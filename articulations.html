@@ -1216,7 +1216,7 @@
   window.SHEET_CONFIG = {
     videoFoundations: 'https://www.youtube.com/embed/REPLACE_WITH_FOUNDATIONS_VIDEO_ID',
     videoDeepDive:    'https://www.youtube.com/embed/REPLACE_WITH_DEEPDIVE_VIDEO_ID',
-    prework:          'articulations-prework.html',
+    prework:          'spaced-recall.html#topic=t-articulations',
   };
   (function wireResources() {
     var cfg = window.SHEET_CONFIG || {};
@@ -1252,7 +1252,13 @@
           var sep = videoUrl.indexOf('?') === -1 ? '?' : '&';
           videoUrl = videoUrl + sep + 'enablejsapi=1&rel=0';
         }
-        iframe.src = videoUrl;
+        if (v.url && v.url.indexOf('REPLACE_WITH') !== -1) {
+          iframe.removeAttribute('src');
+          iframe.srcdoc = '<!doctype html><meta charset="utf-8"><body style="margin:0;height:100vh;display:flex;align-items:center;justify-content:center;font-family:DM Sans,system-ui,sans-serif;background:#EDF1F3;color:#1E3D4C;text-align:center;padding:20px"><div><p style="font-weight:700;font-size:15px;margin:0 0 6px">Lecture video coming soon</p><p style="font-size:13px;opacity:0.85;margin:0">You can still complete the retrieval check below to unlock your cards.</p></div></body>';
+        } else {
+          iframe.removeAttribute('srcdoc');
+          iframe.src = videoUrl;
+        }
         panel.hidden = false;
         toggle.setAttribute('aria-expanded', 'true');
         setTimeout(function () { panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 100);
@@ -1383,10 +1389,10 @@
 <!-- bio004-option-a: inline explain-back gate -->
 <script>
 (function () {
-  // Supplementary reference page: no topic mapping.
-  var TOPIC_ID = null;
-  var GATE_KEYWORDS = [];
-  var PREWORK_TARGET = "articulations-prework.html";
+  // Topic mapping for the explain-back gate and spaced-recall pre-work.
+  var TOPIC_ID = "t-articulations";
+  var GATE_KEYWORDS = ["joint", "synovial", "cartilage", "ligament", "fibrous", "cartilaginous"];
+  var PREWORK_TARGET = "spaced-recall.html#topic=t-articulations";
   var MIN_WORDS = 60;
   var MIN_KEYWORDS = GATE_KEYWORDS.length ? Math.max(2, Math.ceil(GATE_KEYWORDS.length * 0.6)) : 0;
   var pre = document.getElementById('prework-link');

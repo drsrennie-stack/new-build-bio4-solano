@@ -4,9 +4,9 @@
 
 **Project:** BIO 004 Human Anatomy, Digital Concept Pages (Solano Community College)
 
-**Date:** 2026-05-20
+**Date:** 2026-05-21
 
-**Files covered (14 HTML concept pages):**
+**Files covered (37 HTML concept pages):**
 
 Block 1, Introduction Concepts:
 
@@ -16,7 +16,7 @@ Block 1, Introduction Concepts:
 - tissues.html
 - integumentary.html
 
-Block 2, Skeletal System and added modules:
+Block 2, Skeletal System, Muscle, and Endocrine:
 
 - bone-histology.html
 - axial-skeleton-skull.html
@@ -28,7 +28,43 @@ Block 2, Skeletal System and added modules:
 - muscle-fascicles.html
 - endocrine.html
 
-All 14 pages share one template (PRIMARY palette, Notes/Study/Quiz modes, the grid-table and sequence components, the two-video resource bar, the lightbox, and the iframe height-sender). This audit therefore applies template-wide; per-page differences are limited to content, not structure.
+Block 3, Cardiovascular, Respiratory, and Lymphatic:
+
+- heart.html
+- cardiac-conduction.html
+- blood.html
+- blood-vessels.html
+- blood-vessel-disorders.html
+- respiratory.html
+- lymphatic-system.html
+
+Block 4, Digestive, Urinary, and Reproductive:
+
+- alimentary-canal.html
+- accessory-digestive-organs.html
+- urinary-system.html
+- reproductive-male.html
+- reproductive-female.html
+- pregnancy-and-birth.html
+
+Block 5, Nervous System:
+
+- nervous-tissue.html
+- neuronal-integration.html
+- cns-brain.html
+- cns-brainstem.html
+- cns-spinal-cord.html
+- cns-meninges-csf.html
+- cranial-nerves.html
+- nerve-plexuses.html
+- pns.html
+- ans.html
+
+All 37 pages share one template (PRIMARY palette, Notes/Study/Quiz modes, the grid-table and sequence components, the two-video resource bar, the lightbox, the explain-back gate, and the iframe height-sender). This audit therefore applies template-wide; per-page differences are limited to content, not structure.
+
+### Note on the May 2026 rebuild
+
+This release reflects the Block 5 nervous-system depth rebuild and the Block 4 audit. The retired combined page `cns-brain-spinal-cord.html` was split into `cns-brain.html`, `cns-brainstem.html`, `cns-spinal-cord.html`, and `cranial-nerves.html`. New page `nerve-plexuses.html` was added. The pages `nervous-tissue.html`, `pns.html`, and `ans.html` were rebuilt to lecture-level depth from the course lecture notes. The Block 4 pages `alimentary-canal.html`, `accessory-digestive-organs.html`, `urinary-system.html`, `reproductive-male.html`, and `reproductive-female.html` were rebuilt to the same depth standard. Every new and rebuilt page was generated from the verified template scaffold, so the structural audit below carries forward unchanged. Each new and rebuilt page was checked programmatically for em dashes, balanced tags, unique element IDs, matching table column counts, a single correctly nested heading hierarchy, and the presence of the skip link, the `aria-live` regions, the reduced-motion block, the `target="_top"` internal links, and the iframe height-sender.
 
 ## 2. WCAG version and target level achieved per criterion
 
@@ -36,9 +72,9 @@ All 14 pages share one template (PRIMARY palette, Notes/Study/Quiz modes, the gr
 
 | Criterion | Level | Result | Notes |
 |-----------|-------|--------|-------|
-| 1.1.1 Non-text Content | A | Pass | Every `img` has descriptive alt text; icon-only buttons carry `aria-label`; decorative arrows use `aria-hidden="true"`. |
+| 1.1.1 Non-text Content | A | Pass | Every `img` has descriptive alt text; icon-only buttons carry `aria-label`; decorative arrows use `aria-hidden="true"`. Figure-placeholder cards carry written descriptions to be converted to alt text when final images are added. |
 | 1.3.1 Info and Relationships | A | Pass | Semantic `main`, `section`, `aside`, `nav`-style toolbar; headings nest h1, h2, h3 in order; comparison grids use `thead`, `tbody`, and `th` with `scope`; sequences use ordered lists. |
-| 1.3.2 Meaningful Sequence | A | Pass | DOM order matches reading order; the two-column layouts were removed during the retrofit so content reads linearly. |
+| 1.3.2 Meaningful Sequence | A | Pass | DOM order matches reading order; content reads linearly in a single column. |
 | 1.4.1 Use of Color | A | Pass | Mode state is conveyed by text and `aria-pressed`, not color alone; locked, unlocked, and completed states pair color with border style. |
 | 1.4.3 Contrast (Minimum) | AA | Pass | See the audit in section 3. All text pairs meet or exceed 4.5:1, or the 3:1 large-text threshold. |
 | 1.4.6 Contrast (Enhanced) | AAA | Partial | Navy body text reaches 11:1, well past 7:1. The terra-dark eyebrow label at 12 px measures 5.62:1, which meets AA but not the AAA 7:1 target. See section 6. |
@@ -55,7 +91,7 @@ All 14 pages share one template (PRIMARY palette, Notes/Study/Quiz modes, the gr
 | 2.4.11 Focus Not Obscured (Minimum) | AA | Pass | No sticky or floating elements overlap a focused control. |
 | 2.5.8 Target Size (Minimum) | AA | Pass | Mode, Reset, Print, resource, and Reveal controls meet or exceed the 24 by 24 CSS px minimum, including padding. |
 | 3.1.1 Language of Page | A | Pass | `<html lang="en">` is set on every page. |
-| 3.2.3 Consistent Navigation | AA | Pass | The toolbar and resource bar are identical in placement and order across all 14 pages. |
+| 3.2.3 Consistent Navigation | AA | Pass | The toolbar and resource bar are identical in placement and order across all 37 pages. |
 | 3.3.2 Labels or Instructions | A | Pass | Each Quiz input has an `aria-label` naming its target; the mode-hint paragraph explains all three modes. |
 | 4.1.2 Name, Role, Value | A | Pass | Mode buttons expose `aria-pressed`; video toggles expose `aria-expanded` and `aria-controls`; the lightbox uses `role="dialog"` with `aria-modal` and `aria-labelledby`. |
 | 4.1.3 Status Messages | AA | Pass | The explain-back meter and status region use `aria-live="polite"` and `role="status"`. |
@@ -93,7 +129,7 @@ Verified behaviors: every control is reachable and operable with Tab, Shift+Tab,
 
 ## 5. Screen reader testing
 
-This release was audited at the code level for the structures screen readers depend on. Verified in markup: a single `h1` per page with correctly nested `h2` and `h3` headings; landmark structure (`main`, `section` with `aria-labelledby`, `aria-label` on the toolbar and resource regions); comparison grids exposed as real tables with `scope` on every header cell so row and column context is announced; ordered lists for sequences; `aria-pressed`, `aria-expanded`, and `aria-controls` on stateful controls; `role="dialog"` with `aria-modal` and `aria-labelledby` on the lightbox; `aria-live` on dynamic regions; and `aria-label` text on every icon-only or input control.
+This release was audited at the code level for the structures screen readers depend on. Verified in markup across all 37 pages: a single `h1` per page with correctly nested `h2` and `h3` headings; landmark structure (`main`, `section` with `aria-labelledby`, `aria-label` on the toolbar and resource regions); comparison grids exposed as real tables with `scope` on every header cell so row and column context is announced; ordered lists for sequences, each with an `aria-label`; `aria-pressed`, `aria-expanded`, and `aria-controls` on stateful controls; `role="dialog"` with `aria-modal` and `aria-labelledby` on the lightbox; `aria-live` on dynamic regions; and `aria-label` text on every icon-only or input control.
 
 Not yet done: a live pass with a running screen reader. A confirming test with NVDA on Windows and VoiceOver on macOS and iOS is listed as a remediation item in section 6, and should be completed before final sign-off.
 
@@ -102,11 +138,12 @@ Not yet done: a live pass with a running screen reader. A confirming test with N
 1. **AAA contrast for the eyebrow label.** The terra-dark eyebrow at 12 px measures 5.62:1, which passes AA but not the AAA 7:1 target. Remediation options: raise the eyebrow to a large-text size, or use navy for the eyebrow text and keep terra-dark for accent rules only. Decision pending from Dr. Sharilyn Rennie. Priority: low (AA is met).
 2. **Focus outline non-text contrast.** The gold #B8924A focus outline is 2.90:1 against white, marginally below the 3:1 non-text minimum. The outline is 3 px thick with offset, which aids visibility, but the color is below threshold. Remediation: darken the focus ring toward the gold's hover value, or switch the focus outline to navy, which would test at 11:1. Priority: medium. Recommended for the next template revision.
 3. **Live screen reader pass outstanding.** Structure has been audited in code but not exercised with a running screen reader. Remediation: run NVDA and VoiceOver against one page of each layout type and record results here. Priority: medium, before final sign-off.
-4. **Figure placeholders.** Several pages carry labeled figure-placeholder cards in place of final anatomical images. When real images are added, each must receive descriptive alt text equivalent to the placeholder description already written into the card. Priority: tracked with content completion.
+4. **Figure placeholders.** Most pages carry labeled figure-placeholder cards in place of final anatomical images. When real images are added, each must receive descriptive alt text equivalent to the placeholder description already written into the card. Priority: tracked with content completion.
+5. **Pre-work links.** Each page sets a per-topic pre-work target (for example `cns-brain-prework.html`). These target files are not yet built; the links resolve only once the pre-work pages exist. This is a content task, not an accessibility defect. Priority: tracked with content completion.
 
 ## 7. Reviewer
 
-Prepared by Claude (Cowork) on 2026-05-20, from a code-level audit of the shared page template and a contrast computation of the PRIMARY palette.
+Prepared by Claude (Cowork) on 2026-05-21, from a code-level audit of the shared page template, a contrast computation of the PRIMARY palette, and a programmatic structural check of all 37 pages.
 
 Pending review and sign-off by: Dr. Sharilyn Rennie
 
