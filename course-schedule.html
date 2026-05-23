@@ -2,2534 +2,1521 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Course Schedule, BIO 004 Human Anatomy</title>
-<meta name="description" content="Interactive course schedule for BIO 004 Human Anatomy. Toggle between the full schedule, a weekly view, this week, and a graded-items list. Export to a calendar, a spaced-repetition deck, a planner checklist, and an SLO grade map.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schedule | BIO 004 Human Anatomy, Summer 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600&family=Lora:ital,wght@1,400;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+:root {
+  --vanilla: #FFFFFF;
+  --vanilla-tint: #FAFAF8;
+  --card: #FFFFFF;
+  --navy: #142940;
+  --navy-soft: #335E6E;
+  --terra: #7C2018;
+  --terra-light: #A0402A;
+  --gold: #C9A961;
+  --gold-soft: #E5D5A8;
+  --sea-glass: #8FB8BF;
+  --sea-glass-mist: #DCE8EB;
+  --teal-text: #2C5F66;
+  --teal-bright: #5B9AA0;
+  --ink: #0A1A2A;
+  --ink-soft: #3D4F5A;
+  --divider: rgba(20, 41, 64, 0.32);
+  --rule-soft: rgba(20, 41, 64, 0.18);
+  --card-shadow: 0 4px 14px rgba(20, 41, 64, 0.10), 0 1px 3px rgba(20, 41, 64, 0.06);
+  --focus-ring: #0A1A2A;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-style: normal !important; }
+em, i, cite, dfn, var { font-style: normal !important; }
+
+html, body { background: var(--vanilla); }
+
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 /* ============================================================
-   Course Schedule Engine, student-facing view.
-   Palette: PRIMARY teaching stack (navy, brushed gold, terra cotta).
-   No sage, no cream. White cards on an off-white page.
+   GLOBAL ACCESSIBILITY
    ============================================================ */
-:root{
-  --navy:#1E3D4C;
-  --navy-deep:#142a36;
-  --navy-tint:#EDF1F3;
-  --gold:#B8924A;
-  --gold-light:#EFDFA3;
-  --terra:#C2734D;
-  --terra-dark:#A0522D;
-  --white:#FFFFFF;
-  --off-white:#FAFAF9;
-  --gray:#565E62;
-  --gray-line:#B6BDC0;
-  --font-eyebrow:'DM Sans',system-ui,sans-serif;
-  --font-head:'Plus Jakarta Sans',system-ui,sans-serif;
-  --font-body:'Plus Jakarta Sans',system-ui,sans-serif;
-  --font-emph:'Lora',Georgia,serif;
-  --shadow-rest:0 1px 3px rgba(0,0,0,0.08);
-  --shadow-hover:0 8px 16px rgba(0,0,0,0.10);
-}
-*{box-sizing:border-box;}
-html,body{margin:0;padding:0;}
-body{
-  background:var(--off-white);
-  color:var(--navy);
-  font-family:var(--font-body);
-  font-size:16px;
-  line-height:1.55;
-  -webkit-font-smoothing:antialiased;
-}
-.wrap{max-width:1120px;margin:0 auto;padding:24px 20px 64px;}
-
-/* ---- Skip link ---- */
-.skip-link{
-  position:absolute;left:8px;top:-48px;
-  background:var(--navy);color:var(--white);
-  padding:10px 16px;border-radius:6px;
-  font-family:var(--font-head);font-weight:600;
-  text-decoration:none;z-index:100;
-  transition:top 150ms ease;
-}
-.skip-link:focus{top:8px;}
-
-/* ---- Header ---- */
-.site-header{padding:8px 0 20px;border-bottom:1px solid var(--gray-line);margin-bottom:24px;}
-.eyebrow{
-  font-family:var(--font-eyebrow);
-  font-size:12px;font-weight:600;
-  letter-spacing:0.09em;text-transform:uppercase;
-  color:var(--terra-dark);margin:0 0 10px;
-}
-h1{
-  font-family:var(--font-head);font-weight:800;
-  font-size:clamp(1.7rem,4vw,2.4rem);
-  color:var(--navy);margin:0 0 6px;line-height:1.15;
-}
-.subhead{
-  font-family:var(--font-head);font-weight:600;
-  font-size:clamp(1rem,2vw,1.18rem);
-  color:var(--terra-dark);margin:0 0 14px;
-}
-.sample-flag{
-  display:inline-block;
-  font-family:var(--font-eyebrow);font-size:11px;font-weight:600;
-  letter-spacing:0.06em;text-transform:uppercase;
-  color:var(--navy);background:var(--navy-tint);
-  border:1px solid var(--navy);border-radius:999px;
-  padding:4px 12px;
-}
-.course-meta{
-  font-family:var(--font-emph);font-style:italic;
-  color:var(--gray);font-size:0.96rem;margin:12px 0 0;
+.skip-link {
+  position: absolute;
+  top: -48px;
+  left: 16px;
+  background: var(--ink);
+  color: #FFFFFF;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  z-index: 1000;
+  transition: top 0.2s ease;
 }
 
-/* ---- Controls ---- */
-.controls{
-  display:flex;flex-wrap:wrap;gap:18px 28px;
-  align-items:flex-end;
-  margin-bottom:8px;padding-bottom:18px;
-  border-bottom:1px solid var(--gray-line);
-}
-fieldset.control-group{border:0;margin:0;padding:0;}
-.control-group legend,.control-label{
-  font-family:var(--font-eyebrow);
-  font-size:12px;font-weight:600;
-  letter-spacing:0.07em;text-transform:uppercase;
-  color:var(--terra-dark);
-  padding:0;margin:0 0 8px;
-}
-/* Segmented view switch built from radios */
-.seg{display:flex;flex-wrap:wrap;gap:6px;}
-.seg label{
-  font-family:var(--font-head);font-weight:600;font-size:0.92rem;
-  color:var(--navy);background:var(--white);
-  border:1px solid var(--navy);border-radius:7px;
-  padding:9px 14px;cursor:pointer;
-  display:inline-flex;align-items:center;gap:7px;
-  transition:background 150ms ease,color 150ms ease;
-}
-.seg input{position:absolute;opacity:0;width:1px;height:1px;}
-.seg input:checked + label{background:var(--navy);color:var(--white);}
-.seg input:focus-visible + label{
-  outline:3px solid var(--navy);outline-offset:2px;
-  box-shadow:0 0 0 6px rgba(184,146,74,0.45);
-}
-.seg label:hover{background:var(--navy-tint);}
-.seg input:checked + label:hover{background:var(--navy-deep);}
-
-/* Nightly toggle switch */
-.switch-row{display:flex;align-items:center;gap:10px;}
-.switch{position:relative;display:inline-block;width:48px;height:26px;flex:none;}
-.switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;}
-.switch .track{
-  position:absolute;inset:0;background:var(--white);
-  border:1.5px solid var(--navy);border-radius:999px;
-  transition:background 160ms ease;
-}
-.switch .thumb{
-  position:absolute;top:3px;left:3px;width:18px;height:18px;
-  background:var(--navy);border-radius:50%;
-  transition:transform 160ms ease;
-}
-.switch input:checked ~ .track{background:var(--navy);}
-.switch input:checked ~ .thumb{background:var(--white);transform:translateX(22px);}
-.switch input:focus-visible ~ .track{
-  outline:3px solid var(--navy);outline-offset:2px;
-  box-shadow:0 0 0 6px rgba(184,146,74,0.45);
-}
-.switch-label{font-family:var(--font-head);font-weight:600;font-size:0.95rem;cursor:pointer;}
-
-/* Generic buttons */
-.btn{
-  font-family:var(--font-head);font-weight:600;font-size:0.92rem;
-  border-radius:7px;padding:9px 15px;cursor:pointer;
-  border:1px solid var(--navy);
-  transition:background 150ms ease,transform 150ms ease;
-}
-.btn-primary{background:var(--navy);color:var(--white);}
-.btn-primary:hover{background:var(--navy-deep);}
-.btn-secondary{background:var(--white);color:var(--navy);}
-.btn-secondary:hover{background:var(--navy-tint);}
-.btn:focus-visible{
-  outline:3px solid var(--navy);outline-offset:2px;
-  box-shadow:0 0 0 6px rgba(184,146,74,0.45);
-}
-.btn:active{transform:translateY(1px);}
-
-/* ---- Export panel ---- */
-.export{
-  margin:18px 0 6px;background:var(--white);
-  border:1px solid var(--navy);border-radius:10px;
-}
-.export>summary{
-  list-style:none;cursor:pointer;
-  font-family:var(--font-head);font-weight:700;font-size:1.02rem;
-  color:var(--navy);padding:14px 18px;
-  display:flex;align-items:center;gap:10px;
-}
-.export>summary::-webkit-details-marker{display:none;}
-.export>summary::before{
-  content:"";width:9px;height:9px;flex:none;
-  border-right:2.5px solid var(--terra-dark);
-  border-bottom:2.5px solid var(--terra-dark);
-  transform:rotate(-45deg);transition:transform 150ms ease;
-}
-.export[open]>summary::before{transform:rotate(45deg);}
-.export>summary:focus-visible{
-  outline:3px solid var(--navy);outline-offset:-3px;
-  box-shadow:0 0 0 5px rgba(184,146,74,0.4);border-radius:10px;
-}
-.export-body{padding:4px 18px 20px;}
-.export-intro{
-  font-family:var(--font-emph);font-style:italic;
-  color:var(--gray);margin:0 0 16px;font-size:0.97rem;
-}
-.export-grid{display:grid;gap:14px;}
-@media(min-width:640px){.export-grid{grid-template-columns:1fr 1fr;}}
-.export-card{
-  border:1px solid var(--gray-line);border-radius:9px;padding:14px;
-}
-.export-card h3{
-  font-family:var(--font-head);font-weight:600;font-size:1.02rem;
-  color:var(--terra-dark);margin:0 0 4px;
-}
-.export-card p{margin:0 0 12px;font-size:0.9rem;color:var(--gray);}
-.export-card .btn-row{display:flex;flex-wrap:wrap;gap:8px;}
-.export-status{
-  margin-top:14px;font-family:var(--font-head);font-weight:600;
-  font-size:0.92rem;color:var(--navy);
-  background:var(--navy-tint);border:1px solid var(--navy);
-  border-radius:7px;padding:10px 14px;min-height:1px;
-}
-.export-status:empty{display:none;}
-.help{margin-top:14px;}
-.help summary{
-  cursor:pointer;font-family:var(--font-head);font-weight:600;
-  font-size:0.92rem;color:var(--navy);
-}
-.help summary:focus-visible{
-  outline:3px solid var(--navy);outline-offset:2px;border-radius:4px;
-}
-.help-body{
-  font-size:0.9rem;color:var(--navy);
-  border-left:3px solid var(--gold);padding:6px 0 6px 14px;margin-top:10px;
-}
-.help-body p{margin:6px 0;}
-.help-body strong{color:var(--terra-dark);}
-
-/* ---- Status line ---- */
-.status-line{
-  font-family:var(--font-head);font-weight:600;font-size:0.95rem;
-  color:var(--gray);margin:16px 0 4px;
+.skip-link:focus {
+  top: 16px;
+  outline: 3px solid #FFFFFF;
+  outline-offset: 3px;
 }
 
-/* ---- Schedule region ---- */
-.view-head{
-  font-family:var(--font-head);font-weight:800;
-  font-size:clamp(1.3rem,3vw,1.7rem);
-  color:var(--navy);margin:22px 0 4px;
-}
-.view-head:focus{outline:none;}
-/* Split-color heading treatment, navy first segment, terra second */
-.split-a{color:var(--navy);}
-.split-b{color:var(--terra-dark);}
-.view-sub{
-  font-family:var(--font-emph);font-style:italic;
-  color:var(--gray);margin:0 0 18px;
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+  border-radius: 6px;
 }
 
-/* Week block */
-.week-block{margin:0 0 30px;}
-.week-head{
-  display:flex;align-items:baseline;gap:14px;
-  margin:36px 0 2px;padding-top:16px;
-  border-top:1px solid var(--gray-line);
-}
-.week-num{
-  font-family:var(--font-head);font-weight:800;
-  font-size:clamp(2.3rem,5vw,3.1rem);line-height:0.8;
-  color:var(--terra-dark);flex:none;
-}
-.week-title{
-  font-family:var(--font-head);font-weight:800;
-  font-size:1.2rem;line-height:1.25;
-}
-.week-dates{
-  font-family:var(--font-eyebrow);font-size:12px;font-weight:600;
-  letter-spacing:0.05em;text-transform:uppercase;color:var(--gray);
-  margin:0 0 14px;
-}
-
-/* Day grid */
-.day-grid{display:grid;gap:14px;}
-@media(min-width:720px){.day-grid{grid-template-columns:1fr 1fr;}}
-
-/* Day card */
-.day-card{
-  background:var(--white);
-  border:1px solid var(--navy);
-  border-radius:11px;padding:16px 17px;
-  box-shadow:var(--shadow-rest);
-  transition:transform 200ms ease,box-shadow 200ms ease;
-}
-.day-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);}
-.day-card.is-exam{border-left:5px solid var(--gold);}
-.day-card.is-today{border:2px solid var(--gold);box-shadow:var(--shadow-hover);}
-.day-card.is-past{background:var(--navy-tint);}
-.day-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:2px;}
-.day-date{
-  font-family:var(--font-eyebrow);font-size:12px;font-weight:600;
-  letter-spacing:0.05em;text-transform:uppercase;color:var(--navy);
-}
-.day-state-tag{
-  font-family:var(--font-eyebrow);font-size:10.5px;font-weight:600;
-  letter-spacing:0.06em;text-transform:uppercase;
-  border-radius:999px;padding:3px 9px;flex:none;
-}
-.tag-done{background:var(--navy);color:var(--white);}
-.day-session{
-  font-family:var(--font-head);font-weight:800;
-  font-size:1.06rem;color:var(--navy);margin:3px 0 9px;
-}
-/* Today ribbon, a navy bar with a gold arrow, bleeds to the card edges */
-.today-ribbon{
-  display:flex;align-items:center;gap:8px;
-  background:var(--navy);color:var(--white);
-  font-family:var(--font-eyebrow);font-size:11px;font-weight:600;
-  letter-spacing:0.08em;text-transform:uppercase;
-  margin:-16px -17px 12px;padding:8px 16px;
-  border-radius:9px 9px 0 0;
-}
-.today-arrow{color:var(--gold);font-size:15px;line-height:1;}
-/* Lecture and Lab tracks */
-.day-track{margin:0 0 9px;}
-.track-label{
-  font-family:var(--font-eyebrow);font-size:11px;font-weight:600;
-  letter-spacing:0.06em;text-transform:uppercase;
-  color:var(--terra-dark);margin:0 0 3px;
-}
-.track-list{margin:0;padding-left:0;list-style:none;}
-.track-list li{
-  position:relative;padding:2px 0 2px 14px;font-size:0.92rem;color:var(--navy);
-}
-.track-list li::before{
-  content:"";position:absolute;left:0;top:10px;
-  width:5px;height:5px;border-radius:50%;background:var(--terra);
-}
-.track-list a{color:var(--navy);font-weight:600;text-decoration:underline;text-underline-offset:2px;}
-.track-list a:hover{color:var(--terra-dark);}
-.track-list a:focus-visible{outline:3px solid var(--navy);outline-offset:2px;border-radius:3px;}
-.day-section-label{
-  font-family:var(--font-eyebrow);font-size:11px;font-weight:600;
-  letter-spacing:0.06em;text-transform:uppercase;
-  color:var(--terra-dark);margin:12px 0 6px;
-}
-/* Weekend card, full width below a week's day grid */
-.weekend-card{
-  background:var(--white);border:1px dashed var(--navy);
-  border-radius:11px;padding:16px 17px;margin-top:14px;
-  box-shadow:var(--shadow-rest);
-}
-.weekend-card.is-today{border:2px solid var(--gold);}
-.weekend-card.is-past{background:var(--navy-tint);}
-
-/* Graded item badge inside a day card */
-.graded-list{display:flex;flex-direction:column;gap:8px;}
-.graded-item{
-  border:1px solid var(--navy);border-radius:8px;
-  padding:9px 11px;background:var(--white);
-}
-.graded-item.exam{border:1px solid var(--gold);border-left:5px solid var(--gold);}
-.gi-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;}
-.gi-type{
-  font-family:var(--font-eyebrow);font-size:10px;font-weight:600;
-  letter-spacing:0.07em;text-transform:uppercase;
-  padding:3px 8px;border-radius:999px;flex:none;
-}
-.type-exam{background:var(--gold);color:var(--navy-deep);}
-.type-graded{background:var(--navy);color:var(--white);}
-.gi-title{font-family:var(--font-head);font-weight:600;font-size:0.95rem;color:var(--navy);}
-.gi-meta{display:flex;flex-wrap:wrap;gap:5px 14px;margin-top:6px;font-size:0.84rem;}
-.gi-due{color:var(--terra-dark);font-weight:600;}
-.gi-points{color:var(--navy);font-weight:700;}
-.gi-slo{color:var(--gray);}
-.gi-note{font-size:0.83rem;color:var(--gray);margin:6px 0 0;font-style:italic;font-family:var(--font-emph);}
-
-/* Daily prep checklist, prework and spaced recall */
-.prep{
-  margin-top:10px;border-top:1px dashed var(--gray-line);padding-top:10px;
-}
-.prep-intro{
-  font-family:var(--font-emph);font-style:italic;
-  font-size:0.85rem;color:var(--gray);margin:0 0 8px;
-}
-.prep-group{margin:0 0 9px;}
-.prep-group:last-child{margin-bottom:0;}
-.prep-group-label{
-  font-family:var(--font-eyebrow);font-size:11px;font-weight:600;
-  letter-spacing:0.06em;text-transform:uppercase;
-  color:var(--terra-dark);margin:0 0 4px;
-}
-.prep ul{margin:0;padding-left:0;list-style:none;}
-.prep li{
-  position:relative;padding:4px 0 4px 24px;font-size:0.9rem;color:var(--navy);
-}
-.prep li::before{
-  content:"";position:absolute;left:0;top:8px;
-  width:12px;height:12px;border:1.5px solid var(--gray);border-radius:3px;
-}
-.prep a{color:var(--navy);font-weight:600;text-decoration:underline;text-underline-offset:2px;}
-.prep a:hover{color:var(--terra-dark);}
-.prep a:focus-visible{outline:3px solid var(--navy);outline-offset:2px;border-radius:3px;}
-.prep-gated{color:var(--gray);font-family:var(--font-emph);font-style:italic;}
-.prep-lock{
-  font-family:var(--font-eyebrow);font-size:9.5px;font-weight:600;
-  letter-spacing:0.05em;text-transform:uppercase;
-  background:var(--navy-tint);color:var(--navy);border:1px solid var(--navy);
-  border-radius:999px;padding:1px 7px;margin-left:6px;white-space:nowrap;
-}
-
-/* This-week banner, a light gold panel that lifts off the page on an offset shadow */
-.tw-banner{
-  background:var(--gold-light);
-  border:0;border-radius:12px;
-  padding:20px 22px;margin:6px 0 24px;
-  box-shadow:7px 9px 22px rgba(30,61,76,0.20);
-}
-.tw-banner h3{
-  font-family:var(--font-head);font-weight:800;font-size:1.32rem;
-  color:var(--terra-dark);margin:0 0 6px;line-height:1.2;
-}
-.tw-banner p{margin:4px 0;font-size:0.95rem;color:var(--navy);}
-.tw-stats{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:12px;}
-.tw-stat{display:flex;flex-direction:column;}
-.tw-stat .num{font-family:var(--font-head);font-weight:800;font-size:1.5rem;color:var(--terra-dark);line-height:1;}
-.tw-stat .lbl{
-  font-family:var(--font-eyebrow);font-size:11px;font-weight:600;
-  letter-spacing:0.05em;text-transform:uppercase;color:var(--navy);margin-top:4px;
-}
-.progress-track{
-  height:10px;background:var(--white);border:1px solid var(--navy);
-  border-radius:999px;overflow:hidden;margin:14px 0 4px;
-}
-.progress-fill{height:100%;background:var(--gold);}
-.due-soon{margin:14px 0 0;}
-.due-soon h4{
-  font-family:var(--font-eyebrow);font-size:12px;font-weight:600;
-  letter-spacing:0.06em;text-transform:uppercase;color:var(--navy);margin:0 0 8px;
-}
-.due-soon ul{margin:0;padding-left:20px;}
-.due-soon li{font-size:0.92rem;margin:4px 0;}
-
-/* Weekly nav */
-.week-nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0 6px;}
-.week-nav .picker{
-  font-family:var(--font-head);font-weight:600;font-size:0.95rem;
-  border:1px solid var(--navy);border-radius:7px;padding:9px 12px;
-  background:var(--white);color:var(--navy);
-}
-.week-nav .picker:focus-visible{
-  outline:3px solid var(--navy);outline-offset:2px;
-  box-shadow:0 0 0 6px rgba(184,146,74,0.45);
-}
-
-/* Graded table */
-.table-scroll{overflow-x:auto;}
-table.graded-table{
-  width:100%;border-collapse:collapse;
-  background:var(--white);border:1px solid var(--navy);
-  border-radius:11px;overflow:hidden;
-}
-.graded-table caption{
-  text-align:left;font-family:var(--font-emph);font-style:italic;
-  color:var(--gray);padding:0 0 10px;
-}
-.graded-table th,.graded-table td{
-  text-align:left;padding:11px 13px;font-size:0.9rem;
-  border-bottom:1px solid var(--gray-line);
-}
-.graded-table thead th{
-  background:var(--navy);color:var(--white);
-  font-family:var(--font-head);font-weight:600;
-  font-size:0.82rem;letter-spacing:0.03em;
-}
-.graded-table tbody tr:hover{background:var(--navy-tint);}
-.graded-table tbody tr.exam-row td:first-child{border-left:4px solid var(--gold);}
-.graded-table .num{font-weight:700;color:var(--navy);}
-.graded-table tfoot td{
-  font-family:var(--font-head);font-weight:800;
-  background:var(--navy-tint);color:var(--navy);font-size:0.95rem;
-}
-.legend{
-  display:flex;flex-wrap:wrap;gap:8px 18px;margin:14px 0 0;
-  font-size:0.85rem;color:var(--gray);
-}
-.legend span{display:inline-flex;align-items:center;gap:7px;}
-.legend .sw{width:16px;height:16px;border-radius:4px;flex:none;}
-.sw-exam{background:var(--white);border:1px solid var(--gold);border-left:5px solid var(--gold);}
-.sw-graded{background:var(--navy);}
-.sw-done{background:var(--navy-tint);border:1px solid var(--navy);}
-.sw-today{background:var(--white);border:1px solid var(--navy);border-left:5px solid var(--gold);}
-
-/* Footer */
-.site-footer{
-  margin-top:40px;padding-top:18px;border-top:1px solid var(--gray-line);
-  font-size:0.85rem;color:var(--gray);
-}
-.site-footer p{margin:4px 0;}
-
-.sr-only{
-  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
-  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
-}
-
-/* Reduced motion */
-@media(prefers-reduced-motion:reduce){
-  *{transition:none !important;animation:none !important;}
-  .day-card:hover{transform:none;}
-}
-
-/* Print, this produces the PDF when the reader chooses Save as PDF */
-@media print{
-  body{background:#fff;font-size:11.5pt;}
-  .wrap{max-width:none;padding:0;}
-  .controls,.export,.status-line,.skip-link,.week-nav,.no-print{display:none !important;}
-  .site-header{border-color:#000;}
-  .day-card{
-    box-shadow:none;border:1px solid #444;
-    break-inside:avoid;page-break-inside:avoid;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
-  .week-block{break-inside:avoid;}
-  .week-head{break-after:avoid;}
-  .day-card:hover{transform:none;}
-  a{text-decoration:none;color:inherit;}
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --rule-soft: rgba(20, 41, 64, 0.55);
+    --divider: rgba(20, 41, 64, 0.7);
+    --ink-soft: #0A1A2A;
+    --navy-soft: #142940;
+    --teal-text: #1B3F45;
+  }
+}
+
+/* ============================================================
+   NAVY BANNER
+   ============================================================ */
+.banner {
+  background: var(--navy);
+  color: #FFFFFF;
+  padding: 56px 32px 48px;
+  position: relative;
+}
+
+.banner-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.banner-eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  margin-bottom: 16px;
+}
+
+.banner-eyebrow-sep {
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  background: var(--gold-soft);
+  margin: 0 12px;
+  vertical-align: middle;
+  opacity: 0.6;
+}
+
+.banner-title {
+  font-size: clamp(36px, 5.5vw, 54px);
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  margin-bottom: 14px;
+}
+
+.banner-subtitle {
+  font-size: clamp(16px, 2vw, 18px);
+  font-weight: 400;
+  color: var(--sea-glass-mist);
+  max-width: 620px;
+  margin: 0 auto;
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+}
+
+.banner-actions {
+  margin-top: 28px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFFFFF;
+  color: var(--navy);
+  padding: 12px 22px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  border: 1px solid #FFFFFF;
+  min-height: 44px;
+  min-width: 44px;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.action-btn:hover { background: var(--vanilla); }
+.action-btn:focus-visible { outline: 3px solid #FFFFFF; outline-offset: 3px; }
+
+.action-btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   CONTAINER + OVERVIEW
+   ============================================================ */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 36px 32px 64px;
+}
+
+.overview-strip {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 18px 28px;
+  margin-bottom: 28px;
+  border: 1px solid var(--divider);
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px 28px;
+  font-size: 13px;
+  color: var(--ink);
+  text-align: center;
+}
+
+.overview-strip strong {
+  color: var(--terra);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.overview-divider {
+  color: var(--sea-glass);
+  opacity: 0.8;
+}
+
+/* ============================================================
+   STATUS NOW BANNER (auto-detected)
+   ============================================================ */
+.status-now {
+  background: var(--card);
+  border: 1px solid var(--divider);
+  border-left: 6px solid var(--terra);
+  border-radius: 14px;
+  padding: 18px 24px;
+  margin-bottom: 28px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.status-now:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(20, 41, 64, 0.12), 0 2px 4px rgba(20, 41, 64, 0.08);
+}
+
+.status-now--pre { border-left-color: var(--gold); }
+.status-now--post { border-left-color: var(--navy-soft); opacity: 0.85; }
+
+.status-now-label {
+  background: var(--terra);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 100px;
+  flex-shrink: 0;
+}
+
+.status-now--pre .status-now-label { background: var(--gold); color: var(--navy); }
+.status-now--post .status-now-label { background: var(--navy-soft); color: #FFFFFF; }
+
+.status-now-text {
+  flex: 1;
+  min-width: 200px;
+  font-size: 15px;
+  color: var(--ink);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.status-now-text strong { color: var(--terra); font-weight: 700; }
+.status-now--pre .status-now-text strong { color: var(--terra-light); }
+
+.status-now-arrow {
+  font-size: 18px;
+  color: var(--navy-soft);
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+@media (max-width: 640px) {
+  .status-now { padding: 16px 18px; gap: 12px; }
+  .status-now-text { font-size: 14px; }
+}
+
+/* ============================================================
+   SCHEDULE LIST + WEEK CARDS
+   ============================================================ */
+.schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.week-card {
+  background: var(--card);
+  border-radius: 16px;
+  border: 1px solid var(--divider);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+}
+
+.week-card--current {
+  border-color: var(--terra);
+  box-shadow: 0 6px 18px rgba(124, 32, 24, 0.14), 0 2px 4px rgba(20, 41, 64, 0.08);
+  background:
+    linear-gradient(to right, rgba(124, 32, 24, 0.05), var(--card) 40%),
+    var(--card);
+}
+
+.week-card--current .week-tab {
+  background: var(--terra);
+  color: #FFFFFF;
+  border-right-color: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 640px) {
+  .week-card--current .week-tab { border-bottom-color: rgba(255, 255, 255, 0.2); }
+}
+
+.week-card--next {
+  border-color: var(--gold);
+  border-left-width: 4px;
+}
+
+.week-card--past { opacity: 0.55; }
+.week-card--past:hover,
+.week-card--past:focus-within { opacity: 1; }
+
+.week-tab {
+  background: var(--gold);
+  color: var(--navy);
+  padding: 28px 14px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-align: center;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid rgba(20, 41, 64, 0.15);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .week-tab {
+    writing-mode: horizontal-tb;
+    transform: none;
+    padding: 10px 16px;
+    width: 100%;
+    text-align: left;
+    letter-spacing: 0.16em;
+    border-right: none;
+    border-bottom: 1px solid rgba(20, 41, 64, 0.15);
+  }
+  .week-card { flex-direction: column; }
+}
+
+.week-body {
+  flex: 1;
+  padding: 28px 32px;
+  min-width: 0;
+}
+
+@media (max-width: 640px) { .week-body { padding: 24px; } }
+
+.week-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+
+.week-number {
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--terra-light);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  padding-top: 2px;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.week-meta { flex: 1; min-width: 200px; }
+
+.week-dates {
+  font-size: 23px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
+.week-module {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--navy-soft);
+}
+
+@media (max-width: 640px) {
+  .week-number { font-size: 34px; }
+  .week-dates { font-size: 20px; }
+}
+
+.week-status-pill {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 5px 11px;
+  border-radius: 100px;
+  margin-top: 6px;
+  vertical-align: middle;
+  font-variant-numeric: tabular-nums;
+}
+
+.week-status-pill--current {
+  background: var(--terra);
+  color: #FFFFFF;
+}
+
+/* ============================================================
+   EXAM BLOCK (terra)
+   ============================================================ */
+.exam-block {
+  background: var(--terra);
+  color: #FFFFFF;
+  margin: 0 -32px 22px;
+  padding: 18px 32px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+@media (max-width: 640px) {
+  .exam-block { margin: 0 -24px 22px; padding: 16px 24px; }
+}
+
+.exam-tag {
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.exam-block-content { flex: 1; min-width: 200px; }
+
+.exam-block-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.3;
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+
+.exam-block-detail {
+  font-size: 13px;
+  color: #FCE8E2;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.exam-block-day {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  text-align: right;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) { .exam-block-day { text-align: left; } }
+
+/* ============================================================
+   SECTION EYEBROWS (Lecture / Lab Focus)
+   ============================================================ */
+.section-eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--navy-soft);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-eyebrow--lab { color: var(--teal-text); }
+
+.section-eyebrow-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--rule-soft);
+}
+
+.section-eyebrow--lab .section-eyebrow-rule {
+  background: var(--sea-glass);
+  opacity: 0.5;
+}
+
+/* ============================================================
+   LECTURE DAY LIST
+   ============================================================ */
+.day-list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 20px;
+  row-gap: 14px;
+  padding: 14px 0 18px;
+  border-top: 1px solid var(--rule-soft);
+  border-bottom: 1px solid var(--rule-soft);
+  margin-bottom: 26px;
+}
+
+.day-list dt {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--navy-soft);
+  padding-top: 5px;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.day-list dd {
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.5;
+  font-weight: 500;
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) { .day-list { column-gap: 14px; } }
+
+.activity-plain {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.day-descriptor {
+  color: var(--ink-soft);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.day-descriptor::before {
+  content: ". ";
+  color: var(--rule-soft);
+  margin-right: 4px;
+}
+
+.prework-link {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--navy-soft);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  padding: 2px 0;
+  border-bottom: 1px dotted var(--navy-soft);
+  white-space: nowrap;
+}
+
+.prework-link:hover { color: var(--terra); border-bottom-color: var(--terra); }
+.prework-link:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; border-radius: 4px; }
+
+.day-list .pill-tbl {
+  display: inline-block;
+  background: var(--sea-glass);
+  color: var(--navy);
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: 100px;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  vertical-align: baseline;
+}
+
+.day-list .pill-exam {
+  display: inline-block;
+  background: var(--terra);
+  color: #FFFFFF;
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: 100px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  vertical-align: baseline;
+}
+
+/* ============================================================
+   UP-NEXT ARROW PILL
+   ============================================================ */
+.pill-up-next {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 4px 8px 4px 12px;
+  border-radius: 100px 0 0 100px;
+  position: relative;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.pill-up-next::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -10px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 11px 0 11px 10px;
+  border-color: transparent transparent transparent var(--gold);
+}
+
+.day-list .day-up-next {
+  background: rgba(201, 169, 97, 0.06);
+}
+.day-list dt.day-up-next {
+  border-radius: 6px 0 0 6px;
+  padding-left: 10px;
+  margin-left: -10px;
+}
+.day-list dd.day-up-next {
+  border-radius: 0 6px 6px 0;
+  padding-right: 10px;
+  margin-right: -10px;
+}
+
+/* ============================================================
+   TODAY pill
+   ============================================================ */
+.day-list dt.day-today,
+.day-list dd.day-today {
+  background: rgba(124, 32, 24, 0.05);
+}
+.day-list dt.day-today {
+  color: var(--terra);
+  position: relative;
+  padding-left: 10px;
+  margin-left: -10px;
+  border-radius: 6px 0 0 6px;
+}
+.day-list dd.day-today {
+  padding-right: 10px;
+  margin-right: -10px;
+  border-radius: 0 6px 6px 0;
+}
+
+.day-today-pill {
+  display: inline-block;
+  background: var(--terra);
+  color: #FFFFFF;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  padding: 2px 8px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   LAB FOCUS BLOCK
+   ============================================================ */
+.lab-block {
+  background: var(--card);
+  border: 1px solid var(--rule-soft);
+  border-left: 5px solid var(--sea-glass);
+  border-radius: 8px;
+  padding: 20px 22px 22px;
+  margin-bottom: 26px;
+  box-shadow: 0 2px 6px rgba(20, 41, 64, 0.04);
+}
+
+.lab-block-head {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.lab-eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--teal-text);
+  margin-bottom: 4px;
+}
+
+.lab-target {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+.lab-target strong { color: var(--terra); font-weight: 700; }
+
+.lab-topics-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.lab-topic {
+  font-weight: 600;
+  color: var(--teal-text);
+  letter-spacing: 0.005em;
+}
+
+.lab-topic-sep {
+  color: var(--sea-glass);
+  font-weight: 700;
+  opacity: 0.85;
+  display: inline-block;
+  padding: 0 2px;
+}
+
+/* ============================================================
+   WEEK FOOTER
+   ============================================================ */
+.week-footer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+@media (min-width: 640px) {
+  .week-footer { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .week-footer--single { grid-template-columns: 1fr; }
+}
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+
+.field-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--navy-soft);
+}
+
+.field-value {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.field-value--placeholder { color: var(--navy-soft); opacity: 0.8; }
+
+/* ============================================================
+   COURSE FOOTER
+   ============================================================ */
+.course-footer {
+  margin-top: 48px;
+  padding: 28px 32px;
+  background: var(--card);
+  border: 1px solid var(--divider);
+  border-radius: 14px;
+  box-shadow: var(--card-shadow);
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+.course-footer strong { color: var(--navy); font-weight: 600; }
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+  :root {
+    --vanilla: #FFFFFF;
+    --card: #FFFFFF;
+    --navy: #000000;
+    --navy-soft: #000000;
+    --terra: #FFFFFF;
+    --terra-light: #000000;
+    --gold: #FFFFFF;
+    --gold-soft: #FFFFFF;
+    --sea-glass: #FFFFFF;
+    --sea-glass-mist: #FFFFFF;
+    --teal-text: #000000;
+    --ink: #000000;
+    --ink-soft: #000000;
+    --divider: #000000;
+    --rule-soft: #000000;
+    --card-shadow: none;
+  }
+
+  @page { size: letter; margin: 0.5in; }
+
+  html, body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    font-size: 10.5pt;
+  }
+
+  .skip-link, .banner-actions, .status-now { display: none !important; }
+
+  .banner {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    padding: 0 0 12pt;
+    border-bottom: 1pt solid #000000;
+  }
+
+  .banner-eyebrow,
+  .banner-title,
+  .banner-subtitle { color: #000000 !important; }
+
+  .banner-eyebrow-sep { background: #000000; opacity: 1; }
+
+  .container { padding: 12pt 0 0; }
+
+  .overview-strip,
+  .week-card,
+  .course-footer {
+    background: #FFFFFF !important;
+    box-shadow: none !important;
+    border: 1pt solid #000000;
+    border-radius: 0;
+    page-break-inside: avoid;
+  }
+
+  .week-tab {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    writing-mode: horizontal-tb;
+    transform: none;
+    border-right: none;
+    border-bottom: 0.5pt solid #000000;
+    padding: 4pt 8pt;
+    width: 100%;
+  }
+
+  .week-card { display: block; }
+  .week-body { padding: 8pt 10pt; }
+
+  .exam-block {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 0.5pt solid #000000;
+    margin: 0 0 10pt;
+    padding: 6pt 8pt;
+  }
+
+  .exam-block-title,
+  .exam-block-detail,
+  .exam-block-day { color: #000000 !important; }
+
+  .exam-tag,
+  .day-list .pill-tbl,
+  .day-list .pill-exam,
+  .pill-up-next,
+  .day-today-pill {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 0.5pt solid #000000;
+  }
+
+  .pill-up-next::after { display: none; }
+
+  .lab-block {
+    background: #FFFFFF !important;
+    border: 0.5pt solid #000000;
+    border-left: 1.5pt solid #000000;
+    box-shadow: none !important;
+  }
+
+  *, *::before, *::after {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
 }
 </style>
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to the schedule</a>
-<div class="wrap">
+<a href="#schedule-list" class="skip-link">Skip to schedule</a>
 
-  <header class="site-header">
-    <p class="eyebrow" id="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano Community College</p>
-    <h1 id="course-title"><span class="split-a">Course</span> <span class="split-b">Schedule</span></h1>
-    <p class="subhead" id="course-subhead">Human Anatomy &middot; Summer 2026</p>
-    <p class="sample-flag" id="sample-flag" hidden>Sample data, replace with your real dates and topics</p>
-    <p class="course-meta" id="course-meta"></p>
-  </header>
-
-  <nav class="controls" aria-label="Schedule view and options">
-    <fieldset class="control-group">
-      <legend>View</legend>
-      <div class="seg" id="view-switch" role="radiogroup" aria-label="Choose a schedule view">
-        <input type="radio" name="view" id="view-thisweek" value="thisweek" checked>
-        <label for="view-thisweek">This week</label>
-        <input type="radio" name="view" id="view-full" value="full">
-        <label for="view-full">Full schedule</label>
-        <input type="radio" name="view" id="view-weekly" value="weekly">
-        <label for="view-weekly">Weekly</label>
-        <input type="radio" name="view" id="view-graded" value="graded">
-        <label for="view-graded">Graded items</label>
-      </div>
-    </fieldset>
-
-    <fieldset class="control-group">
-      <legend>Options</legend>
-      <div class="switch-row">
-        <span class="switch">
-          <input type="checkbox" id="prep-toggle" checked aria-describedby="prep-desc">
-          <span class="track" aria-hidden="true"></span>
-          <span class="thumb" aria-hidden="true"></span>
-        </span>
-        <label class="switch-label" for="prep-toggle">Show daily prep checklist</label>
-      </div>
-      <span id="prep-desc" class="sr-only">The daily prep checklist lists the lecture material, the nightly prework, and the spaced recall cards for each day. It is recommended preparation and is not graded.</span>
-    </fieldset>
-
-    <div class="control-group">
-      <span class="control-label" id="pdf-label">Print</span>
-      <button type="button" class="btn btn-secondary" id="print-btn" aria-describedby="pdf-label">Save full schedule as PDF</button>
+<header class="banner" role="banner">
+  <div class="banner-inner">
+    <p class="banner-eyebrow">BIO 004 <span class="banner-eyebrow-sep" aria-hidden="true"></span> Summer Session 2026</p>
+    <h1 class="banner-title">Course Schedule</h1>
+    <p class="banner-subtitle">Eight-week session, June 15 to August 6. Lecture and lab Monday through Thursday.</p>
+    <div class="banner-actions">
+      <a class="action-btn" href="schedule-print.html" target="_top" aria-label="Open print-friendly version of the schedule">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+        Print-friendly version
+      </a>
     </div>
-  </nav>
+  </div>
+</header>
 
-  <details class="export" id="export-panel">
-    <summary>Export and copy into your other tools</summary>
-    <div class="export-body">
-      <p class="export-intro">Send this schedule into a calendar, a spaced-repetition app, a task planner, or a grade tracker. Download a file, or copy a ready-to-paste block.</p>
-      <div class="export-grid">
+<main class="container">
+  <section class="overview-strip" aria-label="Session overview">
+    <span><strong>8</strong> weeks</span>
+    <span class="overview-divider" aria-hidden="true">.</span>
+    <span><strong>7</strong> lab exams</span>
+    <span class="overview-divider" aria-hidden="true">.</span>
+    <span><strong>7</strong> weekly cases</span>
+  </section>
 
-        <div class="export-card">
-          <h3>Calendar</h3>
-          <p>Every graded item with its due date. Imports into Google Calendar, Apple Calendar, Outlook, and most planners.</p>
-          <div class="btn-row">
-            <button type="button" class="btn btn-primary" data-export="ics">Download .ics</button>
-          </div>
-        </div>
+  <a id="status-now" class="status-now" href="#schedule-list" aria-live="polite" hidden></a>
 
-        <div class="export-card">
-          <h3>Spaced repetition</h3>
-          <p>A starter Anki deck, one card per topic, plus a daily study plan that schedules reviews for you.</p>
-          <div class="btn-row">
-            <button type="button" class="btn btn-primary" data-export="anki">Download deck (.csv)</button>
-            <button type="button" class="btn btn-secondary" data-export="studyplan">Download study plan (.txt)</button>
-          </div>
-        </div>
+  <ol id="schedule-list" class="schedule-list" aria-label="Weekly schedule"></ol>
 
-        <div class="export-card">
-          <h3>Task planner</h3>
-          <p>A Markdown checklist grouped by week. Paste into Notion, Todoist, Obsidian, Apple Notes, or any planner.</p>
-          <div class="btn-row">
-            <button type="button" class="btn btn-primary" data-export="checklist-copy">Copy checklist</button>
-            <button type="button" class="btn btn-secondary" data-export="checklist-file">Download .md</button>
-          </div>
-        </div>
-
-        <div class="export-card">
-          <h3>SLO grade map</h3>
-          <p>Every graded item mapped to a Student Learning Outcome, with points and weight. For your SLO tracking and grading tool.</p>
-          <div class="btn-row">
-            <button type="button" class="btn btn-primary" data-export="slo-copy">Copy SLO map</button>
-            <button type="button" class="btn btn-secondary" data-export="slo-file">Download .csv</button>
-          </div>
-        </div>
-
-      </div>
-      <p class="export-status" id="export-status" role="status" aria-live="polite"></p>
-
-      <details class="help">
-        <summary>How to import each file</summary>
-        <div class="help-body">
-          <p><strong>Calendar (.ics):</strong> In Google Calendar, open Settings, then Import and export, then Import. In Apple Calendar, choose File, then Import.</p>
-          <p><strong>Anki deck (.csv):</strong> In Anki, choose File, then Import, pick the file, set the field separator to Comma, and map Front, Back, Deck, and Tags. The file already names a deck per week.</p>
-          <p><strong>Study plan (.txt):</strong> Open it in any text editor or paste it into your planner. Each date lists the recommended tasks and which topics to review that night.</p>
-          <p><strong>Planner checklist (.md):</strong> Paste directly into Notion, Obsidian, or Apple Notes. For Todoist or Things, paste into the quick-add box, each line becomes a task.</p>
-          <p><strong>SLO grade map (.csv):</strong> Import into your grade or SLO tool as a CSV. The first row is the header. One row per graded item, with the mapped SLO codes.</p>
-        </div>
-      </details>
-    </div>
-  </details>
-
-  <p class="status-line" id="status-line" role="status" aria-live="polite"></p>
-
-  <main id="main">
-    <div id="schedule-region"></div>
-  </main>
-
-  <footer class="site-footer">
-    <p id="footer-course"></p>
-    <p>Course schedule and daily prep guidance prepared by Dr. Sharilyn Rennie.</p>
-    <p>Generated by the Course Schedule Engine. The daily prep checklist is recommended, not graded.</p>
+  <footer class="course-footer">
+    <strong>How the week runs.</strong><br>
+    Each lecture week follows a four-day rhythm: Monday is a Success Tool session for concept framing, Tuesday is an Active Learning session (drawing, concept mapping, or similar), Wednesday is when the week's Unknown Case is worked in teams, and Thursday is the case presentation and TBL. Pre-work supporting each session lives on the companion pre-work page, linked from each day row.
+    <br><br>
+    <strong>Lab differs from lecture.</strong> The week's lab content is grouped by anatomical category and is tested on the following Monday's lab exam, regardless of how the lecture rhythm sequences the material. Not every lecture topic has a lab counterpart, and not every lab topic gets dedicated lecture time. Completed homework bundles are handed in at the start of each lab exam, before students enter.
+    <br><br>
+    <strong>Week 8 breaks the pattern.</strong> No patient case this week. Monday and Tuesday cover spinal cord and peripheral nerves, Wednesday is cumulative course integration and review, and Thursday runs the cumulative exams.
   </footer>
+</main>
 
-</div>
-
-<!-- =========================================================
-     SCHEDULE DATA, single source of truth.
-     The build script (build_schedule.py) replaces the contents
-     of this element when you update schedule-data.json or the
-     spreadsheet. You can also edit it here by hand.
-     ========================================================= -->
-<script id="schedule-data" type="application/json">
-{
-  "schemaVersion": "3.0",
-  "course": {
-    "code": "BIO 004",
-    "title": "Human Anatomy",
-    "institution": "Solano Community College",
-    "term": "Summer 2026",
-    "instructor": "Dr. Sharilyn Rennie",
-    "meetingPattern": "Monday through Thursday",
-    "format": "8-week summer intensive, in-person, Team-Based Learning",
-    "timezone": "America/Los_Angeles",
-    "isSampleData": true,
-    "spacedRecallUrl": "spaced-recall/index.html",
-    "slos": [
-      {
-        "code": "SLO-1",
-        "description": "Identify and describe anatomical structures of the human body using correct terminology."
-      },
-      {
-        "code": "SLO-2",
-        "description": "Locate structures across organ systems on models, specimens, and imaging."
-      },
-      {
-        "code": "SLO-3",
-        "description": "Describe the structural relationships between organs and systems."
-      },
-      {
-        "code": "SLO-4",
-        "description": "Apply anatomical knowledge to clinical and case-based scenarios."
-      },
-      {
-        "code": "SLO-5",
-        "description": "Demonstrate accurate anatomical drawing and synthesis from memory."
-      }
+<script>
+const weeks = [
+  {
+    number: 1,
+    dates: 'June 15 to 18',
+    startDate: '2026-06-15',
+    endDate: '2026-06-18',
+    weekTitle: 'Foundations and Integumentary System',
+    days: [
+      { day: 'Mon', activity: 'Orientation and Onboarding', descriptor: 'Course introduction, syllabus walkthrough, team formation, and tools setup' },
+      { day: 'Tue', activity: 'Active Learning', descriptor: 'Drawing or concept map applied to the case content' },
+      { day: 'Wed', activity: 'Run Case', descriptor: 'Work Unknown Case 1 in teams' },
+      { day: 'Thu', activity: 'Present Case', pill: 'tbl', descriptor: 'TBL and team presentations' }
     ],
-    "itemTypes": {
-      "lab-exam": "Lab Practical Exam",
-      "tbl": "Team-Based Learning"
+    labChecklist: {
+      examLabel: 'Tested in Lab Exam 1',
+      examDate: 'Monday, June 22',
+      topics: ['Foundations', 'Tissues', 'Integumentary']
     },
-    "totalPoints": 1060
+    caseOfWeek: 'Unknown Case 1. Work up the differential live in class. Present your reasoning at the weekly TBL Thursday.',
+    notes: 'Juneteenth weekend. No classes June 19 to 21.',
+    examBlock: null
   },
-  "weeks": [
-    {
-      "week": 1,
-      "theme": "Onboarding and Foundations",
-      "start": "2026-06-15",
-      "end": "2026-06-18",
-      "days": [
-        {
-          "date": "2026-06-15",
-          "weekday": "Monday",
-          "sessionType": "Onboarding",
-          "lecture": [
-            {
-              "label": "Onboarding"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Microscopy and Epithelial Tissues",
-              "url": "lab/microscopy-epithelial.html"
-            }
-          ],
-          "prework": "Intro to anatomy and cell anatomy. Introduction lab: body regions, planes, cavities, and abdominal quadrants.",
-          "items": []
-        },
-        {
-          "date": "2026-06-16",
-          "weekday": "Tuesday",
-          "sessionType": "Success Strategy",
-          "lecture": [
-            {
-              "label": "Success activities: How to Study Anatomy, team session"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Epithelial Tissue",
-              "url": "lab/epithelial-tissue.html"
-            },
-            {
-              "label": "Connective Tissue",
-              "url": "lab/connective-tissue.html"
-            }
-          ],
-          "prework": "Tissues.",
-          "items": []
-        },
-        {
-          "date": "2026-06-17",
-          "weekday": "Wednesday",
-          "sessionType": "Case",
-          "lecture": [
-            {
-              "label": "Work on your case with your team"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Muscle Tissue",
-              "url": "lab/muscle-tissue.html"
-            },
-            {
-              "label": "Nervous Tissue",
-              "url": "lab/nervous-tissue.html"
-            },
-            {
-              "label": "Blood Cells",
-              "url": "lab/blood-cells.html"
-            }
-          ],
-          "prework": "Integumentary and skin.",
-          "items": []
-        },
-        {
-          "date": "2026-06-18",
-          "weekday": "Thursday",
-          "sessionType": "TBL",
-          "lecture": [
-            {
-              "label": "TBL 1: Intro to Anatomy through Integumentary and Skin"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Skin and Integumentary",
-              "url": "lab/integumentary.html"
-            }
-          ],
-          "prework": "",
-          "items": [
-            {
-              "id": "tbl1",
-              "title": "TBL 1",
-              "type": "tbl",
-              "points": 60,
-              "due": "2026-06-18",
-              "covers": "Week 1",
-              "slo": [
-                "SLO-3",
-                "SLO-4"
-              ],
-              "note": "Includes the iRAT, the tRAT, and the team application activity. Covers intro to anatomy through integumentary and skin."
-            }
-          ]
-        }
-      ],
-      "weekend": {
-        "start": "2026-06-19",
-        "end": "2026-06-21",
-        "prework": [
-          "Daily spaced recall cards.",
-          "Self-directed study: practice labeling and study for the exam."
-        ],
-        "sunday": "Bone and bone tissue, bone growth."
-      }
-    },
-    {
-      "week": 2,
-      "theme": "Skeletal System",
-      "start": "2026-06-22",
-      "end": "2026-06-25",
-      "days": [
-        {
-          "date": "2026-06-22",
-          "weekday": "Monday",
-          "sessionType": "Lab Exam + Success Strategy",
-          "lecture": [
-            {
-              "label": "Success Topic"
-            },
-            {
-              "label": "TBL Self-Analysis"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Lab Exam 1: Intro, Tissues, and Integumentary"
-            }
-          ],
-          "prework": "Final review for Lab Exam 1.",
-          "items": [
-            {
-              "id": "labexam1",
-              "title": "Lab Exam 1",
-              "type": "lab-exam",
-              "points": 80,
-              "due": "2026-06-22",
-              "covers": "Week 1",
-              "slo": [
-                "SLO-1",
-                "SLO-2"
-              ],
-              "note": "Lab practical covering Week 1: intro to anatomy, tissues, and integumentary."
-            }
-          ]
-        },
-        {
-          "date": "2026-06-23",
-          "weekday": "Tuesday",
-          "sessionType": "Active Learning Activity",
-          "lecture": [
-            {
-              "label": "Active learning activity"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Bone Tissue",
-              "url": "lab/bone-tissue.html"
-            },
-            {
-              "label": "Bone Classification",
-              "url": "lab/bone-classification.html"
-            }
-          ],
-          "prework": "The axial skeleton.",
-          "items": []
-        },
-        {
-          "date": "2026-06-24",
-          "weekday": "Wednesday",
-          "sessionType": "Case",
-          "lecture": [
-            {
-              "label": "Work on your case with your team"
-            }
-          ],
-          "lab": [
-            {
-              "label": "The Axial Skeleton",
-              "url": "lab/axial-skeleton.html"
-            }
-          ],
-          "prework": "The appendicular skeleton.",
-          "items": []
-        },
-        {
-          "date": "2026-06-25",
-          "weekday": "Thursday",
-          "sessionType": "TBL",
-          "lecture": [
-            {
-              "label": "TBL 2: Skeletal System"
-            }
-          ],
-          "lab": [
-            {
-              "label": "The Appendicular Skeleton",
-              "url": "lab/appendicular-skeleton.html"
-            }
-          ],
-          "prework": "",
-          "items": [
-            {
-              "id": "tbl2",
-              "title": "TBL 2",
-              "type": "tbl",
-              "points": 60,
-              "due": "2026-06-25",
-              "covers": "Week 2",
-              "slo": [
-                "SLO-3",
-                "SLO-4"
-              ],
-              "note": "Includes the iRAT, the tRAT, and the team application activity."
-            }
-          ]
-        }
-      ],
-      "weekend": {
-        "start": "2026-06-26",
-        "end": "2026-06-28",
-        "prework": [
-          "Daily spaced recall cards.",
-          "Self-directed study and exam review."
-        ],
-        "sunday": "Joints and articulations."
-      }
-    },
-    {
-      "week": 3,
-      "theme": "Joints and the Muscular System",
-      "start": "2026-06-29",
-      "end": "2026-07-02",
-      "days": [
-        {
-          "date": "2026-06-29",
-          "weekday": "Monday",
-          "sessionType": "Lab Exam + Success Strategy",
-          "lecture": [
-            {
-              "label": "Success Topic"
-            },
-            {
-              "label": "TBL Self-Analysis"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Lab Exam 2: Skeletal System"
-            }
-          ],
-          "prework": "Final review for Lab Exam 2.",
-          "items": [
-            {
-              "id": "labexam2",
-              "title": "Lab Exam 2",
-              "type": "lab-exam",
-              "points": 80,
-              "due": "2026-06-29",
-              "covers": "Week 2",
-              "slo": [
-                "SLO-1",
-                "SLO-2"
-              ],
-              "note": "Lab practical covering Week 2: the skeletal system."
-            }
-          ]
-        },
-        {
-          "date": "2026-06-30",
-          "weekday": "Tuesday",
-          "sessionType": "Active Learning Activity",
-          "lecture": [
-            {
-              "label": "Active learning activity"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Articulations and Joints",
-              "url": "lab/joints.html"
-            }
-          ],
-          "prework": "Skeletal muscle structure.",
-          "items": []
-        },
-        {
-          "date": "2026-07-01",
-          "weekday": "Wednesday",
-          "sessionType": "Case",
-          "lecture": [
-            {
-              "label": "Work on your case with your team"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Skeletal Muscle Structure",
-              "url": "lab/muscle-structure.html"
-            }
-          ],
-          "prework": "Major muscle groups.",
-          "items": []
-        },
-        {
-          "date": "2026-07-02",
-          "weekday": "Thursday",
-          "sessionType": "TBL",
-          "lecture": [
-            {
-              "label": "TBL 3: Joints and Muscle"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Major Muscle Groups",
-              "url": "lab/muscle-groups.html"
-            }
-          ],
-          "prework": "",
-          "items": [
-            {
-              "id": "tbl3",
-              "title": "TBL 3",
-              "type": "tbl",
-              "points": 60,
-              "due": "2026-07-02",
-              "covers": "Week 3",
-              "slo": [
-                "SLO-3",
-                "SLO-4"
-              ],
-              "note": "Includes the iRAT, the tRAT, and the team application activity."
-            }
-          ]
-        }
-      ],
-      "weekend": {
-        "start": "2026-07-03",
-        "end": "2026-07-05",
-        "prework": [
-          "Daily spaced recall cards.",
-          "Self-directed study and exam review."
-        ],
-        "sunday": "Nervous tissue."
-      }
-    },
-    {
-      "week": 4,
-      "theme": "Nervous System I",
-      "start": "2026-07-06",
-      "end": "2026-07-09",
-      "days": [
-        {
-          "date": "2026-07-06",
-          "weekday": "Monday",
-          "sessionType": "Lab Exam + Success Strategy",
-          "lecture": [
-            {
-              "label": "Success Topic"
-            },
-            {
-              "label": "TBL Self-Analysis"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Lab Exam 3: Joints and the Muscular System"
-            }
-          ],
-          "prework": "Final review for Lab Exam 3.",
-          "items": [
-            {
-              "id": "labexam3",
-              "title": "Lab Exam 3",
-              "type": "lab-exam",
-              "points": 80,
-              "due": "2026-07-06",
-              "covers": "Week 3",
-              "slo": [
-                "SLO-1",
-                "SLO-2"
-              ],
-              "note": "Lab practical covering Week 3: joints and the muscular system."
-            }
-          ]
-        },
-        {
-          "date": "2026-07-07",
-          "weekday": "Tuesday",
-          "sessionType": "Active Learning Activity",
-          "lecture": [
-            {
-              "label": "Active learning activity"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Nervous Tissue",
-              "url": "lab/nervous-tissue.html"
-            }
-          ],
-          "prework": "The spinal cord and spinal nerves.",
-          "items": []
-        },
-        {
-          "date": "2026-07-08",
-          "weekday": "Wednesday",
-          "sessionType": "Case",
-          "lecture": [
-            {
-              "label": "Work on your case with your team"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Spinal Cord and Spinal Nerves",
-              "url": "lab/spinal-cord.html"
-            }
-          ],
-          "prework": "The brain.",
-          "items": []
-        },
-        {
-          "date": "2026-07-09",
-          "weekday": "Thursday",
-          "sessionType": "TBL",
-          "lecture": [
-            {
-              "label": "TBL 4: Nervous System I"
-            }
-          ],
-          "lab": [
-            {
-              "label": "The Brain",
-              "url": "lab/brain.html"
-            }
-          ],
-          "prework": "",
-          "items": [
-            {
-              "id": "tbl4",
-              "title": "TBL 4",
-              "type": "tbl",
-              "points": 60,
-              "due": "2026-07-09",
-              "covers": "Week 4",
-              "slo": [
-                "SLO-3",
-                "SLO-4"
-              ],
-              "note": "Includes the iRAT, the tRAT, and the team application activity."
-            }
-          ]
-        }
-      ],
-      "weekend": {
-        "start": "2026-07-10",
-        "end": "2026-07-12",
-        "prework": [
-          "Daily spaced recall cards.",
-          "Self-directed study and exam review."
-        ],
-        "sunday": "Cranial nerves and the autonomic nervous system."
-      }
-    },
-    {
-      "week": 5,
-      "theme": "Nervous System II, Senses, and Endocrine",
-      "start": "2026-07-13",
-      "end": "2026-07-16",
-      "days": [
-        {
-          "date": "2026-07-13",
-          "weekday": "Monday",
-          "sessionType": "Lab Exam + Success Strategy",
-          "lecture": [
-            {
-              "label": "Success Topic"
-            },
-            {
-              "label": "TBL Self-Analysis"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Lab Exam 4: Nervous System I"
-            }
-          ],
-          "prework": "Final review for Lab Exam 4.",
-          "items": [
-            {
-              "id": "labexam4",
-              "title": "Lab Exam 4",
-              "type": "lab-exam",
-              "points": 80,
-              "due": "2026-07-13",
-              "covers": "Week 4",
-              "slo": [
-                "SLO-1",
-                "SLO-2"
-              ],
-              "note": "Lab practical covering Week 4: nervous tissue and the central nervous system."
-            }
-          ]
-        },
-        {
-          "date": "2026-07-14",
-          "weekday": "Tuesday",
-          "sessionType": "Active Learning Activity",
-          "lecture": [
-            {
-              "label": "Active learning activity"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Cranial Nerves and the Autonomic Nervous System",
-              "url": "lab/cranial-nerves.html"
-            }
-          ],
-          "prework": "Special senses: the eye and the ear.",
-          "items": []
-        },
-        {
-          "date": "2026-07-15",
-          "weekday": "Wednesday",
-          "sessionType": "Case",
-          "lecture": [
-            {
-              "label": "Work on your case with your team"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Special Senses: Eye and Ear",
-              "url": "lab/special-senses.html"
-            }
-          ],
-          "prework": "Endocrine glands.",
-          "items": []
-        },
-        {
-          "date": "2026-07-16",
-          "weekday": "Thursday",
-          "sessionType": "TBL",
-          "lecture": [
-            {
-              "label": "TBL 5: Senses and Endocrine"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Endocrine Glands",
-              "url": "lab/endocrine.html"
-            }
-          ],
-          "prework": "",
-          "items": [
-            {
-              "id": "tbl5",
-              "title": "TBL 5",
-              "type": "tbl",
-              "points": 60,
-              "due": "2026-07-16",
-              "covers": "Week 5",
-              "slo": [
-                "SLO-3",
-                "SLO-4"
-              ],
-              "note": "Includes the iRAT, the tRAT, and the team application activity."
-            }
-          ]
-        }
-      ],
-      "weekend": {
-        "start": "2026-07-17",
-        "end": "2026-07-19",
-        "prework": [
-          "Daily spaced recall cards.",
-          "Self-directed study and exam review."
-        ],
-        "sunday": "The heart."
-      }
-    },
-    {
-      "week": 6,
-      "theme": "Cardiovascular and Lymphatic Systems",
-      "start": "2026-07-20",
-      "end": "2026-07-23",
-      "days": [
-        {
-          "date": "2026-07-20",
-          "weekday": "Monday",
-          "sessionType": "Lab Exam + Success Strategy",
-          "lecture": [
-            {
-              "label": "Success Topic"
-            },
-            {
-              "label": "TBL Self-Analysis"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Lab Exam 5: Nervous System II, Senses, and Endocrine"
-            }
-          ],
-          "prework": "Final review for Lab Exam 5.",
-          "items": [
-            {
-              "id": "labexam5",
-              "title": "Lab Exam 5",
-              "type": "lab-exam",
-              "points": 80,
-              "due": "2026-07-20",
-              "covers": "Week 5",
-              "slo": [
-                "SLO-1",
-                "SLO-2"
-              ],
-              "note": "Lab practical covering Week 5: peripheral nervous system, senses, and endocrine anatomy."
-            }
-          ]
-        },
-        {
-          "date": "2026-07-21",
-          "weekday": "Tuesday",
-          "sessionType": "Active Learning Activity",
-          "lecture": [
-            {
-              "label": "Active learning activity"
-            }
-          ],
-          "lab": [
-            {
-              "label": "The Heart",
-              "url": "lab/heart.html"
-            }
-          ],
-          "prework": "Blood vessels.",
-          "items": []
-        },
-        {
-          "date": "2026-07-22",
-          "weekday": "Wednesday",
-          "sessionType": "Case",
-          "lecture": [
-            {
-              "label": "Work on your case with your team"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Blood Vessels",
-              "url": "lab/blood-vessels.html"
-            }
-          ],
-          "prework": "The lymphatic system.",
-          "items": []
-        },
-        {
-          "date": "2026-07-23",
-          "weekday": "Thursday",
-          "sessionType": "TBL",
-          "lecture": [
-            {
-              "label": "TBL 6: Cardiovascular and Lymphatic"
-            }
-          ],
-          "lab": [
-            {
-              "label": "The Lymphatic System",
-              "url": "lab/lymphatic.html"
-            }
-          ],
-          "prework": "",
-          "items": [
-            {
-              "id": "tbl6",
-              "title": "TBL 6",
-              "type": "tbl",
-              "points": 60,
-              "due": "2026-07-23",
-              "covers": "Week 6",
-              "slo": [
-                "SLO-3",
-                "SLO-4"
-              ],
-              "note": "Includes the iRAT, the tRAT, and the team application activity."
-            }
-          ]
-        }
-      ],
-      "weekend": {
-        "start": "2026-07-24",
-        "end": "2026-07-26",
-        "prework": [
-          "Daily spaced recall cards.",
-          "Self-directed study and exam review."
-        ],
-        "sunday": "The respiratory system."
-      }
-    },
-    {
-      "week": 7,
-      "theme": "Respiratory and Digestive Systems",
-      "start": "2026-07-27",
-      "end": "2026-07-30",
-      "days": [
-        {
-          "date": "2026-07-27",
-          "weekday": "Monday",
-          "sessionType": "Lab Exam + Success Strategy",
-          "lecture": [
-            {
-              "label": "Success Topic"
-            },
-            {
-              "label": "TBL Self-Analysis"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Lab Exam 6: Cardiovascular and Lymphatic Systems"
-            }
-          ],
-          "prework": "Final review for Lab Exam 6.",
-          "items": [
-            {
-              "id": "labexam6",
-              "title": "Lab Exam 6",
-              "type": "lab-exam",
-              "points": 80,
-              "due": "2026-07-27",
-              "covers": "Week 6",
-              "slo": [
-                "SLO-1",
-                "SLO-2"
-              ],
-              "note": "Lab practical covering Week 6: cardiovascular and lymphatic systems."
-            }
-          ]
-        },
-        {
-          "date": "2026-07-28",
-          "weekday": "Tuesday",
-          "sessionType": "Active Learning Activity",
-          "lecture": [
-            {
-              "label": "Active learning activity"
-            }
-          ],
-          "lab": [
-            {
-              "label": "The Respiratory System",
-              "url": "lab/respiratory.html"
-            }
-          ],
-          "prework": "The digestive tract.",
-          "items": []
-        },
-        {
-          "date": "2026-07-29",
-          "weekday": "Wednesday",
-          "sessionType": "Case",
-          "lecture": [
-            {
-              "label": "Work on your case with your team"
-            }
-          ],
-          "lab": [
-            {
-              "label": "The Digestive Tract",
-              "url": "lab/digestive-tract.html"
-            }
-          ],
-          "prework": "Accessory digestive organs.",
-          "items": []
-        },
-        {
-          "date": "2026-07-30",
-          "weekday": "Thursday",
-          "sessionType": "TBL",
-          "lecture": [
-            {
-              "label": "TBL 7: Respiratory and Digestive"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Accessory Digestive Organs",
-              "url": "lab/accessory-digestive.html"
-            }
-          ],
-          "prework": "",
-          "items": [
-            {
-              "id": "tbl7",
-              "title": "TBL 7",
-              "type": "tbl",
-              "points": 60,
-              "due": "2026-07-30",
-              "covers": "Week 7",
-              "slo": [
-                "SLO-3",
-                "SLO-4"
-              ],
-              "note": "Includes the iRAT, the tRAT, and the team application activity."
-            }
-          ]
-        }
-      ],
-      "weekend": {
-        "start": "2026-07-31",
-        "end": "2026-08-02",
-        "prework": [
-          "Daily spaced recall cards.",
-          "Self-directed study and exam review."
-        ],
-        "sunday": "The urinary system."
-      }
-    },
-    {
-      "week": 8,
-      "theme": "Urinary and Reproductive Systems",
-      "start": "2026-08-03",
-      "end": "2026-08-06",
-      "days": [
-        {
-          "date": "2026-08-03",
-          "weekday": "Monday",
-          "sessionType": "Lab Exam + Success Strategy",
-          "lecture": [
-            {
-              "label": "Success Topic"
-            },
-            {
-              "label": "TBL Self-Analysis"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Lab Exam 7: Respiratory and Digestive Systems"
-            }
-          ],
-          "prework": "Final review for Lab Exam 7.",
-          "items": [
-            {
-              "id": "labexam7",
-              "title": "Lab Exam 7",
-              "type": "lab-exam",
-              "points": 80,
-              "due": "2026-08-03",
-              "covers": "Week 7",
-              "slo": [
-                "SLO-1",
-                "SLO-2"
-              ],
-              "note": "Lab practical covering Week 7: respiratory and digestive systems."
-            }
-          ]
-        },
-        {
-          "date": "2026-08-04",
-          "weekday": "Tuesday",
-          "sessionType": "Active Learning Activity",
-          "lecture": [
-            {
-              "label": "Active learning activity"
-            }
-          ],
-          "lab": [
-            {
-              "label": "The Urinary System",
-              "url": "lab/urinary.html"
-            }
-          ],
-          "prework": "The reproductive system.",
-          "items": []
-        },
-        {
-          "date": "2026-08-05",
-          "weekday": "Wednesday",
-          "sessionType": "Case",
-          "lecture": [
-            {
-              "label": "Work on your case with your team"
-            }
-          ],
-          "lab": [
-            {
-              "label": "The Reproductive System",
-              "url": "lab/reproductive.html"
-            }
-          ],
-          "prework": "Final review for Lab Exam 8.",
-          "items": []
-        },
-        {
-          "date": "2026-08-06",
-          "weekday": "Thursday",
-          "sessionType": "Lab Exam",
-          "lecture": [
-            {
-              "label": "Comprehensive review and course wrap-up"
-            }
-          ],
-          "lab": [
-            {
-              "label": "Lab Exam 8: Urinary and Reproductive Systems"
-            }
-          ],
-          "prework": "",
-          "items": [
-            {
-              "id": "labexam8",
-              "title": "Lab Exam 8",
-              "type": "lab-exam",
-              "points": 80,
-              "due": "2026-08-06",
-              "covers": "Week 8",
-              "slo": [
-                "SLO-1",
-                "SLO-2",
-                "SLO-5"
-              ],
-              "note": "Final lab practical covering Week 8: urinary and reproductive systems."
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "spacedRepetition": {
-    "intervalsDays": [
-      1,
-      3,
-      8,
-      21
+  {
+    number: 2,
+    dates: 'June 22 to 25',
+    startDate: '2026-06-22',
+    endDate: '2026-06-25',
+    weekTitle: 'Skeletal: Axial and Appendicular, Joints, and Muscle Microanatomy',
+    days: [
+      { day: 'Mon', activity: 'Success Tool', descriptor: 'Concept framing and study prompt for the week\u2019s case' },
+      { day: 'Tue', activity: 'Active Learning', descriptor: 'Drawing or concept map applied to the case content' },
+      { day: 'Wed', activity: 'Run Case', descriptor: 'Work Unknown Case 2 in teams' },
+      { day: 'Thu', activity: 'Present Case', pill: 'tbl', descriptor: 'TBL and team presentations' }
     ],
-    "note": "Review offsets, in days, after a topic is first taught."
+    labChecklist: {
+      examLabel: 'Tested in Lab Exam 2',
+      examDate: 'Monday, June 29',
+      topics: ['Bone Microanatomy', 'Axial Skeleton', 'Appendicular Skeleton', 'Joints', 'Muscle Microanatomy']
+    },
+    caseOfWeek: 'Unknown Case 2. Work up the differential live in class. Present your reasoning at the weekly TBL Thursday.',
+    notes: null,
+    examBlock: {
+      label: 'Lab Exam 1',
+      title: 'Lab Exam 1',
+      detail: 'Covers Week 1: Foundations, Tissues, Integumentary. 50 minutes, 25 stations, 2 questions per station.',
+      day: 'Monday, June 22'
+    }
+  },
+  {
+    number: 3,
+    dates: 'June 29 to July 2',
+    startDate: '2026-06-29',
+    endDate: '2026-07-02',
+    weekTitle: 'Cardiovascular, Blood, Respiratory, and Regional BV/N 1',
+    days: [
+      { day: 'Mon', activity: 'Success Tool', descriptor: 'Concept framing and study prompt for the week\u2019s case' },
+      { day: 'Tue', activity: 'Active Learning', descriptor: 'Drawing or concept map applied to the case content' },
+      { day: 'Wed', activity: 'Run Case', descriptor: 'Work Unknown Case 3 in teams' },
+      { day: 'Thu', activity: 'Present Case', pill: 'tbl', descriptor: 'TBL and team presentations' }
+    ],
+    labChecklist: {
+      examLabel: 'Tested in Lab Exam 3',
+      examDate: 'Monday, July 6',
+      topics: ['Cardiovascular', 'Blood', 'Respiratory', 'Regional BV/N 1']
+    },
+    caseOfWeek: 'Unknown Case 3. Work up the differential live in class. Present your reasoning at the weekly TBL Thursday.',
+    notes: 'Independence Day observed Friday, July 3.',
+    examBlock: {
+      label: 'Lab Exam 2',
+      title: 'Lab Exam 2',
+      detail: 'Covers Week 2: Bone Microanatomy, Axial Skeleton, Appendicular Skeleton, Joints, Muscle Microanatomy. 50 minutes, 25 stations, 2 questions per station.',
+      day: 'Monday, June 29'
+    }
+  },
+  {
+    number: 4,
+    dates: 'July 6 to 9',
+    startDate: '2026-07-06',
+    endDate: '2026-07-09',
+    weekTitle: 'Upper Extremity and Thoracic Muscles, Lymphatic, and Regional BV/N 2',
+    days: [
+      { day: 'Mon', activity: 'Success Tool', descriptor: 'Concept framing and study prompt for the week\u2019s case' },
+      { day: 'Tue', activity: 'Active Learning', descriptor: 'Drawing or concept map applied to the case content' },
+      { day: 'Wed', activity: 'Run Case', descriptor: 'Work Unknown Case 4 in teams' },
+      { day: 'Thu', activity: 'Present Case', pill: 'tbl', descriptor: 'TBL and team presentations' }
+    ],
+    labChecklist: {
+      examLabel: 'Tested in Lab Exam 4',
+      examDate: 'Monday, July 13',
+      topics: ['Thoracic and Back Muscles', 'Upper Extremity Muscles', 'Lymphatic and Immune', 'Regional BV/N 2']
+    },
+    caseOfWeek: 'Unknown Case 4. Work up the differential live in class. Present your reasoning at the weekly TBL Thursday.',
+    notes: null,
+    examBlock: {
+      label: 'Lab Exam 3',
+      title: 'Lab Exam 3',
+      detail: 'Covers Week 3: Cardiovascular, Blood, Respiratory, Regional BV/N 1. 50 minutes, 25 stations, 2 questions per station.',
+      day: 'Monday, July 6'
+    }
+  },
+  {
+    number: 5,
+    dates: 'July 13 to 16',
+    startDate: '2026-07-13',
+    endDate: '2026-07-16',
+    weekTitle: 'Digestive System, Abdominal and Pelvic Regional Anatomy, and Regional BV/N 3',
+    days: [
+      { day: 'Mon', activity: 'Success Tool', descriptor: 'Concept framing and study prompt for the week\u2019s case' },
+      { day: 'Tue', activity: 'Active Learning', descriptor: 'Drawing or concept map applied to the case content' },
+      { day: 'Wed', activity: 'Run Case', descriptor: 'Work Unknown Case 5 in teams' },
+      { day: 'Thu', activity: 'Present Case', pill: 'tbl', descriptor: 'TBL and team presentations' }
+    ],
+    labChecklist: {
+      examLabel: 'Tested in Lab Exam 5',
+      examDate: 'Monday, July 20',
+      topics: ['Digestive System', 'Abdominal and Pelvic Wall', 'Lower Extremity Muscles', 'Regional BV/N 3']
+    },
+    caseOfWeek: 'Unknown Case 5. Work up the differential live in class. Present your reasoning at the weekly TBL Thursday.',
+    notes: null,
+    examBlock: {
+      label: 'Lab Exam 4',
+      title: 'Lab Exam 4',
+      detail: 'Covers Week 4: Thoracic and Back Muscles, Upper Extremity Muscles, Lymphatic and Immune, Regional BV/N 2. 50 minutes, 25 stations, 2 questions per station.',
+      day: 'Monday, July 13'
+    }
+  },
+  {
+    number: 6,
+    dates: 'July 20 to 23',
+    startDate: '2026-07-20',
+    endDate: '2026-07-23',
+    weekTitle: 'Urinary, Reproductive, and Endocrine Systems',
+    days: [
+      { day: 'Mon', activity: 'Success Tool', descriptor: 'Concept framing and study prompt for the week\u2019s case' },
+      { day: 'Tue', activity: 'Active Learning', descriptor: 'Drawing or concept map applied to the case content' },
+      { day: 'Wed', activity: 'Run Case', descriptor: 'Work Unknown Case 6 in teams' },
+      { day: 'Thu', activity: 'Present Case', pill: 'tbl', descriptor: 'TBL and team presentations' }
+    ],
+    labChecklist: {
+      examLabel: 'Tested in Lab Exam 6',
+      examDate: 'Monday, July 27',
+      topics: ['Urinary', 'Reproductive', 'Endocrine']
+    },
+    caseOfWeek: 'Unknown Case 6. Work up the differential live in class. Present your reasoning at the weekly TBL Thursday.',
+    notes: null,
+    examBlock: {
+      label: 'Lab Exam 5',
+      title: 'Lab Exam 5',
+      detail: 'Covers Week 5: Digestive System, Abdominal and Pelvic Wall, Lower Extremity Muscles, Regional BV/N 3. 50 minutes, 25 stations, 2 questions per station.',
+      day: 'Monday, July 20'
+    }
+  },
+  {
+    number: 7,
+    dates: 'July 27 to 30',
+    startDate: '2026-07-27',
+    endDate: '2026-07-30',
+    weekTitle: 'Nervous: Head and Neck Muscles, CNS Brain, CSF, and Meninges',
+    days: [
+      { day: 'Mon', activity: 'Success Tool', descriptor: 'Concept framing and study prompt for the week\u2019s case' },
+      { day: 'Tue', activity: 'Active Learning', descriptor: 'Drawing or concept map applied to the case content' },
+      { day: 'Wed', activity: 'Run Case', descriptor: 'Work Unknown Case 7 in teams' },
+      { day: 'Thu', activity: 'Present Case', pill: 'tbl', descriptor: 'TBL and team presentations' }
+    ],
+    labChecklist: {
+      examLabel: 'Tested in Lab Exam 7',
+      examDate: 'Monday, August 3',
+      topics: ['CNS Brain', 'Ventricles, CSF, Meninges', 'Head and Neck Muscles']
+    },
+    caseOfWeek: 'Unknown Case 7. Work up the differential live in class. Present your reasoning at the weekly TBL Thursday.',
+    notes: null,
+    examBlock: {
+      label: 'Lab Exam 6',
+      title: 'Lab Exam 6',
+      detail: 'Covers Week 6: Urinary, Reproductive, Endocrine. 50 minutes, 25 stations, 2 questions per station.',
+      day: 'Monday, July 27'
+    }
+  },
+  {
+    number: 8,
+    dates: 'August 3 to 6',
+    startDate: '2026-08-03',
+    endDate: '2026-08-06',
+    weekTitle: 'Nervous: Spinal Cord, Peripheral and Cranial Nerves, Plexuses, and Integration',
+    noCase: true,
+    days: [
+      { day: 'Mon', activity: 'Lecture and lab', descriptor: 'Spinal cord and spinal nerves. Lab Exam 7 in the afternoon.' },
+      { day: 'Tue', activity: 'Lecture and lab', descriptor: 'Peripheral nerves and plexuses (brachial, lumbar, sacral)' },
+      { day: 'Wed', activity: 'Integration and review', descriptor: 'Cranial nerves; autonomic nervous system; cumulative course review' },
+      { day: 'Thu', activity: 'Cumulative Exams', pill: 'exam', descriptor: 'Cumulative Lab Exam followed by Cumulative Lecture Exam' }
+    ],
+    labChecklist: null,
+    caseOfWeek: null,
+    notes: 'Last day of term Thursday, August 6. No patient case this week; integration and cumulative assessment only.',
+    examBlock: {
+      label: 'Lab Exam 7',
+      title: 'Lab Exam 7',
+      detail: 'Covers Week 7: CNS Brain, Ventricles, CSF, Meninges, Head and Neck Muscles. 50 minutes, 25 stations, 2 questions per station.',
+      day: 'Monday, August 3'
+    }
   }
+];
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
-</script>
 
-<script>
 /* ============================================================
-   COURSE SCHEDULE ENGINE, browser runtime.
-   Reads the JSON above and renders four views, plus exports.
-   No external libraries, no network calls, no stored data.
+   DATE LOGIC
    ============================================================ */
-(function(){
-  "use strict";
+const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const DAY_NAMES_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-  var DATA = JSON.parse(document.getElementById("schedule-data").textContent);
-  var COURSE = DATA.course;
-  var WEEKS = DATA.weeks;
-  var TYPES = COURSE.itemTypes || {};
-  var EXAM_TYPES = { "lab-exam":1 };
+function parseLocalDate(isoStr) {
+  const parts = isoStr.split('-');
+  return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+}
 
-  /* ---- Date helpers, all local time, no timezone drift ---- */
-  var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  var MONTHS_LONG = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-  var WD = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+function startOfToday() {
+  const t = new Date();
+  t.setHours(0, 0, 0, 0);
+  return t;
+}
 
-  function parseISO(s){ var p = s.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
-  function toISO(d){
-    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
-  }
-  function addDays(iso, n){ var d = parseISO(iso); d.setDate(d.getDate()+n); return toISO(d); }
-  function dayDiff(isoA, isoB){
-    return Math.round((parseISO(isoB) - parseISO(isoA)) / 86400000);
-  }
-  function fmtShort(iso){ var d = parseISO(iso); return WD[d.getDay()] + ", " + MONTHS[d.getMonth()] + " " + d.getDate(); }
-  function fmtLong(iso){ var d = parseISO(iso); return MONTHS_LONG[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear(); }
-  function fmtRange(a, b){
-    var da = parseISO(a), db = parseISO(b);
-    if(da.getMonth() === db.getMonth()){
-      return MONTHS[da.getMonth()] + " " + da.getDate() + " to " + db.getDate();
-    }
-    return MONTHS[da.getMonth()] + " " + da.getDate() + " to " + MONTHS[db.getMonth()] + " " + db.getDate();
-  }
-  function todayISO(){ var d = new Date(); return toISO(d); }
+function formatLongDate(d) {
+  return DAY_NAMES_LONG[d.getDay()] + ', ' + MONTH_NAMES[d.getMonth()] + ' ' + d.getDate();
+}
 
-  /* ---- Flatten data for convenience ---- */
-  var ALL_DAYS = [];
-  var ALL_ITEMS = [];
-  WEEKS.forEach(function(w){
-    w.days.forEach(function(day){
-      var rec = { week:w.week, weekTheme:w.theme, day:day };
-      ALL_DAYS.push(rec);
-      (day.items || []).forEach(function(it){
-        ALL_ITEMS.push({ item:it, date:day.date, week:w.week, weekTheme:w.theme, sessionType:day.sessionType });
-      });
-    });
-  });
-  ALL_ITEMS.sort(function(a,b){ return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+function daysBetween(a, b) {
+  return Math.round((b.getTime() - a.getTime()) / 86400000);
+}
 
-  var TOTAL_POINTS = ALL_ITEMS.reduce(function(s,r){ return s + (r.item.points||0); }, 0);
-  var EXAM_COUNT = ALL_ITEMS.filter(function(r){ return EXAM_TYPES[r.item.type]; }).length;
-  var COURSE_START = WEEKS[0].start;
-  var COURSE_END = WEEKS[WEEKS.length-1].end;
+function computeNow(weeks) {
+  const today = startOfToday();
+  const firstStart = parseLocalDate(weeks[0].startDate);
+  const lastEnd = parseLocalDate(weeks[weeks.length - 1].endDate);
 
-  /* ---- State ---- */
-  var state = { view:"thisweek", prep:true, weekIndex:0 };
+  let currentWeek = null;
+  let nextWeek = null;
 
-  /* ---- Small HTML helpers ---- */
-  function esc(s){
-    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-  }
-  function isExam(it){ return !!EXAM_TYPES[it.type]; }
-  function typeLabel(it){ return TYPES[it.type] || it.type; }
-
-  /* ---- Day state relative to today ---- */
-  function dayState(iso){
-    var t = todayISO();
-    if(iso < t) return "past";
-    if(iso === t) return "today";
-    return "future";
-  }
-
-  /* ---- Split-color heading, navy first word, terra remainder ---- */
-  function splitHeading(text){
-    var sp = text.indexOf(" ");
-    if(sp < 0) return '<span class="split-a">' + esc(text) + '</span>';
-    return '<span class="split-a">' + esc(text.slice(0, sp)) + '</span> '
-      + '<span class="split-b">' + esc(text.slice(sp + 1)) + '</span>';
-  }
-  /* ---- Split-color heading for a week, navy "Week N", terra theme ---- */
-  function splitWeek(prefix, theme){
-    return '<span class="split-a">' + esc(prefix) + '</span>'
-      + '<span class="split-b">: ' + esc(theme) + '</span>';
-  }
-  /* ---- A numbered week header, big terra numeral plus a split-color title ---- */
-  function pad2(n){ return ("0" + n).slice(-2); }
-  function weekHeadHTML(numStr, prefix, theme){
-    return '<h3 class="week-head">'
-      + '<span class="week-num" aria-hidden="true">' + esc(numStr) + '</span>'
-      + '<span class="week-title">' + splitWeek(prefix, theme) + '</span></h3>';
-  }
-
-  /* ---- Render: one graded item ---- */
-  function itemHTML(it){
-    var exam = isExam(it);
-    var slo = (it.slo||[]).join(", ");
-    var meta = '<span class="gi-due">Due ' + esc(fmtShort(it.due)) + '</span>'
-             + '<span class="gi-points">' + esc(it.points) + ' pts</span>'
-             + (it.covers ? '<span class="gi-slo">Covers ' + esc(it.covers) + '</span>' : '')
-             + (slo ? '<span class="gi-slo">' + esc(slo) + '</span>' : '');
-    return '<div class="graded-item' + (exam ? ' exam' : '') + '">'
-      + '<div class="gi-top">'
-      + '<span class="gi-type ' + (exam ? 'type-exam' : 'type-graded') + '">' + esc(typeLabel(it)) + '</span>'
-      + '<span class="gi-title">' + esc(it.title) + '</span>'
-      + '</div>'
-      + '<div class="gi-meta">' + meta + '</div>'
-      + (it.note ? '<p class="gi-note">' + esc(it.note) + '</p>' : '')
-      + '</div>';
-  }
-
-  /* ---- A link, internal links open the top frame, external open a new tab ---- */
-  function extLink(url, label){
-    var ext = /^https?:\/\//i.test(url);
-    return '<a href="' + esc(url) + '"'
-      + (ext ? ' target="_blank" rel="noopener"' : ' target="_top"')
-      + '>' + esc(label) + '</a>';
-  }
-
-  /* ---- New spaced-recall cards seed on class days with non-exam lab content ---- */
-  function hasNewCards(day){
-    if(!day.lab || !day.lab.length) return false;
-    return !(day.items||[]).some(isExam);
-  }
-
-  /* ---- Render: a Lecture or Lab track ---- */
-  function trackHTML(label, list){
-    if(!list || !list.length) return "";
-    return '<div class="day-track"><p class="track-label">' + esc(label) + '</p>'
-      + '<ul class="track-list">'
-      + list.map(function(x){
-          return '<li>' + (x.url ? extLink(x.url, x.label) : esc(x.label)) + '</li>';
-        }).join("")
-      + '</ul></div>';
-  }
-
-  /* ---- The today ribbon, a navy bar with a gold arrow ---- */
-  function todayRibbon(text){
-    return '<div class="today-ribbon"><span class="today-arrow" aria-hidden="true">&#9654;</span>'
-      + '<span>' + esc(text) + '</span></div>';
-  }
-
-  /* ---- Render: the daily prep checklist, prework and spaced recall ---- */
-  function prepHTML(day){
-    var groups = "";
-
-    if(day.prework){
-      groups += '<div class="prep-group"><p class="prep-group-label">Nightly prework</p><ul>'
-        + '<li><span class="prep-gated">' + esc(day.prework) + '</span>'
-        + '<span class="prep-lock">unlocks after the video</span></li>'
-        + '</ul></div>';
-    }
-
-    var recallUrl = COURSE.spacedRecallUrl;
-    function recallItem(label){
-      return '<li>' + (recallUrl ? extLink(recallUrl, label) : esc(label)) + '</li>';
-    }
-    var recall = "";
-    if(day.date !== COURSE_START){
-      recall += recallItem("Daily review, every card due today");
-    }
-    if(hasNewCards(day)){
-      recall += recallItem("New cards from today's lab");
-    }
-    if(recall){
-      groups += '<div class="prep-group"><p class="prep-group-label">Spaced recall</p><ul>'
-        + recall + '</ul></div>';
-    }
-
-    if(!groups) return "";
-    return '<div class="prep">'
-      + '<p class="prep-intro">Daily prep, recommended and not graded. A good place to start.</p>'
-      + groups + '</div>';
-  }
-
-  /* ---- Render: one day card ---- */
-  function dayCardHTML(day, headingLevel){
-    var hasExam = (day.items||[]).some(isExam);
-    var st = dayState(day.date);
-    var cls = "day-card";
-    if(hasExam) cls += " is-exam";
-    if(st === "today") cls += " is-today";
-    else if(st === "past") cls += " is-past";
-
-    var ribbon = (st === "today")
-      ? todayRibbon("Today &middot; " + day.weekday + ", " + fmtShort(day.date))
-      : "";
-    var tag = (st === "past") ? '<span class="day-state-tag tag-done">Done</span>' : "";
-
-    var hl = headingLevel || "h4";
-    var session = day.sessionType || "Class Day";
-
-    var graded = "";
-    if(day.items && day.items.length){
-      graded = '<p class="day-section-label">Graded, counts for points</p>'
-        + '<div class="graded-list">' + day.items.map(itemHTML).join("") + '</div>';
-    }
-
-    var prep = state.prep ? prepHTML(day) : "";
-
-    return '<article class="' + cls + '" aria-label="' + esc(day.weekday + " " + fmtShort(day.date)
-        + ", " + session + (st === "today" ? ", today" : "")) + '">'
-      + ribbon
-      + '<div class="day-head">'
-      + '<span class="day-date">' + esc(day.weekday) + ' &middot; ' + esc(fmtShort(day.date)) + '</span>'
-      + tag + '</div>'
-      + '<' + hl + ' class="day-session">' + esc(session) + '</' + hl + '>'
-      + trackHTML("Lecture", day.lecture)
-      + trackHTML("Lab", day.lab)
-      + graded + prep
-      + '</article>';
-  }
-
-  /* ---- Render: the weekend card, shown only when the prep checklist is on ---- */
-  function weekendCardHTML(wk, headingLevel){
-    var we = wk.weekend;
-    if(!we || !state.prep) return "";
-    var t = todayISO();
-    var st = (t >= we.start && t <= we.end) ? "today"
-           : (t > we.end) ? "past" : "future";
-    var cls = "weekend-card";
-    if(st === "today") cls += " is-today";
-    else if(st === "past") cls += " is-past";
-    var hl = headingLevel || "h4";
-
-    var ribbon = (st === "today") ? todayRibbon("This weekend") : "";
-    var tag = (st === "past") ? '<span class="day-state-tag tag-done">Done</span>' : "";
-
-    var groups = "";
-    if(we.prework && we.prework.length){
-      groups += '<div class="prep-group"><p class="prep-group-label">Weekend prework</p><ul>'
-        + we.prework.map(function(p){ return '<li><span class="prep-gated">' + esc(p) + '</span></li>'; }).join("")
-        + '</ul></div>';
-    }
-    if(we.sunday){
-      groups += '<div class="prep-group"><p class="prep-group-label">Sunday prework</p><ul>'
-        + '<li><span class="prep-gated">' + esc(we.sunday) + '</span></li></ul></div>';
-    }
-    var recallUrl = COURSE.spacedRecallUrl;
-    groups += '<div class="prep-group"><p class="prep-group-label">Spaced recall</p><ul><li>'
-      + (recallUrl ? extLink(recallUrl, "Daily review, every card due today")
-                   : esc("Daily review, every card due today"))
-      + '</li></ul></div>';
-
-    return '<article class="' + cls + '" aria-label="' + esc("Weekend, " + fmtRange(we.start, we.end)
-        + (st === "today" ? ", this weekend" : "")) + '">'
-      + ribbon
-      + '<div class="day-head"><span class="day-date">Weekend &middot; '
-      + esc(fmtRange(we.start, we.end)) + '</span>' + tag + '</div>'
-      + '<' + hl + ' class="day-session">Weekend Prep</' + hl + '>'
-      + '<div class="prep">' + groups + '</div>'
-      + '</article>';
-  }
-
-  /* ---- Render: a full week block ---- */
-  function weekBlockHTML(w, dayHeading){
-    var days = w.days.map(function(d){ return dayCardHTML(d, dayHeading); }).join("");
-    return '<section class="week-block">'
-      + weekHeadHTML(pad2(w.week), "Week " + w.week, w.theme)
-      + '<p class="week-dates">' + esc(fmtRange(w.start, w.end)) + '</p>'
-      + '<div class="day-grid">' + days + '</div>'
-      + weekendCardHTML(w, dayHeading)
-      + '</section>';
-  }
-
-  /* ---- VIEW: full schedule ---- */
-  function renderFull(){
-    var blocks = WEEKS.map(function(w){ return weekBlockHTML(w, "h4"); }).join("");
-    return '<h2 class="view-head" id="view-heading" tabindex="-1">' + splitHeading("Full Course Schedule") + '</h2>'
-      + '<p class="view-sub">All ' + WEEKS.length + ' weeks. ' + ALL_ITEMS.length + ' graded items, ' + TOTAL_POINTS + ' points total.</p>'
-      + blocks;
-  }
-
-  /* ---- VIEW: weekly ---- */
-  function renderWeekly(){
-    var i = state.weekIndex;
-    if(i < 0) i = 0;
-    if(i > WEEKS.length-1) i = WEEKS.length-1;
-    state.weekIndex = i;
-    var w = WEEKS[i];
-
-    var options = WEEKS.map(function(ww, idx){
-      return '<option value="' + idx + '"' + (idx===i?' selected':'') + '>Week ' + ww.week + ': ' + esc(ww.theme) + '</option>';
-    }).join("");
-
-    var nav = '<div class="week-nav">'
-      + '<button type="button" class="btn btn-secondary" id="wk-prev"' + (i===0?' disabled':'') + '>Previous week</button>'
-      + '<label class="sr-only" for="wk-picker">Jump to a week</label>'
-      + '<select class="picker" id="wk-picker">' + options + '</select>'
-      + '<button type="button" class="btn btn-secondary" id="wk-next"' + (i===WEEKS.length-1?' disabled':'') + '>Next week</button>'
-      + '</div>';
-
-    var days = w.days.map(function(d){ return dayCardHTML(d, "h3"); }).join("");
-    var wkItems = w.days.reduce(function(s,d){ return s + (d.items?d.items.length:0); }, 0);
-    var wkPts = w.days.reduce(function(s,d){ return s + (d.items||[]).reduce(function(a,it){return a+it.points;},0); }, 0);
-
-    return '<h2 class="view-head" id="view-heading" tabindex="-1">' + splitWeek("Week " + w.week, w.theme) + '</h2>'
-      + '<p class="view-sub">' + esc(fmtRange(w.start, w.end)) + '. ' + wkItems + ' graded item' + (wkItems===1?'':'s') + ' this week, ' + wkPts + ' points.</p>'
-      + nav
-      + '<div class="day-grid">' + days + '</div>'
-      + weekendCardHTML(w, "h3");
-  }
-
-  /* ---- VIEW: this week / due now ---- */
-  function findContext(){
-    var t = todayISO();
-    if(t < COURSE_START) return { state:"before", until:dayDiff(t, COURSE_START) };
-    if(t > COURSE_END) return { state:"after" };
-    for(var i=0;i<WEEKS.length;i++){
-      if(t >= WEEKS[i].start && t <= WEEKS[i].end) return { state:"during", weekIndex:i };
-    }
-    /* In a gap between weeks, point at the next week. */
-    for(var j=0;j<WEEKS.length;j++){
-      if(WEEKS[j].start > t) return { state:"gap", weekIndex:j };
-    }
-    return { state:"after" };
-  }
-
-  function dueWindowHTML(fromISO, toISO_){
-    var rows = ALL_ITEMS.filter(function(r){ return r.date >= fromISO && r.date <= toISO_; });
-    if(!rows.length) return '<p>No graded items are due in this window.</p>';
-    return '<ul>' + rows.map(function(r){
-      return '<li><strong>' + esc(fmtShort(r.date)) + ':</strong> ' + esc(r.item.title)
-        + ' (' + r.item.points + ' pts)</li>';
-    }).join("") + '</ul>';
-  }
-
-  function renderThisWeek(){
-    var ctx = findContext();
-    var t = todayISO();
-    var html = '<h2 class="view-head" id="view-heading" tabindex="-1">' + splitHeading("This Week") + '</h2>';
-
-    if(ctx.state === "before"){
-      var firstWeek = WEEKS[0];
-      html += '<p class="view-sub">A focused view of what to do right now.</p>'
-        + '<div class="tw-banner">'
-        + '<h3>' + COURSE.code + ' starts in ' + ctx.until + ' day' + (ctx.until===1?'':'s') + '</h3>'
-        + '<p>First class meeting is ' + esc(fmtLong(COURSE_START)) + '. Here is the whole course at a glance, and what Week 1 looks like.</p>'
-        + '<div class="tw-stats">'
-        + '<span class="tw-stat"><span class="num">' + WEEKS.length + '</span><span class="lbl">Weeks</span></span>'
-        + '<span class="tw-stat"><span class="num">' + ALL_ITEMS.length + '</span><span class="lbl">Graded items</span></span>'
-        + '<span class="tw-stat"><span class="num">' + EXAM_COUNT + '</span><span class="lbl">Exams</span></span>'
-        + '<span class="tw-stat"><span class="num">' + TOTAL_POINTS + '</span><span class="lbl">Total points</span></span>'
-        + '</div>'
-        + '<div class="due-soon"><h4>Due your first week of class</h4>'
-        + dueWindowHTML(firstWeek.start, firstWeek.end)
-        + '</div>'
-        + '<div class="due-soon"><h4>Get a head start</h4>'
-        + '<ul><li>Open the Full schedule view and add every exam date to your calendar.</li>'
-        + '<li>Use the export panel above to send due dates to your calendar and planner.</li></ul></div>'
-        + '</div>'
-        + '<section class="week-block">'
-        + weekHeadHTML("01", "Coming up, Week 1", firstWeek.theme)
-        + '<p class="week-dates">' + esc(fmtRange(firstWeek.start, firstWeek.end)) + '</p>'
-        + '<div class="day-grid">' + firstWeek.days.map(function(d){ return dayCardHTML(d,"h4"); }).join("") + '</div>'
-        + weekendCardHTML(firstWeek, "h4")
-        + '</section>';
-      return html;
-    }
-
-    if(ctx.state === "after"){
-      html += '<p class="view-sub">The course is complete.</p>'
-        + '<div class="tw-banner">'
-        + '<h3>' + COURSE.code + ' is complete</h3>'
-        + '<p>The last scheduled day was ' + esc(fmtLong(COURSE_END)) + '. Switch to the Full schedule or Graded items view to review the term.</p>'
-        + '</div>';
-      return html;
-    }
-
-    /* during or gap, show the active or upcoming week */
-    var wi = ctx.weekIndex;
-    var w = WEEKS[wi];
-    var elapsed = dayDiff(COURSE_START, t);
-    var span = dayDiff(COURSE_START, COURSE_END);
-    var pct = Math.max(0, Math.min(100, Math.round((elapsed / span) * 100)));
-
-    var bannerTitle = ctx.state === "gap"
-      ? "Week " + w.week + " starts " + fmtShort(w.start)
-      : "Week " + w.week + " of " + WEEKS.length;
-
-    html += '<p class="view-sub">A focused view of what to do right now.</p>'
-      + '<div class="tw-banner">'
-      + '<h3>' + esc(bannerTitle) + ': ' + esc(w.theme) + '</h3>'
-      + '<p>Today is ' + esc(fmtLong(t)) + '.</p>'
-      + '<div class="progress-track" role="img" aria-label="Course progress, about ' + pct + ' percent of the term elapsed">'
-      + '<div class="progress-fill" style="width:' + pct + '%"></div></div>'
-      + '<p style="font-size:0.85rem;color:var(--gray);margin:4px 0 0;">About ' + pct + '% of the term has elapsed.</p>'
-      + '<div class="due-soon"><h4>Due this week</h4>'
-      + dueWindowHTML(w.start, w.end)
-      + '</div>'
-      + '<div class="due-soon"><h4>Due in the next 7 days</h4>'
-      + dueWindowHTML(t, addDays(t,7))
-      + '</div>'
-      + '</div>';
-
-    html += '<div class="day-grid">' + w.days.map(function(d){ return dayCardHTML(d,"h3"); }).join("") + '</div>'
-      + weekendCardHTML(w, "h3");
-
-    /* Offer a peek at next week */
-    if(wi < WEEKS.length-1){
-      var nw = WEEKS[wi+1];
-      html += '<section class="week-block">'
-        + weekHeadHTML(pad2(nw.week), "Looking ahead, Week " + nw.week, nw.theme)
-        + '<p class="week-dates">' + esc(fmtRange(nw.start, nw.end)) + '</p>'
-        + '<div class="day-grid">' + nw.days.map(function(d){ return dayCardHTML(d,"h4"); }).join("") + '</div>'
-        + weekendCardHTML(nw, "h4")
-        + '</section>';
-    }
-    return html;
-  }
-
-  /* ---- VIEW: graded items ---- */
-  function renderGraded(){
-    var running = 0;
-    var rows = ALL_ITEMS.map(function(r){
-      running += r.item.points;
-      var exam = isExam(r.item);
-      var st = dayState(r.date);
-      return '<tr class="' + (exam?'exam-row':'') + '">'
-        + '<td><strong>' + esc(fmtShort(r.date)) + '</strong></td>'
-        + '<td>' + esc(r.item.title) + '</td>'
-        + '<td>' + esc(typeLabel(r.item)) + '</td>'
-        + '<td>' + esc(r.item.covers || "") + '</td>'
-        + '<td class="num">' + r.item.points + '</td>'
-        + '<td class="num">' + running + '</td>'
-        + '<td>' + esc((r.item.slo||[]).join(", ")) + '</td>'
-        + '<td>Week ' + r.week + '</td>'
-        + '</tr>';
-    }).join("");
-
-    var table = '<div class="table-scroll"><table class="graded-table">'
-      + '<caption>Every item that counts for points, in due-date order. The running total shows points available to date.</caption>'
-      + '<thead><tr>'
-      + '<th scope="col">Due date</th><th scope="col">Item</th><th scope="col">Type</th>'
-      + '<th scope="col">Covers</th><th scope="col">Points</th><th scope="col">Running total</th>'
-      + '<th scope="col">SLOs</th><th scope="col">Week</th>'
-      + '</tr></thead>'
-      + '<tbody>' + rows + '</tbody>'
-      + '<tfoot><tr><td colspan="4">Course total</td><td class="num">' + TOTAL_POINTS + '</td><td colspan="3"></td></tr></tfoot>'
-      + '</table></div>';
-
-    var legend = '<div class="legend">'
-      + '<span><span class="sw sw-exam" aria-hidden="true"></span> Exam, gold marker</span>'
-      + '<span><span class="sw sw-graded" aria-hidden="true"></span> Graded item</span>'
-      + '<span><span class="sw sw-today" aria-hidden="true"></span> Today, gold edge on day cards</span>'
-      + '<span><span class="sw sw-done" aria-hidden="true"></span> Completed day, navy tint</span>'
-      + '</div>';
-
-    return '<h2 class="view-head" id="view-heading" tabindex="-1">' + splitHeading("Graded Items and Due Dates") + '</h2>'
-      + '<p class="view-sub">' + ALL_ITEMS.length + ' graded items, ' + EXAM_COUNT + ' exams, ' + TOTAL_POINTS + ' points total.</p>'
-      + table + legend;
-  }
-
-  /* ---- Master render ---- */
-  function render(){
-    var region = document.getElementById("schedule-region");
-    var html, statusMsg;
-    if(state.view === "full"){ html = renderFull(); statusMsg = "Full schedule, all " + WEEKS.length + " weeks."; }
-    else if(state.view === "weekly"){ html = renderWeekly(); statusMsg = "Weekly view, Week " + WEEKS[state.weekIndex].week + "."; }
-    else if(state.view === "graded"){ html = renderGraded(); statusMsg = "Graded items, " + ALL_ITEMS.length + " items due."; }
-    else { html = renderThisWeek(); statusMsg = "This week view."; }
-    region.innerHTML = html;
-    document.getElementById("status-line").textContent = statusMsg
-      + (state.prep ? " Daily prep checklist shown." : " Daily prep checklist hidden.");
-    wireDynamic();
-  }
-
-  /* ---- Wire controls that live inside re-rendered content ---- */
-  function wireDynamic(){
-    var prev = document.getElementById("wk-prev");
-    var next = document.getElementById("wk-next");
-    var picker = document.getElementById("wk-picker");
-    if(prev) prev.addEventListener("click", function(){ state.weekIndex--; render(); focusHeading(); });
-    if(next) next.addEventListener("click", function(){ state.weekIndex++; render(); focusHeading(); });
-    if(picker) picker.addEventListener("change", function(){ state.weekIndex = +picker.value; render(); focusHeading(); });
-  }
-  function focusHeading(){
-    var h = document.getElementById("view-heading");
-    if(h) h.focus();
-  }
-
-  /* =========================================================
-     EXPORT GENERATORS
-     ========================================================= */
-
-  /* CSV field escaping */
-  function csvCell(v){
-    v = (v == null) ? "" : String(v);
-    if(/[",\r\n]/.test(v)) return '"' + v.replace(/"/g,'""') + '"';
-    return v;
-  }
-  function csvRow(arr){ return arr.map(csvCell).join(","); }
-
-  /* --- Calendar, .ics --- */
-  function icsEscape(s){
-    return String(s).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\r?\n/g,"\\n");
-  }
-  function icsFold(line){
-    if(line.length <= 73) return line;
-    var out = "", i = 0;
-    while(i < line.length){
-      var chunk = line.substring(i, i + (i===0?73:72));
-      out += (i===0 ? "" : "\r\n ") + chunk;
-      i += (i===0?73:72);
-    }
-    return out;
-  }
-  function nowStamp(){
-    var d = new Date();
-    function p(n){ return String(n).padStart(2,"0"); }
-    return d.getUTCFullYear()+p(d.getUTCMonth()+1)+p(d.getUTCDate())+"T"
-      +p(d.getUTCHours())+p(d.getUTCMinutes())+p(d.getUTCSeconds())+"Z";
-  }
-  function generateICS(){
-    var L = ["BEGIN:VCALENDAR","VERSION:2.0",
-      "PRODID:-//MedMasters Collaborative//Course Schedule Engine//EN",
-      "CALSCALE:GREGORIAN","METHOD:PUBLISH",
-      "X-WR-CALNAME:" + icsEscape(COURSE.code + " " + COURSE.title + " due dates")];
-    var stamp = nowStamp();
-    ALL_ITEMS.forEach(function(r){
-      var it = r.item;
-      var d = it.due.replace(/-/g,"");
-      var dEnd = addDays(it.due,1).replace(/-/g,"");
-      var desc = typeLabel(it) + ". Worth " + it.points + " points. "
-        + (it.note ? it.note + " " : "") + "SLOs: " + (it.slo||[]).join(", ") + ".";
-      L.push("BEGIN:VEVENT");
-      L.push("UID:" + it.id + "-" + d + "@course-schedule-engine");
-      L.push("DTSTAMP:" + stamp);
-      L.push("DTSTART;VALUE=DATE:" + d);
-      L.push("DTEND;VALUE=DATE:" + dEnd);
-      L.push(icsFold("SUMMARY:" + icsEscape(COURSE.code + ": " + it.title + " (" + it.points + " pts)")));
-      L.push(icsFold("DESCRIPTION:" + icsEscape(desc)));
-      L.push("CATEGORIES:" + icsEscape(typeLabel(it)));
-      L.push("TRANSP:TRANSPARENT");
-      if(isExam(it)){
-        L.push("BEGIN:VALARM");
-        L.push("ACTION:DISPLAY");
-        L.push("TRIGGER:-P1D");
-        L.push(icsFold("DESCRIPTION:" + icsEscape("Tomorrow: " + it.title)));
-        L.push("END:VALARM");
-      }
-      L.push("END:VEVENT");
-    });
-    L.push("END:VCALENDAR");
-    return L.join("\r\n");
-  }
-
-  /* --- Spaced repetition, Anki CSV, one card per lab topic --- */
-  function slug(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,""); }
-  function generateAnkiCSV(){
-    var L = ["#separator:Comma","#html:false","#columns:Front Back Deck Tags"];
-    WEEKS.forEach(function(w){
-      var deck = COURSE.code.replace(/\s+/g,"") + "::Week " + w.week + " " + w.theme.replace(/:/g," ");
-      w.days.forEach(function(day){
-        if(!hasNewCards(day)) return; /* only class days with new lab content */
-        (day.lab||[]).forEach(function(l){
-          var front = "Identify and describe the structures of: " + l.label;
-          var back = "From the " + (day.sessionType||"class") + " session on " + fmtShort(day.date) + ".";
-          var tags = "BIO004 week" + w.week + " " + slug(l.label);
-          L.push(csvRow([front, back, deck, tags]));
-        });
-      });
-    });
-    return L.join("\n");
-  }
-
-  /* --- Daily prep and study plan, text, date indexed, with spaced reviews --- */
-  function generateStudyPlan(){
-    var intervals = (DATA.spacedRepetition && DATA.spacedRepetition.intervalsDays) || [1,3,8,21];
-    /* Build a map of date -> list of lab topics to review that night */
-    var reviewByDate = {};
-    WEEKS.forEach(function(w){
-      w.days.forEach(function(day){
-        if(!hasNewCards(day)) return;
-        (day.lab||[]).forEach(function(l){
-          intervals.forEach(function(off){
-            var rd = addDays(day.date, off);
-            if(rd > COURSE_END) return;
-            (reviewByDate[rd] = reviewByDate[rd] || []).push(l.label);
-          });
-        });
-      });
-    });
-
-    var L = [];
-    L.push(COURSE.code + " " + COURSE.title + ", Daily Prep and Study Plan");
-    L.push(COURSE.term + ". Prepared by Dr. Sharilyn Rennie.");
-    L.push("Prep work is recommended and not graded. Spaced reviews use offsets of " + intervals.join(", ") + " days.");
-    L.push("Paste this into any planner or spaced-repetition app.");
-    L.push("");
-    WEEKS.forEach(function(w){
-      L.push("==============================");
-      L.push("WEEK " + w.week + ": " + w.theme + "  (" + fmtRange(w.start,w.end) + ")");
-      L.push("==============================");
-      w.days.forEach(function(day){
-        L.push("");
-        L.push(day.weekday + ", " + fmtLong(day.date) + "  ::  " + (day.sessionType || "Class day"));
-        (day.items||[]).forEach(function(it){
-          L.push("  GRADED, due today: " + it.title + " (" + it.points + " pts)"
-            + (it.covers ? ", covers " + it.covers : ""));
-        });
-        if(day.lecture && day.lecture.length){
-          L.push("  Lecture:");
-          day.lecture.forEach(function(l){ L.push("    - " + l.label + (l.url ? "  ->  " + l.url : "")); });
-        }
-        if(day.lab && day.lab.length){
-          L.push("  Lab:");
-          day.lab.forEach(function(l){ L.push("    - " + l.label + (l.url ? "  ->  " + l.url : "")); });
-        }
-        if(day.prework){
-          L.push("  Nightly prework (unlocks after the lecture video):");
-          L.push("    [ ] " + day.prework);
-        }
-        L.push("  Spaced recall:");
-        if(day.date !== COURSE_START) L.push("    [ ] Daily review, every card due today");
-        if(hasNewCards(day)) L.push("    [ ] New cards from today's lab");
-        var rev = reviewByDate[day.date];
-        if(rev && rev.length){
-          var uniq = rev.filter(function(v,i){ return rev.indexOf(v)===i; });
-          L.push("  Spaced review of earlier topics:");
-          uniq.forEach(function(tp){ L.push("    [ ] Re-test yourself on: " + tp); });
-        }
-      });
-      if(w.weekend){
-        var we = w.weekend;
-        L.push("");
-        L.push("Weekend  ::  " + fmtRange(we.start, we.end));
-        if(we.prework && we.prework.length){
-          L.push("  Weekend prework:");
-          we.prework.forEach(function(p){ L.push("    [ ] " + p); });
-        }
-        if(we.sunday){
-          L.push("  Sunday prework:");
-          L.push("    [ ] " + we.sunday);
-        }
-        L.push("  Spaced recall:");
-        L.push("    [ ] Daily review, every card due today");
-      }
-      L.push("");
-    });
-    return L.join("\n");
-  }
-
-  /* --- Planner checklist, Markdown --- */
-  function generateChecklist(){
-    var L = [];
-    L.push("# " + COURSE.code + " " + COURSE.title + ", Course Checklist");
-    L.push("");
-    L.push("_" + COURSE.term + ". " + ALL_ITEMS.length + " graded items, " + TOTAL_POINTS + " points. Prepared by Dr. Sharilyn Rennie._");
-    L.push("");
-    WEEKS.forEach(function(w){
-      L.push("## Week " + w.week + ": " + w.theme + "  (" + fmtRange(w.start,w.end) + ")");
-      L.push("");
-      w.days.forEach(function(day){
-        L.push("### " + fmtShort(day.date) + ", " + (day.sessionType || "Class day"));
-        L.push("");
-        (day.items||[]).forEach(function(it){
-          L.push("- [ ] **DUE " + fmtShort(it.due) + ", " + typeLabel(it) + ":** " + it.title
-            + " (" + it.points + " pts)" + (it.covers ? ", covers " + it.covers : ""));
-        });
-        if(day.lecture && day.lecture.length){
-          L.push("- Lecture:");
-          day.lecture.forEach(function(l){
-            L.push("  - " + (l.url ? "[" + l.label + "](" + l.url + ")" : l.label));
-          });
-        }
-        if(day.lab && day.lab.length){
-          L.push("- Lab:");
-          day.lab.forEach(function(l){
-            L.push("  - " + (l.url ? "[" + l.label + "](" + l.url + ")" : l.label));
-          });
-        }
-        if(day.prework){
-          L.push("- Nightly prework (no link, unlocks after the lecture video):");
-          L.push("  - [ ] " + day.prework);
-        }
-        L.push("- Spaced recall:");
-        if(day.date !== COURSE_START) L.push("  - [ ] Daily review, every card due today");
-        if(hasNewCards(day)) L.push("  - [ ] New cards from today's lab");
-        L.push("");
-      });
-      if(w.weekend){
-        var we = w.weekend;
-        L.push("### Weekend, " + fmtRange(we.start, we.end));
-        L.push("");
-        if(we.prework && we.prework.length){
-          L.push("- Weekend prework:");
-          we.prework.forEach(function(p){ L.push("  - [ ] " + p); });
-        }
-        if(we.sunday){
-          L.push("- Sunday prework:");
-          L.push("  - [ ] " + we.sunday);
-        }
-        L.push("- Spaced recall:");
-        L.push("  - [ ] Daily review, every card due today");
-        L.push("");
-      }
-    });
-    return L.join("\n");
-  }
-
-  /* --- SLO grade map, CSV --- */
-  function generateSLO(){
-    var sloMap = {};
-    (COURSE.slos||[]).forEach(function(s){ sloMap[s.code] = s.description; });
-    var L = [];
-    L.push(csvRow(["Item ID","Item","Type","Week","Due Date","Points","Percent of Course","SLO Codes","SLO Descriptions"]));
-    ALL_ITEMS.forEach(function(r){
-      var it = r.item;
-      var codes = (it.slo||[]);
-      var pct = ((it.points / TOTAL_POINTS) * 100).toFixed(1);
-      L.push(csvRow([
-        it.id, it.title, typeLabel(it), "Week " + r.week, it.due, it.points, pct + "%",
-        codes.join("; "),
-        codes.map(function(c){ return sloMap[c] || c; }).join("; ")
-      ]));
-    });
-    L.push("");
-    L.push(csvRow(["SLO Summary","","","","","","","",""]));
-    L.push(csvRow(["SLO Code","SLO Description","Items Touching SLO","Points Touching SLO","","","","",""]));
-    (COURSE.slos||[]).forEach(function(s){
-      var hits = ALL_ITEMS.filter(function(r){ return (r.item.slo||[]).indexOf(s.code) > -1; });
-      var pts = hits.reduce(function(a,r){ return a + r.item.points; }, 0);
-      L.push(csvRow([s.code, s.description, hits.length, pts, "","","","",""]));
-    });
-    return L.join("\r\n");
-  }
-
-  /* ---- Download and clipboard ---- */
-  function announce(msg){
-    var el = document.getElementById("export-status");
-    el.textContent = msg;
-  }
-  function download(filename, text, mime){
-    var blob = new Blob([text], { type: (mime||"text/plain") + ";charset=utf-8" });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement("a");
-    a.href = url; a.download = filename;
-    document.body.appendChild(a); a.click();
-    document.body.removeChild(a);
-    setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
-  }
-  function copyText(text, label){
-    function ok(){ announce("Copied " + label + " to your clipboard. Paste it into your planner or tool."); }
-    function fail(){ announce("Could not copy automatically. Use the download button instead."); }
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(text).then(ok, function(){ legacyCopy(text) ? ok() : fail(); });
-    } else {
-      legacyCopy(text) ? ok() : fail();
-    }
-  }
-  function legacyCopy(text){
-    try{
-      var ta = document.createElement("textarea");
-      ta.value = text;
-      ta.style.position = "fixed"; ta.style.opacity = "0";
-      document.body.appendChild(ta); ta.focus(); ta.select();
-      var done = document.execCommand("copy");
-      document.body.removeChild(ta);
-      return done;
-    }catch(e){ return false; }
-  }
-
-  function handleExport(kind){
-    var base = COURSE.code.replace(/\s+/g,"-").toLowerCase();
-    if(kind === "ics"){
-      download(base + "-schedule.ics", generateICS(), "text/calendar");
-      announce("Calendar file downloaded. Import it into Google Calendar, Apple Calendar, or your planner.");
-    } else if(kind === "anki"){
-      download(base + "-spaced-repetition.csv", generateAnkiCSV(), "text/csv");
-      announce("Spaced-repetition deck downloaded. In Anki, choose File then Import.");
-    } else if(kind === "studyplan"){
-      download(base + "-study-plan.txt", generateStudyPlan(), "text/plain");
-      announce("Nightly study plan downloaded. It schedules your spaced reviews date by date.");
-    } else if(kind === "checklist-copy"){
-      copyText(generateChecklist(), "the planner checklist");
-    } else if(kind === "checklist-file"){
-      download(base + "-planner-checklist.md", generateChecklist(), "text/markdown");
-      announce("Planner checklist downloaded as Markdown.");
-    } else if(kind === "slo-copy"){
-      copyText(generateSLO(), "the SLO grade map");
-    } else if(kind === "slo-file"){
-      download(base + "-slo-grade-map.csv", generateSLO(), "text/csv");
-      announce("SLO grade map downloaded as CSV.");
+  for (let i = 0; i < weeks.length; i++) {
+    const wk = weeks[i];
+    const start = parseLocalDate(wk.startDate);
+    const end = parseLocalDate(wk.endDate);
+    if (today >= start && today <= end) {
+      currentWeek = wk;
+    } else if (today < start && nextWeek === null) {
+      nextWeek = wk;
     }
   }
 
-  /* =========================================================
-     INIT
-     ========================================================= */
-  function init(){
-    /* Header fill */
-    document.getElementById("eyebrow").innerHTML =
-      esc(COURSE.code) + " &middot; " + esc(COURSE.title) + " &middot; " + esc(COURSE.institution);
-    document.title = "Course Schedule, " + COURSE.code + " " + COURSE.title;
-    document.getElementById("course-subhead").innerHTML =
-      esc(COURSE.title) + " &middot; " + esc(COURSE.term);
-    document.getElementById("course-meta").textContent =
-      COURSE.format + ". Meets " + COURSE.meetingPattern + ".";
-    document.getElementById("footer-course").textContent =
-      COURSE.code + " " + COURSE.title + ", " + COURSE.institution + ", " + COURSE.term + ".";
-    if(COURSE.isSampleData){ document.getElementById("sample-flag").hidden = false; }
+  let phase;
+  if (today < firstStart) phase = 'pre';
+  else if (today > lastEnd) phase = 'post';
+  else phase = 'active';
 
-    /* Set the starting week for weekly view to the current or first week */
-    var ctx = findContext();
-    if(ctx.weekIndex != null) state.weekIndex = ctx.weekIndex;
-
-    /* View switch */
-    document.querySelectorAll('input[name="view"]').forEach(function(radio){
-      radio.addEventListener("change", function(){
-        if(radio.checked){ state.view = radio.value; render(); focusHeading(); }
-      });
-    });
-
-    /* Daily prep checklist toggle */
-    document.getElementById("prep-toggle").addEventListener("change", function(){
-      state.prep = this.checked;
-      render();
-    });
-
-    /* Export buttons */
-    document.querySelectorAll("[data-export]").forEach(function(btn){
-      btn.addEventListener("click", function(){ handleExport(btn.getAttribute("data-export")); });
-    });
-
-    /* Print, force the full schedule for a clean PDF */
-    var savedView;
-    function toFull(){
-      savedView = state.view;
-      state.view = "full";
-      document.getElementById("view-full").checked = true;
-      render();
-    }
-    function restoreView(){
-      if(savedView){
-        state.view = savedView;
-        var r = document.getElementById("view-" + savedView);
-        if(r) r.checked = true;
-        render();
-        savedView = null;
-      }
-    }
-    document.getElementById("print-btn").addEventListener("click", function(){
-      toFull();
-      window.print();
-    });
-    window.addEventListener("beforeprint", function(){ if(state.view !== "full") toFull(); });
-    window.addEventListener("afterprint", restoreView);
-
-    render();
-  }
-
-  /* Optional scripting hook. Lets the page be driven or tested in code,
-     for example window.CourseScheduleEngine.ics() returns the calendar text. */
-  window.CourseScheduleEngine = {
-    data: DATA,
-    ics: generateICS,
-    ankiCSV: generateAnkiCSV,
-    studyPlan: generateStudyPlan,
-    checklist: generateChecklist,
-    sloCSV: generateSLO
+  return {
+    today: today,
+    phase: phase,
+    firstStart: firstStart,
+    lastEnd: lastEnd,
+    currentWeek: currentWeek,
+    nextWeek: nextWeek,
+    todayDayName: DAY_NAMES[today.getDay()]
   };
+}
 
-  if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
-})();
-</script>
-
-<script>
 /* ============================================================
-   IFRAME HEIGHT SENDER.
-   Lets this page size itself correctly when embedded in Canvas
-   or any host via an iframe. Posts the document height to the
-   parent on load, on resize, and whenever the content changes.
+   STATUS BANNER
    ============================================================ */
-(function(){
-  function sendHeight(){
-    var h = Math.max(
-      document.documentElement.scrollHeight,
-      document.body ? document.body.scrollHeight : 0
-    );
-    try{
-      parent.postMessage({ id: window.name || "course-schedule", frameHeight: h }, "*");
-    }catch(e){}
+function renderStatusBanner(info) {
+  const el = document.getElementById('status-now');
+  if (!el) return;
+
+  let label = '';
+  let text = '';
+  let extraClass = '';
+
+  if (info.phase === 'pre') {
+    extraClass = 'status-now--pre';
+    const days = daysBetween(info.today, info.firstStart);
+    const dayWord = days === 1 ? 'day' : 'days';
+    label = 'Coming up';
+    text = 'Term begins <strong>' + formatLongDate(info.firstStart) + '</strong>. ' + days + ' ' + dayWord + ' to go. Week 1 opens with Foundations and the Integumentary System.';
+  } else if (info.phase === 'post') {
+    extraClass = 'status-now--post';
+    label = 'Term complete';
+    text = 'Summer 2026 term wrapped on ' + formatLongDate(info.lastEnd) + '. Nice work.';
+  } else if (info.currentWeek) {
+    const wk = info.currentWeek;
+    const dayName = info.todayDayName;
+    const todayItem = wk.days.find(function(d) { return d.day === dayName; });
+    label = 'Today';
+    if (todayItem) {
+      text = '<strong>Week ' + wk.number + ', ' + DAY_NAMES_LONG[info.today.getDay()] + '.</strong> ' + escapeHtml(todayItem.activity) + '. ' + escapeHtml(wk.weekTitle) + '.';
+    } else {
+      const end = parseLocalDate(wk.endDate);
+      if (info.today > end) {
+        if (info.nextWeek) {
+          const nextStart = parseLocalDate(info.nextWeek.startDate);
+          const daysToNext = daysBetween(info.today, nextStart);
+          text = '<strong>Week ' + wk.number + ' wrapped.</strong> Week ' + info.nextWeek.number + ' begins ' + formatLongDate(nextStart) + ' (' + daysToNext + ' day' + (daysToNext === 1 ? '' : 's') + ').';
+        } else {
+          text = '<strong>Week ' + wk.number + ' wrapped.</strong> Last week of term.';
+        }
+      } else {
+        text = '<strong>Week ' + wk.number + ', ' + DAY_NAMES_LONG[info.today.getDay()] + '.</strong> No class scheduled today. ' + escapeHtml(wk.weekTitle) + '.';
+      }
+    }
+  } else if (info.nextWeek) {
+    const nextStart = parseLocalDate(info.nextWeek.startDate);
+    const days = daysBetween(info.today, nextStart);
+    const dayWord = days === 1 ? 'day' : 'days';
+    label = 'Up next';
+    text = '<strong>Week ' + info.nextWeek.number + '</strong> begins ' + formatLongDate(nextStart) + ' (' + days + ' ' + dayWord + '). ' + escapeHtml(info.nextWeek.weekTitle) + '.';
   }
-  window.addEventListener("load", sendHeight);
-  window.addEventListener("resize", sendHeight);
-  if(window.ResizeObserver){
-    var ro = new ResizeObserver(sendHeight);
-    if(document.body) ro.observe(document.body);
+
+  if (!text) { el.hidden = true; return; }
+
+  el.className = 'status-now' + (extraClass ? ' ' + extraClass : '');
+  el.innerHTML =
+    '<span class="status-now-label">' + escapeHtml(label) + '</span>' +
+    '<span class="status-now-text">' + text + '</span>' +
+    '<span class="status-now-arrow" aria-hidden="true">&rsaquo;</span>';
+
+  if (info.currentWeek) {
+    el.href = '#week-' + info.currentWeek.number;
+  } else if (info.nextWeek) {
+    el.href = '#week-' + info.nextWeek.number;
+  } else {
+    el.removeAttribute('href');
+    el.style.cursor = 'default';
   }
-  setTimeout(sendHeight, 400);
+  el.hidden = false;
+}
+
+/* ============================================================
+   RENDERING
+   ============================================================ */
+function renderDay(d, opts) {
+  const isToday = !!opts.isToday;
+  const isUpNext = !!opts.isUpNext;
+  const weekNum = opts.weekNum;
+
+  let primaryHtml;
+  if (d.pill === 'tbl') {
+    primaryHtml = '<span class="pill-tbl">' + escapeHtml(d.activity) + '</span>';
+  } else if (d.pill === 'exam') {
+    primaryHtml = '<span class="pill-exam">' + escapeHtml(d.activity) + '</span>';
+  } else {
+    primaryHtml = '<span class="activity-plain">' + escapeHtml(d.activity) + '</span>';
+  }
+
+  if (d.descriptor) {
+    primaryHtml += '<span class="day-descriptor">' + escapeHtml(d.descriptor) + '</span>';
+  }
+
+  const preworkAnchor = 'wk-' + weekNum + '-' + d.day.toLowerCase();
+  primaryHtml += '<a class="prework-link" href="prework.html#' + preworkAnchor + '" target="_top" aria-label="Pre-work for Week ' + weekNum + ', ' + d.day + '">Pre-work &rsaquo;</a>';
+
+  if (isToday) {
+    primaryHtml += '<span class="day-today-pill" aria-label="Today">Today</span>';
+  }
+
+  let dtContent;
+  let dtClass = '';
+  let ddClass = '';
+
+  if (isUpNext) {
+    dtContent = '<span class="pill-up-next">Up next</span><span>' + escapeHtml(d.day) + '</span>';
+    dtClass = ' class="day-up-next"';
+    ddClass = ' class="day-up-next"';
+  } else {
+    dtContent = '<span>' + escapeHtml(d.day) + '</span>';
+  }
+
+  if (isToday) {
+    dtClass = ' class="day-today"';
+    ddClass = ' class="day-today"';
+  }
+
+  return '<dt' + dtClass + '>' + dtContent + '</dt><dd' + ddClass + '>' + primaryHtml + '</dd>';
+}
+
+function renderExamBlock(eb) {
+  if (!eb) return '';
+  return '<aside class="exam-block" aria-label="' + escapeHtml(eb.title) + '">' +
+    '<span class="exam-tag">' + escapeHtml(eb.label) + '</span>' +
+    '<div class="exam-block-content">' +
+      '<p class="exam-block-title">' + escapeHtml(eb.title) + '</p>' +
+      '<p class="exam-block-detail">' + escapeHtml(eb.detail) + '</p>' +
+    '</div>' +
+    '<p class="exam-block-day">' + escapeHtml(eb.day) + '</p>' +
+  '</aside>';
+}
+
+function renderLabChecklist(lc, weekNum) {
+  if (!lc) return '';
+  const topicsHtml = lc.topics.map(function(t, i) {
+    const sep = i < lc.topics.length - 1
+      ? '<span class="lab-topic-sep" aria-hidden="true">&middot;</span>'
+      : '';
+    return '<span class="lab-topic">' + escapeHtml(t) + '</span>' + sep;
+  }).join('');
+
+  return '<h3 class="section-eyebrow section-eyebrow--lab">' +
+      '<span>Lab focus</span>' +
+      '<span class="section-eyebrow-rule" aria-hidden="true"></span>' +
+    '</h3>' +
+    '<section class="lab-block" aria-label="Lab focus for Week ' + weekNum + '">' +
+      '<div class="lab-block-head">' +
+        '<p class="lab-eyebrow">' + escapeHtml(lc.examLabel) + '</p>' +
+        '<p class="lab-target">Lab stations cover the topics below across all four lab sessions this week, tested on <strong>' + escapeHtml(lc.examDate) + '</strong>.</p>' +
+      '</div>' +
+      '<p class="lab-topics-inline">' + topicsHtml + '</p>' +
+    '</section>';
+}
+
+function renderSchedule(info) {
+  const list = document.getElementById('schedule-list');
+
+  weeks.forEach(function(wk) {
+    const numberLabel = String(wk.number).padStart(2, '0');
+    const tabLabel = 'Wk ' + numberLabel;
+
+    const isCurrent = info.currentWeek && info.currentWeek.number === wk.number;
+    const isNext = !info.currentWeek && info.nextWeek && info.nextWeek.number === wk.number;
+    const wkEndDate = parseLocalDate(wk.endDate);
+    const isPast = !isCurrent && wkEndDate < info.today;
+
+    let stateClass = '';
+    let statusPillHtml = '';
+
+    if (isCurrent) {
+      stateClass = ' week-card--current';
+      statusPillHtml = '<div><span class="week-status-pill week-status-pill--current">This week</span></div>';
+    } else if (isNext) {
+      stateClass = ' week-card--next';
+    } else if (isPast) {
+      stateClass = ' week-card--past';
+    }
+
+    const firstClassDay = wk.days && wk.days.length > 0 ? wk.days[0].day : null;
+
+    const daysHtml = wk.days.map(function(d) {
+      const isToday = isCurrent && d.day === info.todayDayName;
+      const isUpNext = isNext && d.day === firstClassDay;
+      return renderDay(d, { isToday: isToday, isUpNext: isUpNext, weekNum: wk.number });
+    }).join('');
+
+    const caseValue = wk.caseOfWeek
+      ? '<p class="field-value">' + escapeHtml(wk.caseOfWeek) + '</p>'
+      : '<p class="field-value field-value--placeholder">To be assigned</p>';
+
+    const hasNotes = wk.notes && wk.notes.length > 0;
+    const notesHtml = hasNotes
+      ? '<div class="field">' +
+          '<p class="field-label">Notes</p>' +
+          '<p class="field-value">' + escapeHtml(wk.notes) + '</p>' +
+        '</div>'
+      : '';
+
+    const showCase = !wk.noCase;
+    const caseHtml = showCase
+      ? '<div class="field">' +
+          '<p class="field-label">Case of the Week</p>' +
+          caseValue +
+        '</div>'
+      : '';
+
+    const footerClass = (showCase && hasNotes) ? 'week-footer' : 'week-footer week-footer--single';
+    const showFooter = showCase || hasNotes;
+
+    const li = document.createElement('li');
+    li.className = 'week-card' + stateClass;
+    li.id = 'week-' + wk.number;
+    let ariaSuffix = '';
+    if (isCurrent) ariaSuffix = ', this week';
+    else if (isNext) ariaSuffix = ', up next';
+    li.setAttribute('aria-label', 'Week ' + wk.number + ', ' + wk.dates + ', ' + wk.weekTitle + ariaSuffix);
+
+    li.innerHTML =
+      '<div class="week-tab" aria-hidden="true">' + escapeHtml(tabLabel) + '</div>' +
+      '<div class="week-body">' +
+        '<div class="week-header">' +
+          '<div class="week-number" aria-hidden="true">' + numberLabel + '</div>' +
+          '<div class="week-meta">' +
+            '<h2 class="week-dates">' + escapeHtml(wk.dates) + '</h2>' +
+            '<p class="week-module">Week ' + wk.number + ' <span aria-hidden="true">.</span> ' + escapeHtml(wk.weekTitle) + '</p>' +
+            statusPillHtml +
+          '</div>' +
+        '</div>' +
+        renderExamBlock(wk.examBlock) +
+        '<h3 class="section-eyebrow">' +
+          '<span>Lecture</span>' +
+          '<span class="section-eyebrow-rule" aria-hidden="true"></span>' +
+        '</h3>' +
+        '<dl class="day-list" aria-label="Lecture schedule for week ' + wk.number + '">' + daysHtml + '</dl>' +
+        renderLabChecklist(wk.labChecklist, wk.number) +
+        (showFooter
+          ? ('<div class="' + footerClass + '">' + caseHtml + notesHtml + '</div>')
+          : '') +
+      '</div>';
+
+    list.appendChild(li);
+  });
+}
+
+const nowInfo = computeNow(weeks);
+renderStatusBanner(nowInfo);
+renderSchedule(nowInfo);
+
+/* ============================================================
+   IFRAME HEIGHT-SENDER
+   ============================================================ */
+(function() {
+  const FRAME_ID = 'anatomy-schedule';
+  function sendHeight() {
+    try {
+      const height = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight,
+        document.documentElement.offsetHeight,
+        document.body.offsetHeight
+      );
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'setHeight', id: FRAME_ID, height: height }, '*');
+      }
+    } catch (e) {}
+  }
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+  if (typeof ResizeObserver !== 'undefined') {
+    const ro = new ResizeObserver(sendHeight);
+    ro.observe(document.body);
+  }
+  setTimeout(sendHeight, 100);
+  setTimeout(sendHeight, 500);
+  setTimeout(sendHeight, 1500);
 })();
 </script>
 </body>
