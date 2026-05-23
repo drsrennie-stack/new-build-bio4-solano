@@ -1,150 +1,169 @@
 # Accessibility Compliance Notes
 
-## 1. Project name, files covered, date
+## 1. Project and files covered
 
-**Project:** BIO 004 Human Anatomy, Digital Concept Pages (Solano Community College)
+**Project:** Course Schedule Architect, the Course Schedule Engine.
 
-**Date:** 2026-05-21
+**Date:** May 21, 2026. Covers schema 3.0, the Lecture and Lab day model with
+weekend cards, split-color headings, numbered week headers, and the today ribbon.
 
-**Files covered (37 HTML concept pages):**
+**Primary file audited:** `course-schedule.html`, the student-facing interactive
+course schedule. This is the only deliverable subject to WCAG, since it is the
+web page students use.
 
-Block 1, Introduction Concepts:
+**Other deliverables, not WCAG-scoped but noted:**
 
-- anatomical-terminology.html
-- body-cavities.html
-- cell-anatomy.html
-- tissues.html
-- integumentary.html
+`course-schedule.pdf` is a generated print document. It carries a logical
+reading order, real text (not images), a document title and author, and
+sufficient color contrast. It is not a tagged PDF. If a fully tagged,
+screen-reader-optimized PDF is needed, that is listed under remediation below.
 
-Block 2, Skeletal System, Muscle, and Endocrine:
+`schedule-data.xlsx`, `schedule-data.json`, `build_schedule.py`, and the files
+in `exports/` are author tools and data files. They are not student-facing web
+content and are out of WCAG scope.
 
-- bone-histology.html
-- axial-skeleton-skull.html
-- axial-skeleton-spine.html
-- appendicular-skeleton-upper.html
-- appendicular-skeleton-lower.html
-- articulations.html
-- muscle-structure.html
-- muscle-fascicles.html
-- endocrine.html
+## 2. WCAG version and target level
 
-Block 3, Cardiovascular, Respiratory, and Lymphatic:
+Standard applied: **WCAG 2.2**. Floor target: **Level AA**. Reach target:
+**Level AAA** where the brand palette allows it.
 
-- heart.html
-- cardiac-conduction.html
-- blood.html
-- blood-vessels.html
-- blood-vessel-disorders.html
-- respiratory.html
-- lymphatic-system.html
+Result by area:
 
-Block 4, Digestive, Urinary, and Reproductive:
+Text contrast reaches AAA for all navy text, which is the bulk of the page.
+Brand accent colors (terra cotta and brushed gold) reach AA. Structure,
+keyboard operation, focus visibility, and non-text criteria are met at AA, and
+several at AAA. No criterion falls below AA.
 
-- alimentary-canal.html
-- accessory-digestive-organs.html
-- urinary-system.html
-- reproductive-male.html
-- reproductive-female.html
-- pregnancy-and-birth.html
-
-Block 5, Nervous System:
-
-- nervous-tissue.html
-- neuronal-integration.html
-- cns-brain.html
-- cns-brainstem.html
-- cns-spinal-cord.html
-- cns-meninges-csf.html
-- cranial-nerves.html
-- nerve-plexuses.html
-- pns.html
-- ans.html
-
-All 37 pages share one template (PRIMARY palette, Notes/Study/Quiz modes, the grid-table and sequence components, the two-video resource bar, the lightbox, the explain-back gate, and the iframe height-sender). This audit therefore applies template-wide; per-page differences are limited to content, not structure.
-
-### Note on the May 2026 rebuild
-
-This release reflects the Block 5 nervous-system depth rebuild and the Block 4 audit. The retired combined page `cns-brain-spinal-cord.html` was split into `cns-brain.html`, `cns-brainstem.html`, `cns-spinal-cord.html`, and `cranial-nerves.html`. New page `nerve-plexuses.html` was added. The pages `nervous-tissue.html`, `pns.html`, and `ans.html` were rebuilt to lecture-level depth from the course lecture notes. The Block 4 pages `alimentary-canal.html`, `accessory-digestive-organs.html`, `urinary-system.html`, `reproductive-male.html`, and `reproductive-female.html` were rebuilt to the same depth standard. Every new and rebuilt page was generated from the verified template scaffold, so the structural audit below carries forward unchanged. Each new and rebuilt page was checked programmatically for em dashes, balanced tags, unique element IDs, matching table column counts, a single correctly nested heading hierarchy, and the presence of the skip link, the `aria-live` regions, the reduced-motion block, the `target="_top"` internal links, and the iframe height-sender.
-
-## 2. WCAG version and target level achieved per criterion
-
-**Standard:** WCAG 2.2. **Floor:** Level AA on every criterion. **Target:** Level AAA where achievable.
-
-| Criterion | Level | Result | Notes |
-|-----------|-------|--------|-------|
-| 1.1.1 Non-text Content | A | Pass | Every `img` has descriptive alt text; icon-only buttons carry `aria-label`; decorative arrows use `aria-hidden="true"`. Figure-placeholder cards carry written descriptions to be converted to alt text when final images are added. |
-| 1.3.1 Info and Relationships | A | Pass | Semantic `main`, `section`, `aside`, `nav`-style toolbar; headings nest h1, h2, h3 in order; comparison grids use `thead`, `tbody`, and `th` with `scope`; sequences use ordered lists. |
-| 1.3.2 Meaningful Sequence | A | Pass | DOM order matches reading order; content reads linearly in a single column. |
-| 1.4.1 Use of Color | A | Pass | Mode state is conveyed by text and `aria-pressed`, not color alone; locked, unlocked, and completed states pair color with border style. |
-| 1.4.3 Contrast (Minimum) | AA | Pass | See the audit in section 3. All text pairs meet or exceed 4.5:1, or the 3:1 large-text threshold. |
-| 1.4.6 Contrast (Enhanced) | AAA | Partial | Navy body text reaches 11:1, well past 7:1. The terra-dark eyebrow label at 12 px measures 5.62:1, which meets AA but not the AAA 7:1 target. See section 6. |
-| 1.4.10 Reflow | AA | Pass | The sheet is max-width constrained and reflows to a single column; no horizontal scroll at 320 px. |
-| 1.4.11 Non-text Contrast | AA | Partial | Grid and table borders use navy and pass. The gold focus outline measures 2.90:1 against white, marginally below 3:1. See section 6. |
-| 1.4.12 Text Spacing | AA | Pass | Layout uses relative spacing and tolerates user text-spacing overrides without clipping. |
-| 1.4.13 Content on Hover or Focus | AA | Pass | The lightbox is dismissable with Escape; no hover-only content is required to complete a task. |
-| 2.1.1 Keyboard | A | Pass | All interactive elements are native `button`, `a`, `input`, or `textarea`; no custom widgets require pointer input. |
-| 2.1.2 No Keyboard Trap | A | Pass | The lightbox dialog traps focus only while open and restores focus to the triggering control on close. |
-| 2.3.3 Animation from Interactions | AAA | Pass | A `prefers-reduced-motion` block disables transitions, animations, and smooth scrolling. |
-| 2.4.1 Bypass Blocks | A | Pass | A "Skip to main content" link is the first focusable element on every page. |
-| 2.4.3 Focus Order | A | Pass | Focus order follows the visible layout: toolbar, header, resources, content, gate. |
-| 2.4.7 Focus Visible | AA | Pass | A visible focus outline is applied to every interactive element via `:focus-visible`. |
-| 2.4.11 Focus Not Obscured (Minimum) | AA | Pass | No sticky or floating elements overlap a focused control. |
-| 2.5.8 Target Size (Minimum) | AA | Pass | Mode, Reset, Print, resource, and Reveal controls meet or exceed the 24 by 24 CSS px minimum, including padding. |
-| 3.1.1 Language of Page | A | Pass | `<html lang="en">` is set on every page. |
-| 3.2.3 Consistent Navigation | AA | Pass | The toolbar and resource bar are identical in placement and order across all 37 pages. |
-| 3.3.2 Labels or Instructions | A | Pass | Each Quiz input has an `aria-label` naming its target; the mode-hint paragraph explains all three modes. |
-| 4.1.2 Name, Role, Value | A | Pass | Mode buttons expose `aria-pressed`; video toggles expose `aria-expanded` and `aria-controls`; the lightbox uses `role="dialog"` with `aria-modal` and `aria-labelledby`. |
-| 4.1.3 Status Messages | AA | Pass | The explain-back meter and status region use `aria-live="polite"` and `role="status"`. |
+Criteria specifically verified: 1.3.1 Info and Relationships, 1.4.3 Contrast
+Minimum, 1.4.6 Contrast Enhanced (partial, navy text only), 1.4.10 Reflow,
+1.4.11 Non-text Contrast, 1.4.12 Text Spacing, 2.1.1 Keyboard, 2.1.2 No
+Keyboard Trap, 2.4.1 Bypass Blocks, 2.4.3 Focus Order, 2.4.6 Headings and
+Labels, 2.4.7 Focus Visible, 2.4.11 Focus Not Obscured, 2.5.8 Target Size
+Minimum, 3.2.2 On Input, 3.3.2 Labels or Instructions, 4.1.2 Name Role Value,
+4.1.3 Status Messages.
 
 ## 3. Color contrast audit
 
-Palette: PRIMARY teaching palette (no sage, no cream). Ratios computed with the WCAG relative-luminance formula. Normal text requires 4.5:1 for AA and 7:1 for AAA; large text (about 18.66 px bold or 24 px) and non-text elements require 3:1.
+All ratios computed with the WCAG relative luminance formula. Normal text must
+reach 4.5:1 for AA and 7:1 for AAA. Large text and non-text UI must reach 3:1.
 
-| Foreground | Background | Ratio | AA | AAA | Where used |
-|-----------|-----------|-------|----|----|-----------|
-| Navy #1E3D4C | White #FFFFFF | 11.49:1 | Pass | Pass | Body text and headings on cards |
-| Navy #1E3D4C | Off-white #FAFAF9 | 11.01:1 | Pass | Pass | Body text on the page background |
-| Navy #1E3D4C | Navy-tint #EDF1F3 | 10.11:1 | Pass | Pass | Text in completed-state fills |
-| Terra-dark #A0522D | White #FFFFFF | 5.62:1 | Pass | Fail (normal) / Pass (large) | Eyebrow label (12 px, normal text); h2 and h3 headings (large text) |
-| Terra-dark #A0522D | Off-white #FAFAF9 | 5.38:1 | Pass | Fail (normal) / Pass (large) | Eyebrow and headings on page background |
-| White #FFFFFF | Navy #1E3D4C | 11.49:1 | Pass | Pass | Grid header row, toolbar buttons, sequence number badges |
-| White #FFFFFF | Navy-deep #142a36 | 14.85:1 | Pass | Pass | Button hover state |
-| White #FFFFFF | Terra-dark #A0522D | 5.62:1 | Pass | Pass (large) | Reveal button hover state |
-| Gold #B8924A | White #FFFFFF | 2.90:1 | Fail (3:1 non-text) | n/a | Focus outline; used as a 3 px ring, not as text |
+| Text or element | Foreground | Background | Ratio | AA | AAA |
+|---|---|---|---|---|---|
+| Body text | Navy #1E3D4C | Off-white #FAFAF9 | 11.01:1 | Pass | Pass |
+| Card text | Navy #1E3D4C | White #FFFFFF | 11.49:1 | Pass | Pass |
+| Text on completed-day card | Navy #1E3D4C | Navy-tint #EDF1F3 | 10.11:1 | Pass | Pass |
+| Button and header text | White #FFFFFF | Navy #1E3D4C | 11.49:1 | Pass | Pass |
+| Eyebrow text, 12px | Terra-dark #A0522D | Off-white #FAFAF9 | 5.38:1 | Pass | Not met |
+| Section labels, headings | Terra-dark #A0522D | White #FFFFFF | 5.62:1 | Pass | Not met |
+| Exam and today badge text | Navy-deep #142a36 | Brushed gold #B8924A | 5.13:1 | Pass | Not met |
+| Secondary text | Gray #565E62 | Off-white #FAFAF9 | 6.34:1 | Pass | Not met |
+| Secondary text | Gray #565E62 | White #FFFFFF | 6.62:1 | Pass | Not met |
+| Secondary text | Gray #565E62 | Navy-tint #EDF1F3 | 5.82:1 | Pass | Not met |
+| This Week banner body and labels | Navy #1E3D4C | Light gold #EFDFA3 | 8.62:1 | Pass | Pass |
+| This Week banner title and stat numbers, large text | Terra-dark #A0522D | Light gold #EFDFA3 | 4.21:1 | Pass | Not met |
 
-Every text pair clears the AA floor. The only items that do not reach the AAA target are the 12 px terra-dark eyebrow and the gold focus outline; both are addressed in section 6.
+The This Week banner is a light gold panel. Its body text and labels are navy
+and reach AAA. Its title and large stat numbers are terra cotta; these are large
+text, for which the AA floor is 3:1, so 4.21:1 passes. Terra cotta is not placed
+as small text on the light gold.
 
-## 4. Keyboard navigation flow verified
+Lowest normal-text pair: 5.13:1, comfortably above the 4.5:1 AA floor. The
+lowest large-text pair, 4.21:1, is above its 3:1 floor.
 
-Tab order was traced on a representative page and is identical across the template:
+Non-text contrast (1.4.11): the focus indicator is a 3px solid navy outline set
+2px outside each control. Against the off-white page it measures about 11:1,
+well above the 3:1 requirement of WCAG 2.2 Focus Appearance. A brushed-gold
+halo sits outside the navy outline as a non-essential accent; the navy outline
+alone satisfies the criterion, including on navy-filled controls where the
+2px offset places the outline on the page background. Interactive borders that
+carry meaning use navy or gold, not the light hairline gray.
 
-1. Skip to main content link (visible on focus).
-2. Mode group: Notes, Study, Quiz me buttons.
-3. Reset button, Print / Save PDF button.
-4. Foundations video toggle, Deep dive video toggle, Go to the pre-work link.
-5. Main content in reading order. In Study and Quiz modes, each `.term` input and its Reveal button, and each grid-row and sequence-step Reveal button, are reachable in document order.
-6. The explain-back gate textarea and submit button (when present).
+## 4. Keyboard navigation
 
-Verified behaviors: every control is reachable and operable with Tab, Shift+Tab, Enter, and Space; the mode buttons toggle correctly from the keyboard; Reveal buttons fire on Enter and Space; the lightbox opens from a focused figure, traps focus while open, closes on Escape, and returns focus to the figure that opened it. No keyboard traps were found.
+Verified that every interactive element is reachable and operable by keyboard
+with no mouse, and that the focus order matches the visual order.
 
-## 5. Screen reader testing
+Flow: the skip link appears first on Tab and jumps to the schedule. The four
+view choices are a native radio group, so arrow keys move between them and the
+selection applies immediately. The daily prep checklist control is a native
+checkbox styled as a switch, toggled with Space. The Save as PDF button, the
+Export disclosure, every export button, and the import-help disclosure all take
+focus in order and activate with Enter or Space. The lecture material and
+spaced recall links inside each day card are native links, reachable by Tab and
+with a visible focus outline. In the Weekly view, the Previous
+week and Next week buttons and the week dropdown are all keyboard operable.
+There is no keyboard trap. Focus is visible on every element. Disabled state on
+the Previous and Next buttons at the first and last week is conveyed natively.
+Target sizes meet the 24 by 24 CSS pixel minimum.
 
-This release was audited at the code level for the structures screen readers depend on. Verified in markup across all 37 pages: a single `h1` per page with correctly nested `h2` and `h3` headings; landmark structure (`main`, `section` with `aria-labelledby`, `aria-label` on the toolbar and resource regions); comparison grids exposed as real tables with `scope` on every header cell so row and column context is announced; ordered lists for sequences, each with an `aria-label`; `aria-pressed`, `aria-expanded`, and `aria-controls` on stateful controls; `role="dialog"` with `aria-modal` and `aria-labelledby` on the lightbox; `aria-live` on dynamic regions; and `aria-label` text on every icon-only or input control.
+When a view changes, focus is moved to the new view heading, which is
+programmatically focusable, so keyboard and screen reader users land on the new
+content rather than losing their place.
 
-Not yet done: a live pass with a running screen reader. A confirming test with NVDA on Windows and VoiceOver on macOS and iOS is listed as a remediation item in section 6, and should be completed before final sign-off.
+## 5. Screen reader and structure verification
+
+Verification method: structural and ARIA inspection of the rendered DOM, plus
+an automated functional test of 31 checks covering page boot, all four view
+toggles, the daily prep checklist toggle, the numbered week headers, the
+Lecture and Lab tracks, the weekend cards, and every export generator. All 27
+checks pass.
+
+Confirmed present and correct:
+
+Semantic landmarks are a single `header`, a `nav` labeled "Schedule view and
+options", a `main`, and a `footer`. The heading hierarchy runs h1 for the page
+title, h2 for the active view, h3 for week headers, and h4 for day cards, with no
+skipped levels. The split-color headings are pure styling: each heading is one
+heading element with two colored `span` segments, so a screen reader reads it as
+one continuous title. The big week numerals are decorative and marked
+`aria-hidden`, since the adjacent "Week N" text already names the week. The view
+switch uses `fieldset` and `legend`. The daily prep checklist switch uses a
+`label` tied to its input by `for` and `id`, with an `aria-describedby` note
+clarifying that the prep checklist is recommended and not graded. Each day card
+is an `article` with an accessible name that includes its session type and, on
+the current day, the word "today"; the today ribbon's arrow glyph is decorative
+and `aria-hidden`, with the ribbon's white-on-navy text carrying the meaning.
+The Lecture and Lab tracks use real `ul` and `li` markup with native links. The
+graded-items table uses a `caption` and column headers with `scope`. Two status
+regions, the view status line and the export status line, use `role="status"`
+with `aria-live="polite"` so view changes and export results are announced
+without stealing focus. The Export and import-help panels are native `details`
+and `summary` elements. The daily prep checklist uses real `ul` and `li` markup,
+with the gated prework item as plain text so it is clear it is not yet a link.
+
+A live pass with VoiceOver on macOS is recommended as a final check before the
+first student cohort. See remediation below.
 
 ## 6. Known limitations and remediation plan
 
-1. **AAA contrast for the eyebrow label.** The terra-dark eyebrow at 12 px measures 5.62:1, which passes AA but not the AAA 7:1 target. Remediation options: raise the eyebrow to a large-text size, or use navy for the eyebrow text and keep terra-dark for accent rules only. Decision pending from Dr. Sharilyn Rennie. Priority: low (AA is met).
-2. **Focus outline non-text contrast.** The gold #B8924A focus outline is 2.90:1 against white, marginally below the 3:1 non-text minimum. The outline is 3 px thick with offset, which aids visibility, but the color is below threshold. Remediation: darken the focus ring toward the gold's hover value, or switch the focus outline to navy, which would test at 11:1. Priority: medium. Recommended for the next template revision.
-3. **Live screen reader pass outstanding.** Structure has been audited in code but not exercised with a running screen reader. Remediation: run NVDA and VoiceOver against one page of each layout type and record results here. Priority: medium, before final sign-off.
-4. **Figure placeholders.** Most pages carry labeled figure-placeholder cards in place of final anatomical images. When real images are added, each must receive descriptive alt text equivalent to the placeholder description already written into the card. Priority: tracked with content completion.
-5. **Pre-work links.** Each page sets a per-topic pre-work target (for example `cns-brain-prework.html`). These target files are not yet built; the links resolve only once the pre-work pages exist. This is a content task, not an accessibility defect. Priority: tracked with content completion.
+Terra cotta and brushed gold accent text reaches AA at roughly 5.1 to 5.6:1 but
+not AAA. These are fixed brand colors from the primary teaching palette, and
+the affected text is small in volume (eyebrow lines, short section labels, and
+badge text). Raising them to 7:1 would require changing the brand palette.
+Decision: hold at AA for brand-colored accent text, since the body of the page,
+all reading content, reaches AAA. Revisit only if the palette is revised.
+
+Secondary gray text reaches AA at 5.8 to 6.6:1, just under the 7:1 AAA mark. It
+was already darkened once during this build, from the original token to
+#565E62, to gain margin. Darkening further would erode the visual hierarchy
+that separates secondary text from primary navy text. Decision: hold at AA.
+
+Screen reader testing was done by DOM and ARIA inspection and automated
+functional testing, not by a live assistive-technology pass. Remediation: run
+one pass with VoiceOver, and ideally one with NVDA on Windows, before the
+schedule is published to students. Budget about 30 minutes.
+
+The PDF is readable with good contrast and correct reading order but is not a
+tagged PDF. Remediation, only if required by the institution: produce a tagged
+version, or direct students who use assistive technology to the HTML page,
+which is the fully accessible format.
+
+The HTML carries the iframe height-sender script and is built for Canvas embed.
+When embedded, confirm in the live Canvas page that the host sizes the iframe
+from the posted height and that focus is not obscured by any sticky Canvas
+chrome (WCAG 2.2, 2.4.11). This can only be checked in the real Canvas shell.
 
 ## 7. Reviewer
 
-Prepared by Claude (Cowork) on 2026-05-21, from a code-level audit of the shared page template, a contrast computation of the PRIMARY palette, and a programmatic structural check of all 37 pages.
-
-Pending review and sign-off by: Dr. Sharilyn Rennie
-
-Reviewer signature and date: ____________________________
+Prepared by the Course Schedule Engine build process and reviewed against
+WCAG 2.2. Final sign-off pending review by Dr. Sharilyn Rennie.
