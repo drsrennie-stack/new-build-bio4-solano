@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pre-Work · BIO 004 · Human Anatomy</title>
+<!--
+  BIO 004 Human Anatomy · Pre-Work hub.
+  The course-schedule page links each day's "Pre-work" button to this page at
+  the anchor wk-N-day (for example prework.html#wk-1-mon). This page holds one
+  section per week, one card per day, each linking that day's concept pages.
+  Week 1 day mapping is from Dr. Rennie. Weeks 2 to 8 are a draft distribution
+  of each week's topics across the four days; adjust freely.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Lora:ital,wght@0,400;1,400;1,500&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1E3D4C; --navy-deep: #142a36; --navy-tint: #EDF1F3;
+    --gold: #B8924A; --gold-soft: #DCC487; --terra: #C2734D; --terra-dark: #A0522D;
+    --white: #FFFFFF; --offwhite: #FAFAF9;
+    --rule: rgba(30,61,76,0.18); --rule-soft: rgba(30,61,76,0.10);
+    --shadow-rest: 0 1px 3px rgba(0,0,0,0.08); --shadow-hover: 0 8px 16px rgba(0,0,0,0.10);
+    --ink: #1E3D4C; --ink-soft: rgba(30,61,76,0.72);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: var(--offwhite); color: var(--navy); font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  .skip { position: absolute; left: -9999px; }
+  .skip:focus { position: static; display: inline-block; padding: 8px 12px; background: var(--navy); color: #fff; margin: 8px; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; border-radius: 4px; }
+
+  .banner { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%); color: #fff; padding: 44px 32px 40px; position: relative; overflow: hidden; }
+  .banner::before { content: ''; position: absolute; top: -70px; right: -40px; width: 260px; height: 260px; background: radial-gradient(circle, rgba(184,146,74,0.22) 0%, transparent 70%); }
+  .banner-inner { max-width: 980px; margin: 0 auto; position: relative; }
+  .banner-eyebrow { font-family: 'DM Sans', system-ui, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-soft); margin: 0 0 10px; }
+  .banner h1 { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 800; font-size: 2rem; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .banner p { font-family: 'Lora', Georgia, serif; font-size: 1rem; color: #DDE3E8; margin: 0; max-width: 64ch; }
+
+  .wrap { max-width: 980px; margin: 0 auto; padding: 26px 32px 60px; }
+  @media (max-width: 620px) { .wrap, .banner { padding-left: 18px; padding-right: 18px; } }
+
+  .intro { background: var(--white); border: 1px solid var(--rule); border-left: 4px solid var(--gold); border-radius: 8px; padding: 18px 22px; margin-bottom: 28px; box-shadow: var(--shadow-rest); }
+  .intro h2 { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 1rem; font-weight: 700; color: var(--navy); margin: 0 0 6px; }
+  .intro p { margin: 0 0 8px; font-size: 13.5px; color: var(--ink); }
+  .intro p:last-child { margin-bottom: 0; }
+  .intro strong { color: var(--terra-dark); font-weight: 700; }
+
+  .week { margin-bottom: 30px; }
+  .week-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; padding-bottom: 8px; border-bottom: 2px solid var(--navy); margin-bottom: 16px; }
+  .week-num { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 800; font-size: 1.3rem; color: var(--terra-dark); }
+  .week-title { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--navy); margin-right: auto; }
+  .week-dates { font-family: 'DM Sans', system-ui, sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+
+  .day-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 620px) { .day-grid { grid-template-columns: 1fr; } }
+  .day-card { background: var(--white); border: 1px solid var(--rule); border-radius: 8px; box-shadow: var(--shadow-rest); overflow: hidden; scroll-margin-top: 14px; }
+  .day-card-head { background: var(--navy); color: #fff; padding: 11px 16px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .day-card-day { font-family: 'DM Sans', system-ui, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-soft); }
+  .day-card-date { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 0.95rem; font-weight: 700; margin-right: auto; }
+  .day-card-activity { font-family: 'DM Sans', system-ui, sans-serif; font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.3); padding: 3px 9px; border-radius: 100px; }
+  .day-card-body { padding: 13px 16px 15px; }
+  .day-card-label { font-family: 'DM Sans', system-ui, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--terra-dark); margin: 0 0 8px; }
+  .pw-link { display: flex; align-items: center; gap: 8px; padding: 8px 10px; margin: 6px 0; border: 1px solid var(--rule); border-radius: 6px; text-decoration: none; color: var(--navy); font-weight: 700; font-size: 13.5px; transition: background 0.15s, border-color 0.15s, transform 0.15s; }
+  .pw-link:hover { background: var(--navy-tint); border-color: var(--gold); transform: translateY(-1px); }
+  .pw-link .arrow { margin-left: auto; color: var(--gold); font-weight: 800; }
+  .pw-soon { padding: 8px 10px; margin: 6px 0; border: 1px dashed var(--rule); border-radius: 6px; color: var(--ink-soft); font-size: 13px; font-style: italic; font-family: 'Lora', Georgia, serif; }
+  .pw-note { font-family: 'Lora', Georgia, serif; font-style: italic; font-size: 12.5px; color: var(--ink-soft); margin: 8px 0 0; }
+
+  footer { max-width: 980px; margin: 0 auto; padding: 24px 32px 8px; border-top: 1px solid var(--rule); font-family: 'DM Sans', system-ui, sans-serif; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+  footer strong { color: var(--navy); }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  @media print {
+    body { background: #fff; }
+    .banner { background: #fff; color: var(--ink); border-bottom: 2px solid var(--navy); }
+    .banner::before { display: none; } .banner h1 { color: var(--navy); } .banner p, .banner-eyebrow { color: var(--ink); }
+    .day-card, .intro { box-shadow: none; break-inside: avoid; }
+    .day-card-head { background: #fff; color: var(--navy); border-bottom: 1px solid var(--navy); }
+    .day-card-day, .day-card-activity { color: var(--navy); }
+    a { color: var(--navy); }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header class="banner">
+  <div class="banner-inner">
+    <p class="banner-eyebrow">BIO 004 &middot; Human Anatomy &middot; Summer 2026</p>
+    <h1>Pre-Work</h1>
+    <p>Everything to do before each class day, organized by week and by day. Open a topic to watch the video, take your notes, work the study questions, and do your spaced recall cards.</p>
+  </div>
+</header>
+<main class="wrap" id="main">
+  <section class="intro" aria-label="How pre-work works">
+    <h2>How pre-work works</h2>
+    <p>Each evening, open that day's topic pages below. Every topic page walks you through the same routine: watch the Foundations video and take notes, write handwritten definitions, build a concept map, sketch the key structures, answer the study questions, complete the explain-back check, then do your spaced recall cards.</p>
+    <p><strong>This is more than a checklist.</strong> Ticking boxes is the start, not the finish. Committing this material to memory and being able to apply it takes considerable time and repeated effort. Put in the real hours, and keep coming back for frequent recall and review.</p>
+  </section>
+  <div id="weeks"></div>
+</main>
+<footer>
+  <span><strong>BIO 004 Human Anatomy</strong>, Summer 2026, Solano Community College</span>
+  <span>Dr. Sharilyn Rennie</span>
+</footer>
+<script>
+(function () {
+  'use strict';
+  // Each day: [DayLabel, date, activity, [[pageTitle, slug-or-null], ...], note-or-null]
+  // A null slug renders as "concept page coming soon" (topic has no page yet).
+  var WEEKS = [
+    { n: 1, title: 'Foundations and Integumentary System', dates: 'June 15 to 18', days: [
+      ['Mon','June 15','Orientation and Onboarding',[['The Language of Anatomy','anatomical-terminology'],['Body Cavities and Regions','body-cavities']],null],
+      ['Tue','June 16','Active Learning',[['Anatomy of the Cell','cell-anatomy']],null],
+      ['Wed','June 17','Run Case',[['Histology: The Four Tissue Types','tissues']],null],
+      ['Thu','June 18','Present Case, TBL',[['The Integumentary System','integumentary']],null]
+    ]},
+    { n: 2, title: 'Skeletal: Axial, Appendicular, Joints, Muscle Microanatomy', dates: 'June 22 to 25', days: [
+      ['Mon','June 22','Success Tool',[['Bone Histology','bone-histology'],['Axial Skeleton: The Skull','axial-skeleton-skull']],null],
+      ['Tue','June 23','Active Learning',[['Axial Skeleton: The Spine','axial-skeleton-spine'],['Appendicular Skeleton: Upper','appendicular-skeleton-upper']],null],
+      ['Wed','June 24','Run Case',[['Appendicular Skeleton: Lower','appendicular-skeleton-lower'],['Articulations and Joints','articulations']],null],
+      ['Thu','June 25','Present Case, TBL',[['Muscle Fascicles','muscle-fascicles'],['Muscle Structure','muscle-structure']],null]
+    ]},
+    { n: 3, title: 'Cardiovascular, Blood, Respiratory, Regional BV/N 1', dates: 'June 29 to July 2', days: [
+      ['Mon','June 29','Success Tool',[['The Heart','heart'],['Cardiac Conduction','cardiac-conduction']],null],
+      ['Tue','June 30','Active Learning',[['Blood','blood'],['Blood Vessels','blood-vessels']],null],
+      ['Wed','July 1','Run Case',[['The Respiratory System','respiratory']],null],
+      ['Thu','July 2','Present Case, TBL',[['Blood Vessel Disorders','blood-vessel-disorders']],'Regional blood vessels and nerves are covered in lab this week.']
+    ]},
+    { n: 4, title: 'Upper Extremity and Thoracic Muscles, Lymphatic, Regional BV/N 2', dates: 'July 6 to 9', days: [
+      ['Mon','July 6','Success Tool',[['The Lymphatic System','lymphatic-system']],null],
+      ['Tue','July 7','Active Learning',[['Thoracic and Back Muscles',null]],null],
+      ['Wed','July 8','Run Case',[['Upper Extremity Muscles',null]],null],
+      ['Thu','July 9','Present Case, TBL',[['Regional BV/N 2',null]],'The regional muscle topics this week do not yet have concept pages.']
+    ]},
+    { n: 5, title: 'Digestive, Abdominal and Pelvic Anatomy, Regional BV/N 3', dates: 'July 13 to 16', days: [
+      ['Mon','July 13','Success Tool',[['The Alimentary Canal','alimentary-canal']],null],
+      ['Tue','July 14','Active Learning',[['Accessory Digestive Organs','accessory-digestive-organs']],null],
+      ['Wed','July 15','Run Case',[['Abdominal and Pelvic Wall',null]],null],
+      ['Thu','July 16','Present Case, TBL',[['Lower Extremity Muscles',null]],'Abdominal/pelvic wall and lower extremity muscle pages are not yet built.']
+    ]},
+    { n: 6, title: 'Urinary, Reproductive, and Endocrine Systems', dates: 'July 20 to 23', days: [
+      ['Mon','July 20','Success Tool',[['The Urinary System','urinary-system']],null],
+      ['Tue','July 21','Active Learning',[['Male Reproductive System','reproductive-male'],['Female Reproductive System','reproductive-female']],null],
+      ['Wed','July 22','Run Case',[['Pregnancy and Birth','pregnancy-and-birth']],null],
+      ['Thu','July 23','Present Case, TBL',[['The Endocrine System','endocrine']],null]
+    ]},
+    { n: 7, title: 'Nervous: Head and Neck Muscles, CNS Brain, CSF, Meninges', dates: 'July 27 to 30', days: [
+      ['Mon','July 27','Success Tool',[['Nervous Tissue','nervous-tissue']],null],
+      ['Tue','July 28','Active Learning',[['The Brain','cns-brain'],['The Brainstem','cns-brainstem']],null],
+      ['Wed','July 29','Run Case',[['Meninges, Ventricles, and CSF','cns-meninges-csf']],null],
+      ['Thu','July 30','Present Case, TBL',[['Neuronal Integration','neuronal-integration']],'Head and neck muscles are covered in lab this week.']
+    ]},
+    { n: 8, title: 'Nervous: Spinal Cord, Peripheral and Cranial Nerves, Integration', dates: 'August 3 to 6', days: [
+      ['Mon','August 3','Lecture and lab',[['The Spinal Cord','cns-spinal-cord']],null],
+      ['Tue','August 4','Lecture and lab',[['Peripheral Nervous System','pns'],['Nerve Plexuses','nerve-plexuses']],null],
+      ['Wed','August 5','Integration and review',[['Cranial Nerves','cranial-nerves'],['Autonomic Nervous System','ans']],null],
+      ['Thu','August 6','Cumulative Exams',[],'No new pre-work. Review the full term with your spaced recall cards and study questions.']
+    ]}
+  ];
+  var DAYKEY = { Mon: 'mon', Tue: 'tue', Wed: 'wed', Thu: 'thu' };
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  var html = '';
+  WEEKS.forEach(function (w) {
+    html += '<section class="week" aria-label="Week ' + w.n + '">';
+    html += '<div class="week-head"><span class="week-num">Week ' + w.n + '</span>'
+          + '<span class="week-title">' + esc(w.title) + '</span>'
+          + '<span class="week-dates">' + esc(w.dates) + '</span></div>';
+    html += '<div class="day-grid">';
+    w.days.forEach(function (d) {
+      var anchor = 'wk-' + w.n + '-' + DAYKEY[d[0]];
+      html += '<article class="day-card" id="' + anchor + '">';
+      html += '<div class="day-card-head"><span class="day-card-day">' + esc(d[0]) + '</span>'
+            + '<span class="day-card-date">' + esc(d[1]) + '</span>'
+            + '<span class="day-card-activity">' + esc(d[2]) + '</span></div>';
+      html += '<div class="day-card-body">';
+      var pages = d[3] || [];
+      if (pages.length) {
+        html += '<p class="day-card-label">Tonight’s pre-work</p>';
+        pages.forEach(function (p) {
+          if (p[1]) {
+            html += '<a class="pw-link" href="' + p[1] + '.html" target="_top">'
+                  + '<span>' + esc(p[0]) + '</span><span class="arrow" aria-hidden="true">&rsaquo;</span></a>';
+          } else {
+            html += '<div class="pw-soon">' + esc(p[0]) + ' &mdash; concept page coming soon</div>';
+          }
+        });
+      }
+      if (d[4]) { html += '<p class="pw-note">' + esc(d[4]) + '</p>'; }
+      html += '</div></article>';
+    });
+    html += '</div></section>';
+  });
+  document.getElementById('weeks').innerHTML = html;
+
+  // Iframe height-sender for Canvas embeds.
+  if (window.self !== window.top) {
+    var send = function () {
+      try {
+        var h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+        window.parent.postMessage({ type: 'iframe-height', id: 'prework', height: h }, '*');
+      } catch (e) {}
+    };
+    window.addEventListener('load', send);
+    window.addEventListener('resize', send);
+    if (window.ResizeObserver) { new ResizeObserver(send).observe(document.body); }
+  }
+})();
+</script>
+</body>
+</html>
