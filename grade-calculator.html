@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Grade Calculator · BIO 004 · Human Anatomy</title>
+<!--
+  BIO 004 Human Anatomy · Grade Calculator.
+  Recreated in the current PRIMARY palette for the new-build repo.
+  Weights match the syllabus grade model:
+  TBL 40, Lab Practical Exams 35, Cumulative Lecture Final 15, End-of-Day Lab Quizzes 10.
+  Dr. Rennie to redo and refine as needed.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Lora:ital,wght@0,400;1,400;1,500&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1E3D4C; --navy-deep: #142a36; --navy-tint: #EDF1F3;
+    --gold: #B8924A; --gold-soft: #DCC487; --terra: #C2734D; --terra-dark: #A0522D;
+    --white: #FFFFFF; --offwhite: #FAFAF9;
+    --rule: rgba(30,61,76,0.18); --rule-soft: rgba(30,61,76,0.10);
+    --shadow-rest: 0 1px 3px rgba(0,0,0,0.08); --shadow-hover: 0 8px 16px rgba(0,0,0,0.10);
+    --ink: #1E3D4C; --ink-soft: rgba(30,61,76,0.72);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: var(--offwhite); color: var(--ink); font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .skip { position: absolute; left: -9999px; }
+  .skip:focus { position: static; display: inline-block; padding: 8px 12px; background: var(--navy); color: #fff; margin: 8px; }
+  a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; border-radius: 4px; }
+
+  .banner { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%); color: #fff; padding: 40px 32px 36px; position: relative; overflow: hidden; }
+  .banner::before { content: ''; position: absolute; top: -70px; right: -40px; width: 240px; height: 240px; background: radial-gradient(circle, rgba(184,146,74,0.22) 0%, transparent 70%); }
+  .banner-inner { max-width: 680px; margin: 0 auto; position: relative; }
+  .eyebrow { font-family: 'DM Sans', system-ui, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-soft); margin: 0 0 10px; }
+  .banner h1 { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 800; font-size: 1.85rem; margin: 0 0 6px; letter-spacing: -0.02em; }
+  .banner p { font-family: 'Lora', Georgia, serif; font-style: italic; font-size: 0.98rem; color: #DDE3E8; margin: 0; }
+
+  main { max-width: 680px; margin: 0 auto; padding: 26px 32px 56px; }
+  @media (max-width: 560px) { main, .banner { padding-left: 18px; padding-right: 18px; } }
+
+  .calc { background: var(--white); border: 1px solid var(--rule); border-radius: 10px; box-shadow: var(--shadow-rest); padding: 24px 26px; position: relative; overflow: hidden; }
+  .calc::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(to right, var(--navy), var(--gold), var(--terra)); }
+  .calc h2 { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--navy); margin: 6px 0 4px; }
+  .calc-intro { font-family: 'Lora', Georgia, serif; font-size: 13.5px; color: var(--ink-soft); margin: 0 0 16px; }
+
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.82rem; font-weight: 700; color: var(--navy); margin-bottom: 5px; }
+  .field .wt-tag { color: var(--terra-dark); }
+  .field input { width: 100%; padding: 11px 14px; border: 1px solid var(--rule); border-radius: 6px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 1rem; color: var(--ink); background: var(--offwhite); }
+  .field input:focus { border-color: var(--navy); background: var(--white); }
+  .field .hint { font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.72rem; color: var(--ink-soft); margin-top: 4px; }
+
+  .result { margin-top: 20px; padding: 18px 20px; background: var(--navy-tint); border: 1px solid var(--rule-soft); border-radius: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .result-label { font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: var(--terra-dark); margin-bottom: 4px; }
+  .result-value { font-family: 'Lora', Georgia, serif; font-style: italic; font-weight: 600; font-size: 1.7rem; color: var(--navy); }
+  .result-grade { display: inline-block; font-style: normal; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 800; font-size: 1.3rem; background: var(--navy); color: #fff; border: 1px solid var(--gold); border-radius: 6px; padding: 3px 16px; }
+
+  .btn-row { margin-top: 16px; }
+  .btn { font-family: 'DM Sans', system-ui, sans-serif; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 9px 18px; border-radius: 100px; border: 1px solid var(--navy); background: var(--white); color: var(--navy); cursor: pointer; }
+  .btn:hover { background: var(--navy-tint); }
+
+  .note { background: var(--white); border: 1px solid var(--rule); border-left: 4px solid var(--gold); border-radius: 0 8px 8px 0; padding: 14px 18px; margin-top: 20px; font-size: 13.5px; box-shadow: var(--shadow-rest); }
+  .note strong { color: var(--terra-dark); }
+  .disclaimer { font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.78rem; color: var(--ink-soft); margin-top: 14px; }
+
+  footer { max-width: 680px; margin: 0 auto; padding: 22px 32px 8px; border-top: 1px solid var(--rule); text-align: center; font-family: 'DM Sans', system-ui, sans-serif; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
+  footer strong { color: var(--navy); }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header class="banner">
+  <div class="banner-inner">
+    <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Summer 2026</p>
+    <h1>Grade Calculator</h1>
+    <p>Estimate your standing in the course at any point in the term.</p>
+  </div>
+</header>
+<main id="main">
+  <div class="calc">
+    <h2>Current standing estimator</h2>
+    <p class="calc-intro">Enter your averages as percentages out of 100. Leave a field blank to exclude it, the estimate will reweight to what you have entered so far.</p>
+
+    <div class="field">
+      <label for="tbl">Team-Based Learning average <span class="wt-tag">(40%)</span></label>
+      <input type="number" id="tbl" min="0" max="100" step="0.1" inputmode="decimal" placeholder="e.g., 86">
+      <p class="hint">Average across all 8 TBLs. No TBL is dropped.</p>
+    </div>
+    <div class="field">
+      <label for="lab">Lab practical exam average <span class="wt-tag">(35%)</span></label>
+      <input type="number" id="lab" min="0" max="100" step="0.1" inputmode="decimal" placeholder="e.g., 80">
+      <p class="hint">Average across the lab exams you have taken so far.</p>
+    </div>
+    <div class="field">
+      <label for="final">Cumulative Lecture Final <span class="wt-tag">(15%)</span></label>
+      <input type="number" id="final" min="0" max="100" step="0.1" inputmode="decimal" placeholder="leave blank until taken">
+      <p class="hint">Your score on the end-of-term cumulative lecture final.</p>
+    </div>
+    <div class="field">
+      <label for="quiz">End-of-day lab quiz average <span class="wt-tag">(10%)</span></label>
+      <input type="number" id="quiz" min="0" max="100" step="0.1" inputmode="decimal" placeholder="e.g., 92">
+      <p class="hint">Average across all completed end-of-day lab quizzes.</p>
+    </div>
+
+    <div class="result" role="status" aria-live="polite" aria-atomic="true">
+      <div><div class="result-label">Weighted total</div><div class="result-value" id="pct">--</div></div>
+      <div><div class="result-label">Letter grade</div><div class="result-value"><span class="result-grade" id="letter">--</span></div></div>
+    </div>
+    <div class="btn-row"><button type="button" class="btn" id="reset">Reset</button></div>
+    <p class="disclaimer">This is a personal estimation tool. Your official grade is recorded in Canvas.</p>
+  </div>
+
+  <div class="note">
+    <p><strong>The final can lift your lowest TBL.</strong> If your Cumulative Lecture Final score is higher than your single lowest TBL score, that lowest TBL is raised to match the final before your TBL average is computed. This calculator does not model that automatically, so if it applies to you, enter your adjusted TBL average above.</p>
+  </div>
+</main>
+<footer>
+  <p><strong>BIO 004 Human Anatomy</strong>, Summer 2026, Solano Community College &middot; Dr. Sharilyn Rennie</p>
+</footer>
+<script>
+(function () {
+  'use strict';
+  var WEIGHTS = { tbl: 40, lab: 35, final: 15, quiz: 10 };
+  var fields = ['tbl', 'lab', 'final', 'quiz'];
+  var pctEl = document.getElementById('pct');
+  var letterEl = document.getElementById('letter');
+
+  function clamp(v) {
+    if (v === '' || v == null) return null;
+    var n = parseFloat(v);
+    if (isNaN(n)) return null;
+    return Math.max(0, Math.min(100, n));
+  }
+  function letterFor(p) {
+    if (p >= 89.5) return 'A';
+    if (p >= 79.5) return 'B';
+    if (p >= 69.5) return 'C';
+    if (p >= 59.5) return 'D';
+    return 'F';
+  }
+  function recalc() {
+    var sum = 0, totalWeight = 0;
+    fields.forEach(function (f) {
+      var v = clamp(document.getElementById(f).value);
+      if (v !== null) { sum += v * WEIGHTS[f]; totalWeight += WEIGHTS[f]; }
+    });
+    if (totalWeight === 0) { pctEl.textContent = '--'; letterEl.textContent = '--'; return; }
+    var pct = sum / totalWeight;
+    pctEl.textContent = pct.toFixed(1) + '%';
+    letterEl.textContent = letterFor(pct);
+  }
+  fields.forEach(function (f) {
+    document.getElementById(f).addEventListener('input', recalc);
+  });
+  document.getElementById('reset').addEventListener('click', function () {
+    fields.forEach(function (f) { document.getElementById(f).value = ''; });
+    recalc();
+  });
+  recalc();
+
+  if (window.self !== window.top) {
+    var send = function () {
+      try {
+        var h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+        window.parent.postMessage({ type: 'iframeHeight', id: 'grade-calculator', height: h }, '*');
+      } catch (e) {}
+    };
+    window.addEventListener('load', send);
+    window.addEventListener('resize', send);
+    if (window.ResizeObserver) { new ResizeObserver(send).observe(document.body); }
+  }
+})();
+</script>
+</body>
+</html>
