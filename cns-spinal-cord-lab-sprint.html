@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BIO 004 &middot; Week 8 &middot; Spinal Cord Lab Sprint</title>
+<meta name="description" content="Week 8 lab sprint for BIO 004 Human Anatomy: Spinal Cord. Preview structures, drill in Spiral Rounds, then build a study plan for the lab exam.">
+<!--
+  BIO 004 Human Anatomy, Week 8 Lab Sprint: Spinal Cord.
+  Chrome matches index.html and week-8-lab-sprints.html (site-header,
+  dark hero band, light content, dark footer band). All interactive
+  functions preserved: TOC, expandable structure categories, Spiral
+  Rounds SVG + checkboxes, pre-exam study plan with spaced repetition,
+  notes textarea, localStorage persistence.
+-->
+<link href="https://cdn.jsdelivr.net/npm/@fontsource-variable/plus-jakarta-sans/index.css" rel="stylesheet">
+<style>
+:root {
+  --navy:#0B1530; --navy-deep:#060A18;
+  --terra:#8B3A2E; --terra-dark:#A0452F;
+  --gold:#C9A14A;
+  --cream:#F5F1E8;
+  --white:#FFFFFF; --offwhite:#FAFAF9;
+  --ink:#0B1530; --ink-soft:#3D4F5A;
+  --rule:rgba(11,21,48,0.18);
+  --rule-soft:rgba(11,21,48,0.10);
+  --card-border:#8C90A0;
+  --shadow-rest:0 1px 3px rgba(11,21,48,0.06);
+  --shadow-hover:0 10px 22px rgba(11,21,48,0.12);
+  --radius-sm:5px; --radius-md:9px; --radius-lg:12px;
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+html, body { margin:0; padding:0; font-size:16px; line-height:1.65; }
+body {
+  font-family:'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+  background:var(--white); color:var(--ink); -webkit-font-smoothing:antialiased;
+}
+a { color:inherit; }
+img { max-width:100%; display:block; }
+@media (prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto; }
+  *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; }
+}
+.skip-link {
+  position:absolute; left:8px; top:-100px;
+  background:var(--navy); color:var(--cream); font-weight:700; font-size:13px;
+  letter-spacing:.04em; padding:12px 20px; border-radius:4px;
+  text-decoration:none; z-index:9999;
+}
+.skip-link:focus { top:8px; }
+a:focus-visible, button:focus-visible, summary:focus-visible,
+select:focus-visible, input:focus-visible, textarea:focus-visible,
+[tabindex]:focus-visible { outline:3px solid var(--terra); outline-offset:3px; border-radius:4px; }
+.band--dark a:focus-visible, .ls-footer a:focus-visible { outline-color:var(--gold); }
+.band { padding:56px max(40px, 5vw); }
+.band--light { background:var(--white); }
+.band--dark { background:var(--navy-deep); }
+.inner { max-width:1000px; margin:0 auto; }
+.site-header {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:20px; flex-wrap:wrap; padding:20px max(40px, 5vw);
+  background:var(--white); border-bottom:0.5px solid rgba(11,21,48,0.12);
+}
+.site-logo { display:inline-flex; align-items:center; gap:14px; text-decoration:none; }
+.site-logo svg { height:48px; width:auto; display:block; }
+.logo-text { display:flex; flex-direction:column; }
+.logo-title { font-size:21px; font-weight:800; letter-spacing:-0.02em; color:var(--navy); line-height:1; }
+.logo-title .logo-accent { color:var(--terra); }
+.logo-sub { font-size:10px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--navy); opacity:0.72; margin-top:3px; }
+.header-nav { display:flex; gap:8px; flex-wrap:wrap; }
+.header-nav a { font-size:13px; font-weight:700; letter-spacing:.03em; color:var(--navy); text-decoration:none; padding:8px 14px; border-radius:8px; }
+.header-nav a:hover { background:var(--navy); color:var(--white); }
+.hero .eyebrow { font-size:12px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold); margin:0 0 14px; }
+.hero h1 { font-size:clamp(32px, 5vw, 44px); font-weight:800; letter-spacing:-0.025em; line-height:1.1; color:var(--cream); margin:0 0 14px; }
+.hero-sub { font-size:16px; line-height:1.6; color:var(--cream); opacity:0.84; max-width:62ch; margin:0 0 12px; }
+.hero-meta { font-size:13px; color:var(--cream); opacity:0.78; margin:0; }
+.hero-meta strong { color:var(--gold); opacity:1; font-weight:700; }
+.toc { background:var(--white); border:1px solid var(--rule); border-radius:var(--radius-md); padding:14px 20px; margin-bottom:30px; box-shadow:var(--shadow-rest); }
+.toc-label { font-size:11px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--terra); margin:0 0 8px; }
+.toc-list { display:flex; flex-wrap:wrap; gap:6px 20px; list-style:none; margin:0; padding:0; }
+.toc-list a { color:var(--terra); text-decoration:none; font-weight:700; font-size:14px; padding:4px 0; border-bottom:2px solid transparent; }
+.toc-list a:hover, .toc-list a:focus { border-bottom-color:var(--terra); }
+.section { background:var(--white); border:1px solid var(--card-border); border-radius:var(--radius-lg); padding:28px 32px; margin-bottom:22px; box-shadow:var(--shadow-rest); }
+.section-eyebrow { font-size:12px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--terra); margin:0 0 6px; }
+.section h2 { font-size:clamp(21px, 3vw, 27px); font-weight:800; letter-spacing:-0.015em; line-height:1.25; color:var(--navy); margin:0 0 10px; }
+.section-lede { font-size:14.5px; color:var(--ink); opacity:0.80; line-height:1.62; margin:0 0 22px; max-width:820px; }
+.section h3 { font-size:17px; font-weight:800; letter-spacing:-0.01em; color:var(--navy); margin:26px 0 10px; }
+.prep-lead { font-size:14.5px; color:var(--ink-soft); font-style:italic; margin:0 0 14px; }
+.prep-lead strong { color:var(--terra); font-style:normal; font-weight:800; }
+.prep-cat {
+  display:flex; align-items:center; gap:9px; width:100%;
+  background:var(--white); border:1px solid var(--card-border); border-radius:8px;
+  cursor:pointer; text-align:left; padding:12px 14px; margin:10px 0 0;
+  font-family:inherit; font-size:14px; font-weight:700; color:var(--navy); letter-spacing:.01em;
+  transition:border-color .15s ease, background .15s ease, box-shadow .15s ease;
+}
+.prep-cat::before { content:"\25B8"; font-size:13px; color:var(--terra); flex:none; transition:transform .15s ease; }
+.prep-cat[aria-expanded="true"]::before { transform:rotate(90deg); }
+.prep-cat:hover { border-color:var(--terra); box-shadow:var(--shadow-rest); }
+.prep-cat[aria-expanded="true"] { border-color:var(--terra); background:#FFFAF7; }
+.prep-count { display:inline-block; background:var(--navy); color:var(--white); border-radius:999px; padding:2px 10px; font-size:11px; font-weight:700; letter-spacing:.04em; margin-left:auto; }
+.prep-body { margin-top:6px; padding:4px 4px 10px 12px; }
+.prep-body[hidden] { display:none; }
+.prep-list { list-style:none; margin:6px 0 0; padding:0; display:grid; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr)); gap:1px 16px; }
+.prep-list li { font-size:13px; line-height:1.5; color:var(--ink); padding:3px 0 3px 22px; position:relative; }
+.prep-list li::before { content:"\2610"; position:absolute; left:0; top:2px; color:var(--gold); font-size:14px; font-weight:700; }
+.prep-ask { margin-top:14px; border-top:1px dashed var(--rule); padding-top:10px; }
+.prep-ask-h { font-size:10.5px; font-weight:700; letter-spacing:.10em; text-transform:uppercase; color:var(--terra); margin:0 0 6px; }
+.prep-ask ul { margin:0; padding-left:20px; }
+.prep-ask li { font-size:13px; line-height:1.55; color:var(--ink); margin-bottom:5px; }
+.prep-ask li::marker { color:var(--terra); }
+.procedure-wrapper { background:var(--white); border:1px solid var(--card-border); border-radius:var(--radius-md); padding:24px; margin-bottom:22px; overflow-x:auto; box-shadow:var(--shadow-rest); }
+.procedure-svg-container { display:flex; justify-content:center; margin-bottom:14px; }
+.procedure-svg-container svg { max-width:100%; height:auto; }
+.procedure-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; padding-top:12px; border-top:1px solid var(--rule-soft); }
+.spiral-instructions { background:var(--white); border:1px solid var(--card-border); border-left:4px solid var(--gold); padding:14px 18px; margin-bottom:22px; border-radius:0 var(--radius-sm) var(--radius-sm) 0; box-shadow:var(--shadow-rest); }
+.spiral-instructions p { margin:0 0 6px; font-size:13.5px; line-height:1.55; }
+.spiral-instructions p:last-child { margin-bottom:0; }
+.spiral-instructions strong { color:var(--terra); }
+.category-section { margin-top:22px; padding-top:16px; border-top:2px solid var(--rule); }
+.category-section:first-of-type { border-top:none; padding-top:0; }
+.category-title { font-size:13px; font-weight:700; letter-spacing:.10em; text-transform:uppercase; color:var(--navy); margin:0 0 4px; }
+.category-meta { font-size:11px; color:var(--ink-soft); margin:0 0 14px; }
+.spiral-set { background:var(--white); border:1px solid var(--card-border); border-radius:var(--radius-md); padding:14px 18px; margin-bottom:12px; box-shadow:var(--shadow-rest); }
+.spiral-set-header { display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+.spiral-set-title { font-size:13.5px; font-weight:700; color:var(--navy); }
+.spiral-set-tag { font-size:10px; font-weight:700; letter-spacing:.10em; text-transform:uppercase; color:var(--terra); background:var(--white); padding:3px 9px; border-radius:999px; border:1px solid var(--terra); }
+.spiral-set-items { list-style:none; margin:0 0 10px; padding:0; display:grid; grid-template-columns:repeat(auto-fill, minmax(175px, 1fr)); gap:2px 14px; }
+.spiral-set-items li { font-size:12.5px; line-height:1.45; color:var(--ink); padding:2px 0; }
+.spiral-rounds-progress { display:flex; gap:6px; flex-wrap:wrap; padding-top:8px; border-top:1px dashed var(--rule); }
+.spiral-round-checkbox { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; color:var(--ink-soft); cursor:pointer; user-select:none; padding:4px 10px; border-radius:5px; border:1px solid var(--rule); transition:background .15s ease, border-color .15s ease, color .15s ease; }
+.spiral-round-checkbox input { width:14px; height:14px; accent-color:var(--navy); cursor:pointer; }
+.spiral-round-checkbox.is-done { background:#EEF1F5; border-color:var(--navy); color:var(--navy); }
+.preexam-counter { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+.counter-tag { font-size:12px; font-weight:700; padding:6px 12px; border-radius:999px; }
+.counter-known { background:#EEF1F5; color:var(--navy); border:1px solid var(--navy); }
+.counter-unknown { background:var(--white); color:var(--terra); border:1px solid var(--terra); }
+.counter-total { background:var(--white); color:var(--navy); border:1px solid var(--rule); }
+.preexam-controls { background:var(--white); border:1px solid var(--card-border); border-radius:var(--radius-md); padding:16px 20px; margin-bottom:18px; display:flex; flex-wrap:wrap; gap:16px; align-items:center; box-shadow:var(--shadow-rest); }
+.preexam-controls label { font-size:13px; font-weight:700; color:var(--navy); display:inline-flex; align-items:center; gap:8px; }
+.preexam-controls select { font-family:inherit; font-size:14px; font-weight:600; padding:7px 10px; border:2px solid var(--navy); border-radius:var(--radius-sm); background:var(--white); color:var(--navy); cursor:pointer; }
+.checklist-controls { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+.btn { font-family:inherit; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:10px 18px; border-radius:var(--radius-sm); border:1px solid var(--navy); background:var(--white); color:var(--navy); cursor:pointer; transition:background .15s ease, color .15s ease, border-color .15s ease; }
+.btn:hover { background:var(--navy); color:var(--white); }
+.btn-primary { background:var(--terra); color:var(--white); border-color:var(--terra); }
+.btn-primary:hover { background:var(--terra-dark); color:var(--white); border-color:var(--terra-dark); }
+.checklist-cat { margin-bottom:16px; }
+.checklist-cat-title { font-size:12px; font-weight:700; letter-spacing:.10em; text-transform:uppercase; color:var(--navy); margin:0 0 8px; padding-bottom:4px; border-bottom:1px solid var(--rule-soft); }
+.checklist-grid { list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:2px 16px; }
+.checklist-grid li { display:flex; align-items:flex-start; gap:8px; padding:5px 0; }
+.checklist-grid label { display:flex; align-items:flex-start; gap:8px; cursor:pointer; flex:1; user-select:none; font-size:13px; line-height:1.4; }
+.checklist-grid input[type="checkbox"] { margin-top:3px; flex-shrink:0; width:15px; height:15px; accent-color:var(--navy); cursor:pointer; }
+.checklist-grid label.is-known { color:var(--navy); text-decoration:line-through; opacity:0.75; }
+.dist-empty { background:var(--white); border:1px dashed var(--card-border); border-radius:var(--radius-md); padding:22px; text-align:center; color:var(--ink-soft); font-size:14px; }
+.dist-day-card { background:var(--white); border:1px solid var(--card-border); border-radius:var(--radius-md); padding:14px 18px; margin-bottom:10px; box-shadow:var(--shadow-rest); }
+.dist-day-header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; flex-wrap:wrap; gap:8px; }
+.dist-day-title { font-size:14px; font-weight:700; color:var(--navy); }
+.dist-day-when { font-size:11px; color:var(--ink-soft); }
+.dist-list { list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fill, minmax(205px, 1fr)); gap:2px 14px; }
+.dist-list li { font-size:12.5px; color:var(--ink); padding:2px 0; }
+.dist-new::before { content:"\25CF "; color:var(--terra); font-weight:800; }
+.dist-review::before { content:"\25CB "; color:var(--gold); font-weight:800; }
+.dist-legend { background:#FAFAF9; border:1px solid var(--rule-soft); border-radius:var(--radius-md); padding:14px 18px; font-size:12px; color:var(--ink-soft); margin-top:10px; }
+.dist-legend strong { color:var(--navy); }
+.notes-area { width:100%; min-height:120px; font-family:inherit; font-size:14px; line-height:1.55; padding:12px 14px; border:1px solid var(--card-border); border-radius:var(--radius-sm); background:var(--offwhite); color:var(--ink); resize:vertical; }
+.notes-area:focus-visible { border-color:var(--navy); outline-offset:2px; }
+.utility-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; padding-top:16px; border-top:1px solid var(--rule-soft); align-items:center; }
+.utility-status { flex:1; font-size:12px; color:var(--ink-soft); }
+.ls-footer { background:var(--navy-deep); padding:36px max(40px, 5vw); }
+.ls-foot-inner { max-width:1000px; margin:0 auto; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; align-items:center; }
+.ls-foot-nav { display:flex; gap:20px; flex-wrap:wrap; }
+.ls-foot-nav a { font-size:13px; font-weight:700; color:var(--cream); text-decoration:none; }
+.ls-foot-nav a:hover { text-decoration:underline; }
+.ls-foot-byline { font-size:11px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold); margin:0; }
+@media (max-width:720px) {
+  .section { padding:22px 20px; }
+  .band { padding:40px max(20px, 5vw); }
+}
+@media print {
+  body { background:var(--white); }
+  .site-header, .ls-footer, .toc, .hero, .section:not(.print-procedure) { display:none; }
+  .band { padding:0; }
+  .print-procedure { border:none; padding:20px; box-shadow:none; }
+  .procedure-actions { display:none; }
+}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<header class="site-header">
+  <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/index.html" class="site-logo" target="_top" aria-label="BIO 004 Human Anatomy, course home">
+    <svg viewBox="40 10 125 148" role="img" aria-hidden="true" focusable="false">
+      <g transform="translate(0, 18)">
+        <g transform="translate(60, 0) rotate(8 0 130)">
+          <circle cx="0" cy="20" r="10" fill="#0B1530"/>
+          <path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#0B1530"/>
+        </g>
+        <g transform="translate(100, 0)">
+          <circle cx="0" cy="10" r="11" fill="#8B3A2E"/>
+          <path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/>
+        </g>
+        <g transform="translate(140, 0) rotate(-8 0 130)">
+          <circle cx="0" cy="20" r="10" fill="#C9A14A"/>
+          <path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/>
+        </g>
+      </g>
+    </svg>
+    <span class="logo-text">
+      <span class="logo-title">Human <span class="logo-accent">Anatomy</span></span>
+      <span class="logo-sub">BIO 004 &middot; Solano Community College</span>
+    </span>
+  </a>
+  <nav class="header-nav" aria-label="Course">
+    <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/index.html" target="_top">Course Home</a>
+    <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/week-8.html" target="_top">Week 8</a>
+    <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/week-8-lab-sprints.html" target="_top">Week 8 Lab Sprints</a>
+  </nav>
+</header>
+
+<main id="main">
+
+  <section class="band band--dark hero">
+    <div class="inner">
+      <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Week 8</p>
+      <h1>Lab Sprint: Spinal Cord</h1>
+      <p class="hero-sub">Every lab structure for this unit, with the questions you could be asked. Preview, drill in Spiral Rounds, then build a study plan for the lab exam.</p>
+      <p class="hero-meta">BIO 004 Human Anatomy, Summer 2026 &middot; <strong>Dr. Sharilyn Rennie</strong>, Solano Community College</p>
+    </div>
+  </section>
+
+  <section class="band band--light">
+    <div class="inner">
+
+      <nav class="toc" aria-label="Page sections">
+        <p class="toc-label">Jump to</p>
+        <ul class="toc-list">
+          <li><a href="#sec-week">Structures and questions</a></li>
+          <li><a href="#sec-rounds">Spiral Rounds</a></li>
+          <li><a href="#sec-preexam">Pre-exam study plan</a></li>
+          <li><a href="#sec-notes">Notes</a></li>
+        </ul>
+      </nav>
+
+      <section id="sec-week" class="section" aria-labelledby="sec-structures-heading">
+        <p class="section-eyebrow">Section 1 &middot; Week 8</p>
+        <h2 id="sec-structures-heading">Structures and questions</h2>
+        <p class="section-lede">Every lab structure for this unit, taken from the master structure list. Open a category to see the structures to identify and the questions you could be asked. Drill them in Spiral Rounds below, then self-test with the pre-exam plan.</p>
+        <p class="prep-lead"><strong>15 structures across 2 categories.</strong> Preview for recognition first; mastery comes through Spiral Rounds and repeated self-testing.</p>
+        <button type="button" class="prep-cat" aria-expanded="false">Spinal cord gross anatomy <span class="prep-count">8</span></button><div class="prep-body" hidden><ul class="prep-list"><li>Dura mater</li><li>Arachnoid mater</li><li>Pia mater</li><li>Cervical enlargement</li><li>Lumbar enlargement</li><li>Conus medullaris</li><li>Cauda equina</li><li>Filum terminale</li></ul></div><button type="button" class="prep-cat" aria-expanded="false">Spinal cord cross-section <span class="prep-count">7</span></button><div class="prep-body" hidden><ul class="prep-list"><li>Ventral horn</li><li>Lateral horn</li><li>Dorsal horn</li><li>Gray matter</li><li>White matter</li><li>Gray commissure</li><li>Central canal</li></ul></div>
+      </section>
+
+      <section id="sec-rounds" class="section print-procedure" aria-labelledby="sec-rounds-heading">
+        <p class="section-eyebrow">Section 2</p>
+        <h2 id="sec-rounds-heading">Spiral Rounds (study group method)</h2>
+        <p class="section-lede">Spiral Rounds is your in-class and study-group method, organized by concept category. Each category has one or more sets of about 10 to 12 structures. Take each set through the five rounds below, escalating the challenge each round.</p>
+
+        <div class="procedure-wrapper">
+          <div class="procedure-svg-container">
+            <svg viewBox="0 0 1060 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="procedure-title">
+              <title id="procedure-title">Spiral Rounds procedure: five escalating rounds with arrows</title>
+              <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#8B3A2E"/>
+                </marker>
+              </defs>
+              <g transform="translate(0, 20)">
+                <rect x="0" y="0" width="180" height="200" rx="10" fill="#FFFFFF" stroke="#0B1530" stroke-width="2"/>
+                <circle cx="32" cy="32" r="20" fill="#C9A14A"/>
+                <text x="32" y="38" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-weight="800" font-size="14" fill="#0B1530">R1</text>
+                <text x="62" y="38" font-family="'Plus Jakarta Sans',sans-serif" font-weight="700" font-size="13" fill="#0B1530">Introduce</text>
+                <line x1="14" y1="64" x2="166" y2="64" stroke="#8C90A0" stroke-width="1"/>
+                <text x="14" y="86" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">One person IDs all</text>
+                <text x="14" y="102" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">structures aloud for</text>
+                <text x="14" y="118" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">the group. Start with</text>
+                <text x="14" y="134" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">5 to 8 structures and</text>
+                <text x="14" y="150" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">build up.</text>
+                <text x="14" y="180" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" font-style="italic" fill="#A0452F" font-weight="700">EXPOSURE</text>
+              </g>
+              <path d="M 184 140 L 218 140" stroke="#8B3A2E" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+              <g transform="translate(220, 20)">
+                <rect x="0" y="0" width="180" height="200" rx="10" fill="#FFFFFF" stroke="#0B1530" stroke-width="2"/>
+                <circle cx="32" cy="32" r="20" fill="#C9A14A"/>
+                <text x="32" y="38" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-weight="800" font-size="14" fill="#0B1530">R2</text>
+                <text x="62" y="38" font-family="'Plus Jakarta Sans',sans-serif" font-weight="700" font-size="13" fill="#0B1530">Read &amp; point</text>
+                <line x1="14" y1="64" x2="166" y2="64" stroke="#8C90A0" stroke-width="1"/>
+                <text x="14" y="86" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">Reader names a</text>
+                <text x="14" y="102" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">structure (random).</text>
+                <text x="14" y="118" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">Each peer points to</text>
+                <text x="14" y="134" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">it on the model.</text>
+                <text x="14" y="150" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">Rotate readers.</text>
+                <text x="14" y="180" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" font-style="italic" fill="#A0452F" font-weight="700">RECOGNITION</text>
+              </g>
+              <path d="M 404 140 L 438 140" stroke="#8B3A2E" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+              <g transform="translate(440, 20)">
+                <rect x="0" y="0" width="180" height="200" rx="10" fill="#FFFFFF" stroke="#0B1530" stroke-width="2"/>
+                <circle cx="32" cy="32" r="20" fill="#C9A14A"/>
+                <text x="32" y="38" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-weight="800" font-size="14" fill="#0B1530">R3</text>
+                <text x="62" y="38" font-family="'Plus Jakarta Sans',sans-serif" font-weight="700" font-size="13" fill="#0B1530">Reverse + spell</text>
+                <line x1="14" y1="64" x2="166" y2="64" stroke="#8C90A0" stroke-width="1"/>
+                <text x="14" y="86" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">Tester points to a</text>
+                <text x="14" y="102" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">structure. Student</text>
+                <text x="14" y="118" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">names it AND spells</text>
+                <text x="14" y="134" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">it aloud. Catch your</text>
+                <text x="14" y="150" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">spelling errors.</text>
+                <text x="14" y="180" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" font-style="italic" fill="#A0452F" font-weight="700">RECALL + WRITE</text>
+              </g>
+              <path d="M 624 140 L 658 140" stroke="#8B3A2E" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+              <g transform="translate(660, 20)">
+                <rect x="0" y="0" width="180" height="200" rx="10" fill="#FFFFFF" stroke="#0B1530" stroke-width="2"/>
+                <circle cx="32" cy="32" r="20" fill="#C9A14A"/>
+                <text x="32" y="38" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-weight="800" font-size="14" fill="#0B1530">R4</text>
+                <text x="62" y="38" font-family="'Plus Jakarta Sans',sans-serif" font-weight="700" font-size="13" fill="#0B1530">Solo recall</text>
+                <line x1="14" y1="64" x2="166" y2="64" stroke="#8C90A0" stroke-width="1"/>
+                <text x="14" y="86" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">Each person, on their</text>
+                <text x="14" y="102" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">turn, points to and</text>
+                <text x="14" y="118" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">names every</text>
+                <text x="14" y="134" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">structure in the set</text>
+                <text x="14" y="150" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">from memory.</text>
+                <text x="14" y="180" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" font-style="italic" fill="#A0452F" font-weight="700">FREE RECALL</text>
+              </g>
+              <path d="M 844 140 L 878 140" stroke="#8B3A2E" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+              <g transform="translate(880, 20)">
+                <rect x="0" y="0" width="180" height="200" rx="10" fill="#FFFFFF" stroke="#0B1530" stroke-width="2"/>
+                <circle cx="32" cy="32" r="20" fill="#C9A14A"/>
+                <text x="32" y="38" text-anchor="middle" font-family="'Plus Jakarta Sans',sans-serif" font-weight="800" font-size="14" fill="#0B1530">R5</text>
+                <text x="62" y="38" font-family="'Plus Jakarta Sans',sans-serif" font-weight="700" font-size="13" fill="#0B1530">Add layers</text>
+                <line x1="14" y1="64" x2="166" y2="64" stroke="#8C90A0" stroke-width="1"/>
+                <text x="14" y="86" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">Add information:</text>
+                <text x="14" y="102" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">function, composition,</text>
+                <text x="14" y="118" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">distinguishing</text>
+                <text x="14" y="134" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">characteristics.</text>
+                <text x="14" y="150" font-family="'Plus Jakarta Sans',sans-serif" font-size="11" fill="#3D4F5A">Connect lab to lecture.</text>
+                <text x="14" y="180" font-family="'Plus Jakarta Sans',sans-serif" font-size="9" font-style="italic" fill="#A0452F" font-weight="700">INTEGRATION</text>
+              </g>
+            </svg>
+          </div>
+          <div class="procedure-actions">
+            <button class="btn" type="button" onclick="window.print()">Print this procedure</button>
+          </div>
+        </div>
+
+        <div class="spiral-instructions">
+          <p><strong>Group size:</strong> 3 to 5 students per Spiral Rounds set.</p>
+          <p><strong>Pace:</strong> aim for 5 to 8 minutes per round per set. A set of 12 structures runs all five rounds in roughly 30 to 40 minutes.</p>
+          <p><strong>Rule:</strong> every student participates. Active retrieval is the point. Mistakes are expected and useful. Do not opt out by watching.</p>
+        </div>
+
+        <p class="section-lede">This unit's <strong>15 structures</strong> are organized into 2 concept categories below. Each category gets one or more sets of 10 to 12. Tick off rounds as your group completes them.</p>
+
+        <div id="spiral-container"></div>
+      </section>
+
+      <section id="sec-preexam" class="section" aria-labelledby="sec-preexam-heading">
+        <p class="section-eyebrow">Section 3</p>
+        <h2 id="sec-preexam-heading">Pre-exam study plan (with spaced repetition)</h2>
+        <p class="section-lede">Tick the structures you know cold. The rest auto-distribute across the days you set below, with spaced repetition built in: each day reviews the previous days' structures. The day before the exam is a final review pass.</p>
+
+        <div class="preexam-counter" role="status" aria-live="polite">
+          <span class="counter-tag counter-known">Known cold: <span id="cnt-known">0</span></span>
+          <span class="counter-tag counter-unknown">Need to drill: <span id="cnt-unknown">15</span></span>
+          <span class="counter-tag counter-total">Total: <span id="cnt-total">15</span></span>
+        </div>
+
+        <div class="preexam-controls">
+          <label>
+            <span>Days to study before exam:</span>
+            <select id="days-select" aria-label="Days to study before exam">
+              <option value="2">2 days</option>
+              <option value="3" selected>3 days</option>
+              <option value="4">4 days</option>
+              <option value="5">5 days</option>
+              <option value="6">6 days</option>
+            </select>
+          </label>
+          <button class="btn btn-primary" id="btn-distribute" type="button">Generate study plan</button>
+        </div>
+
+        <div class="checklist-controls">
+          <button class="btn" id="btn-mark-all-known" type="button">Mark all known</button>
+          <button class="btn" id="btn-mark-all-unknown" type="button">Reset all to unknown</button>
+        </div>
+
+        <div id="checklist-container"></div>
+
+        <h3>Your study plan</h3>
+        <div id="distribution-container">
+          <div class="dist-empty">No plan yet. Tick structures you know cold above, then click <em>Generate study plan</em>.</div>
+        </div>
+      </section>
+
+      <section id="sec-notes" class="section" aria-labelledby="sec-notes-heading">
+        <p class="section-eyebrow">Workspace</p>
+        <h2 id="sec-notes-heading">Notes for this week</h2>
+        <p class="section-lede">Free space for week-specific notes: questions to ask in lab, structures you keep mixing up, study strategies that worked.</p>
+        <textarea class="notes-area" id="notes-area" aria-label="Spinal Cord notes" placeholder="Type your notes here. They save automatically as you go."></textarea>
+        <div class="utility-row">
+          <span class="utility-status" id="save-status" aria-live="polite">Your progress saves automatically in this browser.</span>
+          <button class="btn" id="btn-clear-all" type="button">Reset everything for this unit</button>
+        </div>
+      </section>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="ls-footer">
+  <div class="ls-foot-inner">
+    <nav class="ls-foot-nav" aria-label="Page navigation">
+      <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/week-8-lab-sprints.html" target="_top">&larr; Back to Week 8 Lab Sprints</a>
+      <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/week-8.html" target="_top">Week 8</a>
+      <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/index.html" target="_top">Course Home</a>
+    </nav>
+    <p class="ls-foot-byline">Dr. Sharilyn Rennie</p>
+  </div>
+</footer>
+
+<script>
+const STRUCTURES = [
+  { id:"dura-mater", name:"Dura mater", category:"Spinal cord gross anatomy" },
+  { id:"arachnoid-mater", name:"Arachnoid mater", category:"Spinal cord gross anatomy" },
+  { id:"pia-mater", name:"Pia mater", category:"Spinal cord gross anatomy" },
+  { id:"cervical-enlargement", name:"Cervical enlargement", category:"Spinal cord gross anatomy" },
+  { id:"lumbar-enlargement", name:"Lumbar enlargement", category:"Spinal cord gross anatomy" },
+  { id:"conus-medullaris", name:"Conus medullaris", category:"Spinal cord gross anatomy" },
+  { id:"cauda-equina", name:"Cauda equina", category:"Spinal cord gross anatomy" },
+  { id:"filum-terminale", name:"Filum terminale", category:"Spinal cord gross anatomy" },
+  { id:"ventral-horn", name:"Ventral horn", category:"Spinal cord cross-section" },
+  { id:"lateral-horn", name:"Lateral horn", category:"Spinal cord cross-section" },
+  { id:"dorsal-horn", name:"Dorsal horn", category:"Spinal cord cross-section" },
+  { id:"gray-matter", name:"Gray matter", category:"Spinal cord cross-section" },
+  { id:"white-matter", name:"White matter", category:"Spinal cord cross-section" },
+  { id:"gray-commissure", name:"Gray commissure", category:"Spinal cord cross-section" },
+  { id:"central-canal", name:"Central canal", category:"Spinal cord cross-section" },
+];
+
+const CATEGORY_ORDER = [
+  "Spinal cord gross anatomy",
+  "Spinal cord cross-section",
+];
+
+const STORAGE_KEY = "bio004-cns-spinal-cord-lab-sprint-v1";
+let state = {
+  known: {}, spiral: {}, notes: "",
+  daysBeforeExam: 3, distribution: null, lastSaved: null,
+};
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const p = JSON.parse(raw);
+      if (p && typeof p === "object") state = Object.assign(state, p);
+    }
+  } catch (e) {}
+}
+let saveTimer = null;
+function save() {
+  state.lastSaved = new Date().toISOString();
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    setSaveStatus("Saved.");
+  } catch (e) { setSaveStatus("Could not save (storage unavailable)."); }
+  if (saveTimer) clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => setSaveStatus("Your progress saves automatically in this browser."), 1500);
+}
+function setSaveStatus(msg) {
+  const el = document.getElementById("save-status");
+  if (el) el.textContent = msg;
+}
+
+function chunkBySize(arr, target) {
+  if (arr.length <= target + 2) return [arr];
+  const numChunks = Math.ceil(arr.length / target);
+  const chunkSize = Math.ceil(arr.length / numChunks);
+  const chunks = [];
+  for (let i = 0; i < arr.length; i += chunkSize) chunks.push(arr.slice(i, i + chunkSize));
+  return chunks;
+}
+
+function renderSpiralRounds() {
+  const container = document.getElementById("spiral-container");
+  if (!container) return;
+  container.innerHTML = "";
+  CATEGORY_ORDER.forEach(cat => {
+    const items = STRUCTURES.filter(s => s.category === cat);
+    if (items.length === 0) return;
+    const sets = chunkBySize(items, 11);
+    const catBlock = document.createElement("div");
+    catBlock.className = "category-section";
+    catBlock.innerHTML = `<p class="category-title">${escHtml(cat)}</p><p class="category-meta">${items.length} structures &middot; ${sets.length} set${sets.length === 1 ? "" : "s"}</p>`;
+    sets.forEach((chunk, idx) => {
+      const setId = `${cat.replace(/[^a-z0-9]/gi, '-')}-set-${idx + 1}`.toLowerCase();
+      const itemsHtml = chunk.map(s => `<li>${escHtml(s.name)}</li>`).join("");
+      const roundsHtml = [1, 2, 3, 4, 5].map(r => {
+        const key = `${setId}:r${r}`;
+        const checked = state.spiral[key] ? "checked" : "";
+        const cls = state.spiral[key] ? "is-done" : "";
+        return `<label class="spiral-round-checkbox ${cls}"><input type="checkbox" data-spiral-key="${key}" ${checked}><span>R${r}</span></label>`;
+      }).join("");
+      const setEl = document.createElement("article");
+      setEl.className = "spiral-set";
+      setEl.innerHTML = `<div class="spiral-set-header"><span class="spiral-set-title">Set ${idx + 1}</span><span class="spiral-set-tag">${chunk.length} structures</span></div><ul class="spiral-set-items">${itemsHtml}</ul><div class="spiral-rounds-progress" role="group" aria-label="${escAttr(cat)} Set ${idx + 1} rounds">${roundsHtml}</div>`;
+      catBlock.appendChild(setEl);
+    });
+    container.appendChild(catBlock);
+  });
+  container.querySelectorAll('input[data-spiral-key]').forEach(cb => {
+    cb.addEventListener("change", e => {
+      const key = e.target.getAttribute("data-spiral-key");
+      state.spiral[key] = e.target.checked;
+      const label = e.target.closest("label");
+      if (label) label.classList.toggle("is-done", e.target.checked);
+      save();
+    });
+  });
+}
+
+function renderChecklist() {
+  const c = document.getElementById("checklist-container");
+  if (!c) return;
+  c.innerHTML = "";
+  CATEGORY_ORDER.forEach(cat => {
+    const items = STRUCTURES.filter(s => s.category === cat);
+    if (items.length === 0) return;
+    const block = document.createElement("div");
+    block.className = "checklist-cat";
+    const lis = items.map(s => {
+      const checked = state.known[s.id] ? "checked" : "";
+      const cls = state.known[s.id] ? "is-known" : "";
+      return `<li><label class="${cls}"><input type="checkbox" data-known-id="${s.id}" ${checked} aria-label="${escAttr(s.name)}"><span>${escHtml(s.name)}</span></label></li>`;
+    }).join("");
+    block.innerHTML = `<p class="checklist-cat-title">${escHtml(cat)}</p><ul class="checklist-grid">${lis}</ul>`;
+    c.appendChild(block);
+  });
+  c.querySelectorAll('input[data-known-id]').forEach(cb => {
+    cb.addEventListener("change", e => {
+      const id = e.target.getAttribute("data-known-id");
+      state.known[id] = e.target.checked;
+      const label = e.target.closest("label");
+      if (label) label.classList.toggle("is-known", e.target.checked);
+      updateCounters();
+      save();
+    });
+  });
+}
+
+function updateCounters() {
+  const knownCount = STRUCTURES.filter(s => state.known[s.id]).length;
+  const unknownCount = STRUCTURES.length - knownCount;
+  document.getElementById("cnt-known").textContent = knownCount;
+  document.getElementById("cnt-unknown").textContent = unknownCount;
+  document.getElementById("cnt-total").textContent = STRUCTURES.length;
+}
+
+function generateDistribution() {
+  const days = parseInt(document.getElementById("days-select").value, 10);
+  const unknowns = STRUCTURES.filter(s => !state.known[s.id]);
+  if (unknowns.length === 0) {
+    state.distribution = { days: [], message: "You've marked everything as known cold. If that's accurate, you're ready. If it's optimistic, untick a few and try again." };
+    save(); renderDistribution();
+    document.getElementById("sec-preexam").scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+  const newChunks = days <= 1 ? [unknowns] : chunkInto(unknowns, days - 1);
+  const daysList = [];
+  for (let i = 0; i < days; i++) {
+    const dayNum = i + 1;
+    const isLastDay = (i === days - 1);
+    let title, when, items;
+    if (isLastDay) {
+      title = `Day ${dayNum}: Final review pass`;
+      when = "Day before the exam, full cold re-test";
+      const reviewSet = [];
+      for (let j = 0; j < newChunks.length; j++) newChunks[j].forEach(s => reviewSet.push({ ...s, mode: "review" }));
+      items = reviewSet;
+    } else {
+      title = `Day ${dayNum}: New content`;
+      when = i === 0 ? "Start of your study window" : `Day ${dayNum} of ${days}`;
+      const newItems = newChunks[i].map(s => ({ ...s, mode: "new" }));
+      const reviewItems = [];
+      for (let j = 0; j < i; j++) newChunks[j].forEach(s => reviewItems.push({ ...s, mode: "review" }));
+      items = [...newItems, ...reviewItems];
+    }
+    daysList.push({ title, when, items });
+  }
+  state.distribution = { days: daysList };
+  save(); renderDistribution();
+  document.getElementById("sec-preexam").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function chunkInto(arr, n) {
+  if (n <= 0) return [arr];
+  const chunks = Array.from({ length: n }, () => []);
+  arr.forEach((item, idx) => chunks[idx % n].push(item));
+  return chunks;
+}
+
+function renderDistribution() {
+  const c = document.getElementById("distribution-container");
+  if (!c) return;
+  if (!state.distribution || (!state.distribution.days && !state.distribution.message)) {
+    c.innerHTML = `<div class="dist-empty">No plan yet. Tick structures you know cold above, then click <em>Generate study plan</em>.</div>`;
+    return;
+  }
+  if (state.distribution.message) {
+    c.innerHTML = `<div class="dist-empty">${escHtml(state.distribution.message)}</div>`;
+    return;
+  }
+  let html = "";
+  state.distribution.days.forEach(day => {
+    if (day.items.length === 0) return;
+    const newItems = day.items.filter(i => i.mode === "new");
+    const reviewItems = day.items.filter(i => i.mode === "review");
+    const lis = [];
+    if (newItems.length > 0) lis.push(...newItems.map(i => `<li class="dist-new">${escHtml(i.name)}</li>`));
+    if (reviewItems.length > 0) lis.push(...reviewItems.map(i => `<li class="dist-review">${escHtml(i.name)}</li>`));
+    html += `<article class="dist-day-card"><header class="dist-day-header"><span class="dist-day-title">${escHtml(day.title)} (${day.items.length} structure${day.items.length === 1 ? '' : 's'})</span><span class="dist-day-when">${escHtml(day.when)}</span></header><ul class="dist-list">${lis.join("")}</ul></article>`;
+  });
+  html += `<div class="dist-legend"><strong>Legend:</strong> <span style="color:#8B3A2E;font-weight:800;">&#9679;</span> new content this day &middot; <span style="color:#C9A14A;font-weight:800;">&#9675;</span> review of previous days' content (spaced repetition)</div>`;
+  c.innerHTML = html;
+}
+
+function escHtml(s) {
+  return String(s).replace(/[&<>"']/g, c =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+}
+function escAttr(s) { return escHtml(s); }
+
+load();
+renderSpiralRounds();
+renderChecklist();
+renderDistribution();
+updateCounters();
+
+const notes = document.getElementById("notes-area");
+notes.value = state.notes || "";
+notes.addEventListener("input", () => { state.notes = notes.value; save(); });
+
+const daysSelect = document.getElementById("days-select");
+daysSelect.value = state.daysBeforeExam || 3;
+daysSelect.addEventListener("change", () => {
+  state.daysBeforeExam = parseInt(daysSelect.value, 10);
+  save();
+});
+
+document.getElementById("btn-distribute").addEventListener("click", generateDistribution);
+
+document.getElementById("btn-mark-all-known").addEventListener("click", () => {
+  if (!confirm("Mark every structure as known cold? Use only if you have truly mastered them.")) return;
+  STRUCTURES.forEach(s => { state.known[s.id] = true; });
+  save(); renderChecklist(); updateCounters();
+});
+
+document.getElementById("btn-mark-all-unknown").addEventListener("click", () => {
+  if (!confirm("Reset all structures to unknown?")) return;
+  state.known = {}; state.distribution = null;
+  save(); renderChecklist(); renderDistribution(); updateCounters();
+});
+
+document.getElementById("btn-clear-all").addEventListener("click", () => {
+  if (!confirm("Reset everything for this unit? This will clear your checklist, Spiral Rounds progress, study plan, and notes.")) return;
+  state = { known: {}, spiral: {}, notes: "", daysBeforeExam: 3, distribution: null, lastSaved: null };
+  save();
+  renderSpiralRounds(); renderChecklist(); renderDistribution(); updateCounters();
+  notes.value = ""; daysSelect.value = 3;
+});
+</script>
+
+<script>
+(function(){
+  document.querySelectorAll('.prep-cat').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+      var body = btn.nextElementSibling;
+      if (body && body.classList.contains('prep-body')) { body.hidden = open; }
+    });
+  });
+})();
+</script>
+
+<script>
+(function () {
+  var FRAME_ID = 'bio004-cns-spinal-cord-lab-sprint';
+  function sendHeight() {
+    var h = Math.max(
+      document.documentElement.scrollHeight,
+      document.body ? document.body.scrollHeight : 0
+    );
+    parent.postMessage({ type: 'resize', id: FRAME_ID, height: h }, '*');
+  }
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+  if (window.ResizeObserver) {
+    new ResizeObserver(sendHeight).observe(document.body);
+  }
+})();
+</script>
+</body>
+</html>
