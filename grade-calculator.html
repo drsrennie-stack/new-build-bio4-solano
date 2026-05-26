@@ -1,139 +1,778 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Grade Calculator · BIO 004 · Human Anatomy</title>
-<!--
-  BIO 004 Human Anatomy · Grade Calculator.
-  Recreated in the current PRIMARY palette for the new-build repo.
-  Weights match the syllabus grade model:
-  TBL 40, Lab Practical Exams 35, Cumulative Lecture Final 15, End-of-Day Lab Quizzes 10.
-  Dr. Rennie to redo and refine as needed.
--->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Lora:ital,wght@0,400;1,400;1,500&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grade Calculator &middot; BIO 004 &middot; Human Anatomy</title>
+<meta name="description" content="Estimate your standing in BIO 004 Human Anatomy. The calculator models the 45/45/5/5 grade structure and the cumulative-exam TBL boost rule.">
 <style>
-  :root {
-    --navy: #1E3D4C; --navy-deep: #142a36; --navy-tint: #EDF1F3;
-    --gold: #B8924A; --gold-soft: #DCC487; --terra: #C2734D; --terra-dark: #A0522D;
-    --white: #FFFFFF; --offwhite: #FAFAF9;
-    --rule: rgba(30,61,76,0.18); --rule-soft: rgba(30,61,76,0.10);
-    --shadow-rest: 0 1px 3px rgba(0,0,0,0.08); --shadow-hover: 0 8px 16px rgba(0,0,0,0.10);
-    --ink: #1E3D4C; --ink-soft: rgba(30,61,76,0.72);
-  }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body { background: var(--offwhite); color: var(--ink); font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
-  .skip { position: absolute; left: -9999px; }
-  .skip:focus { position: static; display: inline-block; padding: 8px 12px; background: var(--navy); color: #fff; margin: 8px; }
-  a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; border-radius: 4px; }
+@import url('https://cdn.jsdelivr.net/npm/@fontsource-variable/plus-jakarta-sans/index.css');
 
-  .banner { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%); color: #fff; padding: 40px 32px 36px; position: relative; overflow: hidden; }
-  .banner::before { content: ''; position: absolute; top: -70px; right: -40px; width: 240px; height: 240px; background: radial-gradient(circle, rgba(184,146,74,0.22) 0%, transparent 70%); }
-  .banner-inner { max-width: 680px; margin: 0 auto; position: relative; }
-  .eyebrow { font-family: 'DM Sans', system-ui, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold-soft); margin: 0 0 10px; }
-  .banner h1 { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 800; font-size: 1.85rem; margin: 0 0 6px; letter-spacing: -0.02em; }
-  .banner p { font-family: 'Lora', Georgia, serif; font-style: italic; font-size: 0.98rem; color: #DDE3E8; margin: 0; }
+/*
+  ============================================================
+  BIO 004 HUMAN ANATOMY  ·  GRADE CALCULATOR
+  Cream design system, matched to index.html and grading.html.
+  Grade model (SU26, confirmed by Shar):
+    TBL  ............ 45%  (7 TBLs, 40 pts each, no drops)
+    Lab exams ....... 45%  (7 lab practicals)
+    Cumulative final  5%  (lifts lowest TBL if higher)
+    Lab quizzes ..... 5%  (end-of-day, no drops)
+  Boost rule (built into the math):
+    If cumulative exam % > lowest TBL %, lowest TBL is raised
+    to match the cumulative exam before the TBL average is
+    computed. The student enters their lowest TBL into the
+    optional field; the calculator applies the boost on the fly.
+  ============================================================
+*/
 
-  main { max-width: 680px; margin: 0 auto; padding: 26px 32px 56px; }
-  @media (max-width: 560px) { main, .banner { padding-left: 18px; padding-right: 18px; } }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+  background: #FFFFFF;
+  color: #0B1530;
+}
+a { color: inherit; }
 
-  .calc { background: var(--white); border: 1px solid var(--rule); border-radius: 10px; box-shadow: var(--shadow-rest); padding: 24px 26px; position: relative; overflow: hidden; }
-  .calc::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(to right, var(--navy), var(--gold), var(--terra)); }
-  .calc h2 { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--navy); margin: 6px 0 4px; }
-  .calc-intro { font-family: 'Lora', Georgia, serif; font-size: 13.5px; color: var(--ink-soft); margin: 0 0 16px; }
+/* ===== KEYBOARD FOCUS ===== */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+summary:focus-visible {
+  outline: 3px solid #8B3A2E;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.cta-section a:focus-visible,
+.footer-section a:focus-visible {
+  outline-color: #C9A14A;
+}
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 8px;
+  background: #0B1530;
+  color: #F5F1E8;
+  padding: 12px 20px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 4px;
+  z-index: 9999;
+  letter-spacing: 0.04em;
+}
+.skip-link:focus { top: 8px; }
 
-  .field { margin-bottom: 14px; }
-  .field label { display: block; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.82rem; font-weight: 700; color: var(--navy); margin-bottom: 5px; }
-  .field .wt-tag { color: var(--terra-dark); }
-  .field input { width: 100%; padding: 11px 14px; border: 1px solid var(--rule); border-radius: 6px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 1rem; color: var(--ink); background: var(--offwhite); }
-  .field input:focus { border-color: var(--navy); background: var(--white); }
-  .field .hint { font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.72rem; color: var(--ink-soft); margin-top: 4px; }
+/* ===== SECTION PADDING ===== */
+.site-header, .hero-card, .calc-section,
+.notes-section, .cta-section, .footer-section {
+  padding-left: max(40px, 5vw);
+  padding-right: max(40px, 5vw);
+}
 
-  .result { margin-top: 20px; padding: 18px 20px; background: var(--navy-tint); border: 1px solid var(--rule-soft); border-radius: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .result-label { font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: var(--terra-dark); margin-bottom: 4px; }
-  .result-value { font-family: 'Lora', Georgia, serif; font-style: italic; font-weight: 600; font-size: 1.7rem; color: var(--navy); }
-  .result-grade { display: inline-block; font-style: normal; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 800; font-size: 1.3rem; background: var(--navy); color: #fff; border: 1px solid var(--gold); border-radius: 6px; padding: 3px 16px; }
+/* ===== SITE HEADER ===== */
+.site-header {
+  background: #FFFFFF;
+  padding-top: 28px;
+  padding-bottom: 28px;
+  border-bottom: 0.5px solid rgba(11, 21, 48, 0.10);
+}
+.site-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  text-decoration: none;
+}
+.site-logo svg { height: 58px; width: auto; display: block; }
+.logo-text { display: flex; flex-direction: column; gap: 3px; }
+.logo-title {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #0B1530;
+  line-height: 1;
+}
+.logo-title .logo-accent { color: #8B3A2E; }
+.logo-sub {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: #0B1530;
+  opacity: 0.72;
+}
 
-  .btn-row { margin-top: 16px; }
-  .btn { font-family: 'DM Sans', system-ui, sans-serif; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 9px 18px; border-radius: 100px; border: 1px solid var(--navy); background: var(--white); color: var(--navy); cursor: pointer; }
-  .btn:hover { background: var(--navy-tint); }
+/* ===== HERO ===== */
+.hero-card {
+  background: #FFFFFF;
+  padding-top: 52px;
+  padding-bottom: 28px;
+}
+.hero-content { max-width: 760px; }
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  color: #8B3A2E;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  margin-bottom: 22px;
+}
+.hero-headline {
+  font-size: 42px;
+  font-weight: 800;
+  color: #0B1530;
+  letter-spacing: -0.025em;
+  line-height: 1.06;
+  margin: 0 0 18px;
+}
+.hero-headline .accent { color: #8B3A2E; }
+.hero-subhead {
+  font-size: 16px;
+  font-weight: 400;
+  color: #0B1530;
+  line-height: 1.6;
+  opacity: 0.80;
+  margin-bottom: 0;
+  max-width: 560px;
+}
 
-  .note { background: var(--white); border: 1px solid var(--rule); border-left: 4px solid var(--gold); border-radius: 0 8px 8px 0; padding: 14px 18px; margin-top: 20px; font-size: 13.5px; box-shadow: var(--shadow-rest); }
-  .note strong { color: var(--terra-dark); }
-  .disclaimer { font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.78rem; color: var(--ink-soft); margin-top: 14px; }
+/* ===== CALCULATOR (light) ===== */
+.calc-section {
+  background: #FFFFFF;
+  padding-top: 30px;
+  padding-bottom: 60px;
+}
+.calc {
+  background: #FFFFFF;
+  border: 1px solid #8C90A0;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(11, 21, 48, 0.06);
+  padding: 30px 32px;
+  max-width: 760px;
+  position: relative;
+  overflow: hidden;
+}
+.calc::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(to right, #8B3A2E 0%, #8B3A2E 45%, #0B1530 45%, #0B1530 90%, #C9A14A 90%, #C9A14A 95%, #C2734D 95%);
+}
+.calc-eyebrow {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #8B3A2E;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin: 4px 0 8px;
+}
+.calc-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0B1530;
+  letter-spacing: -0.015em;
+  margin: 0 0 8px;
+}
+.calc-intro {
+  font-size: 14px;
+  color: #0B1530;
+  opacity: 0.80;
+  line-height: 1.6;
+  margin: 0 0 22px;
+  max-width: 56ch;
+}
 
-  footer { max-width: 680px; margin: 0 auto; padding: 22px 32px 8px; border-top: 1px solid var(--rule); text-align: center; font-family: 'DM Sans', system-ui, sans-serif; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
-  footer strong { color: var(--navy); }
-  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+/* Input grid */
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 22px;
+  margin: 0 0 6px;
+}
+@media (max-width: 600px) { .fields { grid-template-columns: 1fr; } }
+.field { display: flex; flex-direction: column; }
+.field label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0B1530;
+  margin-bottom: 6px;
+  letter-spacing: -0.005em;
+}
+.field .wt-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #8B3A2E;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: rgba(139, 58, 46, 0.08);
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+.field input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #8C90A0;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  color: #0B1530;
+  background: #FFFFFF;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.field input:focus {
+  outline: none;
+  border-color: #8B3A2E;
+  box-shadow: 0 0 0 3px rgba(139, 58, 46, 0.18);
+}
+.field .hint {
+  font-size: 11.5px;
+  color: #0B1530;
+  opacity: 0.65;
+  margin-top: 5px;
+  line-height: 1.45;
+}
+
+/* Optional row */
+.optional-block {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 0.5px solid rgba(11, 21, 48, 0.12);
+}
+.optional-block .opt-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #8B3A2E;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin: 0 0 10px;
+}
+.optional-block .field { max-width: 360px; }
+.optional-block .wt-tag {
+  background: rgba(201, 161, 74, 0.18);
+  color: #7a6225;
+}
+
+/* Result panel */
+.result {
+  margin-top: 24px;
+  padding: 22px 24px;
+  background: #060A18;
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+}
+@media (max-width: 480px) { .result { grid-template-columns: 1fr; text-align: left; } }
+.result-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #C9A14A;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+}
+.result-pct {
+  font-size: 36px;
+  font-weight: 800;
+  color: #F5F1E8;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-feature-settings: 'tnum' 1;
+}
+.result-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 74px;
+  height: 74px;
+  background: #8B3A2E;
+  color: #FFFFFF;
+  border-radius: 8px;
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  border: 2px solid #C9A14A;
+}
+.result-letter.is-empty {
+  background: transparent;
+  color: rgba(245, 241, 232, 0.4);
+  border-color: rgba(245, 241, 232, 0.3);
+  font-size: 28px;
+}
+
+/* Boost indicator */
+.boost {
+  margin-top: 14px;
+  padding: 12px 16px;
+  background: #FFFFFF;
+  border: 1.5px solid #C9A14A;
+  border-radius: 8px;
+  display: none;
+  font-size: 13px;
+  color: #0B1530;
+  line-height: 1.5;
+}
+.boost.is-active { display: block; }
+.boost strong { color: #8B3A2E; font-weight: 800; }
+.boost .boost-icon {
+  display: inline-block;
+  margin-right: 4px;
+  color: #C9A14A;
+  font-weight: 800;
+}
+
+/* Button row */
+.btn-row {
+  margin-top: 18px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.btn {
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 11px 22px;
+  border-radius: 4px;
+  border: 1px solid #0B1530;
+  background: #FFFFFF;
+  color: #0B1530;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.btn:hover { background: #F5F1E8; }
+.disclaimer {
+  font-size: 11.5px;
+  color: #0B1530;
+  opacity: 0.62;
+  line-height: 1.55;
+  margin: 0;
+  flex: 1 1 220px;
+}
+
+/* ===== NOTES (light) ===== */
+.notes-section { background: #FFFFFF; padding-top: 8px; padding-bottom: 64px; }
+.notes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  max-width: 760px;
+}
+@media (max-width: 600px) { .notes-grid { grid-template-columns: 1fr; } }
+.note-card {
+  background: #FFFFFF;
+  border: 1px solid #8C90A0;
+  border-left: 4px solid #C9A14A;
+  border-radius: 0 8px 8px 0;
+  padding: 18px 22px;
+}
+.note-card.is-rust { border-left-color: #8B3A2E; }
+.note-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  color: #8B3A2E;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+}
+.note-card.is-rust .note-eyebrow { color: #8B3A2E; }
+.note-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0B1530;
+  letter-spacing: -0.01em;
+  margin: 0 0 8px;
+  line-height: 1.3;
+}
+.note-body {
+  font-size: 13.5px;
+  color: #0B1530;
+  opacity: 0.85;
+  line-height: 1.6;
+  margin: 0;
+}
+.note-body strong { color: #0B1530; font-weight: 700; opacity: 1; }
+
+/* ===== CTA (dark) ===== */
+.cta-section {
+  background: #060A18;
+  padding-top: 64px;
+  padding-bottom: 64px;
+  text-align: center;
+}
+.cta-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  color: #C9A14A;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.cta-headline {
+  font-size: 32px;
+  font-weight: 800;
+  color: #F5F1E8;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0 auto 18px;
+  max-width: 620px;
+}
+.cta-headline .accent { color: #C2734D; }
+.cta-subhead {
+  font-size: 14.5px;
+  font-weight: 400;
+  color: #F5F1E8;
+  opacity: 0.82;
+  line-height: 1.65;
+  margin: 0 auto 30px;
+  max-width: 540px;
+}
+.cta-button {
+  background: #8B3A2E;
+  color: #FFFFFF;
+  padding: 14px 28px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s ease;
+}
+.cta-button:hover { background: #A0452F; }
+
+/* ===== FOOTER (dark) ===== */
+.footer-section { background: #060A18; padding-top: 56px; padding-bottom: 32px; }
+.footer-top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid rgba(245, 241, 232, 0.16);
+  margin-bottom: 22px;
+}
+.footer-logo { display: inline-flex; align-items: center; gap: 14px; text-decoration: none; margin-bottom: 16px; }
+.footer-logo svg { height: 50px; width: auto; }
+.footer-logo .logo-title { color: #F5F1E8; font-size: 22px; }
+.footer-logo .logo-accent { color: #C9A14A; }
+.footer-logo .logo-sub { color: #F5F1E8; opacity: 0.62; }
+.footer-tagline {
+  font-size: 13px;
+  font-weight: 400;
+  color: #F5F1E8;
+  opacity: 0.72;
+  line-height: 1.6;
+  max-width: 300px;
+  margin: 0;
+}
+.footer-col-header {
+  font-size: 10px;
+  font-weight: 700;
+  color: #C9A14A;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.footer-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: #F5F1E8;
+  opacity: 0.78;
+  display: block;
+  margin-bottom: 10px;
+  text-decoration: none;
+}
+.footer-link:hover { opacity: 1; text-decoration: underline; }
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.footer-copyright {
+  font-size: 11px;
+  font-weight: 500;
+  color: #F5F1E8;
+  opacity: 0.6;
+  letter-spacing: 0.03em;
+}
+.footer-byline {
+  font-size: 11px;
+  font-weight: 700;
+  color: #C9A14A;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 860px) {
+  .hero-headline { font-size: 32px; }
+  .cta-headline { font-size: 26px; }
+  .calc { padding: 26px 22px; }
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+@media (max-width: 500px) {
+  .footer-top { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; }
+  .hero-headline { font-size: 27px; }
+  .result-pct { font-size: 30px; }
+  .result-letter { width: 60px; height: 60px; font-size: 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* ===== PRINT ===== */
+@media print {
+  body { background: #FFFFFF; }
+  .calc-section, .notes-section { background: #FFFFFF; }
+  .cta-section, .footer-section { background: #FFFFFF; color: #0B1530; }
+  .cta-headline, .cta-eyebrow, .cta-subhead { color: #0B1530; opacity: 1; }
+  .result { background: #FFFFFF; border: 1px solid #8C90A0; color: #0B1530; }
+  .result-label { color: #8B3A2E; }
+  .result-pct { color: #0B1530; }
+  .result-letter { background: #FFFFFF; color: #0B1530; border-color: #0B1530; }
+  .cta-button, .btn { display: none; }
+  .footer-link, .footer-tagline, .footer-copyright { color: #0B1530; opacity: 1; }
+  .footer-col-header, .footer-byline, .footer-logo .logo-accent { color: #8B3A2E; }
+  .footer-logo .logo-title { color: #0B1530; }
+  .footer-logo .logo-sub { color: #0B1530; opacity: 0.7; }
+}
 </style>
 </head>
 <body>
-<a class="skip" href="#main">Skip to main content</a>
-<header class="banner">
-  <div class="banner-inner">
-    <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Summer 2026</p>
-    <h1>Grade Calculator</h1>
-    <p>Estimate your standing in the course at any point in the term.</p>
-  </div>
-</header>
-<main id="main">
-  <div class="calc">
-    <h2>Current standing estimator</h2>
-    <p class="calc-intro">Enter your averages as percentages out of 100. Leave a field blank to exclude it, the estimate will reweight to what you have entered so far.</p>
+<a href="#main" class="skip-link">Skip to main content</a>
 
-    <div class="field">
-      <label for="tbl">Team-Based Learning average <span class="wt-tag">(40%)</span></label>
-      <input type="number" id="tbl" min="0" max="100" step="0.1" inputmode="decimal" placeholder="e.g., 86">
-      <p class="hint">Average across all 8 TBLs. No TBL is dropped.</p>
+<!-- ===== SITE HEADER ===== -->
+<header class="site-header">
+  <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/index.html" class="site-logo" target="_top" aria-label="BIO 004 Human Anatomy, course home">
+    <svg viewBox="40 10 125 148" role="img" aria-hidden="true" focusable="false">
+      <g transform="translate(0, 18)">
+        <g transform="translate(60, 0) rotate(8 0 130)">
+          <circle cx="0" cy="20" r="10" fill="#0B1530"/>
+          <path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#0B1530"/>
+        </g>
+        <g transform="translate(100, 0)">
+          <circle cx="0" cy="10" r="11" fill="#8B3A2E"/>
+          <path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/>
+        </g>
+        <g transform="translate(140, 0) rotate(-8 0 130)">
+          <circle cx="0" cy="20" r="10" fill="#C9A14A"/>
+          <path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/>
+        </g>
+      </g>
+    </svg>
+    <span class="logo-text">
+      <span class="logo-title">Human <span class="logo-accent">Anatomy</span></span>
+      <span class="logo-sub">BIO 004 &middot; Solano Community College</span>
+    </span>
+  </a>
+</header>
+
+<main id="main">
+
+<!-- ===== HERO ===== -->
+<div class="hero-card">
+  <div class="hero-content">
+    <div class="hero-eyebrow">BIO 004 &middot; Grade Calculator &middot; Summer 2026</div>
+    <h1 class="hero-headline">See where you <span class="accent">stand</span>.</h1>
+    <p class="hero-subhead">Enter your averages and the calculator weights them automatically. Leave a field blank and it reweights to what you have so far. The cumulative-exam TBL boost is built in: enter your lowest TBL and the calculator applies the boost when it helps.</p>
+  </div>
+</div>
+
+<!-- ===== CALCULATOR (light) ===== -->
+<section class="calc-section">
+  <div class="calc">
+    <p class="calc-eyebrow">Standing estimator</p>
+    <h2 class="calc-title">Enter your averages as percentages</h2>
+    <p class="calc-intro">Each input is a percentage out of 100 (so a TBL average of 86% goes in as <strong>86</strong>). Blank fields are excluded and the remaining components reweight proportionally.</p>
+
+    <div class="fields">
+      <div class="field">
+        <label for="tbl">Team-Based Learning average <span class="wt-tag">45%</span></label>
+        <input type="number" id="tbl" min="0" max="100" step="0.1" inputmode="decimal" placeholder="e.g., 86" aria-describedby="tbl-hint">
+        <p class="hint" id="tbl-hint">Average across all 7 TBLs. No TBL is dropped.</p>
+      </div>
+      <div class="field">
+        <label for="lab">Lab practical exam average <span class="wt-tag">45%</span></label>
+        <input type="number" id="lab" min="0" max="100" step="0.1" inputmode="decimal" placeholder="e.g., 82" aria-describedby="lab-hint">
+        <p class="hint" id="lab-hint">Average across the lab exams you have taken so far.</p>
+      </div>
+      <div class="field">
+        <label for="final">Cumulative Lecture Exam <span class="wt-tag">5%</span></label>
+        <input type="number" id="final" min="0" max="100" step="0.1" inputmode="decimal" placeholder="leave blank until taken" aria-describedby="final-hint">
+        <p class="hint" id="final-hint">Your score on the end-of-term cumulative lecture exam.</p>
+      </div>
+      <div class="field">
+        <label for="quiz">End-of-day lab quiz average <span class="wt-tag">5%</span></label>
+        <input type="number" id="quiz" min="0" max="100" step="0.1" inputmode="decimal" placeholder="e.g., 92" aria-describedby="quiz-hint">
+        <p class="hint" id="quiz-hint">Average across all completed end-of-day lab quizzes.</p>
+      </div>
     </div>
-    <div class="field">
-      <label for="lab">Lab practical exam average <span class="wt-tag">(35%)</span></label>
-      <input type="number" id="lab" min="0" max="100" step="0.1" inputmode="decimal" placeholder="e.g., 80">
-      <p class="hint">Average across the lab exams you have taken so far.</p>
-    </div>
-    <div class="field">
-      <label for="final">Cumulative Lecture Final <span class="wt-tag">(15%)</span></label>
-      <input type="number" id="final" min="0" max="100" step="0.1" inputmode="decimal" placeholder="leave blank until taken">
-      <p class="hint">Your score on the end-of-term cumulative lecture final.</p>
-    </div>
-    <div class="field">
-      <label for="quiz">End-of-day lab quiz average <span class="wt-tag">(10%)</span></label>
-      <input type="number" id="quiz" min="0" max="100" step="0.1" inputmode="decimal" placeholder="e.g., 92">
-      <p class="hint">Average across all completed end-of-day lab quizzes.</p>
+
+    <div class="optional-block">
+      <p class="opt-label">Optional &middot; enables the cumulative-exam TBL boost</p>
+      <div class="field">
+        <label for="lowest">Your lowest individual TBL score <span class="wt-tag">optional</span></label>
+        <input type="number" id="lowest" min="0" max="100" step="0.1" inputmode="decimal" placeholder="e.g., 62" aria-describedby="lowest-hint">
+        <p class="hint" id="lowest-hint">If your cumulative exam ends up higher than this, the calculator will raise this score to match the cumulative exam, then recompute your TBL average.</p>
+      </div>
     </div>
 
     <div class="result" role="status" aria-live="polite" aria-atomic="true">
-      <div><div class="result-label">Weighted total</div><div class="result-value" id="pct">--</div></div>
-      <div><div class="result-label">Letter grade</div><div class="result-value"><span class="result-grade" id="letter">--</span></div></div>
+      <div>
+        <div class="result-label">Weighted total</div>
+        <div class="result-pct" id="pct">--</div>
+      </div>
+      <div>
+        <div class="result-label" style="text-align:right;">Letter</div>
+        <div class="result-letter is-empty" id="letter">--</div>
+      </div>
     </div>
-    <div class="btn-row"><button type="button" class="btn" id="reset">Reset</button></div>
-    <p class="disclaimer">This is a personal estimation tool. Your official grade is recorded in Canvas.</p>
-  </div>
 
-  <div class="note">
-    <p><strong>The final can lift your lowest TBL.</strong> If your Cumulative Lecture Final score is higher than your single lowest TBL score, that lowest TBL is raised to match the final before your TBL average is computed. This calculator does not model that automatically, so if it applies to you, enter your adjusted TBL average above.</p>
+    <div class="boost" id="boost" role="status" aria-live="polite">
+      <span class="boost-icon" aria-hidden="true">&#10003;</span>
+      <strong>Cumulative-exam boost applied.</strong> <span id="boost-detail"></span>
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn" id="reset">Reset</button>
+      <p class="disclaimer">This is a personal estimation tool. Your official grade is recorded in Canvas.</p>
+    </div>
   </div>
+</section>
+
+<!-- ===== NOTES (light) ===== -->
+<section class="notes-section">
+  <div class="notes-grid">
+    <div class="note-card is-rust">
+      <p class="note-eyebrow">How the boost works</p>
+      <h3 class="note-title">The cumulative exam can lift your lowest TBL</h3>
+      <p class="note-body">If you fill in <strong>your lowest individual TBL score</strong> and your <strong>cumulative lecture exam</strong> is higher than it, your TBL component is recomputed with that lowest TBL replaced. The boost only ever helps, never hurts.</p>
+    </div>
+    <div class="note-card">
+      <p class="note-eyebrow">Reweighting blank fields</p>
+      <h3 class="note-title">The math adjusts to what you have</h3>
+      <p class="note-body">Leave a field blank and that component is excluded from the average; the remaining weights are scaled so they still sum to 100%. Early in the term, this gives you a sensible running estimate.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA (dark) ===== -->
+<section class="cta-section">
+  <div class="cta-eyebrow">Need the full picture?</div>
+  <h2 class="cta-headline">Read the full <span class="accent">Grading &amp; Assessments</span> page.</h2>
+  <p class="cta-subhead">Every component, the boost rule explained, the grading scale, Scholar Points, and the no-make-ups policy in one place.</p>
+  <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/grading.html" class="cta-button" target="_top">Open Grading &amp; Assessments</a>
+</section>
+
 </main>
-<footer>
-  <p><strong>BIO 004 Human Anatomy</strong>, Summer 2026, Solano Community College &middot; Dr. Sharilyn Rennie</p>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer-section">
+  <div class="footer-top">
+    <div>
+      <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/index.html" class="footer-logo" target="_top" aria-label="BIO 004 Human Anatomy, course home">
+        <svg viewBox="40 10 125 148" role="img" aria-hidden="true" focusable="false">
+          <g transform="translate(0, 18)">
+            <g transform="translate(60, 0) rotate(8 0 130)">
+              <circle cx="0" cy="20" r="10" fill="#F5F1E8"/>
+              <path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#F5F1E8"/>
+            </g>
+            <g transform="translate(100, 0)">
+              <circle cx="0" cy="10" r="11" fill="#8B3A2E"/>
+              <path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/>
+            </g>
+            <g transform="translate(140, 0) rotate(-8 0 130)">
+              <circle cx="0" cy="20" r="10" fill="#C9A14A"/>
+              <path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/>
+            </g>
+          </g>
+        </svg>
+        <span class="logo-text">
+          <span class="logo-title">Human <span class="logo-accent">Anatomy</span></span>
+          <span class="logo-sub">BIO 004 &middot; Solano Community College</span>
+        </span>
+      </a>
+      <p class="footer-tagline">Your home base for Human Anatomy this summer. Start with the syllabus, then take it one week at a time.</p>
+    </div>
+    <div>
+      <div class="footer-col-header">Start here</div>
+      <a class="footer-link" href="https://drsrennie-stack.github.io/new-build-bio4-solano/index.html" target="_top">Course home</a>
+      <a class="footer-link" href="https://drsrennie-stack.github.io/new-build-bio4-solano/bio004-summer-2026-syllabus.html" target="_top">Course syllabus</a>
+      <a class="footer-link" href="https://drsrennie-stack.github.io/new-build-bio4-solano/grading.html" target="_top">Grading &amp; assessments</a>
+    </div>
+    <div>
+      <div class="footer-col-header">Weeks 1&ndash;4</div>
+      <a class="footer-link" href="https://drsrennie-stack.github.io/new-build-bio4-solano/week-1.html" target="_top">1 &middot; Foundations</a>
+      <a class="footer-link" href="https://drsrennie-stack.github.io/new-build-bio4-solano/week-2.html" target="_top">2 &middot; Skeletal System</a>
+      <a class="footer-link" href="https://drsrennie-stack.github.io/new-build-bio4-solano/week-3.html" target="_top">3 &middot; Cardiovascular &amp; Respiratory</a>
+      <a class="footer-link" href="https://drsrennie-stack.github.io/new-build-bio4-solano/week-4.html" target="_top">4 &middot; Muscles &amp; Lymphatic</a>
+    </div>
+    <div>
+      <div class="footer-col-header">Weeks 5&ndash;8</div>
+      <a class="footer-link" href="https://drsrennie-stack.github.io/new-build-bio4-solano/week-5.html" target="_top">5 &middot; Digestive System</a>
+      <a class="footer-link" href="https://drsrennie-stack.github.io/new-build-bio4-solano/week-6.html" target="_top">6 &middot; Urinary &amp; Reproductive</a>
+      <a class="footer-link" href="https://drsrennie-stack.github.io/new-build-bio4-solano/week-7.html" target="_top">7 &middot; Brain &amp; Meninges</a>
+      <a class="footer-link" href="https://drsrennie-stack.github.io/new-build-bio4-solano/week-8.html" target="_top">8 &middot; Spinal Cord &amp; Nerves</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copyright">BIO 004 Human Anatomy &middot; Solano Community College &middot; Summer 2026</div>
+    <div class="footer-byline">Dr. Sharilyn Rennie</div>
+  </div>
 </footer>
+
 <script>
+/* ====================================================================
+   GRADE CALCULATOR · BIO 004 (SU26)
+   --------------------------------------------------------------------
+   Weights (sum to 100):
+     TBL    45%    Lab exams 45%    Lecture final 5%    Lab quizzes 5%
+   Boost rule:
+     If lowest individual TBL is provided AND the cumulative exam is
+     higher than it, the TBL average is recomputed with the lowest
+     TBL replaced by the cumulative exam value. There are 7 TBLs.
+   Reweighting:
+     Blank inputs are excluded; remaining weights renormalize so they
+     still sum to 100%.
+   ====================================================================*/
 (function () {
   'use strict';
-  var WEIGHTS = { tbl: 40, lab: 35, final: 15, quiz: 10 };
-  var fields = ['tbl', 'lab', 'final', 'quiz'];
+
+  var WEIGHTS = { tbl: 45, lab: 45, final: 5, quiz: 5 };
+  var TBL_COUNT = 7;
+
+  var ids = ['tbl', 'lab', 'final', 'quiz', 'lowest'];
+  var inputs = {};
+  ids.forEach(function (id) { inputs[id] = document.getElementById(id); });
+
   var pctEl = document.getElementById('pct');
   var letterEl = document.getElementById('letter');
+  var boostEl = document.getElementById('boost');
+  var boostDetailEl = document.getElementById('boost-detail');
 
-  function clamp(v) {
+  function readField(id) {
+    var v = inputs[id].value;
     if (v === '' || v == null) return null;
     var n = parseFloat(v);
     if (isNaN(n)) return null;
     return Math.max(0, Math.min(100, n));
   }
+
   function letterFor(p) {
     if (p >= 89.5) return 'A';
     if (p >= 79.5) return 'B';
@@ -141,36 +780,94 @@
     if (p >= 59.5) return 'D';
     return 'F';
   }
-  function recalc() {
-    var sum = 0, totalWeight = 0;
-    fields.forEach(function (f) {
-      var v = clamp(document.getElementById(f).value);
-      if (v !== null) { sum += v * WEIGHTS[f]; totalWeight += WEIGHTS[f]; }
-    });
-    if (totalWeight === 0) { pctEl.textContent = '--'; letterEl.textContent = '--'; return; }
-    var pct = sum / totalWeight;
-    pctEl.textContent = pct.toFixed(1) + '%';
-    letterEl.textContent = letterFor(pct);
-  }
-  fields.forEach(function (f) {
-    document.getElementById(f).addEventListener('input', recalc);
-  });
-  document.getElementById('reset').addEventListener('click', function () {
-    fields.forEach(function (f) { document.getElementById(f).value = ''; });
-    recalc();
-  });
-  recalc();
 
-  if (window.self !== window.top) {
-    var send = function () {
-      try {
-        var h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-        window.parent.postMessage({ type: 'iframeHeight', id: 'grade-calculator', height: h }, '*');
-      } catch (e) {}
-    };
-    window.addEventListener('load', send);
-    window.addEventListener('resize', send);
-    if (window.ResizeObserver) { new ResizeObserver(send).observe(document.body); }
+  function recalc() {
+    var tbl = readField('tbl');
+    var lab = readField('lab');
+    var fin = readField('final');
+    var quiz = readField('quiz');
+    var lowest = readField('lowest');
+
+    // Apply boost: if lowest TBL provided AND cumulative final > lowest,
+    // replace lowest with final and recompute the TBL average.
+    var adjustedTbl = tbl;
+    var boostApplies = false;
+    var boostDelta = 0;
+    if (tbl !== null && lowest !== null && fin !== null && fin > lowest) {
+      // adjustedAvg = (tbl_avg * 7 - lowest + fin) / 7
+      adjustedTbl = (tbl * TBL_COUNT - lowest + fin) / TBL_COUNT;
+      boostApplies = true;
+      boostDelta = adjustedTbl - tbl;
+    }
+
+    // Reweight to whatever was entered
+    var sum = 0;
+    var weightSum = 0;
+    if (adjustedTbl !== null) { sum += adjustedTbl * WEIGHTS.tbl; weightSum += WEIGHTS.tbl; }
+    if (lab !== null) { sum += lab * WEIGHTS.lab; weightSum += WEIGHTS.lab; }
+    if (fin !== null) { sum += fin * WEIGHTS.final; weightSum += WEIGHTS.final; }
+    if (quiz !== null) { sum += quiz * WEIGHTS.quiz; weightSum += WEIGHTS.quiz; }
+
+    if (weightSum === 0) {
+      pctEl.textContent = '--';
+      letterEl.textContent = '--';
+      letterEl.classList.add('is-empty');
+      boostEl.classList.remove('is-active');
+      return;
+    }
+
+    var pct = sum / weightSum;
+    pctEl.textContent = pct.toFixed(1) + '%';
+    var letter = letterFor(pct);
+    letterEl.textContent = letter;
+    letterEl.classList.remove('is-empty');
+
+    // Show or hide boost indicator
+    if (boostApplies) {
+      boostDetailEl.textContent =
+        'Your lowest TBL (' + lowest.toFixed(1) + '%) was raised to match your cumulative exam (' + fin.toFixed(1) + '%). ' +
+        'New TBL average: ' + adjustedTbl.toFixed(1) + '% (up from ' + tbl.toFixed(1) + '%, a +' + boostDelta.toFixed(1) + '-point bump on this component).';
+      boostEl.classList.add('is-active');
+    } else {
+      boostEl.classList.remove('is-active');
+    }
+  }
+
+  // Wire inputs
+  ids.forEach(function (id) {
+    inputs[id].addEventListener('input', recalc);
+  });
+
+  // Reset button
+  document.getElementById('reset').addEventListener('click', function () {
+    ids.forEach(function (id) { inputs[id].value = ''; });
+    recalc();
+    inputs.tbl.focus();
+  });
+
+  // Initial render
+  recalc();
+})();
+
+/* ====================================================================
+   IFRAME HEIGHT-SENDER (for Canvas / Kajabi embeds)
+   ====================================================================*/
+(function () {
+  var FRAME_ID = 'bio004-grade-calculator';
+  function sendHeight() {
+    var h = Math.max(
+      document.documentElement.scrollHeight,
+      document.body ? document.body.scrollHeight : 0
+    );
+    try {
+      parent.postMessage({ type: 'resize', id: FRAME_ID, height: h }, '*');
+      parent.postMessage({ type: 'iframeHeight', id: FRAME_ID, height: h }, '*');
+    } catch (e) {}
+  }
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+  if (window.ResizeObserver) {
+    new ResizeObserver(sendHeight).observe(document.body);
   }
 })();
 </script>
