@@ -345,14 +345,14 @@ canvas.draw-canvas { display: block; width: 100%; cursor: crosshair; touch-actio
   <div class="case-card-wrap">
     <article class="case-card">
       <div class="case-label">Patient case</div>
-      <p class="case-text">A patient arrives in the emergency department after falling from a ladder. The trauma team is rapidly assessing injuries. As the physician examines the patient, she begins speaking to her team.</p>
+      <p class="case-text">A patient arrives in the emergency department after <strong>falling from a ladder</strong>. The <strong>trauma team</strong> is rapidly assessing injuries. As the physician examines the patient, she begins speaking to her team.</p>
       <div class="quotes" aria-label="What the physician says">
         <p>"There's a laceration on the anterior aspect of the left thigh."</p>
         <p>"The patient reports pain in the right lower quadrant."</p>
         <p>"Tenderness is present inferior to the costal margin."</p>
         <p>"Obtain imaging of the distal forearm."</p>
       </div>
-      <p class="case-text">Now imagine for a moment that everyone in the room uses slightly different definitions. One person thinks "lower" means closer to the feet. Another thinks it means lower on the imaging screen. A third reads "distal" and goes to the wrong end of the forearm. Care fragments. Time is lost. Someone gets hurt.</p>
+      <p class="case-text">Now imagine for a moment that everyone in the room uses slightly different definitions. One person thinks <strong>"lower"</strong> means closer to the feet. Another thinks it means lower on the imaging screen. A third reads <strong>"distal"</strong> and goes to the wrong end of the forearm. <strong>Care fragments. Time is lost. Someone gets hurt.</strong></p>
       <div class="guiding-q">
         <span>Guiding question</span>
         How do healthcare professionals know they are talking about the exact same place on the same body?
@@ -571,6 +571,7 @@ function initCanvas(canvasId, wrapId) {
     current: null,
     dpr: window.devicePixelRatio || 1
   };
+  var bgColor = function () { return state.canvasTheme === 'light' ? '#FFFFFF' : '#060A18'; };
   var first = wrap.querySelector('.color-btn.dark-pen.active');
   if (first) state.color = first.dataset.color;
 
@@ -590,20 +591,18 @@ function initCanvas(canvasId, wrapId) {
   }
   function redraw() {
     var r = canvas.getBoundingClientRect();
-    ctx.clearRect(0, 0, r.width, parseFloat(canvas.getAttribute('height')));
-    state.strokes.forEach(drawStroke);
+    ctx.clearRect(0, 0, r.width, parseFloat(canvas.getAttribute('height'))); ctx.fillStyle = bgColor(); ctx.fillRect(0, 0, r.width, parseFloat(canvas.getAttribute('height'))); state.strokes.forEach(drawStroke);
     if (state.current) drawStroke(state.current);
   }
   function drawStroke(s) {
     if (!s.points || !s.points.length) return;
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    if (s.mode === 'eraser') { ctx.globalCompositeOperation = 'destination-out'; ctx.strokeStyle = 'rgba(0,0,0,1)'; }
-    else { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = s.color; }
+    ctx.globalCompositeOperation = 'source-over'; if (s.mode === 'eraser') { ctx.strokeStyle = bgColor(); } else { ctx.strokeStyle = s.color; }
     var p = s.points;
     if (p.length === 1) {
       var q = p[0];
       ctx.beginPath(); ctx.arc(q.x, q.y, Math.max(0.4, q.w / 2), 0, Math.PI * 2);
-      ctx.fillStyle = s.mode === 'eraser' ? 'rgba(0,0,0,1)' : s.color; ctx.fill();
+      ctx.fillStyle = s.mode === 'eraser' ? bgColor() : s.color; ctx.fill();
       ctx.globalCompositeOperation = 'source-over'; return;
     }
     for (var i = 1; i < p.length; i++) {
@@ -664,6 +663,7 @@ function initCanvas(canvasId, wrapId) {
         var drk = wrap.querySelector('.color-btn.dark-pen.active') || wrap.querySelector('.color-btn.dark-pen');
         if (drk) { wrap.querySelectorAll('.color-btn').forEach(function (x) { x.classList.remove('active'); }); drk.classList.add('active'); state.color = drk.dataset.color; }
       }
+      redraw();
     });
   });
 
