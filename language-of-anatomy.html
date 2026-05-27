@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Language of Anatomy &middot; Case Deep Dive &middot; BIO 004</title>
+<meta name="description" content="A case-based companion to the Week 1 prework page. The trauma team needs a shared language; we build it from the ground up." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0B1530;
+  --navy-dark: #060A18;
+  --rust: #8B3A2E;
+  --rust-hover: #A0452F;
+  --gold: #C9A14A;
+  --gold-light: #E8D4A8;
+  --warm-accent: #C2734D;
+  --white: #FFFFFF;
+  --cream: #F5F1E8;
+  --off-white: #F8F8F8;
+  --text: #0B1530;
+  --text-muted: #5A6478;
+  --rule: rgba(11,21,48,0.10);
+  --rule-strong: rgba(11,21,48,0.18);
+  --badge-bg: #FDF0EC;
+  --badge-text: #8B3A2E;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background: var(--white);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--rust); text-decoration: none; border-bottom: 1px solid rgba(139,58,46,0.3); }
+a:hover, a:focus-visible { color: var(--rust-hover); border-bottom-color: var(--rust-hover); }
+:focus-visible { outline: 3px solid var(--rust); outline-offset: 3px; border-radius: 3px; }
+.skip { position: absolute; left: -9999px; top: auto; }
+.skip:focus { position: fixed; left: 12px; top: 12px; background: var(--navy); color: var(--white); padding: 10px 14px; z-index: 1500; border-radius: 4px; }
+
+/* PROGRESS BAR */
+#progress-bar { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: var(--rust); z-index: 1000; transition: width 0.1s linear; }
+
+/* CASE RIBBON */
+#case-ribbon {
+  position: sticky; top: 0; z-index: 200;
+  background: var(--navy-dark); color: var(--white);
+  padding: 12px 28px;
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  border-bottom: 2px solid var(--gold);
+  font-size: 13px; line-height: 1.4;
+}
+#case-ribbon .ribbon-label {
+  background: var(--rust); color: var(--white);
+  font-weight: 700; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 20px; white-space: nowrap;
+}
+#case-ribbon .ribbon-case { opacity: 0.92; }
+#case-ribbon .ribbon-case strong { color: var(--gold-light); font-weight: 700; }
+
+/* HERO */
+.hero {
+  background: var(--white);
+  border-bottom: 0.5px solid var(--rule);
+  padding: 72px 24px 56px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(139,58,46,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--rust); margin-bottom: 18px; position: relative;
+}
+.hero h1 {
+  font-size: clamp(28px, 4vw, 42px); font-weight: 800;
+  color: var(--navy); line-height: 1.1; margin-bottom: 14px;
+  letter-spacing: -0.02em; position: relative;
+}
+.hero h1 .accent { color: var(--rust); }
+.hero-sub {
+  font-size: 16px; color: var(--text); font-weight: 400;
+  opacity: 0.70; position: relative; max-width: 600px; margin: 0 auto;
+}
+
+/* CASE CARD */
+.case-card-wrap {
+  max-width: 820px; margin: -32px auto 0;
+  padding: 0 24px 48px; position: relative; z-index: 10;
+}
+.case-card {
+  background: var(--white);
+  border: 1.5px solid var(--rule);
+  border-top: 4px solid var(--rust);
+  padding: 36px 40px;
+  box-shadow: 0 8px 40px rgba(10,19,34,0.12);
+}
+.case-card .case-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--rust); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.case-card .case-label::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+.case-card .case-text { font-size: 18px; color: var(--text); line-height: 1.65; margin-bottom: 18px; }
+.case-card .case-text:last-of-type { margin-bottom: 24px; }
+.case-card .quotes {
+  padding: 14px 18px; margin: 0 0 20px;
+  background: var(--off-white); border-left: 3px solid var(--rust);
+  font-size: 15px; line-height: 1.65;
+}
+.case-card .quotes p { margin: 0 0 6px; }
+.case-card .quotes p:last-child { margin-bottom: 0; }
+.case-card .guiding-q {
+  background: var(--cream); border-left: 4px solid var(--gold);
+  padding: 18px 24px; font-size: 15px; font-weight: 500; color: var(--navy);
+}
+.case-card .guiding-q span {
+  display: block; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 6px;
+}
+
+/* PREWORK LINK STRIP */
+.prework-strip {
+  max-width: 820px; margin: 0 auto 36px;
+  padding: 14px 24px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  background: var(--off-white); border: 1px solid var(--rule); border-radius: 4px;
+  font-size: 13.5px;
+}
+.prework-strip .tag {
+  background: var(--gold); color: var(--navy); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px;
+}
+.prework-strip .ps-body { flex: 1; color: var(--text); }
+
+/* SECTION LAYOUT */
+.section-wrap { max-width: 820px; margin: 0 auto; padding: 0 24px; }
+.teaching-section { padding: 48px 0 36px; border-bottom: 1px solid var(--rule); }
+.teaching-section:last-of-type { border-bottom: none; }
+.section-number {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-number .num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--rust); color: var(--white); font-size: 11px; font-weight: 700;
+}
+.teaching-section h2 {
+  font-size: clamp(22px, 3.5vw, 30px); font-weight: 700;
+  color: var(--navy); line-height: 1.2; margin-bottom: 18px; letter-spacing: -0.01em;
+}
+.teaching-section p { font-size: 16px; color: var(--text); line-height: 1.78; margin-bottom: 16px; }
+.teaching-section p:last-child { margin-bottom: 0; }
+.teaching-section em { color: var(--navy); font-style: italic; }
+.teaching-section strong { color: var(--navy); font-weight: 700; }
+
+/* CALLOUT */
+.callout {
+  background: #EEF2FF; border: 1px solid rgba(10,19,34,0.10);
+  border-left: 4px solid var(--rust); padding: 18px 22px;
+  margin: 22px 0; font-size: 15px; color: var(--navy); line-height: 1.65;
+}
+
+/* STRUCTURE TILES */
+.structure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+@media (max-width: 600px) { .structure-grid { grid-template-columns: 1fr; } }
+.structure-item {
+  background: var(--off-white); border: 1px solid var(--rule);
+  padding: 14px 18px; display: flex; align-items: flex-start; gap: 12px; border-radius: 3px;
+}
+.structure-item .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--rust); flex-shrink: 0; margin-top: 7px;
+}
+.structure-item .dot.gold { background: var(--gold); }
+.structure-item strong { display: block; font-size: 13.5px; font-weight: 700; color: var(--navy); line-height: 1.3; margin-bottom: 3px; }
+.structure-item span { font-size: 12.5px; color: var(--text-muted); line-height: 1.55; }
+
+/* PAIRS TABLE */
+.pairs-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+.pairs-table th {
+  background: var(--navy); color: var(--white);
+  padding: 11px 14px; text-align: left;
+  font-weight: 600; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.pairs-table td { padding: 10px 14px; border-bottom: 1px solid var(--rule); color: var(--text); vertical-align: top; line-height: 1.55; }
+.pairs-table tr:nth-child(even) td { background: var(--off-white); }
+.pairs-table td:first-child { font-weight: 700; color: var(--navy); white-space: nowrap; }
+
+/* DRAW ZONE */
+.draw-zone-wrap {
+  margin: 32px 0; background: var(--navy-dark);
+  border: 2px solid rgba(201,161,74,0.30);
+  border-radius: 4px; position: relative; user-select: none; overflow: hidden;
+}
+.draw-zone-wrap.canvas-light { background: var(--white); border-color: var(--rule-strong); }
+.draw-zone-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; flex-wrap: wrap; gap: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.draw-zone-wrap.canvas-light .draw-zone-header { border-bottom-color: var(--rule); }
+.draw-zone-title { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.draw-zone-title .dz-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
+.draw-zone-wrap.canvas-light .draw-zone-title .dz-tag { color: var(--rust); }
+.draw-zone-title .prompt-text { font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.7); }
+.draw-zone-wrap.canvas-light .draw-zone-title .prompt-text { color: var(--text); opacity: 0.78; }
+.draw-tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.tool-group { display: flex; align-items: center; gap: 5px; padding-right: 8px; border-right: 1px solid rgba(255,255,255,0.10); }
+.tool-group:last-child { border-right: 0; padding-right: 0; }
+.draw-zone-wrap.canvas-light .tool-group { border-right-color: var(--rule); }
+.tool-group .gl { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.55); }
+.draw-zone-wrap.canvas-light .tool-group .gl { color: var(--text-muted); }
+
+.color-btn {
+  width: 20px; height: 20px; border-radius: 50%; border: 2px solid transparent;
+  cursor: pointer; padding: 0; transition: transform 0.15s, border-color 0.15s;
+}
+.color-btn:hover { transform: scale(1.15); }
+.color-btn.active { border-color: var(--white); transform: scale(1.1); }
+.draw-zone-wrap.canvas-light .color-btn.active { border-color: var(--navy); }
+
+/* dark canvas: fluorescent palette */
+.color-btn.dark-pen { display: inline-flex; }
+.color-btn.light-pen { display: none; }
+.draw-zone-wrap.canvas-light .color-btn.dark-pen { display: none; }
+.draw-zone-wrap.canvas-light .color-btn.light-pen { display: inline-flex; }
+
+.tool-btn {
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.80); font-size: 11px; font-weight: 600;
+  padding: 5px 10px; border-radius: 4px; cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: 0.04em; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 5px; min-height: 28px;
+}
+.tool-btn:hover { background: rgba(255,255,255,0.15); color: var(--white); }
+.tool-btn.active { background: rgba(201,161,74,0.25); border-color: var(--gold); color: var(--gold); }
+.draw-zone-wrap.canvas-light .tool-btn { background: var(--white); border-color: var(--rule-strong); color: var(--navy); }
+.draw-zone-wrap.canvas-light .tool-btn:hover { border-color: var(--rust); }
+.draw-zone-wrap.canvas-light .tool-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+
+.wdot { display: inline-block; background: currentColor; border-radius: 50%; vertical-align: middle; }
+.w-fine .wdot { width: 3px; height: 3px; }
+.w-normal .wdot { width: 6px; height: 6px; }
+.w-bold .wdot { width: 10px; height: 10px; }
+
+.size-slider {
+  -webkit-appearance: none; appearance: none;
+  width: 64px; height: 3px; background: rgba(255,255,255,0.20);
+  border-radius: 2px; outline: none; cursor: pointer;
+}
+.draw-zone-wrap.canvas-light .size-slider { background: var(--rule-strong); }
+.size-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--gold); cursor: pointer; }
+.draw-zone-wrap.canvas-light .size-slider::-webkit-slider-thumb { background: var(--rust); }
+.size-slider::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--gold); border: 0; cursor: pointer; }
+.draw-zone-wrap.canvas-light .size-slider::-moz-range-thumb { background: var(--rust); }
+
+canvas.draw-canvas { display: block; width: 100%; cursor: crosshair; touch-action: none; background: var(--navy-dark); }
+.draw-zone-wrap.canvas-light canvas.draw-canvas { background: var(--white); }
+.draw-zone-hint {
+  padding: 8px 16px; border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 11px; color: rgba(255,255,255,0.40); font-style: italic;
+}
+.draw-zone-wrap.canvas-light .draw-zone-hint { border-top-color: var(--rule); color: var(--text-muted); }
+
+/* CLINICAL CORRELATION (dark inverted block) */
+.clinical-block {
+  background: var(--navy-dark); padding: 56px 24px; margin: 56px 0 0;
+  position: relative; overflow: hidden;
+}
+.clinical-block::before {
+  content: ''; position: absolute; top: -40px; right: -40px;
+  width: 220px; height: 220px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,161,74,0.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+.clinical-block .cb-inner { max-width: 820px; margin: 0 auto; position: relative; }
+.clinical-block .cb-label { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+.clinical-block h2 { font-size: clamp(22px, 3.5vw, 30px); color: var(--white); font-weight: 700; margin-bottom: 18px; line-height: 1.25; }
+.clinical-block p { color: rgba(255,255,255,0.78); font-size: 15.5px; line-height: 1.75; margin-bottom: 14px; }
+.clinical-block strong { color: var(--gold-light); font-weight: 700; }
+.translate-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 22px 0 8px; }
+.translate-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(201,161,74,0.22); padding: 16px 18px; border-radius: 3px; }
+.translate-card .quote { font-size: 13px; font-weight: 600; color: var(--gold-light); margin-bottom: 6px; font-style: italic; }
+.translate-card .meaning { font-size: 12.5px; color: rgba(255,255,255,0.78); line-height: 1.55; }
+
+/* FOOTER */
+.page-footer {
+  background: var(--navy-dark);
+  border-top: 2px solid rgba(201,161,74,0.20);
+  padding: 28px 24px; text-align: center;
+  font-size: 12px; color: rgba(255,255,255,0.60); letter-spacing: 0.06em;
+}
+.page-footer .byline { color: var(--gold); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+@media print {
+  #progress-bar, #case-ribbon, .draw-zone-wrap, .prework-strip { display: none !important; }
+  body { background: #fff; }
+  .clinical-block { background: #fff; color: #000; padding: 30px 0; border-top: 2px solid #0B1530; }
+  .clinical-block h2, .clinical-block p { color: #0B1530; }
+  .clinical-block .cb-label, .clinical-block strong { color: #8B3A2E; }
+  .translate-card { background: #fff; border-color: #ccc; }
+  .translate-card .quote, .translate-card .meaning { color: #0B1530; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to main content</a>
+
+<div id="progress-bar" aria-hidden="true"></div>
+
+<!-- STICKY CASE RIBBON -->
+<div id="case-ribbon" role="region" aria-label="Active patient case">
+  <span class="ribbon-label">Case</span>
+  <span class="ribbon-case">Trauma bay &middot; <strong>patient fell from a ladder</strong> &middot; the team needs a shared language to assess the injuries</span>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-eyebrow">BIO 004 &middot; Week 1 &middot; Case Deep Dive</div>
+  <h1>The <span class="accent">Language</span> of Anatomy</h1>
+  <p class="hero-sub">A shared map of the body, spoken with precision</p>
+</header>
+
+<main id="main">
+
+  <!-- CASE CARD -->
+  <div class="case-card-wrap">
+    <article class="case-card">
+      <div class="case-label">Patient case</div>
+      <p class="case-text">A patient arrives in the emergency department after falling from a ladder. The trauma team is rapidly assessing injuries. As the physician examines the patient, she begins speaking to her team.</p>
+      <div class="quotes" aria-label="What the physician says">
+        <p>"There's a laceration on the anterior aspect of the left thigh."</p>
+        <p>"The patient reports pain in the right lower quadrant."</p>
+        <p>"Tenderness is present inferior to the costal margin."</p>
+        <p>"Obtain imaging of the distal forearm."</p>
+      </div>
+      <p class="case-text">Now imagine for a moment that everyone in the room uses slightly different definitions. One person thinks "lower" means closer to the feet. Another thinks it means lower on the imaging screen. A third reads "distal" and goes to the wrong end of the forearm. Care fragments. Time is lost. Someone gets hurt.</p>
+      <div class="guiding-q">
+        <span>Guiding question</span>
+        How do healthcare professionals know they are talking about the exact same place on the same body?
+      </div>
+    </article>
+  </div>
+
+  <!-- PREWORK STRIP -->
+  <div class="prework-strip" role="note">
+    <span class="tag">Prework</span>
+    <span class="ps-body">This page is your case-based companion. The terms, the video, the spaced recall, and the self-quizzing all live on the Week 1 prework page in your course. Open both side by side: the prework gives you the inventory, this page gives you the story.</span>
+  </div>
+
+  <!-- TEACHING SECTIONS -->
+  <div class="section-wrap">
+
+    <!-- SECTION 1: ORGANIZATION -->
+    <section class="teaching-section" aria-labelledby="s1">
+      <div class="section-number"><span class="num">1</span> Why the language exists</div>
+      <h2 id="s1">A communication system, not a vocabulary list</h2>
+      <p>Anatomical terminology is often taught as a list of strange words you memorize for a quiz. That is the wrong framing. In reality the language is a <strong>communication system</strong>. It exists because the human body is too complex, and the work around it too high-stakes, for everyday English to be precise enough.</p>
+      <p>Watch the physician in our case again. In four short sentences she has named four locations on a body she has only just met, and every member of her team knows exactly what she means. No drawing, no second-guessing, no "do you mean my right or the patient's right?" The whole exchange is possible because of a small set of shared rules. We will spend the rest of this page making those rules concrete.</p>
+      <div class="callout">
+        <strong>What this page does.</strong> It walks the four physician quotes from start to finish. By the end you will be able to read each one aloud and translate it into a specific place on a specific body.
+      </div>
+    </section>
+
+    <!-- SECTION 2: POSITION + PLANES -->
+    <section class="teaching-section" aria-labelledby="s2">
+      <div class="section-number"><span class="num">2</span> Position and planes</div>
+      <h2 id="s2">Where the words "front" and "back" actually mean something</h2>
+      <p>Every directional word in anatomy assumes the body is standing in a specific posture, called the <strong>anatomical position</strong>. The body is upright, facing forward, feet about hip-width apart, arms at the sides, palms facing forward, thumbs pointing outward. That posture is the reference frame. When the physician says "anterior aspect of the left thigh," she means the part that would be facing forward if the patient were standing in anatomical position, even though our patient is supine on the gurney.</p>
+      <p>Notice the palms-forward detail. It is not cosmetic. With the palms forward, the two bones of the forearm (radius and ulna) sit parallel rather than crossed. That keeps the directional terms in the forearm unambiguous, which matters when the same physician asks for imaging of the distal forearm.</p>
+      <p>Now we slice the body with imaginary <strong>planes</strong>. A plane is a flat surface that passes through the body in a specific orientation. A <strong>section</strong> is what you see on the cut surface. Every figure in a textbook, every CT slice on rounds, every microscope slide in lab was made by choosing a plane first. Train yourself to ask "which plane?" before you try to read any image.</p>
+
+      <div class="structure-grid" role="list" aria-label="The three primary planes">
+        <div class="structure-item" role="listitem"><span class="dot"></span><div><strong>Sagittal</strong><span>Vertical, divides the body into right and left portions. <em>Midsagittal</em> is exactly on the midline (equal halves); <em>parasagittal</em> is off to one side. Classic example: an MRI of the spine viewed from the side.</span></div></div>
+        <div class="structure-item" role="listitem"><span class="dot"></span><div><strong>Frontal (coronal)</strong><span>Vertical, divides the body into anterior (front) and posterior (back) portions. Classic example: a chest X-ray.</span></div></div>
+        <div class="structure-item" role="listitem"><span class="dot"></span><div><strong>Transverse (axial)</strong><span>Horizontal, divides the body into superior (upper) and inferior (lower) portions. Classic example: any axial CT slice.</span></div></div>
+        <div class="structure-item" role="listitem"><span class="dot gold"></span><div><strong>Oblique</strong><span>Any plane that isn't sagittal, frontal, or transverse. Cuts at an angle, often used to follow a specific structure.</span></div></div>
+      </div>
+    </section>
+
+    <!-- DRAW ZONE 1 -->
+    <section class="draw-zone-wrap" id="zone1-wrap" aria-label="Draw zone, anatomical position with planes">
+      <div class="draw-zone-header">
+        <div class="draw-zone-title"><span class="dz-tag">Draw zone 1</span><span class="prompt-text">Sketch the body in anatomical position. Add the three primary planes and label each.</span></div>
+        <div class="draw-tools">
+          <div class="tool-group" role="group" aria-label="Canvas theme">
+            <button type="button" class="tool-btn" data-canvas="dark" aria-pressed="true">Dark</button>
+            <button type="button" class="tool-btn" data-canvas="light" aria-pressed="false">Light</button>
+          </div>
+          <div class="tool-group" role="group" aria-label="Pen color">
+            <span class="gl">Color</span>
+            <button type="button" class="color-btn dark-pen active" data-color="#F5F1E8" aria-label="Cream" style="background:#F5F1E8"></button>
+            <button type="button" class="color-btn dark-pen" data-color="#C9A14A" aria-label="Gold" style="background:#C9A14A"></button>
+            <button type="button" class="color-btn dark-pen" data-color="#FF3D6B" aria-label="Hot pink" style="background:#FF3D6B"></button>
+            <button type="button" class="color-btn dark-pen" data-color="#00E5FF" aria-label="Cyan" style="background:#00E5FF"></button>
+            <button type="button" class="color-btn dark-pen" data-color="#7CFF6B" aria-label="Lime" style="background:#7CFF6B"></button>
+            <button type="button" class="color-btn light-pen active" data-color="#0B1530" aria-label="Navy" style="background:#0B1530"></button>
+            <button type="button" class="color-btn light-pen" data-color="#8B3A2E" aria-label="Rust" style="background:#8B3A2E"></button>
+            <button type="button" class="color-btn light-pen" data-color="#C9A14A" aria-label="Gold" style="background:#C9A14A"></button>
+            <button type="button" class="color-btn light-pen" data-color="#1F6F8B" aria-label="Teal" style="background:#1F6F8B"></button>
+            <button type="button" class="color-btn light-pen" data-color="#000000" aria-label="Black" style="background:#000000"></button>
+          </div>
+          <div class="tool-group" role="group" aria-label="Width">
+            <span class="gl">Width</span>
+            <button type="button" class="tool-btn w-fine" data-width="fine"><span class="wdot"></span>Fine</button>
+            <button type="button" class="tool-btn w-normal active" data-width="normal"><span class="wdot"></span>Normal</button>
+            <button type="button" class="tool-btn w-bold" data-width="bold"><span class="wdot"></span>Bold</button>
+          </div>
+          <div class="tool-group"><span class="gl">Size</span><input type="range" class="size-slider" min="0.5" max="24" value="3" step="0.5" aria-label="Fine size override"></div>
+          <div class="tool-group" role="group" aria-label="Tool">
+            <button type="button" class="tool-btn active" data-tool="pen">Pen</button>
+            <button type="button" class="tool-btn" data-tool="eraser">Eraser</button>
+          </div>
+          <div class="tool-group">
+            <button type="button" class="tool-btn" data-action="undo">Undo</button>
+            <button type="button" class="tool-btn" data-action="clear">Clear</button>
+          </div>
+        </div>
+      </div>
+      <canvas class="draw-canvas" id="canvas1" height="440" aria-label="Sketch canvas, anatomical position with body planes"></canvas>
+      <div class="draw-zone-hint">Apple Pencil pressure-sensitive. Fine plus a light touch gives a hairline. Use Dark canvas with fluorescent pens, or Light canvas with ink colors.</div>
+    </section>
+
+    <!-- SECTION 3: DIRECTIONS + REGIONS -->
+    <section class="teaching-section" aria-labelledby="s3">
+      <div class="section-number"><span class="num">3</span> Directions and regions</div>
+      <h2 id="s3">The two vocabularies that let the physician's sentences work</h2>
+      <p>Directional terms describe relationships. They are always used in pairs, and they are always measured from a reference. A structure can be <em>medial</em> to one thing and <em>lateral</em> to another, depending on what you compare it with. The handful you need to read our physician's quotes:</p>
+
+      <table class="pairs-table" aria-label="Directional terms used in the physician's quotes">
+        <thead><tr><th>Pair</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td>Anterior &middot; Posterior</td><td>toward the front &middot; toward the back of the body</td></tr>
+          <tr><td>Superior &middot; Inferior</td><td>toward the head &middot; away from the head (toward the feet)</td></tr>
+          <tr><td>Medial &middot; Lateral</td><td>toward the midline &middot; away from the midline</td></tr>
+          <tr><td>Proximal &middot; Distal</td><td>closer to the point of attachment &middot; farther from the point of attachment</td></tr>
+          <tr><td>Superficial &middot; Deep</td><td>closer to the surface &middot; farther from the surface</td></tr>
+          <tr><td>Ipsilateral &middot; Contralateral</td><td>on the same side &middot; on the opposite side of the body</td></tr>
+        </tbody>
+      </table>
+
+      <p>Regional terms name standardized areas of the body. They are more precise than everyday words. "Groin" can mean almost anything; <em>inguinal region</em> means a specific area, the same way every time, in every chart. For our physician's case the regions we need are <strong>femoral</strong> (the thigh), the four <strong>abdominal quadrants</strong> (a tic-tac-toe grid centered on the umbilicus), the <strong>costal margin</strong> (the inferior edge of the rib cage), and the <strong>antebrachial region</strong> (the forearm, where "distal" is measured from the elbow).</p>
+
+      <p>Two more details to lock in. First, "right" and "left" always refer to the <strong>patient's</strong> right and left, not yours as the examiner. Second, anatomical position is the reference for every directional word even when the patient is supine, prone, or in any other posture. The language is consistent because the reference frame is fixed.</p>
+    </section>
+
+    <!-- DRAW ZONE 2 -->
+    <section class="draw-zone-wrap" id="zone2-wrap" aria-label="Draw zone, map the physician's findings on a body">
+      <div class="draw-zone-header">
+        <div class="draw-zone-title"><span class="dz-tag">Draw zone 2</span><span class="prompt-text">Sketch a body. Place a mark for each of the four findings. Label each with the directional and regional terms.</span></div>
+        <div class="draw-tools">
+          <div class="tool-group" role="group" aria-label="Canvas theme">
+            <button type="button" class="tool-btn" data-canvas="dark" aria-pressed="true">Dark</button>
+            <button type="button" class="tool-btn" data-canvas="light" aria-pressed="false">Light</button>
+          </div>
+          <div class="tool-group" role="group" aria-label="Pen color">
+            <span class="gl">Color</span>
+            <button type="button" class="color-btn dark-pen active" data-color="#F5F1E8" aria-label="Cream" style="background:#F5F1E8"></button>
+            <button type="button" class="color-btn dark-pen" data-color="#C9A14A" aria-label="Gold" style="background:#C9A14A"></button>
+            <button type="button" class="color-btn dark-pen" data-color="#FF3D6B" aria-label="Hot pink" style="background:#FF3D6B"></button>
+            <button type="button" class="color-btn dark-pen" data-color="#00E5FF" aria-label="Cyan" style="background:#00E5FF"></button>
+            <button type="button" class="color-btn dark-pen" data-color="#7CFF6B" aria-label="Lime" style="background:#7CFF6B"></button>
+            <button type="button" class="color-btn light-pen active" data-color="#0B1530" aria-label="Navy" style="background:#0B1530"></button>
+            <button type="button" class="color-btn light-pen" data-color="#8B3A2E" aria-label="Rust" style="background:#8B3A2E"></button>
+            <button type="button" class="color-btn light-pen" data-color="#C9A14A" aria-label="Gold" style="background:#C9A14A"></button>
+            <button type="button" class="color-btn light-pen" data-color="#1F6F8B" aria-label="Teal" style="background:#1F6F8B"></button>
+            <button type="button" class="color-btn light-pen" data-color="#000000" aria-label="Black" style="background:#000000"></button>
+          </div>
+          <div class="tool-group" role="group" aria-label="Width">
+            <span class="gl">Width</span>
+            <button type="button" class="tool-btn w-fine" data-width="fine"><span class="wdot"></span>Fine</button>
+            <button type="button" class="tool-btn w-normal active" data-width="normal"><span class="wdot"></span>Normal</button>
+            <button type="button" class="tool-btn w-bold" data-width="bold"><span class="wdot"></span>Bold</button>
+          </div>
+          <div class="tool-group"><span class="gl">Size</span><input type="range" class="size-slider" min="0.5" max="24" value="3" step="0.5" aria-label="Fine size override"></div>
+          <div class="tool-group" role="group" aria-label="Tool">
+            <button type="button" class="tool-btn active" data-tool="pen">Pen</button>
+            <button type="button" class="tool-btn" data-tool="eraser">Eraser</button>
+          </div>
+          <div class="tool-group">
+            <button type="button" class="tool-btn" data-action="undo">Undo</button>
+            <button type="button" class="tool-btn" data-action="clear">Clear</button>
+          </div>
+        </div>
+      </div>
+      <canvas class="draw-canvas" id="canvas2" height="460" aria-label="Sketch canvas, mapping clinical findings on a body"></canvas>
+      <div class="draw-zone-hint">Mark anterior left thigh, right lower quadrant, sub-costal, distal forearm.</div>
+    </section>
+
+  </div><!-- /section-wrap -->
+
+  <!-- CLINICAL CORRELATION -->
+  <aside class="clinical-block" id="clinical" aria-label="Clinical correlation, the physician's quotes translated">
+    <div class="cb-inner">
+      <div class="cb-label">Returning to the trauma bay</div>
+      <h2>Re-read the physician, with the language in hand</h2>
+      <p>You started this page with four sentences that meant almost nothing. Read them again now.</p>
+      <div class="translate-grid">
+        <div class="translate-card">
+          <div class="quote">"Laceration on the anterior aspect of the left thigh."</div>
+          <div class="meaning">A cut on the front of the femoral region on the patient's left side. Anterior = front. Left = patient's left, not yours.</div>
+        </div>
+        <div class="translate-card">
+          <div class="quote">"Pain in the right lower quadrant."</div>
+          <div class="meaning">Discomfort in the patient's right lower abdominal quadrant. The four-quadrant grid is centered on the umbilicus and uses the patient's right and left.</div>
+        </div>
+        <div class="translate-card">
+          <div class="quote">"Tenderness inferior to the costal margin."</div>
+          <div class="meaning">Tenderness below the lower edge of the rib cage. Inferior means closer to the feet, not lower on the imaging screen.</div>
+        </div>
+        <div class="translate-card">
+          <div class="quote">"Image the distal forearm."</div>
+          <div class="meaning">Image the part of the antebrachial region closer to the wrist. Distal is measured from the point of attachment, which for the forearm is the elbow.</div>
+        </div>
+      </div>
+      <p>Four sentences. Four pieces of information. <strong>Zero ambiguity.</strong> That is what the language buys you. The vocabulary is not the goal. Precise care is the goal.</p>
+      <p>When you go back to your prework page, the term lists and the spaced recall will land differently now, because the words are no longer abstract. Each one points at a specific place on a specific patient.</p>
+    </div>
+  </aside>
+
+</main>
+
+<footer class="page-footer">
+  <span class="byline">Dr. Sharilyn Rennie</span>
+  &nbsp; &middot; &nbsp;
+  <span>BIO 004 &middot; Week 1 &middot; Case deep dive: The Language of Anatomy</span>
+</footer>
+
+<script>
+/* PROGRESS BAR */
+window.addEventListener('scroll', function () {
+  var top = window.scrollY;
+  var h = document.documentElement.scrollHeight - window.innerHeight;
+  var pct = h > 0 ? (top / h) * 100 : 0;
+  document.getElementById('progress-bar').style.width = pct + '%';
+});
+
+/* DRAW ENGINE with Fine pencil + Apple Pencil pressure + canvas theme */
+function initCanvas(canvasId, wrapId) {
+  var wrap = document.getElementById(wrapId);
+  var canvas = document.getElementById(canvasId);
+  if (!wrap || !canvas) return;
+  var ctx = canvas.getContext('2d');
+  var BASE = { fine: 1.2, normal: 3.0, bold: 6.5 };
+  var state = {
+    color: '#F5F1E8',
+    width: 'normal',
+    sliderSize: 3,
+    sliderActive: false,
+    mode: 'pen',
+    canvasTheme: 'dark',
+    strokes: [],
+    current: null,
+    dpr: window.devicePixelRatio || 1
+  };
+  var first = wrap.querySelector('.color-btn.dark-pen.active');
+  if (first) state.color = first.dataset.color;
+
+  function widthFor(p, t) {
+    var b = state.sliderActive ? state.sliderSize : BASE[state.width];
+    if (t === 'pen') { var pp = (p === 0 || p == null) ? 0.5 : p; return Math.max(0.3, b * (0.25 + pp * 1.5)); }
+    return b;
+  }
+  function resize() {
+    var r = canvas.getBoundingClientRect();
+    state.dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(r.width * state.dpr);
+    canvas.height = Math.round(parseFloat(canvas.getAttribute('height')) * state.dpr);
+    canvas.style.height = canvas.getAttribute('height') + 'px';
+    ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+    redraw();
+  }
+  function redraw() {
+    var r = canvas.getBoundingClientRect();
+    ctx.clearRect(0, 0, r.width, parseFloat(canvas.getAttribute('height')));
+    state.strokes.forEach(drawStroke);
+    if (state.current) drawStroke(state.current);
+  }
+  function drawStroke(s) {
+    if (!s.points || !s.points.length) return;
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    if (s.mode === 'eraser') { ctx.globalCompositeOperation = 'destination-out'; ctx.strokeStyle = 'rgba(0,0,0,1)'; }
+    else { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = s.color; }
+    var p = s.points;
+    if (p.length === 1) {
+      var q = p[0];
+      ctx.beginPath(); ctx.arc(q.x, q.y, Math.max(0.4, q.w / 2), 0, Math.PI * 2);
+      ctx.fillStyle = s.mode === 'eraser' ? 'rgba(0,0,0,1)' : s.color; ctx.fill();
+      ctx.globalCompositeOperation = 'source-over'; return;
+    }
+    for (var i = 1; i < p.length; i++) {
+      var a = p[i-1], b = p[i];
+      ctx.lineWidth = (a.w + b.w) / 2;
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    }
+    ctx.globalCompositeOperation = 'source-over';
+  }
+  function pos(e) {
+    var r = canvas.getBoundingClientRect();
+    // Scale-aware mapping: works even if the canvas was resized after the last resize() call.
+    // Maps viewport (CSS) coords -> canvas-internal coords -> CSS-pixel space (where we draw thanks to the dpr transform).
+    var x = ((e.clientX - r.left) / r.width) * canvas.width / state.dpr;
+    var y = ((e.clientY - r.top) / r.height) * canvas.height / state.dpr;
+    return { x: x, y: y };
+  }
+  function down(e) {
+    try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+    var p = pos(e);
+    state.current = { mode: state.mode, color: state.color, points: [{ x: p.x, y: p.y, w: widthFor(e.pressure, e.pointerType) }] };
+    redraw(); e.preventDefault();
+  }
+  function move(e) {
+    if (!state.current) return;
+    var evs = (typeof e.getCoalescedEvents === 'function') ? e.getCoalescedEvents() : [e];
+    if (!evs.length) evs = [e];
+    for (var i = 0; i < evs.length; i++) {
+      var ev = evs[i], p = pos(ev);
+      state.current.points.push({ x: p.x, y: p.y, w: widthFor(ev.pressure, ev.pointerType || e.pointerType) });
+    }
+    redraw(); e.preventDefault();
+  }
+  function up(e) {
+    if (!state.current) return;
+    state.strokes.push(state.current); state.current = null;
+    try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+    redraw();
+  }
+  canvas.addEventListener('pointerdown', down);
+  canvas.addEventListener('pointermove', move);
+  canvas.addEventListener('pointerup', up);
+  canvas.addEventListener('pointercancel', up);
+  canvas.addEventListener('pointerleave', function (e) { if (state.current) up(e); });
+
+  /* Canvas theme toggle: Dark / Light */
+  wrap.querySelectorAll('[data-canvas]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      wrap.querySelectorAll('[data-canvas]').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); x.classList.remove('active'); });
+      b.setAttribute('aria-pressed', 'true'); b.classList.add('active');
+      state.canvasTheme = b.dataset.canvas;
+      if (state.canvasTheme === 'light') {
+        wrap.classList.add('canvas-light');
+        var lit = wrap.querySelector('.color-btn.light-pen.active') || wrap.querySelector('.color-btn.light-pen');
+        if (lit) { wrap.querySelectorAll('.color-btn').forEach(function (x) { x.classList.remove('active'); }); lit.classList.add('active'); state.color = lit.dataset.color; }
+      } else {
+        wrap.classList.remove('canvas-light');
+        var drk = wrap.querySelector('.color-btn.dark-pen.active') || wrap.querySelector('.color-btn.dark-pen');
+        if (drk) { wrap.querySelectorAll('.color-btn').forEach(function (x) { x.classList.remove('active'); }); drk.classList.add('active'); state.color = drk.dataset.color; }
+      }
+    });
+  });
+
+  /* Color */
+  wrap.querySelectorAll('.color-btn[data-color]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var visible = state.canvasTheme === 'light' ? 'light-pen' : 'dark-pen';
+      wrap.querySelectorAll('.color-btn.' + visible).forEach(function (x) { x.classList.remove('active'); });
+      b.classList.add('active'); state.color = b.dataset.color;
+      state.mode = 'pen';
+      var pen = wrap.querySelector('[data-tool="pen"]'); var er = wrap.querySelector('[data-tool="eraser"]');
+      if (pen) pen.classList.add('active'); if (er) er.classList.remove('active');
+    });
+  });
+  /* Width preset */
+  wrap.querySelectorAll('[data-width]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      wrap.querySelectorAll('[data-width]').forEach(function (x) { x.classList.remove('active'); });
+      b.classList.add('active'); state.width = b.dataset.width; state.sliderActive = false;
+    });
+  });
+  /* Size slider override */
+  var slider = wrap.querySelector('.size-slider');
+  if (slider) slider.addEventListener('input', function () {
+    state.sliderSize = parseFloat(slider.value); state.sliderActive = true;
+    wrap.querySelectorAll('[data-width]').forEach(function (x) { x.classList.remove('active'); });
+  });
+  /* Pen / Eraser */
+  wrap.querySelectorAll('[data-tool]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      wrap.querySelectorAll('[data-tool]').forEach(function (x) { x.classList.remove('active'); });
+      b.classList.add('active'); state.mode = b.dataset.tool;
+    });
+  });
+  /* Undo / Clear */
+  wrap.querySelectorAll('[data-action]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      if (b.dataset.action === 'undo') { if (state.strokes.length) { state.strokes.pop(); redraw(); } }
+      else if (b.dataset.action === 'clear') { state.strokes = []; state.current = null; redraw(); }
+    });
+  });
+
+  window.addEventListener('resize', resize);
+  // ResizeObserver catches layout shifts (fonts loading, content changes above the canvas, etc.)
+  if ('ResizeObserver' in window) { try { new ResizeObserver(function () { resize(); }).observe(canvas); } catch (_) {} }
+  resize();
+  // Re-run resize after a tick so font loading / late layout shifts can't strand stale dimensions
+  requestAnimationFrame(function () { resize(); setTimeout(resize, 250); });
+}
+initCanvas('canvas1', 'zone1-wrap');
+initCanvas('canvas2', 'zone2-wrap');
+
+/* iframe height-sender */
+(function () {
+  var FRAME_ID = 'bio004-week1-language-of-anatomy';
+  function sendHeight() {
+    var h = Math.max(document.documentElement.scrollHeight, document.body ? document.body.scrollHeight : 0);
+    try { parent.postMessage({ type: 'resize', id: FRAME_ID, height: h }, '*'); } catch (_) {}
+  }
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+  if (window.ResizeObserver) new ResizeObserver(sendHeight).observe(document.body);
+})();
+</script>
+
+</body>
+</html>

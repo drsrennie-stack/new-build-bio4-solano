@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Draw Zone with Fine Pencil and Pressure Sensitivity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Lora:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1E3D4C;
+    --navy-deep: #142a36;
+    --navy-tint: #EDF1F3;
+    --gold: #B8924A;
+    --terra: #C2734D;
+    --terra-dark: #A0522D;
+    --white: #FFFFFF;
+    --off-white: #FAFAF9;
+    --gray-border: #d6d6d2;
+    --gray-text: #5a5a55;
+    --focus-ring: #1E3D4C;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--off-white);
+    color: var(--navy);
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    line-height: 1.55;
+  }
+
+  /* Skip link for keyboard users */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 8px;
+    background: var(--navy);
+    color: var(--white);
+    padding: 10px 16px;
+    text-decoration: none;
+    border-radius: 4px;
+    z-index: 1000;
+  }
+  .skip-link:focus { left: 8px; }
+
+  /* Sticky case ribbon */
+  .case-ribbon {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: var(--navy);
+    color: var(--white);
+    padding: 12px 20px;
+    font-size: 14.5px;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .case-ribbon .case-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--gold);
+    color: var(--navy-deep);
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-weight: 600;
+  }
+
+  /* Hero */
+  .hero {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 24px 12px;
+  }
+  .hero .eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--terra-dark);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .hero h1 {
+    font-weight: 800;
+    color: var(--navy);
+    font-size: clamp(28px, 4vw, 40px);
+    margin: 0 0 8px;
+    line-height: 1.15;
+  }
+  .hero .subtitle {
+    color: var(--terra-dark);
+    font-weight: 600;
+    font-size: clamp(16px, 2.2vw, 20px);
+    margin: 0;
+  }
+
+  /* Sections */
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 16px 24px 80px;
+  }
+  .section {
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    border-radius: 10px;
+    padding: 28px 28px 32px;
+    margin: 24px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    transition: transform 200ms ease, box-shadow 200ms ease, opacity 400ms ease;
+  }
+  .section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.10);
+  }
+  .section .section-num {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--terra-dark);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .section h2 {
+    font-weight: 600;
+    color: var(--terra-dark);
+    font-size: 22px;
+    margin: 4px 0 16px;
+  }
+  .section p { margin: 0 0 14px; }
+  .section .instr {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    color: var(--gray-text);
+    margin: 0 0 14px;
+  }
+
+  /* Reveal animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal.is-visible {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    .section { transition: none; }
+  }
+
+  /* Draw zone */
+  .draw-zone {
+    border: 1px solid var(--gray-border);
+    border-radius: 8px;
+    background: var(--off-white);
+    padding: 12px;
+    margin-top: 12px;
+  }
+  .draw-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--gray-border);
+    margin-bottom: 10px;
+  }
+  .tool-group {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 0 8px 0 0;
+    border-right: 1px solid var(--gray-border);
+  }
+  .tool-group:last-of-type { border-right: none; }
+  .tool-group .group-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10.5px;
+    color: var(--gray-text);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-right: 6px;
+    font-weight: 600;
+  }
+  .tool-btn {
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    color: var(--navy);
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    min-height: 36px;
+    min-width: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+  }
+  .tool-btn:hover {
+    border-color: var(--navy);
+  }
+  .tool-btn:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+  .tool-btn[aria-pressed="true"] {
+    background: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+  }
+  .tool-btn.gold[aria-pressed="true"] {
+    background: var(--gold);
+    color: var(--navy-deep);
+    border-color: var(--gold);
+  }
+  .swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--gray-border);
+    cursor: pointer;
+    padding: 0;
+    min-width: 28px;
+    min-height: 28px;
+  }
+  .swatch:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+  .swatch[aria-pressed="true"] {
+    border-color: var(--navy);
+    box-shadow: 0 0 0 2px var(--white) inset;
+  }
+
+  /* Width preview dots show the stroke size visually */
+  .width-dot {
+    display: inline-block;
+    background: var(--navy);
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .width-fine .width-dot { width: 3px; height: 3px; }
+  .width-normal .width-dot { width: 7px; height: 7px; }
+  .width-bold .width-dot { width: 11px; height: 11px; }
+  .tool-btn[aria-pressed="true"] .width-dot { background: var(--white); }
+
+  canvas {
+    display: block;
+    width: 100%;
+    background: var(--white);
+    border: 1px solid var(--gray-border);
+    border-radius: 6px;
+    touch-action: none; /* needed for pointer drawing on touch devices */
+    cursor: crosshair;
+  }
+  canvas:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+  .canvas-hint {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    color: var(--gray-text);
+    font-size: 14px;
+    margin: 10px 0 0;
+  }
+
+  /* Visually hidden but available to screen readers */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Footer */
+  footer {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+    color: var(--gray-text);
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<!-- STICKY CASE RIBBON -->
+<div class="case-ribbon" role="region" aria-label="Patient case">
+  <span class="case-label">Case</span>
+  <span>Maya Delgado, 24F. Day 6 of SJS/TEN. Bullae cover 38% BSA. Sketch the layers of skin you would expect to see sloughing.</span>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <p class="eyebrow">BIO 431 · A&amp;P · Integrative Clinical Lecture</p>
+  <h1>Drawing the Skin in Crisis</h1>
+  <p class="subtitle">Layered anatomy, sketched from memory</p>
+</header>
+
+<!-- MAIN CONTENT -->
+<main id="main-content">
+
+  <!-- TEACHING SECTION 1 -->
+  <section class="section reveal" aria-labelledby="s1-heading">
+    <p class="section-num">Section 01</p>
+    <h2 id="s1-heading">Why we draw before we Google</h2>
+    <p>You will not retain what you only read. Drawing forces your motor cortex and visual cortex to negotiate with what your memory actually holds. The gap between what you think you remember and what your hand can produce is the gap you need to close before the lab exam.</p>
+    <p>Two new tools live in the toolbar below: a <strong>Fine pencil</strong> for hairline detail (capillary loops, suture lines, fascicles) and <strong>Apple Pencil pressure sensitivity</strong>, which automatically thins your line when you press lightly and thickens it when you press harder. You do not toggle pressure on or off. It just works when a stylus is detected.</p>
+  </section>
+
+  <!-- TEACHING SECTION 2 -->
+  <section class="section reveal" aria-labelledby="s2-heading">
+    <p class="section-num">Section 02</p>
+    <h2 id="s2-heading">Tool guide</h2>
+    <p><strong>Color.</strong> Pick the pen color before you draw. Tap a different color mid-sketch to layer.</p>
+    <p><strong>Width.</strong> Fine for detail. Normal for general structure. Bold for emphasis or arrows. Apple Pencil pressure scales within each width, so Fine plus light pressure is your hairline.</p>
+    <p><strong>Eraser.</strong> Toggle the eraser, then drag over what you want gone. Tap a color again to leave eraser mode.</p>
+    <p><strong>Undo and Clear.</strong> Undo removes the last stroke. Clear wipes the whole canvas.</p>
+    <p><strong>Input.</strong> Pencil mode rejects palm and finger touches (iPad with Apple Pencil). All Input mode accepts everything (finger, mouse, trackpad). Default is All Input so the tool works on any device.</p>
+  </section>
+
+  <!-- DRAW ZONE -->
+  <section class="section reveal" aria-labelledby="s3-heading">
+    <p class="section-num">Section 03</p>
+    <h2 id="s3-heading">Sketch the epidermal layers, deep to superficial</h2>
+    <p class="instr">Label stratum basale, spinosum, granulosum, lucidum (where present), and corneum. Use Fine pencil for the cleavage plane in SJS/TEN.</p>
+
+    <div class="draw-zone" id="zone1-wrap">
+      <div class="draw-toolbar" role="toolbar" aria-label="Drawing tools for sketch 1">
+
+        <div class="tool-group" role="group" aria-label="Color">
+          <span class="group-label" aria-hidden="true">Color</span>
+          <button type="button" class="swatch" data-color="#1E3D4C" aria-label="Navy" aria-pressed="true" style="background:#1E3D4C"></button>
+          <button type="button" class="swatch" data-color="#C2734D" aria-label="Terra cotta" aria-pressed="false" style="background:#C2734D"></button>
+          <button type="button" class="swatch" data-color="#B8924A" aria-label="Brushed gold" aria-pressed="false" style="background:#B8924A"></button>
+          <button type="button" class="swatch" data-color="#000000" aria-label="Black" aria-pressed="false" style="background:#000000"></button>
+        </div>
+
+        <div class="tool-group" role="group" aria-label="Line width">
+          <span class="group-label" aria-hidden="true">Width</span>
+          <button type="button" class="tool-btn width-fine" data-width="fine" aria-pressed="false">
+            <span class="width-dot" aria-hidden="true"></span>Fine
+          </button>
+          <button type="button" class="tool-btn width-normal" data-width="normal" aria-pressed="true">
+            <span class="width-dot" aria-hidden="true"></span>Normal
+          </button>
+          <button type="button" class="tool-btn width-bold" data-width="bold" aria-pressed="false">
+            <span class="width-dot" aria-hidden="true"></span>Bold
+          </button>
+        </div>
+
+        <div class="tool-group" role="group" aria-label="Modes">
+          <button type="button" class="tool-btn gold" data-action="eraser" aria-pressed="false">Eraser</button>
+          <button type="button" class="tool-btn" data-action="undo">Undo</button>
+          <button type="button" class="tool-btn" data-action="clear">Clear</button>
+        </div>
+
+        <div class="tool-group" role="group" aria-label="Input mode">
+          <span class="group-label" aria-hidden="true">Input</span>
+          <button type="button" class="tool-btn" data-input="pencil" aria-pressed="false">Pencil only</button>
+          <button type="button" class="tool-btn" data-input="all" aria-pressed="true">All input</button>
+        </div>
+
+      </div>
+
+      <canvas id="canvas1" width="900" height="460" role="img" aria-label="Sketch canvas for epidermal layers" tabindex="0"></canvas>
+      <p class="canvas-hint">Sketch the five epidermal layers from deepest to most superficial. Mark the cleavage plane.</p>
+      <p class="sr-only" aria-live="polite" id="canvas1-status">Canvas ready. Use the toolbar buttons above to choose color, width, and mode. Drawing requires a pointer device (stylus, finger, or mouse).</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Drawing-based synthesis. Given, not Googled. &nbsp;|&nbsp; Dr. Sharilyn Rennie</p>
+</footer>
+
+<script>
+/* ============================================================
+   REVEAL-ON-SCROLL (IntersectionObserver)
+   ============================================================ */
+(function () {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced) {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+})();
+
+/* ============================================================
+   initCanvas — drop-in drawing tool with:
+   - Color swatches
+   - Fine / Normal / Bold width presets
+   - Apple Pencil pressure sensitivity (PointerEvents)
+   - Eraser, Undo, Clear
+   - Pencil-only / All-input toggle (palm rejection)
+   ============================================================ */
+function initCanvas(canvasId, wrapId) {
+  const wrap = document.getElementById(wrapId);
+  const canvas = document.getElementById(canvasId);
+  if (!wrap || !canvas) return;
+
+  const ctx = canvas.getContext('2d');
+
+  // ---- State ----
+  const state = {
+    color: '#1E3D4C',
+    widthPreset: 'normal',   // 'fine' | 'normal' | 'bold'
+    mode: 'draw',            // 'draw' | 'erase'
+    inputMode: 'all',        // 'all' | 'pencil'
+    strokes: [],             // history for undo
+    current: null,           // in-progress stroke
+    dpr: window.devicePixelRatio || 1
+  };
+
+  // Base widths (CSS pixels). Fine is intentionally hairline.
+  const BASE_WIDTH = {
+    fine:   1.2,
+    normal: 3.0,
+    bold:   6.5
+  };
+
+  // Pressure mapping: scale base width by stylus pressure.
+  // Light pressure -> thinner, heavy pressure -> thicker.
+  // Non-stylus input (mouse/finger) uses the base width directly.
+  function widthFor(pressure, pointerType) {
+    const base = BASE_WIDTH[state.widthPreset];
+    if (pointerType === 'pen') {
+      // pressure is 0..1; some browsers report 0 or null when no data is available.
+      // Treat 0/null as 0.5 (neutral); let real pressure span 0.25x to 1.75x of base.
+      const p = (pressure === 0 || pressure == null) ? 0.5 : pressure;
+      const mult = 0.25 + (p * 1.5);
+      return Math.max(0.3, base * mult);
+    }
+    return base;
+  }
+
+  // ---- Resize canvas to device pixel ratio for crisp lines ----
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    state.dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(rect.width * state.dpr);
+    canvas.height = Math.round(rect.height * state.dpr);
+    ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+    redraw();
+  }
+
+  // ---- Redraw from stroke history ----
+  function redraw() {
+    const rect = canvas.getBoundingClientRect();
+    ctx.clearRect(0, 0, rect.width, rect.height);
+    for (const stroke of state.strokes) drawStroke(stroke);
+    if (state.current) drawStroke(state.current);
+  }
+
+  function drawStroke(stroke) {
+    if (!stroke.points || stroke.points.length < 1) return;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    if (stroke.mode === 'erase') {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.strokeStyle = 'rgba(0,0,0,1)';
+    } else {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.strokeStyle = stroke.color;
+    }
+
+    // Variable width: draw segment-by-segment using averaged endpoint widths.
+    const pts = stroke.points;
+    if (pts.length === 1) {
+      const p = pts[0];
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, Math.max(0.4, p.w / 2), 0, Math.PI * 2);
+      ctx.fillStyle = stroke.mode === 'erase' ? 'rgba(0,0,0,1)' : stroke.color;
+      ctx.fill();
+      ctx.globalCompositeOperation = 'source-over';
+      return;
+    }
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1];
+      const b = pts[i];
+      ctx.lineWidth = (a.w + b.w) / 2;
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.stroke();
+    }
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  // ---- Pointer handling ----
+  function pointerOK(e) {
+    if (state.inputMode === 'pencil') return e.pointerType === 'pen';
+    return true;
+  }
+
+  function pointerPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+  }
+
+  function onDown(e) {
+    if (!pointerOK(e)) return;
+    try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+    const pos = pointerPos(e);
+    state.current = {
+      mode: state.mode,
+      color: state.color,
+      points: [{
+        x: pos.x,
+        y: pos.y,
+        w: widthFor(e.pressure, e.pointerType)
+      }]
+    };
+    redraw();
+    e.preventDefault();
+  }
+
+  function onMove(e) {
+    if (!state.current) return;
+    if (!pointerOK(e)) return;
+    // Coalesced events give us smoother stylus capture between frames.
+    const events = (typeof e.getCoalescedEvents === 'function') ? e.getCoalescedEvents() : [e];
+    const list = (events && events.length) ? events : [e];
+    for (const ev of list) {
+      const pos = pointerPos(ev);
+      state.current.points.push({
+        x: pos.x,
+        y: pos.y,
+        w: widthFor(ev.pressure, ev.pointerType || e.pointerType)
+      });
+    }
+    redraw();
+    e.preventDefault();
+  }
+
+  function onUp(e) {
+    if (!state.current) return;
+    state.strokes.push(state.current);
+    state.current = null;
+    try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+    redraw();
+  }
+
+  canvas.addEventListener('pointerdown', onDown);
+  canvas.addEventListener('pointermove', onMove);
+  canvas.addEventListener('pointerup', onUp);
+  canvas.addEventListener('pointercancel', onUp);
+  canvas.addEventListener('pointerleave', (e) => {
+    if (state.current) onUp(e);
+  });
+
+  // ---- Toolbar wiring (scoped to this draw zone) ----
+  // Color swatches
+  wrap.querySelectorAll('.swatch[data-color]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      wrap.querySelectorAll('.swatch[data-color]').forEach(b => b.setAttribute('aria-pressed', 'false'));
+      btn.setAttribute('aria-pressed', 'true');
+      state.color = btn.dataset.color;
+      // Selecting a color exits eraser mode
+      state.mode = 'draw';
+      const erBtn = wrap.querySelector('[data-action="eraser"]');
+      if (erBtn) erBtn.setAttribute('aria-pressed', 'false');
+    });
+  });
+
+  // Width buttons
+  wrap.querySelectorAll('.tool-btn[data-width]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      wrap.querySelectorAll('.tool-btn[data-width]').forEach(b => b.setAttribute('aria-pressed', 'false'));
+      btn.setAttribute('aria-pressed', 'true');
+      state.widthPreset = btn.dataset.width;
+    });
+  });
+
+  // Action buttons (eraser, undo, clear)
+  wrap.querySelectorAll('.tool-btn[data-action]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const action = btn.dataset.action;
+      if (action === 'eraser') {
+        const pressed = btn.getAttribute('aria-pressed') === 'true';
+        btn.setAttribute('aria-pressed', String(!pressed));
+        state.mode = !pressed ? 'erase' : 'draw';
+      } else if (action === 'undo') {
+        if (state.strokes.length > 0) {
+          state.strokes.pop();
+          redraw();
+        }
+      } else if (action === 'clear') {
+        state.strokes = [];
+        state.current = null;
+        redraw();
+      }
+    });
+  });
+
+  // Input mode toggle (Pencil-only / All-input)
+  wrap.querySelectorAll('.tool-btn[data-input]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      wrap.querySelectorAll('.tool-btn[data-input]').forEach(b => b.setAttribute('aria-pressed', 'false'));
+      btn.setAttribute('aria-pressed', 'true');
+      state.inputMode = btn.dataset.input;
+    });
+  });
+
+  // ---- Init ----
+  window.addEventListener('resize', resize);
+  resize();
+}
+
+// One line per draw zone.
+initCanvas('canvas1', 'zone1-wrap');
+
+/* ============================================================
+   IFRAME HEIGHT SENDER (for Kajabi / GitHub Pages embeds)
+   ============================================================ */
+(function () {
+  const id = (document.body && document.body.dataset && document.body.dataset.frameId) || window.name || 'cowork-frame';
+
+  function sendHeight() {
+    const h = Math.max(
+      document.documentElement.scrollHeight,
+      document.body.scrollHeight
+    );
+    try {
+      window.parent.postMessage({ type: 'iframe-height', id: id, height: h }, '*');
+    } catch (_) {}
+  }
+
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+
+  if (typeof ResizeObserver !== 'undefined') {
+    const ro = new ResizeObserver(sendHeight);
+    ro.observe(document.body);
+  }
+})();
+</script>
+</body>
+</html>
