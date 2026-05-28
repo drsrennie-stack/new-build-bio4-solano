@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>The Lymphatic System · Case Deep Dive · BIO 004</title>
+<style>@import url('https://cdn.jsdelivr.net/npm/@fontsource-variable/plus-jakarta-sans/index.css');</style>
+<style>
+  :root { --navy:#0B1530; --navy-dark:#060A18; --rust:#8B3A2E; --rust-hover:#A0452F; --gold:#C9A14A; --gold-light:#E8D4A8; --white:#fff; --cream:#F5F1E8; --off-white:#F8F8F8; --text:#0B1530; --text-muted:#5A6478; --rule:rgba(11,21,48,0.10); --canvas-bg:#06080F; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { scroll-behavior:smooth; }
+  body { font-family:'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif; background:var(--white); color:var(--text); font-size:16px; line-height:1.7; -webkit-font-smoothing:antialiased; }
+  #progress-bar { position:fixed; top:0; left:0; height:3px; width:0%; background:var(--rust); z-index:1000; transition:width 0.1s linear; }
+  #case-ribbon { position:sticky; top:0; z-index:200; background:var(--navy-dark); color:var(--white); padding:10px 32px; display:flex; align-items:center; gap:20px; flex-wrap:wrap; border-bottom:2px solid var(--gold); font-size:13px; line-height:1.4; }
+  #case-ribbon .ribbon-label { background:var(--rust); color:var(--white); font-weight:700; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; padding:3px 10px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
+  #case-ribbon .ribbon-case { opacity:0.92; }
+  #case-ribbon .ribbon-case strong { color:var(--gold-light); font-weight:700; }
+  .hero { background:var(--white); border-bottom:0.5px solid var(--rule); padding:64px 40px 56px; text-align:center; position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 60% 40% at 50% 0%, rgba(139,58,46,0.05) 0%, transparent 70%); pointer-events:none; }
+  .hero-eyebrow { font-size:11px; font-weight:700; letter-spacing:0.28em; text-transform:uppercase; color:var(--rust); margin-bottom:18px; position:relative; }
+  .hero h1 { font-size:clamp(28px,4vw,42px); font-weight:800; color:var(--navy); line-height:1.1; margin-bottom:14px; letter-spacing:-0.02em; position:relative; }
+  .hero h1 .accent { color:var(--rust); }
+  .hero-sub { font-size:16px; color:var(--text); font-weight:400; opacity:0.70; position:relative; max-width:600px; margin:0 auto; }
+  .case-card-wrap { max-width:820px; margin:-32px auto 0; padding:0 24px 36px; position:relative; z-index:10; }
+  .case-card { background:var(--white); border:1.5px solid var(--rule); border-top:4px solid var(--rust); padding:32px 36px; box-shadow:0 8px 40px rgba(10,19,34,0.12); }
+  .case-card .case-label { font-size:10px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--rust); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .case-card .case-label::after { content:''; flex:1; height:1px; background:var(--rule); }
+  .case-card .case-text { font-size:17px; color:var(--text); line-height:1.65; margin-bottom:16px; }
+  .case-card .case-text:last-of-type { margin-bottom:22px; }
+  .case-card .case-text strong { color:var(--navy); font-weight:700; }
+  .case-card .path-report { background:var(--off-white); border-left:3px solid var(--rust); padding:14px 18px; font-family:'Plus Jakarta Sans Variable',monospace; font-size:14px; line-height:1.6; color:var(--navy); margin:0 0 16px; }
+  .case-card .path-report .pr-label { font-size:10px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--rust); display:block; margin-bottom:6px; }
+  .case-card .path-report em { color:var(--rust); font-style:italic; }
+  .case-card .guiding-q { background:var(--cream); border-left:4px solid var(--gold); padding:16px 22px; font-size:14.5px; font-weight:500; color:var(--navy); }
+  .case-card .guiding-q span { display:block; font-size:10px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; }
+  .prework-strip { max-width:820px; margin:0 auto 28px; padding:14px 24px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; background:var(--off-white); border:1px solid var(--rule); border-radius:4px; font-size:13.5px; }
+  .prework-strip .tag { background:var(--gold); color:var(--navy); font-size:10px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; padding:3px 10px; border-radius:20px; }
+  .prework-strip .ps-body { flex:1; color:var(--text); }
+  .section-wrap { max-width:820px; margin:0 auto; padding:0 24px; }
+  .teaching-section { padding:44px 0 32px; border-bottom:1px solid var(--rule); }
+  .teaching-section:last-child { border-bottom:none; }
+  .section-number { font-size:10px; font-weight:700; letter-spacing:0.28em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px; display:flex; align-items:center; gap:10px; }
+  .section-number .num { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:var(--rust); color:var(--white); font-size:10px; font-weight:700; }
+  .teaching-section h2 { font-size:clamp(22px,3vw,30px); font-weight:700; color:var(--navy); line-height:1.2; margin-bottom:18px; letter-spacing:-0.01em; }
+  .teaching-section h3 { font-size:13px; color:var(--rust); text-transform:uppercase; letter-spacing:0.06em; margin:18px 0 8px; font-weight:700; }
+  .teaching-section p { font-size:16px; color:var(--text); line-height:1.78; margin-bottom:14px; }
+  .teaching-section p:last-child { margin-bottom:0; }
+  .teaching-section strong { color:var(--navy); font-weight:700; }
+  .teaching-section em { font-style:italic; color:var(--navy); }
+  .callout { background:#EEF2FF; border:1px solid rgba(10,19,34,0.12); border-left:4px solid var(--rust); padding:18px 22px; margin:20px 0; font-size:15px; color:var(--navy); line-height:1.65; }
+  .callout.gold { background:#FBF6E8; border-left-color:var(--gold); }
+  .structure-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:20px 0; }
+  @media (max-width:600px) { .structure-grid { grid-template-columns:1fr; } }
+  .structure-item { background:var(--off-white); border:1px solid var(--rule); padding:14px 18px; display:flex; align-items:flex-start; gap:12px; }
+  .structure-item .dot { width:8px; height:8px; border-radius:50%; background:var(--rust); flex-shrink:0; margin-top:7px; }
+  .structure-item .dot.gold { background:var(--gold); }
+  .structure-item strong { display:block; font-size:13px; font-weight:700; color:var(--navy); line-height:1.3; }
+  .structure-item span { font-size:12.5px; color:var(--text-muted); line-height:1.55; }
+  .divisions-table { width:100%; border-collapse:collapse; margin:22px 0; font-size:14px; }
+  .divisions-table th { background:var(--navy); color:var(--white); padding:11px 14px; text-align:left; font-weight:600; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; }
+  .divisions-table td { padding:10px 14px; border-bottom:1px solid var(--rule); color:var(--text); vertical-align:top; line-height:1.55; }
+  .divisions-table tr:nth-child(even) td { background:var(--off-white); }
+  .divisions-table td:first-child { font-weight:700; color:var(--navy); white-space:nowrap; }
+  .draw-zone-wrap { margin:32px 0; background:var(--canvas-bg); border:2px solid rgba(201,161,74,0.3); position:relative; user-select:none; }
+  .draw-zone-wrap.light-canvas { background:var(--white); border-color:rgba(11,21,48,0.18); }
+  .draw-zone-header { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.08); flex-wrap:wrap; gap:10px; }
+  .draw-zone-wrap.light-canvas .draw-zone-header { border-bottom-color:var(--rule); }
+  .draw-zone-title { display:flex; align-items:center; gap:10px; }
+  .draw-zone-title .pencil-icon { font-size:16px; color:var(--gold); }
+  .draw-zone-wrap.light-canvas .draw-zone-title .pencil-icon { color:var(--rust); }
+  .draw-zone-title > span:not(.pencil-icon) { font-size:11px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); }
+  .draw-zone-wrap.light-canvas .draw-zone-title > span:not(.pencil-icon) { color:var(--rust); }
+  .draw-zone-title .prompt-text { font-size:12px; font-weight:400; color:rgba(255,255,255,0.55); letter-spacing:0; text-transform:none; margin-left:4px; }
+  .draw-zone-wrap.light-canvas .draw-zone-title .prompt-text { color:var(--text-muted); }
+  .draw-tools { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .tool-group { display:flex; align-items:center; gap:4px; border-right:1px solid rgba(255,255,255,0.10); padding-right:8px; }
+  .tool-group:last-child { border-right:none; padding-right:0; }
+  .draw-zone-wrap.light-canvas .tool-group { border-right-color:var(--rule); }
+  .color-btn { width:20px; height:20px; border-radius:50%; border:2px solid transparent; cursor:pointer; transition:transform 0.15s,border-color 0.15s; padding:0; background-clip:padding-box; }
+  .color-btn:hover { transform:scale(1.2); }
+  .color-btn.active { border-color:var(--white); transform:scale(1.15); }
+  .draw-zone-wrap.light-canvas .color-btn.active { border-color:var(--navy); }
+  .tool-btn { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); color:rgba(255,255,255,0.80); font-size:11px; font-weight:600; padding:5px 10px; border-radius:4px; cursor:pointer; font-family:'Plus Jakarta Sans Variable',sans-serif; letter-spacing:0.02em; white-space:nowrap; }
+  .tool-btn:hover { background:rgba(255,255,255,0.18); color:var(--white); }
+  .tool-btn.active { background:rgba(201,161,74,0.30); border-color:var(--gold); color:var(--gold); }
+  .draw-zone-wrap.light-canvas .tool-btn { background:var(--white); border-color:rgba(11,21,48,0.18); color:var(--navy); }
+  .draw-zone-wrap.light-canvas .tool-btn:hover { border-color:var(--rust); }
+  .draw-zone-wrap.light-canvas .tool-btn.active { background:var(--navy); color:var(--white); border-color:var(--navy); }
+  .size-slider { -webkit-appearance:none; appearance:none; width:64px; height:3px; background:rgba(255,255,255,0.20); border-radius:2px; outline:none; cursor:pointer; }
+  .draw-zone-wrap.light-canvas .size-slider { background:rgba(11,21,48,0.18); }
+  .size-slider::-webkit-slider-thumb { -webkit-appearance:none; width:12px; height:12px; border-radius:50%; background:var(--gold); cursor:pointer; }
+  .draw-zone-wrap.light-canvas .size-slider::-webkit-slider-thumb { background:var(--rust); }
+  .size-slider::-moz-range-thumb { width:12px; height:12px; border-radius:50%; background:var(--gold); cursor:pointer; border:0; }
+  .draw-zone-wrap.light-canvas .size-slider::-moz-range-thumb { background:var(--rust); }
+  canvas.draw-canvas { display:block; width:100%; cursor:crosshair; touch-action:none; }
+  .draw-zone-hint { padding:8px 16px; border-top:1px solid rgba(255,255,255,0.06); font-size:10.5px; color:rgba(255,255,255,0.40); font-style:italic; letter-spacing:0.02em; }
+  .draw-zone-wrap.light-canvas .draw-zone-hint { border-top-color:var(--rule); color:var(--text-muted); }
+  .clinical-block { background:var(--navy-dark); padding:48px 40px; margin:48px 0 0; position:relative; overflow:hidden; }
+  .clinical-block::before { content:''; position:absolute; top:-40px; right:-40px; width:220px; height:220px; border-radius:50%; background:radial-gradient(circle,rgba(201,161,74,0.08) 0%, transparent 70%); pointer-events:none; }
+  .clinical-block .cb-inner { max-width:820px; margin:0 auto; position:relative; }
+  .clinical-block .cb-label { font-size:10px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
+  .clinical-block h2 { font-size:clamp(22px,3.5vw,30px); color:var(--white); font-weight:700; margin-bottom:18px; line-height:1.25; }
+  .clinical-block p { color:rgba(255,255,255,0.78); font-size:15px; line-height:1.75; margin-bottom:14px; }
+  .clinical-block strong { color:var(--gold-light); font-weight:700; }
+  .translate-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin:22px 0 8px; }
+  .translate-card { background:rgba(255,255,255,0.05); border:1px solid rgba(201,161,74,0.22); padding:16px 18px; }
+  .translate-card .quote { font-size:13px; font-weight:600; color:var(--gold-light); margin-bottom:6px; font-style:italic; }
+  .translate-card .meaning { font-size:12.5px; color:rgba(255,255,255,0.78); line-height:1.55; }
+  .page-footer { background:var(--navy-dark); border-top:2px solid rgba(201,161,74,0.20); padding:24px 24px; text-align:center; font-size:12px; color:rgba(255,255,255,0.60); letter-spacing:0.04em; }
+  .page-footer .byline { color:var(--gold); font-weight:700; letter-spacing:0.14em; text-transform:uppercase; }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<div id="case-ribbon">
+  <span class="ribbon-label">Case</span>
+  <span class="ribbon-case"><strong>Beverly, 58</strong> · 6 months post-right mastectomy + axillary node dissection for breast cancer · <strong>progressive right arm swelling</strong> · ring stuck on right ring finger · pitting then non-pitting edema · <strong>secondary lymphedema</strong></span>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">BIO 004 · Week 4 · Case Deep Dive</div>
+  <h1>The <span class="accent">Lymphatic System</span></h1>
+  <p class="hero-sub">Six months after a mastectomy, her wedding ring no longer fits on the right hand. The axillary nodes she lost were doing more than she knew.</p>
+</div>
+
+<div class="case-card-wrap">
+  <div class="case-card">
+    <div class="case-label">Patient case</div>
+    <p class="case-text"><strong>Beverly is 58</strong>. Six months ago she had a <strong>right mastectomy with axillary lymph node dissection</strong> for stage II breast cancer, followed by chemotherapy and radiation. Treatment went well and her oncology follow-ups have been reassuring.</p><p class="case-text">Over the past two months her <strong>right arm has been progressively swelling</strong>. Her wedding ring no longer fits her right ring finger. The arm feels heavy. Initially the swelling pitted with pressure; now it feels firmer and pitting is less marked. Skin folds at the wrist are deeper than on the left. She has no fever, no pain, no redness. The diagnosis is <strong>secondary lymphedema</strong> from disruption of axillary lymphatic drainage.</p><p class="case-text">The lymphatic system runs alongside the cardiovascular system and is invisible until something disrupts it. To understand why removing nodes in Beverly's armpit caused swelling in her hand and forearm half a year later, you have to understand what lymph is, where it comes from, and how it gets back to the bloodstream.</p>
+    <div class="guiding-q">
+      <span>Guiding question</span>
+      Where does lymph come from, what path does it take from the tissues back to the bloodstream, and what stops working when a chunk of the route is cut out?
+    </div>
+  </div>
+</div>
+
+<div class="prework-strip">
+  <span class="tag">Prework</span>
+  <span class="ps-body">Companion to your Week 4 Lymphatic System prework page. Terms, video, and spaced recall for lymph, lymph capillaries, vessels, trunks, ducts, nodes, and the primary and secondary lymphoid organs live there.</span>
+</div>
+
+<div class="section-wrap">
+
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">1</span> Why we have a lymphatic system</div>
+    <h2>The leak you didn't know you had</h2>
+    
+    <p>Capillaries are leaky. They have to be — that's how nutrients and oxygen reach tissues. But the leak isn't balanced. About <strong>3 liters per day</strong> more fluid leaves blood capillaries than returns to them at the venous end. If this fluid stayed in the tissues, you would swell to immobility within hours.</p>
+    <p>The lymphatic system is the drainage system that collects this excess interstitial fluid, filters it through lymph nodes, and returns it to the bloodstream. It also: <strong>absorbs dietary fats</strong> from the intestine (via specialized lymph capillaries called lacteals), and <strong>delivers immune surveillance</strong> to every tissue (lymph nodes are where immune cells encounter pathogens collected from drained tissues).</p>
+    
+  </div>
+
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">2</span> Lymph and lymph capillaries</div>
+    <h2>Where it starts</h2>
+    
+    <p><strong>Lymph</strong> is the fluid in the lymphatic system. It starts as <em>interstitial fluid</em> (the same fluid that bathes cells) and becomes lymph the moment it enters a lymphatic vessel. It looks like watery plasma; chyle (lymph from the intestine after a meal) is milky from absorbed fats.</p>
+    <p><strong>Lymphatic capillaries</strong> are blind-ended tubes scattered throughout most tissues. They are more permeable than blood capillaries because their endothelial cells overlap loosely like roof shingles, creating one-way flap valves. Interstitial fluid pushes the flaps inward and enters; rising pressure inside closes them. Lymphatic capillaries collect not just fluid but also proteins, dead cells, microbes, and other large particles that escape from blood capillaries.</p>
+    
+  </div>
+
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">3</span> Vessels, trunks, ducts</div>
+    <h2>From capillary to bloodstream</h2>
+    
+    <p>Lymph capillaries merge into progressively larger lymphatic vessels, just like venules into veins. Larger lymphatic vessels have one-way valves (lymph flow is driven mostly by skeletal muscle contraction and respiratory pump, similar to veins).</p>
+    <div class="structure-grid">
+      <div class="structure-item"><span class="dot"></span><div><strong>Lymphatic vessels</strong><span>Carry lymph from capillaries to trunks. Pass through lymph nodes along the way.</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Lymphatic trunks</strong><span>Large vessels that drain major body regions. Named by region: jugular, subclavian, bronchomediastinal, intestinal, lumbar.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Right lymphatic duct</strong><span>Drains the right upper quadrant of the body (right side of head, neck, thorax, right arm). Empties into the right venous angle (junction of right subclavian and right internal jugular veins).</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Thoracic duct</strong><span>Drains <em>everything else</em> — the rest of the body. The largest lymphatic vessel. Starts at the cisterna chyli in the abdomen, ascends through the chest, empties at the left venous angle.</span></div></div>
+    </div>
+    
+  </div>
+
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">4</span> Lymph nodes</div>
+    <h2>Filters and immune surveillance stations</h2>
+    
+    <p><strong>Lymph nodes</strong> are small bean-shaped organs (1-25 mm) studded along the course of lymphatic vessels. Lymph enters a node through several <em>afferent</em> lymphatic vessels, percolates through a network of sinuses lined with macrophages and lymphocytes, and exits through a single <em>efferent</em> vessel at the hilum (along with a blood supply).</p>
+    <p>Two jobs:</p>
+    <ul style="margin: 8px 0 12px 22px; font-size: 15px; line-height: 1.7;">
+      <li><strong>Filter the lymph</strong>. Macrophages engulf pathogens, debris, and cancer cells. This is why cancer can <em>spread</em> via lymphatics — the first nodes downstream of a tumor often contain the first metastatic cells.</li>
+      <li><strong>Mount immune responses</strong>. B and T lymphocytes encounter antigens delivered in the lymph. Activated lymphocytes proliferate and exit via the efferent vessel.</li>
+    </ul>
+    <p><strong>Lymph node clusters</strong> are concentrated in regions: cervical (head and neck), axillary (upper extremity and breast), inguinal (lower extremity and perineum), and along the great vessels (mesenteric, para-aortic).</p>
+    
+  </div>
+
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">5</span> Primary &amp; secondary lymphoid organs</div>
+    <h2>Where lymphocytes are born vs where they work</h2>
+    
+    <div class="structure-grid">
+      <div class="structure-item"><span class="dot"></span><div><strong>Primary: red bone marrow</strong><span>All lymphocytes are born here. B cells mature here. T-cell precursors leave here for the thymus.</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Primary: thymus</strong><span>T cells mature and are educated here (learn to distinguish self from non-self). Large in childhood, involutes in adulthood.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Secondary: lymph nodes</strong><span>Filter lymph; site of B and T cell activation.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Secondary: spleen</strong><span>Filters BLOOD (not lymph). Removes old/damaged RBCs (red pulp). Mounts immune responses against blood-borne antigens (white pulp). Functional asplenia (as in sickle cell) → vulnerability to encapsulated bacteria.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Secondary: tonsils &amp; MALT</strong><span>Mucosa-associated lymphoid tissue. Tonsils guard the pharynx; Peyer's patches in the ileum sample gut contents; appendix; bronchus-associated lymphoid tissue.</span></div></div>
+    </div>
+    
+  </div>
+
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">6</span> When the drainage breaks</div>
+    <h2>Lymphedema</h2>
+    
+    <p>If lymphatic drainage from a region is disrupted, interstitial fluid (especially protein-rich fluid that lymph normally clears) accumulates. The result is <strong>lymphedema</strong>: chronic swelling that initially pits with pressure but becomes progressively firm as protein-rich fluid drives fibrosis of the subcutaneous tissue.</p>
+    <p>Two types:</p>
+    <ul style="margin: 8px 0 12px 22px; font-size: 15px; line-height: 1.7;">
+      <li><strong>Primary lymphedema</strong>: congenital lymphatic malformations. Rare. Often hereditary.</li>
+      <li><strong>Secondary lymphedema</strong>: acquired disruption. Causes worldwide include filariasis (parasitic infection blocking lymphatics, the most common cause globally). In high-income countries, the most common cause is <em>cancer treatment</em>: surgical lymph node removal and/or radiation. <em>Beverly's.</em></li>
+    </ul>
+    <div class="callout gold"><strong>Why axillary node dissection causes arm lymphedema.</strong> Almost all lymphatic drainage of the upper extremity passes through axillary nodes on its way to the right lymphatic duct. Removing those nodes (and the lymphatic channels around them) physically disconnects the lymphatic system of the arm from its return route. Some collateral channels form over time, but in 20-30% of patients drainage never fully compensates. Radiation worsens the risk by fibrosing remaining channels.</div>
+    
+  </div>
+
+
+  <div class="draw-zone-wrap" id="zone1-wrap">
+    <div class="draw-zone-header">
+      <div class="draw-zone-title"><span class="pencil-icon">&#9998;</span><span>Draw Zone 1 <span class="prompt-text">-- Diagram the body's lymphatic drainage. Color the area drained by the right lymphatic duct vs the thoracic duct. Mark the major lymph node clusters.</span></span></div>
+      <div class="draw-tools">
+        <div class="tool-group">
+          <button class="color-btn active" data-color="#FFFFFF" style="background:#ffffff;"></button>
+          <button class="color-btn" data-color="#C9A14A" style="background:#C9A14A;"></button>
+          <button class="color-btn" data-color="#EF5350" style="background:#EF5350;"></button>
+          <button class="color-btn" data-color="#4FC3F7" style="background:#4FC3F7;"></button>
+          <button class="color-btn" data-color="#66BB6A" style="background:#66BB6A;"></button>
+          <button class="color-btn" data-color="#FFD54F" style="background:#FFD54F;"></button>
+        </div>
+        <div class="tool-group"><input type="range" class="size-slider" min="0.5" max="24" value="3" step="0.5"></div>
+        <div class="tool-group"><button class="tool-btn active" data-tool="pen">Pen</button><button class="tool-btn" data-tool="fine">Fine</button><button class="tool-btn" data-tool="eraser">Eraser</button></div>
+        <div class="tool-group"><button class="tool-btn" data-action="undo">Undo</button><button class="tool-btn" data-action="clear">Clear</button></div>
+        <div class="tool-group"><button class="tool-btn canvas-mode-toggle">&#9788; Light</button></div>
+      </div>
+    </div>
+    <canvas class="draw-canvas" id="canvas1" height="460"></canvas>
+    <div class="draw-zone-hint">The right lymphatic duct serves the right upper quadrant only. Everything else goes to the thoracic duct.</div>
+  </div>
+
+  <div class="draw-zone-wrap" id="zone2-wrap">
+    <div class="draw-zone-header">
+      <div class="draw-zone-title"><span class="pencil-icon">&#9998;</span><span>Draw Zone 2 <span class="prompt-text">-- Sketch Beverly's right axilla and arm. Show the lymphatic channels of the arm draining into axillary nodes, then mark the gap where the nodes were removed. Show fluid backup distally.</span></span></div>
+      <div class="draw-tools">
+        <div class="tool-group">
+          <button class="color-btn active" data-color="#FFFFFF" style="background:#ffffff;"></button>
+          <button class="color-btn" data-color="#C9A14A" style="background:#C9A14A;"></button>
+          <button class="color-btn" data-color="#EF5350" style="background:#EF5350;"></button>
+          <button class="color-btn" data-color="#4FC3F7" style="background:#4FC3F7;"></button>
+          <button class="color-btn" data-color="#66BB6A" style="background:#66BB6A;"></button>
+          <button class="color-btn" data-color="#FFD54F" style="background:#FFD54F;"></button>
+        </div>
+        <div class="tool-group"><input type="range" class="size-slider" min="0.5" max="24" value="3" step="0.5"></div>
+        <div class="tool-group"><button class="tool-btn active" data-tool="pen">Pen</button><button class="tool-btn" data-tool="fine">Fine</button><button class="tool-btn" data-tool="eraser">Eraser</button></div>
+        <div class="tool-group"><button class="tool-btn" data-action="undo">Undo</button><button class="tool-btn" data-action="clear">Clear</button></div>
+        <div class="tool-group"><button class="tool-btn canvas-mode-toggle">&#9788; Light</button></div>
+      </div>
+    </div>
+    <canvas class="draw-canvas" id="canvas2" height="440"></canvas>
+    <div class="draw-zone-hint">Star the typical sites of edema: hand, forearm, upper arm. Show how it progresses from pitting to non-pitting over time.</div>
+  </div>
+
+</div>
+
+<div class="clinical-block">
+  <div class="cb-inner">
+    <div class="cb-label">Returning to Beverly</div>
+    <h2>Six months later, the drainage that didn't compensate</h2>
+    <p>Beverly's arm swelling is the predictable consequence of an axillary node dissection. The lymph is still being produced; it just has nowhere to go.</p>
+    <div class="translate-grid"><div class="translate-card"><div class="quote">"Why six months later, not immediately"</div><div class="meaning">Collateral lymphatic pathways take months to attempt to develop. In ~70% of patients, alternate drainage routes form adequately. In the other 20-30%, they don't, and lymphedema develops slowly over months to years.</div></div><div class="translate-card"><div class="quote">"Pitting then non-pitting edema"</div><div class="meaning">Early lymphedema is fluid only — pits with pressure. Over time the protein-rich fluid drives subcutaneous fibrosis. The tissue becomes firm. Pitting decreases. This is harder to treat and harder to reverse.</div></div><div class="translate-card"><div class="quote">"Heaviness of the arm"</div><div class="meaning">Subjective sensation of carrying extra fluid weight in the limb. A typical lymphedematous arm can weigh 1-2 kg more than the contralateral arm.</div></div><div class="translate-card"><div class="quote">"Wedding ring stuck"</div><div class="meaning">Distal swelling at the fingers is often where lymphedema first becomes obvious. The hand is the most dependent part of the limb and where fluid accumulates first.</div></div><div class="translate-card"><div class="quote">"Why this matters clinically"</div><div class="meaning">Lymphedematous tissue has impaired immune defense. Minor breaks in skin → cellulitis. Recurrent cellulitis → more lymphatic damage → worse lymphedema. The cycle is hard to break.</div></div><div class="translate-card"><div class="quote">"Treatment"</div><div class="meaning">Complete decongestive therapy: manual lymphatic drainage, multilayer compression bandaging, exercise, skin care, and lifelong compression garment use. Newer surgical options (lymphovenous bypass, vascularized lymph node transfer) for selected patients.</div></div></div>
+    <p><strong>Capillary, vessel, node, duct.</strong> Beverly's arm is the lymphatic system's plumbing failing in slow motion. When you go back to the prework, the lymphatic drainage map will land differently — it's the pathway her arm can no longer use.</p>
+  </div>
+</div>
+
+<div class="page-footer">
+  <span class="byline">Dr. Sharilyn Rennie</span>
+  &nbsp; &middot; &nbsp;
+  BIO 004 · Week 4 · Case deep dive: The Lymphatic System
+</div>
+
+<script>
+window.addEventListener('scroll', function () { var s=window.scrollY; var h=document.documentElement.scrollHeight-window.innerHeight; document.getElementById('progress-bar').style.width=(h>0?(s/h)*100:0)+'%'; });
+function initCanvas(canvasId, wrapId) {
+  var canvas=document.getElementById(canvasId), wrap=document.getElementById(wrapId);
+  if(!canvas||!wrap) return;
+  var ctx=canvas.getContext('2d');
+  var state={drawing:false, tool:'pen', color:'#FFFFFF', size:3, canvasMode:'dark', strokes:[], currentStroke:null};
+  function resize(){ var rect=canvas.getBoundingClientRect(); var dpr=window.devicePixelRatio||1; canvas.width=rect.width*dpr; canvas.height=parseFloat(canvas.getAttribute('height'))*dpr; canvas.style.height=canvas.getAttribute('height')+'px'; ctx.setTransform(1,0,0,1,0,0); ctx.scale(dpr,dpr); redraw(); }
+  function paintBg(){ var dpr=window.devicePixelRatio||1; var w=canvas.width/dpr, h=canvas.height/dpr; ctx.save(); ctx.fillStyle=state.canvasMode==='light'?'#FFFFFF':'#06080F'; ctx.fillRect(0,0,w,h); ctx.restore(); }
+  function redraw(){ var dpr=window.devicePixelRatio||1; ctx.clearRect(0,0,canvas.width/dpr,canvas.height/dpr); paintBg(); state.strokes.forEach(function(s){drawStroke(s);}); }
+  function drawStroke(stroke){ if(!stroke.points||!stroke.points.length) return; ctx.save(); if(stroke.tool==='eraser'){ctx.strokeStyle=state.canvasMode==='light'?'#FFFFFF':'#06080F'; ctx.fillStyle=ctx.strokeStyle;}else{ctx.strokeStyle=stroke.color; ctx.fillStyle=stroke.color;} ctx.lineWidth=stroke.size; ctx.lineCap='round'; ctx.lineJoin='round'; if(stroke.points.length===1){ctx.beginPath(); ctx.arc(stroke.points[0].x,stroke.points[0].y,stroke.size/2,0,Math.PI*2); ctx.fill();}else{ctx.beginPath(); ctx.moveTo(stroke.points[0].x,stroke.points[0].y); for(var i=1;i<stroke.points.length-1;i++){var mx=(stroke.points[i].x+stroke.points[i+1].x)/2, my=(stroke.points[i].y+stroke.points[i+1].y)/2; ctx.quadraticCurveTo(stroke.points[i].x,stroke.points[i].y,mx,my);} var last=stroke.points[stroke.points.length-1]; ctx.lineTo(last.x,last.y); ctx.stroke();} ctx.restore(); }
+  function getPos(e){ var rect=canvas.getBoundingClientRect(); var t=e.touches?e.touches[0]:e; return {x:(t.clientX-rect.left)*(canvas.width/rect.width)/(window.devicePixelRatio||1), y:(t.clientY-rect.top)*(canvas.height/rect.height)/(window.devicePixelRatio||1)}; }
+  function startDraw(e){ e.preventDefault(); state.drawing=true; var p=getPos(e); state.currentStroke={tool:state.tool, color:state.color, size:state.size, points:[p]}; }
+  function continueDraw(e){ e.preventDefault(); if(!state.drawing||!state.currentStroke) return; var p=getPos(e); state.currentStroke.points.push(p); var pts=state.currentStroke.points; ctx.save(); ctx.strokeStyle=state.tool==='eraser'?(state.canvasMode==='light'?'#FFFFFF':'#06080F'):state.color; ctx.lineWidth=state.size; ctx.lineCap='round'; ctx.lineJoin='round'; if(pts.length>=3){var i=pts.length-2; var mx=(pts[i].x+pts[i+1].x)/2, my=(pts[i].y+pts[i+1].y)/2; ctx.beginPath(); ctx.moveTo((pts[i-1].x+pts[i].x)/2,(pts[i-1].y+pts[i].y)/2); ctx.quadraticCurveTo(pts[i].x,pts[i].y,mx,my); ctx.stroke();}else if(pts.length===2){ctx.beginPath(); ctx.moveTo(pts[0].x,pts[0].y); ctx.lineTo(pts[1].x,pts[1].y); ctx.stroke();} ctx.restore(); }
+  function endDraw(){ if(!state.drawing) return; state.drawing=false; if(state.currentStroke){state.strokes.push(state.currentStroke); state.currentStroke=null;} }
+  canvas.addEventListener('pointerdown',startDraw); canvas.addEventListener('pointermove',continueDraw); canvas.addEventListener('pointerup',endDraw); canvas.addEventListener('pointerleave',endDraw); canvas.addEventListener('pointercancel',endDraw);
+  canvas.addEventListener('touchstart',startDraw,{passive:false}); canvas.addEventListener('touchmove',continueDraw,{passive:false}); canvas.addEventListener('touchend',endDraw);
+  var header=wrap.querySelector('.draw-zone-header');
+  header.querySelectorAll('.color-btn').forEach(function(btn){ btn.addEventListener('click',function(){ header.querySelectorAll('.color-btn').forEach(function(b){b.classList.remove('active');}); btn.classList.add('active'); state.color=btn.dataset.color; if(state.tool==='eraser'){state.tool='pen'; header.querySelectorAll('[data-tool]').forEach(function(b){b.classList.toggle('active',b.dataset.tool==='pen');});} }); });
+  header.querySelectorAll('[data-tool]').forEach(function(btn){ btn.addEventListener('click',function(){ header.querySelectorAll('[data-tool]').forEach(function(b){b.classList.remove('active');}); btn.classList.add('active'); if(btn.dataset.tool==='fine'){state.tool='pen'; state.size=1; if(sizeSlider) sizeSlider.value=1;}else{state.tool=btn.dataset.tool; if(sizeSlider&&state.tool!=='eraser') state.size=parseFloat(sizeSlider.value);} }); });
+  var sizeSlider=header.querySelector('.size-slider'); if(sizeSlider) sizeSlider.addEventListener('input',function(){ state.size=parseFloat(sizeSlider.value); var fb=header.querySelector('[data-tool="fine"]'); if(fb&&fb.classList.contains('active')){fb.classList.remove('active'); var pb=header.querySelector('[data-tool="pen"]'); if(pb) pb.classList.add('active'); state.tool='pen';} });
+  header.querySelectorAll('[data-action]').forEach(function(btn){ btn.addEventListener('click',function(){ if(btn.dataset.action==='undo'){if(state.strokes.length>0){state.strokes.pop(); redraw();}}else if(btn.dataset.action==='clear'){if(confirm('Clear this canvas?')){state.strokes=[]; redraw();}} }); });
+  var mb=header.querySelector('.canvas-mode-toggle'); if(mb) mb.addEventListener('click',function(){ if(state.canvasMode==='dark'){state.canvasMode='light'; wrap.classList.add('light-canvas'); mb.innerHTML='&#9790; Dark'; if(state.color==='#FFFFFF'){state.color='#0B1530'; header.querySelectorAll('.color-btn').forEach(function(b){b.classList.remove('active');});}}else{state.canvasMode='dark'; wrap.classList.remove('light-canvas'); mb.innerHTML='&#9788; Light'; if(state.color==='#0B1530'){state.color='#FFFFFF'; var wb=header.querySelector('[data-color="#FFFFFF"]'); if(wb){header.querySelectorAll('.color-btn').forEach(function(b){b.classList.remove('active');}); wb.classList.add('active');}}} redraw(); });
+  resize(); window.addEventListener('resize',resize);
+}
+initCanvas('canvas1','zone1-wrap'); initCanvas('canvas2','zone2-wrap');
+</script>
+</body>
+</html>

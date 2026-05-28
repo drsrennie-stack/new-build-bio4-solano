@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>The Respiratory System · Case Deep Dive · BIO 004</title>
+<style>@import url('https://cdn.jsdelivr.net/npm/@fontsource-variable/plus-jakarta-sans/index.css');</style>
+<style>
+  :root { --navy:#0B1530; --navy-dark:#060A18; --rust:#8B3A2E; --rust-hover:#A0452F; --gold:#C9A14A; --gold-light:#E8D4A8; --white:#fff; --cream:#F5F1E8; --off-white:#F8F8F8; --text:#0B1530; --text-muted:#5A6478; --rule:rgba(11,21,48,0.10); --canvas-bg:#06080F; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { scroll-behavior:smooth; }
+  body { font-family:'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif; background:var(--white); color:var(--text); font-size:16px; line-height:1.7; -webkit-font-smoothing:antialiased; }
+  #progress-bar { position:fixed; top:0; left:0; height:3px; width:0%; background:var(--rust); z-index:1000; transition:width 0.1s linear; }
+  #case-ribbon { position:sticky; top:0; z-index:200; background:var(--navy-dark); color:var(--white); padding:10px 32px; display:flex; align-items:center; gap:20px; flex-wrap:wrap; border-bottom:2px solid var(--gold); font-size:13px; line-height:1.4; }
+  #case-ribbon .ribbon-label { background:var(--rust); color:var(--white); font-weight:700; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; padding:3px 10px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
+  #case-ribbon .ribbon-case { opacity:0.92; }
+  #case-ribbon .ribbon-case strong { color:var(--gold-light); font-weight:700; }
+  .hero { background:var(--white); border-bottom:0.5px solid var(--rule); padding:64px 40px 56px; text-align:center; position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 60% 40% at 50% 0%, rgba(139,58,46,0.05) 0%, transparent 70%); pointer-events:none; }
+  .hero-eyebrow { font-size:11px; font-weight:700; letter-spacing:0.28em; text-transform:uppercase; color:var(--rust); margin-bottom:18px; position:relative; }
+  .hero h1 { font-size:clamp(28px,4vw,42px); font-weight:800; color:var(--navy); line-height:1.1; margin-bottom:14px; letter-spacing:-0.02em; position:relative; }
+  .hero h1 .accent { color:var(--rust); }
+  .hero-sub { font-size:16px; color:var(--text); font-weight:400; opacity:0.70; position:relative; max-width:600px; margin:0 auto; }
+  .case-card-wrap { max-width:820px; margin:-32px auto 0; padding:0 24px 36px; position:relative; z-index:10; }
+  .case-card { background:var(--white); border:1.5px solid var(--rule); border-top:4px solid var(--rust); padding:32px 36px; box-shadow:0 8px 40px rgba(10,19,34,0.12); }
+  .case-card .case-label { font-size:10px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--rust); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .case-card .case-label::after { content:''; flex:1; height:1px; background:var(--rule); }
+  .case-card .case-text { font-size:17px; color:var(--text); line-height:1.65; margin-bottom:16px; }
+  .case-card .case-text:last-of-type { margin-bottom:22px; }
+  .case-card .case-text strong { color:var(--navy); font-weight:700; }
+  .case-card .path-report { background:var(--off-white); border-left:3px solid var(--rust); padding:14px 18px; font-family:'Plus Jakarta Sans Variable',monospace; font-size:14px; line-height:1.6; color:var(--navy); margin:0 0 16px; }
+  .case-card .path-report .pr-label { font-size:10px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--rust); display:block; margin-bottom:6px; }
+  .case-card .path-report em { color:var(--rust); font-style:italic; }
+  .case-card .guiding-q { background:var(--cream); border-left:4px solid var(--gold); padding:16px 22px; font-size:14.5px; font-weight:500; color:var(--navy); }
+  .case-card .guiding-q span { display:block; font-size:10px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; }
+  .prework-strip { max-width:820px; margin:0 auto 28px; padding:14px 24px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; background:var(--off-white); border:1px solid var(--rule); border-radius:4px; font-size:13.5px; }
+  .prework-strip .tag { background:var(--gold); color:var(--navy); font-size:10px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; padding:3px 10px; border-radius:20px; }
+  .prework-strip .ps-body { flex:1; color:var(--text); }
+  .section-wrap { max-width:820px; margin:0 auto; padding:0 24px; }
+  .teaching-section { padding:44px 0 32px; border-bottom:1px solid var(--rule); }
+  .teaching-section:last-child { border-bottom:none; }
+  .section-number { font-size:10px; font-weight:700; letter-spacing:0.28em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px; display:flex; align-items:center; gap:10px; }
+  .section-number .num { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:var(--rust); color:var(--white); font-size:10px; font-weight:700; }
+  .teaching-section h2 { font-size:clamp(22px,3vw,30px); font-weight:700; color:var(--navy); line-height:1.2; margin-bottom:18px; letter-spacing:-0.01em; }
+  .teaching-section h3 { font-size:13px; color:var(--rust); text-transform:uppercase; letter-spacing:0.06em; margin:18px 0 8px; font-weight:700; }
+  .teaching-section p { font-size:16px; color:var(--text); line-height:1.78; margin-bottom:14px; }
+  .teaching-section p:last-child { margin-bottom:0; }
+  .teaching-section strong { color:var(--navy); font-weight:700; }
+  .teaching-section em { font-style:italic; color:var(--navy); }
+  .callout { background:#EEF2FF; border:1px solid rgba(10,19,34,0.12); border-left:4px solid var(--rust); padding:18px 22px; margin:20px 0; font-size:15px; color:var(--navy); line-height:1.65; }
+  .callout.gold { background:#FBF6E8; border-left-color:var(--gold); }
+  .structure-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:20px 0; }
+  @media (max-width:600px) { .structure-grid { grid-template-columns:1fr; } }
+  .structure-item { background:var(--off-white); border:1px solid var(--rule); padding:14px 18px; display:flex; align-items:flex-start; gap:12px; }
+  .structure-item .dot { width:8px; height:8px; border-radius:50%; background:var(--rust); flex-shrink:0; margin-top:7px; }
+  .structure-item .dot.gold { background:var(--gold); }
+  .structure-item strong { display:block; font-size:13px; font-weight:700; color:var(--navy); line-height:1.3; }
+  .structure-item span { font-size:12.5px; color:var(--text-muted); line-height:1.55; }
+  .divisions-table { width:100%; border-collapse:collapse; margin:22px 0; font-size:14px; }
+  .divisions-table th { background:var(--navy); color:var(--white); padding:11px 14px; text-align:left; font-weight:600; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; }
+  .divisions-table td { padding:10px 14px; border-bottom:1px solid var(--rule); color:var(--text); vertical-align:top; line-height:1.55; }
+  .divisions-table tr:nth-child(even) td { background:var(--off-white); }
+  .divisions-table td:first-child { font-weight:700; color:var(--navy); white-space:nowrap; }
+  .draw-zone-wrap { margin:32px 0; background:var(--canvas-bg); border:2px solid rgba(201,161,74,0.3); position:relative; user-select:none; }
+  .draw-zone-wrap.light-canvas { background:var(--white); border-color:rgba(11,21,48,0.18); }
+  .draw-zone-header { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.08); flex-wrap:wrap; gap:10px; }
+  .draw-zone-wrap.light-canvas .draw-zone-header { border-bottom-color:var(--rule); }
+  .draw-zone-title { display:flex; align-items:center; gap:10px; }
+  .draw-zone-title .pencil-icon { font-size:16px; color:var(--gold); }
+  .draw-zone-wrap.light-canvas .draw-zone-title .pencil-icon { color:var(--rust); }
+  .draw-zone-title > span:not(.pencil-icon) { font-size:11px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); }
+  .draw-zone-wrap.light-canvas .draw-zone-title > span:not(.pencil-icon) { color:var(--rust); }
+  .draw-zone-title .prompt-text { font-size:12px; font-weight:400; color:rgba(255,255,255,0.55); letter-spacing:0; text-transform:none; margin-left:4px; }
+  .draw-zone-wrap.light-canvas .draw-zone-title .prompt-text { color:var(--text-muted); }
+  .draw-tools { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .tool-group { display:flex; align-items:center; gap:4px; border-right:1px solid rgba(255,255,255,0.10); padding-right:8px; }
+  .tool-group:last-child { border-right:none; padding-right:0; }
+  .draw-zone-wrap.light-canvas .tool-group { border-right-color:var(--rule); }
+  .color-btn { width:20px; height:20px; border-radius:50%; border:2px solid transparent; cursor:pointer; transition:transform 0.15s,border-color 0.15s; padding:0; background-clip:padding-box; }
+  .color-btn:hover { transform:scale(1.2); }
+  .color-btn.active { border-color:var(--white); transform:scale(1.15); }
+  .draw-zone-wrap.light-canvas .color-btn.active { border-color:var(--navy); }
+  .tool-btn { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); color:rgba(255,255,255,0.80); font-size:11px; font-weight:600; padding:5px 10px; border-radius:4px; cursor:pointer; font-family:'Plus Jakarta Sans Variable',sans-serif; letter-spacing:0.02em; white-space:nowrap; }
+  .tool-btn:hover { background:rgba(255,255,255,0.18); color:var(--white); }
+  .tool-btn.active { background:rgba(201,161,74,0.30); border-color:var(--gold); color:var(--gold); }
+  .draw-zone-wrap.light-canvas .tool-btn { background:var(--white); border-color:rgba(11,21,48,0.18); color:var(--navy); }
+  .draw-zone-wrap.light-canvas .tool-btn:hover { border-color:var(--rust); }
+  .draw-zone-wrap.light-canvas .tool-btn.active { background:var(--navy); color:var(--white); border-color:var(--navy); }
+  .size-slider { -webkit-appearance:none; appearance:none; width:64px; height:3px; background:rgba(255,255,255,0.20); border-radius:2px; outline:none; cursor:pointer; }
+  .draw-zone-wrap.light-canvas .size-slider { background:rgba(11,21,48,0.18); }
+  .size-slider::-webkit-slider-thumb { -webkit-appearance:none; width:12px; height:12px; border-radius:50%; background:var(--gold); cursor:pointer; }
+  .draw-zone-wrap.light-canvas .size-slider::-webkit-slider-thumb { background:var(--rust); }
+  .size-slider::-moz-range-thumb { width:12px; height:12px; border-radius:50%; background:var(--gold); cursor:pointer; border:0; }
+  .draw-zone-wrap.light-canvas .size-slider::-moz-range-thumb { background:var(--rust); }
+  canvas.draw-canvas { display:block; width:100%; cursor:crosshair; touch-action:none; }
+  .draw-zone-hint { padding:8px 16px; border-top:1px solid rgba(255,255,255,0.06); font-size:10.5px; color:rgba(255,255,255,0.40); font-style:italic; letter-spacing:0.02em; }
+  .draw-zone-wrap.light-canvas .draw-zone-hint { border-top-color:var(--rule); color:var(--text-muted); }
+  .clinical-block { background:var(--navy-dark); padding:48px 40px; margin:48px 0 0; position:relative; overflow:hidden; }
+  .clinical-block::before { content:''; position:absolute; top:-40px; right:-40px; width:220px; height:220px; border-radius:50%; background:radial-gradient(circle,rgba(201,161,74,0.08) 0%, transparent 70%); pointer-events:none; }
+  .clinical-block .cb-inner { max-width:820px; margin:0 auto; position:relative; }
+  .clinical-block .cb-label { font-size:10px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
+  .clinical-block h2 { font-size:clamp(22px,3.5vw,30px); color:var(--white); font-weight:700; margin-bottom:18px; line-height:1.25; }
+  .clinical-block p { color:rgba(255,255,255,0.78); font-size:15px; line-height:1.75; margin-bottom:14px; }
+  .clinical-block strong { color:var(--gold-light); font-weight:700; }
+  .translate-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin:22px 0 8px; }
+  .translate-card { background:rgba(255,255,255,0.05); border:1px solid rgba(201,161,74,0.22); padding:16px 18px; }
+  .translate-card .quote { font-size:13px; font-weight:600; color:var(--gold-light); margin-bottom:6px; font-style:italic; }
+  .translate-card .meaning { font-size:12.5px; color:rgba(255,255,255,0.78); line-height:1.55; }
+  .page-footer { background:var(--navy-dark); border-top:2px solid rgba(201,161,74,0.20); padding:24px 24px; text-align:center; font-size:12px; color:rgba(255,255,255,0.60); letter-spacing:0.04em; }
+  .page-footer .byline { color:var(--gold); font-weight:700; letter-spacing:0.14em; text-transform:uppercase; }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<div id="case-ribbon">
+  <span class="ribbon-label">Case</span>
+  <span class="ribbon-case"><strong>Frank, 71</strong> · 50 pack-years · "barrel chest" · pursed-lip breathing · prolonged expiration with wheezes · O2 sat 88% on room air · FEV1/FVC 0.55 · <strong>COPD exacerbation</strong></span>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">BIO 004 · Week 3 · Case Deep Dive</div>
+  <h1>The <span class="accent">Respiratory System</span></h1>
+  <p class="hero-sub">A retired mechanic, 50 years of smoke, lungs that can't exhale fast enough, and an airway whose walls are gone.</p>
+</div>
+
+<div class="case-card-wrap">
+  <div class="case-card">
+    <div class="case-label">Patient case</div>
+    <p class="case-text"><strong>Frank is 71</strong>, retired auto mechanic, smoked a pack a day from age 16 to 65 (about <strong>50 pack-years</strong>). He has known COPD. He comes in today with <strong>three days of worsening cough, increased green sputum, and more shortness of breath</strong>, especially when walking from the parking lot.</p><p class="case-text">On exam he is <strong>tripoding, pursed-lip breathing, with a barrel-shaped chest</strong>. Auscultation reveals <strong>diminished breath sounds bilaterally with prolonged expiration and diffuse wheezes</strong>. O2 sat is <strong>88% on room air</strong>. CXR shows hyperinflated lungs with flattened diaphragms. PFTs from last month: <strong>FEV1/FVC 0.55</strong>, total lung capacity increased, residual volume increased. He is admitted for a <strong>COPD exacerbation</strong>.</p><p class="case-text">COPD is what happens when decades of smoke destroy the alveolar walls (emphysema) and inflame the airways (chronic bronchitis). Understanding why Frank can't exhale and why his lungs are getting bigger requires knowing exactly how the respiratory system is built, from the nose to the alveoli, and what each part does.</p>
+    <div class="guiding-q">
+      <span>Guiding question</span>
+      What is the path of air from nose to alveoli, what makes the conducting airways different from the respiratory airways, and why does destruction of alveolar walls trap air inside lungs that should empty easily?
+    </div>
+  </div>
+</div>
+
+<div class="prework-strip">
+  <span class="tag">Prework</span>
+  <span class="ps-body">Companion to your Week 3 Respiratory System prework page. Terms, video, and spaced recall for upper and lower airway anatomy, larynx, lungs and pleurae, gross structure, alveolar structure, and ventilation mechanics live there.</span>
+</div>
+
+<div class="section-wrap">
+
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">1</span> Upper respiratory</div>
+    <h2>Nose to larynx</h2>
+    
+    <p>The respiratory system is divided into <strong>upper</strong> (nose, nasal cavity, pharynx) and <strong>lower</strong> (larynx, trachea, bronchi, lungs). Air goes through all of them on every breath.</p>
+    <div class="structure-grid">
+      <div class="structure-item"><span class="dot"></span><div><strong>Nose &amp; nasal cavity</strong><span>Warms, humidifies, and filters air. Lined by pseudostratified ciliated columnar epithelium (the mucociliary escalator). Conchae increase surface area.</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Paranasal sinuses</strong><span>Frontal, ethmoid, sphenoid, maxillary. Lighten the skull, warm and humidify air, drain into the nasal cavity.</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Pharynx</strong><span>Common passage for air and food. Three regions: nasopharynx (air only), oropharynx (both), laryngopharynx (both, splits below).</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Larynx</strong><span>"Voice box." Cartilage framework (thyroid, cricoid, epiglottis, paired arytenoids) housing the vocal cords. Guards the airway from food entry (epiglottis closes during swallowing) and produces sound.</span></div></div>
+    </div>
+    
+  </div>
+
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">2</span> Lower respiratory</div>
+    <h2>Trachea down to alveoli</h2>
+    
+    <p>From the larynx, air enters the <strong>trachea</strong> (10-12 cm long, supported by C-shaped cartilage rings open posteriorly toward the esophagus). The trachea bifurcates at the <strong>carina</strong> (~T4/T5, the sternal angle level) into right and left main bronchi.</p>
+    <ul style="margin: 8px 0 12px 22px; font-size: 15px; line-height: 1.7;">
+      <li><strong>Right main bronchus</strong>: wider, shorter, more vertical than left. Aspirated objects favor the right side.</li>
+      <li><strong>Left main bronchus</strong>: narrower, longer, more horizontal. Passes under the aortic arch.</li>
+    </ul>
+    <p>From there, the airway branches repeatedly (~23 generations of branching):</p>
+    <div class="structure-grid">
+      <div class="structure-item"><span class="dot"></span><div><strong>Main bronchi → lobar bronchi → segmental bronchi</strong><span>Still cartilage-supported. Air conducting only — no gas exchange.</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Bronchioles</strong><span>&lt; 1 mm diameter. No cartilage. Walls are smooth muscle (which is why they bronchoconstrict in asthma).</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Terminal bronchioles</strong><span>Last of the purely conducting airways.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Respiratory bronchioles</strong><span>First place gas exchange happens (a few alveoli bud off).</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Alveolar ducts → alveolar sacs → alveoli</strong><span>The terminal gas-exchange units. ~300 million alveoli per adult.</span></div></div>
+    </div>
+    
+  </div>
+
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">3</span> Alveoli</div>
+    <h2>Where actual gas exchange happens</h2>
+    
+    <p>An <strong>alveolus</strong> is a thin-walled air sac, about 250-300 μm in diameter, wrapped in a dense capillary network. Three cell types in the alveolar wall:</p>
+    <div class="structure-grid">
+      <div class="structure-item"><span class="dot"></span><div><strong>Type I pneumocytes</strong><span>Squamous cells that form ~95% of the alveolar surface. So thin that O2 and CO2 diffuse across them in milliseconds.</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Type II pneumocytes</strong><span>Cuboidal cells that secrete <em>surfactant</em>, a phospholipid mixture that reduces surface tension and prevents alveolar collapse on exhalation. Premature infants are surfactant-deficient → respiratory distress syndrome.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Alveolar macrophages</strong><span>Phagocytose particles and bacteria that reach the alveoli. The lung's last line of defense after the mucociliary escalator.</span></div></div>
+    </div>
+    <p>The <strong>respiratory membrane</strong> (where O2 and CO2 actually cross) is just three layers: alveolar epithelium (Type I cell), fused basement membranes, capillary endothelium. Total thickness about 0.5 μm. Diseases that thicken this membrane (fibrosis, pulmonary edema) impair gas exchange.</p>
+    
+  </div>
+
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">4</span> Lungs & pleurae</div>
+    <h2>Gross structure and the membranes that wrap them</h2>
+    
+    <p>The right lung has <strong>three lobes</strong> (upper, middle, lower) separated by horizontal and oblique fissures. The left lung has <strong>two lobes</strong> (upper, lower) separated by an oblique fissure — the heart takes the space where the middle lobe would be (instead, there's a notch and a tongue-shaped projection of the upper lobe called the <em>lingula</em>).</p>
+    <p>Each lung is enveloped by two <strong>pleural membranes</strong>:</p>
+    <div class="structure-grid">
+      <div class="structure-item"><span class="dot"></span><div><strong>Visceral pleura</strong><span>Covers the lung surface.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Parietal pleura</strong><span>Lines the thoracic wall, diaphragm, and mediastinum.</span></div></div>
+    </div>
+    <p>The thin space between them is the <strong>pleural cavity</strong>, containing a thin film of serous fluid. The negative intrapleural pressure keeps the lung inflated against the chest wall. If air enters the pleural space (<em>pneumothorax</em>), the lung collapses.</p>
+    
+  </div>
+
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">5</span> Ventilation mechanics</div>
+    <h2>How a breath actually happens</h2>
+    
+    <p><strong>Inspiration</strong> is active. The <em>diaphragm</em> contracts and flattens, the <em>external intercostals</em> lift the ribs up and out, and accessory muscles (sternocleidomastoid, scalenes) help in distress. The thoracic cavity expands. Intrapleural pressure becomes more negative. The lungs are pulled outward, alveolar pressure drops below atmospheric, and air flows in.</p>
+    <p><strong>Expiration</strong> at rest is passive. The diaphragm and external intercostals relax. The elastic recoil of the lung tissue (and the chest wall in some conditions) pulls everything back. Alveolar pressure rises above atmospheric, air flows out.</p>
+    <p>Forced expiration uses abdominal muscles and internal intercostals. This becomes critical in obstructive disease like Frank's.</p>
+    
+  </div>
+
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">6</span> Obstructive vs restrictive</div>
+    <h2>Why FEV1/FVC tells you so much</h2>
+    
+    <p>Lung disease falls into two big patterns:</p>
+    <ul style="margin: 8px 0 12px 22px; font-size: 15px; line-height: 1.7;">
+      <li><strong>Obstructive</strong>: airflow OUT is impaired. FEV1 (volume exhaled in 1 second) drops more than FVC (total volume exhaled). <strong>FEV1/FVC ratio &lt; 0.70</strong>. Examples: asthma, COPD, chronic bronchitis, emphysema. <em>Frank's pattern.</em></li>
+      <li><strong>Restrictive</strong>: lung CAN'T EXPAND fully. Both FEV1 and FVC drop proportionally. FEV1/FVC ratio is preserved or increased. Examples: pulmonary fibrosis, kyphoscoliosis, neuromuscular weakness.</li>
+    </ul>
+    <div class="callout"><strong>What COPD does anatomically.</strong> Two processes, often together. <em>Emphysema</em>: alveolar walls are destroyed; small airways lose the tethering that normally holds them open during exhalation; they collapse on expiration, trapping air. The lung becomes hyperinflated. <em>Chronic bronchitis</em>: chronic inflammation thickens bronchial walls and produces excess mucus, narrowing the airway and providing a substrate for infection. Both produce obstruction.</div>
+    
+  </div>
+
+
+  <div class="draw-zone-wrap" id="zone1-wrap">
+    <div class="draw-zone-header">
+      <div class="draw-zone-title"><span class="pencil-icon">&#9998;</span><span>Draw Zone 1 <span class="prompt-text">-- Diagram the path of air from nose to alveolus. Label upper airway structures, trachea, carina, main/lobar/segmental bronchi, bronchioles, alveoli.</span></span></div>
+      <div class="draw-tools">
+        <div class="tool-group">
+          <button class="color-btn active" data-color="#FFFFFF" style="background:#ffffff;"></button>
+          <button class="color-btn" data-color="#C9A14A" style="background:#C9A14A;"></button>
+          <button class="color-btn" data-color="#EF5350" style="background:#EF5350;"></button>
+          <button class="color-btn" data-color="#4FC3F7" style="background:#4FC3F7;"></button>
+          <button class="color-btn" data-color="#66BB6A" style="background:#66BB6A;"></button>
+          <button class="color-btn" data-color="#FFD54F" style="background:#FFD54F;"></button>
+        </div>
+        <div class="tool-group"><input type="range" class="size-slider" min="0.5" max="24" value="3" step="0.5"></div>
+        <div class="tool-group"><button class="tool-btn active" data-tool="pen">Pen</button><button class="tool-btn" data-tool="fine">Fine</button><button class="tool-btn" data-tool="eraser">Eraser</button></div>
+        <div class="tool-group"><button class="tool-btn" data-action="undo">Undo</button><button class="tool-btn" data-action="clear">Clear</button></div>
+        <div class="tool-group"><button class="tool-btn canvas-mode-toggle">&#9788; Light</button></div>
+      </div>
+    </div>
+    <canvas class="draw-canvas" id="canvas1" height="460"></canvas>
+    <div class="draw-zone-hint">Mark where cartilage stops (bronchioles) and where gas exchange starts (respiratory bronchioles).</div>
+  </div>
+
+  <div class="draw-zone-wrap" id="zone2-wrap">
+    <div class="draw-zone-header">
+      <div class="draw-zone-title"><span class="pencil-icon">&#9998;</span><span>Draw Zone 2 <span class="prompt-text">-- Sketch a normal alveolus and a destroyed (emphysematous) alveolus. Show the loss of alveolar walls, reduced surface area, and the collapsing small airway during exhalation.</span></span></div>
+      <div class="draw-tools">
+        <div class="tool-group">
+          <button class="color-btn active" data-color="#FFFFFF" style="background:#ffffff;"></button>
+          <button class="color-btn" data-color="#C9A14A" style="background:#C9A14A;"></button>
+          <button class="color-btn" data-color="#EF5350" style="background:#EF5350;"></button>
+          <button class="color-btn" data-color="#4FC3F7" style="background:#4FC3F7;"></button>
+          <button class="color-btn" data-color="#66BB6A" style="background:#66BB6A;"></button>
+          <button class="color-btn" data-color="#FFD54F" style="background:#FFD54F;"></button>
+        </div>
+        <div class="tool-group"><input type="range" class="size-slider" min="0.5" max="24" value="3" step="0.5"></div>
+        <div class="tool-group"><button class="tool-btn active" data-tool="pen">Pen</button><button class="tool-btn" data-tool="fine">Fine</button><button class="tool-btn" data-tool="eraser">Eraser</button></div>
+        <div class="tool-group"><button class="tool-btn" data-action="undo">Undo</button><button class="tool-btn" data-action="clear">Clear</button></div>
+        <div class="tool-group"><button class="tool-btn canvas-mode-toggle">&#9788; Light</button></div>
+      </div>
+    </div>
+    <canvas class="draw-canvas" id="canvas2" height="460"></canvas>
+    <div class="draw-zone-hint">Show why a barrel chest develops: chronic air trapping flattens the diaphragm and pushes the chest into a permanent inspiratory shape.</div>
+  </div>
+
+</div>
+
+<div class="clinical-block">
+  <div class="cb-inner">
+    <div class="cb-label">Returning to Frank</div>
+    <h2>Why he can't exhale, why his chest looks the way it does, why pursed lips help</h2>
+    <p>Frank's exam findings are a directory of COPD pathophysiology. Each one maps to specific damage in his lungs.</p>
+    <div class="translate-grid"><div class="translate-card"><div class="quote">"Barrel-shaped chest"</div><div class="meaning">Chronic air trapping holds the lungs in a persistently inflated state. The diaphragm flattens, the ribs sit elevated, the AP diameter of the chest increases. The chest is stuck in inspiration.</div></div><div class="translate-card"><div class="quote">"Pursed-lip breathing"</div><div class="meaning">Maintains positive pressure in the airways during exhalation. This positive pressure splints open the small airways (which would otherwise collapse from loss of alveolar tethering) and prolongs expiration.</div></div><div class="translate-card"><div class="quote">"Prolonged expiration with wheezes"</div><div class="meaning">Narrowed airways (mucus, smooth muscle constriction, loss of tethering) generate turbulent flow during the slow exhalation. Wheezes are the audible sign.</div></div><div class="translate-card"><div class="quote">"Diminished breath sounds"</div><div class="meaning">Hyperinflated lungs are full of trapped air that doesn't move with each breath. Air movement is reduced; breath sounds are quieter.</div></div><div class="translate-card"><div class="quote">"FEV1/FVC 0.55"</div><div class="meaning">Diagnostic of airflow obstruction. He exhales only 55% of his vital capacity in the first second; a normal person exhales &gt; 70%. Below 0.70 = obstructive disease.</div></div><div class="translate-card"><div class="quote">"O2 sat 88%"</div><div class="meaning">Loss of alveolar surface area (emphysema) + ventilation-perfusion mismatch (some alveoli are damaged, others get less air). Plus the current exacerbation adds inflammation, mucus, possibly infection on top of his baseline disease.</div></div></div>
+    <p><strong>Airway, alveolus, surface area, recoil.</strong> Frank's lungs are showing you the price of fifty years of smoke at every level of the respiratory system. When you go back to the prework, the alveolar diagram will land differently — it's exactly what he's missing.</p>
+  </div>
+</div>
+
+<div class="page-footer">
+  <span class="byline">Dr. Sharilyn Rennie</span>
+  &nbsp; &middot; &nbsp;
+  BIO 004 · Week 3 · Case deep dive: The Respiratory System
+</div>
+
+<script>
+window.addEventListener('scroll', function () { var s=window.scrollY; var h=document.documentElement.scrollHeight-window.innerHeight; document.getElementById('progress-bar').style.width=(h>0?(s/h)*100:0)+'%'; });
+function initCanvas(canvasId, wrapId) {
+  var canvas=document.getElementById(canvasId), wrap=document.getElementById(wrapId);
+  if(!canvas||!wrap) return;
+  var ctx=canvas.getContext('2d');
+  var state={drawing:false, tool:'pen', color:'#FFFFFF', size:3, canvasMode:'dark', strokes:[], currentStroke:null};
+  function resize(){ var rect=canvas.getBoundingClientRect(); var dpr=window.devicePixelRatio||1; canvas.width=rect.width*dpr; canvas.height=parseFloat(canvas.getAttribute('height'))*dpr; canvas.style.height=canvas.getAttribute('height')+'px'; ctx.setTransform(1,0,0,1,0,0); ctx.scale(dpr,dpr); redraw(); }
+  function paintBg(){ var dpr=window.devicePixelRatio||1; var w=canvas.width/dpr, h=canvas.height/dpr; ctx.save(); ctx.fillStyle=state.canvasMode==='light'?'#FFFFFF':'#06080F'; ctx.fillRect(0,0,w,h); ctx.restore(); }
+  function redraw(){ var dpr=window.devicePixelRatio||1; ctx.clearRect(0,0,canvas.width/dpr,canvas.height/dpr); paintBg(); state.strokes.forEach(function(s){drawStroke(s);}); }
+  function drawStroke(stroke){ if(!stroke.points||!stroke.points.length) return; ctx.save(); if(stroke.tool==='eraser'){ctx.strokeStyle=state.canvasMode==='light'?'#FFFFFF':'#06080F'; ctx.fillStyle=ctx.strokeStyle;}else{ctx.strokeStyle=stroke.color; ctx.fillStyle=stroke.color;} ctx.lineWidth=stroke.size; ctx.lineCap='round'; ctx.lineJoin='round'; if(stroke.points.length===1){ctx.beginPath(); ctx.arc(stroke.points[0].x,stroke.points[0].y,stroke.size/2,0,Math.PI*2); ctx.fill();}else{ctx.beginPath(); ctx.moveTo(stroke.points[0].x,stroke.points[0].y); for(var i=1;i<stroke.points.length-1;i++){var mx=(stroke.points[i].x+stroke.points[i+1].x)/2, my=(stroke.points[i].y+stroke.points[i+1].y)/2; ctx.quadraticCurveTo(stroke.points[i].x,stroke.points[i].y,mx,my);} var last=stroke.points[stroke.points.length-1]; ctx.lineTo(last.x,last.y); ctx.stroke();} ctx.restore(); }
+  function getPos(e){ var rect=canvas.getBoundingClientRect(); var t=e.touches?e.touches[0]:e; return {x:(t.clientX-rect.left)*(canvas.width/rect.width)/(window.devicePixelRatio||1), y:(t.clientY-rect.top)*(canvas.height/rect.height)/(window.devicePixelRatio||1)}; }
+  function startDraw(e){ e.preventDefault(); state.drawing=true; var p=getPos(e); state.currentStroke={tool:state.tool, color:state.color, size:state.size, points:[p]}; }
+  function continueDraw(e){ e.preventDefault(); if(!state.drawing||!state.currentStroke) return; var p=getPos(e); state.currentStroke.points.push(p); var pts=state.currentStroke.points; ctx.save(); ctx.strokeStyle=state.tool==='eraser'?(state.canvasMode==='light'?'#FFFFFF':'#06080F'):state.color; ctx.lineWidth=state.size; ctx.lineCap='round'; ctx.lineJoin='round'; if(pts.length>=3){var i=pts.length-2; var mx=(pts[i].x+pts[i+1].x)/2, my=(pts[i].y+pts[i+1].y)/2; ctx.beginPath(); ctx.moveTo((pts[i-1].x+pts[i].x)/2,(pts[i-1].y+pts[i].y)/2); ctx.quadraticCurveTo(pts[i].x,pts[i].y,mx,my); ctx.stroke();}else if(pts.length===2){ctx.beginPath(); ctx.moveTo(pts[0].x,pts[0].y); ctx.lineTo(pts[1].x,pts[1].y); ctx.stroke();} ctx.restore(); }
+  function endDraw(){ if(!state.drawing) return; state.drawing=false; if(state.currentStroke){state.strokes.push(state.currentStroke); state.currentStroke=null;} }
+  canvas.addEventListener('pointerdown',startDraw); canvas.addEventListener('pointermove',continueDraw); canvas.addEventListener('pointerup',endDraw); canvas.addEventListener('pointerleave',endDraw); canvas.addEventListener('pointercancel',endDraw);
+  canvas.addEventListener('touchstart',startDraw,{passive:false}); canvas.addEventListener('touchmove',continueDraw,{passive:false}); canvas.addEventListener('touchend',endDraw);
+  var header=wrap.querySelector('.draw-zone-header');
+  header.querySelectorAll('.color-btn').forEach(function(btn){ btn.addEventListener('click',function(){ header.querySelectorAll('.color-btn').forEach(function(b){b.classList.remove('active');}); btn.classList.add('active'); state.color=btn.dataset.color; if(state.tool==='eraser'){state.tool='pen'; header.querySelectorAll('[data-tool]').forEach(function(b){b.classList.toggle('active',b.dataset.tool==='pen');});} }); });
+  header.querySelectorAll('[data-tool]').forEach(function(btn){ btn.addEventListener('click',function(){ header.querySelectorAll('[data-tool]').forEach(function(b){b.classList.remove('active');}); btn.classList.add('active'); if(btn.dataset.tool==='fine'){state.tool='pen'; state.size=1; if(sizeSlider) sizeSlider.value=1;}else{state.tool=btn.dataset.tool; if(sizeSlider&&state.tool!=='eraser') state.size=parseFloat(sizeSlider.value);} }); });
+  var sizeSlider=header.querySelector('.size-slider'); if(sizeSlider) sizeSlider.addEventListener('input',function(){ state.size=parseFloat(sizeSlider.value); var fb=header.querySelector('[data-tool="fine"]'); if(fb&&fb.classList.contains('active')){fb.classList.remove('active'); var pb=header.querySelector('[data-tool="pen"]'); if(pb) pb.classList.add('active'); state.tool='pen';} });
+  header.querySelectorAll('[data-action]').forEach(function(btn){ btn.addEventListener('click',function(){ if(btn.dataset.action==='undo'){if(state.strokes.length>0){state.strokes.pop(); redraw();}}else if(btn.dataset.action==='clear'){if(confirm('Clear this canvas?')){state.strokes=[]; redraw();}} }); });
+  var mb=header.querySelector('.canvas-mode-toggle'); if(mb) mb.addEventListener('click',function(){ if(state.canvasMode==='dark'){state.canvasMode='light'; wrap.classList.add('light-canvas'); mb.innerHTML='&#9790; Dark'; if(state.color==='#FFFFFF'){state.color='#0B1530'; header.querySelectorAll('.color-btn').forEach(function(b){b.classList.remove('active');});}}else{state.canvasMode='dark'; wrap.classList.remove('light-canvas'); mb.innerHTML='&#9788; Light'; if(state.color==='#0B1530'){state.color='#FFFFFF'; var wb=header.querySelector('[data-color="#FFFFFF"]'); if(wb){header.querySelectorAll('.color-btn').forEach(function(b){b.classList.remove('active');}); wb.classList.add('active');}}} redraw(); });
+  resize(); window.addEventListener('resize',resize);
+}
+initCanvas('canvas1','zone1-wrap'); initCanvas('canvas2','zone2-wrap');
+</script>
+</body>
+</html>
