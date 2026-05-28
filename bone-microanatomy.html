@@ -2,469 +2,653 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Cartilage &amp; Bone Microanatomy &middot; Case Deep Dive &middot; BIO 004</title>
-<meta name="description" content="A case-based companion to the Week 2 prework page. A 68-year-old whose hat no longer fits anchors cartilage, bone classification, bone microanatomy, and what happens when remodeling goes wrong." />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root {
-  --navy: #0B1530; --navy-dark: #060A18;
-  --rust: #8B3A2E; --rust-hover: #A0452F;
-  --gold: #C9A14A; --gold-light: #E8D4A8;
-  --warm-accent: #C2734D;
-  --white: #FFFFFF; --cream: #F5F1E8; --off-white: #F8F8F8;
-  --text: #0B1530; --text-muted: #5A6478;
-  --rule: rgba(11,21,48,0.10); --rule-strong: rgba(11,21,48,0.18);
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background: var(--white); color: var(--text); font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
-a { color: var(--rust); text-decoration: none; border-bottom: 1px solid rgba(139,58,46,0.3); }
-a:hover, a:focus-visible { color: var(--rust-hover); border-bottom-color: var(--rust-hover); }
-:focus-visible { outline: 3px solid var(--rust); outline-offset: 3px; border-radius: 3px; }
-.skip { position: absolute; left: -9999px; top: auto; }
-.skip:focus { position: fixed; left: 12px; top: 12px; background: var(--navy); color: var(--white); padding: 10px 14px; z-index: 1500; border-radius: 4px; }
+@import url('https://cdn.jsdelivr.net/npm/@fontsource-variable/plus-jakarta-sans/index.css');
+</style>
+<style>
+  :root {
+    --navy: #0B1530;
+    --navy-dark: #060A18;
+    --navy-soft: #1C2E50;
+    --rust: #8B3A2E;
+    --rust-hover: #A0452F;
+    --gold: #C9A14A;
+    --gold-light: #E8D4A8;
+    --warm-accent: #C2734D;
+    --white: #ffffff;
+    --cream: #F5F1E8;
+    --off-white: #F8F8F8;
+    --text: #0B1530;
+    --text-muted: #5A6478;
+    --rule: rgba(11,21,48,0.10);
+    --canvas-bg: #06080F;
+    --badge-bg: #FDF0EC;
+    --badge-text: #8B3A2E;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    background: var(--white);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  #progress-bar { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: var(--rust); z-index: 1000; transition: width 0.1s linear; }
 
-#progress-bar { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: var(--rust); z-index: 1000; transition: width 0.1s linear; }
+  #case-ribbon {
+    position: sticky; top: 0; z-index: 200;
+    background: var(--navy-dark); color: var(--white);
+    padding: 10px 32px;
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    border-bottom: 2px solid var(--gold);
+    font-size: 13px; line-height: 1.4;
+  }
+  #case-ribbon .ribbon-label { background: var(--rust); color: var(--white); font-weight: 700; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+  #case-ribbon .ribbon-case { opacity: 0.92; }
+  #case-ribbon .ribbon-case strong { color: var(--gold-light); font-weight: 700; }
 
-#case-ribbon { position: sticky; top: 0; z-index: 200; background: var(--navy-dark); color: var(--white); padding: 12px 28px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; border-bottom: 2px solid var(--gold); font-size: 13px; line-height: 1.4; }
-#case-ribbon .ribbon-label { background: var(--rust); color: var(--white); font-weight: 700; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
-#case-ribbon .ribbon-case { opacity: 0.92; }
-#case-ribbon .ribbon-case strong { color: var(--gold-light); font-weight: 700; }
+  .hero {
+    background: var(--white);
+    border-bottom: 0.5px solid var(--rule);
+    padding: 64px 40px 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(139,58,46,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: var(--rust); margin-bottom: 18px; position: relative; }
+  .hero h1 { font-size: clamp(28px, 4vw, 42px); font-weight: 800; color: var(--navy); line-height: 1.1; margin-bottom: 14px; letter-spacing: -0.02em; position: relative; }
+  .hero h1 .accent { color: var(--rust); }
+  .hero-sub { font-size: 16px; color: var(--text); font-weight: 400; opacity: 0.70; position: relative; max-width: 600px; margin: 0 auto; }
 
-.hero { background: var(--white); border-bottom: 0.5px solid var(--rule); padding: 72px 24px 56px; text-align: center; position: relative; overflow: hidden; }
-.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(139,58,46,0.05) 0%, transparent 70%); pointer-events: none; }
-.hero-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: var(--rust); margin-bottom: 18px; position: relative; }
-.hero h1 { font-size: clamp(28px, 4vw, 42px); font-weight: 800; color: var(--navy); line-height: 1.1; margin-bottom: 14px; letter-spacing: -0.02em; position: relative; }
-.hero h1 .accent { color: var(--rust); }
-.hero-sub { font-size: 16px; color: var(--text); font-weight: 400; opacity: 0.70; position: relative; max-width: 600px; margin: 0 auto; }
+  .case-card-wrap { max-width: 820px; margin: -32px auto 0; padding: 0 24px 36px; position: relative; z-index: 10; }
+  .case-card { background: var(--white); border: 1.5px solid var(--rule); border-top: 4px solid var(--rust); padding: 32px 36px; box-shadow: 0 8px 40px rgba(10,19,34,0.12); }
+  .case-card .case-label { font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rust); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .case-card .case-label::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+  .case-card .case-text { font-size: 17px; color: var(--text); line-height: 1.65; margin-bottom: 16px; }
+  .case-card .case-text:last-of-type { margin-bottom: 22px; }
+  .case-card .case-text strong { color: var(--navy); font-weight: 700; }
+  .case-card .guiding-q { background: var(--cream); border-left: 4px solid var(--gold); padding: 16px 22px; font-size: 14.5px; font-weight: 500; color: var(--navy); }
+  .case-card .guiding-q span { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
 
-.case-card-wrap { max-width: 820px; margin: -32px auto 0; padding: 0 24px 48px; position: relative; z-index: 10; }
-.case-card { background: var(--white); border: 1.5px solid var(--rule); border-top: 4px solid var(--rust); padding: 36px 40px; box-shadow: 0 8px 40px rgba(10,19,34,0.12); }
-.case-card .case-label { font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rust); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-.case-card .case-label::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
-.case-card .case-text { font-size: 18px; color: var(--text); line-height: 1.65; margin-bottom: 18px; }
-.case-card .case-text:last-of-type { margin-bottom: 24px; }
-.case-card .case-text strong { color: var(--navy); font-weight: 700; }
-.case-card .vitals { background: var(--off-white); border-left: 3px solid var(--rust); padding: 12px 18px; font-size: 14px; color: var(--navy); margin: 0 0 20px; font-family: 'Plus Jakarta Sans', monospace; line-height: 1.6; }
-.case-card .vitals strong { color: var(--rust); font-weight: 700; }
-.case-card .guiding-q { background: var(--cream); border-left: 4px solid var(--gold); padding: 18px 24px; font-size: 15px; font-weight: 500; color: var(--navy); }
-.case-card .guiding-q span { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+  .prework-strip { max-width: 820px; margin: 0 auto 28px; padding: 14px 24px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; background: var(--off-white); border: 1px solid var(--rule); border-radius: 4px; font-size: 13.5px; }
+  .prework-strip .tag { background: var(--gold); color: var(--navy); font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; }
+  .prework-strip .ps-body { flex: 1; color: var(--text); }
 
-.prework-strip { max-width: 820px; margin: 0 auto 36px; padding: 14px 24px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; background: var(--off-white); border: 1px solid var(--rule); border-radius: 4px; font-size: 13.5px; }
-.prework-strip .tag { background: var(--gold); color: var(--navy); font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; }
-.prework-strip .ps-body { flex: 1; color: var(--text); }
+  .section-wrap { max-width: 820px; margin: 0 auto; padding: 0 24px; }
+  .teaching-section { padding: 44px 0 32px; border-bottom: 1px solid var(--rule); }
+  .teaching-section:last-child { border-bottom: none; }
+  .section-number { font-size: 10px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+  .section-number .num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--rust); color: var(--white); font-size: 10px; font-weight: 700; }
+  .teaching-section h2 { font-size: clamp(22px, 3vw, 30px); font-weight: 700; color: var(--navy); line-height: 1.2; margin-bottom: 18px; letter-spacing: -0.01em; }
+  .teaching-section h3 { font-size: 13px; color: var(--rust); text-transform: uppercase; letter-spacing: 0.06em; margin: 18px 0 8px; font-weight: 700; }
+  .teaching-section p { font-size: 16px; color: var(--text); line-height: 1.78; margin-bottom: 14px; }
+  .teaching-section p:last-child { margin-bottom: 0; }
+  .teaching-section strong { color: var(--navy); font-weight: 700; }
+  .teaching-section em { font-style: italic; color: var(--navy); }
 
-.section-wrap { max-width: 820px; margin: 0 auto; padding: 0 24px; }
-.teaching-section { padding: 48px 0 36px; border-bottom: 1px solid var(--rule); }
-.teaching-section:last-of-type { border-bottom: none; }
-.section-number { font-size: 10px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
-.section-number .num { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--rust); color: var(--white); font-size: 11px; font-weight: 700; }
-.teaching-section h2 { font-size: clamp(22px, 3.5vw, 30px); font-weight: 700; color: var(--navy); line-height: 1.2; margin-bottom: 18px; letter-spacing: -0.01em; }
-.teaching-section h3 { font-size: 13px; color: var(--rust); text-transform: uppercase; letter-spacing: 0.06em; margin: 18px 0 8px; font-weight: 700; }
-.teaching-section p { font-size: 16px; color: var(--text); line-height: 1.78; margin-bottom: 16px; }
-.teaching-section p:last-child { margin-bottom: 0; }
-.teaching-section em { color: var(--navy); font-style: italic; }
-.teaching-section strong { color: var(--navy); font-weight: 700; }
+  .callout { background: #EEF2FF; border: 1px solid rgba(10,19,34,0.12); border-left: 4px solid var(--rust); padding: 18px 22px; margin: 20px 0; font-size: 15px; color: var(--navy); line-height: 1.65; }
+  .callout.gold { background: #FBF6E8; border-left-color: var(--gold); }
 
-.callout { background: #EEF2FF; border: 1px solid rgba(10,19,34,0.10); border-left: 4px solid var(--rust); padding: 18px 22px; margin: 22px 0; font-size: 15px; color: var(--navy); line-height: 1.65; }
-.callout.gold { background: #FBF6E8; border-left-color: var(--gold); }
+  .structure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  @media (max-width: 600px) { .structure-grid { grid-template-columns: 1fr; } }
+  .structure-item { background: var(--off-white); border: 1px solid var(--rule); padding: 14px 18px; display: flex; align-items: flex-start; gap: 12px; }
+  .structure-item .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--rust); flex-shrink: 0; margin-top: 7px; }
+  .structure-item .dot.gold { background: var(--gold); }
+  .structure-item strong { display: block; font-size: 13px; font-weight: 700; color: var(--navy); line-height: 1.3; }
+  .structure-item span { font-size: 12.5px; color: var(--text-muted); line-height: 1.55; }
 
-.structure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
-@media (max-width: 600px) { .structure-grid { grid-template-columns: 1fr; } }
-.structure-item { background: var(--off-white); border: 1px solid var(--rule); padding: 14px 18px; display: flex; align-items: flex-start; gap: 12px; border-radius: 3px; }
-.structure-item .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--rust); flex-shrink: 0; margin-top: 7px; }
-.structure-item .dot.gold { background: var(--gold); }
-.structure-item strong { display: block; font-size: 13.5px; font-weight: 700; color: var(--navy); line-height: 1.3; margin-bottom: 3px; }
-.structure-item span { font-size: 12.5px; color: var(--text-muted); line-height: 1.55; }
+  .divisions-table { width: 100%; border-collapse: collapse; margin: 22px 0; font-size: 14px; }
+  .divisions-table th { background: var(--navy); color: var(--white); padding: 11px 14px; text-align: left; font-weight: 600; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .divisions-table td { padding: 10px 14px; border-bottom: 1px solid var(--rule); color: var(--text); vertical-align: top; line-height: 1.55; }
+  .divisions-table tr:nth-child(even) td { background: var(--off-white); }
+  .divisions-table td:first-child { font-weight: 700; color: var(--navy); white-space: nowrap; }
 
-.pairs-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
-.pairs-table th { background: var(--navy); color: var(--white); padding: 11px 14px; text-align: left; font-weight: 600; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
-.pairs-table td { padding: 10px 14px; border-bottom: 1px solid var(--rule); color: var(--text); vertical-align: top; line-height: 1.55; }
-.pairs-table tr:nth-child(even) td { background: var(--off-white); }
-.pairs-table td:first-child { font-weight: 700; color: var(--navy); white-space: nowrap; }
+  /* ---- DRAW ZONE (exact pattern from working file) ---- */
+  .draw-zone-wrap {
+    margin: 32px 0;
+    background: var(--canvas-bg);
+    border: 2px solid rgba(201,161,74,0.3);
+    position: relative;
+    user-select: none;
+  }
+  .draw-zone-wrap.light-canvas { background: var(--white); border-color: rgba(11,21,48,0.18); }
+  .draw-zone-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);
+    flex-wrap: wrap; gap: 10px;
+  }
+  .draw-zone-wrap.light-canvas .draw-zone-header { border-bottom-color: var(--rule); }
+  .draw-zone-title { display: flex; align-items: center; gap: 10px; }
+  .draw-zone-title .pencil-icon { font-size: 16px; color: var(--gold); }
+  .draw-zone-wrap.light-canvas .draw-zone-title .pencil-icon { color: var(--rust); }
+  .draw-zone-title > span:not(.pencil-icon) { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); }
+  .draw-zone-wrap.light-canvas .draw-zone-title > span:not(.pencil-icon) { color: var(--rust); }
+  .draw-zone-title .prompt-text { font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.55); letter-spacing: 0; text-transform: none; margin-left: 4px; }
+  .draw-zone-wrap.light-canvas .draw-zone-title .prompt-text { color: var(--text-muted); }
 
-.draw-zone-wrap { margin: 32px 0; background: var(--navy-dark); border: 2px solid rgba(201,161,74,0.30); border-radius: 4px; position: relative; user-select: none; overflow: hidden; }
-.draw-zone-wrap.canvas-light { background: var(--white); border-color: var(--rule-strong); }
-.draw-zone-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-.draw-zone-wrap.canvas-light .draw-zone-header { border-bottom-color: var(--rule); }
-.draw-zone-title { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.draw-zone-title .dz-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
-.draw-zone-wrap.canvas-light .draw-zone-title .dz-tag { color: var(--rust); }
-.draw-zone-title .prompt-text { font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.7); }
-.draw-zone-wrap.canvas-light .draw-zone-title .prompt-text { color: var(--text); opacity: 0.78; }
-.draw-tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.tool-group { display: flex; align-items: center; gap: 5px; padding-right: 8px; border-right: 1px solid rgba(255,255,255,0.10); }
-.tool-group:last-child { border-right: 0; padding-right: 0; }
-.draw-zone-wrap.canvas-light .tool-group { border-right-color: var(--rule); }
-.tool-group .gl { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.55); }
-.draw-zone-wrap.canvas-light .tool-group .gl { color: var(--text-muted); }
+  .draw-tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .tool-group { display: flex; align-items: center; gap: 4px; border-right: 1px solid rgba(255,255,255,0.10); padding-right: 8px; }
+  .tool-group:last-child { border-right: none; padding-right: 0; }
+  .draw-zone-wrap.light-canvas .tool-group { border-right-color: var(--rule); }
 
-.color-btn { width: 20px; height: 20px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; padding: 0; transition: transform 0.15s, border-color 0.15s; }
-.color-btn:hover { transform: scale(1.15); }
-.color-btn.active { border-color: var(--white); transform: scale(1.1); }
-.draw-zone-wrap.canvas-light .color-btn.active { border-color: var(--navy); }
-.color-btn.dark-pen { display: inline-flex; } .color-btn.light-pen { display: none; }
-.draw-zone-wrap.canvas-light .color-btn.dark-pen { display: none; }
-.draw-zone-wrap.canvas-light .color-btn.light-pen { display: inline-flex; }
+  .color-btn { width: 20px; height: 20px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform 0.15s, border-color 0.15s; padding: 0; background-clip: padding-box; }
+  .color-btn:hover { transform: scale(1.2); }
+  .color-btn.active { border-color: var(--white); transform: scale(1.15); }
+  .draw-zone-wrap.light-canvas .color-btn.active { border-color: var(--navy); }
 
-.tool-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.80); font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: 0.04em; white-space: nowrap; display: inline-flex; align-items: center; gap: 5px; min-height: 28px; }
-.tool-btn:hover { background: rgba(255,255,255,0.15); color: var(--white); }
-.tool-btn.active { background: rgba(201,161,74,0.25); border-color: var(--gold); color: var(--gold); }
-.draw-zone-wrap.canvas-light .tool-btn { background: var(--white); border-color: var(--rule-strong); color: var(--navy); }
-.draw-zone-wrap.canvas-light .tool-btn:hover { border-color: var(--rust); }
-.draw-zone-wrap.canvas-light .tool-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .tool-btn {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.80); font-size: 11px; font-weight: 600;
+    padding: 5px 10px; border-radius: 4px; cursor: pointer;
+    font-family: 'Plus Jakarta Sans Variable', sans-serif; letter-spacing: 0.02em; white-space: nowrap;
+  }
+  .tool-btn:hover { background: rgba(255,255,255,0.18); color: var(--white); }
+  .tool-btn.active { background: rgba(201,161,74,0.30); border-color: var(--gold); color: var(--gold); }
+  .draw-zone-wrap.light-canvas .tool-btn { background: var(--white); border-color: rgba(11,21,48,0.18); color: var(--navy); }
+  .draw-zone-wrap.light-canvas .tool-btn:hover { border-color: var(--rust); }
+  .draw-zone-wrap.light-canvas .tool-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
 
-.wdot { display: inline-block; background: currentColor; border-radius: 50%; vertical-align: middle; }
-.w-fine .wdot { width: 3px; height: 3px; } .w-normal .wdot { width: 6px; height: 6px; } .w-bold .wdot { width: 10px; height: 10px; }
+  .size-slider { -webkit-appearance: none; appearance: none; width: 64px; height: 3px; background: rgba(255,255,255,0.20); border-radius: 2px; outline: none; cursor: pointer; }
+  .draw-zone-wrap.light-canvas .size-slider { background: rgba(11,21,48,0.18); }
+  .size-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--gold); cursor: pointer; }
+  .draw-zone-wrap.light-canvas .size-slider::-webkit-slider-thumb { background: var(--rust); }
+  .size-slider::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--gold); cursor: pointer; border: 0; }
+  .draw-zone-wrap.light-canvas .size-slider::-moz-range-thumb { background: var(--rust); }
 
-.size-slider { -webkit-appearance: none; appearance: none; width: 64px; height: 3px; background: rgba(255,255,255,0.20); border-radius: 2px; outline: none; cursor: pointer; }
-.draw-zone-wrap.canvas-light .size-slider { background: var(--rule-strong); }
-.size-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--gold); cursor: pointer; }
-.draw-zone-wrap.canvas-light .size-slider::-webkit-slider-thumb { background: var(--rust); }
-.size-slider::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--gold); border: 0; cursor: pointer; }
-.draw-zone-wrap.canvas-light .size-slider::-moz-range-thumb { background: var(--rust); }
+  canvas.draw-canvas { display: block; width: 100%; cursor: crosshair; touch-action: none; }
+  .draw-zone-hint { padding: 8px 16px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 10.5px; color: rgba(255,255,255,0.40); font-style: italic; letter-spacing: 0.02em; }
+  .draw-zone-wrap.light-canvas .draw-zone-hint { border-top-color: var(--rule); color: var(--text-muted); }
 
-canvas.draw-canvas { display: block; width: 100%; cursor: crosshair; touch-action: none; background: var(--navy-dark); }
-.draw-zone-wrap.canvas-light canvas.draw-canvas { background: var(--white); }
-.draw-zone-hint { padding: 8px 16px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 11px; color: rgba(255,255,255,0.40); font-style: italic; }
-.draw-zone-wrap.canvas-light .draw-zone-hint { border-top-color: var(--rule); color: var(--text-muted); }
+  .clinical-block { background: var(--navy-dark); padding: 48px 40px; margin: 48px 0 0; position: relative; overflow: hidden; }
+  .clinical-block::before { content: ''; position: absolute; top: -40px; right: -40px; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(201,161,74,0.08) 0%, transparent 70%); pointer-events: none; }
+  .clinical-block .cb-inner { max-width: 820px; margin: 0 auto; position: relative; }
+  .clinical-block .cb-label { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+  .clinical-block h2 { font-size: clamp(22px, 3.5vw, 30px); color: var(--white); font-weight: 700; margin-bottom: 18px; line-height: 1.25; }
+  .clinical-block p { color: rgba(255,255,255,0.78); font-size: 15px; line-height: 1.75; margin-bottom: 14px; }
+  .clinical-block strong { color: var(--gold-light); font-weight: 700; }
+  .translate-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 22px 0 8px; }
+  .translate-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(201,161,74,0.22); padding: 16px 18px; }
+  .translate-card .quote { font-size: 13px; font-weight: 600; color: var(--gold-light); margin-bottom: 6px; font-style: italic; }
+  .translate-card .meaning { font-size: 12.5px; color: rgba(255,255,255,0.78); line-height: 1.55; }
 
-.clinical-block { background: var(--navy-dark); padding: 56px 24px; margin: 56px 0 0; position: relative; overflow: hidden; }
-.clinical-block::before { content: ''; position: absolute; top: -40px; right: -40px; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(201,161,74,0.10) 0%, transparent 70%); pointer-events: none; }
-.clinical-block .cb-inner { max-width: 820px; margin: 0 auto; position: relative; }
-.clinical-block .cb-label { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
-.clinical-block h2 { font-size: clamp(22px, 3.5vw, 30px); color: var(--white); font-weight: 700; margin-bottom: 18px; line-height: 1.25; }
-.clinical-block p { color: rgba(255,255,255,0.78); font-size: 15.5px; line-height: 1.75; margin-bottom: 14px; }
-.clinical-block strong { color: var(--gold-light); font-weight: 700; }
-.translate-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 22px 0 8px; }
-.translate-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(201,161,74,0.22); padding: 16px 18px; border-radius: 3px; }
-.translate-card .quote { font-size: 13px; font-weight: 600; color: var(--gold-light); margin-bottom: 6px; font-style: italic; }
-.translate-card .meaning { font-size: 12.5px; color: rgba(255,255,255,0.78); line-height: 1.55; }
-
-.page-footer { background: var(--navy-dark); border-top: 2px solid rgba(201,161,74,0.20); padding: 28px 24px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.60); letter-spacing: 0.06em; }
-.page-footer .byline { color: var(--gold); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
-
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
-@media print {
-  #progress-bar, #case-ribbon, .draw-zone-wrap, .prework-strip { display: none !important; }
-  body { background: #fff; }
-  .clinical-block { background: #fff; color: #000; padding: 30px 0; border-top: 2px solid #0B1530; }
-  .clinical-block h2, .clinical-block p { color: #0B1530; }
-  .clinical-block .cb-label, .clinical-block strong { color: #8B3A2E; }
-  .translate-card { background: #fff; border-color: #ccc; }
-  .translate-card .quote, .translate-card .meaning { color: #0B1530; }
-}
+  .page-footer { background: var(--navy-dark); border-top: 2px solid rgba(201,161,74,0.20); padding: 24px 24px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.60); letter-spacing: 0.04em; }
+  .page-footer .byline { color: var(--gold); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
 </style>
 </head>
 <body>
 
-<a class="skip" href="#main">Skip to main content</a>
-<div id="progress-bar" aria-hidden="true"></div>
+<div id="progress-bar"></div>
 
-<div id="case-ribbon" role="region" aria-label="Active patient case">
+<!-- STICKY CASE RIBBON -->
+<div id="case-ribbon">
   <span class="ribbon-label">Case</span>
-  <span class="ribbon-case"><strong>Helen, 68</strong> &middot; "my hat doesn't fit anymore" &middot; widening forehead, anterior tibial bowing, reduced hearing &middot; alk phos sky-high, calcium normal &middot; cotton-wool skull on X-ray</span>
+  <span class="ribbon-case"><strong>Helen, 68</strong> &middot; "my hat doesn't fit anymore" &middot; anterior tibial bowing &middot; alk phos sky-high, calcium normal &middot; cotton-wool skull</span>
 </div>
 
-<header class="hero">
+<!-- HERO -->
+<div class="hero">
   <div class="hero-eyebrow">BIO 004 &middot; Week 2 &middot; Case Deep Dive</div>
   <h1>Cartilage &amp; <span class="accent">Bone Microanatomy</span></h1>
   <p class="hero-sub">A skull that grew. A tibia that bowed. A remodeling system that lost its conductor.</p>
-</header>
+</div>
 
-<main id="main">
-
-  <div class="case-card-wrap">
-    <article class="case-card">
-      <div class="case-label">Patient case</div>
-      <p class="case-text"><strong>Helen, 68</strong>, comes to clinic complaining that <strong>her hat doesn't fit anymore</strong>. Her son had taken a photo of her two years ago at a birthday party and a new photo last week; in the second one her <strong>forehead and the bridge of her nose look noticeably wider</strong>.</p>
-      <p class="case-text">She has been having a <strong>dull ache in her right shin</strong> for months, and when the physician looks she sees a clear <strong>anterior bowing of the tibia</strong>. <strong>Hearing in her right ear is reduced</strong>. Labs come back with a markedly <strong>elevated alkaline phosphatase</strong> but a <strong>normal calcium</strong>. An X-ray of the skull shows a <strong>"cotton wool" appearance</strong>; the right tibia shows <strong>thickened cortex</strong> and a <strong>curved shaft</strong>.</p>
-      <div class="guiding-q">
-        <span>Guiding question</span>
-        Bone is a tissue that builds and breaks itself down every day of your life. What two cells are doing that, what regulates their balance, and what would you expect to see when one of those cells goes into overdrive and the other tries to keep up?
-      </div>
-    </article>
-  </div>
-
-  <div class="prework-strip" role="note">
-    <span class="tag">Prework</span>
-    <span class="ps-body">This is the case-based companion. The terms, the video, and the spaced recall for cartilage, bone classification, the long bone, bone microanatomy, and bone growth/formation live on your Week 2 prework page. Open both side by side: the prework gives you the inventory; this page gives you the patient whose remodeling system tells the whole story.</span>
-  </div>
-
-  <div class="section-wrap">
-
-    <!-- SECTION 1: BONE IS A TISSUE -->
-    <section class="teaching-section" aria-labelledby="s1">
-      <div class="section-number"><span class="num">1</span> Bone is a tissue, not a rock</div>
-      <h2 id="s1">A living organ that builds and breaks itself down every day</h2>
-      <p>The instinct most people have about bone is that it is hard and finished, like rebar. The instinct is wrong. Bone is a <strong>connective tissue</strong> that is actively being torn down and rebuilt at every moment of your life. The adult skeleton replaces roughly 10% of itself every year through this process, called <em>remodeling</em>.</p>
-      <p>Two cell types run the show. <strong>Osteoblasts</strong> build new bone matrix; once they become trapped in the matrix they have laid down, they mature into <strong>osteocytes</strong>, the resident sensor cells of bone. <strong>Osteoclasts</strong>, large multinucleated cells of monocyte lineage, resorb old or damaged bone. When build and resorb are balanced, the skeleton stays in steady state. When one side outruns the other, the skeleton changes shape. Helen's skeleton is changing shape.</p>
-      <div class="callout">
-        <strong>What Paget's actually is.</strong> Helen has <em>Paget's disease of bone</em>: hyperactive osteoclasts resorb bone at three to ten times the normal rate. Osteoblasts try to keep up by laying down replacement matrix faster than they can organize it properly. The result is bone that is thicker but disorganized, weaker for its size, and locally hot, painful, and deformed.
-      </div>
-    </section>
-
-    <!-- SECTION 2: CARTILAGE -->
-    <section class="teaching-section" aria-labelledby="s2">
-      <div class="section-number"><span class="num">2</span> Cartilage, the scaffold before bone</div>
-      <h2 id="s2">Three types, one biology</h2>
-      <p>Before most bones are bone, they are cartilage. Cartilage is also a connective tissue, but a softer and avascular one. Its cells are called <strong>chondrocytes</strong>, and they live inside small chambers called <em>lacunae</em> within a gel-like matrix rich in collagen and proteoglycans. Because cartilage has no blood vessels of its own, nutrients diffuse in slowly from the surrounding <strong>perichondrium</strong>. That is why cartilage injuries heal poorly compared to bone.</p>
-      <p>Three types of cartilage do three different jobs:</p>
-      <div class="structure-grid" role="list" aria-label="Three types of cartilage">
-        <div class="structure-item" role="listitem"><span class="dot"></span><div><strong>Hyaline cartilage</strong><span>Most common type. Smooth, glassy. Articular cartilage on joint surfaces, costal cartilages, tracheal rings, fetal skeleton, epiphyseal plates. The template for endochondral bone formation.</span></div></div>
-        <div class="structure-item" role="listitem"><span class="dot"></span><div><strong>Elastic cartilage</strong><span>Hyaline plus elastic fibers. External ear, epiglottis. Maintains shape but bends and recoils.</span></div></div>
-        <div class="structure-item" role="listitem"><span class="dot gold"></span><div><strong>Fibrocartilage</strong><span>Dense bundles of collagen, very tough. Intervertebral discs, pubic symphysis, menisci of the knee, TMJ disc. Resists compression and shear.</span></div></div>
-      </div>
-      <p>Hold onto hyaline cartilage in particular: it is the template most of your bones grew from in fetal development, and it is what still sits at the ends of your long bones, at the epiphyseal (growth) plates during childhood, and on the articulating surfaces of synovial joints throughout life.</p>
-    </section>
-
-    <!-- SECTION 3: BONE CLASSIFICATION + LONG BONE -->
-    <section class="teaching-section" aria-labelledby="s3">
-      <div class="section-number"><span class="num">3</span> Classifying bone, and the long bone in detail</div>
-      <h2 id="s3">Five shapes, and one shape worth studying carefully</h2>
-      <p>Bones are classified by shape, because shape predicts function and predicts where particular kinds of tissue and growth live.</p>
-      <table class="pairs-table" aria-label="Bone classification by shape">
-        <thead><tr><th>Shape</th><th>Examples</th><th>Function</th></tr></thead>
-        <tbody>
-          <tr><td>Long</td><td>femur, humerus, phalanges</td><td>levers for movement; longer than wide</td></tr>
-          <tr><td>Short</td><td>carpals, tarsals</td><td>stability with limited motion; roughly cube-shaped</td></tr>
-          <tr><td>Flat</td><td>cranial bones, sternum, ribs, scapula</td><td>protection and broad muscle attachment</td></tr>
-          <tr><td>Irregular</td><td>vertebrae, hip bones, sphenoid</td><td>specialized shapes for specialized jobs</td></tr>
-          <tr><td>Sesamoid</td><td>patella, pisiform</td><td>embedded in tendons; protect and improve mechanical advantage</td></tr>
-        </tbody>
-      </table>
-      <h3>The long bone, part by part</h3>
-      <p>Most of bone microanatomy is best learned on a long bone, because every key feature lives there. Walk a femur in your head from end to end:</p>
-      <div class="structure-grid" role="list" aria-label="Parts of a long bone">
-        <div class="structure-item" role="listitem"><span class="dot"></span><div><strong>Diaphysis</strong><span>The shaft. Tube of compact bone surrounding a hollow medullary cavity filled with marrow.</span></div></div>
-        <div class="structure-item" role="listitem"><span class="dot"></span><div><strong>Epiphysis</strong><span>The expanded end of the bone. Mostly spongy (cancellous) bone covered by a thin shell of compact bone. Articular cartilage on the joint surface.</span></div></div>
-        <div class="structure-item" role="listitem"><span class="dot"></span><div><strong>Metaphysis</strong><span>The region between diaphysis and epiphysis. Contains the epiphyseal plate (growth plate) in children; the epiphyseal line (a scar) in adults.</span></div></div>
-        <div class="structure-item" role="listitem"><span class="dot"></span><div><strong>Epiphyseal plate</strong><span>A disc of hyaline cartilage in growing bones. Chondrocytes divide on the epiphyseal side; the diaphyseal side calcifies and converts to bone, lengthening the shaft.</span></div></div>
-        <div class="structure-item" role="listitem"><span class="dot gold"></span><div><strong>Periosteum</strong><span>Dense fibrous outer covering of bone (except at articular surfaces). Inner cellular layer contains osteoblasts and osteoclasts; outer layer carries blood vessels and nerves. Source of width growth and fracture-callus cells.</span></div></div>
-        <div class="structure-item" role="listitem"><span class="dot gold"></span><div><strong>Endosteum</strong><span>Thin cellular layer lining the medullary cavity and the internal surfaces of spongy bone. Also contains osteoblasts and osteoclasts.</span></div></div>
-        <div class="structure-item" role="listitem"><span class="dot gold"></span><div><strong>Medullary cavity</strong><span>The hollow space inside the diaphysis. Red marrow in children (hematopoietic); converts mostly to yellow marrow (fat) in adults.</span></div></div>
-        <div class="structure-item" role="listitem"><span class="dot gold"></span><div><strong>Articular cartilage</strong><span>Hyaline cartilage on the joint surface of the epiphysis. Reduces friction and absorbs compression; no perichondrium, so injury healing is poor.</span></div></div>
-      </div>
-    </section>
-
-    <!-- SECTION 4: BONE MICROANATOMY -->
-    <section class="teaching-section" aria-labelledby="s4">
-      <div class="section-number"><span class="num">4</span> Bone microanatomy</div>
-      <h2 id="s4">Compact bone, spongy bone, and the cells inside both</h2>
-      <p>Looking inside bone, you find two patterns of the same matrix arranged for different jobs.</p>
-      <h3>Compact (cortical) bone</h3>
-      <p>The dense outer shell that gives bone its strength. Built from repeating cylindrical units called <strong>osteons</strong> (or Haversian systems). Each osteon is a stack of concentric rings of bone matrix (<em>lamellae</em>) wrapped around a <strong>central canal (Haversian canal)</strong> that carries a blood vessel and a nerve. Osteocytes sit in small cavities called <em>lacunae</em> between the lamellae, and they send long thin processes through tiny channels called <em>canaliculi</em> to connect with each other and with the central canal. That network is how nutrients reach cells that are otherwise trapped inside a solid matrix.</p>
-      <p>Osteons are linked to each other by perpendicular <em>perforating (Volkmann) canals</em>, which run between central canals and connect the periosteum's blood supply to the marrow cavity.</p>
-      <h3>Spongy (cancellous, trabecular) bone</h3>
-      <p>Inside the epiphyses and along the inner surface of compact bone. Made of a meshwork of bony struts called <strong>trabeculae</strong>, oriented along lines of mechanical stress. The spaces between trabeculae are filled with bone marrow. Spongy bone is much lighter than compact bone for its volume, and it gives the skeleton most of its surface area for hematopoiesis and ion exchange. The trabecular pattern visibly reorients when load patterns change, which is one of the clearest demonstrations that bone is a living, responsive tissue.</p>
-      <h3>The cells of bone</h3>
-      <div class="structure-grid" role="list" aria-label="The four cell types of bone tissue">
-        <div class="structure-item" role="listitem"><span class="dot"></span><div><strong>Osteogenic (osteoprogenitor) cells</strong><span>Stem cells of bone. In the periosteum and endosteum. Divide to produce osteoblasts.</span></div></div>
-        <div class="structure-item" role="listitem"><span class="dot"></span><div><strong>Osteoblasts</strong><span>Build bone. Secrete osteoid (the organic matrix, mostly type I collagen) and initiate its mineralization with hydroxyapatite.</span></div></div>
-        <div class="structure-item" role="listitem"><span class="dot"></span><div><strong>Osteocytes</strong><span>Mature osteoblasts that have become trapped in the matrix they laid down. Sit in lacunae, communicate through canaliculi. Sense mechanical strain and signal remodeling.</span></div></div>
-        <div class="structure-item" role="listitem"><span class="dot gold"></span><div><strong>Osteoclasts</strong><span>Large multinucleated cells of monocyte/macrophage lineage. Secrete acid and proteases that dissolve mineral and digest collagen. Resorb bone.</span></div></div>
-      </div>
-      <p>The matrix itself is two things in one: an organic scaffold (mostly type I collagen, with proteoglycans and glycoproteins) that gives bone its tensile strength, and an inorganic mineral (hydroxyapatite, a calcium phosphate crystal) that gives it compressive strength and hardness. Remove the mineral and bone becomes rubbery; remove the collagen and it becomes brittle. You need both.</p>
-    </section>
-
-    <!-- SECTION 5: BONE GROWTH + REMODELING -->
-    <section class="teaching-section" aria-labelledby="s5">
-      <div class="section-number"><span class="num">5</span> How bone forms, grows, and remodels</div>
-      <h2 id="s5">Two ways to make a bone, two ways to grow one, one continuous rebuild</h2>
-      <h3>Ossification: two pathways</h3>
-      <p><strong>Intramembranous ossification</strong> forms bone directly from a sheet of embryonic mesenchymal tissue, no cartilage intermediate. This is how the flat bones of the skull, the mandible, and the clavicle form. Mesenchymal cells differentiate into osteoblasts in the middle of the sheet and lay down bony spicules outward, eventually forming flat bones.</p>
-      <p><strong>Endochondral ossification</strong> uses cartilage as a template. The fetus forms a hyaline cartilage model of the future bone first; then a primary ossification center develops in the shaft and replaces cartilage with bone, while secondary centers later develop in each epiphysis. The remaining cartilage between primary and secondary centers becomes the <em>epiphyseal plate</em>, and that plate is the engine of length growth throughout childhood. Most bones in the body, including all long bones, form this way.</p>
-      <h3>Length and width growth</h3>
-      <p>A growing long bone gets <strong>longer</strong> at the epiphyseal plate, where chondrocytes divide and the cartilage they leave behind is steadily replaced by bone. The plate closes and ossifies fully in late adolescence; after that you cannot make a bone any longer. A growing long bone gets <strong>wider</strong> by apposition: osteoblasts in the periosteum lay down new bone on the outer surface while osteoclasts on the endosteal surface resorb the inner wall, enlarging the medullary cavity. The bone gets thicker without becoming heavier than it needs to be.</p>
-      <h3>Remodeling, every day for the rest of your life</h3>
-      <p>Even after growth stops, bone never stops turning over. Remodeling adjusts the skeleton in response to mechanical load (<em>Wolff's law</em>: bone deposits where it is stressed and resorbs where it is not), repairs microdamage, and maintains calcium balance under the regulation of parathyroid hormone, calcitonin, vitamin D, and mechanical signaling. The osteocyte network in compact bone is the sensor; osteoblasts and osteoclasts are the effectors.</p>
-      <div class="callout gold">
-        <strong>How Helen's bone broke the rules.</strong> In Paget's disease, osteoclasts become abnormally active first. They resorb bone at high speed, creating a region of low density. Osteoblasts respond by laying down replacement matrix as fast as they can, but the new bone is laid down in a disorganized, mosaic pattern rather than the orderly lamellar layout. The result is bone that looks thicker on X-ray (the "cotton wool" appearance of Paget's skull) but is mechanically weaker and shaped abnormally. Helen's tibia is bowed because the weight of her body deforms the disorganized matrix faster than it can ossify properly. Her hat doesn't fit because the bones of her skull have been remodeled bigger. Her hearing is reduced because the auditory ossicles or the bones around the auditory canal have remodeled and changed shape. Her alkaline phosphatase is elevated because that enzyme is a marker of osteoblast activity, and her osteoblasts are sprinting to keep up. Her calcium is normal because the calcium that comes out of resorbed bone goes right back into the new matrix the osteoblasts are laying down.</p>
-      </div>
-    </section>
-
-    <!-- DRAW ZONE 1 -->
-    <section class="draw-zone-wrap" id="zone1-wrap" aria-label="Draw zone, osteon cross-section">
-      <div class="draw-zone-header">
-        <div class="draw-zone-title"><span class="dz-tag">Draw zone 1</span><span class="prompt-text">Sketch an osteon in cross-section. Label the central canal, lamellae, lacunae, canaliculi, and a perforating canal joining two adjacent osteons.</span></div>
-        <div class="draw-tools">
-          <div class="tool-group" role="group" aria-label="Canvas theme">
-            <button type="button" class="tool-btn active" data-canvas="dark" aria-pressed="true">Dark</button>
-            <button type="button" class="tool-btn" data-canvas="light" aria-pressed="false">Light</button>
-          </div>
-          <div class="tool-group" role="group" aria-label="Pen color">
-            <span class="gl">Color</span>
-            <button type="button" class="color-btn dark-pen active" data-color="#F5F1E8" aria-label="Cream" style="background:#F5F1E8"></button>
-            <button type="button" class="color-btn dark-pen" data-color="#C9A14A" aria-label="Gold" style="background:#C9A14A"></button>
-            <button type="button" class="color-btn dark-pen" data-color="#FF3D6B" aria-label="Hot pink" style="background:#FF3D6B"></button>
-            <button type="button" class="color-btn dark-pen" data-color="#00E5FF" aria-label="Cyan" style="background:#00E5FF"></button>
-            <button type="button" class="color-btn dark-pen" data-color="#7CFF6B" aria-label="Lime" style="background:#7CFF6B"></button>
-            <button type="button" class="color-btn light-pen active" data-color="#0B1530" aria-label="Navy" style="background:#0B1530"></button>
-            <button type="button" class="color-btn light-pen" data-color="#8B3A2E" aria-label="Rust" style="background:#8B3A2E"></button>
-            <button type="button" class="color-btn light-pen" data-color="#C9A14A" aria-label="Gold" style="background:#C9A14A"></button>
-            <button type="button" class="color-btn light-pen" data-color="#1F6F8B" aria-label="Teal" style="background:#1F6F8B"></button>
-            <button type="button" class="color-btn light-pen" data-color="#000000" aria-label="Black" style="background:#000000"></button>
-          </div>
-          <div class="tool-group" role="group" aria-label="Width">
-            <span class="gl">Width</span>
-            <button type="button" class="tool-btn w-fine" data-width="fine"><span class="wdot"></span>Fine</button>
-            <button type="button" class="tool-btn w-normal active" data-width="normal"><span class="wdot"></span>Normal</button>
-            <button type="button" class="tool-btn w-bold" data-width="bold"><span class="wdot"></span>Bold</button>
-          </div>
-          <div class="tool-group"><span class="gl">Size</span><input type="range" class="size-slider" min="0.5" max="24" value="3" step="0.5" aria-label="Fine size override"></div>
-          <div class="tool-group">
-            <button type="button" class="tool-btn active" data-tool="pen">Pen</button>
-            <button type="button" class="tool-btn" data-tool="eraser">Eraser</button>
-          </div>
-          <div class="tool-group">
-            <button type="button" class="tool-btn" data-action="undo">Undo</button>
-            <button type="button" class="tool-btn" data-action="clear">Clear</button>
-          </div>
-        </div>
-      </div>
-      <canvas class="draw-canvas" id="canvas1" height="500" aria-label="Sketch canvas, osteon cross-section"></canvas>
-      <div class="draw-hint">Fine pencil for canaliculi (they're tiny). Bold for the osteon's outer boundary.</div>
-      <div class="draw-zone-hint">Fine pencil for canaliculi (they're tiny). Bold for the osteon's outer boundary.</div>
-    </section>
-
-    <!-- DRAW ZONE 2 -->
-    <section class="draw-zone-wrap" id="zone2-wrap" aria-label="Draw zone, endochondral ossification and Helen's bone changes">
-      <div class="draw-zone-header">
-        <div class="draw-zone-title"><span class="dz-tag">Draw zone 2</span><span class="prompt-text">Sketch a developing long bone undergoing endochondral ossification (cartilage model &rarr; primary center &rarr; secondary center &rarr; epiphyseal plate). Then draw Helen's tibia next to a normal one and label the cellular abnormality.</span></div>
-        <div class="draw-tools">
-          <div class="tool-group" role="group" aria-label="Canvas theme">
-            <button type="button" class="tool-btn active" data-canvas="dark" aria-pressed="true">Dark</button>
-            <button type="button" class="tool-btn" data-canvas="light" aria-pressed="false">Light</button>
-          </div>
-          <div class="tool-group" role="group" aria-label="Pen color">
-            <span class="gl">Color</span>
-            <button type="button" class="color-btn dark-pen active" data-color="#F5F1E8" aria-label="Cream" style="background:#F5F1E8"></button>
-            <button type="button" class="color-btn dark-pen" data-color="#C9A14A" aria-label="Gold" style="background:#C9A14A"></button>
-            <button type="button" class="color-btn dark-pen" data-color="#FF3D6B" aria-label="Hot pink" style="background:#FF3D6B"></button>
-            <button type="button" class="color-btn dark-pen" data-color="#00E5FF" aria-label="Cyan" style="background:#00E5FF"></button>
-            <button type="button" class="color-btn dark-pen" data-color="#7CFF6B" aria-label="Lime" style="background:#7CFF6B"></button>
-            <button type="button" class="color-btn light-pen active" data-color="#0B1530" aria-label="Navy" style="background:#0B1530"></button>
-            <button type="button" class="color-btn light-pen" data-color="#8B3A2E" aria-label="Rust" style="background:#8B3A2E"></button>
-            <button type="button" class="color-btn light-pen" data-color="#C9A14A" aria-label="Gold" style="background:#C9A14A"></button>
-            <button type="button" class="color-btn light-pen" data-color="#1F6F8B" aria-label="Teal" style="background:#1F6F8B"></button>
-            <button type="button" class="color-btn light-pen" data-color="#000000" aria-label="Black" style="background:#000000"></button>
-          </div>
-          <div class="tool-group" role="group" aria-label="Width">
-            <span class="gl">Width</span>
-            <button type="button" class="tool-btn w-fine" data-width="fine"><span class="wdot"></span>Fine</button>
-            <button type="button" class="tool-btn w-normal active" data-width="normal"><span class="wdot"></span>Normal</button>
-            <button type="button" class="tool-btn w-bold" data-width="bold"><span class="wdot"></span>Bold</button>
-          </div>
-          <div class="tool-group"><span class="gl">Size</span><input type="range" class="size-slider" min="0.5" max="24" value="3" step="0.5" aria-label="Fine size override"></div>
-          <div class="tool-group">
-            <button type="button" class="tool-btn active" data-tool="pen">Pen</button>
-            <button type="button" class="tool-btn" data-tool="eraser">Eraser</button>
-          </div>
-          <div class="tool-group">
-            <button type="button" class="tool-btn" data-action="undo">Undo</button>
-            <button type="button" class="tool-btn" data-action="clear">Clear</button>
-          </div>
-        </div>
-      </div>
-      <canvas class="draw-canvas" id="canvas2" height="520" aria-label="Sketch canvas, endochondral ossification and Helen's bone"></canvas>
-      <div class="draw-zone-hint">Color the cartilage one color and the bone another so the conversion is obvious.</div>
-    </section>
-
-  </div><!-- /section-wrap -->
-
-  <aside class="clinical-block" id="clinical" aria-label="Clinical correlation, Helen's findings explained by cell biology">
-    <div class="cb-inner">
-      <div class="cb-label">Returning to Helen</div>
-      <h2>Read her body through the remodeling loop</h2>
-      <p>Every finding Helen brought into the clinic was the bone-cell biology you just learned, expressed at the gross-anatomy level. Walk the loop:</p>
-      <div class="translate-grid">
-        <div class="translate-card">
-          <div class="quote">"My hat doesn't fit anymore."</div>
-          <div class="meaning">Flat bones of the skull (intramembranous origin) have been remodeled larger. Osteoblasts laid down new matrix faster than osteoclasts resorbed, in disorganized pattern. The skull literally grew.</div>
-        </div>
-        <div class="translate-card">
-          <div class="quote">"Anterior bowing of the tibia."</div>
-          <div class="meaning">Long bone (endochondral origin) with disorganized matrix. The cortex is thickened but mechanically weaker. Body weight slowly deforms the disorganized bone faster than osteoblasts can lay down a stronger replacement.</div>
-        </div>
-        <div class="translate-card">
-          <div class="quote">"Hearing reduced on the right."</div>
-          <div class="meaning">Remodeling of the temporal bone or ossicles compresses the auditory canal or impairs ossicle motion. A classic Paget's complication.</div>
-        </div>
-        <div class="translate-card">
-          <div class="quote">"Alk phos markedly elevated."</div>
-          <div class="meaning">Alkaline phosphatase is a marker of <strong>osteoblast activity</strong>. Her osteoblasts are working overtime to keep up with the runaway osteoclasts. Calcium stays normal because mineral is recycled directly into the new matrix.</div>
-        </div>
-        <div class="translate-card">
-          <div class="quote">"Cotton wool skull on X-ray."</div>
-          <div class="meaning">Patchy areas of dense disorganized new bone (the cotton wool) sit next to areas where osteoclast resorption has won. The skull looks puffy and mottled instead of uniformly compact.</div>
-        </div>
-        <div class="translate-card">
-          <div class="quote">"Dull ache in the right shin."</div>
-          <div class="meaning">Periosteal stretch from the enlarging, deforming bone. The periosteum carries the nerves; bone matrix itself is not innervated.</div>
-        </div>
-      </div>
-      <p>Every one of these maps to the cellular cast you just met. <strong>Osteoclast, osteoblast, osteocyte, matrix.</strong> When you go back to the prework page, the diagrams of the osteon and the epiphyseal plate will land differently. Each one is now attached to a patient whose runaway remodeling has bowed her tibia, widened her skull, and dulled her hearing.</p>
+<!-- CASE CARD -->
+<div class="case-card-wrap">
+  <div class="case-card">
+    <div class="case-label">Patient case</div>
+    <p class="case-text"><strong>Helen, 68</strong>, comes to clinic complaining that <strong>her hat doesn't fit anymore</strong>. Her son had taken a photo of her two years ago and a new photo last week; in the second one her <strong>forehead and the bridge of her nose look noticeably wider</strong>.</p>
+    <p class="case-text">She has a <strong>dull ache in her right shin</strong> for months, and when the physician looks she sees a clear <strong>anterior bowing of the tibia</strong>. <strong>Hearing in her right ear is reduced</strong>. Labs come back with a markedly <strong>elevated alkaline phosphatase</strong> but a <strong>normal calcium</strong>. An X-ray of the skull shows a <strong>"cotton wool" appearance</strong>; the right tibia shows <strong>thickened cortex</strong> and a <strong>curved shaft</strong>.</p>
+    <div class="guiding-q">
+      <span>Guiding question</span>
+      Bone is a tissue that builds and breaks itself down every day of your life. What two cells are doing that, what regulates their balance, and what would you expect to see when one cell goes into overdrive and the other tries to keep up?
     </div>
-  </aside>
+  </div>
+</div>
 
-</main>
+<!-- PREWORK STRIP -->
+<div class="prework-strip">
+  <span class="tag">Prework</span>
+  <span class="ps-body">This is the case-based companion. The terms, the video, and the spaced recall for cartilage, bone classification, the long bone, bone microanatomy, and bone growth/formation live on your Week 2 prework page. Open both side by side.</span>
+</div>
 
-<footer class="page-footer">
+<div class="section-wrap">
+
+  <!-- SECTION 1: BONE IS A TISSUE -->
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">1</span> Bone is a tissue, not a rock</div>
+    <h2>A living organ that builds and breaks itself down every day</h2>
+    <p>The instinct most people have about bone is that it is hard and finished, like rebar. The instinct is wrong. Bone is a <strong>connective tissue</strong> that is actively being torn down and rebuilt at every moment of your life. The adult skeleton replaces roughly 10% of itself every year through a process called <em>remodeling</em>.</p>
+    <p>Two cell types run the show. <strong>Osteoblasts</strong> build new bone matrix; once they become trapped in the matrix they have laid down, they mature into <strong>osteocytes</strong>, the resident sensor cells of bone. <strong>Osteoclasts</strong>, large multinucleated cells of monocyte lineage, resorb old or damaged bone. When build and resorb are balanced, the skeleton stays in steady state. When one side outruns the other, the skeleton changes shape. Helen's skeleton is changing shape.</p>
+    <div class="callout">
+      <strong>What Paget's actually is.</strong> Helen has <em>Paget's disease of bone</em>: hyperactive osteoclasts resorb bone at three to ten times the normal rate. Osteoblasts try to keep up by laying down replacement matrix faster than they can organize it properly. The result is bone that is thicker but disorganized, weaker for its size, and locally hot, painful, and deformed.
+    </div>
+  </div>
+
+  <!-- SECTION 2: CARTILAGE -->
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">2</span> Cartilage, the scaffold before bone</div>
+    <h2>Three types, one biology</h2>
+    <p>Before most bones are bone, they are cartilage. Cartilage is also a connective tissue, but a softer and avascular one. Its cells are called <strong>chondrocytes</strong>, and they live inside small chambers called <em>lacunae</em> within a gel-like matrix rich in collagen and proteoglycans. Because cartilage has no blood vessels of its own, nutrients diffuse in slowly from the surrounding <strong>perichondrium</strong>. That is why cartilage injuries heal poorly compared to bone.</p>
+    <div class="structure-grid">
+      <div class="structure-item"><span class="dot"></span><div><strong>Hyaline cartilage</strong><span>Most common type. Smooth, glassy. Articular cartilage on joint surfaces, costal cartilages, tracheal rings, fetal skeleton, epiphyseal plates. The template for endochondral bone formation.</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Elastic cartilage</strong><span>Hyaline plus elastic fibers. External ear, epiglottis. Maintains shape but bends and recoils.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Fibrocartilage</strong><span>Dense bundles of collagen, very tough. Intervertebral discs, pubic symphysis, menisci of the knee, TMJ disc. Resists compression and shear.</span></div></div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: BONE CLASSIFICATION + LONG BONE -->
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">3</span> Classifying bone, and the long bone</div>
+    <h2>Five shapes, and one shape worth knowing carefully</h2>
+    <table class="divisions-table">
+      <thead><tr><th>Shape</th><th>Examples</th><th>Function</th></tr></thead>
+      <tbody>
+        <tr><td>Long</td><td>femur, humerus, phalanges</td><td>levers for movement; longer than wide</td></tr>
+        <tr><td>Short</td><td>carpals, tarsals</td><td>stability with limited motion</td></tr>
+        <tr><td>Flat</td><td>cranial bones, sternum, ribs, scapula</td><td>protection and broad muscle attachment</td></tr>
+        <tr><td>Irregular</td><td>vertebrae, hip bones, sphenoid</td><td>specialized shapes for specialized jobs</td></tr>
+        <tr><td>Sesamoid</td><td>patella, pisiform</td><td>embedded in tendons; mechanical advantage</td></tr>
+      </tbody>
+    </table>
+    <h3>The long bone, part by part</h3>
+    <div class="structure-grid">
+      <div class="structure-item"><span class="dot"></span><div><strong>Diaphysis</strong><span>The shaft. Tube of compact bone surrounding a hollow medullary cavity filled with marrow.</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Epiphysis</strong><span>The expanded end. Mostly spongy bone covered by a thin shell of compact bone. Articular cartilage on the joint surface.</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Metaphysis</strong><span>Between diaphysis and epiphysis. Contains the epiphyseal plate (growth plate) in children; the epiphyseal line in adults.</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Epiphyseal plate</strong><span>Hyaline cartilage disc. Chondrocytes divide on the epiphyseal side; the diaphyseal side calcifies and becomes bone, lengthening the shaft.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Periosteum</strong><span>Dense fibrous outer covering. Inner cellular layer holds osteoblasts/osteoclasts; outer layer carries blood vessels and nerves.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Endosteum</strong><span>Thin cellular layer lining the medullary cavity and the internal surfaces of spongy bone.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Medullary cavity</strong><span>The hollow space inside the diaphysis. Red marrow in children, mostly yellow marrow (fat) in adults.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Articular cartilage</strong><span>Hyaline cartilage on the joint surface of the epiphysis. Reduces friction, absorbs compression.</span></div></div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: BONE MICROANATOMY -->
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">4</span> Bone microanatomy</div>
+    <h2>Compact bone, spongy bone, and the cells inside both</h2>
+    <h3>Compact (cortical) bone</h3>
+    <p>The dense outer shell that gives bone its strength. Built from repeating cylindrical units called <strong>osteons</strong> (Haversian systems). Each osteon is a stack of concentric rings of bone matrix (<em>lamellae</em>) wrapped around a <strong>central canal</strong> (Haversian canal) that carries a blood vessel and a nerve. Osteocytes sit in small cavities called <em>lacunae</em> between the lamellae and send long thin processes through tiny channels called <em>canaliculi</em> to connect with each other and with the central canal. That network is how nutrients reach cells trapped inside a solid matrix. Osteons are linked perpendicular by <em>perforating (Volkmann) canals</em>.</p>
+    <h3>Spongy (cancellous, trabecular) bone</h3>
+    <p>Inside the epiphyses and along the inner surface of compact bone. A meshwork of bony struts called <strong>trabeculae</strong>, oriented along lines of mechanical stress. The spaces between are filled with bone marrow. Spongy bone is lighter than compact bone for its volume and gives the skeleton most of its surface area for hematopoiesis and ion exchange. Trabecular pattern visibly reorients when load patterns change, which is one of the clearest demonstrations that bone is a living, responsive tissue.</p>
+    <h3>The cells of bone</h3>
+    <div class="structure-grid">
+      <div class="structure-item"><span class="dot"></span><div><strong>Osteogenic cells</strong><span>Stem cells of bone. In the periosteum and endosteum. Divide to produce osteoblasts.</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Osteoblasts</strong><span>Build bone. Secrete osteoid (mostly type I collagen) and initiate mineralization with hydroxyapatite.</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Osteocytes</strong><span>Mature osteoblasts trapped in matrix. Sit in lacunae, communicate through canaliculi. Sense mechanical strain and signal remodeling.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Osteoclasts</strong><span>Large multinucleated cells of monocyte lineage. Secrete acid and proteases that dissolve mineral and digest collagen. Resorb bone.</span></div></div>
+    </div>
+    <p>The matrix itself is two things in one: an organic scaffold (mostly type I collagen) that gives bone its tensile strength, and an inorganic mineral (hydroxyapatite) that gives it compressive strength. Remove the mineral and bone becomes rubbery; remove the collagen and it becomes brittle. You need both.</p>
+  </div>
+
+  <!-- SECTION 5: BONE GROWTH + REMODELING -->
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">5</span> Growth, formation, and remodeling</div>
+    <h2>Two ways to make a bone, and one continuous rebuild</h2>
+    <h3>Two ossification pathways</h3>
+    <p><strong>Intramembranous ossification</strong> forms bone directly from a sheet of embryonic mesenchymal tissue, no cartilage intermediate. This is how the flat bones of the skull, the mandible, and the clavicle form. <strong>Endochondral ossification</strong> uses cartilage as a template: the fetus forms a hyaline cartilage model first, then a primary ossification center develops in the shaft and replaces cartilage with bone, while secondary centers later develop in each epiphysis. The remaining cartilage between primary and secondary centers becomes the <em>epiphyseal plate</em>, the engine of length growth throughout childhood. All long bones form this way.</p>
+    <h3>Length and width growth</h3>
+    <p>A long bone gets <strong>longer</strong> at the epiphyseal plate, where chondrocytes divide and the cartilage they leave behind is steadily replaced by bone. The plate closes in late adolescence; after that you cannot make a bone any longer. A long bone gets <strong>wider</strong> by apposition: osteoblasts in the periosteum lay down new bone on the outer surface while osteoclasts on the endosteal surface resorb the inner wall, enlarging the medullary cavity.</p>
+    <h3>Remodeling, every day for the rest of your life</h3>
+    <p>Even after growth stops, bone never stops turning over. Remodeling responds to mechanical load (<em>Wolff's law</em>: bone deposits where it is stressed and resorbs where it is not), repairs microdamage, and maintains calcium balance under the regulation of parathyroid hormone, calcitonin, vitamin D, and mechanical signaling. The osteocyte network is the sensor; osteoblasts and osteoclasts are the effectors.</p>
+    <div class="callout gold">
+      <strong>How Helen's bone broke the rules.</strong> In Paget's disease, osteoclasts become abnormally active first. They resorb bone at high speed, creating a region of low density. Osteoblasts respond by laying down replacement matrix as fast as they can, but the new bone is laid down in a disorganized, mosaic pattern rather than the orderly lamellar layout. The result is bone that looks thicker on X-ray (the "cotton wool" appearance) but is mechanically weaker and shaped abnormally. Helen's tibia is bowed because the weight of her body deforms the disorganized matrix faster than it can ossify properly. Her hat doesn't fit because the bones of her skull have been remodeled bigger. Her hearing is reduced because the auditory ossicles or the bones around the auditory canal have remodeled and changed shape. Her alkaline phosphatase is elevated because that enzyme is a marker of osteoblast activity, and her osteoblasts are sprinting to keep up. Her calcium is normal because the calcium that comes out of resorbed bone goes right back into the new matrix the osteoblasts are laying down.
+    </div>
+  </div>
+
+  <!-- DRAW ZONE 1 -->
+  <div class="draw-zone-wrap" id="zone1-wrap">
+    <div class="draw-zone-header">
+      <div class="draw-zone-title">
+        <span class="pencil-icon">&#9998;</span>
+        <span>Draw Zone 1 <span class="prompt-text">-- Sketch an osteon in cross-section. Label central canal, lamellae, lacunae, canaliculi, and a perforating canal.</span></span>
+      </div>
+      <div class="draw-tools">
+        <div class="tool-group">
+          <button class="color-btn active" data-color="#FFFFFF" style="background:#ffffff;" title="White"></button>
+          <button class="color-btn" data-color="#C9A14A" style="background:#C9A14A;" title="Gold"></button>
+          <button class="color-btn" data-color="#EF5350" style="background:#EF5350;" title="Red"></button>
+          <button class="color-btn" data-color="#4FC3F7" style="background:#4FC3F7;" title="Blue"></button>
+          <button class="color-btn" data-color="#66BB6A" style="background:#66BB6A;" title="Green"></button>
+          <button class="color-btn" data-color="#FFD54F" style="background:#FFD54F;" title="Yellow"></button>
+        </div>
+        <div class="tool-group">
+          <input type="range" class="size-slider" min="0.5" max="24" value="3" step="0.5" title="Brush size">
+        </div>
+        <div class="tool-group">
+          <button class="tool-btn active" data-tool="pen">Pen</button>
+          <button class="tool-btn" data-tool="fine" title="Fine writing mode (1px hairline)">Fine</button>
+          <button class="tool-btn" data-tool="eraser">Eraser</button>
+        </div>
+        <div class="tool-group">
+          <button class="tool-btn" data-action="undo">Undo</button>
+          <button class="tool-btn" data-action="clear">Clear</button>
+        </div>
+        <div class="tool-group">
+          <button class="tool-btn canvas-mode-toggle" title="Toggle canvas background">&#9788; Light</button>
+        </div>
+      </div>
+    </div>
+    <canvas class="draw-canvas" id="canvas1" height="420"></canvas>
+    <div class="draw-zone-hint">Fine pencil for canaliculi (they're tiny). Bold for the osteon's outer boundary.</div>
+  </div>
+
+  <!-- DRAW ZONE 2 -->
+  <div class="draw-zone-wrap" id="zone2-wrap">
+    <div class="draw-zone-header">
+      <div class="draw-zone-title">
+        <span class="pencil-icon">&#9998;</span>
+        <span>Draw Zone 2 <span class="prompt-text">-- Endochondral ossification: cartilage model &rarr; primary center &rarr; secondary center &rarr; growth plate. Then a normal tibia next to Helen's.</span></span>
+      </div>
+      <div class="draw-tools">
+        <div class="tool-group">
+          <button class="color-btn active" data-color="#FFFFFF" style="background:#ffffff;" title="White"></button>
+          <button class="color-btn" data-color="#C9A14A" style="background:#C9A14A;" title="Gold"></button>
+          <button class="color-btn" data-color="#EF5350" style="background:#EF5350;" title="Red"></button>
+          <button class="color-btn" data-color="#4FC3F7" style="background:#4FC3F7;" title="Blue"></button>
+          <button class="color-btn" data-color="#66BB6A" style="background:#66BB6A;" title="Green"></button>
+          <button class="color-btn" data-color="#FFD54F" style="background:#FFD54F;" title="Yellow"></button>
+        </div>
+        <div class="tool-group">
+          <input type="range" class="size-slider" min="0.5" max="24" value="3" step="0.5" title="Brush size">
+        </div>
+        <div class="tool-group">
+          <button class="tool-btn active" data-tool="pen">Pen</button>
+          <button class="tool-btn" data-tool="fine" title="Fine writing mode (1px hairline)">Fine</button>
+          <button class="tool-btn" data-tool="eraser">Eraser</button>
+        </div>
+        <div class="tool-group">
+          <button class="tool-btn" data-action="undo">Undo</button>
+          <button class="tool-btn" data-action="clear">Clear</button>
+        </div>
+        <div class="tool-group">
+          <button class="tool-btn canvas-mode-toggle" title="Toggle canvas background">&#9788; Light</button>
+        </div>
+      </div>
+    </div>
+    <canvas class="draw-canvas" id="canvas2" height="440"></canvas>
+    <div class="draw-zone-hint">Color the cartilage one color and the bone another so the conversion is obvious.</div>
+  </div>
+
+</div><!-- end section-wrap -->
+
+<!-- CLINICAL CORRELATION BLOCK -->
+<div class="clinical-block">
+  <div class="cb-inner">
+    <div class="cb-label">Returning to Helen</div>
+    <h2>Read her body through the remodeling loop</h2>
+    <p>Every finding Helen brought into clinic was bone-cell biology expressed at the gross-anatomy level. Walk the loop:</p>
+    <div class="translate-grid">
+      <div class="translate-card"><div class="quote">"My hat doesn't fit anymore."</div><div class="meaning">Flat bones of the skull (intramembranous origin) remodeled larger. Osteoblasts laid down disorganized new matrix faster than osteoclasts resorbed. The skull literally grew.</div></div>
+      <div class="translate-card"><div class="quote">"Anterior bowing of the tibia."</div><div class="meaning">Long bone (endochondral origin) with disorganized matrix. Cortex looks thickened but is mechanically weaker. Body weight slowly deforms it.</div></div>
+      <div class="translate-card"><div class="quote">"Hearing reduced on the right."</div><div class="meaning">Remodeling of the temporal bone or ossicles compresses the auditory canal or impairs ossicle motion.</div></div>
+      <div class="translate-card"><div class="quote">"Alk phos sky-high."</div><div class="meaning">Alkaline phosphatase marks <strong>osteoblast activity</strong>. Her osteoblasts work overtime to keep up with the runaway osteoclasts.</div></div>
+      <div class="translate-card"><div class="quote">"Calcium normal."</div><div class="meaning">Mineral released from resorbed bone is recycled directly into the new matrix the osteoblasts are laying down. Serum levels don't change.</div></div>
+      <div class="translate-card"><div class="quote">"Cotton wool skull on X-ray."</div><div class="meaning">Patchy areas of dense disorganized new bone sit next to areas where osteoclast resorption won. The skull looks puffy and mottled.</div></div>
+    </div>
+    <p><strong>Osteoclast, osteoblast, osteocyte, matrix.</strong> When you go back to the prework page, the diagrams of the osteon and the epiphyseal plate will land differently. Each one is now attached to a patient whose runaway remodeling has bowed her tibia, widened her skull, and dulled her hearing.</p>
+  </div>
+</div>
+
+<div class="page-footer">
   <span class="byline">Dr. Sharilyn Rennie</span>
   &nbsp; &middot; &nbsp;
-  <span>BIO 004 &middot; Week 2 &middot; Case deep dive: Cartilage &amp; Bone Microanatomy</span>
-</footer>
+  BIO 004 &middot; Week 2 &middot; Case deep dive: Cartilage &amp; Bone Microanatomy
+</div>
 
 <script>
+// ---- PROGRESS BAR ----
 window.addEventListener('scroll', function () {
-  var top = window.scrollY;
+  var s = window.scrollY;
   var h = document.documentElement.scrollHeight - window.innerHeight;
-  document.getElementById('progress-bar').style.width = (h > 0 ? (top / h) * 100 : 0) + '%';
+  document.getElementById('progress-bar').style.width = (h > 0 ? (s / h) * 100 : 0) + '%';
 });
 
+// ---- CANVAS DRAWING ENGINE (verbatim pattern from your working file) ----
 function initCanvas(canvasId, wrapId) {
-  var wrap = document.getElementById(wrapId);
   var canvas = document.getElementById(canvasId);
-  if (!wrap || !canvas) return;
+  var wrap = document.getElementById(wrapId);
+  if (!canvas || !wrap) return;
   var ctx = canvas.getContext('2d');
-  var BASE = { fine: 1.2, normal: 3.0, bold: 6.5 };
-  var state = { color: '#F5F1E8', width: 'normal', sliderSize: 3, sliderActive: false, mode: 'pen', canvasTheme: 'dark', strokes: [], current: null, dpr: window.devicePixelRatio || 1 };
-  var bgColor = function () { return state.canvasTheme === 'light' ? '#FFFFFF' : '#060A18'; };
-  var first = wrap.querySelector('.color-btn.dark-pen.active'); if (first) state.color = first.dataset.color;
-  function widthFor(p, t) { var b = state.sliderActive ? state.sliderSize : BASE[state.width]; if (t === 'pen') { var pp = (p === 0 || p == null) ? 0.5 : p; return Math.max(0.3, b * (0.25 + pp * 1.5)); } return b; }
-  function resize() { var r = canvas.getBoundingClientRect(); state.dpr = window.devicePixelRatio || 1; canvas.width = Math.round(r.width * state.dpr); canvas.height = Math.round(parseFloat(canvas.getAttribute('height')) * state.dpr); canvas.style.height = canvas.getAttribute('height') + 'px'; ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0); redraw(); }
-  function redraw() { var r = canvas.getBoundingClientRect(); ctx.clearRect(0, 0, r.width, parseFloat(canvas.getAttribute('height'))); ctx.fillStyle = bgColor(); ctx.fillRect(0, 0, r.width, parseFloat(canvas.getAttribute('height'))); state.strokes.forEach(drawStroke); if (state.current) drawStroke(state.current); }
-  function drawStroke(s) { if (!s.points || !s.points.length) return; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.globalCompositeOperation = 'source-over'; if (s.mode === 'eraser') { ctx.strokeStyle = bgColor(); } else { ctx.strokeStyle = s.color; } var p = s.points; if (p.length === 1) { var q = p[0]; ctx.beginPath(); ctx.arc(q.x, q.y, Math.max(0.4, q.w / 2), 0, Math.PI * 2); ctx.fillStyle = s.mode === 'eraser' ? bgColor() : s.color; ctx.fill(); ctx.globalCompositeOperation = 'source-over'; return; } for (var i = 1; i < p.length; i++) { var a = p[i-1], b = p[i]; ctx.lineWidth = (a.w + b.w) / 2; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); } ctx.globalCompositeOperation = 'source-over'; }
-  function pos(e) {
-    var r = canvas.getBoundingClientRect();
-    var x = ((e.clientX - r.left) / r.width) * canvas.width / state.dpr;
-    var y = ((e.clientY - r.top) / r.height) * canvas.height / state.dpr;
-    return { x: x, y: y };
+  var state = {
+    drawing: false,
+    tool: 'pen',
+    color: '#FFFFFF',
+    size: 3,
+    canvasMode: 'dark',     // 'dark' or 'light'
+    strokes: [],
+    currentStroke: null
+  };
+
+  function resize() {
+    var rect = canvas.getBoundingClientRect();
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = parseFloat(canvas.getAttribute('height')) * dpr;
+    canvas.style.height = canvas.getAttribute('height') + 'px';
+    ctx.setTransform(1, 0, 0, 1, 0, 0);  // reset transform
+    ctx.scale(dpr, dpr);
+    redraw();
   }
-  function down(e) { try { canvas.setPointerCapture(e.pointerId); } catch (_) {} var p = pos(e); state.current = { mode: state.mode, color: state.color, points: [{ x: p.x, y: p.y, w: widthFor(e.pressure, e.pointerType) }] }; redraw(); e.preventDefault(); }
-  function move(e) { if (!state.current) return; var evs = (typeof e.getCoalescedEvents === 'function') ? e.getCoalescedEvents() : [e]; if (!evs.length) evs = [e]; for (var i = 0; i < evs.length; i++) { var ev = evs[i], p = pos(ev); state.current.points.push({ x: p.x, y: p.y, w: widthFor(ev.pressure, ev.pointerType || e.pointerType) }); } redraw(); e.preventDefault(); }
-  function up(e) { if (!state.current) return; state.strokes.push(state.current); state.current = null; try { canvas.releasePointerCapture(e.pointerId); } catch (_) {} redraw(); }
-  canvas.addEventListener('pointerdown', down); canvas.addEventListener('pointermove', move); canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up); canvas.addEventListener('pointerleave', function (e) { if (state.current) up(e); });
 
-  wrap.querySelectorAll('[data-canvas]').forEach(function (b) { b.addEventListener('click', function () { wrap.querySelectorAll('[data-canvas]').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); x.classList.remove('active'); }); b.setAttribute('aria-pressed', 'true'); b.classList.add('active'); state.canvasTheme = b.dataset.canvas; if (state.canvasTheme === 'light') { wrap.classList.add('canvas-light'); var lit = wrap.querySelector('.color-btn.light-pen.active') || wrap.querySelector('.color-btn.light-pen'); if (lit) { wrap.querySelectorAll('.color-btn').forEach(function (x) { x.classList.remove('active'); }); lit.classList.add('active'); state.color = lit.dataset.color; } } else { wrap.classList.remove('canvas-light'); var drk = wrap.querySelector('.color-btn.dark-pen.active') || wrap.querySelector('.color-btn.dark-pen'); if (drk) { wrap.querySelectorAll('.color-btn').forEach(function (x) { x.classList.remove('active'); }); drk.classList.add('active'); state.color = drk.dataset.color; } }; redraw(); }); });
-  wrap.querySelectorAll('.color-btn[data-color]').forEach(function (b) { b.addEventListener('click', function () { var visible = state.canvasTheme === 'light' ? 'light-pen' : 'dark-pen'; wrap.querySelectorAll('.color-btn.' + visible).forEach(function (x) { x.classList.remove('active'); }); b.classList.add('active'); state.color = b.dataset.color; state.mode = 'pen'; var pen = wrap.querySelector('[data-tool="pen"]'); var er = wrap.querySelector('[data-tool="eraser"]'); if (pen) pen.classList.add('active'); if (er) er.classList.remove('active'); }); });
-  wrap.querySelectorAll('[data-width]').forEach(function (b) { b.addEventListener('click', function () { wrap.querySelectorAll('[data-width]').forEach(function (x) { x.classList.remove('active'); }); b.classList.add('active'); state.width = b.dataset.width; state.sliderActive = false; }); });
-  var slider = wrap.querySelector('.size-slider'); if (slider) slider.addEventListener('input', function () { state.sliderSize = parseFloat(slider.value); state.sliderActive = true; wrap.querySelectorAll('[data-width]').forEach(function (x) { x.classList.remove('active'); }); });
-  wrap.querySelectorAll('[data-tool]').forEach(function (b) { b.addEventListener('click', function () { wrap.querySelectorAll('[data-tool]').forEach(function (x) { x.classList.remove('active'); }); b.classList.add('active'); state.mode = b.dataset.tool; }); });
-  wrap.querySelectorAll('[data-action]').forEach(function (b) { b.addEventListener('click', function () { if (b.dataset.action === 'undo') { if (state.strokes.length) { state.strokes.pop(); redraw(); } } else if (b.dataset.action === 'clear') { state.strokes = []; state.current = null; redraw(); } }); });
+  function paintBg() {
+    var dpr = window.devicePixelRatio || 1;
+    var w = canvas.width / dpr;
+    var h = canvas.height / dpr;
+    ctx.save();
+    ctx.fillStyle = state.canvasMode === 'light' ? '#FFFFFF' : '#06080F';
+    ctx.fillRect(0, 0, w, h);
+    ctx.restore();
+  }
 
-  window.addEventListener('resize', resize);
-  if ('ResizeObserver' in window) { try { new ResizeObserver(function () { resize(); }).observe(canvas); } catch (_) {} }
+  function redraw() {
+    var dpr = window.devicePixelRatio || 1;
+    var w = canvas.width / dpr;
+    var h = canvas.height / dpr;
+    ctx.clearRect(0, 0, w, h);
+    paintBg();
+    state.strokes.forEach(function (stroke) { drawStroke(stroke); });
+  }
+
+  function drawStroke(stroke) {
+    if (!stroke.points || stroke.points.length < 1) return;
+    ctx.save();
+    if (stroke.tool === 'eraser') {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.strokeStyle = state.canvasMode === 'light' ? '#FFFFFF' : '#06080F';
+      ctx.fillStyle = state.canvasMode === 'light' ? '#FFFFFF' : '#06080F';
+    } else {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.strokeStyle = stroke.color;
+      ctx.fillStyle = stroke.color;
+    }
+    ctx.lineWidth = stroke.size;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    if (stroke.points.length === 1) {
+      ctx.beginPath();
+      ctx.arc(stroke.points[0].x, stroke.points[0].y, stroke.size / 2, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.beginPath();
+      ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
+      for (var i = 1; i < stroke.points.length - 1; i++) {
+        var mx = (stroke.points[i].x + stroke.points[i+1].x) / 2;
+        var my = (stroke.points[i].y + stroke.points[i+1].y) / 2;
+        ctx.quadraticCurveTo(stroke.points[i].x, stroke.points[i].y, mx, my);
+      }
+      var last = stroke.points[stroke.points.length - 1];
+      ctx.lineTo(last.x, last.y);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function getPos(e) {
+    var rect = canvas.getBoundingClientRect();
+    var touch = e.touches ? e.touches[0] : e;
+    return {
+      x: (touch.clientX - rect.left) * (canvas.width / rect.width) / (window.devicePixelRatio || 1),
+      y: (touch.clientY - rect.top) * (canvas.height / rect.height) / (window.devicePixelRatio || 1)
+    };
+  }
+
+  function startDraw(e) {
+    e.preventDefault();
+    state.drawing = true;
+    var pos = getPos(e);
+    state.currentStroke = { tool: state.tool, color: state.color, size: state.size, points: [pos] };
+  }
+  function continueDraw(e) {
+    e.preventDefault();
+    if (!state.drawing || !state.currentStroke) return;
+    var pos = getPos(e);
+    state.currentStroke.points.push(pos);
+    var pts = state.currentStroke.points;
+    ctx.save();
+    if (state.tool === 'eraser') {
+      ctx.strokeStyle = state.canvasMode === 'light' ? '#FFFFFF' : '#06080F';
+    } else {
+      ctx.strokeStyle = state.color;
+    }
+    ctx.lineWidth = state.size;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    if (pts.length >= 3) {
+      var i = pts.length - 2;
+      var mx = (pts[i].x + pts[i+1].x) / 2;
+      var my = (pts[i].y + pts[i+1].y) / 2;
+      ctx.beginPath();
+      ctx.moveTo((pts[i-1].x + pts[i].x)/2, (pts[i-1].y + pts[i].y)/2);
+      ctx.quadraticCurveTo(pts[i].x, pts[i].y, mx, my);
+      ctx.stroke();
+    } else if (pts.length === 2) {
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      ctx.lineTo(pts[1].x, pts[1].y);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+  function endDraw() {
+    if (!state.drawing) return;
+    state.drawing = false;
+    if (state.currentStroke) {
+      state.strokes.push(state.currentStroke);
+      state.currentStroke = null;
+    }
+  }
+
+  // Pointer events (Apple Pencil, mouse, touch)
+  canvas.addEventListener('pointerdown', startDraw);
+  canvas.addEventListener('pointermove', continueDraw);
+  canvas.addEventListener('pointerup', endDraw);
+  canvas.addEventListener('pointerleave', endDraw);
+  canvas.addEventListener('pointercancel', endDraw);
+  // Touch fallback
+  canvas.addEventListener('touchstart', startDraw, { passive: false });
+  canvas.addEventListener('touchmove', continueDraw, { passive: false });
+  canvas.addEventListener('touchend', endDraw);
+
+  var header = wrap.querySelector('.draw-zone-header');
+
+  // Color
+  header.querySelectorAll('.color-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      header.querySelectorAll('.color-btn').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      state.color = btn.dataset.color;
+      if (state.tool === 'eraser') {
+        state.tool = 'pen';
+        header.querySelectorAll('[data-tool]').forEach(function (b) { b.classList.toggle('active', b.dataset.tool === 'pen'); });
+      }
+    });
+  });
+
+  // Tools (pen/fine/eraser)
+  header.querySelectorAll('[data-tool]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      header.querySelectorAll('[data-tool]').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      if (btn.dataset.tool === 'fine') {
+        state.tool = 'pen';
+        state.size = 1;
+        if (sizeSlider) sizeSlider.value = 1;
+      } else {
+        state.tool = btn.dataset.tool;
+        if (sizeSlider && state.tool !== 'eraser') state.size = parseFloat(sizeSlider.value);
+      }
+    });
+  });
+
+  var sizeSlider = header.querySelector('.size-slider');
+  if (sizeSlider) {
+    sizeSlider.addEventListener('input', function () {
+      state.size = parseFloat(sizeSlider.value);
+      var fineBtn = header.querySelector('[data-tool="fine"]');
+      if (fineBtn && fineBtn.classList.contains('active')) {
+        fineBtn.classList.remove('active');
+        var penBtn = header.querySelector('[data-tool="pen"]');
+        if (penBtn) penBtn.classList.add('active');
+        state.tool = 'pen';
+      }
+    });
+  }
+
+  header.querySelectorAll('[data-action]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (btn.dataset.action === 'undo') {
+        if (state.strokes.length > 0) { state.strokes.pop(); redraw(); }
+      } else if (btn.dataset.action === 'clear') {
+        if (confirm('Clear this canvas?')) { state.strokes = []; redraw(); }
+      }
+    });
+  });
+
+  // Canvas mode toggle (Dark <-> Light)
+  var modeBtn = header.querySelector('.canvas-mode-toggle');
+  if (modeBtn) {
+    modeBtn.addEventListener('click', function () {
+      if (state.canvasMode === 'dark') {
+        state.canvasMode = 'light';
+        wrap.classList.add('light-canvas');
+        modeBtn.innerHTML = '&#9790; Dark';
+        if (state.color === '#FFFFFF') {
+          state.color = '#0B1530';
+          header.querySelectorAll('.color-btn').forEach(function (b) { b.classList.remove('active'); });
+        }
+      } else {
+        state.canvasMode = 'dark';
+        wrap.classList.remove('light-canvas');
+        modeBtn.innerHTML = '&#9788; Light';
+        if (state.color === '#0B1530') {
+          state.color = '#FFFFFF';
+          var whiteBtn = header.querySelector('[data-color="#FFFFFF"]');
+          if (whiteBtn) {
+            header.querySelectorAll('.color-btn').forEach(function (b) { b.classList.remove('active'); });
+            whiteBtn.classList.add('active');
+          }
+        }
+      }
+      redraw();
+    });
+  }
+
   resize();
-  requestAnimationFrame(function () { resize(); setTimeout(resize, 250); });
+  window.addEventListener('resize', resize);
 }
+
 initCanvas('canvas1', 'zone1-wrap');
 initCanvas('canvas2', 'zone2-wrap');
-
-(function () { var FRAME_ID = 'bio004-week2-bone-microanatomy'; function sendHeight() { var h = Math.max(document.documentElement.scrollHeight, document.body ? document.body.scrollHeight : 0); try { parent.postMessage({ type: 'resize', id: FRAME_ID, height: h }, '*'); } catch (_) {} } window.addEventListener('load', sendHeight); window.addEventListener('resize', sendHeight); if (window.ResizeObserver) new ResizeObserver(sendHeight).observe(document.body); })();
 </script>
 
 </body>

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Anatomy of the Cell &middot; Case Deep Dive &middot; BIO 004</title>
+<style>
+@import url('https://cdn.jsdelivr.net/npm/@fontsource-variable/plus-jakarta-sans/index.css');
+</style>
+<style>
+  :root {
+    --navy: #0B1530;
+    --navy-dark: #060A18;
+    --rust: #8B3A2E;
+    --rust-hover: #A0452F;
+    --gold: #C9A14A;
+    --gold-light: #E8D4A8;
+    --warm-accent: #C2734D;
+    --white: #ffffff;
+    --cream: #F5F1E8;
+    --off-white: #F8F8F8;
+    --text: #0B1530;
+    --text-muted: #5A6478;
+    --rule: rgba(11,21,48,0.10);
+    --canvas-bg: #06080F;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif; background: var(--white); color: var(--text); font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+  #progress-bar { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: var(--rust); z-index: 1000; transition: width 0.1s linear; }
+  #case-ribbon { position: sticky; top: 0; z-index: 200; background: var(--navy-dark); color: var(--white); padding: 10px 32px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; border-bottom: 2px solid var(--gold); font-size: 13px; line-height: 1.4; }
+  #case-ribbon .ribbon-label { background: var(--rust); color: var(--white); font-weight: 700; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+  #case-ribbon .ribbon-case { opacity: 0.92; }
+  #case-ribbon .ribbon-case strong { color: var(--gold-light); font-weight: 700; }
+  .hero { background: var(--white); border-bottom: 0.5px solid var(--rule); padding: 64px 40px 56px; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(139,58,46,0.05) 0%, transparent 70%); pointer-events: none; }
+  .hero-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: var(--rust); margin-bottom: 18px; position: relative; }
+  .hero h1 { font-size: clamp(28px, 4vw, 42px); font-weight: 800; color: var(--navy); line-height: 1.1; margin-bottom: 14px; letter-spacing: -0.02em; position: relative; }
+  .hero h1 .accent { color: var(--rust); }
+  .hero-sub { font-size: 16px; color: var(--text); font-weight: 400; opacity: 0.70; position: relative; max-width: 600px; margin: 0 auto; }
+  .case-card-wrap { max-width: 820px; margin: -32px auto 0; padding: 0 24px 36px; position: relative; z-index: 10; }
+  .case-card { background: var(--white); border: 1.5px solid var(--rule); border-top: 4px solid var(--rust); padding: 32px 36px; box-shadow: 0 8px 40px rgba(10,19,34,0.12); }
+  .case-card .case-label { font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rust); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .case-card .case-label::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+  .case-card .case-text { font-size: 17px; color: var(--text); line-height: 1.65; margin-bottom: 16px; }
+  .case-card .case-text:last-of-type { margin-bottom: 22px; }
+  .case-card .case-text strong { color: var(--navy); font-weight: 700; }
+  .case-card .guiding-q { background: var(--cream); border-left: 4px solid var(--gold); padding: 16px 22px; font-size: 14.5px; font-weight: 500; color: var(--navy); }
+  .case-card .guiding-q span { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+  .prework-strip { max-width: 820px; margin: 0 auto 28px; padding: 14px 24px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; background: var(--off-white); border: 1px solid var(--rule); border-radius: 4px; font-size: 13.5px; }
+  .prework-strip .tag { background: var(--gold); color: var(--navy); font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; }
+  .prework-strip .ps-body { flex: 1; color: var(--text); }
+  .section-wrap { max-width: 820px; margin: 0 auto; padding: 0 24px; }
+  .teaching-section { padding: 44px 0 32px; border-bottom: 1px solid var(--rule); }
+  .teaching-section:last-child { border-bottom: none; }
+  .section-number { font-size: 10px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+  .section-number .num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--rust); color: var(--white); font-size: 10px; font-weight: 700; }
+  .teaching-section h2 { font-size: clamp(22px, 3vw, 30px); font-weight: 700; color: var(--navy); line-height: 1.2; margin-bottom: 18px; letter-spacing: -0.01em; }
+  .teaching-section h3 { font-size: 13px; color: var(--rust); text-transform: uppercase; letter-spacing: 0.06em; margin: 18px 0 8px; font-weight: 700; }
+  .teaching-section p { font-size: 16px; color: var(--text); line-height: 1.78; margin-bottom: 14px; }
+  .teaching-section p:last-child { margin-bottom: 0; }
+  .teaching-section strong { color: var(--navy); font-weight: 700; }
+  .teaching-section em { font-style: italic; color: var(--navy); }
+  .callout { background: #EEF2FF; border: 1px solid rgba(10,19,34,0.12); border-left: 4px solid var(--rust); padding: 18px 22px; margin: 20px 0; font-size: 15px; color: var(--navy); line-height: 1.65; }
+  .callout.gold { background: #FBF6E8; border-left-color: var(--gold); }
+  .structure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  @media (max-width: 600px) { .structure-grid { grid-template-columns: 1fr; } }
+  .structure-item { background: var(--off-white); border: 1px solid var(--rule); padding: 14px 18px; display: flex; align-items: flex-start; gap: 12px; }
+  .structure-item .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--rust); flex-shrink: 0; margin-top: 7px; }
+  .structure-item .dot.gold { background: var(--gold); }
+  .structure-item strong { display: block; font-size: 13px; font-weight: 700; color: var(--navy); line-height: 1.3; }
+  .structure-item span { font-size: 12.5px; color: var(--text-muted); line-height: 1.55; }
+  .divisions-table { width: 100%; border-collapse: collapse; margin: 22px 0; font-size: 14px; }
+  .divisions-table th { background: var(--navy); color: var(--white); padding: 11px 14px; text-align: left; font-weight: 600; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .divisions-table td { padding: 10px 14px; border-bottom: 1px solid var(--rule); color: var(--text); vertical-align: top; line-height: 1.55; }
+  .divisions-table tr:nth-child(even) td { background: var(--off-white); }
+  .divisions-table td:first-child { font-weight: 700; color: var(--navy); white-space: nowrap; }
+  .draw-zone-wrap { margin: 32px 0; background: var(--canvas-bg); border: 2px solid rgba(201,161,74,0.3); position: relative; user-select: none; }
+  .draw-zone-wrap.light-canvas { background: var(--white); border-color: rgba(11,21,48,0.18); }
+  .draw-zone-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap; gap: 10px; }
+  .draw-zone-wrap.light-canvas .draw-zone-header { border-bottom-color: var(--rule); }
+  .draw-zone-title { display: flex; align-items: center; gap: 10px; }
+  .draw-zone-title .pencil-icon { font-size: 16px; color: var(--gold); }
+  .draw-zone-wrap.light-canvas .draw-zone-title .pencil-icon { color: var(--rust); }
+  .draw-zone-title > span:not(.pencil-icon) { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); }
+  .draw-zone-wrap.light-canvas .draw-zone-title > span:not(.pencil-icon) { color: var(--rust); }
+  .draw-zone-title .prompt-text { font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.55); letter-spacing: 0; text-transform: none; margin-left: 4px; }
+  .draw-zone-wrap.light-canvas .draw-zone-title .prompt-text { color: var(--text-muted); }
+  .draw-tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .tool-group { display: flex; align-items: center; gap: 4px; border-right: 1px solid rgba(255,255,255,0.10); padding-right: 8px; }
+  .tool-group:last-child { border-right: none; padding-right: 0; }
+  .draw-zone-wrap.light-canvas .tool-group { border-right-color: var(--rule); }
+  .color-btn { width: 20px; height: 20px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform 0.15s, border-color 0.15s; padding: 0; background-clip: padding-box; }
+  .color-btn:hover { transform: scale(1.2); }
+  .color-btn.active { border-color: var(--white); transform: scale(1.15); }
+  .draw-zone-wrap.light-canvas .color-btn.active { border-color: var(--navy); }
+  .tool-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.80); font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-family: 'Plus Jakarta Sans Variable', sans-serif; letter-spacing: 0.02em; white-space: nowrap; }
+  .tool-btn:hover { background: rgba(255,255,255,0.18); color: var(--white); }
+  .tool-btn.active { background: rgba(201,161,74,0.30); border-color: var(--gold); color: var(--gold); }
+  .draw-zone-wrap.light-canvas .tool-btn { background: var(--white); border-color: rgba(11,21,48,0.18); color: var(--navy); }
+  .draw-zone-wrap.light-canvas .tool-btn:hover { border-color: var(--rust); }
+  .draw-zone-wrap.light-canvas .tool-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .size-slider { -webkit-appearance: none; appearance: none; width: 64px; height: 3px; background: rgba(255,255,255,0.20); border-radius: 2px; outline: none; cursor: pointer; }
+  .draw-zone-wrap.light-canvas .size-slider { background: rgba(11,21,48,0.18); }
+  .size-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--gold); cursor: pointer; }
+  .draw-zone-wrap.light-canvas .size-slider::-webkit-slider-thumb { background: var(--rust); }
+  .size-slider::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--gold); cursor: pointer; border: 0; }
+  .draw-zone-wrap.light-canvas .size-slider::-moz-range-thumb { background: var(--rust); }
+  canvas.draw-canvas { display: block; width: 100%; cursor: crosshair; touch-action: none; }
+  .draw-zone-hint { padding: 8px 16px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 10.5px; color: rgba(255,255,255,0.40); font-style: italic; letter-spacing: 0.02em; }
+  .draw-zone-wrap.light-canvas .draw-zone-hint { border-top-color: var(--rule); color: var(--text-muted); }
+  .clinical-block { background: var(--navy-dark); padding: 48px 40px; margin: 48px 0 0; position: relative; overflow: hidden; }
+  .clinical-block::before { content: ''; position: absolute; top: -40px; right: -40px; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(201,161,74,0.08) 0%, transparent 70%); pointer-events: none; }
+  .clinical-block .cb-inner { max-width: 820px; margin: 0 auto; position: relative; }
+  .clinical-block .cb-label { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+  .clinical-block h2 { font-size: clamp(22px, 3.5vw, 30px); color: var(--white); font-weight: 700; margin-bottom: 18px; line-height: 1.25; }
+  .clinical-block p { color: rgba(255,255,255,0.78); font-size: 15px; line-height: 1.75; margin-bottom: 14px; }
+  .clinical-block strong { color: var(--gold-light); font-weight: 700; }
+  .translate-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 22px 0 8px; }
+  .translate-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(201,161,74,0.22); padding: 16px 18px; }
+  .translate-card .quote { font-size: 13px; font-weight: 600; color: var(--gold-light); margin-bottom: 6px; font-style: italic; }
+  .translate-card .meaning { font-size: 12.5px; color: rgba(255,255,255,0.78); line-height: 1.55; }
+  .page-footer { background: var(--navy-dark); border-top: 2px solid rgba(201,161,74,0.20); padding: 24px 24px; text-align: center; font-size: 12px; color: rgba(255,255,255,0.60); letter-spacing: 0.04em; }
+  .page-footer .byline { color: var(--gold); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<div id="case-ribbon">
+  <span class="ribbon-label">Case</span>
+  <span class="ribbon-case"><strong>Sarah, 24</strong> &middot; backpacking trip in the Sierra Nevada &middot; refilled bottle from a "clean" stream &middot; one week later: cramps, bloating, watery diarrhea &middot; <strong>Giardia</strong></span>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">BIO 004 &middot; Week 1 &middot; Case Deep Dive</div>
+  <h1>Anatomy of the <span class="accent">Cell</span></h1>
+  <p class="hero-sub">A parasite that hijacks one specific surface of one specific cell. Why cell architecture matters at the bedside.</p>
+</div>
+
+<div class="case-card-wrap">
+  <div class="case-card">
+    <div class="case-label">Patient case</div>
+    <p class="case-text"><strong>Sarah is 24</strong>, a graduate student who loves hiking. One weekend she and several friends spend three days backpacking in the <strong>Sierra Nevada mountains</strong>. The weather is warm, the scenery is beautiful, and everything seems to be going perfectly.</p>
+    <p class="case-text">On the second day of the trip, Sarah runs low on water. She notices a clear mountain stream and refills her bottle. <strong>The water looks clean. It tastes clean.</strong> She doesn't think much about it.</p>
+    <p class="case-text">About a week later Sarah begins feeling unwell. At first it's mild: <strong>bloating, abdominal cramps</strong>, more gas than usual. Then it gets worse, with <strong>watery, foul-smelling diarrhea</strong> that won't quit. She loses five pounds in a few days. Her physician orders a stool test and the result comes back: <strong>Giardia duodenalis</strong>, a single-celled parasite that lives in mountain water and infects the small intestine.</p>
+    <div class="guiding-q">
+      <span>Guiding question</span>
+      The cells in Sarah's small intestine are doing a very specific job, and they are built with a very specific architecture to do it. What is that architecture, what is the parasite attacking, and why does her body lose water through the front door of her gut?
+    </div>
+  </div>
+</div>
+
+<div class="prework-strip">
+  <span class="tag">Prework</span>
+  <span class="ps-body">This is the case-based companion. The terms, video, and spaced recall for the generalized cell, plasma membrane, nucleus, cytoplasm and organelles, materials through the cell, and cell specialization live on your Week 1 prework page. Open both side by side.</span>
+</div>
+
+<div class="section-wrap">
+
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">1</span> The generalized cell</div>
+    <h2>The unit you'll learn first, then keep modifying for the rest of the course</h2>
+    <p>Before you can see why Sarah's intestinal cells are different, you need a baseline cell. The <strong>generalized cell</strong> is a simplified diagram of "what every human cell has." It has three big parts: a <strong>plasma membrane</strong> that wraps it, a <strong>nucleus</strong> that holds its DNA, and a <strong>cytoplasm</strong> filled with organelles that do the work.</p>
+    <p>Cells share this floor plan because they share the same fundamental jobs: keep stuff in, keep stuff out, make proteins, generate energy, communicate with neighbors, and reproduce. Specialization is what comes next; the brush-border cells lining Sarah's gut and the neurons in her brain start from the same blueprint and modify it for the work each one needs to do.</p>
+    <div class="structure-grid">
+      <div class="structure-item"><span class="dot"></span><div><strong>Plasma membrane</strong><span>Selectively permeable outer boundary. Phospholipid bilayer with embedded proteins. Decides what gets in and what gets out.</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Nucleus</strong><span>Holds the DNA. Site of transcription. The control center.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Cytoplasm</strong><span>Everything between membrane and nucleus. Cytosol (the gel) plus organelles (the machinery).</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Cytoskeleton</strong><span>Internal scaffolding of microtubules, microfilaments, and intermediate filaments. Gives shape, drives movement.</span></div></div>
+    </div>
+  </div>
+
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">2</span> The plasma membrane</div>
+    <h2>A fluid mosaic, and why it has a top and a bottom</h2>
+    <p>The plasma membrane is built from a <strong>phospholipid bilayer</strong>: two sheets of phospholipid molecules arranged tail-to-tail. The hydrophilic phosphate heads face the watery environment on each side; the hydrophobic fatty-acid tails hide in the middle. Embedded in this bilayer are proteins (channels, pumps, receptors, anchors), cholesterol molecules that tune fluidity, and carbohydrate chains attached to outward-facing proteins and lipids (the glycocalyx). It is called a <em>fluid mosaic</em> because the components float and shift in the plane of the membrane like a mosaic that is also liquid.</p>
+    <p>The thing most students miss is that the membrane has <strong>polarity</strong>: in epithelial cells like Sarah's, the membrane facing the gut lumen (the <strong>apical surface</strong>) is built differently from the membrane facing the bloodstream (the <strong>basolateral surface</strong>). Different proteins, different pumps, different functions. The apical surface of an intestinal cell carries digestive enzymes and absorbs nutrients; the basolateral surface releases those nutrients into the body. Polarity is what makes "intake" and "output" possible in the same cell.</p>
+    <div class="callout">
+      <strong>Why polarity matters for Sarah.</strong> If the apical and basolateral membranes weren't kept separate, the cell could not move sugar and water from gut to blood. Tight junctions between neighboring cells maintain that separation. Damage the junctions and the gut leaks, in both directions.
+    </div>
+  </div>
+
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">3</span> The nucleus</div>
+    <h2>The library that runs the cell</h2>
+    <p>The nucleus is the cell's largest organelle. It contains the cell's <strong>DNA</strong>, packaged into chromatin. A double membrane called the <strong>nuclear envelope</strong> surrounds it; pores in that envelope (<em>nuclear pores</em>) let RNA and proteins cross in and out. Inside the nucleus is a darker region called the <strong>nucleolus</strong>, where ribosomes are assembled.</p>
+    <p>Think of the nucleus as a reference library that never lends out its books. DNA stays inside; instead, the cell makes copies of the relevant genes as <strong>messenger RNA (mRNA)</strong>, which exit through the nuclear pores and travel to ribosomes in the cytoplasm where the protein is built. Sarah's intestinal cells make brush-border enzymes the same way: gene transcribed in nucleus, mRNA exported, protein built in cytoplasm, protein delivered to apical surface.</p>
+  </div>
+
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">4</span> Cytoplasm and organelles</div>
+    <h2>The factory floor</h2>
+    <p>Outside the nucleus, inside the plasma membrane, the cell is packed with organelles ("little organs"). Each one has a specific job and a specific structure that makes the job possible.</p>
+    <div class="structure-grid">
+      <div class="structure-item"><span class="dot"></span><div><strong>Mitochondria</strong><span>Double-membrane organelle with infoldings (cristae). Generates ATP through aerobic respiration. Cells with high energy demand (cardiac muscle, brush border) carry many of them.</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Rough ER (endoplasmic reticulum)</strong><span>Network of membrane sacs studded with ribosomes. Makes membrane proteins and secreted proteins.</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Smooth ER</strong><span>No ribosomes. Synthesizes lipids and steroids, detoxifies drugs, stores calcium.</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Golgi apparatus</strong><span>Stack of flattened sacs that modifies, sorts, and packages proteins from the rough ER. Cell's "shipping department."</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Lysosomes</strong><span>Membrane-bound bags of digestive enzymes. Break down worn-out organelles and ingested material. The cell's recycling and demolition crew.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Peroxisomes</strong><span>Smaller than lysosomes. Break down fatty acids and detoxify hydrogen peroxide.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Ribosomes</strong><span>Not membrane-bound. Read mRNA and build proteins. Free in cytoplasm (proteins stay in the cell) or attached to rough ER (proteins for export).</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Cytoskeleton</strong><span>Microfilaments (actin), intermediate filaments (keratin and others), microtubules. Maintain shape, anchor organelles, drive movement, build the brush border in Sarah's intestinal cells.</span></div></div>
+    </div>
+    <p>The <strong>brush border</strong> on the apical surface of an intestinal cell is built from microvilli, each one supported by a core bundle of actin microfilaments. Thousands of microvilli on a single cell multiply the surface area for digestion and absorption by twentyfold or more. This is where Sarah's cells do most of their work, and it is exactly where Giardia attacks.</p>
+  </div>
+
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">5</span> The path materials take through the cell</div>
+    <h2>How something gets from outside, to where it needs to be, and out</h2>
+    <p>Cells move material across the plasma membrane in several ways, scaled to what they need to move.</p>
+    <table class="divisions-table">
+      <thead><tr><th>Mechanism</th><th>How</th><th>Energy</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td>Simple diffusion</td><td>small or fat-soluble molecules slip directly through the bilayer</td><td>passive (no ATP)</td><td>oxygen, carbon dioxide</td></tr>
+        <tr><td>Facilitated diffusion</td><td>molecule moves through a protein channel or carrier, down its concentration gradient</td><td>passive</td><td>glucose into red blood cells via GLUT-1</td></tr>
+        <tr><td>Osmosis</td><td>water moves through the membrane (often via aquaporin channels) toward higher solute concentration</td><td>passive</td><td>water following sodium and glucose into intestinal cells</td></tr>
+        <tr><td>Active transport</td><td>protein pump uses ATP to move a molecule against its gradient</td><td>requires ATP</td><td>Na-K ATPase on the basolateral surface of intestinal cells</td></tr>
+        <tr><td>Endocytosis</td><td>membrane folds inward and pinches off, bringing material into the cell in a vesicle</td><td>requires ATP</td><td>cells engulfing bacteria (phagocytosis), or LDL uptake</td></tr>
+        <tr><td>Exocytosis</td><td>vesicle inside the cell fuses with the plasma membrane and releases its contents outside</td><td>requires ATP</td><td>secretion of digestive enzymes, hormones, neurotransmitters</td></tr>
+      </tbody>
+    </table>
+    <p>Inside the cell, material doesn't just float around freely; it gets handed from compartment to compartment in <strong>vesicles</strong>. A protein bound for secretion is made on the rough ER, packaged into a vesicle that buds off and travels to the Golgi, modified and re-packaged in another vesicle, and finally delivered to the plasma membrane where it fuses and releases. This is the cell's logistics system.</p>
+  </div>
+
+  <div class="teaching-section">
+    <div class="section-number"><span class="num">6</span> Cells vary with their job</div>
+    <h2>The brush-border cell, optimized for absorption</h2>
+    <p>The cells that line Sarah's small intestine are <strong>simple columnar epithelial cells with a brush border</strong>. Their architecture is the textbook example of how form follows function:</p>
+    <div class="structure-grid">
+      <div class="structure-item"><span class="dot"></span><div><strong>Apical microvilli (brush border)</strong><span>Thousands of finger-like projections on the lumen-facing surface, each supported by actin filaments. Carry digestive enzymes and transporters. Multiply absorptive surface dramatically.</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Tight junctions</strong><span>Just below the apical surface, seal cell-to-cell so material has to go THROUGH cells, not between them. Maintain apical/basolateral polarity.</span></div></div>
+      <div class="structure-item"><span class="dot"></span><div><strong>Many mitochondria</strong><span>Active transport on the basolateral side is energy-hungry. Mitochondria pile up to supply ATP.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Basal nucleus</strong><span>Positioned at the bottom of the cell, out of the way of the absorptive machinery on top.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Basement membrane</strong><span>A thin sheet of extracellular matrix below the cell, anchoring the epithelium to underlying connective tissue and providing a route to capillaries.</span></div></div>
+      <div class="structure-item"><span class="dot gold"></span><div><strong>Goblet cells interspersed</strong><span>Specialized for mucus secretion. Lubricate and protect the surface.</span></div></div>
+    </div>
+    <p>The same blueprint becomes a <em>neuron</em> by elongating into an axon and dropping organelles into the cell body. Becomes a <em>red blood cell</em> by ejecting its nucleus and packing the cytoplasm with hemoglobin. Becomes a <em>cardiac muscle cell</em> by filling with mitochondria and contractile proteins. Cells vary because the body needs them to do different things. Same parts list, different proportions.</p>
+  </div>
+
+  <div class="draw-zone-wrap" id="zone1-wrap">
+    <div class="draw-zone-header">
+      <div class="draw-zone-title">
+        <span class="pencil-icon">&#9998;</span>
+        <span>Draw Zone 1 <span class="prompt-text">-- Sketch a generalized cell. Label plasma membrane, nucleus, nucleolus, mitochondria, rough ER, smooth ER, Golgi, lysosomes, ribosomes, cytoskeleton.</span></span>
+      </div>
+      <div class="draw-tools">
+        <div class="tool-group">
+          <button class="color-btn active" data-color="#FFFFFF" style="background:#ffffff;" title="White"></button>
+          <button class="color-btn" data-color="#C9A14A" style="background:#C9A14A;" title="Gold"></button>
+          <button class="color-btn" data-color="#EF5350" style="background:#EF5350;" title="Red"></button>
+          <button class="color-btn" data-color="#4FC3F7" style="background:#4FC3F7;" title="Blue"></button>
+          <button class="color-btn" data-color="#66BB6A" style="background:#66BB6A;" title="Green"></button>
+          <button class="color-btn" data-color="#FFD54F" style="background:#FFD54F;" title="Yellow"></button>
+        </div>
+        <div class="tool-group"><input type="range" class="size-slider" min="0.5" max="24" value="3" step="0.5" title="Brush size"></div>
+        <div class="tool-group">
+          <button class="tool-btn active" data-tool="pen">Pen</button>
+          <button class="tool-btn" data-tool="fine" title="Fine writing mode (1px hairline)">Fine</button>
+          <button class="tool-btn" data-tool="eraser">Eraser</button>
+        </div>
+        <div class="tool-group">
+          <button class="tool-btn" data-action="undo">Undo</button>
+          <button class="tool-btn" data-action="clear">Clear</button>
+        </div>
+        <div class="tool-group">
+          <button class="tool-btn canvas-mode-toggle" title="Toggle canvas background">&#9788; Light</button>
+        </div>
+      </div>
+    </div>
+    <canvas class="draw-canvas" id="canvas1" height="440"></canvas>
+    <div class="draw-zone-hint">Fine pencil for the inner cristae of mitochondria and the small details. Bold for the cell outline.</div>
+  </div>
+
+  <div class="draw-zone-wrap" id="zone2-wrap">
+    <div class="draw-zone-header">
+      <div class="draw-zone-title">
+        <span class="pencil-icon">&#9998;</span>
+        <span>Draw Zone 2 <span class="prompt-text">-- Sketch an intestinal brush-border cell. Show microvilli, tight junctions, mitochondria, basolateral Na-K pumps. Then draw a Giardia parasite attached to the brush border.</span></span>
+      </div>
+      <div class="draw-tools">
+        <div class="tool-group">
+          <button class="color-btn active" data-color="#FFFFFF" style="background:#ffffff;" title="White"></button>
+          <button class="color-btn" data-color="#C9A14A" style="background:#C9A14A;" title="Gold"></button>
+          <button class="color-btn" data-color="#EF5350" style="background:#EF5350;" title="Red"></button>
+          <button class="color-btn" data-color="#4FC3F7" style="background:#4FC3F7;" title="Blue"></button>
+          <button class="color-btn" data-color="#66BB6A" style="background:#66BB6A;" title="Green"></button>
+          <button class="color-btn" data-color="#FFD54F" style="background:#FFD54F;" title="Yellow"></button>
+        </div>
+        <div class="tool-group"><input type="range" class="size-slider" min="0.5" max="24" value="3" step="0.5" title="Brush size"></div>
+        <div class="tool-group">
+          <button class="tool-btn active" data-tool="pen">Pen</button>
+          <button class="tool-btn" data-tool="fine" title="Fine writing mode (1px hairline)">Fine</button>
+          <button class="tool-btn" data-tool="eraser">Eraser</button>
+        </div>
+        <div class="tool-group">
+          <button class="tool-btn" data-action="undo">Undo</button>
+          <button class="tool-btn" data-action="clear">Clear</button>
+        </div>
+        <div class="tool-group">
+          <button class="tool-btn canvas-mode-toggle" title="Toggle canvas background">&#9788; Light</button>
+        </div>
+      </div>
+    </div>
+    <canvas class="draw-canvas" id="canvas2" height="460"></canvas>
+    <div class="draw-zone-hint">Fine pencil for individual microvilli. The Giardia trophozoite has a ventral adhesive disc that suctions onto the brush border.</div>
+  </div>
+
+</div>
+
+<div class="clinical-block">
+  <div class="cb-inner">
+    <div class="cb-label">Returning to Sarah</div>
+    <h2>One parasite, one cell architecture, every symptom explained</h2>
+    <p>Giardia duodenalis swims down the lumen of the small intestine and lands on the brush-border surface of the duodenum and proximal jejunum. Its <strong>ventral adhesive disc</strong>, a flat cytoskeletal suction cup made largely of microtubules, presses onto the microvilli and holds the parasite in place. It doesn't invade the cell. It doesn't need to. What it does is disrupt the surface that Sarah's body uses to absorb everything.</p>
+    <div class="translate-grid">
+      <div class="translate-card"><div class="quote">"Watery diarrhea"</div><div class="meaning">Giardia damages microvilli, reducing brush-border surface and blunting brush-border disaccharidases. Sugars (including lactose) can't be split and absorbed. They stay in the lumen, pull water in by <strong>osmosis</strong>, and exit as watery stool.</div></div>
+      <div class="translate-card"><div class="quote">"Bloating and excess gas"</div><div class="meaning">Unabsorbed sugars reach the colon, where bacteria ferment them. Fermentation produces gas. The osmotic load also distends bowel loops.</div></div>
+      <div class="translate-card"><div class="quote">"Foul-smelling stool"</div><div class="meaning">Fat malabsorption from disrupted brush-border lipases gives a steatorrhea quality. Sulfur-containing fermentation products from unabsorbed carbohydrates contribute.</div></div>
+      <div class="translate-card"><div class="quote">"Five pounds in a few days"</div><div class="meaning">Fluid loss through diarrhea plus reduced absorption of calories. The body literally cannot extract from food what it normally would.</div></div>
+      <div class="translate-card"><div class="quote">"Why no fever, no blood in stool?"</div><div class="meaning">Giardia attaches to the apical surface but does not invade the epithelium or trigger neutrophilic inflammation the way invasive bacteria (Shigella, invasive E. coli) do. The mechanism is mechanical disruption of absorption, not invasion.</div></div>
+      <div class="translate-card"><div class="quote">"How will she heal?"</div><div class="meaning">Intestinal epithelium turns over every 3 to 5 days. Once Giardia is treated (typically metronidazole), the crypt cells replace the damaged surface cells quickly. The brush border rebuilds. Lactose intolerance may persist for weeks after treatment because the brush-border lactase is the slowest to recover.</div></div>
+    </div>
+    <p>The cell biology is the disease. <strong>Polarity, microvilli, tight junctions, osmosis.</strong> Sarah's symptoms aren't a list of unrelated complaints. They are what happens when one structure on one surface of one specialized cell gets disrupted. When you go back to the prework, the membrane, the cytoskeleton, and the brush border won't feel abstract. They'll have her face on them.</p>
+  </div>
+</div>
+
+<div class="page-footer">
+  <span class="byline">Dr. Sharilyn Rennie</span>
+  &nbsp; &middot; &nbsp;
+  BIO 004 &middot; Week 1 &middot; Case deep dive: Anatomy of the Cell
+</div>
+
+<script>
+window.addEventListener('scroll', function () {
+  var s = window.scrollY;
+  var h = document.documentElement.scrollHeight - window.innerHeight;
+  document.getElementById('progress-bar').style.width = (h > 0 ? (s / h) * 100 : 0) + '%';
+});
+
+function initCanvas(canvasId, wrapId) {
+  var canvas = document.getElementById(canvasId);
+  var wrap = document.getElementById(wrapId);
+  if (!canvas || !wrap) return;
+  var ctx = canvas.getContext('2d');
+  var state = { drawing: false, tool: 'pen', color: '#FFFFFF', size: 3, canvasMode: 'dark', strokes: [], currentStroke: null };
+
+  function resize() {
+    var rect = canvas.getBoundingClientRect();
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = parseFloat(canvas.getAttribute('height')) * dpr;
+    canvas.style.height = canvas.getAttribute('height') + 'px';
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+    redraw();
+  }
+  function paintBg() {
+    var dpr = window.devicePixelRatio || 1;
+    var w = canvas.width / dpr, h = canvas.height / dpr;
+    ctx.save();
+    ctx.fillStyle = state.canvasMode === 'light' ? '#FFFFFF' : '#06080F';
+    ctx.fillRect(0, 0, w, h);
+    ctx.restore();
+  }
+  function redraw() {
+    var dpr = window.devicePixelRatio || 1;
+    var w = canvas.width / dpr, h = canvas.height / dpr;
+    ctx.clearRect(0, 0, w, h);
+    paintBg();
+    state.strokes.forEach(function (s) { drawStroke(s); });
+  }
+  function drawStroke(stroke) {
+    if (!stroke.points || stroke.points.length < 1) return;
+    ctx.save();
+    if (stroke.tool === 'eraser') {
+      ctx.strokeStyle = state.canvasMode === 'light' ? '#FFFFFF' : '#06080F';
+      ctx.fillStyle = state.canvasMode === 'light' ? '#FFFFFF' : '#06080F';
+    } else {
+      ctx.strokeStyle = stroke.color;
+      ctx.fillStyle = stroke.color;
+    }
+    ctx.lineWidth = stroke.size; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    if (stroke.points.length === 1) {
+      ctx.beginPath();
+      ctx.arc(stroke.points[0].x, stroke.points[0].y, stroke.size / 2, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.beginPath();
+      ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
+      for (var i = 1; i < stroke.points.length - 1; i++) {
+        var mx = (stroke.points[i].x + stroke.points[i+1].x) / 2;
+        var my = (stroke.points[i].y + stroke.points[i+1].y) / 2;
+        ctx.quadraticCurveTo(stroke.points[i].x, stroke.points[i].y, mx, my);
+      }
+      var last = stroke.points[stroke.points.length - 1];
+      ctx.lineTo(last.x, last.y);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+  function getPos(e) {
+    var rect = canvas.getBoundingClientRect();
+    var t = e.touches ? e.touches[0] : e;
+    return { x: (t.clientX - rect.left) * (canvas.width / rect.width) / (window.devicePixelRatio || 1),
+             y: (t.clientY - rect.top) * (canvas.height / rect.height) / (window.devicePixelRatio || 1) };
+  }
+  function startDraw(e) { e.preventDefault(); state.drawing = true; var p = getPos(e); state.currentStroke = { tool: state.tool, color: state.color, size: state.size, points: [p] }; }
+  function continueDraw(e) {
+    e.preventDefault();
+    if (!state.drawing || !state.currentStroke) return;
+    var p = getPos(e); state.currentStroke.points.push(p);
+    var pts = state.currentStroke.points;
+    ctx.save();
+    ctx.strokeStyle = state.tool === 'eraser' ? (state.canvasMode === 'light' ? '#FFFFFF' : '#06080F') : state.color;
+    ctx.lineWidth = state.size; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    if (pts.length >= 3) {
+      var i = pts.length - 2;
+      var mx = (pts[i].x + pts[i+1].x)/2, my = (pts[i].y + pts[i+1].y)/2;
+      ctx.beginPath();
+      ctx.moveTo((pts[i-1].x + pts[i].x)/2, (pts[i-1].y + pts[i].y)/2);
+      ctx.quadraticCurveTo(pts[i].x, pts[i].y, mx, my); ctx.stroke();
+    } else if (pts.length === 2) {
+      ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y); ctx.lineTo(pts[1].x, pts[1].y); ctx.stroke();
+    }
+    ctx.restore();
+  }
+  function endDraw() { if (!state.drawing) return; state.drawing = false; if (state.currentStroke) { state.strokes.push(state.currentStroke); state.currentStroke = null; } }
+
+  canvas.addEventListener('pointerdown', startDraw);
+  canvas.addEventListener('pointermove', continueDraw);
+  canvas.addEventListener('pointerup', endDraw);
+  canvas.addEventListener('pointerleave', endDraw);
+  canvas.addEventListener('pointercancel', endDraw);
+  canvas.addEventListener('touchstart', startDraw, { passive: false });
+  canvas.addEventListener('touchmove', continueDraw, { passive: false });
+  canvas.addEventListener('touchend', endDraw);
+
+  var header = wrap.querySelector('.draw-zone-header');
+  header.querySelectorAll('.color-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      header.querySelectorAll('.color-btn').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      state.color = btn.dataset.color;
+      if (state.tool === 'eraser') {
+        state.tool = 'pen';
+        header.querySelectorAll('[data-tool]').forEach(function (b) { b.classList.toggle('active', b.dataset.tool === 'pen'); });
+      }
+    });
+  });
+  header.querySelectorAll('[data-tool]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      header.querySelectorAll('[data-tool]').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      if (btn.dataset.tool === 'fine') {
+        state.tool = 'pen'; state.size = 1;
+        if (sizeSlider) sizeSlider.value = 1;
+      } else {
+        state.tool = btn.dataset.tool;
+        if (sizeSlider && state.tool !== 'eraser') state.size = parseFloat(sizeSlider.value);
+      }
+    });
+  });
+  var sizeSlider = header.querySelector('.size-slider');
+  if (sizeSlider) sizeSlider.addEventListener('input', function () {
+    state.size = parseFloat(sizeSlider.value);
+    var fineBtn = header.querySelector('[data-tool="fine"]');
+    if (fineBtn && fineBtn.classList.contains('active')) {
+      fineBtn.classList.remove('active');
+      var penBtn = header.querySelector('[data-tool="pen"]');
+      if (penBtn) penBtn.classList.add('active');
+      state.tool = 'pen';
+    }
+  });
+  header.querySelectorAll('[data-action]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (btn.dataset.action === 'undo') { if (state.strokes.length > 0) { state.strokes.pop(); redraw(); } }
+      else if (btn.dataset.action === 'clear') { if (confirm('Clear this canvas?')) { state.strokes = []; redraw(); } }
+    });
+  });
+  var modeBtn = header.querySelector('.canvas-mode-toggle');
+  if (modeBtn) modeBtn.addEventListener('click', function () {
+    if (state.canvasMode === 'dark') {
+      state.canvasMode = 'light'; wrap.classList.add('light-canvas'); modeBtn.innerHTML = '&#9790; Dark';
+      if (state.color === '#FFFFFF') { state.color = '#0B1530'; header.querySelectorAll('.color-btn').forEach(function (b) { b.classList.remove('active'); }); }
+    } else {
+      state.canvasMode = 'dark'; wrap.classList.remove('light-canvas'); modeBtn.innerHTML = '&#9788; Light';
+      if (state.color === '#0B1530') {
+        state.color = '#FFFFFF';
+        var whiteBtn = header.querySelector('[data-color="#FFFFFF"]');
+        if (whiteBtn) { header.querySelectorAll('.color-btn').forEach(function (b) { b.classList.remove('active'); }); whiteBtn.classList.add('active'); }
+      }
+    }
+    redraw();
+  });
+
+  resize();
+  window.addEventListener('resize', resize);
+}
+initCanvas('canvas1', 'zone1-wrap');
+initCanvas('canvas2', 'zone2-wrap');
+</script>
+</body>
+</html>

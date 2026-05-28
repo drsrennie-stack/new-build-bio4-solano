@@ -81,53 +81,63 @@ a:hover, a:focus-visible { color: var(--rust-hover); border-bottom-color: var(--
 .pairs-table tr:nth-child(even) td { background: var(--off-white); }
 .pairs-table td:first-child { font-weight: 700; color: var(--navy); white-space: nowrap; }
 
-.draw-zone-wrap { margin: 32px 0; background: var(--navy-dark); border: 2px solid rgba(201,161,74,0.30); border-radius: 4px; position: relative; user-select: none; overflow: hidden; }
-.draw-zone-wrap.canvas-light { background: var(--white); border-color: var(--rule-strong); }
-.draw-zone-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-.draw-zone-wrap.canvas-light .draw-zone-header { border-bottom-color: var(--rule); }
-.draw-zone-title { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.draw-zone-title .dz-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
-.draw-zone-wrap.canvas-light .draw-zone-title .dz-tag { color: var(--rust); }
-.draw-zone-title .prompt-text { font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.7); }
-.draw-zone-wrap.canvas-light .draw-zone-title .prompt-text { color: var(--text); opacity: 0.78; }
-.draw-tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.tool-group { display: flex; align-items: center; gap: 5px; padding-right: 8px; border-right: 1px solid rgba(255,255,255,0.10); }
-.tool-group:last-child { border-right: 0; padding-right: 0; }
-.draw-zone-wrap.canvas-light .tool-group { border-right-color: var(--rule); }
-.tool-group .gl { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.55); }
-.draw-zone-wrap.canvas-light .tool-group .gl { color: var(--text-muted); }
+/* ---- DRAW ZONE (exact pattern from working file) ---- */
+  .draw-zone-wrap {
+    margin: 32px 0;
+    background: var(--canvas-bg);
+    border: 2px solid rgba(201,161,74,0.3);
+    position: relative;
+    user-select: none;
+  }
+  .draw-zone-wrap.light-canvas { background: var(--white); border-color: rgba(11,21,48,0.18); }
+  .draw-zone-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);
+    flex-wrap: wrap; gap: 10px;
+  }
+  .draw-zone-wrap.light-canvas .draw-zone-header { border-bottom-color: var(--rule); }
+  .draw-zone-title { display: flex; align-items: center; gap: 10px; }
+  .draw-zone-title .pencil-icon { font-size: 16px; color: var(--gold); }
+  .draw-zone-wrap.light-canvas .draw-zone-title .pencil-icon { color: var(--rust); }
+  .draw-zone-title > span:not(.pencil-icon) { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); }
+  .draw-zone-wrap.light-canvas .draw-zone-title > span:not(.pencil-icon) { color: var(--rust); }
+  .draw-zone-title .prompt-text { font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.55); letter-spacing: 0; text-transform: none; margin-left: 4px; }
+  .draw-zone-wrap.light-canvas .draw-zone-title .prompt-text { color: var(--text-muted); }
 
-.color-btn { width: 20px; height: 20px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; padding: 0; transition: transform 0.15s, border-color 0.15s; }
-.color-btn:hover { transform: scale(1.15); }
-.color-btn.active { border-color: var(--white); transform: scale(1.1); }
-.draw-zone-wrap.canvas-light .color-btn.active { border-color: var(--navy); }
-.color-btn.dark-pen { display: inline-flex; } .color-btn.light-pen { display: none; }
-.draw-zone-wrap.canvas-light .color-btn.dark-pen { display: none; }
-.draw-zone-wrap.canvas-light .color-btn.light-pen { display: inline-flex; }
+  .draw-tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .tool-group { display: flex; align-items: center; gap: 4px; border-right: 1px solid rgba(255,255,255,0.10); padding-right: 8px; }
+  .tool-group:last-child { border-right: none; padding-right: 0; }
+  .draw-zone-wrap.light-canvas .tool-group { border-right-color: var(--rule); }
 
-.tool-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.80); font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; letter-spacing: 0.04em; white-space: nowrap; display: inline-flex; align-items: center; gap: 5px; min-height: 28px; }
-.tool-btn:hover { background: rgba(255,255,255,0.15); color: var(--white); }
-.tool-btn.active { background: rgba(201,161,74,0.25); border-color: var(--gold); color: var(--gold); }
-.draw-zone-wrap.canvas-light .tool-btn { background: var(--white); border-color: var(--rule-strong); color: var(--navy); }
-.draw-zone-wrap.canvas-light .tool-btn:hover { border-color: var(--rust); }
-.draw-zone-wrap.canvas-light .tool-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .color-btn { width: 20px; height: 20px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform 0.15s, border-color 0.15s; padding: 0; background-clip: padding-box; }
+  .color-btn:hover { transform: scale(1.2); }
+  .color-btn.active { border-color: var(--white); transform: scale(1.15); }
+  .draw-zone-wrap.light-canvas .color-btn.active { border-color: var(--navy); }
 
-.wdot { display: inline-block; background: currentColor; border-radius: 50%; vertical-align: middle; }
-.w-fine .wdot { width: 3px; height: 3px; } .w-normal .wdot { width: 6px; height: 6px; } .w-bold .wdot { width: 10px; height: 10px; }
+  .tool-btn {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.80); font-size: 11px; font-weight: 600;
+    padding: 5px 10px; border-radius: 4px; cursor: pointer;
+    font-family: 'Plus Jakarta Sans Variable', sans-serif; letter-spacing: 0.02em; white-space: nowrap;
+  }
+  .tool-btn:hover { background: rgba(255,255,255,0.18); color: var(--white); }
+  .tool-btn.active { background: rgba(201,161,74,0.30); border-color: var(--gold); color: var(--gold); }
+  .draw-zone-wrap.light-canvas .tool-btn { background: var(--white); border-color: rgba(11,21,48,0.18); color: var(--navy); }
+  .draw-zone-wrap.light-canvas .tool-btn:hover { border-color: var(--rust); }
+  .draw-zone-wrap.light-canvas .tool-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
 
-.size-slider { -webkit-appearance: none; appearance: none; width: 64px; height: 3px; background: rgba(255,255,255,0.20); border-radius: 2px; outline: none; cursor: pointer; }
-.draw-zone-wrap.canvas-light .size-slider { background: var(--rule-strong); }
-.size-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--gold); cursor: pointer; }
-.draw-zone-wrap.canvas-light .size-slider::-webkit-slider-thumb { background: var(--rust); }
-.size-slider::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--gold); border: 0; cursor: pointer; }
-.draw-zone-wrap.canvas-light .size-slider::-moz-range-thumb { background: var(--rust); }
+  .size-slider { -webkit-appearance: none; appearance: none; width: 64px; height: 3px; background: rgba(255,255,255,0.20); border-radius: 2px; outline: none; cursor: pointer; }
+  .draw-zone-wrap.light-canvas .size-slider { background: rgba(11,21,48,0.18); }
+  .size-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; border-radius: 50%; background: var(--gold); cursor: pointer; }
+  .draw-zone-wrap.light-canvas .size-slider::-webkit-slider-thumb { background: var(--rust); }
+  .size-slider::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--gold); cursor: pointer; border: 0; }
+  .draw-zone-wrap.light-canvas .size-slider::-moz-range-thumb { background: var(--rust); }
 
-canvas.draw-canvas { display: block; width: 100%; cursor: crosshair; touch-action: none; background: var(--navy-dark); }
-.draw-zone-wrap.canvas-light canvas.draw-canvas { background: var(--white); }
-.draw-zone-hint { padding: 8px 16px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 11px; color: rgba(255,255,255,0.40); font-style: italic; }
-.draw-zone-wrap.canvas-light .draw-zone-hint { border-top-color: var(--rule); color: var(--text-muted); }
+  canvas.draw-canvas { display: block; width: 100%; cursor: crosshair; touch-action: none; }
+  .draw-zone-hint { padding: 8px 16px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 10.5px; color: rgba(255,255,255,0.40); font-style: italic; letter-spacing: 0.02em; }
+  .draw-zone-wrap.light-canvas .draw-zone-hint { border-top-color: var(--rule); color: var(--text-muted); }
 
-.clinical-block { background: var(--navy-dark); padding: 56px 24px; margin: 56px 0 0; position: relative; overflow: hidden; }
+  .clinical-block { background: var(--navy-dark); padding: 56px 24px; margin: 56px 0 0; position: relative; overflow: hidden; }
 .clinical-block::before { content: ''; position: absolute; top: -40px; right: -40px; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(201,161,74,0.10) 0%, transparent 70%); pointer-events: none; }
 .clinical-block .cb-inner { max-width: 820px; margin: 0 auto; position: relative; }
 .clinical-block .cb-label { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
@@ -237,47 +247,40 @@ canvas.draw-canvas { display: block; width: 100%; cursor: crosshair; touch-actio
     </section>
 
     <!-- DRAW ZONE 1 -->
-    <section class="draw-zone-wrap" id="zone1-wrap" aria-label="Draw zone, cavities and serous design">
-      <div class="draw-zone-header">
-        <div class="draw-zone-title"><span class="dz-tag">Draw zone 1</span><span class="prompt-text">Sketch a midsagittal body. Label dorsal and ventral cavities. Then draw the fist-in-balloon for a serous membrane.</span></div>
-        <div class="draw-tools">
-          <div class="tool-group" role="group" aria-label="Canvas theme">
-            <button type="button" class="tool-btn active" data-canvas="dark" aria-pressed="true">Dark</button>
-            <button type="button" class="tool-btn" data-canvas="light" aria-pressed="false">Light</button>
-          </div>
-          <div class="tool-group" role="group" aria-label="Pen color">
-            <span class="gl">Color</span>
-            <button type="button" class="color-btn dark-pen active" data-color="#F5F1E8" aria-label="Cream" style="background:#F5F1E8"></button>
-            <button type="button" class="color-btn dark-pen" data-color="#C9A14A" aria-label="Gold" style="background:#C9A14A"></button>
-            <button type="button" class="color-btn dark-pen" data-color="#FF3D6B" aria-label="Hot pink" style="background:#FF3D6B"></button>
-            <button type="button" class="color-btn dark-pen" data-color="#00E5FF" aria-label="Cyan" style="background:#00E5FF"></button>
-            <button type="button" class="color-btn dark-pen" data-color="#7CFF6B" aria-label="Lime" style="background:#7CFF6B"></button>
-            <button type="button" class="color-btn light-pen active" data-color="#0B1530" aria-label="Navy" style="background:#0B1530"></button>
-            <button type="button" class="color-btn light-pen" data-color="#8B3A2E" aria-label="Rust" style="background:#8B3A2E"></button>
-            <button type="button" class="color-btn light-pen" data-color="#C9A14A" aria-label="Gold" style="background:#C9A14A"></button>
-            <button type="button" class="color-btn light-pen" data-color="#1F6F8B" aria-label="Teal" style="background:#1F6F8B"></button>
-            <button type="button" class="color-btn light-pen" data-color="#000000" aria-label="Black" style="background:#000000"></button>
-          </div>
-          <div class="tool-group" role="group" aria-label="Width">
-            <span class="gl">Width</span>
-            <button type="button" class="tool-btn w-fine" data-width="fine"><span class="wdot"></span>Fine</button>
-            <button type="button" class="tool-btn w-normal active" data-width="normal"><span class="wdot"></span>Normal</button>
-            <button type="button" class="tool-btn w-bold" data-width="bold"><span class="wdot"></span>Bold</button>
-          </div>
-          <div class="tool-group"><span class="gl">Size</span><input type="range" class="size-slider" min="0.5" max="24" value="3" step="0.5" aria-label="Fine size override"></div>
-          <div class="tool-group">
-            <button type="button" class="tool-btn active" data-tool="pen">Pen</button>
-            <button type="button" class="tool-btn" data-tool="eraser">Eraser</button>
-          </div>
-          <div class="tool-group">
-            <button type="button" class="tool-btn" data-action="undo">Undo</button>
-            <button type="button" class="tool-btn" data-action="clear">Clear</button>
-          </div>
+      <!-- DRAW ZONE 1 -->
+  <div class="draw-zone-wrap" id="zone1-wrap">
+    <div class="draw-zone-header">
+      <div class="draw-zone-title">
+        <span class="pencil-icon">&#9998;</span>
+        <span>Draw Zone 1 <span class="prompt-text">-- Sketch a midsagittal body. Label dorsal and ventral cavities. Then draw the fist-in-balloon for a serous membrane.</span></span>
+      </div>
+      <div class="draw-tools">
+        <div class="tool-group">
+          <button class="color-btn active" data-color="#FFFFFF" style="background:#ffffff;" title="White"></button>
+          <button class="color-btn" data-color="#C9A14A" style="background:#C9A14A;" title="Gold"></button>
+          <button class="color-btn" data-color="#EF5350" style="background:#EF5350;" title="Red"></button>
+          <button class="color-btn" data-color="#4FC3F7" style="background:#4FC3F7;" title="Blue"></button>
+          <button class="color-btn" data-color="#66BB6A" style="background:#66BB6A;" title="Green"></button>
+          <button class="color-btn" data-color="#FFD54F" style="background:#FFD54F;" title="Yellow"></button>
+        </div>
+        <div class="tool-group"><input type="range" class="size-slider" min="0.5" max="24" value="3" step="0.5" title="Brush size"></div>
+        <div class="tool-group">
+          <button class="tool-btn active" data-tool="pen">Pen</button>
+          <button class="tool-btn" data-tool="fine" title="Fine writing mode (1px hairline)">Fine</button>
+          <button class="tool-btn" data-tool="eraser">Eraser</button>
+        </div>
+        <div class="tool-group">
+          <button class="tool-btn" data-action="undo">Undo</button>
+          <button class="tool-btn" data-action="clear">Clear</button>
+        </div>
+        <div class="tool-group">
+          <button class="tool-btn canvas-mode-toggle" title="Toggle canvas background">&#9788; Light</button>
         </div>
       </div>
-      <canvas class="draw-canvas" id="canvas1" height="460" aria-label="Sketch canvas, cavities and serous membrane"></canvas>
-      <div class="draw-zone-hint">Apple Pencil pressure-sensitive. Fine + light touch = hairline. Mark the diaphragm clearly: it is the most clinically important boundary.</div>
-    </section>
+    </div>
+    <canvas class="draw-canvas" id="canvas1" height="460"></canvas>
+    <div class="draw-zone-hint">Mark the diaphragm clearly; it is the most clinically important boundary.</div>
+  </div>
 
     <!-- SECTION 4: PERITONEUM -->
     <section class="teaching-section" aria-labelledby="s4">
@@ -304,47 +307,40 @@ canvas.draw-canvas { display: block; width: 100%; cursor: crosshair; touch-actio
     </section>
 
     <!-- DRAW ZONE 2 -->
-    <section class="draw-zone-wrap" id="zone2-wrap" aria-label="Draw zone, abdominal grids and patient pathology">
-      <div class="draw-zone-header">
-        <div class="draw-zone-title"><span class="dz-tag">Draw zone 2</span><span class="prompt-text">Sketch an anterior abdomen. Overlay the nine-region grid in one color and the four-quadrant cross in another. Then mark where a dissecting aorta would sit on a transverse cut.</span></div>
-        <div class="draw-tools">
-          <div class="tool-group" role="group" aria-label="Canvas theme">
-            <button type="button" class="tool-btn active" data-canvas="dark" aria-pressed="true">Dark</button>
-            <button type="button" class="tool-btn" data-canvas="light" aria-pressed="false">Light</button>
-          </div>
-          <div class="tool-group" role="group" aria-label="Pen color">
-            <span class="gl">Color</span>
-            <button type="button" class="color-btn dark-pen active" data-color="#F5F1E8" aria-label="Cream" style="background:#F5F1E8"></button>
-            <button type="button" class="color-btn dark-pen" data-color="#C9A14A" aria-label="Gold" style="background:#C9A14A"></button>
-            <button type="button" class="color-btn dark-pen" data-color="#FF3D6B" aria-label="Hot pink" style="background:#FF3D6B"></button>
-            <button type="button" class="color-btn dark-pen" data-color="#00E5FF" aria-label="Cyan" style="background:#00E5FF"></button>
-            <button type="button" class="color-btn dark-pen" data-color="#7CFF6B" aria-label="Lime" style="background:#7CFF6B"></button>
-            <button type="button" class="color-btn light-pen active" data-color="#0B1530" aria-label="Navy" style="background:#0B1530"></button>
-            <button type="button" class="color-btn light-pen" data-color="#8B3A2E" aria-label="Rust" style="background:#8B3A2E"></button>
-            <button type="button" class="color-btn light-pen" data-color="#C9A14A" aria-label="Gold" style="background:#C9A14A"></button>
-            <button type="button" class="color-btn light-pen" data-color="#1F6F8B" aria-label="Teal" style="background:#1F6F8B"></button>
-            <button type="button" class="color-btn light-pen" data-color="#000000" aria-label="Black" style="background:#000000"></button>
-          </div>
-          <div class="tool-group" role="group" aria-label="Width">
-            <span class="gl">Width</span>
-            <button type="button" class="tool-btn w-fine" data-width="fine"><span class="wdot"></span>Fine</button>
-            <button type="button" class="tool-btn w-normal active" data-width="normal"><span class="wdot"></span>Normal</button>
-            <button type="button" class="tool-btn w-bold" data-width="bold"><span class="wdot"></span>Bold</button>
-          </div>
-          <div class="tool-group"><span class="gl">Size</span><input type="range" class="size-slider" min="0.5" max="24" value="3" step="0.5" aria-label="Fine size override"></div>
-          <div class="tool-group">
-            <button type="button" class="tool-btn active" data-tool="pen">Pen</button>
-            <button type="button" class="tool-btn" data-tool="eraser">Eraser</button>
-          </div>
-          <div class="tool-group">
-            <button type="button" class="tool-btn" data-action="undo">Undo</button>
-            <button type="button" class="tool-btn" data-action="clear">Clear</button>
-          </div>
+      <!-- DRAW ZONE 2 -->
+  <div class="draw-zone-wrap" id="zone2-wrap">
+    <div class="draw-zone-header">
+      <div class="draw-zone-title">
+        <span class="pencil-icon">&#9998;</span>
+        <span>Draw Zone 2 <span class="prompt-text">-- Sketch an anterior abdomen. Overlay the nine-region grid in one color and the four-quadrant cross in another. Mark where a dissecting aorta would sit on a transverse cut.</span></span>
+      </div>
+      <div class="draw-tools">
+        <div class="tool-group">
+          <button class="color-btn active" data-color="#FFFFFF" style="background:#ffffff;" title="White"></button>
+          <button class="color-btn" data-color="#C9A14A" style="background:#C9A14A;" title="Gold"></button>
+          <button class="color-btn" data-color="#EF5350" style="background:#EF5350;" title="Red"></button>
+          <button class="color-btn" data-color="#4FC3F7" style="background:#4FC3F7;" title="Blue"></button>
+          <button class="color-btn" data-color="#66BB6A" style="background:#66BB6A;" title="Green"></button>
+          <button class="color-btn" data-color="#FFD54F" style="background:#FFD54F;" title="Yellow"></button>
+        </div>
+        <div class="tool-group"><input type="range" class="size-slider" min="0.5" max="24" value="3" step="0.5" title="Brush size"></div>
+        <div class="tool-group">
+          <button class="tool-btn active" data-tool="pen">Pen</button>
+          <button class="tool-btn" data-tool="fine" title="Fine writing mode (1px hairline)">Fine</button>
+          <button class="tool-btn" data-tool="eraser">Eraser</button>
+        </div>
+        <div class="tool-group">
+          <button class="tool-btn" data-action="undo">Undo</button>
+          <button class="tool-btn" data-action="clear">Clear</button>
+        </div>
+        <div class="tool-group">
+          <button class="tool-btn canvas-mode-toggle" title="Toggle canvas background">&#9788; Light</button>
         </div>
       </div>
-      <canvas class="draw-canvas" id="canvas2" height="480" aria-label="Sketch canvas, abdominal grids and dissecting aorta"></canvas>
-      <div class="draw-zone-hint">Use Fine for the dissection flap inside the aortic wall.</div>
-    </section>
+    </div>
+    <canvas class="draw-canvas" id="canvas2" height="480"></canvas>
+    <div class="draw-zone-hint">Use Fine for the dissection flap inside the aortic wall.</div>
+  </div>
 
   </div><!-- /section-wrap -->
 
@@ -392,52 +388,249 @@ canvas.draw-canvas { display: block; width: 100%; cursor: crosshair; touch-actio
 </footer>
 
 <script>
+// ---- PROGRESS BAR ----
 window.addEventListener('scroll', function () {
-  var top = window.scrollY;
+  var s = window.scrollY;
   var h = document.documentElement.scrollHeight - window.innerHeight;
-  document.getElementById('progress-bar').style.width = (h > 0 ? (top / h) * 100 : 0) + '%';
+  document.getElementById('progress-bar').style.width = (h > 0 ? (s / h) * 100 : 0) + '%';
 });
 
+// ---- CANVAS DRAWING ENGINE (verbatim pattern from your working file) ----
 function initCanvas(canvasId, wrapId) {
-  var wrap = document.getElementById(wrapId);
   var canvas = document.getElementById(canvasId);
-  if (!wrap || !canvas) return;
+  var wrap = document.getElementById(wrapId);
+  if (!canvas || !wrap) return;
   var ctx = canvas.getContext('2d');
-  var BASE = { fine: 1.2, normal: 3.0, bold: 6.5 };
-  var state = { color: '#F5F1E8', width: 'normal', sliderSize: 3, sliderActive: false, mode: 'pen', canvasTheme: 'dark', strokes: [], current: null, dpr: window.devicePixelRatio || 1 };
-  var bgColor = function () { return state.canvasTheme === 'light' ? '#FFFFFF' : '#060A18'; };
-  var first = wrap.querySelector('.color-btn.dark-pen.active'); if (first) state.color = first.dataset.color;
-  function widthFor(p, t) { var b = state.sliderActive ? state.sliderSize : BASE[state.width]; if (t === 'pen') { var pp = (p === 0 || p == null) ? 0.5 : p; return Math.max(0.3, b * (0.25 + pp * 1.5)); } return b; }
-  function resize() { var r = canvas.getBoundingClientRect(); state.dpr = window.devicePixelRatio || 1; canvas.width = Math.round(r.width * state.dpr); canvas.height = Math.round(parseFloat(canvas.getAttribute('height')) * state.dpr); canvas.style.height = canvas.getAttribute('height') + 'px'; ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0); redraw(); }
-  function redraw() { var r = canvas.getBoundingClientRect(); ctx.clearRect(0, 0, r.width, parseFloat(canvas.getAttribute('height'))); ctx.fillStyle = bgColor(); ctx.fillRect(0, 0, r.width, parseFloat(canvas.getAttribute('height'))); state.strokes.forEach(drawStroke); if (state.current) drawStroke(state.current); }
-  function drawStroke(s) { if (!s.points || !s.points.length) return; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.globalCompositeOperation = 'source-over'; if (s.mode === 'eraser') { ctx.strokeStyle = bgColor(); } else { ctx.strokeStyle = s.color; } var p = s.points; if (p.length === 1) { var q = p[0]; ctx.beginPath(); ctx.arc(q.x, q.y, Math.max(0.4, q.w / 2), 0, Math.PI * 2); ctx.fillStyle = s.mode === 'eraser' ? bgColor() : s.color; ctx.fill(); ctx.globalCompositeOperation = 'source-over'; return; } for (var i = 1; i < p.length; i++) { var a = p[i-1], b = p[i]; ctx.lineWidth = (a.w + b.w) / 2; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); } ctx.globalCompositeOperation = 'source-over'; }
-  function pos(e) {
-    var r = canvas.getBoundingClientRect();
-    var x = ((e.clientX - r.left) / r.width) * canvas.width / state.dpr;
-    var y = ((e.clientY - r.top) / r.height) * canvas.height / state.dpr;
-    return { x: x, y: y };
+  var state = {
+    drawing: false,
+    tool: 'pen',
+    color: '#FFFFFF',
+    size: 3,
+    canvasMode: 'dark',     // 'dark' or 'light'
+    strokes: [],
+    currentStroke: null
+  };
+
+  function resize() {
+    var rect = canvas.getBoundingClientRect();
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = parseFloat(canvas.getAttribute('height')) * dpr;
+    canvas.style.height = canvas.getAttribute('height') + 'px';
+    ctx.setTransform(1, 0, 0, 1, 0, 0);  // reset transform
+    ctx.scale(dpr, dpr);
+    redraw();
   }
-  function down(e) { try { canvas.setPointerCapture(e.pointerId); } catch (_) {} var p = pos(e); state.current = { mode: state.mode, color: state.color, points: [{ x: p.x, y: p.y, w: widthFor(e.pressure, e.pointerType) }] }; redraw(); e.preventDefault(); }
-  function move(e) { if (!state.current) return; var evs = (typeof e.getCoalescedEvents === 'function') ? e.getCoalescedEvents() : [e]; if (!evs.length) evs = [e]; for (var i = 0; i < evs.length; i++) { var ev = evs[i], p = pos(ev); state.current.points.push({ x: p.x, y: p.y, w: widthFor(ev.pressure, ev.pointerType || e.pointerType) }); } redraw(); e.preventDefault(); }
-  function up(e) { if (!state.current) return; state.strokes.push(state.current); state.current = null; try { canvas.releasePointerCapture(e.pointerId); } catch (_) {} redraw(); }
-  canvas.addEventListener('pointerdown', down); canvas.addEventListener('pointermove', move); canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up); canvas.addEventListener('pointerleave', function (e) { if (state.current) up(e); });
 
-  wrap.querySelectorAll('[data-canvas]').forEach(function (b) { b.addEventListener('click', function () { wrap.querySelectorAll('[data-canvas]').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); x.classList.remove('active'); }); b.setAttribute('aria-pressed', 'true'); b.classList.add('active'); state.canvasTheme = b.dataset.canvas; if (state.canvasTheme === 'light') { wrap.classList.add('canvas-light'); var lit = wrap.querySelector('.color-btn.light-pen.active') || wrap.querySelector('.color-btn.light-pen'); if (lit) { wrap.querySelectorAll('.color-btn').forEach(function (x) { x.classList.remove('active'); }); lit.classList.add('active'); state.color = lit.dataset.color; } } else { wrap.classList.remove('canvas-light'); var drk = wrap.querySelector('.color-btn.dark-pen.active') || wrap.querySelector('.color-btn.dark-pen'); if (drk) { wrap.querySelectorAll('.color-btn').forEach(function (x) { x.classList.remove('active'); }); drk.classList.add('active'); state.color = drk.dataset.color; } }; redraw(); }); });
-  wrap.querySelectorAll('.color-btn[data-color]').forEach(function (b) { b.addEventListener('click', function () { var visible = state.canvasTheme === 'light' ? 'light-pen' : 'dark-pen'; wrap.querySelectorAll('.color-btn.' + visible).forEach(function (x) { x.classList.remove('active'); }); b.classList.add('active'); state.color = b.dataset.color; state.mode = 'pen'; var pen = wrap.querySelector('[data-tool="pen"]'); var er = wrap.querySelector('[data-tool="eraser"]'); if (pen) pen.classList.add('active'); if (er) er.classList.remove('active'); }); });
-  wrap.querySelectorAll('[data-width]').forEach(function (b) { b.addEventListener('click', function () { wrap.querySelectorAll('[data-width]').forEach(function (x) { x.classList.remove('active'); }); b.classList.add('active'); state.width = b.dataset.width; state.sliderActive = false; }); });
-  var slider = wrap.querySelector('.size-slider'); if (slider) slider.addEventListener('input', function () { state.sliderSize = parseFloat(slider.value); state.sliderActive = true; wrap.querySelectorAll('[data-width]').forEach(function (x) { x.classList.remove('active'); }); });
-  wrap.querySelectorAll('[data-tool]').forEach(function (b) { b.addEventListener('click', function () { wrap.querySelectorAll('[data-tool]').forEach(function (x) { x.classList.remove('active'); }); b.classList.add('active'); state.mode = b.dataset.tool; }); });
-  wrap.querySelectorAll('[data-action]').forEach(function (b) { b.addEventListener('click', function () { if (b.dataset.action === 'undo') { if (state.strokes.length) { state.strokes.pop(); redraw(); } } else if (b.dataset.action === 'clear') { state.strokes = []; state.current = null; redraw(); } }); });
+  function paintBg() {
+    var dpr = window.devicePixelRatio || 1;
+    var w = canvas.width / dpr;
+    var h = canvas.height / dpr;
+    ctx.save();
+    ctx.fillStyle = state.canvasMode === 'light' ? '#FFFFFF' : '#06080F';
+    ctx.fillRect(0, 0, w, h);
+    ctx.restore();
+  }
 
-  window.addEventListener('resize', resize);
-  if ('ResizeObserver' in window) { try { new ResizeObserver(function () { resize(); }).observe(canvas); } catch (_) {} }
+  function redraw() {
+    var dpr = window.devicePixelRatio || 1;
+    var w = canvas.width / dpr;
+    var h = canvas.height / dpr;
+    ctx.clearRect(0, 0, w, h);
+    paintBg();
+    state.strokes.forEach(function (stroke) { drawStroke(stroke); });
+  }
+
+  function drawStroke(stroke) {
+    if (!stroke.points || stroke.points.length < 1) return;
+    ctx.save();
+    if (stroke.tool === 'eraser') {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.strokeStyle = state.canvasMode === 'light' ? '#FFFFFF' : '#06080F';
+      ctx.fillStyle = state.canvasMode === 'light' ? '#FFFFFF' : '#06080F';
+    } else {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.strokeStyle = stroke.color;
+      ctx.fillStyle = stroke.color;
+    }
+    ctx.lineWidth = stroke.size;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    if (stroke.points.length === 1) {
+      ctx.beginPath();
+      ctx.arc(stroke.points[0].x, stroke.points[0].y, stroke.size / 2, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.beginPath();
+      ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
+      for (var i = 1; i < stroke.points.length - 1; i++) {
+        var mx = (stroke.points[i].x + stroke.points[i+1].x) / 2;
+        var my = (stroke.points[i].y + stroke.points[i+1].y) / 2;
+        ctx.quadraticCurveTo(stroke.points[i].x, stroke.points[i].y, mx, my);
+      }
+      var last = stroke.points[stroke.points.length - 1];
+      ctx.lineTo(last.x, last.y);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function getPos(e) {
+    var rect = canvas.getBoundingClientRect();
+    var touch = e.touches ? e.touches[0] : e;
+    return {
+      x: (touch.clientX - rect.left) * (canvas.width / rect.width) / (window.devicePixelRatio || 1),
+      y: (touch.clientY - rect.top) * (canvas.height / rect.height) / (window.devicePixelRatio || 1)
+    };
+  }
+
+  function startDraw(e) {
+    e.preventDefault();
+    state.drawing = true;
+    var pos = getPos(e);
+    state.currentStroke = { tool: state.tool, color: state.color, size: state.size, points: [pos] };
+  }
+  function continueDraw(e) {
+    e.preventDefault();
+    if (!state.drawing || !state.currentStroke) return;
+    var pos = getPos(e);
+    state.currentStroke.points.push(pos);
+    var pts = state.currentStroke.points;
+    ctx.save();
+    if (state.tool === 'eraser') {
+      ctx.strokeStyle = state.canvasMode === 'light' ? '#FFFFFF' : '#06080F';
+    } else {
+      ctx.strokeStyle = state.color;
+    }
+    ctx.lineWidth = state.size;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    if (pts.length >= 3) {
+      var i = pts.length - 2;
+      var mx = (pts[i].x + pts[i+1].x) / 2;
+      var my = (pts[i].y + pts[i+1].y) / 2;
+      ctx.beginPath();
+      ctx.moveTo((pts[i-1].x + pts[i].x)/2, (pts[i-1].y + pts[i].y)/2);
+      ctx.quadraticCurveTo(pts[i].x, pts[i].y, mx, my);
+      ctx.stroke();
+    } else if (pts.length === 2) {
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      ctx.lineTo(pts[1].x, pts[1].y);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+  function endDraw() {
+    if (!state.drawing) return;
+    state.drawing = false;
+    if (state.currentStroke) {
+      state.strokes.push(state.currentStroke);
+      state.currentStroke = null;
+    }
+  }
+
+  // Pointer events (Apple Pencil, mouse, touch)
+  canvas.addEventListener('pointerdown', startDraw);
+  canvas.addEventListener('pointermove', continueDraw);
+  canvas.addEventListener('pointerup', endDraw);
+  canvas.addEventListener('pointerleave', endDraw);
+  canvas.addEventListener('pointercancel', endDraw);
+  // Touch fallback
+  canvas.addEventListener('touchstart', startDraw, { passive: false });
+  canvas.addEventListener('touchmove', continueDraw, { passive: false });
+  canvas.addEventListener('touchend', endDraw);
+
+  var header = wrap.querySelector('.draw-zone-header');
+
+  // Color
+  header.querySelectorAll('.color-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      header.querySelectorAll('.color-btn').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      state.color = btn.dataset.color;
+      if (state.tool === 'eraser') {
+        state.tool = 'pen';
+        header.querySelectorAll('[data-tool]').forEach(function (b) { b.classList.toggle('active', b.dataset.tool === 'pen'); });
+      }
+    });
+  });
+
+  // Tools (pen/fine/eraser)
+  header.querySelectorAll('[data-tool]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      header.querySelectorAll('[data-tool]').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      if (btn.dataset.tool === 'fine') {
+        state.tool = 'pen';
+        state.size = 1;
+        if (sizeSlider) sizeSlider.value = 1;
+      } else {
+        state.tool = btn.dataset.tool;
+        if (sizeSlider && state.tool !== 'eraser') state.size = parseFloat(sizeSlider.value);
+      }
+    });
+  });
+
+  var sizeSlider = header.querySelector('.size-slider');
+  if (sizeSlider) {
+    sizeSlider.addEventListener('input', function () {
+      state.size = parseFloat(sizeSlider.value);
+      var fineBtn = header.querySelector('[data-tool="fine"]');
+      if (fineBtn && fineBtn.classList.contains('active')) {
+        fineBtn.classList.remove('active');
+        var penBtn = header.querySelector('[data-tool="pen"]');
+        if (penBtn) penBtn.classList.add('active');
+        state.tool = 'pen';
+      }
+    });
+  }
+
+  header.querySelectorAll('[data-action]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (btn.dataset.action === 'undo') {
+        if (state.strokes.length > 0) { state.strokes.pop(); redraw(); }
+      } else if (btn.dataset.action === 'clear') {
+        if (confirm('Clear this canvas?')) { state.strokes = []; redraw(); }
+      }
+    });
+  });
+
+  // Canvas mode toggle (Dark <-> Light)
+  var modeBtn = header.querySelector('.canvas-mode-toggle');
+  if (modeBtn) {
+    modeBtn.addEventListener('click', function () {
+      if (state.canvasMode === 'dark') {
+        state.canvasMode = 'light';
+        wrap.classList.add('light-canvas');
+        modeBtn.innerHTML = '&#9790; Dark';
+        if (state.color === '#FFFFFF') {
+          state.color = '#0B1530';
+          header.querySelectorAll('.color-btn').forEach(function (b) { b.classList.remove('active'); });
+        }
+      } else {
+        state.canvasMode = 'dark';
+        wrap.classList.remove('light-canvas');
+        modeBtn.innerHTML = '&#9788; Light';
+        if (state.color === '#0B1530') {
+          state.color = '#FFFFFF';
+          var whiteBtn = header.querySelector('[data-color="#FFFFFF"]');
+          if (whiteBtn) {
+            header.querySelectorAll('.color-btn').forEach(function (b) { b.classList.remove('active'); });
+            whiteBtn.classList.add('active');
+          }
+        }
+      }
+      redraw();
+    });
+  }
+
   resize();
-  requestAnimationFrame(function () { resize(); setTimeout(resize, 250); });
+  window.addEventListener('resize', resize);
 }
+
 initCanvas('canvas1', 'zone1-wrap');
 initCanvas('canvas2', 'zone2-wrap');
-
-(function () { var FRAME_ID = 'bio004-week1-body-cavities'; function sendHeight() { var h = Math.max(document.documentElement.scrollHeight, document.body ? document.body.scrollHeight : 0); try { parent.postMessage({ type: 'resize', id: FRAME_ID, height: h }, '*'); } catch (_) {} } window.addEventListener('load', sendHeight); window.addEventListener('resize', sendHeight); if (window.ResizeObserver) new ResizeObserver(sendHeight).observe(document.body); })();
 </script>
 
 </body>
