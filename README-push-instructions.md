@@ -1,37 +1,45 @@
-# BIO 004 — string injection bug fix
+# BIO 004 — Canvas lock fix (Apple Pencil + iPad select-while-drawing)
 
-## What broke
+Applies the touch-event lock to every slide deck that has a drawable canvas. Fixes the bug where drawing with Apple Pencil or finger on iPad would trigger text selection and mess up writing.
 
-34 lecture pages had a JavaScript "video coming soon" iframe that uses `iframe.srcdoc = '<html>...<body>...</body>'` — i.e., a `</body>` tag INSIDE a JS string literal. My wiring script (Phase B v2) looked for the first `</body>` and inserted `<script src="slide-modal.js" defer></script>` before it. The first `</body>` it found was inside that string literal, so my script tag landed inside the JS string, leaving the string unterminated. Browser threw `SyntaxError` at that line, which broke the page's JS, which prevented slide-modal.js from wiring the click handler.
+## What changed in each file
 
-Result: button visible, click did nothing.
+Two patches per file:
 
-## What this push fixes
+1. **CSS lock** added to `.canvas-col`, `.canvas-wrap`, and `.draw-canvas`:
+   - `touch-action: none`
+   - `-webkit-user-select: none; user-select: none`
+   - `-webkit-touch-callout: none`
+   - `overscroll-behavior: contain`
+   - `-webkit-user-drag: none` (canvas only)
+   - Marker comment `/* canvas-lock-v1 */` so future passes can detect it
+2. **JS handlers** added on each canvas, all calling `preventDefault()`:
+   - `touchstart`, `touchmove` (with `{passive: false}`) — **stylus-aware**: skips preventDefault when the touch is from Apple Pencil so the Pencil's pointer events still fire (otherwise pencil drawing breaks on iPad Safari)
+   - `gesturestart`
+   - `contextmenu`
 
-For each of the 34 affected files:
+No visual or layout changes. Existing drawing, undo, eraser, save, and image-import behavior is untouched.
 
-1. Removes the misplaced `<script src="slide-modal.js" defer></script>` from inside the JS string literal
-2. Adds it back in the correct location (right before the real `</body>` at the end of the page)
-3. Leaves everything else untouched
+## Files (28)
 
-## Push commands
+All 28 slide decks in BIO-004-Solano-Anatomy/ that contain a canvas. Full list in the folder.
+
+## Push
 
 ```bash
 cd ~/Documents/new-build-bio4-solano
-cp "/Users/sharilynrennie/Documents/Claude/Projects/Lecture Slides/_PUSH-TO-GITHUB/BIO-004-stringbug-fix/"*.html .
-git add *.html
-git status
-```
-
-`git status` should show ~34 modified HTML files. Then:
-
-```bash
-git commit -m "Fix: script tag was injected inside JS string literal, broke wiring on lecture pages"
+cp "/Users/sharilynrennie/Documents/Claude/Projects/Lecture Slides/_PUSH-TO-GITHUB/BIO-004-canvas-lock-fix/"slides-*.html .
+git add slides-*.html
+git commit -m "Canvas lock: prevent iPad text-selection while drawing on slide canvases"
 git push origin main
 ```
 
-Wait 2 min, then test in incognito:
+After push + 2 min, on iPad:
 
-https://drsrennie-stack.github.io/new-build-bio4-solano/anatomical-terminology.html
+1. Reload any slide deck with a canvas.
+2. Draw with Apple Pencil. No more highlighting/selecting nearby text.
+3. **Also** turn off iPad Settings → Apple Pencil → Scribble for full coverage.
 
-Open dev tools → Console → reload. Should be no red errors. Click the "Draw the anatomical foundations" button — modal should open with the slide deck inside.
+## Cleanup tip
+
+After you confirm the fix is live, delete this folder to keep `_PUSH-TO-GITHUB/` tidy.
