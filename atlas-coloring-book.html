@@ -158,6 +158,11 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible, input:focus-vis
 /* Pane structure: in single mode, panes overlap and only one is visible at a time.
    In side-by-side mode, panes split the wrap 50/50 (or stack vertically on narrow screens). */
 .canvas-pane { position: absolute; inset: 0; overflow: hidden; }
+/* The answer-key pane overlaps the practice pane in single view. It has nothing
+   clickable in it, so make it transparent to pointer/stylus events. Otherwise the
+   key pane swallows every pen and finger event before it reaches the drawing canvas
+   underneath, which makes the Pencil unable to draw (it can only select). */
+.pane-key { pointer-events: none; }
 .pane-label { position: absolute; left: 10px; top: 10px; padding: 3px 9px; font-size: 9.5px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; background: rgba(11, 21, 48, 0.86); color: #FAFAF9; border-radius: 999px; pointer-events: none; z-index: 3; opacity: 0; transition: opacity 180ms ease; }
 .pane-label.is-key { background: rgba(139, 58, 46, 0.92); }
 .canvas-wrap.is-dark .pane-label { background: rgba(250, 250, 249, 0.92); color: #0B1530; }
