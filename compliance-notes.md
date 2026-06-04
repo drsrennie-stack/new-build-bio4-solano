@@ -1,108 +1,88 @@
-# Compliance Notes
+# Accessibility Compliance Notes
 
-**Project:** Integrative Clinical Lecture Pages, Mediastinum
-**Files covered:** mediastinum.html
-**Date:** 2026-05-27
-**WCAG version and target:** WCAG 2.2, AA floor with AAA achieved on most text/background pairs in both themes
-**Reviewer:** Dr. Sharilyn Rennie
+## 1. Project
 
-## 1. Scope
+- **Project:** BIO 004 Human Anatomy, Summer 2026 syllabus
+- **Files covered:** `bio004-summer-2026-syllabus.html` (and its print-derived PDF, `bio004-summer-2026-syllabus.pdf`)
+- **Date:** May 23, 2026
+- **Reviewer:** Dr. Sharilyn Rennie (built and self-audited)
 
-A single-page case-based lecture on the mediastinum, built on the course's existing concept-page system (heart.html). The page uses cream/navy/rust/gold in light mode and navy-deep/cream/gold in dark mode, with fluorescent pen colors for drawing in dark mode. Includes Notes / Study / Quiz me mode toggles, a Light / Dark theme toggle (dark default, localStorage persistence), and four pressure-sensitive draw zones with fine-pencil capability.
+## 2. WCAG version and target level
 
-## 2. Color contrast audit
+Target: WCAG 2.2 Level AA (floor), Level AAA where achievable.
 
-Ratios computed via the WCAG 2.x relative-luminance formula. AAA = 7:1 normal text, 4.5:1 large text. AA = 4.5:1 normal, 3:1 large.
+| Criterion | Level achieved | Notes |
+|---|---|---|
+| 1.1.1 Non-text content | AA | Decorative arrows and the hero glow are `aria-hidden` or pure CSS. No informational images. |
+| 1.3.1 Info and relationships | AAA | Semantic `header`, `nav`, `main`, `footer`, `section`; one `h1`, 20 `h2`, ordered `h3`/`h4`; data tables use `caption` and `th scope`. |
+| 1.4.3 Contrast (minimum) | AA | All text pairs pass; see audit below. |
+| 1.4.6 Contrast (enhanced) | AAA | All body, heading, link, and table text reaches 7:1+. One label (hero eyebrow) is AA only. |
+| 1.4.10 Reflow | AA | Single-column responsive layout; grids collapse at 600px and below. |
+| 1.4.12 Text spacing | AA | Line-height 1.65; no fixed-height text containers. |
+| 2.1.1 Keyboard | AA | All links, the table-of-contents anchors, and the Print button are reachable and operable by keyboard. |
+| 2.4.1 Bypass blocks | AA | "Skip to main content" link as first focusable element. |
+| 2.4.7 Focus visible | AAA | 3px gold `:focus-visible` outline with 2px offset on every interactive element. |
+| 2.3.3 Animation from interactions | AAA | `prefers-reduced-motion` disables smooth scroll and transitions. |
+| 3.1.1 Language of page | AA | `<html lang="en">`. |
+| 4.1.2 Name, role, value | AA | Print control is a native `<button>`; nav landmarks have `aria-label`. |
 
-| Pair | Theme | Ratio | AA | AAA |
-|------|-------|-------|----|-----|
-| Body navy text on cream page | light | 16.00:1 | pass | pass |
-| Body navy text on white sheet | light | 18.04:1 | pass | pass |
-| Rust accent on white sheet | light | 7.66:1 | pass | pass |
-| White on navy table header | light | 18.04:1 | pass | pass |
-| Cream text on navy-deep page | dark | 17.50:1 | pass | pass |
-| Cream text on dark sheet | dark | 15.14:1 | pass | pass |
-| Gold accent on dark sheet | dark | 7.06:1 | pass | pass |
-| Gold-soft on dark sheet | dark | 10.31:1 | pass | pass |
-| Cream text on navy-deep ribbon | both | 17.50:1 | pass | pass |
-| Cyan pen on dark canvas | dark | 12.30:1 | pass | pass |
-| Hot pink pen on dark canvas | dark | 5.52:1 | pass | no |
-| Lime pen on dark canvas | dark | 14.75:1 | pass | pass |
-| Neon yellow pen on dark canvas | dark | 15.79:1 | pass | pass |
-| Cream pen on dark canvas | dark | 16.78:1 | pass | pass |
+## 3. Color contrast audit
 
-Notes. Gold (#C9A14A) is used in light mode only for decorative borders (prework-box left edge, mode-hint left edge). Decorative non-text content does not have a WCAG contrast requirement. Hot-pink pen output is user-generated graphics, AA-equivalent contrast is well above the 3:1 floor for non-text content.
+Palette tokens match the existing BIOL4-Solano course site. Ratios computed against the WCAG formula.
 
-## 3. Keyboard navigation flow
+| Foreground | Background | Ratio | Result |
+|---|---|---|---|
+| Ink `#0A1A2A` (body text) | White `#FFFFFF` | 17.59:1 | AAA |
+| Ink `#0A1A2A` | Cream-warm `#F5F2EC` (alt table rows) | 15.74:1 | AAA |
+| Navy `#142940` (headings) | White | 14.78:1 | AAA |
+| Terra `#7C2018` (subheads, links) | White | 10.11:1 | AAA |
+| Terra `#7C2018` | Cream-warm `#F5F2EC` | 9.05:1 | AAA |
+| Ink-soft `#3D4F5A` (captions) | White | 8.52:1 | AAA |
+| Ink-soft `#3D4F5A` | Cream-warm `#F5F2EC` | 7.63:1 | AAA |
+| Cream `#FAF7F2` (table header text) | Navy `#142940` | 13.83:1 | AAA |
+| White (hero title, button label) | Navy `#142940` | 14.78:1 | AAA |
+| Gold `#C9A961` (hero eyebrow label) | Navy `#142940` | 6.57:1 | AA |
 
-Verified tab order from top to bottom:
+Every text pair clears the AA threshold (4.5:1). All pairs except the hero eyebrow label also clear AAA (7:1). The eyebrow is small bold label text; AA is the required floor for it, and in the print stylesheet that label is re-rendered as terra on white (AAA).
 
-1. Skip link (becomes visible on focus, lands main content)
-2. Toolbar: Notes, Study, Quiz me, Light, Dark, Reset, Print
-3. In-page TOC anchors in document order
-4. Case card (region, non-focusable; its guiding question is reachable as text)
-5. Pre-work checkboxes (each tabbable, space toggles)
-6. Each draw zone's tools in order: color swatches, width buttons, size slider, pen/eraser, undo/clear, pencil/all input
-7. Reveal buttons within each term/grid row/sequence item (only active in Study or Quiz mode)
-8. Quiz mode text inputs
+## 4. Keyboard navigation flow verified
 
-All interactive controls show a 3px gold or rust outline on focus (`--focus`). Theme and mode toggles use `aria-pressed` and update in real time. The reveal buttons are buttons, not links. The size slider has `aria-label="Fine size override"`.
+Tab order: Skip link, Print button, "All course pages and tools" button, table-of-contents anchors (18), then in-content links in document order through the page-and-tools hub, then "Back to top". All anchors jump correctly to their `id` targets (`scroll-margin-top` keeps headings clear of the viewport edge). No keyboard traps. Focus indicator is visible at every stop.
 
-## 4. Screen reader testing
+## 5. Screen reader testing
 
-Verified semantic landmarks and ARIA exposure:
+Verified by markup and structure review: single `h1`, sequential heading levels with no skipped ranks, landmark regions (`header`/`nav`/`main`/`footer`), `aria-label` on both `nav` regions, `caption` plus `th scope` on all data tables, and descriptive link text (no bare "click here"; the one "Open" pattern from the source site was replaced with named links).
 
-- Skip link first in source order, navigates to `#main`
-- Case ribbon: `role="region"` with `aria-label="Active patient case"`
-- Toolbar groups: `role="group"` with descriptive `aria-label`
-- Mode and theme buttons: `aria-pressed` toggled by script
-- Main content: `<main id="main">`
-- Section headings: each block uses `<section>` with `aria-labelledby` pointing to its `<h2>`
-- Headings follow strict order: one h1, multiple h2 within main, h3 only inside blocks
-- Comparison tables include a visually hidden `<caption>` for screen-reader context
-- Sequence list uses `<ol class="seq">` with `aria-label`
-- Each canvas has an `aria-label` describing the sketch task
-- Reveal buttons inserted by JS have visible text label "Reveal"
-- The clinical correlation block uses `<aside role="note">` with `aria-label`
-
-Manual quick test with macOS VoiceOver and Safari: landmark navigation reaches header, main, footer; rotor lists all headings in source order; toolbar buttons announce their pressed state when toggled; canvas elements announce as images with the sketch-task label.
-
-## 5. Specific WCAG 2.2 criteria verified
-
-- 1.3.1 Info and Relationships: semantic HTML throughout, labeled tables, ordered lists for sequences
-- 1.4.3 Contrast (AA): verified above; AAA achieved on most pairs
-- 1.4.10 Reflow: page is responsive; tables stay within container; toolbar wraps at 720px and below
-- 1.4.11 Non-text Contrast: focus rings 3px, well above 3:1
-- 1.4.12 Text Spacing: respects user line-height adjustments; no fixed line-clamp
-- 2.1.1 Keyboard: all interactive elements reachable and operable via keyboard
-- 2.1.2 No Keyboard Trap: no focus traps; modal-free design
-- 2.2.2 Pause/Stop/Hide: no auto-updating content
-- 2.4.1 Bypass Blocks: skip link present
-- 2.4.3 Focus Order: logical, top to bottom
-- 2.4.6 Headings and Labels: descriptive; each section has a heading; buttons have labels
-- 2.4.7 Focus Visible: 3px outline with 3px offset
-- 2.4.11 Focus Not Obscured (AA, new in 2.2): sticky case ribbon at top; verified focused elements remain visible below the 56px ribbon
-- 2.5.7 Dragging Movements (new in 2.2): drawing on canvas is a creative pointer action with no single-pointer alternative inherent to the task. The tool's primary outputs (reading, study, quiz) do not require dragging. The drawing prompts are pedagogical, not the only path to the learning objective; students who cannot draw can use the text terms lists.
-- 2.5.8 Target Size Minimum (new in 2.2, AA): toolbar buttons ≥ 36px tall; swatches are 22px circular but spaced with 5px gap and live inside a larger 36px-tall toolbar row, meeting the spacing exception
-- 3.1.1 Language: `<html lang="en">`
-- 3.2.2 On Input: theme/mode toggles do not navigate or submit; changes are visual only
-- 3.3.2 Labels or Instructions: form inputs (quiz mode) have `aria-label`; checkboxes have `<label>` wrappers
+Recommended before publishing: one live pass with VoiceOver (Safari) or NVDA (Firefox) to confirm table reading order and announcement of the schedule table, which is the most complex region.
 
 ## 6. Known limitations and remediation plan
 
-1. **Canvas drawing is inherently visual.** WCAG does not require a non-visual alternative to a drawing tool whose pedagogy is the act of drawing. The page's terms lists and tables provide an equivalent text-based path through the same material, so a student who cannot use the canvas still reaches the learning objectives.
-2. **Hot pink pen color in dark mode** meets AA (5.52:1) but not AAA. Pen colors are user-generated graphics, not interface text, so AA is sufficient.
-3. **Color swatches are 22px** rather than the 24px target-size recommendation. They sit within 36px-tall toolbar rows with 5px gaps between, satisfying the WCAG 2.5.8 spacing exception. If a future audit prefers the larger target, the swatches can be enlarged without layout change.
-4. **localStorage** is used to persist the theme choice. If the embed environment blocks storage (rare on Kajabi and GitHub Pages), the page still functions; the user just resets to dark on every load.
-5. **iframe height-sender** posts to `parent` with `'*'` as the targetOrigin to work across Kajabi and GitHub Pages without environment-specific configuration. If embedded in a context requiring a specific origin, tighten this in the FRAME_ID block.
+- **Hero eyebrow label** is AA, not AAA, on screen. Acceptable (AA is the floor) and it prints as AAA. No action required; could be darkened if AAA on screen is wanted.
+- **Live assistive-technology test** not yet performed (see section 5). Remediation: run VoiceOver/NVDA before the page is pushed to GitHub Pages.
+- **PDF tagging:** the PDF is generated by headless Chromium print-to-PDF and is not a fully tagged/PDF-UA document. The HTML page is the accessible primary version; the PDF is a print and handout convenience. Remediation if a tagged PDF is required: run it through an accessibility-tagging step, or distribute the HTML as the canonical syllabus.
 
-## 7. Branding and content fidelity
+## 7. Reviewer
 
-- Matches the course concept-page system (cream / navy / rust / gold) from heart.html and index.html
-- No sage; no cream stripped from family-business palettes
-- Plus Jakarta Sans + DM Sans + Lora italic
-- Byline reads "Dr. Sharilyn Rennie" with no credential suffix (per global instructions)
-- No em dashes anywhere in the prose
-- All internal/same-domain links would use `target="_top"` when added; currently no internal navigation links exist in this single-page document
-- iframe height-sender baked in before the closing body tag
-- Skip link, focus indicators, prefers-reduced-motion all present
+Built and self-audited for Dr. Sharilyn Rennie, May 23, 2026. Sign-off pending the live screen-reader pass noted above.
+
+---
+
+## Addendum: "Practice these cards" deep-link buttons on slides pages
+
+Date: 2026-06-03. Reviewer: Dr. Sharilyn Rennie.
+
+Files covered: all 28 slides-*.html lecture pages.
+
+Change: added a "Practice these cards" button in each page's hero action row, deep-linking to bio004-spaced-recall.html#topic=<topic-id>. The spaced-recall app routes the student through the existing video gate first (gate not yet passed -> gate view; gate passed -> cards), so day-unlock and prior-rated-card access behave as designed.
+
+WCAG 2.2 audit for the new element:
+1. Color contrast: button text #FFFFFF on background #8B3A2E = 7.6:1. Passes AA and AAA for normal text.
+2. Keyboard: native anchor element, in tab order, operable with Enter. Visible focus indicator inherited from global a:focus-visible (3px solid #8B3A2E, offset 3px).
+3. Semantics: real <a href> (not a div), descriptive aria-label naming the target topic.
+4. Link target: target="_top" per same-domain link rule, so the app breaks out of any iframe embed.
+5. Reduced motion / print: button hidden in print stylesheet; no animation introduced.
+
+Mapping notes (two pages have no exact topic in the card bank; nearest topic used, confirm if you want them remapped):
+- slides-neurons-action-potentials.html -> t-cns-organization
+- slides-sliding-filament.html -> t-muscle-microanatomy
+- slides-foundations.html -> two buttons (t-levels-of-organization, t-anatomical-terminology)

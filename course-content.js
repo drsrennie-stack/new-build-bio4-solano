@@ -2431,8 +2431,8 @@ window.BIO004_COURSE_CONTENT = {
             {
               "id": "mnt-55",
               "dok": 4,
-              "q": "Integrate spatial, microscopic, and functional features to explain how a motor neuron, its axon, and a skeletal muscle fiber form a single working unit.",
-              "a": "Spatially the motor neuron's cell body sits in the ventral horn of the spinal cord. Microscopically, its single long axon (myelinated by Schwann cells in the PNS) exits through the ventral root, joins a peripheral nerve, and terminates at the neuromuscular junction on the surface of a skeletal muscle fiber. Functionally, the axon conducts an action potential to the terminal, releases acetylcholine into the synaptic cleft, depolarizes the sarcolemma, and triggers contraction of all fibers innervated by that motor neuron (the motor unit)."
+              "q": "Integrate the spatial position, microscopic features, and structural connections of a motor neuron, its axon, and a skeletal muscle fiber to describe a motor unit as a single anatomical unit.",
+              "a": "Spatially the motor neuron cell body sits in the ventral horn of the spinal cord. Microscopically, it has a multipolar shape with a single long myelinated axon (myelin from Schwann cells in the PNS). The axon exits through the ventral root, travels in a peripheral nerve, and ends as terminal boutons at the neuromuscular junction on the sarcolemma of one or more skeletal muscle fibers. The motor unit is the structural pairing of one motor neuron with all the muscle fibers it innervates."
             },
             {
               "id": "mnt-56",
@@ -3222,8 +3222,8 @@ window.BIO004_COURSE_CONTENT = {
             {
               "id": "skna-51",
               "dok": 3,
-              "q": "Trace the cellular pathway by which a tactile signal from a fingertip Meissner corpuscle reaches a sensory nerve, naming each structural step.",
-              "a": "Mechanical deformation distorts the encapsulated Meissner corpuscle in a dermal papilla. The encapsulated dendritic terminal of a sensory neuron depolarizes (mechanically gated channels). The dendrite carries the signal proximally through the dermis and out via a cutaneous nerve into the spinal cord at the appropriate dermatome."
+              "q": "Trace the anatomical path from a Meissner corpuscle in a fingertip to the central nervous system, naming each structural step.",
+              "a": "The Meissner corpuscle sits in a dermal papilla just below the epidermis. It contains the encapsulated terminal dendrite of a sensory neuron. That dendrite travels proximally through the dermis, joins a cutaneous nerve, enters a peripheral nerve, and reaches the spinal cord through the dorsal root at the appropriate dermatomal level."
             },
             {
               "id": "skna-52",
@@ -5334,6 +5334,6068 @@ window.BIO004_COURSE_CONTENT = {
               "dok": 4,
               "q": "Synthesize: design an argument for why the six synovial joint shapes exist, using the upper limb as a worked example. For each shape in the upper limb, name the joint and explain why its specific shape suits its function.",
               "a": "Plane (gliding) at intercarpal joints: flat surfaces allow small multidirectional shifts that let the carpal bones of the wrist move as a flexible block during wrist motion. Hinge at the humeroulnar joint of the elbow and the interphalangeal joints: cylindrical bone in trough confines motion to a single axis, providing strong stability for flexion and extension when carrying loads or pinching objects. Pivot at the proximal radioulnar joint: the head of the radius rotates inside the annular ligament around the ulna, allowing forearm pronation and supination without changing elbow flexion. Condyloid (ellipsoidal) at the wrist (radiocarpal) and MCP joints: oval head in oval cup allows flexion/extension plus abduction/adduction, giving the wrist its two-axis range and the MCP joints the ability to spread the fingers. Saddle at the thumb CMC: the perpendicular saddle surfaces enable opposition, the unique motion that lets the thumb cross the palm to touch other digits, supporting grip and manipulation. Ball-and-socket at the glenohumeral joint: spherical head in shallow cup gives the shoulder the widest possible range to position the hand in space. Each shape, then, is matched to the demands placed on that joint, with the entire upper limb's catalog of joint shapes producing a hierarchy of mobility (proximal multiaxial) and precision (distal uniaxial)."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m-muscular",
+      "title": "Muscular System",
+      "week": 4,
+      "topics": [
+        {
+          "id": "t-muscle-microanatomy",
+          "title": "Skeletal Muscle Microanatomy",
+          "summary": "Connective tissue wrappings, the muscle fiber interior, sarcomere geometry, and myofilament protein arrangement that set up skeletal muscle contraction.",
+          "videoLabel": "Video: Skeletal Muscle Microanatomy (placeholder)",
+          "gateKeywords": [
+            "sarcomere",
+            "myofibril",
+            "T-tubule",
+            "sarcoplasmic reticulum",
+            "actin",
+            "myosin",
+            "Z disc",
+            "endomysium"
+          ],
+          "notes": [
+            {
+              "heading": "Levels of organization",
+              "body": [
+                "Whole muscle wrapped by epimysium, fascicles by perimysium, individual fibers by endomysium.",
+                "All three connective tissue layers converge into the tendon, which attaches to bone periosteum.",
+                "Inside each fiber are myofibrils made of repeating sarcomeres."
+              ]
+            },
+            {
+              "heading": "The muscle fiber interior",
+              "body": [
+                "Muscle fibers are multinucleated cells with nuclei pushed to the periphery just under the sarcolemma.",
+                "Sarcolemma is the plasma membrane and sarcoplasm is the cytoplasm.",
+                "T-tubules are invaginations of the sarcolemma that dive deep into the cell.",
+                "Sarcoplasmic reticulum is a specialized smooth ER that stores Ca2+.",
+                "One T-tubule flanked by two terminal cisternae of SR forms a triad."
+              ]
+            },
+            {
+              "heading": "Sarcomere geometry",
+              "body": [
+                "A sarcomere spans Z disc to Z disc and is the structural unit of contraction.",
+                "I band is light, contains only thin (actin) filaments.",
+                "A band is dark, spans the full length of thick (myosin) filaments.",
+                "H zone sits in the middle of the A band where there is no thin-filament overlap.",
+                "M line anchors thick filaments at the center."
+              ]
+            },
+            {
+              "heading": "Myofilament proteins",
+              "body": [
+                "Thin filament: actin globular subunits in a double helix, with tropomyosin and the troponin complex on top.",
+                "Thick filament: bundled myosin tails with heads (cross-bridges) projecting toward actin.",
+                "Each myosin head carries an ATP-binding site and an actin-binding site."
+              ]
+            }
+          ],
+          "cards": [
+            {
+              "id": "mm-1",
+              "dok": 1,
+              "q": "Name the connective tissue wrapping around an entire skeletal muscle.",
+              "a": "Epimysium."
+            },
+            {
+              "id": "mm-2",
+              "dok": 1,
+              "q": "Name the connective tissue wrapping around a single fascicle.",
+              "a": "Perimysium."
+            },
+            {
+              "id": "mm-3",
+              "dok": 1,
+              "q": "Name the connective tissue wrapping around a single muscle fiber.",
+              "a": "Endomysium."
+            },
+            {
+              "id": "mm-4",
+              "dok": 1,
+              "q": "What is the structural unit of a myofibril, defined Z disc to Z disc?",
+              "a": "The sarcomere."
+            },
+            {
+              "id": "mm-5",
+              "dok": 1,
+              "q": "What ion is stored in the sarcoplasmic reticulum?",
+              "a": "Ca2+."
+            },
+            {
+              "id": "mm-6",
+              "dok": 1,
+              "q": "What is the plasma membrane of a skeletal muscle fiber called?",
+              "a": "Sarcolemma."
+            },
+            {
+              "id": "mm-7",
+              "dok": 1,
+              "q": "Name the three proteins of the thin filament.",
+              "a": "Actin, tropomyosin, and troponin."
+            },
+            {
+              "id": "mm-8",
+              "dok": 1,
+              "q": "Which protein makes up the thick filament?",
+              "a": "Myosin."
+            },
+            {
+              "id": "mm-9",
+              "dok": 2,
+              "q": "Describe the path from whole muscle to filament in correct order.",
+              "a": "Whole muscle, fascicle, muscle fiber, myofibril, myofilament."
+            },
+            {
+              "id": "mm-10",
+              "dok": 2,
+              "q": "What is a triad in a skeletal muscle fiber?",
+              "a": "One T-tubule flanked by two terminal cisternae of the sarcoplasmic reticulum."
+            },
+            {
+              "id": "mm-11",
+              "dok": 2,
+              "q": "Where are the nuclei located in a mature skeletal muscle fiber, and why?",
+              "a": "At the periphery, just under the sarcolemma, because many myoblasts fused to form the fiber."
+            },
+            {
+              "id": "mm-12",
+              "dok": 2,
+              "q": "Which band of the sarcomere contains only thin filaments?",
+              "a": "The I band."
+            },
+            {
+              "id": "mm-13",
+              "dok": 2,
+              "q": "Which band corresponds to the full length of the thick filaments?",
+              "a": "The A band."
+            },
+            {
+              "id": "mm-14",
+              "dok": 2,
+              "q": "What sits in the middle of the A band where there is no thin-filament overlap?",
+              "a": "The H zone."
+            },
+            {
+              "id": "mm-15",
+              "dok": 2,
+              "q": "What anchors the thick filaments at the center of the sarcomere?",
+              "a": "The M line."
+            },
+            {
+              "id": "mm-16",
+              "dok": 2,
+              "q": "What anchors the thin filaments at each end of the sarcomere?",
+              "a": "The Z disc (Z line)."
+            },
+            {
+              "id": "mm-17",
+              "dok": 2,
+              "q": "Describe the geometry of actin in a thin filament.",
+              "a": "Globular actin subunits arranged in a double helix."
+            },
+            {
+              "id": "mm-18",
+              "dok": 2,
+              "q": "What is tropomyosin and where does it sit at rest?",
+              "a": "A long protein lying along the actin helix, covering the myosin-binding sites at rest."
+            },
+            {
+              "id": "mm-19",
+              "dok": 2,
+              "q": "What complex sits on tropomyosin?",
+              "a": "The troponin complex."
+            },
+            {
+              "id": "mm-20",
+              "dok": 2,
+              "q": "Name the two functional sites on each myosin head.",
+              "a": "An ATP-binding site and an actin-binding site."
+            },
+            {
+              "id": "mm-21",
+              "dok": 2,
+              "q": "What structure on the sarcolemma carries the electrical signal deep into the fiber?",
+              "a": "The T-tubule."
+            },
+            {
+              "id": "mm-22",
+              "dok": 2,
+              "q": "Where in the sarcomere are the M line and Z disc relative to one another?",
+              "a": "The M line sits at the center; Z discs sit at each end."
+            },
+            {
+              "id": "mm-23",
+              "dok": 2,
+              "q": "Distinguish epimysium, perimysium, and endomysium by what each wraps.",
+              "a": "Epimysium wraps the whole muscle, perimysium wraps each fascicle, endomysium wraps each fiber."
+            },
+            {
+              "id": "mm-24",
+              "dok": 2,
+              "q": "What happens to the three connective tissue layers at the end of a muscle?",
+              "a": "They converge and become continuous with the tendon."
+            },
+            {
+              "id": "mm-25",
+              "dok": 2,
+              "q": "What is the term for the cytoplasm of a muscle fiber?",
+              "a": "Sarcoplasm."
+            },
+            {
+              "id": "mm-26",
+              "dok": 2,
+              "q": "What are terminal cisternae?",
+              "a": "Enlarged regions of the sarcoplasmic reticulum that flank each T-tubule."
+            },
+            {
+              "id": "mm-27",
+              "dok": 2,
+              "q": "Why does the SR membrane carry many Ca2+ pumps and channels structurally?",
+              "a": "Because Ca2+ storage and release is its dedicated job; it is a specialized smooth ER."
+            },
+            {
+              "id": "mm-28",
+              "dok": 2,
+              "q": "What does the term 'myofilament' refer to anatomically?",
+              "a": "The thin (actin) and thick (myosin) protein filaments that make up the sarcomere."
+            },
+            {
+              "id": "mm-29",
+              "dok": 2,
+              "q": "Where does the myosin tail end and the head begin, in terms of orientation in a thick filament?",
+              "a": "Tails are bundled along the center axis; heads project outward toward neighboring thin filaments."
+            },
+            {
+              "id": "mm-30",
+              "dok": 2,
+              "q": "If you label a sarcomere as Z, I, A, H, M, in what order do those structures appear from one Z disc moving toward the M line?",
+              "a": "Z disc, then I band, then A band (with H zone inside it), then M line at center."
+            },
+            {
+              "id": "mm-31",
+              "dok": 2,
+              "q": "What anatomical relationship lets the T-tubule signal reach the SR almost simultaneously across the fiber?",
+              "a": "T-tubules dive deep into the fiber and align next to terminal cisternae at every sarcomere."
+            },
+            {
+              "id": "mm-32",
+              "dok": 3,
+              "q": "Predict what happens to the I band and H zone widths when a sarcomere shortens, and explain why the A band stays the same.",
+              "a": "I band and H zone narrow because thin filaments slide over thick. A band stays constant because it equals the length of the thick filaments themselves."
+            },
+            {
+              "id": "mm-33",
+              "dok": 3,
+              "q": "A drug damages the proteins of the Z disc. Predict the structural consequence for force transmission in a sarcomere.",
+              "a": "Thin filaments lose their anchor, sarcomeres pull apart end-to-end, and force cannot be transmitted across the myofibril."
+            },
+            {
+              "id": "mm-34",
+              "dok": 3,
+              "q": "Compare a triad in skeletal muscle to a dyad in cardiac muscle in terms of structural components.",
+              "a": "A triad has one T-tubule plus two terminal cisternae of SR; a dyad has one T-tubule plus one terminal cisterna of SR."
+            },
+            {
+              "id": "mm-35",
+              "dok": 3,
+              "q": "Why does damage to the sarcolemma compromise the structural pathway that links the surface of the fiber to the sarcoplasmic reticulum?",
+              "a": "T-tubules are tube-like invaginations of the sarcolemma that travel into the depths of the fiber. A damaged sarcolemma disrupts the continuity of these tubes, so the structural connection between the cell surface and the SR terminal cisternae is broken."
+            },
+            {
+              "id": "mm-36",
+              "dok": 3,
+              "q": "Predict what would happen to muscle structure if myosin lacked its globular heads but retained its tail.",
+              "a": "Thick filaments could still form a bundle anchored at the M line but could not form cross-bridges with actin; sarcomeres could not generate force."
+            },
+            {
+              "id": "mm-37",
+              "dok": 3,
+              "q": "If endomysium were destroyed throughout a muscle, what would be lost structurally?",
+              "a": "The connective tissue sleeve around each fiber, which provides capillary support and links individual fibers into the tendon, so force transmission and fiber organization would fail."
+            },
+            {
+              "id": "mm-38",
+              "dok": 3,
+              "q": "Compare the location of nuclei in a skeletal muscle fiber to a typical body cell and explain the developmental reason.",
+              "a": "Skeletal muscle nuclei sit at the periphery rather than central because many myoblasts fused, displacing nuclei from the central sarcoplasm packed with myofibrils."
+            },
+            {
+              "id": "mm-39",
+              "dok": 3,
+              "q": "Why is the sarcoplasmic reticulum classified as smooth ER rather than rough ER?",
+              "a": "It lacks ribosomes on its surface; its specialized job is Ca2+ storage and release, not protein synthesis."
+            },
+            {
+              "id": "mm-40",
+              "dok": 3,
+              "q": "Explain why a sarcomere viewed under polarized light shows alternating light and dark bands.",
+              "a": "The A band is anisotropic (dark) because thick filaments overlap with thin filaments; the I band is isotropic (light) because only thin filaments are present."
+            },
+            {
+              "id": "mm-41",
+              "dok": 3,
+              "q": "Predict the effect on the H zone if a sarcomere were stretched beyond resting length.",
+              "a": "The H zone would widen because thin filaments would slide away from the M line, leaving more of the thick filament without thin-filament overlap."
+            },
+            {
+              "id": "mm-42",
+              "dok": 3,
+              "q": "Compare a fascicle and a myofibril structurally.",
+              "a": "A fascicle is a bundle of muscle fibers wrapped in perimysium; a myofibril is an intracellular bundle of filaments inside a single fiber."
+            },
+            {
+              "id": "mm-43",
+              "dok": 3,
+              "q": "Why does the connective tissue arrangement allow force to travel continuously from filament to bone?",
+              "a": "Endomysium, perimysium, and epimysium are continuous with each other and merge into tendon, which attaches to bone periosteum, forming an unbroken mechanical pathway."
+            },
+            {
+              "id": "mm-44",
+              "dok": 3,
+              "q": "Explain what 'multinucleated' means for muscle fibers and link it to their developmental origin.",
+              "a": "Each fiber contains many nuclei because it formed by the fusion of many myoblasts into one long cell."
+            },
+            {
+              "id": "mm-45",
+              "dok": 3,
+              "q": "If troponin were missing, what would happen to the position of tropomyosin on actin?",
+              "a": "Tropomyosin would have no anchor that responds to Ca2+, so its position on actin could not be regulated in response to signaling."
+            },
+            {
+              "id": "mm-46",
+              "dok": 3,
+              "q": "Describe how the arrangement of triads at every A-I band junction places the SR in close structural proximity to every part of the fiber.",
+              "a": "Triads (one T-tubule flanked by two SR terminal cisternae) recur at every A-I junction along each myofibril. Because the triads are distributed at regular intervals across the entire fiber, the SR is positioned within a short distance of every sarcomere."
+            },
+            {
+              "id": "mm-47",
+              "dok": 3,
+              "q": "Compare the locations of thick and thin filaments at the H zone versus the rest of the A band.",
+              "a": "At the H zone there are only thick filaments; elsewhere in the A band, thin and thick filaments overlap."
+            },
+            {
+              "id": "mm-48",
+              "dok": 3,
+              "q": "Why is the term 'sarcomere' specifically reserved for the Z-to-Z unit rather than the A band or the I band?",
+              "a": "Only the Z-to-Z span represents one complete repeating functional unit with all bands present; the A or I bands alone are partial structures within that unit."
+            },
+            {
+              "id": "mm-49",
+              "dok": 3,
+              "q": "If a fiber lost all of its T-tubules, what would happen to the spatial relationship between the sarcolemma and the sarcoplasmic reticulum?",
+              "a": "Without T-tubules, the sarcolemma is reduced to the outer surface of the fiber only. The SR, which sits deep around each myofibril, would no longer be in close structural contact with any portion of the cell membrane."
+            },
+            {
+              "id": "mm-50",
+              "dok": 3,
+              "q": "Describe the spatial relationship of the M line to the Z disc within one sarcomere.",
+              "a": "The M line sits midway between the two Z discs, perpendicular to the long axis of the myofibril."
+            },
+            {
+              "id": "mm-51",
+              "dok": 3,
+              "q": "Explain why the I band spans two adjacent sarcomeres.",
+              "a": "Half the I band sits on each side of a Z disc; from the perspective of a single sarcomere, only half of each flanking I band belongs to that unit."
+            },
+            {
+              "id": "mm-52",
+              "dok": 3,
+              "q": "Why does the sarcolemma need to be especially stable mechanically given the architecture of a contracting fiber?",
+              "a": "Sarcomeres pull on each end and on the surrounding endomysium during every contraction, so the sarcolemma must resist tearing under repeated mechanical stress."
+            },
+            {
+              "id": "mm-53",
+              "dok": 3,
+              "q": "Compare the structural arrangement of actin in a thin filament to actin in a non-muscle cell briefly.",
+              "a": "In skeletal muscle, actin is organized into a stable double helix decorated with tropomyosin and troponin; in non-muscle cells, actin forms dynamic networks without those regulatory proteins in the same arrangement."
+            },
+            {
+              "id": "mm-54",
+              "dok": 4,
+              "q": "Design a labeled drawing plan for a complete sarcomere showing Z, I, A, H, and M structures, and justify the placement of each based on filament identity.",
+              "a": "Draw two Z discs at each end. From Z inward, draw thin filaments extending toward the center; this overlapping region is the I band where only thin filaments are present. Where thin and thick overlap, that is part of the A band. Place thick filaments centered between Z discs, anchored at the M line in the middle. The H zone is the central A band region containing only thick filaments. The full Z-to-Z span is one sarcomere."
+            },
+            {
+              "id": "mm-55",
+              "dok": 4,
+              "q": "Propose a structural explanation for why skeletal muscle hypertrophy adds myofibrils and sarcomeres rather than adding new fibers.",
+              "a": "Adult muscle cells are post-mitotic and cannot divide, so training cannot make new fibers. Instead, existing fibers build more contractile machinery: they add myofibrils in parallel and add sarcomeres in series, increasing cross-sectional area and length without increasing fiber number."
+            },
+            {
+              "id": "mm-56",
+              "dok": 4,
+              "q": "Build a structural argument for why a triad architecture is essential to synchronous activation of a long skeletal muscle fiber.",
+              "a": "Fibers are too long for signal from the sarcolemma surface to reach internal SR by diffusion. T-tubules carry the signal down into the fiber, and the triad places terminal cisternae of SR directly alongside the T-tubule at every A-I junction. This places the activating membrane within nanometers of the Ca2+ store, repeated thousands of times along the fiber, so the entire length of the fiber can release Ca2+ at nearly the same instant."
+            }
+          ]
+        },
+        {
+          "id": "t-sliding-filament",
+          "title": "Sliding Filament, brief",
+          "summary": "Structural overview of how thick and thin filaments slide past each other to shorten a sarcomere, naming the proteins involved and the bands that change.",
+          "videoLabel": "Video: Sliding Filament, brief (placeholder)",
+          "gateKeywords": [
+            "thick filament",
+            "thin filament",
+            "myosin",
+            "actin",
+            "troponin",
+            "tropomyosin",
+            "Z line",
+            "M line",
+            "H zone",
+            "I band",
+            "A band",
+            "sarcomere",
+            "binding site",
+            "calcium"
+          ],
+          "notes": [
+            {
+              "heading": "Filaments in the sarcomere",
+              "body": [
+                "Thick filaments are made of myosin. Each myosin molecule has a head that projects sideways toward the thin filament.",
+                "Thin filaments are made of actin. Each actin monomer carries a binding site for the myosin head.",
+                "Tropomyosin is a long strand that lies along the actin filament and covers the binding sites at rest.",
+                "Troponin is a small complex bound to tropomyosin. It holds tropomyosin in place until calcium arrives."
+              ]
+            },
+            {
+              "heading": "Landmarks of the sarcomere",
+              "body": [
+                "Z lines bound the sarcomere at each end. Thin filaments anchor to the Z lines.",
+                "M line runs down the center of the sarcomere. Thick filaments anchor to the M line.",
+                "A band is the full length of the thick filament.",
+                "I band is the region of thin filament only, on either side of the Z line.",
+                "H zone is the central region of thick filament only, where thin filaments do not reach at rest."
+              ]
+            },
+            {
+              "heading": "What happens during shortening",
+              "body": [
+                "Calcium binds troponin. Troponin shifts tropomyosin off the binding sites on actin.",
+                "Myosin heads attach to the now-exposed sites and pull the thin filament toward the M line.",
+                "The filaments themselves do not shrink. They slide past each other.",
+                "Z lines pull toward the M line. The I band shrinks. The H zone shrinks. The A band stays the same length."
+              ]
+            }
+          ],
+          "cards": [
+            {
+              "id": "sf-1",
+              "dok": 1,
+              "q": "What protein makes up the thick filament?",
+              "a": "Myosin."
+            },
+            {
+              "id": "sf-2",
+              "dok": 1,
+              "q": "What protein makes up the thin filament?",
+              "a": "Actin."
+            },
+            {
+              "id": "sf-3",
+              "dok": 1,
+              "q": "Name the two regulatory proteins that sit on the thin filament.",
+              "a": "Troponin and tropomyosin."
+            },
+            {
+              "id": "sf-4",
+              "dok": 1,
+              "q": "What structure anchors the ends of a sarcomere?",
+              "a": "The Z line (Z disc)."
+            },
+            {
+              "id": "sf-5",
+              "dok": 1,
+              "q": "What structure anchors the thick filaments in the middle of the sarcomere?",
+              "a": "The M line."
+            },
+            {
+              "id": "sf-6",
+              "dok": 2,
+              "q": "Where on the thin filament do the myosin heads attach?",
+              "a": "At the binding sites on actin, the spots that tropomyosin covers at rest."
+            },
+            {
+              "id": "sf-7",
+              "dok": 2,
+              "q": "What part of the myosin molecule physically contacts actin?",
+              "a": "The myosin head, which projects sideways from the thick filament toward the thin filament."
+            },
+            {
+              "id": "sf-8",
+              "dok": 2,
+              "q": "Describe the position of tropomyosin on the thin filament at rest.",
+              "a": "Tropomyosin lies along the actin strand and covers (blocks) the myosin binding sites."
+            },
+            {
+              "id": "sf-9",
+              "dok": 2,
+              "q": "What is troponin's structural job on the thin filament?",
+              "a": "Troponin is a small complex that holds tropomyosin in place over the binding sites until calcium arrives."
+            },
+            {
+              "id": "sf-10",
+              "dok": 2,
+              "q": "Identify the band that contains thin filament only.",
+              "a": "The I band."
+            },
+            {
+              "id": "sf-11",
+              "dok": 2,
+              "q": "Identify the zone in the center of the sarcomere that contains thick filament only at rest.",
+              "a": "The H zone."
+            },
+            {
+              "id": "sf-12",
+              "dok": 2,
+              "q": "Which band corresponds to the full length of the thick filament?",
+              "a": "The A band."
+            },
+            {
+              "id": "sf-13",
+              "dok": 2,
+              "q": "Which two bands shrink as the sarcomere shortens?",
+              "a": "The I band and the H zone."
+            },
+            {
+              "id": "sf-14",
+              "dok": 2,
+              "q": "Which band does NOT change length during contraction, and why?",
+              "a": "The A band does not change because the thick filament itself does not shrink. Only the filaments slide."
+            },
+            {
+              "id": "sf-15",
+              "dok": 2,
+              "q": "Briefly, what does calcium do at the structural level on the thin filament?",
+              "a": "Calcium binds troponin, which pulls tropomyosin off the binding sites and exposes them to myosin."
+            },
+            {
+              "id": "sf-16",
+              "dok": 2,
+              "q": "What happens to the Z lines during sarcomere shortening?",
+              "a": "The Z lines are pulled inward toward the M line at the center of the sarcomere."
+            },
+            {
+              "id": "sf-17",
+              "dok": 2,
+              "q": "Do the filaments themselves shorten when a muscle contracts? Explain.",
+              "a": "No. The thick and thin filaments stay the same length. They slide past each other so the sarcomere as a whole shortens."
+            },
+            {
+              "id": "sf-18",
+              "dok": 3,
+              "q": "Predict what would happen to the I band if every sarcomere in a fiber shortened by half. Explain your reasoning.",
+              "a": "The I band would shrink markedly. The I band is the thin-filament-only region near the Z line, so as thin filaments slide deeper between thick filaments, less of the thin filament sits alone in the I band."
+            },
+            {
+              "id": "sf-19",
+              "dok": 3,
+              "q": "A drawing shows the A band getting shorter when a sarcomere shortens. What is wrong with the drawing?",
+              "a": "The A band should stay the same length during contraction. The A band is the length of the thick filament, and the thick filament does not change size. Only the I band and H zone shrink."
+            },
+            {
+              "id": "sf-20",
+              "dok": 3,
+              "q": "If tropomyosin were stuck permanently over the actin binding sites, what step of sliding filament would fail and why?",
+              "a": "Myosin heads could not attach to actin, so no pulling on the thin filaments could occur. The sarcomere would not shorten because the binding sites stay covered."
+            },
+            {
+              "id": "sf-21",
+              "dok": 3,
+              "q": "If troponin could not bind calcium, what structural consequence would follow for the thin filament?",
+              "a": "Tropomyosin would never shift, so the binding sites would stay blocked. Myosin heads could not engage actin, and the sarcomere would not shorten."
+            },
+            {
+              "id": "sf-22",
+              "dok": 3,
+              "q": "Explain why the H zone disappears entirely at maximum sarcomere shortening.",
+              "a": "The H zone is the central region of the thick filament where no thin filament overlaps at rest. As thin filaments slide inward and meet in the middle, that gap closes and the H zone vanishes."
+            },
+            {
+              "id": "sf-23",
+              "dok": 3,
+              "q": "A student says the Z lines pull on the M line during contraction. Restate this more accurately at the structural level.",
+              "a": "The myosin heads on thick filaments pull on actin (thin filaments). Because thin filaments anchor to the Z lines, the Z lines are dragged toward the M line at the center. The Z lines do not act on the M line directly."
+            },
+            {
+              "id": "sf-24",
+              "dok": 3,
+              "q": "Compare the resting and contracted sarcomere in terms of which structures change length and which do not.",
+              "a": "At rest the A band, thick filament, and thin filament are at their normal lengths. During contraction the sarcomere as a whole shortens. The thick and thin filaments stay the same length. The I band and H zone shrink. The A band is unchanged."
+            },
+            {
+              "id": "sf-25",
+              "dok": 3,
+              "q": "If a stain marked every Z line in a muscle fiber, what would you see happen to the spacing between marks during contraction?",
+              "a": "The marks would move closer together. The sarcomeres are bounded by Z lines, so as each sarcomere shortens the distance between adjacent Z marks decreases along the fiber."
+            },
+            {
+              "id": "sf-26",
+              "dok": 3,
+              "q": "Why does naming the H zone require specifying \"at rest\"?",
+              "a": "The H zone is defined as the central region of thick filament with no thin-filament overlap. During contraction the thin filaments slide into that region, so the H zone shrinks or disappears. It is most clearly seen at rest."
+            },
+            {
+              "id": "sf-27",
+              "dok": 3,
+              "q": "Explain the structural relationship that lets many small sliding events add up to a whole-muscle shortening.",
+              "a": "Sarcomeres are arranged end to end along a myofibril, myofibrils run the length of the fiber, and fibers run the length of the muscle. When every sarcomere shortens a little, the fiber shortens, and the whole muscle shortens."
+            },
+            {
+              "id": "sf-28",
+              "dok": 3,
+              "q": "Sketch in words: where does a myosin head project from, and where does it grip?",
+              "a": "The myosin head projects sideways off the thick filament toward the neighboring thin filament. It grips the binding site on actin when tropomyosin moves out of the way."
+            },
+            {
+              "id": "sf-29",
+              "dok": 3,
+              "q": "If you could measure A band, I band, and H zone widths at the same moment in a sarcomere, which two would tell you the muscle is contracting?",
+              "a": "Shrinkage of the I band and shrinkage of the H zone both signal contraction. A constant A band confirms the change is from sliding, not from filament shrinkage."
+            },
+            {
+              "id": "sf-30",
+              "dok": 4,
+              "q": "Build a structural model that explains why sarcomere shortening requires BOTH calcium availability AND intact thin filament regulatory proteins. Name each structure and what it contributes.",
+              "a": "Calcium availability lets troponin shift tropomyosin off the actin binding sites, which exposes the sites for myosin heads. Intact thin-filament regulatory proteins (troponin and tropomyosin) are required because without troponin there is no calcium sensor on the thin filament, and without tropomyosin the binding sites would be uncovered all the time. So you need calcium as the signal, troponin as the receiver on the thin filament, tropomyosin as the gate over the binding sites, actin as the track, and myosin heads on the thick filament as the pulling units. The result is that thin filaments slide toward the M line, Z lines move inward, I band and H zone shrink, A band stays constant, and the sarcomere shortens."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m-nervous",
+      "title": "Nervous System",
+      "week": 5,
+      "topics": [
+        {
+          "id": "t-cns-organization",
+          "title": "CNS Organization",
+          "summary": "Brain regions and lobes, ventricles and meninges, spinal cord gray and white matter organization, named tracts, and spinal nerve root anatomy.",
+          "videoLabel": "Video: CNS Organization (placeholder)",
+          "gateKeywords": [
+            "cerebrum",
+            "cerebellum",
+            "brainstem",
+            "meninges",
+            "ventricles",
+            "spinal cord",
+            "gray matter",
+            "white matter"
+          ],
+          "notes": [
+            {
+              "heading": "Brain regions",
+              "body": [
+                "The cerebrum has four lobes: frontal, parietal, temporal, occipital, plus the insula.",
+                "Diencephalon contains thalamus, hypothalamus, and pineal gland.",
+                "Brainstem includes midbrain, pons, and medulla.",
+                "Cerebellum sits posterior to the brainstem and handles coordination, balance, and motor learning."
+              ]
+            },
+            {
+              "heading": "Gray and white matter",
+              "body": [
+                "Gray matter has cell bodies and dendrites; it forms the cortex and deep nuclei.",
+                "White matter has myelinated axon tracts.",
+                "In the brain, gray sits outside (cortex) and as deep nuclei.",
+                "In the spinal cord, the gray matter is central and the white matter wraps the outside."
+              ]
+            },
+            {
+              "heading": "Meninges and CSF",
+              "body": [
+                "Three meninges: dura mater outside, arachnoid middle, pia mater inside.",
+                "Subarachnoid space holds CSF.",
+                "Two lateral ventricles drain to the 3rd ventricle, then through the cerebral aqueduct to the 4th ventricle.",
+                "CSF is made by the choroid plexus and absorbed at arachnoid villi."
+              ]
+            },
+            {
+              "heading": "Spinal cord anatomy",
+              "body": [
+                "Central gray matter is butterfly or H-shaped with dorsal (sensory), ventral (motor), and lateral (autonomic, T1-L2) horns.",
+                "Dorsal root ganglion carries sensory cell bodies; ventral root carries motor axons.",
+                "Central canal contains CSF.",
+                "Thirty-one spinal nerve pairs: 8 cervical, 12 thoracic, 5 lumbar, 5 sacral, 1 coccygeal."
+              ]
+            }
+          ],
+          "cards": [
+            {
+              "id": "cns-1",
+              "dok": 1,
+              "q": "Name the four lobes of the cerebrum.",
+              "a": "Frontal, parietal, temporal, and occipital."
+            },
+            {
+              "id": "cns-2",
+              "dok": 1,
+              "q": "Name the three parts of the brainstem.",
+              "a": "Midbrain, pons, and medulla."
+            },
+            {
+              "id": "cns-3",
+              "dok": 1,
+              "q": "Name the three meninges from outside to inside.",
+              "a": "Dura mater, arachnoid mater, pia mater."
+            },
+            {
+              "id": "cns-4",
+              "dok": 1,
+              "q": "Where is CSF produced?",
+              "a": "By the choroid plexus."
+            },
+            {
+              "id": "cns-5",
+              "dok": 1,
+              "q": "How many pairs of spinal nerves are there?",
+              "a": "31 pairs."
+            },
+            {
+              "id": "cns-6",
+              "dok": 1,
+              "q": "Name the two main components of the diencephalon.",
+              "a": "Thalamus and hypothalamus."
+            },
+            {
+              "id": "cns-7",
+              "dok": 1,
+              "q": "What is the central canal of the spinal cord?",
+              "a": "A small canal that runs the length of the spinal cord and contains CSF."
+            },
+            {
+              "id": "cns-8",
+              "dok": 1,
+              "q": "Which horns of spinal gray matter carry sensory input?",
+              "a": "The dorsal (posterior) horns."
+            },
+            {
+              "id": "cns-9",
+              "dok": 2,
+              "q": "Distinguish gray matter from white matter by composition.",
+              "a": "Gray matter contains cell bodies and dendrites; white matter contains myelinated axon tracts."
+            },
+            {
+              "id": "cns-10",
+              "dok": 2,
+              "q": "Where is gray matter in the cerebrum versus in the spinal cord?",
+              "a": "In the cerebrum, gray sits on the outside (cortex) and as deep nuclei; in the spinal cord, gray sits centrally in a butterfly shape."
+            },
+            {
+              "id": "cns-11",
+              "dok": 2,
+              "q": "Identify the lobe that contains the primary motor cortex.",
+              "a": "The frontal lobe (precentral gyrus)."
+            },
+            {
+              "id": "cns-12",
+              "dok": 2,
+              "q": "Identify the lobe that contains the primary somatosensory cortex.",
+              "a": "The parietal lobe (postcentral gyrus)."
+            },
+            {
+              "id": "cns-13",
+              "dok": 2,
+              "q": "Identify the lobe that contains the primary visual cortex.",
+              "a": "The occipital lobe."
+            },
+            {
+              "id": "cns-14",
+              "dok": 2,
+              "q": "Identify the lobe that contains the primary auditory cortex.",
+              "a": "The temporal lobe."
+            },
+            {
+              "id": "cns-15",
+              "dok": 2,
+              "q": "Where is Broca area located?",
+              "a": "In the frontal lobe, on the inferior frontal gyrus of the dominant hemisphere."
+            },
+            {
+              "id": "cns-16",
+              "dok": 2,
+              "q": "Where is Wernicke area located?",
+              "a": "In the temporal lobe, posterior to the auditory cortex of the dominant hemisphere."
+            },
+            {
+              "id": "cns-17",
+              "dok": 2,
+              "q": "Describe the structural arrangement of horns in the spinal gray matter.",
+              "a": "Dorsal (posterior) horns carry sensory input, ventral (anterior) horns carry motor output, lateral horns at T1-L2 carry autonomic neurons."
+            },
+            {
+              "id": "cns-18",
+              "dok": 2,
+              "q": "Where do sensory cell bodies sit relative to the spinal cord?",
+              "a": "In the dorsal root ganglion, just outside the cord on the dorsal root."
+            },
+            {
+              "id": "cns-19",
+              "dok": 2,
+              "q": "Trace CSF flow from the lateral ventricles to the 4th ventricle.",
+              "a": "Lateral ventricles drain through the interventricular foramen to the 3rd ventricle, then through the cerebral aqueduct to the 4th ventricle."
+            },
+            {
+              "id": "cns-20",
+              "dok": 2,
+              "q": "Where is CSF reabsorbed into the venous system?",
+              "a": "At the arachnoid villi, into the dural venous sinuses."
+            },
+            {
+              "id": "cns-21",
+              "dok": 2,
+              "q": "Identify the structure that separates the frontal and parietal lobes.",
+              "a": "The central sulcus."
+            },
+            {
+              "id": "cns-22",
+              "dok": 2,
+              "q": "Identify the structure that separates the temporal lobe from the frontal and parietal lobes.",
+              "a": "The lateral (Sylvian) sulcus."
+            },
+            {
+              "id": "cns-23",
+              "dok": 2,
+              "q": "Where is the substantia nigra and what is it associated with?",
+              "a": "In the midbrain; it is a dopaminergic nucleus associated with motor control."
+            },
+            {
+              "id": "cns-24",
+              "dok": 2,
+              "q": "What three vital centers sit in the medulla?",
+              "a": "Cardiac, respiratory, and vasomotor centers."
+            },
+            {
+              "id": "cns-25",
+              "dok": 2,
+              "q": "Identify the breakdown of the 31 spinal nerve pairs by region.",
+              "a": "8 cervical, 12 thoracic, 5 lumbar, 5 sacral, 1 coccygeal."
+            },
+            {
+              "id": "cns-26",
+              "dok": 2,
+              "q": "Where does the spinal cord begin and end anatomically?",
+              "a": "It begins at the foramen magnum (continuous with the medulla) and ends around L1-L2 as the conus medullaris."
+            },
+            {
+              "id": "cns-27",
+              "dok": 2,
+              "q": "What is the subarachnoid space and what does it contain?",
+              "a": "The space between arachnoid and pia mater, containing CSF and major blood vessels."
+            },
+            {
+              "id": "cns-28",
+              "dok": 2,
+              "q": "Where does the ventral root carry information, and what kind?",
+              "a": "Out of the cord; it carries motor axons (efferent)."
+            },
+            {
+              "id": "cns-29",
+              "dok": 2,
+              "q": "Distinguish 'cortex' from 'nucleus' in CNS gray matter.",
+              "a": "Cortex is gray matter on the outer surface of the brain; a nucleus is a cluster of gray matter deep inside the brain."
+            },
+            {
+              "id": "cns-30",
+              "dok": 2,
+              "q": "Identify the function of the cerebellum in one phrase.",
+              "a": "Coordination, balance, and motor learning."
+            },
+            {
+              "id": "cns-31",
+              "dok": 2,
+              "q": "Where does the cerebral aqueduct sit anatomically?",
+              "a": "In the midbrain, connecting the 3rd ventricle to the 4th ventricle."
+            },
+            {
+              "id": "cns-32",
+              "dok": 3,
+              "q": "Compare the structural arrangement of gray and white matter in the cerebrum versus the spinal cord.",
+              "a": "Cerebrum: gray matter outside (cortex) plus deep nuclei, white matter inside. Spinal cord: gray matter inside (butterfly), white matter outside. The arrangement is inverted between brain and cord."
+            },
+            {
+              "id": "cns-33",
+              "dok": 3,
+              "q": "Predict what symptoms could follow a lesion of the medulla.",
+              "a": "Loss of cardiac, respiratory, and vasomotor control, with potential cardiopulmonary collapse, because these vital centers sit in the medulla."
+            },
+            {
+              "id": "cns-34",
+              "dok": 3,
+              "q": "If a patient has a lesion in the lateral horn of the spinal cord at T5, what category of nervous output is affected?",
+              "a": "Sympathetic autonomic output, since lateral horns at T1-L2 house sympathetic preganglionic neurons."
+            },
+            {
+              "id": "cns-35",
+              "dok": 3,
+              "q": "Explain why hydrocephalus can develop after blockage of the cerebral aqueduct.",
+              "a": "CSF made in the lateral and 3rd ventricles cannot drain to the 4th ventricle, so it accumulates upstream and expands the ventricles, raising intracranial pressure."
+            },
+            {
+              "id": "cns-36",
+              "dok": 3,
+              "q": "A lumbar puncture is performed at L3-L4. Explain why this level is structurally chosen.",
+              "a": "The spinal cord ends near L1-L2, so a needle at L3-L4 enters the subarachnoid space below the cord and samples CSF without damaging the cord itself."
+            },
+            {
+              "id": "cns-37",
+              "dok": 3,
+              "q": "Compare the structural roles of dura, arachnoid, and pia mater.",
+              "a": "Dura is tough outer protection adherent to the skull; arachnoid is web-like middle layer that bounds the subarachnoid CSF space; pia mater is delicate inner layer adherent to brain and cord surface."
+            },
+            {
+              "id": "cns-38",
+              "dok": 3,
+              "q": "Predict the functional consequence of damage to the dorsal root ganglion at one spinal level.",
+              "a": "Loss of sensory input from the dermatome served by that level, because the cell bodies of those sensory neurons reside in the dorsal root ganglion."
+            },
+            {
+              "id": "cns-39",
+              "dok": 3,
+              "q": "Explain the structural reason brain death is defined by brainstem death.",
+              "a": "The brainstem houses the medullary cardiorespiratory centers and the reticular activating system; without brainstem function, neither vital reflexes nor consciousness can be sustained."
+            },
+            {
+              "id": "cns-40",
+              "dok": 3,
+              "q": "Compare the locations of Broca and Wernicke areas in terms of lobe and function.",
+              "a": "Broca area sits in the frontal lobe and produces speech; Wernicke area sits in the temporal lobe and comprehends speech. Both are usually in the dominant hemisphere."
+            },
+            {
+              "id": "cns-41",
+              "dok": 3,
+              "q": "If the 4th ventricle outlet is obstructed, where would CSF accumulate?",
+              "a": "In the lateral, 3rd, and 4th ventricles, expanding the entire ventricular system because CSF cannot exit into the subarachnoid space."
+            },
+            {
+              "id": "cns-42",
+              "dok": 3,
+              "q": "Compare structural protection of the brain versus the spinal cord.",
+              "a": "Brain is protected by the skull, three meninges, and CSF in subarachnoid space and ventricles. Spinal cord is protected by the vertebral column, the same three meninges, and CSF including central canal."
+            },
+            {
+              "id": "cns-43",
+              "dok": 3,
+              "q": "If a tumor compresses the central sulcus area, predict the broad deficits seen on each side.",
+              "a": "Motor deficits on the contralateral body from precentral gyrus involvement, plus somatosensory deficits on the contralateral body from postcentral gyrus involvement."
+            },
+            {
+              "id": "cns-44",
+              "dok": 3,
+              "q": "Explain why C1-C5 spinal cord injury is ventilator-dependent.",
+              "a": "Phrenic nerve innervates the diaphragm, and its motor neurons sit at C3-C5. A high cervical injury cuts descending input to those neurons, paralyzing the diaphragm."
+            },
+            {
+              "id": "cns-45",
+              "dok": 3,
+              "q": "Compare the location and function of dorsal and ventral horns of spinal gray matter.",
+              "a": "Dorsal horns lie posteriorly and process incoming sensory input; ventral horns lie anteriorly and house motor neurons that send axons out to skeletal muscle."
+            },
+            {
+              "id": "cns-46",
+              "dok": 3,
+              "q": "Predict the structural and functional change in a patient with substantia nigra dopaminergic loss.",
+              "a": "Loss of midbrain dopaminergic neurons reduces input to the basal ganglia motor circuit, producing the rigidity, tremor, and bradykinesia of Parkinson disease."
+            },
+            {
+              "id": "cns-47",
+              "dok": 3,
+              "q": "Compare the cerebellum and cerebrum in terms of where the gray matter sits.",
+              "a": "Both have gray matter as cortex on the surface and additional deep nuclei (cerebellar nuclei in cerebellum, basal nuclei in cerebrum), with white matter between."
+            },
+            {
+              "id": "cns-48",
+              "dok": 3,
+              "q": "Explain the structural reason that a lesion of the temporal lobe near the hippocampus can impair memory.",
+              "a": "The hippocampus, within the medial temporal lobe, is central to forming new declarative memories, so damage there disrupts memory encoding."
+            },
+            {
+              "id": "cns-49",
+              "dok": 3,
+              "q": "Compare the spinal cord's central canal to a ventricle of the brain.",
+              "a": "Both are CSF-filled spaces lined by ependyma; the ventricles are larger cavities in the brain, while the central canal is a thin tube running through the spinal cord."
+            },
+            {
+              "id": "cns-50",
+              "dok": 3,
+              "q": "If the choroid plexus is destroyed, what happens to CSF dynamics?",
+              "a": "CSF production drops sharply, lowering CSF volume and pressure, since the choroid plexus is the primary source of CSF."
+            },
+            {
+              "id": "cns-51",
+              "dok": 3,
+              "q": "Compare the relationship of the optic radiations to the occipital lobe and motor radiations to the precentral gyrus structurally.",
+              "a": "Both are white-matter tracts running through cerebral white matter to deliver information to specific cortical regions: optic radiations to V1 in the occipital lobe, corticospinal output from the precentral gyrus in the frontal lobe."
+            },
+            {
+              "id": "cns-52",
+              "dok": 3,
+              "q": "Explain why the thalamus is described as a sensory relay structure.",
+              "a": "Nearly all ascending sensory tracts (except olfaction) synapse in thalamic nuclei before projecting to cortex; this anatomical arrangement makes the thalamus the gateway to the cortex."
+            },
+            {
+              "id": "cns-53",
+              "dok": 3,
+              "q": "Compare the meaning of 'tract' in the CNS to 'nerve' in the PNS.",
+              "a": "Both are bundles of axons. A tract lies within the CNS (white matter); a nerve lies in the PNS, outside the CNS."
+            },
+            {
+              "id": "cns-54",
+              "dok": 4,
+              "q": "Design a structural argument for why occlusion of a vascular branch supplying the medulla is more immediately life-threatening than the same-size occlusion in the parietal lobe.",
+              "a": "The medulla contains cardiorespiratory and vasomotor centers; small damage here can stop breathing and heart rhythm. The parietal lobe processes somatosensory and spatial input; equivalent damage produces sensory and spatial deficits but does not interrupt vital cardiopulmonary control. Anatomical concentration of life-critical structures in the medulla makes even modest damage there immediately lethal."
+            },
+            {
+              "id": "cns-55",
+              "dok": 4,
+              "q": "Build a plan for mapping a stroke's symptoms back to its location, using lobe-by-lobe anatomy.",
+              "a": "Step 1: identify deficits. Step 2: pair each deficit with the cortical region anatomically responsible (motor weakness to frontal precentral, sensory loss to parietal postcentral, vision to occipital, language production to Broca in left frontal, language comprehension to Wernicke in left temporal). Step 3: lateralize: deficits show up contralateral to the lesion. Step 4: combine those clues to estimate the vascular territory (MCA, ACA, PCA) involved."
+            },
+            {
+              "id": "cns-56",
+              "dok": 4,
+              "q": "Propose a structural explanation for why a cervical spinal cord injury produces both motor and sensory deficits below the lesion, but the dermatome at the level of injury can show patchy sensation.",
+              "a": "Descending motor tracts and ascending sensory tracts run through cord white matter, so a transverse lesion blocks information traveling past the injury level. At the level itself, only some roots may be involved on each side, and roots above the lesion are spared, so the dermatome at the lesion can show partial sensation while levels below are fully cut off from cortex."
+            }
+          ]
+        },
+        {
+          "id": "t-pns-autonomic",
+          "title": "PNS and Autonomic Nervous System",
+          "summary": "Twelve cranial nerves by number, name and function category, the organization of spinal nerve plexuses and ganglia, and the divisional anatomy of sympathetic versus parasympathetic outflow.",
+          "videoLabel": "Video: PNS and Autonomic Nervous System (placeholder)",
+          "gateKeywords": [
+            "cranial nerves",
+            "spinal nerves",
+            "sympathetic",
+            "parasympathetic",
+            "ganglia",
+            "vagus",
+            "thoracolumbar",
+            "craniosacral"
+          ],
+          "notes": [
+            {
+              "heading": "PNS components",
+              "body": [
+                "PNS is everything outside the CNS: 12 pairs of cranial nerves, 31 pairs of spinal nerves, and associated ganglia.",
+                "Bundles of axons in the PNS are nerves; clusters of cell bodies are ganglia.",
+                "Sensory axons are afferent; motor axons are efferent.",
+                "Schwann cells myelinate PNS axons; satellite cells support cell bodies in ganglia."
+              ]
+            },
+            {
+              "heading": "Twelve cranial nerves",
+              "body": [
+                "I Olfactory, II Optic, III Oculomotor, IV Trochlear, V Trigeminal, VI Abducens, VII Facial, VIII Vestibulocochlear, IX Glossopharyngeal, X Vagus, XI Accessory, XII Hypoglossal.",
+                "CN III, IV, and VI move the eye (with CN IV for superior oblique and CN VI for lateral rectus).",
+                "CN VII handles facial expression, CN XII the tongue, CN XI the SCM and trapezius.",
+                "CN X (vagus) is the major parasympathetic supply to thorax and most abdomen."
+              ]
+            },
+            {
+              "heading": "Somatic versus autonomic motor",
+              "body": [
+                "Somatic motor uses one neuron from CNS to skeletal muscle; autonomic motor uses two neurons with a synapse in a ganglion.",
+                "Somatic NMJ neurotransmitter is ACh and is always excitatory.",
+                "Autonomic output can be excitatory or inhibitory."
+              ]
+            },
+            {
+              "heading": "Sympathetic vs parasympathetic anatomy",
+              "body": [
+                "Sympathetic outflow is thoracolumbar (T1-L2) with short preganglionic and long postganglionic axons; ganglia sit in the sympathetic chain along the vertebral column or in prevertebral ganglia.",
+                "Parasympathetic outflow is craniosacral (CN III, VII, IX, X plus S2-S4) with long preganglionic and short postganglionic axons; ganglia sit close to or in target organs.",
+                "Sympathetic uses ACh at the ganglion and norepinephrine at the target; parasympathetic uses ACh at both."
+              ]
+            }
+          ],
+          "cards": [
+            {
+              "id": "pns-1",
+              "dok": 1,
+              "q": "How many pairs of cranial nerves are there?",
+              "a": "12 pairs."
+            },
+            {
+              "id": "pns-2",
+              "dok": 1,
+              "q": "What is the name of cranial nerve I?",
+              "a": "Olfactory."
+            },
+            {
+              "id": "pns-3",
+              "dok": 1,
+              "q": "What is the name of cranial nerve X?",
+              "a": "Vagus."
+            },
+            {
+              "id": "pns-4",
+              "dok": 1,
+              "q": "Which cranial nerve handles hearing and balance?",
+              "a": "CN VIII, vestibulocochlear."
+            },
+            {
+              "id": "pns-5",
+              "dok": 1,
+              "q": "Where does sympathetic outflow originate in the spinal cord?",
+              "a": "Thoracolumbar region, T1 through L2."
+            },
+            {
+              "id": "pns-6",
+              "dok": 1,
+              "q": "Where does parasympathetic outflow originate?",
+              "a": "Craniosacral: cranial nerves III, VII, IX, X, plus sacral segments S2 through S4."
+            },
+            {
+              "id": "pns-7",
+              "dok": 1,
+              "q": "What term describes a cluster of cell bodies in the PNS?",
+              "a": "Ganglion."
+            },
+            {
+              "id": "pns-8",
+              "dok": 1,
+              "q": "What glial cell myelinates PNS axons?",
+              "a": "Schwann cells."
+            },
+            {
+              "id": "pns-9",
+              "dok": 2,
+              "q": "List cranial nerves I through VI by name in order.",
+              "a": "Olfactory, Optic, Oculomotor, Trochlear, Trigeminal, Abducens."
+            },
+            {
+              "id": "pns-10",
+              "dok": 2,
+              "q": "List cranial nerves VII through XII by name in order.",
+              "a": "Facial, Vestibulocochlear, Glossopharyngeal, Vagus, Accessory, Hypoglossal."
+            },
+            {
+              "id": "pns-11",
+              "dok": 2,
+              "q": "Which cranial nerve innervates the superior oblique muscle?",
+              "a": "CN IV, trochlear."
+            },
+            {
+              "id": "pns-12",
+              "dok": 2,
+              "q": "Which cranial nerve innervates the lateral rectus muscle?",
+              "a": "CN VI, abducens."
+            },
+            {
+              "id": "pns-13",
+              "dok": 2,
+              "q": "Which cranial nerves innervate the remaining extraocular muscles?",
+              "a": "CN III, oculomotor."
+            },
+            {
+              "id": "pns-14",
+              "dok": 2,
+              "q": "Distinguish the somatic and autonomic motor pathways structurally.",
+              "a": "Somatic motor has one neuron from CNS to skeletal muscle; autonomic motor has two neurons with a synapse in a peripheral ganglion."
+            },
+            {
+              "id": "pns-15",
+              "dok": 2,
+              "q": "Compare preganglionic and postganglionic fiber lengths between sympathetic and parasympathetic divisions.",
+              "a": "Sympathetic has short preganglionic and long postganglionic fibers; parasympathetic has long preganglionic and short postganglionic fibers."
+            },
+            {
+              "id": "pns-16",
+              "dok": 2,
+              "q": "Where are sympathetic ganglia located anatomically?",
+              "a": "In the sympathetic (paravertebral) chain alongside the vertebral column and in prevertebral ganglia (celiac, superior mesenteric, inferior mesenteric)."
+            },
+            {
+              "id": "pns-17",
+              "dok": 2,
+              "q": "Where are parasympathetic ganglia located anatomically?",
+              "a": "Close to or within the wall of the target organ."
+            },
+            {
+              "id": "pns-18",
+              "dok": 2,
+              "q": "Identify which cranial nerve carries facial sensation and innervates muscles of mastication.",
+              "a": "CN V, trigeminal."
+            },
+            {
+              "id": "pns-19",
+              "dok": 2,
+              "q": "Identify which cranial nerve innervates the muscles of facial expression.",
+              "a": "CN VII, facial."
+            },
+            {
+              "id": "pns-20",
+              "dok": 2,
+              "q": "Identify which cranial nerve innervates the tongue muscles.",
+              "a": "CN XII, hypoglossal."
+            },
+            {
+              "id": "pns-21",
+              "dok": 2,
+              "q": "Identify which cranial nerve innervates the SCM and trapezius.",
+              "a": "CN XI, accessory."
+            },
+            {
+              "id": "pns-22",
+              "dok": 2,
+              "q": "Identify the cranial nerve responsible for swallowing and posterior tongue taste.",
+              "a": "CN IX, glossopharyngeal."
+            },
+            {
+              "id": "pns-23",
+              "dok": 2,
+              "q": "Identify the cranial nerve responsible for parasympathetic supply to most thoracic and abdominal organs.",
+              "a": "CN X, vagus."
+            },
+            {
+              "id": "pns-24",
+              "dok": 2,
+              "q": "Compare the structural meaning of 'nerve' versus 'tract' and 'ganglion' versus 'nucleus'.",
+              "a": "Nerve and tract are both axon bundles; nerve is in the PNS, tract in the CNS. Ganglion and nucleus are both cell-body clusters; ganglion is in the PNS, nucleus in the CNS."
+            },
+            {
+              "id": "pns-25",
+              "dok": 2,
+              "q": "What is the breakdown of the 31 pairs of spinal nerves by region?",
+              "a": "8 cervical, 12 thoracic, 5 lumbar, 5 sacral, 1 coccygeal."
+            },
+            {
+              "id": "pns-26",
+              "dok": 2,
+              "q": "Identify the location of dorsal root ganglia and what cell bodies they contain.",
+              "a": "Just outside the spinal cord on the dorsal root; they contain sensory neuron cell bodies."
+            },
+            {
+              "id": "pns-27",
+              "dok": 2,
+              "q": "Identify the structural feature shared by all autonomic motor pathways but not somatic motor pathways.",
+              "a": "A synapse in a peripheral ganglion between two neurons (preganglionic and postganglionic)."
+            },
+            {
+              "id": "pns-28",
+              "dok": 2,
+              "q": "Where are satellite cells found in the PNS?",
+              "a": "Surrounding neuron cell bodies in ganglia."
+            },
+            {
+              "id": "pns-29",
+              "dok": 2,
+              "q": "Distinguish afferent and efferent fibers by direction.",
+              "a": "Afferent (sensory) fibers carry information toward the CNS; efferent (motor) fibers carry information away from the CNS."
+            },
+            {
+              "id": "pns-30",
+              "dok": 2,
+              "q": "Identify the splanchnic nerves and what they connect.",
+              "a": "Preganglionic sympathetic axons that pass through the sympathetic chain without synapsing and reach the prevertebral ganglia (celiac, superior mesenteric, inferior mesenteric)."
+            },
+            {
+              "id": "pns-31",
+              "dok": 2,
+              "q": "Identify the cranial nerve that exits the cribriform plate.",
+              "a": "CN I, olfactory."
+            },
+            {
+              "id": "pns-32",
+              "dok": 3,
+              "q": "Compare the anatomical layout of the sympathetic chain to the location of parasympathetic ganglia, and explain how each supports different responses.",
+              "a": "Sympathetic chain ganglia run parallel to the spinal cord, allowing rapid widespread activation across many segments; parasympathetic ganglia sit close to or inside target organs, allowing precise local control."
+            },
+            {
+              "id": "pns-33",
+              "dok": 3,
+              "q": "A patient cannot abduct the right eye laterally past midline. Which cranial nerve is most likely damaged?",
+              "a": "Right CN VI, abducens, which innervates the lateral rectus."
+            },
+            {
+              "id": "pns-34",
+              "dok": 3,
+              "q": "A patient shows ptosis, miosis, and anhidrosis on the left side of the face. Identify the structural pattern.",
+              "a": "Horner syndrome: damage to the sympathetic supply to the face on that side."
+            },
+            {
+              "id": "pns-35",
+              "dok": 3,
+              "q": "Explain why a vagus nerve lesion affects so many organs structurally.",
+              "a": "The vagus delivers parasympathetic preganglionic axons to thorax and most abdominal viscera; one nerve injury can disrupt heart rate slowing, bronchial constriction, and GI motility because all share that source."
+            },
+            {
+              "id": "pns-36",
+              "dok": 3,
+              "q": "Compare the structural innervation of the extraocular muscles served by CN III, IV, and VI.",
+              "a": "CN III handles superior, inferior, medial rectus, inferior oblique, and levator palpebrae. CN IV handles only superior oblique. CN VI handles only lateral rectus. Loss of any one produces a specific gaze deficit."
+            },
+            {
+              "id": "pns-37",
+              "dok": 3,
+              "q": "Predict the deficit pattern when CN VII is damaged at the stylomastoid foramen.",
+              "a": "Ipsilateral facial paralysis of muscles of facial expression (Bell palsy), because CN VII exits there to supply those muscles."
+            },
+            {
+              "id": "pns-38",
+              "dok": 3,
+              "q": "Explain why one preganglionic sympathetic fiber can produce effects across many organs.",
+              "a": "Each preganglionic fiber synapses on multiple postganglionic fibers within the sympathetic chain, allowing fan-out and broad target activation."
+            },
+            {
+              "id": "pns-39",
+              "dok": 3,
+              "q": "Compare the dorsal and ventral roots in terms of what they carry.",
+              "a": "Dorsal roots carry sensory (afferent) axons in, with cell bodies in the dorsal root ganglion; ventral roots carry motor (efferent) axons out, with cell bodies in the ventral horn of the cord."
+            },
+            {
+              "id": "pns-40",
+              "dok": 3,
+              "q": "Predict the autonomic balance shift if a patient's right vagus nerve is severed.",
+              "a": "Reduced parasympathetic input to thorax and upper abdomen on that side, leading to relative sympathetic dominance: faster heart rate, lower GI motility, and bronchodilation."
+            },
+            {
+              "id": "pns-41",
+              "dok": 3,
+              "q": "Compare the cranial origin of the parasympathetic outflow (which CN numbers) to which organs each supplies.",
+              "a": "CN III to pupil constriction and lens accommodation; CN VII to lacrimal, submandibular, sublingual glands; CN IX to parotid gland; CN X to thorax and most abdomen."
+            },
+            {
+              "id": "pns-42",
+              "dok": 3,
+              "q": "Explain why median nerve compression at the wrist produces deficit limited to the hand and not the forearm.",
+              "a": "The median nerve has already given off most of its forearm branches by the time it crosses the wrist through the carpal tunnel, so compression there spares forearm muscles but affects distal hand territories."
+            },
+            {
+              "id": "pns-43",
+              "dok": 3,
+              "q": "Compare the structural pattern of a somatic motor unit and an autonomic motor unit.",
+              "a": "Somatic: one motor neuron from CNS to skeletal muscle fibers, no peripheral synapse. Autonomic: preganglionic neuron from CNS to ganglion, postganglionic neuron from ganglion to smooth muscle, cardiac muscle, or gland."
+            },
+            {
+              "id": "pns-44",
+              "dok": 3,
+              "q": "Predict the structural pattern of cranial nerve roots if all 12 nerves emerged together in one bundle.",
+              "a": "Most lose their ability to be tested separately because each currently exits the skull through a different foramen; bundling them would confound differential diagnosis and could couple unrelated functions."
+            },
+            {
+              "id": "pns-45",
+              "dok": 3,
+              "q": "Explain why dorsal root ganglion cells are pseudounipolar in shape, given their location.",
+              "a": "Their single process splits with one branch traveling out to the periphery to sense and one branch traveling into the cord; this T-shaped layout matches the ganglion's position outside the cord on the sensory pathway."
+            },
+            {
+              "id": "pns-46",
+              "dok": 3,
+              "q": "Compare the anatomical structures of the sympathetic chain and prevertebral ganglia.",
+              "a": "The chain is a paired column of paravertebral ganglia along each side of the spinal column; prevertebral ganglia (celiac, superior mesenteric, inferior mesenteric) sit anterior to the aorta near the origins of their named arteries."
+            },
+            {
+              "id": "pns-47",
+              "dok": 3,
+              "q": "Identify the structural reason CN II is treated more like a CNS tract than a PNS nerve.",
+              "a": "CN II is a direct extension of the diencephalon; it is myelinated by oligodendrocytes and wrapped by meninges, so its histology is CNS-like."
+            },
+            {
+              "id": "pns-48",
+              "dok": 3,
+              "q": "Predict what happens to facial sensation if CN V is damaged on one side.",
+              "a": "Ipsilateral loss of facial sensation across the trigeminal distribution (ophthalmic, maxillary, mandibular) and weakness of muscles of mastication on that side."
+            },
+            {
+              "id": "pns-49",
+              "dok": 3,
+              "q": "Compare the structural divisions of the trigeminal nerve.",
+              "a": "CN V splits into three divisions: V1 ophthalmic (forehead and upper face), V2 maxillary (midface), V3 mandibular (lower face, with motor to muscles of mastication)."
+            },
+            {
+              "id": "pns-50",
+              "dok": 3,
+              "q": "Explain why parasympathetic effects are usually more discrete than sympathetic effects, structurally.",
+              "a": "Parasympathetic preganglionic fibers synapse in ganglia within target organs, so each pathway targets a specific organ. Sympathetic chain fan-out lets one preganglionic fiber distribute to many organs at once."
+            },
+            {
+              "id": "pns-51",
+              "dok": 3,
+              "q": "Compare the symptoms expected from injury to ventral root versus dorsal root at a single spinal level.",
+              "a": "Ventral root injury produces motor loss in that segment's myotome; dorsal root injury produces sensory loss in that segment's dermatome. Combined root injury produces both."
+            },
+            {
+              "id": "pns-52",
+              "dok": 3,
+              "q": "Identify the cranial nerve responsible for taste from the anterior two-thirds of the tongue.",
+              "a": "CN VII, facial."
+            },
+            {
+              "id": "pns-53",
+              "dok": 3,
+              "q": "Compare CN III function in somatic and autonomic terms.",
+              "a": "Somatic: moves most eye muscles plus levator palpebrae. Autonomic (parasympathetic): constricts pupil and contracts ciliary muscle for accommodation."
+            },
+            {
+              "id": "pns-54",
+              "dok": 4,
+              "q": "Design a structural test scheme for distinguishing CN III, IV, and VI lesions using gaze direction alone.",
+              "a": "Test single-direction movements. Lateral gaze (abduction) tests CN VI lateral rectus; down-and-in from adducted position isolates CN IV superior oblique; the remaining cardinal gazes (up, down, in) test CN III. A lesion that blocks one of those movements while sparing the others maps to that nerve."
+            },
+            {
+              "id": "pns-55",
+              "dok": 4,
+              "q": "Build an anatomical argument for why a single autonomic command can have both excitatory and inhibitory effects across the body simultaneously.",
+              "a": "Autonomic motor uses two neurons with a ganglionic synapse, where postganglionic fibers diverge to multiple targets. Different target tissues carry different receptor subtypes for the same transmitter, so a single norepinephrine release can constrict skin vessels via alpha receptors while relaxing bronchial smooth muscle via beta-2 receptors. The two-neuron, multi-target anatomy enables one command to split its effect by receptor identity at each destination."
+            },
+            {
+              "id": "pns-56",
+              "dok": 4,
+              "q": "Propose a structural explanation for how the vagus nerve, a single cranial nerve, can selectively slow the heart, increase GI motility, and constrict bronchi without firing identically at all three sites.",
+              "a": "The vagus contains many separate preganglionic axons, each headed for a ganglion in a specific organ wall. The postganglionic fibers in each organ release ACh onto local receptors with regional specialization. Central control of vagal firing can shift to particular branches, so the same nerve trunk acts like a bundle of separately targeted parasympathetic channels rather than one all-or-none output."
+            }
+          ]
+        },
+        {
+          "id": "t-neurons-action-potentials",
+          "title": "Neurons and Action Potentials, brief",
+          "summary": "Structural overview of a neuron and the chemical synapse, naming the parts that receive, conduct, and pass on a signal.",
+          "videoLabel": "Video: Neurons and Action Potentials, brief (placeholder)",
+          "gateKeywords": [
+            "soma",
+            "dendrite",
+            "axon hillock",
+            "axon",
+            "terminal bouton",
+            "myelin",
+            "node of Ranvier",
+            "synaptic cleft",
+            "vesicle",
+            "postsynaptic membrane",
+            "neurotransmitter",
+            "Schwann",
+            "oligodendrocyte"
+          ],
+          "notes": [
+            {
+              "heading": "Parts of a neuron",
+              "body": [
+                "Soma (cell body) holds the nucleus and most organelles. It is the metabolic center of the neuron.",
+                "Dendrites are short branched processes that extend from the soma. They are the main receiving surface for incoming signals.",
+                "Axon hillock is the cone-shaped region where the axon leaves the soma. Signals heading down the axon start here.",
+                "Axon is the long process that carries the signal away from the soma toward other cells.",
+                "Terminal boutons (axon terminals, synaptic knobs) are the bulbous endings of the axon that contact the next cell."
+              ]
+            },
+            {
+              "heading": "Myelin and nodes",
+              "body": [
+                "Myelin sheath is a fatty insulating wrapping around many axons. In the CNS it is made by oligodendrocytes. In the PNS it is made by Schwann cells.",
+                "Nodes of Ranvier are gaps in the myelin sheath. The signal regenerates at these nodes and appears to jump between them along myelinated axons.",
+                "Larger axon diameter also speeds the signal along."
+              ]
+            },
+            {
+              "heading": "The chemical synapse",
+              "body": [
+                "The synapse is the junction between a presynaptic terminal bouton and the postsynaptic cell.",
+                "Synaptic vesicles inside the terminal bouton hold neurotransmitter.",
+                "The synaptic cleft is the narrow gap between presynaptic and postsynaptic membranes.",
+                "The postsynaptic membrane carries receptors for the neurotransmitter.",
+                "When the signal reaches the terminal, vesicles fuse with the presynaptic membrane and release neurotransmitter into the cleft. Neurotransmitter crosses the cleft and binds receptors on the postsynaptic membrane."
+              ]
+            }
+          ],
+          "cards": [
+            {
+              "id": "nap-1",
+              "dok": 1,
+              "q": "What is the soma of a neuron?",
+              "a": "The cell body. It contains the nucleus and most of the neuron's organelles."
+            },
+            {
+              "id": "nap-2",
+              "dok": 1,
+              "q": "What are dendrites?",
+              "a": "Short, branched processes that extend from the soma and receive incoming signals."
+            },
+            {
+              "id": "nap-3",
+              "dok": 1,
+              "q": "Name the cone-shaped region where the axon leaves the soma.",
+              "a": "The axon hillock."
+            },
+            {
+              "id": "nap-4",
+              "dok": 1,
+              "q": "What is the long process that carries the signal away from the soma called?",
+              "a": "The axon."
+            },
+            {
+              "id": "nap-5",
+              "dok": 1,
+              "q": "What are the bulbous endings of the axon called?",
+              "a": "Terminal boutons (axon terminals, synaptic knobs)."
+            },
+            {
+              "id": "nap-6",
+              "dok": 2,
+              "q": "Which neuron structure is the main RECEIVING surface for incoming signals?",
+              "a": "The dendrites. They branch off the soma and provide the largest receptive surface area."
+            },
+            {
+              "id": "nap-7",
+              "dok": 2,
+              "q": "Which neuron structure is where the signal heading down the axon STARTS?",
+              "a": "The axon hillock, the cone-shaped origin of the axon at the soma."
+            },
+            {
+              "id": "nap-8",
+              "dok": 2,
+              "q": "Describe the role of the axon structurally.",
+              "a": "The axon is a long process that conducts the signal away from the soma toward the terminal boutons, sometimes over long distances."
+            },
+            {
+              "id": "nap-9",
+              "dok": 2,
+              "q": "What is the myelin sheath?",
+              "a": "A fatty insulating wrapping around many axons. It speeds signal travel and is made by oligodendrocytes in the CNS or Schwann cells in the PNS."
+            },
+            {
+              "id": "nap-10",
+              "dok": 2,
+              "q": "What are the nodes of Ranvier?",
+              "a": "Bare gaps in the myelin sheath. The signal regenerates at these nodes and appears to jump from node to node along a myelinated axon."
+            },
+            {
+              "id": "nap-11",
+              "dok": 2,
+              "q": "Which glial cell makes myelin in the CNS, and which makes it in the PNS?",
+              "a": "Oligodendrocytes make CNS myelin. Schwann cells make PNS myelin."
+            },
+            {
+              "id": "nap-12",
+              "dok": 2,
+              "q": "What is the synaptic cleft?",
+              "a": "The narrow gap between the presynaptic terminal bouton and the postsynaptic cell's membrane."
+            },
+            {
+              "id": "nap-13",
+              "dok": 2,
+              "q": "What is held inside synaptic vesicles?",
+              "a": "Neurotransmitter, the chemical messenger released into the synaptic cleft."
+            },
+            {
+              "id": "nap-14",
+              "dok": 2,
+              "q": "What is the postsynaptic membrane and what does it carry?",
+              "a": "It is the membrane of the receiving cell at a synapse. It carries receptors for the neurotransmitter released across the cleft."
+            },
+            {
+              "id": "nap-15",
+              "dok": 2,
+              "q": "Briefly, how does a signal cross the synapse at the structural level?",
+              "a": "When the signal reaches the terminal bouton, synaptic vesicles fuse with the presynaptic membrane, neurotransmitter is released into the cleft, crosses the gap, and binds receptors on the postsynaptic membrane."
+            },
+            {
+              "id": "nap-16",
+              "dok": 2,
+              "q": "Why does a larger axon diameter or a thicker myelin sheath matter structurally?",
+              "a": "Both speed signal conduction along the axon. Myelin insulates so the signal regenerates only at nodes of Ranvier, and a wider axon offers less internal resistance."
+            },
+            {
+              "id": "nap-17",
+              "dok": 2,
+              "q": "List in order the parts of a neuron the signal passes through, from input to output.",
+              "a": "Dendrites, soma, axon hillock, axon, terminal boutons."
+            },
+            {
+              "id": "nap-18",
+              "dok": 3,
+              "q": "A student labels the axon hillock as part of the dendrite tree. Correct the error and explain.",
+              "a": "The axon hillock is not on the dendrite side. It sits where the axon emerges from the soma. Dendrites are the receiving processes coming off the soma. The hillock is the take-off point of the axon, on the opposite side from where signals come in."
+            },
+            {
+              "id": "nap-19",
+              "dok": 3,
+              "q": "If a section of myelin sheath was destroyed along an axon, what would happen to signal travel through that segment, and why?",
+              "a": "Signal travel through the demyelinated segment would slow down or stop, because the signal usually \"jumps\" from one node of Ranvier to the next. Losing the insulation between nodes removes that fast regeneration pattern."
+            },
+            {
+              "id": "nap-20",
+              "dok": 3,
+              "q": "If a drug emptied all the synaptic vesicles in a terminal bouton, what would happen at the synapse?",
+              "a": "There would be nothing to release into the synaptic cleft, so neurotransmitter could not cross to the postsynaptic membrane, and the next cell would not be activated even if the signal reaches the axon terminal."
+            },
+            {
+              "id": "nap-21",
+              "dok": 3,
+              "q": "A receptor on the postsynaptic membrane is missing. Explain the structural consequence for synaptic transmission.",
+              "a": "Neurotransmitter can still be released into the cleft and cross it, but with no receptor to bind on the postsynaptic side, the postsynaptic cell does not receive the signal. The structural chain breaks at the receiving end."
+            },
+            {
+              "id": "nap-22",
+              "dok": 3,
+              "q": "Why are nodes of Ranvier described as gaps rather than as their own special structures?",
+              "a": "They are simply the spaces along the axon where myelin is absent. The axon membrane itself is exposed at the node. The structure of interest is really the interrupted myelin pattern that leaves these regularly spaced bare patches."
+            },
+            {
+              "id": "nap-23",
+              "dok": 3,
+              "q": "Compare the soma and the axon in terms of length, branching, and main job.",
+              "a": "The soma is compact, contains the nucleus and most organelles, and serves as the metabolic center. The axon is a long, usually unbranched (until near the end) process whose job is to conduct the signal away from the soma to the terminal boutons."
+            },
+            {
+              "id": "nap-24",
+              "dok": 3,
+              "q": "Why are terminal boutons described as the OUTPUT side of a neuron while dendrites are the INPUT side?",
+              "a": "Dendrites receive signals from other cells. The signal travels through the soma, down the axon, and reaches the terminal boutons. The terminal boutons then release neurotransmitter onto the next cell, so they are where the neuron's output is delivered."
+            },
+            {
+              "id": "nap-25",
+              "dok": 3,
+              "q": "Explain at the structural level why damage to Schwann cells affects PNS axons but not CNS axons.",
+              "a": "Schwann cells make the myelin sheath only on PNS axons. Damage to Schwann cells removes or thins the PNS myelin, slowing or blocking signal travel in peripheral nerves. CNS axons are myelinated by oligodendrocytes and are not affected by loss of Schwann cells."
+            },
+            {
+              "id": "nap-26",
+              "dok": 3,
+              "q": "A diagram labels the synaptic cleft as part of the axon. What is wrong with this label?",
+              "a": "The synaptic cleft is not part of the axon. It is the narrow extracellular gap between the presynaptic terminal bouton (end of one neuron's axon) and the postsynaptic membrane (of the next cell). It belongs to neither cell."
+            },
+            {
+              "id": "nap-27",
+              "dok": 3,
+              "q": "Describe the structural difference between the presynaptic and postsynaptic sides of a chemical synapse.",
+              "a": "The presynaptic side is the terminal bouton of the sending neuron, packed with synaptic vesicles full of neurotransmitter. The postsynaptic side is the membrane of the receiving cell, studded with receptors that bind the neurotransmitter after it crosses the cleft."
+            },
+            {
+              "id": "nap-28",
+              "dok": 3,
+              "q": "If you stained an axon for myelin and saw evenly spaced gaps along the stain, what would those gaps be, and why are they important?",
+              "a": "Those gaps are the nodes of Ranvier. They are important because the signal regenerates at each node and appears to jump from node to node, which is what makes signal travel along a myelinated axon so fast."
+            },
+            {
+              "id": "nap-29",
+              "dok": 3,
+              "q": "Trace the structural path of one signal from the dendrites of neuron A to the dendrites of neuron B.",
+              "a": "Signal arrives at the dendrites of neuron A, passes through the soma to the axon hillock, travels down the axon (jumping between nodes of Ranvier if myelinated), arrives at the terminal bouton, triggers vesicle fusion so neurotransmitter is released into the synaptic cleft, crosses the cleft, and binds receptors on the postsynaptic membrane of a dendrite (or soma) of neuron B."
+            },
+            {
+              "id": "nap-30",
+              "dok": 4,
+              "q": "Design a labeled structural map of a typical neuron plus its synapse onto the next cell. For each structure, give its location and its role in passing the signal forward.",
+              "a": "Start at the dendrites: short branched processes off the soma, the main receiving surface. Soma: cell body holding the nucleus, the metabolic center and where the incoming signal converges. Axon hillock: cone-shaped region where the axon leaves the soma, the take-off point for the outgoing signal. Axon: long process carrying the signal away from the soma. Myelin sheath: fatty insulating wrap around the axon, made by oligodendrocytes (CNS) or Schwann cells (PNS), speeds signal travel. Nodes of Ranvier: regularly spaced bare gaps in the myelin where the signal regenerates and appears to jump along the axon. Terminal boutons: bulbous endings of the axon that house synaptic vesicles. Synaptic vesicles: membrane-bound sacs holding neurotransmitter. Presynaptic membrane: the inner face of the terminal bouton where vesicles fuse. Synaptic cleft: narrow extracellular gap between the two cells. Postsynaptic membrane: membrane of the receiving cell carrying receptors. Neurotransmitter crosses the cleft and binds these receptors, completing the structural hand-off from one neuron to the next."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m-senses",
+      "title": "Special Senses",
+      "week": 5,
+      "topics": [
+        {
+          "id": "t-vision",
+          "title": "Vision",
+          "summary": "Eye anatomy from accessory structures and extraocular muscles through the three tunics, chambers, retina layers and photoreceptors, and the visual pathway from retina to occipital cortex.",
+          "videoLabel": "Video: Vision (placeholder)",
+          "gateKeywords": [
+            "cornea",
+            "retina",
+            "lens",
+            "fovea",
+            "optic nerve",
+            "optic chiasm",
+            "LGN",
+            "occipital cortex"
+          ],
+          "notes": [
+            {
+              "heading": "Accessory structures",
+              "body": [
+                "Eyelids, eyelashes, and conjunctiva protect the surface of the eye.",
+                "The lacrimal apparatus produces and drains tears: tears flow from the lacrimal gland (lateral) medially to the puncta, then through the nasolacrimal duct into the nasal cavity.",
+                "Six extraocular muscles move the eye: four recti (superior, inferior, medial, lateral) and two obliques (superior and inferior).",
+                "CN III innervates most, CN IV the superior oblique, CN VI the lateral rectus (LR6 SO4)."
+              ]
+            },
+            {
+              "heading": "Three tunics of the eyeball",
+              "body": [
+                "Fibrous tunic: sclera (white) and cornea (clear front).",
+                "Vascular tunic (uvea): choroid, ciliary body, iris.",
+                "Neural tunic: retina."
+              ]
+            },
+            {
+              "heading": "Chambers and humors",
+              "body": [
+                "Anterior chamber: between cornea and iris, filled with aqueous humor.",
+                "Posterior chamber: between iris and lens, also aqueous humor.",
+                "Vitreous chamber: behind the lens, filled with vitreous humor (gel)."
+              ]
+            },
+            {
+              "heading": "Retina and photoreceptors",
+              "body": [
+                "Rods (about 120 million) work in dim light, no color, peripheral.",
+                "Cones (about 6 million) work in bright light, give color, concentrated in the fovea.",
+                "Three cone types: S (blue), M (green), L (red).",
+                "Signal flow within the retina goes photoreceptor to bipolar cell to ganglion cell, whose axons form the optic nerve.",
+                "Fovea centralis has only cones and the highest acuity; the optic disc has no photoreceptors and is the blind spot."
+              ]
+            },
+            {
+              "heading": "Visual pathway",
+              "body": [
+                "Optic nerve to optic chiasm: nasal hemiretina fibers cross, temporal hemiretina fibers stay ipsilateral.",
+                "Optic tract carries fibers to the LGN of the thalamus.",
+                "Optic radiations carry signal from LGN to primary visual cortex (V1) in the occipital lobe.",
+                "Each visual cortex represents the contralateral visual field."
+              ]
+            }
+          ],
+          "cards": [
+            {
+              "id": "vis-1",
+              "dok": 1,
+              "q": "Name the three tunics of the eyeball.",
+              "a": "Fibrous, vascular (uvea), and neural."
+            },
+            {
+              "id": "vis-2",
+              "dok": 1,
+              "q": "What is the clear front portion of the fibrous tunic?",
+              "a": "The cornea."
+            },
+            {
+              "id": "vis-3",
+              "dok": 1,
+              "q": "Name the three parts of the vascular tunic.",
+              "a": "Choroid, ciliary body, and iris."
+            },
+            {
+              "id": "vis-4",
+              "dok": 1,
+              "q": "What is the neural tunic of the eyeball?",
+              "a": "The retina."
+            },
+            {
+              "id": "vis-5",
+              "dok": 1,
+              "q": "Name the two types of photoreceptors in the retina.",
+              "a": "Rods and cones."
+            },
+            {
+              "id": "vis-6",
+              "dok": 1,
+              "q": "Where is the highest visual acuity located on the retina?",
+              "a": "The fovea centralis."
+            },
+            {
+              "id": "vis-7",
+              "dok": 1,
+              "q": "What is the blind spot of the eye anatomically?",
+              "a": "The optic disc, where the optic nerve exits and there are no photoreceptors."
+            },
+            {
+              "id": "vis-8",
+              "dok": 1,
+              "q": "Which cranial nerve carries vision from the retina?",
+              "a": "CN II, optic."
+            },
+            {
+              "id": "vis-9",
+              "dok": 2,
+              "q": "List the six extraocular muscles.",
+              "a": "Superior rectus, inferior rectus, medial rectus, lateral rectus, superior oblique, inferior oblique."
+            },
+            {
+              "id": "vis-10",
+              "dok": 2,
+              "q": "Identify which extraocular muscle is innervated by CN IV.",
+              "a": "Superior oblique."
+            },
+            {
+              "id": "vis-11",
+              "dok": 2,
+              "q": "Identify which extraocular muscle is innervated by CN VI.",
+              "a": "Lateral rectus."
+            },
+            {
+              "id": "vis-12",
+              "dok": 2,
+              "q": "Trace the path of tears from production to drainage.",
+              "a": "Lacrimal gland (superolateral) secretes tears, which sweep across the eye to the medial puncta, drain into the lacrimal sac, then through the nasolacrimal duct into the nasal cavity."
+            },
+            {
+              "id": "vis-13",
+              "dok": 2,
+              "q": "Distinguish the contents of the anterior and vitreous chambers.",
+              "a": "Anterior chamber holds aqueous humor (thin, watery, in front of the lens); vitreous chamber holds vitreous humor (gel-like, behind the lens)."
+            },
+            {
+              "id": "vis-14",
+              "dok": 2,
+              "q": "Where in the eye is the aqueous humor produced?",
+              "a": "By the ciliary body, which then circulates aqueous into the posterior and anterior chambers."
+            },
+            {
+              "id": "vis-15",
+              "dok": 2,
+              "q": "Describe the structural relationship between the iris and the pupil.",
+              "a": "The iris is the pigmented muscular ring; the pupil is the opening through the iris that admits light."
+            },
+            {
+              "id": "vis-16",
+              "dok": 2,
+              "q": "Where is the lens located anatomically and what holds it in place?",
+              "a": "Behind the iris and pupil, suspended by zonular fibers attached to the ciliary body."
+            },
+            {
+              "id": "vis-17",
+              "dok": 2,
+              "q": "Identify the layer of the eyeball that supplies blood to the retina from behind.",
+              "a": "The choroid."
+            },
+            {
+              "id": "vis-18",
+              "dok": 2,
+              "q": "Describe the relative density of rods vs cones across the retina.",
+              "a": "Rods dominate in the peripheral retina; cones dominate centrally, especially in the fovea where there are no rods at all."
+            },
+            {
+              "id": "vis-19",
+              "dok": 2,
+              "q": "Name the three cone types and the colors each is most sensitive to.",
+              "a": "S (short, blue), M (medium, green), L (long, red)."
+            },
+            {
+              "id": "vis-20",
+              "dok": 2,
+              "q": "Describe the cell-to-cell signal flow within the retina.",
+              "a": "Photoreceptor (rod or cone) to bipolar cell to ganglion cell; ganglion cell axons form the optic nerve."
+            },
+            {
+              "id": "vis-21",
+              "dok": 2,
+              "q": "Trace the visual pathway from the eye to the occipital cortex.",
+              "a": "Retina to optic nerve to optic chiasm to optic tract to LGN of thalamus to optic radiations to primary visual cortex (V1) in the occipital lobe."
+            },
+            {
+              "id": "vis-22",
+              "dok": 2,
+              "q": "Describe what happens at the optic chiasm structurally.",
+              "a": "Nasal retinal fibers from each eye cross to the opposite side; temporal retinal fibers stay on the same side."
+            },
+            {
+              "id": "vis-23",
+              "dok": 2,
+              "q": "Identify the thalamic relay nucleus for vision.",
+              "a": "Lateral geniculate nucleus (LGN)."
+            },
+            {
+              "id": "vis-24",
+              "dok": 2,
+              "q": "Identify which cortical area is the primary visual cortex.",
+              "a": "V1, the primary visual cortex, in the occipital lobe along the calcarine sulcus."
+            },
+            {
+              "id": "vis-25",
+              "dok": 2,
+              "q": "Describe the relationship between the visual field of one eye and the cortex that processes it.",
+              "a": "The left half of each retina (which sees the right visual field) projects to the left visual cortex; thus each cortex represents the contralateral visual field."
+            },
+            {
+              "id": "vis-26",
+              "dok": 2,
+              "q": "Identify the LR6 SO4 mnemonic.",
+              "a": "Lateral rectus served by CN VI, superior oblique served by CN IV, all other extraocular muscles by CN III."
+            },
+            {
+              "id": "vis-27",
+              "dok": 2,
+              "q": "Where is the conjunctiva and what does it cover?",
+              "a": "A thin membrane covering the white of the eye (sclera) and lining the inner eyelid."
+            },
+            {
+              "id": "vis-28",
+              "dok": 2,
+              "q": "Describe the structural arrangement of layers in the retina from light entry to back.",
+              "a": "Light passes through ganglion cells, then bipolar cells, then reaches photoreceptors at the back of the retina, against the pigmented epithelium."
+            },
+            {
+              "id": "vis-29",
+              "dok": 2,
+              "q": "Identify the four recti by name and the cranial nerve serving each.",
+              "a": "Superior, inferior, medial rectus served by CN III; lateral rectus served by CN VI."
+            },
+            {
+              "id": "vis-30",
+              "dok": 2,
+              "q": "Identify the function of the ciliary body beyond producing aqueous humor.",
+              "a": "It contains the ciliary muscle, which changes lens shape for accommodation."
+            },
+            {
+              "id": "vis-31",
+              "dok": 2,
+              "q": "Describe what makes the fovea centralis structurally distinct.",
+              "a": "Only cones, no rods, with overlying layers thinned to allow light direct access; this gives maximal acuity and color discrimination."
+            },
+            {
+              "id": "vis-32",
+              "dok": 3,
+              "q": "Predict the visual field defect from a lesion of the right optic nerve.",
+              "a": "Complete monocular blindness in the right eye, because all signal from the right retina is lost before crossing."
+            },
+            {
+              "id": "vis-33",
+              "dok": 3,
+              "q": "Predict the visual field defect from a midline lesion of the optic chiasm.",
+              "a": "Bitemporal hemianopia: loss of both temporal visual fields, because the crossing nasal retinal fibers are interrupted."
+            },
+            {
+              "id": "vis-34",
+              "dok": 3,
+              "q": "Predict the visual field defect from a lesion of the right optic tract.",
+              "a": "Left homonymous hemianopia: loss of the left visual field in both eyes, because the right optic tract carries fibers from the left visual field of both eyes."
+            },
+            {
+              "id": "vis-35",
+              "dok": 3,
+              "q": "Compare a cataract and glaucoma as anatomical problems.",
+              "a": "Cataract is opacification of the lens that blocks light from reaching the retina; glaucoma is elevated intraocular pressure that damages the optic nerve at the back of the eye."
+            },
+            {
+              "id": "vis-36",
+              "dok": 3,
+              "q": "Explain why central vision loss in macular degeneration spares peripheral vision.",
+              "a": "The macula and fovea host cones and central vision; the peripheral retina is rod-rich and survives, so peripheral vision remains while central vision falls out."
+            },
+            {
+              "id": "vis-37",
+              "dok": 3,
+              "q": "Compare myopia and hyperopia in terms of eyeball shape and image focus.",
+              "a": "Myopia: eyeball is too long, images focus in front of the retina, near vision is preserved but distance is blurred. Hyperopia: eyeball is too short, images focus behind the retina, distance is clearer than near (though near becomes harder with age)."
+            },
+            {
+              "id": "vis-38",
+              "dok": 3,
+              "q": "Predict what happens to accommodation with age (presbyopia) and explain the structural reason.",
+              "a": "The lens stiffens with age and the ciliary muscle becomes less effective at reshaping it, so near focus is lost first; reading distance increases."
+            },
+            {
+              "id": "vis-39",
+              "dok": 3,
+              "q": "If the optic disc had even a few photoreceptors, would the blind spot still exist?",
+              "a": "The size of the blind spot would shrink, since it exists because ganglion-cell axons exit there and displace photoreceptors. Adding photoreceptors back would reduce or eliminate it."
+            },
+            {
+              "id": "vis-40",
+              "dok": 3,
+              "q": "Explain why red-green color blindness affects mostly males.",
+              "a": "The genes for L and M opsins sit on the X chromosome. Males carry only one X; a defective allele has no backup. Females have two X chromosomes, so a second working allele often masks the defect."
+            },
+            {
+              "id": "vis-41",
+              "dok": 3,
+              "q": "Compare the structural roles of choroid and retinal pigmented epithelium.",
+              "a": "Choroid is the vascular layer behind the retina that supplies blood to the outer retina; the retinal pigmented epithelium sits between choroid and photoreceptors, absorbing stray light and supporting photoreceptor function."
+            },
+            {
+              "id": "vis-42",
+              "dok": 3,
+              "q": "If extraocular muscles on one side were completely paralyzed, what change would you predict in eye position at rest?",
+              "a": "The eye would drift in the direction opposed by the paralyzed muscle, since muscle tone of the intact antagonist takes over."
+            },
+            {
+              "id": "vis-43",
+              "dok": 3,
+              "q": "Compare the structural function of cornea and lens in focusing light.",
+              "a": "Cornea provides most of the fixed refractive power because of its sharp curvature; the lens provides adjustable focusing (accommodation) for near and far."
+            },
+            {
+              "id": "vis-44",
+              "dok": 3,
+              "q": "Explain why a detached retina causes vision loss without affecting the lens.",
+              "a": "Photoreceptors lose contact with the choroid and pigmented epithelium that supply them; without that support they cannot signal, even though incoming light still focuses correctly onto the retinal surface."
+            },
+            {
+              "id": "vis-45",
+              "dok": 3,
+              "q": "Compare the location of the LGN and the primary visual cortex.",
+              "a": "LGN sits in the thalamus, deep in the diencephalon; primary visual cortex sits in the occipital lobe along the calcarine sulcus on the medial surface."
+            },
+            {
+              "id": "vis-46",
+              "dok": 3,
+              "q": "Predict the deficit if the optic radiations are damaged on one side.",
+              "a": "Contralateral homonymous hemianopia, since optic radiations carry the contralateral visual field from LGN to V1."
+            },
+            {
+              "id": "vis-47",
+              "dok": 3,
+              "q": "Compare the structural arrangement of cones in the fovea to cones in the periphery.",
+              "a": "Fovea: dense cones, no rods, with overlying retinal layers thinned for direct light access. Periphery: fewer cones, many rods, with full thickness of retinal layers."
+            },
+            {
+              "id": "vis-48",
+              "dok": 3,
+              "q": "Predict what happens to retinal signal flow if all bipolar cells were damaged.",
+              "a": "Photoreceptors could still respond to light, but ganglion cells would not be driven, so no signal would leave the eye through the optic nerve."
+            },
+            {
+              "id": "vis-49",
+              "dok": 3,
+              "q": "Compare the path of aqueous humor flow to the path of vitreous humor.",
+              "a": "Aqueous humor is continuously produced by ciliary body, circulates through posterior and anterior chambers, and drains at the trabecular meshwork; vitreous humor is largely static gel filling the vitreous chamber, not actively circulated."
+            },
+            {
+              "id": "vis-50",
+              "dok": 3,
+              "q": "Explain why the optic nerve is myelinated by oligodendrocytes rather than Schwann cells.",
+              "a": "The optic nerve is technically a CNS tract (an outgrowth of the diencephalon), so it uses CNS glia."
+            },
+            {
+              "id": "vis-51",
+              "dok": 3,
+              "q": "Compare the structural function of the iris constrictor versus dilator muscles.",
+              "a": "Constrictor (circular fibers, parasympathetic via CN III) narrows the pupil; dilator (radial fibers, sympathetic) widens it. Together they regulate light entry."
+            },
+            {
+              "id": "vis-52",
+              "dok": 3,
+              "q": "Compare what each tunic contributes to the function of the eye.",
+              "a": "Fibrous tunic provides structural shape and a clear window (cornea) for light entry; vascular tunic delivers blood and houses the iris and ciliary body for light regulation and accommodation; neural tunic converts light into neural signal."
+            },
+            {
+              "id": "vis-53",
+              "dok": 3,
+              "q": "Explain why the lacrimal apparatus connects to the nasal cavity anatomically.",
+              "a": "Tears need a drainage path. The nasolacrimal duct routes excess tears from the lacrimal sac into the nasal cavity, which is why the nose runs when you cry."
+            },
+            {
+              "id": "vis-54",
+              "dok": 4,
+              "q": "Design a structural diagnostic framework that uses visual field testing to localize a lesion along the visual pathway.",
+              "a": "Step 1: monocular loss isolates an optic nerve or eye-level lesion. Step 2: bitemporal hemianopia points to the chiasm. Step 3: homonymous hemianopia points to the optic tract, LGN, optic radiations, or visual cortex on the contralateral side. Step 4: cortical-only deficits (such as macular sparing) suggest occipital cortex with collateral blood supply to the macular representation."
+            },
+            {
+              "id": "vis-55",
+              "dok": 4,
+              "q": "Propose a structural argument for why the retina is described as wired backwards but still produces high-resolution images.",
+              "a": "Photoreceptors sit at the back of the retina because they evolved next to the pigmented epithelium that supports their high metabolic and photopigment recycling needs. Light passes through transparent inner layers (ganglion, bipolar) with minimal scatter. In the fovea, the inner layers are pushed aside so light reaches cones directly, restoring high acuity at the spot where it matters most."
+            },
+            {
+              "id": "vis-56",
+              "dok": 4,
+              "q": "Build a multi-step structural plan for explaining the deficit caused by a tumor at the optic chiasm pressing posteriorly into the floor of the third ventricle.",
+              "a": "Step 1: midline chiasm compression interrupts crossing nasal fibers, producing bitemporal hemianopia. Step 2: posterior extension may impinge on the hypothalamic floor, producing endocrine or autonomic disturbance. Step 3: superior extension can pull on optic tracts after the chiasm, adding homonymous components. Mapping field loss plus endocrine signs identifies the lesion's exact extent."
+            }
+          ]
+        },
+        {
+          "id": "t-hearing-equilibrium",
+          "title": "Hearing and Equilibrium",
+          "summary": "Outer, middle, and inner ear anatomy, cochlear architecture, vestibular apparatus structure, and the auditory pathway from cochlea to temporal cortex.",
+          "videoLabel": "Video: Hearing and Equilibrium (placeholder)",
+          "gateKeywords": [
+            "cochlea",
+            "ossicles",
+            "semicircular canals",
+            "utricle",
+            "saccule",
+            "CN VIII",
+            "tympanic membrane",
+            "auditory cortex"
+          ],
+          "notes": [
+            {
+              "heading": "Three regions of the ear",
+              "body": [
+                "Outer ear: auricle, external auditory canal, tympanic membrane (eardrum).",
+                "Middle ear: tympanic cavity housing three ossicles (malleus, incus, stapes).",
+                "Inner ear: bony labyrinth containing membranous labyrinth, with cochlea for hearing and vestibule plus semicircular canals for equilibrium.",
+                "Eustachian (auditory) tube connects the middle ear to the pharynx for pressure equalization."
+              ]
+            },
+            {
+              "heading": "Cochlear anatomy",
+              "body": [
+                "Three fluid-filled ducts run the length of the cochlea: scala vestibuli (top, perilymph), cochlear duct (middle, endolymph, contains organ of Corti), scala tympani (bottom, perilymph).",
+                "Basilar membrane separates the cochlear duct from the scala tympani.",
+                "Tectorial membrane overlies hair cells.",
+                "Inner hair cells are the primary sensory transducers; outer hair cells amplify.",
+                "Helicotrema connects scala vestibuli and scala tympani at the cochlear apex."
+              ]
+            },
+            {
+              "heading": "Vestibular apparatus",
+              "body": [
+                "Utricle and saccule sit in the vestibule and detect linear acceleration and head position; each contains a macula with otoliths (calcium carbonate crystals).",
+                "Three semicircular canals (anterior, posterior, lateral) detect angular acceleration; each contains a crista ampullaris with a cupula.",
+                "All vestibular signals leave via CN VIII to vestibular nuclei in the brainstem, then to cerebellum, eye muscles, and cortex."
+              ]
+            },
+            {
+              "heading": "Auditory pathway",
+              "body": [
+                "Cochlea to cochlear nerve (CN VIII) to cochlear nuclei in the medulla.",
+                "Most fibers cross at the superior olive, supporting sound localization.",
+                "Lateral lemniscus to inferior colliculus (midbrain), then medial geniculate nucleus (MGN) of thalamus, then primary auditory cortex on the superior temporal gyrus.",
+                "Bilateral representation means a unilateral cortical lesion does not produce total deafness."
+              ]
+            }
+          ],
+          "cards": [
+            {
+              "id": "hear-1",
+              "dok": 1,
+              "q": "Name the three regions of the ear.",
+              "a": "Outer, middle, and inner ear."
+            },
+            {
+              "id": "hear-2",
+              "dok": 1,
+              "q": "Name the three ossicles in order from tympanic membrane to oval window.",
+              "a": "Malleus, incus, stapes."
+            },
+            {
+              "id": "hear-3",
+              "dok": 1,
+              "q": "What is the tympanic membrane?",
+              "a": "The eardrum, the structure at the end of the external auditory canal that vibrates in response to sound."
+            },
+            {
+              "id": "hear-4",
+              "dok": 1,
+              "q": "What tube connects the middle ear to the pharynx?",
+              "a": "The Eustachian (auditory) tube."
+            },
+            {
+              "id": "hear-5",
+              "dok": 1,
+              "q": "Which cranial nerve carries hearing and balance information?",
+              "a": "CN VIII, vestibulocochlear."
+            },
+            {
+              "id": "hear-6",
+              "dok": 1,
+              "q": "What part of the inner ear handles hearing?",
+              "a": "The cochlea."
+            },
+            {
+              "id": "hear-7",
+              "dok": 1,
+              "q": "What part of the inner ear handles angular acceleration?",
+              "a": "The semicircular canals."
+            },
+            {
+              "id": "hear-8",
+              "dok": 1,
+              "q": "What part of the inner ear handles linear acceleration and head position?",
+              "a": "The vestibule (utricle and saccule)."
+            },
+            {
+              "id": "hear-9",
+              "dok": 2,
+              "q": "Identify the three structures of the outer ear.",
+              "a": "Auricle (pinna), external auditory canal, and tympanic membrane."
+            },
+            {
+              "id": "hear-10",
+              "dok": 2,
+              "q": "Describe how the middle ear ossicles connect to one another in series.",
+              "a": "Tympanic membrane to malleus to incus to stapes; the stapes footplate sits in the oval window."
+            },
+            {
+              "id": "hear-11",
+              "dok": 2,
+              "q": "Describe the three fluid-filled ducts of the cochlea by name and contents.",
+              "a": "Scala vestibuli (top, perilymph), cochlear duct (middle, endolymph), scala tympani (bottom, perilymph)."
+            },
+            {
+              "id": "hear-12",
+              "dok": 2,
+              "q": "Where does the organ of Corti sit anatomically?",
+              "a": "On the basilar membrane within the cochlear duct, with the tectorial membrane above it."
+            },
+            {
+              "id": "hear-13",
+              "dok": 2,
+              "q": "Identify the membrane that separates the cochlear duct from the scala tympani.",
+              "a": "The basilar membrane."
+            },
+            {
+              "id": "hear-14",
+              "dok": 2,
+              "q": "Identify the membrane that sits above the hair cells of the organ of Corti.",
+              "a": "The tectorial membrane."
+            },
+            {
+              "id": "hear-15",
+              "dok": 2,
+              "q": "Distinguish inner from outer hair cells of the cochlea.",
+              "a": "Inner hair cells are the primary sensory transducers that signal CN VIII; outer hair cells amplify the basilar membrane response."
+            },
+            {
+              "id": "hear-16",
+              "dok": 2,
+              "q": "What is the helicotrema?",
+              "a": "The opening at the apex of the cochlea where scala vestibuli meets scala tympani."
+            },
+            {
+              "id": "hear-17",
+              "dok": 2,
+              "q": "Identify the structures in the vestibule that sense linear acceleration.",
+              "a": "The utricle and saccule, each with a macula bearing otoliths."
+            },
+            {
+              "id": "hear-18",
+              "dok": 2,
+              "q": "Identify the three semicircular canals by orientation.",
+              "a": "Anterior, posterior, and lateral semicircular canals."
+            },
+            {
+              "id": "hear-19",
+              "dok": 2,
+              "q": "Where in each semicircular canal does sensory transduction occur?",
+              "a": "In the ampulla, on the crista ampullaris bearing a cupula."
+            },
+            {
+              "id": "hear-20",
+              "dok": 2,
+              "q": "Describe what otoliths are made of and where they sit.",
+              "a": "Calcium carbonate crystals embedded in the gelatinous otolithic membrane atop the macula."
+            },
+            {
+              "id": "hear-21",
+              "dok": 2,
+              "q": "Trace the auditory pathway from cochlea to cortex.",
+              "a": "Cochlea to CN VIII to cochlear nuclei in medulla to superior olive (most fibers cross) to lateral lemniscus to inferior colliculus in midbrain to medial geniculate nucleus in thalamus to primary auditory cortex on the superior temporal gyrus."
+            },
+            {
+              "id": "hear-22",
+              "dok": 2,
+              "q": "Identify the thalamic relay nucleus for hearing.",
+              "a": "Medial geniculate nucleus (MGN)."
+            },
+            {
+              "id": "hear-23",
+              "dok": 2,
+              "q": "Where is the primary auditory cortex anatomically?",
+              "a": "On the superior temporal gyrus of the temporal lobe."
+            },
+            {
+              "id": "hear-24",
+              "dok": 2,
+              "q": "Identify the function of the Eustachian tube.",
+              "a": "Pressure equalization between the middle ear cavity and the pharynx."
+            },
+            {
+              "id": "hear-25",
+              "dok": 2,
+              "q": "Describe tonotopy along the basilar membrane.",
+              "a": "High-frequency sounds maximally deflect the basilar membrane near the base (stiff, narrow); low-frequency sounds maximally deflect it near the apex (compliant, wide)."
+            },
+            {
+              "id": "hear-26",
+              "dok": 2,
+              "q": "Identify how vestibular signals leave the inner ear.",
+              "a": "Through the vestibular portion of CN VIII to the vestibular nuclei in the brainstem."
+            },
+            {
+              "id": "hear-27",
+              "dok": 2,
+              "q": "Describe the structural distinction between bony and membranous labyrinth.",
+              "a": "The bony labyrinth is the cavity within the temporal bone, containing perilymph; the membranous labyrinth is the inner sac suspended within it, filled with endolymph."
+            },
+            {
+              "id": "hear-28",
+              "dok": 2,
+              "q": "Identify the targets of vestibular nuclei beyond the cerebellum.",
+              "a": "Extraocular muscles (via the vestibulo-ocular reflex), spinal cord motor neurons for postural control, and the cerebral cortex for conscious balance."
+            },
+            {
+              "id": "hear-29",
+              "dok": 2,
+              "q": "Identify the structures that the stapes footplate contacts.",
+              "a": "The oval window of the cochlea."
+            },
+            {
+              "id": "hear-30",
+              "dok": 2,
+              "q": "Describe what each cochlear duct's lining of hair cells contacts above.",
+              "a": "Inner and outer hair cells project stereocilia upward, with outer hair cell stereocilia embedded in the overlying tectorial membrane."
+            },
+            {
+              "id": "hear-31",
+              "dok": 2,
+              "q": "Where does endolymph exist in the inner ear?",
+              "a": "Inside the membranous labyrinth: cochlear duct, utricle, saccule, and semicircular canals."
+            },
+            {
+              "id": "hear-32",
+              "dok": 3,
+              "q": "Explain why the ossicles produce mechanical amplification at the oval window.",
+              "a": "The large tympanic membrane area focuses force onto the small stapes footplate at the oval window; the area ratio plus lever action of the ossicles increases pressure enough to push waves into the dense cochlear fluid."
+            },
+            {
+              "id": "hear-33",
+              "dok": 3,
+              "q": "Predict the consequence of fused ossicles (otosclerosis) for hearing.",
+              "a": "Reduced ossicular mobility prevents efficient transmission of vibration to the oval window, producing conductive hearing loss."
+            },
+            {
+              "id": "hear-34",
+              "dok": 3,
+              "q": "Compare the locations of cochlea and semicircular canals within the inner ear.",
+              "a": "Cochlea is anterior, snail-shaped; semicircular canals are posterior, three loops in different planes. The vestibule sits between them and contains the utricle and saccule."
+            },
+            {
+              "id": "hear-35",
+              "dok": 3,
+              "q": "Predict the symptoms expected from BPPV and explain the structural basis.",
+              "a": "Brief, position-dependent vertigo because displaced otoliths from the utricle have moved into a semicircular canal, where head position now improperly stimulates the cupula."
+            },
+            {
+              "id": "hear-36",
+              "dok": 3,
+              "q": "Compare conductive and sensorineural hearing loss by anatomical site.",
+              "a": "Conductive: outer or middle ear pathology (wax, fluid, ossicle problems) blocking sound transmission. Sensorineural: inner ear (cochlea, hair cells) or CN VIII pathology blocking transduction or signal transmission."
+            },
+            {
+              "id": "hear-37",
+              "dok": 3,
+              "q": "Explain why a unilateral lesion of the primary auditory cortex does not cause total deafness.",
+              "a": "Auditory pathways above the cochlear nuclei project bilaterally, so each cortex receives input from both ears; losing one cortex leaves the other with bilateral input."
+            },
+            {
+              "id": "hear-38",
+              "dok": 3,
+              "q": "Compare the structural sensors of linear versus angular acceleration.",
+              "a": "Linear: macula in the utricle and saccule with otoliths overlying hair cells. Angular: crista ampullaris in each semicircular canal with a cupula that bends from endolymph movement."
+            },
+            {
+              "id": "hear-39",
+              "dok": 3,
+              "q": "Explain why otitis media is more common in young children than adults.",
+              "a": "Children's Eustachian tubes are shorter, more horizontal, and less able to drain the middle ear, allowing fluid and bacteria from the pharynx to accumulate behind the tympanic membrane."
+            },
+            {
+              "id": "hear-40",
+              "dok": 3,
+              "q": "Predict the result of damaging the right vestibular nuclei or right CN VIII vestibular branch.",
+              "a": "Imbalance, nystagmus, and vertigo with a tendency to fall toward the lesioned side; vestibular tone is asymmetric across the brainstem."
+            },
+            {
+              "id": "hear-41",
+              "dok": 3,
+              "q": "Compare the locations of inner hair cells and outer hair cells along the organ of Corti.",
+              "a": "Inner hair cells form a single row on the modiolar side; outer hair cells form three rows lateral to them. The two types differ in number, innervation, and role."
+            },
+            {
+              "id": "hear-42",
+              "dok": 3,
+              "q": "Explain the structural reason a perforated tympanic membrane causes conductive hearing loss.",
+              "a": "Vibrations that would have driven the ossicular chain instead leak through the perforation; the ossicles move less efficiently, lowering the transfer of energy to the oval window."
+            },
+            {
+              "id": "hear-43",
+              "dok": 3,
+              "q": "Compare the basilar membrane mechanics at the cochlear base and apex.",
+              "a": "At the base the membrane is narrow and stiff, responding best to high frequencies; at the apex it is wide and compliant, responding best to low frequencies."
+            },
+            {
+              "id": "hear-44",
+              "dok": 3,
+              "q": "Explain how the structural arrangement of three semicircular canals in different planes detects rotation about any axis.",
+              "a": "The three canals are roughly mutually perpendicular, so any head rotation generates endolymph movement in at least one canal; combined signals encode the axis and magnitude of the rotation."
+            },
+            {
+              "id": "hear-45",
+              "dok": 3,
+              "q": "Predict what happens to the auditory pathway if the inferior colliculus is damaged on one side.",
+              "a": "Because of bilateral input above the cochlear nuclei, some sound perception remains, but sound localization is impaired and deficits appear in the contralateral ear's representation."
+            },
+            {
+              "id": "hear-46",
+              "dok": 3,
+              "q": "Compare presbycusis and noise-induced hearing loss in terms of where damage sits.",
+              "a": "Both target cochlear hair cells, particularly outer hair cells responding to high frequencies near the base. Presbycusis is age-related cumulative loss; noise-induced loss is acoustic-trauma-related."
+            },
+            {
+              "id": "hear-47",
+              "dok": 3,
+              "q": "Compare endolymph and perilymph by location and significance.",
+              "a": "Endolymph fills the membranous labyrinth (cochlear duct, utricle, saccule, semicircular canals) and bathes the apical surfaces of hair cells; perilymph fills the bony labyrinth around the membranous labyrinth (scala vestibuli, scala tympani) and resembles standard extracellular fluid in composition."
+            },
+            {
+              "id": "hear-48",
+              "dok": 3,
+              "q": "Explain why Méniere disease produces vertigo, hearing loss, and tinnitus together.",
+              "a": "Endolymph fluid imbalance distorts the entire membranous labyrinth, affecting both cochlear (hearing, tinnitus) and vestibular (vertigo) structures simultaneously."
+            },
+            {
+              "id": "hear-49",
+              "dok": 3,
+              "q": "Compare the function of the auricle (pinna) and the external auditory canal.",
+              "a": "Auricle collects and funnels sound waves; the canal directs them inward to the tympanic membrane and also adds resonance that boosts mid-range frequencies."
+            },
+            {
+              "id": "hear-50",
+              "dok": 3,
+              "q": "Predict the consequence of damage to outer hair cells while inner hair cells remain intact.",
+              "a": "Hearing remains possible because inner hair cells still transduce, but sensitivity is reduced and discrimination of soft sounds is impaired because outer hair cells amplify the basilar membrane response."
+            },
+            {
+              "id": "hear-51",
+              "dok": 3,
+              "q": "Compare the auditory and vestibular branches of CN VIII in terms of central targets.",
+              "a": "Auditory branch projects to cochlear nuclei in the medulla; vestibular branch projects to vestibular nuclei in the brainstem and directly to portions of the cerebellum."
+            },
+            {
+              "id": "hear-52",
+              "dok": 3,
+              "q": "Explain the role of the round window structurally.",
+              "a": "It is a flexible membrane on the scala tympani; as the stapes pushes the oval window in, the round window bulges out, allowing the incompressible perilymph to displace and a traveling wave to develop."
+            },
+            {
+              "id": "hear-53",
+              "dok": 3,
+              "q": "Compare the structural role of the maculae versus the cristae.",
+              "a": "Maculae (in utricle and saccule) sense linear acceleration and head tilt via otoliths on hair cells; cristae (in semicircular canal ampullae) sense angular acceleration via endolymph deflection of the cupula."
+            },
+            {
+              "id": "hear-54",
+              "dok": 4,
+              "q": "Design a structural diagnostic approach to differentiating conductive from sensorineural hearing loss using anatomical reasoning.",
+              "a": "Step 1: identify whether sound is reaching the cochlea. Bone conduction bypasses the outer and middle ear; if hearing is preserved by bone conduction but not air conduction, the problem is conductive (outer or middle ear). Step 2: if both air and bone conduction are reduced, the lesion is in the cochlea or CN VIII (sensorineural). Step 3: Weber and Rinne tests apply this anatomical logic by routing vibration through skull bone versus the ear canal."
+            },
+            {
+              "id": "hear-55",
+              "dok": 4,
+              "q": "Build a structural argument for why preserving sound localization depends on intact crossing fibers at the superior olive.",
+              "a": "The brain compares small differences in arrival time and intensity between the two ears to localize sound. The superior olive is the first station in the auditory pathway that receives input from both ears, made possible by crossing fibers from each cochlear nucleus. If those crossings are damaged, each higher station receives information from only one side at a time, and binaural comparisons that drive localization become impossible. Localization fails even when each ear still hears."
+            },
+            {
+              "id": "hear-56",
+              "dok": 4,
+              "q": "Propose a structural plan for how a patient could lose the vestibulo-ocular reflex while still hearing normally.",
+              "a": "Step 1: hearing relies on the cochlear branch of CN VIII and central auditory pathway. Step 2: the vestibulo-ocular reflex relies on the vestibular branch of CN VIII, vestibular nuclei, and connections to extraocular motor nuclei (CN III, IV, VI). Step 3: a lesion limited to the vestibular nuclei or vestibular branch of CN VIII spares the cochlear pathway, so hearing remains intact while the reflex that stabilizes the eyes during head movement fails. The patient experiences blurred vision when the head moves but hears clearly."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m-endocrine",
+      "title": "Endocrine System",
+      "week": 6,
+      "topics": [
+        {
+          "id": "t-endocrine-glands",
+          "title": "Major Endocrine Glands",
+          "summary": "Locations, gross and microscopic structure, and hormone outputs of the major endocrine glands of the body.",
+          "videoLabel": "Video: Major Endocrine Glands (placeholder)",
+          "gateKeywords": [
+            "pituitary",
+            "thyroid",
+            "adrenal",
+            "pancreas",
+            "hormone"
+          ],
+          "notes": [
+            {
+              "heading": "Hypothalamus and pituitary",
+              "body": [
+                "The pituitary sits in the sella turcica of the sphenoid bone, connected to the hypothalamus by the infundibulum.",
+                "Anterior pituitary (adenohypophysis) is glandular epithelium. It secretes GH, TSH, ACTH, FSH, LH, and PRL.",
+                "Posterior pituitary (neurohypophysis) is neural tissue. It stores and releases ADH and oxytocin, both made in hypothalamic neurons."
+              ]
+            },
+            {
+              "heading": "Thyroid and parathyroids",
+              "body": [
+                "The thyroid is a butterfly-shaped gland on the anterior trachea, just inferior to the larynx, with two lobes joined by an isthmus.",
+                "Microscopically, follicles filled with colloid store thyroglobulin. Follicular cells secrete T3 and T4. Parafollicular (C) cells secrete calcitonin.",
+                "Four parathyroid glands sit on the posterior surface of the thyroid and secrete PTH."
+              ]
+            },
+            {
+              "heading": "Adrenals",
+              "body": [
+                "The adrenal glands sit on the superior pole of each kidney.",
+                "The cortex has three zones: zona glomerulosa (aldosterone), zona fasciculata (cortisol), zona reticularis (androgens).",
+                "The medulla contains chromaffin cells that secrete epinephrine and norepinephrine."
+              ]
+            },
+            {
+              "heading": "Pancreas and gonads",
+              "body": [
+                "The pancreas is retroperitoneal across the upper abdomen. Pancreatic islets (islets of Langerhans) hold alpha cells (glucagon), beta cells (insulin), and delta cells (somatostatin).",
+                "Ovaries (pelvis) secrete estrogen and progesterone. Testes (scrotum) secrete testosterone.",
+                "Pineal (epithalamus) secretes melatonin. Thymus (mediastinum) secretes thymosins."
+              ]
+            }
+          ],
+          "cards": [
+            {
+              "id": "endo-1",
+              "dok": 1,
+              "q": "Where is the pituitary gland located?",
+              "a": "In the sella turcica of the sphenoid bone, hanging from the hypothalamus by the infundibulum."
+            },
+            {
+              "id": "endo-2",
+              "dok": 1,
+              "q": "Name the two functional divisions of the pituitary.",
+              "a": "Anterior pituitary (adenohypophysis) and posterior pituitary (neurohypophysis)."
+            },
+            {
+              "id": "endo-3",
+              "dok": 1,
+              "q": "Where is the thyroid gland located?",
+              "a": "On the anterior trachea, just inferior to the larynx; two lobes joined by an isthmus."
+            },
+            {
+              "id": "endo-4",
+              "dok": 1,
+              "q": "How many parathyroid glands are there and where do they sit?",
+              "a": "Four parathyroid glands embedded on the posterior surface of the thyroid."
+            },
+            {
+              "id": "endo-5",
+              "dok": 1,
+              "q": "Where are the adrenal glands located?",
+              "a": "On the superior pole of each kidney (retroperitoneal)."
+            },
+            {
+              "id": "endo-6",
+              "dok": 1,
+              "q": "Name the two main regions of an adrenal gland.",
+              "a": "Adrenal cortex (outer) and adrenal medulla (inner)."
+            },
+            {
+              "id": "endo-7",
+              "dok": 1,
+              "q": "Where is the pineal gland located?",
+              "a": "In the epithalamus of the brain, posterior to the third ventricle."
+            },
+            {
+              "id": "endo-8",
+              "dok": 1,
+              "q": "Where is the thymus located?",
+              "a": "In the superior mediastinum, posterior to the sternum."
+            },
+            {
+              "id": "endo-9",
+              "dok": 2,
+              "q": "List the six hormones secreted by the anterior pituitary.",
+              "a": "GH (growth hormone), TSH, ACTH, FSH, LH, and prolactin (PRL)."
+            },
+            {
+              "id": "endo-10",
+              "dok": 2,
+              "q": "Which two hormones are released by the posterior pituitary, and where are they actually synthesized?",
+              "a": "ADH and oxytocin; both are synthesized in hypothalamic neurons and transported down axons to the posterior pituitary for storage and release."
+            },
+            {
+              "id": "endo-11",
+              "dok": 2,
+              "q": "Describe the microscopic structure of the thyroid.",
+              "a": "Spherical follicles filled with colloid (thyroglobulin) lined by follicular cells; parafollicular (C) cells lie between follicles."
+            },
+            {
+              "id": "endo-12",
+              "dok": 2,
+              "q": "Which thyroid cells produce T3 and T4, and which produce calcitonin?",
+              "a": "Follicular cells produce T3 and T4. Parafollicular (C) cells produce calcitonin."
+            },
+            {
+              "id": "endo-13",
+              "dok": 2,
+              "q": "What hormone do the parathyroid glands secrete?",
+              "a": "Parathyroid hormone (PTH)."
+            },
+            {
+              "id": "endo-14",
+              "dok": 2,
+              "q": "Name the three zones of the adrenal cortex from outer to inner.",
+              "a": "Zona glomerulosa, zona fasciculata, zona reticularis."
+            },
+            {
+              "id": "endo-15",
+              "dok": 2,
+              "q": "Which hormone is secreted by each zone of the adrenal cortex?",
+              "a": "Glomerulosa: aldosterone. Fasciculata: cortisol. Reticularis: androgens (mainly DHEA)."
+            },
+            {
+              "id": "endo-16",
+              "dok": 2,
+              "q": "What cells make up the adrenal medulla and what do they secrete?",
+              "a": "Chromaffin cells; they secrete epinephrine and norepinephrine."
+            },
+            {
+              "id": "endo-17",
+              "dok": 2,
+              "q": "Name the three cell types of a pancreatic islet and the hormone each makes.",
+              "a": "Alpha cells: glucagon. Beta cells: insulin. Delta cells: somatostatin."
+            },
+            {
+              "id": "endo-18",
+              "dok": 2,
+              "q": "What hormones do the ovaries secrete?",
+              "a": "Estrogen and progesterone."
+            },
+            {
+              "id": "endo-19",
+              "dok": 2,
+              "q": "What hormone do the testes secrete and from which cells?",
+              "a": "Testosterone, from interstitial (Leydig) cells of the testis."
+            },
+            {
+              "id": "endo-20",
+              "dok": 2,
+              "q": "What hormone is secreted by the pineal gland?",
+              "a": "Melatonin."
+            },
+            {
+              "id": "endo-21",
+              "dok": 2,
+              "q": "What hormone family is secreted by the thymus?",
+              "a": "Thymosins (and thymopoietin)."
+            },
+            {
+              "id": "endo-22",
+              "dok": 2,
+              "q": "Describe the gross shape and orientation of the thyroid.",
+              "a": "Butterfly or H-shaped; two lateral lobes flank the trachea, joined anteriorly by a midline isthmus just below the cricoid cartilage."
+            },
+            {
+              "id": "endo-23",
+              "dok": 2,
+              "q": "What anatomical connection links the hypothalamus to the anterior pituitary?",
+              "a": "The hypophyseal portal system (a vascular link), which carries releasing and inhibiting hormones."
+            },
+            {
+              "id": "endo-24",
+              "dok": 2,
+              "q": "What anatomical connection links the hypothalamus to the posterior pituitary?",
+              "a": "The hypothalamohypophyseal tract, a bundle of axons running through the infundibulum."
+            },
+            {
+              "id": "endo-25",
+              "dok": 2,
+              "q": "Microscopically, where in the pancreas are the endocrine cells found?",
+              "a": "Clustered in pancreatic islets (islets of Langerhans) scattered among exocrine acini."
+            },
+            {
+              "id": "endo-26",
+              "dok": 2,
+              "q": "Which hormone is responsible for the dark colloid stain seen in a thyroid follicle?",
+              "a": "Thyroglobulin, the storage form of thyroid hormone, fills the follicle lumen as colloid."
+            },
+            {
+              "id": "endo-27",
+              "dok": 2,
+              "q": "Name two hormones secreted by the heart and the kidney that act in an endocrine role.",
+              "a": "Heart: ANP (atrial natriuretic peptide). Kidney: erythropoietin (and renin)."
+            },
+            {
+              "id": "endo-28",
+              "dok": 2,
+              "q": "What is the bony landmark that houses the pituitary, and which bone is it part of?",
+              "a": "The sella turcica, part of the sphenoid bone."
+            },
+            {
+              "id": "endo-29",
+              "dok": 2,
+              "q": "What hormone do alpha cells of pancreatic islets secrete?",
+              "a": "Glucagon."
+            },
+            {
+              "id": "endo-30",
+              "dok": 2,
+              "q": "What hormone do beta cells of pancreatic islets secrete?",
+              "a": "Insulin."
+            },
+            {
+              "id": "endo-31",
+              "dok": 2,
+              "q": "What is the anatomic name for cells of the adrenal medulla?",
+              "a": "Chromaffin cells (modified postganglionic sympathetic neurons)."
+            },
+            {
+              "id": "endo-32",
+              "dok": 3,
+              "q": "Given a histology slide showing follicles full of pink colloid with cuboidal cells around the rim, which endocrine gland is this and what hormones come from those rim cells?",
+              "a": "The thyroid gland; the rim cells are follicular cells, which secrete T3 and T4."
+            },
+            {
+              "id": "endo-33",
+              "dok": 3,
+              "q": "A surgeon accidentally removes tissue from the posterior surface of the thyroid during thyroidectomy. Which endocrine glands and which hormone could be affected?",
+              "a": "The parathyroid glands, which secrete PTH."
+            },
+            {
+              "id": "endo-34",
+              "dok": 3,
+              "q": "If a tumor sits in the zona glomerulosa, which hormone is likely overproduced?",
+              "a": "Aldosterone."
+            },
+            {
+              "id": "endo-35",
+              "dok": 3,
+              "q": "A patient has a tumor in the adrenal medulla. Which hormones would you expect to be overproduced?",
+              "a": "Epinephrine and norepinephrine (this is a pheochromocytoma)."
+            },
+            {
+              "id": "endo-36",
+              "dok": 3,
+              "q": "On a labeled body diagram, which endocrine gland would you place posterior to the stomach and across the L1 to L2 vertebral level?",
+              "a": "The pancreas."
+            },
+            {
+              "id": "endo-37",
+              "dok": 3,
+              "q": "A child fails to grow normally and pituitary imaging shows a normal posterior pituitary but a damaged anterior pituitary. Which hormone deficiency best explains the growth failure?",
+              "a": "Growth hormone (GH) deficiency, secreted by the anterior pituitary."
+            },
+            {
+              "id": "endo-38",
+              "dok": 3,
+              "q": "Damage to the hypothalamohypophyseal tract would primarily affect release of which two hormones?",
+              "a": "ADH and oxytocin, because they travel down this tract to the posterior pituitary."
+            },
+            {
+              "id": "endo-39",
+              "dok": 3,
+              "q": "Identify the gland in the mediastinum that shrinks with age and produces hormones supporting T cell maturation.",
+              "a": "The thymus."
+            },
+            {
+              "id": "endo-40",
+              "dok": 3,
+              "q": "A histology image shows clusters of pale-staining cells scattered among darker exocrine acini. Which gland is this and what are the clusters called?",
+              "a": "The pancreas; the pale clusters are pancreatic islets (islets of Langerhans)."
+            },
+            {
+              "id": "endo-41",
+              "dok": 3,
+              "q": "Sketch the order of structures a pituitary stalk passes through from the third ventricle to the sphenoid bone.",
+              "a": "Floor of third ventricle, infundibulum (pituitary stalk), through diaphragma sellae, into the sella turcica of the sphenoid bone."
+            },
+            {
+              "id": "endo-42",
+              "dok": 3,
+              "q": "A patient lacks the small glands embedded in the back of the thyroid. Which ion homeostasis would be most disturbed, and which hormone is missing?",
+              "a": "Calcium (Ca2+) homeostasis; PTH from the parathyroid glands is missing."
+            },
+            {
+              "id": "endo-43",
+              "dok": 3,
+              "q": "If chromaffin cells were destroyed but the cortex was intact, which catecholamines would drop and which corticosteroids would stay normal?",
+              "a": "Epinephrine and norepinephrine from the medulla would drop; cortisol, aldosterone, and adrenal androgens (cortex) would stay normal."
+            },
+            {
+              "id": "endo-44",
+              "dok": 3,
+              "q": "An exam image shows a triangular gland sitting on the upper pole of a kidney. Name the gland and its two regions.",
+              "a": "The adrenal gland; cortex (outer) and medulla (inner)."
+            },
+            {
+              "id": "endo-45",
+              "dok": 3,
+              "q": "Match each anterior pituitary hormone to its target tissue: TSH, ACTH, FSH/LH, PRL, GH.",
+              "a": "TSH targets the thyroid. ACTH targets the adrenal cortex. FSH and LH target the gonads. PRL targets mammary glands. GH targets bone, muscle, and liver."
+            },
+            {
+              "id": "endo-46",
+              "dok": 3,
+              "q": "A patient has high melatonin levels at unusual times of day. Which endocrine structure is the likely source?",
+              "a": "The pineal gland."
+            },
+            {
+              "id": "endo-47",
+              "dok": 3,
+              "q": "Distinguish the structural difference between adenohypophysis and neurohypophysis on a histology slide.",
+              "a": "Adenohypophysis: glandular epithelial cells in cords with capillaries. Neurohypophysis: unmyelinated axons and pituicytes (glia), no glandular epithelium."
+            },
+            {
+              "id": "endo-48",
+              "dok": 3,
+              "q": "Trace the anatomic route a hypothalamic releasing hormone takes to reach the anterior pituitary.",
+              "a": "Hypothalamic neuron releases it into the primary capillary plexus of the median eminence; hypophyseal portal veins carry it down the infundibulum to the secondary capillary plexus in the anterior pituitary."
+            },
+            {
+              "id": "endo-49",
+              "dok": 3,
+              "q": "Which two glands together regulate blood calcium, and what does each secrete?",
+              "a": "Parathyroid (PTH, raises calcium) and thyroid C cells (calcitonin, lowers calcium)."
+            },
+            {
+              "id": "endo-50",
+              "dok": 3,
+              "q": "Identify the gland that has both endocrine and exocrine roles within its parenchyma.",
+              "a": "The pancreas: exocrine acini secrete digestive enzymes; islets secrete hormones."
+            },
+            {
+              "id": "endo-51",
+              "dok": 3,
+              "q": "An image shows nests of polyhedral cells stained with chromium salts. Which gland region is this?",
+              "a": "Adrenal medulla (chromaffin cells)."
+            },
+            {
+              "id": "endo-52",
+              "dok": 3,
+              "q": "Which endocrine organs are paired (occur as two of them)?",
+              "a": "Adrenals, ovaries, testes, and parathyroids (four). The pituitary, thyroid, pancreas, pineal, and thymus are single midline structures."
+            },
+            {
+              "id": "endo-53",
+              "dok": 3,
+              "q": "Given a transverse section through the neck at the level of the thyroid cartilage, name two endocrine structures visible.",
+              "a": "Thyroid gland and parathyroid glands (on the posterior surface of the thyroid)."
+            },
+            {
+              "id": "endo-54",
+              "dok": 4,
+              "q": "Design a labeled body map for a study guide showing every major endocrine gland in correct anatomic location plus its primary hormone(s). What inclusion criteria should you use to keep it complete but uncluttered?",
+              "a": "Include pineal (melatonin), hypothalamus and pituitary (anterior: GH/TSH/ACTH/FSH/LH/PRL; posterior: ADH/oxytocin), thyroid (T3/T4, calcitonin), parathyroids (PTH), thymus (thymosins), adrenals (cortex: aldosterone/cortisol/androgens; medulla: epinephrine/NE), pancreas (insulin, glucagon, somatostatin), gonads (sex hormones). Exclude organs with only minor endocrine roles unless explicitly within scope; group hypothalamus-pituitary as one axis label."
+            },
+            {
+              "id": "endo-55",
+              "dok": 4,
+              "q": "Plan a lab dissection that allows a student to find every major endocrine gland in a single cadaver. List the dissection sequence and the access plane for each gland.",
+              "a": "Sequence: skull base for pineal and pituitary (saw through sphenoid to access sella turcica); anterior neck for thyroid and parathyroids; superior mediastinum for thymus; retroperitoneum for adrenals (superior pole of kidneys) and pancreas (across L1 to L2 behind stomach); pelvis for ovaries or scrotum for testes. Each is reached through its native anatomic compartment without removing intervening organs."
+            },
+            {
+              "id": "endo-56",
+              "dok": 4,
+              "q": "Build a chart that lets students predict, from a labeled gland, which hormone(s) they should list. What columns make the chart maximally useful?",
+              "a": "Columns: gland name, anatomic location, gross structure, microscopic cell type(s), and hormone(s) secreted by each cell type. Add a sixth column for any subdivisions (cortex vs medulla, anterior vs posterior, follicular vs parafollicular) so a single row never mixes outputs from anatomically distinct cell populations."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m-cardiovascular",
+      "title": "Cardiovascular System",
+      "week": 6,
+      "topics": [
+        {
+          "id": "t-heart-anatomy",
+          "title": "Heart Anatomy",
+          "summary": "Chambers, valves, layers, great vessels, coronary circulation, fibrous skeleton, and conduction system anatomy of the heart.",
+          "videoLabel": "Video: Heart Anatomy (placeholder)",
+          "gateKeywords": [
+            "chamber",
+            "valve",
+            "pericardium",
+            "coronary",
+            "conduction"
+          ],
+          "notes": [
+            {
+              "heading": "Location and coverings",
+              "body": [
+                "The heart sits in the middle mediastinum, about two-thirds left of midline. The apex points down, left, and anterior to the 5th intercostal space at the midclavicular line. The base is superior, where great vessels attach.",
+                "Pericardium has three layers: fibrous pericardium (outer), parietal serous pericardium, and visceral serous pericardium (epicardium).",
+                "The pericardial cavity sits between parietal and visceral serous layers and contains about 50 mL of serous fluid."
+              ]
+            },
+            {
+              "heading": "Chambers, walls, and valves",
+              "body": [
+                "Four chambers: right atrium, right ventricle, left atrium, left ventricle. Atria are separated by the interatrial septum; ventricles by the interventricular septum.",
+                "Three wall layers: epicardium (= visceral pericardium), myocardium (cardiac muscle, thickest in LV), endocardium (endothelium lining chambers and valves).",
+                "Four valves: tricuspid (RA to RV, 3 cusps), pulmonary semilunar (RV to pulmonary trunk, 3 cusps), mitral/bicuspid (LA to LV, 2 cusps), aortic semilunar (LV to aorta, 3 cusps).",
+                "AV valves are anchored by chordae tendineae attached to papillary muscles."
+              ]
+            },
+            {
+              "heading": "Great vessels and coronary circulation",
+              "body": [
+                "Great vessels: superior and inferior venae cavae and coronary sinus enter the RA; pulmonary trunk leaves the RV; four pulmonary veins enter the LA; aorta leaves the LV.",
+                "Coronary arteries arise from the aortic sinuses just above the aortic valve. Right coronary artery (RCA) gives marginal and posterior interventricular branches; left coronary artery (LCA) gives left anterior descending (LAD) and circumflex branches.",
+                "Venous return: cardiac veins (great, middle, small) drain into the coronary sinus on the posterior heart, which empties into the right atrium."
+              ]
+            },
+            {
+              "heading": "Fibrous skeleton and conduction system",
+              "body": [
+                "The fibrous skeleton is dense connective tissue at the base of the heart that anchors the four valves, separates atria from ventricles electrically, and provides attachment for cardiac muscle.",
+                "Conduction system anatomy: sinoatrial (SA) node in upper RA wall near the SVC opening; atrioventricular (AV) node at the floor of the RA near the coronary sinus; AV bundle (bundle of His) through the interventricular septum; right and left bundle branches; Purkinje fibers throughout ventricular myocardium."
+              ]
+            }
+          ],
+          "cards": [
+            {
+              "id": "hrt-1",
+              "dok": 1,
+              "q": "In which compartment of the thorax does the heart sit?",
+              "a": "The middle mediastinum, between the lungs."
+            },
+            {
+              "id": "hrt-2",
+              "dok": 1,
+              "q": "Name the four chambers of the heart.",
+              "a": "Right atrium, right ventricle, left atrium, left ventricle."
+            },
+            {
+              "id": "hrt-3",
+              "dok": 1,
+              "q": "Name the three layers of the heart wall from outer to inner.",
+              "a": "Epicardium, myocardium, endocardium."
+            },
+            {
+              "id": "hrt-4",
+              "dok": 1,
+              "q": "Name the four valves of the heart.",
+              "a": "Tricuspid, pulmonary semilunar, mitral (bicuspid), aortic semilunar."
+            },
+            {
+              "id": "hrt-5",
+              "dok": 1,
+              "q": "Name the three layers of the pericardium.",
+              "a": "Fibrous pericardium, parietal serous pericardium, visceral serous pericardium (epicardium)."
+            },
+            {
+              "id": "hrt-6",
+              "dok": 1,
+              "q": "Which side of the heart has the thicker myocardium?",
+              "a": "The left ventricle."
+            },
+            {
+              "id": "hrt-7",
+              "dok": 1,
+              "q": "Which great vessel leaves the right ventricle?",
+              "a": "The pulmonary trunk."
+            },
+            {
+              "id": "hrt-8",
+              "dok": 1,
+              "q": "Where is the sinoatrial (SA) node located?",
+              "a": "In the upper wall of the right atrium near the opening of the superior vena cava."
+            },
+            {
+              "id": "hrt-9",
+              "dok": 2,
+              "q": "Describe the orientation of the heart in the thorax (apex vs base direction).",
+              "a": "Apex points inferiorly, leftward, and anteriorly to the 5th intercostal space at the midclavicular line. Base is superior, where great vessels attach."
+            },
+            {
+              "id": "hrt-10",
+              "dok": 2,
+              "q": "What three vessels return blood to the right atrium?",
+              "a": "Superior vena cava, inferior vena cava, and coronary sinus."
+            },
+            {
+              "id": "hrt-11",
+              "dok": 2,
+              "q": "How many pulmonary veins return blood to the left atrium?",
+              "a": "Four pulmonary veins."
+            },
+            {
+              "id": "hrt-12",
+              "dok": 2,
+              "q": "Compare the cusps of the tricuspid and mitral valves.",
+              "a": "Tricuspid has three cusps; mitral (bicuspid) has two cusps. Both are AV valves anchored by chordae tendineae to papillary muscles."
+            },
+            {
+              "id": "hrt-13",
+              "dok": 2,
+              "q": "How many cusps does each semilunar valve have?",
+              "a": "Three cusps each (pulmonary and aortic semilunar valves)."
+            },
+            {
+              "id": "hrt-14",
+              "dok": 2,
+              "q": "What anchors the AV valves and prevents them from prolapsing into the atria?",
+              "a": "Chordae tendineae attached to papillary muscles of the ventricular wall."
+            },
+            {
+              "id": "hrt-15",
+              "dok": 2,
+              "q": "Trace blood flow through the right side of the heart starting from the venae cavae.",
+              "a": "SVC/IVC into right atrium, through tricuspid valve into right ventricle, through pulmonary valve into pulmonary trunk, then to the lungs."
+            },
+            {
+              "id": "hrt-16",
+              "dok": 2,
+              "q": "Trace blood flow through the left side of the heart starting from the pulmonary veins.",
+              "a": "Pulmonary veins into left atrium, through mitral valve into left ventricle, through aortic valve into aorta."
+            },
+            {
+              "id": "hrt-17",
+              "dok": 2,
+              "q": "Which serous layer of the pericardium is the same as the epicardium?",
+              "a": "The visceral serous pericardium is the epicardium (the outer layer of the heart wall)."
+            },
+            {
+              "id": "hrt-18",
+              "dok": 2,
+              "q": "Where is the pericardial cavity and what does it contain?",
+              "a": "Between the parietal and visceral serous pericardium; contains about 50 mL of serous fluid for lubrication."
+            },
+            {
+              "id": "hrt-19",
+              "dok": 2,
+              "q": "Describe the location of the AV node.",
+              "a": "At the floor of the right atrium, near the opening of the coronary sinus and the interatrial septum."
+            },
+            {
+              "id": "hrt-20",
+              "dok": 2,
+              "q": "Trace the path of an electrical signal through the conduction system from SA node to ventricular myocardium.",
+              "a": "SA node, internodal pathways through atrial myocardium, AV node, AV bundle (bundle of His), right and left bundle branches in the interventricular septum, Purkinje fibers in ventricular walls."
+            },
+            {
+              "id": "hrt-21",
+              "dok": 2,
+              "q": "From which structure do the coronary arteries arise?",
+              "a": "From the aortic sinuses, just superior to the cusps of the aortic valve."
+            },
+            {
+              "id": "hrt-22",
+              "dok": 2,
+              "q": "Name the two main branches of the left coronary artery.",
+              "a": "Left anterior descending (LAD, anterior interventricular) and circumflex artery."
+            },
+            {
+              "id": "hrt-23",
+              "dok": 2,
+              "q": "Name two main branches of the right coronary artery.",
+              "a": "Right marginal artery and posterior interventricular (posterior descending) artery."
+            },
+            {
+              "id": "hrt-24",
+              "dok": 2,
+              "q": "What major venous structure on the posterior heart drains most cardiac veins?",
+              "a": "The coronary sinus, which empties into the right atrium."
+            },
+            {
+              "id": "hrt-25",
+              "dok": 2,
+              "q": "What is the fibrous skeleton of the heart?",
+              "a": "Dense connective tissue rings (annuli fibrosi) at the base of the heart that anchor the four valves, separate atrial from ventricular myocardium, and serve as attachment for cardiac muscle."
+            },
+            {
+              "id": "hrt-26",
+              "dok": 2,
+              "q": "Describe the structural difference between the right atrium walls (pectinate vs smooth).",
+              "a": "The anterior wall of the RA shows pectinate muscles (in the auricle and along the crista terminalis); the posterior wall is smooth (sinus venarum, derived from the embryonic sinus venosus)."
+            },
+            {
+              "id": "hrt-27",
+              "dok": 2,
+              "q": "Name the auricles of the heart and what they are.",
+              "a": "Auricles are small flap-like extensions on the right and left atria, lined internally by pectinate muscles."
+            },
+            {
+              "id": "hrt-28",
+              "dok": 2,
+              "q": "What is the moderator band and where is it found?",
+              "a": "A muscular band in the right ventricle that crosses from the interventricular septum to the anterior papillary muscle; carries part of the right bundle branch."
+            },
+            {
+              "id": "hrt-29",
+              "dok": 2,
+              "q": "What are trabeculae carneae?",
+              "a": "Irregular muscular ridges that line the inner walls of the ventricles."
+            },
+            {
+              "id": "hrt-30",
+              "dok": 2,
+              "q": "Which valve has only two cusps and where is it?",
+              "a": "The mitral (bicuspid) valve, between the left atrium and left ventricle."
+            },
+            {
+              "id": "hrt-31",
+              "dok": 2,
+              "q": "What anatomic structure links the right and left atria in the fetus and may persist as the fossa ovalis?",
+              "a": "The foramen ovale in the interatrial septum; it closes after birth, leaving the fossa ovalis as a depression on the right atrial side."
+            },
+            {
+              "id": "hrt-32",
+              "dok": 3,
+              "q": "An image shows the heart from the anterior view with the ventricle that has the thickest wall in cross-section. Which chamber is this and why is the wall thicker?",
+              "a": "The left ventricle; it pumps blood against systemic vascular resistance at much higher pressure than the right ventricle."
+            },
+            {
+              "id": "hrt-33",
+              "dok": 3,
+              "q": "On a coronal section of the heart, you see a valve with two cusps. Which valve is it and what does it separate?",
+              "a": "The mitral (bicuspid) valve, separating the left atrium from the left ventricle."
+            },
+            {
+              "id": "hrt-34",
+              "dok": 3,
+              "q": "A patient has a blockage in the left anterior descending artery. Which wall of the heart is at greatest risk of ischemia?",
+              "a": "The anterior wall of the left ventricle and the anterior portion of the interventricular septum."
+            },
+            {
+              "id": "hrt-35",
+              "dok": 3,
+              "q": "Why does damage to a papillary muscle cause valve dysfunction?",
+              "a": "Papillary muscles tension the chordae tendineae, which hold the AV valve cusps closed during ventricular contraction. Damaged papillary muscle leads to valve prolapse and regurgitation."
+            },
+            {
+              "id": "hrt-36",
+              "dok": 3,
+              "q": "Which anatomic feature electrically insulates the atria from the ventricles, forcing signals through the AV node?",
+              "a": "The fibrous skeleton (cardiac skeleton) of the heart."
+            },
+            {
+              "id": "hrt-37",
+              "dok": 3,
+              "q": "An image shows a small flap-like extension off the right atrium with internal muscular ridges. Identify the structure and the muscles inside.",
+              "a": "The right auricle, lined internally by pectinate muscles."
+            },
+            {
+              "id": "hrt-38",
+              "dok": 3,
+              "q": "If the coronary sinus were occluded, which part of cardiac venous return would be impaired?",
+              "a": "Drainage of the great, middle, and small cardiac veins into the right atrium."
+            },
+            {
+              "id": "hrt-39",
+              "dok": 3,
+              "q": "Identify the structure: a depression on the right atrial septal wall that marks a closed fetal opening.",
+              "a": "The fossa ovalis (former foramen ovale)."
+            },
+            {
+              "id": "hrt-40",
+              "dok": 3,
+              "q": "Which coronary artery, when blocked, most often causes inferior wall myocardial infarction?",
+              "a": "The right coronary artery (RCA), via its posterior interventricular branch."
+            },
+            {
+              "id": "hrt-41",
+              "dok": 3,
+              "q": "Sketch the path of the right bundle branch and explain why the moderator band exists.",
+              "a": "Right bundle branch descends through the interventricular septum, then crosses to the anterior papillary muscle through the moderator band, which shortens the conduction path and helps coordinated RV contraction."
+            },
+            {
+              "id": "hrt-42",
+              "dok": 3,
+              "q": "On a histology image, a section labeled myocardium shows striated cells with intercalated discs. Which heart wall layer is this and what tissue type?",
+              "a": "Myocardium, composed of cardiac muscle tissue."
+            },
+            {
+              "id": "hrt-43",
+              "dok": 3,
+              "q": "If the fibrous skeleton failed to develop, which step of cardiac conduction would be disrupted?",
+              "a": "Atria would not be electrically isolated from ventricles, so signals could bypass the AV node, ruining coordinated atrial-then-ventricular contraction."
+            },
+            {
+              "id": "hrt-44",
+              "dok": 3,
+              "q": "Identify the anatomic landmark on the heart that separates atria from ventricles externally.",
+              "a": "The coronary sulcus (atrioventricular sulcus), which contains coronary vessels."
+            },
+            {
+              "id": "hrt-45",
+              "dok": 3,
+              "q": "Identify the sulcus on the anterior heart that overlies the interventricular septum.",
+              "a": "The anterior interventricular sulcus, which carries the LAD and great cardiac vein."
+            },
+            {
+              "id": "hrt-46",
+              "dok": 3,
+              "q": "On a posterior view of the heart, name the sulcus along which the posterior interventricular artery and middle cardiac vein run.",
+              "a": "The posterior interventricular sulcus."
+            },
+            {
+              "id": "hrt-47",
+              "dok": 3,
+              "q": "Why is the right atrium described as having two regions of different embryologic origin?",
+              "a": "The smooth-walled sinus venarum is derived from the embryonic sinus venosus; the rough-walled, pectinate-lined region (including the auricle) is derived from the primitive atrium."
+            },
+            {
+              "id": "hrt-48",
+              "dok": 3,
+              "q": "Which valve is most likely auscultated at the 5th left intercostal space at the midclavicular line, and why is that location chosen?",
+              "a": "The mitral valve; sound from valve closure travels with blood flow into the LV apex, which sits at the 5th left intercostal space midclavicular line."
+            },
+            {
+              "id": "hrt-49",
+              "dok": 3,
+              "q": "Distinguish endocardium from epicardium in terms of tissue composition.",
+              "a": "Endocardium: simple squamous endothelium plus thin connective tissue lining all chambers and valves. Epicardium: visceral serous pericardium, mesothelium plus connective tissue and fat on the heart surface."
+            },
+            {
+              "id": "hrt-50",
+              "dok": 3,
+              "q": "Identify the structure: a vertical band of cardiac muscle along the interventricular septum that contains conduction tissue.",
+              "a": "The interventricular septum carrying the AV bundle (bundle of His) and its right and left bundle branches."
+            },
+            {
+              "id": "hrt-51",
+              "dok": 3,
+              "q": "Why must coronary arteries fill primarily during diastole, anatomically?",
+              "a": "Their ostia in the aortic sinuses are partially occluded by the open aortic valve cusps during systole; in diastole the cusps close and the sinuses fill, pushing blood into the coronaries."
+            },
+            {
+              "id": "hrt-52",
+              "dok": 3,
+              "q": "Match: tricuspid, pulmonary, mitral, aortic. State the chambers or vessels each separates and the side of the heart it sits on.",
+              "a": "Tricuspid: RA to RV, right side. Pulmonary semilunar: RV to pulmonary trunk, right side. Mitral: LA to LV, left side. Aortic semilunar: LV to aorta, left side."
+            },
+            {
+              "id": "hrt-53",
+              "dok": 3,
+              "q": "Which structures together form the AV bundle pathway, and which septum carries them?",
+              "a": "AV node, bundle of His, right and left bundle branches; the interventricular septum carries the bundle of His and its branches."
+            },
+            {
+              "id": "hrt-54",
+              "dok": 4,
+              "q": "Design a labeled anterior heart drawing for a lab practical that lets a student identify all four chambers, all four valves, the great vessels, and the main coronary branches. Which views must you include to cover all required structures?",
+              "a": "Anterior view (RA, RV, LV apex, pulmonary trunk, aorta, SVC, LAD in anterior interventricular sulcus, RCA in right AV sulcus, great cardiac vein, auricles). Posterior view (LA, four pulmonary veins, coronary sinus, posterior interventricular artery and middle cardiac vein, RCA continuing). Internal view (chambers cut open: pectinate muscles, fossa ovalis, papillary muscles, chordae tendineae, all four valves, fibrous rings). Three views are needed because no single view shows all required structures."
+            },
+            {
+              "id": "hrt-55",
+              "dok": 4,
+              "q": "Plan a step-by-step dissection sequence that exposes the entire conduction system anatomy without destroying it. What landmarks do you use?",
+              "a": "Open the right atrium between the SVC and IVC to find the SA node near the SVC and the AV node near the coronary sinus opening on the septal floor. Cut along the right side of the interventricular septum to follow the bundle of His and right bundle branch through to the moderator band. Reflect the LV wall to expose the left bundle branch fanning across the septum. Landmarks: crista terminalis (SA node), triangle of Koch (AV node), membranous interventricular septum (bundle of His), moderator band (right bundle branch endpoint)."
+            },
+            {
+              "id": "hrt-56",
+              "dok": 4,
+              "q": "Build a chart that lets a student predict which coronary artery supplies any named region of myocardium. What columns and rules make the chart reliable?",
+              "a": "Columns: artery (RCA, LAD, circumflex, posterior descending), territory supplied (anatomic region), main branches, typical heart regions infarcted on occlusion. Rule: list dominance (right vs left dominant circulation) because that decides which artery supplies the posterior interventricular branch and the inferior wall. Without that column, predictions for inferior MI break in left-dominant hearts."
+            }
+          ]
+        },
+        {
+          "id": "t-blood-vessels",
+          "title": "Blood Vessels",
+          "summary": "Wall layers, vessel types, capillary structure, and major named vessels of the systemic and pulmonary circulations.",
+          "videoLabel": "Video: Blood Vessels (placeholder)",
+          "gateKeywords": [
+            "artery",
+            "vein",
+            "capillary",
+            "tunica",
+            "circulation"
+          ],
+          "notes": [
+            {
+              "heading": "Vessel wall layers",
+              "body": [
+                "Arteries and veins both have three layers: tunica intima (endothelium plus basement membrane and subendothelial connective tissue), tunica media (smooth muscle and elastic fibers), and tunica externa or adventitia (connective tissue).",
+                "Tunica media is thickest in arteries because they handle higher pressure. Tunica externa is relatively thicker in veins.",
+                "Capillaries have only an endothelium plus a basement membrane (no media or externa)."
+              ]
+            },
+            {
+              "heading": "Vessel types",
+              "body": [
+                "Elastic (conducting) arteries: aorta and its major branches; large diameter and lots of elastin to absorb and recoil with cardiac ejection.",
+                "Muscular (distributing) arteries: brachial, femoral, etc.; thick tunica media with smooth muscle to direct flow to specific organs.",
+                "Arterioles: the major resistance vessels; mostly smooth muscle.",
+                "Capillaries: continuous (tight junctions, in muscle, skin, CNS), fenestrated (small pores, in kidney glomerulus and intestine and endocrine glands), and sinusoidal (large gaps, in liver, spleen, bone marrow).",
+                "Venules and veins: thin walled with valves; capacitance vessels that hold most of the blood volume."
+              ]
+            },
+            {
+              "heading": "Systemic arteries (named)",
+              "body": [
+                "Aorta divisions: ascending aorta, aortic arch, descending thoracic aorta, abdominal aorta.",
+                "Arch branches: brachiocephalic trunk (gives right common carotid and right subclavian), left common carotid, left subclavian.",
+                "Upper limb: subclavian to axillary to brachial; brachial splits at the elbow into radial and ulnar.",
+                "Carotids in the neck split into internal and external carotid; vertebral arteries ascend through transverse foramina.",
+                "Abdominal aorta branches: celiac trunk, superior mesenteric, renal arteries, gonadal, inferior mesenteric, ending in right and left common iliac arteries.",
+                "Lower limb: common iliac to external iliac to femoral to popliteal to anterior and posterior tibial arteries."
+              ]
+            },
+            {
+              "heading": "Systemic veins and pulmonary circulation",
+              "body": [
+                "Upper body returns through brachiocephalic veins (right and left) into the superior vena cava, then RA.",
+                "Lower body returns through inferior vena cava, formed by union of common iliac veins, receiving renal, hepatic, and gonadal tributaries.",
+                "Hepatic portal system: blood from the gut and spleen drains into the portal vein (superior mesenteric + splenic), through the liver sinusoids, into hepatic veins, then into the IVC.",
+                "Pulmonary circulation: pulmonary trunk leaves RV, splits into right and left pulmonary arteries (carry deoxygenated blood). Four pulmonary veins return oxygenated blood to LA."
+              ]
+            }
+          ],
+          "cards": [
+            {
+              "id": "bv-1",
+              "dok": 1,
+              "q": "Name the three tunics (layers) of a typical artery or vein wall.",
+              "a": "Tunica intima, tunica media, tunica externa (adventitia)."
+            },
+            {
+              "id": "bv-2",
+              "dok": 1,
+              "q": "Which wall layer is thickest in an artery?",
+              "a": "Tunica media."
+            },
+            {
+              "id": "bv-3",
+              "dok": 1,
+              "q": "Which three structural layers make up a capillary wall?",
+              "a": "Endothelium and basement membrane only (no media or externa)."
+            },
+            {
+              "id": "bv-4",
+              "dok": 1,
+              "q": "Name the three classifications of capillaries.",
+              "a": "Continuous, fenestrated, sinusoidal."
+            },
+            {
+              "id": "bv-5",
+              "dok": 1,
+              "q": "What is the largest artery in the body?",
+              "a": "The aorta."
+            },
+            {
+              "id": "bv-6",
+              "dok": 1,
+              "q": "What are the two large veins that drain blood into the right atrium?",
+              "a": "Superior vena cava and inferior vena cava."
+            },
+            {
+              "id": "bv-7",
+              "dok": 1,
+              "q": "Which vessels carry blood away from the heart?",
+              "a": "Arteries."
+            },
+            {
+              "id": "bv-8",
+              "dok": 1,
+              "q": "Which vessels have valves to prevent backflow?",
+              "a": "Veins (especially in the limbs)."
+            },
+            {
+              "id": "bv-9",
+              "dok": 2,
+              "q": "Describe the tunica intima.",
+              "a": "Innermost layer; simple squamous endothelium on a basement membrane, plus a thin layer of subendothelial connective tissue. In arteries there is also an internal elastic lamina."
+            },
+            {
+              "id": "bv-10",
+              "dok": 2,
+              "q": "Describe the tunica media.",
+              "a": "Middle layer; smooth muscle cells arranged circularly, interlaced with elastic and reticular fibers. In large elastic arteries, this layer is rich in elastin."
+            },
+            {
+              "id": "bv-11",
+              "dok": 2,
+              "q": "Describe the tunica externa.",
+              "a": "Outermost layer; loose connective tissue with collagen fibers. Contains vasa vasorum (tiny vessels) in larger vessels and nerve fibers."
+            },
+            {
+              "id": "bv-12",
+              "dok": 2,
+              "q": "What is the structural difference between an elastic and a muscular artery?",
+              "a": "Elastic arteries (e.g., aorta) have a tunica media rich in elastin sheets for recoil. Muscular arteries (e.g., femoral) have a tunica media dominated by smooth muscle for distribution."
+            },
+            {
+              "id": "bv-13",
+              "dok": 2,
+              "q": "Why are arterioles called the major resistance vessels structurally?",
+              "a": "Their walls are mostly smooth muscle with little elastin; contracting that muscle drastically narrows the small lumen, producing most of the resistance to flow."
+            },
+            {
+              "id": "bv-14",
+              "dok": 2,
+              "q": "Describe continuous capillaries.",
+              "a": "Endothelial cells joined by tight junctions; allow only small molecules and water across; found in skin, muscle, lungs, CNS."
+            },
+            {
+              "id": "bv-15",
+              "dok": 2,
+              "q": "Describe fenestrated capillaries.",
+              "a": "Endothelial cells with small pores (fenestrations) covered by a thin diaphragm; allow rapid exchange of fluid and small solutes; found in kidney glomerulus, small intestine villi, and endocrine glands."
+            },
+            {
+              "id": "bv-16",
+              "dok": 2,
+              "q": "Describe sinusoidal capillaries.",
+              "a": "Wide, irregular vessels with large gaps between endothelial cells and an incomplete basement membrane; allow proteins and blood cells through; found in liver, spleen, bone marrow."
+            },
+            {
+              "id": "bv-17",
+              "dok": 2,
+              "q": "Trace blood from the aortic arch to the right hand.",
+              "a": "Aortic arch, brachiocephalic trunk, right subclavian artery, right axillary artery, right brachial artery, radial and ulnar arteries to the hand."
+            },
+            {
+              "id": "bv-18",
+              "dok": 2,
+              "q": "Trace blood from the aortic arch to the left hand.",
+              "a": "Aortic arch directly gives the left subclavian artery, then left axillary, left brachial, radial and ulnar to the hand."
+            },
+            {
+              "id": "bv-19",
+              "dok": 2,
+              "q": "Name the three branches arising from the aortic arch.",
+              "a": "Brachiocephalic trunk, left common carotid, left subclavian."
+            },
+            {
+              "id": "bv-20",
+              "dok": 2,
+              "q": "Into what two arteries does the brachiocephalic trunk divide?",
+              "a": "Right common carotid and right subclavian."
+            },
+            {
+              "id": "bv-21",
+              "dok": 2,
+              "q": "Where does each common carotid artery divide and into what?",
+              "a": "At the upper border of the thyroid cartilage; into internal carotid (brain) and external carotid (face and scalp)."
+            },
+            {
+              "id": "bv-22",
+              "dok": 2,
+              "q": "What vessels supply the brain via the foramen magnum?",
+              "a": "Vertebral arteries (from subclavians), which join to form the basilar artery; combined with internal carotids in the circle of Willis."
+            },
+            {
+              "id": "bv-23",
+              "dok": 2,
+              "q": "Name five branches of the abdominal aorta in order.",
+              "a": "Celiac trunk, superior mesenteric, renal arteries, gonadal arteries, inferior mesenteric."
+            },
+            {
+              "id": "bv-24",
+              "dok": 2,
+              "q": "Into what does the abdominal aorta terminate?",
+              "a": "Right and left common iliac arteries."
+            },
+            {
+              "id": "bv-25",
+              "dok": 2,
+              "q": "Trace blood from the common iliac artery to the dorsum of the foot.",
+              "a": "Common iliac, external iliac, femoral, popliteal, anterior tibial, dorsalis pedis."
+            },
+            {
+              "id": "bv-26",
+              "dok": 2,
+              "q": "Trace blood from the foot back to the inferior vena cava in major superficial route.",
+              "a": "Dorsal venous arch, great saphenous vein, femoral vein, external iliac vein, common iliac vein, inferior vena cava."
+            },
+            {
+              "id": "bv-27",
+              "dok": 2,
+              "q": "What forms the brachiocephalic veins?",
+              "a": "Union of internal jugular and subclavian veins on each side."
+            },
+            {
+              "id": "bv-28",
+              "dok": 2,
+              "q": "What forms the superior vena cava?",
+              "a": "Union of right and left brachiocephalic veins."
+            },
+            {
+              "id": "bv-29",
+              "dok": 2,
+              "q": "What forms the inferior vena cava?",
+              "a": "Union of right and left common iliac veins at about L5."
+            },
+            {
+              "id": "bv-30",
+              "dok": 2,
+              "q": "Describe the hepatic portal system in terms of vessels involved.",
+              "a": "Splenic vein and superior mesenteric vein unite to form the hepatic portal vein, which carries blood from gut and spleen through the liver. Hepatic veins drain the liver into the inferior vena cava."
+            },
+            {
+              "id": "bv-31",
+              "dok": 2,
+              "q": "Trace the pulmonary circulation through named vessels.",
+              "a": "Right ventricle, pulmonary trunk, right and left pulmonary arteries to the lungs, capillaries around alveoli, four pulmonary veins (two per lung), left atrium."
+            },
+            {
+              "id": "bv-32",
+              "dok": 3,
+              "q": "A histology image shows a vessel with very thick tunica media dominated by elastic sheets. Identify the vessel type and give one example.",
+              "a": "An elastic (conducting) artery, such as the aorta or pulmonary trunk."
+            },
+            {
+              "id": "bv-33",
+              "dok": 3,
+              "q": "A vessel cross-section shows a thin endothelium with small pores covered by a diaphragm. What capillary type is this, and where in the body would you look first?",
+              "a": "Fenestrated capillary; look in the kidney glomerulus, small intestine villi, or endocrine glands."
+            },
+            {
+              "id": "bv-34",
+              "dok": 3,
+              "q": "A vessel image shows large gaps between endothelial cells and red blood cells passing through. What capillary type and where is it found?",
+              "a": "Sinusoidal capillary; found in liver, spleen, and bone marrow."
+            },
+            {
+              "id": "bv-35",
+              "dok": 3,
+              "q": "A vessel cross-section shows three clear tunics with the media dominated by smooth muscle and a relatively small lumen. Is this likely an artery or a vein and why?",
+              "a": "An artery (muscular artery). Arteries hold their round shape, have a thick muscular media, and a relatively smaller lumen compared to nearby veins."
+            },
+            {
+              "id": "bv-36",
+              "dok": 3,
+              "q": "A vessel cross-section appears collapsed with a wide lumen, thin walls, and a tunica externa thicker than the media. Artery or vein?",
+              "a": "Vein."
+            },
+            {
+              "id": "bv-37",
+              "dok": 3,
+              "q": "Why does the tunica externa of large vessels contain its own tiny blood vessels?",
+              "a": "These vasa vasorum supply the outer layers of the wall, which are too thick to be nourished by diffusion from the lumen."
+            },
+            {
+              "id": "bv-38",
+              "dok": 3,
+              "q": "Identify the major artery palpable behind the medial malleolus.",
+              "a": "Posterior tibial artery."
+            },
+            {
+              "id": "bv-39",
+              "dok": 3,
+              "q": "Identify the major artery palpable on the dorsum of the foot.",
+              "a": "Dorsalis pedis artery."
+            },
+            {
+              "id": "bv-40",
+              "dok": 3,
+              "q": "A clinician palpates a pulse at the wrist on the thumb side. Which artery is this?",
+              "a": "Radial artery."
+            },
+            {
+              "id": "bv-41",
+              "dok": 3,
+              "q": "Trace blood from the left ventricle to the right kidney through named vessels.",
+              "a": "Left ventricle, ascending aorta, aortic arch, descending thoracic aorta, abdominal aorta, right renal artery."
+            },
+            {
+              "id": "bv-42",
+              "dok": 3,
+              "q": "Identify a difference in the route from heart to right arm vs heart to left arm.",
+              "a": "Right arm: aortic arch, brachiocephalic trunk, right subclavian, right axillary, etc. Left arm: aortic arch, left subclavian directly (no brachiocephalic on the left)."
+            },
+            {
+              "id": "bv-43",
+              "dok": 3,
+              "q": "A patient has obstruction of the hepatic portal vein. Which organs' venous drainage is impaired?",
+              "a": "Drainage from the digestive tract (stomach, intestines, pancreas) and spleen into the liver is impaired, because their veins normally converge into the portal vein."
+            },
+            {
+              "id": "bv-44",
+              "dok": 3,
+              "q": "Which vessel layer is most directly affected by atherosclerotic plaque formation, and why does it matter for vessel lumen?",
+              "a": "The tunica intima; plaque builds in the subendothelial space, narrowing the lumen and reducing flow."
+            },
+            {
+              "id": "bv-45",
+              "dok": 3,
+              "q": "Explain why blood pressure (and the pulse) is much higher in arteries than veins, anatomically.",
+              "a": "Arteries have thick, elastic muscular walls that resist and recoil, sustaining high pressure from ventricular ejection. Veins have thin, distensible walls and large lumens that hold blood at low pressure."
+            },
+            {
+              "id": "bv-46",
+              "dok": 3,
+              "q": "Identify the artery commonly used for emergency arterial line in the wrist.",
+              "a": "Radial artery."
+            },
+            {
+              "id": "bv-47",
+              "dok": 3,
+              "q": "Identify the artery commonly used for central pulse check in CPR on an adult.",
+              "a": "Carotid artery (in the neck) or femoral artery (in the groin)."
+            },
+            {
+              "id": "bv-48",
+              "dok": 3,
+              "q": "Identify the vein commonly used for IV blood draws in the antecubital fossa.",
+              "a": "Median cubital vein (connecting cephalic and basilic veins)."
+            },
+            {
+              "id": "bv-49",
+              "dok": 3,
+              "q": "Why are veins called capacitance vessels structurally?",
+              "a": "Their thin distensible walls and wide lumens let them hold large volumes of blood at low pressure; about 65% of total blood volume sits in the venous system at rest."
+            },
+            {
+              "id": "bv-50",
+              "dok": 3,
+              "q": "Identify the two vessels that together form the basilar artery and the structure they supply.",
+              "a": "The right and left vertebral arteries unite at the base of the brainstem to form the basilar artery, which supplies the brainstem and joins the circle of Willis."
+            },
+            {
+              "id": "bv-51",
+              "dok": 3,
+              "q": "A vessel between an arteriole and a venule with only endothelium and basement membrane. Identify it and explain why its structure suits its function.",
+              "a": "Capillary. The thin single-cell wall allows efficient diffusion of gases, nutrients, and wastes between blood and tissue."
+            },
+            {
+              "id": "bv-52",
+              "dok": 3,
+              "q": "Distinguish pulmonary arteries from systemic arteries by oxygen content of blood carried.",
+              "a": "Pulmonary arteries carry deoxygenated blood (RV to lungs); systemic arteries carry oxygenated blood (LV to body)."
+            },
+            {
+              "id": "bv-53",
+              "dok": 3,
+              "q": "Distinguish pulmonary veins from systemic veins by oxygen content of blood carried.",
+              "a": "Pulmonary veins carry oxygenated blood (lungs to LA); systemic veins carry deoxygenated blood (body to RA)."
+            },
+            {
+              "id": "bv-54",
+              "dok": 4,
+              "q": "Design a single labeled diagram of the systemic arterial tree from the heart to one named artery in each limb and each major abdominal organ. Decide where you must branch and where you can simplify.",
+              "a": "Start at LV, ascending aorta, arch with three named branches (brachiocephalic, left common carotid, left subclavian). From subclavians draw arms (subclavian to axillary to brachial to radial and ulnar). From common carotids show split into internal and external. Descending aorta gives thoracic then abdominal; show celiac to liver/stomach/spleen, SMA to small intestine, renals to kidneys, gonadals, IMA to colon, then bifurcation into common iliacs and down each leg (external iliac to femoral to popliteal to anterior and posterior tibial). Simplify by collapsing intercostal and lumbar branches into a single label per segment; show only one named branch per major organ. This keeps the tree under 25 named vessels."
+            },
+            {
+              "id": "bv-55",
+              "dok": 4,
+              "q": "Build a sortable table that lets a student decide, from a histology slide alone, what type of vessel they are looking at. What columns and decision rules should it use?",
+              "a": "Columns: lumen shape (round vs collapsed), wall thickness, dominant media component (elastin vs smooth muscle), presence of internal elastic lamina, presence of valves, capillary subtype features (tight junctions, fenestrations, gaps). Decision rules: round + thick smooth-muscle media + internal elastic lamina = muscular artery; round + elastin sheets in media = elastic artery; collapsed + thin wall + thick externa + valves = vein; endothelium only = capillary, then subclassify by pore pattern."
+            },
+            {
+              "id": "bv-56",
+              "dok": 4,
+              "q": "Plan a lab exercise where students trace blood from the aortic arch to a labeled organ of choice using only named vessels. What constraints will keep the exercise rigorous without becoming a memory dump?",
+              "a": "Require: (1) name every artery in the path from arch to the organ at first-order branch resolution, (2) at the organ specify the capillary subtype expected (continuous, fenestrated, sinusoidal) and justify from the organ's function, (3) trace venous return back to the right atrium, (4) for any gut organ include the hepatic portal system step. Constraint: cap the list at no more than 10 named vessels per side, forcing students to choose level of detail. This prevents pure recall and rewards understanding of branching anatomy and capillary structure-function matching."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m-lymphatic",
+      "title": "Lymphatic and Immune System",
+      "week": 6,
+      "topics": [
+        {
+          "id": "t-lymphatic-innate",
+          "title": "Lymphatic System and Innate Immunity",
+          "summary": "Structural anatomy of lymphatic vessels, named lymphoid organs, and the physical and chemical barriers that form the body's first line of defense.",
+          "videoLabel": "Video: Lymphatic System and Innate Immunity (placeholder)",
+          "gateKeywords": [
+            "lymph",
+            "thymus",
+            "spleen",
+            "tonsil",
+            "node",
+            "MALT",
+            "Peyer",
+            "barrier",
+            "skin",
+            "mucosa"
+          ],
+          "notes": [
+            {
+              "heading": "Lymphatic vessels",
+              "body": [
+                "Lymph capillaries are blind-ended and more permeable than blood capillaries.",
+                "Lymph vessels carry valves like veins and rely on the skeletal muscle pump and respiration for flow.",
+                "Right lymphatic duct drains the upper right quadrant into the right subclavian vein.",
+                "Thoracic duct drains the rest of the body into the left subclavian vein."
+              ]
+            },
+            {
+              "heading": "Primary lymphoid organs",
+              "body": [
+                "Bone marrow: site of B cell maturation and origin of all blood cells.",
+                "Thymus: site of T cell maturation, sits in the superior mediastinum, involutes with age."
+              ]
+            },
+            {
+              "heading": "Secondary lymphoid organs",
+              "body": [
+                "Lymph nodes: roughly 600 in the body, filter lymph along its return route.",
+                "Spleen: filters blood and removes aged red blood cells in the left upper quadrant.",
+                "MALT and GALT include tonsils, Peyer's patches in the ileum, and the appendix."
+              ]
+            },
+            {
+              "heading": "First-line structural barriers",
+              "body": [
+                "Skin: keratinized stratified squamous epithelium, dry and acidic.",
+                "Mucous membranes line entry tracts and trap pathogens in mucus.",
+                "Ciliated mucosae move trapped material outward (mucociliary escalator).",
+                "Stomach acid, lysozyme in tears and saliva, normal microbiota, and urinary flow add chemical and mechanical defense."
+              ]
+            }
+          ],
+          "cards": [
+            {
+              "id": "lym-1",
+              "dok": 1,
+              "q": "Name the two terminal ducts that return lymph to the venous system.",
+              "a": "Right lymphatic duct and thoracic duct."
+            },
+            {
+              "id": "lym-2",
+              "dok": 1,
+              "q": "Where do B cells mature?",
+              "a": "In the bone marrow."
+            },
+            {
+              "id": "lym-3",
+              "dok": 1,
+              "q": "Where do T cells mature?",
+              "a": "In the thymus."
+            },
+            {
+              "id": "lym-4",
+              "dok": 1,
+              "q": "Which organ filters blood and removes aged red blood cells?",
+              "a": "The spleen."
+            },
+            {
+              "id": "lym-5",
+              "dok": 1,
+              "q": "What is the name of the aggregated lymphoid follicles found in the ileum?",
+              "a": "Peyer's patches."
+            },
+            {
+              "id": "lym-6",
+              "dok": 1,
+              "q": "What epithelial type covers the skin surface?",
+              "a": "Keratinized stratified squamous epithelium."
+            },
+            {
+              "id": "lym-7",
+              "dok": 1,
+              "q": "Approximately how many lymph nodes are in the body?",
+              "a": "About 600."
+            },
+            {
+              "id": "lym-8",
+              "dok": 1,
+              "q": "What does MALT stand for?",
+              "a": "Mucosa-associated lymphoid tissue."
+            },
+            {
+              "id": "lym-9",
+              "dok": 2,
+              "q": "Contrast lymph capillaries with blood capillaries structurally.",
+              "a": "Lymph capillaries are blind-ended, more permeable, and have overlapping endothelial flaps that act as one-way mini-valves. Blood capillaries are continuous loops connecting arterioles to venules."
+            },
+            {
+              "id": "lym-10",
+              "dok": 2,
+              "q": "Trace lymph from a finger on the left hand back to the bloodstream.",
+              "a": "Finger lymph capillaries, collecting lymph vessels of the arm, axillary lymph nodes, subclavian lymph trunk, thoracic duct, left subclavian vein."
+            },
+            {
+              "id": "lym-11",
+              "dok": 2,
+              "q": "Describe the location and structural relationships of the thymus.",
+              "a": "In the superior mediastinum, posterior to the manubrium, anterior to the great vessels, superior to the heart."
+            },
+            {
+              "id": "lym-12",
+              "dok": 2,
+              "q": "Describe the location of the spleen.",
+              "a": "Left upper quadrant of the abdomen, posterolateral to the stomach, against ribs 9 through 11."
+            },
+            {
+              "id": "lym-13",
+              "dok": 2,
+              "q": "List the named tonsils and their locations.",
+              "a": "Pharyngeal (adenoid) in the nasopharynx, palatine on either side of the oropharyngeal isthmus, lingual at the posterior tongue, and tubal near the openings of the auditory tubes."
+            },
+            {
+              "id": "lym-14",
+              "dok": 2,
+              "q": "Compare GALT and MALT.",
+              "a": "MALT is the umbrella term for mucosa-associated lymphoid tissue throughout the body. GALT is the gut-associated subset (tonsils, Peyer's patches, appendix, lamina propria lymphoid aggregates)."
+            },
+            {
+              "id": "lym-15",
+              "dok": 2,
+              "q": "Describe the gross structure of a lymph node.",
+              "a": "Bean-shaped, with a fibrous capsule, an outer cortex containing follicles, a paracortex with T cells, and a medulla with cords and sinuses. Lymph enters at multiple afferent vessels along the convex surface and exits at a single efferent vessel at the hilum."
+            },
+            {
+              "id": "lym-16",
+              "dok": 2,
+              "q": "Why does lymph move in only one direction?",
+              "a": "Lymph vessels contain valves that prevent backflow, similar to venous valves."
+            },
+            {
+              "id": "lym-17",
+              "dok": 2,
+              "q": "Identify the two pumps that drive lymph flow.",
+              "a": "The skeletal muscle pump (compression of vessels during movement) and the respiratory pump (pressure changes in the thorax during breathing)."
+            },
+            {
+              "id": "lym-18",
+              "dok": 2,
+              "q": "Describe the location of the cisterna chyli.",
+              "a": "An expanded sac at the inferior end of the thoracic duct, anterior to the L1 to L2 vertebrae, posterior to the abdominal aorta."
+            },
+            {
+              "id": "lym-19",
+              "dok": 2,
+              "q": "What anatomical features make skin an effective barrier?",
+              "a": "Keratinized stratified squamous epithelium, multiple cell layers, tight junctions, an acidic surface pH, low water activity, and the antimicrobial peptides in sebum."
+            },
+            {
+              "id": "lym-20",
+              "dok": 2,
+              "q": "How is the respiratory mucosa structurally adapted as a barrier?",
+              "a": "Pseudostratified ciliated columnar epithelium with goblet cells secretes mucus that traps particles, and cilia sweep the mucus upward toward the pharynx."
+            },
+            {
+              "id": "lym-21",
+              "dok": 2,
+              "q": "Identify the location and drainage of the cervical lymph node chains.",
+              "a": "Superficial and deep cervical chains along the sternocleidomastoid drain the head and neck, ultimately into the jugular trunk."
+            },
+            {
+              "id": "lym-22",
+              "dok": 2,
+              "q": "Describe the white pulp of the spleen.",
+              "a": "Sleeves of lymphoid tissue surrounding central arterioles, containing periarteriolar lymphoid sheaths (T cells) and adjacent follicles (B cells)."
+            },
+            {
+              "id": "lym-23",
+              "dok": 2,
+              "q": "Describe the red pulp of the spleen.",
+              "a": "A network of splenic sinusoids and cords of Billroth where macrophages remove aged red blood cells from blood."
+            },
+            {
+              "id": "lym-24",
+              "dok": 2,
+              "q": "What is the structural significance of afferent versus efferent lymphatic vessels at a node?",
+              "a": "Multiple afferent vessels enter through the convex surface so lymph is forced to slow and percolate through node parenchyma. A single efferent vessel exits at the hilum."
+            },
+            {
+              "id": "lym-25",
+              "dok": 2,
+              "q": "What forms the bulk of the inguinal lymph node drainage field?",
+              "a": "Lower limb, lower abdominal wall below the umbilicus, perineum, and external genitalia."
+            },
+            {
+              "id": "lym-26",
+              "dok": 2,
+              "q": "Describe how the structure of the thymus changes from childhood to adulthood.",
+              "a": "Largest relative to body size in childhood, then progressively involutes after puberty with thymic tissue replaced by adipose tissue. A remnant cortex and medulla persist in adults."
+            },
+            {
+              "id": "lym-27",
+              "dok": 2,
+              "q": "Identify the structures the thoracic duct passes between as it ascends.",
+              "a": "Posterior to the esophagus, between the azygos vein (right) and the descending aorta (left), through the aortic hiatus of the diaphragm."
+            },
+            {
+              "id": "lym-28",
+              "dok": 2,
+              "q": "What is the structural basis for one-way flow at the lymph capillary wall?",
+              "a": "Overlapping endothelial cell flaps anchored by collagen filaments to surrounding tissue. Rising interstitial pressure opens the flaps; rising luminal pressure closes them."
+            },
+            {
+              "id": "lym-29",
+              "dok": 2,
+              "q": "Describe the basic structure of a tonsil.",
+              "a": "Partially encapsulated lymphoid mass with overlying epithelium that dips into deep tonsillar crypts, increasing surface contact between immune cells and oral or pharyngeal antigens."
+            },
+            {
+              "id": "lym-30",
+              "dok": 2,
+              "q": "Where is the appendix located, and how is its histology distinct?",
+              "a": "Right lower quadrant, hanging off the posteromedial wall of the cecum. Its submucosa is packed with lymphoid follicles, making it a GALT-rich structure."
+            },
+            {
+              "id": "lym-31",
+              "dok": 2,
+              "q": "Identify three named structural barriers other than skin.",
+              "a": "Mucous membranes of the respiratory, GI, and urogenital tracts; the cornea and conjunctiva; and the urinary epithelium."
+            },
+            {
+              "id": "lym-32",
+              "dok": 3,
+              "q": "A breast tumor in the upper outer quadrant first metastasizes to which lymph nodes, and why?",
+              "a": "Axillary lymph nodes, because the upper outer quadrant of the breast drains predominantly to axillary nodes along the lateral thoracic vessels. This is the anatomical basis for sentinel node biopsy."
+            },
+            {
+              "id": "lym-33",
+              "dok": 3,
+              "q": "Explain why a blockage of the thoracic duct could affect almost the entire body but a blocked right lymphatic duct affects only one quadrant.",
+              "a": "The thoracic duct drains everything below the diaphragm plus the upper left quadrant, which is the majority of body lymph. The right lymphatic duct drains only the upper right limb, right side of head and neck, and right thorax."
+            },
+            {
+              "id": "lym-34",
+              "dok": 3,
+              "q": "Predict what would happen anatomically to the thymus after a thymectomy in adulthood and explain.",
+              "a": "Adults have already seeded peripheral T cell populations, so adult thymectomy has limited structural effect on existing lymphoid organs. The thymic bed simply remains as fat. In neonates, removal would prevent T cell maturation."
+            },
+            {
+              "id": "lym-35",
+              "dok": 3,
+              "q": "A patient has the spleen removed after trauma. Which structures now compensate for some of its lost functions?",
+              "a": "Liver Kupffer cells and bone marrow macrophages take over filtration of aged red blood cells. Remaining lymph nodes and MALT take over immune surveillance of blood-borne antigens, though less efficiently."
+            },
+            {
+              "id": "lym-36",
+              "dok": 3,
+              "q": "Why does swelling (edema) develop when axillary lymph nodes are removed?",
+              "a": "Removal interrupts the lymphatic return pathway from the upper limb. Interstitial fluid that normally drains via axillary nodes accumulates, producing lymphedema of the arm."
+            },
+            {
+              "id": "lym-37",
+              "dok": 3,
+              "q": "Explain how the structure of Peyer's patches positions them to sample gut antigens.",
+              "a": "Peyer's patches sit in the lamina propria and submucosa of the ileum directly beneath M cells in the overlying epithelium. M cells transcytose antigens from the lumen directly to underlying lymphocytes."
+            },
+            {
+              "id": "lym-38",
+              "dok": 3,
+              "q": "A surgeon planning a head and neck dissection wants to follow lymphatic drainage of the tongue. Trace it.",
+              "a": "Tongue lymph drains to submental, submandibular, and deep cervical (jugulodigastric and jugulo-omohyoid) nodes, then to the jugular trunk, then to the thoracic duct (left) or right lymphatic duct."
+            },
+            {
+              "id": "lym-39",
+              "dok": 3,
+              "q": "Why are sentinel lymph node biopsies clinically useful in cancer staging?",
+              "a": "The sentinel node is the first node a tumor's lymph drains to. Its status predicts whether downstream nodes are likely involved, allowing limited dissection instead of full nodal clearance."
+            },
+            {
+              "id": "lym-40",
+              "dok": 3,
+              "q": "Compare the structural defense roles of the skin and the gut mucosa.",
+              "a": "Skin uses a thick, dry, keratinized multilayered barrier. Gut mucosa uses a thinner moist epithelium but adds mucus layers, tight junctions, IgA in secretions, and a dense lymphoid presence (GALT) beneath it."
+            },
+            {
+              "id": "lym-41",
+              "dok": 3,
+              "q": "Why does the spleen have both arterial and venous trabeculae but lymph nodes have a single hilum?",
+              "a": "The spleen is a blood-filtering organ with substantial vascular trafficking and so needs distributed vascular access. Lymph nodes filter only lymph, which arrives diffusely via afferents and departs through a single efferent vessel."
+            },
+            {
+              "id": "lym-42",
+              "dok": 3,
+              "q": "Why does an obstruction of the lower esophagus (or thoracic duct injury) sometimes lead to chylothorax?",
+              "a": "The thoracic duct ascends posterior to the esophagus carrying chyle. Disruption allows lymph rich in dietary fats to leak into the pleural cavity, producing a milky chylothorax."
+            },
+            {
+              "id": "lym-43",
+              "dok": 3,
+              "q": "Compare the location, size, and named ducts of the parotid, submandibular, and sublingual glands as they relate to oral lymphoid sampling.",
+              "a": "Parotid is largest, anterior to the ear, drains via Stensen's duct. Submandibular sits along the mandible body, drains via Wharton's duct. Sublingual is smallest, beneath the tongue. All deliver IgA-containing saliva to the oral mucosa."
+            },
+            {
+              "id": "lym-44",
+              "dok": 3,
+              "q": "Why is the cervical region a clinically important location for assessing immune activity?",
+              "a": "Deep and superficial cervical nodes drain the head, scalp, oral cavity, pharynx, and thyroid. Many infections and head and neck malignancies produce palpable nodes in this chain."
+            },
+            {
+              "id": "lym-45",
+              "dok": 3,
+              "q": "Explain the structural reason lymph node enlargement often hurts in infection but not in malignancy.",
+              "a": "In infection the rapid expansion stretches the fibrous capsule and triggers nociceptors, so the node is tender. Malignant infiltration expands the node slowly, allowing capsule to remodel without acute stretch, so it is typically firm but painless."
+            },
+            {
+              "id": "lym-46",
+              "dok": 3,
+              "q": "Trace the structural sequence by which interstitial fluid becomes lymph and re-enters circulation.",
+              "a": "Filtered plasma leaves capillaries into interstitium, enters lymph capillaries through endothelial flaps, flows through collecting lymph vessels with valves, passes through one or more lymph nodes, joins a lymphatic trunk, drains into the thoracic or right lymphatic duct, and finally re-enters venous blood at the subclavian veins."
+            },
+            {
+              "id": "lym-47",
+              "dok": 3,
+              "q": "Why does the spleen have both white pulp and red pulp in its parenchyma?",
+              "a": "Red pulp specializes in filtering blood (especially removing aged RBCs). White pulp specializes in immune surveillance of blood-borne antigens. Together they make the spleen the largest single mass of lymphoid tissue in adults."
+            },
+            {
+              "id": "lym-48",
+              "dok": 3,
+              "q": "Why is the integrity of the mucociliary escalator structurally critical for respiratory defense?",
+              "a": "The cilia plus mucus layer create a continuously moving sheet that traps inhaled particles and physically transports them upward. Damage from smoking or genetic ciliary disease leaves the lower airway vulnerable to colonization."
+            },
+            {
+              "id": "lym-49",
+              "dok": 3,
+              "q": "A patient has surgical removal of the right palatine tonsil. Which other lymphoid structures could compensate, and why?",
+              "a": "The remaining tonsils (lingual, pharyngeal, tubal) and cervical lymph nodes continue to sample oropharyngeal antigens. The lymphoid ring (Waldeyer ring) has redundancy built into its structure."
+            },
+            {
+              "id": "lym-50",
+              "dok": 3,
+              "q": "Compare the structural defenses of the urinary tract above and below the bladder.",
+              "a": "Above the bladder the ureters and renal pelvis rely on transitional epithelium and one-way peristalsis. The bladder adds mucin coating, urine acidity, and complete emptying. The urethra adds antimicrobial secretions plus mechanical flushing."
+            },
+            {
+              "id": "lym-51",
+              "dok": 3,
+              "q": "Why are inguinal nodes commonly enlarged in lower-extremity skin infections?",
+              "a": "Inguinal nodes are the first lymphatic filtration site for the lower limb and perineum. Pathogens that reach lymph from a foot or leg infection accumulate there."
+            },
+            {
+              "id": "lym-52",
+              "dok": 3,
+              "q": "Explain why removal of the appendix is well tolerated despite its lymphoid role.",
+              "a": "GALT is distributed throughout the gut as Peyer's patches and isolated lymphoid follicles in the lamina propria. Loss of the appendix removes one node of a large redundant network."
+            },
+            {
+              "id": "lym-53",
+              "dok": 3,
+              "q": "A patient has an injury to the upper outer left thigh. Predict the structural drainage path.",
+              "a": "Local interstitial fluid drains into lymph capillaries, collecting into superficial inguinal nodes, then deep inguinal nodes, then external iliac nodes, then lumbar nodes, then the cisterna chyli, then the thoracic duct, then the left subclavian vein."
+            },
+            {
+              "id": "lym-54",
+              "dok": 4,
+              "q": "Build a structural argument for why the lymphatic system is best understood as both a drainage circuit and a surveillance network. Cite at least three named structures supporting each role.",
+              "a": "Drainage: lymph capillaries collect interstitial fluid, collecting vessels carry it centrally with valves, and the thoracic and right lymphatic ducts return it to venous blood. Surveillance: lymph nodes filter that fluid through cortex and medulla, MALT and GALT sample mucosal antigens (Peyer's patches, tonsils, appendix), and the spleen samples blood-borne antigens. Drainage hardware and surveillance hardware are anatomically intertwined: nodes interrupt the very vessels that perform drainage."
+            },
+            {
+              "id": "lym-55",
+              "dok": 4,
+              "q": "Design a structural map of the body's barrier defenses, identifying which barrier type (mechanical, chemical, biological) dominates at each major portal of entry, with at least one named structure per portal.",
+              "a": "Skin: mechanical (keratinized stratified squamous, tight junctions), chemical (sebum acid, defensins), biological (commensal flora). Respiratory: mechanical (mucociliary escalator), chemical (lysozyme, IgA), biological (alveolar macrophages). GI: mechanical (peristalsis, tight junctions), chemical (HCl, bile, lysozyme), biological (microbiota, GALT). Urogenital: mechanical (flushing of urine), chemical (acidic pH of vagina), biological (lactobacilli)."
+            },
+            {
+              "id": "lym-56",
+              "dok": 4,
+              "q": "A patient has cancer requiring complete axillary lymph node dissection on the right side. Anticipate three anatomical consequences and the structural basis for each.",
+              "a": "First, lymphedema of the right arm because the interrupted nodes were its primary drainage route. Second, increased infection susceptibility in the right limb because regional immune surveillance is lost. Third, possible nerve injury to the long thoracic or thoracodorsal nerves running through the axilla, with downstream effects on serratus anterior or latissimus dorsi function."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m-respiratory",
+      "title": "Respiratory System",
+      "week": 7,
+      "topics": [
+        {
+          "id": "t-respiratory-anatomy",
+          "title": "Respiratory Anatomy",
+          "summary": "Gross and microscopic structure of the conducting and respiratory portions of the airway, the lungs and their pleural coverings, and the muscles that move them.",
+          "videoLabel": "Video: Respiratory Anatomy (placeholder)",
+          "gateKeywords": [
+            "airway",
+            "trachea",
+            "bronchi",
+            "alveoli",
+            "pleura",
+            "diaphragm",
+            "lobe",
+            "larynx",
+            "pharynx",
+            "nasal"
+          ],
+          "notes": [
+            {
+              "heading": "Upper airway",
+              "body": [
+                "Nasal cavity warms, humidifies, and filters air; turbinates increase surface area.",
+                "Pharynx (nasopharynx, oropharynx, laryngopharynx) is shared with the digestive tract.",
+                "Larynx contains the vocal folds and is guarded by the epiglottis during swallowing."
+              ]
+            },
+            {
+              "heading": "Lower airway and bronchial tree",
+              "body": [
+                "Trachea is held open by C-shaped cartilage rings; trachealis muscle closes the posterior gap.",
+                "Right primary bronchus is wider, shorter, more vertical than the left.",
+                "Bronchi branch to secondary (lobar), tertiary (segmental), then bronchioles, then terminal bronchioles, then respiratory bronchioles."
+              ]
+            },
+            {
+              "heading": "Lungs and pleura",
+              "body": [
+                "Right lung has three lobes (upper, middle, lower); left lung has two lobes (upper, lower) and a cardiac notch.",
+                "Hilum is the entry point for bronchi, vessels, and nerves.",
+                "Visceral pleura covers the lung; parietal pleura lines the thoracic wall, mediastinum, and diaphragm.",
+                "Pleural cavity holds a thin film of serous fluid; intrapleural pressure is subatmospheric."
+              ]
+            },
+            {
+              "heading": "Alveoli",
+              "body": [
+                "Alveolar wall is simple squamous epithelium (type I pneumocytes) plus scattered cuboidal type II pneumocytes that produce surfactant.",
+                "Alveolar macrophages patrol the alveolar lumen.",
+                "Respiratory membrane: alveolar epithelium, fused basement membranes, capillary endothelium."
+              ]
+            },
+            {
+              "heading": "Muscles of breathing",
+              "body": [
+                "Diaphragm: primary inspiratory muscle, dome-shaped, innervated by the phrenic nerve (C3 to C5).",
+                "External intercostals: assist quiet inspiration.",
+                "Accessory muscles of inspiration: scalenes, sternocleidomastoid, pectoralis minor.",
+                "Active expiration uses internal intercostals and abdominal muscles."
+              ]
+            }
+          ],
+          "cards": [
+            {
+              "id": "resp-1",
+              "dok": 1,
+              "q": "Name the three regions of the pharynx from superior to inferior.",
+              "a": "Nasopharynx, oropharynx, laryngopharynx."
+            },
+            {
+              "id": "resp-2",
+              "dok": 1,
+              "q": "How many lobes are in the right lung and the left lung?",
+              "a": "Right lung has three lobes. Left lung has two lobes."
+            },
+            {
+              "id": "resp-3",
+              "dok": 1,
+              "q": "Name the cartilage that closes the laryngeal inlet during swallowing.",
+              "a": "The epiglottis."
+            },
+            {
+              "id": "resp-4",
+              "dok": 1,
+              "q": "What is the primary muscle of inspiration?",
+              "a": "The diaphragm."
+            },
+            {
+              "id": "resp-5",
+              "dok": 1,
+              "q": "Which cells produce pulmonary surfactant?",
+              "a": "Type II pneumocytes."
+            },
+            {
+              "id": "resp-6",
+              "dok": 1,
+              "q": "What is the name of the slit between the vocal folds?",
+              "a": "The rima glottidis (the glottis)."
+            },
+            {
+              "id": "resp-7",
+              "dok": 1,
+              "q": "What pleural layer directly covers the lung?",
+              "a": "Visceral pleura."
+            },
+            {
+              "id": "resp-8",
+              "dok": 1,
+              "q": "What nerve innervates the diaphragm?",
+              "a": "The phrenic nerve, from spinal levels C3 to C5."
+            },
+            {
+              "id": "resp-9",
+              "dok": 2,
+              "q": "Trace air from the external nares to an alveolus, naming every major structure in order.",
+              "a": "External nares, nasal cavity, internal nares (choanae), nasopharynx, oropharynx, laryngopharynx, larynx, trachea, primary (main) bronchus, secondary (lobar) bronchus, tertiary (segmental) bronchus, bronchioles, terminal bronchiole, respiratory bronchiole, alveolar duct, alveolar sac, alveolus."
+            },
+            {
+              "id": "resp-10",
+              "dok": 2,
+              "q": "Compare the structure of the right and left primary bronchi.",
+              "a": "The right primary bronchus is wider, shorter, and more vertical. The left is narrower, longer, and more horizontal because it must arch over the heart."
+            },
+            {
+              "id": "resp-11",
+              "dok": 2,
+              "q": "Describe the epithelial transition along the conducting airway.",
+              "a": "Pseudostratified ciliated columnar with goblet cells from the nasal cavity through most of the bronchi, transitioning to simple ciliated columnar in bronchioles, then simple cuboidal in terminal bronchioles, and finally simple squamous in alveoli."
+            },
+            {
+              "id": "resp-12",
+              "dok": 2,
+              "q": "Identify the structures that form the respiratory membrane.",
+              "a": "Type I alveolar epithelial cell, fused basement membranes of alveolar and capillary endothelium, and the capillary endothelial cell."
+            },
+            {
+              "id": "resp-13",
+              "dok": 2,
+              "q": "Describe the cartilage support along the airway.",
+              "a": "C-shaped tracheal rings, irregular cartilage plates in primary and secondary bronchi, smaller plates in tertiary bronchi, and no cartilage at all in bronchioles."
+            },
+            {
+              "id": "resp-14",
+              "dok": 2,
+              "q": "Identify the structure of the trachealis muscle and explain its location.",
+              "a": "A band of smooth muscle that bridges the posterior gap of each C-shaped tracheal cartilage, allowing the esophagus posterior to it to expand during swallowing."
+            },
+            {
+              "id": "resp-15",
+              "dok": 2,
+              "q": "Compare visceral and parietal pleura.",
+              "a": "Visceral pleura adheres directly to the lung surface and dips into the fissures. Parietal pleura lines the thoracic wall, mediastinum, and superior diaphragm. They are continuous at the hilum."
+            },
+            {
+              "id": "resp-16",
+              "dok": 2,
+              "q": "Identify the bronchopulmonary segments and explain their significance.",
+              "a": "Each tertiary (segmental) bronchus serves a discrete bronchopulmonary segment with its own arterial supply. The right lung has 10 segments and the left has 8 to 10. Segments are surgically resectable units."
+            },
+            {
+              "id": "resp-17",
+              "dok": 2,
+              "q": "Describe the gross structure of the larynx.",
+              "a": "Nine cartilages including the unpaired thyroid, cricoid, and epiglottic; paired arytenoid, corniculate, and cuneiform. Contains true and false vocal folds, and the laryngeal ventricle between them."
+            },
+            {
+              "id": "resp-18",
+              "dok": 2,
+              "q": "Where does the trachea bifurcate and what landmark sits at this point?",
+              "a": "At the sternal angle (T4 to T5 vertebral level), at an internal ridge called the carina."
+            },
+            {
+              "id": "resp-19",
+              "dok": 2,
+              "q": "Identify the three structures of the conchae (turbinates) and their role.",
+              "a": "Superior, middle, and inferior nasal conchae project from the lateral nasal wall. They create turbulent airflow that maximizes contact with the warm, moist mucosa."
+            },
+            {
+              "id": "resp-20",
+              "dok": 2,
+              "q": "What is the cardiac notch, and where is it located?",
+              "a": "An indentation on the medial border of the left lung superior to the lingula that accommodates the heart's leftward bulge."
+            },
+            {
+              "id": "resp-21",
+              "dok": 2,
+              "q": "Compare type I and type II pneumocytes structurally.",
+              "a": "Type I pneumocytes are flat simple squamous cells covering most of the alveolar surface for thin diffusion. Type II pneumocytes are cuboidal, scattered among type I, and contain lamellar bodies that store surfactant."
+            },
+            {
+              "id": "resp-22",
+              "dok": 2,
+              "q": "Describe the structure and location of the diaphragm.",
+              "a": "A dome-shaped musculotendinous sheet separating thorax from abdomen, with a central tendon, attaching to the xiphoid process, lower six ribs, and L1 to L3 vertebrae via the crura."
+            },
+            {
+              "id": "resp-23",
+              "dok": 2,
+              "q": "Identify the three major openings in the diaphragm and the structures passing through them.",
+              "a": "Caval foramen (T8): inferior vena cava. Esophageal hiatus (T10): esophagus and vagus nerves. Aortic hiatus (T12): aorta, thoracic duct, azygos vein."
+            },
+            {
+              "id": "resp-24",
+              "dok": 2,
+              "q": "Identify the accessory muscles of inspiration.",
+              "a": "Sternocleidomastoid, scalenes (anterior, middle, posterior), pectoralis minor, and serratus anterior."
+            },
+            {
+              "id": "resp-25",
+              "dok": 2,
+              "q": "Identify the muscles of forced expiration.",
+              "a": "Internal intercostals, innermost intercostals, rectus abdominis, external and internal obliques, and transversus abdominis."
+            },
+            {
+              "id": "resp-26",
+              "dok": 2,
+              "q": "Identify the paranasal sinuses and their drainage relationships.",
+              "a": "Frontal, ethmoid, sphenoid, and maxillary sinuses, all lined with respiratory mucosa, all draining into the nasal cavity through meatuses."
+            },
+            {
+              "id": "resp-27",
+              "dok": 2,
+              "q": "What is the lingula and where is it located?",
+              "a": "A tongue-like projection on the inferior aspect of the upper lobe of the left lung, considered the left lung's structural counterpart to the right middle lobe."
+            },
+            {
+              "id": "resp-28",
+              "dok": 2,
+              "q": "Describe the structure of the costodiaphragmatic recess.",
+              "a": "A potential space between the diaphragmatic and costal parietal pleurae where the lung does not fully extend during quiet breathing. It is the lowest part of the pleural cavity and where fluid collects."
+            },
+            {
+              "id": "resp-29",
+              "dok": 2,
+              "q": "Identify the three lobar fissures of the right lung.",
+              "a": "The horizontal (minor) fissure separates the upper and middle lobes. The oblique (major) fissure separates the middle and lower lobes. The left lung has only an oblique fissure."
+            },
+            {
+              "id": "resp-30",
+              "dok": 2,
+              "q": "Locate the hilum of each lung.",
+              "a": "On the mediastinal surface of each lung, where main bronchus, pulmonary artery, pulmonary veins, bronchial vessels, lymphatics, and nerves enter or exit."
+            },
+            {
+              "id": "resp-31",
+              "dok": 2,
+              "q": "What anatomical landmark marks the position of the carina?",
+              "a": "Internally at the bifurcation of the trachea, externally roughly at the sternal angle (angle of Louis) at the T4 to T5 vertebral level."
+            },
+            {
+              "id": "resp-32",
+              "dok": 3,
+              "q": "Why does an aspirated peanut more often lodge in the right main bronchus than the left?",
+              "a": "The right main bronchus is wider, shorter, and more vertical, providing a more direct path for inhaled material."
+            },
+            {
+              "id": "resp-33",
+              "dok": 3,
+              "q": "A patient has lost the integrity of their visceral pleura due to a bleb rupture. Predict the anatomical consequence and reasoning.",
+              "a": "Air escapes the lung into the pleural cavity (pneumothorax). Because intrapleural pressure normally is subatmospheric, equalization collapses the lung."
+            },
+            {
+              "id": "resp-34",
+              "dok": 3,
+              "q": "Compare the anatomical paths of air and food at the pharynx and explain the structural safeguards.",
+              "a": "Air can travel nasopharynx to oropharynx to laryngopharynx to larynx. Food travels oropharynx to laryngopharynx to esophagus. The epiglottis tips back to cover the laryngeal inlet during swallowing, and the soft palate elevates to close the nasopharynx, separating the two paths."
+            },
+            {
+              "id": "resp-35",
+              "dok": 3,
+              "q": "Why is a tracheostomy typically placed below the cricoid cartilage but above the sternal notch?",
+              "a": "The cricoid is the only complete cartilage ring and must remain intact to support the airway. The space inferior to it but superior to the sternum gives surgical access to the trachea without major vascular interference."
+            },
+            {
+              "id": "resp-36",
+              "dok": 3,
+              "q": "Explain why surfactant deficiency in a premature infant collapses alveoli.",
+              "a": "Surfactant lowers alveolar surface tension. Without it, small alveoli generate higher inward pressure (Laplace's law) and collapse into larger ones, reducing surface area for gas exchange."
+            },
+            {
+              "id": "resp-37",
+              "dok": 3,
+              "q": "Why is the right phrenic nerve more vulnerable in central venous catheter placement than the left?",
+              "a": "The right phrenic nerve runs alongside the superior vena cava, a common catheter target. Catheter malposition can compress or injure it, causing right hemidiaphragm paralysis."
+            },
+            {
+              "id": "resp-38",
+              "dok": 3,
+              "q": "Why does a parietal pleural irritation typically cause sharp, localized pain, while a visceral pleural irritation does not?",
+              "a": "Parietal pleura is innervated by somatic nerves (intercostals and phrenic) carrying sharp localizable pain. Visceral pleura is innervated by autonomic fibers and is largely insensitive to pain."
+            },
+            {
+              "id": "resp-39",
+              "dok": 3,
+              "q": "Explain the anatomical basis for referred shoulder pain in diaphragmatic irritation.",
+              "a": "The diaphragm is innervated by the phrenic nerve (C3 to C5). Cutaneous C3 to C5 supplies the shoulder, so central nervous system convergence causes diaphragmatic irritation to be felt at the shoulder."
+            },
+            {
+              "id": "resp-40",
+              "dok": 3,
+              "q": "Predict why a smoker's airway has structural changes that impair clearance.",
+              "a": "Chronic smoke exposure causes goblet cell hyperplasia (more mucus), squamous metaplasia of pseudostratified epithelium (loss of cilia), and bronchial wall remodeling. The mucociliary escalator fails."
+            },
+            {
+              "id": "resp-41",
+              "dok": 3,
+              "q": "A surgeon plans to remove an isolated tumor confined to one bronchopulmonary segment. What structural principle makes this feasible?",
+              "a": "Each bronchopulmonary segment has its own segmental bronchus and segmental artery, with venous drainage between segments. The segment can be resected as a self-contained unit with intact adjacent segments."
+            },
+            {
+              "id": "resp-42",
+              "dok": 3,
+              "q": "Explain why fluid in the pleural cavity preferentially accumulates in the costodiaphragmatic recess of an upright patient.",
+              "a": "Gravity pulls fluid to the lowest dependent point of the pleural space. In a standing patient, that is the costodiaphragmatic recess."
+            },
+            {
+              "id": "resp-43",
+              "dok": 3,
+              "q": "Why does damage to the recurrent laryngeal nerve (a branch of the vagus) cause hoarseness?",
+              "a": "The recurrent laryngeal nerve innervates all intrinsic muscles of the larynx except cricothyroid. Damage impairs vocal fold movement, altering phonation."
+            },
+            {
+              "id": "resp-44",
+              "dok": 3,
+              "q": "Why does the left recurrent laryngeal nerve have a longer course than the right?",
+              "a": "The left recurrent laryngeal nerve loops under the aortic arch before ascending, while the right loops under the right subclavian artery in the neck. The left therefore has more course at risk in thoracic disease."
+            },
+            {
+              "id": "resp-45",
+              "dok": 3,
+              "q": "Why is the diaphragm shaped as a dome at rest, and what happens to that shape during inspiration?",
+              "a": "At rest the dome shape results from upward pressure from abdominal contents balanced against intrathoracic recoil. During inspiration the diaphragm contracts, flattening downward, increasing thoracic volume vertically."
+            },
+            {
+              "id": "resp-46",
+              "dok": 3,
+              "q": "Explain the anatomical reason a tension pneumothorax shifts the mediastinum.",
+              "a": "Air trapped under increasing pressure in one pleural cavity displaces mediastinal structures (heart, great vessels, trachea) toward the opposite side, compromising venous return and ventilation of the contralateral lung."
+            },
+            {
+              "id": "resp-47",
+              "dok": 3,
+              "q": "Why is the alveolar wall so thin, and what cells contribute to keeping it thin?",
+              "a": "Type I pneumocytes are simple squamous, fused basement membranes are minimal, and capillary endothelium is also flat. The structural goal is minimum diffusion distance for oxygen and carbon dioxide."
+            },
+            {
+              "id": "resp-48",
+              "dok": 3,
+              "q": "Predict the consequence of losing alveolar macrophage function on the lung's structural defense.",
+              "a": "Inhaled particulates and microbes that bypass the mucociliary escalator would accumulate at the alveolar surface. Without macrophage clearance, chronic inflammation and infection risk would rise."
+            },
+            {
+              "id": "resp-49",
+              "dok": 3,
+              "q": "Why does a hiatal hernia produce gastroesophageal reflux symptoms?",
+              "a": "The esophageal hiatus at T10 normally hugs the esophagus and contributes to the lower esophageal sphincter mechanism. When the upper stomach herniates through it, the antireflux barrier is anatomically disrupted."
+            },
+            {
+              "id": "resp-50",
+              "dok": 3,
+              "q": "Compare conducting and respiratory portions of the airway by structure and function.",
+              "a": "Conducting portion (nose through terminal bronchioles): no gas exchange, walls with cartilage or smooth muscle, ciliated epithelium with goblet cells. Respiratory portion (respiratory bronchioles, alveolar ducts, alveolar sacs, alveoli): gas exchange, thin alveolar walls, no cartilage."
+            },
+            {
+              "id": "resp-51",
+              "dok": 3,
+              "q": "A patient cannot extend their head and neck after a stroke. Why might this affect breathing in a stressed state?",
+              "a": "Inability to recruit accessory inspiratory muscles like sternocleidomastoid (which assists when neck is extended) reduces maximal thoracic expansion when respiratory demand rises."
+            },
+            {
+              "id": "resp-52",
+              "dok": 3,
+              "q": "Why might a patient with a high cervical spinal cord injury (above C3) require mechanical ventilation, while a patient injured at C5 might not?",
+              "a": "The phrenic nerve arises from C3 to C5. Injury above C3 destroys diaphragmatic innervation completely. Injury at C5 spares the upper roots, often preserving partial diaphragm function."
+            },
+            {
+              "id": "resp-53",
+              "dok": 3,
+              "q": "Explain why a thoracentesis needle is typically passed just above the upper border of a rib.",
+              "a": "The intercostal neurovascular bundle (vein, artery, nerve from superior to inferior) runs along the inferior border of each rib. Entering just above the next rib avoids the bundle."
+            },
+            {
+              "id": "resp-54",
+              "dok": 4,
+              "q": "Design a structural map of the respiratory system from external nares to alveolus that explicitly distinguishes the conducting zone from the respiratory zone, and predict where pathology would block ventilation versus impair gas exchange.",
+              "a": "Conducting zone: nares, nasal cavity, paranasal sinuses, pharynx, larynx, trachea, primary, secondary, tertiary bronchi, bronchioles, terminal bronchioles. Pathology here (foreign body, mucus, bronchospasm) blocks ventilation. Respiratory zone: respiratory bronchioles, alveolar ducts, alveolar sacs, alveoli. Pathology here (alveolar collapse, edema, fibrosis) impairs gas exchange by altering the respiratory membrane, not airflow per se."
+            },
+            {
+              "id": "resp-55",
+              "dok": 4,
+              "q": "Argue from anatomy why the pleural cavity must be sealed and contain only a thin fluid film. Identify three structural features that maintain this state and what happens if any one fails.",
+              "a": "First, intact parietal and visceral pleura prevent gas exchange between cavity and external air; a tear causes pneumothorax. Second, intact diaphragm and chest wall maintain subatmospheric intrapleural pressure; chest wall defects let air in. Third, serous fluid produced by pleural mesothelium lubricates and keeps the layers sliding without separation; loss produces pleural friction. Failure of any one converts the cavity from a coupling mechanism into a structural liability."
+            },
+            {
+              "id": "resp-56",
+              "dok": 4,
+              "q": "Propose why the right lung has three lobes and the left has two, and use this asymmetry to predict differences in surgical and emergency anatomy.",
+              "a": "The left lung accommodates the heart by sacrificing a lobe and adding a cardiac notch. Right thoracic surgery offers three distinct lobar units for selective resection. In aspiration, right-sided foreign bodies travel a more vertical bronchus and lodge in the lower lobe. The left main bronchus crosses anterior to the descending aorta, complicating left-sided procedures. Lobar pneumonia patterns also differ: right middle lobe pneumonia has no left counterpart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m-digestive",
+      "title": "Digestive System",
+      "week": 7,
+      "topics": [
+        {
+          "id": "t-gi-alimentary",
+          "title": "GI Alimentary Canal",
+          "summary": "Gross and microscopic structure of the continuous tube from mouth to anus, including the four-tunic wall plan, segmental modifications, and named regions.",
+          "videoLabel": "Video: GI Alimentary Canal (placeholder)",
+          "gateKeywords": [
+            "mucosa",
+            "submucosa",
+            "muscularis",
+            "serosa",
+            "stomach",
+            "duodenum",
+            "jejunum",
+            "ileum",
+            "colon",
+            "esophagus"
+          ],
+          "notes": [
+            {
+              "heading": "Four tunics",
+              "body": [
+                "Mucosa (innermost): epithelium, lamina propria, muscularis mucosae.",
+                "Submucosa: dense connective tissue, vessels, submucosal (Meissner) plexus.",
+                "Muscularis externa: inner circular and outer longitudinal smooth muscle with myenteric (Auerbach) plexus between them.",
+                "Serosa (intraperitoneal) or adventitia (retroperitoneal)."
+              ]
+            },
+            {
+              "heading": "Oral cavity to esophagus",
+              "body": [
+                "Oral cavity contains teeth, tongue, hard and soft palate, and salivary duct openings.",
+                "Pharynx (oro and laryngo) is shared with the airway.",
+                "Esophagus is about 25 cm; upper third skeletal muscle, middle third mixed, lower third smooth muscle.",
+                "Upper and lower esophageal sphincters guard each end."
+              ]
+            },
+            {
+              "heading": "Stomach",
+              "body": [
+                "Regions: cardia, fundus, body, antrum (pyloric), pylorus.",
+                "Lesser and greater curvatures.",
+                "Rugae are folds that flatten as the stomach distends.",
+                "Muscularis externa has a third oblique layer for churning.",
+                "Cells of gastric glands: parietal (HCl, intrinsic factor), chief (pepsinogen), G cells (gastrin), mucous neck and surface mucous cells."
+              ]
+            },
+            {
+              "heading": "Small intestine",
+              "body": [
+                "Duodenum (~25 cm), jejunum (~2.5 m), ileum (~3.5 m).",
+                "Surface amplification: plicae circulares, villi, microvilli.",
+                "Each villus contains a central lacteal and a capillary network.",
+                "Peyer's patches concentrate in the ileum."
+              ]
+            },
+            {
+              "heading": "Large intestine",
+              "body": [
+                "Cecum, ascending, transverse, descending, sigmoid, rectum, anal canal.",
+                "Teniae coli (three longitudinal bands), haustra, epiploic appendages.",
+                "Pectinate line marks the boundary between superior endoderm-derived and inferior ectoderm-derived anal canal.",
+                "Internal anal sphincter is smooth muscle; external is skeletal."
+              ]
+            }
+          ],
+          "cards": [
+            {
+              "id": "gia-1",
+              "dok": 1,
+              "q": "Name the four tunics of the alimentary canal wall from innermost to outermost.",
+              "a": "Mucosa, submucosa, muscularis externa, serosa (or adventitia)."
+            },
+            {
+              "id": "gia-2",
+              "dok": 1,
+              "q": "Name the five gross regions of the stomach.",
+              "a": "Cardia, fundus, body, antrum (pyloric), pylorus."
+            },
+            {
+              "id": "gia-3",
+              "dok": 1,
+              "q": "Name the three segments of the small intestine in order.",
+              "a": "Duodenum, jejunum, ileum."
+            },
+            {
+              "id": "gia-4",
+              "dok": 1,
+              "q": "What are the three longitudinal muscle strips of the large intestine called?",
+              "a": "Teniae coli."
+            },
+            {
+              "id": "gia-5",
+              "dok": 1,
+              "q": "Name the two nerve plexuses of the enteric nervous system.",
+              "a": "Submucosal (Meissner) plexus and myenteric (Auerbach) plexus."
+            },
+            {
+              "id": "gia-6",
+              "dok": 1,
+              "q": "Name the sphincter at the gastroesophageal junction.",
+              "a": "Lower esophageal sphincter (cardiac sphincter)."
+            },
+            {
+              "id": "gia-7",
+              "dok": 1,
+              "q": "What are the circular folds of the small intestine called?",
+              "a": "Plicae circulares."
+            },
+            {
+              "id": "gia-8",
+              "dok": 1,
+              "q": "What is the boundary between the upper and lower anal canal called?",
+              "a": "The pectinate (dentate) line."
+            },
+            {
+              "id": "gia-9",
+              "dok": 2,
+              "q": "Describe the structure of the mucosa.",
+              "a": "Three layers: an epithelial lining (type varies by segment), lamina propria (loose connective tissue with vessels and immune cells), and a thin muscularis mucosae of smooth muscle."
+            },
+            {
+              "id": "gia-10",
+              "dok": 2,
+              "q": "Describe the structure of the muscularis externa and where the myenteric plexus sits.",
+              "a": "Inner circular and outer longitudinal layers of smooth muscle. The myenteric (Auerbach) plexus lies between the two layers."
+            },
+            {
+              "id": "gia-11",
+              "dok": 2,
+              "q": "Compare serosa and adventitia.",
+              "a": "Serosa is visceral peritoneum covering intraperitoneal organs. Adventitia is loose connective tissue anchoring retroperitoneal organs (such as most of the esophagus and the duodenum) to surrounding structures."
+            },
+            {
+              "id": "gia-12",
+              "dok": 2,
+              "q": "Describe the epithelial transitions along the alimentary canal.",
+              "a": "Stratified squamous in oral cavity, pharynx, esophagus, and anal canal below the pectinate line. Simple columnar from the stomach through the rectum."
+            },
+            {
+              "id": "gia-13",
+              "dok": 2,
+              "q": "Identify the three salivary duct openings in the oral cavity.",
+              "a": "Parotid (Stensen) duct opens lateral to the upper second molar. Submandibular (Wharton) duct opens at the sublingual caruncle beside the lingual frenulum. Sublingual ducts open along the floor of the mouth."
+            },
+            {
+              "id": "gia-14",
+              "dok": 2,
+              "q": "Identify the four types of teeth and their roles.",
+              "a": "Incisors (cutting), canines (tearing), premolars (grinding), molars (grinding)."
+            },
+            {
+              "id": "gia-15",
+              "dok": 2,
+              "q": "Describe the structure of the tongue.",
+              "a": "Skeletal muscle organ covered by stratified squamous epithelium. Anterior two-thirds and posterior third meet at the sulcus terminalis. Anchored anteriorly by the lingual frenulum. Surface has filiform, fungiform, foliate, and circumvallate papillae."
+            },
+            {
+              "id": "gia-16",
+              "dok": 2,
+              "q": "Identify the three regions of the pharynx and their roles in alimentary versus respiratory function.",
+              "a": "Nasopharynx (air only), oropharynx (shared), laryngopharynx (shared). Both food and air pass through the oro and laryngopharynx."
+            },
+            {
+              "id": "gia-17",
+              "dok": 2,
+              "q": "Describe the muscular composition of the esophagus.",
+              "a": "Upper third skeletal muscle, middle third mixed skeletal and smooth, lower third smooth muscle."
+            },
+            {
+              "id": "gia-18",
+              "dok": 2,
+              "q": "Describe the gross shape and curvatures of the stomach.",
+              "a": "J-shaped, with a concave lesser curvature on the right and a convex greater curvature on the left. The cardia receives the esophagus and the pylorus exits to the duodenum."
+            },
+            {
+              "id": "gia-19",
+              "dok": 2,
+              "q": "Identify the cell types of a gastric gland.",
+              "a": "Parietal cells (HCl, intrinsic factor), chief cells (pepsinogen), mucous neck cells and surface mucous cells (alkaline mucus), G cells in the antrum (gastrin), and enteroendocrine cells."
+            },
+            {
+              "id": "gia-20",
+              "dok": 2,
+              "q": "Describe the third muscle layer of the stomach.",
+              "a": "An additional innermost oblique layer of smooth muscle deep to the circular layer, providing the churning capacity to mix gastric contents."
+            },
+            {
+              "id": "gia-21",
+              "dok": 2,
+              "q": "Describe the structure of duodenal submucosa that distinguishes it from the rest of the small intestine.",
+              "a": "Brunner glands, which produce alkaline mucus, are found in the submucosa of the duodenum and protect against acidic chyme from the stomach."
+            },
+            {
+              "id": "gia-22",
+              "dok": 2,
+              "q": "Describe the gross anatomy of the jejunum.",
+              "a": "Middle segment of the small intestine, about 2.5 m long, thicker and more vascular wall than ileum, with more prominent plicae circulares, longer villi, and concentrated nutrient absorption."
+            },
+            {
+              "id": "gia-23",
+              "dok": 2,
+              "q": "Describe the structural features that distinguish the ileum from the jejunum.",
+              "a": "Thinner wall, less vascular, smaller and fewer plicae, shorter villi, and prominent Peyer's patches in the submucosa."
+            },
+            {
+              "id": "gia-24",
+              "dok": 2,
+              "q": "Identify the structures that amplify small intestine surface area in order.",
+              "a": "Plicae circulares (gross folds), villi (mucosal projections), microvilli (apical projections of columnar epithelial cells forming the brush border)."
+            },
+            {
+              "id": "gia-25",
+              "dok": 2,
+              "q": "Describe the structure of a single villus.",
+              "a": "A finger-like projection covered by simple columnar epithelium with goblet cells. Core contains a central lacteal (lymphatic) and a capillary network for nutrient pickup."
+            },
+            {
+              "id": "gia-26",
+              "dok": 2,
+              "q": "Identify the location and function of crypts of Lieberkuhn.",
+              "a": "Tubular invaginations of mucosa between villi housing stem cells that renew the intestinal epithelium every three to five days, plus Paneth cells that secrete antimicrobial peptides."
+            },
+            {
+              "id": "gia-27",
+              "dok": 2,
+              "q": "Identify the named flexures of the colon.",
+              "a": "Hepatic (right colic) flexure between ascending and transverse colon. Splenic (left colic) flexure between transverse and descending colon."
+            },
+            {
+              "id": "gia-28",
+              "dok": 2,
+              "q": "What are haustra, and how do they form?",
+              "a": "Pouches in the large intestine wall created because the teniae coli are shorter than the colon length, gathering the wall into sacculations."
+            },
+            {
+              "id": "gia-29",
+              "dok": 2,
+              "q": "What are epiploic appendages?",
+              "a": "Small fatty pouches of visceral peritoneum hanging off the external surface of the colon, characteristic of the large intestine."
+            },
+            {
+              "id": "gia-30",
+              "dok": 2,
+              "q": "Identify the two anal sphincters and their muscle types.",
+              "a": "Internal anal sphincter (smooth muscle, involuntary, thickening of the inner circular layer). External anal sphincter (skeletal muscle, voluntary, surrounding the anal canal)."
+            },
+            {
+              "id": "gia-31",
+              "dok": 2,
+              "q": "Identify the named anatomical features of the rectum and anal canal.",
+              "a": "Rectum contains transverse rectal folds (valves of Houston). Anal canal contains anal columns, anal sinuses, anal valves, and the pectinate line."
+            },
+            {
+              "id": "gia-32",
+              "dok": 3,
+              "q": "Compare the wall structure of the esophagus and stomach and explain how each suits its function.",
+              "a": "Esophagus has stratified squamous epithelium (abrasion resistance for solid bolus) and skeletal-to-smooth muscle progression. Stomach has simple columnar with gastric pits for secretion, an extra oblique muscle layer for churning, and rugae for distension."
+            },
+            {
+              "id": "gia-33",
+              "dok": 3,
+              "q": "Explain how the histology of the small intestine reflects its primary structural role.",
+              "a": "Plicae, villi, microvilli, and a thin epithelium maximize absorptive surface area while minimizing diffusion distance. Each villus core has both blood and lymphatic vessels to collect different nutrient classes."
+            },
+            {
+              "id": "gia-34",
+              "dok": 3,
+              "q": "Identify why the duodenum is retroperitoneal except for its first segment.",
+              "a": "Most of the duodenum lies posterior to the parietal peritoneum, fixed against the posterior abdominal wall. Only the proximal bulb (first part) is intraperitoneal and mobile."
+            },
+            {
+              "id": "gia-35",
+              "dok": 3,
+              "q": "Compare the structural features that distinguish small bowel from large bowel on imaging or in surgery.",
+              "a": "Small bowel: prominent plicae circulares, smaller caliber, central abdominal position, smooth outer wall. Large bowel: teniae coli, haustra, epiploic appendages, larger caliber, peripheral abdominal frame."
+            },
+            {
+              "id": "gia-36",
+              "dok": 3,
+              "q": "Explain why the rectum has both intraperitoneal and extraperitoneal portions.",
+              "a": "The upper rectum is covered by peritoneum anteriorly, mid rectum only on the front, and lower rectum is below the peritoneal reflection. This affects surgical approach and infection spread."
+            },
+            {
+              "id": "gia-37",
+              "dok": 3,
+              "q": "Explain the anatomical basis for the difference in pain sensation above versus below the pectinate line.",
+              "a": "Above the pectinate line, the canal derives from endoderm and is innervated by autonomic fibers (stretch, dull). Below the line it derives from ectoderm and is innervated by somatic pudendal fibers (sharp, well-localized pain)."
+            },
+            {
+              "id": "gia-38",
+              "dok": 3,
+              "q": "Why do gastric ulcers most often occur along the lesser curvature?",
+              "a": "The lesser curvature has fewer rugae, thinner muscularis, and lies closer to the acid-secreting body. It also receives less protective mucus and has tighter blood supply, making it structurally vulnerable to erosion."
+            },
+            {
+              "id": "gia-39",
+              "dok": 3,
+              "q": "Explain why the appendix can become inflamed despite its small size.",
+              "a": "Its narrow lumen is easily obstructed (fecalith, lymphoid hyperplasia). Behind obstruction, mucus accumulates, distending the wall, compromising blood supply, and inviting bacterial overgrowth, leading to inflammation and possible perforation."
+            },
+            {
+              "id": "gia-40",
+              "dok": 3,
+              "q": "Explain the structural reason GERD damages distal esophagus.",
+              "a": "Stratified squamous esophageal epithelium is structurally suited for friction but not for acid. Repeated reflux past a failing lower esophageal sphincter damages the distal mucosa and can drive metaplasia to columnar (Barrett's)."
+            },
+            {
+              "id": "gia-41",
+              "dok": 3,
+              "q": "Trace the path of an ingested marble from oral cavity to its exit.",
+              "a": "Oral cavity, oropharynx, laryngopharynx, esophagus (through UES), through diaphragmatic hiatus, through LES, stomach (cardia, fundus, body, antrum), pylorus, duodenum, jejunum, ileum, ileocecal valve, cecum, ascending colon, hepatic flexure, transverse colon, splenic flexure, descending colon, sigmoid colon, rectum, anal canal, anus."
+            },
+            {
+              "id": "gia-42",
+              "dok": 3,
+              "q": "Compare the cellular structure of gastric pits versus intestinal crypts.",
+              "a": "Gastric pits open into glands lined by parietal, chief, mucous, G, and enteroendocrine cells specialized for secretion. Intestinal crypts house stem cells, Paneth cells, and enteroendocrine cells specialized for renewal and defense."
+            },
+            {
+              "id": "gia-43",
+              "dok": 3,
+              "q": "Explain why a hiatal hernia mechanically predisposes to reflux.",
+              "a": "The diaphragmatic hiatus normally helps cinch the lower esophageal sphincter. When stomach herniates above the diaphragm, the sphincter loses its diaphragmatic support, and the antireflux barrier is anatomically weakened."
+            },
+            {
+              "id": "gia-44",
+              "dok": 3,
+              "q": "Why does the small intestine have many lymphoid aggregates while the esophagus has few?",
+              "a": "The small intestine constantly encounters dietary antigens and microbes. Its mucosa contains Peyer's patches and diffuse lymphoid tissue for sampling and response. The esophagus mostly transmits material rapidly with minimal absorption or antigen exposure."
+            },
+            {
+              "id": "gia-45",
+              "dok": 3,
+              "q": "Why are the ileocecal valve and the pyloric sphincter both anatomical narrowings, and how do they differ structurally?",
+              "a": "Both regulate transit between segments. The pyloric sphincter is a true smooth muscle thickening. The ileocecal valve is more of a folded mucosal flap with reinforcing muscle that opens passively in response to colonic pressure changes."
+            },
+            {
+              "id": "gia-46",
+              "dok": 3,
+              "q": "Explain how peritoneal versus retroperitoneal position of GI segments shapes surgical approach.",
+              "a": "Intraperitoneal organs (stomach, jejunum, ileum, transverse and sigmoid colon) hang on a mesentery and are mobile, allowing exteriorization. Retroperitoneal organs (most of duodenum, ascending and descending colon, rectum) require mobilization from posterior attachments."
+            },
+            {
+              "id": "gia-47",
+              "dok": 3,
+              "q": "Why is the lower third of the esophagus uniquely vulnerable to varices in liver disease?",
+              "a": "Distal esophageal veins drain into the left gastric vein (portal system) and azygos vein (systemic). When portal pressure rises, these submucosal veins dilate into varices that can rupture catastrophically."
+            },
+            {
+              "id": "gia-48",
+              "dok": 3,
+              "q": "Explain how the meandering arrangement of plicae circulares relates to mixing.",
+              "a": "Plicae spiral or run transversely, swirling chyme as it passes and increasing contact time between chyme and absorptive surface. Function emerges from the structural orientation of the folds."
+            },
+            {
+              "id": "gia-49",
+              "dok": 3,
+              "q": "Compare the structure and likely transit roles of the appendix and the cecum.",
+              "a": "The cecum is the proximal sac of the large intestine receiving ileal output. The appendix hangs from the cecum, is narrower, and contains dense GALT. Cecum has active mixing and water absorption; appendix has minimal transit role and dominantly immune and microbial reservoir function."
+            },
+            {
+              "id": "gia-50",
+              "dok": 3,
+              "q": "Why do the sigmoid colon and transverse colon hang on mesenteries while the ascending and descending colon are fixed?",
+              "a": "Sigmoid and transverse colon have a mesentery (sigmoid mesocolon, transverse mesocolon) attaching them to the posterior wall, allowing mobility. Ascending and descending colon are secondarily retroperitoneal, fused to the posterior wall during development."
+            },
+            {
+              "id": "gia-51",
+              "dok": 3,
+              "q": "Explain the structural difference that gives the stomach more storage capacity than other segments.",
+              "a": "Rugae are deep, voluminous folds when empty that flatten with distension, allowing the stomach to expand from about 50 mL to over a liter without rupture."
+            },
+            {
+              "id": "gia-52",
+              "dok": 3,
+              "q": "Why is the ileocecal junction a clinically important anatomical landmark?",
+              "a": "It marks the end of the small intestine and the beginning of the large intestine, is the site of Meckel diverticulum location reference, and is a common region for Crohn disease and intussusception in children."
+            },
+            {
+              "id": "gia-53",
+              "dok": 3,
+              "q": "Compare the structure and clinical significance of the upper and lower esophageal sphincters.",
+              "a": "UES is composed primarily of skeletal muscle (cricopharyngeus), preventing air entry during respiration. LES is a smooth muscle physiologic sphincter, supported by the diaphragm, preventing reflux. Dysfunction of UES causes Zenker diverticulum; LES failure causes GERD."
+            },
+            {
+              "id": "gia-54",
+              "dok": 4,
+              "q": "Build a structural argument that the alimentary canal is best understood as a single epithelial tube with regional specializations, citing three named regional adaptations and their structural basis.",
+              "a": "Stomach: extra oblique muscle layer plus rugae plus gastric glands convert the tube into a mixing and acid-secreting reservoir. Small intestine: plicae, villi, microvilli, and lacteals convert the tube into a maximum-surface-area absorption zone. Large intestine: teniae coli, haustra, and epiploic appendages allow a slower water-reclaiming storage tube. Throughout, the four-tunic plan persists, with regional cellular and muscular modifications."
+            },
+            {
+              "id": "gia-55",
+              "dok": 4,
+              "q": "Design a structural comparison of how the alimentary canal protects itself from its own contents at three distinct named locations, and identify the failure mode at each.",
+              "a": "Esophagus: stratified squamous epithelium resists abrasion; failure produces esophagitis from acid. Stomach: alkaline mucus blanket and rapid epithelial turnover resist HCl; failure produces gastritis or ulcer. Small intestine: Brunner glands (duodenum) and Paneth cell antimicrobials in crypts protect against acid and bacteria; failure produces duodenal ulcer or bacterial overgrowth. Each defense matches the threat at its location."
+            },
+            {
+              "id": "gia-56",
+              "dok": 4,
+              "q": "Propose a structural explanation for why colon cancer can grow large before becoming symptomatic, while esophageal cancer presents earlier. Cite at least three anatomical features.",
+              "a": "Esophagus has a narrow lumen, prominent neuromuscular function (peristalsis and swallowing), and minimal capacitance, so even a small tumor causes dysphagia. Colon has a wide lumen, flexible haustrated wall that can expand around a growing lesion, and limited innervation for sharp pain, allowing tumors to grow until they obstruct or bleed. Colon contents are also semisolid, accommodating partial obstruction longer than the solid bolus passing the esophagus."
+            }
+          ]
+        },
+        {
+          "id": "t-gi-accessory",
+          "title": "GI Accessory Structures",
+          "summary": "Anatomy of the salivary glands, teeth, tongue, liver, gallbladder, biliary tree, and pancreas, including gross relationships and key microanatomy.",
+          "videoLabel": "Video: GI Accessory Structures (placeholder)",
+          "gateKeywords": [
+            "salivary",
+            "liver",
+            "gallbladder",
+            "pancreas",
+            "bile",
+            "biliary",
+            "tongue",
+            "teeth",
+            "lobule",
+            "acinus"
+          ],
+          "notes": [
+            {
+              "heading": "Salivary glands",
+              "body": [
+                "Parotid: largest, anterior to ear, Stensen's duct opens opposite upper second molar.",
+                "Submandibular: under mandible body, Wharton's duct opens at sublingual caruncle.",
+                "Sublingual: smallest, under tongue, multiple short ducts open along the floor of mouth."
+              ]
+            },
+            {
+              "heading": "Teeth and tongue",
+              "body": [
+                "Adults have 32 teeth in four quadrants: incisors, canines, premolars, molars.",
+                "Each tooth has crown, neck, root, with enamel, dentin, pulp, cementum.",
+                "Tongue: intrinsic muscles change shape, extrinsic muscles move position.",
+                "Surface bears filiform, fungiform, foliate, and circumvallate papillae."
+              ]
+            },
+            {
+              "heading": "Liver",
+              "body": [
+                "Largest internal organ, right upper quadrant, under diaphragm.",
+                "Four anatomical lobes: right, left, caudate (posterior), quadrate (inferior).",
+                "Falciform ligament separates right and left lobes anteriorly; carries round ligament (ligamentum teres).",
+                "Porta hepatis: hilum for hepatic artery proper, portal vein, common hepatic duct, lymphatics, nerves.",
+                "Functional unit: hepatic lobule, hexagonal, central vein at center, portal triads at corners."
+              ]
+            },
+            {
+              "heading": "Gallbladder and biliary tree",
+              "body": [
+                "Gallbladder lies in a fossa on the inferior surface of the right liver lobe.",
+                "Right and left hepatic ducts merge into common hepatic duct.",
+                "Cystic duct from gallbladder joins common hepatic to form common bile duct.",
+                "Common bile duct joins main pancreatic duct at the ampulla of Vater, opening at the major duodenal papilla through the sphincter of Oddi."
+              ]
+            },
+            {
+              "heading": "Pancreas",
+              "body": [
+                "Retroperitoneal, posterior to stomach. Head sits in C-loop of duodenum; body and tail extend toward spleen.",
+                "Exocrine (~99%): acinar cells secrete digestive enzymes as zymogens; duct cells secrete bicarbonate.",
+                "Endocrine (~1-2%): islets of Langerhans (alpha, beta, delta, PP cells).",
+                "Main pancreatic duct (Wirsung) joins CBD at ampulla; accessory duct (Santorini) opens at minor papilla in many people."
+              ]
+            }
+          ],
+          "cards": [
+            {
+              "id": "gix-1",
+              "dok": 1,
+              "q": "Name the three pairs of salivary glands.",
+              "a": "Parotid, submandibular, sublingual."
+            },
+            {
+              "id": "gix-2",
+              "dok": 1,
+              "q": "Name the four anatomical lobes of the liver.",
+              "a": "Right, left, caudate, quadrate."
+            },
+            {
+              "id": "gix-3",
+              "dok": 1,
+              "q": "What is the functional unit of the liver?",
+              "a": "The hepatic lobule."
+            },
+            {
+              "id": "gix-4",
+              "dok": 1,
+              "q": "Where is the gallbladder located?",
+              "a": "On the inferior surface of the right liver lobe, in the cystic fossa."
+            },
+            {
+              "id": "gix-5",
+              "dok": 1,
+              "q": "Name the duct system that delivers bile to the duodenum.",
+              "a": "Right and left hepatic ducts join to form the common hepatic duct, which joins the cystic duct to form the common bile duct, which opens at the ampulla of Vater."
+            },
+            {
+              "id": "gix-6",
+              "dok": 1,
+              "q": "What is the name of the main pancreatic duct?",
+              "a": "The duct of Wirsung."
+            },
+            {
+              "id": "gix-7",
+              "dok": 1,
+              "q": "What is the falciform ligament?",
+              "a": "A peritoneal fold connecting the liver to the anterior abdominal wall and diaphragm, separating the right and left lobes anteriorly."
+            },
+            {
+              "id": "gix-8",
+              "dok": 1,
+              "q": "Where do the islets of Langerhans cluster most densely in the pancreas?",
+              "a": "In the tail of the pancreas."
+            },
+            {
+              "id": "gix-9",
+              "dok": 2,
+              "q": "Identify the location and named duct of the parotid gland.",
+              "a": "Anterior and inferior to the ear, overlying the masseter. Stensen's duct crosses the masseter to open on the buccal mucosa opposite the upper second molar."
+            },
+            {
+              "id": "gix-10",
+              "dok": 2,
+              "q": "Identify the location and named duct of the submandibular gland.",
+              "a": "In the submandibular triangle under the body of the mandible. Wharton's duct travels forward to open on the floor of the mouth at the sublingual caruncle."
+            },
+            {
+              "id": "gix-11",
+              "dok": 2,
+              "q": "Identify the location and ducts of the sublingual gland.",
+              "a": "Under the mucosa of the floor of the mouth, anterior to the submandibular gland. Multiple small ducts (Rivinus) open along the sublingual fold."
+            },
+            {
+              "id": "gix-12",
+              "dok": 2,
+              "q": "Compare the secretion type of each major salivary gland.",
+              "a": "Parotid: mostly serous (watery, enzyme-rich). Submandibular: mixed serous and mucous. Sublingual: mostly mucous."
+            },
+            {
+              "id": "gix-13",
+              "dok": 2,
+              "q": "Describe the gross structure of a typical tooth.",
+              "a": "Crown (above gumline), neck, and root (in alveolus). Composed of enamel covering the crown, dentin below, pulp in the center, and cementum covering the root."
+            },
+            {
+              "id": "gix-14",
+              "dok": 2,
+              "q": "Identify the extrinsic muscles of the tongue.",
+              "a": "Genioglossus, hyoglossus, styloglossus, palatoglossus. All end in '-glossus' and move the tongue as a whole."
+            },
+            {
+              "id": "gix-15",
+              "dok": 2,
+              "q": "Identify the intrinsic muscles of the tongue.",
+              "a": "Superior longitudinal, inferior longitudinal, transverse, vertical. All contained within the tongue and change its shape."
+            },
+            {
+              "id": "gix-16",
+              "dok": 2,
+              "q": "Identify the surfaces and ligaments of the liver.",
+              "a": "Diaphragmatic surface (against diaphragm), visceral surface (facing abdominal contents). Coronary ligament attaches the bare area to the diaphragm. Falciform ligament separates lobes anteriorly. Round ligament (ligamentum teres) runs in the inferior edge of the falciform."
+            },
+            {
+              "id": "gix-17",
+              "dok": 2,
+              "q": "Describe the porta hepatis and what passes through it.",
+              "a": "Transverse fissure on the visceral surface of the liver. Hepatic artery proper and portal vein enter; common hepatic duct exits; lymphatics and nerves also pass through."
+            },
+            {
+              "id": "gix-18",
+              "dok": 2,
+              "q": "Describe the dual blood supply of the liver.",
+              "a": "Hepatic artery proper supplies about 25% of flow and 50% of oxygen with oxygenated blood from the celiac trunk. Hepatic portal vein supplies about 75% of flow but is nutrient-rich, deoxygenated blood draining the GI tract and spleen."
+            },
+            {
+              "id": "gix-19",
+              "dok": 2,
+              "q": "Describe the structure of a classic hepatic lobule.",
+              "a": "Hexagonal, with a central vein at its center. Plates of hepatocytes radiate outward like spokes. Sinusoids (fenestrated capillaries) lie between plates. Portal triads (branches of hepatic artery, portal vein, bile duct) sit at the corners."
+            },
+            {
+              "id": "gix-20",
+              "dok": 2,
+              "q": "What are sinusoids, and what cells line them?",
+              "a": "Fenestrated capillaries between hepatocyte plates. Lined by endothelial cells with large gaps and by Kupffer cells (resident macrophages) that filter blood from the portal system."
+            },
+            {
+              "id": "gix-21",
+              "dok": 2,
+              "q": "Trace the path of blood through the liver from portal vein to inferior vena cava.",
+              "a": "Portal vein, interlobular branches in portal triads, sinusoids, central vein of each lobule, sublobular veins, hepatic veins, inferior vena cava."
+            },
+            {
+              "id": "gix-22",
+              "dok": 2,
+              "q": "Trace the path of bile from hepatocyte to duodenum.",
+              "a": "Bile canaliculi between hepatocytes, canals of Hering, interlobular bile ducts in portal triads, right and left hepatic ducts, common hepatic duct (joined by cystic duct), common bile duct, ampulla of Vater, major duodenal papilla, duodenum."
+            },
+            {
+              "id": "gix-23",
+              "dok": 2,
+              "q": "Describe the gross structure of the gallbladder.",
+              "a": "Small pear-shaped sac about 7 to 10 cm long, with fundus, body, and neck. Neck connects via spiral valve (of Heister) to the cystic duct."
+            },
+            {
+              "id": "gix-24",
+              "dok": 2,
+              "q": "Describe Calot's triangle and its surgical importance.",
+              "a": "Bounded by the cystic duct (inferiorly), common hepatic duct (medially), and inferior liver edge (superiorly). The cystic artery typically runs through it. Critical landmark in cholecystectomy."
+            },
+            {
+              "id": "gix-25",
+              "dok": 2,
+              "q": "Identify the regions of the pancreas.",
+              "a": "Head (with uncinate process) sits in the C-loop of the duodenum. Neck is a constricted region. Body extends across the abdomen. Tail extends toward the splenic hilum."
+            },
+            {
+              "id": "gix-26",
+              "dok": 2,
+              "q": "Describe the structure of a pancreatic acinus.",
+              "a": "Cluster of pyramidal acinar cells with apices pointing toward a central lumen. Contains zymogen granules with stored proenzymes. Centroacinar cells extend into the acinus from the intercalated duct."
+            },
+            {
+              "id": "gix-27",
+              "dok": 2,
+              "q": "Distinguish exocrine and endocrine pancreatic tissue histologically.",
+              "a": "Exocrine: clusters of dark-staining acinar cells with ducts, making up about 99% of the gland. Endocrine: pale-staining round nests (islets of Langerhans), about 1 to 2% by mass, scattered throughout, more concentrated in the tail."
+            },
+            {
+              "id": "gix-28",
+              "dok": 2,
+              "q": "Identify the cell types in a pancreatic islet.",
+              "a": "Alpha cells (glucagon), beta cells (insulin), delta cells (somatostatin), PP or F cells (pancreatic polypeptide), epsilon cells (ghrelin)."
+            },
+            {
+              "id": "gix-29",
+              "dok": 2,
+              "q": "Identify the location and significance of the ampulla of Vater.",
+              "a": "Located in the descending duodenum, where the common bile duct and main pancreatic duct join. Surrounded by the sphincter of Oddi, opens at the major duodenal papilla."
+            },
+            {
+              "id": "gix-30",
+              "dok": 2,
+              "q": "Identify the accessory pancreatic duct and its opening.",
+              "a": "Duct of Santorini, present in many people. Drains the superior head of the pancreas. Opens at the minor duodenal papilla, slightly superior to the major papilla."
+            },
+            {
+              "id": "gix-31",
+              "dok": 2,
+              "q": "Describe the relationship of the pancreas to surrounding structures.",
+              "a": "Retroperitoneal, posterior to the stomach, anterior to the abdominal aorta and IVC. Head is enclosed by the duodenal C-loop. Tail abuts the splenic hilum and crosses the left kidney's anterior surface."
+            },
+            {
+              "id": "gix-32",
+              "dok": 3,
+              "q": "Why is the parotid the most common salivary gland affected in mumps?",
+              "a": "Mumps virus has tropism for the parotid duct epithelium and the largely serous parotid parenchyma. The thin parotid capsule limits expansion, making swelling and pain prominent."
+            },
+            {
+              "id": "gix-33",
+              "dok": 3,
+              "q": "Why are submandibular salivary stones (sialolithiasis) more common than parotid stones?",
+              "a": "Wharton's duct runs upward against gravity and is longer, the saliva is thicker (mixed mucous), and flow is slower. Stagnant flow plus viscous secretions favor stone formation."
+            },
+            {
+              "id": "gix-34",
+              "dok": 3,
+              "q": "Explain the surgical significance of the falciform ligament.",
+              "a": "It anchors the liver to the anterior abdominal wall and divides the liver visibly into right and left lobes. It carries the round ligament (remnant of the umbilical vein) and provides a landmark during liver surgery."
+            },
+            {
+              "id": "gix-35",
+              "dok": 3,
+              "q": "Compare the anatomical lobes and the functional (Couinaud) segments of the liver.",
+              "a": "Anatomical lobes (right, left, caudate, quadrate) are defined by external landmarks. Functional segments (eight) are defined by branches of the portal vein, hepatic artery, and bile duct, each with its own venous drainage. Surgeons use the segmental scheme."
+            },
+            {
+              "id": "gix-36",
+              "dok": 3,
+              "q": "Why is the caudate lobe anatomically unique among liver lobes?",
+              "a": "It receives blood from both right and left portal veins and drains directly to the IVC via its own short hepatic veins, bypassing the main hepatic veins. In Budd-Chiari syndrome, this allows the caudate to hypertrophy when others fail."
+            },
+            {
+              "id": "gix-37",
+              "dok": 3,
+              "q": "Why is cholecystectomy a common procedure, yet the bile system continues to function?",
+              "a": "Bile flow continues from the liver via the common bile duct directly into the duodenum. The gallbladder concentrates bile but is not necessary for delivery. Patients can digest fats, though large fatty meals may be less well tolerated."
+            },
+            {
+              "id": "gix-38",
+              "dok": 3,
+              "q": "Explain why pancreatic head tumors cause painless jaundice.",
+              "a": "The pancreatic head wraps the common bile duct as it descends through the gland. A growing head tumor compresses the CBD, obstructing bile flow. The slow obstruction does not cause acute pain, but conjugated bilirubin backs up systemically."
+            },
+            {
+              "id": "gix-39",
+              "dok": 3,
+              "q": "Describe the structural arrangement of pancreatic acinar cells and ducts that places the gland at risk if duct outflow is blocked.",
+              "a": "Acinar cells are organized into clusters that drain into intercalated ducts, then intralobular and interlobular ducts, all converging on the main pancreatic duct. The acini sit directly along this duct system with no separating barrier, so any obstruction of the duct backs up the secretory contents into close contact with the gland tissue itself."
+            },
+            {
+              "id": "gix-40",
+              "dok": 3,
+              "q": "Why is the right hepatic lobe much larger than the left?",
+              "a": "Embryologically, the right liver mass grows around the right portal vein branch, which has greater perfusion. Functionally and structurally, it is by far the dominant mass of liver tissue."
+            },
+            {
+              "id": "gix-41",
+              "dok": 3,
+              "q": "Why is the gallbladder susceptible to gangrene more than the liver in a vascular event?",
+              "a": "The gallbladder has a single end-artery supply (cystic artery, usually from right hepatic artery) without significant collaterals. The liver has dual supply (hepatic artery and portal vein), providing redundancy."
+            },
+            {
+              "id": "gix-42",
+              "dok": 3,
+              "q": "Trace the structural path bile takes when contracted out of the gallbladder.",
+              "a": "Gallbladder lumen, cystic duct, common bile duct (after joining common hepatic duct), through the sphincter of Oddi (relaxed), ampulla of Vater, major duodenal papilla, duodenum."
+            },
+            {
+              "id": "gix-43",
+              "dok": 3,
+              "q": "Compare the structural and functional consequences of total pancreatectomy versus splenectomy.",
+              "a": "Total pancreatectomy removes both exocrine and endocrine pancreatic function, requiring lifelong enzyme replacement and insulin therapy. Splenectomy removes blood filtration and immune surveillance roles, leaving the patient at higher risk of encapsulated bacterial infections. Both leave anatomic spaces that adjacent organs eventually fill."
+            },
+            {
+              "id": "gix-44",
+              "dok": 3,
+              "q": "Explain why the appendix and gallbladder are common emergencies but the tongue rarely is.",
+              "a": "Appendix and gallbladder have narrow lumens that obstruct readily and end-artery vascular supply, leading to ischemia and infection when blocked. The tongue is a muscular organ with rich collateral circulation and no narrow lumen, structurally far less vulnerable to obstructive emergencies."
+            },
+            {
+              "id": "gix-45",
+              "dok": 3,
+              "q": "Why does jaundice from CBD obstruction also raise stool pH (pale stools)?",
+              "a": "Bile pigments give stool its brown color. CBD obstruction prevents bilirubin from reaching the intestine, so stool loses pigment (acholic) and appears pale or clay-colored."
+            },
+            {
+              "id": "gix-46",
+              "dok": 3,
+              "q": "Why is the pancreas considered both an exocrine and endocrine gland anatomically?",
+              "a": "Acinar cells with ducts (exocrine) deliver digestive enzymes to the GI lumen. Islets of Langerhans (endocrine) lack ducts and secrete hormones directly into the bloodstream. Both tissue types are interleaved within a single gland."
+            },
+            {
+              "id": "gix-47",
+              "dok": 3,
+              "q": "Why is a parotid tumor so concerning despite being benign-prone?",
+              "a": "The facial nerve (CN VII) passes through the parotid gland, dividing into terminal branches there. Surgery risks facial paralysis. Anatomy makes the lesion locally significant beyond tumor biology."
+            },
+            {
+              "id": "gix-48",
+              "dok": 3,
+              "q": "Why does liver disease often cause caput medusae and esophageal varices?",
+              "a": "Portal hypertension forces blood through anastomoses between portal and systemic veins. Paraumbilical veins (via the round ligament) distend (caput medusae). Submucosal veins of the lower esophagus distend (varices)."
+            },
+            {
+              "id": "gix-49",
+              "dok": 3,
+              "q": "Why does pancreatic body or tail cancer often present late?",
+              "a": "These regions are deep retroperitoneal, without an early structural relationship like the head's compression of the bile duct. Symptoms (back pain, weight loss) arise only when the tumor invades local structures."
+            },
+            {
+              "id": "gix-50",
+              "dok": 3,
+              "q": "Explain the spatial relationship that allows the gallbladder fundus to abut the abdominal wall.",
+              "a": "The gallbladder fundus projects beyond the inferior liver edge, often touching the parietal peritoneum just lateral to the rectus muscle at the tip of the ninth costal cartilage. This is Murphy's sign territory."
+            },
+            {
+              "id": "gix-51",
+              "dok": 3,
+              "q": "Why is the central vein at the center of each hepatic lobule, but portal triads are at the corners?",
+              "a": "Blood flows from the portal triads at the periphery, through sinusoids, toward the central vein. Bile flows in the opposite direction, from canaliculi toward the bile ducts in the triads. The lobule's geometry reflects this counter-current flow pattern."
+            },
+            {
+              "id": "gix-52",
+              "dok": 3,
+              "q": "Explain how the ductal anatomy of the pancreas and biliary tree converge.",
+              "a": "The main pancreatic duct (Wirsung) and common bile duct join inside the head of the pancreas, forming the ampulla of Vater, which opens at the major duodenal papilla through the sphincter of Oddi. The accessory duct (Santorini) drains separately at the minor papilla."
+            },
+            {
+              "id": "gix-53",
+              "dok": 3,
+              "q": "Why does the structure of saliva from each gland vary by autonomic input?",
+              "a": "Parasympathetic stimulation drives watery, enzyme-rich secretion from acinar cells. Sympathetic stimulation produces thicker, mucous-rich secretion (and reduced overall volume), explaining dry mouth in stress."
+            },
+            {
+              "id": "gix-54",
+              "dok": 4,
+              "q": "Build a structural argument that the liver is best understood as both a metabolic organ and a vascular organ. Cite at least three anatomical features supporting each role.",
+              "a": "Metabolic: hepatocyte plates, bile canaliculi between them, and rough endoplasmic reticulum-rich cytoplasm for protein synthesis. Vascular: dual blood supply (portal vein and hepatic artery), fenestrated sinusoids that allow extensive plasma-hepatocyte exchange, and central veins that drain to hepatic veins and IVC. The lobule's geometry intertwines these roles: every metabolic transaction depends on the sinusoidal architecture, and every blood flow path includes parenchymal contact."
+            },
+            {
+              "id": "gix-55",
+              "dok": 4,
+              "q": "Design a structural comparison of the salivary gland and pancreatic acinar arrangement, identifying three shared features and three differences.",
+              "a": "Shared: clusters of pyramidal exocrine cells around a central lumen, zymogen granules at the apex, duct system funneling secretions toward a target. Differences: salivary glands secrete onto the oral mucosa via short main ducts; pancreas delivers to the duodenum via long ducts that pierce the duodenal wall. Salivary acini have myoepithelial cells; pancreas does not. Pancreas houses islets of Langerhans interspersed; salivary glands are purely exocrine."
+            },
+            {
+              "id": "gix-56",
+              "dok": 4,
+              "q": "A patient has a stone obstructing the ampulla of Vater. Predict and explain three downstream anatomical consequences.",
+              "a": "First, bile backs up into the common bile duct, then dilates the intra and extrahepatic biliary tree, producing obstructive jaundice. Second, the gallbladder may distend (Courvoisier sign if chronic) because bile cannot exit. Third, pancreatic secretions are blocked at the same point, raising intraductal pressure in the pancreas and risking gallstone pancreatitis from premature zymogen activation. All three follow from the convergence of bile and pancreatic ducts at this single anatomic chokepoint."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m-urinary",
+      "title": "Urinary System",
+      "week": 8,
+      "topics": [
+        {
+          "id": "t-kidney-anatomy",
+          "title": "Kidney Anatomy",
+          "summary": "Gross and microscopic structure of the kidneys, the nephron's segmental anatomy, and the urine-conducting structures of the urinary tract.",
+          "videoLabel": "Video: Kidney Anatomy (placeholder)",
+          "gateKeywords": [
+            "kidney",
+            "nephron",
+            "glomerulus",
+            "cortex",
+            "medulla",
+            "pyramid",
+            "ureter",
+            "bladder",
+            "calyx",
+            "pelvis"
+          ],
+          "notes": [
+            {
+              "heading": "Kidney gross anatomy",
+              "body": [
+                "Bean-shaped retroperitoneal organs at T12 to L3. Right slightly lower than left because of the liver.",
+                "Surrounded by renal capsule, perirenal fat, renal fascia (Gerota), pararenal fat.",
+                "Internally: cortex (outer), medulla with renal pyramids (inner), renal columns between pyramids.",
+                "Pyramid apex (papilla) drains into a minor calyx; minor calyces unite into major calyces, which unite into the renal pelvis."
+              ]
+            },
+            {
+              "heading": "Renal blood supply",
+              "body": [
+                "Renal artery (from abdominal aorta) divides into segmental arteries, then interlobar arteries between pyramids, arcuate arteries at the corticomedullary junction, cortical radiate (interlobular) arteries into the cortex, then afferent arterioles to each glomerulus."
+              ]
+            },
+            {
+              "heading": "Nephron",
+              "body": [
+                "Functional unit. About 1 million per kidney.",
+                "Two types: cortical (about 85%, short loops) and juxtamedullary (about 15%, long loops deep into medulla).",
+                "Renal corpuscle: glomerulus plus Bowman (glomerular) capsule.",
+                "Tubular segments: proximal convoluted tubule, loop of Henle (descending and ascending limbs), distal convoluted tubule, connecting tubule, collecting duct."
+              ]
+            },
+            {
+              "heading": "Renal corpuscle structure",
+              "body": [
+                "Filtration barrier: fenestrated capillary endothelium, glomerular basement membrane, podocyte foot processes with slit diaphragms.",
+                "Mesangial cells provide structural support and regulate capillary surface area.",
+                "Juxtaglomerular apparatus: macula densa of the distal tubule plus juxtaglomerular (granular) cells of the afferent arteriole."
+              ]
+            },
+            {
+              "heading": "Urinary tract",
+              "body": [
+                "Ureter: about 25 to 30 cm, retroperitoneal, three constrictions (uretero-pelvic junction, crossing iliac vessels, uretero-vesical junction).",
+                "Bladder: trigone landmark with two ureteric orifices and the internal urethral orifice. Detrusor smooth muscle.",
+                "Urethra: short in females (about 4 cm), longer in males (about 20 cm) with prostatic, membranous, and spongy parts.",
+                "Internal urethral sphincter is smooth muscle; external is skeletal."
+              ]
+            }
+          ],
+          "cards": [
+            {
+              "id": "kid-1",
+              "dok": 1,
+              "q": "What is the functional unit of the kidney?",
+              "a": "The nephron."
+            },
+            {
+              "id": "kid-2",
+              "dok": 1,
+              "q": "Name the outer and inner regions of the kidney parenchyma.",
+              "a": "Cortex (outer) and medulla (inner)."
+            },
+            {
+              "id": "kid-3",
+              "dok": 1,
+              "q": "What are the cone-shaped structures within the medulla called?",
+              "a": "Renal pyramids."
+            },
+            {
+              "id": "kid-4",
+              "dok": 1,
+              "q": "What is the funnel-shaped region that collects urine before the ureter?",
+              "a": "The renal pelvis."
+            },
+            {
+              "id": "kid-5",
+              "dok": 1,
+              "q": "Name the two parts of a renal corpuscle.",
+              "a": "The glomerulus and Bowman (glomerular) capsule."
+            },
+            {
+              "id": "kid-6",
+              "dok": 1,
+              "q": "What artery brings blood into a glomerulus?",
+              "a": "The afferent arteriole."
+            },
+            {
+              "id": "kid-7",
+              "dok": 1,
+              "q": "What is the smooth muscle of the bladder wall called?",
+              "a": "The detrusor muscle."
+            },
+            {
+              "id": "kid-8",
+              "dok": 1,
+              "q": "What region of the bladder is the trigone, and what borders it?",
+              "a": "A smooth triangular area on the posterior bladder wall bordered by the two ureteric orifices and the internal urethral orifice."
+            },
+            {
+              "id": "kid-9",
+              "dok": 2,
+              "q": "Identify the layers surrounding the kidney from inner to outer.",
+              "a": "Renal capsule (fibrous), perirenal fat, renal fascia (Gerota fascia), pararenal fat."
+            },
+            {
+              "id": "kid-10",
+              "dok": 2,
+              "q": "Identify the structures entering and exiting the renal hilum.",
+              "a": "Renal artery and nerves enter; renal vein and ureter exit; lymphatics also pass through. From anterior to posterior: vein, artery, ureter."
+            },
+            {
+              "id": "kid-11",
+              "dok": 2,
+              "q": "Trace blood flow from the renal artery to the afferent arteriole.",
+              "a": "Renal artery, segmental arteries, interlobar arteries, arcuate arteries, cortical radiate (interlobular) arteries, afferent arterioles."
+            },
+            {
+              "id": "kid-12",
+              "dok": 2,
+              "q": "Trace blood flow from an efferent arteriole back to the renal vein.",
+              "a": "Efferent arteriole, peritubular capillaries (or vasa recta for juxtamedullary nephrons), cortical radiate veins, arcuate veins, interlobar veins, renal vein."
+            },
+            {
+              "id": "kid-13",
+              "dok": 2,
+              "q": "Identify the segments of a nephron in order.",
+              "a": "Renal corpuscle, proximal convoluted tubule, descending limb of loop of Henle, ascending limb of loop of Henle, distal convoluted tubule, connecting tubule. Multiple nephrons drain into a shared collecting duct."
+            },
+            {
+              "id": "kid-14",
+              "dok": 2,
+              "q": "Compare cortical and juxtamedullary nephrons.",
+              "a": "Cortical nephrons (about 85%) sit largely in the cortex with short loops dipping only into the outer medulla. Juxtamedullary nephrons (about 15%) sit at the corticomedullary junction with long loops dipping deep into the inner medulla."
+            },
+            {
+              "id": "kid-15",
+              "dok": 2,
+              "q": "Describe the three layers of the filtration barrier.",
+              "a": "Fenestrated capillary endothelium (stops cells), glomerular basement membrane (negatively charged, restricts large/charged proteins), podocyte foot processes with slit diaphragms (final size-selective filter)."
+            },
+            {
+              "id": "kid-16",
+              "dok": 2,
+              "q": "Describe podocytes structurally.",
+              "a": "Visceral epithelial cells of Bowman's capsule with long cytoplasmic foot processes (pedicels) that wrap glomerular capillaries. Adjacent foot processes interdigitate, separated by filtration slits bridged by slit diaphragms."
+            },
+            {
+              "id": "kid-17",
+              "dok": 2,
+              "q": "Describe mesangial cells and their location.",
+              "a": "Specialized contractile cells in the central core of the glomerular tuft. They provide structural support to capillaries and modulate filtration surface area."
+            },
+            {
+              "id": "kid-18",
+              "dok": 2,
+              "q": "Identify the components of the juxtaglomerular apparatus.",
+              "a": "Macula densa (modified epithelial cells of the distal tubule where it contacts its parent corpuscle), juxtaglomerular (granular) cells in the afferent arteriole wall, and extraglomerular mesangial cells between them."
+            },
+            {
+              "id": "kid-19",
+              "dok": 2,
+              "q": "Describe the epithelium of the proximal convoluted tubule.",
+              "a": "Simple cuboidal cells with abundant apical microvilli (brush border) and numerous basolateral mitochondria, reflecting bulk reabsorptive activity."
+            },
+            {
+              "id": "kid-20",
+              "dok": 2,
+              "q": "Describe the epithelium of the descending thin limb of the loop of Henle.",
+              "a": "Simple squamous epithelium with few mitochondria, structurally suited to passive water permeability."
+            },
+            {
+              "id": "kid-21",
+              "dok": 2,
+              "q": "Describe the epithelium of the thick ascending limb.",
+              "a": "Simple cuboidal with abundant mitochondria but few microvilli, structurally suited to active transport of solutes."
+            },
+            {
+              "id": "kid-22",
+              "dok": 2,
+              "q": "Describe the epithelium of the collecting duct.",
+              "a": "Simple cuboidal becoming simple columnar in the medullary segments. Two main cell types: principal cells (Na, K, water handling) and intercalated cells (acid-base handling)."
+            },
+            {
+              "id": "kid-23",
+              "dok": 2,
+              "q": "Describe the vasa recta and their location.",
+              "a": "Long, straight peritubular capillary loops paralleling the loops of Henle of juxtamedullary nephrons. Found only in the medulla."
+            },
+            {
+              "id": "kid-24",
+              "dok": 2,
+              "q": "Identify the structural levels from renal pelvis upward.",
+              "a": "Renal pelvis, major calyces (2 to 3), minor calyces (8 to 18), papillae of pyramids drain into minor calyces."
+            },
+            {
+              "id": "kid-25",
+              "dok": 2,
+              "q": "Describe the gross structure of the ureter.",
+              "a": "Muscular tube about 25 to 30 cm long, retroperitoneal, with three layers: transitional epithelium (urothelium) plus lamina propria, smooth muscle (inner longitudinal, outer circular), and adventitia."
+            },
+            {
+              "id": "kid-26",
+              "dok": 2,
+              "q": "Identify the three normal anatomical constrictions of the ureter.",
+              "a": "Ureteropelvic junction (UPJ), where the ureter crosses the common iliac vessels at the pelvic brim, and ureterovesical junction (UVJ) where it enters the bladder."
+            },
+            {
+              "id": "kid-27",
+              "dok": 2,
+              "q": "Describe the structure of the bladder wall.",
+              "a": "Mucosa with transitional epithelium and underlying lamina propria, submucosa, three-layer detrusor smooth muscle (inner and outer longitudinal, middle circular), and adventitia or serosa."
+            },
+            {
+              "id": "kid-28",
+              "dok": 2,
+              "q": "Compare male and female urethra.",
+              "a": "Female urethra is about 4 cm long, opens at the urethral meatus between clitoris and vaginal opening. Male urethra is about 20 cm long with three regions: prostatic, membranous, and spongy (penile)."
+            },
+            {
+              "id": "kid-29",
+              "dok": 2,
+              "q": "Identify the internal and external urethral sphincters and their innervation.",
+              "a": "Internal urethral sphincter is smooth muscle at the bladder neck, under autonomic (involuntary) control. External urethral sphincter is skeletal muscle around the membranous urethra, under somatic (voluntary) control via the pudendal nerve."
+            },
+            {
+              "id": "kid-30",
+              "dok": 2,
+              "q": "Describe the renal columns.",
+              "a": "Cortical tissue extending inward between renal pyramids, carrying interlobar vessels. They separate adjacent pyramids and define a single renal lobe (pyramid plus overlying cortex)."
+            },
+            {
+              "id": "kid-31",
+              "dok": 2,
+              "q": "Describe a single renal pyramid.",
+              "a": "A cone of medullary tissue with its base at the corticomedullary junction and its apex (renal papilla) projecting into a minor calyx. Contains collecting ducts and loops of Henle running roughly parallel toward the papilla."
+            },
+            {
+              "id": "kid-32",
+              "dok": 3,
+              "q": "Why is the right kidney positioned slightly lower than the left?",
+              "a": "The right liver lobe sits above and pushes the right kidney inferiorly. Both kidneys span T12 to L3 vertebrae, but the right is about half a vertebral body lower."
+            },
+            {
+              "id": "kid-33",
+              "dok": 3,
+              "q": "Why do kidney stones typically lodge at one of three predictable anatomical points along the ureter?",
+              "a": "The ureter narrows at the ureteropelvic junction, where it crosses the iliac vessels at the pelvic brim, and at the ureterovesical junction. Stones too large to pass these natural constrictions get caught and obstruct."
+            },
+            {
+              "id": "kid-34",
+              "dok": 3,
+              "q": "Explain why an ascending urinary tract infection more readily reaches the bladder in females.",
+              "a": "The female urethra is much shorter (about 4 cm versus 20 cm) and opens close to the anus, providing a shorter route for fecal flora to colonize the bladder."
+            },
+            {
+              "id": "kid-35",
+              "dok": 3,
+              "q": "Predict the structural reason proteinuria suggests glomerular damage.",
+              "a": "Normal filtration barrier blocks large or negatively charged proteins like albumin. Loss of basement membrane charge selectivity or breakdown of podocyte slit diaphragms lets albumin leak into Bowman's space, exceeding tubular reabsorptive capacity."
+            },
+            {
+              "id": "kid-36",
+              "dok": 3,
+              "q": "Explain why the renal medulla has limited collateral circulation.",
+              "a": "Vasa recta are end-vessels of juxtamedullary efferent arterioles. They serve a region with high metabolic demand but rely on a single arterial source, leaving the medulla especially vulnerable to ischemia."
+            },
+            {
+              "id": "kid-37",
+              "dok": 3,
+              "q": "Compare the structural features of the proximal convoluted tubule and the distal convoluted tubule.",
+              "a": "PCT has prominent brush border, more abundant mitochondria, and a wider lumen; DCT has minimal brush border, smaller lumen, and a thinner appearance. PCT bulk-reabsorbs; DCT fine-tunes."
+            },
+            {
+              "id": "kid-38",
+              "dok": 3,
+              "q": "Why is the renal pelvis structurally lined with transitional epithelium?",
+              "a": "Transitional epithelium (urothelium) is impermeable to urine and stretches with volume changes. The pelvis collects urine intermittently from calyces and must resist osmotic and chemical insult while accommodating volume."
+            },
+            {
+              "id": "kid-39",
+              "dok": 3,
+              "q": "Why does the ureter pass obliquely through the bladder wall?",
+              "a": "The oblique entry creates a one-way valve. When bladder pressure rises, the bladder wall compresses the intramural ureter, preventing reflux of urine back toward the kidneys."
+            },
+            {
+              "id": "kid-40",
+              "dok": 3,
+              "q": "Explain the structural reason hydronephrosis develops with ureteral obstruction.",
+              "a": "Urine cannot exit the kidney. Pressure rises in the calyces and pelvis, dilating them. Persistent pressure transmits back to the renal parenchyma, thinning the cortex and causing functional loss."
+            },
+            {
+              "id": "kid-41",
+              "dok": 3,
+              "q": "Explain why the kidneys receive about 20 to 25% of cardiac output despite being a small fraction of body mass.",
+              "a": "Their filtration function requires a high arterial flow to generate adequate glomerular hydrostatic pressure. Their structure (millions of glomeruli with parallel afferent arterioles) demands a high-volume supply not for metabolism but for filtration."
+            },
+            {
+              "id": "kid-42",
+              "dok": 3,
+              "q": "Why are juxtamedullary nephrons positioned to reach much deeper into the kidney than cortical nephrons, and what structural feature lets them do so?",
+              "a": "Juxtamedullary nephrons have their renal corpuscles near the corticomedullary junction and their long loops of Henle extend deep into the inner medulla. Cortical nephrons sit higher in the cortex and have short loops that barely enter the outer medulla. The depth of the loop is the defining structural difference."
+            },
+            {
+              "id": "kid-43",
+              "dok": 3,
+              "q": "Compare the structural relationships of the ureter and the bladder in males versus females.",
+              "a": "In females, the ureter passes inferior to the uterine artery (water under the bridge) near the cervix before entering the bladder. In males, it passes inferior to the vas deferens. The pelvic course shapes risk during gynecologic and urologic surgery."
+            },
+            {
+              "id": "kid-44",
+              "dok": 3,
+              "q": "Why is the urethral meatus a common site of urinary tract sampling and infection observation?",
+              "a": "It is the external opening, easily accessible for collection. It is also the entry point for ascending pathogens, making it the first structure exposed to colonization and inflammation."
+            },
+            {
+              "id": "kid-45",
+              "dok": 3,
+              "q": "Trace urine flow from the collecting duct to the external environment.",
+              "a": "Medullary collecting ducts, papillary duct (of Bellini), renal papilla, minor calyx, major calyx, renal pelvis, ureter, urinary bladder, urethra, external urethral meatus."
+            },
+            {
+              "id": "kid-46",
+              "dok": 3,
+              "q": "Why is the bladder trigone less distensible than the rest of the bladder wall?",
+              "a": "The trigone has a smoother mucosa firmly bound to underlying detrusor with limited folding. The remainder of the bladder is highly folded (rugae) when empty and stretches greatly. The trigone's rigidity helps maintain the geometry of ureteric and urethral orifices during filling and emptying."
+            },
+            {
+              "id": "kid-47",
+              "dok": 3,
+              "q": "Predict the anatomical consequence of a horseshoe kidney configuration.",
+              "a": "The two kidneys are fused at their lower poles. The fused isthmus is trapped beneath the inferior mesenteric artery during ascent, leaving the kidney in a low pelvic position. Ureters arch over the isthmus, predisposing to UPJ obstruction."
+            },
+            {
+              "id": "kid-48",
+              "dok": 3,
+              "q": "Explain why renal vein thrombosis can present with kidney enlargement.",
+              "a": "The renal vein is the only major venous outflow. Blockage causes blood to pool in the kidney, increasing parenchymal volume and pressure, distending the capsule, and causing flank pain plus enlargement on imaging."
+            },
+            {
+              "id": "kid-49",
+              "dok": 3,
+              "q": "Why are renal cell carcinomas often found in the cortex?",
+              "a": "The cortex contains the proximal tubule epithelium, the cell type from which most renal cell carcinomas arise. Their structural location aligns with the tumor's tissue of origin."
+            },
+            {
+              "id": "kid-50",
+              "dok": 3,
+              "q": "Why does prostate enlargement in older males cause urinary retention?",
+              "a": "The prostatic urethra runs through the prostate. As the prostate enlarges, it compresses the urethra, increasing resistance and obstructing outflow from the bladder."
+            },
+            {
+              "id": "kid-51",
+              "dok": 3,
+              "q": "Explain why a stone passing the ureterovesical junction is structurally significant.",
+              "a": "This is the narrowest point of the ureter. A stone making it past UVJ enters the bladder and is far more likely to pass without further obstruction, since the bladder lumen and urethra are wider."
+            },
+            {
+              "id": "kid-52",
+              "dok": 3,
+              "q": "Compare the structural arrangement of glomerular capillaries with peritubular capillaries.",
+              "a": "Glomerular capillaries are a high-pressure, fenestrated tuft between two arterioles, optimized for filtration. Peritubular capillaries are low-pressure capillaries wrapped around the tubules, optimized for reabsorption back into the blood."
+            },
+            {
+              "id": "kid-53",
+              "dok": 3,
+              "q": "Explain why the renal artery's segmental branches are structurally clinically important.",
+              "a": "Segmental arteries are end-arteries with no anastomoses. Blockage of one segmental artery infarcts a wedge of kidney, and segmental anatomy guides partial nephrectomy planning."
+            },
+            {
+              "id": "kid-54",
+              "dok": 4,
+              "q": "Build a structural argument that the nephron is best understood as a tube whose epithelial morphology changes to match its segmental function. Cite at least three examples linking epithelium to role.",
+              "a": "PCT: simple cuboidal with prominent brush border and many basal mitochondria, matching bulk reabsorption. Thin descending limb: simple squamous with low mitochondrial density, matching passive water permeability. Thick ascending limb: cuboidal with many mitochondria but limited apical surface, matching active solute pumping. Collecting duct: principal and intercalated cells, with selective channels for water, sodium, potassium, and acid-base handling. The cell shape, organelle density, and apical specializations predict the transport role of each segment."
+            },
+            {
+              "id": "kid-55",
+              "dok": 4,
+              "q": "A patient has unilateral renal artery stenosis. Predict three structural consequences for the affected kidney over time.",
+              "a": "First, reduced perfusion will shrink the affected kidney's parenchyma (atrophy) due to chronic low blood flow. Second, juxtaglomerular cells in the affected kidney chronically activate, hypertrophying granular cells in afferent arterioles. Third, the contralateral kidney often compensates by hypertrophy. The asymmetry between kidneys mirrors the perfusion asymmetry."
+            },
+            {
+              "id": "kid-56",
+              "dok": 4,
+              "q": "Build a structural map of three regions of the kidney that are anatomically vulnerable to injury and explain the structural feature that makes each site fragile.",
+              "a": "Proximal convoluted tubule: a long, densely cellular segment with a tall brush border and packed mitochondria; this dense, demanding tissue lies in the cortex and is the first segment to suffer when blood supply drops. Outer medulla: supplied only by the vasa recta with no collateral vessels; any reduction in flow leaves this region without a structural backup. Glomerular capillaries: a thin, fenestrated tuft between two arterioles, structurally exposed to circulating particles and immune complexes that lodge in their open walls."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m-reproductive",
+      "title": "Reproductive System",
+      "week": 8,
+      "topics": [
+        {
+          "id": "t-reproductive",
+          "title": "Reproductive Systems",
+          "summary": "Gross and microscopic anatomy of male and female reproductive structures, including gonads, duct systems, accessory glands, external genitalia, and mammary glands.",
+          "videoLabel": "Video: Reproductive Systems (placeholder)",
+          "gateKeywords": [
+            "testis",
+            "epididymis",
+            "ovary",
+            "uterus",
+            "vagina",
+            "prostate",
+            "seminal",
+            "fallopian",
+            "mammary",
+            "penis"
+          ],
+          "notes": [
+            {
+              "heading": "Male gonad and duct system",
+              "body": [
+                "Testis sits in the scrotum, surrounded by tunica vaginalis (outer serous) and tunica albuginea (inner fibrous).",
+                "Internally divided into lobules, each containing seminiferous tubules.",
+                "Sperm pathway: seminiferous tubules, straight tubules, rete testis, efferent ductules, epididymis (head, body, tail), vas (ductus) deferens, ejaculatory duct, urethra (prostatic, membranous, spongy)."
+              ]
+            },
+            {
+              "heading": "Male accessory glands",
+              "body": [
+                "Seminal vesicles: posterior to bladder, produce alkaline fructose-rich fluid (about 60% of semen).",
+                "Prostate: surrounds prostatic urethra inferior to bladder, contributes alkaline fluid (about 30%).",
+                "Bulbourethral (Cowper) glands: pea-sized, inferior to prostate, secrete lubricating mucus."
+              ]
+            },
+            {
+              "heading": "Penis",
+              "body": [
+                "Three columns of erectile tissue: paired corpora cavernosa (dorsally), single corpus spongiosum (ventrally, contains spongy urethra).",
+                "Glans penis is the expanded distal corpus spongiosum.",
+                "Penile root contains crura (cavernosa attachments) and bulb (spongiosum attachment).",
+                "Innervated by pudendal nerve and pelvic parasympathetics."
+              ]
+            },
+            {
+              "heading": "Female internal organs",
+              "body": [
+                "Ovary: sits in the ovarian fossa, attached by suspensory ligament (carries ovarian vessels) and ovarian ligament (to uterus).",
+                "Uterine (fallopian) tube regions in order from ovary toward uterus: infundibulum with fimbriae, ampulla (site of fertilization), isthmus, uterine (intramural) part.",
+                "Uterus regions: fundus (above tube entries), body (corpus), isthmus, cervix.",
+                "Uterine wall layers: perimetrium (outer serosa), myometrium (smooth muscle), endometrium (mucosa with stratum functionalis and stratum basalis).",
+                "Cervix has internal os, cervical canal, external os; opens into vagina."
+              ]
+            },
+            {
+              "heading": "Vagina, vulva, and mammary glands",
+              "body": [
+                "Vagina: fibromuscular tube, stratified squamous epithelium, posterior to bladder/urethra, anterior to rectum.",
+                "Vulva (external genitalia): mons pubis, labia majora and minora, clitoris (glans, body, crura), vestibule with urethral and vaginal openings, greater vestibular (Bartholin) glands.",
+                "Mammary glands: 15 to 20 lobes drained by lactiferous ducts to lactiferous sinuses then nipple; surrounded by adipose tissue and supported by suspensory (Cooper) ligaments."
+              ]
+            }
+          ],
+          "cards": [
+            {
+              "id": "repro-1",
+              "dok": 1,
+              "q": "What is the male gonad called?",
+              "a": "The testis."
+            },
+            {
+              "id": "repro-2",
+              "dok": 1,
+              "q": "Where in the testis are sperm produced?",
+              "a": "In the seminiferous tubules."
+            },
+            {
+              "id": "repro-3",
+              "dok": 1,
+              "q": "Name the three accessory glands of the male reproductive system.",
+              "a": "Seminal vesicles, prostate, bulbourethral (Cowper) glands."
+            },
+            {
+              "id": "repro-4",
+              "dok": 1,
+              "q": "Name the regions of the uterine (fallopian) tube from ovary toward uterus.",
+              "a": "Infundibulum (with fimbriae), ampulla, isthmus, uterine (intramural) part."
+            },
+            {
+              "id": "repro-5",
+              "dok": 1,
+              "q": "Name the three regions of the uterus.",
+              "a": "Fundus, body (corpus), cervix (with an isthmus between body and cervix)."
+            },
+            {
+              "id": "repro-6",
+              "dok": 1,
+              "q": "Name the three layers of the uterine wall.",
+              "a": "Perimetrium (outer), myometrium (middle smooth muscle), endometrium (inner mucosa)."
+            },
+            {
+              "id": "repro-7",
+              "dok": 1,
+              "q": "Name the columns of erectile tissue in the penis.",
+              "a": "Paired corpora cavernosa (dorsal) and single corpus spongiosum (ventral)."
+            },
+            {
+              "id": "repro-8",
+              "dok": 1,
+              "q": "Approximately how many lobes are in a mammary gland?",
+              "a": "About 15 to 20."
+            },
+            {
+              "id": "repro-9",
+              "dok": 2,
+              "q": "Trace the path of a sperm from the seminiferous tubule to ejaculation.",
+              "a": "Seminiferous tubules, straight tubules (tubuli recti), rete testis, efferent ductules, epididymis (head, body, tail), vas deferens, ejaculatory duct, prostatic urethra, membranous urethra, spongy urethra, external urethral meatus."
+            },
+            {
+              "id": "repro-10",
+              "dok": 2,
+              "q": "Describe the layered coverings of the testis.",
+              "a": "Tunica vaginalis (outer serous, parietal and visceral layers with potential cavity between them) and tunica albuginea (inner dense connective tissue capsule) that sends septa to divide the testis into lobules."
+            },
+            {
+              "id": "repro-11",
+              "dok": 2,
+              "q": "Describe the cell types of a seminiferous tubule.",
+              "a": "Spermatogenic cells in progressive stages from spermatogonia (basal) to spermatids (luminal), and Sertoli cells (sustentacular cells) extending from basement membrane to lumen that support spermatogenesis."
+            },
+            {
+              "id": "repro-12",
+              "dok": 2,
+              "q": "Identify Leydig cells and their location.",
+              "a": "Interstitial cells in the connective tissue between seminiferous tubules. Produce testosterone."
+            },
+            {
+              "id": "repro-13",
+              "dok": 2,
+              "q": "Describe the structure of the epididymis.",
+              "a": "A coiled tube on the posterior testis with head, body, and tail. Lined by pseudostratified columnar epithelium with stereocilia. About 6 m long when uncoiled. The tail continues as the vas deferens."
+            },
+            {
+              "id": "repro-14",
+              "dok": 2,
+              "q": "Identify the contents of the spermatic cord.",
+              "a": "Vas (ductus) deferens, testicular artery, pampiniform plexus of veins, lymphatics, autonomic nerves, genital branch of the genitofemoral nerve, and covering fascia."
+            },
+            {
+              "id": "repro-15",
+              "dok": 2,
+              "q": "Describe the location and secretion of the seminal vesicles.",
+              "a": "Paired pouches posterior to the bladder, superior to the prostate. Produce a viscous alkaline fluid rich in fructose, about 60% of semen volume."
+            },
+            {
+              "id": "repro-16",
+              "dok": 2,
+              "q": "Describe the location of the prostate.",
+              "a": "Inferior to the bladder, anterior to the rectum, surrounding the prostatic urethra. About the size of a walnut in a healthy adult."
+            },
+            {
+              "id": "repro-17",
+              "dok": 2,
+              "q": "Identify the zones of the prostate.",
+              "a": "Peripheral zone (most prostate cancers), central zone (around the ejaculatory ducts), transitional zone (around the urethra, site of BPH), anterior fibromuscular zone."
+            },
+            {
+              "id": "repro-18",
+              "dok": 2,
+              "q": "Describe the structure of the bulbourethral glands.",
+              "a": "Pair of pea-sized glands inferior to the prostate, embedded in the urogenital diaphragm. Ducts open into the spongy urethra and deliver lubricating mucus."
+            },
+            {
+              "id": "repro-19",
+              "dok": 2,
+              "q": "Describe the gross structure of the penis.",
+              "a": "Three columns of erectile tissue (two corpora cavernosa dorsally, one corpus spongiosum ventrally housing the spongy urethra). Root contains crura (cavernosa) and bulb (spongiosum). Shaft is the body. Glans is the expanded distal end. Foreskin (prepuce) covers the glans when present."
+            },
+            {
+              "id": "repro-20",
+              "dok": 2,
+              "q": "Describe the location and ligaments of the ovary.",
+              "a": "Sits in the ovarian fossa on the lateral pelvic wall. Suspensory ligament of the ovary anchors it to the pelvic wall and carries ovarian vessels. Ovarian ligament connects the ovary to the uterus."
+            },
+            {
+              "id": "repro-21",
+              "dok": 2,
+              "q": "Describe the layers of the ovary.",
+              "a": "Surface (germinal) epithelium of simple cuboidal cells covers a fibrous tunica albuginea. Cortex contains follicles in various stages. Medulla contains vessels, nerves, and loose connective tissue."
+            },
+            {
+              "id": "repro-22",
+              "dok": 2,
+              "q": "Describe the structure of the uterine tube ampulla.",
+              "a": "Widest, longest section of the uterine tube. Highly folded mucosa with simple columnar epithelium of ciliated and secretory cells. Site of fertilization."
+            },
+            {
+              "id": "repro-23",
+              "dok": 2,
+              "q": "Compare the endometrial functional layer and basal layer.",
+              "a": "Stratum functionalis is the superficial layer that thickens and is shed each cycle. Stratum basalis is the deeper layer attached to the myometrium that regenerates the functionalis each cycle."
+            },
+            {
+              "id": "repro-24",
+              "dok": 2,
+              "q": "Identify the structures of the cervix.",
+              "a": "Internal os (opening into the uterine cavity), cervical canal (lined with simple columnar mucus-producing epithelium), external os (opening into the vagina), ectocervix (covered by stratified squamous epithelium)."
+            },
+            {
+              "id": "repro-25",
+              "dok": 2,
+              "q": "Describe the wall of the vagina.",
+              "a": "Mucosa with non-keratinized stratified squamous epithelium and a fibrous lamina propria, muscularis (inner circular and outer longitudinal smooth muscle), and adventitia."
+            },
+            {
+              "id": "repro-26",
+              "dok": 2,
+              "q": "Identify the components of the vulva.",
+              "a": "Mons pubis (anterior fat pad over the pubic symphysis), labia majora (outer), labia minora (inner), clitoris (glans, body, crura), vestibule (between labia minora, containing urethral and vaginal openings), greater vestibular (Bartholin) glands, lesser vestibular glands, hymen."
+            },
+            {
+              "id": "repro-27",
+              "dok": 2,
+              "q": "Describe the structure of the clitoris.",
+              "a": "Composed of two corpora cavernosa with crura attaching to the inferior pubic rami, a body, and a glans. Densely innervated. Equivalent embryologically to the male penis but without a corpus spongiosum or urethra."
+            },
+            {
+              "id": "repro-28",
+              "dok": 2,
+              "q": "Identify the greater vestibular (Bartholin) glands.",
+              "a": "Paired glands on each side of the vaginal opening within the labia majora. Secrete lubricating fluid into the vestibule. Homologous to male bulbourethral glands."
+            },
+            {
+              "id": "repro-29",
+              "dok": 2,
+              "q": "Describe the structure of a mammary gland.",
+              "a": "About 15 to 20 lobes radiating from the nipple. Each lobe drains via a lactiferous duct that dilates into a lactiferous sinus near the nipple and opens at the nipple. Lobes are subdivided into lobules of alveoli. Adipose tissue and suspensory (Cooper) ligaments give shape."
+            },
+            {
+              "id": "repro-30",
+              "dok": 2,
+              "q": "Identify the broad ligament of the uterus.",
+              "a": "A fold of peritoneum that drapes over the uterus, uterine tubes, and ovaries, connecting them to the lateral pelvic wall. Subdivided into mesovarium, mesosalpinx, and mesometrium."
+            },
+            {
+              "id": "repro-31",
+              "dok": 2,
+              "q": "Identify the round ligament of the uterus and its course.",
+              "a": "Fibromuscular cord arising from the lateral uterus near the tube, passing anterolaterally through the inguinal canal to insert in the labium majus. Helps maintain anteversion."
+            },
+            {
+              "id": "repro-32",
+              "dok": 3,
+              "q": "Why is the testis suspended in the scrotum rather than housed inside the abdomen?",
+              "a": "Spermatogenesis requires a temperature about 2 to 3 C below core temperature. The scrotum's external position plus the pampiniform plexus countercurrent heat exchange plus cremaster muscle adjustments maintain this cooler environment."
+            },
+            {
+              "id": "repro-33",
+              "dok": 3,
+              "q": "Explain the anatomical basis for vasectomy.",
+              "a": "The vas deferens is a discrete, palpable, accessible tube within the spermatic cord. Cutting and ligating it interrupts the only conduit for sperm to exit the epididymis, with no effect on testosterone production by Leydig cells."
+            },
+            {
+              "id": "repro-34",
+              "dok": 3,
+              "q": "Compare structurally why the testicular artery has a long abdominal course but the ovarian artery has a shorter pelvic course.",
+              "a": "Both gonads originate near the kidneys embryologically. The testis descends into the scrotum, pulling its artery downward across the abdomen and through the inguinal canal. The ovary remains in the pelvis, so its artery has a much shorter course from the aorta."
+            },
+            {
+              "id": "repro-35",
+              "dok": 3,
+              "q": "Why does prostate cancer commonly arise in the peripheral zone, while BPH arises in the transitional zone?",
+              "a": "Cancer originates in the peripheral zone glandular tissue. BPH is a hyperplasia of the periurethral transitional zone, which compresses the urethra when it enlarges. The two locations cause distinct clinical patterns (peripheral cancer is palpable on rectal exam; transitional BPH obstructs urine flow)."
+            },
+            {
+              "id": "repro-36",
+              "dok": 3,
+              "q": "Explain the structural reason an ectopic pregnancy commonly occurs in the ampulla.",
+              "a": "Fertilization normally occurs in the ampulla, the widest segment. If the embryo cannot travel through the narrower isthmus and reach the uterus, it implants in the tubal wall, where the lumen is structurally not designed for placentation, leading to rupture."
+            },
+            {
+              "id": "repro-37",
+              "dok": 3,
+              "q": "Why is the cervix lined by two different epithelial types, and what is the clinical consequence?",
+              "a": "Endocervix has simple columnar mucus-secreting epithelium; ectocervix has stratified squamous. The transformation zone where they meet is metaplastic and is the most common site of cervical dysplasia and cancer. Pap smears sample this zone."
+            },
+            {
+              "id": "repro-38",
+              "dok": 3,
+              "q": "Predict why a tubal ligation prevents pregnancy without affecting menstruation.",
+              "a": "Tubal ligation blocks sperm and ovum from meeting in the uterine tube. The ovary still ovulates and still produces estrogen and progesterone, so the cyclic uterine response persists, including menstruation."
+            },
+            {
+              "id": "repro-39",
+              "dok": 3,
+              "q": "Why does a varicocele almost always occur on the left side?",
+              "a": "The left testicular vein drains at a right angle into the left renal vein, while the right drains obliquely into the IVC. The right-angle entry creates higher venous pressure and more reflux on the left, dilating the pampiniform plexus."
+            },
+            {
+              "id": "repro-40",
+              "dok": 3,
+              "q": "Explain why the uterus is described as anteverted and anteflexed in most women.",
+              "a": "Anteversion refers to the angle between the uterus and the vagina (uterus tipped forward over the bladder). Anteflexion refers to the angle between the cervix and the uterine body (body tipped forward on the cervix). The round ligament helps maintain this position."
+            },
+            {
+              "id": "repro-41",
+              "dok": 3,
+              "q": "Compare male and female homologous structures of the external genitalia.",
+              "a": "Glans penis and glans clitoris share a common embryologic origin. Scrotum and labia majora are homologs. Corpus spongiosum surrounds the male urethra; in females there is no homologous spongy structure around the urethra. Bulbourethral glands in males are homologs of Bartholin glands in females."
+            },
+            {
+              "id": "repro-42",
+              "dok": 3,
+              "q": "Explain why a hydrocele develops in the tunica vaginalis.",
+              "a": "The tunica vaginalis has a parietal and visceral layer with a potential cavity between them. Excess fluid (from infection, trauma, or persistent processus vaginalis) accumulates in this potential space, producing scrotal swelling around the testis."
+            },
+            {
+              "id": "repro-43",
+              "dok": 3,
+              "q": "Why does fertilization typically occur in the ampulla rather than the uterus?",
+              "a": "After ovulation, the fimbriae sweep the egg into the infundibulum. The egg travels slowly through the ampulla, where ciliated and secretory epithelium support it. Sperm ascending the uterus and tubes reach the ampulla, the longest segment, and most fertilizations happen there before the embryo continues to the uterus."
+            },
+            {
+              "id": "repro-44",
+              "dok": 3,
+              "q": "Why does the prostate enlarge with age while remaining the same external size superficially?",
+              "a": "BPH affects the central transitional zone around the urethra. Growth there compresses the urethra inward without dramatically expanding outward, because the prostate capsule resists outward expansion. The external surface may feel only modestly larger on rectal exam despite significant urethral compression."
+            },
+            {
+              "id": "repro-45",
+              "dok": 3,
+              "q": "Compare the duct systems of a mammary gland during lactation versus a non-lactating state.",
+              "a": "Non-lactating: small alveoli, sparse lobules, predominant fat. Lactating: alveolar epithelium proliferates and secretes milk; lobules expand and dominate the gland; lactiferous ducts and sinuses fill with milk; fat content relatively decreases."
+            },
+            {
+              "id": "repro-46",
+              "dok": 3,
+              "q": "Explain why the breast's suspensory (Cooper) ligaments are clinically important.",
+              "a": "These fibrous strands connect skin to deep fascia and shape the breast. Tumors that invade them shorten the ligaments, producing dimpling or skin retraction (peau d'orange) visible on physical exam."
+            },
+            {
+              "id": "repro-47",
+              "dok": 3,
+              "q": "Why does the uterus increase from about 50 g to over 1000 g during pregnancy?",
+              "a": "Myometrial smooth muscle undergoes both hyperplasia and hypertrophy under estrogen and progesterone influence. The endometrium remodels into the decidua. Structural expansion accommodates the growing fetus, placenta, and amniotic fluid."
+            },
+            {
+              "id": "repro-48",
+              "dok": 3,
+              "q": "Compare the urethra's relationship to reproduction in males versus females.",
+              "a": "In males, the urethra is shared between urinary and reproductive systems, conveying urine and semen at different times. In females, the urethra is strictly urinary; the reproductive tract opens separately at the vaginal vestibule."
+            },
+            {
+              "id": "repro-49",
+              "dok": 3,
+              "q": "Why is the recto-uterine pouch (pouch of Douglas) clinically important?",
+              "a": "It is the lowest extension of the peritoneal cavity in females, located between the rectum and posterior uterus. Fluid (blood, pus) collects here in pelvic pathology, and the pouch can be accessed through the posterior vaginal fornix for sampling."
+            },
+            {
+              "id": "repro-50",
+              "dok": 3,
+              "q": "Explain why ovarian cancers can spread widely in the peritoneum before causing pelvic symptoms.",
+              "a": "The ovaries hang relatively freely in the peritoneal cavity. Cancer cells exfoliating from the ovarian surface seed peritoneal surfaces directly. There is no intervening serosal barrier, so dissemination precedes local mass effect."
+            },
+            {
+              "id": "repro-51",
+              "dok": 3,
+              "q": "Why does a hysterectomy potentially affect bladder function?",
+              "a": "Pelvic autonomic nerves to the bladder travel close to the uterine vessels and cervix. Surgical dissection in this region risks injuring them, producing transient or sometimes chronic bladder dysfunction."
+            },
+            {
+              "id": "repro-52",
+              "dok": 3,
+              "q": "Why does the suspensory ligament of the ovary carry the ovarian vessels?",
+              "a": "Embryologically the ovary forms near the kidney and the vessels arise from the aorta and IVC. The ligament is the fold of peritoneum that brings these vessels into the pelvis as the ovary descends partway, and the artery and vein run within it."
+            },
+            {
+              "id": "repro-53",
+              "dok": 3,
+              "q": "Compare the structural roles of the cervical mucus in fertility and infection defense.",
+              "a": "Cervical mucus changes consistency: thin and stretchy near ovulation to facilitate sperm transit, thick and dense in luteal phase and pregnancy to block sperm and pathogens. The cervix functions structurally as a regulated gatekeeper between the vagina and uterine cavity."
+            },
+            {
+              "id": "repro-54",
+              "dok": 4,
+              "q": "Build a structural argument that the male and female reproductive systems are homologous despite different functional anatomy. Cite at least four pairs of homologous structures and the structural feature they share.",
+              "a": "Testes and ovaries share an origin from the genital ridge and produce gametes plus sex hormones. Scrotum and labia majora share an origin from genital swellings and house or border the gonads. Glans penis and glans clitoris share an origin from the genital tubercle as erectile expansions. Bulbourethral and Bartholin glands share an origin from urogenital sinus outgrowths and provide lubricating secretions. Each pair shows that male and female anatomy diverged from common precursors, with structural roles adapted to gamete delivery (male) versus gamete reception and gestation (female)."
+            },
+            {
+              "id": "repro-55",
+              "dok": 4,
+              "q": "Design a structural comparison of the male and female accessory glands. Identify how each gland's location maps to its function and what failure of each would predict.",
+              "a": "Seminal vesicles posterior to bladder open into ejaculatory ducts, contributing fructose-rich fluid; failure would reduce semen volume and sperm energy supply. Prostate around the urethra contributes alkaline fluid that buffers acidic vaginal pH; enlargement obstructs urine flow. Bulbourethral glands inferior to prostate add lubrication just before ejaculate; failure reduces lubrication. In females, Bartholin glands at the vaginal vestibule provide vestibular lubrication; obstruction causes Bartholin cyst. Each gland's anatomical location places its secretion exactly where it is needed in the reproductive tract."
+            },
+            {
+              "id": "repro-56",
+              "dok": 4,
+              "q": "A patient has chronic obstruction of one uterine tube from prior infection. Predict the anatomical and reproductive consequences and explain.",
+              "a": "First, the obstructed tube cannot transmit a fertilized ovum, so fertility on that side is lost. Second, if fertilization still occurs, the embryo may implant in the tube, producing an ectopic pregnancy with risk of rupture. Third, contralateral tube remains functional, so menstrual cycles continue and pregnancy through the contralateral tube remains possible. Fourth, hydrosalpinx (fluid-filled distended tube) may develop, sometimes leaking inflammatory fluid into the peritoneal cavity and reducing implantation success even with IVF. The structural blockage produces both fertility loss and downstream pregnancy risks."
             }
           ]
         }
