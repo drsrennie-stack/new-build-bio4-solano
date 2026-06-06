@@ -1,0 +1,3038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Myology Atlas — Muscle Anatomy Study Tool</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* ── Paper / surfaces ── */
+  --paper:        #F8F7F4;
+  --paper-2:      #EBE8E0;
+  --paper-3:      #D6D2C6;
+  --surface:      #FFFFFF;
+  --surface-2:    #F5F3EE;
+  --rule:         #E5E2D9;
+  --rule-soft:    #EFECE4;
+
+  /* ── Ink ── */
+  --ink:          #181410;
+  --ink-2:        #3A2E22;
+  --ink-3:        #6A5847;
+  --ink-4:        #968270;
+  --ink-5:        #B5A38C;
+
+  /* ── Accent — deep oxblood ── */
+  --accent:       #8B2929;
+  --accent-2:     #A23A2A;
+  --accent-soft:  rgba(139, 41, 41, 0.07);
+  --accent-line:  rgba(139, 41, 41, 0.20);
+
+  /* ── Sidebar (white) ── */
+  --sb-bg:        #FFFFFF;
+  --sb-bg-2:      #F7F4ED;
+  --sb-text:      #14182E;
+  --sb-text-dim:  #5A6175;
+  --sb-text-mute: #9097A7;
+  --sb-rule:      #E8E4DA;
+  --sb-hover:     rgba(20, 24, 46, 0.04);
+  --sb-active:    rgba(139, 41, 41, 0.07);
+  --sb-accent:    #8B2929;
+
+  /* ── Column colors — equally weighted, well-differentiated ── */
+  --c-o:          #B53A1A;   /* terracotta — Origin */
+  --c-i:          #1F5F50;   /* teal — Insertion */
+  --c-a:          #B27800;   /* dark gold — Action */
+  --c-n:          #5B3A87;   /* violet — Nerve */
+
+  --c-o-soft:     rgba(181, 58, 26, 0.06);
+  --c-i-soft:     rgba(31, 95, 80, 0.06);
+  --c-a-soft:     rgba(178, 120, 0, 0.06);
+  --c-n-soft:     rgba(91, 58, 135, 0.06);
+
+  --c-o-tint:     rgba(181, 58, 26, 0.13);
+  --c-i-tint:     rgba(31, 95, 80, 0.13);
+  --c-a-tint:     rgba(178, 120, 0, 0.13);
+  --c-n-tint:     rgba(91, 58, 135, 0.13);
+
+  /* ── Right panel surfaces (lighter than main paper palette) ── */
+  --rp-card:      #FFFFFF;
+  --rp-strip:     #FAF8F4;
+
+  --focus:        #8B2929;
+  --shadow-sm:    0 1px 2px rgba(58, 46, 34, 0.05);
+  --shadow-md:    0 4px 12px rgba(58, 46, 34, 0.07);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+  background-image:
+    radial-gradient(ellipse at 85% 80%, rgba(139, 41, 41, 0.025), transparent 55%);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Skip link / a11y ── */
+.skip-link {
+  position: absolute; top: -100px; left: 8px; z-index: 9999;
+  background: var(--accent); color: #fff; padding: 12px 18px;
+  border-radius: 0 0 4px 4px; font-weight: 600; font-size: 13px;
+  text-decoration: none; transition: top 0.15s;
+}
+.skip-link:focus { top: 0; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 3px; }
+
+#sr-status {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap;
+}
+
+/* ── Layout shell ── */
+#shell { display: flex; align-items: flex-start; min-height: 100vh; }
+
+/* ════════════════════════════════════════
+   SIDEBAR
+   ════════════════════════════════════════ */
+#sidebar {
+  width: 276px;
+  min-width: 276px;
+  background: var(--sb-bg);
+  color: var(--sb-text);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: #C9C2B3 transparent;
+  border-right: 1px solid var(--sb-rule);
+}
+#sidebar::-webkit-scrollbar { width: 5px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: #C9C2B3; border-radius: 4px; }
+
+#sb-header {
+  padding: 28px 24px 22px;
+  border-bottom: 1px solid var(--sb-rule);
+}
+.brand-mark {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 300;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--sb-text);
+  letter-spacing: -0.025em;
+}
+.brand-mark-2 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  color: var(--sb-accent);
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+.brand-rule {
+  display: block;
+  width: 36px; height: 1px;
+  background: var(--sb-accent);
+  margin: 14px 0 10px;
+  opacity: 0.6;
+}
+.brand-tag {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--sb-text-dim);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+#sb-nav { padding: 8px 0 14px; flex: 1; }
+.sb-group { padding: 8px 0 2px; }
+.sb-group-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  color: var(--sb-text-mute);
+  font-weight: 600;
+  padding: 8px 24px 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sb-group-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--sb-rule);
+}
+
+.sb-btn {
+  display: block;
+  width: 100%;
+  padding: 10px 22px 10px 20px;
+  border: none;
+  background: none;
+  color: var(--sb-text);
+  opacity: 0.78;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all 0.15s;
+  position: relative;
+}
+.sb-btn:hover {
+  opacity: 1;
+  background: var(--sb-hover);
+}
+.sb-btn.active {
+  opacity: 1;
+  background: var(--sb-active);
+  border-left-color: var(--sb-accent);
+  color: var(--sb-text);
+  font-weight: 700;
+}
+.sb-btn-top {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 6px;
+}
+.sb-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sb-name { flex: 1; }
+.sb-count {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--sb-text-mute);
+  font-variant-numeric: tabular-nums;
+}
+.sb-btn.active .sb-count { color: var(--sb-text-dim); }
+
+.sb-progress {
+  height: 2px;
+  background: rgba(20, 24, 46, 0.07);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.sb-progress-fill {
+  height: 100%;
+  background: var(--sb-accent);
+  border-radius: 2px;
+  transition: width 0.3s;
+  opacity: 0.85;
+}
+
+#sb-foot {
+  padding: 16px 24px 22px;
+  border-top: 1px solid var(--sb-rule);
+  background: var(--sb-bg-2);
+}
+.foot-label {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--sb-text-mute);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.foot-stat {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--sb-text-dim);
+  padding: 3px 0;
+}
+.foot-stat strong {
+  color: var(--sb-text);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.foot-reset {
+  width: 100%;
+  margin-top: 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--sb-rule);
+  background: transparent;
+  color: var(--sb-text-dim);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.foot-reset:hover {
+  background: rgba(139, 41, 41, 0.06);
+  border-color: var(--sb-accent);
+  color: var(--sb-accent);
+}
+
+/* ════════════════════════════════════════
+   MAIN
+   ════════════════════════════════════════ */
+#main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* ── Header zone ── */
+#header-zone {
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+  padding: 22px 32px 14px;
+}
+.header-row-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.cat-title-block { min-width: 0; flex: 1; }
+.cat-eyebrow {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  color: var(--ink-3);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+#cat-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 38px;
+  line-height: 1.05;
+  color: var(--ink);
+  letter-spacing: -0.028em;
+}
+.cat-subtitle {
+  margin-top: 6px;
+  font-size: 13.5px;
+  color: var(--ink-3);
+  font-weight: 400;
+}
+
+/* Search */
+.search-wrap {
+  position: relative;
+  width: 280px;
+  flex-shrink: 0;
+}
+.search-wrap svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--ink-4);
+  pointer-events: none;
+}
+#search {
+  width: 100%;
+  padding: 9px 36px 9px 36px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+#search::placeholder { color: var(--ink-4); }
+#search:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.search-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: var(--paper-2);
+  color: var(--ink-3);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.search-clear.visible { display: flex; }
+
+/* Controls row */
+.header-row-bot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.ctrl-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.toggle-label {
+  font-size: 12px;
+  color: var(--ink-2);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.tsw {
+  position: relative;
+  display: inline-block;
+  width: 32px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.tsw input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+.tsw-track {
+  position: absolute;
+  inset: 0;
+  background: var(--paper-3);
+  border-radius: 18px;
+  transition: 0.18s;
+  border: 1px solid var(--rule);
+}
+.tsw input:checked + .tsw-track {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.tsw-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-radius: 50%;
+  transition: 0.18s;
+  pointer-events: none;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.tsw input:checked ~ .tsw-thumb { left: 16px; }
+
+.action-btn {
+  padding: 7px 14px;
+  border-radius: 3px;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--ink-2);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.action-btn:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent-line);
+  color: var(--accent);
+}
+.action-btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.action-btn-primary:hover {
+  background: var(--accent-2);
+  border-color: var(--accent-2);
+  color: #fff;
+}
+
+/* ── Legend / Progress strip ── */
+#strip {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 12px 32px;
+  background: var(--paper-2);
+  border-bottom: 1px solid var(--rule);
+  flex-wrap: wrap;
+}
+.legend-block {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.leg-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--ink-2);
+  letter-spacing: 0.04em;
+}
+.leg-swatch {
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+}
+.progress-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 200px;
+  margin-left: auto;
+}
+#score-txt {
+  font-size: 11.5px;
+  color: var(--ink-2);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+#prog-track {
+  flex: 1;
+  height: 5px;
+  background: var(--paper-3);
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+#prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #B05030, var(--c-i));
+  border-radius: 5px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 0;
+}
+#pct-txt {
+  font-size: 11.5px;
+  color: var(--ink-3);
+  font-weight: 600;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  min-width: 36px;
+  text-align: right;
+}
+
+/* ════════════════════════════════════════
+   TABLE
+   ════════════════════════════════════════ */
+#table-wrap {
+  padding: 24px 32px 80px;
+  background: transparent;
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 28px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);
+}
+.section-header:first-child { margin-top: 4px; }
+.section-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--ink);
+  letter-spacing: -0.015em;
+}
+.section-count {
+  font-size: 11px;
+  color: var(--ink-3);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-variant-numeric: tabular-nums;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 5px;
+  min-width: 720px;
+}
+thead th {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  padding: 8px 12px;
+  text-align: left;
+  color: var(--ink-3);
+  background: transparent;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: bottom;
+}
+thead th:first-child { padding-left: 0; width: 92px; }
+thead th.muscle-col { width: 21%; }
+thead th.col-o { color: var(--c-o); width: 19%; }
+thead th.col-i { color: var(--c-i); width: 19%; }
+thead th.col-a { color: var(--c-a); width: 22%; }
+thead th.col-n { color: var(--c-n); width: 15%; }
+
+tbody tr { transition: opacity 0.2s; }
+tbody tr.excluded { opacity: 0.38; }
+tbody tr.excluded .muscle-name-text { text-decoration: line-through; text-decoration-thickness: 1px; }
+tbody tr.hidden-row { display: none; }
+
+td { padding: 0; vertical-align: stretch; height: 1px; }
+
+/* Skip + Scope toggle cell — stacked labeled pills */
+td.skip-col { width: 92px; padding: 0 8px 0 0; }
+.row-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: stretch;
+  justify-content: center;
+  padding: 4px 0;
+  height: 100%;
+}
+.row-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 4px 8px;
+  min-height: 22px;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--ink-3);
+  border-radius: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.row-toggle-btn .pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-5);
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+/* Skip — muted gray when active (subtractive) */
+.skip-btn:hover {
+  border-color: var(--ink-3);
+  color: var(--ink);
+  background: rgba(20, 24, 46, 0.03);
+}
+.skip-btn.checked {
+  background: var(--ink-3);
+  border-color: var(--ink-3);
+  color: #fff;
+}
+.skip-btn.checked .pill-dot { background: #fff; }
+/* In-scope — oxblood when active (selective) */
+.scope-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.scope-btn:hover .pill-dot { background: var(--accent); }
+.scope-btn.checked {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.scope-btn.checked .pill-dot { background: #fff; }
+
+/* Muscle name cell — clickable to open detail panel */
+.muscle-name {
+  padding: 12px 14px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--ink);
+  line-height: 1.3;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  min-height: 50px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  letter-spacing: -0.015em;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.muscle-name:hover {
+  background: var(--accent-soft);
+}
+.muscle-name:hover .muscle-name-text {
+  color: var(--accent);
+}
+.muscle-name.active-detail {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.muscle-name.active-detail .muscle-name-text {
+  color: var(--accent);
+}
+.row-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.muscle-name-text { flex: 1; }
+
+/* Cell buttons */
+.cell-btn {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 50px;
+  padding: 11px 14px;
+  border: 1px solid var(--rule);
+  border-left: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.42;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.12s;
+  background: var(--paper-2);
+  color: transparent;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.005em;
+}
+
+/* Subtle pattern on hidden cells (dot texture) */
+.cell-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--ink-5) 0.7px, transparent 1px);
+  background-size: 10px 10px;
+  background-position: 0 0;
+  opacity: 0.18;
+  pointer-events: none;
+  transition: opacity 0.12s;
+}
+.cell-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: transparent;
+  transition: color 0.15s;
+  pointer-events: none;
+}
+
+.cell-btn:hover {
+  background: var(--surface-2);
+  border-color: var(--ink-4);
+}
+.cell-btn:hover::before { opacity: 0; }
+.cell-btn:hover::after { content: '+  reveal'; }
+
+td.col-o .cell-btn:hover { border-color: var(--c-o); }
+td.col-o .cell-btn:hover::after { color: var(--c-o); }
+td.col-i .cell-btn:hover { border-color: var(--c-i); }
+td.col-i .cell-btn:hover::after { color: var(--c-i); }
+td.col-a .cell-btn:hover { border-color: var(--c-a); }
+td.col-a .cell-btn:hover::after { color: var(--c-a); }
+td.col-n .cell-btn:hover { border-color: var(--c-n); }
+td.col-n .cell-btn:hover::after { color: var(--c-n); }
+
+.cell-btn.revealed {
+  background: var(--surface);
+  color: var(--ink-2);
+  cursor: default;
+}
+.cell-btn.revealed::before,
+.cell-btn.revealed::after { display: none; }
+.cell-btn.revealed:hover { background: var(--surface); }
+
+td.col-o .cell-btn.revealed { background: var(--c-o-soft); border-color: var(--c-o-tint); border-left: 3px solid var(--c-o); padding-left: 12px; }
+td.col-i .cell-btn.revealed { background: var(--c-i-soft); border-color: var(--c-i-tint); border-left: 3px solid var(--c-i); padding-left: 12px; }
+td.col-a .cell-btn.revealed { background: var(--c-a-soft); border-color: var(--c-a-tint); border-left: 3px solid var(--c-a); padding-left: 12px; }
+td.col-n .cell-btn.revealed { background: var(--c-n-soft); border-color: var(--c-n-tint); border-left: 3px solid var(--c-n); padding-left: 12px; }
+
+td.col-n .cell-btn { border-radius: 0 4px 4px 0; }
+
+.hide-col { display: none; }
+
+/* Study mode — all visible always */
+body.study .cell-btn {
+  background: var(--surface);
+  color: var(--ink-2);
+  cursor: default;
+}
+body.study .cell-btn::before,
+body.study .cell-btn::after { display: none; }
+body.study td.col-o .cell-btn { background: var(--c-o-soft); border-left: 3px solid var(--c-o); padding-left: 12px; }
+body.study td.col-i .cell-btn { background: var(--c-i-soft); border-left: 3px solid var(--c-i); padding-left: 12px; }
+body.study td.col-a .cell-btn { background: var(--c-a-soft); border-left: 3px solid var(--c-a); padding-left: 12px; }
+body.study td.col-n .cell-btn { background: var(--c-n-soft); border-left: 3px solid var(--c-n); padding-left: 12px; }
+
+/* Excluded rows: dim & override colors */
+tbody tr.excluded .muscle-name,
+tbody tr.excluded .cell-btn {
+  background: var(--paper-2);
+  border-color: var(--rule);
+}
+tbody tr.excluded td.col-o .cell-btn,
+tbody tr.excluded td.col-i .cell-btn,
+tbody tr.excluded td.col-a .cell-btn,
+tbody tr.excluded td.col-n .cell-btn {
+  border-left: 1px solid var(--rule);
+  padding-left: 14px;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--ink-3);
+  font-size: 14px;
+}
+.empty-state .ico {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 300;
+  font-size: 32px;
+  color: var(--ink-4);
+  margin-bottom: 10px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(106, 88, 71, 0.25); border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(106, 88, 71, 0.4); }
+
+/* ════════════════════════════════════════
+   RIGHT PANEL — Spaced repetition + detail
+   ════════════════════════════════════════ */
+#right-panel {
+  width: 0;
+  flex-shrink: 0;
+  background: #FFFFFF;
+  border-left: 1px solid var(--rule);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+#right-panel.open {
+  width: 400px;
+  min-width: 400px;
+}
+.rp-inner {
+  width: 400px;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Panel header */
+.rp-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--rp-strip);
+  flex-shrink: 0;
+}
+.rp-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--ink-3);
+}
+.rp-close {
+  width: 28px; height: 28px;
+  border: none; background: transparent;
+  cursor: pointer; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink-3);
+}
+.rp-close:hover { background: var(--rp-strip); color: var(--ink); border: 1px solid var(--rule); }
+.rp-close svg { width: 18px; height: 18px; }
+
+.rp-body { padding: 20px; flex: 1; }
+
+/* ── Idle mode ── */
+.rp-idle-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.rp-stat-card {
+  padding: 14px 16px;
+  background: var(--rp-card);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+}
+.rp-stat-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-3);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.rp-stat-num {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+}
+.rp-stat-num.due { color: var(--accent); }
+
+.rp-exam-block {
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  background: var(--rp-card);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+}
+.rp-exam-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-3);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.rp-exam-block input[type="date"] {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--rule);
+  background: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  color: var(--ink);
+  border-radius: 4px;
+}
+.rp-exam-block input[type="date"]:focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.rp-exam-countdown {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+.rp-exam-countdown strong { color: var(--accent); font-weight: 700; }
+
+.rp-start-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.rp-start-btn:hover { background: var(--accent-2); }
+.rp-start-btn:disabled {
+  background: var(--paper-3); color: var(--ink-4); cursor: not-allowed;
+}
+
+.rp-section-h {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--ink-3);
+  font-weight: 700;
+  margin: 22px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule);
+}
+.rp-upcoming { list-style: none; padding: 0; }
+.rp-upcoming li {
+  display: flex; justify-content: space-between;
+  padding: 6px 0; font-size: 13px; color: var(--ink-2);
+}
+.rp-upcoming li strong { color: var(--ink); font-variant-numeric: tabular-nums; font-weight: 700; }
+
+.rp-empty-scope {
+  padding: 20px;
+  background: var(--rp-strip);
+  border: 1px dashed var(--ink-5);
+  border-radius: 6px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--ink-3);
+  line-height: 1.5;
+}
+.rp-empty-scope strong { color: var(--ink); }
+
+/* SRS-only reset button at the bottom of the idle panel */
+.rp-reset-srs {
+  width: 100%;
+  margin-top: 10px;
+  padding: 9px 12px;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-3);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.rp-reset-srs:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.rp-data-label {
+  font-size: 11px;
+  color: var(--ink-4);
+  line-height: 1.5;
+  margin-top: 4px;
+}
+
+/* ── Detail mode ── */
+.rp-detail-loc {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 4px;
+}
+.rp-detail-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.1;
+  letter-spacing: -0.028em;
+  margin-bottom: 18px;
+}
+.rp-scope-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 14px;
+  background: var(--rp-strip);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  margin-bottom: 18px;
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+.rp-scope-row:hover { border-color: var(--accent); }
+.rp-scope-row.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.rp-scope-check {
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--ink-5);
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.rp-scope-row.active .rp-scope-check {
+  background: var(--accent); border-color: var(--accent);
+}
+.rp-scope-check svg { width: 12px; height: 12px; color: transparent; }
+.rp-scope-row.active .rp-scope-check svg { color: #fff; }
+.rp-scope-label { font-size: 13px; font-weight: 600; color: var(--ink); }
+.rp-scope-row.active .rp-scope-label { color: var(--accent); }
+
+.rp-field { margin-bottom: 14px; }
+.rp-field-label {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+.rp-field.f-o .rp-field-label { color: var(--c-o); }
+.rp-field.f-i .rp-field-label { color: var(--c-i); }
+.rp-field.f-a .rp-field-label { color: var(--c-a); }
+.rp-field.f-n .rp-field-label { color: var(--c-n); }
+.rp-field-text {
+  font-size: 13.5px;
+  color: var(--ink);
+  line-height: 1.5;
+  padding-left: 12px;
+  border-left: 2px solid var(--rule);
+}
+.rp-field.f-o .rp-field-text { border-left-color: var(--c-o); }
+.rp-field.f-i .rp-field-text { border-left-color: var(--c-i); }
+.rp-field.f-a .rp-field-text { border-left-color: var(--c-a); }
+.rp-field.f-n .rp-field-text { border-left-color: var(--c-n); }
+
+.rp-notes-ta {
+  width: 100%;
+  min-height: 70px;
+  padding: 10px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  resize: vertical;
+  background: var(--rp-card);
+}
+.rp-notes-ta:focus {
+  outline: none; border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.rp-xref { list-style: none; padding: 0; }
+.rp-xref-item {
+  padding: 8px 11px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  margin-bottom: 4px;
+  font-size: 13px;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: all 0.12s;
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 10px;
+  background: var(--rp-card);
+  font-weight: 500;
+}
+.rp-xref-item:hover { border-color: var(--accent); color: var(--accent); }
+.rp-xref-cat {
+  font-size: 10px; color: var(--ink-4);
+  text-transform: uppercase; letter-spacing: 0.14em;
+  font-weight: 600; flex-shrink: 0;
+}
+.rp-xref-empty {
+  font-size: 12.5px; color: var(--ink-4);
+  padding: 6px 0;
+}
+
+.rp-srs-status {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+.rp-srs-cell {
+  padding: 10px 12px;
+  background: var(--rp-card);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+}
+.rp-srs-cell-label {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-3);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.rp-srs-cell-value {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ── Review mode ── */
+.rp-review-progress {
+  padding: 12px 20px;
+  background: var(--rp-strip);
+  border-bottom: 1px solid var(--rule);
+  font-size: 12px;
+  color: var(--ink-3);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.rp-review-progress strong { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.rp-card {
+  flex: 1;
+  padding: 36px 24px 28px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.rp-card-cat {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--ink-3);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.rp-card-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 14px;
+  max-width: 100%;
+  word-break: break-word;
+}
+.rp-card-prompt {
+  font-size: 13px;
+  color: var(--ink-3);
+  margin-bottom: 28px;
+  font-weight: 500;
+}
+.rp-show-answer {
+  padding: 12px 32px;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: 24px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.rp-show-answer:hover { background: var(--ink-2); }
+
+.rp-answer {
+  padding: 0 22px 14px;
+  text-align: left;
+  flex: 1;
+  overflow-y: auto;
+}
+.rp-answer-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.022em;
+  margin-bottom: 4px;
+}
+.rp-answer-cat {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--ink-3);
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.rp-ratings {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  padding: 14px 18px 18px;
+  background: var(--rp-strip);
+  border-top: 1px solid var(--rule);
+  flex-shrink: 0;
+}
+.rp-rate-btn {
+  padding: 10px 4px;
+  border: 1.5px solid;
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  transition: all 0.12s;
+}
+.rp-rate-btn:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(58,46,34,0.12); }
+.rp-rate-label {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.rp-rate-interval {
+  font-size: 10.5px; font-weight: 500;
+  color: var(--ink-3); font-variant-numeric: tabular-nums;
+}
+.rp-rate-btn[data-r="again"] { border-color: #B53A1A; color: #B53A1A; }
+.rp-rate-btn[data-r="again"]:hover { background: #B53A1A; color: #fff; }
+.rp-rate-btn[data-r="again"]:hover .rp-rate-interval { color: rgba(255,255,255,0.88); }
+.rp-rate-btn[data-r="hard"] { border-color: #B27800; color: #B27800; }
+.rp-rate-btn[data-r="hard"]:hover { background: #B27800; color: #fff; }
+.rp-rate-btn[data-r="hard"]:hover .rp-rate-interval { color: rgba(255,255,255,0.88); }
+.rp-rate-btn[data-r="good"] { border-color: #1F5F50; color: #1F5F50; }
+.rp-rate-btn[data-r="good"]:hover { background: #1F5F50; color: #fff; }
+.rp-rate-btn[data-r="good"]:hover .rp-rate-interval { color: rgba(255,255,255,0.88); }
+.rp-rate-btn[data-r="easy"] { border-color: #2E7D5A; color: #2E7D5A; }
+.rp-rate-btn[data-r="easy"]:hover { background: #2E7D5A; color: #fff; }
+.rp-rate-btn[data-r="easy"]:hover .rp-rate-interval { color: rgba(255,255,255,0.88); }
+
+.rp-done {
+  text-align: center;
+  padding: 50px 24px;
+}
+.rp-done-mark {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--c-i);
+  color: #fff;
+  margin: 0 auto 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.rp-done-mark svg { width: 32px; height: 32px; }
+.rp-done-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+  letter-spacing: -0.022em;
+}
+.rp-done-sub {
+  font-size: 13px;
+  color: var(--ink-3);
+  margin-bottom: 22px;
+}
+.rp-done-stats {
+  display: flex; justify-content: center; gap: 18px;
+  margin-bottom: 24px;
+}
+.rp-done-stat { text-align: center; }
+.rp-done-stat-num {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 22px; font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.rp-done-stat-label {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-3);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* ── Header SRS controls ── */
+.due-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-line);
+  color: var(--accent);
+  font-size: 11.5px;
+  font-weight: 700;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.due-badge:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+.due-badge-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+.due-badge.zero { background: var(--paper-2); border-color: var(--rule); color: var(--ink-3); cursor: default; }
+.due-badge.zero:hover { background: var(--paper-2); color: var(--ink-3); border-color: var(--rule); }
+.due-badge.zero .due-badge-dot { background: var(--ink-4); animation: none; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.panel-toggle {
+  padding: 7px 12px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  color: var(--ink-2);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+.panel-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.panel-toggle svg { width: 13px; height: 13px; }
+
+/* ── Responsive overrides for right panel ── */
+@media (max-width: 1280px) {
+  #right-panel.open { width: 360px; min-width: 360px; }
+  .rp-inner { width: 360px; }
+}
+@media (max-width: 1080px) {
+  #right-panel.open {
+    width: 100%;
+    min-width: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 100;
+    box-shadow: -8px 0 32px rgba(20, 24, 46, 0.15);
+    max-width: 420px;
+  }
+  .rp-inner { width: 100%; max-width: 420px; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 980px) {
+  #sidebar { width: 220px; min-width: 220px; }
+  #header-zone { padding: 18px 22px 12px; }
+  #cat-title { font-size: 30px; }
+  #table-wrap { padding: 20px 22px 60px; }
+  #strip { padding: 12px 22px; gap: 22px; }
+}
+@media (max-width: 760px) {
+  #shell { flex-direction: column; }
+  #sidebar {
+    width: 100%; min-width: 0;
+    position: relative; height: auto;
+    max-height: 280px;
+  }
+  .header-row-top { flex-direction: column; align-items: stretch; }
+  .search-wrap { width: 100%; }
+  #cat-title { font-size: 26px; }
+  #table-wrap { padding: 16px; }
+  table { min-width: 640px; }
+  #strip { padding: 10px 16px; }
+}
+
+/* ── Print styles ── */
+@media print {
+  #sidebar, #strip, .skip-col, .search-wrap, .ctrl-group, .foot-reset, .skip-link, #right-panel, .header-srs, .due-badge, .panel-toggle { display: none !important; }
+  #header-zone { padding: 0 0 16px; border-bottom: 2px solid var(--ink); }
+  #cat-title { font-size: 28px; color: #000; }
+  body { background: #fff; color: #000; }
+  .cell-btn { color: var(--ink) !important; background: #fff !important; border: 1px solid #999 !important; }
+  .muscle-name { background: #fff !important; }
+  .section-title { color: #000; }
+  table { page-break-inside: auto; }
+  tr { page-break-inside: avoid; }
+  thead { display: table-header-group; }
+}
+</style>
+</head>
+<body>
+<a href="#table-wrap" class="skip-link">Skip to muscle table</a>
+<div id="sr-status" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<div id="shell">
+  <!-- ════ SIDEBAR ════ -->
+  <nav id="sidebar" role="navigation" aria-label="Muscle categories">
+    <div id="sb-header">
+      <div class="brand-mark">Myology</div>
+      <div class="brand-mark-2">Atlas</div>
+      <span class="brand-rule" aria-hidden="true"></span>
+      <p class="brand-tag">Interactive<br>Anatomy Study Tool</p>
+    </div>
+    <div id="sb-nav"></div>
+    <div id="sb-foot">
+      <div class="foot-label">Your Progress</div>
+      <div class="foot-stat"><span>Total revealed</span><strong id="foot-rev">0</strong></div>
+      <div class="foot-stat"><span>Skipped muscles</span><strong id="foot-skip">0</strong></div>
+      <div class="foot-stat"><span>Overall mastery</span><strong id="foot-pct">0%</strong></div>
+      <button class="foot-reset" id="reset-all-btn" aria-label="Reset all progress across categories">Reset all progress</button>
+    </div>
+  </nav>
+
+  <!-- ════ MAIN ════ -->
+  <div id="main">
+    <header id="header-zone">
+      <div class="header-row-top">
+        <div class="cat-title-block">
+          <div class="cat-eyebrow" id="cat-eyebrow">Head &amp; Neck</div>
+          <h1 id="cat-title">Scalp</h1>
+          <p class="cat-subtitle" id="cat-subtitle">Muscles of facial expression — scalp region</p>
+        </div>
+        <div class="header-srs" style="display:flex;align-items:center;gap:10px;">
+          <button class="due-badge" id="due-badge" aria-label="Cards due for review">
+            <span class="due-badge-dot" aria-hidden="true"></span>
+            <span id="due-badge-text">0 due</span>
+          </button>
+          <button class="panel-toggle" id="panel-toggle" aria-label="Toggle review panel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M15 3v18"/>
+            </svg>
+            <span>Review</span>
+          </button>
+        </div>
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+          </svg>
+          <input type="search" id="search" placeholder="Search muscles…" aria-label="Filter muscles by name">
+          <button class="search-clear" id="search-clear" aria-label="Clear search">×</button>
+        </div>
+      </div>
+      <div class="header-row-bot">
+        <div class="ctrl-group">
+          <label class="toggle">
+            <span class="toggle-label">Quiz mode</span>
+            <span class="tsw">
+              <input type="checkbox" id="qt" checked aria-label="Quiz mode">
+              <span class="tsw-track" aria-hidden="true"></span>
+              <span class="tsw-thumb" aria-hidden="true"></span>
+            </span>
+          </label>
+          <label class="toggle">
+            <span class="toggle-label">Innervation</span>
+            <span class="tsw">
+              <input type="checkbox" id="it" checked aria-label="Show innervation column">
+              <span class="tsw-track" aria-hidden="true"></span>
+              <span class="tsw-thumb" aria-hidden="true"></span>
+            </span>
+          </label>
+          <label class="toggle">
+            <span class="toggle-label">Hide skipped</span>
+            <span class="tsw">
+              <input type="checkbox" id="ht" aria-label="Hide skipped muscles">
+              <span class="tsw-track" aria-hidden="true"></span>
+              <span class="tsw-thumb" aria-hidden="true"></span>
+            </span>
+          </label>
+        </div>
+        <div class="ctrl-group">
+          <button class="action-btn" id="reset-cat-btn">Reset category</button>
+          <button class="action-btn" id="ha">Hide all</button>
+          <button class="action-btn action-btn-primary" id="ra">Reveal all</button>
+        </div>
+      </div>
+    </header>
+
+    <div id="strip">
+      <div class="legend-block" role="note" aria-label="Column color key">
+        <div class="leg-item"><span class="leg-swatch" style="background:var(--c-o)" aria-hidden="true"></span>Origin</div>
+        <div class="leg-item"><span class="leg-swatch" style="background:var(--c-i)" aria-hidden="true"></span>Insertion</div>
+        <div class="leg-item"><span class="leg-swatch" style="background:var(--c-a)" aria-hidden="true"></span>Action</div>
+        <div class="leg-item"><span class="leg-swatch" style="background:var(--c-n)" aria-hidden="true"></span>Innervation</div>
+      </div>
+      <div class="progress-block">
+        <span id="score-txt" aria-live="polite">0 / 0 revealed</span>
+        <div id="prog-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Completion">
+          <div id="prog-fill"></div>
+        </div>
+        <span id="pct-txt" aria-hidden="true">0%</span>
+      </div>
+    </div>
+
+    <main id="table-wrap" tabindex="-1" aria-label="Muscle anatomy table"></main>
+  </div>
+
+  <!-- ════ RIGHT PANEL — Spaced repetition + detail ════ -->
+  <aside id="right-panel" role="complementary" aria-label="Review panel">
+    <div class="rp-inner" id="rp-inner">
+      <div class="rp-header">
+        <span class="rp-title" id="rp-title">Review</span>
+        <button class="rp-close" id="rp-close" aria-label="Close panel">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div id="rp-content"></div>
+    </div>
+  </aside>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════
+   DATA — preserved from original source
+   ════════════════════════════════════════════════════ */
+const COLORS = ['#B53A1A','#1F5F50','#B27800','#5B3A87','#8A5A2A','#3F7458','#C04A2A','#704A8A','#5C8270','#A55E2E','#456D86','#8B4A28'];
+const COL_LABELS = { o: 'Origin', i: 'Insertion', a: 'Action', v: 'Innervation' };
+const GROUP_LABELS = { Head: 'Head & Neck', Trunk: 'Trunk', Upper: 'Upper Limb', Lower: 'Lower Limb' };
+
+const DATA = [
+  { id:'scalp', lb:'Scalp', g:'Head', sub:'Muscles of facial expression — scalp region',
+    s:[{ t:'Scalp (Facial Expression)', m:[
+      { n:'Frontalis', o:'Epicranial aponeurosis', i:'Skin of eyebrow & bridge of nose', a:'Raises eyebrows, wrinkles forehead', v:'CN VII (Facial)' },
+      { n:'Occipitalis', o:'Superior nuchal line, mastoid region of temporal bone', i:'Epicranial aponeurosis', a:'Tenses & pulls scalp posteriorly', v:'CN VII (Facial)' },
+      { n:'Temporoparietalis', o:'Fascia around external ear', i:'Epicranial aponeurosis', a:'Tenses scalp, moves ear', v:'CN VII (Facial)' },
+    ]}]},
+  { id:'face', lb:'Face', g:'Head', sub:'Muscles of facial expression — face',
+    s:[{ t:'Face (Facial Expression)', m:[
+      { n:'Corrugator Supercilii', o:'Frontal bone above nasal bones', i:'Skin of eyebrow', a:'Draws eyebrows together', v:'CN VII (Facial)' },
+      { n:'Orbicularis Oculi', o:'Medial margin of orbit', i:'Skin around eyelids', a:'Closes eye', v:'CN VII (Facial)' },
+      { n:'Buccinator', o:'Molar region of maxilla & mandible', i:'Orbicularis oris at angle of mouth', a:'Compresses cheek, retracts angle of mouth', v:'CN VII (Facial)' },
+      { n:'Zygomaticus Major', o:'Zygomatic bone', i:'Corner of mouth', a:'Retracts/elevates angle of mouth — smiling', v:'CN VII (Facial)' },
+      { n:'Zygomaticus Minor', o:'Zygomatic bone', i:'Upper lip', a:'Retracts/elevates upper lip', v:'CN VII (Facial)' },
+      { n:'Depressor Labii Inferioris', o:'Body of mandible', i:'Lower lip', a:'Depresses lower lip', v:'CN VII (Facial)' },
+      { n:'Levator Labii Superioris', o:'Maxilla (infraorbital margin)', i:'Upper lip', a:'Elevates upper lip', v:'CN VII (Facial)' },
+      { n:'Mentalis', o:'Mandible below incisors', i:'Skin of chin', a:'Protrudes lower lip', v:'CN VII (Facial)' },
+      { n:'Orbicularis Oris', o:'Maxilla & mandible', i:'Lips', a:'Compresses, purses lips', v:'CN VII (Facial)' },
+      { n:'Depressor Anguli Oris', o:'Body of mandible', i:'Angle of mouth', a:'Depresses angle of mouth', v:'CN VII (Facial)' },
+      { n:'Risorius', o:'Fascia of masseter muscle', i:'Angle of mouth', a:'Draws angle of mouth laterally', v:'CN VII (Facial)' },
+      { n:'Platysma', o:'Upper thoracic fascia', i:'Mandible & corner of mouth', a:'Tenses neck skin, depresses mandible & lip', v:'CN VII (Facial)' },
+    ]}]},
+  { id:'mast', lb:'Mastication', g:'Head', sub:'Muscles of mastication — jaw movers',
+    s:[{ t:'Muscles of Mastication', m:[
+      { n:'Temporalis', o:'Temporal bone', i:'Coronoid process of mandible', a:'Elevates & retracts mandible (closes jaw)', v:'CN V (Trigeminal)' },
+      { n:'Masseter', o:'Zygomatic arch', i:'Ramus of mandible', a:'Elevates mandible — prime mover', v:'CN V (Trigeminal)' },
+      { n:'Pterygoids', o:'Pterygoid process', i:'Mandible, mostly medial ramus', a:'Chewing; side-to-side grinding', v:'CN V (Trigeminal)' },
+    ]}]},
+  { id:'eye', lb:'Eye (Extrinsic)', g:'Head', sub:'Extrinsic muscles of the eyeball',
+    s:[{ t:'Extrinsic Eye Muscles', m:[
+      { n:'Inferior Rectus', o:'Sphenoid via common tendinous ring', i:'Inferior surface of eyeball', a:'Rotates eye downward', v:'CN III (Oculomotor)' },
+      { n:'Medial Rectus', o:'Sphenoid via common tendinous ring', i:'Medial surface of eyeball', a:'Rotates eye medially (adduction)', v:'CN III (Oculomotor)' },
+      { n:'Superior Rectus', o:'Sphenoid via common tendinous ring', i:'Superior surface of eyeball', a:'Rotates eye upward', v:'CN III (Oculomotor)' },
+      { n:'Inferior Oblique', o:'Maxillary bone of orbit', i:'Inferior/lateral surface of eyeball', a:'Rotates eye up & laterally', v:'CN III (Oculomotor)' },
+      { n:'Superior Oblique', o:'Sphenoid (superomedial orbital margin)', i:'Superior/lateral surface of eye via trochlea', a:'Rotates eye down & laterally', v:'CN IV (Trochlear)' },
+      { n:'Lateral Rectus', o:'Sphenoid via common tendinous ring', i:'Lateral surface of eyeball', a:'Rotates eye laterally (abduction)', v:'CN VI (Abducens)' },
+    ]}]},
+  { id:'neck', lb:'Neck', g:'Head', sub:'Anterior & lateral neck muscles',
+    s:[{ t:'Neck Muscles', m:[
+      { n:'Sternocleidomastoid', o:'Manubrium, medial clavicle', i:'Mastoid process (temporal bone)', a:'Unilateral: lateral flex head, rotate to opposite side; Bilateral: flex head/neck', v:'CN XI & Spinal C2–C3' },
+      { n:'Scalenes', o:'Transverse processes (cervical)', i:'Ribs 1 & 2', a:'Rotate & flex neck; elevates ribs 1 & 2', v:'Cervical spinal nerves' },
+    ]}]},
+  { id:'vert', lb:'Vertebral Column', g:'Trunk', sub:'Muscles of the vertebral column',
+    s:[{ t:'Vertebral Column', m:[
+      { n:'Splenius (capitis/cervicis)', o:'Ligamentum nuchae & spinous proc. C7–T6', i:'Occipital bone/mastoid (capitis); transverse proc. C1–C3 (cervicis)', a:'Unilateral: rotate & laterally flex neck; Bilateral: extend neck', v:'Cervical nerves' },
+      { n:'Quadratus Lumborum', o:'Iliac crest', i:'Transverse processes of lumbar vertebrae', a:'Laterally flexes spine', v:'T12, Lumbar nerves' },
+      { n:'Erector Spinae Group', o:'Vertebrae, ribs, sacral & iliac crests', i:'Vertebrae, ribs & occipital bone', a:'Extend neck; extend/laterally flex spine', v:'Spinal nerves' },
+    ]}]},
+  { id:'thorax', lb:'Thorax', g:'Trunk', sub:'Muscles of respiration',
+    s:[{ t:'Thorax (Breathing)', m:[
+      { n:'Diaphragm', o:'Xiphoid process, costal cartilages, lumbar vertebrae', i:'Central tendinous sheet', a:'Contract = inhale; relax = exhale; compresses abdominal cavity', v:'Phrenic nerves' },
+      { n:'External Intercostals', o:'Inferior border of superior rib', i:'Superior border of inferior rib', a:'Elevates ribs — inspiration', v:'Intercostal nerves' },
+      { n:'Internal Intercostals', o:'Superior border of inferior rib', i:'Inferior border of superior rib', a:'Depresses ribs — expiration', v:'Intercostal nerves' },
+    ]}]},
+  { id:'abd', lb:'Abdomen', g:'Trunk', sub:'Muscles of the abdominal wall',
+    s:[{ t:'Abdominal Wall', m:[
+      { n:'Rectus Abdominis', o:'Pubic crest & symphysis', i:'Costal cartilage 5–7 & xiphoid process', a:'Flexes trunk, compresses abdomen', v:'Intercostal nerves' },
+      { n:'External Oblique', o:'Ribs 5–12', i:'Linea alba & iliac crest', a:'Rotates spine, lateral flexion, compresses abdomen', v:'Intercostal nerves' },
+      { n:'Internal Oblique', o:'Lumbar fascia, iliac crest', i:'Ribs 9–12, costal cart., linea alba, pubic crest', a:'Rotates spine, lateral flexion, compresses abdomen', v:'Intercostal nerves' },
+      { n:'Transverse Abdominis', o:'Lumbar fascia, costal cart. 6–12, iliac crest', i:'Linea alba & pubic crest', a:'Compresses abdomen', v:'Intercostal nerves' },
+    ]}]},
+  { id:'pg', lb:'Pectoral Girdle', g:'Upper', sub:'Muscles that move the pectoral girdle',
+    s:[{ t:'Pectoral Girdle', m:[
+      { n:'Pectoralis Minor', o:'Ribs 3–5', i:'Coracoid process of scapula', a:'Abducts & depresses scapula, elevates ribs', v:'Pectoral nerves' },
+      { n:'Serratus Anterior', o:'Ribs 1–8', i:'Medial border of scapula', a:'Abducts scapula (rotates up)', v:'Long thoracic nerve' },
+      { n:'Levator Scapulae', o:'Transverse processes C1–C4', i:'Medial border of scapula', a:'Elevates scapula (rotates down)', v:'Dorsal scapular & cervical nn.' },
+      { n:'Rhomboideus Major', o:'Spinous processes T2–T5', i:'Medial border of scapula', a:'Adducts scapula (rotates down)', v:'Dorsal scapular nerve' },
+      { n:'Rhomboideus Minor', o:'Spinous processes C7 & T1', i:'Medial border of scapula', a:'Adducts scapula (rotates down)', v:'Dorsal scapular nerve' },
+      { n:'Trapezius', o:'Occipital bone, lig. nuchae, spinous proc. thoracic vert.', i:'Spine & acromion of scapula, lateral clavicle', a:'Upper: elevate scapula/extend neck; Middle: adduct scapula; Lower: depress scapula', v:'CN XI (Accessory)' },
+    ]}]},
+  { id:'sits', lb:'Rotator Cuff (SITS)', g:'Upper', sub:'The four rotator-cuff muscles — all stabilize the glenohumeral joint',
+    s:[{ t:'Rotator Cuff — all stabilize GH joint', m:[
+      { n:'Supraspinatus', o:'Supraspinous fossa of scapula', i:'Greater tubercle of humerus', a:'Weak abduction, stabilize GH joint', v:'Suprascapular nerve' },
+      { n:'Infraspinatus', o:'Infraspinous fossa of scapula', i:'Greater tubercle of humerus', a:'Laterally rotates arm, stabilize GH joint', v:'Suprascapular nerve' },
+      { n:'Teres Minor', o:'Lateral border of scapula', i:'Greater tubercle of humerus', a:'Adducts & laterally rotates arm, stabilize GH joint', v:'Axillary nerve' },
+      { n:'Subscapularis', o:'Subscapular fossa of scapula', i:'Lesser tubercle of humerus', a:'Medially rotates arm, stabilize GH joint', v:'Subscapular nerve' },
+    ]}]},
+  { id:'sh', lb:'Shoulder', g:'Upper', sub:'Movers of the glenohumeral (shoulder) joint',
+    s:[{ t:'Shoulder (GH joint) Movers', m:[
+      { n:'Pectoralis Major', o:'Medial clavicle, sternum, ribs 1–6', i:'Intertubercular groove & greater tubercle of humerus', a:'Flexion, adduction, horizontal flexion, medial rotation', v:'Pectoral nerves' },
+      { n:'Deltoid', o:'Acromion, spine of scapula & clavicle', i:'Deltoid tuberosity of humerus', a:'Anterior: flex; Posterior: extend; All: abduction', v:'Axillary nerve' },
+      { n:'Latissimus Dorsi', o:'Ribs 8–12, spinous proc. thoracic/lumbar, thoracolumbar fascia, iliac crest', i:'Intertubercular groove of humerus', a:'Extension, adduction, horizontal extension, medial rotation', v:'Thoracodorsal nerve' },
+      { n:'Teres Major', o:'Lateral border/inferior angle of scapula', i:'Intertubercular groove of humerus', a:'Medially rotates, adducts, extends arm', v:'Lower subscapular nerve' },
+      { n:'Coracobrachialis', o:'Coracoid process of scapula', i:'Medial surface of humerus', a:'Adducts & flexes shoulder', v:'Musculocutaneous nerve' },
+    ]}]},
+  { id:'el', lb:'Elbow', g:'Upper', sub:'Movers of the elbow joint',
+    s:[{ t:'Elbow Movers', m:[
+      { n:'Triceps Brachii', o:'Infraglenoid tubercle & posterior humerus', i:'Olecranon process of ulna', a:'Elbow extension — agonist', v:'Radial nerve' },
+      { n:'Anconeus', o:'Lateral epicondyle of humerus', i:'Olecranon process of ulna', a:'Elbow extension (synergist of triceps)', v:'Radial nerve' },
+      { n:'Biceps Brachii', o:'Coracoid process & supraglenoid tubercle of scapula', i:'Radial tuberosity', a:'Elbow flexion — agonist; supinates forearm', v:'Musculocutaneous nerve' },
+      { n:'Brachialis', o:'Distal anterior humerus', i:'Coronoid process of ulna', a:'Elbow flexion (synergist of biceps)', v:'Musculocutaneous nerve' },
+      { n:'Brachioradialis', o:'Lateral supracondylar ridge of humerus', i:'Styloid process of radius', a:'Elbow flexion (synergist of biceps)', v:'Radial nerve' },
+    ]}]},
+  { id:'ps', lb:'Pronation/Supination', g:'Upper', sub:'Pronators & supinators of the forearm',
+    s:[{ t:'Pronation / Supination', m:[
+      { n:'Supinator', o:'Lateral epicondyle of humerus & proximal ulna', i:'Proximal radius', a:'Supinates forearm', v:'Deep radial nerve' },
+      { n:'Pronator Teres', o:'Medial epicondyle of humerus & coronoid process of ulna', i:'Lateral radius (middle)', a:'Pronates forearm', v:'Median nerve' },
+    ]}]},
+  { id:'wr', lb:'Wrist', g:'Upper', sub:'Muscles that move the wrist',
+    s:[{ t:'Wrist Movers', m:[
+      { n:'Flexor Carpi Radialis', o:'Medial epicondyle of humerus', i:'Metacarpals 2 & 3', a:'Flex & abduct wrist', v:'Median nerve' },
+      { n:'Palmaris Longus', o:'Medial epicondyle of humerus', i:'Palmar aponeurosis', a:'Flex wrist', v:'Median nerve' },
+      { n:'Flexor Carpi Ulnaris', o:'Medial epicondyle of humerus', i:'Metacarpal 5, pisiform', a:'Flex & adduct wrist', v:'Ulnar nerve' },
+      { n:'Ext. Carpi Radialis Longus', o:'Lateral supracondylar ridge of humerus', i:'Metacarpal 2', a:'Extend & abduct wrist', v:'Radial nerve' },
+      { n:'Ext. Carpi Radialis Brevis', o:'Lateral epicondyle of humerus', i:'Metacarpal 3', a:'Extend & abduct wrist', v:'Deep radial nerve' },
+      { n:'Extensor Carpi Ulnaris', o:'Lateral epicondyle of humerus', i:'Metacarpal 5', a:'Extend & adduct wrist', v:'Deep radial nerve' },
+    ]}]},
+  { id:'di', lb:'Digits', g:'Upper', sub:'Muscles that move the digits (fingers & thumb)',
+    s:[{ t:'Digit Movers', m:[
+      { n:'Flexor Digitorum Superficialis', o:'Medial epicondyle, proximal ulna & radius', i:'Middle phalanges digits 2–5', a:'Flex fingers & wrist', v:'Median nerve' },
+      { n:'Flexor Digitorum Profundus', o:'Proximal ulna, coronoid process, interosseous membrane', i:'Distal phalanges digits 2–5', a:'Flex fingers & wrist', v:'Ulnar n. (medial ½) & Median n. (lateral ½)' },
+      { n:'Extensor Digitorum', o:'Lateral epicondyle of humerus', i:'Phalanges digits 2–5', a:'Extend fingers & wrist', v:'Deep radial nerve' },
+      { n:'Extensor Digiti Minimi', o:'Lateral epicondyle of humerus', i:'Phalanges digit 5', a:'Extend digit 5 & wrist', v:'Deep radial nerve' },
+      { n:'Abductor Pollicis Longus', o:'Proximal radius & ulna (dorsal)', i:'Metacarpal 1', a:'Abduct thumb & wrist', v:'Deep radial nerve' },
+      { n:'Extensor Pollicis Brevis & Longus', o:'Dorsal radius & ulna, interosseous membrane', i:'Proximal (Brevis) & distal (Longus) phalanges of thumb', a:'Extend thumb; Longus also extends/abducts wrist', v:'Deep radial nerve' },
+      { n:'Flexor Pollicis Longus', o:'Shaft of radius, interosseous membrane', i:'Distal phalanx of thumb', a:'Flex thumb', v:'Median nerve' },
+    ]}]},
+  { id:'hip', lb:'Hip', g:'Lower', sub:'Movers of the hip joint',
+    s:[{ t:'Hip Movers', m:[
+      { n:'Iliacus', o:'Iliac fossa', i:'Lesser trochanter of femur', a:'Flex hip & lumbar vertebrae', v:'Femoral nerve' },
+      { n:'Psoas Major', o:'T12–L5 transverse processes', i:'Lesser trochanter of femur', a:'Flex hip & lumbar vertebrae', v:'Lumbar nerves' },
+      { n:'Tensor Fascia Latae', o:'Iliac crest, ASIS', i:'Iliotibial (IT) tract', a:'Flex, abduct, medially rotate hip', v:'Superior gluteal nerve' },
+      { n:'Gluteus Minimus & Medius', o:'Ilium', i:'Greater trochanter of femur', a:'Abducts & medially rotates hip', v:'Superior gluteal nerve' },
+      { n:'Gluteus Maximus', o:'Dorsal ilium, sacrum & coccyx', i:'Gluteal tuberosity of femur & IT tract', a:'Extend, abduct, laterally rotate hip', v:'Inferior gluteal nerve' },
+      { n:'Adductor Magnus', o:'Inferior pubic ramus, ischial tuberosity', i:'Linea aspera of femur', a:'Adduct, flex & medially rotate hip; posterior part extends hip', v:'Obturator n. (+ Sciatic n. for posterior)' },
+      { n:'Adductor Longus', o:'Inferior pubic ramus', i:'Linea aspera of femur', a:'Adduct, flex & medially rotate hip', v:'Obturator nerve' },
+      { n:'Adductor Brevis', o:'Inferior pubic ramus', i:'Linea aspera of femur', a:'Adduct, flex & medially rotate hip', v:'Obturator nerve' },
+      { n:'Pectineus', o:'Superior ramus of pubis', i:'Proximal femur', a:'Adduct, flex & medially rotate hip', v:'Femoral nerve' },
+      { n:'Gracilis', o:'Inferior ramus of pubis', i:'Medial, proximal tibia', a:'Adduct hip; flex & medially rotate knee', v:'Obturator nerve' },
+      { n:'Piriformis', o:'Sacrum', i:'Greater trochanter of femur', a:'Abduct & laterally rotate hip, stabilize hip', v:'Sacral nerves' },
+    ]}]},
+  { id:'kn', lb:'Knee', g:'Lower', sub:'Movers of the knee (and hip)',
+    s:[{ t:'Knee & Hip Movers', m:[
+      { n:'Sartorius', o:'ASIS', i:'Medial tibia near tibial tuberosity', a:'Flex knee; flex, abduct, laterally rotate hip', v:'Femoral nerve' },
+      { n:'Biceps Femoris', o:'Ischial tuberosity & linea aspera', i:'Fibula head, lateral condyle of tibia', a:'Flex knee; extend & laterally rotate hip', v:'Sciatic nerve' },
+      { n:'Semimembranosus', o:'Ischial tuberosity', i:'Medial condyle of tibia', a:'Flex knee; extend & medially rotate hip', v:'Sciatic nerve' },
+      { n:'Semitendinosus', o:'Ischial tuberosity', i:'Proximal, medial tibia', a:'Flex knee; extend & medially rotate hip', v:'Sciatic nerve' },
+      { n:'Rectus Femoris', o:'AIIS', i:'Tibial tuberosity via quad tendon–patella–patellar lig.', a:'Extend knee, flex hip', v:'Femoral nerve' },
+      { n:'Vastus Intermedius', o:'Femur (anterolateral surface)', i:'Tibial tuberosity via quadriceps tendon', a:'Extend knee', v:'Femoral nerve' },
+      { n:'Vastus Lateralis', o:'Femur, proximal linea aspera', i:'Tibial tuberosity via quadriceps tendon', a:'Extend knee', v:'Femoral nerve' },
+      { n:'Vastus Medialis', o:'Linea aspera', i:'Tibial tuberosity via quadriceps tendon', a:'Extend knee', v:'Femoral nerve' },
+    ]}]},
+  { id:'ank', lb:'Ankle', g:'Lower', sub:'Movers of the ankle joint',
+    s:[{ t:'Ankle Movers', m:[
+      { n:'Gastrocnemius', o:'Femoral condyles', i:'Calcaneus via calcaneal tendon', a:'Plantar flexes ankle & flexes knee', v:'Tibial nerve' },
+      { n:'Soleus', o:'Superior tibia & fibula, interosseous membrane', i:'Calcaneus via calcaneal tendon', a:'Plantar flexes ankle', v:'Tibial nerve' },
+      { n:'Tibialis Posterior', o:'Tibia, fibula, interosseous membrane', i:'Tarsals & metatarsals under arch', a:'Plantar flexes & inverts ankle', v:'Tibial nerve' },
+      { n:'Tibialis Anterior', o:'Lateral condyle & proximal tibia, interosseous membrane', i:'Medial cuneiform & metatarsal 1', a:'Dorsiflexes & inverts ankle', v:'Deep fibular nerve' },
+      { n:'Peroneus (Fibularis) Longus', o:'Head & proximal shaft of fibula', i:'Medial cuneiform & metatarsal 1 (plantar)', a:'Plantarflexes & everts ankle', v:'Superficial fibular nerve' },
+      { n:'Peroneus (Fibularis) Brevis', o:'Distal fibula', i:'Proximal metatarsal 5', a:'Plantarflexes & everts ankle', v:'Superficial fibular nerve' },
+    ]}]},
+  { id:'toe', lb:'Toes', g:'Lower', sub:'Muscles that move the toes',
+    s:[{ t:'Toe Movers', m:[
+      { n:'Flexor Digitorum Longus', o:'Posterior tibia', i:'Distal phalanges 2–5', a:'Flex toes 2–5, invert & plantar flex ankle', v:'Tibial nerve' },
+      { n:'Flexor Hallucis Longus', o:'Posterior fibula', i:'Distal phalanx of hallux', a:'Flex hallux, plantar flexes ankle', v:'Tibial nerve' },
+      { n:'Extensor Digitorum Longus', o:'Lateral condyle of tibia & fibula', i:'Phalanges 2–5 (dorsal)', a:'Extend toes 2–5, dorsiflex ankle', v:'Deep fibular nerve' },
+      { n:'Extensor Hallucis Longus', o:'Anterior/middle fibula', i:'Distal phalanx of hallux', a:'Extend hallux, dorsiflex ankle', v:'Deep fibular nerve' },
+    ]}]},
+];
+DATA.forEach((c, i) => { c._col = COLORS[i % COLORS.length]; });
+
+/* ════════════════════════════════════════════════════
+   STATE — with localStorage persistence
+   ════════════════════════════════════════════════════ */
+const STORAGE_KEY = 'myology-atlas-v1';
+
+function defaultState() {
+  const reveals = {};
+  const excluded = {};
+  const examScope = {};
+  DATA.forEach(c => {
+    reveals[c.id] = {};
+    excluded[c.id] = {};
+    examScope[c.id] = {};
+    let x = 0;
+    c.s.forEach(s => s.m.forEach(() => {
+      reveals[c.id][x] = { o:false, i:false, a:false, v:false };
+      excluded[c.id][x] = false;
+      examScope[c.id][x] = false;
+      x++;
+    }));
+  });
+  return {
+    cur: DATA[0].id,
+    quizMode: true,
+    showInn: true,
+    hideExcl: false,
+    search: '',
+    reveals,
+    excluded,
+    examScope,
+    cards: {},        // key: "catId:idx" → { interval, dueDate, lastReviewed, reviews }
+    notes: {},        // key: "catId:idx" → string
+    examDate: '',     // ISO date string (yyyy-mm-dd) or empty
+    panel: { open: false, mode: 'idle', detailKey: null },
+  };
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return defaultState();
+    const saved = JSON.parse(raw);
+    const def = defaultState();
+    def.cur = saved.cur && DATA.find(c => c.id === saved.cur) ? saved.cur : def.cur;
+    def.quizMode = typeof saved.quizMode === 'boolean' ? saved.quizMode : true;
+    def.showInn = typeof saved.showInn === 'boolean' ? saved.showInn : true;
+    def.hideExcl = typeof saved.hideExcl === 'boolean' ? saved.hideExcl : false;
+    // Sanitize stored exam date — drop if year is obviously wrong (covers stale typo-years)
+    if (typeof saved.examDate === 'string' && saved.examDate) {
+      const year = Number(saved.examDate.slice(0, 4));
+      const currentYear = new Date().getFullYear();
+      def.examDate = (year >= currentYear && year <= currentYear + 5) ? saved.examDate : '';
+    } else {
+      def.examDate = '';
+    }
+    DATA.forEach(c => {
+      let x = 0;
+      c.s.forEach(s => s.m.forEach(() => {
+        if (saved.reveals?.[c.id]?.[x]) {
+          def.reveals[c.id][x] = {
+            o: !!saved.reveals[c.id][x].o,
+            i: !!saved.reveals[c.id][x].i,
+            a: !!saved.reveals[c.id][x].a,
+            v: !!saved.reveals[c.id][x].v,
+          };
+        }
+        if (saved.excluded?.[c.id]?.[x] !== undefined) {
+          def.excluded[c.id][x] = !!saved.excluded[c.id][x];
+        }
+        if (saved.examScope?.[c.id]?.[x] !== undefined) {
+          def.examScope[c.id][x] = !!saved.examScope[c.id][x];
+        }
+        x++;
+      }));
+    });
+    if (saved.cards && typeof saved.cards === 'object') {
+      Object.keys(saved.cards).forEach(k => {
+        const card = saved.cards[k];
+        if (card && typeof card === 'object') {
+          def.cards[k] = {
+            interval: Number(card.interval) || 1,
+            dueDate: Number(card.dueDate) || Date.now(),
+            lastReviewed: Number(card.lastReviewed) || 0,
+            reviews: Number(card.reviews) || 0,
+          };
+        }
+      });
+    }
+    if (saved.notes && typeof saved.notes === 'object') {
+      Object.keys(saved.notes).forEach(k => {
+        if (typeof saved.notes[k] === 'string') def.notes[k] = saved.notes[k];
+      });
+    }
+    // Panel state — don't restore review mode mid-session; only restore detail or idle
+    def.panel = { open: false, mode: 'idle', detailKey: null };
+    return def;
+  } catch (e) {
+    return defaultState();
+  }
+}
+
+let state = loadState();
+
+const saveState = (() => {
+  let t;
+  return () => {
+    clearTimeout(t);
+    t = setTimeout(() => {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+    }, 120);
+  };
+})();
+
+/* ════════════════════════════════════════════════════
+   ANNOUNCE / A11y
+   ════════════════════════════════════════════════════ */
+function announce(msg) {
+  const el = document.getElementById('sr-status');
+  el.textContent = '';
+  setTimeout(() => { el.textContent = msg; }, 50);
+}
+
+/* ════════════════════════════════════════════════════
+   CATEGORY STATS
+   ════════════════════════════════════════════════════ */
+function catStats(catId) {
+  const cat = DATA.find(c => c.id === catId);
+  const cols = state.showInn ? ['o','i','a','v'] : ['o','i','a'];
+  let active = 0, total = 0, revealed = 0, excluded = 0, muscles = 0;
+  let x = 0;
+  cat.s.forEach(s => s.m.forEach(() => {
+    muscles++;
+    const isEx = state.excluded[catId][x];
+    if (isEx) { excluded++; }
+    else {
+      active++;
+      cols.forEach(c => {
+        total++;
+        if (state.reveals[catId][x][c]) revealed++;
+      });
+    }
+    x++;
+  }));
+  return { active, total, revealed, excluded, muscles, pct: total ? Math.round(revealed/total*100) : 0 };
+}
+
+function allStats() {
+  let totRev = 0, totTot = 0, totSkip = 0;
+  DATA.forEach(c => {
+    const s = catStats(c.id);
+    totRev += s.revealed;
+    totTot += s.total;
+    totSkip += s.excluded;
+  });
+  return { rev: totRev, tot: totTot, skip: totSkip, pct: totTot ? Math.round(totRev/totTot*100) : 0 };
+}
+
+/* ════════════════════════════════════════════════════
+   SIDEBAR
+   ════════════════════════════════════════════════════ */
+function buildSidebar() {
+  const nav = document.getElementById('sb-nav');
+  nav.innerHTML = '';
+  const grps = {};
+  DATA.forEach(c => { if (!grps[c.g]) grps[c.g] = []; grps[c.g].push(c); });
+
+  const order = ['Head','Trunk','Upper','Lower'];
+  order.forEach(g => {
+    if (!grps[g]) return;
+    const div = document.createElement('div');
+    div.className = 'sb-group';
+    const lbl = document.createElement('div');
+    lbl.className = 'sb-group-label';
+    lbl.innerHTML = `<span>${GROUP_LABELS[g] || g}</span>`;
+    lbl.setAttribute('aria-hidden','true');
+    div.appendChild(lbl);
+
+    grps[g].forEach(c => {
+      const stats = catStats(c.id);
+      const btn = document.createElement('button');
+      btn.className = 'sb-btn' + (c.id === state.cur ? ' active' : '');
+      btn.dataset.id = c.id;
+      btn.setAttribute('aria-pressed', c.id === state.cur ? 'true' : 'false');
+      btn.setAttribute('aria-label', `${c.lb}, ${stats.muscles} muscles, ${stats.pct}% mastered`);
+      btn.innerHTML = `
+        <div class="sb-btn-top">
+          <span class="sb-dot" style="background:${c._col}" aria-hidden="true"></span>
+          <span class="sb-name">${c.lb}</span>
+          <span class="sb-count" aria-hidden="true">${stats.muscles}</span>
+        </div>
+        <div class="sb-progress" aria-hidden="true">
+          <div class="sb-progress-fill" style="width:${stats.pct}%"></div>
+        </div>
+      `;
+      btn.addEventListener('click', () => {
+        state.cur = c.id;
+        state.search = '';
+        document.getElementById('search').value = '';
+        document.getElementById('search-clear').classList.remove('visible');
+        document.querySelectorAll('.sb-btn').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed','false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed','true');
+        updateHeader();
+        renderTable();
+        announce(`Showing ${c.lb}, ${stats.muscles} muscles`);
+        saveState();
+      });
+      div.appendChild(btn);
+    });
+    nav.appendChild(div);
+  });
+}
+
+function refreshSidebarStats() {
+  document.querySelectorAll('.sb-btn').forEach(btn => {
+    const id = btn.dataset.id;
+    const stats = catStats(id);
+    const fill = btn.querySelector('.sb-progress-fill');
+    if (fill) fill.style.width = stats.pct + '%';
+    const cat = DATA.find(c => c.id === id);
+    btn.setAttribute('aria-label', `${cat.lb}, ${stats.muscles} muscles, ${stats.pct}% mastered`);
+  });
+  const all = allStats();
+  document.getElementById('foot-rev').textContent = all.rev;
+  document.getElementById('foot-skip').textContent = all.skip;
+  document.getElementById('foot-pct').textContent = all.pct + '%';
+}
+
+/* ════════════════════════════════════════════════════
+   HEADER UPDATES
+   ════════════════════════════════════════════════════ */
+function updateHeader() {
+  const cat = DATA.find(c => c.id === state.cur);
+  document.getElementById('cat-title').textContent = cat.lb;
+  document.getElementById('cat-eyebrow').textContent = GROUP_LABELS[cat.g] || cat.g;
+  document.getElementById('cat-subtitle').textContent = cat.sub || '';
+}
+
+/* ════════════════════════════════════════════════════
+   TABLE
+   ════════════════════════════════════════════════════ */
+function renderTable() {
+  const cat = DATA.find(c => c.id === state.cur);
+  const wrap = document.getElementById('table-wrap');
+  wrap.innerHTML = '';
+  const hc = state.showInn ? '' : ' hide-col';
+  const searchQ = state.search.trim().toLowerCase();
+
+  let gi = 0;
+  let anyVisible = false;
+
+  cat.s.forEach(sec => {
+    // Count visible muscles in this section
+    const startGi = gi;
+    const visibleInSection = sec.m.filter((m, idx) => {
+      const globalIdx = startGi + idx;
+      const isExcl = state.excluded[state.cur][globalIdx];
+      if (state.hideExcl && isExcl) return false;
+      if (searchQ && !m.n.toLowerCase().includes(searchQ)) return false;
+      return true;
+    });
+
+    if (visibleInSection.length === 0) {
+      gi += sec.m.length;
+      return;
+    }
+    anyVisible = true;
+
+    const sectionHeader = document.createElement('div');
+    sectionHeader.className = 'section-header';
+    sectionHeader.setAttribute('role','heading');
+    sectionHeader.setAttribute('aria-level','2');
+    sectionHeader.innerHTML = `
+      <span class="section-title">${sec.t}</span>
+      <span class="section-count">${visibleInSection.length} of ${sec.m.length}</span>
+    `;
+    wrap.appendChild(sectionHeader);
+
+    const tblWrap = document.createElement('div');
+    tblWrap.style.overflowX = 'auto';
+    const tbl = document.createElement('table');
+    tbl.setAttribute('role','table');
+    tbl.setAttribute('aria-label', sec.t);
+    tbl.innerHTML = `<thead role="rowgroup"><tr role="row">
+      <th scope="col" style="text-align:center;">On list?</th>
+      <th scope="col" class="muscle-col">Muscle</th>
+      <th scope="col" class="col-o">Origin</th>
+      <th scope="col" class="col-i">Insertion</th>
+      <th scope="col" class="col-a">Action</th>
+      <th scope="col" class="col-n${hc}">Innervation</th>
+    </tr></thead>`;
+    const tbody = document.createElement('tbody');
+    tbody.setAttribute('role','rowgroup');
+    tbl.appendChild(tbody);
+    tblWrap.appendChild(tbl);
+    wrap.appendChild(tblWrap);
+
+    sec.m.forEach(m => {
+      const idx = gi++;
+      const r = state.reveals[state.cur][idx];
+      const isExcl = state.excluded[state.cur][idx];
+
+      if (state.hideExcl && isExcl) return;
+      if (searchQ && !m.n.toLowerCase().includes(searchQ)) return;
+
+      const tr = document.createElement('tr');
+      tr.setAttribute('role','row');
+      if (isExcl) tr.classList.add('excluded');
+
+      // Skip + Scope toggles
+      const skipTd = document.createElement('td');
+      skipTd.className = 'skip-col';
+      const togglesWrap = document.createElement('div');
+      togglesWrap.className = 'row-toggles';
+
+      const isInScope = !!state.examScope[state.cur]?.[idx];
+      const thisKey = cardKey(state.cur, idx);
+      const isActiveDetail = state.panel.open && state.panel.mode === 'detail' && state.panel.detailKey === thisKey;
+
+      // Skip button
+      const skipBtn = document.createElement('button');
+      skipBtn.className = 'row-toggle-btn skip-btn' + (isExcl ? ' checked' : '');
+      skipBtn.setAttribute('aria-pressed', isExcl ? 'true' : 'false');
+      skipBtn.setAttribute('aria-label', isExcl ? `${m.n}: marked as skipped. Click to include.` : `${m.n}: skip (not on my list)`);
+      skipBtn.setAttribute('title', isExcl ? 'Click to include this muscle' : 'Skip — not on my list');
+      skipBtn.innerHTML = '<span class="pill-dot" aria-hidden="true"></span><span>Skip</span>';
+      skipBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const newVal = !state.excluded[state.cur][idx];
+        state.excluded[state.cur][idx] = newVal;
+        // Mutually exclusive: skipping removes from exam scope
+        if (newVal && state.examScope[state.cur][idx]) {
+          state.examScope[state.cur][idx] = false;
+        }
+        announce(newVal ? `${m.n} marked as skipped` : `${m.n} included again`);
+        renderTable();
+        refreshSidebarStats();
+        updateScore();
+        updateDueBadge();
+        if (state.panel.open && state.panel.mode === 'idle') renderPanel();
+        saveState();
+      });
+      togglesWrap.appendChild(skipBtn);
+
+      // Scope button (bookmark)
+      const scopeBtn = document.createElement('button');
+      scopeBtn.className = 'row-toggle-btn scope-btn' + (isInScope ? ' checked' : '');
+      scopeBtn.setAttribute('aria-pressed', isInScope ? 'true' : 'false');
+      scopeBtn.setAttribute('aria-label', isInScope ? `${m.n}: in exam scope. Click to remove.` : `${m.n}: add to exam scope`);
+      scopeBtn.setAttribute('title', isInScope ? 'In exam scope — click to remove' : 'Add to exam scope');
+      scopeBtn.innerHTML = '<span class="pill-dot" aria-hidden="true"></span><span>On Exam</span>';
+      scopeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const newVal = !state.examScope[state.cur][idx];
+        state.examScope[state.cur][idx] = newVal;
+        if (newVal && state.excluded[state.cur][idx]) {
+          state.excluded[state.cur][idx] = false;
+        }
+        announce(newVal ? `${m.n} added to exam scope` : `${m.n} removed from exam scope`);
+        renderTable();
+        refreshSidebarStats();
+        updateScore();
+        updateDueBadge();
+        if (state.panel.open && (state.panel.mode === 'idle' || (state.panel.mode === 'detail' && state.panel.detailKey === thisKey))) {
+          renderPanel();
+        }
+        saveState();
+      });
+      togglesWrap.appendChild(scopeBtn);
+
+      skipTd.appendChild(togglesWrap);
+      tr.appendChild(skipTd);
+
+      // Muscle name (clickable to open detail panel)
+      const nameTd = document.createElement('td');
+      nameTd.setAttribute('role','rowheader');
+      const nameDiv = document.createElement('div');
+      nameDiv.className = 'muscle-name' + (isActiveDetail ? ' active-detail' : '');
+      nameDiv.setAttribute('role', 'button');
+      nameDiv.setAttribute('tabindex', '0');
+      nameDiv.setAttribute('aria-label', `${m.n} — open detail panel`);
+      nameDiv.innerHTML = `<span class="row-dot" style="background:${cat._col}" aria-hidden="true"></span><span class="muscle-name-text">${m.n}</span>`;
+      const openDetail = () => {
+        state.panel.detailKey = thisKey;
+        openPanel('detail');
+        renderTable(); // refresh to highlight
+      };
+      nameDiv.addEventListener('click', openDetail);
+      nameDiv.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openDetail(); }
+      });
+      nameTd.appendChild(nameDiv);
+      tr.appendChild(nameTd);
+
+      // Cells
+      [['o','col-o',m.o],['i','col-i',m.i],['a','col-a',m.a],['v','col-n'+hc,m.v]].forEach(([key, cls, val]) => {
+        const td = document.createElement('td');
+        td.className = cls;
+        td.setAttribute('role','cell');
+        const isRev = r[key];
+        const btn = document.createElement('button');
+        btn.className = 'cell-btn' + (isRev ? ' revealed' : '');
+        btn.textContent = val;
+        btn.setAttribute('aria-label', isRev ? `${m.n} ${COL_LABELS[key]}: ${val}` : `${m.n} ${COL_LABELS[key]}: hidden, press to reveal`);
+        btn.setAttribute('aria-expanded', isRev ? 'true' : 'false');
+        if (isRev) btn.setAttribute('aria-disabled', 'true');
+        btn.dataset.col = key;
+        btn.dataset.idx = idx;
+        btn.addEventListener('click', function() {
+          if (!state.quizMode || state.reveals[state.cur][idx][key]) return;
+          state.reveals[state.cur][idx][key] = true;
+          this.classList.add('revealed');
+          this.setAttribute('aria-label', `${m.n} ${COL_LABELS[key]}: ${val}`);
+          this.setAttribute('aria-expanded', 'true');
+          this.setAttribute('aria-disabled', 'true');
+          announce(`${m.n} ${COL_LABELS[key]}: ${val}`);
+          updateScore();
+          refreshSidebarStats();
+          saveState();
+        });
+        td.appendChild(btn);
+        tr.appendChild(td);
+      });
+
+      tbody.appendChild(tr);
+    });
+  });
+
+  if (!anyVisible) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.innerHTML = '<div class="ico">—</div>No muscles match your filter.';
+    wrap.appendChild(empty);
+  }
+
+  updateScore();
+}
+
+/* ════════════════════════════════════════════════════
+   PROGRESS
+   ════════════════════════════════════════════════════ */
+function updateScore() {
+  const s = catStats(state.cur);
+  const txt = `${s.revealed} of ${s.total} revealed`;
+  document.getElementById('score-txt').textContent = txt;
+  document.getElementById('prog-fill').style.width = s.pct + '%';
+  document.getElementById('pct-txt').textContent = s.pct + '%';
+  const bar = document.getElementById('prog-track');
+  bar.setAttribute('aria-valuenow', s.pct);
+  bar.setAttribute('aria-valuetext', txt);
+}
+
+/* ════════════════════════════════════════════════════
+   SPACED REPETITION — scheduling + queue
+   ════════════════════════════════════════════════════ */
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function cardKey(catId, idx) { return catId + ':' + idx; }
+function parseKey(k) { const i = k.indexOf(':'); return [k.slice(0, i), Number(k.slice(i + 1))]; }
+
+function getMuscle(catId, idx) {
+  const cat = DATA.find(c => c.id === catId);
+  if (!cat) return null;
+  let gi = 0;
+  for (const sec of cat.s) {
+    for (const m of sec.m) {
+      if (gi === idx) return { muscle: m, cat, section: sec, idx };
+      gi++;
+    }
+  }
+  return null;
+}
+
+// SM-2-inspired interval calculation. Returns { interval (days), dueDate, lastReviewed, reviews }
+function schedule(card, rating) {
+  const now = Date.now();
+  const prevReviews = (card && card.reviews) || 0;
+  const prevInterval = (card && card.interval) || 1;
+  let interval, reviews = prevReviews + 1;
+
+  if (rating === 'again') {
+    interval = 10 / 60 / 24; // 10 min in days
+    reviews = 0;
+  } else if (rating === 'hard') {
+    interval = Math.max(1, prevInterval * 1.2);
+  } else if (rating === 'good') {
+    if (prevReviews === 0) interval = 1;
+    else if (prevReviews === 1) interval = 3;
+    else interval = prevInterval * 2.5;
+  } else { // easy
+    if (prevReviews === 0) interval = 3;
+    else interval = prevInterval * 4;
+  }
+
+  return {
+    interval,
+    dueDate: now + interval * DAY_MS,
+    lastReviewed: now,
+    reviews,
+  };
+}
+
+// Preview the interval for a given rating without committing
+function previewInterval(card, rating) {
+  const prevReviews = (card && card.reviews) || 0;
+  const prevInterval = (card && card.interval) || 1;
+  if (rating === 'again') return 10 / 60 / 24;
+  if (rating === 'hard') return Math.max(1, prevInterval * 1.2);
+  if (rating === 'good') {
+    if (prevReviews === 0) return 1;
+    if (prevReviews === 1) return 3;
+    return prevInterval * 2.5;
+  }
+  if (rating === 'easy') {
+    if (prevReviews === 0) return 3;
+    return prevInterval * 4;
+  }
+  return 1;
+}
+
+function formatInterval(days) {
+  if (days < 1 / 24) return Math.round(days * 24 * 60) + 'm';
+  if (days < 1) return Math.round(days * 24) + 'h';
+  if (days < 30) return Math.round(days) + 'd';
+  if (days < 365) return Math.round(days / 30) + 'mo';
+  return Math.round(days / 365) + 'y';
+}
+
+function formatRelative(dueDate) {
+  const diff = dueDate - Date.now();
+  if (diff <= 0) return 'Due now';
+  return 'in ' + formatInterval(diff / DAY_MS);
+}
+
+function daysUntilExam() {
+  if (!state.examDate) return null;
+  const exam = new Date(state.examDate + 'T23:59:59');
+  if (isNaN(exam.getTime())) return null;
+  return Math.ceil((exam.getTime() - Date.now()) / DAY_MS);
+}
+
+// Build the review queue: cards in scope that are due, sorted by overdueness
+function buildReviewQueue() {
+  const now = Date.now();
+  const queue = [];
+  DATA.forEach(cat => {
+    let gi = 0;
+    cat.s.forEach(sec => sec.m.forEach(() => {
+      const inScope = state.examScope[cat.id]?.[gi];
+      const skipped = state.excluded[cat.id][gi];
+      if (inScope && !skipped) {
+        const k = cardKey(cat.id, gi);
+        const card = state.cards[k];
+        if (!card || card.dueDate <= now) {
+          const dueness = card ? now - card.dueDate : Infinity;
+          queue.push({ key: k, dueness });
+        }
+      }
+      gi++;
+    }));
+  });
+  queue.sort((a, b) => b.dueness - a.dueness);
+  return queue.map(q => q.key);
+}
+
+function getScopeSummary() {
+  const now = Date.now();
+  let inScope = 0, dueNow = 0, due24 = 0, dueWeek = 0, learned = 0, mature = 0;
+  DATA.forEach(cat => {
+    let gi = 0;
+    cat.s.forEach(sec => sec.m.forEach(() => {
+      const isInScope = state.examScope[cat.id]?.[gi];
+      const skipped = state.excluded[cat.id][gi];
+      if (isInScope && !skipped) {
+        inScope++;
+        const card = state.cards[cardKey(cat.id, gi)];
+        if (!card || card.dueDate <= now) dueNow++;
+        else if (card.dueDate <= now + DAY_MS) due24++;
+        else if (card.dueDate <= now + 7 * DAY_MS) dueWeek++;
+        if (card && card.reviews >= 2) learned++;
+        if (card && card.interval >= 21) mature++;
+      }
+      gi++;
+    }));
+  });
+  return { inScope, dueNow, due24, dueWeek, learned, mature };
+}
+
+function computeXrefs(forMuscle, forCatId, forIdx) {
+  // Same nerve (exact match on v field)
+  const sameNerve = [];
+  DATA.forEach(cat => {
+    let gi = 0;
+    cat.s.forEach(sec => sec.m.forEach(m => {
+      if (!(cat.id === forCatId && gi === forIdx)) {
+        if (m.v === forMuscle.v) sameNerve.push({ m, cat, idx: gi });
+      }
+      gi++;
+    }));
+  });
+  return { sameNerve };
+}
+
+/* ════════════════════════════════════════════════════
+   RIGHT PANEL — rendering & state
+   ════════════════════════════════════════════════════ */
+let reviewSession = null; // { queue, idx, shown, stats: {reviewed, again, hard, good, easy} }
+
+function openPanel(mode, opts) {
+  state.panel.open = true;
+  state.panel.mode = mode || 'idle';
+  if (opts && opts.detailKey) state.panel.detailKey = opts.detailKey;
+  document.getElementById('right-panel').classList.add('open');
+  renderPanel();
+  saveState();
+}
+
+function closePanel() {
+  state.panel.open = false;
+  if (state.panel.mode === 'review') state.panel.mode = 'idle';
+  reviewSession = null;
+  document.getElementById('right-panel').classList.remove('open');
+  // Refresh table to clear any active-detail highlight
+  renderTable();
+  saveState();
+}
+
+function renderPanel() {
+  const titleEl = document.getElementById('rp-title');
+  const contentEl = document.getElementById('rp-content');
+  if (state.panel.mode === 'idle') {
+    titleEl.textContent = 'Review';
+    contentEl.innerHTML = renderIdleHTML();
+    wireIdleHandlers();
+  } else if (state.panel.mode === 'detail') {
+    titleEl.textContent = 'Muscle Detail';
+    contentEl.innerHTML = renderDetailHTML();
+    wireDetailHandlers();
+  } else if (state.panel.mode === 'review') {
+    titleEl.textContent = 'Review Session';
+    contentEl.innerHTML = renderReviewHTML();
+    wireReviewHandlers();
+  }
+}
+
+/* ── Idle mode HTML ── */
+function renderIdleHTML() {
+  const sum = getScopeSummary();
+  const daysExam = daysUntilExam();
+  const queue = buildReviewQueue();
+
+  // Date range for the exam picker — landing it in the current year and preventing typo-years
+  const _todayISO = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+  const _maxISO = new Date(Date.now() + 2 * 365 * DAY_MS - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+
+  let examHTML = `
+    <div class="rp-exam-block">
+      <div class="rp-exam-label">Next exam</div>
+      <input type="date" id="exam-date-input" value="${state.examDate || ''}" min="${_todayISO}" max="${_maxISO}" aria-label="Exam date">
+      ${daysExam !== null && daysExam >= 0
+        ? `<div class="rp-exam-countdown"><strong>${daysExam}</strong> day${daysExam === 1 ? '' : 's'} away</div>`
+        : daysExam !== null && daysExam < 0
+          ? `<div class="rp-exam-countdown">Exam date has passed</div>`
+          : `<div class="rp-exam-countdown">Set a date to plan your reviews</div>`}
+    </div>
+  `;
+
+  let scopeHTML;
+  if (sum.inScope === 0) {
+    scopeHTML = `
+      <div class="rp-empty-scope">
+        <strong>No cards in your exam scope yet.</strong><br>
+        Click the bookmark icon next to a muscle in the table to add it. Only cards you select will appear in review sessions.
+      </div>
+    `;
+  } else {
+    scopeHTML = `
+      <div class="rp-idle-grid">
+        <div class="rp-stat-card">
+          <div class="rp-stat-label">Due now</div>
+          <div class="rp-stat-num due">${sum.dueNow}</div>
+        </div>
+        <div class="rp-stat-card">
+          <div class="rp-stat-label">In scope</div>
+          <div class="rp-stat-num">${sum.inScope}</div>
+        </div>
+      </div>
+      <button class="rp-start-btn" id="rp-start-review" ${queue.length === 0 ? 'disabled' : ''}>
+        ${queue.length === 0 ? 'No cards due — check back later' : `Start review · ${queue.length} card${queue.length === 1 ? '' : 's'}`}
+      </button>
+      <div class="rp-section-h">Upcoming</div>
+      <ul class="rp-upcoming">
+        <li>In the next 24 hours <strong>${sum.due24}</strong></li>
+        <li>Later this week <strong>${sum.dueWeek}</strong></li>
+        <li>Learned (2+ reviews) <strong>${sum.learned}</strong></li>
+        <li>Mature (21+ days) <strong>${sum.mature}</strong></li>
+      </ul>
+    `;
+  }
+
+  return `<div class="rp-body">${examHTML}${scopeHTML}
+    <div class="rp-section-h" style="margin-top:28px;">Spaced recall data</div>
+    <button class="rp-reset-srs" id="rp-reset-srs">Reset spaced recall</button>
+    <div class="rp-data-label">Clears exam scope, scheduling history, notes, and exam date. The reset buttons elsewhere don't touch this data.</div>
+  </div>`;
+}
+
+function wireIdleHandlers() {
+  const dateInput = document.getElementById('exam-date-input');
+  if (dateInput) {
+    dateInput.addEventListener('change', function() {
+      const v = this.value || '';
+      // Reject obviously invalid years (typos like 0002, 0026, etc.)
+      if (v) {
+        const year = Number(v.slice(0, 4));
+        const currentYear = new Date().getFullYear();
+        if (year < currentYear || year > currentYear + 5) {
+          this.value = state.examDate || '';
+          announce('Please enter a valid exam date');
+          return;
+        }
+      }
+      state.examDate = v;
+      renderPanel();
+      saveState();
+    });
+  }
+  const startBtn = document.getElementById('rp-start-review');
+  if (startBtn) {
+    startBtn.addEventListener('click', startReviewSession);
+  }
+  const srsReset = document.getElementById('rp-reset-srs');
+  if (srsReset) {
+    srsReset.addEventListener('click', () => {
+      if (!confirm('Reset all spaced-recall data?\n\nClears your exam scope, scheduling history (intervals & review counts), per-muscle notes, and exam date.\n\nReveals and skip marks are preserved. Cannot be undone.')) return;
+      DATA.forEach(c => {
+        Object.keys(state.examScope[c.id]).forEach(k => {
+          state.examScope[c.id][k] = false;
+        });
+      });
+      state.cards = {};
+      state.notes = {};
+      state.examDate = '';
+      reviewSession = null;
+      renderTable();
+      renderPanel();
+      refreshSidebarStats();
+      updateDueBadge();
+      announce('Spaced-recall data reset');
+      saveState();
+    });
+  }
+}
+
+/* ── Detail mode HTML ── */
+function renderDetailHTML() {
+  const k = state.panel.detailKey;
+  if (!k) return '<div class="rp-body"><div class="rp-empty-scope">No muscle selected.</div></div>';
+  const [catId, idx] = parseKey(k);
+  const info = getMuscle(catId, idx);
+  if (!info) return '<div class="rp-body"><div class="rp-empty-scope">Muscle not found.</div></div>';
+  const { muscle, cat } = info;
+  const inScope = !!state.examScope[catId]?.[idx];
+  const card = state.cards[k];
+  const noteVal = state.notes[k] || '';
+  const xrefs = computeXrefs(muscle, catId, idx);
+
+  const sameNerveHTML = xrefs.sameNerve.length
+    ? `<ul class="rp-xref">${xrefs.sameNerve.map(x => `
+        <li class="rp-xref-item" data-jump="${cardKey(x.cat.id, x.idx)}">
+          <span>${x.m.n}</span>
+          <span class="rp-xref-cat">${x.cat.lb}</span>
+        </li>
+      `).join('')}</ul>`
+    : `<div class="rp-xref-empty">No other muscles in the dataset share this innervation.</div>`;
+
+  const srsHTML = card
+    ? `<div class="rp-srs-status">
+         <div class="rp-srs-cell">
+           <div class="rp-srs-cell-label">Reviews</div>
+           <div class="rp-srs-cell-value">${card.reviews}</div>
+         </div>
+         <div class="rp-srs-cell">
+           <div class="rp-srs-cell-label">Next due</div>
+           <div class="rp-srs-cell-value">${formatRelative(card.dueDate)}</div>
+         </div>
+         <div class="rp-srs-cell">
+           <div class="rp-srs-cell-label">Interval</div>
+           <div class="rp-srs-cell-value">${formatInterval(card.interval)}</div>
+         </div>
+         <div class="rp-srs-cell">
+           <div class="rp-srs-cell-label">Last reviewed</div>
+           <div class="rp-srs-cell-value">${card.lastReviewed ? formatInterval((Date.now() - card.lastReviewed) / DAY_MS) + ' ago' : 'Never'}</div>
+         </div>
+       </div>`
+    : `<div class="rp-xref-empty">Not yet reviewed. ${inScope ? 'It will appear in your next review session.' : 'Add to your exam scope to schedule it.'}</div>`;
+
+  return `<div class="rp-body">
+    <div class="rp-detail-loc">${GROUP_LABELS[cat.g] || cat.g} · ${cat.lb}</div>
+    <h2 class="rp-detail-name">${muscle.n}</h2>
+
+    <div class="rp-scope-row ${inScope ? 'active' : ''}" id="rp-scope-toggle" role="button" aria-pressed="${inScope}" tabindex="0">
+      <div class="rp-scope-check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <span class="rp-scope-label">${inScope ? 'In exam scope' : 'Add to exam scope'}</span>
+    </div>
+
+    <div class="rp-field f-o">
+      <div class="rp-field-label">Origin</div>
+      <div class="rp-field-text">${muscle.o}</div>
+    </div>
+    <div class="rp-field f-i">
+      <div class="rp-field-label">Insertion</div>
+      <div class="rp-field-text">${muscle.i}</div>
+    </div>
+    <div class="rp-field f-a">
+      <div class="rp-field-label">Action</div>
+      <div class="rp-field-text">${muscle.a}</div>
+    </div>
+    <div class="rp-field f-n">
+      <div class="rp-field-label">Innervation</div>
+      <div class="rp-field-text">${muscle.v}</div>
+    </div>
+
+    <div class="rp-section-h">Notes &amp; Mnemonics</div>
+    <textarea class="rp-notes-ta" id="rp-notes" placeholder="Add a memory hook, clinical note, or anything that helps you remember…">${escapeHTML(noteVal)}</textarea>
+
+    <div class="rp-section-h">Same Innervation</div>
+    ${sameNerveHTML}
+
+    <div class="rp-section-h">SRS Status</div>
+    ${srsHTML}
+  </div>`;
+}
+
+function escapeHTML(s) {
+  return s.replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
+function wireDetailHandlers() {
+  const scopeToggle = document.getElementById('rp-scope-toggle');
+  if (scopeToggle) {
+    const toggle = () => {
+      const [catId, idx] = parseKey(state.panel.detailKey);
+      state.examScope[catId][idx] = !state.examScope[catId][idx];
+      // If excluded, un-exclude — they're mutually exclusive semantically
+      if (state.examScope[catId][idx] && state.excluded[catId][idx]) {
+        state.excluded[catId][idx] = false;
+      }
+      renderPanel();
+      renderTable();
+      updateDueBadge();
+      saveState();
+    };
+    scopeToggle.addEventListener('click', toggle);
+    scopeToggle.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+  }
+  const notesEl = document.getElementById('rp-notes');
+  if (notesEl) {
+    let t;
+    notesEl.addEventListener('input', function() {
+      const v = this.value;
+      clearTimeout(t);
+      t = setTimeout(() => {
+        if (v) state.notes[state.panel.detailKey] = v;
+        else delete state.notes[state.panel.detailKey];
+        saveState();
+      }, 200);
+    });
+  }
+  document.querySelectorAll('.rp-xref-item[data-jump]').forEach(item => {
+    item.addEventListener('click', () => {
+      const k = item.dataset.jump;
+      const [catId] = parseKey(k);
+      if (catId !== state.cur) {
+        state.cur = catId;
+        document.querySelectorAll('.sb-btn').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+          if (b.dataset.id === catId) {
+            b.classList.add('active');
+            b.setAttribute('aria-pressed', 'true');
+          }
+        });
+        updateHeader();
+      }
+      state.panel.detailKey = k;
+      renderPanel();
+      renderTable();
+      saveState();
+    });
+  });
+}
+
+/* ── Review session ── */
+function startReviewSession() {
+  const queue = buildReviewQueue();
+  if (queue.length === 0) return;
+  reviewSession = {
+    queue,
+    idx: 0,
+    shown: false,
+    stats: { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0 },
+  };
+  openPanel('review');
+}
+
+function renderReviewHTML() {
+  if (!reviewSession) return renderIdleHTML();
+  const { queue, idx, shown, stats } = reviewSession;
+
+  // Session done
+  if (idx >= queue.length) {
+    return `<div class="rp-done">
+      <div class="rp-done-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="rp-done-title">Session complete</div>
+      <div class="rp-done-sub">Great work. Come back when more cards are due.</div>
+      <div class="rp-done-stats">
+        <div class="rp-done-stat"><div class="rp-done-stat-num">${stats.reviewed}</div><div class="rp-done-stat-label">Reviewed</div></div>
+        <div class="rp-done-stat"><div class="rp-done-stat-num" style="color:var(--c-i)">${stats.good + stats.easy}</div><div class="rp-done-stat-label">Strong</div></div>
+        <div class="rp-done-stat"><div class="rp-done-stat-num" style="color:#B53A1A">${stats.again}</div><div class="rp-done-stat-label">Restarts</div></div>
+      </div>
+      <button class="rp-start-btn" id="rp-back-idle">Back to overview</button>
+    </div>`;
+  }
+
+  const k = queue[idx];
+  const [catId, mIdx] = parseKey(k);
+  const info = getMuscle(catId, mIdx);
+  if (!info) {
+    // Skip and advance
+    reviewSession.idx++;
+    return renderReviewHTML();
+  }
+  const { muscle, cat } = info;
+  const card = state.cards[k];
+
+  const progress = `
+    <div class="rp-review-progress">
+      Card <strong>${idx + 1}</strong> of <strong>${queue.length}</strong>
+      &nbsp;·&nbsp; <strong>${stats.reviewed}</strong> reviewed this session
+    </div>
+  `;
+
+  if (!shown) {
+    return progress + `
+      <div class="rp-card">
+        <div class="rp-card-cat">${cat.lb}</div>
+        <div class="rp-card-name">${muscle.n}</div>
+        <div class="rp-card-prompt">Recall Origin, Insertion, Action, and Innervation</div>
+        <button class="rp-show-answer" id="rp-show">Show answer</button>
+      </div>
+    `;
+  }
+
+  // Answer shown
+  return progress + `
+    <div class="rp-answer">
+      <div class="rp-answer-cat">${cat.lb}</div>
+      <div class="rp-answer-name">${muscle.n}</div>
+      <div class="rp-field f-o">
+        <div class="rp-field-label">Origin</div>
+        <div class="rp-field-text">${muscle.o}</div>
+      </div>
+      <div class="rp-field f-i">
+        <div class="rp-field-label">Insertion</div>
+        <div class="rp-field-text">${muscle.i}</div>
+      </div>
+      <div class="rp-field f-a">
+        <div class="rp-field-label">Action</div>
+        <div class="rp-field-text">${muscle.a}</div>
+      </div>
+      <div class="rp-field f-n">
+        <div class="rp-field-label">Innervation</div>
+        <div class="rp-field-text">${muscle.v}</div>
+      </div>
+    </div>
+    <div class="rp-ratings">
+      <button class="rp-rate-btn" data-r="again">
+        <span class="rp-rate-label">Again</span>
+        <span class="rp-rate-interval">${formatInterval(previewInterval(card, 'again'))}</span>
+      </button>
+      <button class="rp-rate-btn" data-r="hard">
+        <span class="rp-rate-label">Hard</span>
+        <span class="rp-rate-interval">${formatInterval(previewInterval(card, 'hard'))}</span>
+      </button>
+      <button class="rp-rate-btn" data-r="good">
+        <span class="rp-rate-label">Good</span>
+        <span class="rp-rate-interval">${formatInterval(previewInterval(card, 'good'))}</span>
+      </button>
+      <button class="rp-rate-btn" data-r="easy">
+        <span class="rp-rate-label">Easy</span>
+        <span class="rp-rate-interval">${formatInterval(previewInterval(card, 'easy'))}</span>
+      </button>
+    </div>
+  `;
+}
+
+function wireReviewHandlers() {
+  const show = document.getElementById('rp-show');
+  if (show) {
+    show.addEventListener('click', () => {
+      reviewSession.shown = true;
+      renderPanel();
+    });
+  }
+  document.querySelectorAll('.rp-rate-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const r = btn.dataset.r;
+      const k = reviewSession.queue[reviewSession.idx];
+      const prev = state.cards[k];
+      state.cards[k] = schedule(prev, r);
+      reviewSession.stats.reviewed++;
+      reviewSession.stats[r]++;
+      reviewSession.idx++;
+      reviewSession.shown = false;
+      renderPanel();
+      updateDueBadge();
+      refreshSidebarStats();
+      saveState();
+    });
+  });
+  const back = document.getElementById('rp-back-idle');
+  if (back) {
+    back.addEventListener('click', () => {
+      reviewSession = null;
+      state.panel.mode = 'idle';
+      renderPanel();
+      saveState();
+    });
+  }
+  // Keyboard shortcuts: space to show, 1-4 to rate
+  document.addEventListener('keydown', reviewKeyHandler);
+}
+function reviewKeyHandler(e) {
+  if (state.panel.mode !== 'review' || !reviewSession) return;
+  if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) return;
+  if (reviewSession.idx >= reviewSession.queue.length) return;
+  if (!reviewSession.shown) {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      reviewSession.shown = true;
+      renderPanel();
+    }
+  } else {
+    const map = { '1': 'again', '2': 'hard', '3': 'good', '4': 'easy' };
+    if (map[e.key]) {
+      e.preventDefault();
+      const btn = document.querySelector(`.rp-rate-btn[data-r="${map[e.key]}"]`);
+      if (btn) btn.click();
+    }
+  }
+}
+
+function updateDueBadge() {
+  const queue = buildReviewQueue();
+  const badge = document.getElementById('due-badge');
+  const text = document.getElementById('due-badge-text');
+  const n = queue.length;
+  text.textContent = `${n} due`;
+  badge.classList.toggle('zero', n === 0);
+  badge.setAttribute('aria-label', `${n} card${n === 1 ? '' : 's'} due for review`);
+}
+
+/* ════════════════════════════════════════════════════
+   EVENT HANDLERS
+   ════════════════════════════════════════════════════ */
+const qt = document.getElementById('qt');
+qt.checked = state.quizMode;
+document.body.classList.toggle('study', !state.quizMode);
+qt.addEventListener('change', function() {
+  state.quizMode = this.checked;
+  document.body.classList.toggle('study', !state.quizMode);
+  if (!state.quizMode) {
+    // Reveal all in current category for study mode display
+    Object.keys(state.reveals[state.cur]).forEach(k => ['o','i','a','v'].forEach(c => state.reveals[state.cur][k][c] = true));
+    announce('Study mode — all answers visible');
+  } else {
+    announce('Quiz mode — click cells to reveal');
+  }
+  renderTable();
+  refreshSidebarStats();
+  saveState();
+});
+
+const it = document.getElementById('it');
+it.checked = state.showInn;
+it.addEventListener('change', function() {
+  state.showInn = this.checked;
+  renderTable();
+  refreshSidebarStats();
+  announce(state.showInn ? 'Innervation column shown' : 'Innervation column hidden');
+  saveState();
+});
+
+const ht = document.getElementById('ht');
+ht.checked = state.hideExcl;
+ht.addEventListener('change', function() {
+  state.hideExcl = this.checked;
+  renderTable();
+  announce(state.hideExcl ? 'Skipped muscles hidden' : 'Skipped muscles shown');
+  saveState();
+});
+
+document.getElementById('ra').addEventListener('click', () => {
+  Object.keys(state.reveals[state.cur]).forEach(k => {
+    if (state.excluded[state.cur][k]) return;
+    ['o','i','a','v'].forEach(c => state.reveals[state.cur][k][c] = true);
+  });
+  renderTable();
+  refreshSidebarStats();
+  announce('All cells revealed in this category');
+  saveState();
+});
+
+document.getElementById('ha').addEventListener('click', () => {
+  Object.keys(state.reveals[state.cur]).forEach(k => ['o','i','a','v'].forEach(c => state.reveals[state.cur][k][c] = false));
+  renderTable();
+  refreshSidebarStats();
+  announce('All cells hidden in this category');
+  saveState();
+});
+
+document.getElementById('reset-cat-btn').addEventListener('click', () => {
+  const cat = DATA.find(c => c.id === state.cur);
+  if (!confirm(`Reset progress for "${cat.lb}"? Clears your reveals and skip marks for this category only.\n\nYour exam scope, SRS scheduling history, and notes are preserved — use "Reset spaced recall" in the review panel for those.`)) return;
+  Object.keys(state.reveals[state.cur]).forEach(k => {
+    ['o','i','a','v'].forEach(c => state.reveals[state.cur][k][c] = false);
+    state.excluded[state.cur][k] = false;
+  });
+  renderTable();
+  refreshSidebarStats();
+  if (state.panel.open) renderPanel();
+  announce(`${cat.lb} progress reset`);
+  saveState();
+});
+
+document.getElementById('reset-all-btn').addEventListener('click', () => {
+  if (!confirm('Reset all progress? Clears reveals and skip marks across every category, and resets display toggles.\n\nYour exam scope, SRS scheduling history, notes, and exam date are preserved — use "Reset spaced recall" in the review panel for those.')) return;
+  DATA.forEach(c => {
+    Object.keys(state.reveals[c.id]).forEach(k => {
+      ['o','i','a','v'].forEach(col => state.reveals[c.id][k][col] = false);
+      state.excluded[c.id][k] = false;
+    });
+  });
+  state.quizMode = true;
+  state.showInn = true;
+  state.hideExcl = false;
+  state.search = '';
+  document.getElementById('qt').checked = true;
+  document.getElementById('it').checked = true;
+  document.getElementById('ht').checked = false;
+  document.getElementById('search').value = '';
+  document.getElementById('search-clear').classList.remove('visible');
+  document.body.classList.toggle('study', false);
+  renderTable();
+  refreshSidebarStats();
+  if (state.panel.open) renderPanel();
+  announce('All progress reset');
+  saveState();
+});
+
+/* Search */
+const searchEl = document.getElementById('search');
+const searchClear = document.getElementById('search-clear');
+searchEl.addEventListener('input', function() {
+  state.search = this.value;
+  searchClear.classList.toggle('visible', !!this.value);
+  renderTable();
+});
+searchClear.addEventListener('click', () => {
+  searchEl.value = '';
+  state.search = '';
+  searchClear.classList.remove('visible');
+  renderTable();
+  searchEl.focus();
+});
+
+/* Keyboard: '/' to focus search */
+document.addEventListener('keydown', (e) => {
+  if (e.key === '/' && document.activeElement !== searchEl && !e.ctrlKey && !e.metaKey) {
+    e.preventDefault();
+    searchEl.focus();
+  }
+  if (e.key === 'Escape' && document.activeElement === searchEl) {
+    searchEl.value = '';
+    state.search = '';
+    searchClear.classList.remove('visible');
+    renderTable();
+    searchEl.blur();
+  }
+});
+
+/* ════════════════════════════════════════════════════
+   PANEL EVENT HANDLERS
+   ════════════════════════════════════════════════════ */
+document.getElementById('rp-close').addEventListener('click', closePanel);
+
+document.getElementById('panel-toggle').addEventListener('click', () => {
+  if (state.panel.open) closePanel();
+  else {
+    const mode = state.panel.mode === 'detail' && state.panel.detailKey ? 'detail' : 'idle';
+    openPanel(mode);
+  }
+});
+
+document.getElementById('due-badge').addEventListener('click', () => {
+  const queue = buildReviewQueue();
+  if (queue.length > 0) {
+    startReviewSession();
+  } else {
+    openPanel('idle');
+  }
+});
+
+// Esc closes panel (unless typing in a field)
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && state.panel.open) {
+    const tag = document.activeElement?.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    closePanel();
+  }
+});
+
+/* ════════════════════════════════════════════════════
+   INIT
+   ════════════════════════════════════════════════════ */
+buildSidebar();
+updateHeader();
+renderTable();
+refreshSidebarStats();
+updateDueBadge();
+// Restore panel state if it was open (only idle/detail; review sessions don't persist)
+if (state.panel.open && (state.panel.mode === 'idle' || state.panel.mode === 'detail')) {
+  document.getElementById('right-panel').classList.add('open');
+  renderPanel();
+}
+</script>
+</body>
+</html>
