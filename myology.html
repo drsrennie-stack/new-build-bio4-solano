@@ -3,68 +3,68 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Myology Atlas — Muscle Anatomy Study Tool</title>
+<title>Myology Atlas — Interactive Study Tool</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&display=swap" rel="stylesheet">
 <style>
 :root {
-  /* ── Paper / surfaces ── */
-  --paper:        #F8F7F4;
-  --paper-2:      #EBE8E0;
-  --paper-3:      #D6D2C6;
+  /* ── Paper / surfaces — cream ── */
+  --paper:        #F5F1E8;
+  --paper-2:      #ECE6D8;
+  --paper-3:      #DDD6C4;
   --surface:      #FFFFFF;
-  --surface-2:    #F5F3EE;
-  --rule:         #E5E2D9;
-  --rule-soft:    #EFECE4;
+  --surface-2:    #FAF7F0;
+  --rule:         #DCD6C7;
+  --rule-soft:    #E8E3D6;
 
-  /* ── Ink ── */
-  --ink:          #181410;
-  --ink-2:        #3A2E22;
-  --ink-3:        #6A5847;
-  --ink-4:        #968270;
-  --ink-5:        #B5A38C;
+  /* ── Ink — navy family ── */
+  --ink:          #0B1530;
+  --ink-2:        #2A3350;
+  --ink-3:        #55607A;
+  --ink-4:        #8A93A6;
+  --ink-5:        #B6BCCB;
 
-  /* ── Accent — deep oxblood ── */
-  --accent:       #8B2929;
-  --accent-2:     #A23A2A;
-  --accent-soft:  rgba(139, 41, 41, 0.07);
-  --accent-line:  rgba(139, 41, 41, 0.20);
+  /* ── Accent — rust ── */
+  --accent:       #8B3A2E;
+  --accent-2:     #A0452F;
+  --accent-soft:  rgba(139, 58, 46, 0.07);
+  --accent-line:  rgba(139, 58, 46, 0.22);
 
   /* ── Sidebar (white) ── */
   --sb-bg:        #FFFFFF;
-  --sb-bg-2:      #F7F4ED;
-  --sb-text:      #14182E;
-  --sb-text-dim:  #5A6175;
-  --sb-text-mute: #9097A7;
-  --sb-rule:      #E8E4DA;
-  --sb-hover:     rgba(20, 24, 46, 0.04);
-  --sb-active:    rgba(139, 41, 41, 0.07);
-  --sb-accent:    #8B2929;
+  --sb-bg-2:      #FAF7F0;
+  --sb-text:      #0B1530;
+  --sb-text-dim:  #55607A;
+  --sb-text-mute: #8A93A6;
+  --sb-rule:      #E8E3D6;
+  --sb-hover:     rgba(11, 21, 48, 0.04);
+  --sb-active:    rgba(139, 58, 46, 0.07);
+  --sb-accent:    #8B3A2E;
 
-  /* ── Column colors — equally weighted, well-differentiated ── */
-  --c-o:          #B53A1A;   /* terracotta — Origin */
-  --c-i:          #1F5F50;   /* teal — Insertion */
-  --c-a:          #B27800;   /* dark gold — Action */
-  --c-n:          #5B3A87;   /* violet — Nerve */
+  /* ── Column colors — brand triad + harmonious teal & indigo ── */
+  --c-o:          #8B3A2E;   /* rust   — Origin */
+  --c-i:          #2F6B5E;   /* teal   — Insertion */
+  --c-a:          #9A7A1C;   /* gold   — Action */
+  --c-n:          #4E4A86;   /* indigo — Nerve */
 
-  --c-o-soft:     rgba(181, 58, 26, 0.06);
-  --c-i-soft:     rgba(31, 95, 80, 0.06);
-  --c-a-soft:     rgba(178, 120, 0, 0.06);
-  --c-n-soft:     rgba(91, 58, 135, 0.06);
+  --c-o-soft:     rgba(139, 58, 46, 0.06);
+  --c-i-soft:     rgba(47, 107, 94, 0.06);
+  --c-a-soft:     rgba(154, 122, 28, 0.07);
+  --c-n-soft:     rgba(78, 74, 134, 0.06);
 
-  --c-o-tint:     rgba(181, 58, 26, 0.13);
-  --c-i-tint:     rgba(31, 95, 80, 0.13);
-  --c-a-tint:     rgba(178, 120, 0, 0.13);
-  --c-n-tint:     rgba(91, 58, 135, 0.13);
+  --c-o-tint:     rgba(139, 58, 46, 0.14);
+  --c-i-tint:     rgba(47, 107, 94, 0.14);
+  --c-a-tint:     rgba(154, 122, 28, 0.16);
+  --c-n-tint:     rgba(78, 74, 134, 0.14);
 
-  /* ── Right panel surfaces (lighter than main paper palette) ── */
+  /* ── Right panel surfaces ── */
   --rp-card:      #FFFFFF;
-  --rp-strip:     #FAF8F4;
+  --rp-strip:     #FAF7F0;
 
-  --focus:        #8B2929;
-  --shadow-sm:    0 1px 2px rgba(58, 46, 34, 0.05);
-  --shadow-md:    0 4px 12px rgba(58, 46, 34, 0.07);
+  --focus:        #8B3A2E;
+  --shadow-sm:    0 1px 2px rgba(11, 21, 48, 0.06);
+  --shadow-md:    0 4px 12px rgba(11, 21, 48, 0.08);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -77,7 +77,7 @@ body {
   color: var(--ink);
   background: var(--paper);
   background-image:
-    radial-gradient(ellipse at 85% 80%, rgba(139, 41, 41, 0.025), transparent 55%);
+    radial-gradient(ellipse at 85% 80%, rgba(139, 58, 46, 0.025), transparent 55%);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -117,49 +117,45 @@ body {
   display: flex;
   flex-direction: column;
   scrollbar-width: thin;
-  scrollbar-color: #C9C2B3 transparent;
+  scrollbar-color: #CCC6B6 transparent;
   border-right: 1px solid var(--sb-rule);
 }
 #sidebar::-webkit-scrollbar { width: 5px; }
 #sidebar::-webkit-scrollbar-track { background: transparent; }
-#sidebar::-webkit-scrollbar-thumb { background: #C9C2B3; border-radius: 4px; }
+#sidebar::-webkit-scrollbar-thumb { background: #CCC6B6; border-radius: 4px; }
 
 #sb-header {
   padding: 28px 24px 22px;
   border-bottom: 1px solid var(--sb-rule);
 }
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+.brand-logo {
+  height: 46px;
+  width: auto;
+  flex-shrink: 0;
+  display: block;
+}
+.brand-words { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
 .brand-mark {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-weight: 300;
-  font-size: 28px;
+  font-weight: 800;
+  font-size: 21px;
   line-height: 1;
   color: var(--sb-text);
-  letter-spacing: -0.025em;
+  letter-spacing: -0.02em;
 }
-.brand-mark-2 {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-weight: 800;
-  font-size: 28px;
-  line-height: 1;
-  letter-spacing: 0.16em;
-  color: var(--sb-accent);
-  margin-top: 4px;
-  text-transform: uppercase;
-}
-.brand-rule {
-  display: block;
-  width: 36px; height: 1px;
-  background: var(--sb-accent);
-  margin: 14px 0 10px;
-  opacity: 0.6;
-}
+.brand-mark .brand-accent { color: var(--sb-accent); }
 .brand-tag {
-  font-size: 10.5px;
+  font-size: 9px;
   text-transform: uppercase;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.18em;
   color: var(--sb-text-dim);
-  font-weight: 500;
-  line-height: 1.4;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 #sb-nav { padding: 8px 0 14px; flex: 1; }
@@ -233,7 +229,7 @@ body {
 
 .sb-progress {
   height: 2px;
-  background: rgba(20, 24, 46, 0.07);
+  background: rgba(11, 21, 48, 0.07);
   border-radius: 2px;
   overflow: hidden;
 }
@@ -287,7 +283,7 @@ body {
   transition: all 0.15s;
 }
 .foot-reset:hover {
-  background: rgba(139, 41, 41, 0.06);
+  background: rgba(139, 58, 46, 0.06);
   border-color: var(--sb-accent);
   color: var(--sb-accent);
 }
@@ -547,7 +543,7 @@ body {
 }
 #prog-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent), #B05030, var(--c-i));
+  background: linear-gradient(90deg, var(--accent), var(--c-a), var(--c-i));
   border-radius: 5px;
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   width: 0;
@@ -670,7 +666,7 @@ td.skip-col { width: 92px; padding: 0 8px 0 0; }
 .skip-btn:hover {
   border-color: var(--ink-3);
   color: var(--ink);
-  background: rgba(20, 24, 46, 0.03);
+  background: rgba(11, 21, 48, 0.03);
 }
 .skip-btn.checked {
   background: var(--ink-3);
@@ -1321,7 +1317,7 @@ tbody tr.excluded td.col-n .cell-btn {
   gap: 3px;
   transition: all 0.12s;
 }
-.rp-rate-btn:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(58,46,34,0.12); }
+.rp-rate-btn:hover { transform: translateY(-1px); box-shadow: 0 2px 6px rgba(11,21,48,0.12); }
 .rp-rate-label {
   font-size: 11px; font-weight: 700;
   letter-spacing: 0.08em; text-transform: uppercase;
@@ -1330,17 +1326,17 @@ tbody tr.excluded td.col-n .cell-btn {
   font-size: 10.5px; font-weight: 500;
   color: var(--ink-3); font-variant-numeric: tabular-nums;
 }
-.rp-rate-btn[data-r="again"] { border-color: #B53A1A; color: #B53A1A; }
-.rp-rate-btn[data-r="again"]:hover { background: #B53A1A; color: #fff; }
+.rp-rate-btn[data-r="again"] { border-color: #8B3A2E; color: #8B3A2E; }
+.rp-rate-btn[data-r="again"]:hover { background: #8B3A2E; color: #fff; }
 .rp-rate-btn[data-r="again"]:hover .rp-rate-interval { color: rgba(255,255,255,0.88); }
-.rp-rate-btn[data-r="hard"] { border-color: #B27800; color: #B27800; }
-.rp-rate-btn[data-r="hard"]:hover { background: #B27800; color: #fff; }
+.rp-rate-btn[data-r="hard"] { border-color: #9A7A1C; color: #9A7A1C; }
+.rp-rate-btn[data-r="hard"]:hover { background: #9A7A1C; color: #fff; }
 .rp-rate-btn[data-r="hard"]:hover .rp-rate-interval { color: rgba(255,255,255,0.88); }
-.rp-rate-btn[data-r="good"] { border-color: #1F5F50; color: #1F5F50; }
-.rp-rate-btn[data-r="good"]:hover { background: #1F5F50; color: #fff; }
+.rp-rate-btn[data-r="good"] { border-color: #2F6B5E; color: #2F6B5E; }
+.rp-rate-btn[data-r="good"]:hover { background: #2F6B5E; color: #fff; }
 .rp-rate-btn[data-r="good"]:hover .rp-rate-interval { color: rgba(255,255,255,0.88); }
-.rp-rate-btn[data-r="easy"] { border-color: #2E7D5A; color: #2E7D5A; }
-.rp-rate-btn[data-r="easy"]:hover { background: #2E7D5A; color: #fff; }
+.rp-rate-btn[data-r="easy"] { border-color: #3E7D63; color: #3E7D63; }
+.rp-rate-btn[data-r="easy"]:hover { background: #3E7D63; color: #fff; }
 .rp-rate-btn[data-r="easy"]:hover .rp-rate-interval { color: rgba(255,255,255,0.88); }
 
 .rp-done {
@@ -1453,7 +1449,7 @@ tbody tr.excluded td.col-n .cell-btn {
     right: 0;
     top: 0;
     z-index: 100;
-    box-shadow: -8px 0 32px rgba(20, 24, 46, 0.15);
+    box-shadow: -8px 0 32px rgba(11, 21, 48, 0.15);
     max-width: 420px;
   }
   .rp-inner { width: 100%; max-width: 420px; }
@@ -1505,10 +1501,28 @@ tbody tr.excluded td.col-n .cell-btn {
   <!-- ════ SIDEBAR ════ -->
   <nav id="sidebar" role="navigation" aria-label="Muscle categories">
     <div id="sb-header">
-      <div class="brand-mark">Myology</div>
-      <div class="brand-mark-2">Atlas</div>
-      <span class="brand-rule" aria-hidden="true"></span>
-      <p class="brand-tag">Interactive<br>Anatomy Study Tool</p>
+      <div class="brand-lockup">
+        <svg class="brand-logo" viewBox="40 10 125 148" role="img" aria-hidden="true" focusable="false">
+          <g transform="translate(0, 18)">
+            <g transform="translate(60, 0) rotate(8 0 130)">
+              <circle cx="0" cy="20" r="10" fill="#0B1530"/>
+              <path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#0B1530"/>
+            </g>
+            <g transform="translate(100, 0)">
+              <circle cx="0" cy="10" r="11" fill="#8B3A2E"/>
+              <path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/>
+            </g>
+            <g transform="translate(140, 0) rotate(-8 0 130)">
+              <circle cx="0" cy="20" r="10" fill="#C9A14A"/>
+              <path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/>
+            </g>
+          </g>
+        </svg>
+        <div class="brand-words">
+          <div class="brand-mark">Myology <span class="brand-accent">Atlas</span></div>
+          <div class="brand-tag">Interactive Study Tool</div>
+        </div>
+      </div>
     </div>
     <div id="sb-nav"></div>
     <div id="sb-foot">
@@ -1623,7 +1637,7 @@ tbody tr.excluded td.col-n .cell-btn {
 /* ════════════════════════════════════════════════════
    DATA — preserved from original source
    ════════════════════════════════════════════════════ */
-const COLORS = ['#B53A1A','#1F5F50','#B27800','#5B3A87','#8A5A2A','#3F7458','#C04A2A','#704A8A','#5C8270','#A55E2E','#456D86','#8B4A28'];
+const COLORS = ['#8B3A2E','#2F6B5E','#9A7A1C','#4E4A86','#A0452F','#3F7458','#7A5E14','#5C5A96','#B5572F','#2C5E70','#8A6A2A','#6E4A86'];
 const COL_LABELS = { o: 'Origin', i: 'Insertion', a: 'Action', v: 'Innervation' };
 const GROUP_LABELS = { Head: 'Head & Neck', Trunk: 'Trunk', Upper: 'Upper Limb', Lower: 'Lower Limb' };
 
@@ -2716,7 +2730,7 @@ function renderReviewHTML() {
       <div class="rp-done-stats">
         <div class="rp-done-stat"><div class="rp-done-stat-num">${stats.reviewed}</div><div class="rp-done-stat-label">Reviewed</div></div>
         <div class="rp-done-stat"><div class="rp-done-stat-num" style="color:var(--c-i)">${stats.good + stats.easy}</div><div class="rp-done-stat-label">Strong</div></div>
-        <div class="rp-done-stat"><div class="rp-done-stat-num" style="color:#B53A1A">${stats.again}</div><div class="rp-done-stat-label">Restarts</div></div>
+        <div class="rp-done-stat"><div class="rp-done-stat-num" style="color:#8B3A2E">${stats.again}</div><div class="rp-done-stat-label">Restarts</div></div>
       </div>
       <button class="rp-start-btn" id="rp-back-idle">Back to overview</button>
     </div>`;
