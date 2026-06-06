@@ -9,14 +9,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&display=swap" rel="stylesheet">
 <style>
 :root {
-  /* ── Paper / surfaces — cream ── */
-  --paper:        #F5F1E8;
-  --paper-2:      #ECE6D8;
-  --paper-3:      #DDD6C4;
+  /* ── Paper / surfaces — light cream ── */
+  --paper:        #FBF9F3;
+  --paper-2:      #F2EEE3;
+  --paper-3:      #E6E0D1;
   --surface:      #FFFFFF;
-  --surface-2:    #FAF7F0;
-  --rule:         #DCD6C7;
-  --rule-soft:    #E8E3D6;
+  --surface-2:    #FCFAF5;
+  --rule:         #E2DCCD;
+  --rule-soft:    #EDE8DB;
 
   /* ── Ink — navy family ── */
   --ink:          #0B1530;
@@ -33,7 +33,7 @@
 
   /* ── Sidebar (white) ── */
   --sb-bg:        #FFFFFF;
-  --sb-bg-2:      #FAF7F0;
+  --sb-bg-2:      #FCFAF5;
   --sb-text:      #0B1530;
   --sb-text-dim:  #55607A;
   --sb-text-mute: #8A93A6;
@@ -60,7 +60,7 @@
 
   /* ── Right panel surfaces ── */
   --rp-card:      #FFFFFF;
-  --rp-strip:     #FAF7F0;
+  --rp-strip:     #FCFAF5;
 
   --focus:        #8B3A2E;
   --shadow-sm:    0 1px 2px rgba(11, 21, 48, 0.06);
@@ -1543,18 +1543,6 @@ tbody tr.excluded td.col-n .cell-btn {
           <h1 id="cat-title">Scalp</h1>
           <p class="cat-subtitle" id="cat-subtitle">Muscles of facial expression — scalp region</p>
         </div>
-        <div class="header-srs" style="display:flex;align-items:center;gap:10px;">
-          <button class="due-badge" id="due-badge" aria-label="Cards due for review">
-            <span class="due-badge-dot" aria-hidden="true"></span>
-            <span id="due-badge-text">0 due</span>
-          </button>
-          <button class="panel-toggle" id="panel-toggle" aria-label="Toggle review panel">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M15 3v18"/>
-            </svg>
-            <span>Review</span>
-          </button>
-        </div>
         <div class="search-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
@@ -1835,7 +1823,7 @@ function defaultState() {
     cards: {},        // key: "catId:idx" → { interval, dueDate, lastReviewed, reviews }
     notes: {},        // key: "catId:idx" → string
     examDate: '',     // ISO date string (yyyy-mm-dd) or empty
-    panel: { open: false, mode: 'idle', detailKey: null },
+    panel: { open: false, mode: 'detail', detailKey: null },
   };
 }
 
@@ -1896,7 +1884,7 @@ function loadState() {
       });
     }
     // Panel state — don't restore review mode mid-session; only restore detail or idle
-    def.panel = { open: false, mode: 'idle', detailKey: null };
+    def.panel = { open: false, mode: 'detail', detailKey: null };
     return def;
   } catch (e) {
     return defaultState();
@@ -2114,13 +2102,12 @@ function renderTable() {
       tr.setAttribute('role','row');
       if (isExcl) tr.classList.add('excluded');
 
-      // Skip + Scope toggles
+      // Skip toggle
       const skipTd = document.createElement('td');
       skipTd.className = 'skip-col';
       const togglesWrap = document.createElement('div');
       togglesWrap.className = 'row-toggles';
 
-      const isInScope = !!state.examScope[state.cur]?.[idx];
       const thisKey = cardKey(state.cur, idx);
       const isActiveDetail = state.panel.open && state.panel.mode === 'detail' && state.panel.detailKey === thisKey;
 
@@ -2135,45 +2122,13 @@ function renderTable() {
         e.stopPropagation();
         const newVal = !state.excluded[state.cur][idx];
         state.excluded[state.cur][idx] = newVal;
-        // Mutually exclusive: skipping removes from exam scope
-        if (newVal && state.examScope[state.cur][idx]) {
-          state.examScope[state.cur][idx] = false;
-        }
         announce(newVal ? `${m.n} marked as skipped` : `${m.n} included again`);
         renderTable();
         refreshSidebarStats();
         updateScore();
-        updateDueBadge();
-        if (state.panel.open && state.panel.mode === 'idle') renderPanel();
         saveState();
       });
       togglesWrap.appendChild(skipBtn);
-
-      // Scope button (bookmark)
-      const scopeBtn = document.createElement('button');
-      scopeBtn.className = 'row-toggle-btn scope-btn' + (isInScope ? ' checked' : '');
-      scopeBtn.setAttribute('aria-pressed', isInScope ? 'true' : 'false');
-      scopeBtn.setAttribute('aria-label', isInScope ? `${m.n}: in exam scope. Click to remove.` : `${m.n}: add to exam scope`);
-      scopeBtn.setAttribute('title', isInScope ? 'In exam scope — click to remove' : 'Add to exam scope');
-      scopeBtn.innerHTML = '<span class="pill-dot" aria-hidden="true"></span><span>On Exam</span>';
-      scopeBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const newVal = !state.examScope[state.cur][idx];
-        state.examScope[state.cur][idx] = newVal;
-        if (newVal && state.excluded[state.cur][idx]) {
-          state.excluded[state.cur][idx] = false;
-        }
-        announce(newVal ? `${m.n} added to exam scope` : `${m.n} removed from exam scope`);
-        renderTable();
-        refreshSidebarStats();
-        updateScore();
-        updateDueBadge();
-        if (state.panel.open && (state.panel.mode === 'idle' || (state.panel.mode === 'detail' && state.panel.detailKey === thisKey))) {
-          renderPanel();
-        }
-        saveState();
-      });
-      togglesWrap.appendChild(scopeBtn);
 
       skipTd.appendChild(togglesWrap);
       tr.appendChild(skipTd);
@@ -2278,121 +2233,6 @@ function getMuscle(catId, idx) {
   return null;
 }
 
-// SM-2-inspired interval calculation. Returns { interval (days), dueDate, lastReviewed, reviews }
-function schedule(card, rating) {
-  const now = Date.now();
-  const prevReviews = (card && card.reviews) || 0;
-  const prevInterval = (card && card.interval) || 1;
-  let interval, reviews = prevReviews + 1;
-
-  if (rating === 'again') {
-    interval = 10 / 60 / 24; // 10 min in days
-    reviews = 0;
-  } else if (rating === 'hard') {
-    interval = Math.max(1, prevInterval * 1.2);
-  } else if (rating === 'good') {
-    if (prevReviews === 0) interval = 1;
-    else if (prevReviews === 1) interval = 3;
-    else interval = prevInterval * 2.5;
-  } else { // easy
-    if (prevReviews === 0) interval = 3;
-    else interval = prevInterval * 4;
-  }
-
-  return {
-    interval,
-    dueDate: now + interval * DAY_MS,
-    lastReviewed: now,
-    reviews,
-  };
-}
-
-// Preview the interval for a given rating without committing
-function previewInterval(card, rating) {
-  const prevReviews = (card && card.reviews) || 0;
-  const prevInterval = (card && card.interval) || 1;
-  if (rating === 'again') return 10 / 60 / 24;
-  if (rating === 'hard') return Math.max(1, prevInterval * 1.2);
-  if (rating === 'good') {
-    if (prevReviews === 0) return 1;
-    if (prevReviews === 1) return 3;
-    return prevInterval * 2.5;
-  }
-  if (rating === 'easy') {
-    if (prevReviews === 0) return 3;
-    return prevInterval * 4;
-  }
-  return 1;
-}
-
-function formatInterval(days) {
-  if (days < 1 / 24) return Math.round(days * 24 * 60) + 'm';
-  if (days < 1) return Math.round(days * 24) + 'h';
-  if (days < 30) return Math.round(days) + 'd';
-  if (days < 365) return Math.round(days / 30) + 'mo';
-  return Math.round(days / 365) + 'y';
-}
-
-function formatRelative(dueDate) {
-  const diff = dueDate - Date.now();
-  if (diff <= 0) return 'Due now';
-  return 'in ' + formatInterval(diff / DAY_MS);
-}
-
-function daysUntilExam() {
-  if (!state.examDate) return null;
-  const exam = new Date(state.examDate + 'T23:59:59');
-  if (isNaN(exam.getTime())) return null;
-  return Math.ceil((exam.getTime() - Date.now()) / DAY_MS);
-}
-
-// Build the review queue: cards in scope that are due, sorted by overdueness
-function buildReviewQueue() {
-  const now = Date.now();
-  const queue = [];
-  DATA.forEach(cat => {
-    let gi = 0;
-    cat.s.forEach(sec => sec.m.forEach(() => {
-      const inScope = state.examScope[cat.id]?.[gi];
-      const skipped = state.excluded[cat.id][gi];
-      if (inScope && !skipped) {
-        const k = cardKey(cat.id, gi);
-        const card = state.cards[k];
-        if (!card || card.dueDate <= now) {
-          const dueness = card ? now - card.dueDate : Infinity;
-          queue.push({ key: k, dueness });
-        }
-      }
-      gi++;
-    }));
-  });
-  queue.sort((a, b) => b.dueness - a.dueness);
-  return queue.map(q => q.key);
-}
-
-function getScopeSummary() {
-  const now = Date.now();
-  let inScope = 0, dueNow = 0, due24 = 0, dueWeek = 0, learned = 0, mature = 0;
-  DATA.forEach(cat => {
-    let gi = 0;
-    cat.s.forEach(sec => sec.m.forEach(() => {
-      const isInScope = state.examScope[cat.id]?.[gi];
-      const skipped = state.excluded[cat.id][gi];
-      if (isInScope && !skipped) {
-        inScope++;
-        const card = state.cards[cardKey(cat.id, gi)];
-        if (!card || card.dueDate <= now) dueNow++;
-        else if (card.dueDate <= now + DAY_MS) due24++;
-        else if (card.dueDate <= now + 7 * DAY_MS) dueWeek++;
-        if (card && card.reviews >= 2) learned++;
-        if (card && card.interval >= 21) mature++;
-      }
-      gi++;
-    }));
-  });
-  return { inScope, dueNow, due24, dueWeek, learned, mature };
-}
-
 function computeXrefs(forMuscle, forCatId, forIdx) {
   // Same nerve (exact match on v field)
   const sameNerve = [];
@@ -2411,11 +2251,9 @@ function computeXrefs(forMuscle, forCatId, forIdx) {
 /* ════════════════════════════════════════════════════
    RIGHT PANEL — rendering & state
    ════════════════════════════════════════════════════ */
-let reviewSession = null; // { queue, idx, shown, stats: {reviewed, again, hard, good, easy} }
-
 function openPanel(mode, opts) {
   state.panel.open = true;
-  state.panel.mode = mode || 'idle';
+  state.panel.mode = mode || 'detail';
   if (opts && opts.detailKey) state.panel.detailKey = opts.detailKey;
   document.getElementById('right-panel').classList.add('open');
   renderPanel();
@@ -2424,8 +2262,6 @@ function openPanel(mode, opts) {
 
 function closePanel() {
   state.panel.open = false;
-  if (state.panel.mode === 'review') state.panel.mode = 'idle';
-  reviewSession = null;
   document.getElementById('right-panel').classList.remove('open');
   // Refresh table to clear any active-detail highlight
   renderTable();
@@ -2435,140 +2271,19 @@ function closePanel() {
 function renderPanel() {
   const titleEl = document.getElementById('rp-title');
   const contentEl = document.getElementById('rp-content');
-  if (state.panel.mode === 'idle') {
-    titleEl.textContent = 'Review';
-    contentEl.innerHTML = renderIdleHTML();
-    wireIdleHandlers();
-  } else if (state.panel.mode === 'detail') {
-    titleEl.textContent = 'Muscle Detail';
-    contentEl.innerHTML = renderDetailHTML();
-    wireDetailHandlers();
-  } else if (state.panel.mode === 'review') {
-    titleEl.textContent = 'Review Session';
-    contentEl.innerHTML = renderReviewHTML();
-    wireReviewHandlers();
-  }
-}
-
-/* ── Idle mode HTML ── */
-function renderIdleHTML() {
-  const sum = getScopeSummary();
-  const daysExam = daysUntilExam();
-  const queue = buildReviewQueue();
-
-  // Date range for the exam picker — landing it in the current year and preventing typo-years
-  const _todayISO = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-  const _maxISO = new Date(Date.now() + 2 * 365 * DAY_MS - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-
-  let examHTML = `
-    <div class="rp-exam-block">
-      <div class="rp-exam-label">Next exam</div>
-      <input type="date" id="exam-date-input" value="${state.examDate || ''}" min="${_todayISO}" max="${_maxISO}" aria-label="Exam date">
-      ${daysExam !== null && daysExam >= 0
-        ? `<div class="rp-exam-countdown"><strong>${daysExam}</strong> day${daysExam === 1 ? '' : 's'} away</div>`
-        : daysExam !== null && daysExam < 0
-          ? `<div class="rp-exam-countdown">Exam date has passed</div>`
-          : `<div class="rp-exam-countdown">Set a date to plan your reviews</div>`}
-    </div>
-  `;
-
-  let scopeHTML;
-  if (sum.inScope === 0) {
-    scopeHTML = `
-      <div class="rp-empty-scope">
-        <strong>No cards in your exam scope yet.</strong><br>
-        Click the bookmark icon next to a muscle in the table to add it. Only cards you select will appear in review sessions.
-      </div>
-    `;
-  } else {
-    scopeHTML = `
-      <div class="rp-idle-grid">
-        <div class="rp-stat-card">
-          <div class="rp-stat-label">Due now</div>
-          <div class="rp-stat-num due">${sum.dueNow}</div>
-        </div>
-        <div class="rp-stat-card">
-          <div class="rp-stat-label">In scope</div>
-          <div class="rp-stat-num">${sum.inScope}</div>
-        </div>
-      </div>
-      <button class="rp-start-btn" id="rp-start-review" ${queue.length === 0 ? 'disabled' : ''}>
-        ${queue.length === 0 ? 'No cards due — check back later' : `Start review · ${queue.length} card${queue.length === 1 ? '' : 's'}`}
-      </button>
-      <div class="rp-section-h">Upcoming</div>
-      <ul class="rp-upcoming">
-        <li>In the next 24 hours <strong>${sum.due24}</strong></li>
-        <li>Later this week <strong>${sum.dueWeek}</strong></li>
-        <li>Learned (2+ reviews) <strong>${sum.learned}</strong></li>
-        <li>Mature (21+ days) <strong>${sum.mature}</strong></li>
-      </ul>
-    `;
-  }
-
-  return `<div class="rp-body">${examHTML}${scopeHTML}
-    <div class="rp-section-h" style="margin-top:28px;">Spaced recall data</div>
-    <button class="rp-reset-srs" id="rp-reset-srs">Reset spaced recall</button>
-    <div class="rp-data-label">Clears exam scope, scheduling history, notes, and exam date. The reset buttons elsewhere don't touch this data.</div>
-  </div>`;
-}
-
-function wireIdleHandlers() {
-  const dateInput = document.getElementById('exam-date-input');
-  if (dateInput) {
-    dateInput.addEventListener('change', function() {
-      const v = this.value || '';
-      // Reject obviously invalid years (typos like 0002, 0026, etc.)
-      if (v) {
-        const year = Number(v.slice(0, 4));
-        const currentYear = new Date().getFullYear();
-        if (year < currentYear || year > currentYear + 5) {
-          this.value = state.examDate || '';
-          announce('Please enter a valid exam date');
-          return;
-        }
-      }
-      state.examDate = v;
-      renderPanel();
-      saveState();
-    });
-  }
-  const startBtn = document.getElementById('rp-start-review');
-  if (startBtn) {
-    startBtn.addEventListener('click', startReviewSession);
-  }
-  const srsReset = document.getElementById('rp-reset-srs');
-  if (srsReset) {
-    srsReset.addEventListener('click', () => {
-      if (!confirm('Reset all spaced-recall data?\n\nClears your exam scope, scheduling history (intervals & review counts), per-muscle notes, and exam date.\n\nReveals and skip marks are preserved. Cannot be undone.')) return;
-      DATA.forEach(c => {
-        Object.keys(state.examScope[c.id]).forEach(k => {
-          state.examScope[c.id][k] = false;
-        });
-      });
-      state.cards = {};
-      state.notes = {};
-      state.examDate = '';
-      reviewSession = null;
-      renderTable();
-      renderPanel();
-      refreshSidebarStats();
-      updateDueBadge();
-      announce('Spaced-recall data reset');
-      saveState();
-    });
-  }
+  titleEl.textContent = 'Muscle Detail';
+  contentEl.innerHTML = renderDetailHTML();
+  wireDetailHandlers();
 }
 
 /* ── Detail mode HTML ── */
 function renderDetailHTML() {
   const k = state.panel.detailKey;
-  if (!k) return '<div class="rp-body"><div class="rp-empty-scope">No muscle selected.</div></div>';
+  if (!k) return '<div class="rp-body"><div class="rp-xref-empty">No muscle selected.</div></div>';
   const [catId, idx] = parseKey(k);
   const info = getMuscle(catId, idx);
-  if (!info) return '<div class="rp-body"><div class="rp-empty-scope">Muscle not found.</div></div>';
+  if (!info) return '<div class="rp-body"><div class="rp-xref-empty">Muscle not found.</div></div>';
   const { muscle, cat } = info;
-  const inScope = !!state.examScope[catId]?.[idx];
-  const card = state.cards[k];
   const noteVal = state.notes[k] || '';
   const xrefs = computeXrefs(muscle, catId, idx);
 
@@ -2581,37 +2296,9 @@ function renderDetailHTML() {
       `).join('')}</ul>`
     : `<div class="rp-xref-empty">No other muscles in the dataset share this innervation.</div>`;
 
-  const srsHTML = card
-    ? `<div class="rp-srs-status">
-         <div class="rp-srs-cell">
-           <div class="rp-srs-cell-label">Reviews</div>
-           <div class="rp-srs-cell-value">${card.reviews}</div>
-         </div>
-         <div class="rp-srs-cell">
-           <div class="rp-srs-cell-label">Next due</div>
-           <div class="rp-srs-cell-value">${formatRelative(card.dueDate)}</div>
-         </div>
-         <div class="rp-srs-cell">
-           <div class="rp-srs-cell-label">Interval</div>
-           <div class="rp-srs-cell-value">${formatInterval(card.interval)}</div>
-         </div>
-         <div class="rp-srs-cell">
-           <div class="rp-srs-cell-label">Last reviewed</div>
-           <div class="rp-srs-cell-value">${card.lastReviewed ? formatInterval((Date.now() - card.lastReviewed) / DAY_MS) + ' ago' : 'Never'}</div>
-         </div>
-       </div>`
-    : `<div class="rp-xref-empty">Not yet reviewed. ${inScope ? 'It will appear in your next review session.' : 'Add to your exam scope to schedule it.'}</div>`;
-
   return `<div class="rp-body">
     <div class="rp-detail-loc">${GROUP_LABELS[cat.g] || cat.g} · ${cat.lb}</div>
     <h2 class="rp-detail-name">${muscle.n}</h2>
-
-    <div class="rp-scope-row ${inScope ? 'active' : ''}" id="rp-scope-toggle" role="button" aria-pressed="${inScope}" tabindex="0">
-      <div class="rp-scope-check">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <span class="rp-scope-label">${inScope ? 'In exam scope' : 'Add to exam scope'}</span>
-    </div>
 
     <div class="rp-field f-o">
       <div class="rp-field-label">Origin</div>
@@ -2635,9 +2322,6 @@ function renderDetailHTML() {
 
     <div class="rp-section-h">Same Innervation</div>
     ${sameNerveHTML}
-
-    <div class="rp-section-h">SRS Status</div>
-    ${srsHTML}
   </div>`;
 }
 
@@ -2646,25 +2330,6 @@ function escapeHTML(s) {
 }
 
 function wireDetailHandlers() {
-  const scopeToggle = document.getElementById('rp-scope-toggle');
-  if (scopeToggle) {
-    const toggle = () => {
-      const [catId, idx] = parseKey(state.panel.detailKey);
-      state.examScope[catId][idx] = !state.examScope[catId][idx];
-      // If excluded, un-exclude — they're mutually exclusive semantically
-      if (state.examScope[catId][idx] && state.excluded[catId][idx]) {
-        state.excluded[catId][idx] = false;
-      }
-      renderPanel();
-      renderTable();
-      updateDueBadge();
-      saveState();
-    };
-    scopeToggle.addEventListener('click', toggle);
-    scopeToggle.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-    });
-  }
   const notesEl = document.getElementById('rp-notes');
   if (notesEl) {
     let t;
@@ -2700,178 +2365,6 @@ function wireDetailHandlers() {
       saveState();
     });
   });
-}
-
-/* ── Review session ── */
-function startReviewSession() {
-  const queue = buildReviewQueue();
-  if (queue.length === 0) return;
-  reviewSession = {
-    queue,
-    idx: 0,
-    shown: false,
-    stats: { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0 },
-  };
-  openPanel('review');
-}
-
-function renderReviewHTML() {
-  if (!reviewSession) return renderIdleHTML();
-  const { queue, idx, shown, stats } = reviewSession;
-
-  // Session done
-  if (idx >= queue.length) {
-    return `<div class="rp-done">
-      <div class="rp-done-mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <div class="rp-done-title">Session complete</div>
-      <div class="rp-done-sub">Great work. Come back when more cards are due.</div>
-      <div class="rp-done-stats">
-        <div class="rp-done-stat"><div class="rp-done-stat-num">${stats.reviewed}</div><div class="rp-done-stat-label">Reviewed</div></div>
-        <div class="rp-done-stat"><div class="rp-done-stat-num" style="color:var(--c-i)">${stats.good + stats.easy}</div><div class="rp-done-stat-label">Strong</div></div>
-        <div class="rp-done-stat"><div class="rp-done-stat-num" style="color:#8B3A2E">${stats.again}</div><div class="rp-done-stat-label">Restarts</div></div>
-      </div>
-      <button class="rp-start-btn" id="rp-back-idle">Back to overview</button>
-    </div>`;
-  }
-
-  const k = queue[idx];
-  const [catId, mIdx] = parseKey(k);
-  const info = getMuscle(catId, mIdx);
-  if (!info) {
-    // Skip and advance
-    reviewSession.idx++;
-    return renderReviewHTML();
-  }
-  const { muscle, cat } = info;
-  const card = state.cards[k];
-
-  const progress = `
-    <div class="rp-review-progress">
-      Card <strong>${idx + 1}</strong> of <strong>${queue.length}</strong>
-      &nbsp;·&nbsp; <strong>${stats.reviewed}</strong> reviewed this session
-    </div>
-  `;
-
-  if (!shown) {
-    return progress + `
-      <div class="rp-card">
-        <div class="rp-card-cat">${cat.lb}</div>
-        <div class="rp-card-name">${muscle.n}</div>
-        <div class="rp-card-prompt">Recall Origin, Insertion, Action, and Innervation</div>
-        <button class="rp-show-answer" id="rp-show">Show answer</button>
-      </div>
-    `;
-  }
-
-  // Answer shown
-  return progress + `
-    <div class="rp-answer">
-      <div class="rp-answer-cat">${cat.lb}</div>
-      <div class="rp-answer-name">${muscle.n}</div>
-      <div class="rp-field f-o">
-        <div class="rp-field-label">Origin</div>
-        <div class="rp-field-text">${muscle.o}</div>
-      </div>
-      <div class="rp-field f-i">
-        <div class="rp-field-label">Insertion</div>
-        <div class="rp-field-text">${muscle.i}</div>
-      </div>
-      <div class="rp-field f-a">
-        <div class="rp-field-label">Action</div>
-        <div class="rp-field-text">${muscle.a}</div>
-      </div>
-      <div class="rp-field f-n">
-        <div class="rp-field-label">Innervation</div>
-        <div class="rp-field-text">${muscle.v}</div>
-      </div>
-    </div>
-    <div class="rp-ratings">
-      <button class="rp-rate-btn" data-r="again">
-        <span class="rp-rate-label">Again</span>
-        <span class="rp-rate-interval">${formatInterval(previewInterval(card, 'again'))}</span>
-      </button>
-      <button class="rp-rate-btn" data-r="hard">
-        <span class="rp-rate-label">Hard</span>
-        <span class="rp-rate-interval">${formatInterval(previewInterval(card, 'hard'))}</span>
-      </button>
-      <button class="rp-rate-btn" data-r="good">
-        <span class="rp-rate-label">Good</span>
-        <span class="rp-rate-interval">${formatInterval(previewInterval(card, 'good'))}</span>
-      </button>
-      <button class="rp-rate-btn" data-r="easy">
-        <span class="rp-rate-label">Easy</span>
-        <span class="rp-rate-interval">${formatInterval(previewInterval(card, 'easy'))}</span>
-      </button>
-    </div>
-  `;
-}
-
-function wireReviewHandlers() {
-  const show = document.getElementById('rp-show');
-  if (show) {
-    show.addEventListener('click', () => {
-      reviewSession.shown = true;
-      renderPanel();
-    });
-  }
-  document.querySelectorAll('.rp-rate-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const r = btn.dataset.r;
-      const k = reviewSession.queue[reviewSession.idx];
-      const prev = state.cards[k];
-      state.cards[k] = schedule(prev, r);
-      reviewSession.stats.reviewed++;
-      reviewSession.stats[r]++;
-      reviewSession.idx++;
-      reviewSession.shown = false;
-      renderPanel();
-      updateDueBadge();
-      refreshSidebarStats();
-      saveState();
-    });
-  });
-  const back = document.getElementById('rp-back-idle');
-  if (back) {
-    back.addEventListener('click', () => {
-      reviewSession = null;
-      state.panel.mode = 'idle';
-      renderPanel();
-      saveState();
-    });
-  }
-  // Keyboard shortcuts: space to show, 1-4 to rate
-  document.addEventListener('keydown', reviewKeyHandler);
-}
-function reviewKeyHandler(e) {
-  if (state.panel.mode !== 'review' || !reviewSession) return;
-  if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA')) return;
-  if (reviewSession.idx >= reviewSession.queue.length) return;
-  if (!reviewSession.shown) {
-    if (e.key === ' ' || e.key === 'Enter') {
-      e.preventDefault();
-      reviewSession.shown = true;
-      renderPanel();
-    }
-  } else {
-    const map = { '1': 'again', '2': 'hard', '3': 'good', '4': 'easy' };
-    if (map[e.key]) {
-      e.preventDefault();
-      const btn = document.querySelector(`.rp-rate-btn[data-r="${map[e.key]}"]`);
-      if (btn) btn.click();
-    }
-  }
-}
-
-function updateDueBadge() {
-  const queue = buildReviewQueue();
-  const badge = document.getElementById('due-badge');
-  const text = document.getElementById('due-badge-text');
-  const n = queue.length;
-  text.textContent = `${n} due`;
-  badge.classList.toggle('zero', n === 0);
-  badge.setAttribute('aria-label', `${n} card${n === 1 ? '' : 's'} due for review`);
 }
 
 /* ════════════════════════════════════════════════════
@@ -2935,7 +2428,7 @@ document.getElementById('ha').addEventListener('click', () => {
 
 document.getElementById('reset-cat-btn').addEventListener('click', () => {
   const cat = DATA.find(c => c.id === state.cur);
-  if (!confirm(`Reset progress for "${cat.lb}"? Clears your reveals and skip marks for this category only.\n\nYour exam scope, SRS scheduling history, and notes are preserved — use "Reset spaced recall" in the review panel for those.`)) return;
+  if (!confirm(`Reset progress for "${cat.lb}"? Clears your reveals and skip marks for this category only.\n\nYour saved notes are preserved.`)) return;
   Object.keys(state.reveals[state.cur]).forEach(k => {
     ['o','i','a','v'].forEach(c => state.reveals[state.cur][k][c] = false);
     state.excluded[state.cur][k] = false;
@@ -2948,7 +2441,7 @@ document.getElementById('reset-cat-btn').addEventListener('click', () => {
 });
 
 document.getElementById('reset-all-btn').addEventListener('click', () => {
-  if (!confirm('Reset all progress? Clears reveals and skip marks across every category, and resets display toggles.\n\nYour exam scope, SRS scheduling history, notes, and exam date are preserved — use "Reset spaced recall" in the review panel for those.')) return;
+  if (!confirm('Reset all progress? Clears reveals and skip marks across every category, and resets display toggles.\n\nYour saved notes are preserved.')) return;
   DATA.forEach(c => {
     Object.keys(state.reveals[c.id]).forEach(k => {
       ['o','i','a','v'].forEach(col => state.reveals[c.id][k][col] = false);
@@ -3008,23 +2501,6 @@ document.addEventListener('keydown', (e) => {
    ════════════════════════════════════════════════════ */
 document.getElementById('rp-close').addEventListener('click', closePanel);
 
-document.getElementById('panel-toggle').addEventListener('click', () => {
-  if (state.panel.open) closePanel();
-  else {
-    const mode = state.panel.mode === 'detail' && state.panel.detailKey ? 'detail' : 'idle';
-    openPanel(mode);
-  }
-});
-
-document.getElementById('due-badge').addEventListener('click', () => {
-  const queue = buildReviewQueue();
-  if (queue.length > 0) {
-    startReviewSession();
-  } else {
-    openPanel('idle');
-  }
-});
-
 // Esc closes panel (unless typing in a field)
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && state.panel.open) {
@@ -3041,11 +2517,12 @@ buildSidebar();
 updateHeader();
 renderTable();
 refreshSidebarStats();
-updateDueBadge();
-// Restore panel state if it was open (only idle/detail; review sessions don't persist)
-if (state.panel.open && (state.panel.mode === 'idle' || state.panel.mode === 'detail')) {
+// Restore the detail panel if it was open
+if (state.panel.open && state.panel.mode === 'detail' && state.panel.detailKey) {
   document.getElementById('right-panel').classList.add('open');
   renderPanel();
+} else {
+  state.panel.open = false;
 }
 </script>
 </body>
