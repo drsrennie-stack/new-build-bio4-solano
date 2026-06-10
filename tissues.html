@@ -768,6 +768,79 @@
   body.quiz .seq li.revealed .seq-name,
   body.quiz .seq li.revealed .seq-desc { color: var(--navy); }
   body.quiz .seq li:not(.revealed) .reveal-btn { display: inline-block; }
+  /* ---- majors: term breakdown (etymology) ---- */
+  .term-breakdown {
+    border: 1px solid var(--rule); border-left: 4px solid var(--gold);
+    border-radius: 6px; background: var(--white);
+    padding: 16px 20px 18px; margin: 20px 0 4px;
+  }
+  .term-breakdown .eyebrow { color: var(--terra-dark); margin-bottom: 4px; }
+  .term-breakdown h2 {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-weight: 700; font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--navy); margin: 0 0 4px; padding: 0; border: 0;
+  }
+  .term-breakdown .hint {
+    font-family: 'Lora', Georgia, serif; font-style: italic; font-size: 13px;
+    color: var(--navy); opacity: 0.92; margin: 6px 0 10px; max-width: 70ch;
+  }
+  .morph-list { list-style: none; margin: 8px 0 0; padding: 0; }
+  .morph {
+    display: grid; grid-template-columns: 150px 1fr; gap: 3px 14px;
+    padding: 8px 0; border-bottom: 1px dotted var(--rule-soft); align-items: baseline;
+  }
+  .morph:last-child { border-bottom: 0; }
+  .morph .root {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-weight: 700; font-size: 13.5px; color: var(--terra-dark);
+  }
+  .morph .gloss { font-family: 'Lora', Georgia, serif; font-size: 13px; color: var(--navy); line-height: 1.5; }
+  .morph .egs { grid-column: 2; font-family: 'Lora', Georgia, serif; font-style: italic; font-size: 12.5px; color: var(--navy); opacity: 0.85; }
+  @media (max-width: 620px) { .morph { grid-template-columns: 1fr; gap: 2px; } .morph .egs { grid-column: 1; } }
+
+  /* ---- majors: drawing prompt (collapsed on screen, prints open) ---- */
+  .drawing-prompt { margin: 20px 0 4px; }
+  .draw-details {
+    border: 1px solid var(--rule); border-left: 4px solid var(--navy);
+    border-radius: 6px; background: var(--navy-tint); overflow: hidden;
+  }
+  .draw-details > summary { list-style: none; cursor: pointer; padding: 14px 18px; display: block; position: relative; }
+  .draw-details > summary::-webkit-details-marker { display: none; }
+  .draw-details > summary::after {
+    content: ""; position: absolute; right: 18px; top: 19px; width: 9px; height: 9px;
+    border-right: 2px solid var(--navy); border-bottom: 2px solid var(--navy);
+    transform: rotate(45deg); transition: transform 200ms ease;
+  }
+  .draw-details[open] > summary::after { transform: rotate(-135deg); }
+  .draw-details > summary:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: -3px; }
+  .draw-details > summary .eyebrow {
+    font-family: 'DM Sans', system-ui, sans-serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--terra-dark); display: block; margin: 0 0 3px;
+  }
+  .draw-details > summary .draw-title {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-weight: 700; font-size: 14.5px; color: var(--navy); display: block; padding-right: 26px;
+  }
+  .draw-body { padding: 2px 18px 16px; }
+  .draw-body .hint { font-family: 'Lora', Georgia, serif; font-size: 13px; color: var(--navy); margin: 6px 0 10px; max-width: 70ch; }
+  .draw-tasks { margin: 8px 0 10px; padding-left: 20px; }
+  .draw-tasks li { margin: 0 0 7px; font-family: 'Lora', Georgia, serif; font-size: 13.5px; color: var(--navy); line-height: 1.5; }
+  .draw-tasks li::marker { color: var(--terra-dark); font-weight: 700; }
+  .draw-reveal-note {
+    margin: 10px 0 0; padding: 8px 0 2px 14px; border-left: 3px solid var(--terra-dark);
+    font-family: 'Lora', Georgia, serif; font-size: 12.5px; color: var(--navy); line-height: 1.55;
+  }
+  .draw-reveal-note strong { color: var(--terra-dark); font-weight: 700; font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif; }
+  @media (prefers-reduced-motion: reduce) { .draw-details > summary::after { transition: none; } }
+
+  /* ---- majors print ---- */
+  @media print {
+    .term-breakdown, .morph, .drawing-prompt { break-inside: avoid; }
+    .draw-details { background: transparent; }
+    .draw-details > summary::after { display: none; }
+    .draw-details > .draw-body { display: block !important; }
+  }
+
   /* Print styles */
   @media print {
     @page { size: letter; margin: 0.45in; }
@@ -849,14 +922,6 @@
   .study-q-list li::marker { color: var(--terra-dark); font-weight: 700; }
   @media print { .prework-box, .study-q-list li { break-inside: avoid; } }
 </style>
-
-<style id="slide-modal-trigger-styles">
-.draw-btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 20px; padding: 12px 16px; background: rgba(11,21,48,0.04); border-left: 3px solid #8B3A2E; border-radius: 4px; }
-.draw-btn-row::before { content: "Drawing tools"; display: block; width: 100%; font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #8B3A2E; margin-bottom: 4px; }
-.draw-btn { display: inline-flex; align-items: center; gap: 6px; background: #0B1530; color: #FFFFFF; border: none; padding: 8px 14px; border-radius: 4px; font-family: inherit; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; }
-.draw-btn:hover { background: #142A36; }
-.draw-btn::before { content: "\270E"; font-size: 13px; }
-</style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to main content</a>
@@ -872,7 +937,6 @@
 <main class="sheet" id="main">
   <p class="eyebrow">BIO 004 · Human Anatomy</p>
   <h1 class="title">Histology: The Four Tissue Types</h1>
-<div class="draw-btn-row"><button type="button" class="draw-btn" data-slide="slides-muscle-nervous-tissue.html">Draw muscle + nervous tissue</button></div>
   <p class="subhead">Block 1 · Module 3: Tissues &amp; Histology</p>
   <p class="usage">A reference for the histology video and lab. A tissue is a group of cells that share a structure and a job. Four tissue types build every organ in the body, and reading them on a slide is a core lab skill.</p>
   <p class="mode-hint" role="note">
@@ -889,6 +953,9 @@
     <!-- PLACEHOLDER: point the pre-work link at the real BIO 004 resource, or remove this button. -->
     <a class="resource-btn primary" id="prework-link" href="#" target="_top" rel="noopener">
       Practice Spaced Recall <span class="arrow" aria-hidden="true">&rarr;</span>
+    </a>
+    <a class="resource-btn" id="atlas-link" href="#" target="_blank" rel="noopener" hidden>
+      Atlas Coloring Book <span class="arrow" aria-hidden="true">&#8599;</span>
     </a>
   </div>
   <p class="resource-hint">The Foundations video gives you a complete foundational understanding of this topic, enough on its own for a foundational course. Learn it first, then move on to the Deep dive, which adds the majors-level material: epithelial classification, the connective tissue matrix, and reading tissue types on a slide.</p>
@@ -1175,6 +1242,48 @@
     <p>Tissue of origin even names disease. Most cancers are carcinomas, which arise from epithelium, the tissue that turns over the most.</p>
   </aside>
   <!-- Study questions: work on answering in your own words. Not mode-aware. -->
+  <hr class="rule" />
+  <!-- Majors: term breakdown (root/prefix/suffix etymology) -->
+  <section class="term-breakdown" aria-labelledby="termbreak-heading">
+    <p class="eyebrow">Build the word</p>
+    <h2 id="termbreak-heading">Term breakdown</h2>
+    <p class="hint">Tissue and cell names come from Greek and Latin roots for shape, layering, and the job each cell does. Decode the root and the name describes the picture.</p>
+    <ul class="morph-list">
+      <li class="morph"><span class="root">epi- + theli-</span><span class="gloss">upon + delicate tissue</span><span class="egs">epithelium, epithelial</span></li>
+      <li class="morph"><span class="root">endo- + theli-</span><span class="gloss">within + delicate tissue</span><span class="egs">endothelium (lines vessels)</span></li>
+      <li class="morph"><span class="root">mes- + theli-</span><span class="gloss">middle + delicate tissue</span><span class="egs">mesothelium (serous lining)</span></li>
+      <li class="morph"><span class="root">squam-</span><span class="gloss">scale</span><span class="egs">squamous (flat, scale-like)</span></li>
+      <li class="morph"><span class="root">cub-</span><span class="gloss">cube</span><span class="egs">cuboidal</span></li>
+      <li class="morph"><span class="root">strat-</span><span class="gloss">layer</span><span class="egs">stratified, stratum</span></li>
+      <li class="morph"><span class="root">pseudo-</span><span class="gloss">false</span><span class="egs">pseudostratified</span></li>
+      <li class="morph"><span class="root">-blast</span><span class="gloss">germ, former (builds)</span><span class="egs">fibroblast, osteoblast, chondroblast</span></li>
+      <li class="morph"><span class="root">-cyte</span><span class="gloss">cell (maintains)</span><span class="egs">fibrocyte, osteocyte, chondrocyte</span></li>
+      <li class="morph"><span class="root">fibro-</span><span class="gloss">fiber</span><span class="egs">fibroblast, fibrocartilage</span></li>
+      <li class="morph"><span class="root">chondr-</span><span class="gloss">cartilage</span><span class="egs">chondrocyte, chondroblast</span></li>
+      <li class="morph"><span class="root">oste-</span><span class="gloss">bone</span><span class="egs">osteocyte, osteoblast</span></li>
+      <li class="morph"><span class="root">aden-</span><span class="gloss">gland</span><span class="egs">glandular epithelium, adenoma</span></li>
+      <li class="morph"><span class="root">-derm</span><span class="gloss">skin, layer</span><span class="egs">ectoderm, mesoderm, endoderm</span></li>
+      <li class="morph"><span class="root">ecto- / meso- / endo-</span><span class="gloss">outer / middle / inner</span><span class="egs">the three germ layers</span></li>
+    </ul>
+  </section>
+  <!-- Majors: drawing prompt. Collapsed on screen, opens automatically in print. -->
+  <section class="drawing-prompt" aria-labelledby="draw-heading">
+    <details class="draw-details">
+      <summary aria-describedby="draw-heading">
+        <span class="eyebrow">Draw it from memory</span>
+        <span class="draw-title" id="draw-heading">Sketch and label before you check</span>
+      </summary>
+      <div class="draw-body">
+        <p class="hint">Work on blank paper, from memory, before you look back at the figures. Drawing the tissues forces you to commit the cell shapes and arrangements.</p>
+        <ol class="draw-tasks">
+          <li>Draw four labeled boxes for the <strong>four tissue types</strong> (epithelial, connective, muscle, nervous). Write the one-line job of each from memory.</li>
+          <li>Draw simple epithelia side by side: <strong>simple squamous</strong>, <strong>simple cuboidal</strong>, <strong>simple columnar</strong>, and <strong>stratified squamous</strong>. On each, label the free (apical) surface and the basement membrane.</li>
+          <li>Draw a field of <strong>loose (areolar) connective tissue</strong>. Label fibroblasts, collagen fibers, elastic fibers, and the ground substance.</li>
+        </ol>
+        <p class="draw-reveal-note"><strong>Then check yourself.</strong> Compare your drawings against the figures and tables above. Whatever you missed is tonight's study list. Redraw it until the shapes and labels come out right without looking.</p>
+      </div>
+    </details>
+  </section>
   <section class="block study-q" aria-labelledby="studyq-heading">
     <h2 id="studyq-heading">Study questions</h2>
     <p class="hint">Work on answering these in writing, in your own words. They are the questions to bring to class, and good practice for the reasoning the exams ask for.</p>
@@ -1227,11 +1336,14 @@
     videoFoundations: 'https://www.youtube.com/embed/REPLACE_WITH_FOUNDATIONS_VIDEO_ID',
     videoDeepDive:    'https://www.youtube.com/embed/REPLACE_WITH_DEEPDIVE_VIDEO_ID',
     prework:          'https://drsrennie-stack.github.io/new-build-bio4-solano/spaced-recall.html#topic=t-tissues',
+    atlas:            'https://www.medmasterscollaborative.com/atlas-coloring-book',
   };
   (function wireResources() {
     var cfg = window.SHEET_CONFIG || {};
     var prework = document.getElementById('prework-link');
     if (prework && cfg.prework) prework.href = cfg.prework;
+    var atlas = document.getElementById('atlas-link');
+    if (atlas && cfg.atlas) { atlas.href = cfg.atlas; atlas.hidden = false; }
     var videos = [
       { toggle: 'video-toggle-foundations', panel: 'video-panel-foundations', iframe: 'video-iframe-foundations', url: cfg.videoFoundations },
       { toggle: 'video-toggle-deepdive',    panel: 'video-panel-deepdive',    iframe: 'video-iframe-deepdive',    url: cfg.videoDeepDive }
@@ -1495,6 +1607,5 @@
   if ('ResizeObserver' in window) new ResizeObserver(send).observe(document.body);
 })();
 </script>
-  <script src="slide-modal.js" defer></script>
 </body>
 </html>

@@ -827,6 +827,79 @@
   body.quiz .seq li.revealed .seq-name,
   body.quiz .seq li.revealed .seq-desc { color: var(--navy); }
   body.quiz .seq li:not(.revealed) .reveal-btn { display: inline-block; }
+  /* ---- majors: term breakdown (etymology) ---- */
+  .term-breakdown {
+    border: 1px solid var(--rule); border-left: 4px solid var(--gold);
+    border-radius: 6px; background: var(--white);
+    padding: 16px 20px 18px; margin: 20px 0 4px;
+  }
+  .term-breakdown .eyebrow { color: var(--terra-dark); margin-bottom: 4px; }
+  .term-breakdown h2 {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-weight: 700; font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--navy); margin: 0 0 4px; padding: 0; border: 0;
+  }
+  .term-breakdown .hint {
+    font-family: 'Lora', Georgia, serif; font-style: italic; font-size: 13px;
+    color: var(--navy); opacity: 0.92; margin: 6px 0 10px; max-width: 70ch;
+  }
+  .morph-list { list-style: none; margin: 8px 0 0; padding: 0; }
+  .morph {
+    display: grid; grid-template-columns: 150px 1fr; gap: 3px 14px;
+    padding: 8px 0; border-bottom: 1px dotted var(--rule-soft); align-items: baseline;
+  }
+  .morph:last-child { border-bottom: 0; }
+  .morph .root {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-weight: 700; font-size: 13.5px; color: var(--terra-dark);
+  }
+  .morph .gloss { font-family: 'Lora', Georgia, serif; font-size: 13px; color: var(--navy); line-height: 1.5; }
+  .morph .egs { grid-column: 2; font-family: 'Lora', Georgia, serif; font-style: italic; font-size: 12.5px; color: var(--navy); opacity: 0.85; }
+  @media (max-width: 620px) { .morph { grid-template-columns: 1fr; gap: 2px; } .morph .egs { grid-column: 1; } }
+
+  /* ---- majors: drawing prompt (collapsed on screen, prints open) ---- */
+  .drawing-prompt { margin: 20px 0 4px; }
+  .draw-details {
+    border: 1px solid var(--rule); border-left: 4px solid var(--navy);
+    border-radius: 6px; background: var(--navy-tint); overflow: hidden;
+  }
+  .draw-details > summary { list-style: none; cursor: pointer; padding: 14px 18px; display: block; position: relative; }
+  .draw-details > summary::-webkit-details-marker { display: none; }
+  .draw-details > summary::after {
+    content: ""; position: absolute; right: 18px; top: 19px; width: 9px; height: 9px;
+    border-right: 2px solid var(--navy); border-bottom: 2px solid var(--navy);
+    transform: rotate(45deg); transition: transform 200ms ease;
+  }
+  .draw-details[open] > summary::after { transform: rotate(-135deg); }
+  .draw-details > summary:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: -3px; }
+  .draw-details > summary .eyebrow {
+    font-family: 'DM Sans', system-ui, sans-serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--terra-dark); display: block; margin: 0 0 3px;
+  }
+  .draw-details > summary .draw-title {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-weight: 700; font-size: 14.5px; color: var(--navy); display: block; padding-right: 26px;
+  }
+  .draw-body { padding: 2px 18px 16px; }
+  .draw-body .hint { font-family: 'Lora', Georgia, serif; font-size: 13px; color: var(--navy); margin: 6px 0 10px; max-width: 70ch; }
+  .draw-tasks { margin: 8px 0 10px; padding-left: 20px; }
+  .draw-tasks li { margin: 0 0 7px; font-family: 'Lora', Georgia, serif; font-size: 13.5px; color: var(--navy); line-height: 1.5; }
+  .draw-tasks li::marker { color: var(--terra-dark); font-weight: 700; }
+  .draw-reveal-note {
+    margin: 10px 0 0; padding: 8px 0 2px 14px; border-left: 3px solid var(--terra-dark);
+    font-family: 'Lora', Georgia, serif; font-size: 12.5px; color: var(--navy); line-height: 1.55;
+  }
+  .draw-reveal-note strong { color: var(--terra-dark); font-weight: 700; font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif; }
+  @media (prefers-reduced-motion: reduce) { .draw-details > summary::after { transition: none; } }
+
+  /* ---- majors print ---- */
+  @media print {
+    .term-breakdown, .morph, .drawing-prompt { break-inside: avoid; }
+    .draw-details { background: transparent; }
+    .draw-details > summary::after { display: none; }
+    .draw-details > .draw-body { display: block !important; }
+  }
+
   /* ------------------------------------------------------------------
      Print styles, what becomes the student PDF
      ------------------------------------------------------------------ */
@@ -913,14 +986,6 @@
   .study-q-list li::marker { color: var(--terra-dark); font-weight: 700; }
   @media print { .prework-box, .study-q-list li { break-inside: avoid; } }
 </style>
-
-<style id="slide-modal-trigger-styles">
-.draw-btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 20px; padding: 12px 16px; background: rgba(11,21,48,0.04); border-left: 3px solid #8B3A2E; border-radius: 4px; }
-.draw-btn-row::before { content: "Drawing tools"; display: block; width: 100%; font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #8B3A2E; margin-bottom: 4px; }
-.draw-btn { display: inline-flex; align-items: center; gap: 6px; background: #0B1530; color: #FFFFFF; border: none; padding: 8px 14px; border-radius: 4px; font-family: inherit; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; }
-.draw-btn:hover { background: #142A36; }
-.draw-btn::before { content: "\270E"; font-size: 13px; }
-</style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to main content</a>
@@ -937,7 +1002,6 @@
 <main class="sheet" id="main">
   <p class="eyebrow">BIO 004 · Human Anatomy</p>
   <h1 class="title">Body Cavities &amp; Regions</h1>
-<div class="draw-btn-row"><button type="button" class="draw-btn" data-slide="slides-foundations.html">Draw the anatomical foundations</button></div>
   <p class="subhead">Block 1 · Module 1: Introduction to Anatomy</p>
   <p class="usage">A reference for the Body Cavities video and your lab work. The body cavities enclose and organize the viscera, and the abdominopelvic regions and quadrants give every clinician one shared map for locating organs, pain, and masses.</p>
   <p class="mode-hint" role="note">
@@ -954,6 +1018,9 @@
     <!-- PLACEHOLDER: point the pre-work link at the real BIO 004 resource, or remove this button. -->
     <a class="resource-btn primary" id="prework-link" href="#" target="_top" rel="noopener">
       Practice Spaced Recall <span class="arrow" aria-hidden="true">&rarr;</span>
+    </a>
+    <a class="resource-btn" id="atlas-link" href="#" target="_blank" rel="noopener" hidden>
+      Atlas Coloring Book <span class="arrow" aria-hidden="true">&#8599;</span>
     </a>
   </div>
   <p class="resource-hint">The Foundations video gives you a complete foundational understanding of this topic, enough on its own for a foundational course. Learn it first, then move on to the Deep dive, which adds the majors-level material: the mediastinum, peritoneal relationships, and SADPUCKER.</p>
@@ -1239,6 +1306,49 @@
       </aside>
   </section>
   <!-- Study questions: work on answering in your own words. Not mode-aware. -->
+  <hr class="rule" />
+  <!-- Majors: term breakdown (root/prefix/suffix etymology) -->
+  <section class="term-breakdown" aria-labelledby="termbreak-heading">
+    <p class="eyebrow">Build the word</p>
+    <h2 id="termbreak-heading">Term breakdown</h2>
+    <p class="hint">These names are built from Greek and Latin roots for the body wall, the great cavities, and the membranes that line them. Decode the root and the location follows.</p>
+    <ul class="morph-list">
+      <li class="morph"><span class="root">dors-</span><span class="gloss">back, toward the back</span><span class="egs">dorsal body cavity</span></li>
+      <li class="morph"><span class="root">ventr-</span><span class="gloss">belly, toward the front</span><span class="egs">ventral body cavity</span></li>
+      <li class="morph"><span class="root">crani-</span><span class="gloss">skull</span><span class="egs">cranial cavity</span></li>
+      <li class="morph"><span class="root">thorac-</span><span class="gloss">chest</span><span class="egs">thoracic cavity</span></li>
+      <li class="morph"><span class="root">abdomin-</span><span class="gloss">belly</span><span class="egs">abdominal cavity, abdominopelvic</span></li>
+      <li class="morph"><span class="root">pelv-</span><span class="gloss">basin</span><span class="egs">pelvic cavity</span></li>
+      <li class="morph"><span class="root">peri-</span><span class="gloss">around</span><span class="egs">pericardium, peritoneum</span></li>
+      <li class="morph"><span class="root">cardi-</span><span class="gloss">heart</span><span class="egs">pericardium</span></li>
+      <li class="morph"><span class="root">pleur-</span><span class="gloss">rib, side</span><span class="egs">pleura, pleural cavity</span></li>
+      <li class="morph"><span class="root">mediastin-</span><span class="gloss">in the middle</span><span class="egs">mediastinum</span></li>
+      <li class="morph"><span class="root">pariet- (paries)</span><span class="gloss">wall</span><span class="egs">parietal layer (lines the wall)</span></li>
+      <li class="morph"><span class="root">viscer- (viscus)</span><span class="gloss">internal organ</span><span class="egs">visceral layer (covers the organ)</span></li>
+      <li class="morph"><span class="root">ser- (serum)</span><span class="gloss">watery fluid</span><span class="egs">serous membrane</span></li>
+      <li class="morph"><span class="root">retro-</span><span class="gloss">behind</span><span class="egs">retroperitoneal</span></li>
+      <li class="morph"><span class="root">mes-</span><span class="gloss">middle</span><span class="egs">mesentery, mesocolon</span></li>
+      <li class="morph"><span class="root">epi- / hypo- + gastr-</span><span class="gloss">upon / below + stomach</span><span class="egs">epigastric, hypogastric regions</span></li>
+    </ul>
+  </section>
+  <!-- Majors: drawing prompt. Collapsed on screen, opens automatically in print. -->
+  <section class="drawing-prompt" aria-labelledby="draw-heading">
+    <details class="draw-details">
+      <summary aria-describedby="draw-heading">
+        <span class="eyebrow">Draw it from memory</span>
+        <span class="draw-title" id="draw-heading">Sketch and label before you check</span>
+      </summary>
+      <div class="draw-body">
+        <p class="hint">Work on blank paper, from memory, before you look back at the figures. Drawing forces you to fix the spatial relationships, not just recognize them.</p>
+        <ol class="draw-tasks">
+          <li>Draw a lateral (side) view of the body. Outline the <strong>dorsal cavity</strong> (cranial and vertebral) and the <strong>ventral cavity</strong> (thoracic and abdominopelvic). Draw the diaphragm and label what it separates.</li>
+          <li>Draw a serous membrane wrapped around an organ. Label the <strong>parietal layer</strong>, the <strong>visceral layer</strong>, and the serous cavity between them. Do it once for the heart (pericardium) and once for a lung (pleura).</li>
+          <li>Draw the anterior abdomen. Sketch and label the <strong>nine abdominopelvic regions</strong>, then on a second outline overlay the <strong>four quadrants</strong>.</li>
+        </ol>
+        <p class="draw-reveal-note"><strong>Then check yourself.</strong> Compare your labels against the figures and tables above. Whatever you missed or misplaced is your study list for tonight. Redraw it until it comes out right without looking.</p>
+      </div>
+    </details>
+  </section>
   <section class="block study-q" aria-labelledby="studyq-heading">
     <h2 id="studyq-heading">Study questions</h2>
     <p class="hint">Work on answering these in writing, in your own words. They are the questions to bring to class, and good practice for the reasoning the exams ask for.</p>
@@ -1293,11 +1403,14 @@
     videoFoundations: 'https://www.youtube.com/embed/REPLACE_WITH_FOUNDATIONS_VIDEO_ID',
     videoDeepDive:    'https://www.youtube.com/embed/REPLACE_WITH_BIO004_DEEPDIVE_VIDEO_ID',
     prework:          'https://drsrennie-stack.github.io/new-build-bio4-solano/spaced-recall.html#topic=t-body-cavities',
+    atlas:            'https://www.medmasterscollaborative.com/atlas-coloring-book',
   };
   (function wireResources() {
     var cfg = window.SHEET_CONFIG || {};
     var prework = document.getElementById('prework-link');
     if (prework && cfg.prework) prework.href = cfg.prework;
+    var atlas = document.getElementById('atlas-link');
+    if (atlas && cfg.atlas) { atlas.href = cfg.atlas; atlas.hidden = false; }
     // Two videos: Foundations (reused essentials) and Deep dive (majors-level).
     var videos = [
       { toggle: 'video-toggle-foundations', panel: 'video-panel-foundations', iframe: 'video-iframe-foundations', url: cfg.videoFoundations },
@@ -1569,6 +1682,5 @@
   if ('ResizeObserver' in window) new ResizeObserver(send).observe(document.body);
 })();
 </script>
-  <script src="slide-modal.js" defer></script>
 </body>
 </html>

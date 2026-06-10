@@ -2,87 +2,206 @@
 
 ## 1. Project
 
-- **Project:** BIO 004 Human Anatomy, Summer 2026 syllabus
-- **Files covered:** `bio004-summer-2026-syllabus.html` (and its print-derived PDF, `bio004-summer-2026-syllabus.pdf`)
-- **Date:** May 23, 2026
-- **Reviewer:** Dr. Sharilyn Rennie (built and self-audited)
+- **Project:** BIO 004 Human Anatomy, Solano Community College
+- **Files covered:** `index.html` (course home), `week-1.html` through `week-8.html` (the eight weekly module pages), `week-1-lab-sprints.html` through `week-8-lab-sprints.html` (the eight weekly lab sprint hubs), 31 per-topic lab sprint pages, `welcome.html` (the Canvas welcome page), and `course-information.html` (the syllabus essentials hub)
+- **Date:** 2026-05-24, revised 2026-05-25
+- **Design:** Cream-design course site adapted from Dr. Rennie's MedMasters site language. Each page is a self-contained HTML file with inline CSS and JS.
+
+**Revision 2026-05-25:** `week-1.html` through `week-8.html` each gained a Lab Sprint card, replacing the former small outline "Lab Sprint" button. The card sits as the last cell of the "Study this week" card grid, matching the white study cards in shape and size but filled navy `#0B1530` so it reads as a distinct, non-lecture item. It carries a gold eyebrow `#C9A14A`, a soft-clay title `#CE8166` (20px, weight 800), and cream `#F5F1E8` body text and call-to-action, and is a single native `a` linking to that week's `week-N-lab-sprints.html`. The same revision lightened the Mon-Thu day cards from `#0B1530` to `#1C2E4F` so they separate cleanly from the near-black `#060A18` band instead of reading navy-on-navy. Two new values were introduced: soft clay `#CE8166` (a lightened, readable member of the rust family, for dark backgrounds where the rust `#8B3A2E` itself fails contrast) and card navy `#1C2E4F` (a lighter navy for card surfaces on the dark band). Contrast for every pair is in section 3.
+
+**Welcome page (2026-05-25):** `welcome.html` is a standalone Canvas welcome panel: near-black `#060A18` background, gold eyebrow, cream message, and a terra cotta `#C2734D` Enter Course button with navy `#0B1530` text that links to the hub. Contrast: gold 8.2:1, cream 17.5:1, terra cotta h1 accent 5.5:1 (large text), button text 5.0:1, button fill vs background 5.5:1, gold focus ring 8.2:1, all clear WCAG AA and most reach AAA. A paste-safe inline-styled twin, `welcome-canvas.html`, carries the same colors and copy for direct entry into the Canvas Rich Content Editor (no script, no style block); it falls back to a system font and drops the hover animation, neither of which affects conformance.
+
+**Course information page (2026-05-25):** `course-information.html` is a single-page syllabus essentials hub, alternating light and dark bands in the cream design system. Sections: Required Materials (with an InteDashboard callout flagging the ~$40 cost, the financial-aid path through the bookstore, and the do-not-activate-until-class note), Communication & Office Hours, Academic Policies & Integrity (academic integrity, AI policy, late work and make-ups), Accessibility & Accommodations (with ASC contacts and Clockwork link), and Lab Safety & Procedures (PPE, the strict in-lab digital device policy, and consequences). The page uses the same palette and contrast pairs already documented in section 3; no new colors. A jump nav at the top of the page lets students skip to a section. Hosted standalone and embeddable in Canvas via iframe.
+
+**Per-topic lab sprint pages (2026-05-25):** 31 per-topic lab sprint pages were added to the project folder (uploaded by Dr. Rennie). The topic cards inside each `week-N-lab-sprints.html` master page now resolve to real files. One file is missing: `cns-brain-lab-sprint.html` (Week 7's "The Brain" card); the corresponding link will 404 until that file is added. These files were authored separately and inherit their own contrast profile; not re-audited here.
+
+**Palette exception on record:** These pages intentionally use cream (`#F5F1E8`) with near-black sections (`#060A18` / `#0B1530`), a deliberate exception to the standing "no cream in BIO 004" rule, confirmed by Dr. Rennie for this set of pages. The repo's existing concept pages remain on the PRIMARY palette.
+
+**Accent rule:** rust `#8B3A2E` for accents on light sections; on dark sections, gold `#C9A14A` eyebrows with terra cotta `#C2734D` for accent words and large numbers. Terra cotta was Dr. Rennie's call; `#C2734D` reaches 5.5:1 on `#060A18`, where the darker brick rust would fail.
 
 ## 2. WCAG version and target level
 
-Target: WCAG 2.2 Level AA (floor), Level AAA where achievable.
+Target: **WCAG 2.2 Level AA** (minimum), Level AAA where achievable. All nine pages share one design system and were audited together.
 
-| Criterion | Level achieved | Notes |
-|---|---|---|
-| 1.1.1 Non-text content | AA | Decorative arrows and the hero glow are `aria-hidden` or pure CSS. No informational images. |
-| 1.3.1 Info and relationships | AAA | Semantic `header`, `nav`, `main`, `footer`, `section`; one `h1`, 20 `h2`, ordered `h3`/`h4`; data tables use `caption` and `th scope`. |
-| 1.4.3 Contrast (minimum) | AA | All text pairs pass; see audit below. |
-| 1.4.6 Contrast (enhanced) | AAA | All body, heading, link, and table text reaches 7:1+. One label (hero eyebrow) is AA only. |
-| 1.4.10 Reflow | AA | Single-column responsive layout; grids collapse at 600px and below. |
-| 1.4.12 Text spacing | AA | Line-height 1.65; no fixed-height text containers. |
-| 2.1.1 Keyboard | AA | All links, the table-of-contents anchors, and the Print button are reachable and operable by keyboard. |
-| 2.4.1 Bypass blocks | AA | "Skip to main content" link as first focusable element. |
-| 2.4.7 Focus visible | AAA | 3px gold `:focus-visible` outline with 2px offset on every interactive element. |
-| 2.3.3 Animation from interactions | AAA | `prefers-reduced-motion` disables smooth scroll and transitions. |
-| 3.1.1 Language of page | AA | `<html lang="en">`. |
-| 4.1.2 Name, role, value | AA | Print control is a native `<button>`; nav landmarks have `aria-label`. |
+| Criterion | Level | Result |
+|-----------|-------|--------|
+| 1.1.1 Non-text Content | A | Pass. Logo SVGs are `aria-hidden` / `focusable="false"` with an accessible name on the parent link. The InteDashboard button image has `alt="InteDashboard"`. Decorative arrows carry `aria-hidden`. |
+| 1.3.1 Info and Relationships | A | Pass. Semantic `header`, `nav`, `main`, `section`, `footer`; one `h1`, four section `h2` per page, `h3` for cards; study links are `ul`/`li`. |
+| 1.4.3 Contrast (Minimum) | AA | Pass. Full audit in section 3. |
+| 1.4.6 Contrast (Enhanced) | AAA | Mostly met. Body copy, headings, and the whole Lab Sprint card clear the AAA thresholds; the terra cotta dark-section accent (5.5:1) and the day-card gold label on the lightened card navy (5.6:1) are AA, brand-fixed values where AAA is not reachable on those hues. |
+| 1.4.11 Non-text Contrast | AA | Pass. Study-card borders use `#8C90A0` (3.2:1); the Lab Sprint card's navy fill reads 18:1 against the white page; the lightened day cards carry a `rgba(245,241,232,0.28)` hairline on the dark band; focus rings clear 3:1 on both backgrounds. |
+| 2.1.1 Keyboard | A | Pass. All controls are native links. See section 4. |
+| 2.4.1 Bypass Blocks | A | Pass. A skip link to `#main` is the first focusable element on every page. |
+| 2.4.7 Focus Visible | AA | Pass. 3px focus ring, rust on light sections, gold on dark sections (scoped so it always clears 3:1). |
+| 2.5.8 Target Size (Minimum) | AA (2.2) | Pass. Cards, buttons, and nav links all exceed 24x24 CSS px. |
+| 3.1.1 Language of Page | A | Pass. `<html lang="en">` on every page. |
+| 4.1.2 Name, Role, Value | A | Pass. Native links and `details`/`summary` only; no custom widgets. |
+| 2.3.3 Animation from Interactions | AAA | Pass. Transitions and smooth scroll are disabled under `prefers-reduced-motion`. |
 
 ## 3. Color contrast audit
 
-Palette tokens match the existing BIOL4-Solano course site. Ratios computed against the WCAG formula.
+Palette: navy `#0B1530`, card navy `#1C2E4F`, near-black `#060A18`, rust `#8B3A2E`, terra cotta `#C2734D`, soft clay `#CE8166`, gold `#C9A14A`, cream `#F5F1E8`, white `#FFFFFF`, border slate `#8C90A0`. Ratios use the WCAG relative-luminance formula; opacity values are alpha-composited over their background before measuring. All pages share this CSS, so one audit covers the set.
 
-| Foreground | Background | Ratio | Result |
-|---|---|---|---|
-| Ink `#0A1A2A` (body text) | White `#FFFFFF` | 17.59:1 | AAA |
-| Ink `#0A1A2A` | Cream-warm `#F5F2EC` (alt table rows) | 15.74:1 | AAA |
-| Navy `#142940` (headings) | White | 14.78:1 | AAA |
-| Terra `#7C2018` (subheads, links) | White | 10.11:1 | AAA |
-| Terra `#7C2018` | Cream-warm `#F5F2EC` | 9.05:1 | AAA |
-| Ink-soft `#3D4F5A` (captions) | White | 8.52:1 | AAA |
-| Ink-soft `#3D4F5A` | Cream-warm `#F5F2EC` | 7.63:1 | AAA |
-| Cream `#FAF7F2` (table header text) | Navy `#142940` | 13.83:1 | AAA |
-| White (hero title, button label) | Navy `#142940` | 14.78:1 | AAA |
-| Gold `#C9A961` (hero eyebrow label) | Navy `#142940` | 6.57:1 | AA |
+| Element | Colors | Ratio | Requirement | Result |
+|---------|--------|-------|-------------|--------|
+| Body text, navy on white | `#0B1530` / `#FFFFFF` | 18.0:1 | 4.5 | AAA |
+| Body text, cream on near-black | `#F5F1E8` / `#060A18` | 17.5:1 | 4.5 | AAA |
+| Rust eyebrows, numbers, CTAs (light) | `#8B3A2E` / `#FFFFFF` | 7.7:1 | 4.5 | AAA |
+| Gold eyebrows (dark) | `#C9A14A` / `#060A18` | 8.2:1 | 4.5 | AAA |
+| Terra cotta accent words and numbers (dark) | `#C2734D` / `#060A18` | 5.5:1 | 3.0 (large) | Pass |
+| Lead text, navy at 82% (light) | composited / `#FFFFFF` | 10.5:1 | 4.5 | AAA |
+| Lead text, cream at 84% (dark) | composited / `#060A18` | 12.3:1 | 4.5 | AAA |
+| Day-card heading, cream on card navy | `#F5F1E8` / `#1C2E4F` | 11.9:1 | 4.5 | AAA |
+| Day-card label, gold on card navy | `#C9A14A` / `#1C2E4F` | 5.6:1 | 4.5 | Pass |
+| Day-card body, cream at 78% on card navy | composited / `#1C2E4F` | 7.9:1 | 4.5 | AAA |
+| Button text, white on rust | `#FFFFFF` / `#8B3A2E` | 7.7:1 | 4.5 | AAA |
+| InteDashboard note, cream at 62% (dark) | composited / `#060A18` | 7.0:1 | 4.5 | AAA |
+| Study-card border | `#8C90A0` / `#FFFFFF` | 3.2:1 | 3.0 | Pass |
+| Focus ring, light sections | `#8B3A2E` / `#FFFFFF` | 7.7:1 | 3.0 | Pass |
+| Focus ring, dark sections | `#C9A14A` / `#060A18` | 8.2:1 | 3.0 | Pass |
+| Lab Sprint card title, soft clay on navy | `#CE8166` / `#0B1530` | 6.0:1 | 3.0 (large) | AAA (large) |
+| Lab Sprint card eyebrow, gold on navy | `#C9A14A` / `#0B1530` | 7.5:1 | 4.5 | AAA |
+| Lab Sprint card body and CTA, cream on navy | `#F5F1E8` / `#0B1530` | 16.0:1 | 4.5 | AAA |
+| Lab Sprint card fill vs white page (non-text) | `#0B1530` / `#FFFFFF` | 18.0:1 | 3.0 | Pass |
+| Lab Sprint card focus ring, rust on white page | `#8B3A2E` / `#FFFFFF` | 7.7:1 | 3.0 | Pass |
 
-Every text pair clears the AA threshold (4.5:1). All pairs except the hero eyebrow label also clear AAA (7:1). The eyebrow is small bold label text; AA is the required floor for it, and in the print stylesheet that label is re-rendered as terra on white (AAA).
+No text or non-text pair falls below its threshold on any of the nine pages. The Lab Sprint card is a navy `#0B1530` surface and every element on it clears AAA: gold eyebrow 7.5:1, soft-clay title 6.0:1 as large text, cream body 16:1. The day cards were lightened to `#1C2E4F` so they read as distinct surfaces on the near-black band; their gold label sits at AA (5.6:1) rather than AAA, the one trade of the lighter card fill.
 
-## 4. Keyboard navigation flow verified
+## 4. Keyboard navigation flow
 
-Tab order: Skip link, Print button, "All course pages and tools" button, table-of-contents anchors (18), then in-content links in document order through the page-and-tools hub, then "Back to top". All anchors jump correctly to their `id` targets (`scroll-margin-top` keeps headings clear of the viewport edge). No keyboard traps. Focus indicator is visible at every stop.
+Each page: skip link first, then the header logo and the two header nav links (Course Home, Full Schedule), then the in-page content links (study-page cards followed by the Lab Sprint card that closes the grid, the pre-work button, the InteDashboard link where present, the schedule link on Week 8), then the footer previous/next week links. Every interactive element is a native `a`, reachable and operable by keyboard with no traps. The InteDashboard link opens in a new tab (`target="_blank" rel="noopener"`); all internal links use `target="_top"` so they break out of the Canvas or Kajabi iframe cleanly. Focus is visible at every step.
 
-## 5. Screen reader testing
+## 5. Screen reader review
 
-Verified by markup and structure review: single `h1`, sequential heading levels with no skipped ranks, landmark regions (`header`/`nav`/`main`/`footer`), `aria-label` on both `nav` regions, `caption` plus `th scope` on all data tables, and descriptive link text (no bare "click here"; the one "Open" pattern from the source site was replaced with named links).
-
-Recommended before publishing: one live pass with VoiceOver (Safari) or NVDA (Firefox) to confirm table reading order and announcement of the schedule table, which is the most complex region.
+Structural and ARIA review completed against the markup of all nine pages: one `h1`, four `h2` section headings, and `h3` card titles per page, with no skipped levels. Landmarks (`header`, `nav` with `aria-label`, `main`, `footer`) are present. Decorative SVGs and arrows carry `aria-hidden`; each logo link has an `aria-label`; the week-navigation footer is a labelled `nav`. **Not yet performed:** a live VoiceOver / NVDA pass (see section 6).
 
 ## 6. Known limitations and remediation plan
 
-- **Hero eyebrow label** is AA, not AAA, on screen. Acceptable (AA is the floor) and it prints as AAA. No action required; could be darkened if AAA on screen is wanted.
-- **Live assistive-technology test** not yet performed (see section 5). Remediation: run VoiceOver/NVDA before the page is pushed to GitHub Pages.
-- **PDF tagging:** the PDF is generated by headless Chromium print-to-PDF and is not a fully tagged/PDF-UA document. The HTML page is the accessible primary version; the PDF is a print and handout convenience. Remediation if a tagged PDF is required: run it through an accessibility-tagging step, or distribute the HTML as the canonical syllabus.
+1. **Live screen-reader test pending.** Markup verified; not yet exercised with VoiceOver or NVDA. Run one pass before the site goes live to students.
+2. **Cross-page links resolve only on deploy.** The week pages link to the repo's concept pages, `prework.html`, `course-schedule.html`, the syllabus, and `Intedashboard.png`. These 404 in local preview and work once all files sit together in the `new-build-bio4-solano` repo.
+3. **Mixed design system.** The home and week pages use the cream design; the repo's ~37 concept pages use the PRIMARY palette. Students cross a visual change moving from a week hub into a concept page. This is a known, accepted state pending any future restyle.
+4. **InteDashboard logo is a raster PNG.** It will not scale as crisply as an SVG. Acceptable at the small button size used.
+5. **Weeks 4 and 5 study sections are light.** Those weeks are regional and lab-heavy; the repo lacks concept pages for several regional muscle topics, so the pages link fewer cards. Not an accessibility issue.
 
 ## 7. Reviewer
 
-Built and self-audited for Dr. Sharilyn Rennie, May 23, 2026. Sign-off pending the live screen-reader pass noted above.
+Automated and structural audit performed by Claude (Cowork), 2026-05-24; Lab Sprint card addition audited 2026-05-25. Pending sign-off and a live screen-reader pass by Dr. Sharilyn Rennie.
+
+## 8. Digital Device Policy and Agreement (2026-05-26 audit and patch)
+
+**Files audited:** `digital-device-policy.html`, `digital-device-policy-agreement.html`. Patched: `digital-device-policy-agreement.html` (in `BIOL OO4 Content/`, ready to copy back into `drsrennie-stack/new-build-bio4-solano`).
+
+### Findings
+
+| Issue | Where | Severity | Status |
+|---|---|---|---|
+| Cream body text inheriting into white cons-block cards (Special circumstances, First offense, Second offense). Contrast 1.05:1 on white. WCAG 1.4.3 fail. | `.band--dark .body p`, `.band--dark .body li` leaking into `.cons-block` | Critical | Fixed |
+| Gold bold text on white inside cons-block cards. Contrast 2.9:1 on white. WCAG 1.4.3 fail for normal text. | `.band--dark .body strong` leaking into `.cons-block strong` | Critical | Fixed |
+| Terra `#C2734D` on white for cons-block `h3`. Contrast 3.7:1. Passes AA large, fails AAA. | `.cons-block h3` | Minor | Bumped to terra-dark `#8B3A2E`, now 7.2:1 AAA |
+| Submit-zone status text updates without screen reader notification. WCAG 4.1.3 status messages improvement. | `#submit-zone-status` | Moderate | Added `role="status" aria-live="polite"` |
+
+### CSS patch applied
+
+```css
+/* Cons-block is a white card. Override band--dark inheritance so text stays readable on white (WCAG 1.4.3 AA fix). */
+.band--dark .cons-block p,
+.band--dark .cons-block li,
+.band--dark .cons-block .cons-note { color: #0B1530; opacity: 1; }
+.band--dark .cons-block .cons-note { color: rgba(11, 21, 48, 0.72); }
+.band--dark .cons-block strong { color: #8B3A2E; }
+.band--dark .cons-block h3 { color: #8B3A2E; }
+.band--dark .cons-block li::marker { color: #8B3A2E; }
+.band--dark .cons-block .initial-prompt { color: #0B1530; }
+```
+
+### HTML patch applied
+
+```html
+<p class="submit-zone-status" id="submit-zone-status" role="status" aria-live="polite">
+```
+
+### Post-patch contrast on cons-block text
+
+| Pair | Ratio | AA | AAA |
+|---|---|---|---|
+| Navy `#0B1530` on white (body, list items, prompt) | 17.4:1 | pass | pass |
+| Terra-dark `#8B3A2E` on white (bold, h3, list markers) | 7.2:1 | pass | pass |
+| Navy at 0.72 opacity on white (italic cons-note) | ~9:1 | pass | pass |
+
+### Form-specific accessibility verified
+- Every text input has a paired `<label for>` element.
+- Initial inputs additionally carry `aria-label="Initials for Rule N"` (and equivalents) so the announced name includes context, since the visible label is just "Initials."
+- Acknowledgment checkboxes use `<label class="ack-item" for="ack-N">` wrapping the input and text. Clicking anywhere on the row toggles.
+- The acknowledgment group is wrapped in `<div role="group" aria-labelledby="ack-heading">`.
+- The progress bar uses `role="status" aria-live="polite"` with an aria-hidden inner track and an announced count.
+- The deadline banner uses `role="alert"` and announces on load.
+- The expand button toggles `aria-expanded` correctly and references the panel via `aria-controls`.
+
+### Time-gated initial inputs (WCAG 2.2.1 Timing Adjustable, Level A)
+Each initial-zone gates its input behind a 5 to 20 second countdown. This is not a WCAG-defined time limit because the user is not penalized for waiting and nothing expires. Mitigation if a student reports difficulty: reduce or remove the `data-min-read` value globally. Submission still requires all initials, acknowledgments, name, and signature.
+
+### Known limitations specific to the agreement file
+1. **Live screen reader pass pending.** Markup verified, not yet exercised with VoiceOver or NVDA.
+2. **Countdown text ticks silently.** Intentional, to avoid announcement spam. If post-deployment testing shows confusion, wrap the unlock message in a discrete `aria-live="polite"` span that updates only at the unlock event.
+3. **PDF output accessibility.** Submission triggers `window.print()` to "Save as PDF." The PDF's structure depends on the browser's PDF engine. Spot-check one export with Acrobat's Accessibility Checker before the June 16 deadline.
+
+### Deployment note
+The repo copy in `drsrennie-stack/new-build-bio4-solano` does not yet carry this patch. Copy the patched file from `BIOL OO4 Content/` into the repo and push to make the fix live for students.
 
 ---
 
-## Addendum: "Practice these cards" deep-link buttons on slides pages
+## Majors notes upgrade, Foundations block (2026-06-10)
 
-Date: 2026-06-03. Reviewer: Dr. Sharilyn Rennie.
+**Files covered:** `anatomical-terminology.html`, `body-cavities.html`, `cell-anatomy.html`, `tissues.html`, `integumentary.html`.
 
-Files covered: all 28 slides-*.html lecture pages.
+**What changed.** Each of the five Foundations concept pages was upgraded in place with the majors-level note components, built on the existing engine (no duplicate "-notes" files):
 
-Change: added a "Practice these cards" button in each page's hero action row, deep-linking to bio004-spaced-recall.html#topic=<topic-id>. The spaced-recall app routes the student through the existing video gate first (gate not yet passed -> gate view; gate passed -> cards), so day-unlock and prior-rated-card access behave as designed.
+1. **Term breakdown box** (`.term-breakdown`): a root/prefix/suffix etymology panel (15 to 16 entries per page) that replaces the non-majors "explain it simply" approach. White card, gold left rule, navy uppercase heading, terra-dark roots. Always visible; prints with the page.
+2. **Drawing prompt** (`.drawing-prompt`): the drawing-and-labeling integrity activity, built as a native `<details>`/`<summary>` disclosure. Collapsed on screen by default, and forced open in print via `@media print { .draw-details > .draw-body { display: block !important; } }` so the worksheet always prints in full. Three labeling tasks per page plus a self-check note.
+3. **Atlas Coloring Book chip** (`#atlas-link`): a resource-bar link to `https://www.medmasterscollaborative.com/atlas-coloring-book`, wired through `SHEET_CONFIG.atlas`. External domain, so it carries `target="_blank" rel="noopener"`; the chip stays `hidden` until the config value is set.
 
-WCAG 2.2 audit for the new element:
-1. Color contrast: button text #FFFFFF on background #8B3A2E = 7.6:1. Passes AA and AAA for normal text.
-2. Keyboard: native anchor element, in tab order, operable with Enter. Visible focus indicator inherited from global a:focus-visible (3px solid #8B3A2E, offset 3px).
-3. Semantics: real <a href> (not a div), descriptive aria-label naming the target topic.
-4. Link target: target="_top" per same-domain link rule, so the app breaks out of any iframe embed.
-5. Reduced motion / print: button hidden in print stylesheet; no animation introduced.
+`anatomical-terminology.html` uses that page's site-header design tokens (`--rust`, `--line`, `--cream`, `--font`); the other four use the bone-histology concept-page tokens (`--terra`, `--rule`, `--navy-tint`, literal Plus Jakarta stack). Component styling was matched to each page's existing language so nothing looks bolted on.
 
-Mapping notes (two pages have no exact topic in the card bank; nearest topic used, confirm if you want them remapped):
-- slides-neurons-action-potentials.html -> t-cns-organization
-- slides-sliding-filament.html -> t-muscle-microanatomy
-- slides-foundations.html -> two buttons (t-levels-of-organization, t-anatomical-terminology)
+### WCAG 2.2 results for the new components
+
+| Criterion | Level | Result |
+|-----------|-------|--------|
+| 1.3.1 Info and Relationships | A | Pass. Term breakdown is a `section` with `aria-labelledby`; entries are a `ul`. Drawing prompt uses native `details`/`summary` with the heading id referenced by `aria-describedby`; tasks are an `ol`. |
+| 1.4.3 Contrast (Minimum) | AA | Pass. New text/background pairs in section below; all clear AA, most reach AAA. |
+| 2.1.1 Keyboard | A | Pass. `summary` is natively focusable and toggles on Enter/Space; the atlas chip is a native link. No custom widgets, no key traps. |
+| 2.4.7 Focus Visible | AA | Pass. `summary:focus-visible` gets a 3px focus ring (`--focus-ring`, with `outline-offset: -3px` so it stays inside the card edge); the chip inherits the page focus ring. |
+| 2.5.8 Target Size | AA (2.2) | Pass. Summary row and chip exceed 24x24 CSS px. |
+| 4.1.2 Name, Role, Value | A | Pass. `details`/`summary` expose expanded/collapsed state to assistive tech with no ARIA needed. |
+| 1.4.13 Content on Hover or Focus | AA | Pass. The disclosure toggles on click/Enter, not hover; nothing appears on hover alone. |
+| 2.3.3 Animation from Interactions | AAA | Pass. The chevron rotation is disabled under `prefers-reduced-motion`. |
+
+### Contrast audit, new color pairs
+
+Backgrounds: white `#FFFFFF`, off-white/cream `#F5F1E8` (the `--cream` / `--navy-tint` / `--offwhite` token, used as the drawing-prompt fill).
+
+| Pair | Ratio | Result |
+|------|-------|--------|
+| Navy `#0B1530` text on white | 18.0:1 | AAA |
+| Navy `#0B1530` text on cream `#F5F1E8` | 16.0:1 | AAA |
+| Terra/rust `#8B3A2E` root labels on white | 7.7:1 | AAA (normal text) |
+| Terra/rust `#8B3A2E` on cream `#F5F1E8` | 6.8:1 | AA (AAA for large) |
+| Terra-dark `#A0452F` eyebrow on white / cream | 6.2:1 / 5.5:1 | AA |
+| Gold `#C9A14A` used only as the 4px left border (non-text) | n/a | 1.4.11 met (decorative rule, not an accent that must read) |
+
+The drawing-prompt left rule is navy (not gold), so no gold-as-text issue. Gold appears only as the term-breakdown left border, a decorative rule.
+
+### Keyboard flow verified
+Tab order within each new block: into the page normally, the atlas chip sits in the resource bar after the spaced-recall link, the term breakdown contains no focusable controls (reference text), and the drawing-prompt `summary` is a single tab stop that opens/closes the tasks. No focus trap; Esc is not needed because the disclosure is inline, not modal.
+
+### Screen reader testing
+Markup verified by structure (semantic landmarks, `details`/`summary` native semantics, labeled sections). **Live screen reader pass pending** (VoiceOver/NVDA not yet exercised on these five pages).
+
+### Known limitations and remediation
+1. **Live SR pass pending** (as above). Exercise `details` expand/collapse announcements before wide release.
+2. **Atlas link target.** All five pages point at the single Atlas Coloring Book URL. If per-topic Atlas anchors are added later, set each page's `SHEET_CONFIG.atlas` to the specific URL.
+3. **Print disclosure override** relies on the print stylesheet forcing `.draw-body` open; verified in the CSS, spot-check one Chrome "Save as PDF" export to confirm the tasks render before handing to students.
+
+### Deployment note
+These edits live in `BIOL OO4 Content/` only. Copy the five files into `drsrennie-stack/new-build-bio4-solano` and push to make them live.
+
+**Reviewer:** Dr. Sharilyn Rennie

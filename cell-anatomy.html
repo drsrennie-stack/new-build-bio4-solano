@@ -767,6 +767,79 @@
   body.quiz .seq li.revealed .seq-name,
   body.quiz .seq li.revealed .seq-desc { color: var(--navy); }
   body.quiz .seq li:not(.revealed) .reveal-btn { display: inline-block; }
+  /* ---- majors: term breakdown (etymology) ---- */
+  .term-breakdown {
+    border: 1px solid var(--rule); border-left: 4px solid var(--gold);
+    border-radius: 6px; background: var(--white);
+    padding: 16px 20px 18px; margin: 20px 0 4px;
+  }
+  .term-breakdown .eyebrow { color: var(--terra-dark); margin-bottom: 4px; }
+  .term-breakdown h2 {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-weight: 700; font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--navy); margin: 0 0 4px; padding: 0; border: 0;
+  }
+  .term-breakdown .hint {
+    font-family: 'Lora', Georgia, serif; font-style: italic; font-size: 13px;
+    color: var(--navy); opacity: 0.92; margin: 6px 0 10px; max-width: 70ch;
+  }
+  .morph-list { list-style: none; margin: 8px 0 0; padding: 0; }
+  .morph {
+    display: grid; grid-template-columns: 150px 1fr; gap: 3px 14px;
+    padding: 8px 0; border-bottom: 1px dotted var(--rule-soft); align-items: baseline;
+  }
+  .morph:last-child { border-bottom: 0; }
+  .morph .root {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-weight: 700; font-size: 13.5px; color: var(--terra-dark);
+  }
+  .morph .gloss { font-family: 'Lora', Georgia, serif; font-size: 13px; color: var(--navy); line-height: 1.5; }
+  .morph .egs { grid-column: 2; font-family: 'Lora', Georgia, serif; font-style: italic; font-size: 12.5px; color: var(--navy); opacity: 0.85; }
+  @media (max-width: 620px) { .morph { grid-template-columns: 1fr; gap: 2px; } .morph .egs { grid-column: 1; } }
+
+  /* ---- majors: drawing prompt (collapsed on screen, prints open) ---- */
+  .drawing-prompt { margin: 20px 0 4px; }
+  .draw-details {
+    border: 1px solid var(--rule); border-left: 4px solid var(--navy);
+    border-radius: 6px; background: var(--navy-tint); overflow: hidden;
+  }
+  .draw-details > summary { list-style: none; cursor: pointer; padding: 14px 18px; display: block; position: relative; }
+  .draw-details > summary::-webkit-details-marker { display: none; }
+  .draw-details > summary::after {
+    content: ""; position: absolute; right: 18px; top: 19px; width: 9px; height: 9px;
+    border-right: 2px solid var(--navy); border-bottom: 2px solid var(--navy);
+    transform: rotate(45deg); transition: transform 200ms ease;
+  }
+  .draw-details[open] > summary::after { transform: rotate(-135deg); }
+  .draw-details > summary:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: -3px; }
+  .draw-details > summary .eyebrow {
+    font-family: 'DM Sans', system-ui, sans-serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--terra-dark); display: block; margin: 0 0 3px;
+  }
+  .draw-details > summary .draw-title {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-weight: 700; font-size: 14.5px; color: var(--navy); display: block; padding-right: 26px;
+  }
+  .draw-body { padding: 2px 18px 16px; }
+  .draw-body .hint { font-family: 'Lora', Georgia, serif; font-size: 13px; color: var(--navy); margin: 6px 0 10px; max-width: 70ch; }
+  .draw-tasks { margin: 8px 0 10px; padding-left: 20px; }
+  .draw-tasks li { margin: 0 0 7px; font-family: 'Lora', Georgia, serif; font-size: 13.5px; color: var(--navy); line-height: 1.5; }
+  .draw-tasks li::marker { color: var(--terra-dark); font-weight: 700; }
+  .draw-reveal-note {
+    margin: 10px 0 0; padding: 8px 0 2px 14px; border-left: 3px solid var(--terra-dark);
+    font-family: 'Lora', Georgia, serif; font-size: 12.5px; color: var(--navy); line-height: 1.55;
+  }
+  .draw-reveal-note strong { color: var(--terra-dark); font-weight: 700; font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif; }
+  @media (prefers-reduced-motion: reduce) { .draw-details > summary::after { transition: none; } }
+
+  /* ---- majors print ---- */
+  @media print {
+    .term-breakdown, .morph, .drawing-prompt { break-inside: avoid; }
+    .draw-details { background: transparent; }
+    .draw-details > summary::after { display: none; }
+    .draw-details > .draw-body { display: block !important; }
+  }
+
   /* Print styles */
   @media print {
     @page { size: letter; margin: 0.45in; }
@@ -848,14 +921,6 @@
   .study-q-list li::marker { color: var(--terra-dark); font-weight: 700; }
   @media print { .prework-box, .study-q-list li { break-inside: avoid; } }
 </style>
-
-<style id="slide-modal-trigger-styles">
-.draw-btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 20px; padding: 12px 16px; background: rgba(11,21,48,0.04); border-left: 3px solid #8B3A2E; border-radius: 4px; }
-.draw-btn-row::before { content: "Drawing tools"; display: block; width: 100%; font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #8B3A2E; margin-bottom: 4px; }
-.draw-btn { display: inline-flex; align-items: center; gap: 6px; background: #0B1530; color: #FFFFFF; border: none; padding: 8px 14px; border-radius: 4px; font-family: inherit; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; }
-.draw-btn:hover { background: #142A36; }
-.draw-btn::before { content: "\270E"; font-size: 13px; }
-</style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to main content</a>
@@ -871,7 +936,6 @@
 <main class="sheet" id="main">
   <p class="eyebrow">BIO 004 · Human Anatomy</p>
   <h1 class="title">Anatomy of the Cell</h1>
-<div class="draw-btn-row"><button type="button" class="draw-btn" data-slide="slides-cell-anatomy.html">Draw the cell + organelles</button></div>
   <p class="subhead">Block 1 · Module 2: Cell Anatomy</p>
   <p class="usage">A reference for the cell anatomy video and lab. The cell is the smallest living unit of the body. Every tissue, organ, and system is built from cells, so the structures named here are the foundation for the histology page that follows.</p>
   <p class="mode-hint" role="note">
@@ -888,6 +952,9 @@
     <!-- PLACEHOLDER: point the pre-work link at the real BIO 004 resource, or remove this button. -->
     <a class="resource-btn primary" id="prework-link" href="#" target="_top" rel="noopener">
       Practice Spaced Recall <span class="arrow" aria-hidden="true">&rarr;</span>
+    </a>
+    <a class="resource-btn" id="atlas-link" href="#" target="_blank" rel="noopener" hidden>
+      Atlas Coloring Book <span class="arrow" aria-hidden="true">&#8599;</span>
     </a>
   </div>
   <p class="resource-hint">The Foundations video gives you a complete foundational understanding of this topic, enough on its own for a foundational course. Learn it first, then move on to the Deep dive, which adds the majors-level material: the membranous and non-membranous organelles and how cell structure matches cell job.</p>
@@ -1093,6 +1160,48 @@
   </aside>
   <p class="see-also">See also: <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/tissues.html" target="_top">Histology: The Four Tissue Types</a>, the companion page in this module, where cells are organized into tissues.</p>
   <!-- Study questions: work on answering in your own words. Not mode-aware. -->
+  <hr class="rule" />
+  <!-- Majors: term breakdown (root/prefix/suffix etymology) -->
+  <section class="term-breakdown" aria-labelledby="termbreak-heading">
+    <p class="eyebrow">Build the word</p>
+    <h2 id="termbreak-heading">Term breakdown</h2>
+    <p class="hint">Organelle names describe what the part looks like or what it does. Learn the roots and the names stop being arbitrary.</p>
+    <ul class="morph-list">
+      <li class="morph"><span class="root">cyt- / -cyte</span><span class="gloss">cell</span><span class="egs">cytoplasm, cytosol, cytoskeleton</span></li>
+      <li class="morph"><span class="root">plasma</span><span class="gloss">formed, molded</span><span class="egs">plasma membrane, cytoplasm</span></li>
+      <li class="morph"><span class="root">nucle-</span><span class="gloss">kernel</span><span class="egs">nucleus, nucleolus</span></li>
+      <li class="morph"><span class="root">mito- + chondr-</span><span class="gloss">thread + granule</span><span class="egs">mitochondrion</span></li>
+      <li class="morph"><span class="root">endo-</span><span class="gloss">within</span><span class="egs">endoplasmic reticulum, endosome</span></li>
+      <li class="morph"><span class="root">reticul-</span><span class="gloss">little net</span><span class="egs">endoplasmic reticulum</span></li>
+      <li class="morph"><span class="root">lys-</span><span class="gloss">to split, loosen</span><span class="egs">lysosome</span></li>
+      <li class="morph"><span class="root">-some</span><span class="gloss">body</span><span class="egs">ribosome, lysosome, peroxisome</span></li>
+      <li class="morph"><span class="root">micro-</span><span class="gloss">small</span><span class="egs">microvilli, microtubule, microfilament</span></li>
+      <li class="morph"><span class="root">vill-</span><span class="gloss">shaggy hair</span><span class="egs">microvilli</span></li>
+      <li class="morph"><span class="root">cili-</span><span class="gloss">eyelash</span><span class="egs">cilia</span></li>
+      <li class="morph"><span class="root">flagell-</span><span class="gloss">whip</span><span class="egs">flagellum</span></li>
+      <li class="morph"><span class="root">centr-</span><span class="gloss">center</span><span class="egs">centriole, centrosome</span></li>
+      <li class="morph"><span class="root">phag- / pino-</span><span class="gloss">eat / drink</span><span class="egs">phagocytosis, pinocytosis</span></li>
+      <li class="morph"><span class="root">-plasm</span><span class="gloss">formed substance</span><span class="egs">cytoplasm, nucleoplasm</span></li>
+    </ul>
+  </section>
+  <!-- Majors: drawing prompt. Collapsed on screen, opens automatically in print. -->
+  <section class="drawing-prompt" aria-labelledby="draw-heading">
+    <details class="draw-details">
+      <summary aria-describedby="draw-heading">
+        <span class="eyebrow">Draw it from memory</span>
+        <span class="draw-title" id="draw-heading">Sketch and label before you check</span>
+      </summary>
+      <div class="draw-body">
+        <p class="hint">Work on blank paper, from memory, before you look back at the figures. Drawing the cell forces you to place each organelle, not just name it.</p>
+        <ol class="draw-tasks">
+          <li>Draw a generalized cell. Label the <strong>plasma membrane</strong>, <strong>nucleus</strong>, <strong>nucleolus</strong>, and at least six organelles in the cytoplasm.</li>
+          <li>Draw the <strong>plasma membrane</strong> in cross-section. Label the phospholipid bilayer (heads and tails), an integral (transmembrane) protein, and a peripheral protein.</li>
+          <li>Draw the endomembrane path. From memory, trace a protein from the <strong>rough ER</strong> to a transport vesicle, to the <strong>Golgi apparatus</strong>, to a secretory vesicle, to the plasma membrane. Label every station.</li>
+        </ol>
+        <p class="draw-reveal-note"><strong>Then check yourself.</strong> Compare your drawing against the figures and tables above. Whatever you left out or placed wrong is tonight's study list. Redraw it until it comes out right without looking.</p>
+      </div>
+    </details>
+  </section>
   <section class="block study-q" aria-labelledby="studyq-heading">
     <h2 id="studyq-heading">Study questions</h2>
     <p class="hint">Work on answering these in writing, in your own words. They are the questions to bring to class, and good practice for the reasoning the exams ask for.</p>
@@ -1145,11 +1254,14 @@
     videoFoundations: 'https://www.youtube.com/embed/REPLACE_WITH_FOUNDATIONS_VIDEO_ID',
     videoDeepDive:    'https://www.youtube.com/embed/REPLACE_WITH_DEEPDIVE_VIDEO_ID',
     prework:          'https://drsrennie-stack.github.io/new-build-bio4-solano/spaced-recall.html#topic=t-cell-anatomy',
+    atlas:            'https://www.medmasterscollaborative.com/atlas-coloring-book',
   };
   (function wireResources() {
     var cfg = window.SHEET_CONFIG || {};
     var prework = document.getElementById('prework-link');
     if (prework && cfg.prework) prework.href = cfg.prework;
+    var atlas = document.getElementById('atlas-link');
+    if (atlas && cfg.atlas) { atlas.href = cfg.atlas; atlas.hidden = false; }
     var videos = [
       { toggle: 'video-toggle-foundations', panel: 'video-panel-foundations', iframe: 'video-iframe-foundations', url: cfg.videoFoundations },
       { toggle: 'video-toggle-deepdive',    panel: 'video-panel-deepdive',    iframe: 'video-iframe-deepdive',    url: cfg.videoDeepDive }
@@ -1413,6 +1525,5 @@
   if ('ResizeObserver' in window) new ResizeObserver(send).observe(document.body);
 })();
 </script>
-  <script src="slide-modal.js" defer></script>
 </body>
 </html>

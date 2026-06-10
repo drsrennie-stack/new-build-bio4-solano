@@ -527,8 +527,67 @@
     .cn-foot-nav a, .cn-foot-nav a.cn-right { max-width: 100%; text-align: left; align-items: flex-start; }
   }
 
+  /* ---- majors: term breakdown (etymology) ---- */
+  .term-breakdown {
+    border: 1px solid var(--line); border-left: 4px solid var(--gold);
+    border-radius: 0 10px 10px 0; background: var(--white);
+    padding: 18px 22px; margin: 24px 0 4px;
+  }
+  .term-breakdown .eyebrow { margin-bottom: 4px; }
+  .term-breakdown h2 {
+    font-family: var(--font); font-weight: 800; font-size: 17px;
+    color: var(--navy); margin: 0 0 4px; border: 0; padding: 0;
+  }
+  .term-breakdown .hint { font-size: 13.5px; color: var(--ink-soft); margin: 6px 0 12px; max-width: 72ch; }
+  .morph-list { list-style: none; margin: 8px 0 0; padding: 0; }
+  .morph {
+    display: grid; grid-template-columns: 140px 1fr; gap: 4px 16px;
+    padding: 9px 0; border-bottom: 1px solid var(--line-soft); align-items: baseline;
+  }
+  .morph:last-child { border-bottom: 0; }
+  .morph .root { font-family: var(--font); font-weight: 800; font-size: 14px; color: var(--rust); letter-spacing: 0.01em; }
+  .morph .gloss { font-size: 13.5px; color: var(--ink); line-height: 1.55; }
+  .morph .egs { grid-column: 2; font-size: 13px; color: var(--ink-soft); font-style: italic; }
+  @media (max-width: 620px) { .morph { grid-template-columns: 1fr; gap: 2px; } .morph .egs { grid-column: 1; } }
+
+  /* ---- majors: drawing prompt (collapsed on screen, prints open) ---- */
+  .drawing-prompt { margin: 24px 0 4px; }
+  .draw-details {
+    border: 1px solid var(--line); border-left: 4px solid var(--navy);
+    border-radius: 0 10px 10px 0; background: var(--cream); overflow: hidden;
+  }
+  .draw-details > summary { list-style: none; cursor: pointer; padding: 16px 20px; display: block; position: relative; }
+  .draw-details > summary::-webkit-details-marker { display: none; }
+  .draw-details > summary::after {
+    content: ""; position: absolute; right: 20px; top: 21px;
+    width: 9px; height: 9px; border-right: 2px solid var(--navy); border-bottom: 2px solid var(--navy);
+    transform: rotate(45deg); transition: transform 200ms ease;
+  }
+  .draw-details[open] > summary::after { transform: rotate(-135deg); }
+  .draw-details > summary:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: -3px; }
+  .draw-details > summary .eyebrow { color: var(--rust); margin: 0 0 3px; }
+  .draw-details > summary .draw-title {
+    font-family: var(--font); font-weight: 800; font-size: 16px; color: var(--navy);
+    display: block; padding-right: 26px;
+  }
+  .draw-body { padding: 2px 20px 18px; }
+  .draw-body .hint { font-size: 13.5px; color: var(--ink); margin: 6px 0 10px; max-width: 72ch; }
+  .draw-tasks { margin: 8px 0 10px; padding-left: 20px; }
+  .draw-tasks li { margin: 0 0 7px; font-size: 14px; color: var(--ink); line-height: 1.55; }
+  .draw-tasks li::marker { color: var(--rust); font-weight: 700; }
+  .draw-reveal-note {
+    margin: 10px 0 0; padding: 9px 0 2px 14px; border-left: 3px solid var(--rust);
+    font-size: 13px; color: var(--ink-soft); line-height: 1.6;
+  }
+  .draw-reveal-note strong { color: var(--rust); font-weight: 700; }
+  @media (prefers-reduced-motion: reduce) { .draw-details > summary::after { transition: none; } }
+
   /* ---- print ---- */
   @media print {
+    .term-breakdown, .morph, .drawing-prompt { break-inside: avoid; }
+    .draw-details { background: transparent; border-left-color: var(--navy); }
+    .draw-details > summary::after { display: none; }
+    .draw-details > .draw-body { display: block !important; }
     @page { size: letter; margin: 0.5in; }
     body { background: #fff; }
     .site-header, .toolbar, .skip, .cn-footer, .lightbox { display: none !important; }
@@ -559,14 +618,6 @@
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
   }
-</style>
-
-<style id="slide-modal-trigger-styles">
-.draw-btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 20px; padding: 12px 16px; background: rgba(11,21,48,0.04); border-left: 3px solid #8B3A2E; border-radius: 4px; }
-.draw-btn-row::before { content: "Drawing tools"; display: block; width: 100%; font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #8B3A2E; margin-bottom: 4px; }
-.draw-btn { display: inline-flex; align-items: center; gap: 6px; background: #0B1530; color: #FFFFFF; border: none; padding: 8px 14px; border-radius: 4px; font-family: inherit; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; }
-.draw-btn:hover { background: #142A36; }
-.draw-btn::before { content: "\270E"; font-size: 13px; }
 </style>
 </head>
 <body>
@@ -611,7 +662,6 @@
 <main class="sheet" id="main">
   <p class="eyebrow">BIO 004 · Human Anatomy</p>
   <h1 class="title">The Language of Anatomy</h1>
-<div class="draw-btn-row"><button type="button" class="draw-btn" data-slide="slides-foundations.html">Draw the anatomical foundations</button></div>
   <p class="subhead">Block 1 · Module 1: Introduction to Anatomy</p>
   <p class="usage">A reference for the anatomical terminology video and lab. Every position, plane, direction, and region named here is the shared vocabulary the rest of the course is built on.</p>
   <p class="mode-hint" role="note">
@@ -628,6 +678,9 @@
     <!-- PLACEHOLDER: point the pre-work link at the real BIO 004 resource, or remove this button. -->
     <a class="resource-btn primary" id="prework-link" href="#" target="_top" rel="noopener">
       Practice Spaced Recall <span class="arrow" aria-hidden="true">&rarr;</span>
+    </a>
+    <a class="resource-btn" id="atlas-link" href="#" target="_blank" rel="noopener" hidden>
+      Atlas Coloring Book <span class="arrow" aria-hidden="true">&#8599;</span>
     </a>
   </div>
   <p class="resource-hint">The Foundations video gives you a complete foundational understanding of this topic, enough on its own for a foundational course. Learn it first, then move on to the Deep dive, which adds the majors-level material: precise paired-term usage and how the planes map to clinical imaging.</p>
@@ -819,6 +872,30 @@
       </div>
     </div>
   </section>
+  <hr class="rule" />
+  <!-- Majors: term breakdown (root/prefix/suffix etymology) -->
+  <section class="term-breakdown" aria-labelledby="termbreak-heading">
+    <p class="eyebrow">Build the word</p>
+    <h2 id="termbreak-heading">Term breakdown</h2>
+    <p class="hint">Anatomical terms are assembled from Greek and Latin roots. Learn the pieces and you can decode terms you have never seen before, which is the whole point of the vocabulary.</p>
+    <ul class="morph-list">
+      <li class="morph"><span class="root">ante- / anter-</span><span class="gloss">before, toward the front</span><span class="egs">anterior, antecubital, antebrachial</span></li>
+      <li class="morph"><span class="root">poster-</span><span class="gloss">behind, toward the back</span><span class="egs">posterior</span></li>
+      <li class="morph"><span class="root">super- / supra-</span><span class="gloss">above, over</span><span class="egs">superior, superficial</span></li>
+      <li class="morph"><span class="root">infer-</span><span class="gloss">below, under</span><span class="egs">inferior</span></li>
+      <li class="morph"><span class="root">proxim-</span><span class="gloss">nearest</span><span class="egs">proximal</span></li>
+      <li class="morph"><span class="root">dist-</span><span class="gloss">distant, away</span><span class="egs">distal</span></li>
+      <li class="morph"><span class="root">medi-</span><span class="gloss">middle</span><span class="egs">medial, intermediate, median</span></li>
+      <li class="morph"><span class="root">later-</span><span class="gloss">side</span><span class="egs">lateral, ipsilateral, contralateral</span></li>
+      <li class="morph"><span class="root">cephal-</span><span class="gloss">head</span><span class="egs">cephalic, encephalon</span></li>
+      <li class="morph"><span class="root">caud-</span><span class="gloss">tail</span><span class="egs">caudal</span></li>
+      <li class="morph"><span class="root">ipsi- / contra-</span><span class="gloss">same / opposite</span><span class="egs">ipsilateral, contralateral</span></li>
+      <li class="morph"><span class="root">trans-</span><span class="gloss">across</span><span class="egs">transverse</span></li>
+      <li class="morph"><span class="root">brachi-</span><span class="gloss">arm</span><span class="egs">brachial, antebrachial</span></li>
+      <li class="morph"><span class="root">crur-</span><span class="gloss">leg (knee to ankle)</span><span class="egs">crural</span></li>
+      <li class="morph"><span class="root">-al / -ic</span><span class="gloss">pertaining to (suffix)</span><span class="egs">brachi<strong>al</strong>, cephal<strong>ic</strong></span></li>
+    </ul>
+  </section>
   <aside class="tie-in" role="note" aria-label="Clinical tie-in">
     <p class="eyebrow">Clinical tie-in</p>
     <h3>Why the words are not optional</h3>
@@ -827,6 +904,24 @@
     <p>Paired terms must be used precisely. <strong>Proximal</strong> and <strong>distal</strong> describe the limbs only, never the trunk. <strong>Ipsilateral</strong> and <strong>contralateral</strong> matter in neurology, where a lesion on one side of the brain can show its effect on the opposite side of the body.</p>
   </aside>
   <p class="see-also">See also: <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/body-cavities.html" target="_top">Body Cavities and Regions</a>, the companion page in this module.</p>
+  <!-- Majors: drawing prompt. Collapsed on screen, opens automatically in print. -->
+  <section class="drawing-prompt" aria-labelledby="draw-heading">
+    <details class="draw-details">
+      <summary aria-describedby="draw-heading">
+        <span class="eyebrow">Draw it from memory</span>
+        <span class="draw-title" id="draw-heading">Sketch and label before you check</span>
+      </summary>
+      <div class="draw-body">
+        <p class="hint">Work on blank paper, from memory, before you look back at the figures. Drawing forces you to commit the spatial relationships, not just recognize them.</p>
+        <ol class="draw-tasks">
+          <li>Draw a simple body outline in <strong>anatomical position</strong>. Add a line for each of the three reference planes: sagittal, frontal, and transverse. Label each plane and name the two parts it divides the body into.</li>
+          <li>On the same figure, draw and label arrows for the paired directional terms: superior and inferior, anterior and posterior, medial and lateral, and (on a limb) proximal and distal.</li>
+          <li>Draw an anterior and a posterior whole-body outline. From memory, label at least ten axial and ten appendicular regional terms in their correct locations.</li>
+        </ol>
+        <p class="draw-reveal-note"><strong>Then check yourself.</strong> Compare your labels against the figures and tables above. Whatever you missed or placed wrong is your study list for tonight. Redraw it until it comes out right without looking.</p>
+      </div>
+    </details>
+  </section>
   <!-- Study questions: work on answering in your own words. Not mode-aware. -->
   <section class="block study-q" aria-labelledby="studyq-heading">
     <h2 id="studyq-heading">Study questions</h2>
@@ -895,11 +990,14 @@
     videoFoundations: 'https://www.youtube.com/embed/REPLACE_WITH_FOUNDATIONS_VIDEO_ID',
     videoDeepDive:    'https://www.youtube.com/embed/REPLACE_WITH_DEEPDIVE_VIDEO_ID',
     prework:          'https://drsrennie-stack.github.io/new-build-bio4-solano/spaced-recall.html#topic=t-anatomical-terminology',
+    atlas:            'https://www.medmasterscollaborative.com/atlas-coloring-book',
   };
   (function wireResources() {
     var cfg = window.SHEET_CONFIG || {};
     var prework = document.getElementById('prework-link');
     if (prework && cfg.prework) prework.href = cfg.prework;
+    var atlas = document.getElementById('atlas-link');
+    if (atlas && cfg.atlas) { atlas.href = cfg.atlas; atlas.hidden = false; }
     var videos = [
       { toggle: 'video-toggle-foundations', panel: 'video-panel-foundations', iframe: 'video-iframe-foundations', url: cfg.videoFoundations },
       { toggle: 'video-toggle-deepdive',    panel: 'video-panel-deepdive',    iframe: 'video-iframe-deepdive',    url: cfg.videoDeepDive }
@@ -1163,6 +1261,5 @@
   if ('ResizeObserver' in window) new ResizeObserver(send).observe(document.body);
 })();
 </script>
-  <script src="slide-modal.js" defer></script>
 </body>
 </html>
