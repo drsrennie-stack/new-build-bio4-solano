@@ -1,274 +1,1438 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Pregnancy and Birth · Case Deep Dive · BIO 004</title>
-<style>@import url('https://cdn.jsdelivr.net/npm/@fontsource-variable/plus-jakarta-sans/index.css');</style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pregnancy and Birth · BIO 004 · Concept Page</title>
+<!--
+  BIO 004 Human Anatomy · Pregnancy and Birth concept page.
+  Block 4, Module 7: Pregnancy and Birth. Anatomy-focused.
+  Built on the current concept-page template (grid-table and sequence components).
+
+  PLACEHOLDERS to fill in:
+   1. SHEET_CONFIG.videoFoundations : your existing foundational essentials video embed URL.
+   2. SHEET_CONFIG.videoDeepDive    : the new short majors-level deep-dive video embed URL.
+   3. SHEET_CONFIG.prework          : point pregnancy-and-birth-prework.html at the real pre-work, or remove the button.
+   4. Three figure slots            : implantation, the placenta and membranes, the stages of labor.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Lora:ital,wght@0,400;1,400;1,500&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root { --navy:#0B1530; --navy-dark:#060A18; --rust:#8B3A2E; --rust-hover:#A0452F; --gold:#C9A14A; --gold-light:#E8D4A8; --white:#fff; --cream:#F5F1E8; --off-white:#F8F8F8; --text:#0B1530; --text-muted:#5A6478; --rule:rgba(11,21,48,0.10); --canvas-bg:#06080F; }
-  * { box-sizing:border-box; margin:0; padding:0; }
-  html { scroll-behavior:smooth; }
-  body { font-family:'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif; background:var(--white); color:var(--text); font-size:16px; line-height:1.7; -webkit-font-smoothing:antialiased; }
-  #progress-bar { position:fixed; top:0; left:0; height:3px; width:0%; background:var(--rust); z-index:1000; transition:width 0.1s linear; }
-  #case-ribbon { position:sticky; top:0; z-index:200; background:var(--navy-dark); color:var(--white); padding:10px 32px; display:flex; align-items:center; gap:20px; flex-wrap:wrap; border-bottom:2px solid var(--gold); font-size:13px; line-height:1.4; }
-  #case-ribbon .ribbon-label { background:var(--rust); color:var(--white); font-weight:700; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; padding:3px 10px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
-  #case-ribbon .ribbon-case { opacity:0.92; }
-  #case-ribbon .ribbon-case strong { color:var(--gold-light); font-weight:700; }
-  .hero { background:var(--white); border-bottom:0.5px solid var(--rule); padding:64px 40px 56px; text-align:center; position:relative; overflow:hidden; }
-  .hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 60% 40% at 50% 0%, rgba(139,58,46,0.05) 0%, transparent 70%); pointer-events:none; }
-  .hero-eyebrow { font-size:11px; font-weight:700; letter-spacing:0.28em; text-transform:uppercase; color:var(--rust); margin-bottom:18px; position:relative; }
-  .hero h1 { font-size:clamp(28px,4vw,42px); font-weight:800; color:var(--navy); line-height:1.1; margin-bottom:14px; letter-spacing:-0.02em; position:relative; }
-  .hero h1 .accent { color:var(--rust); }
-  .hero-sub { font-size:16px; color:var(--text); font-weight:400; opacity:0.70; position:relative; max-width:600px; margin:0 auto; }
-  .case-card-wrap { max-width:820px; margin:-32px auto 0; padding:0 24px 36px; position:relative; z-index:10; }
-  .case-card { background:var(--white); border:1.5px solid var(--rule); border-top:4px solid var(--rust); padding:32px 36px; box-shadow:0 8px 40px rgba(10,19,34,0.12); }
-  .case-card .case-label { font-size:10px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--rust); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
-  .case-card .case-label::after { content:''; flex:1; height:1px; background:var(--rule); }
-  .case-card .case-text { font-size:17px; color:var(--text); line-height:1.65; margin-bottom:16px; }
-  .case-card .case-text:last-of-type { margin-bottom:22px; }
-  .case-card .case-text strong { color:var(--navy); font-weight:700; }
-  .case-card .path-report { background:var(--off-white); border-left:3px solid var(--rust); padding:14px 18px; font-family:'Plus Jakarta Sans Variable',monospace; font-size:14px; line-height:1.6; color:var(--navy); margin:0 0 16px; }
-  .case-card .path-report .pr-label { font-size:10px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--rust); display:block; margin-bottom:6px; }
-  .case-card .path-report em { color:var(--rust); font-style:italic; }
-  .case-card .guiding-q { background:var(--cream); border-left:4px solid var(--gold); padding:16px 22px; font-size:14.5px; font-weight:500; color:var(--navy); }
-  .case-card .guiding-q span { display:block; font-size:10px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; }
-  .prework-strip { max-width:820px; margin:0 auto 28px; padding:14px 24px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; background:var(--off-white); border:1px solid var(--rule); border-radius:4px; font-size:13.5px; }
-  .prework-strip .tag { background:var(--gold); color:var(--navy); font-size:10px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; padding:3px 10px; border-radius:20px; }
-  .prework-strip .ps-body { flex:1; color:var(--text); }
-  .section-wrap { max-width:820px; margin:0 auto; padding:0 24px; }
-  .teaching-section { padding:44px 0 32px; border-bottom:1px solid var(--rule); }
-  .teaching-section:last-child { border-bottom:none; }
-  .section-number { font-size:10px; font-weight:700; letter-spacing:0.28em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px; display:flex; align-items:center; gap:10px; }
-  .section-number .num { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:var(--rust); color:var(--white); font-size:10px; font-weight:700; }
-  .teaching-section h2 { font-size:clamp(22px,3vw,30px); font-weight:700; color:var(--navy); line-height:1.2; margin-bottom:18px; letter-spacing:-0.01em; }
-  .teaching-section h3 { font-size:13px; color:var(--rust); text-transform:uppercase; letter-spacing:0.06em; margin:18px 0 8px; font-weight:700; }
-  .teaching-section p { font-size:16px; color:var(--text); line-height:1.78; margin-bottom:14px; }
-  .teaching-section p:last-child { margin-bottom:0; }
-  .teaching-section strong { color:var(--navy); font-weight:700; }
-  .teaching-section em { font-style:italic; color:var(--navy); }
-  .callout { background:#EEF2FF; border:1px solid rgba(10,19,34,0.12); border-left:4px solid var(--rust); padding:18px 22px; margin:20px 0; font-size:15px; color:var(--navy); line-height:1.65; }
-  .callout.gold { background:#FBF6E8; border-left-color:var(--gold); }
-  .structure-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:20px 0; }
-  @media (max-width:600px) { .structure-grid { grid-template-columns:1fr; } }
-  .structure-item { background:var(--off-white); border:1px solid var(--rule); padding:14px 18px; display:flex; align-items:flex-start; gap:12px; }
-  .structure-item .dot { width:8px; height:8px; border-radius:50%; background:var(--rust); flex-shrink:0; margin-top:7px; }
-  .structure-item .dot.gold { background:var(--gold); }
-  .structure-item strong { display:block; font-size:13px; font-weight:700; color:var(--navy); line-height:1.3; }
-  .structure-item span { font-size:12.5px; color:var(--text-muted); line-height:1.55; }
-  .divisions-table { width:100%; border-collapse:collapse; margin:22px 0; font-size:14px; }
-  .divisions-table th { background:var(--navy); color:var(--white); padding:11px 14px; text-align:left; font-weight:600; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; }
-  .divisions-table td { padding:10px 14px; border-bottom:1px solid var(--rule); color:var(--text); vertical-align:top; line-height:1.55; }
-  .divisions-table tr:nth-child(even) td { background:var(--off-white); }
-  .divisions-table td:first-child { font-weight:700; color:var(--navy); white-space:nowrap; }
-  .draw-zone-wrap { margin:32px 0; background:var(--canvas-bg); border:2px solid rgba(201,161,74,0.3); position:relative; user-select:none; }
-  .draw-zone-wrap.light-canvas { background:var(--white); border-color:rgba(11,21,48,0.18); }
-  .draw-zone-header { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.08); flex-wrap:wrap; gap:10px; }
-  .draw-zone-wrap.light-canvas .draw-zone-header { border-bottom-color:var(--rule); }
-  .draw-zone-title { display:flex; align-items:center; gap:10px; }
-  .draw-zone-title .pencil-icon { font-size:16px; color:var(--gold); }
-  .draw-zone-wrap.light-canvas .draw-zone-title .pencil-icon { color:var(--rust); }
-  .draw-zone-title > span:not(.pencil-icon) { font-size:11px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); }
-  .draw-zone-wrap.light-canvas .draw-zone-title > span:not(.pencil-icon) { color:var(--rust); }
-  .draw-zone-title .prompt-text { font-size:12px; font-weight:400; color:rgba(255,255,255,0.55); letter-spacing:0; text-transform:none; margin-left:4px; }
-  .draw-zone-wrap.light-canvas .draw-zone-title .prompt-text { color:var(--text-muted); }
-  .draw-tools { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-  .tool-group { display:flex; align-items:center; gap:4px; border-right:1px solid rgba(255,255,255,0.10); padding-right:8px; }
-  .tool-group:last-child { border-right:none; padding-right:0; }
-  .draw-zone-wrap.light-canvas .tool-group { border-right-color:var(--rule); }
-  .color-btn { width:20px; height:20px; border-radius:50%; border:2px solid transparent; cursor:pointer; transition:transform 0.15s,border-color 0.15s; padding:0; background-clip:padding-box; }
-  .color-btn:hover { transform:scale(1.2); }
-  .color-btn.active { border-color:var(--white); transform:scale(1.15); }
-  .draw-zone-wrap.light-canvas .color-btn.active { border-color:var(--navy); }
-  .tool-btn { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); color:rgba(255,255,255,0.80); font-size:11px; font-weight:600; padding:5px 10px; border-radius:4px; cursor:pointer; font-family:'Plus Jakarta Sans Variable',sans-serif; letter-spacing:0.02em; white-space:nowrap; }
-  .tool-btn:hover { background:rgba(255,255,255,0.18); color:var(--white); }
-  .tool-btn.active { background:rgba(201,161,74,0.30); border-color:var(--gold); color:var(--gold); }
-  .draw-zone-wrap.light-canvas .tool-btn { background:var(--white); border-color:rgba(11,21,48,0.18); color:var(--navy); }
-  .draw-zone-wrap.light-canvas .tool-btn:hover { border-color:var(--rust); }
-  .draw-zone-wrap.light-canvas .tool-btn.active { background:var(--navy); color:var(--white); border-color:var(--navy); }
-  .size-slider { -webkit-appearance:none; appearance:none; width:64px; height:3px; background:rgba(255,255,255,0.20); border-radius:2px; outline:none; cursor:pointer; }
-  .draw-zone-wrap.light-canvas .size-slider { background:rgba(11,21,48,0.18); }
-  .size-slider::-webkit-slider-thumb { -webkit-appearance:none; width:12px; height:12px; border-radius:50%; background:var(--gold); cursor:pointer; }
-  .draw-zone-wrap.light-canvas .size-slider::-webkit-slider-thumb { background:var(--rust); }
-  .size-slider::-moz-range-thumb { width:12px; height:12px; border-radius:50%; background:var(--gold); cursor:pointer; border:0; }
-  .draw-zone-wrap.light-canvas .size-slider::-moz-range-thumb { background:var(--rust); }
-  canvas.draw-canvas { display:block; width:100%; cursor:crosshair; touch-action:none; }
-  .draw-zone-hint { padding:8px 16px; border-top:1px solid rgba(255,255,255,0.06); font-size:10.5px; color:rgba(255,255,255,0.40); font-style:italic; letter-spacing:0.02em; }
-  .draw-zone-wrap.light-canvas .draw-zone-hint { border-top-color:var(--rule); color:var(--text-muted); }
-  .clinical-block { background:var(--navy-dark); padding:48px 40px; margin:48px 0 0; position:relative; overflow:hidden; }
-  .clinical-block::before { content:''; position:absolute; top:-40px; right:-40px; width:220px; height:220px; border-radius:50%; background:radial-gradient(circle,rgba(201,161,74,0.08) 0%, transparent 70%); pointer-events:none; }
-  .clinical-block .cb-inner { max-width:820px; margin:0 auto; position:relative; }
-  .clinical-block .cb-label { font-size:10px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
-  .clinical-block h2 { font-size:clamp(22px,3.5vw,30px); color:var(--white); font-weight:700; margin-bottom:18px; line-height:1.25; }
-  .clinical-block p { color:rgba(255,255,255,0.78); font-size:15px; line-height:1.75; margin-bottom:14px; }
-  .clinical-block strong { color:var(--gold-light); font-weight:700; }
-  .translate-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin:22px 0 8px; }
-  .translate-card { background:rgba(255,255,255,0.05); border:1px solid rgba(201,161,74,0.22); padding:16px 18px; }
-  .translate-card .quote { font-size:13px; font-weight:600; color:var(--gold-light); margin-bottom:6px; font-style:italic; }
-  .translate-card .meaning { font-size:12.5px; color:rgba(255,255,255,0.78); line-height:1.55; }
-  .page-footer { background:var(--navy-dark); border-top:2px solid rgba(201,161,74,0.20); padding:24px 24px; text-align:center; font-size:12px; color:rgba(255,255,255,0.60); letter-spacing:0.04em; }
-  .page-footer .byline { color:var(--gold); font-weight:700; letter-spacing:0.14em; text-transform:uppercase; }
+  /* ------------------------------------------------------------------
+     PRIMARY palette (teaching stack). No sage, no cream, no pastels.
+     ------------------------------------------------------------------ */
+  :root {
+    --navy: #0B1530;
+    --navy-deep: #060A18;
+    --navy-tint: #F5F1E8;
+    --gold: #C9A14A;
+    --terra: #8B3A2E;
+    --terra-dark: #A0452F;
+    --white: #FFFFFF;
+    --offwhite: #F5F1E8;
+    --rule: rgba(11, 21, 48,0.18);
+    --rule-soft: rgba(11, 21, 48,0.10);
+    --shadow-rest: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-hover: 0 8px 16px rgba(0,0,0,0.10);
+    --card: #FFFFFF;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    --ink: #0B1530;
+    --ink-soft: rgba(11, 21, 48,0.72);
+    --focus-ring: #C9A14A;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0;
+  font-size: 16px;
+  line-height: 1.65;
+}
+  body {
+    background: var(--offwhite);
+    color: var(--navy);
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .skip {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .skip:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    display: inline-block;
+    padding: 8px 12px;
+    background: var(--navy);
+    color: var(--white);
+    text-decoration: none;
+    margin: 8px;
+  }
+  .sheet {
+    max-width: 8.5in;
+    margin: 28px auto;
+    background: var(--white);
+    padding: 0.55in 0.6in 0.55in 0.6in;
+    box-shadow: var(--shadow-rest);
+    border-radius: 2px;
+  }
+  .eyebrow {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--terra-dark);
+    margin: 0 0 6px 0;
+  }
+  h1.title {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 34px;
+    line-height: 1.1;
+    color: var(--navy);
+    margin: 0 0 4px 0;
+    letter-spacing: -0.01em;
+  }
+  .subhead {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--terra-dark);
+    margin: 0 0 10px 0;
+  }
+  .usage {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--navy);
+    opacity: 0.9;
+    margin: 0 0 18px 0;
+    max-width: 64ch;
+  }
+  .mode-hint {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-size: 13px;
+    color: var(--navy);
+    border-left: 2px solid var(--gold);
+    padding: 6px 0 6px 12px;
+    margin: -6px 0 18px 0;
+    max-width: 64ch;
+  }
+  .mode-hint .label {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--terra-dark);
+    display: block;
+    margin-bottom: 2px;
+  }
+  hr.rule {
+    border: 0;
+    border-top: 1px solid var(--rule);
+    margin: 18px 0;
+  }
+  .objectives {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 14px;
+    align-items: start;
+    margin: 0 0 18px 0;
+  }
+  .objectives .label {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terra-dark);
+    padding-top: 2px;
+  }
+  .objectives ol { margin: 0; padding-left: 18px; }
+  .objectives li { margin: 0 0 4px 0; padding-left: 4px; }
+  .objectives li::marker { color: var(--terra-dark); font-weight: 700; }
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-top: 4px;
+  }
+  @media (max-width: 720px) {
+    .columns { grid-template-columns: 1fr; }
+  }
+  .col h2,
+  .directions h2,
+  .block h2 {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin: 0 0 8px 0;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--navy);
+  }
+  .col h3,
+  .block h3 {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--terra-dark);
+    margin: 14px 0 6px 0;
+    letter-spacing: 0.02em;
+  }
+  .directions .hint,
+  .block .hint {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--navy);
+    opacity: 0.92;
+    margin: 6px 0 10px 0;
+    max-width: 70ch;
+  }
+  .block { margin: 20px 0 4px 0; }
+  .terms { list-style: none; margin: 0; padding: 0; }
+  .term {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 10px;
+    padding: 6px 0 5px 0;
+    border-bottom: 1px dotted var(--rule-soft);
+    align-items: baseline;
+  }
+  .terms.wide .term { grid-template-columns: 172px 1fr; }
+  @media (max-width: 720px) {
+    .terms.wide .term { grid-template-columns: 120px 1fr; }
+  }
+  .term .name {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--navy);
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  .term .loc {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--navy);
+    opacity: 0.9;
+  }
+  /* See-also pointer to a deep-dive unit or sibling page */
+  .see-also {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--terra-dark);
+    border-left: 3px solid var(--gold);
+    padding: 7px 0 7px 12px;
+    margin: 12px 0 4px 0;
+  }
+  .see-also a { color: var(--terra-dark); }
+  .see-also a:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  /* Placeholder figure slot */
+  .fig-placeholder {
+    border: 2px dashed var(--rule);
+    border-radius: 6px;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 18px 22px;
+    gap: 4px;
+    margin: 14px 0 4px 0;
+  }
+  .fig-placeholder .todo-tag {
+    display: inline-block;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--terra-dark);
+    border: 1px solid var(--terra-dark);
+    border-radius: 999px;
+    padding: 2px 9px;
+  }
+  .fig-placeholder .fig-ph-title {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--navy);
+    margin: 4px 0 0 0;
+  }
+  .fig-placeholder .fig-ph-desc {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-style: italic;
+    font-size: 12.5px;
+    color: var(--navy);
+    opacity: 0.85;
+    margin: 0;
+    max-width: 56ch;
+  }
+  /* Clinical tie-in callout */
+  .tie-in {
+    margin-top: 20px;
+    padding: 14px 18px 16px 18px;
+    background: var(--white);
+    border: 1.5px solid var(--terra-dark);
+    border-radius: 3px;
+    box-shadow: 0 6px 14px rgba(139, 58, 46,0.12), 0 1px 2px rgba(0,0,0,0.06);
+  }
+  .tie-in .eyebrow { color: var(--terra-dark); margin-bottom: 6px; }
+  .tie-in h3 {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--navy);
+    margin: 0 0 6px 0;
+  }
+  .tie-in p {
+    margin: 0 0 8px 0;
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-size: 13.5px;
+    color: var(--navy);
+  }
+  .tie-in p:last-child { margin-bottom: 0; }
+  .tie-in strong { color: var(--terra-dark); }
+  /* Footer */
+  .foot {
+    margin-top: 22px;
+    padding-top: 12px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--navy);
+    opacity: 0.85;
+  }
+  /* Mode toolbar (screen only) */
+  .toolbar {
+    max-width: 8.5in;
+    margin: 18px auto 0 auto;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    padding: 0 4px;
+  }
+  .toolbar .group {
+    display: inline-flex;
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 3px;
+    box-shadow: var(--shadow-rest);
+  }
+  .toolbar button {
+    background: transparent;
+    border: 0;
+    padding: 6px 14px;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--navy);
+    cursor: pointer;
+    border-radius: 999px;
+    transition: background 200ms ease, color 200ms ease;
+  }
+  .toolbar button:hover { background: var(--navy-tint); }
+  .toolbar button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  .toolbar button.active {
+    background: var(--navy);
+    color: var(--white);
+  }
+  .toolbar .print {
+    background: var(--navy);
+    color: var(--white);
+    border: 1px solid var(--navy);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: var(--shadow-rest);
+    transition: transform 200ms ease, box-shadow 200ms ease, background 200ms ease;
+  }
+  .toolbar .print:hover {
+    background: var(--navy-deep);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-hover);
+  }
+  .toolbar .print:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  .toolbar .print.btn-ghost {
+    background: transparent;
+    color: var(--navy);
+    border: 1px solid var(--navy);
+  }
+  .toolbar .print.btn-ghost:hover { background: var(--navy-tint); }
+  /* Figure plate */
+  .plate {
+    margin: 14px 0 6px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+  .plate figure {
+    margin: 0;
+    padding: 4px;
+    text-align: center;
+    cursor: zoom-in;
+    transition: transform 200ms ease;
+  }
+  .plate figure:hover { transform: translateY(-2px) scale(1.01); }
+  .plate figure:focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 2px;
+    transform: translateY(-2px);
+  }
+  .plate img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    pointer-events: none;
+  }
+  .plate figcaption {
+    margin-top: 6px;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--terra-dark);
+    font-weight: 700;
+    pointer-events: none;
+  }
+  @media (max-width: 720px) {
+    .plate { grid-template-columns: 1fr; }
+  }
+  /* Lightbox */
+  .lightbox[hidden] { display: none; }
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(6, 10, 24, 0.88);
+  }
+  .lightbox-content {
+    position: relative;
+    background: var(--white);
+    padding: 16px 16px 12px 16px;
+    border-radius: 4px;
+    max-width: min(96vw, 1400px);
+    max-height: 96vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .lightbox-content img {
+    max-width: 100%;
+    max-height: 82vh;
+    height: auto;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+  }
+  .lightbox-caption {
+    margin: 10px 0 0 0;
+    text-align: center;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terra-dark);
+    font-weight: 700;
+  }
+  .lightbox-close {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--white);
+    border: 2px solid var(--white);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .lightbox-close:hover { background: var(--navy-deep); }
+  .lightbox-close:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  /* MODE: Notes (default) / Study / Quiz me */
+  .term .reveal-btn,
+  .term .term-input { display: none; }
+  body.study .term .loc { display: none; }
+  body.study .term .reveal-btn { display: inline-block; }
+  body.study .term.revealed .loc { display: inline; }
+  body.study .term.revealed .reveal-btn { display: none; }
+  body.quiz .term {
+    display: block;
+    padding: 8px 0 10px 0;
+  }
+  body.quiz .term .name { display: none; }
+  body.quiz .term .loc {
+    display: block;
+    font-size: 13.5px;
+    opacity: 1;
+    margin-bottom: 6px;
+    color: var(--navy);
+  }
+  body.quiz .term .term-input {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  body.quiz .term .term-input input {
+    flex: 1 1 220px;
+    min-width: 180px;
+    border: 0;
+    border-bottom: 1px solid var(--rule);
+    background: transparent;
+    padding: 4px 0;
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--navy);
+  }
+  body.quiz .term .term-input input:focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 2px;
+    border-bottom-color: var(--gold);
+  }
+  body.quiz .term .term-input input.correct {
+    border-bottom-color: var(--navy);
+    color: var(--navy);
+  }
+  body.quiz .term .reveal-btn { display: inline-block; }
+  body.quiz .term.revealed .name {
+    display: inline-block;
+    background: var(--navy-tint);
+    padding: 2px 10px;
+    border-radius: 3px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-top: 4px;
+  }
+  body.quiz .term.revealed .term-input input { opacity: 0.6; }
+  body.quiz .term.revealed .reveal-btn { display: none; }
+  .reveal-btn {
+    background: transparent;
+    border: 1px dashed var(--terra-dark);
+    color: var(--terra-dark);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 200ms ease, color 200ms ease;
+  }
+  .reveal-btn:hover { background: var(--terra-dark); color: var(--white); }
+  .reveal-btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  /* Resource bar */
+  .resource-bar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 0 0 8px 0;
+  }
+  .resource-hint {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-style: italic;
+    font-size: 12.5px;
+    color: var(--navy);
+    opacity: 0.9;
+    margin: 0 0 14px 0;
+    max-width: 72ch;
+  }
+  @media print { .resource-hint { display: none !important; } }
+  .resource-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border-radius: 999px;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    border: 1px solid var(--navy);
+    background: var(--white);
+    color: var(--navy);
+    transition: background 200ms ease, color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+    box-shadow: var(--shadow-rest);
+  }
+  .resource-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-hover);
+  }
+  .resource-btn:focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 2px;
+  }
+  .resource-btn.primary {
+    background: var(--navy);
+    color: var(--white);
+  }
+  .resource-btn.primary:hover { background: var(--navy-deep); }
+  .resource-btn .arrow { font-size: 16px; line-height: 1; }
+  .video-panel {
+    margin: 0 0 18px 0;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    background: var(--navy-tint);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: var(--shadow-rest);
+  }
+  .video-panel[hidden] { display: none; }
+  .video-panel iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+  @media print {
+    .resource-bar, .video-panel { display: none !important; }
+  }
+  /* Explain-back gate (inline). Removed at runtime on supplementary pages. */
+  #explain-gate { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 26px 30px; margin: 32px 0 0; box-shadow: var(--card-shadow); }
+  #explain-gate[hidden] { display: none; }
+  #explain-gate .gate-eyebrow { font-family: 'DM Sans', system-ui, sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--terra-dark); margin: 0 0 6px; }
+  #explain-gate h2 { font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 800; font-size: 22px; color: var(--navy); margin: 0 0 8px; letter-spacing: -0.01em; }
+  #explain-gate p.gate-instr { font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif; font-size: 15.5px; color: var(--ink); line-height: 1.55; margin: 0 0 14px; }
+  #gate-input { width: 100%; min-height: 140px; padding: 12px 14px; font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif; font-size: 15.5px; color: var(--ink); line-height: 1.55; border: 1px solid var(--rule); border-radius: 8px; background: #FFFFFF; resize: vertical; }
+  #gate-input:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 1px; border-color: var(--navy); }
+  #gate-meter { display: flex; gap: 18px; flex-wrap: wrap; margin: 12px 0 14px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 13px; color: var(--ink-soft); }
+  #gate-meter strong { color: var(--navy); font-weight: 700; font-variant-numeric: tabular-nums; }
+  #gate-meter .met { color: var(--navy); }
+  #gate-submit { font-family: 'DM Sans', system-ui, sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; padding: 12px 22px; border-radius: 999px; border: 1px solid var(--navy); background: var(--navy); color: #FFFFFF; cursor: pointer; }
+  #gate-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  #gate-submit:not(:disabled):hover { background: var(--navy-deep); }
+  #gate-submit:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 3px; }
+  #gate-status { font-family: 'DM Sans', system-ui, sans-serif; font-size: 12.5px; color: var(--terra); margin: 10px 0 0; min-height: 18px; }
+  #gate-status.passed { color: var(--navy); font-weight: 700; }
+  .resource-btn.gate-locked { opacity: 0.55; cursor: not-allowed; pointer-events: auto; }
+  .gate-hint { display: inline-block; margin-left: 10px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--terra-dark); vertical-align: middle; }
+  .gate-hint[hidden] { display: none; }
+  @media print { #explain-gate { display: none !important; } }
+  /* ------------------------------------------------------------------
+     Comparison grid: a multi-column table for items that share attributes
+     ------------------------------------------------------------------ */
+  .grid-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--rule);
+    margin: 8px 0 6px 0;
+  }
+  .grid-table thead th {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 8px 10px;
+  }
+  .grid-table tbody th {
+    text-align: left;
+    vertical-align: top;
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--navy);
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .grid-table tbody td {
+    vertical-align: top;
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-size: 13px;
+    color: var(--navy);
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .grid-table tbody tr:last-child th,
+  .grid-table tbody tr:last-child td { border-bottom: 0; }
+  /* ------------------------------------------------------------------
+     Sequence: a numbered, ordered set of steps or regions
+     ------------------------------------------------------------------ */
+  .seq {
+    list-style: none;
+    margin: 8px 0 6px 0;
+    padding: 0;
+    counter-reset: seq;
+  }
+  .seq li {
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    gap: 12px;
+    align-items: start;
+    padding: 9px 0;
+    border-bottom: 1px dotted var(--rule-soft);
+  }
+  .seq li:last-child { border-bottom: 0; }
+  .seq li::before {
+    counter-increment: seq;
+    content: counter(seq);
+    width: 28px;
+    height: 28px;
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+  }
+  .seq .seq-name {
+    display: block;
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--navy);
+  }
+  .seq .seq-desc {
+    display: block;
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-size: 13px;
+    color: var(--navy);
+    opacity: 0.9;
+    margin-top: 1px;
+  }
+  /* Grids and sequences respond to Study and Quiz modes */
+  .grid-table .reveal-btn { display: none; margin-left: 8px; }
+  .seq .reveal-btn { display: none; margin-top: 6px; }
+  body.study .grid-table tbody td { color: transparent; }
+  body.study .seq .seq-name,
+  body.study .seq .seq-desc { color: transparent; }
+  body.quiz .grid-table tbody td { color: transparent; }
+  body.quiz .grid-table tbody tr.revealed td { color: var(--navy); }
+  body.quiz .grid-table tbody tr:not(.revealed) .reveal-btn { display: inline-block; }
+  body.quiz .seq li .seq-name,
+  body.quiz .seq li .seq-desc { color: transparent; }
+  body.quiz .seq li.revealed .seq-name,
+  body.quiz .seq li.revealed .seq-desc { color: var(--navy); }
+  body.quiz .seq li:not(.revealed) .reveal-btn { display: inline-block; }
+  /* Print styles */
+  @media print {
+    @page { size: letter; margin: 0.45in; }
+    body { background: var(--white); }
+    .toolbar, .skip { display: none !important; }
+    .sheet {
+      margin: 0;
+      padding: 0;
+      box-shadow: none;
+      max-width: none;
+    }
+    .reveal-btn { display: none !important; }
+    .term-input, .term-input input { display: none !important; }
+    body.study .term .name { display: inline !important; }
+    body.study .term .loc {
+      color: transparent !important;
+      border-bottom: 1px solid #888 !important;
+      display: inline-block !important;
+      width: 100% !important;
+      min-height: 1.1em;
+    }
+    body.quiz .term {
+      display: grid !important;
+      grid-template-columns: 120px 1fr !important;
+      gap: 10px !important;
+      padding: 6px 0 5px 0 !important;
+      align-items: baseline !important;
+    }
+    body.quiz .term .name {
+      color: transparent !important;
+      border-bottom: 1px solid #888 !important;
+      display: inline-block !important;
+      width: 100% !important;
+      min-height: 1.1em;
+    }
+    body.quiz .term .loc {
+      display: inline !important;
+      color: var(--navy) !important;
+      opacity: 0.9 !important;
+    }
+    .grid-table thead th {
+      background: transparent !important;
+      color: var(--navy) !important;
+      border-bottom: 2px solid var(--navy) !important;
+    }
+    .seq li::before {
+      background: transparent !important;
+      color: var(--navy) !important;
+      border: 1.5px solid var(--navy) !important;
+    }
+    .grid-table, .seq { page-break-inside: avoid; }
+    .plate figure { border: 0; padding: 0; background: transparent; cursor: default; }
+    .plate { page-break-inside: avoid; }
+    .lightbox { display: none !important; }
+    a { color: var(--navy); text-decoration: none; }
+  }
+  /* Accessibility: respect reduced-motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition: none !important;
+      animation: none !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  /* Pre-work checklist and study questions (added; plain, not mode-aware) */
+  .prework-box { border: 1px solid var(--rule); border-radius: 6px; padding: 16px 20px 18px 20px; margin: 18px 0 4px 0; background: var(--white); }
+  .prework-box h2 { font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--navy); margin: 0 0 4px 0; }
+  .prework-box .hint { font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif; font-style: italic; font-size: 13px; color: var(--navy); opacity: 0.92; margin: 6px 0 10px 0; max-width: 70ch; }
+  .prework-list { list-style: none; margin: 8px 0 0 0; padding: 0; }
+  .prework-list li { padding: 7px 0; font-size: 13.5px; color: var(--navy); border-bottom: 1px dotted var(--rule-soft); }
+  .prework-list li:last-child { border-bottom: 0; }
+  .prework-list label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+  .prework-list input[type="checkbox"] { margin: 1px 0 0 0; width: 16px; height: 16px; accent-color: var(--navy); flex-shrink: 0; }
+  .prework-list strong { color: var(--navy); font-weight: 700; }
+  .prework-note { margin: 14px 0 2px 0; padding: 9px 0 2px 14px; border-left: 3px solid var(--terra-dark); font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif; font-size: 13px; color: var(--navy); line-height: 1.55; }
+  .prework-note strong { color: var(--terra-dark); font-weight: 700; font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif; }
+  .study-q-list { margin: 8px 0 0 0; padding-left: 20px; }
+  .study-q-list li { margin: 0 0 9px 0; font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif; font-size: 13.5px; color: var(--navy); line-height: 1.5; }
+  .study-q-list li::marker { color: var(--terra-dark); font-weight: 700; }
+  @media print { .prework-box, .study-q-list li { break-inside: avoid; } }
+  /* prework-collapse v1: pre-work box as a disclosure; uniform border, no bookend bars */
+  details.prework-box > summary.prework-summary {
+    list-style: none; cursor: pointer; position: relative; display: block;
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-weight: 800; font-size: 16px; color: var(--navy); padding-right: 28px; margin: 0;
+  }
+  details.prework-box > summary.prework-summary::-webkit-details-marker { display: none; }
+  details.prework-box > summary.prework-summary::after {
+    content: ""; position: absolute; right: 2px; top: 5px; width: 9px; height: 9px;
+    border-right: 2px solid var(--navy); border-bottom: 2px solid var(--navy);
+    transform: rotate(45deg); transition: transform 200ms ease;
+  }
+  details.prework-box[open] > summary.prework-summary::after { transform: rotate(-135deg); }
+  details.prework-box[open] > summary.prework-summary { margin-bottom: 10px; }
+  details.prework-box > summary.prework-summary:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 3px; border-radius: 4px; }
+  @media (prefers-reduced-motion: reduce) { details.prework-box > summary.prework-summary::after { transition: none; } }
+  /* mcas-rebrand v1: MCAS site header (atlas branding) */
+  .site-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; padding: 18px max(24px,4vw) 14px; border-bottom: 1px solid rgba(11,21,48,0.12); background: var(--white); }
+  .site-logo { display: inline-flex; align-items: center; gap: 14px; text-decoration: none; }
+  .site-logo svg { height: 46px; width: auto; display: block; }
+  .logo-text { display: flex; flex-direction: column; gap: 2px; }
+  .logo-title { font-size: 21px; font-weight: 800; letter-spacing: -0.02em; color: var(--navy); line-height: 1; }
+  .logo-title .logo-accent { color: var(--terra); }
+  .logo-sub { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--navy); opacity: 0.72; }
+  .site-logo:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 3px; border-radius: 6px; }
+  @media print { .site-header { display: none !important; } }
+  /* mcas-rebrand v1: mode-hint scannable + collapsible, no bookend bar */
+  details.mode-hint { background: var(--white); border: 1px solid rgba(11,21,48,0.14); border-radius: 8px; padding: 0; margin: 0 0 18px; max-width: 74ch; }
+  details.mode-hint > summary { list-style: none; cursor: pointer; position: relative; padding: 12px 40px 12px 16px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--terra); }
+  details.mode-hint > summary::-webkit-details-marker { display: none; }
+  details.mode-hint > summary::after { content: ""; position: absolute; right: 16px; top: 15px; width: 8px; height: 8px; border-right: 2px solid var(--navy); border-bottom: 2px solid var(--navy); transform: rotate(45deg); transition: transform 200ms ease; }
+  details.mode-hint[open] > summary::after { transform: rotate(-135deg); }
+  details.mode-hint > summary:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: -3px; border-radius: 8px; }
+  .mode-hint-body { padding: 2px 16px 14px; }
+  .mode-hint-line { margin: 0 0 7px; font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif; font-size: 13.5px; color: var(--navy); line-height: 1.5; }
+  .mode-hint-line:last-child { margin-bottom: 0; }
+  .mode-hint-line strong { font-weight: 800; color: var(--navy); }
+  .mode-hint-line.sub { font-size: 12.5px; opacity: 0.82; }
+  @media (prefers-reduced-motion: reduce) { details.mode-hint > summary::after { transition: none; } }
+  @media print { details.mode-hint { display: none !important; } }
 </style>
 </head>
 <body>
-
-<div id="progress-bar"></div>
-
-<div id="case-ribbon">
-  <span class="ribbon-label">Case</span>
-  <span class="ribbon-case"><strong>Aisha, 28</strong> · 6 weeks since last period · positive home pregnancy test · sudden <strong>right lower quadrant pain</strong>, vaginal spotting · BP 100/65, HR 110 · beta-hCG 4,500 · transvaginal US: <strong>no intrauterine pregnancy, complex mass in right adnexa</strong> · <strong>ectopic pregnancy in right uterine tube</strong></span>
+<a class="skip" href="#main">Skip to main content</a>
+<header class="site-header">
+  <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/index.html" class="site-logo" target="_top" aria-label="BIO 004 Human Anatomy, course home">
+    <svg viewBox="40 10 125 148" role="img" aria-hidden="true" focusable="false">
+      <g transform="translate(0, 18)">
+        <g transform="translate(60, 0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#0B1530"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#0B1530"/></g>
+        <g transform="translate(100, 0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/></g>
+        <g transform="translate(140, 0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/></g>
+      </g>
+    </svg>
+    <span class="logo-text"><span class="logo-title">Human <span class="logo-accent">Anatomy</span></span><span class="logo-sub">BIO 004 &middot; Solano Community College</span></span>
+  </a>
+</header>
+<div class="toolbar" role="toolbar" aria-label="Sheet mode">
+  <div class="group" role="group" aria-label="Mode">
+    <button type="button" id="mode-notes" class="active" aria-pressed="true">Notes</button>
+    <button type="button" id="mode-study" aria-pressed="false">Study</button>
+    <button type="button" id="mode-quiz" aria-pressed="false">Quiz me</button>
+  </div>
+  <button type="button" class="print btn-ghost" id="reset-btn" aria-label="Reset all answers and inputs">Reset</button>
+  <button type="button" class="print" id="print-btn" aria-label="Print or save as PDF">Print / Save PDF</button>
 </div>
+<main class="sheet" id="main">
+  <p class="eyebrow">BIO 004 · Human Anatomy</p>
+  <h1 class="title">Pregnancy and Birth</h1>
+  <p class="subhead">Block 4 · Module 7: Pregnancy and Birth</p>
+  <p class="usage">A reference for the pregnancy and birth video and lab. This page covers fertilization and implantation, the stages of prenatal development, the placenta and fetal membranes, the gravid uterus, and the stages of labor.</p>
+    <details class="mode-hint">
+    <summary>How to use this sheet</summary>
+    <div class="mode-hint-body">
+      <p class="mode-hint-line"><strong>Notes</strong> prints the full reference for review.</p>
+      <p class="mode-hint-line"><strong>Study</strong> prints as a fill-in-the-blank worksheet to complete while you watch the video or read.</p>
+      <p class="mode-hint-line"><strong>Quiz me</strong> is on-screen practice: type the term, or click Reveal to check yourself.</p>
+      <p class="mode-hint-line sub">The tables and sequences respond to Study and Quiz too, with a Reveal button on each row.</p>
+    </div>
+  </details>
+  <div class="resource-bar" role="region" aria-label="Topic resources">
+    <button type="button" class="resource-btn" id="video-toggle-foundations" aria-expanded="false" aria-controls="video-panel-foundations">
+      <span class="arrow" aria-hidden="true">&#9654;</span> Foundations video
+    </button>
+    <button type="button" class="resource-btn" id="video-toggle-deepdive" aria-expanded="false" aria-controls="video-panel-deepdive">
+      <span class="arrow" aria-hidden="true">&#9654;</span> Deep dive video
+    </button>
+    <!-- PLACEHOLDER: point the pre-work link at the real BIO 004 resource, or remove this button. -->
+    <a class="resource-btn primary" id="prework-link" href="#" target="_top" rel="noopener">
+      Practice Spaced Recall <span class="arrow" aria-hidden="true">&rarr;</span>
+    </a>
+  </div>
+  <p class="resource-hint">The Foundations video gives you a complete foundational understanding of this topic, enough on its own for a foundational course. Learn it first, then move on to the Deep dive, which adds the majors-level material: the fetal membranes, the gravid uterus, and the stages of labor.</p>
+  <!-- PLACEHOLDER: Foundations panel plays your existing foundational essentials video. -->
+  <div class="video-panel" id="video-panel-foundations" hidden>
+    <iframe id="video-iframe-foundations" src="about:blank" title="Foundations video: pregnancy and birth essentials" loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen></iframe>
+  </div>
+  <!-- PLACEHOLDER: Deep dive panel plays the new short majors-level video. -->
+  <div class="video-panel" id="video-panel-deepdive" hidden>
+    <iframe id="video-iframe-deepdive" src="about:blank" title="Deep dive video: the placenta, gravid uterus, and labor" loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen></iframe>
+  </div>
+  <hr class="rule" />
+  <div class="objectives">
+    <span class="label">By the end</span>
+    <ol>
+      <li>Describe fertilization and implantation.</li>
+      <li>Order the stages of prenatal development from zygote to fetus.</li>
+      <li>Name the placenta and the fetal membranes and what each does.</li>
+      <li>Describe the gravid uterus and the three stages of labor.</li>
+    </ol>
+  </div>
+  <!-- Pre-work checklist: what to do the evening before class. Not mode-aware. -->
+  <details class="prework-box">
+    <summary class="prework-summary">Your pre-work</summary>
+    <p class="hint">Work through these the evening before class. None of it is turned in. It is how you learn the material and build your spaced recall.</p>
+    <ul class="prework-list">
+      <li><label><input type="checkbox"> <span><strong>Watch the Foundations video</strong> and take notes as you go.</span></label></li>
+      <li><label><input type="checkbox"> <span><strong>Print this page in Study mode</strong> and fill in each answer while you watch.</span></label></li>
+      <li><label><input type="checkbox"> <span><strong>Write handwritten definitions</strong> of the key terms in your own words.</span></label></li>
+      <li><label><input type="checkbox"> <span><strong>Build a concept map</strong> linking the main ideas of this topic.</span></label></li>
+      <li><label><input type="checkbox"> <span><strong>Sketch the key structures</strong>, small drawings to fix what they look like.</span></label></li>
+      <li><label><input type="checkbox"> <span><strong>Answer the study questions</strong> below, in your own words.</span></label></li>
+      <li><label><input type="checkbox"> <span><strong>Complete the explain-back check</strong> at the bottom of the page to unlock your cards.</span></label></li>
+      <li><label><input type="checkbox"> <span><strong>Do your spaced recall cards</strong>, today's new cards plus any daily cards that are due.</span></label></li>
+    </ul>
+    <p class="prework-note"><strong>This is more than a checklist.</strong> Ticking these boxes is the start, not the finish. Committing this material to memory and being able to apply it takes considerable time and repeated effort. You are not done when the boxes are checked. Put in the real hours, and keep coming back for frequent recall and review until the material is genuinely yours.</p>
+  </details>
 
-<div class="hero">
-  <div class="hero-eyebrow">BIO 004 · Week 6 · Case Deep Dive</div>
-  <h1>Pregnancy and <span class="accent">Birth</span></h1>
-  <p class="hero-sub">A positive pregnancy test, sharp lower-quadrant pain, and an embryo implanted where it can't survive.</p>
-</div>
-
-<div class="case-card-wrap">
-  <div class="case-card">
-    <div class="case-label">Patient case</div>
-    <p class="case-text"><strong>Aisha is 28</strong>, 6 weeks since her last menstrual period, with a <strong>positive home pregnancy test</strong> two weeks ago. This morning she developed <strong>sharp right lower quadrant pain</strong> and noticed <strong>brown vaginal spotting</strong>.</p><p class="case-text">In the ED she is mildly tachycardic (HR 110). Beta-hCG is 4,500 mIU/mL — high enough that a normal intrauterine pregnancy should be visible on transvaginal ultrasound. Instead the scan shows <strong>no gestational sac in the uterus</strong> and a <strong>complex mass in the right adnexa</strong>. There is a small amount of free fluid in the cul-de-sac. The diagnosis is <strong>ectopic pregnancy in the right uterine tube</strong>; the team prepares for either medical management with methotrexate or surgical removal depending on stability and size.</p><p class="case-text">Pregnancy is the female reproductive system's success story. Ectopic pregnancy is what happens when implantation occurs in the wrong place. To understand both, you have to walk from fertilization to implantation to placentation to birth.</p>
-    <div class="guiding-q">
-      <span>Guiding question</span>
-      Where do fertilization and implantation happen, what does a placenta do, and what goes wrong when the embryo implants outside the uterus?
+  <!-- PLACEHOLDER: figure plate, pregnancy and birth diagrams. -->
+  <div class="plate" aria-label="Pregnancy and birth figure placeholders">
+    <div class="fig-placeholder" role="note">
+      <span class="todo-tag">Figure placeholder</span>
+      <p class="fig-ph-title">Fertilization and implantation</p>
+      <p class="fig-ph-desc">Add a labeled diagram from fertilization in the uterine tube to implantation in the endometrium.</p>
+    </div>
+    <div class="fig-placeholder" role="note">
+      <span class="todo-tag">Figure placeholder</span>
+      <p class="fig-ph-title">The placenta and membranes</p>
+      <p class="fig-ph-desc">Add a labeled view of the fetus, placenta, umbilical cord, and amniotic sac.</p>
+    </div>
+    <div class="fig-placeholder" role="note">
+      <span class="todo-tag">Figure placeholder</span>
+      <p class="fig-ph-title">The stages of labor</p>
+      <p class="fig-ph-desc">Add a labeled diagram of the dilation, expulsion, and placental stages of labor.</p>
     </div>
   </div>
-</div>
+  <hr class="rule" />
+  <!-- Overview -->
+  <section class="block" aria-labelledby="overview-heading">
+    <h2 id="overview-heading">Pregnancy and Birth, an Overview</h2>
+    <p class="hint">Pregnancy begins at fertilization and ends at birth. Over those months a single cell becomes a fetus, supported by a temporary set of structures built just for the pregnancy.</p>
+    <ul class="terms wide">
+      <li class="term"><span class="name">Pregnancy</span><span class="loc">the period from fertilization to birth, during which a fetus develops in the uterus</span></li>
+      <li class="term"><span class="name">Gestation</span><span class="loc">the length of a pregnancy, about 38 weeks from fertilization, or 40 weeks counted from the last menstrual period</span></li>
+      <li class="term"><span class="name">Embryo</span><span class="loc">the developing offspring during the first 8 weeks after fertilization</span></li>
+      <li class="term"><span class="name">Fetus</span><span class="loc">the developing offspring from the 9th week until birth</span></li>
+      <li class="term"><span class="name">Trimesters</span><span class="loc">the three roughly three-month periods that pregnancy is divided into</span></li>
+    </ul>
+  </section>
+  <hr class="rule" />
+  <!-- Fertilization and implantation -->
+  <section class="block" aria-labelledby="fertilization-heading">
+    <h2 id="fertilization-heading">Fertilization and Implantation</h2>
+    <p class="hint">Pregnancy begins when a sperm and an egg unite. The new cell divides as it travels, and about a week later it embeds itself in the wall of the uterus.</p>
+    <ul class="terms wide">
+      <li class="term"><span class="name">Fertilization</span><span class="loc">the union of a sperm and an egg, normally in the ampulla of the uterine tube</span></li>
+      <li class="term"><span class="name">Zygote</span><span class="loc">the single cell formed at fertilization</span></li>
+      <li class="term"><span class="name">Cleavage</span><span class="loc">the series of rapid cell divisions the zygote undergoes as it travels toward the uterus</span></li>
+      <li class="term"><span class="name">Morula</span><span class="loc">the solid ball of cells produced by cleavage</span></li>
+      <li class="term"><span class="name">Blastocyst</span><span class="loc">the hollow ball of cells that reaches the uterus, with an inner cell mass and an outer layer</span></li>
+      <li class="term"><span class="name">Inner cell mass</span><span class="loc">the cluster of cells of the blastocyst that becomes the embryo</span></li>
+      <li class="term"><span class="name">Trophoblast</span><span class="loc">the outer layer of the blastocyst that becomes the fetal part of the placenta</span></li>
+      <li class="term"><span class="name">Implantation</span><span class="loc">the embedding of the blastocyst into the endometrium, about a week after fertilization</span></li>
+    </ul>
+  </section>
+  <hr class="rule" />
+  <!-- Stages of prenatal development -->
+  <section class="block" aria-labelledby="development-heading">
+    <h2 id="development-heading">Stages of Prenatal Development</h2>
+    <p class="hint">From one cell to a newborn, development passes through a fixed set of stages. Follow them in order.</p>
+    <ol class="seq" aria-label="The stages of prenatal development, in order">
+      <li><div class="seq-body"><span class="seq-name">Zygote</span><span class="seq-desc">the single cell formed when a sperm and an egg unite</span></div></li>
+      <li><div class="seq-body"><span class="seq-name">Cleavage</span><span class="seq-desc">rapid cell divisions produce a solid ball of cells, the morula</span></div></li>
+      <li><div class="seq-body"><span class="seq-name">Blastocyst</span><span class="seq-desc">a hollow ball of cells that reaches the uterus and implants in the endometrium</span></div></li>
+      <li><div class="seq-body"><span class="seq-name">Embryo</span><span class="seq-desc">from implantation through week 8; the organs and body systems form</span></div></li>
+      <li><div class="seq-body"><span class="seq-name">Fetus</span><span class="seq-desc">from week 9 until birth; the body grows and the systems mature</span></div></li>
+      <li><div class="seq-body"><span class="seq-name">Birth</span><span class="seq-desc">the fetus is delivered, ending the gestation</span></div></li>
+    </ol>
+  </section>
+  <hr class="rule" />
+  <!-- The placenta and fetal membranes -->
+  <section class="block" aria-labelledby="placenta-heading">
+    <h2 id="placenta-heading">The Placenta and Fetal Membranes</h2>
+    <p class="hint">A pregnancy builds temporary structures that support the fetus and are discarded at birth. Compare the placenta and the fetal membranes.</p>
+    <table class="grid-table">
+      <caption class="skip">The placenta and fetal membranes compared</caption>
+      <thead>
+        <tr><th scope="col">Structure</th><th scope="col">What it is</th><th scope="col">Role</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Placenta</th><td>the disc-shaped organ that forms during pregnancy</td><td>exchanges oxygen, nutrients, and wastes between the mother's blood and the fetus's blood</td></tr>
+        <tr><th scope="row">Umbilical cord</th><td>the cord linking the fetus to the placenta</td><td>carries the two umbilical arteries and the umbilical vein</td></tr>
+        <tr><th scope="row">Amnion</th><td>the innermost fetal membrane</td><td>forms the fluid-filled sac that surrounds the fetus</td></tr>
+        <tr><th scope="row">Amniotic fluid</th><td>the fluid within the amnion</td><td>cushions the fetus, lets it move, and allows even growth</td></tr>
+        <tr><th scope="row">Chorion</th><td>the outermost fetal membrane</td><td>contributes the fetal portion of the placenta</td></tr>
+        <tr><th scope="row">Yolk sac</th><td>an early fetal membrane</td><td>forms the earliest blood cells and the germ cells</td></tr>
+      </tbody>
+    </table>
+  </section>
+  <hr class="rule" />
+  <!-- The gravid uterus -->
+  <section class="block" aria-labelledby="uterus-heading">
+    <h2 id="uterus-heading">The Gravid Uterus and Fetal Position</h2>
+    <p class="hint">The uterus changes more than any other organ during pregnancy, and the fetus settles into position for birth.</p>
+    <ul class="terms wide">
+      <li class="term"><span class="name">Gravid uterus</span><span class="loc">the uterus during pregnancy, which enlarges enormously to hold the growing fetus</span></li>
+      <li class="term"><span class="name">The expanding uterus</span><span class="loc">by full term it reaches up to the rib cage, pushing the abdominal organs aside</span></li>
+      <li class="term"><span class="name">Cervical changes</span><span class="loc">the cervix stays firm and closed through pregnancy, then softens and thins as birth approaches</span></li>
+      <li class="term"><span class="name">Vertex position</span><span class="loc">the head-down position most fetuses settle into by late pregnancy, ready for birth</span></li>
+      <li class="term"><span class="name">Breech position</span><span class="loc">a position in which the buttocks or feet, rather than the head, are nearest the cervix</span></li>
+      <li class="term"><span class="name">Lightening</span><span class="loc">the descent of the fetus lower into the pelvis as birth nears</span></li>
+    </ul>
+  </section>
+  <hr class="rule" />
+  <!-- Labor and birth -->
+  <section class="block" aria-labelledby="labor-heading">
+    <h2 id="labor-heading">Labor and Birth</h2>
+    <p class="hint">Labor is the process of birth. It is divided into three stages, which follow in a fixed order.</p>
+    <ol class="seq" aria-label="The three stages of labor, in order">
+      <li><div class="seq-body"><span class="seq-name">Dilation stage</span><span class="seq-desc">regular contractions thin and open the cervix until it is fully dilated; the longest stage</span></div></li>
+      <li><div class="seq-body"><span class="seq-name">Expulsion stage</span><span class="seq-desc">strong contractions push the fetus through the cervix and vagina; it ends with the birth of the baby</span></div></li>
+      <li><div class="seq-body"><span class="seq-name">Placental stage</span><span class="seq-desc">contractions continue and expel the placenta, now called the afterbirth</span></div></li>
+    </ol>
+    <ul class="terms wide">
+      <li class="term"><span class="name">Labor</span><span class="loc">the process by which the fetus and placenta are expelled from the uterus</span></li>
+      <li class="term"><span class="name">Afterbirth</span><span class="loc">the placenta and attached membranes, expelled in the placental stage</span></li>
+      <li class="term"><span class="name">Cesarean section</span><span class="loc">surgical delivery of the fetus through an incision in the abdominal and uterine walls</span></li>
+    </ul>
+  </section>
+  <hr class="rule" />
+  <!-- Disorders of pregnancy -->
+  <section class="block" aria-labelledby="disorders-heading">
+    <h2 id="disorders-heading">Disorders of Pregnancy</h2>
+    <p class="hint">Compare the common conditions of pregnancy by the structure or stage each one affects.</p>
+    <table class="grid-table">
+      <caption class="skip">Common disorders of pregnancy compared</caption>
+      <thead>
+        <tr><th scope="col">Condition</th><th scope="col">Affected structure or stage</th><th scope="col">What it is</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Ectopic pregnancy</th><td>the implantation site</td><td>the embryo implants outside the uterus, most often in a uterine tube; a structural emergency</td></tr>
+        <tr><th scope="row">Miscarriage</th><td>the pregnancy</td><td>the loss of a pregnancy before the fetus can survive on its own</td></tr>
+        <tr><th scope="row">Placenta previa</th><td>the placenta</td><td>the placenta lies over the cervical opening and can block the birth canal</td></tr>
+        <tr><th scope="row">Preeclampsia</th><td>the mother's blood pressure</td><td>a serious condition of later pregnancy marked by high blood pressure</td></tr>
+        <tr><th scope="row">Gestational diabetes</th><td>blood sugar control</td><td>high blood sugar that first develops during pregnancy</td></tr>
+        <tr><th scope="row">Breech presentation</th><td>fetal position</td><td>the fetus is positioned buttocks or feet first, which can complicate a vaginal delivery</td></tr>
+      </tbody>
+    </table>
+  </section>
+  <aside class="tie-in" role="note" aria-label="Clinical tie-in">
+    <p class="eyebrow">Clinical tie-in</p>
+    <h3>Temporary structures, lasting clues</h3>
+    <p>The <strong>placenta</strong> is the exchange organ of pregnancy, and where it sits matters. In placenta previa it lies over the cervix, blocking the path the baby would take, which is why position is checked on ultrasound and may call for a cesarean section.</p>
+    <p>The <strong>amniotic sac</strong> normally stays sealed until labor. Its rupture, felt as the "water breaking," releases the amniotic fluid and signals that birth is near. A sample of that fluid can also be drawn, in amniocentesis, to study the fetus.</p>
+    <p>The <strong>fetal membranes</strong> and placenta are built for one pregnancy and discarded at birth as the afterbirth. Examining the delivered placenta afterward gives clues to how the pregnancy went, a temporary organ read like a record.</p>
+  </aside>
+  <p class="see-also">See also: <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/reproductive-female.html" target="_top">The Female Reproductive System</a> for the uterus and ovaries, and <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/blood-vessel-disorders.html" target="_top">Blood Vessel Disorders and Fetal Circulation</a> for the fetal shunts.</p>
+  <!-- Study questions: work on answering in your own words. Not mode-aware. -->
+  <section class="block study-q" aria-labelledby="studyq-heading">
+    <h2 id="studyq-heading">Study questions</h2>
+    <p class="hint">Work on answering these in writing, in your own words. They are the questions to bring to class, and good practice for the reasoning the exams ask for.</p>
+    <ol class="study-q-list">
+      <li>Trace the events from fertilization to implantation, naming where each one occurs.</li>
+      <li>Name the structures of the placenta and explain what passes between mother and fetus.</li>
+      <li>Compare the fetal circulatory shortcuts with the circulation after birth.</li>
+      <li>Name the three stages of labor and what happens in each.</li>
+    </ol>
+  </section>
 
-<div class="prework-strip">
-  <span class="tag">Prework</span>
-  <span class="ps-body">Companion to your Week 6 Pregnancy and Birth prework page.</span>
-</div>
-
-<div class="section-wrap">
-
-  <div class="teaching-section">
-    <div class="section-number"><span class="num">1</span> Fertilization</div>
-    <h2>Where and how the sperm meets the ovum</h2>
-    <p>Sperm deposited in the vagina swim through the cervix, traverse the uterus, and enter the uterine tubes. The ovum, released at ovulation and swept into the tube by fimbriae, meets sperm in the <strong>ampulla of the uterine tube</strong> — the wide section about midway along the tube. Capacitated sperm bind the zona pellucida; one penetrates; the zona reaction prevents others. Sperm and ovum nuclei fuse → <strong>zygote</strong>.</p>
+  <div class="foot">
+    <span>Dr. Sharilyn Rennie</span>
+    <span>BIO 004 &middot; Block 4 &middot; Module 7</span>
   </div>
-
-  <div class="teaching-section">
-    <div class="section-number"><span class="num">2</span> Pre-implantation</div>
-    <h2>The zygote travels to the uterus</h2>
-    <p>The zygote begins mitotic divisions while traveling slowly down the tube (3-4 days). It becomes a <strong>morula</strong> (solid ball), then a <strong>blastocyst</strong> (hollow ball with inner cell mass that becomes the embryo, and trophoblast that becomes placenta). The blastocyst reaches the uterus on day 5-6.</p><p><strong>Implantation</strong> normally occurs in the upper uterine wall (anterior or posterior) around day 7. The trophoblast invades the endometrium and establishes the maternal-fetal interface.</p>
-  </div>
-
-  <div class="teaching-section">
-    <div class="section-number"><span class="num">3</span> Placenta</div>
-    <h2>Disposable organ shared by mother and fetus</h2>
-    <p>The placenta develops from trophoblast + maternal decidua. By the end of the first trimester it has taken over hormonal and nutritional functions.</p><div class="structure-grid"><div class="structure-item"><span class="dot"></span><div><strong>Chorionic villi</strong><span>Finger-like projections of fetal tissue containing fetal capillaries. Bathed in maternal blood pooled in intervillous spaces.</span></div></div><div class="structure-item"><span class="dot"></span><div><strong>Placental barrier</strong><span>Fetal capillary endothelium + thin trophoblast layer separates fetal from maternal blood. Allows gas, nutrient, and waste exchange WITHOUT mixing blood.</span></div></div><div class="structure-item"><span class="dot gold"></span><div><strong>Umbilical cord</strong><span>Connects fetus to placenta. Contains <em>two umbilical arteries</em> (carry deoxygenated blood from fetus to placenta) and <em>one umbilical vein</em> (oxygenated blood to fetus). Wharton's jelly cushions the vessels.</span></div></div><div class="structure-item"><span class="dot gold"></span><div><strong>Hormones</strong><span>hCG (maintains corpus luteum early), estrogen, progesterone (maintain pregnancy), hPL (alters maternal metabolism for fetal benefit).</span></div></div></div>
-  </div>
-
-  <div class="teaching-section">
-    <div class="section-number"><span class="num">4</span> Trimesters</div>
-    <h2>Three stages of fetal development</h2>
-    <table class="divisions-table"><thead><tr><th>Trimester</th><th>Weeks</th><th>Key events</th></tr></thead><tbody><tr><td>First</td><td>1-12</td><td>Organogenesis. Most vulnerable to teratogens. Heartbeat by week 6 on transvaginal US.</td></tr><tr><td>Second</td><td>13-27</td><td>Rapid growth, maternal "quickening" (feeling fetal movement) ~16-20 weeks. Anatomic survey US around 20 weeks.</td></tr><tr><td>Third</td><td>28-40</td><td>Growth and maturation. Surfactant maturation in lungs (~34 weeks). Viability improves week by week.</td></tr></tbody></table>
-  </div>
-
-  <div class="teaching-section">
-    <div class="section-number"><span class="num">5</span> Labor and delivery</div>
-    <h2>Three stages of birth</h2>
-    <div class="structure-grid"><div class="structure-item"><span class="dot"></span><div><strong>Stage 1 — Dilation</strong><span>Longest. Cervix dilates 0 → 10 cm. Latent (slow) and active (faster) phases. Regular uterine contractions.</span></div></div><div class="structure-item"><span class="dot"></span><div><strong>Stage 2 — Expulsion</strong><span>Full dilation to delivery of baby. Maternal pushing + uterine contractions. Cardinal movements: engagement, descent, flexion, internal rotation, extension (head out), external rotation (restitution), expulsion of body.</span></div></div><div class="structure-item"><span class="dot gold"></span><div><strong>Stage 3 — Placenta</strong><span>Delivery of placenta. Usually within 30 minutes of baby. Uterus contracts to control bleeding from where placenta attached.</span></div></div></div><p>Labor is driven by progressive increase in oxytocin, fetal cortisol, and prostaglandins. The cervix softens and effaces under prostaglandin influence; uterine contractions intensify with oxytocin.</p>
-  </div>
-
-  <div class="teaching-section">
-    <div class="section-number"><span class="num">6</span> Postpartum</div>
-    <h2>What changes after delivery</h2>
-    <p>The uterus involutes from ~1 kg to pre-pregnancy size over 6 weeks. Lactation begins as estrogen and progesterone drop and prolactin rises (the placenta's estrogen had been blocking prolactin's effect on the breast). Milk production is established within days; oxytocin (released in response to nipple stimulation) drives the let-down reflex.</p><p>Maternal cardiovascular changes (increased blood volume, increased cardiac output, decreased SVR) gradually reverse over weeks.</p>
-  </div>
-
-
-  <div class="draw-zone-wrap" id="zone1-wrap">
-    <div class="draw-zone-header">
-      <div class="draw-zone-title"><span class="pencil-icon">&#9998;</span><span>Draw Zone 1 <span class="prompt-text">-- Diagram fertilization through implantation: sperm in vagina, fertilization in ampulla, cleavage, morula, blastocyst, normal uterine implantation. Then mark the abnormal sites where ectopic pregnancy can occur.</span></span></div>
-      <div class="draw-tools">
-        <div class="tool-group">
-          <button class="color-btn active" data-color="#FFFFFF" style="background:#ffffff;"></button>
-          <button class="color-btn" data-color="#C9A14A" style="background:#C9A14A;"></button>
-          <button class="color-btn" data-color="#EF5350" style="background:#EF5350;"></button>
-          <button class="color-btn" data-color="#4FC3F7" style="background:#4FC3F7;"></button>
-          <button class="color-btn" data-color="#66BB6A" style="background:#66BB6A;"></button>
-          <button class="color-btn" data-color="#FFD54F" style="background:#FFD54F;"></button>
-        </div>
-        <div class="tool-group"><input type="range" class="size-slider" min="0.5" max="24" value="3" step="0.5"></div>
-        <div class="tool-group"><button class="tool-btn active" data-tool="pen">Pen</button><button class="tool-btn" data-tool="fine">Fine</button><button class="tool-btn" data-tool="eraser">Eraser</button></div>
-        <div class="tool-group"><button class="tool-btn" data-action="undo">Undo</button><button class="tool-btn" data-action="clear">Clear</button></div>
-        <div class="tool-group"><button class="tool-btn canvas-mode-toggle">&#9788; Light</button></div>
-      </div>
+  <!-- Explain-back gate (Option A). Supplementary reference page: TOPIC_ID stays
+       null and this section is removed at runtime. Kept for template parity. -->
+  <section id="explain-gate" hidden aria-labelledby="explain-gate-h">
+    <p class="gate-eyebrow">Step 2 . Retrieval check</p>
+    <h2 id="explain-gate-h">Now explain it back, in your own words.</h2>
+    <p class="gate-instr">In 60 words or more, pull together what the video just taught you. Include the key concepts. This is the point where the learning actually sticks. After you submit, your spaced-recall cards for this topic unlock.</p>
+    <textarea id="gate-input" aria-label="Explain-back response" aria-describedby="gate-meter" placeholder="What did this video teach you?"></textarea>
+    <div id="gate-meter" aria-live="polite">
+      <span>Words: <strong id="gate-word-count">0</strong> / 60</span>
+      <span>Concepts found: <strong id="gate-keyword-count">0</strong> / <span id="gate-keyword-target">0</span></span>
     </div>
-    <canvas class="draw-canvas" id="canvas1" height="460"></canvas>
-    <div class="draw-zone-hint">98% of ectopics are tubal (most often ampulla). Other sites: ovary, abdomen, cervix.</div>
-  </div>
-
-  <div class="draw-zone-wrap" id="zone2-wrap">
-    <div class="draw-zone-header">
-      <div class="draw-zone-title"><span class="pencil-icon">&#9998;</span><span>Draw Zone 2 <span class="prompt-text">-- Sketch the placenta and fetal-maternal interface. Show chorionic villi, intervillous space, umbilical vessels (2 arteries, 1 vein), and the placental barrier.</span></span></div>
-      <div class="draw-tools">
-        <div class="tool-group">
-          <button class="color-btn active" data-color="#FFFFFF" style="background:#ffffff;"></button>
-          <button class="color-btn" data-color="#C9A14A" style="background:#C9A14A;"></button>
-          <button class="color-btn" data-color="#EF5350" style="background:#EF5350;"></button>
-          <button class="color-btn" data-color="#4FC3F7" style="background:#4FC3F7;"></button>
-          <button class="color-btn" data-color="#66BB6A" style="background:#66BB6A;"></button>
-          <button class="color-btn" data-color="#FFD54F" style="background:#FFD54F;"></button>
-        </div>
-        <div class="tool-group"><input type="range" class="size-slider" min="0.5" max="24" value="3" step="0.5"></div>
-        <div class="tool-group"><button class="tool-btn active" data-tool="pen">Pen</button><button class="tool-btn" data-tool="fine">Fine</button><button class="tool-btn" data-tool="eraser">Eraser</button></div>
-        <div class="tool-group"><button class="tool-btn" data-action="undo">Undo</button><button class="tool-btn" data-action="clear">Clear</button></div>
-        <div class="tool-group"><button class="tool-btn canvas-mode-toggle">&#9788; Light</button></div>
-      </div>
-    </div>
-    <canvas class="draw-canvas" id="canvas2" height="440"></canvas>
-    <div class="draw-zone-hint">Color fetal vessels and maternal blood differently. Star the barrier — it separates without mixing.</div>
-  </div>
-
-</div>
-
-<div class="clinical-block">
-  <div class="cb-inner">
-    <div class="cb-label">Returning to Aisha</div>
-    <h2>An embryo in the wrong place</h2>
-    <p>Ectopic pregnancy is the leading cause of first-trimester maternal death. Aisha's tubal pregnancy can rupture as it grows, with catastrophic hemorrhage. Identifying it early saves her life and often her fertility.</p>
-    <div class="translate-grid"><div class="translate-card"><div class="quote">"RLQ pain + bleeding"</div><div class="meaning">Implantation in the tube stretches and inflames the tubal wall, causing pain. Hormone changes and local irritation cause spotting/bleeding from the uterine endometrium.</div></div><div class="translate-card"><div class="quote">"Beta-hCG 4,500 with no IUP visible"</div><div class="meaning">Transvaginal US should detect a gestational sac at beta-hCG &gt; 1,500-2,000 mIU/mL. Absence at 4,500 + adnexal mass = ectopic until proven otherwise.</div></div><div class="translate-card"><div class="quote">"Why most ectopics are tubal"</div><div class="meaning">Tubal damage (PID, prior ectopic, prior surgery, smoking) impairs cilia and tube motility. The embryo can't complete its journey to the uterus and implants where it stops.</div></div><div class="translate-card"><div class="quote">"Risk of rupture"</div><div class="meaning">The tube has limited capacity to expand. As the embryo grows it stretches the tube. Rupture causes massive intra-abdominal bleeding and shock. Aisha's mild tachycardia and free fluid suggest she may be early in this process — surgical urgency.</div></div><div class="translate-card"><div class="quote">"Methotrexate vs surgery"</div><div class="meaning">Methotrexate (folate antagonist; halts trophoblast division) is an option in stable patients with small (&lt;3.5 cm) ectopics and beta-hCG &lt;5,000. Surgical removal (salpingostomy or salpingectomy) for larger ectopics, ruptured ectopics, or unstable patients.</div></div><div class="translate-card"><div class="quote">"Future fertility"</div><div class="meaning">Most women conceive successfully after an ectopic, especially if the contralateral tube is healthy. Risk of recurrent ectopic is increased (~15%).</div></div></div>
-    <p><strong>Tube, implantation, placenta, blood supply.</strong> Aisha's case is the reproductive system's most dangerous misstep — a fertilized ovum implanting where the body cannot support it.</p>
+    <button type="button" id="gate-submit" disabled>Unlock pre-work cards</button>
+    <p id="gate-status" role="status"></p>
+  </section>
+</main>
+<!-- Lightbox dialog -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lightbox-title" hidden>
+  <div class="lightbox-backdrop" id="lightbox-backdrop"></div>
+  <div class="lightbox-content">
+    <button class="lightbox-close" id="lightbox-close" aria-label="Close zoomed image">&times;</button>
+    <h2 id="lightbox-title" class="skip">Zoomed image</h2>
+    <img id="lightbox-img" src="" alt="" />
+    <p class="lightbox-caption" id="lightbox-caption"></p>
   </div>
 </div>
-
-<div class="page-footer">
-  <span class="byline">Dr. Sharilyn Rennie</span>
-  &nbsp; &middot; &nbsp;
-  BIO 004 · Week 6 · Case deep dive: Pregnancy and Birth
-</div>
-
 <script>
-window.addEventListener('scroll', function () { var s=window.scrollY; var h=document.documentElement.scrollHeight-window.innerHeight; document.getElementById('progress-bar').style.width=(h>0?(s/h)*100:0)+'%'; });
-function initCanvas(canvasId, wrapId) {
-  var canvas=document.getElementById(canvasId), wrap=document.getElementById(wrapId);
-  if(!canvas||!wrap) return;
-  var ctx=canvas.getContext('2d');
-  var state={drawing:false, tool:'pen', color:'#FFFFFF', size:3, canvasMode:'dark', strokes:[], currentStroke:null};
-  function resize(){ var rect=canvas.getBoundingClientRect(); var dpr=window.devicePixelRatio||1; canvas.width=rect.width*dpr; canvas.height=parseFloat(canvas.getAttribute('height'))*dpr; canvas.style.height=canvas.getAttribute('height')+'px'; ctx.setTransform(1,0,0,1,0,0); ctx.scale(dpr,dpr); redraw(); }
-  function paintBg(){ var dpr=window.devicePixelRatio||1; var w=canvas.width/dpr, h=canvas.height/dpr; ctx.save(); ctx.fillStyle=state.canvasMode==='light'?'#FFFFFF':'#06080F'; ctx.fillRect(0,0,w,h); ctx.restore(); }
-  function redraw(){ var dpr=window.devicePixelRatio||1; ctx.clearRect(0,0,canvas.width/dpr,canvas.height/dpr); paintBg(); state.strokes.forEach(function(s){drawStroke(s);}); }
-  function drawStroke(stroke){ if(!stroke.points||!stroke.points.length) return; ctx.save(); if(stroke.tool==='eraser'){ctx.strokeStyle=state.canvasMode==='light'?'#FFFFFF':'#06080F'; ctx.fillStyle=ctx.strokeStyle;}else{ctx.strokeStyle=stroke.color; ctx.fillStyle=stroke.color;} ctx.lineWidth=stroke.size; ctx.lineCap='round'; ctx.lineJoin='round'; if(stroke.points.length===1){ctx.beginPath(); ctx.arc(stroke.points[0].x,stroke.points[0].y,stroke.size/2,0,Math.PI*2); ctx.fill();}else{ctx.beginPath(); ctx.moveTo(stroke.points[0].x,stroke.points[0].y); for(var i=1;i<stroke.points.length-1;i++){var mx=(stroke.points[i].x+stroke.points[i+1].x)/2, my=(stroke.points[i].y+stroke.points[i+1].y)/2; ctx.quadraticCurveTo(stroke.points[i].x,stroke.points[i].y,mx,my);} var last=stroke.points[stroke.points.length-1]; ctx.lineTo(last.x,last.y); ctx.stroke();} ctx.restore(); }
-  function getPos(e){ var rect=canvas.getBoundingClientRect(); var t=e.touches?e.touches[0]:e; return {x:(t.clientX-rect.left)*(canvas.width/rect.width)/(window.devicePixelRatio||1), y:(t.clientY-rect.top)*(canvas.height/rect.height)/(window.devicePixelRatio||1)}; }
-  function startDraw(e){ e.preventDefault(); state.drawing=true; var p=getPos(e); state.currentStroke={tool:state.tool, color:state.color, size:state.size, points:[p]}; }
-  function continueDraw(e){ e.preventDefault(); if(!state.drawing||!state.currentStroke) return; var p=getPos(e); state.currentStroke.points.push(p); var pts=state.currentStroke.points; ctx.save(); ctx.strokeStyle=state.tool==='eraser'?(state.canvasMode==='light'?'#FFFFFF':'#06080F'):state.color; ctx.lineWidth=state.size; ctx.lineCap='round'; ctx.lineJoin='round'; if(pts.length>=3){var i=pts.length-2; var mx=(pts[i].x+pts[i+1].x)/2, my=(pts[i].y+pts[i+1].y)/2; ctx.beginPath(); ctx.moveTo((pts[i-1].x+pts[i].x)/2,(pts[i-1].y+pts[i].y)/2); ctx.quadraticCurveTo(pts[i].x,pts[i].y,mx,my); ctx.stroke();}else if(pts.length===2){ctx.beginPath(); ctx.moveTo(pts[0].x,pts[0].y); ctx.lineTo(pts[1].x,pts[1].y); ctx.stroke();} ctx.restore(); }
-  function endDraw(){ if(!state.drawing) return; state.drawing=false; if(state.currentStroke){state.strokes.push(state.currentStroke); state.currentStroke=null;} }
-  canvas.addEventListener('pointerdown',startDraw); canvas.addEventListener('pointermove',continueDraw); canvas.addEventListener('pointerup',endDraw); canvas.addEventListener('pointerleave',endDraw); canvas.addEventListener('pointercancel',endDraw);
-  canvas.addEventListener('touchstart',startDraw,{passive:false}); canvas.addEventListener('touchmove',continueDraw,{passive:false}); canvas.addEventListener('touchend',endDraw);
-  var header=wrap.querySelector('.draw-zone-header');
-  header.querySelectorAll('.color-btn').forEach(function(btn){ btn.addEventListener('click',function(){ header.querySelectorAll('.color-btn').forEach(function(b){b.classList.remove('active');}); btn.classList.add('active'); state.color=btn.dataset.color; if(state.tool==='eraser'){state.tool='pen'; header.querySelectorAll('[data-tool]').forEach(function(b){b.classList.toggle('active',b.dataset.tool==='pen');});} }); });
-  header.querySelectorAll('[data-tool]').forEach(function(btn){ btn.addEventListener('click',function(){ header.querySelectorAll('[data-tool]').forEach(function(b){b.classList.remove('active');}); btn.classList.add('active'); if(btn.dataset.tool==='fine'){state.tool='pen'; state.size=1; if(sizeSlider) sizeSlider.value=1;}else{state.tool=btn.dataset.tool; if(sizeSlider&&state.tool!=='eraser') state.size=parseFloat(sizeSlider.value);} }); });
-  var sizeSlider=header.querySelector('.size-slider'); if(sizeSlider) sizeSlider.addEventListener('input',function(){ state.size=parseFloat(sizeSlider.value); var fb=header.querySelector('[data-tool="fine"]'); if(fb&&fb.classList.contains('active')){fb.classList.remove('active'); var pb=header.querySelector('[data-tool="pen"]'); if(pb) pb.classList.add('active'); state.tool='pen';} });
-  header.querySelectorAll('[data-action]').forEach(function(btn){ btn.addEventListener('click',function(){ if(btn.dataset.action==='undo'){if(state.strokes.length>0){state.strokes.pop(); redraw();}}else if(btn.dataset.action==='clear'){if(confirm('Clear this canvas?')){state.strokes=[]; redraw();}} }); });
-  var mb=header.querySelector('.canvas-mode-toggle'); if(mb) mb.addEventListener('click',function(){ if(state.canvasMode==='dark'){state.canvasMode='light'; wrap.classList.add('light-canvas'); mb.innerHTML='&#9790; Dark'; if(state.color==='#FFFFFF'){state.color='#0B1530'; header.querySelectorAll('.color-btn').forEach(function(b){b.classList.remove('active');});}}else{state.canvasMode='dark'; wrap.classList.remove('light-canvas'); mb.innerHTML='&#9788; Light'; if(state.color==='#0B1530'){state.color='#FFFFFF'; var wb=header.querySelector('[data-color="#FFFFFF"]'); if(wb){header.querySelectorAll('.color-btn').forEach(function(b){b.classList.remove('active');}); wb.classList.add('active');}}} redraw(); });
-  resize(); window.addEventListener('resize',resize);
-}
-initCanvas('canvas1','zone1-wrap'); initCanvas('canvas2','zone2-wrap');
+  window.__SHEET_ID__ = 'bio004-pregnancy-and-birth';
+  // ----------------------------------------------------------------
+  // Per-sheet config. Edit these URLs for this page.
+  //  videoFoundations : the foundational essentials video embed URL (reused as is)
+  //  videoDeepDive    : the new short majors-level deep-dive video embed URL
+  //  prework          : URL into the pre-work for this topic, or remove the button
+  // ----------------------------------------------------------------
+  window.SHEET_CONFIG = {
+    videoFoundations: 'https://www.youtube.com/embed/REPLACE_WITH_FOUNDATIONS_VIDEO_ID',
+    videoDeepDive:    'https://www.youtube.com/embed/REPLACE_WITH_DEEPDIVE_VIDEO_ID',
+    prework:          'https://drsrennie-stack.github.io/new-build-bio4-solano/spaced-recall.html#topic=t-pregnancy-and-birth',
+  };
+  (function wireResources() {
+    var cfg = window.SHEET_CONFIG || {};
+    var prework = document.getElementById('prework-link');
+    if (prework && cfg.prework) prework.href = cfg.prework;
+    var videos = [
+      { toggle: 'video-toggle-foundations', panel: 'video-panel-foundations', iframe: 'video-iframe-foundations', url: cfg.videoFoundations },
+      { toggle: 'video-toggle-deepdive',    panel: 'video-panel-deepdive',    iframe: 'video-iframe-deepdive',    url: cfg.videoDeepDive }
+    ];
+    function collapse(v) {
+      var t = document.getElementById(v.toggle);
+      var p = document.getElementById(v.panel);
+      var f = document.getElementById(v.iframe);
+      if (!t || !p || !f) return;
+      p.hidden = true;
+      f.src = 'about:blank';
+      t.setAttribute('aria-expanded', 'false');
+    }
+    videos.forEach(function (v) {
+      var toggle = document.getElementById(v.toggle);
+      var panel  = document.getElementById(v.panel);
+      var iframe = document.getElementById(v.iframe);
+      if (!toggle || !panel || !iframe) return;
+      toggle.addEventListener('click', function () {
+        var expanded = toggle.getAttribute('aria-expanded') === 'true';
+        if (expanded) {
+          collapse(v);
+          return;
+        }
+        videos.forEach(function (other) { if (other !== v) collapse(other); });
+        var videoUrl = v.url || 'about:blank';
+        if (videoUrl.indexOf('youtube.com/embed/') !== -1 && videoUrl.indexOf('enablejsapi=1') === -1) {
+          var sep = videoUrl.indexOf('?') === -1 ? '?' : '&';
+          videoUrl = videoUrl + sep + 'enablejsapi=1&rel=0';
+        }
+        if (v.url && v.url.indexOf('REPLACE_WITH') !== -1) {
+          iframe.removeAttribute('src');
+          iframe.srcdoc = '<!doctype html><meta charset="utf-8"><body style="margin:0;height:100vh;display:flex;align-items:center;justify-content:center;font-family:DM Sans,system-ui,sans-serif;background:#F5F1E8;color:#0B1530;text-align:center;padding:20px"><div><p style="font-weight:700;font-size:15px;margin:0 0 6px">Lecture video coming soon</p><p style="font-size:13px;opacity:0.85;margin:0">You can still complete the retrieval check below to unlock your cards.</p></div></body>';
+        } else {
+          iframe.removeAttribute('srcdoc');
+          iframe.src = videoUrl;
+        }
+        panel.hidden = false;
+        toggle.setAttribute('aria-expanded', 'true');
+        setTimeout(function () { panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 100);
+      });
+    });
+  })();
+  (function injectControls() {
+    document.querySelectorAll('.term').forEach(function (term) {
+      var name = term.querySelector('.name');
+      var loc  = term.querySelector('.loc');
+      if (!name || !loc) return;
+      var termText = name.textContent.trim();
+      var locText  = loc.textContent.trim();
+      var wrap = document.createElement('span');
+      wrap.className = 'term-input';
+      var input = document.createElement('input');
+      input.type = 'text';
+      input.setAttribute('aria-label', 'Type the term that matches: ' + locText);
+      input.placeholder = 'type the term';
+      wrap.appendChild(input);
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'reveal-btn';
+      btn.textContent = 'Reveal';
+      btn.setAttribute('aria-label', 'Reveal answer');
+      btn.addEventListener('click', function () {
+        term.classList.add('revealed');
+        if (document.body.classList.contains('quiz')) {
+          var typed = (input.value || '').trim().toLowerCase();
+          var target = termText.toLowerCase();
+          var norm = function (s) { return s.replace(/[\s·\.\/&;,]+/g, ' ').replace(/\s+/g, ' ').trim(); };
+          if (typed && norm(typed) === norm(target)) input.classList.add('correct');
+        }
+      });
+      wrap.appendChild(btn);
+      term.appendChild(wrap);
+    });
+  })();
+  // For Quiz mode: add a Reveal button to each grid-table row and each sequence step
+  (function injectChartControls() {
+    document.querySelectorAll('.grid-table tbody tr').forEach(function (row) {
+      var th = row.querySelector('th');
+      if (!th) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'reveal-btn';
+      btn.textContent = 'Reveal';
+      btn.setAttribute('aria-label', 'Reveal this row');
+      btn.addEventListener('click', function () { row.classList.add('revealed'); });
+      th.appendChild(btn);
+    });
+    document.querySelectorAll('.seq li').forEach(function (item) {
+      var seqBody = item.querySelector('.seq-body');
+      if (!seqBody) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'reveal-btn';
+      btn.textContent = 'Reveal';
+      btn.setAttribute('aria-label', 'Reveal this step');
+      btn.addEventListener('click', function () { item.classList.add('revealed'); });
+      seqBody.appendChild(btn);
+    });
+  })();
+  (function () {
+    var body = document.body;
+    var btnNotes = document.getElementById('mode-notes');
+    var btnStudy = document.getElementById('mode-study');
+    var btnQuiz  = document.getElementById('mode-quiz');
+    var btnPrint = document.getElementById('print-btn');
+    var btnReset = document.getElementById('reset-btn');
+    var allButtons = [btnNotes, btnStudy, btnQuiz];
+    function setMode(mode) {
+      body.classList.remove('study', 'quiz');
+      if (mode === 'study') body.classList.add('study');
+      if (mode === 'quiz')  body.classList.add('quiz');
+      allButtons.forEach(function (b) {
+        var active =
+          (mode === 'notes' && b === btnNotes) ||
+          (mode === 'study' && b === btnStudy) ||
+          (mode === 'quiz'  && b === btnQuiz);
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      document.querySelectorAll('.term-input input').forEach(function (i) { i.value = ''; i.classList.remove('correct'); });
+      document.querySelectorAll('.revealed').forEach(function (t) { t.classList.remove('revealed'); });
+    }
+    btnNotes.addEventListener('click', function () { setMode('notes'); });
+    btnStudy.addEventListener('click', function () { setMode('study'); });
+    btnQuiz .addEventListener('click', function () { setMode('quiz'); });
+    btnPrint.addEventListener('click', function () { window.print(); });
+    btnReset.addEventListener('click', function () {
+      document.querySelectorAll('.term-input input').forEach(function (i) { i.value = ''; i.classList.remove('correct'); });
+      document.querySelectorAll('.revealed').forEach(function (t) { t.classList.remove('revealed'); });
+    });
+  })();
+  (function () {
+    var lightbox = document.getElementById('lightbox');
+    if (!lightbox) return;
+    var lbImg = document.getElementById('lightbox-img');
+    var lbCap = document.getElementById('lightbox-caption');
+    var lbClose = document.getElementById('lightbox-close');
+    var lbBack = document.getElementById('lightbox-backdrop');
+    var lastFocus = null;
+    function open(src, alt, caption) {
+      lastFocus = document.activeElement;
+      lbImg.src = src; lbImg.alt = alt; lbCap.textContent = caption;
+      lightbox.hidden = false; document.body.style.overflow = 'hidden';
+      setTimeout(function () { lbClose.focus(); }, 0);
+    }
+    function close() {
+      lightbox.hidden = true; lbImg.src = ''; document.body.style.overflow = '';
+      if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+    }
+    document.querySelectorAll('.plate figure').forEach(function (fig) {
+      fig.setAttribute('tabindex', '0'); fig.setAttribute('role', 'button');
+      var img = fig.querySelector('img'); var cap = fig.querySelector('figcaption');
+      var capText = cap ? cap.textContent.trim() : '';
+      fig.setAttribute('aria-label', 'Enlarge: ' + capText);
+      fig.addEventListener('click', function () { open(img.src, img.alt, capText); });
+      fig.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(img.src, img.alt, capText); } });
+    });
+    lbClose.addEventListener('click', close);
+    lbBack.addEventListener('click', close);
+    document.addEventListener('keydown', function (e) { if (!lightbox.hidden && e.key === 'Escape') close(); });
+    lightbox.addEventListener('keydown', function (e) { if (e.key !== 'Tab') return; e.preventDefault(); lbClose.focus(); });
+  })();
 </script>
-  <script src="slide-modal.js" defer></script>
+<!-- bio004-option-a: inline explain-back gate -->
+<script>
+(function () {
+  // Topic mapping for the explain-back gate and spaced-recall pre-work.
+  var TOPIC_ID = "t-pregnancy-and-birth";
+  var GATE_KEYWORDS = ["fertilization", "zygote", "implantation", "placenta", "embryo", "labor"];
+  var PREWORK_TARGET = "https://drsrennie-stack.github.io/new-build-bio4-solano/spaced-recall.html#topic=t-pregnancy-and-birth";
+  var MIN_WORDS = 60;
+  var MIN_KEYWORDS = GATE_KEYWORDS.length ? Math.max(2, Math.ceil(GATE_KEYWORDS.length * 0.6)) : 0;
+  var pre = document.getElementById('prework-link');
+  var gateSection = document.getElementById('explain-gate');
+  var input = document.getElementById('gate-input');
+  var submitBtn = document.getElementById('gate-submit');
+  var statusEl = document.getElementById('gate-status');
+  var wordCountEl = document.getElementById('gate-word-count');
+  var kwCountEl = document.getElementById('gate-keyword-count');
+  var kwTargetEl = document.getElementById('gate-keyword-target');
+  if (kwTargetEl) kwTargetEl.textContent = String(MIN_KEYWORDS);
+  if (!TOPIC_ID) {
+    if (gateSection) gateSection.remove();
+    if (pre) pre.href = PREWORK_TARGET;
+    return;
+  }
+  if (pre) {
+    pre.classList.add('gate-locked');
+    pre.setAttribute('aria-disabled', 'true');
+    var hint = document.createElement('span');
+    hint.className = 'gate-hint';
+    hint.id = 'prework-gate-hint';
+    hint.textContent = 'Watch the video and complete the retrieval check to unlock';
+    if (pre.parentNode) pre.parentNode.insertBefore(hint, pre.nextSibling);
+    pre.href = PREWORK_TARGET;
+    pre.addEventListener('click', function (e) {
+      if (pre.classList.contains('gate-locked')) {
+        e.preventDefault();
+        if (gateSection && gateSection.hidden) {
+          alert('Watch the video first. Then complete the retrieval check below.');
+        } else if (gateSection) {
+          gateSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (input) input.focus();
+        }
+      } else {
+        try { window.localStorage.setItem('bio004-gate-' + TOPIC_ID, 'true'); } catch (er) {}
+        try { window.localStorage.setItem('bio004-video-' + TOPIC_ID, 'true'); } catch (er) {}
+      }
+    });
+  }
+  function updateMeter() {
+    if (!input) return;
+    var text = input.value.trim();
+    var wordCount = text ? text.split(/\s+/).filter(Boolean).length : 0;
+    var lower = text.toLowerCase();
+    var matched = GATE_KEYWORDS.filter(function (k) { return lower.indexOf(k.toLowerCase()) !== -1; });
+    if (wordCountEl) wordCountEl.textContent = String(wordCount);
+    if (kwCountEl) kwCountEl.textContent = String(matched.length);
+    if (wordCountEl) wordCountEl.parentElement.classList.toggle('met', wordCount >= MIN_WORDS);
+    if (kwCountEl) kwCountEl.parentElement.classList.toggle('met', matched.length >= MIN_KEYWORDS);
+    var passed = wordCount >= MIN_WORDS && matched.length >= MIN_KEYWORDS;
+    if (submitBtn) submitBtn.disabled = !passed;
+  }
+  if (input) input.addEventListener('input', updateMeter);
+  if (submitBtn) {
+    submitBtn.addEventListener('click', function () {
+      try { window.localStorage.setItem('bio004-gate-' + TOPIC_ID, 'true'); } catch (e) {}
+      try { window.localStorage.setItem('bio004-video-' + TOPIC_ID, 'true'); } catch (e) {}
+      if (pre) {
+        pre.classList.remove('gate-locked');
+        pre.removeAttribute('aria-disabled');
+      }
+      var hintEl = document.getElementById('prework-gate-hint');
+      if (hintEl) hintEl.hidden = true;
+      if (statusEl) {
+        statusEl.textContent = 'Unlocked. Your pre-work cards are ready.';
+        statusEl.classList.add('passed');
+      }
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Unlocked';
+      if (pre) {
+        pre.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        pre.focus();
+      }
+    });
+  }
+})();
+// Iframe height-sender for Canvas embeds (single, consolidated).
+(function () {
+  if (window.self === window.top) return;
+  var ID = window.__SHEET_ID__ || 'bio004-pregnancy-and-birth';
+  function send() {
+    try {
+      var h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+      window.parent.postMessage({ id: ID, type: 'resize', height: h }, '*');
+    } catch (e) {}
+  }
+  window.addEventListener('load', send);
+  window.addEventListener('resize', send);
+  if ('ResizeObserver' in window) new ResizeObserver(send).observe(document.body);
+})();
+</script>
 </body>
 </html>
