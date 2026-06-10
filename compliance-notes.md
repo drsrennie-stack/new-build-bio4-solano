@@ -205,3 +205,80 @@ Markup verified by structure (semantic landmarks, `details`/`summary` native sem
 These edits live in `BIOL OO4 Content/` only. Copy the five files into `drsrennie-stack/new-build-bio4-solano` and push to make them live.
 
 **Reviewer:** Dr. Sharilyn Rennie
+
+---
+
+## Majors notes upgrade, Skeletal block (2026-06-10)
+
+**Files covered:** `bone-histology.html`, `axial-skeleton-skull.html`, `axial-skeleton-spine.html`, `appendicular-skeleton-upper.html`, `appendicular-skeleton-lower.html`, `articulations.html`.
+
+**What changed.** The six Skeletal concept pages were upgraded in place with the same locked majors components as the Foundations block (term breakdown, collapsed-but-prints drawing prompt, Atlas Coloring Book chip wired through `SHEET_CONFIG.atlas`), plus two skeletal-specific components:
+
+1. **Classification mind-map** (`.mindmap`): a new component on `bone-histology.html` (supportive connective tissues) and `articulations.html` (structural classification of joints). Built as a genuine nested list (`ul.mm-branches` of `li.mm-branch`) inside a `role="group"` with an `aria-label`, so the hierarchy is exposed to assistive tech and prints cleanly. Navy root pill, terra-dark category labels, Lora examples, a navy connector spine on the left. No SVG, no script.
+2. **Structure-to-know table**: a four-column landmark table (Marking / Type / Description / Example) added to `appendicular-skeleton-upper.html` as a "Bone markings vocabulary" reference. It reuses the existing `.grid-table` component, so it inherits the page's Notes/Study/Quiz reveal behavior and print rules with no new CSS.
+
+All six pages use the bone-histology concept-page token set (`--terra`/`--terra-dark`, `--rule`/`--rule-soft`, `--navy-tint` for the drawing-prompt fill, `--focus-ring` gold, literal Plus Jakarta stack).
+
+### WCAG 2.2 results for the new components
+
+The term breakdown, drawing prompt, and Atlas chip carry the same conformance profile documented in the Foundations entry above (native `details`/`summary` keyboard and state semantics, 3px focus ring, target size, reduced-motion). New for this block:
+
+| Criterion | Level | Result |
+|-----------|-------|--------|
+| 1.3.1 Info and Relationships | A | Pass. The mind-map is a real `ul`/`li` hierarchy in a labeled `role="group"`; the structure-to-know table uses `scope="col"`/`scope="row"` and a `caption`. |
+| 1.4.3 Contrast (Minimum) | AA | Pass. Mind-map navy root pill: white on navy `#0B1530` = 18.0:1 (AAA). Terra-dark category labels on white = 6.2:1 (AA). Navy and Lora examples on white = 16+:1 (AAA). |
+| 1.4.11 Non-text Contrast | AA | Pass. The mind-map connector spine and node dashes use `--rule` (rgba navy 0.18) as decorative structure, not meaning-bearing; the branch text carries the information. |
+| 4.1.2 Name, Role, Value | A | Pass. No custom widgets; the mind-map is static structured text, the table is a native table. |
+
+### Contrast audit, new pairs
+White `#FFFFFF` on navy `#0B1530` (mind-map root pill): 18.0:1, AAA. All other text pairs reuse the values in the Foundations entry (navy on white 18.0:1; terra `#8B3A2E` on white 7.7:1; terra-dark `#A0452F` on white 6.2:1).
+
+### Keyboard flow verified
+The mind-map and structure-to-know table contain no interactive controls (the table gains Study/Quiz reveal buttons only in those modes, which are native buttons already audited on the concept pages). Tab order is unchanged: resource bar (with the atlas chip after the spaced-recall link), then content, then the drawing-prompt `summary` as a single tab stop.
+
+### Screen reader testing
+Structure verified (nested-list hierarchy, labeled group, table scopes/caption). **Live screen reader pass pending** for these six pages.
+
+### Known limitations and remediation
+1. **Live SR pass pending** (as above).
+2. **Atlas link target** points at the single Atlas Coloring Book URL on all six pages; set per-page `SHEET_CONFIG.atlas` if topic-specific Atlas anchors are added later.
+3. **Print disclosure override** verified in CSS; spot-check one Chrome "Save as PDF" of `bone-histology.html` (mind-map + drawing prompt) before handing to students.
+
+### Deployment note
+These edits live in `BIOL OO4 Content/` only. Copy the six files into `drsrennie-stack/new-build-bio4-solano` and push to make them live.
+
+**Reviewer:** Dr. Sharilyn Rennie
+
+---
+
+## MCAS branding pass, all concept pages (2026-06-10)
+
+**Files covered:** all 37 concept pages carrying the shared sheet template.
+
+**What changed (per Dr. Rennie's direction, aligned to the BIO 304 index branding):**
+
+1. **Font: Plus Jakarta Sans only.** Replaced every `'Lora', Georgia, serif` declaration (579 occurrences across 39 files) with the Plus Jakarta Sans stack. No serif remains in body copy, hints, definitions, tables, or the majors components.
+2. **Pre-work box collapsed.** The `Your pre-work` block is now a `<details>`/`<summary>` disclosure, closed by default, on all 37 pages.
+3. **"How to use this sheet" rebuilt.** Was a dense serif paragraph; now a collapsed `<details>` with one scannable line per mode (Notes / Study / Quiz me) plus a sub-line about the tables. Hidden in print.
+4. **No bookend borders.** Removed the 4px left-accent bars from the pre-work box, term-breakdown box, and drawing-prompt card; uniform 1px border with symmetric radius, per the MCAS rule.
+5. **MCAS logo header.** Added the atlas-matching `site-header` (three-figure anatomy logo SVG + "Human Anatomy" wordmark, rust accent, "BIO 004 · Solano Community College" sub) to the 36 concept pages that lacked one. Links to course home (`target="_top"`); hidden in print.
+
+### WCAG 2.2 results
+
+| Criterion | Level | Result |
+|-----------|-------|--------|
+| 1.3.1 Info and Relationships | A | Pass. Pre-work and mode-hint are native `details`/`summary`; header is a `header` landmark with an accessible logo link name. |
+| 1.4.3 Contrast (Minimum) | AA | Pass. Mode-hint summary rust on white 7.7:1; body lines navy on white 18:1; logo wordmark clears AA. |
+| 2.1.1 Keyboard / 2.4.7 Focus Visible | A / AA | Pass. Disclosures are `summary` (Enter/Space); logo is a native link; both carry the 3px focus ring. |
+| 4.1.2 Name, Role, Value | A | Pass. `details`/`summary` expose state natively. |
+
+### Known limitations
+1. **Page background** still off-white/cream behind white cards; the BIO 304 index uses pure white. Not changed this pass; can match on request.
+2. **Footer** unchanged on most pages (simple byline vs the dark MCAS footer). Can be unified on request.
+3. **Unused Lora @import** still requested (harmless); can be pruned.
+4. **Live SR pass pending.**
+
+### Deployment note
+All 37 concept pages were modified in `BIOL OO4 Content/` only. Copy the changed files into `drsrennie-stack/new-build-bio4-solano` and push to make them live.
+
+**Reviewer:** Dr. Sharilyn Rennie
