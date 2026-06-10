@@ -360,8 +360,8 @@
 
   /* ---- pre-work box ---- */
   .prework-box {
-    border: 1px solid var(--line); border-left: 4px solid var(--rust);
-    border-radius: 0 8px 8px 0; padding: 18px 22px;
+    border: 1px solid var(--line);
+    border-radius: 8px; padding: 18px 22px;
     margin: 22px 0 4px; background: var(--white);
   }
   .prework-box h2 {
@@ -529,8 +529,8 @@
 
   /* ---- majors: term breakdown (etymology) ---- */
   .term-breakdown {
-    border: 1px solid var(--line); border-left: 4px solid var(--gold);
-    border-radius: 0 10px 10px 0; background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 10px; background: var(--white);
     padding: 18px 22px; margin: 24px 0 4px;
   }
   .term-breakdown .eyebrow { margin-bottom: 4px; }
@@ -553,8 +553,8 @@
   /* ---- majors: drawing prompt (collapsed on screen, prints open) ---- */
   .drawing-prompt { margin: 24px 0 4px; }
   .draw-details {
-    border: 1px solid var(--line); border-left: 4px solid var(--navy);
-    border-radius: 0 10px 10px 0; background: var(--cream); overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 10px; background: var(--cream); overflow: hidden;
   }
   .draw-details > summary { list-style: none; cursor: pointer; padding: 16px 20px; display: block; position: relative; }
   .draw-details > summary::-webkit-details-marker { display: none; }
@@ -618,6 +618,36 @@
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
   }
+  /* prework-collapse v1: pre-work box as a disclosure; uniform border, no bookend bars */
+  details.prework-box > summary.prework-summary {
+    list-style: none; cursor: pointer; position: relative; display: block;
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-weight: 800; font-size: 16px; color: var(--navy); padding-right: 28px; margin: 0;
+  }
+  details.prework-box > summary.prework-summary::-webkit-details-marker { display: none; }
+  details.prework-box > summary.prework-summary::after {
+    content: ""; position: absolute; right: 2px; top: 5px; width: 9px; height: 9px;
+    border-right: 2px solid var(--navy); border-bottom: 2px solid var(--navy);
+    transform: rotate(45deg); transition: transform 200ms ease;
+  }
+  details.prework-box[open] > summary.prework-summary::after { transform: rotate(-135deg); }
+  details.prework-box[open] > summary.prework-summary { margin-bottom: 10px; }
+  details.prework-box > summary.prework-summary:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 3px; border-radius: 4px; }
+  @media (prefers-reduced-motion: reduce) { details.prework-box > summary.prework-summary::after { transition: none; } }
+  /* mcas-rebrand v1: mode-hint scannable + collapsible, no bookend bar */
+  details.mode-hint { background: var(--white); border: 1px solid rgba(11,21,48,0.14); border-radius: 8px; padding: 0; margin: 0 0 18px; max-width: 74ch; }
+  details.mode-hint > summary { list-style: none; cursor: pointer; position: relative; padding: 12px 40px 12px 16px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--terra); }
+  details.mode-hint > summary::-webkit-details-marker { display: none; }
+  details.mode-hint > summary::after { content: ""; position: absolute; right: 16px; top: 15px; width: 8px; height: 8px; border-right: 2px solid var(--navy); border-bottom: 2px solid var(--navy); transform: rotate(45deg); transition: transform 200ms ease; }
+  details.mode-hint[open] > summary::after { transform: rotate(-135deg); }
+  details.mode-hint > summary:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: -3px; border-radius: 8px; }
+  .mode-hint-body { padding: 2px 16px 14px; }
+  .mode-hint-line { margin: 0 0 7px; font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif; font-size: 13.5px; color: var(--navy); line-height: 1.5; }
+  .mode-hint-line:last-child { margin-bottom: 0; }
+  .mode-hint-line strong { font-weight: 800; color: var(--navy); }
+  .mode-hint-line.sub { font-size: 12.5px; opacity: 0.82; }
+  @media (prefers-reduced-motion: reduce) { details.mode-hint > summary::after { transition: none; } }
+  @media print { details.mode-hint { display: none !important; } }
 </style>
 </head>
 <body>
@@ -664,10 +694,15 @@
   <h1 class="title">The Language of Anatomy</h1>
   <p class="subhead">Block 1 · Module 1: Introduction to Anatomy</p>
   <p class="usage">A reference for the anatomical terminology video and lab. Every position, plane, direction, and region named here is the shared vocabulary the rest of the course is built on.</p>
-  <p class="mode-hint" role="note">
-    <strong class="label">How to use this sheet</strong>
-    Toggle the toolbar above. <strong>Notes</strong> prints the full reference for review. <strong>Study</strong> prints as a fill-in-the-blank worksheet. Print it, then write each answer while you watch the video or read your book. <strong>Quiz me</strong> is on-screen practice: type the term or click <em>Reveal</em> to check yourself. The grid and the sequence respond to Study and Quiz too.
-  </p>
+    <details class="mode-hint">
+    <summary>How to use this sheet</summary>
+    <div class="mode-hint-body">
+      <p class="mode-hint-line"><strong>Notes</strong> prints the full reference for review.</p>
+      <p class="mode-hint-line"><strong>Study</strong> prints as a fill-in-the-blank worksheet to complete while you watch the video or read.</p>
+      <p class="mode-hint-line"><strong>Quiz me</strong> is on-screen practice: type the term, or click Reveal to check yourself.</p>
+      <p class="mode-hint-line sub">The tables and sequences respond to Study and Quiz too, with a Reveal button on each row.</p>
+    </div>
+  </details>
   <div class="resource-bar" role="region" aria-label="Topic resources">
     <button type="button" class="resource-btn" id="video-toggle-foundations" aria-expanded="false" aria-controls="video-panel-foundations">
       <span class="arrow" aria-hidden="true">&#9654;</span> Foundations video
@@ -707,8 +742,8 @@
     </ol>
   </div>
   <!-- Pre-work checklist: what to do the evening before class. Not mode-aware. -->
-  <section class="prework-box" aria-labelledby="prework-heading">
-    <h2 id="prework-heading">Your pre-work</h2>
+  <details class="prework-box">
+    <summary class="prework-summary">Your pre-work</summary>
     <p class="hint">Work through these the evening before class. None of it is turned in. It is how you learn the material and build your spaced recall.</p>
     <ul class="prework-list">
       <li><label><input type="checkbox"> <span><strong>Watch the Foundations video</strong> and take notes as you go.</span></label></li>
@@ -721,7 +756,7 @@
       <li><label><input type="checkbox"> <span><strong>Do your spaced recall cards</strong>, today's new cards plus any daily cards that are due.</span></label></li>
     </ul>
     <p class="prework-note"><strong>This is more than a checklist.</strong> Ticking these boxes is the start, not the finish. Committing this material to memory and being able to apply it takes considerable time and repeated effort. You are not done when the boxes are checked. Put in the real hours, and keep coming back for frequent recall and review until the material is genuinely yours.</p>
-  </section>
+  </details>
 
   <div class="plate" aria-label="Labeled regional anatomy figures">
     <figure>
@@ -737,7 +772,7 @@
       <figcaption>Posterior &amp; lateral head</figcaption>
     </figure>
   </div>
-  <p style="text-align:center;margin:6px 0 0 0;font-family:'Lora',Georgia,serif;font-style:italic;font-size:12.5px;color:var(--navy);">Click any image to enlarge.</p>
+  <p style="text-align:center;margin:6px 0 0 0;font-family:'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;font-style:italic;font-size:12.5px;color:var(--navy);">Click any image to enlarge.</p>
   <hr class="rule" />
   <!-- Levels of structural organization: a sequence -->
   <section class="block" aria-labelledby="levels-heading">
