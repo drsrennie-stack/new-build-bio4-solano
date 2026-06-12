@@ -356,6 +356,12 @@ summary:focus-visible,
 .mod-cta .arrow { transition: transform 0.2s ease; }
 .mod-card:hover .mod-cta .arrow { transform: translateX(4px); }
 
+.mod-card { position: relative; }
+.mod-card.is-locked { opacity: 0.55; cursor: not-allowed; }
+.mod-card.is-locked:hover { transform: none; }
+.mod-card.is-locked .mod-cta { color: #8B3A2E; }
+.mod-lock { position: absolute; top: 14px; right: 14px; display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #8B3A2E; background: #ECEEF2; border: 1px solid #D3DAE0; border-radius: 999px; padding: 4px 9px; }
+
 /* ===== ABOUT INSTRUCTOR (dark) ===== */
 .about-section { background: #060A18; padding-top: 64px; padding-bottom: 64px; }
 .about-section .section-eyebrow { color: #C9A14A; }
@@ -939,31 +945,42 @@ html { scroll-behavior: smooth; }
   })();
 </script>
 <script>
-  /* Current-week marker: flags the module card for the week we are in,
-     based on today's date and the BIO 004 Summer 2026 schedule. */
-  (function () {
-    var starts = [
-      '2026-06-15', '2026-06-22', '2026-06-29', '2026-07-06',
-      '2026-07-13', '2026-07-20', '2026-07-27', '2026-08-03'
-    ];
-    var courseEnd = new Date('2026-08-10T00:00:00');
-    var now = new Date();
-    var current = 0;
-    for (var i = 0; i < starts.length; i++) {
-      if (new Date(starts[i] + 'T00:00:00') <= now) current = i + 1;
+/* Module gating. Each week's card unlocks on its open date (local midnight).
+   Week 1 is open now; each later week opens the Saturday-at-midnight before it starts.
+   Edit OPENS to change the schedule (YYYY-MM-DD = the midnight it opens). */
+(function () {
+  var OPENS  = ['2026-06-01','2026-06-21','2026-06-28','2026-07-05','2026-07-12','2026-07-19','2026-07-26','2026-08-02'];
+  var starts = ['2026-06-15','2026-06-22','2026-06-29','2026-07-06','2026-07-13','2026-07-20','2026-07-27','2026-08-03'];
+  var courseEnd = new Date('2026-08-10T00:00:00');
+  var now = new Date(); var MS_DAY = 86400000;
+  var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var WD  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  function satNight(openTs){ var d = new Date(openTs.getTime() - MS_DAY); return WD[d.getDay()] + ', ' + MON[d.getMonth()] + ' ' + d.getDate(); }
+  for (var i = 0; i < OPENS.length; i++) {
+    var wk = i + 1, card = document.querySelector('.mod-card[data-week="' + wk + '"]');
+    if (!card) continue;
+    var openTs = new Date(OPENS[i] + 'T00:00:00');
+    if (now < openTs) {
+      card.classList.add('is-locked');
+      card.setAttribute('aria-disabled', 'true');
+      card.setAttribute('tabindex', '-1');
+      if (card.getAttribute('href')) { card.setAttribute('data-href', card.getAttribute('href')); card.removeAttribute('href'); }
+      card.addEventListener('click', function (e) { e.preventDefault(); });
+      var badge = document.createElement('span'); badge.className = 'mod-lock'; badge.textContent = 'Locked'; card.appendChild(badge);
+      var cta = card.querySelector('.mod-cta'); if (cta) { cta.textContent = 'Opens ' + satNight(openTs) + ' at midnight'; }
     }
-    if (now >= courseEnd) current = 0;
-    if (current >= 1) {
-      var card = document.querySelector('.mod-card[data-week="' + current + '"]');
-      if (card) {
-        card.classList.add('is-current-week');
-        var flag = document.createElement('span');
-        flag.className = 'mod-flag';
-        flag.innerHTML = '<span aria-hidden="true">&#9656;</span> This week';
-        card.appendChild(flag);
-      }
+  }
+  var current = 0;
+  for (var j = 0; j < starts.length; j++) { if (new Date(starts[j] + 'T00:00:00') <= now) current = j + 1; }
+  if (now >= courseEnd) current = 0;
+  if (current >= 1) {
+    var c = document.querySelector('.mod-card[data-week="' + current + '"]');
+    if (c && !c.classList.contains('is-locked')) {
+      c.classList.add('is-current-week');
+      var flag = document.createElement('span'); flag.className = 'mod-flag'; flag.innerHTML = '<span aria-hidden="true">&#9656;</span> This week'; c.appendChild(flag);
     }
-  })();
+  }
+})();
 </script>
 </body>
 </html>
