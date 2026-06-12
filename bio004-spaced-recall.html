@@ -273,6 +273,23 @@
     *{transition:none !important;}
   }
 
+
+
+  /* Weakness dashboard */
+  .weak-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:760px){ .weak-grid{grid-template-columns:1fr;} }
+  .weak-row{display:grid; grid-template-columns:minmax(120px,1fr) 92px 82px; gap:10px; align-items:center; padding:9px 0; border-bottom:1px solid var(--gray-line);}
+  .weak-row:last-child{border-bottom:0;}
+  .weak-label{font-weight:700; color:var(--navy);}
+  .weak-sub{font-size:12px; color:var(--gray-soft); font-weight:600;}
+  .weak-bar{height:10px; background:var(--navy-tint); border-radius:999px; overflow:hidden; border:1px solid var(--gray-line);}
+  .weak-fill{height:100%; background:var(--gold); width:0%;}
+  .weak-score{text-align:right; font-weight:800; color:var(--navy);}
+  .weak-risk{display:inline-block; font-size:11px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; border-radius:999px; padding:3px 8px; border:1px solid var(--gray-line); color:var(--gray-soft);}
+  .weak-risk.high{border-color:var(--terra-dark); color:var(--terra-dark); background:#F3E7E5;}
+  .weak-risk.mid{border-color:var(--gold); color:var(--gold-deep);}
+  .tag-chip{display:inline-block; margin:3px 5px 3px 0; padding:4px 8px; border:1px solid var(--gray-line); border-radius:999px; font-size:12px; font-weight:700; color:var(--navy); background:var(--off-white);}
+
   /* Print: weekly report only */
   @media print{
     header.brand, nav.top, footer.site, .no-print{display:none !important;}
@@ -316,6 +333,7 @@
       <button type="button" data-nav="study">Study cards</button>
       <button type="button" data-nav="make">Make cards</button>
       <button type="button" data-nav="report">My weekly report</button>
+      <button type="button" data-nav="weakness">Weakness dashboard</button>
       <button type="button" data-nav="settings">Settings</button>
     </nav>
   </div>
@@ -499,6 +517,16 @@
     </div>
   </section>
 
+
+
+  <!-- ===================== WEAKNESS DASHBOARD ===================== -->
+  <section class="view" id="view-weakness" aria-labelledby="weak-h">
+    <p class="eyebrow">Study analytics</p>
+    <h1 id="weak-h">Weakness dashboard</h1>
+    <p class="lead">This uses the cards you have actually reviewed on this device. It shows weak systems, topics, and DOK levels so students know what to study next.</p>
+    <div id="weakness-body" aria-live="polite"></div>
+  </section>
+
   <!-- ===================== SETTINGS ===================== -->
   <section class="view" id="view-settings" aria-labelledby="set-h">
     <p class="eyebrow">Settings</p>
@@ -569,7 +597,7 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <!-- Course content (1110 cards). Edit course-content.js to change cards or add topic.videoUrl. -->
-<script src="course-content.js"></script>
+<script src="course-content-tagged.js"></script>
 
 <script>
 (function(){
@@ -784,7 +812,7 @@
   }
   function isDue(entry){
     // Never instantiate state here, that would mark every card "seen" just by viewing a list.
-    var cs = peekCardState(entry.source === "mine" ? "personal" : entry.topicId, entry.card.id);
+    var cs = peekCardState(entry.source === "mine" ? "personal" : entry.topicId, cardKey(entry.card));
     if (!cs) return true;            // a card never reviewed is due now
     return cs.nextDue <= Date.now();
   }
@@ -813,6 +841,7 @@
     if (view === "study") renderStudy();
     if (view === "make") renderMake();
     if (view === "report") renderReport();
+    if (view === "weakness") renderWeakness();
     if (view === "setup") renderSetup();
     var h = el ? el.querySelector("h1") : null;
     if (h){ h.setAttribute("tabindex","-1"); h.focus(); }
@@ -1056,7 +1085,7 @@
     post.querySelectorAll(".rate").forEach(function(b){
       b.addEventListener("click", function(){
         var correctFinal = isBasic ? (b.dataset.r !== "again") : correct;
-        var cs = entry.source === "mine" ? cardState("personal", c.id, 1) : cardState(entry.topicId, c.id, c.dok);
+        var cs = entry.source === "mine" ? cardState("personal", cardKey(c), 1) : cardState(entry.topicId, cardKey(c), c.dok);
         schedule(cs, b.dataset.r, correctFinal);
         logCard(entry.source === "mine" ? null : entry.topicId);
         QPOS += 1;
@@ -1072,6 +1101,107 @@
     if (bar) bar.style.width = pct + "%";
     var sr = document.getElementById("card-progress-sr");
     if (sr) sr.textContent = "Progress " + pct + " percent.";
+  }
+
+
+
+  /* ---------- WEAKNESS DASHBOARD ---------- */
+  function cardKey(card){ return card.globalId || card.id; }
+  function cardMetaById(){
+    var map = {};
+    officialCards().forEach(function(e){ map[cardKey(e.card)] = e; });
+    personalCards().forEach(function(e){ map[cardKey(e.card)] = e; });
+    return map;
+  }
+  function riskLabel(pct, attempts){
+    if (attempts < 3) return { text:"Needs data", cls:"" };
+    if (pct < 70) return { text:"High risk", cls:"high" };
+    if (pct < 85) return { text:"Watch", cls:"mid" };
+    return { text:"Strong", cls:"" };
+  }
+  function addBucket(buckets, key, label, correct){
+    if (!label) label = "Uncategorized";
+    if (!buckets[key]) buckets[key] = {};
+    if (!buckets[key][label]) buckets[key][label] = { label:label, attempts:0, correct:0 };
+    buckets[key][label].attempts += 1;
+    if (correct) buckets[key][label].correct += 1;
+  }
+  function collectWeakness(){
+    var meta = cardMetaById();
+    var buckets = { system:{}, topic:{}, dok:{}, type:{} };
+    var totals = { attempts:0, correct:0, reviewedCards:0 };
+    Object.keys(STATE.topics || {}).forEach(function(topicId){
+      var ts = STATE.topics[topicId];
+      if (!ts || !ts.cards) return;
+      Object.keys(ts.cards).forEach(function(cid){
+        var cs = ts.cards[cid];
+        var hist = cs && cs.history ? cs.history : [];
+        if (!hist.length) return;
+        totals.reviewedCards += 1;
+        var e = meta[cid] || null;
+        var card = e ? e.card : { id:cid, dok:cs.dok || 1, tags:{} };
+        var tags = card.tags || {};
+        hist.forEach(function(h){
+          var ok = !!h.correct;
+          totals.attempts += 1; if (ok) totals.correct += 1;
+          addBucket(buckets, "system", tags.system || (e && unitOfTopic(e.topicId) ? unitOfTopic(e.topicId).title : "My Cards"), ok);
+          addBucket(buckets, "topic", tags.topic || (e ? e.topicTitle : topicTitleAny(topicId) || "My Cards"), ok);
+          addBucket(buckets, "dok", tags.dok || ("DOK " + (card.dok || cs.dok || 1)), ok);
+          addBucket(buckets, "type", tags.questionType || (card.type === "basic" ? "Short Answer" : "Multiple Choice"), ok);
+        });
+      });
+    });
+    return { buckets:buckets, totals:totals };
+  }
+  function sortedBucket(obj){
+    return Object.keys(obj).map(function(k){ return obj[k]; }).sort(function(a,b){
+      var ap = a.attempts ? a.correct/a.attempts : 0;
+      var bp = b.attempts ? b.correct/b.attempts : 0;
+      if (ap !== bp) return ap - bp;
+      return b.attempts - a.attempts;
+    });
+  }
+  function weakPanel(title, bucket, limit){
+    var rows = sortedBucket(bucket).slice(0, limit || 8);
+    if (!rows.length) return '<div class="card"><h3>'+escapeHtml(title)+'</h3><p class="empty">No review data yet.</p></div>';
+    var html = '<div class="card"><h3>'+escapeHtml(title)+'</h3>';
+    rows.forEach(function(r){
+      var pct = r.attempts ? Math.round((r.correct/r.attempts)*100) : 0;
+      var risk = riskLabel(pct, r.attempts);
+      html += '<div class="weak-row"><div><div class="weak-label">'+escapeHtml(r.label)+'</div><div class="weak-sub">'+r.correct+'/'+r.attempts+' correct</div></div>'+ 
+              '<div><div class="weak-bar" aria-hidden="true"><div class="weak-fill" style="width:'+pct+'%;"></div></div><span class="weak-risk '+risk.cls+'">'+risk.text+'</span></div>'+ 
+              '<div class="weak-score">'+pct+'%</div></div>';
+    });
+    html += '</div>';
+    return html;
+  }
+  function renderWeakness(){
+    var box = document.getElementById("weakness-body");
+    var data = collectWeakness();
+    var t = data.totals;
+    if (!t.attempts){
+      box.innerHTML = '<div class="card"><h3>No weakness data yet</h3><p class="muted">Study a few cards first. Once students answer cards, this page will show weak systems, topics, DOK levels, and question types.</p><button type="button" class="btn gold" data-nav="study">Start studying</button></div>';
+      box.querySelector('[data-nav]').addEventListener('click', function(){ nav('study'); });
+      return;
+    }
+    var overall = Math.round((t.correct/t.attempts)*100);
+    var weakestTopics = sortedBucket(data.buckets.topic).slice(0,3).map(function(r){ return r.label; });
+    box.innerHTML =
+      '<div class="stats">'+
+        stat(overall+'%', 'Overall accuracy')+
+        stat(t.attempts, 'Attempts logged')+
+        stat(t.reviewedCards, 'Cards with data')+
+        stat(dueCount(), 'Cards due now')+
+      '</div>'+ 
+      '<div class="card"><h3>Recommended next study</h3><p class="muted" style="margin-top:0;">Prioritize the lowest-accuracy areas with at least a few attempts. Current focus tags:</p>'+ 
+      weakestTopics.map(function(x){ return '<span class="tag-chip">'+escapeHtml(x)+'</span>'; }).join('')+
+      '</div>'+ 
+      '<div class="weak-grid">'+
+        weakPanel('Weakest systems', data.buckets.system, 8)+
+        weakPanel('Weakest topics', data.buckets.topic, 8)+
+        weakPanel('DOK performance', data.buckets.dok, 6)+
+        weakPanel('Question type performance', data.buckets.type, 6)+
+      '</div>';
   }
 
   /* ---------- MAKE CARDS ---------- */
@@ -1696,13 +1826,13 @@
       nav("setup");
       return;
     }
-    if (/^(home|study|make|report|setup|settings)$/.test(h)) nav(h);
+    if (/^(home|study|make|report|weakness|setup|settings)$/.test(h)) nav(h);
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 
   // expose a tiny bit for testing harnesses
-  if (typeof window !== "undefined"){ window.__BIO004 = { allCards:allCards, activeCards:activeCards, allTopics:allTopics, allUnits:allUnits, weekScore:weekScore, weekSummary:weekSummary, schedule:schedule, setActive:setActive, dueCount:dueCount, currentTargets:currentTargets, ensureCustomTopic:ensureCustomTopic, STATE:function(){ return STATE; }, save:save }; }
+  if (typeof window !== "undefined"){ window.__BIO004 = { allCards:allCards, activeCards:activeCards, allTopics:allTopics, allUnits:allUnits, weekScore:weekScore, weekSummary:weekSummary, schedule:schedule, setActive:setActive, dueCount:dueCount, renderWeakness:renderWeakness, collectWeakness:collectWeakness, currentTargets:currentTargets, ensureCustomTopic:ensureCustomTopic, STATE:function(){ return STATE; }, save:save }; }
 })();
 </script>
 
