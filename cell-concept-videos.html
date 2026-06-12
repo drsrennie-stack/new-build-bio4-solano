@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Cell · Concept Videos · BIO 004</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!--
+  Concept video machine, wired to real videos. Each concept is its own short YouTube video.
+  Edit the CONCEPTS array to change titles, video ids, notes, terms, and recall prompts.
+  Notes here are short STARTER notes, swap in your own wording.
+-->
+<style>
+  :root{
+    --navy:#0B1530; --navy-deep:#060A18; --navy-tint:#ECEEF2;
+    --gold:#C9A14A; --gold-deep:#B08B3A;
+    --terra:#8B3A2E; --terra-dark:#8B3A2E;
+    --white:#FFFFFF; --off-white:#FAFAF9;
+    --gray-line:#D3DAE0; --gray-soft:#5c6970;
+    --rest:0 1px 3px rgba(0,0,0,.08); --hover:0 8px 16px rgba(0,0,0,.10); --t:200ms ease;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--off-white); color:var(--navy); font-family:"Plus Jakarta Sans",system-ui,sans-serif; line-height:1.55;}
+  .wrap{max-width:1100px; margin:0 auto; padding:0 18px 70px;}
+  a{color:var(--navy);}
+  a:focus-visible, button:focus-visible, [tabindex]:focus-visible{outline:3px solid var(--gold); outline-offset:2px; border-radius:6px;}
+
+  header.brand{border-bottom:1px solid var(--gray-line);}
+  .brand-inner{max-width:1100px; margin:0 auto; padding:14px 18px; display:flex; align-items:center; gap:14px;}
+  .brand-inner svg{height:50px; width:auto;}
+  .logo-title{font-weight:800; font-size:22px; letter-spacing:-.02em; line-height:1;}
+  .logo-title .ac{color:var(--terra-dark);}
+  .logo-sub{font-size:10.5px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; opacity:.72;}
+
+  .eyebrow{font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--terra-dark); margin:22px 0 0;}
+  h1{font-weight:800; font-size:30px; margin:4px 0 2px; letter-spacing:-.01em;}
+  .lead{color:var(--gray-soft); font-size:15px; margin:0 0 14px; max-width:74ch;}
+
+  .layout{display:grid; grid-template-columns:1fr 330px; gap:20px; align-items:start;}
+  @media(max-width:880px){ .layout{grid-template-columns:1fr;} }
+
+  .player{background:var(--white); border:1px solid var(--gray-line); border-radius:14px; box-shadow:var(--rest); overflow:hidden;}
+  .frame{position:relative; aspect-ratio:16/9; background:#000;}
+  .frame iframe, .frame #cv-media{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .vctl{display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
+  .autonext{font-size:13px; font-weight:700; color:var(--gray-soft); display:flex; align-items:center; gap:6px; cursor:pointer;}
+  .autonext input{width:16px; height:16px; accent-color:var(--gold);}
+  .vbar{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 16px; flex-wrap:wrap;}
+  .vbar .vtitle{font-weight:800; font-size:18px;}
+  .vbar .vidx{font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--terra-dark);}
+
+  .notes{background:var(--white); border:1px solid var(--gray-line); border-radius:14px; box-shadow:var(--rest); padding:22px 24px; margin-top:18px;}
+  .notes h2{font-weight:800; font-size:21px; margin:0 0 2px;}
+  .notes .starter{font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--gray-soft); margin:0 0 12px;}
+  .notes ul{margin:0 0 14px; padding-left:20px;} .notes li{margin:7px 0; font-size:15.5px;}
+  .terms{display:flex; flex-wrap:wrap; gap:7px; margin:6px 0 16px;}
+  .term{font-size:12.5px; font-weight:700; color:var(--navy); background:var(--navy-tint); border:1px solid var(--gray-line); border-radius:999px; padding:5px 11px;}
+  .recall{background:var(--off-white); border-left:3px solid var(--gold); border-radius:8px; padding:12px 14px; font-size:14.5px;}
+  .recall strong{color:var(--terra-dark);}
+  .note-actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;}
+  .btn{font:inherit; font-weight:700; font-size:14px; cursor:pointer; border-radius:10px; padding:10px 16px; border:1px solid var(--navy); background:var(--navy); color:#fff; text-decoration:none; display:inline-flex; align-items:center; gap:7px;}
+  .btn:hover{background:var(--navy-deep);}
+  .btn.gold{background:var(--gold); border-color:var(--gold); color:#241a00;} .btn.gold:hover{background:var(--gold-deep);}
+  .btn.ghost{background:transparent; color:var(--navy); border-color:var(--gray-line);} .btn.ghost:hover{border-color:var(--navy); background:var(--navy-tint);}
+
+  .rail{background:var(--white); border:1px solid var(--gray-line); border-radius:14px; box-shadow:var(--rest); padding:16px;}
+  .rail h3{font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--terra-dark); margin:2px 4px 10px;}
+  .rail-scroll{max-height:560px; overflow:auto; padding-right:2px;}
+  .chap{display:flex; gap:11px; align-items:center; width:100%; text-align:left; font:inherit; background:transparent; border:1px solid transparent; border-radius:10px; padding:9px 10px; cursor:pointer; color:var(--navy);}
+  .chap:hover{background:var(--navy-tint);}
+  .chap.active{border-color:var(--gold); background:#fbf7ee;}
+  .chap .ix{width:24px; height:24px; border-radius:50%; border:1.5px solid var(--gray-line); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:var(--gray-soft); flex-shrink:0;}
+  .chap.done .ix{border-color:var(--navy); background:var(--navy-tint); color:var(--navy);}
+  .chap .ct{font-weight:700; font-size:14px; line-height:1.25;}
+  .rail-progress{margin:12px 4px 2px; font-size:12.5px; color:var(--gray-soft);}
+  .rail-bar{height:7px; background:var(--navy-tint); border-radius:5px; overflow:hidden; margin-top:5px;}
+  .rail-bar>div{height:100%; background:var(--gold); width:0; transition:width var(--t);}
+
+  .foot{margin-top:26px; padding-top:14px; border-top:1px solid var(--gray-line); font-size:13px; color:var(--gray-soft);}
+  @media(prefers-reduced-motion:reduce){ *{transition:none !important;} }
+</style>
+</head>
+<body>
+<header class="brand">
+  <div class="brand-inner">
+    <a href="index.html" target="_top" aria-label="BIO 004 course home" style="display:inline-flex; align-items:center; gap:14px; text-decoration:none;">
+      <svg viewBox="40 10 125 148" aria-hidden="true">
+        <g transform="translate(0,18)">
+          <g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#0B1530"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#0B1530"/></g>
+          <g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/></g>
+          <g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/></g>
+        </g>
+      </svg>
+      <span><span class="logo-title">Concept <span class="ac">Videos</span></span><br><span class="logo-sub">BIO 004 · Human Anatomy</span></span>
+    </a>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="eyebrow">BIO 004 · Human Anatomy · Module 1</p>
+  <h1>The Cell</h1>
+  <p class="lead">Short concept videos, one idea each. Pick a concept from the list, watch it, then read the notes and try the recommended practice. When you have watched a few, practice them in Recall Rx.</p>
+
+  <div class="layout">
+    <div>
+      <div class="player">
+        <div class="frame"><div id="cv-media"></div></div>
+        <div class="vbar">
+          <div><span class="vtitle" id="cv-title">Intro</span> &nbsp;<span class="vidx" id="cv-idx">Concept 1 of 18</span></div>
+          <div class="vctl">
+            <button type="button" class="btn gold" id="cv-playall">&#9654; Play all</button>
+            <label class="autonext"><input type="checkbox" id="cv-autonext" checked> Autoplay next</label>
+          </div>
+        </div>
+      </div>
+
+      <section class="notes" aria-labelledby="seg-title">
+        <p class="starter">From your Cell notes</p>
+        <h2 id="seg-title">Concept</h2>
+        <ul id="seg-points"></ul>
+        <div class="terms" id="seg-terms" aria-label="Key terms"></div>
+        <div class="recall" id="seg-recall"></div>
+        <div class="note-actions">
+          <button type="button" class="btn ghost" id="seg-watched">Mark watched</button>
+          <button type="button" class="btn" id="seg-next">Next concept &rarr;</button>
+          <a class="btn ghost" href="anatomy-of-the-cell.html" target="_top">Full Cell notes &rarr;</a>
+          <a class="btn gold" id="seg-practice" href="bio004-spaced-recall.html#topic=t-cell-anatomy" target="_top">Practice in Recall Rx &rarr;</a>
+        </div>
+      </section>
+    </div>
+
+    <aside class="rail" aria-label="Concepts">
+      <h3>Concepts in The Cell</h3>
+      <div class="rail-scroll" id="cv-list"></div>
+      <div class="rail-progress"><span id="rail-count">0 of 18 watched</span><div class="rail-bar"><div id="rail-fill"></div></div></div>
+    </aside>
+  </div>
+
+  <p class="foot">Prototype wired to your real videos for Dr. Sharilyn Rennie. Watched state is saved on this device. Notes are pulled from your Anatomy of the Cell page.</p>
+</main>
+
+<script>
+(function(){
+  "use strict";
+  var CONCEPTS = [
+  {
+    "v": "4ssiY4t4g4I",
+    "title": "Intro",
+    "points": [
+      "Every human cell starts from one floor plan: a plasma membrane that wraps it, a nucleus that holds its DNA, and a cytoplasm full of organelles.",
+      "Cells share this plan because they share the same jobs: keep things in and out, make proteins, generate energy, communicate, reproduce. Specialization comes later."
+    ],
+    "terms": [
+      "generalized cell",
+      "plasma membrane",
+      "nucleus",
+      "cytoplasm"
+    ],
+    "recall": "Sketch a generalized cell and label the plasma membrane, nucleus, and cytoplasm."
+  },
+  {
+    "v": "5pwqpAnBVJw",
+    "title": "Cell Permeability",
+    "points": [
+      "The plasma membrane is selectively permeable: its structure decides what gets in and what gets out.",
+      "Material crosses in scaled ways: simple and facilitated diffusion and osmosis are passive; active transport, endocytosis, and exocytosis need ATP."
+    ],
+    "terms": [
+      "selectively permeable",
+      "diffusion",
+      "osmosis",
+      "active transport"
+    ],
+    "recall": "Draw the membrane and add one arrow for a passive crossing and one for an ATP-powered crossing."
+  },
+  {
+    "v": "fwIFm-0Jdsg",
+    "title": "General information about the nucleus",
+    "points": [
+      "The nucleus is the cell's largest organelle and its control center, holding the DNA packaged as chromatin.",
+      "A double nuclear envelope surrounds it; nuclear pores let RNA and proteins cross. Inside sits the nucleolus."
+    ],
+    "terms": [
+      "nucleus",
+      "nuclear envelope",
+      "nuclear pores",
+      "nucleolus"
+    ],
+    "recall": "Label a nucleus: envelope, pores, nucleolus, and chromatin."
+  },
+  {
+    "v": "L5P4Cqr3yjA",
+    "title": "Cytoplasm vs. cytosol",
+    "points": [
+      "Cytoplasm is everything between the plasma membrane and the nucleus.",
+      "It is the cytosol (the gel) plus the organelles (the machinery) suspended in it."
+    ],
+    "terms": [
+      "cytoplasm",
+      "cytosol",
+      "organelles"
+    ],
+    "recall": "Write one sentence each for cytoplasm and cytosol so the difference is clear."
+  },
+  {
+    "v": "q5dzTAhKx7Y",
+    "title": "Plasma membrane",
+    "points": [
+      "A phospholipid bilayer: hydrophilic heads face the water on each side, hydrophobic tails hide in the middle. Proteins, cholesterol, and carbohydrate chains sit in it.",
+      "Epithelial membranes are polarized: the apical surface (facing the lumen) is built differently from the basolateral surface (facing the blood)."
+    ],
+    "terms": [
+      "phospholipid bilayer",
+      "apical",
+      "basolateral",
+      "glycocalyx"
+    ],
+    "recall": "Draw the bilayer, label the heads and tails, and mark the apical vs basolateral side."
+  },
+  {
+    "v": "Ul1RsX9tOwU",
+    "title": "Glycocalyx",
+    "points": [
+      "Carbohydrate chains attached to outward-facing proteins and lipids form a sugary coat on the membrane's outer surface.",
+      "It helps with cell identity and helps cells stick together."
+    ],
+    "terms": [
+      "glycocalyx",
+      "glycoprotein",
+      "glycolipid"
+    ],
+    "recall": "Add the glycocalyx to your membrane drawing, on the correct side."
+  },
+  {
+    "v": "KRkAUbOLN5U",
+    "title": "Fluid Mosaic Model",
+    "points": [
+      "The membrane is a fluid mosaic: its components float and shift in the plane of the membrane like a mosaic that is also liquid.",
+      "Cholesterol tunes how fluid it stays."
+    ],
+    "terms": [
+      "fluid mosaic",
+      "bilayer",
+      "cholesterol"
+    ],
+    "recall": "In your own words, explain why it is called both fluid and mosaic."
+  },
+  {
+    "v": "nwWIDMJ7Las",
+    "title": "Nucleus and structures of the nucleus",
+    "points": [
+      "The nuclear envelope carries pores; inside are chromatin and the nucleolus, where ribosome parts are assembled.",
+      "DNA stays inside, like a library that never lends its books; the cell exports mRNA copies through the pores to ribosomes in the cytoplasm."
+    ],
+    "terms": [
+      "nuclear pores",
+      "nucleolus",
+      "chromatin",
+      "mRNA"
+    ],
+    "recall": "Trace the path of an mRNA from gene to ribosome on a quick sketch."
+  },
+  {
+    "v": "dCi_iMijvpo",
+    "title": "Membranous vs. nonmembranous organelles",
+    "points": [
+      "Membranous (wrapped in their own membrane): mitochondria, rough and smooth ER, Golgi, lysosomes, peroxisomes.",
+      "Nonmembranous (no membrane): ribosomes and the cytoskeleton."
+    ],
+    "terms": [
+      "membranous",
+      "nonmembranous"
+    ],
+    "recall": "Sort the organelles into two columns: has a membrane vs no membrane."
+  },
+  {
+    "v": "JH7KLl8IupU",
+    "title": "Ribosomes",
+    "points": [
+      "Not membrane-bound. They read mRNA and build proteins.",
+      "Free in the cytoplasm (proteins that stay in the cell) or attached to rough ER (proteins for export)."
+    ],
+    "terms": [
+      "ribosome",
+      "free vs bound",
+      "mRNA"
+    ],
+    "recall": "Show the two places ribosomes are found on a cell sketch."
+  },
+  {
+    "v": "aqTNmAcG4Ck",
+    "title": "Endoplasmic reticulum",
+    "points": [
+      "Rough ER is a network of membrane sacs studded with ribosomes; it makes membrane and secreted proteins.",
+      "Smooth ER has no ribosomes; it makes lipids and steroids, detoxifies drugs, and stores calcium."
+    ],
+    "terms": [
+      "rough ER",
+      "smooth ER",
+      "cisternae"
+    ],
+    "recall": "Draw rough and smooth ER and mark what makes rough ER rough."
+  },
+  {
+    "v": "9XKMxyflrHQ",
+    "title": "Golgi apparatus",
+    "points": [
+      "A stack of flattened membrane sacs that modifies, sorts, and packages proteins from the rough ER.",
+      "The cell's shipping department, budding vesicles toward their destination."
+    ],
+    "terms": [
+      "Golgi",
+      "cis face",
+      "trans face",
+      "vesicle"
+    ],
+    "recall": "Sketch the Golgi stack and label the receiving and shipping faces."
+  },
+  {
+    "v": "KgO1qpPXs8M",
+    "title": "Lysosomes",
+    "points": [
+      "Membrane-bound bags of digestive enzymes.",
+      "They break down worn-out organelles and ingested material, the cell's recycling and demolition crew."
+    ],
+    "terms": [
+      "lysosome",
+      "hydrolytic enzymes"
+    ],
+    "recall": "Explain why a bag of digestive enzymes needs its own membrane."
+  },
+  {
+    "v": "EjZDI5LPKyU",
+    "title": "Peroxisomes",
+    "points": [
+      "Smaller than lysosomes.",
+      "They break down fatty acids and detoxify hydrogen peroxide."
+    ],
+    "terms": [
+      "peroxisome",
+      "catalase"
+    ],
+    "recall": "Give one way a peroxisome differs from a lysosome."
+  },
+  {
+    "v": "JH8Iaw4GHI0",
+    "title": "Mitochondria",
+    "points": [
+      "A double-membrane organelle with infoldings called cristae.",
+      "Generates ATP through aerobic respiration; high-energy cells such as cardiac muscle and the brush border carry many."
+    ],
+    "terms": [
+      "double membrane",
+      "cristae",
+      "matrix",
+      "ATP"
+    ],
+    "recall": "Draw a mitochondrion and label both membranes, the cristae, and the matrix."
+  },
+  {
+    "v": "rt0_aoakdMc",
+    "title": "Cytoskeleton",
+    "points": [
+      "An internal scaffold of microfilaments (actin), intermediate filaments, and microtubules.",
+      "Maintains shape, anchors organelles, drives movement, and builds the brush border of intestinal cells."
+    ],
+    "terms": [
+      "microfilament",
+      "intermediate filament",
+      "microtubule"
+    ],
+    "recall": "Name the three cytoskeletal fibers and one job for each."
+  },
+  {
+    "v": "ltnlhBsUEPs",
+    "title": "Centrioles and centrosome",
+    "points": [
+      "Centrioles are paired bundles of microtubules set at right angles to each other.",
+      "The centrosome is the region around them that organizes the cell's microtubules."
+    ],
+    "terms": [
+      "centriole",
+      "centrosome",
+      "microtubule triplets"
+    ],
+    "recall": "Sketch a pair of centrioles and note how the two are oriented."
+  },
+  {
+    "v": "1ShCZVPT1MI",
+    "title": "Cilia and flagella",
+    "points": [
+      "Hair-like projections of the membrane built on a 9+2 microtubule arrangement.",
+      "Cilia are short and many; a flagellum is long and usually single. Microvilli (the brush border) are different: actin-supported, not microtubule."
+    ],
+    "terms": [
+      "cilia",
+      "flagella",
+      "9+2",
+      "basal body"
+    ],
+    "recall": "Compare cilia, flagella, and microvilli in a quick three-column table."
+  }
+];
+    var KEY = "cellvids-watched-v1";
+  var current = 0, player = null, apiReady = false, AUTONEXT = true, pending = null, fallback = false;
+  var watched = load();
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ return []; } }
+  function persist(){ try{ localStorage.setItem(KEY, JSON.stringify(watched)); }catch(e){} }
+  function isW(v){ return watched.indexOf(v) >= 0; }
+  var $ = function(id){ return document.getElementById(id); };
+
+  function buildList(){
+    var box = $("cv-list"); box.innerHTML = "";
+    CONCEPTS.forEach(function(c,i){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "chap" + (isW(c.v)?" done":""); b.dataset.i = i;
+      b.innerHTML = '<span class="ix">'+(i+1)+'</span><span class="ct">'+c.title+'</span>';
+      b.addEventListener("click", function(){ select(i, true); });
+      box.appendChild(b);
+    });
+    updateProgress();
+  }
+  function updateProgress(){
+    var n = CONCEPTS.filter(function(c){ return isW(c.v); }).length;
+    $("rail-count").textContent = n + " of " + CONCEPTS.length + " watched";
+    $("rail-fill").style.width = (n/CONCEPTS.length*100) + "%";
+    $("seg-practice").textContent = n>=CONCEPTS.length ? "All watched. Practice the whole topic →" : "Practice in Recall Rx →";
+  }
+  function renderNotes(i){
+    var c = CONCEPTS[i];
+    $("seg-title").textContent = c.title;
+    $("seg-points").innerHTML = c.points.map(function(p){ return "<li>"+p+"</li>"; }).join("");
+    $("seg-terms").innerHTML = c.terms.map(function(x){ return '<span class="term">'+x+'</span>'; }).join("");
+    $("seg-recall").innerHTML = '<strong>Recommended for study:</strong> ' + c.recall;
+  }
+  function setMeta(i){
+    var c = CONCEPTS[i];
+    $("cv-title").textContent = c.title;
+    $("cv-idx").textContent = "Concept " + (i+1) + " of " + CONCEPTS.length;
+    renderNotes(i);
+    document.querySelectorAll(".chap").forEach(function(el){ el.classList.toggle("active", +el.dataset.i===i); });
+  }
+  function setVideo(v, autoplay){
+    if (fallback){ var f = $("cv-frame-iframe"); if (f) f.src = "https://www.youtube-nocookie.com/embed/"+v+"?rel=0&modestbranding=1"+(autoplay?"&autoplay=1":""); return; }
+    if (apiReady && player){ if (autoplay) player.loadVideoById(v); else player.cueVideoById(v); }
+    else { pending = { v:v, autoplay:autoplay }; }
+  }
+  function select(i, autoplay){ current = i; setMeta(i); setVideo(CONCEPTS[i].v, autoplay); }
+  function markWatched(i){
+    var v = CONCEPTS[i].v;
+    if (!isW(v)){ watched.push(v); persist(); }
+    var el = document.querySelector('.chap[data-i="'+i+'"]'); if (el) el.classList.add("done");
+    updateProgress();
+  }
+
+  // ---- YouTube IFrame Player API: auto-advance + automatic watched detection ----
+  function onState(e){
+    if (!window.YT) return;
+    if (e.data === YT.PlayerState.ENDED){
+      markWatched(current);
+      if (AUTONEXT && current < CONCEPTS.length-1){ select(current+1, true); }
+    }
+  }
+  window.onYouTubeIframeAPIReady = function(){
+    try{
+      player = new YT.Player("cv-media", {
+        host: "https://www.youtube-nocookie.com", width:"100%", height:"100%",
+        videoId: CONCEPTS[0].v,
+        playerVars: { rel:0, modestbranding:1, playsinline:1 },
+        events: {
+          "onReady": function(){ apiReady = true; if (pending){ setVideo(pending.v, pending.autoplay); pending = null; } },
+          "onStateChange": onState
+        }
+      });
+    }catch(e){ enableFallback(); }
+  };
+  function enableFallback(){
+    if (fallback) return; fallback = true;
+    var frame = document.querySelector(".frame");
+    frame.innerHTML = '<iframe id="cv-frame-iframe" title="Concept video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>';
+    setVideo(CONCEPTS[current].v, false);
+  }
+  (function loadApi(){
+    var tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    tag.onerror = enableFallback;
+    document.head.appendChild(tag);
+    setTimeout(function(){ if (!apiReady && !fallback) enableFallback(); }, 6000); // safety net if the API never loads
+  })();
+
+  // ---- wire up ----
+  buildList();
+  setMeta(0);
+  $("cv-autonext").addEventListener("change", function(){ AUTONEXT = this.checked; });
+  $("cv-playall").addEventListener("click", function(){
+    AUTONEXT = true; $("cv-autonext").checked = true;
+    select(0, true);                       // start the whole set from the beginning
+    window.scrollTo({ top:0, behavior:"smooth" });
+  });
+  $("seg-watched").addEventListener("click", function(){ markWatched(current); });
+  $("seg-next").addEventListener("click", function(){ markWatched(current); select(Math.min(CONCEPTS.length-1, current+1), true); window.scrollTo({ top:0, behavior:"smooth" }); });
+
+  if (typeof window !== "undefined"){ window.__CELL = { onState:onState, count:CONCEPTS.length, get:function(){ return { current:current, watched:watched.length, autonext:AUTONEXT }; } }; }
+})();
+</script>
+
+<!-- iframe height-sender so a Kajabi/Canvas embed grows to fit -->
+<script>
+(function(){ var ID="cell-concept-videos"; function s(){ try{ var h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight); parent.postMessage({id:ID,type:"resize",height:h},"*"); }catch(e){} } window.addEventListener("load",s); window.addEventListener("resize",s); if(window.ResizeObserver){try{new ResizeObserver(s).observe(document.body);}catch(e){}} setTimeout(s,500); })();
+</script>
+</body>
+</html>
