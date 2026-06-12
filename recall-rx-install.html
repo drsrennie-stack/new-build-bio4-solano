@@ -83,5 +83,21 @@
 
   <p class="byline">Dr. Sharilyn Rennie</p>
 </div>
+<script>
+/* iframe height-sender: lets a Kajabi/Canvas embed grow to fit, using the site's resize message convention */
+(function(){
+  var ID = "recall-rx-install";
+  function send(){
+    try{
+      var h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+      parent.postMessage({ id: ID, type: "resize", height: h }, "*");
+    }catch(e){}
+  }
+  window.addEventListener("load", send);
+  window.addEventListener("resize", send);
+  if (window.ResizeObserver){ try{ new ResizeObserver(send).observe(document.body); }catch(e){} }
+  setTimeout(send, 400);
+})();
+</script>
 </body>
 </html>
