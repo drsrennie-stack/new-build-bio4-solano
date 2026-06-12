@@ -209,6 +209,42 @@
   .big-choice .bc-title{font-weight:800; font-size:18px;}
   .big-choice .bc-desc{font-size:14px; color:var(--gray-soft);}
 
+  /* Walkthrough overlay (animated how-to) */
+  .wt-overlay{position:fixed; inset:0; background:rgba(11,21,48,0.55); display:flex; align-items:center; justify-content:center; z-index:200; padding:16px;}
+  .wt-overlay[hidden]{display:none;}
+  .wt-card{background:var(--white); border:1px solid var(--gray-line); border-radius:16px; max-width:560px; width:100%; padding:24px; box-shadow:var(--hover-shadow); position:relative; max-height:92vh; overflow:auto;}
+  .wt-close{position:absolute; top:8px; right:12px; background:none; border:0; font-size:26px; line-height:1; color:var(--gray-soft); cursor:pointer;}
+  .wt-step{font-family:"Plus Jakarta Sans"; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--terra-dark);}
+  .wt-prog{height:6px; background:var(--navy-tint); border-radius:4px; overflow:hidden; margin:8px 0 14px;}
+  .wt-prog>div{height:100%; background:var(--gold); width:0; transition:width var(--t);}
+  .wt-illus{background:var(--off-white); border:1px solid var(--gray-line); border-radius:12px; padding:18px; margin-bottom:14px; min-height:172px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;}
+  .mock-field{background:#fff; border:1.5px solid var(--gray-line); border-radius:8px; padding:9px 11px; font-size:13px; font-weight:600; color:var(--navy); display:flex; align-items:center; justify-content:space-between; gap:10px; min-width:150px;}
+  .mock-btn{background:var(--gold); color:#241a00; border-radius:9px; padding:9px 16px; font-weight:800; font-size:13px; display:inline-block;}
+  .mock-btn.ghost{background:#fff; color:var(--navy); border:1.5px solid var(--gray-line);}
+  .mock-row{display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
+  .mock-tab{font-size:12px; font-weight:700; color:var(--navy); border:1px solid var(--gray-line); border-radius:7px; padding:6px 10px; background:#fff;}
+  .mock-tab.hot{border-color:var(--navy); background:var(--navy-tint);}
+  .mock-radio{display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:var(--navy); margin:5px 0;}
+  .mock-dot{width:15px; height:15px; border-radius:50%; border:2px solid var(--gray-line); flex-shrink:0;}
+  .mock-dot.on{border-color:var(--gold); background:var(--gold);}
+  .mock-card{width:54px; height:36px; border-radius:6px; border:1.5px solid var(--navy); background:var(--navy-tint);}
+  /* animated drawn arrow */
+  .draw-arrow{position:absolute; pointer-events:none; animation:wt-bob 1.4s ease-in-out infinite;}
+  .draw-arrow path{stroke:var(--terra-dark); stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round;}
+  .draw-arrow .ln{stroke-dasharray:240; stroke-dashoffset:240; animation:wt-draw 1s ease forwards;}
+  .draw-arrow .hd{stroke-dasharray:42; stroke-dashoffset:42; animation:wt-draw .45s ease forwards; animation-delay:.75s;}
+  @keyframes wt-draw{to{stroke-dashoffset:0;}}
+  @keyframes wt-bob{0%,100%{transform:translate(0,0);} 50%{transform:translate(3px,-3px);}}
+  .wt-tap{position:absolute; width:30px; height:30px; border:3px solid var(--terra-dark); border-radius:50%; animation:wt-tap 1.4s ease-out infinite;}
+  @keyframes wt-tap{0%{transform:scale(.4); opacity:.85;} 100%{transform:scale(1.6); opacity:0;}}
+  .wt-fly{animation:wt-fly 1.6s ease-in-out infinite;}
+  @keyframes wt-fly{0%{transform:translateX(-26px); opacity:.2;} 40%{opacity:1;} 100%{transform:translateX(26px); opacity:.2;}}
+  .wt-draw-path{stroke-dasharray:60; stroke-dashoffset:60; animation:wt-draw 1s ease forwards .2s;}
+  @media(prefers-reduced-motion:reduce){
+    .draw-arrow, .draw-arrow .ln, .draw-arrow .hd, .wt-tap, .wt-fly, .wt-draw-path{animation:none !important;}
+    .draw-arrow .ln, .draw-arrow .hd, .wt-draw-path{stroke-dashoffset:0;}
+  }
+
   .pill-row{display:flex; gap:10px; flex-wrap:wrap; margin:10px 0;}
   .empty{color:var(--gray-soft); font-style:normal; font-family:"Plus Jakarta Sans",sans-serif;}
 
@@ -347,7 +383,10 @@
   <section class="view" id="view-make" aria-labelledby="make-h">
     <p class="eyebrow">Make cards</p>
     <h1 id="make-h">Build your own card</h1>
-    <p class="lead">Write a question, give four answers, mark the right one. Your cards stay on this device and join your daily review.</p>
+    <p class="lead">Write a question, choose multiple choice or a simple answer, and it joins your daily review. Your cards stay on this device.</p>
+    <div class="pill-row no-print">
+      <button type="button" class="btn ghost" id="btn-howto">Show me how &rarr;</button>
+    </div>
 
     <form class="card" id="make-form" autocomplete="off">
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
@@ -487,6 +526,19 @@
     <span class="byline">Dr. Sharilyn Rennie</span>
   </div>
 </footer>
+
+<!-- Animated how-to walkthrough -->
+<div class="wt-overlay" id="walkthrough" hidden role="dialog" aria-modal="true" aria-labelledby="wt-title">
+  <div class="wt-card">
+    <button type="button" class="wt-close" id="wt-close" aria-label="Close the walkthrough">&times;</button>
+    <p class="wt-step" id="wt-step">Step 1</p>
+    <div class="wt-prog"><div id="wt-fill"></div></div>
+    <div class="wt-illus" id="wt-illus" aria-hidden="true"></div>
+    <h2 class="wiz-h" id="wt-title">How to add cards</h2>
+    <p class="wiz-lead" id="wt-text"></p>
+    <div class="pill-row" id="wt-nav"></div>
+  </div>
+</div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -1504,6 +1556,54 @@
     toastTimer = setTimeout(function(){ t.classList.remove("show"); }, 2600);
   }
 
+  /* ---------- HOW-TO WALKTHROUGH (animated) ---------- */
+  function aUp(s){ return '<svg class="draw-arrow" style="'+s+'" width="70" height="78" viewBox="0 0 70 78" aria-hidden="true"><path class="ln" d="M16,68 C6,44 18,24 40,16"/><path class="hd" d="M40,16 L30,24 M40,16 L47,28"/></svg>'; }
+  function aRight(s){ return '<svg class="draw-arrow" style="'+s+'" width="82" height="60" viewBox="0 0 82 60" aria-hidden="true"><path class="ln" d="M6,40 C26,28 46,28 66,34"/><path class="hd" d="M66,34 L55,28 M66,34 L55,42"/></svg>'; }
+  function aDownRight(s){ return '<svg class="draw-arrow" style="'+s+'" width="82" height="70" viewBox="0 0 82 70" aria-hidden="true"><path class="ln" d="M6,12 C30,6 56,16 66,48"/><path class="hd" d="M66,48 L55,40 M66,48 L52,52"/></svg>'; }
+  var FILE_MOCK = '<span class="wt-fly" style="display:inline-block;width:30px;height:38px;background:#fff;border:1.5px solid var(--gray-line);border-radius:4px;box-shadow:var(--rest-shadow);"></span>';
+
+  var WT_STEPS = [
+    { t:"Open Make cards", x:"Tap Make cards in the top menu. That is where you build your own cards.",
+      illus:function(){ return '<div class="mock-row"><span class="mock-tab">Home</span><span class="mock-tab">Study</span><span class="mock-tab hot" style="position:relative;">Make<span class="wt-tap" style="right:-8px;top:-8px;"></span></span></div>'+aUp('left:56%;top:88px;'); } },
+    { t:"Say where it goes", x:"Pick the unit, then the topic. Studying something new? Choose “Add a new topic” to name your own.",
+      illus:function(){ return '<div style="display:flex;flex-direction:column;gap:10px;"><div class="mock-field">Unit <span>▾</span></div><div class="mock-field">Topic <span>▾</span></div></div>'+aRight('left:2px;top:58px;'); } },
+    { t:"Pick the card type", x:"Multiple choice gives four answers. Simple is just a question and its answer. Your call.",
+      illus:function(){ return '<div><div class="mock-radio"><span class="mock-dot on"></span> Multiple choice</div><div class="mock-radio"><span class="mock-dot"></span> Simple (question and answer)</div></div>'+aRight('left:0;top:56px;'); } },
+    { t:"Write your question", x:"Type the question. For multiple choice, fill the answers and tap the circle next to the correct one. Add a why if you want.",
+      illus:function(){ return '<div style="width:212px;"><div class="mock-field" style="margin-bottom:8px;">What does supine mean?</div><div class="mock-radio"><span class="mock-dot on"></span><span class="mock-field" style="flex:1;">Lying face up</span></div><div class="mock-radio"><span class="mock-dot"></span><span class="mock-field" style="flex:1;">Lying face down</span></div></div>'+aDownRight('left:2px;top:2px;'); } },
+    { t:"Save it", x:"Tap Save card. It drops into your daily review for that unit, once the unit is turned on.",
+      illus:function(){ return '<span class="mock-btn" style="position:relative;">Save card<span class="wt-tap" style="left:50%;top:50%;transform:translate(-50%,-50%);"></span></span><span class="mock-card wt-fly" style="position:absolute;right:30px;top:26px;"></span>'+aUp('left:54%;top:70px;'); } },
+    { t:"Share your cards", x:"Export my cards makes a file you can send to a classmate, so they get your questions too.",
+      illus:function(){ return '<div class="mock-row"><span class="mock-btn ghost">Export my cards</span>'+FILE_MOCK+'</div>'+aRight('left:2px;top:54px;'); } },
+    { t:"Add a friend’s cards", x:"Import adds their file to your bank. The same card never doubles up, repeats are skipped automatically.",
+      illus:function(){ return '<div class="mock-row">'+FILE_MOCK+'<span class="mock-btn ghost">Import shared cards</span></div>'+aRight('left:2px;top:54px;'); } },
+    { t:"You’ve got it", x:"Make your first card now. You can reopen this guide any time from the Show me how button.",
+      illus:function(){ return '<svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="28" fill="var(--navy-tint)" stroke="var(--navy)" stroke-width="2"/><path class="wt-draw-path" d="M22,37 l9,9 l19,-21" stroke="var(--navy)" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'; } }
+  ];
+  var WT = { i:0 };
+  function openHowto(){ WT.i = 0; var ov = document.getElementById("walkthrough"); ov.hidden = false; renderWt(); document.getElementById("wt-close").focus(); }
+  function closeHowto(){ document.getElementById("walkthrough").hidden = true; var b = document.getElementById("btn-howto"); if (b) b.focus(); }
+  function wtGo(d){ WT.i = Math.max(0, Math.min(WT_STEPS.length-1, WT.i + d)); renderWt(); }
+  function renderWt(){
+    var st = WT_STEPS[WT.i];
+    document.getElementById("wt-step").textContent = "Step " + (WT.i+1) + " of " + WT_STEPS.length;
+    document.getElementById("wt-fill").style.width = Math.round(WT.i/(WT_STEPS.length-1)*100) + "%";
+    document.getElementById("wt-illus").innerHTML = st.illus();
+    document.getElementById("wt-title").textContent = st.t;
+    document.getElementById("wt-text").textContent = st.x;
+    var nav = document.getElementById("wt-nav"); nav.innerHTML = "";
+    if (WT.i > 0) addNavBtn(nav, "Back", "ghost", function(){ wtGo(-1); });
+    if (WT.i < WT_STEPS.length-1) addNavBtn(nav, "Next", "gold", function(){ wtGo(1); });
+    else addNavBtn(nav, "Make a card", "gold", function(){ closeHowto(); var u = document.getElementById("mk-unit"); if (u) u.focus(); });
+  }
+  function setupHowto(){
+    var b = document.getElementById("btn-howto");
+    if (b) b.addEventListener("click", openHowto);
+    document.getElementById("wt-close").addEventListener("click", closeHowto);
+    document.getElementById("walkthrough").addEventListener("click", function(e){ if (e.target === this) closeHowto(); });
+    document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !document.getElementById("walkthrough").hidden) closeHowto(); });
+  }
+
   /* ---------- init ---------- */
   function init(){
     document.querySelectorAll("[data-nav]").forEach(function(b){
@@ -1519,6 +1619,7 @@
     setupMakeForm();
     setupShare();
     setupReport();
+    setupHowto();
     renderMake();
     // First run goes to setup so students choose their course and turn on topics.
     nav((STATE.setup && STATE.setup.done) ? "home" : "setup");
