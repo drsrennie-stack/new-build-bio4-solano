@@ -240,6 +240,13 @@
   .wt-fly{animation:wt-fly 1.6s ease-in-out infinite;}
   @keyframes wt-fly{0%{transform:translateX(-26px); opacity:.2;} 40%{opacity:1;} 100%{transform:translateX(26px); opacity:.2;}}
   .wt-draw-path{stroke-dasharray:60; stroke-dashoffset:60; animation:wt-draw 1s ease forwards .2s;}
+  /* QR / get-it-on-your-phone popup */
+  .qr-img{width:208px; height:208px; display:block; margin:2px auto 8px; border:1px solid var(--gray-line); border-radius:10px;}
+  .qr-url{font-size:12px; font-weight:700; word-break:break-all; background:var(--off-white); border:1px dashed var(--gray-line); border-radius:8px; padding:8px 10px; text-align:center; margin:0;}
+  .qr-steps{font-size:13.5px; color:var(--gray-soft); margin:14px 0 0; text-align:left;}
+  .qr-steps strong{color:var(--navy);}
+  .qr-warn{background:#8B3A2E; color:#FBEFEA; border-radius:10px; padding:14px 16px; margin-top:16px; font-size:14px; text-align:left;}
+  .qr-warn strong{color:#FFFFFF;}
   @media(prefers-reduced-motion:reduce){
     .draw-arrow, .draw-arrow .ln, .draw-arrow .hd, .wt-tap, .wt-fly, .wt-draw-path{animation:none !important;}
     .draw-arrow .ln, .draw-arrow .hd, .wt-draw-path{stroke-dashoffset:0;}
@@ -340,6 +347,7 @@
     <div class="pill-row no-print">
       <button type="button" class="btn" data-nav="study">Start studying</button>
       <button type="button" class="btn ghost" data-nav="report">See my weekly report</button>
+      <button type="button" class="btn ghost open-qr">Get it on your phone</button>
     </div>
   </section>
 
@@ -468,9 +476,11 @@
     <p class="lead">This is what you turn in for your TBL bonus. Put your name in, then use Save as PDF and submit it in Canvas.</p>
 
     <div class="card no-print">
-      <label for="rp-name">Your name (prints at the top, stays on this device)</label>
+      <label for="rp-name">Your name (prints at the top of your report)</label>
       <input type="text" id="rp-name" placeholder="First and last name">
+      <p id="rp-name-note" class="field-help"></p>
       <div class="pill-row" style="margin-top:14px;">
+        <button type="button" class="btn ghost" id="btn-lock-name">Lock in my name</button>
         <button type="button" class="btn" id="btn-print">Save as PDF / Print</button>
       </div>
     </div>
@@ -507,6 +517,7 @@
       <p class="muted">Recall Rx works on a phone or tablet too. Open it in your phone’s browser, then add it to your home screen so it opens like an app:</p>
       <p class="muted" style="margin-top:8px;"><strong>iPhone or iPad (Safari):</strong> tap the Share button, then "Add to Home Screen."<br><strong>Android (Chrome):</strong> tap the three-dot menu, then "Add to Home screen" or "Install app."</p>
       <p class="muted" style="margin-top:8px;">Remember this becomes its own device. Whatever you study on your phone stays on your phone, so study in one place.</p>
+      <button type="button" class="btn open-qr" style="margin-top:10px;">Show the QR code</button>
     </div>
     <div class="card">
       <h3>Reset</h3>
@@ -537,6 +548,19 @@
     <h2 class="wiz-h" id="wt-title">How to add cards</h2>
     <p class="wiz-lead" id="wt-text"></p>
     <div class="pill-row" id="wt-nav"></div>
+  </div>
+</div>
+
+<!-- Get it on your phone (QR + saved-data warning) -->
+<div class="wt-overlay" id="qrmodal" hidden role="dialog" aria-modal="true" aria-labelledby="qr-title">
+  <div class="wt-card" style="max-width:430px;">
+    <button type="button" class="wt-close" id="qr-close" aria-label="Close">&times;</button>
+    <h2 class="wiz-h" style="text-align:center;" id="qr-title">Get Recall Rx on your phone</h2>
+    <p class="wiz-lead" style="text-align:center;">Scan this with your phone camera, then add it to your home screen so it opens like an app.</p>
+    <img class="qr-img" src="recall-rx-qr.png" alt="QR code that opens Recall Rx">
+    <p class="qr-url">drsrennie-stack.github.io/new-build-bio4-solano/bio004-spaced-recall.html</p>
+    <p class="qr-steps"><strong>iPhone (Safari):</strong> tap Share, then Add to Home Screen.<br><strong>Android (Chrome):</strong> tap the three-dot menu, then Add to Home screen.</p>
+    <div class="qr-warn"><strong>Heads up about your saved work.</strong> Recall Rx saves your progress, your streak, and the cards you make only on the device and browser you use. They do not move between your phone and your laptop. Pick one place to study, come back to it each day, and save your weekly report so your work is recorded.</div>
   </div>
 </div>
 
@@ -641,7 +665,7 @@
   /* ---------- state ---------- */
   var STATE = loadState();
   function freshState(){
-    return { version:2, createdAt:new Date().toISOString(), name:"",
+    return { version:2, createdAt:new Date().toISOString(), name:"", nameLocked:false,
              setup:{ done:false, format:"summer" },
              active:{}, customTopics:[], examDates:{},
              topics:{}, personal:[], sessions:[] };
@@ -1301,11 +1325,17 @@
     }
     else if (key === "name"){
       head.textContent = "Your name";
-      body.innerHTML = '<h2 class="wiz-h">What is your name?</h2><p class="wiz-lead">It goes at the top of the weekly report you turn in for bonus points. It stays on this device.</p>'+
-        '<label for="wiz-name" class="sr-only">Your name</label><input type="text" id="wiz-name" placeholder="First and last name">';
-      var input = body.querySelector("#wiz-name");
-      input.value = STATE.name || "";
-      input.addEventListener("input", function(){ STATE.name = input.value; save(); });
+      if (STATE.nameLocked){
+        body.innerHTML = '<h2 class="wiz-h">Your name</h2><p class="wiz-lead">Your name is set and locked so your bonus stays yours.</p>'+
+          '<div class="mock-field" style="display:block;font-size:16px;">'+escapeHtml(STATE.name)+'</div>'+
+          '<p class="field-help">To change it you would have to reset the app in Settings, which erases your progress.</p>';
+      } else {
+        body.innerHTML = '<h2 class="wiz-h">What is your name?</h2><p class="wiz-lead">It goes at the top of the weekly report you turn in for bonus points. It stays on this device, and it locks when you finish setup.</p>'+
+          '<label for="wiz-name" class="sr-only">Your name</label><input type="text" id="wiz-name" placeholder="First and last name">';
+        var input = body.querySelector("#wiz-name");
+        input.value = STATE.name || "";
+        input.addEventListener("input", function(){ STATE.name = input.value; save(); });
+      }
       addNavBtn(navEl, "Back", "ghost", function(){ goStep(0); });
       addNavBtn(navEl, "Next", "gold", function(){ goStep(2); });
     }
@@ -1328,6 +1358,7 @@
       renderUnitSheet(body.querySelector("#wiz-units"));
       addNavBtn(navEl, "Back", "ghost", function(){ goStep(2); });
       addNavBtn(navEl, "Next", "gold", function(){ goStep(4); });
+      if (STATE.setup && STATE.setup.done) addNavBtn(navEl, "Study now", "ghost", function(){ nav("study"); });
     }
     else if (key === "exams"){
       head.textContent = "Exam dates";
@@ -1440,6 +1471,8 @@
     STATE.setup = STATE.setup || {};
     STATE.setup.done = true;
     if (!STATE.setup.format) STATE.setup.format = "summer";
+    // Lock the name so a finished report cannot be re-credited to someone else.
+    if ((STATE.name||"").trim()) STATE.nameLocked = true;
     save();
     toast("You are all set.");
     nav(activeTopicIds().length ? "study" : "home");
@@ -1484,7 +1517,13 @@
     var s = weekSummary();
     var sc = weekScore(s);
     var name = STATE.name || "";
-    document.getElementById("rp-name").value = name;
+    var locked = !!STATE.nameLocked;
+    var inp = document.getElementById("rp-name");
+    inp.value = name; inp.disabled = locked;
+    document.getElementById("btn-lock-name").hidden = locked;
+    document.getElementById("rp-name-note").textContent = locked
+      ? "Locked so your bonus stays yours. To change it you would have to reset the app, which erases your progress."
+      : "Type your name, then tap Lock in my name. After that it cannot be changed.";
     var body = document.getElementById("report-body");
 
     var NAMES = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
@@ -1538,10 +1577,18 @@
 
   function setupReport(){
     document.getElementById("rp-name").addEventListener("input", function(e){
+      if (STATE.nameLocked) return;            // cannot edit once locked
       STATE.name = e.target.value; save();
     });
+    document.getElementById("btn-lock-name").addEventListener("click", function(){
+      var v = (document.getElementById("rp-name").value||"").trim();
+      if (!v){ toast("Type your name first."); return; }
+      if (!confirm('Lock your name as "'+v+'"? It cannot be changed after this without resetting the app.')) return;
+      STATE.name = v; STATE.nameLocked = true; save();
+      renderReport(); toast("Name locked.");
+    });
     document.getElementById("btn-print").addEventListener("click", function(){
-      if (!STATE.name) toast("Tip: add your name first so it prints at the top.");
+      if (!STATE.name) toast("Tip: add and lock your name first so it prints at the top.");
       window.print();
     });
   }
@@ -1604,6 +1651,16 @@
     document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !document.getElementById("walkthrough").hidden) closeHowto(); });
   }
 
+  /* ---------- QR popup ---------- */
+  function openQR(){ var m = document.getElementById("qrmodal"); m.hidden = false; document.getElementById("qr-close").focus(); }
+  function closeQR(){ document.getElementById("qrmodal").hidden = true; }
+  function setupQR(){
+    document.querySelectorAll(".open-qr").forEach(function(b){ b.addEventListener("click", openQR); });
+    document.getElementById("qr-close").addEventListener("click", closeQR);
+    document.getElementById("qrmodal").addEventListener("click", function(e){ if (e.target === this) closeQR(); });
+    document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !document.getElementById("qrmodal").hidden) closeQR(); });
+  }
+
   /* ---------- init ---------- */
   function init(){
     document.querySelectorAll("[data-nav]").forEach(function(b){
@@ -1620,9 +1677,24 @@
     setupShare();
     setupReport();
     setupHowto();
+    setupQR();
     renderMake();
     // First run goes to setup so students choose their course and turn on topics.
     nav((STATE.setup && STATE.setup.done) ? "home" : "setup");
+    applyDeepLink();
+  }
+  // A lecture page can link here with #topic=<id> to open the activation page with that unit shown.
+  function applyDeepLink(){
+    var h = (location.hash || "").replace(/^#/, "");
+    if (!h) return;
+    var m = h.match(/topic=([A-Za-z0-9_-]+)/);
+    if (m){
+      var u = unitOfTopic(m[1]);
+      if (u) SHEET_EXPANDED = u.id;   // expand that unit so they can see and set its activation
+      nav("setup");
+      return;
+    }
+    if (/^(home|study|make|report|setup|settings)$/.test(h)) nav(h);
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();

@@ -956,7 +956,7 @@
       <li><label><input type="checkbox"> <span><strong>Build a concept map</strong> linking the main ideas of this topic.</span></label></li>
       <li><label><input type="checkbox"> <span><strong>Sketch the key structures</strong>, small drawings to fix what they look like.</span></label></li>
       <li><label><input type="checkbox"> <span><strong>Answer the study questions</strong> below, in your own words.</span></label></li>
-      <li><label><input type="checkbox"> <span><strong>Complete the explain-back check</strong> at the bottom of the page to unlock your cards.</span></label></li>
+      <li><label><input type="checkbox"> <span><strong>Do the explain-back check</strong> at the bottom of the page to lock in what you learned. Optional.</span></label></li>
       <li><label><input type="checkbox"> <span><strong>Do your spaced recall cards</strong>, today's new cards plus any daily cards that are due.</span></label></li>
     </ul>
     <p class="prework-note"><strong>This is more than a checklist.</strong> Ticking these boxes is the start, not the finish. Committing this material to memory and being able to apply it takes considerable time and repeated effort. You are not done when the boxes are checked. Put in the real hours, and keep coming back for frequent recall and review until the material is genuinely yours.</p>
@@ -1124,7 +1124,7 @@
   <section id="explain-gate" hidden aria-labelledby="explain-gate-h">
     <p class="gate-eyebrow">Step 2 . Retrieval check</p>
     <h2 id="explain-gate-h">Now explain it back, in your own words.</h2>
-    <p class="gate-instr">In 60 words or more, pull together what the video just taught you. Include the key concepts. This is the point where the learning actually sticks. After you submit, your spaced-recall cards for this topic unlock.</p>
+    <p class="gate-instr">In 60 words or more, pull together what the video just taught you. Include the key concepts. This is the point where the learning actually sticks.</p>
     <textarea id="gate-input" aria-label="Explain-back response" aria-describedby="gate-meter" placeholder="What did this video teach you?"></textarea>
     <div id="gate-meter" aria-live="polite">
       <span>Words: <strong id="gate-word-count">0</strong> / 60</span>
@@ -1155,7 +1155,7 @@
   window.SHEET_CONFIG = {
     videoFoundations: 'https://www.youtube.com/embed/REPLACE_WITH_FOUNDATIONS_VIDEO_ID',
     videoDeepDive:    'https://www.youtube.com/embed/REPLACE_WITH_DEEPDIVE_VIDEO_ID',
-    prework:          'https://drsrennie-stack.github.io/new-build-bio4-solano/spaced-recall.html#topic=t-accessory-digestive-organs',
+    prework:          'https://drsrennie-stack.github.io/new-build-bio4-solano/bio004-spaced-recall.html#topic=t-accessory-digestive-organs',
   };
   (function wireResources() {
     var cfg = window.SHEET_CONFIG || {};
@@ -1193,7 +1193,7 @@
         }
         if (v.url && v.url.indexOf('REPLACE_WITH') !== -1) {
           iframe.removeAttribute('src');
-          iframe.srcdoc = '<!doctype html><meta charset="utf-8"><body style="margin:0;height:100vh;display:flex;align-items:center;justify-content:center;font-family:Plus Jakarta Sans,system-ui,sans-serif;background:#FAFAF9;color:#0B1530;text-align:center;padding:20px"><div><p style="font-weight:700;font-size:15px;margin:0 0 6px">Lecture video coming soon</p><p style="font-size:13px;opacity:0.85;margin:0">You can still complete the retrieval check below to unlock your cards.</p></div></body>';
+          iframe.srcdoc = '<!doctype html><meta charset="utf-8"><body style="margin:0;height:100vh;display:flex;align-items:center;justify-content:center;font-family:Plus Jakarta Sans,system-ui,sans-serif;background:#FAFAF9;color:#0B1530;text-align:center;padding:20px"><div><p style="font-weight:700;font-size:15px;margin:0 0 6px">Lecture video coming soon</p><p style="font-size:13px;opacity:0.85;margin:0">You can still do the retrieval check below to reinforce it.</p></div></body>';
         } else {
           iframe.removeAttribute('srcdoc');
           iframe.src = videoUrl;
@@ -1331,7 +1331,7 @@
   // Topic mapping for the explain-back gate and spaced-recall pre-work.
   var TOPIC_ID = "t-accessory-digestive-organs";
   var GATE_KEYWORDS = ["liver", "gallbladder", "pancreas", "salivary gland", "bile", "hepatocyte"];
-  var PREWORK_TARGET = "https://drsrennie-stack.github.io/new-build-bio4-solano/spaced-recall.html#topic=t-accessory-digestive-organs";
+  var PREWORK_TARGET = "https://drsrennie-stack.github.io/new-build-bio4-solano/bio004-spaced-recall.html#topic=t-accessory-digestive-organs";
   var MIN_WORDS = 60;
   var MIN_KEYWORDS = GATE_KEYWORDS.length ? Math.max(2, Math.ceil(GATE_KEYWORDS.length * 0.6)) : 0;
   var pre = document.getElementById('prework-link');
@@ -1349,13 +1349,13 @@
     return;
   }
   if (pre) {
-    pre.classList.add('gate-locked');
-    pre.setAttribute('aria-disabled', 'true');
+    /* button stays unlocked */
+    pre.setAttribute('aria-disabled', 'false');
     var hint = document.createElement('span');
     hint.className = 'gate-hint';
     hint.id = 'prework-gate-hint';
-    hint.textContent = 'Watch the video and complete the retrieval check to unlock';
-    if (pre.parentNode) pre.parentNode.insertBefore(hint, pre.nextSibling);
+    hint.textContent = '';
+    void hint;
     pre.href = PREWORK_TARGET;
     pre.addEventListener('click', function (e) {
       if (pre.classList.contains('gate-locked')) {
