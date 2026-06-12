@@ -514,9 +514,11 @@
     </div>
     <div class="card">
       <h3>Put Recall Rx on your phone</h3>
-      <p class="muted">Recall Rx works on a phone or tablet too. Open it in your phone’s browser, then add it to your home screen so it opens like an app:</p>
-      <p class="muted" style="margin-top:8px;"><strong>iPhone or iPad (Safari):</strong> tap the Share button, then "Add to Home Screen."<br><strong>Android (Chrome):</strong> tap the three-dot menu, then "Add to Home screen" or "Install app."</p>
-      <p class="muted" style="margin-top:8px;">Remember this becomes its own device. Whatever you study on your phone stays on your phone, so study in one place.</p>
+      <p class="muted">Recall Rx installs like an app, no app store needed.</p>
+      <p class="muted" style="margin-top:8px;"><strong>iPhone or iPad:</strong> tap the <strong>Share</strong> button (a box with an up arrow). In Chrome it is up in the address bar; in Safari it is at the bottom of the screen. Then tap "Add to Home Screen," then Add.</p>
+      <p class="muted" style="margin-top:8px;"><strong>Android phone:</strong> open in Chrome, tap the three-dot menu, then "Install app."</p>
+      <p class="muted" style="margin-top:8px;"><strong>Computer:</strong> in Chrome, click the Install icon in the address bar (a small screen with a down arrow).</p>
+      <p class="muted" style="margin-top:8px;">Remember this becomes its own device. Whatever you study there stays there, so study in one place.</p>
       <button type="button" class="btn open-qr" style="margin-top:10px;">Show the QR code</button>
     </div>
     <div class="card">
@@ -559,7 +561,7 @@
     <p class="wiz-lead" style="text-align:center;">Scan this with your phone camera, then add it to your home screen so it opens like an app.</p>
     <img class="qr-img" src="recall-rx-qr.png" alt="QR code that opens Recall Rx">
     <p class="qr-url">drsrennie-stack.github.io/new-build-bio4-solano/bio004-spaced-recall.html</p>
-    <p class="qr-steps"><strong>iPhone (Safari):</strong> tap Share, then Add to Home Screen.<br><strong>Android (Chrome):</strong> tap the three-dot menu, then Add to Home screen.</p>
+    <p class="qr-steps"><strong>iPhone or iPad:</strong> tap the <strong>Share</strong> button (a box with an up arrow). In Chrome it is up in the address bar; in Safari it is at the bottom. Then tap <strong>Add to Home Screen</strong>, then Add.<br><strong>Android phone:</strong> open in Chrome, tap the three-dot menu, then <strong>Install app</strong>.<br><strong>Computer:</strong> in Chrome, click the <strong>Install</strong> icon in the address bar (a small screen with a down arrow).</p>
     <div class="qr-warn"><strong>Heads up about your saved work.</strong> Recall Rx saves your progress, your streak, and the cards you make only on the device and browser you use. They do not move between your phone and your laptop. Pick one place to study, come back to it each day, and save your weekly report so your work is recorded.</div>
   </div>
 </div>
@@ -1702,6 +1704,15 @@
   // expose a tiny bit for testing harnesses
   if (typeof window !== "undefined"){ window.__BIO004 = { allCards:allCards, activeCards:activeCards, allTopics:allTopics, allUnits:allUnits, weekScore:weekScore, weekSummary:weekSummary, schedule:schedule, setActive:setActive, dueCount:dueCount, currentTargets:currentTargets, ensureCustomTopic:ensureCustomTopic, STATE:function(){ return STATE; }, save:save }; }
 })();
+</script>
+
+<!-- Register the service worker so Chrome offers Install and the app works offline -->
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("sw.js").catch(function () {});
+  });
+}
 </script>
 
 <!-- iframe height-sender: report height to a Kajabi/host page so the embed grows with content -->
