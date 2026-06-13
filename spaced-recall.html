@@ -807,7 +807,7 @@
   <p class="eyebrow">BIO 004 &middot; Human Anatomy</p>
   <h1 class="page-title">Pre-Work and Spaced Recall</h1>
   <p class="subhead" id="subhead-context">Tonight&rsquo;s prep, your daily review, and your engagement record</p>
-  <p class="usage">Watch each video. Explain it in your own words to unlock notes and your question set. Rate how you felt on each card. Come back tomorrow and your cards will be ready for review.</p>
+  <p class="usage">Work through tonight's cards and rate how you felt on each one. Come back tomorrow and your due cards will be ready for review.</p>
   <nav class="top-nav" aria-label="Primary">
     <button type="button" data-nav="dashboard" aria-current="page">Tonight&rsquo;s pre-work</button>
     <button type="button" data-nav="review">Daily review</button>
@@ -1396,8 +1396,7 @@
     const ts = STATE.topics[topicId];
     if (!ts) return "locked";
     if (ts.gateCompleted && ts.videoWatched) return "completed";
-    if (ts.videoWatched) return "unlocked";
-    return "locked";
+    return "unlocked";
   }
 
   /* Course-day calendar: pre-work runs Mon, Tue, Thu, Fri. Wednesday is
@@ -1702,10 +1701,7 @@
         // Option A: check the cross-page gate flag set by the lecture page.
         // If the student has passed the lecture-page gate, jump straight to cards.
         var gatePassed = false;
-        try {
-          gatePassed = window.localStorage.getItem("bio304-gate-" + id) === "true"
-                    || window.localStorage.getItem("bio304-video-" + id) === "true";
-        } catch (e) {}
+        gatePassed = true; // lecture gate removed: cards open directly
         if (gatePassed || ts.gateCompleted) {
           if (!ts.gateCompleted) {
             ts.gateCompleted = true;
@@ -1730,6 +1726,11 @@
     CURRENT_TOPIC = topicId;
     const topic = topicById(topicId);
     if (!topic) { nav("dashboard"); return; }
+    // Lecture gate removed: open cards directly for every topic.
+    var _ts = getTopicState(topicId);
+    if (!_ts.gateCompleted) { _ts.gateCompleted = true; _ts.videoWatched = true; saveTopicState(topicId, _ts); }
+    nav("learn", topicId);
+    return;
     const ts = getTopicState(topicId);
     $("#topic-heading").textContent = topic.title;
     $("#topic-summary").textContent = topic.summary || "";
