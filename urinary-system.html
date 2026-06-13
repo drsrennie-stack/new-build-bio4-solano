@@ -1209,6 +1209,7 @@
       var panel  = document.getElementById(v.panel);
       var iframe = document.getElementById(v.iframe);
       if (!toggle || !panel || !iframe) return;
+      if (v.url && v.url.indexOf('REPLACE_WITH') !== -1) { toggle.hidden = true; return; }
       toggle.addEventListener('click', function () {
         var expanded = toggle.getAttribute('aria-expanded') === 'true';
         if (expanded) {
@@ -1359,7 +1360,7 @@
 <script>
 (function () {
   // Topic mapping for the explain-back gate and spaced-recall pre-work.
-  var TOPIC_ID = "t-urinary-system";
+  var TOPIC_ID = null;
   var GATE_KEYWORDS = ["kidney", "nephron", "glomerulus", "ureter", "bladder", "urethra"];
   var PREWORK_TARGET = "https://drsrennie-stack.github.io/new-build-bio4-solano/spaced-recall.html#topic=t-urinary-system";
   var MIN_WORDS = 60;
