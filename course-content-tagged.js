@@ -1492,8 +1492,10 @@ window.BIO004_COURSE_CONTENT = {
    Recall Rx metadata enrichment
    Adds globally unique card IDs plus dashboard-ready tags.
    Original per-topic ids are preserved as legacyId.
+   Exposed as window.BIO004_enrich so it can be re-run after
+   additional card banks (e.g. the DOK 3 expansion) are injected.
    ============================================================ */
-(function(){
+window.BIO004_enrich = function(){
   var C = (typeof window !== "undefined") ? window.BIO004_COURSE_CONTENT : null;
   if (!C || !C.modules) return;
   var systemMap = {
@@ -1541,10 +1543,11 @@ window.BIO004_COURSE_CONTENT = {
           region:region,
           dok:"DOK " + (card.dok || 1),
           questionType:(card.options && card.options.length) ? "Multiple Choice" : "Short Answer",
-          source:"Official Course Bank"
+          source:card.source || "Official Course Bank"
         };
         card.tagList = ["BIO004", system, region, t.title || t.id, "DOK"+(card.dok||1), card.tags.questionType].filter(Boolean);
       });
     });
   });
-})();
+};
+window.BIO004_enrich();

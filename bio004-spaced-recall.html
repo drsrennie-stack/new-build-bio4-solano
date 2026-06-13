@@ -157,6 +157,25 @@
   .opt[disabled]{cursor:default;}
   .explain{margin-top:16px; padding:14px 16px; background:var(--off-white); border-left:3px solid var(--gold); border-radius:8px; font-size:15px;}
   .explain h4{margin:0 0 4px; font-family:"Plus Jakarta Sans"; color:var(--navy); font-size:14px;}
+  .mode-toggle{margin-top:14px; border:1px solid var(--gray-line); border-radius:12px; padding:12px 14px;}
+  .mode-toggle legend{font-weight:700; color:var(--navy); padding:0 6px; font-size:14px;}
+  .mode-opts{display:flex; flex-direction:column; gap:8px;}
+  .mode-opt{display:flex; gap:10px; align-items:flex-start; border:1px solid var(--gray-line); border-radius:10px; padding:10px 12px; cursor:pointer; font-size:14px; line-height:1.4;}
+  .mode-opt:hover{border-color:var(--navy);}
+  .mode-opt input{margin-top:3px; accent-color:var(--navy);}
+  .mode-opt:has(input:checked){border-color:var(--navy); background:var(--navy-tint);}
+  @media(min-width:640px){ .mode-opts{flex-direction:row;} .mode-opt{flex:1;} }
+  .mode-pill{display:inline-block; font-size:12px; font-weight:700; color:var(--navy); background:var(--navy-tint); border:1px solid var(--navy); border-radius:999px; padding:3px 10px; margin-bottom:8px;}
+  .recall-input{width:100%; box-sizing:border-box; min-height:74px; font:inherit; font-size:16px; line-height:1.5; color:var(--navy); border:1px solid var(--gray-line); border-radius:10px; padding:10px 12px; margin:4px 0 10px; resize:vertical;}
+  .recall-input:focus{outline:none; border-color:var(--navy); box-shadow:0 0 0 3px var(--navy-tint);}
+  .answer-row{display:flex; gap:8px; align-items:flex-start; flex-wrap:wrap;}
+  .mic-btn{flex:0 0 auto; font:inherit; font-weight:700; font-size:14px; cursor:pointer; border-radius:10px; padding:10px 14px; border:1px solid var(--navy); background:var(--white); color:var(--navy); display:inline-flex; align-items:center; gap:7px;}
+  .mic-btn:hover{background:var(--navy-tint);}
+  .mic-btn[aria-pressed="true"]{background:var(--terra-dark); border-color:var(--terra-dark); color:var(--white);}
+  .mic-dot{width:10px; height:10px; border-radius:50%; background:currentColor; display:inline-block;}
+  .mic-btn[aria-pressed="true"] .mic-dot{animation:micpulse 1s ease-in-out infinite;}
+  @keyframes micpulse{0%,100%{opacity:1;} 50%{opacity:.35;}}
+  @media(prefers-reduced-motion:reduce){ .mic-btn[aria-pressed="true"] .mic-dot{animation:none;} }
   .rate-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:18px;}
   .rate{font:inherit; font-weight:700; font-size:14px; cursor:pointer; border-radius:10px; padding:10px 16px; border:1px solid var(--navy); background:var(--white); color:var(--navy);}
   .rate:hover{background:var(--navy-tint);}
@@ -332,7 +351,6 @@
       <button type="button" data-nav="home" aria-current="page">Home</button>
       <button type="button" data-nav="study">Study cards</button>
       <button type="button" data-nav="make">Make cards</button>
-      <button type="button" data-nav="report">My weekly report</button>
       <button type="button" data-nav="weakness">Weakness dashboard</button>
       <button type="button" data-nav="settings">Settings</button>
     </nav>
@@ -364,7 +382,7 @@
     <div class="stats" id="home-stats" aria-live="polite"></div>
     <div class="pill-row no-print">
       <button type="button" class="btn" data-nav="study">Start studying</button>
-      <button type="button" class="btn ghost" data-nav="report">See my weekly report</button>
+      <button type="button" class="btn ghost" data-nav="weakness">See my weakness dashboard</button>
       <button type="button" class="btn ghost open-qr">Get it on your phone</button>
     </div>
   </section>
@@ -382,6 +400,15 @@
         <button type="button" class="btn gold" id="btn-start-due">Review due cards</button>
         <button type="button" class="btn ghost" id="btn-study-mine">Study only my cards</button>
       </div>
+
+      <fieldset class="mode-toggle no-print" aria-describedby="mode-help">
+        <legend>Answer mode</legend>
+        <div class="mode-opts" role="radiogroup" aria-label="Answer mode">
+          <label class="mode-opt"><input type="radio" name="study-mode" value="mcq"> <span><strong>Multiple choice</strong><br>Pick from options. Faster, builds recognition.</span></label>
+          <label class="mode-opt"><input type="radio" name="study-mode" value="written"> <span><strong>Written recall</strong><br>No options. Produce the answer from memory, then grade yourself. Harder, and what an exam actually asks.</span></label>
+        </div>
+        <p id="mode-help" class="field-help" style="margin:6px 0 0;">Written recall fights recognition bias: seeing the right answer in a list is not the same as remembering it.</p>
+      </fieldset>
     </div>
 
     <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
@@ -487,25 +514,6 @@
     <div id="mine-list" class="deck-list"></div>
   </section>
 
-  <!-- ===================== WEEKLY REPORT ===================== -->
-  <section class="view" id="view-report" aria-labelledby="report-h">
-    <p class="eyebrow">For your professor</p>
-    <h1 id="report-h">Weekly engagement report</h1>
-    <p class="lead">This is what you turn in for your TBL bonus. Put your name in, then use Save as PDF and submit it in Canvas.</p>
-
-    <div class="card no-print">
-      <label for="rp-name">Your name (prints at the top of your report)</label>
-      <input type="text" id="rp-name" placeholder="First and last name">
-      <p id="rp-name-note" class="field-help"></p>
-      <div class="pill-row" style="margin-top:14px;">
-        <button type="button" class="btn ghost" id="btn-lock-name">Lock in my name</button>
-        <button type="button" class="btn" id="btn-print">Save as PDF / Print</button>
-      </div>
-    </div>
-
-    <div id="report-body" aria-live="polite"></div>
-  </section>
-
   <!-- ===================== SETUP WIZARD ===================== -->
   <section class="view" id="view-setup" aria-labelledby="setup-h">
     <p class="eyebrow" id="wizard-step-label">Setup</p>
@@ -523,7 +531,7 @@
   <section class="view" id="view-weakness" aria-labelledby="weak-h">
     <p class="eyebrow">Study analytics</p>
     <h1 id="weak-h">Weakness dashboard</h1>
-    <p class="lead">This uses the cards you have actually reviewed on this device. It shows weak systems, topics, and DOK levels so students know what to study next.</p>
+    <p class="lead">This uses the cards you have reviewed on this device. It shows your weakest systems and topics, how you do at each DOK level, your mastery by topic, and the cards you keep missing, so you know exactly what to study next.</p>
     <div id="weakness-body" aria-live="polite"></div>
   </section>
 
@@ -598,6 +606,7 @@
 
 <!-- Course content (1110 cards). Edit course-content.js to change cards or add topic.videoUrl. -->
 <script src="course-content-tagged.js"></script>
+<script src="dok3-explain-why.js"></script>
 
 <script>
 (function(){
@@ -696,7 +705,7 @@
   var STATE = loadState();
   function freshState(){
     return { version:2, createdAt:new Date().toISOString(), name:"", nameLocked:false,
-             setup:{ done:false, format:"summer" },
+             setup:{ done:false, format:"summer", studyMode:"mcq" },
              active:{}, customTopics:[], examDates:{},
              topics:{}, personal:[], sessions:[] };
   }
@@ -707,8 +716,9 @@
       var p = JSON.parse(raw);
       if (!p || p.version !== 2) return freshState();
       p.topics = p.topics || {}; p.personal = p.personal || []; p.sessions = p.sessions || [];
-      p.setup = p.setup || { done:false, format:"summer" };
+      p.setup = p.setup || { done:false, format:"summer", studyMode:"mcq" };
       if (!p.setup.format) p.setup.format = "summer";
+      if (p.setup.studyMode !== "written") p.setup.studyMode = "mcq";
       p.active = p.active || {}; p.customTopics = p.customTopics || []; p.examDates = p.examDates || {};
       return p;
     }catch(e){ return freshState(); }
@@ -830,6 +840,7 @@
   var CURRENT = "home";
   function nav(view){
     CURRENT = view;
+    if (typeof stopDictation === "function") stopDictation();
     document.querySelectorAll(".view").forEach(function(v){ v.classList.remove("active"); });
     var el = document.getElementById("view-"+view);
     if (el) el.classList.add("active");
@@ -840,7 +851,6 @@
     if (view === "home") renderHome();
     if (view === "study") renderStudy();
     if (view === "make") renderMake();
-    if (view === "report") renderReport();
     if (view === "weakness") renderWeakness();
     if (view === "setup") renderSetup();
     var h = el ? el.querySelector("h1") : null;
@@ -848,18 +858,26 @@
   }
 
   /* ---------- HOME ---------- */
+  function isMastered(cs){ return !!(cs && cs.reps >= 3 && cs.lastCorrect === true); }
+  function studyTotals(){
+    var reviewed = 0, mastered = 0;
+    Object.keys(STATE.topics || {}).forEach(function(tid){
+      var ts = STATE.topics[tid]; if (!ts || !ts.cards) return;
+      Object.keys(ts.cards).forEach(function(cid){
+        var cs = ts.cards[cid];
+        if (cs && cs.history && cs.history.length){ reviewed += 1; if (isMastered(cs)) mastered += 1; }
+      });
+    });
+    return { reviewed:reviewed, mastered:mastered };
+  }
   function renderHome(){
-    var s = weekSummary();
-    var tgt = currentTargets();
+    var st = studyTotals();
     var stats = document.getElementById("home-stats");
-    // Show the video stat only when the student has activated topics that actually have videos.
-    var third = s.hasVideos ? stat(s.videos + "/" + s.videosTotal, "Videos watched")
-                            : stat(activeTopicIds().length, "Topics on");
     stats.innerHTML =
-      stat(s.activeDays + "/" + tgt.activeDays, "Days active") +
-      stat(s.cards, "Cards studied") +
-      third +
-      stat(dueCount(), "Cards due now");
+      stat(dueCount(), "Cards due now") +
+      stat(st.reviewed, "Cards studied") +
+      stat(st.mastered, "Cards mastered") +
+      stat(activeTopicIds().length, "Topics on");
   }
   function stat(n,l){ return '<div class="stat"><div class="n">'+escapeHtml(String(n))+'</div><div class="l">'+escapeHtml(l)+'</div></div>'; }
 
@@ -872,7 +890,21 @@
     if (d <= 10) return ' · <strong style="color:var(--terra-dark);">exam in '+d+' day'+(d===1?"":"s")+'</strong>';
     return ' · exam in '+d+' days';
   }
+  function studyMode(){ return (STATE.setup && STATE.setup.studyMode === "written") ? "written" : "mcq"; }
+  function syncModeRadios(){
+    var mode = studyMode();
+    document.querySelectorAll('input[name="study-mode"]').forEach(function(r){
+      r.checked = (r.value === mode);
+      if (!r.__wired){
+        r.__wired = true;
+        r.addEventListener("change", function(){
+          if (this.checked){ STATE.setup.studyMode = (this.value === "written" ? "written" : "mcq"); save(); }
+        });
+      }
+    });
+  }
   function renderStudy(){
+    syncModeRadios();
     var due = dueCount();
     document.getElementById("due-summary").textContent =
       due > 0 ? (due + " card" + (due===1?"":"s") + " due now in your active topics.")
@@ -1028,18 +1060,36 @@
     setProgress(QPOS/QUEUE.length);
     var entry = QUEUE[QPOS];
     var c = entry.card;
-    var isBasic = c.type === "basic" || !(c.options && c.options.length >= 2);
+    var hasOptions = !!(c.options && c.options.length >= 2);
+    var isBasic = c.type === "basic" || !hasOptions;
+    var written = studyMode() === "written";
+    var asRecall = isBasic || written; // present without answer choices
+    var modeTag = (hasOptions && written) ? '<span class="mode-pill">Written recall</span>' : '';
     var meta = '<div class="q-meta"><span class="eyebrow">'+escapeHtml(entry.topicTitle)+'</span>'+
       '<span class="muted" style="font-size:13px;">Card '+(QPOS+1)+' of '+QUEUE.length+'</span></div>'+
-      '<p class="q-text">'+escapeHtml(c.q)+'</p>';
-    if (isBasic){
-      // simple question-and-answer card: recall, then reveal, then self-rate
-      stage.innerHTML = '<div class="q-card">'+meta+
-        '<div class="pill-row"><button type="button" class="btn gold" id="show-ans">Show answer</button></div>'+
+      modeTag+'<p class="q-text">'+escapeHtml(c.q)+'</p>';
+    if (asRecall){
+      // recall card: try to produce the answer from memory, then reveal, then self-rate
+      var answerText = isBasic ? (c.answer||"")
+        : (c.options && c.options[c.correctIndex] != null ? c.options[c.correctIndex] : (c.answer||""));
+      var prompt = (hasOptions && written)
+        ? '<p class="field-help" style="margin:0 0 10px;">Say or write the answer in your own words first. No peeking, then check yourself.</p>'
+        : '';
+      stage.innerHTML = '<div class="q-card">'+meta+prompt+
+        '<label class="field-help" for="recall-answer" style="display:block; margin:0 0 4px;">Your answer (optional). Type it, or tap the mic to speak.</label>'+
+        '<textarea id="recall-answer" class="recall-input" rows="3" aria-label="Your answer" placeholder="Say it out loud or write it here, then reveal and check yourself."></textarea>'+
+        '<div class="pill-row">'+
+          '<button type="button" class="mic-btn" id="mic-btn" aria-pressed="false" hidden><span class="mic-dot" aria-hidden="true"></span><span id="mic-label">Speak answer</span></button> '+
+          '<button type="button" class="btn gold" id="show-ans">Show answer</button>'+
+        '</div>'+
+        '<p class="field-help" id="mic-status" aria-live="polite" style="margin:6px 0 0;"></p>'+
         '<div id="post"></div></div>';
+      var ansEl = stage.querySelector("#recall-answer");
+      setupDictation(ansEl, stage.querySelector("#mic-btn"), stage.querySelector("#mic-status"));
       stage.querySelector("#show-ans").addEventListener("click", function(){
         this.disabled = true;
-        revealAndRate(entry, c, null, true);
+        stopDictation();
+        revealAndRate(entry, c, null, true, answerText, ansEl ? ansEl.value.trim() : "");
       });
     } else {
       var html = '<div class="q-card">'+meta+'<div class="options" role="group" aria-label="Answer choices">';
@@ -1063,12 +1113,66 @@
     }
   }
 
-  function revealAndRate(entry, c, correct, isBasic){
+  /* ---------- VOICE TO TEXT (written-recall answers) ---------- */
+  var SR = (typeof window !== "undefined") && (window.SpeechRecognition || window.webkitSpeechRecognition);
+  var DICT = null; // active recognition instance
+  function stopDictation(){
+    if (DICT){ try{ DICT.onend = null; DICT.stop(); }catch(e){} DICT = null; }
+  }
+  function setupDictation(textarea, btn, statusEl){
+    if (!textarea || !btn) return;
+    if (!SR){ btn.hidden = true; if (statusEl) statusEl.textContent = ""; return; }
+    btn.hidden = false;
+    var baseText = "";
+    var listening = false;
+    function setLabel(t){ var l = btn.querySelector("#mic-label"); if (l) l.textContent = t; }
+    function start(){
+      stopDictation();
+      var rec = new SR();
+      rec.lang = "en-US"; rec.interimResults = true; rec.continuous = true;
+      baseText = textarea.value ? (textarea.value.replace(/\s+$/,"") + " ") : "";
+      rec.onresult = function(ev){
+        var finalT = "", interimT = "";
+        for (var i = ev.resultIndex; i < ev.results.length; i++){
+          var r = ev.results[i];
+          if (r.isFinal) finalT += r[0].transcript; else interimT += r[0].transcript;
+        }
+        if (finalT) baseText += finalT.replace(/\s+/g," ") + " ";
+        textarea.value = (baseText + interimT).replace(/\s+/g," ").replace(/^\s/,"");
+      };
+      rec.onerror = function(ev){
+        if (statusEl) statusEl.textContent = (ev && ev.error === "not-allowed")
+          ? "Microphone blocked. Allow mic access in your browser, or just type your answer."
+          : "Voice input stopped. You can keep typing.";
+        endUI();
+      };
+      rec.onend = function(){ if (listening){ try{ rec.start(); }catch(e){ endUI(); } } };
+      try{ rec.start(); }catch(e){ if (statusEl) statusEl.textContent = "Could not start the mic. You can type instead."; return; }
+      DICT = rec; listening = true;
+      btn.setAttribute("aria-pressed","true"); setLabel("Stop");
+      if (statusEl) statusEl.textContent = "Listening. Speak your answer, then tap Stop or Show answer.";
+    }
+    function endUI(){
+      listening = false; btn.setAttribute("aria-pressed","false"); setLabel("Speak answer");
+    }
+    function stop(){ listening = false; stopDictation(); endUI(); if (statusEl) statusEl.textContent = "Mic off. Edit your answer or reveal it."; }
+    btn.addEventListener("click", function(){
+      if (listening) stop(); else start();
+    });
+  }
+
+  function revealAndRate(entry, c, correct, isBasic, answerOverride, studentAns){
     var post = document.getElementById("post");
     var block;
     if (isBasic){
-      block = '<div class="explain"><h4>Answer</h4><p style="margin:0;">'+escapeHtml(c.answer||"")+'</p>'+
-        (c.explanation ? '<p style="margin:8px 0 0;">'+escapeHtml(c.explanation)+'</p>' : '')+'</div>';
+      var ans = (answerOverride != null && answerOverride !== "") ? answerOverride : (c.answer||"");
+      var yours = (studentAns && studentAns !== "")
+        ? '<div class="explain" style="border-left-color:var(--gold-deep);"><h4>Your answer</h4><p style="margin:0;">'+escapeHtml(studentAns)+'</p></div>'
+        : '';
+      block = yours +
+        '<div class="explain"><h4>Answer</h4><p style="margin:0;">'+escapeHtml(ans)+'</p>'+
+        (c.explanation ? '<p style="margin:8px 0 0;">'+escapeHtml(c.explanation)+'</p>' : '')+'</div>'+
+        '<p class="field-help" style="margin:10px 0 0;">Did you produce that answer from memory before revealing? Grade yourself honestly.</p>';
     } else {
       var verdict = correct ? "Correct" : "Not quite";
       block = c.explanation ? '<div class="explain"><h4>'+verdict+'</h4><p style="margin:0;">'+escapeHtml(c.explanation)+'</p></div>'
@@ -1088,6 +1192,7 @@
         var cs = entry.source === "mine" ? cardState("personal", cardKey(c), 1) : cardState(entry.topicId, cardKey(c), c.dok);
         schedule(cs, b.dataset.r, correctFinal);
         logCard(entry.source === "mine" ? null : entry.topicId);
+        stopDictation();
         QPOS += 1;
         showCard();
       });
@@ -1175,9 +1280,105 @@
     html += '</div>';
     return html;
   }
+  function masteryAndMissed(){
+    var meta = cardMetaById();
+    var topicMastery = {};   // topicTitle -> {mastered, total}
+    var missed = [];         // {q, topic, wrong}
+    Object.keys(STATE.topics || {}).forEach(function(topicId){
+      var ts = STATE.topics[topicId];
+      if (!ts || !ts.cards) return;
+      Object.keys(ts.cards).forEach(function(cid){
+        var cs = ts.cards[cid];
+        var hist = cs && cs.history ? cs.history : [];
+        if (!hist.length) return;
+        var e = meta[cid] || null;
+        var topicTitle = e ? e.topicTitle : (topicTitleAny(topicId) || "My cards");
+        var tm = topicMastery[topicTitle] || (topicMastery[topicTitle] = { mastered:0, total:0 });
+        tm.total += 1; if (isMastered(cs)) tm.mastered += 1;
+        var wrong = hist.filter(function(h){ return !h.correct; }).length;
+        if (wrong >= 2){ var q = (e && e.card) ? (e.card.q || "(card)") : "(your card)"; missed.push({ q:q, topic:topicTitle, wrong:wrong }); }
+      });
+    });
+    missed.sort(function(a,b){ return b.wrong - a.wrong; });
+    return { topicMastery:topicMastery, missed:missed };
+  }
+  function masteryPanel(topicMastery){
+    var keys = Object.keys(topicMastery);
+    if (!keys.length) return '<div class="card"><h3>Mastery progress</h3><p class="empty">No review data yet.</p></div>';
+    keys.sort(function(a,b){ return (topicMastery[a].mastered/topicMastery[a].total) - (topicMastery[b].mastered/topicMastery[b].total); });
+    var html = '<div class="card"><h3>Mastery progress</h3><p class="muted" style="margin-top:0;">Cards mastered (answered right several times) versus still shaky, by topic.</p>';
+    keys.forEach(function(k){
+      var tm = topicMastery[k]; var pct = tm.total ? Math.round(tm.mastered/tm.total*100) : 0;
+      html += '<div class="weak-row"><div><div class="weak-label">'+escapeHtml(k)+'</div><div class="weak-sub">'+tm.mastered+'/'+tm.total+' mastered</div></div>'+
+              '<div><div class="weak-bar" aria-hidden="true"><div class="weak-fill" style="width:'+pct+'%;"></div></div></div>'+
+              '<div class="weak-score">'+pct+'%</div></div>';
+    });
+    return html + '</div>';
+  }
+  function missedPanel(missed){
+    if (!missed.length) return '<div class="card"><h3>Cards you keep missing</h3><p class="muted">Nothing repeatedly missed yet. Keep going.</p></div>';
+    var html = '<div class="card"><h3>Cards you keep missing</h3><p class="muted" style="margin-top:0;">You have missed each of these at least twice. Review them directly.</p>';
+    missed.slice(0, 10).forEach(function(m){
+      html += '<div style="padding:9px 0; border-bottom:1px solid var(--gray-line);"><div style="font-weight:600;">'+escapeHtml(m.q)+'</div><div class="weak-sub">'+escapeHtml(m.topic)+' &middot; missed '+m.wrong+' times</div></div>';
+    });
+    return html + '</div>';
+  }
+  // ---- DOK Mastery: recall vs understanding vs application ----
+  var DOK_INFO = {
+    1: { name:"Recall", sub:"facts, naming, definitions" },
+    2: { name:"Understanding", sub:"relationships, how parts connect" },
+    3: { name:"Application", sub:"reasoning, clinical and why-questions" }
+  };
+  function dokMastery(){
+    var meta = cardMetaById();
+    var lv = { 1:{attempts:0,correct:0,reviewed:0,mastered:0}, 2:{attempts:0,correct:0,reviewed:0,mastered:0}, 3:{attempts:0,correct:0,reviewed:0,mastered:0} };
+    Object.keys(STATE.topics || {}).forEach(function(tid){
+      var ts = STATE.topics[tid]; if (!ts || !ts.cards) return;
+      Object.keys(ts.cards).forEach(function(cid){
+        var cs = ts.cards[cid]; var hist = cs && cs.history ? cs.history : []; if (!hist.length) return;
+        var e = meta[cid]; var dok = (e && e.card && e.card.dok) || cs.dok || 1;
+        dok = dok < 1 ? 1 : (dok > 3 ? 3 : dok);
+        var L = lv[dok]; L.reviewed += 1; if (isMastered(cs)) L.mastered += 1;
+        hist.forEach(function(h){ L.attempts += 1; if (h.correct) L.correct += 1; });
+      });
+    });
+    return lv;
+  }
+  function dokMasteryPanel(lv){
+    var levels = [1,2,3].filter(function(d){ return lv[d].attempts > 0; });
+    if (!levels.length) return '';
+    // weakest level among those with enough attempts
+    var scored = levels.filter(function(d){ return lv[d].attempts >= 3; }).map(function(d){ return { d:d, acc:lv[d].correct/lv[d].attempts }; });
+    scored.sort(function(a,b){ return a.acc - b.acc; });
+    var headline = '';
+    if (scored.length){
+      var w = scored[0]; var info = DOK_INFO[w.d];
+      var pct = Math.round(w.acc*100);
+      headline = '<div class="policy" style="margin:0 0 14px;"><strong>Your weak spot: '+info.name+' (DOK '+w.d+'), '+pct+'% accurate.</strong> You are '+
+        (w.d===1 ? 'still shaky on the basic facts, build those first.' :
+         w.d===2 ? 'fine on facts but missing how the pieces relate.' :
+         'good at recognizing facts but struggle to apply them. Knowing it when you see it is not the same as producing and reasoning with it on an exam. Prioritize DOK 3 practice.')+'</div>';
+    }
+    var rows = '';
+    [1,2,3].forEach(function(d){
+      var L = lv[d]; var info = DOK_INFO[d];
+      if (!L.attempts){ rows += '<div class="weak-row"><div><div class="weak-label">DOK '+d+' &middot; '+info.name+'</div><div class="weak-sub">'+info.sub+'</div></div><div></div><div class="weak-score" style="color:var(--gray-soft);">no data</div></div>'; return; }
+      var acc = Math.round(L.correct/L.attempts*100);
+      var mast = L.reviewed ? Math.round(L.mastered/L.reviewed*100) : 0;
+      var risk = riskLabel(acc, L.attempts);
+      rows += '<div class="weak-row"><div><div class="weak-label">DOK '+d+' &middot; '+info.name+'</div><div class="weak-sub">'+info.sub+' &middot; '+L.mastered+'/'+L.reviewed+' mastered</div></div>'+
+              '<div><div class="weak-bar" aria-hidden="true"><div class="weak-fill" style="width:'+acc+'%;"></div></div><span class="weak-risk '+risk.cls+'">'+risk.text+'</span></div>'+
+              '<div class="weak-score">'+acc+'%</div></div>';
+    });
+    return '<div class="card"><h3>DOK Mastery: recall, understanding, application</h3>'+
+      '<p class="muted" style="margin-top:0;">Most students do not know whether they are weak at remembering, understanding, or applying. This is your accuracy and mastery at each level.</p>'+
+      headline + rows + '</div>';
+  }
   function renderWeakness(){
     var box = document.getElementById("weakness-body");
     var data = collectWeakness();
+    var mm = masteryAndMissed();
+    var dlv = dokMastery();
     var t = data.totals;
     if (!t.attempts){
       box.innerHTML = '<div class="card"><h3>No weakness data yet</h3><p class="muted">Study a few cards first. Once students answer cards, this page will show weak systems, topics, DOK levels, and question types.</p><button type="button" class="btn gold" data-nav="study">Start studying</button></div>';
@@ -1195,13 +1396,16 @@
       '</div>'+ 
       '<div class="card"><h3>Recommended next study</h3><p class="muted" style="margin-top:0;">Prioritize the lowest-accuracy areas with at least a few attempts. Current focus tags:</p>'+ 
       weakestTopics.map(function(x){ return '<span class="tag-chip">'+escapeHtml(x)+'</span>'; }).join('')+
-      '</div>'+ 
+      '</div>'+
+      dokMasteryPanel(dlv)+
       '<div class="weak-grid">'+
         weakPanel('Weakest systems', data.buckets.system, 8)+
         weakPanel('Weakest topics', data.buckets.topic, 8)+
         weakPanel('DOK performance', data.buckets.dok, 6)+
         weakPanel('Question type performance', data.buckets.type, 6)+
-      '</div>';
+      '</div>'+
+      masteryPanel(mm.topicMastery)+
+      missedPanel(mm.missed);
   }
 
   /* ---------- MAKE CARDS ---------- */
@@ -1457,17 +1661,11 @@
     }
     else if (key === "name"){
       head.textContent = "Your name";
-      if (STATE.nameLocked){
-        body.innerHTML = '<h2 class="wiz-h">Your name</h2><p class="wiz-lead">Your name is set and locked so your bonus stays yours.</p>'+
-          '<div class="mock-field" style="display:block;font-size:16px;">'+escapeHtml(STATE.name)+'</div>'+
-          '<p class="field-help">To change it you would have to reset the app in Settings, which erases your progress.</p>';
-      } else {
-        body.innerHTML = '<h2 class="wiz-h">What is your name?</h2><p class="wiz-lead">It goes at the top of the weekly report you turn in for bonus points. It stays on this device, and it locks when you finish setup.</p>'+
-          '<label for="wiz-name" class="sr-only">Your name</label><input type="text" id="wiz-name" placeholder="First and last name">';
-        var input = body.querySelector("#wiz-name");
-        input.value = STATE.name || "";
-        input.addEventListener("input", function(){ STATE.name = input.value; save(); });
-      }
+      body.innerHTML = '<h2 class="wiz-h">What is your name?</h2><p class="wiz-lead">Optional. It just labels this study app for you, and it stays on this device.</p>'+
+        '<label for="wiz-name" class="sr-only">Your name</label><input type="text" id="wiz-name" placeholder="First and last name">';
+      var input = body.querySelector("#wiz-name");
+      input.value = STATE.name || "";
+      input.addEventListener("input", function(){ STATE.name = input.value; save(); });
       addNavBtn(navEl, "Back", "ghost", function(){ goStep(0); });
       addNavBtn(navEl, "Next", "gold", function(){ goStep(2); });
     }
@@ -1517,7 +1715,7 @@
         '<ol style="margin:0; padding-left:18px; line-height:1.9;">'+
         '<li>Open <strong>Study cards</strong> and answer a few. Tap an answer, read why, then tap how well you knew it.</li>'+
         '<li>Come back tomorrow. The app brings back what you are about to forget.</li>'+
-        '<li>Each week, open <strong>My weekly report</strong> and save it as a PDF to turn in for bonus points.</li>'+
+        '<li>Open the <strong>Weakness dashboard</strong> any time to see your weak systems, topics, and DOK levels, and what to study next.</li>'+
         '</ol>'+
         '<div class="policy" style="margin-top:14px;"><strong>Important:</strong> your progress is saved only in this browser on this device. Use the <strong>same device and the same browser</strong> every time, or your streak and your cards will not be here. On a phone or tablet, use your browser’s <strong>Add to Home Screen</strong> to keep Recall Rx one tap away.</div>';
       addNavBtn(navEl, "Start studying", "gold", finishWizard);
@@ -1604,125 +1802,9 @@
     STATE.setup.done = true;
     if (!STATE.setup.format) STATE.setup.format = "summer";
     // Lock the name so a finished report cannot be re-credited to someone else.
-    if ((STATE.name||"").trim()) STATE.nameLocked = true;
     save();
     toast("You are all set.");
     nav(activeTopicIds().length ? "study" : "home");
-  }
-
-  /* ---------- WEEKLY REPORT ---------- */
-  function weekSummary(){
-    var days = weekDates();
-    var sessByDate = {};
-    STATE.sessions.forEach(function(s){ sessByDate[s.date] = s; });
-    var activeDays = 0, cards = 0, videoSet = {};
-    days.forEach(function(d){
-      var s = sessByDate[d];
-      if (s && s.cardsReviewed > 0) activeDays += 1;
-      if (s){ cards += s.cardsReviewed; (s.videos||[]).forEach(function(v){ videoSet[v]=1; }); }
-    });
-    // Only count videos that belong to topics the student turned on. Students in other
-    // classes never activate topics that have your videos, so videos simply do not apply
-    // to them: no 0-of-N, no penalty, nothing that looks broken.
-    var topicsWithVideo = allTopics().filter(function(t){ return !!t.videoUrl && isActive(t.id); });
-    return {
-      days:days, sessByDate:sessByDate,
-      activeDays:activeDays, cards:cards,
-      videos:Object.keys(videoSet).length,
-      videosTotal:topicsWithVideo.length,
-      hasVideos:topicsWithVideo.length > 0
-    };
-  }
-  function weekScore(s){
-    var tgt = currentTargets();
-    var dayFrac = Math.min(1, s.activeDays / Math.max(1, tgt.activeDays));
-    var cardFrac = Math.min(1, s.cards / Math.max(1, tgt.cards));
-    var vidTarget = s.videosTotal > 0 ? s.videosTotal : 0;
-    var vidFrac = vidTarget > 0 ? Math.min(1, s.videos / vidTarget) : null;
-    var parts = [dayFrac, cardFrac];
-    if (vidFrac !== null) parts.push(vidFrac);
-    var avg = parts.reduce(function(a,b){ return a+b; },0) / parts.length;
-    return { pct:Math.round(avg*100), dayFrac:dayFrac, cardFrac:cardFrac, vidFrac:vidFrac };
-  }
-
-  function renderReport(){
-    var s = weekSummary();
-    var sc = weekScore(s);
-    var name = STATE.name || "";
-    var locked = !!STATE.nameLocked;
-    var inp = document.getElementById("rp-name");
-    inp.value = name; inp.disabled = locked;
-    document.getElementById("btn-lock-name").hidden = locked;
-    document.getElementById("rp-name-note").textContent = locked
-      ? "Locked so your bonus stays yours. To change it you would have to reset the app, which erases your progress."
-      : "Type your name, then tap Lock in my name. After that it cannot be changed.";
-    var body = document.getElementById("report-body");
-
-    var NAMES = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-    var grid = '';
-    s.days.forEach(function(d, i){
-      var sess = s.sessByDate[d];
-      var n = sess ? sess.cardsReviewed : 0;
-      var hadVideo = sess && (sess.videos||[]).length > 0;
-      var cls = n >= 10 ? "full" : (n > 0 ? "partial" : "");
-      grid += '<div class="wday '+cls+'">'+(hadVideo?'<span class="vmark" title="watched a video">video</span>':'')+
-              '<div class="wn">'+NAMES[i]+'</div><div class="wc">'+n+'</div><div class="ws">cards</div></div>';
-    });
-
-    var bandText = sc.pct >= 85 ? "On track for the full weekly bonus." :
-                   sc.pct >= 60 ? "Most of the way there. A little more this week earns the full bonus." :
-                                  "Keep going this week to earn the bonus.";
-
-    var headerName = name ? escapeHtml(name) : "(add your name above)";
-    var weekLabel = s.days[0] + " to " + s.days[6];
-    var tgt = currentTargets();
-
-    // upcoming exams (units with a future exam date), soonest first
-    var exams = allUnits().map(function(u){ return { title:u.title, d:daysUntil(examDateFor(u.id)), date:examDateFor(u.id) }; })
-      .filter(function(x){ return x.date && x.d !== null && x.d >= 0; })
-      .sort(function(a,b){ return a.d - b.d; });
-    var examHtml = exams.length ? '<div class="policy" style="margin-top:10px;"><strong>Upcoming exams:</strong> '+
-      exams.map(function(x){ return escapeHtml(x.title)+" in "+x.d+" day"+(x.d===1?"":"s"); }).join("; ")+'.</div>' : '';
-
-    body.innerHTML =
-      '<div class="card">'+
-        '<p class="eyebrow">Recall Rx &middot; BIO 004 Human Anatomy &middot; '+escapeHtml(tgt.label)+'</p>'+
-        '<h2 style="margin:4px 0 2px; color:var(--navy);">'+headerName+'</h2>'+
-        '<p class="muted" style="margin:0;">Week of '+escapeHtml(weekLabel)+'</p>'+
-        '<div style="display:flex; align-items:baseline; gap:14px; margin-top:14px; flex-wrap:wrap;">'+
-          '<span class="grade-num">'+sc.pct+'%</span>'+
-          '<span class="muted">engagement this week</span>'+
-        '</div>'+
-        '<div class="grade-bar"><div class="grade-fill" style="width:'+sc.pct+'%;"></div></div>'+
-        '<p style="font-weight:600; margin:6px 0 0;">'+bandText+'</p>'+
-        '<div class="week-grid">'+grid+'</div>'+
-        '<div class="stats" style="margin:6px 0 0;">'+
-          stat(s.activeDays+"/"+tgt.activeDays, "Days active")+
-          stat(s.cards, "Cards studied")+
-          (s.hasVideos ? stat(s.videos+"/"+s.videosTotal, "Videos watched") : stat(Math.round(sc.dayFrac*100)+"%", "Days goal"))+
-          stat(Math.round(sc.cardFrac*100)+"%", "Card goal")+
-        '</div>'+
-        '<div class="policy">Engagement is the average of: days you showed up ('+tgt.activeDays+' a week is full), cards you studied ('+tgt.cards+' a week is full)'+(s.videosTotal? ', and this week’s lecture videos watched.' : '.')+' Nothing is locked. Bonus points are awarded by Dr. Sharilyn Rennie.</div>'+
-        examHtml+
-      '</div>';
-  }
-
-  function setupReport(){
-    document.getElementById("rp-name").addEventListener("input", function(e){
-      if (STATE.nameLocked) return;            // cannot edit once locked
-      STATE.name = e.target.value; save();
-    });
-    document.getElementById("btn-lock-name").addEventListener("click", function(){
-      var v = (document.getElementById("rp-name").value||"").trim();
-      if (!v){ toast("Type your name first."); return; }
-      if (!confirm('Lock your name as "'+v+'"? It cannot be changed after this without resetting the app.')) return;
-      STATE.name = v; STATE.nameLocked = true; save();
-      renderReport(); toast("Name locked.");
-    });
-    document.getElementById("btn-print").addEventListener("click", function(){
-      if (!STATE.name) toast("Tip: add and lock your name first so it prints at the top.");
-      window.print();
-    });
   }
 
   /* ---------- util ---------- */
@@ -1807,7 +1889,6 @@
     });
     setupMakeForm();
     setupShare();
-    setupReport();
     setupHowto();
     setupQR();
     renderMake();
@@ -1832,7 +1913,7 @@
   else init();
 
   // expose a tiny bit for testing harnesses
-  if (typeof window !== "undefined"){ window.__BIO004 = { allCards:allCards, activeCards:activeCards, allTopics:allTopics, allUnits:allUnits, weekScore:weekScore, weekSummary:weekSummary, schedule:schedule, setActive:setActive, dueCount:dueCount, renderWeakness:renderWeakness, collectWeakness:collectWeakness, currentTargets:currentTargets, ensureCustomTopic:ensureCustomTopic, STATE:function(){ return STATE; }, save:save }; }
+  if (typeof window !== "undefined"){ window.__BIO004 = { allCards:allCards, activeCards:activeCards, allTopics:allTopics, allUnits:allUnits, schedule:schedule, masteryAndMissed:masteryAndMissed, setActive:setActive, dueCount:dueCount, renderWeakness:renderWeakness, collectWeakness:collectWeakness, currentTargets:currentTargets, ensureCustomTopic:ensureCustomTopic, STATE:function(){ return STATE; }, save:save }; }
 })();
 </script>
 
