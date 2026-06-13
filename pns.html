@@ -1194,6 +1194,7 @@
       var panel  = document.getElementById(v.panel);
       var iframe = document.getElementById(v.iframe);
       if (!toggle || !panel || !iframe) return;
+      if (v.url && v.url.indexOf('REPLACE_WITH') !== -1) { toggle.hidden = true; return; }
       toggle.addEventListener('click', function () {
         var expanded = toggle.getAttribute('aria-expanded') === 'true';
         if (expanded) {
@@ -1344,7 +1345,7 @@
 <script>
 (function () {
   // Topic mapping for the explain-back gate and spaced-recall pre-work.
-  var TOPIC_ID = "t-pns";
+  var TOPIC_ID = null;
   var GATE_KEYWORDS = ["nerve", "spinal nerve", "rami", "ganglion", "sensory receptor", "fascicle"];
   var PREWORK_TARGET = "https://drsrennie-stack.github.io/new-build-bio4-solano/spaced-recall.html#topic=t-pns";
   var MIN_WORDS = 60;
