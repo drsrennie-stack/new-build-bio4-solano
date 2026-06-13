@@ -1481,6 +1481,7 @@
       var panel  = document.getElementById(v.panel);
       var iframe = document.getElementById(v.iframe);
       if (!toggle || !panel || !iframe) return;
+      if (v.url && v.url.indexOf('REPLACE_WITH') !== -1) { toggle.hidden = true; return; }
       toggle.addEventListener('click', function () {
         var expanded = toggle.getAttribute('aria-expanded') === 'true';
         if (expanded) {
@@ -1635,7 +1636,7 @@
 <script>
 (function () {
   // Body Cavities is a supplementary reference page: no topic mapping.
-  var TOPIC_ID = "t-body-cavities";
+  var TOPIC_ID = null;
   var GATE_KEYWORDS = ["dorsal cavity", "ventral cavity", "thoracic", "abdominopelvic", "mediastinum", "serous membrane"];
   var PREWORK_TARGET = "https://drsrennie-stack.github.io/new-build-bio4-solano/spaced-recall.html#topic=t-body-cavities";
   var MIN_WORDS = 60;
