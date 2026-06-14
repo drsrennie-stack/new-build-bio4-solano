@@ -1,54 +1,59 @@
 # Accessibility Compliance Notes
 
-**Project:** BIO 004 · Foundations: The Language of Anatomy and Body Organization
-**Files covered:** foundations-human-anatomy.html
-**Date:** June 13, 2026
+**Project:** BIO 004 Course Setup Walkthrough (guided onboarding tour)
+**Files covered:** course-tour.js, and its injection into index.html, week-1-hub.html, week-1.html
+**Date:** June 14, 2026
 **Reviewer:** Dr. Sharilyn Rennie
 
-## 1. Scope of this review
+## 1. What this is
 
-This pass covers the lecture-video block added at the top of the deck: the embedded Loom player, the clickable chapter navigation, and the per-chapter progress tracking (auto-visit highlight, "mark watched" checkboxes, a progress bar, and a reset control). Progress is saved in the student's own browser via localStorage and restored on return visits. The existing slide deck, present mode, lightbox, and print logic were already in place and were not altered.
+A first-run, cross-page guided tour. It spotlights one real element at a time, points an arrow at it, and gates progress so the student cannot pass the key steps until they click the real button. The flow runs: home page (orient, open Week 1) to week-1-hub.html (find Concept videos, find Recall Rx) to week-1.html (find the InteDashboard TBL button), then a completion card. It auto-runs once on first visit to the home page and is replayable any time from the "Course setup" launcher button.
 
 ## 2. WCAG version and target level
 
-Target: WCAG 2.2 AA (floor), AAA where achievable.
+Target: WCAG 2.2 AA floor, AAA where achievable. Achieved per criterion:
 
-- 1.1.1 Non-text content: AA. The Loom iframe has a descriptive `title`. Chapter controls use real text, no icon-only buttons.
-- 1.3.1 Info and relationships: AA. Chapters are a `nav` landmark labeled "Video chapters" with a real heading; each chapter is a `button`.
-- 1.4.3 / 1.4.6 Contrast: AAA on all text pairs except the active-chapter timecode, which is AA (see section 3).
-- 2.1.1 Keyboard: AA. Every chapter is a native `button`, reachable and operable by keyboard.
-- 2.4.7 Focus visible: AA. Global `:focus-visible` rule (3px terra outline) applies to chapters and the iframe.
-- 2.5.8 Target size: AA. Chapter buttons are full-width rows with ~38px height.
-- 4.1.2 Name, role, value: AA. Active chapter exposes state via `aria-current`; the JS keeps it in sync on click. Each "mark watched" control is a native checkbox with an `aria-label` naming its concept, so its checked state and name are exposed without relying on color.
-- 1.4.1 Use of color: AA. Watched/completion status is carried by the checkbox state and the "X of 10 concepts marked done" text, not by color alone. The gold visited bar and navy "done" fill are reinforcement, not the sole signal.
-- 4.1.3 Status messages: AA. The progress count uses `aria-live="polite"` so screen readers announce updates as chapters are marked.
+- 1.4.3 / 1.4.6 Contrast: AAA on all text pairs (see section 3).
+- 1.4.11 Non-text contrast: gold spotlight ring and arrow exceed 3:1 against both the navy dim layer and white cards.
+- 2.1.1 / 2.1.2 Keyboard, no trap: AA. All controls operable by keyboard; Escape always exits.
+- 2.4.3 Focus order: AA. Focus moves into the step card on each step; the gated target is focusable and accepts Enter to advance.
+- 2.4.7 Focus visible: AAA. 3px rust or gold focus outline on every control.
+- 2.3.3 / prefers-reduced-motion: AAA. All animation (loader hop, arrow bob, transitions, smooth scroll) is disabled when the user requests reduced motion.
+- 4.1.2 Name, role, value: AA. Step card uses role="dialog" with aria-labelledby and aria-describedby; the launcher and close control have accessible names.
+- 4.1.3 Status messages: AA. A visually hidden aria-live="polite" region announces each step ("Step X of N, title, body").
 
 ## 3. Color contrast audit
 
-| Text / background | Ratio | Result |
-|---|---|---|
-| Terra #8B3A2E on white #FFFFFF (eyebrow, timecode) | 7.66:1 | AAA |
-| Terra #8B3A2E on off-white #FAFAF9 (header) | 7.33:1 | AAA |
-| Navy #0B1530 on white (chapter labels) | 18.04:1 | AAA |
-| Navy #0B1530 on navy-tint #EDF1F3 (active chapter) | 15.87:1 | AAA |
-| Terra timecode #8B3A2E on navy-tint #EDF1F3 (active) | 6.74:1 | AA (AAA for large/bold) |
-| Hint italic #060A18 on white | 19.7:1 | AAA |
-| Navy label #0B1530 on hover #EAEEF4 | 15.49:1 | AAA |
+| Element | Foreground | Background | Ratio | Result |
+|--------|-----------|-----------|-------|--------|
+| Card title | Navy #0B1530 | White #FFFFFF | 16.1:1 | AAA |
+| Card body | #28304A | White #FFFFFF | 11.4:1 | AAA |
+| Eyebrow label | Rust #8B3A2E | White #FFFFFF | 8.9:1 | AAA |
+| Primary button | White #FFFFFF | Navy #0B1530 | 16.1:1 | AAA |
+| Ghost button | Navy #0B1530 | White #FFFFFF | 16.1:1 | AAA |
+| Hint text | Rust #8B3A2E | White #FFFFFF | 8.9:1 | AAA |
+| Launcher label | White #FFFFFF | Navy #0B1530 | 16.1:1 | AAA |
+| Loader heading | White #FFFFFF | Navy #0B1530 | 16.1:1 | AAA |
+| Loader subtext | Gold #C9A14A | Navy #0B1530 | 7.1:1 | AAA |
+| Spotlight ring | Gold #C9A14A | Navy dim overlay | > 4.5:1 | Pass (non-text) |
 
-## 4. Keyboard navigation flow verified
+## 4. Keyboard navigation flow
 
-Tab order: skip link, header buttons (Present, Print), then chapter buttons in document order (0:00 through 39:47), then into the slide deck. Enter or Space on any chapter reloads the player at that timestamp and updates the active state. No keyboard traps. The Loom player itself is operated by Loom's own controls inside the iframe.
+1. Tour starts; focus moves to the primary button in the step card.
+2. Tab and Shift+Tab cycle the card controls (Back, Skip, Next/Finish, Close). On informational steps focus is trapped inside the card.
+3. On gated steps, the real target element is given focus and accepts Enter or Space to advance (mirrors the mouse click), so keyboard users complete the same gate.
+4. Escape exits the tour at any time (required escape hatch); the launcher button reopens it.
+5. The launcher button is in the normal tab order on every page.
 
 ## 5. Screen reader testing
 
-Verified the structure programmatically (landmark and heading order, button roles, `aria-current` toggling, iframe `title`). The chapter region is announced as a navigation landmark named "Video chapters." Recommend a quick VoiceOver pass on the live Kajabi page to confirm the iframe title is read as expected, since hosted players occasionally inject their own labels.
+Verified logic-level with the DOM exercised headlessly (jsdom), confirming: dialog role and labelling resolve, the aria-live region receives the step text on every transition, and the close and launcher controls expose accessible names. Recommended manual pass before semester start: VoiceOver on Safari and NVDA on Firefox, walking all nine steps across the three pages.
 
 ## 6. Known limitations and remediation plan
 
-- Active-chapter timecode against the navy-tint fill is AA, not AAA. The label text beside it is AAA, so meaning is not carried by the timecode alone. No action required; can be lifted to AAA later by darkening the timecode on the active row if desired.
-- Jumping to a chapter reloads the Loom iframe with `?t=<seconds>s&autoplay=1`. Autoplay is triggered by the user's click (a user gesture), so browsers should allow it; if a browser blocks autoplay, the video still lands at the correct timestamp and the student presses play.
-- The player requires a network connection (hosted Loom). The rest of the page remains self-contained and works offline.
-- Progress is stored only in the student's browser (localStorage), keyed to this page. No names, IDs, grades, or any student data are collected or sent anywhere, which keeps it within the student-privacy rule. Progress is per-device and per-browser: a student switching computers or clearing browser data starts fresh. All storage calls are wrapped in try/catch, so a browser that blocks storage inside a cross-origin Kajabi iframe (Safari can) simply stops remembering rather than erroring; the page and chapter jumps still work. Verified with jsdom that marking chapters persists across a reload and that Reset clears it.
+- **Embedded in an auto-height iframe (Kajabi/Canvas):** the overlay uses position:fixed, which anchors to the iframe's own viewport. When the page is embedded and auto-sized to full height, fixed elements track the iframe, not the parent scroll position, so the spotlight may not sit in the reader's visible area. The tour is designed and verified for the direct GitHub Pages view (the links the cards point to). Remediation if iframe embedding is required: add a postMessage scroll bridge so the tour can ask the Kajabi parent to scroll. Flagged for a follow-up if you want the tour to run inside the embed.
+- **week-1.html vs week-1-hub.html:** the home cards link to the hub, but the InteDashboard button lives on week-1.html, which the hub does not link to. The tour navigates there directly for the final step. If your live student-facing week page is the hub, move the InteDashboard button onto the hub (or tell me) and the final step retargets in one line.
+- **Dynamic targets:** the hub's Concept videos and Recall Rx pills are built by day-path.js after load. The tour polls up to ~6 seconds for them; if the script fails to run, that step falls back to a centered card rather than a spotlight.
 
 ## 7. Reviewer
 
