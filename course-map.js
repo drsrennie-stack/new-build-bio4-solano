@@ -19,14 +19,15 @@
     ],
     /* week-level Blue Lab Card */
     weekLab: {
-      sprint:  { label: "Lab Sprint",   url: HUB + "week-1-lab-sprints.html" },
+      sprintBase:  HUB + "week-{N}-lab-sprints.html",
+      sprintLabel: "Lab Sprint",
       canvas:  { label: "Atlas Canvas", url: HUB + "atlas-coloring-book.html" },
-      digital: { label: "Digital Atlas", url: HUB + "atlas-builder.html" }
+      digital: { label: "Digital Atlas", url: "https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02", external: true }
     },
     topics: {
       foundations: {
         title: "Foundations",
-        notes:  [{ label: "Notes", url: HUB + "language-of-anatomy.html" }],
+        notes:  [{ label: "Notes", url: HUB + "week-1-notes.html#language-of-anatomy" }],
         videos: [{ label: "Concept videos", url: HUB + "week1-concept-videos.html" }],
         slides: [{ label: "HTML", url: DECK + "foundations-human-anatomy.html" }],
         ppt:    [{ label: "Accessible PPT", url: DECK + "Foundations-Human-Anatomy.pptx" }],
@@ -34,7 +35,7 @@
       },
       cell: {
         title: "The Cell",
-        notes:  [{ label: "Notes", url: HUB + "cell-anatomy.html" }],
+        notes:  [{ label: "Notes", url: HUB + "week-1-notes.html#cell" }],
         videos: [{ label: "Concept videos", url: HUB + "cell-concept-videos.html" }],
         slides: [{ label: "HTML", url: DECK + "cell-anatomy-histology.html" }],
         ppt:    [{ label: "Accessible PPT", url: DECK + "The-Cell-Anatomy-and-Histology.pptx" }],
@@ -42,7 +43,7 @@
       },
       tissues: {
         title: "Tissues & Histology",
-        notes:  [{ label: "Notes", url: HUB + "tissues.html" }],
+        notes:  [{ label: "Notes", url: HUB + "week-1-notes.html#tissues" }],
         videos: [{ label: "Concept videos", url: HUB + "tissues-concept-videos.html" }],
         slides: [{ label: "HTML", url: DECK + "tissues-histology.html" }],
         ppt:    [{ label: "Accessible PPT", pending: true }],
@@ -50,7 +51,7 @@
       },
       integumentary: {
         title: "Integumentary",
-        notes:  [{ label: "Notes", url: HUB + "integumentary.html" }],
+        notes:  [{ label: "Notes", url: HUB + "week-1-notes.html#integumentary" }],
         videos: [{ label: "Concept videos", url: HUB + "integumentary-concept-videos.html" }],
         slides: [{ label: "HTML", url: DECK + "integumentary-anatomy-histology.html" }],
         ppt:    [{ label: "Accessible PPT", pending: true }],
