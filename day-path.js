@@ -75,21 +75,24 @@
 
   function buildWeekLab(el, map) {
     var wl = map.weekLab; if (!wl) { el.hidden = true; return; }
+    var n = el.getAttribute("data-weeklab") || "1";
     el.classList.add("weeklab");
     el.setAttribute("aria-label", "Lab resources for the week");
-    var eye = document.createElement("p"); eye.className = "wl-eyebrow"; eye.textContent = "Lab — start of the week";
+    var eye = document.createElement("p"); eye.className = "wl-eyebrow"; eye.textContent = "Lab \u00b7 start of the week";
     var sub = document.createElement("p"); sub.className = "wl-sub"; sub.textContent = "Set these up before the week begins.";
     el.appendChild(eye); el.appendChild(sub);
     var ol = document.createElement("ol");
+    var sprint = { label: wl.sprintLabel, url: wl.sprintBase.replace("{N}", n) };
     var items = [
-      { it: wl.sprint,  bg: "#C9A14A", fg: "#0B1530" },
+      { it: sprint,     bg: "#C9A14A", fg: "#0B1530" },
       { it: wl.canvas,  bg: "#C2734D", fg: "#0B1530" },
       { it: wl.digital, bg: "#FFFFFF", fg: "#0B1530" }
     ];
     items.forEach(function (row, i) {
       var li = document.createElement("li");
       var a = document.createElement("a");
-      a.className = "wl-pill"; a.href = row.it.url; a.target = "_top";
+      a.className = "wl-pill"; a.href = row.it.url;
+      if (row.it.external) { a.target = "_blank"; a.setAttribute("rel", "noopener"); } else { a.target = "_top"; }
       a.style.background = row.bg; a.style.color = row.fg;
       a.innerHTML = '<span class="n" aria-hidden="true">' + (i + 1) + "</span>";
       a.appendChild(document.createTextNode(row.it.label));
