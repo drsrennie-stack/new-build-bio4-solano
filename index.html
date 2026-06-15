@@ -610,6 +610,65 @@ html { scroll-behavior: smooth; }
     box-shadow: 0 2px 6px rgba(11, 21, 48, 0.18);
   }
   .mod-card.is-current-week { border-color: #C9A14A; }
+
+  /* ===== LOCKED-WEEK STATE ===== */
+  .mod-card.is-locked {
+    border-style: dashed;
+    border-color: #8C90A0;
+    background: #FFFFFF;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+  .mod-card.is-locked:hover,
+  .mod-card.is-locked:focus-visible {
+    transform: none;
+    box-shadow: none;
+    border-color: #8C90A0;
+  }
+  .mod-card.is-locked .mod-num,
+  .mod-card.is-locked .mod-title,
+  .mod-card.is-locked .mod-desc { opacity: 0.55; }
+  .mod-lock-flag {
+    position: absolute;
+    top: -11px;
+    right: 18px;
+    background: #6B7180;
+    color: #FFFFFF;
+    font-size: 11.2px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 11px;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .mod-card.is-locked .mod-cta {
+    color: #6B7180;
+    text-transform: uppercase;
+  }
+  .mod-card.is-locked .mod-cta .arrow { display: none; }
+  /* Locked notice banner (shown when a student is bounced from a locked week) */
+  .lock-banner {
+    background: #060A18;
+    color: #FFFFFF;
+    border-left: 4px solid #C9A14A;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 0 0 28px;
+    font-size: 15.7px;
+    line-height: 1.55;
+    max-width: 720px;
+  }
+  .lock-banner strong { color: #C9A14A; }
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0);
+    white-space: nowrap; border: 0;
+  }
 </style>
 </head>
 <body>
@@ -718,6 +777,7 @@ html { scroll-behavior: smooth; }
   <div class="section-eyebrow">Your eight weeks</div>
   <h2 class="section-headline">The whole course, <span class="accent">week by week</span>.</h2>
   <p class="section-intro">Eight modules, one per week. Each one opens its readings, atlas pages, and lab activities. Work through them in order, and check back here whenever you need your bearings.</p>
+  <div id="lock-banner" class="lock-banner" role="status" aria-live="polite" hidden></div>
   <!-- Eight-week sequence from course-schedule.html (the authoritative schedule). -->
   <ul class="mod-grid">
 
@@ -976,6 +1036,84 @@ html { scroll-behavior: smooth; }
         flag.className = 'mod-flag';
         flag.innerHTML = '<span aria-hidden="true">&#9656;</span> This week';
         card.appendChild(flag);
+      }
+    }
+  })();
+</script>
+<script>
+  /* Week unlock locks on the module cards.
+     Each week opens 12:01 AM Pacific (PDT) on the Sunday before its Monday.
+     Mirrors the schedule in course-lock.js. Week 1 is always open. */
+  (function () {
+    var UNLOCKS = {
+      1: 0,
+      2: Date.UTC(2026, 5, 21, 7, 1),
+      3: Date.UTC(2026, 5, 28, 7, 1),
+      4: Date.UTC(2026, 6, 5,  7, 1),
+      5: Date.UTC(2026, 6, 12, 7, 1),
+      6: Date.UTC(2026, 6, 19, 7, 1),
+      7: Date.UTC(2026, 6, 26, 7, 1),
+      8: Date.UTC(2026, 7, 2,  7, 1)
+    };
+    var TZ = 'America/Los_Angeles';
+    function unlockLabel(ms) {
+      try {
+        return new Date(ms).toLocaleDateString('en-US', {
+          timeZone: TZ, weekday: 'short', month: 'short', day: 'numeric'
+        });
+      } catch (e) {
+        return new Date(ms).toDateString();
+      }
+    }
+    var now = Date.now();
+
+    // Lock each future-week card.
+    var cards = document.querySelectorAll('.mod-card[data-week]');
+    Array.prototype.forEach.call(cards, function (card) {
+      var week = parseInt(card.getAttribute('data-week'), 10);
+      var unlock = UNLOCKS[week];
+      if (!unlock || now >= unlock) { return; }   // open weeks untouched
+
+      var label = unlockLabel(unlock);
+      card.classList.add('is-locked');
+      card.removeAttribute('href');               // no longer a link
+      card.setAttribute('role', 'group');
+      card.setAttribute('aria-disabled', 'true');
+      card.setAttribute('aria-label',
+        'Week ' + week + ' is locked. Opens ' + label + ' at 12:01 AM Pacific.');
+
+      // Swap the "Open module" CTA for a lock label.
+      var cta = card.querySelector('.mod-cta');
+      if (cta) { cta.innerHTML = '🔒 Opens ' + label; }
+
+      // Corner flag.
+      var flag = document.createElement('span');
+      flag.className = 'mod-lock-flag';
+      flag.innerHTML = '<span aria-hidden="true">🔒</span> Locked';
+      card.appendChild(flag);
+
+      // Belt and suspenders: block clicks and Enter/Space activation.
+      card.addEventListener('click', function (e) {
+        e.preventDefault(); e.stopPropagation();
+      });
+      card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault(); e.stopPropagation();
+        }
+      });
+    });
+
+    // If a student was bounced here from a locked week, explain it.
+    var m = (location.search || '').match(/[?&]locked=(\d+)/);
+    if (m) {
+      var wk = parseInt(m[1], 10);
+      var unlock = UNLOCKS[wk];
+      var banner = document.getElementById('lock-banner');
+      if (banner && unlock) {
+        banner.innerHTML = '<strong>Week ' + wk + ' isn’t open yet.</strong> ' +
+          'It unlocks ' + unlockLabel(unlock) + ' at 12:01 AM Pacific. ' +
+          'Until then, keep working through the weeks that are open below.';
+        banner.hidden = false;
       }
     }
   })();

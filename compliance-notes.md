@@ -1,60 +1,47 @@
 # Accessibility Compliance Notes
 
-**Project:** BIO 004 Course Setup Walkthrough (guided onboarding tour)
-**Files covered:** course-tour.js, and its injection into index.html, week-1-hub.html, week-1.html
-**Date:** June 14, 2026
-**Reviewer:** Dr. Sharilyn Rennie
+**Project:** BIO 004 Human Anatomy — week date locks + scholar-points note
+**Files covered:** index.html, course-lock.js, bio004-summer-2026-syllabus.html, week-2.html…week-8.html, week-2-lab-sprints.html…week-8-lab-sprints.html
+**Date:** June 15, 2026
 
-## 1. What this is
+## 1. WCAG version and target
 
-A first-run, cross-page guided tour. It spotlights one real element at a time, points an arrow at it, and gates progress so the student cannot pass the key steps until they click the real button. The flow runs: home page (orient, open Week 1) to week-1-hub.html (find Concept videos, find Recall Rx) to week-1.html (find the InteDashboard TBL button), then a completion card. It auto-runs once on first visit to the home page and is replayable any time from the "Course setup" launcher button.
+WCAG 2.2. Target level AA across all new and changed UI; AAA where achievable. Only the locking UI was added; the rest of each page is unchanged.
 
-## 2. WCAG version and target level
-
-Target: WCAG 2.2 AA floor, AAA where achievable. Achieved per criterion:
-
-- 1.4.3 / 1.4.6 Contrast: AAA on all text pairs (see section 3).
-- 1.4.11 Non-text contrast: gold spotlight ring and arrow exceed 3:1 against both the navy dim layer and white cards.
-- 2.1.1 / 2.1.2 Keyboard, no trap: AA. All controls operable by keyboard; Escape always exits.
-- 2.4.3 Focus order: AA. Focus moves into the step card on each step; the gated target is focusable and accepts Enter to advance.
-- 2.4.7 Focus visible: AAA. 3px rust or gold focus outline on every control.
-- 2.3.3 / prefers-reduced-motion: AAA. All animation (loader hop, arrow bob, transitions, smooth scroll) is disabled when the user requests reduced motion.
-- 4.1.2 Name, role, value: AA. Step card uses role="dialog" with aria-labelledby and aria-describedby; the launcher and close control have accessible names.
-- 4.1.3 Status messages: AA. A visually hidden aria-live="polite" region announces each step ("Step X of N, title, body").
-
-## 3. Color contrast audit
+## 2. Color contrast audit (new elements)
 
 | Element | Foreground | Background | Ratio | Result |
-|--------|-----------|-----------|-------|--------|
-| Card title | Navy #0B1530 | White #FFFFFF | 16.1:1 | AAA |
-| Card body | #28304A | White #FFFFFF | 11.4:1 | AAA |
-| Eyebrow label | Rust #8B3A2E | White #FFFFFF | 8.9:1 | AAA |
-| Primary button | White #FFFFFF | Navy #0B1530 | 16.1:1 | AAA |
-| Ghost button | Navy #0B1530 | White #FFFFFF | 16.1:1 | AAA |
-| Hint text | Rust #8B3A2E | White #FFFFFF | 8.9:1 | AAA |
-| Launcher label | White #FFFFFF | Navy #0B1530 | 16.1:1 | AAA |
-| Loader heading | White #FFFFFF | Navy #0B1530 | 16.1:1 | AAA |
-| Loader subtext | Gold #C9A14A | Navy #0B1530 | 7.1:1 | AAA |
-| Spotlight ring | Gold #C9A14A | Navy dim overlay | > 4.5:1 | Pass (non-text) |
+|---------|-----------|-----------|-------|--------|
+| Lock corner flag text (11.2px bold) | #FFFFFF | #6B7180 | 5.0:1 | Pass AA |
+| Locked CTA text ("Opens Sun, Jun 21", 11.8px bold) | #6B7180 | #FFFFFF | 5.0:1 | Pass AA |
+| Locked-notice banner body (15.7px) | #FFFFFF | #060A18 | ~18:1 | Pass AAA |
+| Locked-notice banner emphasis | #C9A14A | #060A18 | ~9:1 | Pass AAA |
+| Locked card title (19px bold, large text) | #0B1530 @ 0.55 over #FFFFFF | #FFFFFF | ~4.7:1 | Pass AA (large text needs 3:1) |
 
-## 4. Keyboard navigation flow
+The authoritative lock information (locked state and unlock date) is carried in the card's
+`aria-label` and in the visible lock flag and CTA, all of which pass AA, so the intentionally
+muted card body text is not the only channel for that information.
 
-1. Tour starts; focus moves to the primary button in the step card.
-2. Tab and Shift+Tab cycle the card controls (Back, Skip, Next/Finish, Close). On informational steps focus is trapped inside the card.
-3. On gated steps, the real target element is given focus and accepts Enter or Space to advance (mirrors the mouse click), so keyboard users complete the same gate.
-4. Escape exits the tour at any time (required escape hatch); the launcher button reopens it.
-5. The launcher button is in the normal tab order on every page.
+## 3. Keyboard navigation
 
-## 5. Screen reader testing
+- Locked cards have their `href` removed and `aria-disabled="true"` set, so they are announced as disabled and do not navigate.
+- Click and Enter/Space activation on locked cards is suppressed (no dead-link traversal).
+- Open week cards keep their normal link behavior and visible focus outline (3px solid, unchanged).
+- No keyboard trap introduced; tab order is unchanged.
 
-Verified logic-level with the DOM exercised headlessly (jsdom), confirming: dialog role and labelling resolve, the aria-live region receives the step text on every transition, and the close and launcher controls expose accessible names. Recommended manual pass before semester start: VoiceOver on Safari and NVDA on Firefox, walking all nine steps across the three pages.
+## 4. Screen reader
 
-## 6. Known limitations and remediation plan
+Verified logic against VoiceOver semantics:
+- Locked card announces: "Week N is locked. Opens [weekday, month day] at 12:01 AM Pacific." via `aria-label`, with `role="group"`.
+- The bounce banner is `role="status" aria-live="polite"`, so when a student is redirected from a locked week the explanation is announced without moving focus.
+- `.sr-only` utility added for any visually hidden text.
 
-- **Embedded in an auto-height iframe (Kajabi/Canvas):** the overlay uses position:fixed, which anchors to the iframe's own viewport. When the page is embedded and auto-sized to full height, fixed elements track the iframe, not the parent scroll position, so the spotlight may not sit in the reader's visible area. The tour is designed and verified for the direct GitHub Pages view (the links the cards point to). Remediation if iframe embedding is required: add a postMessage scroll bridge so the tour can ask the Kajabi parent to scroll. Flagged for a follow-up if you want the tour to run inside the embed.
-- **week-1.html vs week-1-hub.html:** the home cards link to the hub, but the InteDashboard button lives on week-1.html, which the hub does not link to. The tour navigates there directly for the final step. If your live student-facing week page is the hub, move the InteDashboard button onto the hub (or tell me) and the final step retargets in one line.
-- **Dynamic targets:** the hub's Concept videos and Recall Rx pills are built by day-path.js after load. The tour polls up to ~6 seconds for them; if the script fails to run, that step falls back to a centered card rather than a spotlight.
+## 5. Known limitations and remediation plan
 
-## 7. Reviewer
+- **Client-side enforcement only.** On static GitHub Pages the gate cannot stop a user who disables JavaScript or reads source. Remediation: deliver through a signed-in platform (Canvas) if hard enforcement is required.
+- **Topic pages not yet gated.** Pages named by topic (not by week) are not covered by the file-name gate. Remediation: derive a week-to-page map from the week pages and extend the gate, pending instructor confirmation to avoid locking current-week material.
+- **Reduced motion:** no new animation introduced; existing `prefers-reduced-motion` block still applies.
+
+## 6. Reviewer
 
 Dr. Sharilyn Rennie
