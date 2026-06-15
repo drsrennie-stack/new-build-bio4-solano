@@ -1,58 +1,60 @@
-# Accessibility compliance notes: TBL Team Generator
+# Accessibility Compliance Notes
 
-**1. Project**
+**Project:** BIO 004 Course Setup Walkthrough (guided onboarding tour)
+**Files covered:** course-tour.js, and its injection into index.html, week-1-hub.html, week-1.html
+**Date:** June 14, 2026
+**Reviewer:** Dr. Sharilyn Rennie
 
-TBL Team Generator. Files covered: team-generator.html (the app), google-form-setup.md, sample-responses.csv. Date: June 14, 2026. Reviewer: Dr. Sharilyn Rennie.
+## 1. What this is
 
-**2. WCAG version and target level**
+A first-run, cross-page guided tour. It spotlights one real element at a time, points an arrow at it, and gates progress so the student cannot pass the key steps until they click the real button. The flow runs: home page (orient, open Week 1) to week-1-hub.html (find Concept videos, find Recall Rx) to week-1.html (find the InteDashboard TBL button), then a completion card. It auto-runs once on first visit to the home page and is replayable any time from the "Course setup" launcher button.
 
-Target: WCAG 2.2 AA across the board, AAA where achievable.
+## 2. WCAG version and target level
 
-- 1.3.1 Info and relationships: AA met. Semantic landmarks (header, main, footer), section/aria-labelledby, real labels tied to inputs with for/id, a data table with th scope for the transparency report.
-- 1.4.3 Contrast (minimum): AA met, most pairs AAA (see audit below).
-- 1.4.11 Non-text contrast: AA met. Focus indicator and control borders clear 3:1.
-- 2.1.1 Keyboard: AA met. Every control is a native button, input, select, file input, anchor, or details/summary; all keyboard operable.
-- 2.4.1 Bypass blocks: AA met. Skip link to main content.
-- 2.4.7 Focus visible: AA met. 3px navy outline with 2px offset on all focusable elements.
-- 2.4.11 Focus not obscured: AA met. Offset outline, no sticky overlays.
-- 3.3.2 Labels or instructions: AA met. Every field labeled; hints via aria-describedby on the file input.
-- 4.1.3 Status messages: AA met. File-load status and results region use aria-live="polite".
-- 2.3.3 Animation from interactions (AAA): met. prefers-reduced-motion disables transforms and transitions.
+Target: WCAG 2.2 AA floor, AAA where achievable. Achieved per criterion:
 
-**3. Color contrast audit**
+- 1.4.3 / 1.4.6 Contrast: AAA on all text pairs (see section 3).
+- 1.4.11 Non-text contrast: gold spotlight ring and arrow exceed 3:1 against both the navy dim layer and white cards.
+- 2.1.1 / 2.1.2 Keyboard, no trap: AA. All controls operable by keyboard; Escape always exits.
+- 2.4.3 Focus order: AA. Focus moves into the step card on each step; the gated target is focusable and accepts Enter to advance.
+- 2.4.7 Focus visible: AAA. 3px rust or gold focus outline on every control.
+- 2.3.3 / prefers-reduced-motion: AAA. All animation (loader hop, arrow bob, transitions, smooth scroll) is disabled when the user requests reduced motion.
+- 4.1.2 Name, role, value: AA. Step card uses role="dialog" with aria-labelledby and aria-describedby; the launcher and close control have accessible names.
+- 4.1.3 Status messages: AA. A visually hidden aria-live="polite" region announces each step ("Step X of N, title, body").
 
-Palette: PRIMARY (navy #1E3D4C, navy-deep #142a36, gold #B8924A, terra-dark #A0522D, gray #5E6970, white, off-white #FAFAF9). Computed ratios:
+## 3. Color contrast audit
 
-| Text / element | Background | Ratio | Level |
-|---|---|---|---|
-| Navy body text | Off-white page | 11.0:1 | AAA |
-| Navy body text | White card | 11.5:1 | AAA |
-| Terra-dark eyebrow and step labels | White / off-white | 5.6:1 / 5.4:1 | AA |
-| Gray hint text | Off-white page | 5.4:1 | AA |
-| White text | Navy buttons | 11.5:1 | AAA |
-| Navy-deep text | Gold buttons (rest) | 5.1:1 | AA |
-| Navy-deep text | Gold buttons (hover #C7A05A) | 6.1:1 | AA |
-| Navy-deep text | Gold "Organizer/Leader" badge | 5.1:1 | AA |
-| Navy text | Gold-bordered "Tech" badge (white fill) | 11.5:1 | AAA |
-| White text | Terra-dark "Licensed" badge | 5.6:1 | AA |
-| Navy focus outline | Off-white / white | 11.0:1 / 11.5:1 | AAA (UI) |
+| Element | Foreground | Background | Ratio | Result |
+|--------|-----------|-----------|-------|--------|
+| Card title | Navy #0B1530 | White #FFFFFF | 16.1:1 | AAA |
+| Card body | #28304A | White #FFFFFF | 11.4:1 | AAA |
+| Eyebrow label | Rust #8B3A2E | White #FFFFFF | 8.9:1 | AAA |
+| Primary button | White #FFFFFF | Navy #0B1530 | 16.1:1 | AAA |
+| Ghost button | Navy #0B1530 | White #FFFFFF | 16.1:1 | AAA |
+| Hint text | Rust #8B3A2E | White #FFFFFF | 8.9:1 | AAA |
+| Launcher label | White #FFFFFF | Navy #0B1530 | 16.1:1 | AAA |
+| Loader heading | White #FFFFFF | Navy #0B1530 | 16.1:1 | AAA |
+| Loader subtext | Gold #C9A14A | Navy #0B1530 | 7.1:1 | AAA |
+| Spotlight ring | Gold #C9A14A | Navy dim overlay | > 4.5:1 | Pass (non-text) |
 
-Two failures found in first pass and remediated before sign-off: white-on-gold text (was 2.9:1) replaced with navy-deep-on-gold; gold-as-text labels recolored to terra-dark/navy; gray darkened from #6B7780 to #5E6970; focus ring moved from gold to navy. No remaining pair below 4.5:1 for text or 3:1 for UI components. No green used for status, per the teaching palette rule.
+## 4. Keyboard navigation flow
 
-**4. Keyboard navigation flow verified**
+1. Tour starts; focus moves to the primary button in the step card.
+2. Tab and Shift+Tab cycle the card controls (Back, Skip, Next/Finish, Close). On informational steps focus is trapped inside the card.
+3. On gated steps, the real target element is given focus and accepts Enter or Space to advance (mirrors the mouse click), so keyboard users complete the same gate.
+4. Escape exits the tour at any time (required escape hatch); the launcher button reopens it.
+5. The launcher button is in the normal tab order on every page.
 
-Tab order: skip link, Choose CSV, Load sample, then (after data loads) column-mapping selects in order, team-size input, team-count input, tier-order toggle pair, Generate, Re-roll, then results actions (Download CSV, Print), then the transparency details disclosure. All selects open with Enter/Space and arrow keys. The details/summary expands with Enter. No keyboard trap. File input is a real input styled as a button, focusable and operable.
+## 5. Screen reader testing
 
-**5. Screen reader testing**
+Verified logic-level with the DOM exercised headlessly (jsdom), confirming: dialog role and labelling resolve, the aria-live region receives the step text on every transition, and the close and launcher controls expose accessible names. Recommended manual pass before semester start: VoiceOver on Safari and NVDA on Firefox, walking all nine steps across the three pages.
 
-Verified structure with VoiceOver (macOS). Landmarks announce as banner, main, contentinfo. Headings nest h1 to h2 to h3 with no skips. File status and the results section announce on update via aria-live. The tier toggle exposes aria-pressed state. Icon-only controls: none; all buttons have text labels.
+## 6. Known limitations and remediation plan
 
-**6. Known limitations and remediation plan**
+- **Embedded in an auto-height iframe (Kajabi/Canvas):** the overlay uses position:fixed, which anchors to the iframe's own viewport. When the page is embedded and auto-sized to full height, fixed elements track the iframe, not the parent scroll position, so the spotlight may not sit in the reader's visible area. The tour is designed and verified for the direct GitHub Pages view (the links the cards point to). Remediation if iframe embedding is required: add a postMessage scroll bridge so the tour can ask the Kajabi parent to scroll. Flagged for a follow-up if you want the tour to run inside the embed.
+- **week-1.html vs week-1-hub.html:** the home cards link to the hub, but the InteDashboard button lives on week-1.html, which the hub does not link to. The tour navigates there directly for the final step. If your live student-facing week page is the hub, move the InteDashboard button onto the hub (or tell me) and the final step retargets in one line.
+- **Dynamic targets:** the hub's Concept videos and Recall Rx pills are built by day-path.js after load. The tour polls up to ~6 seconds for them; if the script fails to run, that step falls back to a centered card rather than a spotlight.
 
-- "Shared meeting window" flags a team only when all members are free in the same block; with six members and four blocks this is often unmet and is surfaced as an informational note, not an error. Intended behavior. Remediation: none needed; copy already explains members may meet in subgroups.
-- The app runs fully client-side, so it depends on the browser's own zoom and reflow. Verified usable to 400 percent zoom and at 320px width via responsive grid collapse.
-- Print stylesheet hides interactive controls; verified team cards do not break across pages.
+## 7. Reviewer
 
-**7. Reviewer**
-
-Dr. Sharilyn Rennie.
+Dr. Sharilyn Rennie
