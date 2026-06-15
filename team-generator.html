@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TBL Team Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Lora:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1E3D4C;
+    --navy-deep:#142a36;
+    --navy-tint:#EDF1F3;
+    --gold:#B8924A;
+    --terra:#C2734D;
+    --terra-dark:#A0522D;
+    --white:#FFFFFF;
+    --offwhite:#FAFAF9;
+    --gray:#5E6970;
+    --gray-line:#D7DCDF;
+    --rest-shadow:0 1px 3px rgba(0,0,0,0.08);
+    --hover-shadow:0 8px 16px rgba(0,0,0,0.10);
+    --t:transform 200ms ease, box-shadow 200ms ease;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--offwhite);
+    color:var(--navy);
+    font-family:'DM Sans',system-ui,Arial,sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .skip{position:absolute;left:-999px;top:0;background:var(--navy);color:#fff;padding:10px 16px;z-index:100;border-radius:0 0 8px 0;}
+  .skip:focus{left:0;}
+  .wrap{max-width:1120px;margin:0 auto;padding:28px 20px 64px;}
+  .eyebrow{font-family:'DM Sans';font-size:12px;letter-spacing:.10em;text-transform:uppercase;color:var(--terra-dark);font-weight:700;margin:0 0 8px;}
+  h1{font-family:'Plus Jakarta Sans';font-weight:800;color:var(--navy);font-size:clamp(26px,4vw,38px);margin:0 0 6px;line-height:1.12;}
+  h2{font-family:'Plus Jakarta Sans';font-weight:600;color:var(--terra-dark);font-size:20px;margin:0 0 12px;}
+  h3{font-family:'Plus Jakarta Sans';font-weight:600;color:var(--terra-dark);font-size:15px;margin:0 0 4px;}
+  .lead{font-family:'Lora';font-style:italic;color:var(--navy);font-size:17px;max-width:70ch;margin:0 0 22px;}
+  .card{background:var(--white);border:1px solid var(--gray-line);border-radius:14px;box-shadow:var(--rest-shadow);padding:22px;margin:0 0 22px;}
+  .step-label{font-family:'DM Sans';font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-dark);font-weight:700;margin:0 0 10px;}
+  label{font-weight:600;font-size:14px;display:block;margin:0 0 6px;color:var(--navy);}
+  .hint{font-size:13px;color:var(--gray);margin:4px 0 0;}
+  input[type=number],select{
+    font-family:'DM Sans';font-size:15px;color:var(--navy);
+    border:1px solid var(--gray-line);border-radius:9px;padding:9px 11px;background:#fff;
+    min-width:90px;
+  }
+  input[type=number]:focus,select:focus,button:focus,.filebtn:focus-within,a:focus{outline:3px solid var(--navy);outline-offset:2px;}
+  .row{display:flex;flex-wrap:wrap;gap:18px 26px;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:0;}
+  button{
+    font-family:'DM Sans';font-weight:700;font-size:15px;cursor:pointer;
+    border-radius:10px;padding:11px 20px;border:1px solid transparent;transition:var(--t);
+  }
+  .btn-primary{background:var(--navy);color:#fff;}
+  .btn-primary:hover{background:var(--navy-deep);transform:translateY(-2px);box-shadow:var(--hover-shadow);}
+  .btn-gold{background:var(--gold);color:var(--navy-deep);}
+  .btn-gold:hover{background:#C7A05A;transform:translateY(-2px);box-shadow:var(--hover-shadow);}
+  .btn-ghost{background:#fff;color:var(--navy);border:1px solid var(--navy);}
+  .btn-ghost:hover{background:var(--navy-tint);transform:translateY(-2px);box-shadow:var(--hover-shadow);}
+  .btn-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px;}
+  .filebtn{display:inline-flex;align-items:center;gap:10px;background:var(--navy);color:#fff;font-weight:700;font-size:15px;border-radius:10px;padding:11px 20px;cursor:pointer;transition:var(--t);}
+  .filebtn:hover{background:var(--navy-deep);transform:translateY(-2px);box-shadow:var(--hover-shadow);}
+  .filebtn input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;}
+  .filename{font-size:14px;color:var(--gray);margin-left:4px;}
+  .toggle{display:inline-flex;border:1px solid var(--gray-line);border-radius:10px;overflow:hidden;}
+  .toggle button{border-radius:0;border:none;background:#fff;color:var(--navy);font-weight:600;padding:9px 14px;}
+  .toggle button[aria-pressed=true]{background:var(--navy);color:#fff;}
+  .map-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;}
+  .map-grid label{margin-bottom:4px;}
+  .teams{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;}
+  .team{background:#fff;border:1px solid var(--gray-line);border-radius:14px;box-shadow:var(--rest-shadow);padding:18px;transition:var(--t);}
+  .team:hover{transform:translateY(-2px);box-shadow:var(--hover-shadow);}
+  .team-head{display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--gray-line);padding-bottom:10px;margin-bottom:12px;}
+  .team-head h3{font-size:18px;color:var(--navy);font-weight:700;margin:0;}
+  .team-size{font-size:12px;color:var(--gray);font-weight:600;}
+  .member{padding:8px 0;border-bottom:1px dashed var(--gray-line);}
+  .member:last-child{border-bottom:none;}
+  .m-name{font-weight:600;font-size:15px;color:var(--navy);}
+  .badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;}
+  .badge{font-size:11px;font-weight:700;letter-spacing:.02em;padding:2px 8px;border-radius:20px;border:1px solid;}
+  .b-stem{color:#fff;background:var(--navy);border-color:var(--navy);}
+  .b-deg{color:var(--navy);background:var(--navy-tint);border-color:var(--navy);}
+  .b-lic{color:#fff;background:var(--terra-dark);border-color:var(--terra-dark);}
+  .b-entry{color:var(--terra-dark);background:#fff;border-color:var(--terra);}
+  .b-lead{color:var(--navy-deep);background:var(--gold);border-color:var(--gold);}
+  .b-tech{color:var(--navy);background:#fff;border-color:var(--gold);}
+  .b-social{color:var(--gray);background:#fff;border-color:var(--gray-line);}
+  .team-metrics{margin-top:12px;padding-top:10px;border-top:1px solid var(--gray-line);font-size:12.5px;color:var(--navy);}
+  .team-metrics div{display:flex;justify-content:space-between;padding:2px 0;}
+  .team-metrics .k{color:var(--gray);}
+  .warn{background:#fff;border-left:4px solid var(--terra);padding:6px 10px;margin-top:8px;font-size:12.5px;color:var(--terra-dark);border-radius:0 6px 6px 0;}
+  .summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:6px;}
+  .stat{border:1px solid var(--gray-line);border-radius:10px;padding:12px 14px;}
+  .stat .n{font-family:'Plus Jakarta Sans';font-weight:800;font-size:24px;color:var(--navy);}
+  .stat .l{font-size:12px;color:var(--gray);font-weight:600;}
+  .hidden{display:none;}
+  .notice{font-size:14px;color:var(--terra-dark);font-weight:600;margin-top:10px;}
+  table.cl{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;}
+  table.cl th,table.cl td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--gray-line);}
+  table.cl th{color:var(--gray);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.05em;}
+  details summary{cursor:pointer;font-weight:700;color:var(--navy);font-size:14px;}
+  footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--gray-line);font-size:13px;color:var(--gray);}
+  @media (max-width:620px){.map-grid{grid-template-columns:1fr;}}
+  @media print{
+    .noprint{display:none!important;}
+    body{background:#fff;}
+    .team{break-inside:avoid;box-shadow:none;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;}
+    .team:hover,.btn-primary:hover,.btn-gold:hover,.btn-ghost:hover,.filebtn:hover{transform:none;}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Team-Based Learning &middot; MedMasters Collaborative</p>
+    <h1>TBL Team Generator</h1>
+    <p class="lead">Upload your survey responses and build equitable, instructor-formed teams. Strengths are spread across teams, every team gets an organizer and a tech-comfortable member, and no one is left isolated.</p>
+  </header>
+
+  <main id="main">
+
+    <!-- STEP 1: UPLOAD -->
+    <section class="card" aria-labelledby="s1">
+      <p class="step-label">Step 1</p>
+      <h2 id="s1">Load your survey responses</h2>
+      <p class="hint" style="margin-top:-4px;margin-bottom:14px;">Export your Google Form responses as a CSV (in the linked Google Sheet: File &rarr; Download &rarr; Comma-separated values), then load it here. Everything runs on this device. Nothing is uploaded anywhere.</p>
+      <div class="btn-row">
+        <label class="filebtn">
+          <span>Choose CSV file</span>
+          <input type="file" id="csvFile" accept=".csv,text/csv" aria-describedby="fileHint">
+        </label>
+        <button type="button" class="btn-ghost" id="demoBtn">Load sample data to try it</button>
+      </div>
+      <p class="filename" id="fileName" role="status" aria-live="polite"></p>
+      <p class="hint" id="fileHint">No file yet. Use the sample button to test the tool before class.</p>
+    </section>
+
+    <!-- STEP 2: MAP + SETTINGS -->
+    <section class="card hidden" id="setupCard" aria-labelledby="s2">
+      <p class="step-label">Step 2</p>
+      <h2 id="s2">Confirm columns and settings</h2>
+      <p class="hint" style="margin-top:-4px;">The tool guessed which column answers which question. Fix any that are wrong, then generate.</p>
+
+      <h3 style="margin-top:18px;">Column mapping</h3>
+      <div class="map-grid" id="mapGrid"></div>
+
+      <h3 style="margin-top:22px;">Team settings</h3>
+      <div class="row" style="margin-top:6px;">
+        <div class="field">
+          <label for="teamSize">Target members per team</label>
+          <input type="number" id="teamSize" min="3" max="12" value="7">
+          <p class="hint">TBL norm is 5 to 7. You set 6 to 8.</p>
+        </div>
+        <div class="field">
+          <label for="teamCount">Number of teams</label>
+          <input type="number" id="teamCount" min="1" max="20" value="5">
+          <p class="hint" id="sizeNote">Auto-set from headcount. Override if you like.</p>
+        </div>
+        <div class="field">
+          <label id="tierLbl">Tier order (who counts as "strongest")</label>
+          <div class="toggle" role="group" aria-labelledby="tierLbl">
+            <button type="button" id="tierFlip" aria-pressed="true">Allied health above non-STEM degree</button>
+            <button type="button" id="tierMine" aria-pressed="false">Degree-first order</button>
+          </div>
+          <p class="hint" id="tierHint">Default: STEM degree &gt; licensed allied health &gt; non-STEM degree &gt; entry care.</p>
+        </div>
+      </div>
+      <div class="btn-row" style="margin-top:18px;">
+        <button type="button" class="btn-primary" id="genBtn">Generate teams</button>
+        <button type="button" class="btn-gold hidden" id="rerollBtn">Re-roll (new arrangement)</button>
+      </div>
+    </section>
+
+    <!-- STEP 3: RESULTS -->
+    <section class="card hidden" id="resultsCard" aria-labelledby="s3" aria-live="polite">
+      <div class="noprint" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+        <div>
+          <p class="step-label">Step 3</p>
+          <h2 id="s3" style="margin-bottom:4px;">Your teams</h2>
+        </div>
+        <div class="btn-row" style="margin-top:0;">
+          <button type="button" class="btn-ghost" id="csvBtn">Download teams (CSV)</button>
+          <button type="button" class="btn-ghost" id="printBtn">Print / save PDF</button>
+        </div>
+      </div>
+
+      <h3 style="margin-top:14px;">Balance at a glance</h3>
+      <div class="summary-grid" id="summary"></div>
+      <div id="globalWarn"></div>
+
+      <div class="teams" id="teams" style="margin-top:22px;"></div>
+
+      <details style="margin-top:24px;">
+        <summary>How the teams were built (transparency report)</summary>
+        <p class="hint" style="margin-top:10px;">Students are sorted by background strength and dealt across teams in a snake pattern so every team gets a comparable spread. The tool then swaps members to guarantee each team has at least one organizer and one tech-comfortable member, to even out work-hours load, to mix introverts and extroverts, to share at least one meeting window, and to avoid leaving anyone as the lone member of a group. Each team card shows its resulting composition.</p>
+        <div id="clTableWrap"></div>
+      </details>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>TBL Team Generator. Built for Dr. Sharilyn Rennie. Runs entirely in your browser; student data never leaves this device.</p>
+  </footer>
+</div>
+
+<script>
+/* ---------------- seeded RNG ---------------- */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+let SEED=12345, rnd=mulberry32(SEED);
+
+/* ---------------- minimal CSV parser ---------------- */
+function parseCSV(text){
+  const rows=[];let row=[],cur='',q=false;
+  text=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){
+      if(c==='"'){ if(text[i+1]==='"'){cur+='"';i++;} else q=false; }
+      else cur+=c;
+    }else{
+      if(c==='"')q=true;
+      else if(c===','){row.push(cur);cur='';}
+      else if(c==='\n'){row.push(cur);rows.push(row);row=[];cur='';}
+      else cur+=c;
+    }
+  }
+  if(cur!==''||row.length){row.push(cur);rows.push(row);}
+  return rows.filter(r=>r.some(c=>c.trim()!==''));
+}
+
+/* ---------------- factor definitions ---------------- */
+const FACTORS=[
+  {key:'name',   label:'Full name',                  kw:['name']},
+  {key:'degree', label:'Highest degree',             kw:['degree','education']},
+  {key:'health', label:'Healthcare training',        kw:['healthcare','licens','clinical','patient care']},
+  {key:'role',   label:'Leadership preference',      kw:['prefer to','on a team','lead','organize']},
+  {key:'tech',   label:'Tech comfort',               kw:['technology','tech','apps']},
+  {key:'social', label:'Introvert / extrovert',      kw:['more like you','introvert','extrovert','recharge']},
+  {key:'avail',  label:'Availability to meet',       kw:['free to meet','outside of class','available','meet outside']},
+  {key:'work',   label:'Work hours per week',        kw:['hours per week','work for pay','hours do you work']},
+  {key:'gender', label:'Gender (optional)',          kw:['gender']},
+  {key:'esl',    label:'English additional (optional)',kw:['english','additional language']}
+];
+
+let RAW=null, HEADERS=[], MAP={}, STUDENTS=[], TEAMS=[], TIER='flip';
+
+function guessMap(headers){
+  const m={};const used=new Set();
+  FACTORS.forEach(f=>{
+    let best=-1,bestScore=0;
+    headers.forEach((h,i)=>{
+      if(used.has(i))return;
+      const hl=h.toLowerCase();let s=0;
+      f.kw.forEach(k=>{if(hl.includes(k))s+=k.length;});
+      if(s>bestScore){bestScore=s;best=i;}
+    });
+    if(best>=0){m[f.key]=best;used.add(best);} else m[f.key]=-1;
+  });
+  return m;
+}
+
+/* ---------------- classification ---------------- */
+function classify(v,opts){ // returns matched option key by keyword
+  const s=(v||'').toLowerCase();
+  for(const o of opts){ if(o.kw.some(k=>s.includes(k))) return o.val; }
+  return opts[opts.length-1].val; // default last
+}
+const DEGREE_OPTS=[
+  {val:'stem', kw:['stem','biology','chemistry','physics','math','engineer']},
+  {val:'nonstem',kw:["bachelor","non-stem","non stem"]},
+  {val:'assoc',kw:['associate','some college']},
+  {val:'hs',   kw:['high school','prerequisite','prereq','completing']}
+];
+const HEALTH_OPTS=[
+  {val:'licensed',kw:['licensed','rn','registered nurse','lvn','lpn','respiratory','rrt','paramedic','radiology','rad tech','sonograph','physical therapist assistant','pt assistant','pta','occupational therapy assistant','surgical tech','allied']},
+  {val:'entry',   kw:['cna','pct','patient care tech','medical assistant','emt','entry']},
+  {val:'none',    kw:['no healthcare','none','no health']}
+];
+const ROLE_OPTS=[
+  {val:'lead', kw:['lead and organize','lead the','lead ']},
+  {val:'plan', kw:['plan','organized','keep us']},
+  {val:'follow',kw:['follow','contribute']},
+  {val:'none', kw:['no strong','no preference']}
+];
+const TECH_OPTS=[
+  {val:'high',kw:['enjoy','very comfortable']},
+  {val:'mid', kw:['comfortable']},
+  {val:'neu', kw:['neutral']},
+  {val:'low', kw:['avoid','prefer to avoid']}
+];
+const SOCIAL_OPTS=[
+  {val:'intro',kw:['introvert','recharge alone','prefer to listen','listen']},
+  {val:'extro',kw:['extrovert','recharge around','prefer to talk','talk']},
+  {val:'mid',  kw:['between','ambivert','somewhere']}
+];
+const WORK_OPTS=[
+  {val:0, kw:["don't work","do not work","none","not work"]},
+  {val:35,kw:['more than 30','over 30','30+','more than thirty']},
+  {val:25,kw:['20 to 30','20-30','twenty to thirty']},
+  {val:15,kw:['10 to 20','10-20','ten to twenty']},
+  {val:5, kw:['under 10','less than 10','under ten']}
+];
+const AVAIL_BLOCKS=[
+  {key:'wMorn',kw:['weekday morning','morning']},
+  {key:'wAft', kw:['weekday afternoon','afternoon']},
+  {key:'wEve', kw:['weekday evening','evening']},
+  {key:'wknd', kw:['weekend']}
+];
+
+function tierValue(deg,health,order){
+  // returns numeric asset strength (higher = stronger), taking the best applicable
+  let degV, healthV;
+  if(order==='mine'){ // STEM > nonSTEM > licensed > entry
+    degV   = deg==='stem'?5: deg==='nonstem'?4: 1;
+    healthV= health==='licensed'?3: health==='entry'?2: 0;
+  }else{ // STEM > licensed > nonSTEM > entry
+    degV   = deg==='stem'?5: deg==='nonstem'?3: 1;
+    healthV= health==='licensed'?4: health==='entry'?2: 0;
+  }
+  return Math.max(degV,healthV,1);
+}
+function tierLabel(deg,health){
+  const parts=[];
+  if(deg==='stem')parts.push('STEM degree');
+  else if(deg==='nonstem')parts.push('Non-STEM degree');
+  if(health==='licensed')parts.push('Licensed clinician');
+  else if(health==='entry')parts.push('Entry care');
+  if(!parts.length)parts.push('Prereq / building base');
+  return parts;
+}
+
+function buildStudents(){
+  STUDENTS=[];
+  for(let r=1;r<RAW.length;r++){
+    const row=RAW[r];
+    const get=k=>{const i=MAP[k];return i>=0&&i<row.length?row[i]:'';};
+    const name=(get('name')||('Student '+r)).trim();
+    if(!name)continue;
+    const deg=classify(get('degree'),DEGREE_OPTS);
+    const health=classify(get('health'),HEALTH_OPTS);
+    const role=classify(get('role'),ROLE_OPTS);
+    const tech=classify(get('tech'),TECH_OPTS);
+    const social=classify(get('social'),SOCIAL_OPTS);
+    const work=classify(get('work'),WORK_OPTS);
+    const availRaw=(get('avail')||'').toLowerCase();
+    const avail={};AVAIL_BLOCKS.forEach(b=>{avail[b.key]=b.kw.some(k=>availRaw.includes(k));});
+    const genderRaw=(get('gender')||'').toLowerCase();
+    let gender='na';
+    if(genderRaw.includes('woman')||genderRaw.includes('female'))gender='woman';
+    else if(genderRaw.includes('non-binary')||genderRaw.includes('nonbinary')||genderRaw.includes('non binary'))gender='nb';
+    else if(genderRaw.includes('man')||genderRaw.includes('male'))gender='man';
+    const eslRaw=(get('esl')||'').toLowerCase();
+    const esl=eslRaw.startsWith('yes')||eslRaw.includes('yes');
+    STUDENTS.push({name,deg,health,role,tech,social,work,avail,gender,esl,
+      organizer:(role==='lead'||role==='plan'),
+      techStrong:(tech==='high'),
+      leader:(role==='lead')});
+  }
+}
+
+/* ---------------- team building ---------------- */
+function computeTeamCount(n,size){return Math.max(1,Math.round(n/size));}
+
+function snakeDraft(students,T){
+  const teams=Array.from({length:T},()=>[]);
+  const sorted=students.slice().sort((a,b)=>{
+    const av=tierValue(a.deg,a.health,TIER), bv=tierValue(b.deg,b.health,TIER);
+    if(bv!==av)return bv-av;
+    return rnd()-0.5;
+  });
+  let t=0,dir=1;
+  sorted.forEach(s=>{
+    teams[t].push(s);
+    if(dir===1){ if(t===T-1)dir=-1; else t++; }
+    else{ if(t===0)dir=1; else t--; }
+  });
+  return teams;
+}
+
+function variance(arr){const m=arr.reduce((a,b)=>a+b,0)/arr.length;return arr.reduce((a,b)=>a+(b-m)*(b-m),0)/arr.length;}
+
+function teamHasCommonWindow(team){
+  return AVAIL_BLOCKS.some(b=>team.every(s=>s.avail[b.key]));
+}
+function teamSharedWindowCount(team){
+  return AVAIL_BLOCKS.filter(b=>team.every(s=>s.avail[b.key])).length;
+}
+
+function score(teams){
+  let s=0;
+  const assetSums=[],workSums=[],extroFrac=[];
+  teams.forEach(team=>{
+    const org=team.filter(x=>x.organizer).length;
+    const tech=team.filter(x=>x.techStrong).length;
+    if(org===0)s+=60;
+    if(tech===0)s+=35;
+    if(!teamHasCommonWindow(team))s+=25;
+    // isolation
+    const women=team.filter(x=>x.gender==='woman').length;
+    const nb=team.filter(x=>x.gender==='nb').length;
+    const men=team.filter(x=>x.gender==='man').length;
+    const esl=team.filter(x=>x.esl).length;
+    if(women===1&&team.length>2)s+=30;
+    if(nb===1&&team.length>2)s+=30;
+    if(men===1&&team.length>2)s+=22;
+    if(esl===1&&team.length>2)s+=20;
+    assetSums.push(team.reduce((a,x)=>a+tierValue(x.deg,x.health,TIER),0));
+    workSums.push(team.reduce((a,x)=>a+x.work,0));
+    const ex=team.filter(x=>x.social==='extro').length;
+    extroFrac.push(ex/team.length);
+  });
+  s+=variance(assetSums)*2.0;
+  s+=variance(workSums)*0.04;
+  s+=variance(extroFrac)*120;
+  return s;
+}
+
+function optimize(teams,iters){
+  let best=teams.map(t=>t.slice());
+  let bestScore=score(best);
+  let cur=best.map(t=>t.slice());
+  let curScore=bestScore;
+  for(let i=0;i<iters;i++){
+    const T=cur.length;
+    let a=Math.floor(rnd()*T),b=Math.floor(rnd()*T);
+    if(a===b)continue;
+    const ia=Math.floor(rnd()*cur[a].length), ib=Math.floor(rnd()*cur[b].length);
+    const tmp=cur[a][ia];cur[a][ia]=cur[b][ib];cur[b][ib]=tmp;
+    const ns=score(cur);
+    const temp=1.5*(1-i/iters);
+    if(ns<curScore || rnd()<Math.exp((curScore-ns)/(temp+0.0001))){
+      curScore=ns;
+      if(ns<bestScore){bestScore=ns;best=cur.map(t=>t.slice());}
+    }else{
+      const tmp2=cur[a][ia];cur[a][ia]=cur[b][ib];cur[b][ib]=tmp2; // revert
+    }
+  }
+  return best;
+}
+
+function generate(){
+  rnd=mulberry32(SEED);
+  const size=Math.max(3,parseInt(document.getElementById('teamSize').value)||7);
+  let T=parseInt(document.getElementById('teamCount').value)||computeTeamCount(STUDENTS.length,size);
+  T=Math.max(1,Math.min(T,STUDENTS.length));
+  let teams=snakeDraft(STUDENTS,T);
+  teams=optimize(teams,6000);
+  TEAMS=teams;
+  render();
+}
+
+/* ---------------- rendering ---------------- */
+function badge(cls,txt){return '<span class="badge '+cls+'">'+txt+'</span>';}
+
+function memberBadges(s){
+  let b='';
+  if(s.deg==='stem')b+=badge('b-stem','STEM degree');
+  else if(s.deg==='nonstem')b+=badge('b-deg','Degree');
+  if(s.health==='licensed')b+=badge('b-lic','Licensed');
+  else if(s.health==='entry')b+=badge('b-entry','Entry care');
+  if(s.leader)b+=badge('b-lead','Leader');
+  else if(s.organizer)b+=badge('b-lead','Organizer');
+  if(s.techStrong)b+=badge('b-tech','Tech');
+  b+=badge('b-social', s.social==='intro'?'Introvert':s.social==='extro'?'Extrovert':'Ambivert');
+  return b;
+}
+
+function esc(t){return (t||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+function render(){
+  const wrap=document.getElementById('teams');
+  wrap.innerHTML='';
+  TEAMS.forEach((team,idx)=>{
+    const org=team.filter(x=>x.organizer).length;
+    const tech=team.filter(x=>x.techStrong).length;
+    const assetSum=team.reduce((a,x)=>a+tierValue(x.deg,x.health,TIER),0);
+    const workSum=team.reduce((a,x)=>a+x.work,0);
+    const intro=team.filter(x=>x.social==='intro').length;
+    const extro=team.filter(x=>x.social==='extro').length;
+    const shared=teamSharedWindowCount(team);
+    const women=team.filter(x=>x.gender==='woman').length;
+    const nb=team.filter(x=>x.gender==='nb').length;
+    const men=team.filter(x=>x.gender==='man').length;
+    let warns='';
+    if(org===0)warns+='<div class="warn">No organizer available for this team (limited supply).</div>';
+    if(tech===0)warns+='<div class="warn">No strongly tech-comfortable member (limited supply).</div>';
+    if(shared===0)warns+='<div class="warn">No window when all members are free at once. They may need to meet in subgroups.</div>';
+    if(women===1&&team.length>2)warns+='<div class="warn">Only one woman on this team. Review if avoidable.</div>';
+    if(men===1&&team.length>2)warns+='<div class="warn">Only one man on this team. Review if avoidable.</div>';
+    if(nb===1&&team.length>2)warns+='<div class="warn">Only one non-binary student on this team. Review if avoidable.</div>';
+
+    let html='<div class="team"><div class="team-head"><h3>Team '+(idx+1)+'</h3><span class="team-size">'+team.length+' members</span></div>';
+    team.forEach(s=>{
+      html+='<div class="member"><div class="m-name">'+esc(s.name)+'</div><div class="badges">'+memberBadges(s)+'</div></div>';
+    });
+    html+='<div class="team-metrics">';
+    html+='<div><span class="k">Background strength</span><span>'+assetSum+'</span></div>';
+    html+='<div><span class="k">Organizers / tech</span><span>'+org+' / '+tech+'</span></div>';
+    html+='<div><span class="k">Introvert / extrovert</span><span>'+intro+' / '+extro+'</span></div>';
+    html+='<div><span class="k">Shared meeting windows</span><span>'+shared+'</span></div>';
+    html+='<div><span class="k">Total work hours/wk (est.)</span><span>'+workSum+'</span></div>';
+    html+='</div>'+warns+'</div>';
+    wrap.insertAdjacentHTML('beforeend',html);
+  });
+
+  // summary
+  const assetSums=TEAMS.map(t=>t.reduce((a,x)=>a+tierValue(x.deg,x.health,TIER),0));
+  const workSums=TEAMS.map(t=>t.reduce((a,x)=>a+x.work,0));
+  const noOrg=TEAMS.filter(t=>t.filter(x=>x.organizer).length===0).length;
+  const noTech=TEAMS.filter(t=>t.filter(x=>x.techStrong).length===0).length;
+  const noWin=TEAMS.filter(t=>teamSharedWindowCount(t)===0).length;
+  const spread=Math.max(...assetSums)-Math.min(...assetSums);
+  const sm=document.getElementById('summary');
+  sm.innerHTML=
+    stat(STUDENTS.length,'Students placed')+
+    stat(TEAMS.length,'Teams')+
+    stat(spread,'Strength gap (top vs low team)')+
+    stat(noOrg,'Teams without an organizer')+
+    stat(noTech,'Teams without tech support')+
+    stat(noWin,'Teams without a shared window');
+  let gw='';
+  if(noOrg||noTech||noWin)gw='<p class="notice">Some guarantees could not be fully met given who answered. Details are flagged on each team card. Try Re-roll or adjust team count.</p>';
+  document.getElementById('globalWarn').innerHTML=gw;
+
+  // transparency table
+  let rows='<table class="cl"><thead><tr><th>Team</th><th>Strength</th><th>Org</th><th>Tech</th><th>Intro/Extro</th><th>Work hrs</th><th>Shared windows</th></tr></thead><tbody>';
+  TEAMS.forEach((t,i)=>{
+    rows+='<tr><td>Team '+(i+1)+'</td><td>'+assetSums[i]+'</td><td>'+t.filter(x=>x.organizer).length+'</td><td>'+t.filter(x=>x.techStrong).length+'</td><td>'+t.filter(x=>x.social==='intro').length+' / '+t.filter(x=>x.social==='extro').length+'</td><td>'+workSums[i]+'</td><td>'+teamSharedWindowCount(t)+'</td></tr>';
+  });
+  rows+='</tbody></table>';
+  document.getElementById('clTableWrap').innerHTML=rows;
+
+  document.getElementById('resultsCard').classList.remove('hidden');
+  document.getElementById('rerollBtn').classList.remove('hidden');
+  document.getElementById('resultsCard').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function stat(n,l){return '<div class="stat"><div class="n">'+n+'</div><div class="l">'+l+'</div></div>';}
+
+/* ---------------- mapping UI ---------------- */
+function renderMap(){
+  const grid=document.getElementById('mapGrid');
+  grid.innerHTML='';
+  FACTORS.forEach(f=>{
+    let opts='<option value="-1">(not in this survey)</option>';
+    HEADERS.forEach((h,i)=>{opts+='<option value="'+i+'"'+(MAP[f.key]===i?' selected':'')+'>'+esc(h)+'</option>';});
+    grid.insertAdjacentHTML('beforeend',
+      '<div><label for="map_'+f.key+'">'+f.label+'</label><select id="map_'+f.key+'" data-key="'+f.key+'" style="width:100%">'+opts+'</select></div>');
+  });
+  grid.querySelectorAll('select').forEach(sel=>{
+    sel.addEventListener('change',e=>{MAP[e.target.dataset.key]=parseInt(e.target.value);});
+  });
+}
+
+/* ---------------- load handling ---------------- */
+function ingest(text){
+  RAW=parseCSV(text);
+  if(!RAW.length){alert('That file looks empty.');return;}
+  HEADERS=RAW[0];
+  MAP=guessMap(HEADERS);
+  renderMap();
+  const n=RAW.length-1;
+  document.getElementById('teamCount').value=computeTeamCount(n,parseInt(document.getElementById('teamSize').value)||7);
+  document.getElementById('sizeNote').textContent=n+' responses loaded.';
+  document.getElementById('setupCard').classList.remove('hidden');
+  document.getElementById('setupCard').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+document.getElementById('csvFile').addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f)return;
+  document.getElementById('fileName').textContent='Loaded: '+f.name;
+  const reader=new FileReader();
+  reader.onload=ev=>ingest(ev.target.result);
+  reader.readAsText(f);
+});
+
+document.getElementById('teamSize').addEventListener('change',()=>{
+  if(RAW){document.getElementById('teamCount').value=computeTeamCount(RAW.length-1,parseInt(document.getElementById('teamSize').value)||7);}
+});
+
+document.getElementById('genBtn').addEventListener('click',()=>{
+  buildStudents();
+  if(!STUDENTS.length){alert('No student rows found. Check the Full name column mapping.');return;}
+  generate();
+});
+document.getElementById('rerollBtn').addEventListener('click',()=>{SEED=Math.floor(Math.random()*1e9);generate();});
+
+function setTier(t){
+  TIER=t;
+  document.getElementById('tierMine').setAttribute('aria-pressed',t==='mine');
+  document.getElementById('tierFlip').setAttribute('aria-pressed',t==='flip');
+  document.getElementById('tierHint').textContent = t==='mine'
+    ? 'Your order: STEM degree > non-STEM degree > licensed allied health > entry care.'
+    : 'Flipped: STEM degree > licensed allied health > non-STEM degree > entry care.';
+  if(TEAMS.length)generate();
+}
+document.getElementById('tierMine').addEventListener('click',()=>setTier('mine'));
+document.getElementById('tierFlip').addEventListener('click',()=>setTier('flip'));
+
+document.getElementById('printBtn').addEventListener('click',()=>window.print());
+
+document.getElementById('csvBtn').addEventListener('click',()=>{
+  let out='Team,Name,Degree,Healthcare,Leadership,Tech,Social,WorkHrsEst,Availability,Gender,ESL\n';
+  TEAMS.forEach((t,i)=>{
+    t.forEach(s=>{
+      const av=AVAIL_BLOCKS.filter(b=>s.avail[b.key]).map(b=>b.key).join(' ');
+      const cells=['Team '+(i+1),s.name,s.deg,s.health,s.role,s.tech,s.social,s.work,av,s.gender,s.esl?'yes':'no']
+        .map(c=>{c=String(c);return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c;});
+      out+=cells.join(',')+'\n';
+    });
+  });
+  const blob=new Blob([out],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='tbl-teams.csv';a.click();
+});
+
+/* ---------------- sample data ---------------- */
+const SAMPLE=`Timestamp,Your full name,Highest degree you have completed,Healthcare training or licensure,"On a team, I prefer to...",How comfortable are you with technology and learning new apps?,Which sounds more like you?,When are you generally free to meet outside of class? (check all that apply),About how many hours per week do you work for pay?,Gender (optional),Is English an additional language for you? (optional)
+1,Ava Thompson,Bachelor's degree or higher in a STEM field (biology chemistry physics math engineering),No healthcare experience,Lead and organize the group,"Very comfortable, I enjoy tech",More extroverted (I recharge around people and often prefer to talk),Weekday afternoons;Weekends,Under 10 hours,Woman,No
+2,Liam Garcia,Associate degree or some college credit,Entry-level patient care (CNA PCT medical assistant EMT-Basic),Contribute and follow the group's plan,Comfortable,More introverted (I recharge alone and often prefer to listen),Weekday evenings;Weekends,20 to 30 hours,Man,Yes
+3,Sofia Nguyen,Bachelor's degree or higher in a non-STEM field,No healthcare experience,Help plan and keep us organized but not necessarily lead,Neutral,Somewhere in between,Weekday mornings;Weekday afternoons,I don't work for pay right now,Woman,No
+4,Noah Patel,High school diploma or currently completing prerequisites,Licensed allied health professional (RN respiratory therapy paramedic radiology tech),Lead and organize the group,Comfortable,More extroverted (I recharge around people and often prefer to talk),Weekday evenings,More than 30 hours,Man,No
+5,Maria Rodriguez,Bachelor's degree or higher in a STEM field (biology chemistry physics math engineering),Entry-level patient care (CNA PCT medical assistant EMT-Basic),Contribute and follow the group's plan,"Very comfortable, I enjoy tech",More introverted (I recharge alone and often prefer to listen),Weekday afternoons;Weekends,10 to 20 hours,Woman,Yes
+6,James Kim,Bachelor's degree or higher in a non-STEM field,No healthcare experience,No strong preference,I prefer to avoid tech when I can,Somewhere in between,Weekends,Under 10 hours,Man,No
+7,Olivia Chen,High school diploma or currently completing prerequisites,No healthcare experience,Help plan and keep us organized but not necessarily lead,Comfortable,More extroverted (I recharge around people and often prefer to talk),Weekday mornings;Weekday evenings,10 to 20 hours,Woman,No
+8,Ethan Brown,Associate degree or some college credit,Licensed allied health professional (RN respiratory therapy paramedic radiology tech),Lead and organize the group,Neutral,More introverted (I recharge alone and often prefer to listen),Weekday evenings;Weekends,More than 30 hours,Man,No
+9,Isabella Martinez,Bachelor's degree or higher in a STEM field (biology chemistry physics math engineering),No healthcare experience,Contribute and follow the group's plan,"Very comfortable, I enjoy tech",Somewhere in between,Weekday afternoons,I don't work for pay right now,Woman,No
+10,Lucas Singh,High school diploma or currently completing prerequisites,Entry-level patient care (CNA PCT medical assistant EMT-Basic),Help plan and keep us organized but not necessarily lead,Comfortable,More introverted (I recharge alone and often prefer to listen),Weekday mornings;Weekends,20 to 30 hours,Man,Yes
+11,Mia Johnson,Bachelor's degree or higher in a non-STEM field,Entry-level patient care (CNA PCT medical assistant EMT-Basic),Lead and organize the group,Neutral,More extroverted (I recharge around people and often prefer to talk),Weekday evenings,Under 10 hours,Woman,No
+12,Benjamin Lee,Bachelor's degree or higher in a STEM field (biology chemistry physics math engineering),Licensed allied health professional (RN respiratory therapy paramedic radiology tech),Contribute and follow the group's plan,"Very comfortable, I enjoy tech",More introverted (I recharge alone and often prefer to listen),Weekday afternoons;Weekday evenings,10 to 20 hours,Man,No
+13,Charlotte Davis,Associate degree or some college credit,No healthcare experience,Help plan and keep us organized but not necessarily lead,Comfortable,Somewhere in between,Weekends,More than 30 hours,Woman,No
+14,Henry Wilson,High school diploma or currently completing prerequisites,Entry-level patient care (CNA PCT medical assistant EMT-Basic),No strong preference,Neutral,More introverted (I recharge alone and often prefer to listen),Weekday mornings,20 to 30 hours,Man,No
+15,Amelia Moore,Bachelor's degree or higher in a non-STEM field,No healthcare experience,Contribute and follow the group's plan,I prefer to avoid tech when I can,More extroverted (I recharge around people and often prefer to talk),Weekday afternoons;Weekends,Under 10 hours,Woman,No
+16,Alexander Taylor,Bachelor's degree or higher in a STEM field (biology chemistry physics math engineering),No healthcare experience,Lead and organize the group,"Very comfortable, I enjoy tech",More extroverted (I recharge around people and often prefer to talk),Weekday evenings;Weekends,I don't work for pay right now,Man,No
+17,Harper Anderson,High school diploma or currently completing prerequisites,Licensed allied health professional (RN respiratory therapy paramedic radiology tech),Help plan and keep us organized but not necessarily lead,Comfortable,Somewhere in between,Weekday mornings;Weekday afternoons,More than 30 hours,Woman,Yes
+18,Daniel Thomas,Associate degree or some college credit,Entry-level patient care (CNA PCT medical assistant EMT-Basic),Contribute and follow the group's plan,Neutral,More introverted (I recharge alone and often prefer to listen),Weekday evenings,20 to 30 hours,Man,No
+19,Evelyn Jackson,Bachelor's degree or higher in a STEM field (biology chemistry physics math engineering),No healthcare experience,Help plan and keep us organized but not necessarily lead,"Very comfortable, I enjoy tech",More extroverted (I recharge around people and often prefer to talk),Weekday afternoons,Under 10 hours,Woman,No
+20,Matthew White,Bachelor's degree or higher in a non-STEM field,Entry-level patient care (CNA PCT medical assistant EMT-Basic),No strong preference,Comfortable,More introverted (I recharge alone and often prefer to listen),Weekends,10 to 20 hours,Man,No
+21,Abigail Harris,High school diploma or currently completing prerequisites,No healthcare experience,Lead and organize the group,Neutral,More extroverted (I recharge around people and often prefer to talk),Weekday mornings;Weekday evenings,I don't work for pay right now,Woman,No
+22,Joseph Martin,Associate degree or some college credit,Licensed allied health professional (RN respiratory therapy paramedic radiology tech),Contribute and follow the group's plan,Comfortable,Somewhere in between,Weekday evenings;Weekends,More than 30 hours,Man,No
+23,Emily Lewis,Bachelor's degree or higher in a STEM field (biology chemistry physics math engineering),No healthcare experience,Help plan and keep us organized but not necessarily lead,"Very comfortable, I enjoy tech",More introverted (I recharge alone and often prefer to listen),Weekday afternoons;Weekends,Under 10 hours,Woman,No
+24,David Walker,High school diploma or currently completing prerequisites,Entry-level patient care (CNA PCT medical assistant EMT-Basic),No strong preference,I prefer to avoid tech when I can,More introverted (I recharge alone and often prefer to listen),Weekday mornings,20 to 30 hours,Man,Yes
+25,Elizabeth Hall,Bachelor's degree or higher in a non-STEM field,No healthcare experience,Lead and organize the group,Comfortable,More extroverted (I recharge around people and often prefer to talk),Weekday evenings,Under 10 hours,Woman,No
+26,Andrew Allen,Bachelor's degree or higher in a STEM field (biology chemistry physics math engineering),Licensed allied health professional (RN respiratory therapy paramedic radiology tech),Contribute and follow the group's plan,"Very comfortable, I enjoy tech",Somewhere in between,Weekday afternoons,10 to 20 hours,Man,No
+27,Sofia Young,Associate degree or some college credit,No healthcare experience,Help plan and keep us organized but not necessarily lead,Neutral,More introverted (I recharge alone and often prefer to listen),Weekends,More than 30 hours,Woman,No
+28,Joshua King,High school diploma or currently completing prerequisites,Entry-level patient care (CNA PCT medical assistant EMT-Basic),No strong preference,Comfortable,More extroverted (I recharge around people and often prefer to talk),Weekday mornings;Weekday evenings,20 to 30 hours,Man,No
+29,Avery Wright,Bachelor's degree or higher in a non-STEM field,No healthcare experience,Lead and organize the group,"Very comfortable, I enjoy tech",More extroverted (I recharge around people and often prefer to talk),Weekday afternoons;Weekends,Under 10 hours,Woman,No
+30,Christopher Lopez,Bachelor's degree or higher in a STEM field (biology chemistry physics math engineering),No healthcare experience,Contribute and follow the group's plan,Comfortable,More introverted (I recharge alone and often prefer to listen),Weekday evenings,I don't work for pay right now,Man,Yes
+31,Grace Hill,High school diploma or currently completing prerequisites,Licensed allied health professional (RN respiratory therapy paramedic radiology tech),Help plan and keep us organized but not necessarily lead,Neutral,Somewhere in between,Weekday mornings,More than 30 hours,Woman,No
+32,Ryan Scott,Associate degree or some college credit,Entry-level patient care (CNA PCT medical assistant EMT-Basic),No strong preference,I prefer to avoid tech when I can,More introverted (I recharge alone and often prefer to listen),Weekends,20 to 30 hours,Man,No
+33,Chloe Green,Bachelor's degree or higher in a STEM field (biology chemistry physics math engineering),No healthcare experience,Lead and organize the group,"Very comfortable, I enjoy tech",More extroverted (I recharge around people and often prefer to talk),Weekday afternoons,Under 10 hours,Woman,No
+34,Nathan Adams,Bachelor's degree or higher in a non-STEM field,Entry-level patient care (CNA PCT medical assistant EMT-Basic),Contribute and follow the group's plan,Comfortable,More introverted (I recharge alone and often prefer to listen),Weekday evenings;Weekends,10 to 20 hours,Man,No
+35,Lily Baker,High school diploma or currently completing prerequisites,No healthcare experience,Help plan and keep us organized but not necessarily lead,Neutral,More extroverted (I recharge around people and often prefer to talk),Weekday mornings;Weekday afternoons,I don't work for pay right now,Woman,No
+36,Samuel Nelson,Associate degree or some college credit,Licensed allied health professional (RN respiratory therapy paramedic radiology tech),Contribute and follow the group's plan,Comfortable,Somewhere in between,Weekday evenings,More than 30 hours,Man,Yes`;
+
+document.getElementById('demoBtn').addEventListener('click',()=>{
+  document.getElementById('fileName').textContent='Loaded: sample data (36 students)';
+  ingest(SAMPLE);
+});
+
+/* ---------------- iframe height-sender ---------------- */
+(function(){
+  function sendHeight(){
+    var h=document.documentElement.scrollHeight;
+    if(window.parent!==window){window.parent.postMessage({type:'setHeight',id:'tbl-team-generator',height:h},'*');}
+  }
+  window.addEventListener('load',sendHeight);
+  window.addEventListener('resize',sendHeight);
+  if('ResizeObserver' in window){new ResizeObserver(sendHeight).observe(document.body);}
+})();
+</script>
+</body>
+</html>
