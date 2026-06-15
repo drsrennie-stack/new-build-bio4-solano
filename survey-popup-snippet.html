@@ -1,0 +1,112 @@
+<!--
+  ============================================================
+  TBL SURVEY POPUP  ·  reusable drop-in block
+  ------------------------------------------------------------
+  WHAT IT DOES
+  First time a student opens the page, a branded popup invites
+  them to take the team survey. Once they click "Take the survey"
+  or "I've already done it," it never shows again on that device.
+  Pressing Esc or the X dismisses it for that visit only, so it
+  gently reappears next time until they act.
+
+  It also stops showing for everyone after a cutoff date, so it
+  is not still popping up mid-term.
+
+  HOW TO USE
+  1. Paste this entire block just before the closing </body> tag
+     on any course page.
+  2. In the <script> CONFIG section below, set three things:
+       FORM_URL  the live Google Form link
+       KEY       a unique name per course (so courses are independent)
+       STOP      the date to stop showing it (one day AFTER the last day you want it)
+  3. Save and push. Nothing else to wire up.
+
+  Matches the BIO 004 branding: ink #0B1530, rust #8B3A2E,
+  Plus Jakarta Sans. Accessible: role=dialog, focus trap, Esc,
+  focus return, reduced-motion safe.
+  ============================================================
+-->
+<style>
+  .tsp-overlay{position:fixed;inset:0;background:rgba(6,10,24,0.72);display:flex;align-items:center;justify-content:center;padding:24px;z-index:10000;}
+  .tsp-overlay[hidden]{display:none;}
+  .tsp-modal{background:#FFFFFF;border:1px solid #8C90A0;border-radius:12px;max-width:480px;width:100%;padding:34px 32px 30px;box-shadow:0 18px 50px rgba(11,21,48,0.35);position:relative;font-family:'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;}
+  .tsp-eyebrow{font-size:12.3px;font-weight:700;color:#8B3A2E;letter-spacing:0.28em;text-transform:uppercase;margin:0 0 14px;}
+  .tsp-title{font-size:26px;font-weight:800;color:#0B1530;letter-spacing:-0.02em;line-height:1.15;margin:0 0 12px;}
+  .tsp-body{font-size:16px;font-weight:400;color:#0B1530;opacity:0.85;line-height:1.6;margin:0 0 24px;}
+  .tsp-actions{display:flex;flex-wrap:wrap;gap:16px;align-items:center;}
+  .tsp-primary{background:#8B3A2E;color:#FFFFFF;padding:14px 24px;border-radius:4px;font-size:12.3px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;text-decoration:none;display:inline-block;border:none;cursor:pointer;transition:background 0.2s ease;}
+  .tsp-primary:hover{background:#A0452F;}
+  .tsp-secondary{background:none;border:none;color:#0B1530;font-size:12.3px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;cursor:pointer;border-bottom:1px solid rgba(11,21,48,0.4);padding:0 0 6px;font-family:inherit;}
+  .tsp-close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:26px;line-height:1;color:#0B1530;opacity:0.6;cursor:pointer;width:40px;height:40px;border-radius:6px;}
+  .tsp-close:hover{opacity:1;}
+  .tsp-overlay :focus-visible{outline:3px solid #8B3A2E;outline-offset:3px;border-radius:4px;}
+  @media (prefers-reduced-motion:reduce){.tsp-primary{transition:none;}}
+</style>
+
+<div class="tsp-overlay" id="tsp-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="tsp-title" aria-describedby="tsp-body">
+  <div class="tsp-modal">
+    <button type="button" class="tsp-close" id="tsp-close" aria-label="Close this reminder">&times;</button>
+    <p class="tsp-eyebrow">Before you dive in</p>
+    <h2 class="tsp-title" id="tsp-title">Take the 2-minute team survey</h2>
+    <p class="tsp-body" id="tsp-body">This course runs on Team-Based Learning, so your first task is a short survey that places you on a balanced team. It takes about two minutes. Please complete it before our first class.</p>
+    <div class="tsp-actions">
+      <a class="tsp-primary" id="tsp-take" href="#" target="_blank" rel="noopener">Take the survey</a>
+      <button type="button" class="tsp-secondary" id="tsp-done">I've already done it</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  /* ===== CONFIG: edit these three ===== */
+  var FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScIagrYxX7UT9ng36Oqhk1lCG-IbR39XO061wx3E4F_wPWSeg/viewform";
+  var KEY      = "tbl_survey_done_COURSE";   /* make this unique per course */
+  var STOP     = new Date("2026-06-17T00:00:00"); /* stops showing on/after this date */
+  /* ===================================== */
+
+  var overlay=document.getElementById('tsp-overlay');
+  if(!overlay) return;
+  var modal=overlay.querySelector('.tsp-modal');
+  var takeBtn=document.getElementById('tsp-take');
+  var doneBtn=document.getElementById('tsp-done');
+  var closeBtn=document.getElementById('tsp-close');
+  if(takeBtn) takeBtn.href=FORM_URL;
+  var lastFocus=null;
+
+  function markDone(){ try{localStorage.setItem(KEY,'1');}catch(e){} hide(); }
+  function show(){
+    lastFocus=document.activeElement;
+    overlay.hidden=false;
+    document.documentElement.style.overflow='hidden';
+    (takeBtn||modal).focus();
+    document.addEventListener('keydown',onKey,true);
+  }
+  function hide(){
+    overlay.hidden=true;
+    document.documentElement.style.overflow='';
+    document.removeEventListener('keydown',onKey,true);
+    if(lastFocus&&lastFocus.focus)lastFocus.focus();
+  }
+  function onKey(e){
+    if(e.key==='Escape'){hide();return;}
+    if(e.key==='Tab'){
+      var f=overlay.querySelectorAll('a[href],button:not([disabled])');
+      if(!f.length)return;
+      var first=f[0],last=f[f.length-1];
+      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+      else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+    }
+  }
+  if(takeBtn) takeBtn.addEventListener('click',markDone); /* clicking through counts as done */
+  if(doneBtn) doneBtn.addEventListener('click',markDone);
+  if(closeBtn) closeBtn.addEventListener('click',hide);   /* X = dismiss this visit only */
+
+  var done=false; try{done=localStorage.getItem(KEY)==='1';}catch(e){}
+  var expired=new Date()>=STOP;
+  if(!done && !expired){
+    if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',show);}
+    else{show();}
+  }
+})();
+</script>
+<!-- ===== END TBL SURVEY POPUP ===== -->
