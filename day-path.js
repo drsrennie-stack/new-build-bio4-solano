@@ -86,7 +86,8 @@
     var items = [
       { it: sprint,     bg: "#C9A14A", fg: "#0B1530" },
       { it: wl.canvas,  bg: "#C2734D", fg: "#0B1530" },
-      { it: wl.digital, bg: "#FFFFFF", fg: "#0B1530" }
+      { it: wl.digital, bg: "#FFFFFF", fg: "#0B1530" },
+      { it: { label: "Loops", url: "https://www.medmasterscollaborative.com/anatomy-loops", external: true }, bg: "#8B3A2E", fg: "#FFFFFF" }
     ];
     items.forEach(function (row, i) {
       var li = document.createElement("li");
