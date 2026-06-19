@@ -947,6 +947,7 @@
       <span style="font-family:'DM Sans',system-ui,sans-serif;font-weight:700;font-size:12.3px;letter-spacing:.1em;text-transform:uppercase;color:var(--terra-dark);">Show</span>
       <button type="button" class="btn btn-primary" id="btn-review-due" aria-pressed="true">Due today only</button>
       <button type="button" class="btn btn-ghost" id="btn-review-all" aria-pressed="false">All unlocked cards</button>
+      <button type="button" class="btn btn-gold" id="btn-review-weak">Drill my weak spots</button>
     </div>
     <div id="review-body"></div>
   </section>
@@ -989,6 +990,7 @@
 <!-- External course content. Edit course-content.js to add/edit modules, topics, and cards.
      If this file is missing, the engine falls back to a single bundled demo topic. -->
 <script src="https://drsrennie-stack.github.io/new-build-bio4-solano/course-content.js"></script>
+<script src="https://drsrennie-stack.github.io/new-build-bio4-solano/gap-cards.js"></script>
 
 <script>
 /* ============================================================
@@ -1372,7 +1374,11 @@
   let CURRENT_CARD_CORRECT = null;  // set by MC click, consumed by rateCard
   let CURRENT_CARD_OPTIONS = null;   // shuffled option order for the current render
 
+  // Weak-spots drill: a cross-topic session of the student's weakest seen cards.
+  let WEAK_ACTIVE = false, WEAK_QUEUE = [], WEAK_TOTAL = 0;
+
   function nav(view, topicId){
+    WEAK_ACTIVE = false; WEAK_QUEUE = [];   // any normal navigation ends a weak-spots drill
     $$(".view").forEach(v => v.classList.remove("active"));
     const target = $("#view-" + view);
     if (target) target.classList.add("active");
@@ -2003,6 +2009,7 @@
   }
 
   function loadNextCard(){
+    if (WEAK_ACTIVE) { return loadNextWeakCard(); }
     const card = pickCardForTopic(CURRENT_TOPIC);
     CURRENT_CARD_CORRECT = null;
     CURRENT_CARD_OPTIONS = null;
@@ -2153,6 +2160,84 @@
     }
     renderMastery(CURRENT_TOPIC);
     loadNextCard();
+  }
+
+  /* ---------- WEAK-SPOTS DRILL (cross-topic) ---------- */
+
+  // Switch to the learn view without routing through nav() (which would clear
+  // the weak-spots session). Mirrors nav()'s view-switch.
+  function showLearnView(){
+    $$(".view").forEach(v => v.classList.remove("active"));
+    const target = $("#view-learn"); if (target) target.classList.add("active");
+    $$("nav.top-nav button").forEach(b => b.setAttribute("aria-current", b.dataset.nav === "dashboard" ? "page" : "false"));
+    const main = $("#main-content"); if (main) main.focus({ preventScroll: false });
+  }
+
+  // Build a queue of the student's weakest SEEN cards, across unlocked topics.
+  // Weakness score: repeated lapses weigh most, then low ease, then a last-wrong answer.
+  function buildWeakQueue(limit){
+    const items = [];
+    allTopics().forEach(t => {
+      const ts = STATE.topics[t.id];
+      if (!(ts && ts.gateCompleted)) return;                 // only unlocked topics
+      t.cards.forEach(c => {
+        const st = ts.cards[c.id];
+        if (!st || !st.history || !st.history.length) return; // only cards seen at least once
+        let score = (st.lapses || 0) * 2;
+        score += Math.max(0, 2.5 - (st.ease || 2.5)) * 1.5;
+        if (st.lastCorrect === false) score += 2;
+        if (score > 0) items.push({ topicId: t.id, card: c, score: score, ease: st.ease || 2.5 });
+      });
+    });
+    items.sort((a, b) => b.score - a.score || a.ease - b.ease);
+    return items.slice(0, limit || 20).map(i => ({ topicId: i.topicId, card: i.card }));
+  }
+
+  function startWeakSession(){
+    const q = buildWeakQueue(20);
+    const note = $("#review-mode-note");
+    if (!q.length) {
+      if (note) note.textContent = "No weak spots yet. Work through some cards first; the ones you miss or rate hard collect here for a focused drill.";
+      if (typeof announce === "function") announce("No weak spots yet. Do some cards first, then come back.");
+      return;
+    }
+    WEAK_QUEUE = q; WEAK_TOTAL = q.length; WEAK_ACTIVE = true;
+    showLearnView();
+    $("#learn-heading").textContent = "Your weak spots";
+    loadNextCard();
+  }
+
+  function loadNextWeakCard(){
+    CURRENT_CARD_CORRECT = null; CURRENT_CARD_OPTIONS = null;
+    const mcWrap = $("#mc-options"); const fb = $("#FFFFFFck-panel");
+    const rateRow = $("#rate-row"); const rateInstructions = $("#rate-instructions"); const ans = $("#card-answer");
+    if (mcWrap) mcWrap.innerHTML = "";
+    if (fb) fb.hidden = true;
+    if (rateRow) rateRow.hidden = true;
+    if (rateInstructions) rateInstructions.hidden = true;
+    if (ans) ans.hidden = true;
+
+    const done = WEAK_TOTAL - WEAK_QUEUE.length;
+    if (!WEAK_QUEUE.length) {
+      WEAK_ACTIVE = false;
+      $("#card-question").textContent = "Weak-spot session complete. Those " + WEAK_TOTAL + " cards are rescheduled by how you just rated them. Come back anytime to drill the next set.";
+      $("#card-dok-badge").textContent = "DONE";
+      $("#card-dok-badge").className = "dok-badge dok-1";
+      $("#card-progress").textContent = "";
+      return;
+    }
+    const item = WEAK_QUEUE.shift();
+    CURRENT_TOPIC = item.topicId;
+    CURRENT_CARD = item.card;
+    const topic = topicById(item.topicId);
+    $("#learn-heading").textContent = "Your weak spots";
+    renderNotesLink(topic);
+    renderMastery(item.topicId);
+    $("#card-question").textContent = item.card.q;
+    $("#card-dok-badge").textContent = "DOK " + item.card.dok;
+    $("#card-dok-badge").className = "dok-badge dok-" + item.card.dok;
+    $("#card-progress").textContent = "Weak spot " + (done + 1) + " of " + WEAK_TOTAL + " · " + topic.title;
+    renderMcOptions(item.card);
   }
 
   /* ---------- DAILY REVIEW ---------- */
@@ -2454,6 +2539,8 @@
     const btnReviewAll = $("#btn-review-all");
     if (btnReviewDue) btnReviewDue.addEventListener("click", () => setReviewMode("due"));
     if (btnReviewAll) btnReviewAll.addEventListener("click", () => setReviewMode("all"));
+    const btnReviewWeak = $("#btn-review-weak");
+    if (btnReviewWeak) btnReviewWeak.addEventListener("click", startWeakSession);
 
     // Report
     $("#btn-print").addEventListener("click", () => { nav("report"); setTimeout(() => window.print(), 200); });
