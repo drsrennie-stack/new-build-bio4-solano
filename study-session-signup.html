@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Study Session Signup, BIO 004 Human Anatomy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Lora:ital@1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0B1530; --navy-deep:#0B1530; --navy-darkest:#060A18; --navy-tint:#ECEFF4;
+    --terra:#C2734D; --terra-dark:#8B3A2E; --terra-deep:#A0452F;
+    --gold:#B8924A; --gold-bright:#C9A14A;
+    --white:#FFFFFF; --offwhite:#FAFAF9; --gray:#5c6970; --gray-light:#C2C8CF;
+    --radius:8px;
+    --shadow-rest:0 1px 3px rgba(0,0,0,0.08);
+    --shadow-hover:0 10px 22px rgba(0,0,0,0.12);
+    --t:transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease, background 200ms ease;
+    --font-display:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    --font-body:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    --font-eyebrow:'DM Sans',-apple-system,sans-serif;
+    --font-serif:'Lora',Georgia,serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:var(--font-body);color:var(--navy);background:var(--offwhite);line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1040px;margin:0 auto;padding:30px 20px 56px;}
+  .skip{position:absolute;left:-9999px;top:auto;background:var(--terra-dark);color:#fff;padding:10px 16px;border-radius:8px;font-weight:700;z-index:50;text-decoration:none;}
+  .skip:focus{left:16px;top:16px;}
+  :focus-visible{outline:3px solid var(--terra-dark);outline-offset:3px;border-radius:6px;}
+
+  /* ---------- COURSE LOGO HEADER ---------- */
+  .site-header{background:#fff;border-bottom:.5px solid rgba(11,21,48,.10);padding:22px max(20px,4vw);}
+  .site-header-inner{max-width:1040px;margin:0 auto;}
+  .site-logo{display:inline-flex;align-items:center;gap:16px;text-decoration:none;}
+  .site-logo svg{height:54px;width:auto;display:block;}
+  .logo-text{display:flex;flex-direction:column;gap:3px;}
+  .logo-title{font-family:var(--font-display);font-size:1.68rem;font-weight:800;letter-spacing:-.02em;color:var(--navy);line-height:1;}
+  .logo-title .logo-accent{color:var(--terra-dark);}
+  .logo-sub{font-family:var(--font-eyebrow);font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);opacity:.72;}
+
+  .eyebrow{font-family:var(--font-eyebrow);font-weight:700;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--terra-dark);margin:0 0 .8rem;}
+  h1{font-family:var(--font-display);font-weight:800;font-size:clamp(2rem,5vw,3rem);line-height:1.05;letter-spacing:-.025em;color:var(--navy-deep);margin:0 0 .9rem;}
+  .rule{width:3.2rem;height:3px;background:var(--terra-dark);border-radius:2px;margin:0 0 1.1rem;}
+  .subhead{font-family:var(--font-display);font-weight:600;color:var(--terra-dark);font-size:clamp(1.05rem,2.4vw,1.3rem);margin:0;}
+  .usage{font-family:var(--font-serif);font-style:italic;color:var(--navy);opacity:.9;margin:.9rem 0 0;font-size:1.02rem;max-width:50rem;}
+
+  h2{font-family:var(--font-display);font-weight:600;color:var(--terra-dark);font-size:1.3rem;margin:0 0 4px;letter-spacing:-.01em;}
+  .section-sub{font-family:var(--font-serif);font-style:italic;color:var(--navy);opacity:.82;margin:0 0 18px;font-size:.98rem;}
+
+  /* ---------- TOOLBAR ---------- */
+  .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:26px 0 6px;}
+  .btn{font-family:var(--font-display);font-weight:800;font-size:.95rem;border-radius:9px;padding:11px 20px;cursor:pointer;border:2px solid transparent;transition:var(--t);display:inline-flex;align-items:center;gap:8px;text-decoration:none;}
+  .btn-primary{background:var(--gold-bright);color:var(--navy);border-color:var(--gold-bright);}
+  .btn-primary:hover,.btn-primary:focus-visible{background:#d6b056;transform:translateY(-2px);box-shadow:var(--shadow-hover);outline:none;}
+  .btn-navy{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .btn-navy:hover,.btn-navy:focus-visible{background:var(--navy-deep);transform:translateY(-2px);box-shadow:var(--shadow-hover);outline:none;}
+  .btn-ghost{background:#fff;color:var(--navy);border-color:rgba(11,21,48,.28);}
+  .btn-ghost:hover,.btn-ghost:focus-visible{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .btn-sm{font-size:.86rem;padding:8px 14px;}
+  .btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none;}
+
+  /* ---------- VIEW TOGGLE ---------- */
+  .viewbar{display:inline-flex;gap:4px;margin:18px 0 0;background:#fff;border:1px solid var(--gray-light);border-radius:10px;padding:4px;}
+  .seg{font-family:var(--font-display);font-weight:700;font-size:.9rem;border:none;background:transparent;color:var(--navy);padding:8px 16px;border-radius:7px;cursor:pointer;transition:var(--t);}
+  .seg:hover{background:var(--navy-tint);}
+  .seg-on{background:var(--navy);color:#fff;}
+  .seg-on:hover{background:var(--navy-deep);}
+
+  /* ---------- WEEK CALENDAR ---------- */
+  .weeknav{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:24px 0 16px;}
+  .weeknav-label{font-family:var(--font-display);font-weight:800;font-size:1.1rem;color:var(--navy);margin-right:auto;}
+  .weekgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;}
+  @media (max-width:920px){ .weekgrid{grid-template-columns:repeat(3,minmax(0,1fr));} }
+  @media (max-width:560px){ .weekgrid{grid-template-columns:repeat(2,minmax(0,1fr));} }
+  @media (max-width:380px){ .weekgrid{grid-template-columns:1fr;} }
+  .weekday{background:#fff;border:1px solid var(--gray-light);border-radius:var(--radius);padding:10px;min-height:96px;display:flex;flex-direction:column;gap:8px;}
+  .weekday.is-today{border-color:var(--terra-dark);box-shadow:inset 0 0 0 1px var(--terra-dark);}
+  .weekday-head{display:flex;align-items:baseline;justify-content:space-between;gap:6px;border-bottom:1px solid var(--navy-tint);padding-bottom:6px;}
+  .weekday-name{font-family:var(--font-eyebrow);font-weight:700;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--terra-dark);}
+  .weekday-num{font-family:var(--font-display);font-weight:800;font-size:1rem;color:var(--navy);}
+  .weekday-empty{font-family:var(--font-serif);font-style:italic;font-size:.8rem;color:var(--gray);}
+  .chip{text-align:left;width:100%;background:var(--offwhite);border:1px solid var(--gray-light);border-left:3px solid var(--gold);border-radius:7px;padding:7px 8px;cursor:pointer;transition:var(--t);display:flex;flex-direction:column;gap:2px;}
+  .chip:hover,.chip:focus-visible{transform:translateY(-1px);box-shadow:var(--shadow-hover);outline:none;border-color:var(--terra-dark);}
+  .chip.full{border-left-color:var(--navy);background:var(--navy-tint);cursor:default;}
+  .chip.live{border-left-color:var(--terra-dark);}
+  .chip-time{font-family:var(--font-display);font-weight:800;font-size:.82rem;color:var(--navy);}
+  .chip-topic{font-family:var(--font-display);font-weight:600;font-size:.82rem;color:var(--terra-dark);line-height:1.25;}
+  .chip-meta{font-family:var(--font-eyebrow);font-weight:700;font-size:.6rem;letter-spacing:.04em;text-transform:uppercase;color:var(--gray);}
+  .chip-live-tag{color:var(--terra-dark);}
+
+  /* labeled signup list on each card */
+  .roster-label{font-family:var(--font-eyebrow);font-weight:700;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-dark);margin:2px 0 0;}
+
+  .status{min-height:1.3em;margin:14px 0 0;font-family:var(--font-display);font-weight:700;font-size:.9rem;color:var(--terra-dark);}
+  .status.ok{color:#1f7a4d;}
+  .status.err{color:#b3261e;}
+
+  /* ---------- DAY GROUPS ---------- */
+  .day-group{margin-top:30px;}
+  .day-head{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--navy-tint);padding-bottom:8px;margin-bottom:16px;}
+  .day-name{font-family:var(--font-display);font-weight:800;font-size:1.15rem;color:var(--navy);}
+  .day-date{font-family:var(--font-eyebrow);font-weight:700;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--terra-dark);}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;}
+  .card{background:#fff;border:1px solid var(--gray-light);border-left:4px solid var(--gold);border-radius:var(--radius);padding:18px 18px 16px;box-shadow:var(--shadow-rest);transition:var(--t);display:flex;flex-direction:column;gap:8px;}
+  .card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);}
+  .card.full{border-left-color:var(--navy);background:var(--navy-tint);}
+  .card .ctime{font-family:var(--font-display);font-weight:800;font-size:1.12rem;color:var(--navy);letter-spacing:-.01em;}
+  .card .ctopic{font-family:var(--font-display);font-weight:600;color:var(--terra-dark);font-size:1rem;}
+  .card .chost{font-family:var(--font-eyebrow);font-weight:700;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gray);}
+  .card .cseats{font-family:var(--font-display);font-weight:700;font-size:.9rem;color:var(--navy);}
+  .pill-row{display:flex;gap:6px;flex-wrap:wrap;}
+  .pill{display:inline-block;font-family:var(--font-eyebrow);font-weight:700;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:.24rem .6rem;border-radius:999px;border:1px solid var(--gold);color:var(--navy);}
+  .pill.full{border-color:var(--navy);background:var(--navy);color:#fff;}
+  .pill.live{border-color:var(--terra-dark);background:var(--terra-dark);color:#fff;}
+  .pill.done{border-color:var(--navy);background:var(--navy-tint);color:var(--navy);}
+  .card.live{border-left-color:var(--terra-dark);}
+  .hostlink{margin-top:10px;background:none;border:none;padding:4px 0 0;font-family:var(--font-eyebrow);font-weight:700;font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;color:var(--gray);cursor:pointer;text-decoration:underline;text-underline-offset:2px;align-self:flex-start;}
+  .hostlink:hover,.hostlink:focus-visible{color:var(--terra-dark);}
+
+  .room-row{display:flex;align-items:center;gap:12px;justify-content:space-between;text-decoration:none;background:#fff;border:1px solid var(--gray-light);border-left:4px solid var(--terra-dark);border-radius:var(--radius);padding:13px 15px;margin-bottom:10px;transition:var(--t);}
+  .room-row:hover,.room-row:focus-visible{transform:translateY(-2px);box-shadow:var(--shadow-hover);outline:none;border-color:var(--terra-dark);}
+  .rr-main{display:flex;flex-direction:column;gap:2px;}
+  .rr-topic{font-family:var(--font-display);font-weight:800;color:var(--navy);font-size:1rem;}
+  .rr-host{font-family:var(--font-eyebrow);font-weight:700;font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;color:var(--gray);}
+  .rr-go{font-family:var(--font-display);font-weight:800;color:var(--terra-dark);font-size:.92rem;white-space:nowrap;}
+  .card-actions{margin-top:auto;display:flex;flex-wrap:wrap;gap:8px;padding-top:6px;}
+  .roster{margin:2px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px;}
+  .roster li{font-family:var(--font-eyebrow);font-weight:700;font-size:.64rem;letter-spacing:.04em;text-transform:uppercase;color:var(--navy);background:var(--navy-tint);border-radius:999px;padding:.2rem .55rem;}
+
+  .empty{background:#fff;border:1px dashed var(--gray-light);border-radius:var(--radius);padding:34px 24px;text-align:center;color:var(--gray);font-family:var(--font-display);font-weight:600;}
+
+  .warn{background:#fff;border:1px solid var(--gray-light);border-left:4px solid var(--terra-dark);border-radius:var(--radius);padding:14px 18px;margin:18px 0 0;display:flex;gap:12px;align-items:flex-start;}
+  .warn .warn-ic{flex:0 0 auto;font-family:var(--font-display);font-weight:800;color:#fff;background:var(--terra-dark);width:26px;height:26px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:.95rem;}
+  .warn .warn-tx{font-size:.95rem;color:var(--navy);}
+  .warn .warn-tx strong{color:var(--terra-dark);}
+  .notice{background:#fff;border:1px solid var(--gray-light);border-left:4px solid var(--terra);border-radius:var(--radius);padding:16px 18px;margin:22px 0 0;font-size:.94rem;}
+  .notice strong{color:var(--terra-dark);}
+  .notice ul{margin:8px 0 0;padding-left:1.1rem;}
+  .notice li{margin:4px 0;}
+
+  /* ---------- DIALOG ---------- */
+  dialog{border:none;border-radius:14px;padding:0;max-width:440px;width:92vw;box-shadow:0 24px 60px rgba(0,0,0,.32);}
+  dialog::backdrop{background:rgba(6,10,24,.55);}
+  .dlg-inner{padding:26px 24px 22px;}
+  .dlg-eyebrow{font-family:var(--font-eyebrow);font-weight:700;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--terra-dark);margin:0 0 6px;}
+  .dlg-title{font-family:var(--font-display);font-weight:800;font-size:1.4rem;color:var(--navy);margin:0 0 4px;}
+  .dlg-sub{font-family:var(--font-serif);font-style:italic;color:var(--navy);opacity:.85;margin:0 0 18px;font-size:.95rem;}
+  .field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+  .field label{font-family:var(--font-eyebrow);font-weight:700;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-dark);}
+  .field .req{color:var(--terra-deep);}
+  .field input,.field select,.field textarea{font:inherit;font-family:var(--font-display);font-weight:600;color:var(--navy);background:var(--offwhite);border:2px solid var(--gray-light);border-radius:9px;padding:10px 12px;}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--terra-dark);background:#fff;}
+  .field .hint{font-family:var(--font-serif);font-style:italic;font-size:.82rem;color:var(--gray);font-weight:400;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .dlg-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:8px;}
+  .dlg-err{color:#b3261e;font-family:var(--font-display);font-weight:700;font-size:.86rem;min-height:1.1em;margin:0 0 8px;}
+
+  footer{background:var(--navy-darkest);color:var(--navy-tint);text-align:center;padding:1.9rem 1.5rem 1.7rem;border-top:2px solid var(--terra);border-radius:var(--radius);margin-top:46px;}
+  footer .by{font-family:var(--font-display);font-weight:700;color:#fff;font-size:1rem;margin-bottom:.15rem;}
+  footer .role{font-size:.82rem;color:var(--navy-tint);}
+  footer .brand{font-family:var(--font-eyebrow);font-weight:700;color:var(--terra);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.9rem;}
+  .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;scroll-behavior:auto !important;}
+    .card:hover,.btn:hover{transform:none;}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/index.html" class="site-logo" target="_top" aria-label="BIO 004 Human Anatomy, course home">
+      <svg viewBox="40 10 125 148" role="img" aria-hidden="true" focusable="false">
+        <g transform="translate(0, 18)">
+          <g transform="translate(60, 0) rotate(8 0 130)">
+            <circle cx="0" cy="20" r="10" fill="#0B1530"/>
+            <path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#0B1530"/>
+          </g>
+          <g transform="translate(100, 0)">
+            <circle cx="0" cy="10" r="11" fill="#8B3A2E"/>
+            <path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/>
+          </g>
+          <g transform="translate(140, 0) rotate(-8 0 130)">
+            <circle cx="0" cy="20" r="10" fill="#C9A14A"/>
+            <path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/>
+          </g>
+        </g>
+      </svg>
+      <span class="logo-text">
+        <span class="logo-title">Human <span class="logo-accent">Anatomy</span></span>
+        <span class="logo-sub">BIO 004 &middot; Solano Community College</span>
+      </span>
+    </a>
+  </div>
+</header>
+
+<div class="wrap">
+  <main id="main">
+
+    <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; MedMasters Collaborative</p>
+    <h1>Student Study Session Signup</h1>
+    <div class="rule" aria-hidden="true"></div>
+    <p class="subhead">Host a session or claim a seat. Everyone studies on the same Zoom room.</p>
+    <p class="usage">Pick a time below and sign up, or offer to host your own session. All sessions meet in our shared course Zoom room and are recorded to the cloud so anyone who misses one can watch the replay. No host? No problem. Offer to host and your classmates can join you.</p>
+
+    <div class="toolbar">
+      <button type="button" class="btn btn-primary" id="hostBtn">Offer to host a session</button>
+      <button type="button" class="btn btn-navy" id="zoomBtn">Join a live study room</button>
+      <button type="button" class="btn btn-ghost btn-sm" id="refreshBtn">Refresh</button>
+    </div>
+
+    <div class="viewbar" role="group" aria-label="Choose how to view sessions">
+      <button type="button" class="seg seg-on" id="listViewBtn" aria-pressed="true">List</button>
+      <button type="button" class="seg" id="weekViewBtn" aria-pressed="false">Weekly calendar</button>
+    </div>
+
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+
+    <div class="warn" role="note">
+      <span class="warn-ic" aria-hidden="true">!</span>
+      <span class="warn-tx"><strong>Stay in one room for credit.</strong> Pick one session and stay in it for the whole meeting. Jumping between rooms means your attendance cannot be verified and the session will not count.</span>
+    </div>
+
+    <section id="sessions" aria-label="Upcoming study sessions">
+      <div class="empty" id="loading">Loading sessions...</div>
+
+      <div id="listView">
+        <div id="dayGroups"></div>
+      </div>
+
+      <div id="weekView" hidden>
+        <div class="weeknav">
+          <button type="button" class="btn btn-ghost btn-sm" id="prevWeek">&larr; Previous</button>
+          <span class="weeknav-label" id="weekLabel" aria-live="polite"></span>
+          <button type="button" class="btn btn-ghost btn-sm" id="nextWeek">Next &rarr;</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="thisWeek">This week</button>
+        </div>
+        <div class="weekgrid" id="weekGrid"></div>
+      </div>
+    </section>
+
+    <div class="notice">
+      <strong>How hosting works.</strong>
+      <ul>
+        <li>When you offer to host, you run the session in your own Zoom room and you record it. That is what earns you host credit. Turn recording on at the start.</li>
+        <li>After the session, click "Host? Add recording and attendance" on your session. Paste your recording link and your Zoom attendance report. That submits everyone's attendance for tracking and shares the replay.</li>
+        <li>When you sign up, use your full name as it appears on the class roster, and use that same name in Zoom, so the host can match you in the attendance report.</li>
+        <li>We collect emails only to match people to sessions and verify hosts. Emails and attendance reports are private to Dr. Rennie, never posted on this page.</li>
+        <li>Be respectful of classmates' time. If you sign up, show up, or cancel your seat so someone else can take it.</li>
+      </ul>
+    </div>
+
+  </main>
+</div>
+
+<!-- HOST DIALOG -->
+<dialog id="hostDialog" aria-labelledby="hostDlgTitle">
+  <form method="dialog" class="dlg-inner" id="hostForm">
+    <p class="dlg-eyebrow">Offer to host</p>
+    <h2 class="dlg-title" id="hostDlgTitle">Set up a study session</h2>
+    <p class="dlg-sub">You lead it, classmates join. Pick a date, time, and topic.</p>
+    <p class="dlg-err" id="hostErr" role="alert"></p>
+    <div class="field">
+      <label for="h-name">Your name <span class="req" aria-hidden="true">*</span></label>
+      <input id="h-name" name="hostName" type="text" autocomplete="name" required maxlength="60">
+    </div>
+    <div class="field">
+      <label for="h-email">Your email <span class="req" aria-hidden="true">*</span></label>
+      <input id="h-email" name="hostEmail" type="email" autocomplete="email" required maxlength="120">
+      <span class="hint">Used to identify you and share the recording. Not posted publicly.</span>
+    </div>
+    <div class="field">
+      <label for="h-topic">Topic or chapter <span class="req" aria-hidden="true">*</span></label>
+      <input id="h-topic" name="topic" type="text" required maxlength="80" placeholder="e.g. Appendicular skeleton review">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="h-date">Date <span class="req" aria-hidden="true">*</span></label>
+        <input id="h-date" name="date" type="date" required>
+      </div>
+      <div class="field">
+        <label for="h-time">Start time <span class="req" aria-hidden="true">*</span></label>
+        <input id="h-time" name="time" type="time" required>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="h-cap">Seats (optional)</label>
+        <input id="h-cap" name="capacity" type="number" min="1" max="100" placeholder="No limit">
+      </div>
+      <div class="field">
+        <label for="h-dur">Length in minutes</label>
+        <input id="h-dur" name="duration" type="number" min="15" max="480" placeholder="90">
+      </div>
+    </div>
+    <div class="field">
+      <label for="h-zoom">Your Zoom link (optional)</label>
+      <input id="h-zoom" name="zoomLink" type="url" maxlength="400" placeholder="Leave blank to use the shared course room">
+      <span class="hint">Paste your own meeting link if you are hosting in your own room. Blank uses the shared course Zoom.</span>
+    </div>
+    <div class="dlg-actions">
+      <button type="button" class="btn btn-ghost btn-sm" data-close>Cancel</button>
+      <button type="submit" class="btn btn-primary btn-sm" id="hostSubmit">Post session</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- SIGNUP DIALOG -->
+<dialog id="signupDialog" aria-labelledby="suDlgTitle">
+  <form method="dialog" class="dlg-inner" id="signupForm">
+    <p class="dlg-eyebrow">Reserve a seat</p>
+    <h2 class="dlg-title" id="suDlgTitle">Sign up for this session</h2>
+    <p class="dlg-sub" id="suDlgSub"></p>
+    <p class="dlg-err" id="suErr" role="alert"></p>
+    <div class="field">
+      <label for="s-name">Your name <span class="req" aria-hidden="true">*</span></label>
+      <input id="s-name" name="name" type="text" autocomplete="name" required maxlength="60">
+      <span class="hint">Use your full name exactly as it appears on the class roster, and use the same name in Zoom, so your host can match you in the attendance report.</span>
+    </div>
+    <div class="field">
+      <label for="s-email">Your email <span class="req" aria-hidden="true">*</span></label>
+      <input id="s-email" name="email" type="email" autocomplete="email" required maxlength="120">
+      <span class="hint">Used to confirm your seat and share the recording.</span>
+    </div>
+    <div class="dlg-actions">
+      <button type="button" class="btn btn-ghost btn-sm" data-close>Cancel</button>
+      <button type="submit" class="btn btn-primary btn-sm" id="suSubmit">Confirm seat</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- HOST WRAP-UP DIALOG -->
+<dialog id="wrapDialog" aria-labelledby="wrapTitle">
+  <form method="dialog" class="dlg-inner" id="wrapForm">
+    <p class="dlg-eyebrow">Host wrap-up</p>
+    <h2 class="dlg-title" id="wrapTitle">Submit recording and attendance</h2>
+    <p class="dlg-sub" id="wrapSub">Hosts: you ran it, you recorded it, you get the credit. Add your recording link and paste your Zoom attendance report so everyone gets tracked.</p>
+    <p class="dlg-err" id="wrapErr" role="alert"></p>
+    <div class="field">
+      <label for="w-email">Your host email <span class="req" aria-hidden="true">*</span></label>
+      <input id="w-email" name="hostEmail" type="email" autocomplete="email" required maxlength="120">
+      <span class="hint">Use the same email you hosted with, so we can verify it is you.</span>
+    </div>
+    <div class="field">
+      <label for="w-rec">Recording link</label>
+      <input id="w-rec" name="recordingLink" type="url" maxlength="400" placeholder="https://...">
+      <span class="hint">The share link for your recording so classmates can watch the replay.</span>
+    </div>
+    <div class="field">
+      <label for="w-rpt">Attendance report</label>
+      <textarea id="w-rpt" name="attendanceReport" rows="5" placeholder="Paste the participant list from your Zoom usage report (names and join times)."></textarea>
+      <span class="hint">In Zoom: Reports, then Usage, then click the participant count, and copy the list. Only Dr. Rennie sees this.</span>
+    </div>
+    <div class="dlg-actions">
+      <button type="button" class="btn btn-ghost btn-sm" data-close>Cancel</button>
+      <button type="submit" class="btn btn-primary btn-sm" id="wrapSubmit">Submit</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- LIVE ROOMS DIALOG -->
+<dialog id="roomsDialog" aria-labelledby="roomsTitle">
+  <div class="dlg-inner">
+    <p class="dlg-eyebrow">Live now</p>
+    <h2 class="dlg-title" id="roomsTitle">Join a study room</h2>
+    <p class="dlg-sub" id="roomsSub">Pick the room you want to join.</p>
+    <div id="roomsList"></div>
+    <div class="warn" role="note" style="margin-top:14px">
+      <span class="warn-ic" aria-hidden="true">!</span>
+      <span class="warn-tx"><strong>Stay put for credit.</strong> Choose one room and stay the whole time. Hopping between sessions means it will not count.</span>
+    </div>
+    <div class="dlg-actions">
+      <button type="button" class="btn btn-ghost btn-sm" data-close>Close</button>
+    </div>
+  </div>
+</dialog>
+
+<div class="wrap">
+  <footer>
+    <div class="by">Dr. Sharilyn Rennie</div>
+    <div class="role">BIO 004 Human Anatomy &middot; Solano Community College</div>
+    <div class="brand">MedMasters Collaborative</div>
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG  ->  paste your two links here after setup
+   ============================================================ */
+const API_URL   = "https://script.google.com/macros/s/AKfycbyuACXIV8Xl1f2vAsABGhS_yTZrRtBbaGx4jxQCsMn1-ASC3OtcCO7lYCP6yvqiMncl3w/exec";
+const ZOOM_LINK = "PASTE_YOUR_RECURRING_ZOOM_ROOM_LINK_HERE";
+/* ============================================================ */
+
+const $ = (s, r=document) => r.querySelector(s);
+const statusEl = $("#status");
+const loadingEl = $("#loading");
+const groupsEl = $("#dayGroups");
+const hostDialog = $("#hostDialog");
+const signupDialog = $("#signupDialog");
+const roomsDialog = $("#roomsDialog");
+const wrapDialog = $("#wrapDialog");
+let pollTimer = null;
+let activeSessionId = null;
+let allSessions = [];   // upcoming only, for list view
+let rawSessions = [];   // everything from the server, for week view
+let currentView = "list";
+let weekStart = startOfWeek(new Date());
+
+function startOfWeek(d){
+  const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  x.setDate(x.getDate() - x.getDay()); // back to Sunday
+  return x;
+}
+function ymd(d){
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+
+function defaultRoom(){
+  return (ZOOM_LINK && ZOOM_LINK.indexOf("PASTE") === -1) ? ZOOM_LINK : "";
+}
+function joinLink(s){
+  if(s && s.zoomLink && /^https?:\/\//i.test(s.zoomLink)) return s.zoomLink;
+  return defaultRoom();
+}
+function liveState(s){
+  if(!s || !s.date || !s.time) return {live:false};
+  const start = new Date(s.date + "T" + s.time + ":00");
+  const dur = Number(s.duration) || 90;
+  const end = new Date(start.getTime() + dur * 60000);
+  const open = new Date(start.getTime() - 15 * 60000); // joinable 15 min early
+  const now = new Date();
+  return {live: now >= open && now <= end, start, end, open};
+}
+function joinState(s){
+  const ls = liveState(s);
+  if(!ls.start) return {kind:"none"};
+  const now = new Date();
+  if(now < ls.open) return {kind:"before"};
+  if(ls.live) return {kind:"live", link: joinLink(s)};
+  return {kind:"ended"};
+}
+function recLink(s){
+  return (s && s.recordingLink && /^https?:\/\//i.test(s.recordingLink)) ? s.recordingLink : "";
+}
+
+function setStatus(msg, kind){
+  statusEl.textContent = msg || "";
+  statusEl.className = "status" + (kind ? " " + kind : "");
+}
+function configured(){
+  return API_URL && API_URL.indexOf("PASTE") === -1;
+}
+function esc(s){
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c => (
+    {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]
+  ));
+}
+function fmtDay(dateStr){
+  const d = new Date(dateStr + "T00:00:00");
+  return d.toLocaleDateString(undefined, {weekday:"long"});
+}
+function fmtDate(dateStr){
+  const d = new Date(dateStr + "T00:00:00");
+  return d.toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"});
+}
+function fmtTime(t){
+  if(!t) return "";
+  const [h, m] = t.split(":").map(Number);
+  const ap = h >= 12 ? "PM" : "AM";
+  const hr = ((h + 11) % 12) + 1;
+  return hr + ":" + String(m).padStart(2,"0") + " " + ap;
+}
+
+async function api(payload){
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: {"Content-Type": "text/plain;charset=utf-8"},
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json();
+  if(!data.ok) throw new Error(data.error || "Something went wrong.");
+  return data;
+}
+
+async function load(){
+  if(!configured()){
+    loadingEl.textContent = "Setup needed: paste your Apps Script URL into this file (see the setup guide).";
+    return;
+  }
+  try{
+    const res = await fetch(API_URL + "?action=list", {method:"GET"});
+    const data = await res.json();
+    if(!data.ok) throw new Error(data.error || "Could not load sessions.");
+    render(data.sessions || []);
+  }catch(err){
+    loadingEl.style.display = "block";
+    loadingEl.textContent = "Could not load sessions. Check your connection or the setup, then Refresh.";
+    setStatus(err.message, "err");
+  }
+}
+
+function render(sessions){
+  loadingEl.style.display = "none";
+  rawSessions = (sessions || []).slice().sort((a,b) => (a.date+a.time).localeCompare(b.date+b.time));
+  const todayStr = ymd(new Date());
+  allSessions = rawSessions.filter(s => s.date >= todayStr);
+  if(currentView === "week") renderWeek(); else renderList();
+}
+
+function attachSignup(scope){
+  scope.querySelectorAll("[data-signup]").forEach(b =>
+    b.addEventListener("click", () => openSignup(b.getAttribute("data-signup"))));
+  scope.querySelectorAll("[data-wrap]").forEach(b =>
+    b.addEventListener("click", () => openWrap(b.getAttribute("data-wrap"))));
+}
+
+function renderList(){
+  if(allSessions.length === 0){
+    groupsEl.innerHTML = '<div class="empty">No upcoming sessions yet. Be the first, click "Offer to host a session".</div>';
+    return;
+  }
+  const byDay = {};
+  allSessions.forEach(s => { (byDay[s.date] = byDay[s.date] || []).push(s); });
+
+  let html = "";
+  Object.keys(byDay).sort().forEach(date => {
+    html += '<div class="day-group"><div class="day-head">' +
+            '<span class="day-name">' + esc(fmtDay(date)) + '</span>' +
+            '<span class="day-date">' + esc(fmtDate(date)) + '</span></div><div class="cards">';
+    byDay[date].forEach(s => { html += card(s); });
+    html += '</div></div>';
+  });
+  groupsEl.innerHTML = html;
+  attachSignup(groupsEl);
+}
+
+const DAYNAMES = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+function renderWeek(){
+  const grid = $("#weekGrid");
+  const end = new Date(weekStart); end.setDate(end.getDate()+6);
+  $("#weekLabel").textContent =
+    weekStart.toLocaleDateString(undefined,{month:"short",day:"numeric"}) + " to " +
+    end.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"});
+
+  const todayStr = ymd(new Date());
+  let html = "";
+  for(let i=0;i<7;i++){
+    const d = new Date(weekStart); d.setDate(d.getDate()+i);
+    const key = ymd(d);
+    const todays = rawSessions.filter(s => s.date === key);
+    html += '<div class="weekday' + (key===todayStr ? ' is-today' : '') + '">' +
+      '<div class="weekday-head"><span class="weekday-name">' + DAYNAMES[i] + '</span>' +
+      '<span class="weekday-num">' + d.getDate() + '</span></div>';
+    if(todays.length === 0){
+      html += '<span class="weekday-empty">No sessions</span>';
+    } else {
+      todays.forEach(s => { html += weekChip(s); });
+    }
+    html += '</div>';
+  }
+  grid.innerHTML = html;
+  attachSignup(grid);
+}
+
+function weekChip(s){
+  const att = Array.isArray(s.attendees) ? s.attendees : [];
+  const cap = Number(s.capacity) || 0;
+  const full = cap > 0 && att.length >= cap;
+  const live = liveState(s).live;
+  const seats = cap > 0 ? (att.length + "/" + cap) : (att.length + " in");
+  const inner =
+    '<span class="chip-time">' + esc(fmtTime(s.time)) + (live ? ' <span class="chip-live-tag">&bull; Live</span>' : '') + '</span>' +
+    '<span class="chip-topic">' + esc(s.topic) + '</span>' +
+    '<span class="chip-meta">' + esc(s.hostName || "TBD") + ' &middot; ' + esc(seats) + (full ? ' &middot; Full' : '') + '</span>';
+  if(full){
+    return '<div class="chip full" aria-label="' + esc(s.topic + ', full') + '">' + inner + '</div>';
+  }
+  return '<button type="button" class="chip' + (live ? ' live' : '') + '" data-signup="' + esc(s.id) + '">' + inner + '</button>';
+}
+
+function setView(view){
+  currentView = view;
+  const isList = view === "list";
+  $("#listView").hidden = !isList;
+  $("#weekView").hidden = isList;
+  $("#listViewBtn").classList.toggle("seg-on", isList);
+  $("#weekViewBtn").classList.toggle("seg-on", !isList);
+  $("#listViewBtn").setAttribute("aria-pressed", String(isList));
+  $("#weekViewBtn").setAttribute("aria-pressed", String(!isList));
+  if(isList) renderList(); else renderWeek();
+}
+
+$("#listViewBtn").addEventListener("click", () => setView("list"));
+$("#weekViewBtn").addEventListener("click", () => setView("week"));
+$("#prevWeek").addEventListener("click", () => { weekStart.setDate(weekStart.getDate()-7); renderWeek(); });
+$("#nextWeek").addEventListener("click", () => { weekStart.setDate(weekStart.getDate()+7); renderWeek(); });
+$("#thisWeek").addEventListener("click", () => { weekStart = startOfWeek(new Date()); renderWeek(); });
+
+function card(s){
+  const att = Array.isArray(s.attendees) ? s.attendees : [];
+  const cap = Number(s.capacity) || 0;
+  const full = cap > 0 && att.length >= cap;
+  const seats = cap > 0 ? (att.length + " / " + cap + " seats") : (att.length + " signed up");
+  const roster = att.map(a => '<li>' + esc((a.name||"").split(" ")[0] || "Student") + '</li>').join("");
+  const js = joinState(s);
+  const rec = recLink(s);
+  const reportIn = !!s.reportSubmitted;
+
+  let joinBtn;
+  if(js.kind === "live" && js.link){
+    joinBtn = '<a class="btn btn-navy btn-sm" href="' + esc(js.link) + '" target="_blank" rel="noopener">Join now</a>';
+  } else if(js.kind === "live"){
+    joinBtn = '<button type="button" class="btn btn-ghost btn-sm" disabled>No link yet</button>';
+  } else if(js.kind === "before"){
+    joinBtn = '<button type="button" class="btn btn-ghost btn-sm" disabled>Opens ' + esc(fmtTime(s.time)) + '</button>';
+  } else {
+    joinBtn = ""; // ended
+  }
+
+  return '<article class="card' + (full ? ' full' : '') + (js.kind === "live" ? ' live' : '') + '">' +
+    '<div class="pill-row">' +
+      '<span class="pill' + (full ? ' full' : '') + '">' + (full ? 'Full' : 'Open') + '</span>' +
+      (js.kind === "live" ? '<span class="pill live">Live now</span>' : '') +
+      (reportIn ? '<span class="pill done">Attendance in</span>' : '') +
+    '</div>' +
+    '<div class="ctime">' + esc(fmtTime(s.time)) + '</div>' +
+    '<div class="ctopic">' + esc(s.topic) + '</div>' +
+    '<div class="chost">Host: ' + esc(s.hostName || "TBD") + '</div>' +
+    '<div class="cseats">' + esc(seats) + '</div>' +
+    '<div class="roster-label">' + (att.length ? 'Signed up (' + att.length + ')' : 'No signups yet, be the first') + '</div>' +
+    (roster ? '<ul class="roster" aria-label="Students signed up">' + roster + '</ul>' : '') +
+    '<div class="card-actions">' +
+      (full
+        ? '<button type="button" class="btn btn-ghost btn-sm" disabled>Session full</button>'
+        : '<button type="button" class="btn btn-primary btn-sm" data-signup="' + esc(s.id) + '">Sign up</button>') +
+      joinBtn +
+      (rec ? '<a class="btn btn-navy btn-sm" href="' + esc(rec) + '" target="_blank" rel="noopener">Watch recording</a>' : '') +
+    '</div>' +
+    '<button type="button" class="hostlink" data-wrap="' + esc(s.id) + '">Host? Add recording and attendance</button>' +
+  '</article>';
+}
+
+/* ---------- HOST ---------- */
+$("#hostBtn").addEventListener("click", () => {
+  if(!configured()){ setStatus("Setup needed before hosting. See the setup guide.", "err"); return; }
+  $("#hostErr").textContent = "";
+  $("#hostForm").reset();
+  $("#h-date").min = new Date().toISOString().slice(0,10);
+  hostDialog.showModal();
+});
+
+$("#hostForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const f = e.target;
+  const payload = {
+    action: "create",
+    hostName: f.hostName.value.trim(),
+    hostEmail: f.hostEmail.value.trim(),
+    topic: f.topic.value.trim(),
+    date: f.date.value,
+    time: f.time.value,
+    capacity: f.capacity.value ? Number(f.capacity.value) : 0,
+    duration: f.duration.value ? Number(f.duration.value) : 0,
+    zoomLink: f.zoomLink.value.trim()
+  };
+  if(!payload.hostName || !payload.hostEmail || !payload.topic || !payload.date || !payload.time){
+    $("#hostErr").textContent = "Please fill in all required fields."; return;
+  }
+  $("#hostSubmit").disabled = true;
+  try{
+    await api(payload);
+    hostDialog.close();
+    setStatus("Your session is posted. Thanks for hosting.", "ok");
+    await load();
+  }catch(err){
+    $("#hostErr").textContent = err.message;
+  }finally{
+    $("#hostSubmit").disabled = false;
+  }
+});
+
+/* ---------- SIGN UP ---------- */
+function openSignup(id){
+  activeSessionId = id;
+  $("#suErr").textContent = "";
+  $("#signupForm").reset();
+  const s = rawSessions.find(x => x.id === id);
+  $("#suDlgSub").textContent = s ? (s.topic + " at " + fmtTime(s.time)) : "";
+  signupDialog.showModal();
+}
+
+$("#signupForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const f = e.target;
+  const payload = {
+    action: "signup",
+    id: activeSessionId,
+    name: f.name.value.trim(),
+    email: f.email.value.trim()
+  };
+  if(!payload.name || !payload.email){
+    $("#suErr").textContent = "Please add your name and email."; return;
+  }
+  $("#suSubmit").disabled = true;
+  try{
+    await api(payload);
+    signupDialog.close();
+    setStatus("You're signed up. See you on Zoom.", "ok");
+    await load();
+  }catch(err){
+    $("#suErr").textContent = err.message;
+  }finally{
+    $("#suSubmit").disabled = false;
+  }
+});
+
+/* ---------- HOST WRAP-UP (recording + attendance) ---------- */
+function openWrap(id){
+  activeSessionId = id;
+  $("#wrapErr").textContent = "";
+  $("#wrapForm").reset();
+  const s = rawSessions.find(x => x.id === id);
+  $("#wrapSub").textContent = s
+    ? ('For "' + s.topic + '" on ' + fmtDate(s.date) + '. You ran it and recorded it, so you get the credit. Add the recording link and paste your Zoom attendance report.')
+    : "Add the recording link and paste your Zoom attendance report.";
+  wrapDialog.showModal();
+}
+
+$("#wrapForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const f = e.target;
+  const payload = {
+    action: "wrapup",
+    id: activeSessionId,
+    hostEmail: f.hostEmail.value.trim(),
+    recordingLink: f.recordingLink.value.trim(),
+    attendanceReport: f.attendanceReport.value.trim()
+  };
+  if(!payload.hostEmail){ $("#wrapErr").textContent = "Enter the email you hosted with."; return; }
+  if(!payload.recordingLink && !payload.attendanceReport){
+    $("#wrapErr").textContent = "Add a recording link or paste the attendance report (or both)."; return;
+  }
+  $("#wrapSubmit").disabled = true;
+  try{
+    await api(payload);
+    wrapDialog.close();
+    setStatus("Thanks. Your recording and attendance are saved.", "ok");
+    await load();
+  }catch(err){
+    $("#wrapErr").textContent = err.message;
+  }finally{
+    $("#wrapSubmit").disabled = false;
+  }
+});
+
+/* ---------- JOIN A LIVE ROOM ---------- */
+$("#zoomBtn").addEventListener("click", () => {
+  const liveOnes = allSessions.filter(s => liveState(s).live && joinLink(s));
+  if(liveOnes.length === 1){
+    window.open(joinLink(liveOnes[0]), "_blank", "noopener");
+    return;
+  }
+  openRooms(liveOnes);
+});
+
+function openRooms(list){
+  const body = $("#roomsList");
+  if(!list || list.length === 0){
+    const dflt = defaultRoom();
+    $("#roomsSub").textContent = "No student rooms are live right now.";
+    body.innerHTML = dflt
+      ? '<a class="room-row" href="' + esc(dflt) + '" target="_blank" rel="noopener">' +
+          '<span class="rr-main"><span class="rr-topic">Shared course room</span>' +
+          '<span class="rr-host">Open the standing BIO 004 study room</span></span>' +
+          '<span class="rr-go" aria-hidden="true">Join &rarr;</span></a>'
+      : '<p class="empty">No rooms are live. Check the schedule below and sign up for the next session.</p>';
+  } else {
+    $("#roomsSub").textContent = list.length + (list.length > 1 ? " rooms are live. Pick one." : " room is live. Pick one.");
+    body.innerHTML = list.map(s =>
+      '<a class="room-row" href="' + esc(joinLink(s)) + '" target="_blank" rel="noopener">' +
+        '<span class="rr-main"><span class="rr-topic">' + esc(s.topic) + '</span>' +
+        '<span class="rr-host">Host: ' + esc(s.hostName || "TBD") + ' &middot; ' + esc(fmtTime(s.time)) + '</span></span>' +
+        '<span class="rr-go" aria-hidden="true">Join &rarr;</span></a>'
+    ).join("");
+  }
+  roomsDialog.showModal();
+}
+
+/* ---------- dialog close buttons + backdrop ---------- */
+document.querySelectorAll("[data-close]").forEach(b =>
+  b.addEventListener("click", () => b.closest("dialog").close()));
+[hostDialog, signupDialog, roomsDialog, wrapDialog].forEach(d =>
+  d.addEventListener("click", e => { if(e.target === d) d.close(); }));
+
+$("#refreshBtn").addEventListener("click", () => { setStatus("Refreshing..."); load().then(()=>setStatus("")); });
+
+/* ---------- init + light polling for "real time" feel ---------- */
+load();
+pollTimer = setInterval(() => { if(!document.hidden) load(); }, 25000);
+document.addEventListener("visibilitychange", () => { if(!document.hidden) load(); });
+</script>
+
+<!-- iframe height-sender (Kajabi / Canvas / GitHub Pages embeds) -->
+<script>
+(function(){
+  function sendHeight(){
+    var h = Math.max(
+      document.body.scrollHeight, document.documentElement.scrollHeight,
+      document.body.offsetHeight, document.documentElement.offsetHeight
+    );
+    parent.postMessage({ type: "setHeight", id: "study-session-signup", height: h }, "*");
+  }
+  window.addEventListener("load", sendHeight);
+  window.addEventListener("resize", sendHeight);
+  if (window.ResizeObserver){ new ResizeObserver(sendHeight).observe(document.body); }
+})();
+</script>
+</body>
+</html>
