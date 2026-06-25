@@ -129,6 +129,8 @@
   .card .cseats{font-family:var(--font-display);font-weight:700;font-size:.9rem;color:var(--ink);}
   .cloc{font-family:var(--font-display);font-weight:700;font-size:.92rem;color:var(--gold);}
   .cloc span{color:var(--ink-soft);font-weight:700;}
+  .cpass{font-family:var(--font-display);font-weight:800;font-size:.92rem;color:var(--ink);letter-spacing:.02em;}
+  .cpass span{color:var(--ink-soft);font-weight:700;letter-spacing:0;}
   .pill-row{display:flex;gap:6px;flex-wrap:wrap;}
   .pill{display:inline-block;font-family:var(--font-eyebrow);font-weight:700;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:.26rem .62rem;border-radius:999px;background:var(--card-soft);color:var(--ink);}
   .pill.full{background:var(--white);color:#0B1530;}
@@ -298,7 +300,7 @@
     </div>
     <div class="field">
       <label for="h-topic">Topic or chapter <span class="req" aria-hidden="true">*</span></label>
-      <input id="h-topic" name="topic" type="text" required maxlength="70" placeholder="e.g. Appendicular skeleton review">
+      <input id="h-topic" name="topic" type="text" required maxlength="60" placeholder="e.g. Appendicular skeleton review">
     </div>
     <div class="field-row">
       <div class="field">
@@ -327,8 +329,13 @@
     </div>
     <div class="field">
       <label for="h-loc">In-person location (if meeting in person)</label>
-      <input id="h-loc" name="location" type="text" maxlength="40" placeholder="e.g. Library, Journey Coffee, Open Lab">
+      <input id="h-loc" name="location" type="text" maxlength="30" placeholder="e.g. Library, Journey Coffee, Open Lab">
       <span class="hint">Type where you will meet. It shows as plain text, not a link.</span>
+    </div>
+    <div class="field">
+      <label for="h-pass">Meeting passcode (optional)</label>
+      <input id="h-pass" name="passcode" type="text" maxlength="16" placeholder="Leave blank if none">
+      <span class="hint">If your Zoom needs a passcode, add it here so classmates can get in.</span>
     </div>
     <div class="dlg-actions">
       <button type="button" class="btn btn-ghost btn-sm" data-close>Cancel</button>
@@ -358,6 +365,7 @@
       <button type="button" class="btn btn-ghost btn-sm" data-close>Cancel</button>
       <button type="submit" class="btn btn-primary btn-sm" id="suSubmit">Confirm seat</button>
     </div>
+    <p style="margin:14px 0 0;text-align:center;"><button type="button" class="hostlink danger" id="suHostCancel">Are you the host? Cancel this session</button></p>
   </form>
 </dialog>
 
@@ -497,11 +505,15 @@ function recLink(s){
 /* In-person location rides inside the topic field (no backend change needed),
    separated by a rare delimiter, and is split back out for display. */
 const LOC_DELIM = " ::@:: ";
-function splitLocation(t){
-  const raw = String(t || "");
-  const i = raw.indexOf(LOC_DELIM);
-  if(i >= 0) return { topic: raw.slice(0, i), location: raw.slice(i + LOC_DELIM.length) };
-  return { topic: raw, location: "" };
+const PASS_DELIM = " ::#:: ";
+function splitExtras(t){
+  let raw = String(t || "");
+  let passcode = "", location = "";
+  let i = raw.indexOf(PASS_DELIM);
+  if(i >= 0){ passcode = raw.slice(i + PASS_DELIM.length); raw = raw.slice(0, i); }
+  let j = raw.indexOf(LOC_DELIM);
+  if(j >= 0){ location = raw.slice(j + LOC_DELIM.length); raw = raw.slice(0, j); }
+  return { topic: raw, location: location, passcode: passcode };
 }
 function saveIdentity(name, email){
   try{ localStorage.setItem("ssg_identity_v1", JSON.stringify({name:name, email:email})); }catch(e){}
@@ -580,7 +592,7 @@ async function load(){
 
 function render(sessions){
   loadingEl.style.display = "none";
-  (sessions || []).forEach(s => { const p = splitLocation(s.topic); s.topic = p.topic; s.location = p.location; });
+  (sessions || []).forEach(s => { const p = splitExtras(s.topic); s.topic = p.topic; s.location = p.location; s.passcode = p.passcode; });
   rawSessions = (sessions || []).slice().sort((a,b) => (a.date+a.time).localeCompare(b.date+b.time));
   const todayStr = ymd(new Date());
   allSessions = rawSessions.filter(s => s.date >= todayStr);
@@ -721,6 +733,7 @@ function card(s){
     '<div class="ctopic">' + esc(s.topic) + '</div>' +
     '<div class="chost">Host: ' + esc(s.hostName || "TBD") + '</div>' +
     (loc ? '<div class="cloc"><span>In person:</span> ' + esc(loc) + '</div>' : '') +
+    (s.passcode ? '<div class="cpass"><span>Passcode:</span> ' + esc(s.passcode) + '</div>' : '') +
     '<div class="cseats">' + esc(seats) + '</div>' +
     '<div class="roster-label">' + (att.length ? 'Signed up (' + att.length + ')' : 'No signups yet, be the first') + '</div>' +
     (roster ? '<ul class="roster" aria-label="Students signed up">' + roster + '</ul>' : '') +
@@ -751,18 +764,23 @@ $("#hostBtn").addEventListener("click", () => {
 $("#hostForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const f = e.target;
-  const baseTopic = f.topic.value.trim();
-  const loc = f.location.value.trim();
+  const el = n => f.elements[n];
+  const baseTopic = el("topic").value.trim();
+  const loc = el("location").value.trim();
+  const pass = el("passcode").value.trim();
+  let topicPayload = baseTopic;
+  if(loc) topicPayload += LOC_DELIM + loc;
+  if(pass) topicPayload += PASS_DELIM + pass;
   const payload = {
     action: "create",
-    hostName: f.hostName.value.trim(),
-    hostEmail: f.hostEmail.value.trim(),
-    topic: loc ? (baseTopic + LOC_DELIM + loc) : baseTopic,
-    date: f.date.value,
-    time: f.time.value,
-    capacity: f.capacity.value ? Number(f.capacity.value) : 0,
-    duration: f.duration.value ? Number(f.duration.value) : 0,
-    zoomLink: f.zoomLink.value.trim()
+    hostName: el("hostName").value.trim(),
+    hostEmail: el("hostEmail").value.trim(),
+    topic: topicPayload,
+    date: el("date").value,
+    time: el("time").value,
+    capacity: el("capacity").value ? Number(el("capacity").value) : 0,
+    duration: el("duration").value ? Number(el("duration").value) : 0,
+    zoomLink: el("zoomLink").value.trim()
   };
   if(!payload.hostName || !payload.hostEmail || !baseTopic || !payload.date || !payload.time){
     $("#hostErr").textContent = "Please fill in all required fields."; return;
@@ -937,6 +955,13 @@ function openRooms(list){
     a.addEventListener("click", () => logJoin(a.getAttribute("data-join"))));
   roomsDialog.showModal();
 }
+
+/* host cancel reachable from the signup popup (used by calendar chips) */
+$("#suHostCancel").addEventListener("click", () => {
+  const id = activeSessionId;
+  signupDialog.close();
+  openCancel(id, "session");
+});
 
 /* ---------- dialog close buttons + backdrop ---------- */
 document.querySelectorAll("[data-close]").forEach(b =>
