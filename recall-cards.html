@@ -1,0 +1,1516 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Recall Rx &middot; Personalized Recall Cards &middot; MedMasters</title>
+<!--
+  My Recall Cards. A personal, build-your-own flashcard tool for students.
+  Blank to start. Students make their own BANKS (one per course), each bank holding
+  decks and cards. Each card side is text or a photo. Per-bank exam dates,
+  a daily Again / Hard / Good / Easy review, and a weakness dashboard by deck.
+  Export one bank or everything; import adds cards under their bank.
+  Everything is stored only in the student's own browser. Nothing is sent anywhere.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* MCAS palette (MedMasters), sage and cream removed. Never green for completed. */
+    --navy:#0B1530; --navy-deep:#060A18; --navy-tint:#ECEEF2;
+    --gold:#C9A14A; --gold-deep:#B08B3A;
+    --terra:#8B3A2E; --terra-dark:#8B3A2E;
+    --white:#FFFFFF; --off-white:#FAFAF9;
+    --gray-line:#D3DAE0; --gray-soft:#5c6970;
+    --rule:rgba(11,21,48,0.18); --rule-soft:rgba(11,21,48,0.10);
+    --shadow-rest:0 1px 3px rgba(0,0,0,0.08);
+    --shadow-hover:0 8px 16px rgba(0,0,0,0.10);
+    --t-fast:150ms ease; --t-med:200ms ease;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0; padding:0;}
+  body{
+    font-family:"Plus Jakarta Sans", system-ui, sans-serif;
+    color:var(--navy); background:var(--off-white);
+    line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  .sr-only{
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  }
+  .skip-link{
+    position:absolute; left:-9999px; top:0; background:var(--navy); color:var(--white);
+    padding:12px 18px; z-index:200; text-decoration:none; border-radius:0 0 6px 0;
+    font-family:"Plus Jakarta Sans", system-ui, sans-serif; font-weight:600;
+  }
+  .skip-link:focus{left:0;}
+  :focus-visible{outline:3px solid var(--navy); outline-offset:2px; border-radius:2px; box-shadow:0 0 0 2px var(--white);}
+
+  /* Header */
+  header.page-header{background:var(--white); border-bottom:1px solid var(--gray-line); padding:22px 20px 16px;}
+  .head-inner{max-width:920px; margin:0 auto;}
+  .eyebrow{
+    font-family:"Plus Jakarta Sans", system-ui, sans-serif; font-weight:700; font-size:12px;
+    letter-spacing:.12em; text-transform:uppercase; color:var(--terra-dark); margin:0 0 6px;
+  }
+  h1.page-title{
+    font-family:"Plus Jakarta Sans", system-ui, sans-serif; font-weight:800;
+    font-size:clamp(24px,3vw,32px); color:var(--navy); margin:0 0 4px; letter-spacing:-0.01em;
+  }
+  .subhead{
+    font-family:"Plus Jakarta Sans", system-ui, sans-serif; font-weight:600;
+    font-size:clamp(14px,1.6vw,17px); color:var(--terra-dark); margin:0;
+  }
+  .back-link{
+    display:inline-block; margin-top:10px; font-family:"Plus Jakarta Sans",system-ui,sans-serif;
+    font-size:13px; font-weight:700; color:var(--terra-dark); text-decoration:none;
+  }
+  .back-link:hover{text-decoration:underline;}
+
+  /* Brand logo lockup */
+  .site-logo{display:inline-flex; align-items:center; gap:13px; text-decoration:none;}
+  .site-logo svg{height:50px; width:auto; display:block; flex-shrink:0;}
+  .site-logo:focus-visible{outline:3px solid var(--navy); outline-offset:3px; box-shadow:0 0 0 2px var(--white);}
+  .logo-text{display:flex; flex-direction:column; gap:3px;}
+  .logo-title{font-family:"Plus Jakarta Sans",sans-serif; font-size:25px; font-weight:800; letter-spacing:-.02em; color:var(--navy); line-height:1;}
+  .logo-title .logo-accent{color:var(--terra-dark);}
+  .logo-sub{font-family:"Plus Jakarta Sans",sans-serif; font-size:11.5px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--navy); opacity:.72;}
+  .head-tools{margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
+
+  /* Bank switcher */
+  .bank-bar{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:14px; padding-top:14px; border-top:1px solid var(--rule-soft);}
+  .bank-bar label{font-family:"Plus Jakarta Sans",system-ui,sans-serif; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--gray-soft);}
+  .bank-bar select{width:auto; max-width:300px; padding:9px 12px; font-family:"Plus Jakarta Sans",sans-serif; font-weight:600;}
+
+  /* Nav */
+  nav.top-nav{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;}
+  nav.top-nav button{
+    font-family:"Plus Jakarta Sans", system-ui, sans-serif; font-weight:600; font-size:14px;
+    background:transparent; color:var(--navy); border:1px solid var(--gray-line);
+    padding:8px 14px; border-radius:999px; cursor:pointer;
+    transition:background var(--t-fast), border-color var(--t-fast), color var(--t-fast);
+  }
+  nav.top-nav button:hover{background:var(--navy-tint); border-color:var(--navy);}
+  nav.top-nav button[aria-current="page"]{background:var(--navy); color:var(--white); border-color:var(--navy);}
+  .nav-badge{
+    display:inline-block; min-width:18px; padding:0 5px; margin-left:6px;
+    font-family:"Plus Jakarta Sans",sans-serif; font-size:11px; font-weight:800; line-height:18px;
+    text-align:center; border-radius:999px; background:var(--gold); color:var(--navy);
+  }
+  nav.top-nav button[aria-current="page"] .nav-badge{background:var(--white);}
+
+  /* Layout */
+  .wrap{max-width:920px; margin:0 auto; padding:24px 20px 90px;}
+  .view{display:none;}
+  .view.active{display:block;}
+  h2{font-family:"Plus Jakarta Sans",sans-serif; font-weight:700; font-size:21px; color:var(--navy); margin:30px 0 4px;}
+  h2:first-child{margin-top:0;}
+  h3{font-family:"Plus Jakarta Sans",sans-serif; font-weight:600; font-size:15px; color:var(--terra-dark); margin:18px 0 8px;}
+  p{margin:0 0 14px;}
+  .muted{color:var(--gray-soft);}
+  .lead{font-size:16px; max-width:62ch;}
+  .usage{font-style:italic; color:var(--gray-soft); max-width:62ch;}
+  .bank-tag{font-family:"Plus Jakarta Sans",sans-serif; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--terra-dark);}
+
+  .card{
+    background:var(--white); border:1px solid var(--rule); border-radius:12px;
+    padding:22px 24px; box-shadow:var(--shadow-rest); margin:16px 0;
+  }
+  .card.tap{cursor:pointer; transition:transform var(--t-med), box-shadow var(--t-med), border-color var(--t-med);}
+  .card.tap:hover{transform:translateY(-2px); box-shadow:var(--shadow-hover); border-color:var(--navy);}
+
+  /* Buttons */
+  .btn{
+    font-family:"Plus Jakarta Sans", system-ui, sans-serif; font-weight:800; font-size:14px;
+    letter-spacing:.02em; padding:13px 22px; border-radius:999px; cursor:pointer;
+    border:1px solid var(--navy); background:var(--navy); color:var(--white);
+    transition:background var(--t-med), transform var(--t-med), border-color var(--t-med), color var(--t-med);
+  }
+  .btn:hover{background:var(--navy-deep); transform:translateY(-2px);}
+  .btn.gold{background:var(--gold); border-color:var(--gold); color:var(--navy);}
+  .btn.gold:hover{background:var(--gold-deep); color:var(--white);}
+  .btn.ghost{background:var(--white); color:var(--navy);}
+  .btn.ghost:hover{background:var(--navy-tint); color:var(--navy);}
+  .btn.danger{background:var(--white); color:var(--terra-dark); border-color:var(--terra-dark);}
+  .btn.danger:hover{background:var(--terra-dark); color:var(--white);}
+  .btn:disabled{opacity:.5; cursor:not-allowed; transform:none;}
+  .btn-row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+  .btn.small{padding:8px 14px; font-size:13px;}
+
+  /* Stat tiles */
+  .stat-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin:16px 0;}
+  .stat{background:var(--white); border:1px solid var(--rule); border-radius:12px; padding:16px 18px; box-shadow:var(--shadow-rest);}
+  .stat .num{font-family:"Plus Jakarta Sans",sans-serif; font-weight:800; font-size:34px; line-height:1; color:var(--navy);}
+  .stat .num.accent{color:var(--terra-dark);}
+  .stat .lbl{font-family:"Plus Jakarta Sans",sans-serif; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--gray-soft); margin-top:6px;}
+
+  /* Deck list */
+  .deck-list{display:flex; flex-direction:column; gap:10px; margin-top:12px;}
+  .deck{
+    background:var(--white); border:1px solid var(--rule); border-radius:12px;
+    padding:16px 18px; box-shadow:var(--shadow-rest);
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+  .deck .d-title{font-family:"Plus Jakarta Sans",sans-serif; font-weight:700; font-size:17px; color:var(--navy);}
+  .deck .d-sub{font-size:13.5px; color:var(--gray-soft); margin-top:2px;}
+  .deck .d-right{display:flex; align-items:center; gap:8px; flex-shrink:0; flex-wrap:wrap; justify-content:flex-end;}
+  .chip{
+    font-family:"Plus Jakarta Sans",sans-serif; font-size:11.5px; font-weight:700; letter-spacing:.03em;
+    padding:4px 9px; border-radius:999px; border:1px solid var(--rule); color:var(--navy); background:var(--off-white); white-space:nowrap;
+  }
+  .chip.due{background:var(--gold); border-color:var(--gold); color:var(--navy);}
+  .chip.new{background:var(--navy); border-color:var(--navy); color:var(--white);}
+
+  /* Progress bars */
+  .bar{position:relative; height:14px; background:var(--navy-tint); border:1px solid var(--gray-line); border-radius:8px; overflow:hidden;}
+  .bar > span{position:absolute; left:0; top:0; bottom:0; background:var(--gold); border-radius:7px 0 0 7px;}
+  .bar > span.navy{background:var(--navy); border-radius:7px;}
+
+  /* Forms */
+  label.field{display:block; font-family:"Plus Jakarta Sans",sans-serif; font-weight:600; font-size:14px; color:var(--navy); margin:14px 0 6px;}
+  .field-help{font-size:13px; color:var(--gray-soft); margin:4px 0 0;}
+  input[type=text], input[type=date], input[type=number], select, textarea{
+    width:100%; font-family:"Plus Jakarta Sans",system-ui,sans-serif; font-size:15.5px; color:var(--navy);
+    background:var(--white); border:1px solid var(--gray-line); border-radius:8px; padding:11px 12px;
+  }
+  textarea{min-height:84px; resize:vertical; line-height:1.5;}
+  input:focus, select:focus, textarea:focus{outline:3px solid var(--navy); outline-offset:1px; border-color:var(--navy);}
+  .radio-line{display:flex; align-items:flex-start; gap:9px; margin:8px 0;}
+  .radio-line input{margin-top:3px;}
+  .radio-line label{font-family:"Plus Jakarta Sans",system-ui,sans-serif; font-weight:400; font-size:15px; margin:0;}
+  fieldset{border:1px solid var(--rule); border-radius:10px; padding:14px 16px; margin:14px 0;}
+  legend{font-family:"Plus Jakarta Sans",sans-serif; font-weight:700; font-size:14px; color:var(--terra-dark); padding:0 6px;}
+  .seg{display:inline-flex; border:1px solid var(--gray-line); border-radius:999px; overflow:hidden; background:var(--white);}
+  .seg button{font-family:"Plus Jakarta Sans",sans-serif; font-weight:700; font-size:13px; padding:8px 16px; border:0; background:transparent; color:var(--navy); cursor:pointer;}
+  .seg button[aria-pressed="true"]{background:var(--navy); color:var(--white);}
+
+  .img-preview{margin-top:10px; border:1px dashed var(--gray-line); border-radius:10px; padding:8px; text-align:center; background:var(--off-white);}
+  .img-preview img{max-width:100%; max-height:240px; border-radius:6px;}
+  .img-preview.empty{color:var(--gray-soft); font-style:italic; padding:24px;}
+
+  /* Tags */
+  .tag-pick{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;}
+  .tag-chip{font-family:"Plus Jakarta Sans",sans-serif; font-size:13px; font-weight:700; padding:7px 13px; border-radius:999px; border:1px solid var(--gray-line); background:var(--white); color:var(--navy); cursor:pointer; transition:background var(--t-fast), border-color var(--t-fast), color var(--t-fast);}
+  .tag-chip:hover{border-color:var(--navy);}
+  .tag-chip[aria-pressed="true"]{background:var(--navy); color:var(--white); border-color:var(--navy);}
+  .tag-chip .x{margin-left:6px; font-weight:800;}
+  .tag-add{display:flex; gap:8px; margin-top:12px; align-items:center; flex-wrap:wrap;}
+  .tag-add input{max-width:280px;}
+  .card-tags{display:flex; flex-wrap:wrap; gap:5px; margin-top:6px;}
+  .card-tags .ct{font-family:"Plus Jakarta Sans",sans-serif; font-size:10.5px; font-weight:700; letter-spacing:.02em; padding:2px 8px; border-radius:999px; background:var(--navy-tint); color:var(--navy); border:1px solid var(--rule-soft);}
+  .card-tags .ct.lab{background:var(--gold); border-color:var(--gold); color:var(--navy);}
+
+  /* Walk-through */
+  .wt-overlay{position:fixed; inset:0; background:rgba(11,21,48,0.6); display:none; align-items:center; justify-content:center; padding:18px; z-index:280;}
+  .wt-overlay.show{display:flex;}
+  .wt-card{background:var(--white); border-radius:16px; max-width:540px; width:100%; padding:28px; box-shadow:var(--shadow-hover); max-height:92vh; overflow:auto;}
+  .wt-step-label{font-family:"Plus Jakarta Sans",sans-serif; font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--terra-dark); margin:0 0 8px;}
+  .wt-illus{margin:2px 0 14px; color:var(--gold);}
+  .wt-illus svg{width:48px; height:48px;}
+  .wt-h{font-family:"Plus Jakarta Sans",sans-serif; font-weight:800; font-size:23px; color:var(--navy); margin:0 0 10px; letter-spacing:-0.01em;}
+  #wt-text{font-size:15.5px; color:var(--navy); margin:0;}
+  #wt-text p{margin:0 0 10px;}
+  .wt-prog{height:6px; background:var(--navy-tint); border-radius:999px; overflow:hidden; margin:18px 0;}
+  .wt-prog > span{display:block; height:100%; background:var(--gold); transition:width var(--t-med);}
+  .wt-nav{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:14px;}
+  .wt-dots{display:flex; gap:5px;}
+  .wt-dots i{width:7px; height:7px; border-radius:50%; background:var(--gray-line); display:inline-block;}
+  .wt-dots i.on{background:var(--navy);}
+
+  /* Study stage */
+  .study-card{
+    background:var(--white); border:1px solid var(--rule); border-radius:16px;
+    box-shadow:var(--shadow-rest); padding:30px 26px; min-height:240px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+  }
+  .study-deck{font-family:"Plus Jakarta Sans",sans-serif; font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--terra-dark); margin-bottom:14px;}
+  .study-q{font-family:"Plus Jakarta Sans",sans-serif; font-weight:700; font-size:24px; color:var(--navy); margin:0;}
+  .study-a{font-family:"Plus Jakarta Sans",system-ui,sans-serif; font-size:19px; color:var(--navy); margin:0;}
+  .study-img{max-width:100%; max-height:360px; border-radius:10px; border:1px solid var(--rule);}
+  .divider{width:100%; height:1px; background:var(--rule-soft); margin:22px 0;}
+  .study-side-label{font-family:"Plus Jakarta Sans",sans-serif; font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--gray-soft); margin-bottom:10px;}
+  .progress-track{height:8px; background:var(--navy-tint); border-radius:999px; overflow:hidden; margin:0 0 18px;}
+  .progress-track > span{display:block; height:100%; background:var(--gold); transition:width var(--t-med);}
+
+  .grade-row{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:16px;}
+  .grade-btn{
+    font-family:"Plus Jakarta Sans",sans-serif; cursor:pointer; padding:14px 8px; border-radius:12px;
+    background:var(--white); border:1px solid var(--navy); color:var(--navy);
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+    transition:transform var(--t-med), box-shadow var(--t-med);
+  }
+  .grade-btn:hover{transform:translateY(-2px); box-shadow:var(--shadow-hover);}
+  .grade-btn .g-word{font-weight:800; font-size:15px;}
+  .grade-btn .g-when{font-size:12px; color:var(--gray-soft);}
+  .grade-btn .g-key{font-size:10.5px; font-weight:700; letter-spacing:.05em; color:var(--gray-soft);}
+  .grade-btn[data-g="again"]{border-color:var(--terra-dark);}
+  .grade-btn[data-g="again"] .g-word{color:var(--terra-dark);}
+  .grade-btn[data-g="easy"]{border-color:var(--gold-deep);}
+  .grade-btn[data-g="easy"] .g-word{color:var(--gold-deep);}
+
+  /* Weakness dashboard rows */
+  .wk-row{background:var(--white); border:1px solid var(--rule); border-radius:12px; padding:14px 16px; box-shadow:var(--shadow-rest); margin-bottom:10px;}
+  .wk-head{display:flex; align-items:baseline; justify-content:space-between; gap:10px;}
+  .wk-name{font-family:"Plus Jakarta Sans",sans-serif; font-weight:700; font-size:16px; color:var(--navy);}
+  .wk-pct{font-family:"Plus Jakarta Sans",sans-serif; font-weight:800; font-size:18px;}
+  .wk-pct.weak{color:var(--terra-dark);}
+  .wk-pct.ok{color:var(--navy);}
+  .wk-meta{font-size:13px; color:var(--gray-soft); margin-top:8px;}
+  .flag{display:inline-block; font-family:"Plus Jakarta Sans",sans-serif; font-size:11px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; padding:3px 9px; border-radius:999px; margin-left:8px;}
+  .flag.work{background:var(--terra-dark); color:var(--white);}
+  .flag.solid{background:var(--navy-tint); color:var(--navy); border:1px solid var(--navy);}
+
+  /* Empty state */
+  .empty-state{text-align:center; padding:34px 20px;}
+  .empty-state h2{margin-top:0;}
+  .empty-state .em-ico{width:54px; height:54px; margin:0 auto 10px; color:var(--gold);}
+
+  /* Exam banner */
+  .exam-banner{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    background:var(--navy-tint); border:1px solid var(--navy); border-left:4px solid var(--gold);
+    border-radius:10px; padding:14px 18px; margin:0 0 16px;
+  }
+  .exam-banner .ex-big{font-family:"Plus Jakarta Sans",sans-serif; font-weight:800; font-size:22px; color:var(--navy);}
+  .note{background:var(--navy-tint); border-left:3px solid var(--gold); padding:12px 16px; border-radius:0 8px 8px 0; font-size:14px; margin:14px 0;}
+
+  /* Toast */
+  .toast{
+    position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px);
+    background:var(--navy); color:var(--white); font-family:"Plus Jakarta Sans",sans-serif; font-weight:600; font-size:14px;
+    padding:12px 20px; border-radius:999px; box-shadow:var(--shadow-hover); opacity:0; pointer-events:none;
+    transition:opacity var(--t-med), transform var(--t-med); z-index:300; max-width:90vw; text-align:center;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  /* Modal */
+  .modal-overlay{position:fixed; inset:0; background:rgba(11,21,48,0.55); display:none; align-items:center; justify-content:center; padding:18px; z-index:250;}
+  .modal-overlay.show{display:flex;}
+  .modal{background:var(--white); border-radius:14px; max-width:520px; width:100%; padding:26px; box-shadow:var(--shadow-hover); max-height:90vh; overflow:auto;}
+  .modal h2{margin-top:0;}
+  .modal label.field:first-of-type{margin-top:0;}
+
+  footer{text-align:center; font-style:italic; color:var(--gray-soft); font-size:13px; margin-top:40px; padding-top:16px; border-top:1px solid var(--rule-soft);}
+
+  @media (max-width:560px){
+    .grade-row{grid-template-columns:repeat(2,1fr);}
+    .study-q{font-size:21px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important; animation:none !important;}
+    .btn:hover, .card.tap:hover, .grade-btn:hover{transform:none;}
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="page-header">
+  <div class="head-inner">
+    <a class="site-logo" href="index.html" target="_top" aria-label="Recall Rx by MedMasters, back to course resources">
+      <svg viewBox="40 10 125 148" role="img" aria-hidden="true" focusable="false">
+        <g transform="translate(0, 18)">
+          <g transform="translate(60, 0) rotate(8 0 130)">
+            <circle cx="0" cy="20" r="10" fill="#0B1530"/>
+            <path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#0B1530"/>
+          </g>
+          <g transform="translate(100, 0)">
+            <circle cx="0" cy="10" r="11" fill="#8B3A2E"/>
+            <path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/>
+          </g>
+          <g transform="translate(140, 0) rotate(-8 0 130)">
+            <circle cx="0" cy="20" r="10" fill="#C9A14A"/>
+            <path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/>
+          </g>
+        </g>
+      </svg>
+      <span class="logo-text">
+        <span class="logo-title">Recall <span class="logo-accent">Rx</span></span>
+        <span class="logo-sub">Personalized Recall Cards</span>
+      </span>
+    </a>
+    <h1 class="sr-only">Recall Rx, personalized recall cards</h1>
+    <p class="subhead" style="margin-top:12px;">Your own banks, one per course. Build them, review daily, see where you are weak.</p>
+    <div class="head-tools">
+      <a class="back-link" href="index.html" target="_top" style="margin-top:0;">&larr; Back to course resources</a>
+      <button type="button" class="btn ghost small" id="tour-btn">Take the tour</button>
+    </div>
+
+    <div class="bank-bar">
+      <label for="bank-select" id="bank-select-label">Course bank</label>
+      <select id="bank-select" aria-labelledby="bank-select-label"></select>
+      <button type="button" class="btn ghost small" id="bank-new-btn">+ New bank</button>
+    </div>
+
+    <nav class="top-nav" aria-label="Main">
+      <button type="button" data-go="home" aria-current="page">Home</button>
+      <button type="button" data-go="review">Daily review <span class="nav-badge" id="nav-due" hidden>0</span></button>
+      <button type="button" data-go="make">Make a card</button>
+      <button type="button" data-go="decks">My decks</button>
+      <button type="button" data-go="weakness">Weakness</button>
+      <button type="button" data-go="settings">Settings</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+
+  <!-- ===================== HOME ===================== -->
+  <section class="view active" id="view-home" aria-labelledby="home-h" tabindex="-1">
+    <h1 id="home-h" class="sr-only">Home</h1>
+    <div id="home-body"></div>
+  </section>
+
+  <!-- ===================== DAILY REVIEW ===================== -->
+  <section class="view" id="view-review" aria-labelledby="review-h" tabindex="-1">
+    <h1 id="review-h" class="sr-only">Daily review</h1>
+    <div id="review-body"></div>
+  </section>
+
+  <!-- ===================== MAKE A CARD ===================== -->
+  <section class="view" id="view-make" aria-labelledby="make-h" tabindex="-1">
+    <h2 id="make-h" style="margin-top:0;">Build a card</h2>
+    <p class="usage" id="make-intro">Each side can be plain text or a photo. Use a photo when a label, a slide, or a drawing says it better than words.</p>
+    <div id="make-wrap"></div>
+  </section>
+
+  <!-- ===================== MY DECKS ===================== -->
+  <section class="view" id="view-decks" aria-labelledby="decks-h" tabindex="-1">
+    <h2 id="decks-h" style="margin-top:0;">My decks</h2>
+    <p class="bank-tag" id="decks-bank"></p>
+    <p class="usage" style="margin-top:2px;">Filter by deck or tag, then <strong>Study these</strong> to drill just that slice, like every Cardiovascular card, or only the ones tagged Electrophysiology.</p>
+    <div class="btn-row" style="margin-bottom:8px;">
+      <label class="sr-only" for="deck-filter">Filter cards by deck</label>
+      <select id="deck-filter" style="max-width:280px;"><option value="">All decks</option></select>
+      <label class="sr-only" for="tag-filter">Filter cards by tag</label>
+      <select id="tag-filter" style="max-width:240px;"><option value="">All tags</option></select>
+    </div>
+    <div class="btn-row" style="margin-bottom:14px;"><button type="button" class="btn gold small" id="study-filtered" hidden>Study these</button></div>
+    <div id="decks-summary" class="deck-list"></div>
+    <h3 id="cards-list-head">Cards</h3>
+    <div id="cards-list" class="deck-list" aria-live="polite"></div>
+  </section>
+
+  <!-- ===================== WEAKNESS ===================== -->
+  <section class="view" id="view-weakness" aria-labelledby="weak-h" tabindex="-1">
+    <h2 id="weak-h" style="margin-top:0;">Weakness dashboard</h2>
+    <p class="bank-tag" id="weak-bank"></p>
+    <p class="usage">Ranked weakest first. "Recall" is the share of your reviews you got right (Good or Easy). A deck needs at least three reviews before a score shows.</p>
+    <div id="weakness-body" aria-live="polite"></div>
+  </section>
+
+  <!-- ===================== SETTINGS ===================== -->
+  <section class="view" id="view-settings" aria-labelledby="set-h" tabindex="-1">
+    <h2 id="set-h" style="margin-top:0;">Settings</h2>
+    <div id="settings-body"></div>
+  </section>
+
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Confirm modal -->
+<div class="modal-overlay" id="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+  <div class="modal">
+    <h2 id="confirm-title">Are you sure?</h2>
+    <p id="confirm-text" class="muted"></p>
+    <div class="btn-row" style="justify-content:flex-end;">
+      <button type="button" class="btn ghost small" id="confirm-cancel">Cancel</button>
+      <button type="button" class="btn danger small" id="confirm-ok">Yes, do it</button>
+    </div>
+  </div>
+</div>
+
+<!-- Prompt modal (for naming banks, decks) -->
+<div class="modal-overlay" id="prompt-modal" role="dialog" aria-modal="true" aria-labelledby="prompt-title">
+  <div class="modal">
+    <h2 id="prompt-title">Name</h2>
+    <label class="field" for="prompt-input" id="prompt-label">Name</label>
+    <input type="text" id="prompt-input" autocomplete="off">
+    <p class="field-help" id="prompt-help"></p>
+    <div class="btn-row" style="justify-content:flex-end; margin-top:14px;">
+      <button type="button" class="btn ghost small" id="prompt-cancel">Cancel</button>
+      <button type="button" class="btn gold small" id="prompt-ok">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Walk-through -->
+<div class="wt-overlay" id="wt-overlay" role="dialog" aria-modal="true" aria-labelledby="wt-h">
+  <div class="wt-card">
+    <p class="wt-step-label" id="wt-step-label">Step 1</p>
+    <div class="wt-illus" id="wt-illus" aria-hidden="true"></div>
+    <h2 class="wt-h" id="wt-h">Welcome</h2>
+    <div id="wt-text"></div>
+    <div class="wt-prog" aria-hidden="true"><span id="wt-fill" style="width:0%"></span></div>
+    <div class="wt-nav">
+      <button type="button" class="btn ghost small" id="wt-skip">Skip</button>
+      <div class="wt-dots" id="wt-dots" aria-hidden="true"></div>
+      <div style="display:flex; gap:8px;">
+        <button type="button" class="btn ghost small" id="wt-prev">Back</button>
+        <button type="button" class="btn gold small" id="wt-next">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>Dr. Sharilyn Rennie &middot; MedMasters Collaborative &middot; Recall Rx. Your cards live only in this browser. Export to keep a backup.</p>
+</footer>
+
+<script>
+"use strict";
+(function(){
+
+  /* ============================================================
+     STORAGE: IndexedDB for cards (handles photos), localStorage for settings
+     ============================================================ */
+  var DB_NAME = "recall-cards-db", DB_VER = 1, STORE = "cards";
+  var SETTINGS_KEY = "recall-cards-settings";
+  var dbp = null;
+
+  function openDB(){
+    if (dbp) return dbp;
+    dbp = new Promise(function(resolve, reject){
+      var req = indexedDB.open(DB_NAME, DB_VER);
+      req.onupgradeneeded = function(e){
+        var db = e.target.result;
+        if (!db.objectStoreNames.contains(STORE)){
+          var os = db.createObjectStore(STORE, { keyPath:"id" });
+          os.createIndex("bank", "bank", { unique:false });
+        }
+      };
+      req.onsuccess = function(){ resolve(req.result); };
+      req.onerror = function(){ reject(req.error); };
+    });
+    return dbp;
+  }
+  function tx(mode){ return openDB().then(function(db){ return db.transaction(STORE, mode).objectStore(STORE); }); }
+  function idbAll(){
+    return tx("readonly").then(function(os){
+      return new Promise(function(res, rej){
+        var out = [], c = os.openCursor();
+        c.onsuccess = function(e){ var cur = e.target.result; if(cur){ out.push(cur.value); cur.continue(); } else res(out); };
+        c.onerror = function(){ rej(c.error); };
+      });
+    });
+  }
+  function idbPut(card){ return tx("readwrite").then(function(os){ return new Promise(function(res,rej){ var r=os.put(card); r.onsuccess=function(){res();}; r.onerror=function(){rej(r.error);}; }); }); }
+  function idbDelete(id){ return tx("readwrite").then(function(os){ return new Promise(function(res,rej){ var r=os.delete(id); r.onsuccess=function(){res();}; r.onerror=function(){rej(r.error);}; }); }); }
+  function idbClear(){ return tx("readwrite").then(function(os){ return new Promise(function(res,rej){ var r=os.clear(); r.onsuccess=function(){res();}; r.onerror=function(){rej(r.error);}; }); }); }
+
+  /* settings */
+  var SETTINGS = loadSettings();
+  function defaultSettings(){ return { activeBank:"", dailyNew:15, banks:{}, dayKey:"", newToday:{}, tourSeen:false }; }
+  function loadSettings(){
+    try{ var raw = localStorage.getItem(SETTINGS_KEY); if(!raw) return defaultSettings();
+      var p = JSON.parse(raw); var d = defaultSettings(); for(var k in d){ if(!(k in p)) p[k]=d[k]; }
+      if (typeof p.banks !== "object" || !p.banks) p.banks = {};
+      if (typeof p.newToday !== "object" || !p.newToday) p.newToday = {};
+      return p;
+    }catch(e){ return defaultSettings(); }
+  }
+  function saveSettings(){ try{ localStorage.setItem(SETTINGS_KEY, JSON.stringify(SETTINGS)); }catch(e){} }
+
+  /* ============================================================
+     HELPERS
+     ============================================================ */
+  var $ = function(s, r){ return (r||document).querySelector(s); };
+  var $$ = function(s, r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
+  function uid(){ return "c" + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+  function todayStr(){ var d=new Date(); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+  function pad(n){ return n<10 ? "0"+n : ""+n; }
+  function addDays(iso, n){ var d = parseISO(iso); d.setDate(d.getDate()+n); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+  function parseISO(iso){ var p=iso.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
+  function daysUntil(iso){ if(!iso) return null; var ms = parseISO(iso) - parseISO(todayStr()); return Math.round(ms/86400000); }
+  function esc(s){ return (s==null?"":String(s)).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+  function intervalLabel(days){ if(days<=0) return "today"; if(days===1) return "1 day"; if(days<30) return days+" days"; var m=Math.round(days/30); return m+(m===1?" month":" months"); }
+
+  var toastTimer=null;
+  function toast(msg){ var t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer=setTimeout(function(){ t.classList.remove("show"); }, 2400); }
+
+  /* image downscale to keep storage small */
+  function fileToImage(file, maxDim, cb){
+    var reader = new FileReader();
+    reader.onload = function(){
+      var img = new Image();
+      img.onload = function(){
+        var w=img.width, h=img.height, scale=Math.min(1, maxDim/Math.max(w,h));
+        var cw=Math.round(w*scale), ch=Math.round(h*scale);
+        var cv=document.createElement("canvas"); cv.width=cw; cv.height=ch;
+        cv.getContext("2d").drawImage(img,0,0,cw,ch);
+        var out;
+        try{ out = cv.toDataURL("image/jpeg", 0.82); }catch(e){ out = reader.result; }
+        cb(out);
+      };
+      img.onerror=function(){ cb(null); };
+      img.src = reader.result;
+    };
+    reader.onerror=function(){ cb(null); };
+    reader.readAsDataURL(file);
+  }
+
+  /* ============================================================
+     BANKS (one per course) > DECKS > CARDS
+     ============================================================ */
+  var CARDS = [];
+
+  function bankNames(){ return Object.keys(SETTINGS.banks).sort(function(a,b){ return a.toLowerCase()<b.toLowerCase()?-1:1; }); }
+  function hasBanks(){ return bankNames().length > 0; }
+  function activeBank(){ return SETTINGS.activeBank; }
+  function bankMeta(name){ var m = SETTINGS.banks[name] = SETTINGS.banks[name] || {examLabel:"", examDate:""}; if(!m.deckExams) m.deckExams={}; return m; }
+
+  // A deck's effective exam: its own override if set, else the bank default, else none.
+  function effectiveExam(bank, deck){
+    var m = bankMeta(bank);
+    var de = m.deckExams[deck];
+    if (de && de.examDate) return { examLabel:(de.examLabel||"Exam"), examDate:de.examDate, source:"topic" };
+    if (m.examDate) return { examLabel:(m.examLabel||(bank+" exam")), examDate:m.examDate, source:"bank" };
+    return null;
+  }
+  // Distinct upcoming exams for a bank, grouped by date, soonest first.
+  function upcomingExams(bank){
+    var map = {};
+    deckNamesFor(bank).forEach(function(dk){
+      var ex = effectiveExam(bank, dk); if(!ex) return;
+      var du = daysUntil(ex.examDate); if(du==null || du<0) return;
+      var key = ex.examDate+"|"+(ex.examLabel||"");
+      if(!map[key]) map[key] = { examLabel:ex.examLabel, examDate:ex.examDate, days:du, decks:[], cards:0 };
+      map[key].decks.push(dk); map[key].cards += cardsInDeckFor(bank, dk).length;
+    });
+    return Object.keys(map).map(function(k){ return map[k]; }).sort(function(a,b){ return a.examDate<b.examDate?-1:1; });
+  }
+  function deckNamesFor(bank){ var s={}; CARDS.forEach(function(c){ if(c.bank===bank && c.deck) s[c.deck]=true; }); return Object.keys(s).sort(); }
+  function cardsInDeckFor(bank, deck){ return CARDS.filter(function(c){ return c.bank===bank && c.deck===deck; }); }
+
+  function ensureBank(name){
+    name = (name||"").trim(); if(!name) return false;
+    if (!SETTINGS.banks[name]) SETTINGS.banks[name] = {examLabel:"", examDate:""};
+    return true;
+  }
+  function setActiveBank(name){ if (SETTINGS.banks[name]){ SETTINGS.activeBank = name; saveSettings(); } }
+
+  function newCard(){
+    return { id:uid(), bank:activeBank(), deck:"", tags:[], fType:"text", fText:"", fImg:null, fAlt:"",
+      bType:"text", bText:"", bImg:null, bAlt:"",
+      due:todayStr(), interval:0, ease:2.5, reps:0, lapses:0, state:"new",
+      correct:0, total:0, lastReviewed:null, created:Date.now(), suspended:false };
+  }
+
+  // scoping to the active bank
+  function activeCards(){ var b=activeBank(); return CARDS.filter(function(c){ return c.bank===b; }); }
+  function deckNames(){
+    var set={}; activeCards().forEach(function(c){ if(c.deck) set[c.deck]=true; });
+    return Object.keys(set).sort(function(a,b){ return a.toLowerCase()<b.toLowerCase()?-1:1; });
+  }
+  function cardsInDeck(name){ return activeCards().filter(function(c){ return c.deck===name; }); }
+
+  function rolloverDay(){
+    var t = todayStr();
+    if (SETTINGS.dayKey !== t){ SETTINGS.dayKey = t; SETTINGS.newToday = {}; saveSettings(); }
+  }
+  function dueCards(){ var t=todayStr(); return activeCards().filter(function(c){ return !c.suspended && c.state!=="new" && c.due<=t; }); }
+  function newCards(){ return activeCards().filter(function(c){ return !c.suspended && c.state==="new"; }); }
+  function newAllowance(){ rolloverDay(); var used = SETTINGS.newToday[activeBank()]||0; return Math.max(0, (SETTINGS.dailyNew||0) - used); }
+
+  /* ============================================================
+     SCHEDULING (Again / Hard / Good / Easy)
+     ============================================================ */
+  function preview(card, grade){ var c = JSON.parse(JSON.stringify(card)); applyGrade(c, grade); return c.interval; }
+
+  function applyGrade(card, grade){
+    var wasReview = card.reps > 0;
+    var cap = null;
+    var ex = effectiveExam(card.bank, card.deck);
+    var dExam = ex ? daysUntil(ex.examDate) : null;
+    if (dExam != null && dExam > 0) cap = dExam; // keep cards surfacing before the topic's exam
+
+    if (grade === "again"){
+      card.ease = Math.max(1.3, card.ease - 0.20);
+      card.interval = 0; card.state = "learning";
+      if (wasReview) card.lapses++;
+    } else if (grade === "hard"){
+      card.ease = Math.max(1.3, card.ease - 0.15);
+      card.interval = card.reps === 0 ? 1 : Math.max(1, Math.round(card.interval * 1.2));
+      card.state = "review"; card.reps++;
+    } else if (grade === "good"){
+      card.interval = card.reps === 0 ? 1 : Math.max(1, Math.round((card.interval||1) * card.ease));
+      card.state = "review"; card.reps++;
+    } else if (grade === "easy"){
+      card.ease = card.ease + 0.15;
+      card.interval = card.reps === 0 ? 3 : Math.max(1, Math.round((card.interval||1) * card.ease * 1.3));
+      card.state = "review"; card.reps++;
+    }
+    if (cap != null && card.interval > cap) card.interval = cap;
+    card.due = addDays(todayStr(), card.interval);
+    return card;
+  }
+
+  /* ============================================================
+     NAVIGATION
+     ============================================================ */
+  function go(view){
+    $$(".view").forEach(function(v){ v.classList.remove("active"); });
+    $$("nav.top-nav button[data-go]").forEach(function(b){ b.removeAttribute("aria-current"); });
+    var sec = $("#view-"+view); if(!sec){ view="home"; sec=$("#view-home"); }
+    sec.classList.add("active");
+    var nav = $('nav.top-nav button[data-go="'+view+'"]'); if(nav) nav.setAttribute("aria-current","page");
+    try{ sec.focus(); }catch(e){}
+    if (location.hash !== "#"+view) history.replaceState(null,"","#"+view);
+    if (view==="home") renderHome();
+    else if (view==="review") startOrResumeReview();
+    else if (view==="make") renderMake();
+    else if (view==="decks") renderDecks();
+    else if (view==="weakness") renderWeakness();
+    else if (view==="settings") renderSettings();
+    updateNavBadge();
+  }
+
+  function updateNavBadge(){
+    var n = hasBanks() ? (dueCards().length + Math.min(newCards().length, newAllowance())) : 0;
+    var b = $("#nav-due");
+    if (n>0){ b.hidden=false; b.textContent = n>99?"99+":n; } else { b.hidden=true; }
+  }
+
+  function renderBankSelect(){
+    var sel = $("#bank-select");
+    var names = bankNames();
+    if (names.length===0){
+      sel.innerHTML = '<option value="">No banks yet</option>';
+      sel.disabled = true;
+      return;
+    }
+    sel.disabled = false;
+    sel.innerHTML = names.map(function(n){ return '<option value="'+esc(n)+'"'+(n===activeBank()?" selected":"")+'>'+esc(n)+'</option>'; }).join("")
+      + '<option value="__new__">+ New bank...</option>';
+  }
+
+  /* ============================================================
+     HOME
+     ============================================================ */
+  function renderHome(){
+    var body = $("#home-body");
+    if (!hasBanks()){
+      body.innerHTML =
+        '<div class="card empty-state">'+
+        '<svg class="em-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 12l9 4 9-4"/><path d="M3 17l9 4 9-4"/></svg>'+
+        '<h2>Start your first bank</h2>'+
+        '<p class="muted" style="max-width:48ch; margin:0 auto 16px;">A bank is one course, like Anatomy or Physiology. Make a bank for each class, then build decks and cards inside it.</p>'+
+        '<button type="button" class="btn gold" id="home-new-bank">Create a bank</button>'+
+        '</div>';
+      $("#home-new-bank").addEventListener("click", promptNewBank);
+      return;
+    }
+    rolloverDay();
+    var due = dueCards().length;
+    var newAvail = Math.min(newCards().length, newAllowance());
+    var total = activeCards().length;
+    var ups = upcomingExams(activeBank());
+
+    var banner;
+    if (ups.length){
+      var nx = ups[0];
+      var when = nx.days === 0 ? "is today" : ("in " + nx.days + " day" + (nx.days===1?"":"s"));
+      var more = ups.length>1 ? (' &middot; '+(ups.length-1)+' more exam'+(ups.length-1===1?"":"s")+' after') : '';
+      banner =
+        '<div class="exam-banner"><div><div class="ex-big">'+esc(nx.examLabel||"Next exam")+' '+when+'</div>'+
+        '<div class="muted" style="font-size:13px;">'+nx.decks.length+' topic'+(nx.decks.length===1?"":"s")+more+'</div></div>'+
+        '<button type="button" class="btn ghost small" data-go="settings">Exam dates</button></div>';
+    } else {
+      banner = '<div class="note">No exam dates set for <strong>'+esc(activeBank())+'</strong> yet. Add them in <button type="button" class="btn ghost small" data-go="settings" style="vertical-align:baseline;">Settings</button>, and the dashboard will pace each topic toward its exam.</div>';
+    }
+
+    var stats =
+      '<div class="stat-grid" aria-live="polite">'+
+      tile(due, "Due today", due>0) + tile(newAvail, "New today", false) +
+      tile(total, "Cards in "+activeBank(), false) + tile(deckNames().length, "Decks", false) +
+      '</div>';
+
+    var cta;
+    if (total === 0){
+      cta = '<div class="card empty-state">'+
+        '<svg class="em-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg>'+
+        '<h2>'+esc(activeBank())+' is empty</h2>'+
+        '<p class="muted" style="max-width:46ch; margin:0 auto 16px;">Make your first card. Type a question and answer, or take a photo of a slide, a model, or your own drawing.</p>'+
+        '<button type="button" class="btn gold" data-go="make">Make my first card</button></div>';
+    } else if (due + newAvail === 0){
+      cta = '<div class="card" style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;"><div><strong style="font-family:\'Plus Jakarta Sans\',sans-serif;">You are caught up in '+esc(activeBank())+'.</strong><p class="muted" style="margin:6px 0 0;">Nothing is due right now. Add more cards, or do a full pass before an exam.</p></div><button type="button" class="btn ghost" data-cumulative>Cumulative review</button></div>';
+    } else {
+      cta = '<div class="card" style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">'+
+        '<div><strong style="font-family:\'Plus Jakarta Sans\',sans-serif; font-size:18px;">'+(due+newAvail)+' card'+((due+newAvail)===1?"":"s")+' ready</strong><p class="muted" style="margin:4px 0 0;">'+due+' due, '+newAvail+' new.</p></div>'+
+        '<button type="button" class="btn gold" data-go="review">Start review</button></div>';
+    }
+
+    body.innerHTML = banner + stats + cta +
+      '<h2>Where to start</h2>'+
+      '<div class="deck-list">'+
+        '<div class="card tap" role="button" tabindex="0" data-go="review"><strong style="font-family:\'Plus Jakarta Sans\',sans-serif; font-size:17px;">Do today\'s review</strong><p class="muted" style="margin:6px 0 0;">Cards that are due in '+esc(activeBank())+', plus a few new ones.</p></div>'+
+        '<div class="card tap" role="button" tabindex="0" data-cumulative><strong style="font-family:\'Plus Jakarta Sans\',sans-serif; font-size:17px;">Cumulative review</strong><p class="muted" style="margin:6px 0 0;">Go through every card in '+esc(activeBank())+', due or not. Best before a cumulative final or midterm.</p></div>'+
+        '<div class="card tap" role="button" tabindex="0" data-go="make"><strong style="font-family:\'Plus Jakarta Sans\',sans-serif; font-size:17px;">Make a card</strong><p class="muted" style="margin:6px 0 0;">Type a question and answer, or snap a photo for either side.</p></div>'+
+        '<div class="card tap" role="button" tabindex="0" data-go="weakness"><strong style="font-family:\'Plus Jakarta Sans\',sans-serif; font-size:17px;">See your weakness dashboard</strong><p class="muted" style="margin:6px 0 0;">Which decks need work before your exam.</p></div>'+
+      '</div>';
+  }
+  function tile(num, lbl, accent){ return '<div class="stat"><div class="num'+(accent?" accent":"")+'">'+num+'</div><div class="lbl">'+esc(lbl)+'</div></div>'; }
+
+  /* ============================================================
+     DAILY REVIEW
+     ============================================================ */
+  var SESSION = null;
+  var FILTERED_IDS = [];
+
+  function buildSession(){
+    rolloverDay();
+    var due = dueCards();
+    var allow = newAllowance();
+    var fresh = newCards().slice(0, allow);
+    var pool = due.concat(fresh);
+    for (var i=pool.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var tmp=pool[i]; pool[i]=pool[j]; pool[j]=tmp; }
+    return { queue: pool.map(function(c){ return c.id; }), total: pool.length, done:0, introduced:{}, flipped:false, bank:activeBank() };
+  }
+  function startOrResumeReview(){
+    if (!hasBanks()){ $("#review-body").innerHTML = '<div class="card empty-state"><h2 style="margin-top:0;">No bank yet</h2><p class="muted">Create a bank first, then add cards.</p><button type="button" class="btn gold" id="rv-new-bank">Create a bank</button></div>'; $("#rv-new-bank").addEventListener("click", promptNewBank); return; }
+    if (!SESSION || SESSION.queue.length === 0 || SESSION.bank !== activeBank()){ SESSION = buildSession(); }
+    renderReview();
+  }
+  function cardById(id){ for(var i=0;i<CARDS.length;i++){ if(CARDS[i].id===id) return CARDS[i]; } return null; }
+
+  function renderReview(){
+    var body = $("#review-body");
+    if (!SESSION || SESSION.queue.length === 0){
+      var msg = (activeCards().length === 0)
+        ? esc(activeBank())+' is empty. <button type="button" class="btn gold small" data-go="make">Make a card</button> to get started.'
+        : 'Nothing is due in '+esc(activeBank())+' right now. You are caught up. Come back tomorrow, or add more cards.';
+      body.innerHTML = '<div class="card empty-state"><h2 style="margin-top:0;">All done</h2><p class="muted">'+msg+'</p>'+
+        (SESSION && SESSION.done>0 ? '<p style="font-family:\'Plus Jakarta Sans\',sans-serif; font-weight:700;">You reviewed '+SESSION.done+' card'+(SESSION.done===1?"":"s")+' this session.</p>' : '')+
+        '<button type="button" class="btn ghost small" data-go="home">Back to home</button></div>';
+      SESSION = null; updateNavBadge(); return;
+    }
+    var card = cardById(SESSION.queue[0]);
+    if (!card){ SESSION.queue.shift(); return renderReview(); }
+    var remaining = SESSION.queue.length;
+    var pctDone = (SESSION.done+remaining) ? Math.round((SESSION.done/(SESSION.done+remaining))*100) : 0;
+
+    body.innerHTML =
+      (SESSION.mode==="cumulative" ? '<p class="bank-tag" style="margin:0 0 10px;">Cumulative review &middot; every card in '+esc(activeBank())+'</p>' : '')+
+      '<div class="progress-track" aria-hidden="true"><span style="width:'+pctDone+'%"></span></div>'+
+      '<p class="sr-only" aria-live="polite">'+remaining+' card'+(remaining===1?"":"s")+' left in this review.</p>'+
+      '<div class="study-card">'+
+        '<div class="study-deck">'+esc(card.deck||"No deck")+'</div>'+
+        '<div class="study-side-label">Prompt</div>'+ sideHTML(card,"f","q")+
+        '<div id="answer-slot" hidden style="width:100%;"><div class="divider"></div><div class="study-side-label">Answer</div>'+ sideHTML(card,"b","a")+'</div>'+
+      '</div>'+
+      '<div id="review-controls"></div>';
+
+    SESSION.flipped = false;
+    $("#review-controls").innerHTML = '<div class="btn-row" style="margin-top:16px; justify-content:center;"><button type="button" class="btn gold" id="flip-btn">Show answer <span class="muted" style="font-weight:600; color:rgba(255,255,255,.8);">(Space)</span></button></div>';
+    $("#flip-btn").addEventListener("click", flip);
+  }
+
+  function sideHTML(card, sideKey, qa){
+    var type = sideKey==="f" ? card.fType : card.bType;
+    var text = sideKey==="f" ? card.fText : card.bText;
+    var img  = sideKey==="f" ? card.fImg : card.bImg;
+    var alt  = sideKey==="f" ? card.fAlt : card.bAlt;
+    if (type==="image" && img) return '<img class="study-img" src="'+img+'" alt="'+esc(alt||"Card image")+'">';
+    return '<p class="'+(qa==="q"?"study-q":"study-a")+'">'+esc(text||"(blank)").replace(/\n/g,"<br>")+'</p>';
+  }
+
+  function flip(){
+    if (!SESSION || SESSION.flipped) return;
+    SESSION.flipped = true;
+    $("#answer-slot").hidden = false;
+    var card = cardById(SESSION.queue[0]);
+    var grades = [["again","Again"],["hard","Hard"],["good","Good"],["easy","Easy"]];
+    var html = '<div class="grade-row" role="group" aria-label="How well did you recall this?">';
+    grades.forEach(function(g, i){
+      var iv = preview(card, g[0]);
+      var when = g[0]==="again" ? "today" : intervalLabel(iv);
+      html += '<button type="button" class="grade-btn" data-g="'+g[0]+'"><span class="g-word">'+g[1]+'</span><span class="g-when">'+when+'</span><span class="g-key">'+(i+1)+'</span></button>';
+    });
+    html += '</div><p class="field-help" style="text-align:center; margin-top:10px;">Keys 1 to 4. Be honest. "Again" is not a failure, it just means soon.</p>';
+    $("#review-controls").innerHTML = html;
+    $$("#review-controls .grade-btn").forEach(function(b){ b.addEventListener("click", function(){ grade(b.getAttribute("data-g")); }); });
+  }
+
+  function grade(g){
+    if (!SESSION) return;
+    var id = SESSION.queue[0];
+    var card = cardById(id);
+    if (!card){ SESSION.queue.shift(); return renderReview(); }
+    var wasNew = card.state === "new";
+    card.total++; if (g==="good"||g==="easy") card.correct++;
+    card.lastReviewed = Date.now();
+    applyGrade(card, g);
+    if (wasNew && !SESSION.introduced[id]){ SESSION.introduced[id]=true; if (SESSION.mode!=="cumulative"){ var b=card.bank; SETTINGS.newToday[b]=(SETTINGS.newToday[b]||0)+1; saveSettings(); } }
+    idbPut(card);
+    SESSION.queue.shift();
+    if (g === "again"){ var pos = Math.min(SESSION.queue.length, 4); SESSION.queue.splice(pos, 0, id); }
+    else { SESSION.done++; }
+    renderReview(); updateNavBadge();
+  }
+
+  document.addEventListener("keydown", function(e){
+    if (!$("#view-review").classList.contains("active") || !SESSION) return;
+    var tag = (e.target.tagName||"").toLowerCase();
+    if (tag==="input"||tag==="textarea"||tag==="select") return;
+    if (!SESSION.flipped && (e.key===" "||e.key==="Enter")){ e.preventDefault(); flip(); return; }
+    if (SESSION.flipped){ var map = {"1":"again","2":"hard","3":"good","4":"easy"}; if (map[e.key]){ e.preventDefault(); grade(map[e.key]); } }
+  });
+
+  /* ============================================================
+     MAKE / EDIT
+     ============================================================ */
+  var DRAFT = { fImg:null, bImg:null };
+  var MK_TAGS = [];
+  var PRESET_TAGS = ["Anatomy","Physiology","General","Lab"];
+
+  function usedTags(){ var s={}; activeCards().forEach(function(c){ (c.tags||[]).forEach(function(t){ if(t) s[t]=true; }); }); return Object.keys(s); }
+  function defaultTags(){
+    var t=[]; var b=(activeBank()||"").toLowerCase();
+    if (b.indexOf("anat")>=0) t.push("Anatomy");
+    if (b.indexOf("phys")>=0) t.push("Physiology");
+    return t;
+  }
+  function isTagSel(t){ return MK_TAGS.some(function(x){ return x.toLowerCase()===t.toLowerCase(); }); }
+  function tagList(){
+    var seen={}, out=[];
+    PRESET_TAGS.concat(usedTags()).concat(MK_TAGS).forEach(function(t){
+      var k=t.toLowerCase(); if(!seen[k]){ seen[k]=1; out.push(t); }
+    });
+    return out;
+  }
+  function toggleTag(t){
+    if (isTagSel(t)) MK_TAGS = MK_TAGS.filter(function(x){ return x.toLowerCase()!==t.toLowerCase(); });
+    else MK_TAGS.push(t);
+    renderTagPick();
+  }
+  function addCustomTag(){
+    var inp=$("#mk-tag-new"); if(!inp) return; var v=(inp.value||"").trim(); if(!v) return;
+    if(!isTagSel(v)) MK_TAGS.push(v);
+    inp.value=""; renderTagPick(); inp.focus();
+  }
+  function renderTagPick(){
+    var host=$("#mk-tag-pick"); if(!host) return;
+    host.innerHTML = tagList().map(function(t){
+      var on = isTagSel(t);
+      return '<button type="button" class="tag-chip" aria-pressed="'+(on?"true":"false")+'" data-tag="'+esc(t)+'">'+esc(t)+(on?' <span class="x" aria-hidden="true">&times;</span>':'')+'</button>';
+    }).join("");
+    $$('#mk-tag-pick .tag-chip').forEach(function(b){ b.addEventListener("click", function(){ toggleTag(b.getAttribute("data-tag")); }); });
+  }
+
+  var MAKE_FORM_HTML =
+    '<form class="card" id="make-form" autocomplete="off">'+
+      '<input type="hidden" id="edit-id" value="">'+
+      '<p class="bank-tag" id="mk-bank-tag" style="margin:0 0 4px;"></p>'+
+      '<label class="field" for="mk-deck">Deck</label>'+
+      '<select id="mk-deck" aria-describedby="mk-deck-help"><option value="__new__">+ New deck...</option></select>'+
+      '<p class="field-help" id="mk-deck-help">A deck is a topic inside this bank, like "Cranial nerves" or "Wrist bones." The weakness dashboard groups your cards by deck.</p>'+
+      '<div id="mk-new-deck-wrap" hidden><label class="field" for="mk-new-deck">New deck name</label><input type="text" id="mk-new-deck" placeholder="for example, Brachial plexus"></div>'+
+      '<fieldset id="mk-tags-fs"><legend>Tags</legend>'+
+        '<p class="field-help" style="margin-top:0;">Label this card, and stack more than one. Tag the broad system <strong>and</strong> the specific subtopic, for example <strong>Cardiovascular</strong> plus <strong>Electrophysiology</strong>. Later you can pull every cardiovascular card, or just the electrophysiology ones. Use <strong>Lab</strong> for photo cards. The more you tag, the more precisely you can study.</p>'+
+        '<div class="tag-pick" id="mk-tag-pick"></div>'+
+        '<div class="tag-add"><label class="sr-only" for="mk-tag-new">Add a custom tag</label><input type="text" id="mk-tag-new" placeholder="Add your own, e.g., Cranial nerves"><button type="button" class="btn ghost small" id="mk-tag-add-btn">Add tag</button></div>'+
+      '</fieldset>'+
+      '<fieldset><legend>Front of the card (the prompt)</legend>'+
+        '<div class="seg" role="group" aria-label="Front type"><button type="button" data-side="front" data-type="text" aria-pressed="true">Text</button><button type="button" data-side="front" data-type="image" aria-pressed="false">Photo</button></div>'+
+        '<div data-pane="front-text"><label class="field" for="mk-front-text">Prompt text</label><textarea id="mk-front-text" placeholder="Which nerve passes through the foramen rotundum?"></textarea></div>'+
+        '<div data-pane="front-image" hidden><label class="field" for="mk-front-file">Front photo</label><input type="file" id="mk-front-file" accept="image/*" capture="environment"><label class="field" for="mk-front-alt">Describe the photo (for screen readers and for you)</label><input type="text" id="mk-front-alt" placeholder="Lateral skull, arrow on a foramen"><div class="img-preview empty" data-preview="front">No photo yet.</div></div>'+
+      '</fieldset>'+
+      '<fieldset><legend>Back of the card (the answer)</legend>'+
+        '<div class="seg" role="group" aria-label="Back type"><button type="button" data-side="back" data-type="text" aria-pressed="true">Text</button><button type="button" data-side="back" data-type="image" aria-pressed="false">Photo</button></div>'+
+        '<div data-pane="back-text"><label class="field" for="mk-back-text">Answer text</label><textarea id="mk-back-text" placeholder="The maxillary nerve, CN V2."></textarea></div>'+
+        '<div data-pane="back-image" hidden><label class="field" for="mk-back-file">Answer photo</label><input type="file" id="mk-back-file" accept="image/*" capture="environment"><label class="field" for="mk-back-alt">Describe the photo</label><input type="text" id="mk-back-alt" placeholder="Labeled diagram of CN V branches"><div class="img-preview empty" data-preview="back">No photo yet.</div></div>'+
+      '</fieldset>'+
+      '<p id="mk-feedback" class="field-help" role="status" aria-live="polite"></p>'+
+      '<div class="btn-row" style="margin-top:6px;"><button type="submit" class="btn gold" id="mk-save">Save card</button><button type="button" class="btn ghost" id="mk-clear">Clear form</button><button type="button" class="btn ghost" id="mk-cancel-edit" hidden>Cancel edit</button></div>'+
+    '</form>';
+
+  function renderMake(){
+    var wrap = $("#make-wrap");
+    if (!hasBanks()){
+      wrap.innerHTML = '<div class="card empty-state"><h2 style="margin-top:0;">Create a bank first</h2><p class="muted">Cards live inside a course bank. Make one, then add cards.</p><button type="button" class="btn gold" id="mk-new-bank">Create a bank</button></div>';
+      $("#mk-new-bank").addEventListener("click", promptNewBank); return;
+    }
+    if (!$("#make-form")){
+      wrap.innerHTML = MAKE_FORM_HTML;
+      $$('.seg button[data-side]', wrap).forEach(function(b){ b.addEventListener("click", function(){ setSideType(b.getAttribute("data-side"), b.getAttribute("data-type")); }); });
+      $("#mk-deck").addEventListener("change", toggleNewDeck);
+      $("#mk-front-file").addEventListener("change", function(){ handleFile(this,"front","fImg"); });
+      $("#mk-back-file").addEventListener("change", function(){ handleFile(this,"back","bImg"); });
+      $("#make-form").addEventListener("submit", saveCard);
+      $("#mk-clear").addEventListener("click", function(){ resetMakeForm(); renderMakeDeckOptions(); });
+      $("#mk-cancel-edit").addEventListener("click", function(){ resetMakeForm(); renderMakeDeckOptions(); });
+      $("#mk-tag-add-btn").addEventListener("click", addCustomTag);
+      $("#mk-tag-new").addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); addCustomTag(); } });
+      MK_TAGS = defaultTags();
+    }
+    $("#mk-bank-tag").textContent = "Adding to bank: " + activeBank();
+    renderMakeDeckOptions();
+    renderTagPick();
+  }
+  function renderMakeDeckOptions(){
+    var sel = $("#mk-deck"); if(!sel) return; var cur = sel.value;
+    sel.innerHTML = '<option value="__new__">+ New deck...</option>' + deckNames().map(function(n){ return '<option value="'+esc(n)+'">'+esc(n)+'</option>'; }).join("");
+    if (cur && cur!=="__new__" && deckNames().indexOf(cur)>=0) sel.value = cur;
+    toggleNewDeck();
+  }
+  function toggleNewDeck(){ var sel=$("#mk-deck"); if(sel) $("#mk-new-deck-wrap").hidden = sel.value !== "__new__"; }
+
+  function setSideType(side, type){
+    $$('.seg button[data-side="'+side+'"]').forEach(function(b){ b.setAttribute("aria-pressed", b.getAttribute("data-type")===type ? "true":"false"); });
+    $('[data-pane="'+side+'-text"]').hidden = type!=="text";
+    $('[data-pane="'+side+'-image"]').hidden = type!=="image";
+  }
+  function resetMakeForm(){
+    if(!$("#make-form")) return;
+    $("#edit-id").value=""; $("#mk-new-deck").value="";
+    $("#mk-front-text").value=""; $("#mk-back-text").value="";
+    $("#mk-front-alt").value=""; $("#mk-back-alt").value="";
+    $("#mk-front-file").value=""; $("#mk-back-file").value="";
+    DRAFT={fImg:null,bImg:null};
+    setSideType("front","text"); setSideType("back","text");
+    setPreview("front",null); setPreview("back",null);
+    $("#mk-cancel-edit").hidden=true; $("#mk-save").textContent="Save card";
+    $("#mk-feedback").textContent=""; $("#make-h").textContent="Build a card";
+    MK_TAGS = defaultTags(); renderTagPick();
+  }
+  function setPreview(side, dataURL){
+    var el = $('[data-preview="'+side+'"]'); if(!el) return;
+    if (dataURL){ el.classList.remove("empty"); el.innerHTML = '<img src="'+dataURL+'" alt="Preview of your '+side+' photo">'; }
+    else { el.classList.add("empty"); el.textContent = "No photo yet."; }
+  }
+
+  function startEdit(id){
+    var c = cardById(id); if(!c) return;
+    if (c.bank !== activeBank()){ setActiveBank(c.bank); renderBankSelect(); }
+    renderMake();
+    $("#edit-id").value = c.id;
+    var sel=$("#mk-deck");
+    if (deckNames().indexOf(c.deck)>=0){ sel.value=c.deck; } else { sel.value="__new__"; $("#mk-new-deck").value=c.deck; }
+    toggleNewDeck();
+    setSideType("front", c.fType); setSideType("back", c.bType);
+    $("#mk-front-text").value=c.fText||""; $("#mk-back-text").value=c.bText||"";
+    $("#mk-front-alt").value=c.fAlt||""; $("#mk-back-alt").value=c.bAlt||"";
+    DRAFT.fImg = c.fImg||null; DRAFT.bImg = c.bImg||null;
+    setPreview("front", c.fImg); setPreview("back", c.bImg);
+    MK_TAGS = (c.tags||[]).slice(); renderTagPick();
+    $("#mk-cancel-edit").hidden=false; $("#mk-save").textContent="Save changes";
+    $("#make-h").textContent="Edit card";
+    go("make"); window.scrollTo(0,0);
+  }
+
+  function saveCard(e){
+    e.preventDefault();
+    var sel=$("#mk-deck");
+    var deck = sel.value==="__new__" ? $("#mk-new-deck").value.trim() : sel.value;
+    var fType = $('.seg button[data-side="front"][aria-pressed="true"]').getAttribute("data-type");
+    var bType = $('.seg button[data-side="back"][aria-pressed="true"]').getAttribute("data-type");
+    var fText = $("#mk-front-text").value.trim(), bText=$("#mk-back-text").value.trim();
+    var fb = $("#mk-feedback");
+    if (!deck){ fb.textContent="Give the card a deck first."; $("#mk-deck").focus(); return; }
+    if (fType==="text" && !fText){ fb.textContent="The front needs some text, or switch it to a photo."; return; }
+    if (fType==="image" && !DRAFT.fImg){ fb.textContent="Add a photo for the front, or switch it to text."; return; }
+    if (bType==="text" && !bText){ fb.textContent="The back needs an answer, or switch it to a photo."; return; }
+    if (bType==="image" && !DRAFT.bImg){ fb.textContent="Add a photo for the back, or switch it to text."; return; }
+
+    var editId = $("#edit-id").value;
+    var c = editId ? cardById(editId) : newCard();
+    if (!c) c = newCard();
+    if (!editId) c.bank = activeBank();
+    c.deck=deck; c.fType=fType; c.bType=bType;
+    c.fText = fType==="text"?fText:""; c.bText = bType==="text"?bText:"";
+    c.fImg = fType==="image"?DRAFT.fImg:null; c.bImg = bType==="image"?DRAFT.bImg:null;
+    c.fAlt = fType==="image"?$("#mk-front-alt").value.trim():""; c.bAlt = bType==="image"?$("#mk-back-alt").value.trim():"";
+    c.tags = MK_TAGS.slice();
+
+    idbPut(c).then(function(){
+      if (!editId) CARDS.push(c);
+      var keepDeck = deck;
+      resetMakeForm(); renderMakeDeckOptions();
+      var s=$("#mk-deck"); if (deckNames().indexOf(keepDeck)>=0) s.value=keepDeck;
+      toggleNewDeck();
+      toast(editId ? "Card updated" : "Card saved");
+      $("#mk-front-text").focus(); updateNavBadge();
+    });
+  }
+
+  /* ============================================================
+     MY DECKS
+     ============================================================ */
+  function renderDecks(){
+    $("#decks-bank").textContent = hasBanks() ? ("Bank: " + activeBank()) : "";
+    if (!hasBanks()){ $("#decks-summary").innerHTML = '<div class="card empty-state"><h2 style="margin-top:0;">No bank yet</h2><p class="muted">Create a bank, then add decks and cards.</p><button type="button" class="btn gold" id="dk-new-bank">Create a bank</button></div>'; $("#cards-list").innerHTML=""; $("#cards-list-head").hidden=true; $("#dk-new-bank").addEventListener("click", promptNewBank); return; }
+    var filterSel = $("#deck-filter"); var cur=filterSel.value;
+    filterSel.innerHTML = '<option value="">All decks</option>' + deckNames().map(function(n){ return '<option value="'+esc(n)+'">'+esc(n)+'</option>'; }).join("");
+    if (deckNames().indexOf(cur)>=0) filterSel.value=cur;
+    var tagSel = $("#tag-filter"); var tcur=tagSel.value; var ut=usedTags().sort();
+    tagSel.innerHTML = '<option value="">All tags</option>' + ut.map(function(n){ return '<option value="'+esc(n)+'">'+esc(n)+'</option>'; }).join("");
+    if (ut.indexOf(tcur)>=0) tagSel.value=tcur;
+
+    var t = todayStr();
+    var summary = $("#decks-summary");
+    var names = deckNames();
+    if (names.length===0){
+      summary.innerHTML = '<div class="card empty-state"><h2 style="margin-top:0;">No decks yet in '+esc(activeBank())+'</h2><p class="muted">Make a card and a deck appears here.</p><button type="button" class="btn gold" data-go="make">Make a card</button></div>';
+      $("#cards-list").innerHTML=""; $("#cards-list-head").hidden=true; return;
+    }
+    $("#cards-list-head").hidden=false;
+    summary.innerHTML = names.map(function(n){
+      var cs = cardsInDeck(n);
+      var due = cs.filter(function(c){ return c.state!=="new" && c.due<=t && !c.suspended; }).length;
+      var nw = cs.filter(function(c){ return c.state==="new" && !c.suspended; }).length;
+      var mature = cs.filter(function(c){ return c.interval>=14; }).length;
+      return '<div class="deck"><div><div class="d-title">'+esc(n)+'</div><div class="d-sub">'+cs.length+' card'+(cs.length===1?"":"s")+' &middot; '+mature+' well-known</div></div>'+
+        '<div class="d-right">'+(due>0?'<span class="chip due">'+due+' due</span>':'')+(nw>0?'<span class="chip new">'+nw+' new</span>':'')+
+        '<button type="button" class="btn ghost small" data-deck-rename="'+esc(n)+'">Rename</button></div></div>';
+    }).join("");
+    renderCardsList();
+  }
+  function renderCardsList(){
+    var filter = $("#deck-filter").value;
+    var tagF = $("#tag-filter") ? $("#tag-filter").value : "";
+    var list = activeCards().filter(function(c){
+      var okDeck = !filter || c.deck===filter;
+      var okTag = !tagF || (c.tags||[]).some(function(t){ return t.toLowerCase()===tagF.toLowerCase(); });
+      return okDeck && okTag;
+    }).sort(function(a,b){ return (a.deck+a.created)<(b.deck+b.created)?-1:1; });
+    FILTERED_IDS = list.map(function(c){ return c.id; });
+    var sb = $("#study-filtered");
+    if (sb){ var studyable = list.filter(function(c){ return !c.suspended; }).length;
+      if (studyable>0){ sb.hidden=false; sb.textContent = "Study these "+studyable+" card"+(studyable===1?"":"s"); } else { sb.hidden=true; } }
+    var host = $("#cards-list");
+    if (list.length===0){ host.innerHTML='<p class="muted">No cards match this filter yet.</p>'; return; }
+    host.innerHTML = list.map(function(c){
+      var front = c.fType==="image" ? "[Photo] "+esc(c.fAlt||"front image") : esc((c.fText||"").slice(0,90));
+      var back = c.bType==="image" ? "[Photo]" : esc((c.bText||"").slice(0,60));
+      var sched = c.state==="new" ? "New" : ("Due "+(daysUntil(c.due)<=0?"now":intervalLabel(daysUntil(c.due)>0?daysUntil(c.due):0)));
+      var tagHtml = (c.tags && c.tags.length) ? '<div class="card-tags">'+c.tags.map(function(t){ return '<span class="ct'+(t.toLowerCase()==="lab"?" lab":"")+'">'+esc(t)+'</span>'; }).join("")+'</div>' : '';
+      return '<div class="deck"><div style="min-width:0;"><div class="d-title" style="font-size:15.5px;">'+front+'</div><div class="d-sub">'+esc(c.deck)+' &middot; '+back+(c.suspended?' &middot; suspended':'')+' &middot; '+sched+'</div>'+tagHtml+'</div>'+
+        '<div class="d-right"><button type="button" class="btn ghost small" data-edit="'+c.id+'">Edit</button><button type="button" class="btn ghost small" data-suspend="'+c.id+'">'+(c.suspended?"Unpause":"Pause")+'</button><button type="button" class="btn danger small" data-del="'+c.id+'">Delete</button></div></div>';
+    }).join("");
+  }
+
+  /* ============================================================
+     WEAKNESS DASHBOARD
+     ============================================================ */
+  function renderWeakness(){
+    $("#weak-bank").textContent = hasBanks() ? ("Bank: " + activeBank()) : "";
+    var body = $("#weakness-body");
+    if (!hasBanks()){ body.innerHTML = '<div class="card empty-state"><h2 style="margin-top:0;">No bank yet</h2><p class="muted">Create a bank and add some cards first.</p><button type="button" class="btn gold" id="wk-new-bank">Create a bank</button></div>'; $("#wk-new-bank").addEventListener("click", promptNewBank); return; }
+    var names = deckNames();
+    if (names.length===0){ body.innerHTML = '<div class="card empty-state"><h2 style="margin-top:0;">Nothing to show yet</h2><p class="muted">Make a few cards in '+esc(activeBank())+' and review them. Your weakest decks rise to the top here.</p><button type="button" class="btn gold" data-go="make">Make a card</button></div>'; return; }
+    var t = todayStr();
+    var rows = names.map(function(n){
+      var cs = cardsInDeck(n);
+      var totalRev = cs.reduce(function(s,c){ return s+c.total; },0);
+      var correct = cs.reduce(function(s,c){ return s+c.correct; },0);
+      var lapses = cs.reduce(function(s,c){ return s+c.lapses; },0);
+      var mature = cs.filter(function(c){ return c.interval>=14; }).length;
+      var due = cs.filter(function(c){ return c.state!=="new" && c.due<=t && !c.suspended; }).length;
+      var nw = cs.filter(function(c){ return c.state==="new"; }).length;
+      var pct = totalRev>=3 ? Math.round((correct/totalRev)*100) : null;
+      var masteryPct = cs.length ? Math.round((mature/cs.length)*100) : 0;
+      var ex = effectiveExam(activeBank(), n); var examTxt="";
+      if (ex){ var du=daysUntil(ex.examDate); if(du!=null && du>=0) examTxt = (ex.examLabel||"Exam")+(du===0?" today":" in "+du+"d"); }
+      return { name:n, count:cs.length, totalRev:totalRev, pct:pct, lapses:lapses, mature:mature, masteryPct:masteryPct, due:due, nw:nw, examTxt:examTxt };
+    });
+    rows.sort(function(a,b){ var aw=a.pct==null?999:a.pct, bw=b.pct==null?999:b.pct; if(aw!==bw) return aw-bw; if(b.lapses!==a.lapses) return b.lapses-a.lapses; return b.due-a.due; });
+
+    var ups = upcomingExams(activeBank());
+    var head = "";
+    if (ups.length){
+      var nx = ups[0];
+      var notMature = nx.decks.reduce(function(s,dk){ return s + cardsInDeck(dk).filter(function(c){ return c.interval<14 && !c.suspended; }).length; }, 0);
+      head = '<div class="exam-banner"><div><div class="ex-big">'+(nx.days===0?"Next exam is today":(nx.days+" day"+(nx.days===1?"":"s")+" to "+esc(nx.examLabel||"next exam")))+'</div><div class="muted" style="font-size:13px;">'+nx.decks.length+' topic'+(nx.decks.length===1?"":"s")+' on it &middot; '+notMature+' card'+(notMature===1?"":"s")+' still need work.</div></div></div>';
+    }
+    body.innerHTML = head + rows.map(function(r){
+      var pctTxt = r.pct==null ? "&mdash;" : r.pct+"%";
+      var weak = r.pct!=null && r.pct<80;
+      var flag = "";
+      if (r.pct!=null && r.pct<70) flag = '<span class="flag work">Needs work</span>';
+      else if (r.masteryPct>=80 && r.totalRev>=3) flag = '<span class="flag solid">Solid</span>';
+      var barW = r.pct==null ? 0 : r.pct;
+      return '<div class="wk-row"><div class="wk-head"><div class="wk-name">'+esc(r.name)+flag+'</div><div class="wk-pct '+(weak?"weak":"ok")+'">'+pctTxt+' <span class="muted" style="font-size:12px; font-weight:600;">recall</span></div></div>'+
+        '<div class="bar" style="margin:10px 0 8px;" role="img" aria-label="Recall '+(r.pct==null?"not enough data":r.pct+" percent")+'"><span style="width:'+barW+'%"></span></div>'+
+        '<div class="wk-meta">'+r.count+' card'+(r.count===1?"":"s")+' &middot; '+r.mature+' well-known ('+r.masteryPct+'%) &middot; '+r.lapses+' lapse'+(r.lapses===1?"":"s")+(r.due>0?' &middot; <strong style="color:var(--terra-dark);">'+r.due+' due now</strong>':'')+(r.nw>0?' &middot; '+r.nw+' new':'')+(r.examTxt?' &middot; <strong>'+esc(r.examTxt)+'</strong>':'')+'</div>'+
+        ((r.due+r.nw)>0 ? '<div class="btn-row" style="margin-top:10px;"><button type="button" class="btn ghost small" data-study-deck="'+esc(r.name)+'">Study this deck</button></div>' : '')+'</div>';
+    }).join("");
+  }
+  function studyDeck(name){
+    var t = todayStr();
+    var pool = cardsInDeck(name).filter(function(c){ return !c.suspended && (c.state==="new" || c.due<=t); });
+    if (pool.length===0){ toast("Nothing due in that deck right now"); return; }
+    for (var i=pool.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var tmp=pool[i]; pool[i]=pool[j]; pool[j]=tmp; }
+    SESSION = { queue: pool.map(function(c){return c.id;}), total:pool.length, done:0, introduced:{}, flipped:false, bank:activeBank() };
+    go("review");
+  }
+  // Cumulative review: every card in the active bank, due or not.
+  function startCumulative(){
+    if (!hasBanks()){ toast("Create a bank first"); return; }
+    var pool = activeCards().filter(function(c){ return !c.suspended; });
+    if (pool.length===0){ toast("No cards in "+activeBank()+" yet"); return; }
+    for (var i=pool.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var tmp=pool[i]; pool[i]=pool[j]; pool[j]=tmp; }
+    SESSION = { queue: pool.map(function(c){return c.id;}), total:pool.length, done:0, introduced:{}, flipped:false, bank:activeBank(), mode:"cumulative" };
+    go("review");
+  }
+  // Cram the current deck/tag filter: every matching card, due or not.
+  function studyFiltered(){
+    var pool = FILTERED_IDS.map(cardById).filter(function(c){ return c && !c.suspended; });
+    if (pool.length===0){ toast("No cards to study in this filter"); return; }
+    for (var i=pool.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var tmp=pool[i]; pool[i]=pool[j]; pool[j]=tmp; }
+    SESSION = { queue: pool.map(function(c){return c.id;}), total:pool.length, done:0, introduced:{}, flipped:false, bank:activeBank() };
+    go("review");
+  }
+
+  /* ============================================================
+     SETTINGS + BANKS + EXPORT / IMPORT
+     ============================================================ */
+  function renderSettings(){
+    var body = $("#settings-body");
+    var bankBlock, examBlock;
+    if (hasBanks()){
+      var meta = bankMeta(activeBank());
+      bankBlock =
+        '<div class="card"><h3 style="margin-top:0;">This bank: '+esc(activeBank())+'</h3>'+
+        '<p class="field-help">Banks separate your courses. Switch banks from the menu at the top of the page.</p>'+
+        '<div class="btn-row"><button type="button" class="btn ghost small" id="bank-rename">Rename this bank</button><button type="button" class="btn ghost small" id="bank-add">Add another bank</button><button type="button" class="btn danger small" id="bank-delete">Delete this bank</button></div></div>';
+      examBlock =
+        '<div class="card"><h3 style="margin-top:0;">Course exam date &mdash; '+esc(activeBank())+'</h3>'+
+        '<p class="field-help">The default for this whole course. Any topic without its own date uses this. Switch banks at the top to set another course.</p>'+
+        '<label class="field" for="set-exam-label">Exam name</label><input type="text" id="set-exam-label" placeholder="for example, Final" value="'+esc(meta.examLabel||"")+'">'+
+        '<label class="field" for="set-exam-date">Exam date</label><input type="date" id="set-exam-date" value="'+esc(meta.examDate||"")+'">'+
+        '<div class="btn-row" style="margin-top:12px;"><button type="button" class="btn gold small" id="set-exam-save">Save course date</button><button type="button" class="btn ghost small" id="set-exam-clear">Clear</button></div></div>'+
+        '<div class="card"><h3 style="margin-top:0;">Topic exam dates &mdash; '+esc(activeBank())+'</h3>'+
+        '<p class="field-help">For topics tested on a different day, override the course date. Check the topics for one exam, set its name and date, then apply. Repeat for each exam or block, so each topic paces toward its real exam.</p>'+
+        ( deckNames().length===0
+          ? '<p class="muted" style="margin:0;">Add some cards first, and your topics will appear here.</p>'
+          : '<label class="field" for="topic-exam-label">Exam name</label><input type="text" id="topic-exam-label" placeholder="for example, Lab Exam 3">'+
+            '<label class="field" for="topic-exam-date">Exam date</label><input type="date" id="topic-exam-date">'+
+            '<div class="btn-row" style="margin:12px 0;"><button type="button" class="btn gold small" id="apply-topic-exam">Apply to checked topics</button><button type="button" class="btn ghost small" id="clear-topic-exam">Clear checked (use default)</button></div>'+
+            '<div id="topic-exam-list">'+ deckNames().map(function(dk){ var ex=effectiveExam(activeBank(),dk); var info = ex ? (esc(ex.examLabel||"Exam")+' &middot; '+esc(ex.examDate)+(ex.source==="bank"?" (course default)":"")) : "no date yet"; return '<label class="radio-line" style="align-items:center;"><input type="checkbox" class="deck-check" data-deck="'+esc(dk)+'"> <span><strong>'+esc(dk)+'</strong> &mdash; '+info+'</span></label>'; }).join("")+'</div>'
+        )+'</div>';
+    } else {
+      bankBlock = '<div class="card"><h3 style="margin-top:0;">Banks</h3><p class="field-help">You have no banks yet. A bank is one course.</p><button type="button" class="btn gold small" id="bank-add">Create your first bank</button></div>';
+      examBlock = "";
+    }
+
+    body.innerHTML =
+      bankBlock + examBlock +
+      '<div class="card"><h3 style="margin-top:0;">Daily new cards</h3><p class="field-help">How many brand-new cards to introduce per day, per bank, during review. Lower is gentler.</p>'+
+        '<label class="field" for="set-daily-new">New cards per day</label><input type="number" id="set-daily-new" min="1" max="100" step="1" style="max-width:160px;" value="'+(SETTINGS.dailyNew||15)+'">'+
+        '<div class="btn-row" style="margin-top:12px;"><button type="button" class="btn gold small" id="set-daily-save">Save</button></div></div>'+
+      '<div class="card"><h3 style="margin-top:0;">Back up and share your cards</h3>'+
+        '<p class="field-help">Export saves your cards and photos to one file on your device. Keep it safe so you can restore if you clear your browser or switch devices, or send it to a classmate so they can import your cards.</p>'+
+        '<div class="btn-row">'+
+          (hasBanks()?'<button type="button" class="btn gold small" id="btn-export-bank">Export this bank ('+esc(activeBank())+')</button>':'')+
+          '<button type="button" class="btn gold small" id="btn-export-all">Export everything</button>'+
+          '<button type="button" class="btn ghost small" id="btn-restore">Restore from a backup (replace)</button>'+
+          '<button type="button" class="btn ghost small" id="btn-import-shared">Import cards (add)</button>'+
+        '</div>'+
+        '<input type="file" id="file-restore" accept="application/json,.json" class="sr-only" tabindex="-1" aria-hidden="true">'+
+        '<input type="file" id="file-shared" accept="application/json,.json" class="sr-only" tabindex="-1" aria-hidden="true">'+
+        '<p class="field-help" id="share-feedback" role="status" aria-live="polite" style="margin-top:10px;"></p>'+
+        '<p class="field-help"><strong>Export this bank</strong> saves just the current course. <strong>Export everything</strong> saves all your banks in one file. <strong>Restore</strong> replaces everything on this device with a backup, keeping each card\'s schedule. <strong>Import cards</strong> adds cards from any export into their banks as fresh cards, so nothing of yours is overwritten.</p></div>'+
+      '<div class="card"><h3 style="margin-top:0;">Start over</h3><p class="field-help">Erases every bank, card, and setting in this browser. There is no undo. Export first if you want a backup.</p><button type="button" class="btn danger small" id="btn-reset">Erase everything on this device</button></div>'+
+      '<div class="card"><h3 style="margin-top:0;">Guided tour</h3><p class="field-help">A quick walk-through of banks, cards, tags, exam dates, and daily review.</p><button type="button" class="btn ghost small" id="settings-tour">Take the tour again</button></div>'+
+      '<div class="card"><h3 style="margin-top:0;">How spacing works</h3><p class="field-help" style="margin:0;">After you flip a card you grade yourself. <strong>Again</strong> brings it back today. <strong>Hard</strong>, <strong>Good</strong>, and <strong>Easy</strong> push it further into the future, the more you knew it. Cards you miss come back sooner. Cards you know well drift apart, so you spend your time where it counts.</p></div>';
+
+    // wire settings controls
+    bind("#bank-rename", promptRenameBank);
+    bind("#bank-add", promptNewBank);
+    bind("#bank-delete", confirmDeleteBank);
+    bind("#set-exam-save", function(){ var m=bankMeta(activeBank()); m.examLabel=$("#set-exam-label").value.trim(); m.examDate=$("#set-exam-date").value; saveSettings(); toast("Course exam date saved"); updateNavBadge(); });
+    bind("#set-exam-clear", function(){ var m=bankMeta(activeBank()); m.examLabel=""; m.examDate=""; saveSettings(); renderSettings(); toast("Course exam date cleared"); updateNavBadge(); });
+    bind("#apply-topic-exam", function(){
+      var date=$("#topic-exam-date").value; var label=$("#topic-exam-label").value.trim();
+      var checked=$$(".deck-check").filter(function(c){ return c.checked; });
+      if(!date){ toast("Pick an exam date first"); return; }
+      if(!checked.length){ toast("Check at least one topic"); return; }
+      var m=bankMeta(activeBank());
+      checked.forEach(function(c){ m.deckExams[c.getAttribute("data-deck")]={examLabel:label, examDate:date}; });
+      saveSettings(); renderSettings(); toast("Applied to "+checked.length+" topic"+(checked.length===1?"":"s")); updateNavBadge();
+    });
+    bind("#clear-topic-exam", function(){
+      var checked=$$(".deck-check").filter(function(c){ return c.checked; });
+      if(!checked.length){ toast("Check the topics to clear first"); return; }
+      var m=bankMeta(activeBank());
+      checked.forEach(function(c){ delete m.deckExams[c.getAttribute("data-deck")]; });
+      saveSettings(); renderSettings(); toast("Cleared"); updateNavBadge();
+    });
+    bind("#set-daily-save", function(){ var v=parseInt($("#set-daily-new").value,10); if(isNaN(v)||v<1)v=15; if(v>100)v=100; SETTINGS.dailyNew=v; $("#set-daily-new").value=v; saveSettings(); toast("Saved"); updateNavBadge(); });
+    bind("#settings-tour", function(){ openTour(0); });
+    bind("#btn-export-bank", exportBank);
+    bind("#btn-export-all", exportAll);
+    bind("#btn-restore", function(){ $("#file-restore").click(); });
+    bind("#btn-import-shared", function(){ $("#file-shared").click(); });
+    bind("#btn-reset", function(){ askConfirm("Erase everything?","This deletes every bank, card, and setting in this browser. There is no undo.","Erase everything", function(){ idbClear().then(function(){ CARDS=[]; SETTINGS=defaultSettings(); saveSettings(); renderBankSelect(); toast("Everything erased"); go("home"); }); }); });
+    var fr=$("#file-restore"); if(fr) fr.addEventListener("change", function(){ if(!this.files[0]) return; var f=this.files[0]; this.value=""; askConfirm("Restore from backup?","This replaces every bank and card on this device with the ones in the file. Export first if you want to keep what you have now.","Restore", function(){ readJSONFile(f, restoreFromBackup); }); });
+    var fs=$("#file-shared"); if(fs) fs.addEventListener("change", function(){ if(!this.files[0]) return; var f=this.files[0]; this.value=""; readJSONFile(f, importShared); });
+  }
+  function bind(sel, fn){ var el=$(sel); if(el) el.addEventListener("click", fn); }
+
+  function exportBank(){
+    var b = activeBank(); var cs = activeCards();
+    var bankObj = {}; bankObj[b] = bankMeta(b);
+    download({ app:"my-recall-cards", version:2, scope:"bank", bank:b, exported:new Date().toISOString(), banks:bankObj, cards:cs }, "recall-"+slug(b)+"-"+todayStr()+".json");
+    toast("Exported "+cs.length+" card"+(cs.length===1?"":"s")+" from "+b);
+  }
+  function exportAll(){
+    download({ app:"my-recall-cards", version:2, scope:"all", exported:new Date().toISOString(), dailyNew:SETTINGS.dailyNew, banks:SETTINGS.banks, cards:CARDS }, "my-recall-cards-all-"+todayStr()+".json");
+    toast("Exported "+CARDS.length+" card"+(CARDS.length===1?"":"s")+" across "+bankNames().length+" bank"+(bankNames().length===1?"":"s"));
+  }
+  function download(payload, name){
+    var blob = new Blob([JSON.stringify(payload)], {type:"application/json"});
+    var url = URL.createObjectURL(blob); var a = document.createElement("a");
+    a.href=url; a.download=name; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  }
+  function slug(s){ return (s||"bank").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,40) || "bank"; }
+
+  function readJSONFile(file, cb){ var r=new FileReader(); r.onload=function(){ try{ cb(JSON.parse(r.result)); }catch(e){ toast("That file could not be read"); } }; r.onerror=function(){ toast("That file could not be read"); }; r.readAsText(file); }
+  function validCards(data){ if(!data) return null; var arr = Array.isArray(data)?data:data.cards; return Array.isArray(arr)?arr:null; }
+
+  // Restore = replace everything, keep schedules
+  function restoreFromBackup(data){
+    var arr = validCards(data); if(!arr){ feedback("That file does not look like a cards export."); return; }
+    idbClear().then(function(){
+      var banks = {};
+      if (data.banks && typeof data.banks==="object"){ for(var k in data.banks){ banks[k] = { examLabel:(data.banks[k].examLabel||""), examDate:(data.banks[k].examDate||""), deckExams:(data.banks[k].deckExams||{}) }; } }
+      var clean = arr.map(function(c){ var n=newCard(); for(var k in c){ if(k in n) n[k]=c[k]; } if(!n.id) n.id=uid(); if(!n.bank) n.bank="My cards"; if(!banks[n.bank]) banks[n.bank]={examLabel:"",examDate:""}; return n; });
+      return Promise.all(clean.map(idbPut)).then(function(){
+        CARDS = clean; SETTINGS.banks = banks;
+        if (data.dailyNew) SETTINGS.dailyNew = data.dailyNew;
+        SETTINGS.activeBank = bankNames()[0] || "";
+        SETTINGS.newToday = {}; saveSettings();
+        renderBankSelect();
+        feedback("Restored "+clean.length+" card"+(clean.length===1?"":"s")+" across "+bankNames().length+" bank"+(bankNames().length===1?"":"s")+".");
+        toast("Backup restored"); renderSettings(); updateNavBadge();
+      });
+    });
+  }
+  // Import shared = add as brand-new cards under their bank, reset schedule
+  function importShared(data){
+    var arr = validCards(data); if(!arr){ feedback("That file does not look like a cards export."); return; }
+    var fileBanks = (data.banks && typeof data.banks==="object") ? data.banks : {};
+    var added = arr.map(function(c){
+      var n = newCard();
+      n.bank = (c.bank||data.bank||"Imported"); n.deck = c.deck||"Imported";
+      n.fType=c.fType||"text"; n.bType=c.bType||"text";
+      n.fText=c.fText||""; n.bText=c.bText||""; n.fImg=c.fImg||null; n.bImg=c.bImg||null;
+      n.fAlt=c.fAlt||""; n.bAlt=c.bAlt||""; n.tags=(c.tags||[]).slice();
+      ensureBank(n.bank);
+      return n;
+    });
+    Promise.all(added.map(idbPut)).then(function(){
+      CARDS = CARDS.concat(added);
+      if (!activeBank() && bankNames()[0]) SETTINGS.activeBank = bankNames()[0];
+      saveSettings(); renderBankSelect();
+      var bset={}; added.forEach(function(c){ bset[c.bank]=true; });
+      feedback("Added "+added.length+" card"+(added.length===1?"":"s")+" into "+Object.keys(bset).length+" bank"+(Object.keys(bset).length===1?"":"s")+". They start fresh in your review.");
+      toast("Imported "+added.length+" card"+(added.length===1?"":"s"));
+      renderSettings(); updateNavBadge();
+    });
+  }
+  function feedback(msg){ var el=$("#share-feedback"); if(el) el.textContent = msg; }
+
+  /* ============================================================
+     BANK ACTIONS (prompt modal)
+     ============================================================ */
+  function promptNewBank(){ openPrompt("Create a bank","Course or bank name","for example, Anatomy or Physiology","", function(name){
+      name=name.trim(); if(!name) return; if(SETTINGS.banks[name]){ setActiveBank(name); } else { ensureBank(name); SETTINGS.activeBank=name; saveSettings(); }
+      renderBankSelect(); toast("Bank ready: "+name); go("make");
+    }); }
+  function promptRenameBank(){ var old=activeBank(); openPrompt("Rename bank","New name for this bank","",old, function(nn){
+      nn=nn.trim(); if(!nn||nn===old) return;
+      if (SETTINGS.banks[nn]){ toast("A bank with that name already exists"); return; }
+      SETTINGS.banks[nn]=SETTINGS.banks[old]; delete SETTINGS.banks[old];
+      if (SETTINGS.newToday[old]!=null){ SETTINGS.newToday[nn]=SETTINGS.newToday[old]; delete SETTINGS.newToday[old]; }
+      var affected = CARDS.filter(function(c){ return c.bank===old; }); affected.forEach(function(c){ c.bank=nn; });
+      SETTINGS.activeBank=nn; saveSettings();
+      Promise.all(affected.map(idbPut)).then(function(){ renderBankSelect(); renderSettings(); toast("Bank renamed"); });
+    }); }
+  function confirmDeleteBank(){ var b=activeBank(); var n=cardsInDeck; var count=activeCards().length;
+      askConfirm("Delete bank "+b+"?", "This deletes "+b+" and its "+count+" card"+(count===1?"":"s")+". There is no undo. Export first if you want a copy.", "Delete bank", function(){
+        var ids = CARDS.filter(function(c){ return c.bank===b; }).map(function(c){ return c.id; });
+        Promise.all(ids.map(idbDelete)).then(function(){
+          CARDS = CARDS.filter(function(c){ return c.bank!==b; });
+          delete SETTINGS.banks[b]; delete SETTINGS.newToday[b];
+          SETTINGS.activeBank = bankNames()[0] || ""; saveSettings();
+          renderBankSelect(); toast("Bank deleted"); go(hasBanks()?"settings":"home");
+        });
+      }); }
+
+  /* prompt modal */
+  var promptCb=null;
+  function openPrompt(title, label, placeholder, value, cb){
+    $("#prompt-title").textContent=title; $("#prompt-label").textContent=label;
+    var inp=$("#prompt-input"); inp.placeholder=placeholder||""; inp.value=value||"";
+    promptCb=cb; $("#prompt-modal").classList.add("show"); inp.focus(); inp.select();
+  }
+  function closePrompt(){ $("#prompt-modal").classList.remove("show"); promptCb=null; }
+  function submitPrompt(){ var v=$("#prompt-input").value; var cb=promptCb; closePrompt(); if(cb) cb(v); }
+
+  /* confirm modal */
+  var confirmCb = null;
+  function askConfirm(title, text, okLabel, cb){
+    $("#confirm-title").textContent=title; $("#confirm-text").textContent=text;
+    $("#confirm-ok").textContent=okLabel||"Yes, do it";
+    confirmCb = cb; $("#confirm-modal").classList.add("show"); $("#confirm-cancel").focus();
+  }
+  function closeConfirm(){ $("#confirm-modal").classList.remove("show"); confirmCb=null; }
+
+  /* ============================================================
+     WALK-THROUGH
+     ============================================================ */
+  var tourIdx = 0, tourReturn = null;
+  var SVG = {
+    banks:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 12l9 4 9-4"/><path d="M3 17l9 4 9-4"/></svg>',
+    card:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg>',
+    tag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 11l8-8 10 10-8 8L3 11z"/><circle cx="8" cy="8" r="1.6"/></svg>',
+    cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>',
+    review:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12a9 9 0 11-3-6.7M21 4v4h-4"/></svg>',
+    hello:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>'
+  };
+  var TOUR = [
+    { svg:SVG.hello, h:"Welcome to Recall Rx", text:"<p>This is your own study deck. It starts empty. You build it, and it tells you what to study each day so you are not guessing.</p><p>Takes about a minute to learn. Let's go.</p>" },
+    { svg:SVG.banks, h:"Make a bank for each course", text:"<p>Use the <strong>Course bank</strong> menu at the top to create a bank for each class, like <strong>Anatomy</strong> and <strong>Physiology</strong>.</p><p>Each bank keeps its own cards, exam date, and daily review. Switch between them anytime, and add as many as you need.</p>" },
+    { svg:SVG.card, h:"Build a card", text:"<p>On <strong>Make a card</strong>, type a question on the front and the answer on the back.</p><p>Either side can be a <strong>photo</strong> instead of text, so you can snap a slide, a model, or your own drawing.</p>" },
+    { svg:SVG.tag, h:"Tag your cards, and layer them", text:"<p>While you build a card, give it <strong>tags</strong>, and stack more than one. Tag the broad system and the specific subtopic.</p><p>Example: tag a card <strong>Cardiovascular</strong> and <strong>Electrophysiology</strong>. Later, in <strong>My decks</strong>, filter by Cardiovascular to pull every heart card, or by Electrophysiology to drill just those, then tap <strong>Study these</strong>. Use <strong>Lab</strong> for photo cards. The more you tag, the more precisely you can study.</p>" },
+    { svg:SVG.cal, h:"Set your exam dates", text:"<p>In <strong>Settings</strong>, set a <strong>course date</strong> as the default. If some topics sit on a different exam, like a lab exam or a block test, check those topics and give them their own date.</p><p>Each topic then paces toward its real exam, and the dashboard shows whichever exam is next.</p>" },
+    { svg:SVG.review, h:"Review daily, see your weak spots", text:"<p>Each day open <strong>Daily review</strong>. Flip each card and grade yourself <strong>Again, Hard, Good, or Easy</strong>. Cards you miss come back sooner.</p><p>Before a final, use <strong>Cumulative review</strong> on the home screen to go through every card in the course, due or not. The <strong>Weakness</strong> dashboard shows which decks need work, and <strong>Export</strong> keeps a backup or shares your cards with a classmate.</p>" }
+  ];
+  function openTour(i){
+    tourReturn = document.activeElement;
+    tourIdx = i||0;
+    $("#wt-overlay").classList.add("show");
+    renderTour();
+    $("#wt-next").focus();
+  }
+  function closeTour(){
+    $("#wt-overlay").classList.remove("show");
+    SETTINGS.tourSeen = true; saveSettings();
+    if (tourReturn && tourReturn.focus){ try{ tourReturn.focus(); }catch(e){} }
+  }
+  function renderTour(){
+    var s = TOUR[tourIdx];
+    $("#wt-step-label").textContent = "Step "+(tourIdx+1)+" of "+TOUR.length;
+    $("#wt-illus").innerHTML = s.svg || "";
+    $("#wt-h").textContent = s.h;
+    $("#wt-text").innerHTML = s.text;
+    $("#wt-fill").style.width = Math.round(((tourIdx+1)/TOUR.length)*100)+"%";
+    $("#wt-dots").innerHTML = TOUR.map(function(_,i){ return '<i class="'+(i===tourIdx?"on":"")+'"></i>'; }).join("");
+    $("#wt-prev").disabled = tourIdx===0;
+    $("#wt-next").textContent = tourIdx===TOUR.length-1 ? "Done" : "Next";
+  }
+
+  /* ============================================================
+     EVENTS
+     ============================================================ */
+  function wire(){
+    document.addEventListener("click", function(e){
+      var goEl = e.target.closest("[data-go]");
+      if (goEl){ e.preventDefault(); go(goEl.getAttribute("data-go")); return; }
+      var cumEl = e.target.closest("[data-cumulative]");
+      if (cumEl){ e.preventDefault(); startCumulative(); return; }
+      var edit = e.target.closest("[data-edit]"); if(edit){ startEdit(edit.getAttribute("data-edit")); return; }
+      var del = e.target.closest("[data-del]"); if(del){ var id=del.getAttribute("data-del"); askConfirm("Delete this card?","This removes the card for good. There is no undo.","Delete", function(){ idbDelete(id).then(function(){ CARDS=CARDS.filter(function(c){return c.id!==id;}); renderDecks(); updateNavBadge(); toast("Card deleted"); }); }); return; }
+      var sus = e.target.closest("[data-suspend]"); if(sus){ var sid=sus.getAttribute("data-suspend"); var c=cardById(sid); if(c){ c.suspended=!c.suspended; idbPut(c).then(function(){ renderDecks(); updateNavBadge(); }); } return; }
+      var sd = e.target.closest("[data-study-deck]"); if(sd){ studyDeck(sd.getAttribute("data-study-deck")); return; }
+      var rn = e.target.closest("[data-deck-rename]"); if(rn){ renameDeck(rn.getAttribute("data-deck-rename")); return; }
+    });
+    document.addEventListener("keydown", function(e){
+      if ((e.key==="Enter"||e.key===" ") && e.target.matches('[role="button"][data-go]')){ e.preventDefault(); go(e.target.getAttribute("data-go")); }
+      else if ((e.key==="Enter"||e.key===" ") && e.target.matches('[role="button"][data-cumulative]')){ e.preventDefault(); startCumulative(); }
+    });
+
+    // bank switcher
+    $("#bank-select").addEventListener("change", function(){
+      if (this.value==="__new__"){ renderBankSelect(); promptNewBank(); return; }
+      setActiveBank(this.value); SESSION=null;
+      var cur=(location.hash||"").replace("#","")||"home"; go(["home","review","make","decks","weakness","settings"].indexOf(cur)>=0?cur:"home");
+    });
+    $("#bank-new-btn").addEventListener("click", promptNewBank);
+
+    // deck + tag filters
+    $("#deck-filter").addEventListener("change", renderCardsList);
+    $("#tag-filter").addEventListener("change", renderCardsList);
+    $("#study-filtered").addEventListener("click", studyFiltered);
+
+    // walk-through
+    $("#tour-btn").addEventListener("click", function(){ openTour(0); });
+    $("#wt-next").addEventListener("click", function(){ if(tourIdx>=TOUR.length-1) closeTour(); else { tourIdx++; renderTour(); } });
+    $("#wt-prev").addEventListener("click", function(){ if(tourIdx>0){ tourIdx--; renderTour(); } });
+    $("#wt-skip").addEventListener("click", closeTour);
+    $("#wt-overlay").addEventListener("click", function(e){ if(e.target===this) closeTour(); });
+
+    // prompt modal
+    $("#prompt-ok").addEventListener("click", submitPrompt);
+    $("#prompt-cancel").addEventListener("click", closePrompt);
+    $("#prompt-input").addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); submitPrompt(); } });
+    $("#prompt-modal").addEventListener("click", function(e){ if(e.target===this) closePrompt(); });
+
+    // confirm modal
+    $("#confirm-cancel").addEventListener("click", closeConfirm);
+    $("#confirm-ok").addEventListener("click", function(){ var cb=confirmCb; closeConfirm(); if(cb) cb(); });
+    $("#confirm-modal").addEventListener("click", function(e){ if(e.target===this) closeConfirm(); });
+    document.addEventListener("keydown", function(e){ if(e.key==="Escape"){ if($("#confirm-modal").classList.contains("show")) closeConfirm(); if($("#prompt-modal").classList.contains("show")) closePrompt(); if($("#wt-overlay").classList.contains("show")) closeTour(); } });
+  }
+
+  function handleFile(input, side, draftKey){
+    var f = input.files && input.files[0]; if(!f) return;
+    fileToImage(f, 1280, function(dataURL){ if(!dataURL){ toast("That image could not be read"); return; } DRAFT[draftKey]=dataURL; setPreview(side, dataURL); });
+  }
+  function renameDeck(oldName){
+    openPrompt("Rename deck","New name for this deck","",oldName, function(nn){
+      nn=nn.trim(); if(!nn||nn===oldName) return;
+      var m=bankMeta(activeBank()); if(m.deckExams && m.deckExams[oldName]!=null){ m.deckExams[nn]=m.deckExams[oldName]; delete m.deckExams[oldName]; saveSettings(); }
+      var affected = cardsInDeck(oldName); affected.forEach(function(c){ c.deck=nn; });
+      Promise.all(affected.map(idbPut)).then(function(){ renderDecks(); toast("Deck renamed"); });
+    });
+  }
+
+  /* ============================================================
+     INIT  (+ migrate any pre-bank cards)
+     ============================================================ */
+  function migrate(){
+    // give bankless cards a home; rebuild banks map from cards
+    var changed = [];
+    CARDS.forEach(function(c){ if(!c.bank){ c.bank = "My cards"; changed.push(c); } ensureBank(c.bank); });
+    if (!activeBank() && bankNames()[0]) SETTINGS.activeBank = bankNames()[0];
+    saveSettings();
+    return Promise.all(changed.map(idbPut));
+  }
+  function init(){
+    wire();
+    idbAll().then(function(cards){
+      CARDS = cards || [];
+      return migrate();
+    }).then(function(){
+      rolloverDay(); renderBankSelect();
+      var start = (location.hash||"").replace("#","");
+      go(["home","review","make","decks","weakness","settings"].indexOf(start)>=0 ? start : "home");
+      if (!SETTINGS.tourSeen) setTimeout(function(){ openTour(0); }, 350);
+    }).catch(function(){ CARDS=[]; renderBankSelect(); go("home"); toast("Storage is unavailable in this browser mode"); });
+  }
+  if (document.readyState==="loading") document.addEventListener("DOMContentLoaded", init); else init();
+
+})();
+</script>
+
+<!-- Iframe height-sender for Canvas / Kajabi embeds. -->
+<script>
+(function(){
+  if (window.self === window.top) return;
+  function send(){
+    var h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+    try{ window.parent.postMessage({ id:"bio004-my-recall-cards", type:"resize", height:h }, "*"); }catch(e){}
+  }
+  window.addEventListener("load", send);
+  window.addEventListener("resize", send);
+  if (window.ResizeObserver){ new ResizeObserver(send).observe(document.body); }
+  else { setInterval(send, 800); }
+})();
+</script>
+</body>
+</html>
