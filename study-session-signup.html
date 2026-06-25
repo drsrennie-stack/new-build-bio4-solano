@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Student Study Session Signup, BIO 004 Human Anatomy</title>
+<!-- Add-to-home-screen / app config -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0B1530">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Study With Me">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Lora:ital@1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -85,6 +93,16 @@
   .seg-on{background:var(--navy);color:#fff;}
   .seg-on:hover{background:#0a1430;}
 
+  /* ---------- ROLE LEGEND ---------- */
+  .legend{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0 0;}
+  .legend .lg-label{font-family:var(--font-eyebrow);font-weight:700;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--page-soft);}
+  .lg{font-family:var(--font-eyebrow);font-weight:700;font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;padding:.3rem .62rem;border-radius:999px;}
+  .lg-faculty{background:#A4472F;color:#fff;}
+  .lg-tutor{background:#C9A14A;color:#0B1530;}
+  .lg-student{background:#fff;color:#0B1530;box-shadow:0 1px 3px rgba(11,21,48,.20);}
+  .phonetip{font-family:var(--font-body);font-size:.85rem;color:var(--page-soft);margin:14px 0 0;}
+  .phonetip strong{color:var(--terra-cta);font-weight:800;}
+
   /* ---------- WEEK CALENDAR ---------- */
   .weeknav{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:24px 0 16px;}
   .weeknav-label{font-family:var(--font-display);font-weight:800;font-size:1.1rem;color:var(--page-ink);margin-right:auto;}
@@ -98,13 +116,18 @@
   .weekday-name{font-family:var(--font-eyebrow);font-weight:700;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--terra-cta);}
   .weekday-num{font-family:var(--font-display);font-weight:800;font-size:1rem;color:var(--page-ink);}
   .weekday-empty{font-family:var(--font-body);font-size:.8rem;color:var(--page-soft);}
-  .chip{text-align:left;width:100%;background:var(--card);border:none;border-radius:8px;padding:8px 9px;cursor:pointer;transition:var(--t);display:flex;flex-direction:column;gap:2px;box-shadow:var(--shadow-rest);}
+  /* ---- host-role color tokens (applied to .card and .chip) ---- */
+  .card,.chip{--cbg:#FFFFFF;--cink:#0B1530;--csoft:#5c6970;--caccent:#A4472F;--cchip:#eef1f6;--cchipink:#0B1530;}
+  .role-tutor{--cbg:#C9A14A;--cink:#0B1530;--csoft:#3f3410;--caccent:#0B1530;--cchip:rgba(11,21,48,.16);--cchipink:#0B1530;}
+  .role-faculty{--cbg:#A4472F;--cink:#FFFFFF;--csoft:#FBE9E3;--caccent:#F9E9B4;--cchip:#0B1530;--cchipink:#FFFFFF;}
+
+  .chip{text-align:left;width:100%;background:var(--cbg);border:none;border-radius:8px;padding:8px 9px;cursor:pointer;transition:var(--t);display:flex;flex-direction:column;gap:2px;box-shadow:var(--shadow-rest);}
   .chip:hover,.chip:focus-visible{transform:translateY(-1px);box-shadow:var(--shadow-hover);outline:none;}
   .chip.full{opacity:.55;cursor:default;}
-  .chip-time{font-family:var(--font-display);font-weight:800;font-size:.82rem;color:var(--ink);}
-  .chip-topic{font-family:var(--font-display);font-weight:600;font-size:.82rem;color:var(--gold);line-height:1.25;}
-  .chip-meta{font-family:var(--font-eyebrow);font-weight:700;font-size:.6rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);}
-  .chip-live-tag{color:var(--gold);}
+  .chip-time{font-family:var(--font-display);font-weight:800;font-size:.82rem;color:var(--cink);}
+  .chip-topic{font-family:var(--font-display);font-weight:600;font-size:.82rem;color:var(--caccent);line-height:1.25;}
+  .chip-meta{font-family:var(--font-eyebrow);font-weight:700;font-size:.6rem;letter-spacing:.04em;text-transform:uppercase;color:var(--csoft);}
+  .chip-live-tag{color:var(--caccent);}
 
   /* labeled signup list on each card */
   .roster-label{font-family:var(--font-eyebrow);font-weight:700;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin:2px 0 0;}
@@ -120,26 +143,27 @@
   .day-date{font-family:var(--font-eyebrow);font-weight:700;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--terra-cta);}
 
   .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;}
-  .card{background:var(--card);border:none;border-radius:var(--radius);padding:18px 18px 16px;box-shadow:var(--shadow-rest);transition:var(--t);display:flex;flex-direction:column;gap:8px;}
+  .card{background:var(--cbg);color:var(--cink);border:none;border-radius:var(--radius);padding:18px 18px 16px;box-shadow:var(--shadow-rest);transition:var(--t);display:flex;flex-direction:column;gap:8px;}
   .card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);}
   .card.full{opacity:.62;}
-  .card .ctime{font-family:var(--font-display);font-weight:800;font-size:1.12rem;color:var(--ink);letter-spacing:-.01em;}
-  .card .ctopic{font-family:var(--font-display);font-weight:600;color:var(--gold);font-size:1rem;}
-  .card .chost{font-family:var(--font-eyebrow);font-weight:700;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);}
-  .card .cseats{font-family:var(--font-display);font-weight:700;font-size:.9rem;color:var(--ink);}
-  .cloc{font-family:var(--font-display);font-weight:700;font-size:.92rem;color:var(--gold);}
-  .cloc span{color:var(--ink-soft);font-weight:700;}
-  .cpass{font-family:var(--font-display);font-weight:800;font-size:.92rem;color:var(--ink);letter-spacing:.02em;}
-  .cpass span{color:var(--ink-soft);font-weight:700;letter-spacing:0;}
-  .pill-row{display:flex;gap:6px;flex-wrap:wrap;}
-  .pill{display:inline-block;font-family:var(--font-eyebrow);font-weight:700;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:.26rem .62rem;border-radius:999px;background:var(--card-soft);color:var(--ink);}
-  .pill.full{background:var(--white);color:#0B1530;}
-  .pill.live{background:var(--terra-cta);color:#fff;}
-  .pill.done{background:var(--gold);color:#0B1530;}
-  .pill.inperson{background:#2a9d7f;color:#06231b;}
+  .card .ctime{font-family:var(--font-display);font-weight:800;font-size:1.12rem;color:var(--cink);letter-spacing:-.01em;}
+  .card .ctopic{font-family:var(--font-display);font-weight:600;color:var(--caccent);font-size:1rem;}
+  .card .chost{font-family:var(--font-eyebrow);font-weight:700;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--csoft);}
+  .card .cseats{font-family:var(--font-display);font-weight:700;font-size:.9rem;color:var(--cink);}
+  .cloc{font-family:var(--font-display);font-weight:700;font-size:.92rem;color:var(--caccent);}
+  .cloc span{color:var(--csoft);font-weight:700;}
+  .cpass{font-family:var(--font-display);font-weight:800;font-size:.92rem;color:var(--cink);letter-spacing:.02em;}
+  .cpass span{color:var(--csoft);font-weight:700;letter-spacing:0;}
+  .pill-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+  .pill{display:inline-block;font-family:var(--font-eyebrow);font-weight:700;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:.26rem .62rem;border-radius:999px;background:var(--cchip);color:var(--cchipink);}
+  .pill.role{background:#0B1530;color:#fff;}
+  .pill.full{background:#5c6970;color:#fff;}
+  .pill.live{background:#1f7a4d;color:#fff;}
+  .pill.done{background:#0B1530;color:#EAD08A;}
+  .pill.inperson{background:#0B1530;color:#fff;}
   .card-links{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;align-items:center;}
-  .hostlink{background:none;border:none;padding:4px 0 0;font-family:var(--font-eyebrow);font-weight:700;font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
-  .hostlink:hover,.hostlink:focus-visible{color:var(--gold);}
+  .hostlink{background:none;border:none;padding:4px 0 0;font-family:var(--font-eyebrow);font-weight:700;font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;color:var(--csoft);cursor:pointer;text-decoration:underline;text-underline-offset:2px;}
+  .hostlink:hover,.hostlink:focus-visible{color:var(--caccent);}
   .hostlink.danger{color:#fff;background:var(--red);padding:5px 10px;border-radius:7px;text-decoration:none;}
   .hostlink.danger:hover,.hostlink.danger:focus-visible{background:var(--red-dark);color:#fff;}
 
@@ -151,7 +175,7 @@
   .rr-go{font-family:var(--font-display);font-weight:800;color:var(--gold);font-size:.92rem;white-space:nowrap;}
   .card-actions{margin-top:auto;display:flex;flex-wrap:wrap;gap:8px;padding-top:6px;}
   .roster{margin:2px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px;}
-  .roster li{font-family:var(--font-eyebrow);font-weight:700;font-size:.64rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);background:var(--card-soft);border-radius:999px;padding:.2rem .55rem;}
+  .roster li{font-family:var(--font-eyebrow);font-weight:700;font-size:.64rem;letter-spacing:.04em;text-transform:uppercase;color:var(--cchipink);background:var(--cchip);border-radius:999px;padding:.2rem .55rem;}
 
   .empty{background:transparent;border:none;border-radius:var(--radius);padding:30px 24px;text-align:center;color:var(--page-soft);font-family:var(--font-display);font-weight:600;}
 
@@ -159,6 +183,8 @@
   .warn .warn-ic{flex:0 0 auto;font-family:var(--font-display);font-weight:800;color:#fff;background:var(--red);width:26px;height:26px;border-radius:999px;display:flex;align-items:center;justify-content:center;font-size:.95rem;}
   .warn .warn-tx{font-size:.95rem;color:var(--ink);}
   .warn .warn-tx strong{color:var(--gold);}
+  .warn .warn-tx ul{margin:7px 0 0;padding-left:1.05rem;}
+  .warn .warn-tx li{margin:5px 0;}
   .notice{background:var(--card);border:none;border-radius:var(--radius);padding:16px 18px;margin:22px 0 0;font-size:.94rem;color:var(--ink);box-shadow:var(--shadow-rest);}
   .notice strong{color:var(--gold);}
   .notice ul{margin:8px 0 0;padding-left:1.1rem;}
@@ -243,11 +269,27 @@
       <button type="button" class="seg" id="listViewBtn" aria-pressed="false">List</button>
     </div>
 
+    <p class="legend" aria-label="Card colors by who is hosting">
+      <span class="lg-label">Hosted by:</span>
+      <span class="lg lg-faculty">Faculty</span>
+      <span class="lg lg-tutor">Tutor</span>
+      <span class="lg lg-student">Student</span>
+    </p>
+
+    <p class="phonetip">On your phone? Tap <strong>Share</strong>, then <strong>Add to Home Screen</strong>, to keep this one tap away.</p>
+
     <p class="status" id="status" role="status" aria-live="polite"></p>
 
     <div class="warn" role="note">
       <span class="warn-ic" aria-hidden="true">!</span>
-      <span class="warn-tx"><strong>Stay in one room for credit.</strong> Pick one session and stay in it for the whole meeting. Jumping between rooms means your attendance cannot be verified and the session will not count.</span>
+      <div class="warn-tx">
+        <strong>Credit and attendance</strong>
+        <ul>
+          <li><strong>Credit is not automatic.</strong> Whether a session counts is up to your professor.</li>
+          <li><strong>Getting credit for attending?</strong> Stay the whole time, in one session. Do not jump between rooms, or your time cannot be verified.</li>
+          <li><strong>Hosting?</strong> After the session, upload your Zoom recording and the usage report that shows when each person joined and left.</li>
+        </ul>
+      </div>
     </div>
 
     <section id="sessions" aria-label="Upcoming study sessions">
@@ -299,7 +341,16 @@
       <span class="hint">Used to identify you and share the recording. Not posted publicly.</span>
     </div>
     <div class="field">
-      <label for="h-topic">Topic or chapter <span class="req" aria-hidden="true">*</span></label>
+      <label for="h-role">I am hosting as <span class="req" aria-hidden="true">*</span></label>
+      <select id="h-role" name="role" required>
+        <option value="Student" selected>Student</option>
+        <option value="Tutor">Tutor</option>
+        <option value="Faculty">Faculty</option>
+      </select>
+      <span class="hint">Sets your card color: faculty terracotta, tutor gold, student white.</span>
+    </div>
+    <div class="field">
+      <label for="h-topic" id="h-topic-label">Topic or chapter <span class="req" aria-hidden="true">*</span></label>
       <input id="h-topic" name="topic" type="text" required maxlength="60" placeholder="e.g. Appendicular skeleton review">
     </div>
     <div class="field-row">
@@ -327,11 +378,22 @@
       <input id="h-zoom" name="zoomLink" type="url" maxlength="400" placeholder="https://zoom.us/j/...">
       <span class="hint">Paste the link to the room you will host in. Leave blank if you are meeting in person.</span>
     </div>
-    <div class="field">
-      <label for="h-loc">In-person location (if meeting in person)</label>
-      <input id="h-loc" name="location" type="text" maxlength="30" placeholder="e.g. Library, Journey Coffee, Open Lab">
-      <span class="hint">Type where you will meet. It shows as plain text, not a link.</span>
+    <div class="field-row">
+      <div class="field">
+        <label for="h-campus">Campus (if in person)</label>
+        <select id="h-campus" name="campus">
+          <option value="" selected>--</option>
+          <option value="Fairfield">Fairfield</option>
+          <option value="Vacaville">Vacaville</option>
+          <option value="Online">Online</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="h-loc">Room or place (if in person)</label>
+        <input id="h-loc" name="location" type="text" maxlength="30" placeholder="e.g. Room 812, Library">
+      </div>
     </div>
+    <span class="hint" style="display:block;margin:-8px 0 14px;">Faculty: pick a campus and add the room. It shows as plain text, not a link.</span>
     <div class="field">
       <label for="h-pass">Meeting passcode (optional)</label>
       <input id="h-pass" name="passcode" type="text" maxlength="16" placeholder="Leave blank if none">
@@ -506,14 +568,21 @@ function recLink(s){
    separated by a rare delimiter, and is split back out for display. */
 const LOC_DELIM = " ::@:: ";
 const PASS_DELIM = " ::#:: ";
+const ROLE_DELIM = " ::r:: ";
+function normRole(r){
+  r = String(r || "").trim().toLowerCase();
+  return (r === "tutor" || r === "faculty") ? r : "student";
+}
 function splitExtras(t){
   let raw = String(t || "");
-  let passcode = "", location = "";
+  let passcode = "", location = "", role = "";
   let i = raw.indexOf(PASS_DELIM);
   if(i >= 0){ passcode = raw.slice(i + PASS_DELIM.length); raw = raw.slice(0, i); }
   let j = raw.indexOf(LOC_DELIM);
   if(j >= 0){ location = raw.slice(j + LOC_DELIM.length); raw = raw.slice(0, j); }
-  return { topic: raw, location: location, passcode: passcode };
+  let k = raw.indexOf(ROLE_DELIM);
+  if(k >= 0){ role = raw.slice(k + ROLE_DELIM.length); raw = raw.slice(0, k); }
+  return { topic: raw, location: location, passcode: passcode, role: normRole(role) };
 }
 function saveIdentity(name, email){
   try{ localStorage.setItem("ssg_identity_v1", JSON.stringify({name:name, email:email})); }catch(e){}
@@ -592,7 +661,7 @@ async function load(){
 
 function render(sessions){
   loadingEl.style.display = "none";
-  (sessions || []).forEach(s => { const p = splitExtras(s.topic); s.topic = p.topic; s.location = p.location; s.passcode = p.passcode; });
+  (sessions || []).forEach(s => { const p = splitExtras(s.topic); s.topic = p.topic; s.location = p.location; s.passcode = p.passcode; s.role = p.role; });
   rawSessions = (sessions || []).slice().sort((a,b) => (a.date+a.time).localeCompare(b.date+b.time));
   const todayStr = ymd(new Date());
   allSessions = rawSessions.filter(s => s.date >= todayStr);
@@ -666,14 +735,16 @@ function weekChip(s){
   const full = cap > 0 && att.length >= cap;
   const live = liveState(s).live;
   const seats = cap > 0 ? (att.length + "/" + cap) : (att.length + " in");
+  const role = s.role || "student";
+  const roleLabel = role.charAt(0).toUpperCase() + role.slice(1);
   const inner =
     '<span class="chip-time">' + esc(fmtTime(s.time)) + (live ? ' <span class="chip-live-tag">&bull; Live</span>' : '') + '</span>' +
     '<span class="chip-topic">' + esc(s.topic) + '</span>' +
-    '<span class="chip-meta">' + esc(s.hostName || "TBD") + ' &middot; ' + esc(seats) + (full ? ' &middot; Full' : '') + (s.location ? ' &middot; ' + esc(s.location) : '') + '</span>';
+    '<span class="chip-meta">' + esc(roleLabel) + ' &middot; ' + esc(s.hostName || "TBD") + ' &middot; ' + esc(seats) + (full ? ' &middot; Full' : '') + (s.location ? ' &middot; ' + esc(s.location) : '') + '</span>';
   if(full){
-    return '<div class="chip full" aria-label="' + esc(s.topic + ', full') + '">' + inner + '</div>';
+    return '<div class="chip role-' + role + ' full" aria-label="' + esc(s.topic + ', full') + '">' + inner + '</div>';
   }
-  return '<button type="button" class="chip' + (live ? ' live' : '') + '" data-signup="' + esc(s.id) + '">' + inner + '</button>';
+  return '<button type="button" class="chip role-' + role + (live ? ' live' : '') + '" data-signup="' + esc(s.id) + '">' + inner + '</button>';
 }
 
 function setView(view){
@@ -722,9 +793,12 @@ function card(s){
     }
   }
 
-  return '<article class="card' + (full ? ' full' : '') + (js.kind === "live" ? ' live' : '') + '">' +
+  const role = s.role || "student";
+  const roleLabel = role.charAt(0).toUpperCase() + role.slice(1);
+  return '<article class="card role-' + role + (full ? ' full' : '') + (js.kind === "live" ? ' live' : '') + '">' +
     '<div class="pill-row">' +
-      '<span class="pill' + (full ? ' full' : '') + '">' + (full ? 'Full' : 'Open') + '</span>' +
+      '<span class="pill role">' + esc(roleLabel) + '</span>' +
+      (full ? '<span class="pill full">Full</span>' : '') +
       (js.kind === "live" ? '<span class="pill live">Live now</span>' : '') +
       (inPerson ? '<span class="pill inperson">In person</span>' : '') +
       (reportIn ? '<span class="pill done">Attendance in</span>' : '') +
@@ -758,7 +832,13 @@ $("#hostBtn").addEventListener("click", () => {
   $("#hostErr").textContent = "";
   $("#hostForm").reset();
   $("#h-date").min = new Date().toISOString().slice(0,10);
+  $("#h-topic").placeholder = "e.g. Appendicular skeleton review";
   hostDialog.showModal();
+});
+$("#h-role").addEventListener("change", function(){
+  $("#h-topic").placeholder = (this.value === "Faculty")
+    ? "Topics you'll cover, e.g. Exam 2 review: skull and spine"
+    : "e.g. Appendicular skeleton review";
 });
 
 $("#hostForm").addEventListener("submit", async (e) => {
@@ -766,9 +846,16 @@ $("#hostForm").addEventListener("submit", async (e) => {
   const f = e.target;
   const el = n => f.elements[n];
   const baseTopic = el("topic").value.trim();
-  const loc = el("location").value.trim();
+  const role = el("role").value || "Student";
+  const campus = el("campus").value;            // "", Fairfield, Vacaville, Online
+  const roomText = el("location").value.trim();
   const pass = el("passcode").value.trim();
+  const locParts = [];
+  if(campus && campus !== "Online") locParts.push(campus);
+  if(roomText) locParts.push(roomText);
+  const loc = locParts.join(" · ");        // e.g. "Fairfield · Room 812"
   let topicPayload = baseTopic;
+  if(normRole(role) !== "student") topicPayload += ROLE_DELIM + role;
   if(loc) topicPayload += LOC_DELIM + loc;
   if(pass) topicPayload += PASS_DELIM + pass;
   const payload = {
