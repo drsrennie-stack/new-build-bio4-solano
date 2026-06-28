@@ -36,6 +36,7 @@ h2{font-size:18px;font-weight:800;color:#8B3A2E;margin:26px 0 10px}
 .muted{color:#5a6573}
 .foot{margin-top:30px;border-top:.5px solid rgba(11,21,48,.10);padding-top:14px;display:flex;gap:12px;flex-wrap:wrap}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.chapters{margin:6px 0 2px}.ch-list{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:4px}.ch{display:flex;width:100%;align-items:baseline;gap:12px;text-align:left;background:none;border:0;border-radius:8px;padding:9px 12px;cursor:pointer;font-family:inherit;color:#0B1530}.ch:hover{background:#EDF1F3}.ch:focus-visible{outline:3px solid #C9A14A;outline-offset:2px}.ch .t{flex:0 0 auto;font-variant-numeric:tabular-nums;font-weight:800;font-size:14px;color:#8B3A2E}.ch .label{font-size:15px;font-weight:600;line-height:1.35}
 </style>
 </head>
 <body>
@@ -48,9 +49,10 @@ h2{font-size:18px;font-weight:800;color:#8B3A2E;margin:26px 0 10px}
   <p class="eyebrow">BIO 004 &middot; Concept Video</p>
   <h1>Respiratory System</h1>
 
-  <div id="video" class="vid" data-yt="">
-    <div class="vid-ph"><p class="big">Video coming soon</p><p class="sub">The recording link will appear here.</p></div>
+  <div id="video" class="vid">
+    <iframe id="player" src="https://www.loom.com/embed/69f53b5f9da4407e8c6fb844eef9b878?hide_owner=true&hideEmbedTopBar=true" title="Concept video: Respiratory System" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
   </div>
+  <nav class="chapters" aria-label="Video chapters"><h2>Chapters</h2><ul class="ch-list" id="ch-list"><li><button class="ch" type="button" data-s="0"><span class="t">0:00</span><span class="label">Respiratory system overview</span></button></li><li><button class="ch" type="button" data-s="113"><span class="t">1:53</span><span class="label">Ventilation and gas exchange</span></button></li><li><button class="ch" type="button" data-s="250"><span class="t">4:10</span><span class="label">Lungs position and diaphragm</span></button></li><li><button class="ch" type="button" data-s="953"><span class="t">15:53</span><span class="label">Larynx and voice passage</span></button></li><li><button class="ch" type="button" data-s="1366"><span class="t">22:46</span><span class="label">Trachea and breathing tubes</span></button></li><li><button class="ch" type="button" data-s="1802"><span class="t">30:02</span><span class="label">Alveoli and gas exchange</span></button></li><li><button class="ch" type="button" data-s="2044"><span class="t">34:04</span><span class="label">Lung sections and blood flow</span></button></li><li><button class="ch" type="button" data-s="2399"><span class="t">39:59</span><span class="label">Breathing muscles and final tips</span></button></li></ul></nav>
 
   <div class="dlrow">
     <a class="btn terra" https://drsrennie-stack.github.io/A-P-lecture-core/Respiratory.pptx target="_blank" rel="noopener"><span aria-hidden="true">&#11015;</span> Download the notes</a>
@@ -68,9 +70,7 @@ h2{font-size:18px;font-weight:800;color:#8B3A2E;margin:26px 0 10px}
   </div>
 </div>
 <script>
-/* paste the YouTube ID into data-yt above and this swaps in the player */
-(function(){var b=document.getElementById('video');var id=b.getAttribute('data-yt');
-if(id){b.innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+id+'?rel=0&modestbranding=1" title="Concept video: Respiratory System" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';}})();
+(function(){var BASE="https://www.loom.com/embed/69f53b5f9da4407e8c6fb844eef9b878";var EXTRA="hide_owner=true&hideEmbedTopBar=true";var player=document.getElementById("player");Array.prototype.slice.call(document.querySelectorAll(".ch")).forEach(function(b){b.addEventListener("click",function(){var s=b.getAttribute("data-s");player.src=BASE+"?"+EXTRA+"&t="+s+"&autoplay=1";document.getElementById("video").scrollIntoView({behavior:"smooth",block:"nearest"});});});})();
 (function(){var k=document.getElementById('backBtn');if(!k)return;if(document.referrer||history.length>1)k.hidden=false;k.addEventListener('click',function(){if(history.length>1)history.back();else if(document.referrer)location.href=document.referrer;});})();
 (function(){function s(){try{parent.postMessage({type:'resize',id:'respiratory-concept-videos',height:document.documentElement.scrollHeight},'*');}catch(e){}}
 window.addEventListener('load',s);window.addEventListener('resize',s);if(window.ResizeObserver)new ResizeObserver(s).observe(document.body);})();
