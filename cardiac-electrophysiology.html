@@ -689,10 +689,13 @@ body.present .trat .opts{font-size:clamp(15px,1.5vw,21px)}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
 (function(){
-  if(new URLSearchParams(location.search).get('host')!=='1') return; /* students see nothing */
   var CFG={apiKey:"AIzaSyDYAf05Br0OoBOdNar_yp1hBfuMg7huUX8",authDomain:"tbl-interactive-dashboard.firebaseapp.com",databaseURL:"https://tbl-interactive-dashboard-default-rtdb.firebaseio.com",projectId:"tbl-interactive-dashboard",storageBucket:"tbl-interactive-dashboard.firebasestorage.app",messagingSenderId:"187790279963",appId:"1:187790279963:web:b3a0872a1c870768173fbe"};
   var SESSION="cardiac-conduction", CORRECT=[1,2,0,1,0];
-  var db; try{ firebase.initializeApp(CFG); db=firebase.database(); }catch(e){ return; }
+  function hostOn(){return localStorage.getItem("deckHost")==="1" || new URLSearchParams(location.search).get("host")==="1";}
+  function applyHost(){document.body.classList.toggle("host-on", hostOn());}
+  function toast(t){var d=document.createElement("div");d.textContent=t;d.style.cssText="position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:#0B1530;color:#fff;padding:10px 16px;border-radius:8px;font:700 14px system-ui;z-index:99";document.body.appendChild(d);setTimeout(function(){d.remove();},1600);}
+  document.addEventListener("keydown",function(e){ if(e.shiftKey && (e.key==="H"||e.key==="h")){ localStorage.setItem("deckHost", hostOn()?"0":"1"); applyHost(); toast(document.body.classList.contains("host-on")?"Host controls ON":"Host controls off"); } });
+  var db; try{ firebase.initializeApp(CFG); db=firebase.database(); }catch(e){ db=null; }
   var R=function(p){return db.ref("sessions/"+SESSION+"/"+p);};
   function fmt(s){var m=Math.floor(s/60),x=s%60;return m+":"+(x<10?"0":"")+x;}
   document.querySelectorAll(".slide.cp").forEach(function(sl){
@@ -710,6 +713,7 @@ body.present .trat .opts{font-size:clamp(15px,1.5vw,21px)}
     bars[CORRECT[qi]].classList.add("correct");
     function remaining(){return Math.max(0,Math.round((startAt+60000-Date.now())/1000));}
     btn.addEventListener("click",function(){
+      if(!db){ toast("Not connected to Firebase"); return; }
       R("responses/"+qi).remove(); startAt=Date.now();
       R("active").set({q:qi,startAt:startAt,dur:60,open:true});
       live.hidden=false; btn.textContent="Relaunch Question "+(qi+1);
@@ -724,6 +728,7 @@ body.present .trat .opts{font-size:clamp(15px,1.5vw,21px)}
       tick=setInterval(function(){var r=remaining();clk.textContent=fmt(r);clk.classList.toggle("warn",r<=10);if(r<=0){clearInterval(tick);tick=null;R("active").update({open:false});clk.textContent="closed";}},300);
     });
   });
+  applyHost();
 })();
 </script>
 </body>
