@@ -247,6 +247,7 @@ body.present .trat .opts{font-size:clamp(15px,1.5vw,21px)}
 .kj-steps strong{color:var(--rust)}
 .kj-note{margin:16px 0 0;font-size:14px;color:var(--navy);opacity:.7}
 .kj-cue{margin:10px 0 0;font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--rust);opacity:.85}
+.kj-url{margin:12px 0 0;font-size:13.5px;color:var(--navy);opacity:.85}
 
 /* kahoot join + checkpoints */
 .kahoot-join .slide-body,.cp .slide-body{align-items:center;justify-content:center}
@@ -257,6 +258,7 @@ body.present .trat .opts{font-size:clamp(15px,1.5vw,21px)}
 .kj-steps li{margin:0 0 10px}.kj-steps strong{color:var(--rust)}
 .kj-note{margin:16px 0 0;font-size:14px;color:var(--navy);opacity:.7}
 .kj-cue{margin:10px 0 0;font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--rust);opacity:.85}
+.kj-url{margin:12px 0 0;font-size:13.5px;color:var(--navy);opacity:.85}
 .cp-card{background:#fff;border:none;border-radius:16px;padding:26px 30px;text-align:center;max-width:520px;box-shadow:0 14px 30px rgba(11,21,48,.14),0 2px 6px rgba(11,21,48,.07)}
 .cp-card .cp-ey{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);margin:0 0 6px}
 .cp-card .cp-q{font-size:clamp(30px,5vw,58px);font-weight:800;color:var(--navy);line-height:1;margin:0 0 10px}
@@ -271,9 +273,6 @@ body.present .trat .opts{font-size:clamp(15px,1.5vw,21px)}
 .cp-clock{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--navy)}
 .cp-clock.warn{color:var(--rust)}
 .cp-ans{font-size:14px;font-weight:800;color:var(--rust)}
-.cp-bars{display:flex;gap:8px}
-.cp-bars .b{font-size:14px;font-weight:800;background:var(--offwhite);border:1px solid var(--rule);border-radius:8px;padding:5px 10px;color:var(--navy)}
-.cp-bars .b.correct{background:#FBF6EA;border-color:var(--gold)}
 </style>
 </head>
 <body>
@@ -329,6 +328,7 @@ body.present .trat .opts{font-size:clamp(15px,1.5vw,21px)}
           <li>Enter your <strong>character name</strong>, exactly as on your card.</li>
           <li>Keep it open. Questions appear <strong>through the lecture</strong>, one at a time.</li>
         </ol>
+        <p class="kj-url">On a laptop or no camera? Go to <strong>drsrennie-stack.github.io/live-clicker</strong> and tap <strong>Student page</strong>.</p>
         <p class="kj-cue">Instructor: open the dashboard so students can scan and join.</p>
       </div>
     </div>
@@ -704,13 +704,11 @@ body.present .trat .opts{font-size:clamp(15px,1.5vw,21px)}
     var card=sl.querySelector(".cp-card"); if(!card) return;
     var host=document.createElement("div"); host.className="cp-host";
     host.innerHTML='<button class="cp-launch" type="button">Launch Question '+(qi+1)+' (60s)</button>'+
-      '<div class="cp-live" hidden><span class="cp-clock">1:00</span><span class="cp-ans">0 in</span>'+
-      '<div class="cp-bars"><span class="b">A 0</span><span class="b">B 0</span><span class="b">C 0</span><span class="b">D 0</span></div></div>';
+      '<div class="cp-live" hidden><span class="cp-clock">1:00</span><span class="cp-ans">0 answered</span></div>';
     card.appendChild(host);
     var btn=host.querySelector(".cp-launch"), live=host.querySelector(".cp-live"),
         clk=host.querySelector(".cp-clock"), ans=host.querySelector(".cp-ans"),
-        bars=host.querySelectorAll(".cp-bars .b"), startAt=0, tick=null, ref=null;
-    bars[CORRECT[qi]].classList.add("correct");
+        startAt=0, tick=null, ref=null;
     function remaining(){return Math.max(0,Math.round((startAt+60000-Date.now())/1000));}
     btn.addEventListener("click",function(){
       if(!db){ toast("Not connected to Firebase"); return; }
@@ -719,10 +717,7 @@ body.present .trat .opts{font-size:clamp(15px,1.5vw,21px)}
       live.hidden=false; btn.textContent="Relaunch Question "+(qi+1);
       if(ref) ref.off(); ref=R("responses/"+qi);
       ref.on("value",function(snap){
-        var v=snap.val()||{}, c=[0,0,0,0], n=0;
-        Object.keys(v).forEach(function(k){var r=v[k]; if(typeof r.top==="number") c[r.top]++; n++;});
-        ans.textContent=n+" in";
-        bars.forEach(function(b,i){b.textContent="ABCD"[i]+" "+c[i];});
+        ans.textContent=(snap.val()?Object.keys(snap.val()).length:0)+" answered";
       });
       if(tick) clearInterval(tick);
       tick=setInterval(function(){var r=remaining();clk.textContent=fmt(r);clk.classList.toggle("warn",r<=10);if(r<=0){clearInterval(tick);tick=null;R("active").update({open:false});clk.textContent="closed";}},300);
