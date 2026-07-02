@@ -1,0 +1,2515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mastery OS · BIO 004 Spaced Recall · Integumentary (401 to 500)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Lora:ital@0;1&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1530; --card-navy:#1C2E4F; --near-black:#060A18;
+  --rust:#8B3A2E; --rust-hover:#A0452F; --terra:#C2734D; --terra-dark:#A0522D;
+  --gold:#C9A14A; --gold-light:#D9B065; --cream:#F5F1E8;
+  --white:#FFFFFF; --offwhite:#FAFAF9;
+  --ink:#0B1530; --ink-soft:rgba(11,21,48,0.74); --ink-faint:rgba(11,21,48,0.52);
+  --line:rgba(11,21,48,0.12); --line-soft:rgba(11,21,48,0.07);
+  --ok:#3F7A5B; --warn:#B4772E; --bad:#8B3A2E;
+  --shadow:0 1px 3px rgba(11,21,48,0.08);
+  --lift:0 14px 34px -16px rgba(11,21,48,0.30);
+  --disp:'Plus Jakarta Sans',system-ui,sans-serif;
+  --mono:'DM Sans',system-ui,sans-serif;
+  --serif:'Lora',Georgia,serif;
+  --r-sm:6px; --r:10px; --r-lg:16px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--offwhite);color:var(--ink);font-family:var(--disp);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3{letter-spacing:-0.02em;color:var(--navy);line-height:1.15;margin:0}
+p{margin:0}
+button,select,input{font-family:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:var(--r-sm)}
+.skip{position:absolute;left:-999px;top:0;background:var(--navy);color:#fff;padding:10px 16px;border-radius:var(--r);z-index:999;text-decoration:none;font-weight:700}
+.skip:focus{left:12px;top:12px}
+.eyebrow{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--terra-dark);margin:0 0 6px}
+/* header */
+.site-header{position:sticky;top:0;z-index:30;background:rgba(250,250,249,.9);backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line-soft)}
+.hbar{max-width:1120px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:14px}
+.logo{display:inline-flex;align-items:center;gap:12px}
+.logo svg{height:38px;flex:none}
+.logo .lt{font-size:20px;font-weight:800;color:var(--navy);letter-spacing:-.02em;line-height:1}
+.logo .lt .ac{color:var(--rust)}
+.logo .ls{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);display:block;margin-top:3px}
+.spacer{flex:1}
+.hbadge{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);background:var(--cream);border:1px solid var(--line);padding:6px 12px;border-radius:999px}
+/* layout */
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+/* hero */
+.hero{margin:26px 0 0;background:radial-gradient(140% 135% at 12% 0%,#12203f 0%,var(--navy) 48%,var(--near-black) 100%);color:var(--cream);border-radius:var(--r-lg);padding:30px;box-shadow:var(--lift)}
+.hero .heb{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-light);margin:0 0 8px}
+.hero h1{color:#fff;font-size:clamp(26px,4.4vw,38px);font-weight:800;margin:0 0 8px}
+.hero .lead{font-family:var(--serif);font-style:italic;color:var(--cream);opacity:.9;max-width:64ch;font-size:16px}
+.stats{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.stat{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:var(--r);padding:12px 16px;min-width:104px}
+.stat .num{font-size:26px;font-weight:800;color:#fff;line-height:1}
+.stat .lbl{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-light);margin-top:5px}
+/* controls */
+.controls{position:sticky;top:62px;z-index:20;margin:18px 0 4px;background:rgba(250,250,249,.94);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px 16px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;box-shadow:var(--shadow)}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+select,.search input{font-size:15px;padding:10px 12px;border:1.5px solid var(--line);border-radius:var(--r);background:var(--white);color:var(--navy)}
+select{min-width:190px}
+select:focus,.search input:focus{border-color:var(--gold);outline:none}
+.search{flex:1;min-width:200px}
+.search input{width:100%}
+.ctl-btn{border:1.5px solid var(--line);background:var(--white);color:var(--navy);font-weight:700;font-size:14px;padding:10px 16px;border-radius:var(--r);cursor:pointer;transition:transform .18s var(--ease),box-shadow .18s var(--ease),border-color .18s}
+.ctl-btn:hover{transform:translateY(-1px);box-shadow:var(--lift);border-color:var(--navy)}
+.count{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ink-soft);margin-left:auto;align-self:center}
+/* grid + cards */
+#cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;margin:18px 0 8px}
+.card{background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px 19px;box-shadow:var(--shadow);transition:transform .2s var(--ease),box-shadow .2s var(--ease);display:flex;flex-direction:column;gap:9px}
+.card:hover,.card:focus-within{transform:translateY(-2px);box-shadow:var(--lift)}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.cid{font-family:var(--mono);font-weight:700;font-size:13px;color:var(--navy)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.chip{font-family:var(--mono);font-weight:700;font-size:10.5px;letter-spacing:.03em;padding:4px 9px;border-radius:999px;border:1px solid var(--line);color:var(--navy);white-space:nowrap}
+.chip-topic{border-color:var(--terra);color:var(--terra-dark)}
+.chip-type{background:var(--cream);border-color:var(--line)}
+.chip-diff{color:var(--ink-soft)}
+.dok{border:none}
+.dok-1{background:var(--cream);color:var(--navy);box-shadow:inset 0 0 0 1px var(--gold)}
+.dok-2{background:#f6ecd9;color:var(--warn)}
+.dok-3{background:#f6e4e0;color:var(--rust)}
+.sub{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin:0}
+.q{font-weight:700;font-size:16.5px;color:var(--navy);margin:2px 0 0;line-height:1.35}
+details{border-top:1px solid var(--line-soft);padding-top:10px;margin-top:2px}
+summary{list-style:none;cursor:pointer;font-family:var(--mono);font-weight:700;font-size:13px;color:var(--rust);display:inline-flex;align-items:center;gap:7px}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"";width:8px;height:8px;border-right:2px solid var(--rust);border-bottom:2px solid var(--rust);transform:rotate(-45deg);transition:transform .2s var(--ease);margin-top:-2px}
+details[open] summary::before{transform:rotate(45deg)}
+.sum-close{display:none}
+details[open] .sum-open{display:none}
+details[open] .sum-close{display:inline}
+.reveal{margin-top:12px;display:flex;flex-direction:column;gap:11px}
+.reveal p{margin:0;font-size:14.5px;line-height:1.5}
+.lbl{display:block;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--terra-dark);margin-bottom:3px}
+.lbl-a{color:var(--ok)}
+.lbl-mc{color:var(--rust)}
+.a{background:#eef4f0;border-left:3px solid var(--ok);border-radius:var(--r-sm);padding:10px 12px}
+.mc{background:#faf0ed;border-left:3px solid var(--rust);border-radius:var(--r-sm);padding:10px 12px}
+.ex{color:var(--ink-soft)}
+.lo{border-top:1px dashed var(--line);padding-top:9px}
+.lo-txt{font-family:var(--serif);font-style:italic;color:var(--navy)}
+.tags{font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin-top:2px}
+.empty{grid-column:1/-1;text-align:center;color:var(--ink-faint);padding:40px 0;font-weight:600}
+/* footer */
+.foot{padding:30px 0 46px;color:var(--ink-faint);font-size:13px;border-top:1px solid var(--line-soft);margin-top:22px}
+.foot .disc{max-width:78ch;line-height:1.6;margin:0 0 12px}
+.foot .sig{font-weight:700;color:var(--ink-soft)}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.001ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#cards">Skip to cards</a>
+<header class="site-header">
+  <div class="hbar">
+    <span class="logo"><svg viewBox="40 10 125 148" aria-hidden="true"><g transform="translate(0,18)"><g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/></g><g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/></g><g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#0B1530"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#0B1530"/></g></g></svg><span><span class="lt">Mastery <span class="ac">OS</span></span><span class="ls">Human Anatomy</span></span></span>
+    <span class="spacer"></span>
+    <span class="hbadge">Week 1 · Integumentary</span>
+  </div>
+</header>
+<main class="wrap" id="main">
+  <section class="hero" aria-labelledby="h1">
+    <p class="heb">BIO 004 · Human Anatomy · Spaced Recall · Batch 5</p>
+    <h1 id="h1">Integumentary System</h1>
+    <p class="lead">Read the question, answer it in your own words, then reveal the answer and teaching notes. Filter or search to drill a weak area. Given, not Googled.</p>
+    <div class="stats" aria-label="Batch summary">
+      <div class="stat"><div class="num">100</div><div class="lbl">Cards 401–500</div></div>
+      <div class="stat"><div class="num">20</div><div class="lbl">DOK 1 · Recall</div></div>
+      <div class="stat"><div class="num">50</div><div class="lbl">DOK 2 · Concept</div></div>
+      <div class="stat"><div class="num">30</div><div class="lbl">DOK 3 · Reasoning</div></div>
+      <div class="stat"><div class="num">7</div><div class="lbl">Topics</div></div>
+      <div class="stat"><div class="num">2–8</div><div class="lbl">Difficulty</div></div>
+    </div>
+  </section>
+
+  <section class="controls" aria-label="Filters">
+    <div class="search field">
+      <label for="q">Search</label>
+      <input id="q" type="search" placeholder="Search questions, answers, tags..." autocomplete="off" aria-controls="cards">
+    </div>
+    <div class="field">
+      <label for="topic">Topic</label>
+      <select id="topic" aria-controls="cards">
+        <option value="all">All topics</option>
+          <option value="Integument Overview">Integument Overview</option>
+          <option value="Epidermis">Epidermis</option>
+          <option value="Dermis">Dermis</option>
+          <option value="Hair">Hair</option>
+          <option value="Nails">Nails</option>
+          <option value="Glands">Glands</option>
+          <option value="Clinical">Clinical</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="dok">Depth of Knowledge</label>
+      <select id="dok" aria-controls="cards">
+        <option value="all">All levels</option>
+        <option value="1">DOK 1 · Recall</option>
+        <option value="2">DOK 2 · Concept</option>
+        <option value="3">DOK 3 · Reasoning</option>
+      </select>
+    </div>
+    <button class="ctl-btn" id="toggleAll" aria-pressed="false">Reveal all</button>
+    <p class="count" id="count" role="status" aria-live="polite">100 of 100</p>
+  </section>
+
+  <section id="cards" aria-live="polite">
+      <article class="card" data-topic="Integument Overview" data-dok="1" data-search="what is the integumentary system? the skin together with its accessory structures: hair, nails, and glands. integument definition integumentary; overview integument overview definition" tabindex="0" aria-label="Card W1-401">
+        <div class="card-head">
+          <span class="cid">W1-401</span>
+          <span class="chips">
+            <span class="chip chip-topic">Integument Overview</span>
+            <span class="chip chip-type">Definition</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 2</span>
+          </span>
+        </div>
+        <p class="sub">Integument definition</p>
+        <p class="q">What is the integumentary system?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The skin together with its accessory structures: hair, nails, and glands.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>The system is more than skin; the accessory structures all grow from it.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Students think the integumentary system is only the skin and forget hair, nails, and glands.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Name the two layers of the skin and the hypodermis beneath them.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; overview</p>
+      </article>
+      <article class="card" data-topic="Integument Overview" data-dok="1" data-search="what are the two layers of the skin? the epidermis and the dermis. skin layers integumentary; skin layers; epidermis; dermis integument overview identification" tabindex="0" aria-label="Card W1-402">
+        <div class="card-head">
+          <span class="cid">W1-402</span>
+          <span class="chips">
+            <span class="chip chip-topic">Integument Overview</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 2</span>
+          </span>
+        </div>
+        <p class="sub">Skin layers</p>
+        <p class="q">What are the two layers of the skin?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The epidermis and the dermis.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>The hypodermis lies beneath but is not counted as skin.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Students count the hypodermis as a third layer of skin.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Name the two layers of the skin and the hypodermis beneath them.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; skin layers; epidermis; dermis</p>
+      </article>
+      <article class="card" data-topic="Integument Overview" data-dok="2" data-search="why is the hypodermis not considered part of the skin proper? it is a subcutaneous layer of mostly adipose that anchors the skin, but it is not one of the skin&#x27;s two layers. hypodermis integumentary; hypodermis integument overview structure-function" tabindex="0" aria-label="Card W1-403">
+        <div class="card-head">
+          <span class="cid">W1-403</span>
+          <span class="chips">
+            <span class="chip chip-topic">Integument Overview</span>
+            <span class="chip chip-type">Structure-function</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Hypodermis</p>
+        <p class="q">Why is the hypodermis not considered part of the skin proper?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>It is a subcutaneous layer of mostly adipose that anchors the skin, but it is not one of the skin&#x27;s two layers.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>It anchors skin to underlying structures and insulates the body.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Calling the hypodermis the third layer of skin.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Name the two layers of the skin and the hypodermis beneath them.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; hypodermis</p>
+      </article>
+      <article class="card" data-topic="Integument Overview" data-dok="2" data-search="compare the epidermis and dermis by tissue type. the epidermis is keratinized stratified squamous epithelium; the dermis is mostly connective tissue. skin layers integumentary; epidermis; dermis integument overview comparison" tabindex="0" aria-label="Card W1-404">
+        <div class="card-head">
+          <span class="cid">W1-404</span>
+          <span class="chips">
+            <span class="chip chip-topic">Integument Overview</span>
+            <span class="chip chip-type">Comparison</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Skin layers</p>
+        <p class="q">Compare the epidermis and dermis by tissue type.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The epidermis is keratinized stratified squamous epithelium; the dermis is mostly connective tissue.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Epithelium above, connective tissue below, a recurring skin pattern.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking both layers are epithelium.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Name the two layers of the skin and the hypodermis beneath them.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; dermis</p>
+      </article>
+      <article class="card" data-topic="Integument Overview" data-dok="1" data-search="which layer of the skin is avascular? the epidermis. epidermis integumentary; epidermis; avascular integument overview identification" tabindex="0" aria-label="Card W1-405">
+        <div class="card-head">
+          <span class="cid">W1-405</span>
+          <span class="chips">
+            <span class="chip chip-topic">Integument Overview</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 2</span>
+          </span>
+        </div>
+        <p class="sub">Epidermis</p>
+        <p class="q">Which layer of the skin is avascular?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The epidermis.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>It has no blood vessels and is fed by diffusion from the dermis.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Assuming the epidermis has its own blood supply.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Name the two layers of the skin and the hypodermis beneath them.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; avascular</p>
+      </article>
+      <article class="card" data-topic="Integument Overview" data-dok="2" data-search="why must the epidermis rely on the dermis for nutrients? the epidermis is avascular, so nutrients diffuse up from vessels in the dermis. epidermis integumentary; epidermis; dermis integument overview structure-function" tabindex="0" aria-label="Card W1-406">
+        <div class="card-head">
+          <span class="cid">W1-406</span>
+          <span class="chips">
+            <span class="chip chip-topic">Integument Overview</span>
+            <span class="chip chip-type">Structure-function</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Epidermis</p>
+        <p class="q">Why must the epidermis rely on the dermis for nutrients?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The epidermis is avascular, so nutrients diffuse up from vessels in the dermis.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>This is why the deeper vascular dermis keeps the surface alive.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Believing epidermal cells receive blood directly.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Name the two layers of the skin and the hypodermis beneath them.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; dermis</p>
+      </article>
+      <article class="card" data-topic="Integument Overview" data-dok="2" data-search="which skin layer holds the blood vessels, nerves, and glands? the dermis. dermis integumentary; dermis integument overview identification" tabindex="0" aria-label="Card W1-407">
+        <div class="card-head">
+          <span class="cid">W1-407</span>
+          <span class="chips">
+            <span class="chip chip-topic">Integument Overview</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Dermis</p>
+        <p class="q">Which skin layer holds the blood vessels, nerves, and glands?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The dermis.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>The dermis is the working connective-tissue layer of the skin.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Placing glands and vessels in the epidermis.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Name the two layers of the skin and the hypodermis beneath them.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis</p>
+      </article>
+      <article class="card" data-topic="Integument Overview" data-dok="2" data-search="what is the hypodermis made of, and what does it do? mostly adipose tissue; it anchors the skin to underlying structures and insulates. hypodermis integumentary; hypodermis integument overview definition" tabindex="0" aria-label="Card W1-408">
+        <div class="card-head">
+          <span class="cid">W1-408</span>
+          <span class="chips">
+            <span class="chip chip-topic">Integument Overview</span>
+            <span class="chip chip-type">Definition</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Hypodermis</p>
+        <p class="q">What is the hypodermis made of, and what does it do?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Mostly adipose tissue; it anchors the skin to underlying structures and insulates.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Also called the subcutaneous layer; it is the site of subcutaneous injections.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking the hypodermis is muscle.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Name the two layers of the skin and the hypodermis beneath them.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; hypodermis</p>
+      </article>
+      <article class="card" data-topic="Integument Overview" data-dok="2" data-search="compare the epidermis and dermis by blood supply. the epidermis is avascular; the dermis is vascular and carries the blood vessels. skin layers integumentary; epidermis; dermis; vascularity integument overview comparison" tabindex="0" aria-label="Card W1-409">
+        <div class="card-head">
+          <span class="cid">W1-409</span>
+          <span class="chips">
+            <span class="chip chip-topic">Integument Overview</span>
+            <span class="chip chip-type">Comparison</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Skin layers</p>
+        <p class="q">Compare the epidermis and dermis by blood supply.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The epidermis is avascular; the dermis is vascular and carries the blood vessels.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>The vascular dermis feeds the avascular epidermis.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking both layers are vascular.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Name the two layers of the skin and the hypodermis beneath them.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; dermis; vascularity</p>
+      </article>
+      <article class="card" data-topic="Integument Overview" data-dok="2" data-search="list the skin from superficial to deep, including the layer beneath it. epidermis, then dermis, then the hypodermis beneath. skin layers integumentary; skin layers; ordering integument overview ordering" tabindex="0" aria-label="Card W1-410">
+        <div class="card-head">
+          <span class="cid">W1-410</span>
+          <span class="chips">
+            <span class="chip chip-topic">Integument Overview</span>
+            <span class="chip chip-type">Ordering</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Skin layers</p>
+        <p class="q">List the skin from superficial to deep, including the layer beneath it.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Epidermis, then dermis, then the hypodermis beneath.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Only the first two are skin proper; the hypodermis is subcutaneous.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Ordering the dermis above the epidermis.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Name the two layers of the skin and the hypodermis beneath them.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; skin layers; ordering</p>
+      </article>
+      <article class="card" data-topic="Integument Overview" data-dok="3" data-search="a subcutaneous injection is placed in the fatty layer beneath the skin. which layer is that? the hypodermis. clinical integumentary; hypodermis; clinical; injection integument overview classification" tabindex="0" aria-label="Card W1-411">
+        <div class="card-head">
+          <span class="cid">W1-411</span>
+          <span class="chips">
+            <span class="chip chip-topic">Integument Overview</span>
+            <span class="chip chip-type">Classification</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 6</span>
+          </span>
+        </div>
+        <p class="sub">Clinical</p>
+        <p class="q">A subcutaneous injection is placed in the fatty layer beneath the skin. Which layer is that?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The hypodermis.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>&#x27;Subcutaneous&#x27; literally means below the skin.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Confusing subcutaneous (hypodermis) with intradermal (dermis).</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Relate the anatomy of the skin layers to clinical scenarios such as burns, injections, and healing.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; hypodermis; clinical; injection</p>
+      </article>
+      <article class="card" data-topic="Integument Overview" data-dok="3" data-search="the skin&#x27;s surface stays alive despite having no blood vessels of its own. explain how. the avascular epidermis receives nutrients by diffusion from the vascular dermis beneath it. epidermis integumentary; epidermis; dermis; board integument overview board-style" tabindex="0" aria-label="Card W1-412">
+        <div class="card-head">
+          <span class="cid">W1-412</span>
+          <span class="chips">
+            <span class="chip chip-topic">Integument Overview</span>
+            <span class="chip chip-type">Board-style</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 6</span>
+          </span>
+        </div>
+        <p class="sub">Epidermis</p>
+        <p class="q">The skin&#x27;s surface stays alive despite having no blood vessels of its own. Explain how.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The avascular epidermis receives nutrients by diffusion from the vascular dermis beneath it.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>The short diffusion distance is one reason the epidermis stays thin.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking the epidermis is nourished by sweat or by air.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Name the two layers of the skin and the hypodermis beneath them.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; dermis; board</p>
+      </article>
+      <article class="card" data-topic="Integument Overview" data-dok="3" data-search="a burn destroys the epidermis but spares the dermis. which functions of the deeper layer remain intact? the dermis still holds its blood vessels, nerves, glands, and hair follicles. dermis integumentary; dermis; clinical; burns integument overview application" tabindex="0" aria-label="Card W1-413">
+        <div class="card-head">
+          <span class="cid">W1-413</span>
+          <span class="chips">
+            <span class="chip chip-topic">Integument Overview</span>
+            <span class="chip chip-type">Application</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 6</span>
+          </span>
+        </div>
+        <p class="sub">Dermis</p>
+        <p class="q">A burn destroys the epidermis but spares the dermis. Which functions of the deeper layer remain intact?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The dermis still holds its blood vessels, nerves, glands, and hair follicles.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Sparing the dermis preserves the sources of regeneration and sensation.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Assuming that losing the epidermis destroys the glands and follicles.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Relate the anatomy of the skin layers to clinical scenarios such as burns, injections, and healing.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis; clinical; burns</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="2" data-search="list the five strata of the epidermis from deep to superficial. stratum basale, stratum spinosum, stratum granulosum, stratum lucidum, stratum corneum. strata order integumentary; epidermis; strata; ordering epidermis ordering" tabindex="0" aria-label="Card W1-414">
+        <div class="card-head">
+          <span class="cid">W1-414</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Ordering</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Strata order</p>
+        <p class="q">List the five strata of the epidermis from deep to superficial.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Stratum basale, stratum spinosum, stratum granulosum, stratum lucidum, stratum corneum.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>New cells are born deep and are pushed up through each layer.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Reversing the order and starting from the corneum.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; strata; ordering</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="1" data-search="which epidermal stratum is the deepest? the stratum basale. stratum basale integumentary; epidermis; stratum basale epidermis identification" tabindex="0" aria-label="Card W1-415">
+        <div class="card-head">
+          <span class="cid">W1-415</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 2</span>
+          </span>
+        </div>
+        <p class="sub">Stratum basale</p>
+        <p class="q">Which epidermal stratum is the deepest?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The stratum basale.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>It sits directly on the basement membrane.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Naming the corneum as the deepest layer.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; stratum basale</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="2" data-search="why is the stratum basale critical for skin renewal? it is a single row of dividing cells that continually produces new keratinocytes. stratum basale integumentary; epidermis; stratum basale epidermis structure-function" tabindex="0" aria-label="Card W1-416">
+        <div class="card-head">
+          <span class="cid">W1-416</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Structure-function</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Stratum basale</p>
+        <p class="q">Why is the stratum basale critical for skin renewal?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>It is a single row of dividing cells that continually produces new keratinocytes.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>The new cells are pushed toward the surface as more form beneath them.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking the surface layer is the one that divides.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; stratum basale</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="1" data-search="which stratum is the surface layer of flat, dead, keratinized cells? the stratum corneum. stratum corneum integumentary; epidermis; stratum corneum epidermis identification" tabindex="0" aria-label="Card W1-417">
+        <div class="card-head">
+          <span class="cid">W1-417</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 2</span>
+          </span>
+        </div>
+        <p class="sub">Stratum corneum</p>
+        <p class="q">Which stratum is the surface layer of flat, dead, keratinized cells?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The stratum corneum.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>It is the tough, water-resistant barrier of the skin.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Calling the corneum a living layer.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; stratum corneum</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="2" data-search="in which stratum does keratinization begin? the stratum granulosum. stratum granulosum integumentary; epidermis; stratum granulosum; keratinization epidermis identification" tabindex="0" aria-label="Card W1-418">
+        <div class="card-head">
+          <span class="cid">W1-418</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Stratum granulosum</p>
+        <p class="q">In which stratum does keratinization begin?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The stratum granulosum.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Cells here fill with keratohyalin granules.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking keratin first appears in the stratum basale.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; stratum granulosum; keratinization</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="2" data-search="what waterproofs the epidermis, and where is it released? lamellar granules of lipid, released by keratinocytes in the stratum granulosum. stratum granulosum integumentary; epidermis; stratum granulosum; waterproofing epidermis structure-function" tabindex="0" aria-label="Card W1-419">
+        <div class="card-head">
+          <span class="cid">W1-419</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Structure-function</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Stratum granulosum</p>
+        <p class="q">What waterproofs the epidermis, and where is it released?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Lamellar granules of lipid, released by keratinocytes in the stratum granulosum.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>This lipid seals the layers against water loss.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking keratin alone waterproofs the skin.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; stratum granulosum; waterproofing</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="2" data-search="which stratum is present only in thick skin? the stratum lucidum. stratum lucidum integumentary; epidermis; stratum lucidum; thick skin epidermis identification" tabindex="0" aria-label="Card W1-420">
+        <div class="card-head">
+          <span class="cid">W1-420</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Stratum lucidum</p>
+        <p class="q">Which stratum is present only in thick skin?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The stratum lucidum.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>It is a clear, thin layer found in the palms and soles.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking the lucidum is present in all skin.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; stratum lucidum; thick skin</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="2" data-search="compare thick and thin skin by their strata. thick skin of the palms and soles has all five strata; thin skin lacks the stratum lucidum. thick vs thin skin integumentary; epidermis; thick skin; thin skin epidermis comparison" tabindex="0" aria-label="Card W1-421">
+        <div class="card-head">
+          <span class="cid">W1-421</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Comparison</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Thick vs thin skin</p>
+        <p class="q">Compare thick and thin skin by their strata.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Thick skin of the palms and soles has all five strata; thin skin lacks the stratum lucidum.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Thick versus thin refers to epidermal thickness, not the whole skin.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking thick skin simply has a thicker dermis.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; thick skin; thin skin</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="1" data-search="which stratum has a spiny appearance and several cell layers? the stratum spinosum. stratum spinosum integumentary; epidermis; stratum spinosum epidermis identification" tabindex="0" aria-label="Card W1-422">
+        <div class="card-head">
+          <span class="cid">W1-422</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 2</span>
+          </span>
+        </div>
+        <p class="sub">Stratum spinosum</p>
+        <p class="q">Which stratum has a spiny appearance and several cell layers?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The stratum spinosum.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>The &#x27;spines&#x27; are shrinkage artifacts at the desmosomes.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Confusing the spinosum with the granulosum.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; stratum spinosum</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="2" data-search="trace a keratinocyte&#x27;s journey through the epidermis. born in the stratum basale, it is pushed up through the spinosum, granulosum, (lucidum in thick skin), and corneum, where it is shed. keratinocyte journey integumentary; epidermis; keratinocyte epidermis tracing" tabindex="0" aria-label="Card W1-423">
+        <div class="card-head">
+          <span class="cid">W1-423</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Tracing</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Keratinocyte journey</p>
+        <p class="q">Trace a keratinocyte&#x27;s journey through the epidermis.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Born in the stratum basale, it is pushed up through the spinosum, granulosum, (lucidum in thick skin), and corneum, where it is shed.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>The cell dies and flattens as it rises.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking keratinocytes stay in one layer.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; keratinocyte</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="3" data-search="a biopsy shows a clear, thin band just above the granulosum. from which body region is the skin most likely? thick skin of the palm or sole, because the band is the stratum lucidum. thick vs thin skin integumentary; epidermis; stratum lucidum; thick skin epidermis classification" tabindex="0" aria-label="Card W1-424">
+        <div class="card-head">
+          <span class="cid">W1-424</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Classification</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 6</span>
+          </span>
+        </div>
+        <p class="sub">Thick vs thin skin</p>
+        <p class="q">A biopsy shows a clear, thin band just above the granulosum. From which body region is the skin most likely?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Thick skin of the palm or sole, because the band is the stratum lucidum.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Only thick skin contains a stratum lucidum.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Assuming any skin sample can show a lucidum.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; stratum lucidum; thick skin</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="2" data-search="why is the stratum corneum well suited to be the body&#x27;s barrier? it is many layers of flat, dead, keratin-filled cells that resist abrasion and water loss. stratum corneum integumentary; epidermis; stratum corneum epidermis structure-function" tabindex="0" aria-label="Card W1-425">
+        <div class="card-head">
+          <span class="cid">W1-425</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Structure-function</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Stratum corneum</p>
+        <p class="q">Why is the stratum corneum well suited to be the body&#x27;s barrier?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>It is many layers of flat, dead, keratin-filled cells that resist abrasion and water loss.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Dead, keratinized cells make a durable shield.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking the barrier layer is living tissue.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; stratum corneum</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="2" data-search="compare the stratum basale and stratum corneum by cell activity. the basale is living and dividing; the corneum is dead and keratinized. strata comparison integumentary; epidermis; stratum basale; stratum corneum epidermis comparison" tabindex="0" aria-label="Card W1-426">
+        <div class="card-head">
+          <span class="cid">W1-426</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Comparison</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Strata comparison</p>
+        <p class="q">Compare the stratum basale and stratum corneum by cell activity.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The basale is living and dividing; the corneum is dead and keratinized.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Life at the bottom, protection at the top.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking corneum cells still divide.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; stratum basale; stratum corneum</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="3" data-search="in thick skin, through which strata, in order, must a keratinocyte pass from dividing to shed? basale, spinosum, granulosum, lucidum, corneum. strata order integumentary; epidermis; strata; ordering; thick skin epidermis ordering" tabindex="0" aria-label="Card W1-427">
+        <div class="card-head">
+          <span class="cid">W1-427</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Ordering</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 7</span>
+          </span>
+        </div>
+        <p class="sub">Strata order</p>
+        <p class="q">In thick skin, through which strata, in order, must a keratinocyte pass from dividing to shed?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Basale, spinosum, granulosum, lucidum, corneum.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>The lucidum step occurs only in thick skin.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Skipping the lucidum when describing thick skin.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; strata; ordering; thick skin</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="1" data-search="on what structure does the stratum basale rest? the basement membrane. stratum basale integumentary; epidermis; stratum basale; basement membrane epidermis identification" tabindex="0" aria-label="Card W1-428">
+        <div class="card-head">
+          <span class="cid">W1-428</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 3</span>
+          </span>
+        </div>
+        <p class="sub">Stratum basale</p>
+        <p class="q">On what structure does the stratum basale rest?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The basement membrane.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>The basement membrane anchors the epidermis to the dermis.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking the basale rests directly on adipose tissue.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; stratum basale; basement membrane</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="3" data-search="a wound spares the stratum basale. why can the epidermis still regenerate? the basale is the dividing layer, so intact basal cells regrow the epidermis. clinical integumentary; epidermis; stratum basale; clinical; healing epidermis board-style" tabindex="0" aria-label="Card W1-429">
+        <div class="card-head">
+          <span class="cid">W1-429</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Board-style</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 7</span>
+          </span>
+        </div>
+        <p class="sub">Clinical</p>
+        <p class="q">A wound spares the stratum basale. Why can the epidermis still regenerate?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The basale is the dividing layer, so intact basal cells regrow the epidermis.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>If the basale is destroyed, a graft is needed.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking any epidermal layer can regenerate the skin.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Relate the anatomy of the skin layers to clinical scenarios such as burns, injections, and healing.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; stratum basale; clinical; healing</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="3" data-search="why does keratinization make the outer epidermis both tough and water-resistant? as cells rise they fill with keratin and are sealed by lamellar lipid, forming a dead, hardened, waterproof surface. keratinization integumentary; epidermis; keratinization epidermis structure-function" tabindex="0" aria-label="Card W1-430">
+        <div class="card-head">
+          <span class="cid">W1-430</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Structure-function</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 7</span>
+          </span>
+        </div>
+        <p class="sub">Keratinization</p>
+        <p class="q">Why does keratinization make the outer epidermis both tough and water-resistant?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>As cells rise they fill with keratin and are sealed by lamellar lipid, forming a dead, hardened, waterproof surface.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Structural protein plus a lipid barrier work together.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking keratin alone, without the lipid, does the job.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; keratinization</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="1" data-search="what is the main cell of the epidermis? the keratinocyte. epidermal cells integumentary; epidermis; keratinocyte epidermis identification" tabindex="0" aria-label="Card W1-431">
+        <div class="card-head">
+          <span class="cid">W1-431</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 3</span>
+          </span>
+        </div>
+        <p class="sub">Epidermal cells</p>
+        <p class="q">What is the main cell of the epidermis?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The keratinocyte.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>It produces keratin, the protective protein of the epidermis.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking melanocytes are the most numerous epidermal cell.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; keratinocyte</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="2" data-search="what do keratinocytes produce, and why does it matter? keratin, the tough protein that protects the epidermis. epidermal cells integumentary; epidermis; keratinocyte; keratin epidermis structure-function" tabindex="0" aria-label="Card W1-432">
+        <div class="card-head">
+          <span class="cid">W1-432</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Structure-function</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Epidermal cells</p>
+        <p class="q">What do keratinocytes produce, and why does it matter?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Keratin, the tough protein that protects the epidermis.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Keratin gives the skin its durability.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Confusing keratin with melanin.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; keratinocyte; keratin</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="1" data-search="which epidermal cell produces melanin? the melanocyte. epidermal cells integumentary; epidermis; melanocyte; melanin epidermis identification" tabindex="0" aria-label="Card W1-433">
+        <div class="card-head">
+          <span class="cid">W1-433</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 3</span>
+          </span>
+        </div>
+        <p class="sub">Epidermal cells</p>
+        <p class="q">Which epidermal cell produces melanin?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The melanocyte.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Melanin colors the skin and shields it against UV light.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking keratinocytes make the pigment.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; melanocyte; melanin</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="2" data-search="how does melanin protect the skin? it shields the skin against uv light while also giving it color. epidermal cells integumentary; epidermis; melanocyte; melanin; uv epidermis structure-function" tabindex="0" aria-label="Card W1-434">
+        <div class="card-head">
+          <span class="cid">W1-434</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Structure-function</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Epidermal cells</p>
+        <p class="q">How does melanin protect the skin?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>It shields the skin against UV light while also giving it color.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Melanocytes pass the pigment to nearby keratinocytes.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking melanin&#x27;s only role is color.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; melanocyte; melanin; UV</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="2" data-search="compare keratinocytes and melanocytes by product and role. keratinocytes make keratin for protection; melanocytes make melanin for color and uv shielding. epidermal cells integumentary; epidermis; keratinocyte; melanocyte epidermis comparison" tabindex="0" aria-label="Card W1-435">
+        <div class="card-head">
+          <span class="cid">W1-435</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Comparison</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Epidermal cells</p>
+        <p class="q">Compare keratinocytes and melanocytes by product and role.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Keratinocytes make keratin for protection; melanocytes make melanin for color and UV shielding.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Two different products, two different jobs.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking one cell type does both jobs.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; keratinocyte; melanocyte</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="2" data-search="what is another name for tactile cells, and what do they sense? merkel cells; paired with a nerve ending, they sense touch. epidermal cells integumentary; epidermis; tactile cells; merkel cells epidermis identification" tabindex="0" aria-label="Card W1-436">
+        <div class="card-head">
+          <span class="cid">W1-436</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Epidermal cells</p>
+        <p class="q">What is another name for tactile cells, and what do they sense?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Merkel cells; paired with a nerve ending, they sense touch.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>They lie in the deep epidermis.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking Merkel cells are immune cells.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; tactile cells; Merkel cells</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="2" data-search="what is another name for dendritic cells, and what is their role? langerhans cells; they are immune cells that patrol the epidermis. epidermal cells integumentary; epidermis; dendritic cells; langerhans cells epidermis identification" tabindex="0" aria-label="Card W1-437">
+        <div class="card-head">
+          <span class="cid">W1-437</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Epidermal cells</p>
+        <p class="q">What is another name for dendritic cells, and what is their role?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Langerhans cells; they are immune cells that patrol the epidermis.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>They detect pathogens breaching the surface.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Confusing Langerhans cells of the skin with the islet cells of the pancreas.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; dendritic cells; Langerhans cells</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="2" data-search="compare tactile cells and dendritic cells by function. tactile (merkel) cells sense touch; dendritic (langerhans) cells provide immune defense. epidermal cells integumentary; epidermis; merkel cells; langerhans cells epidermis comparison" tabindex="0" aria-label="Card W1-438">
+        <div class="card-head">
+          <span class="cid">W1-438</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Comparison</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Epidermal cells</p>
+        <p class="q">Compare tactile cells and dendritic cells by function.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Tactile (Merkel) cells sense touch; dendritic (Langerhans) cells provide immune defense.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>One senses, one defends.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Swapping the roles of the two cells.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; Merkel cells; Langerhans cells</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="3" data-search="an epidermal cell partners with a sensory nerve ending. which cell type is it? a tactile (merkel) cell. epidermal cells integumentary; epidermis; merkel cells; classification epidermis classification" tabindex="0" aria-label="Card W1-439">
+        <div class="card-head">
+          <span class="cid">W1-439</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Classification</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 7</span>
+          </span>
+        </div>
+        <p class="sub">Epidermal cells</p>
+        <p class="q">An epidermal cell partners with a sensory nerve ending. Which cell type is it?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>A tactile (Merkel) cell.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Its job is touch reception.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Guessing melanocyte because it is also a specialized cell.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; Merkel cells; classification</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="3" data-search="a person&#x27;s melanocytes make very little melanin. which protection is most reduced? protection against uv light. epidermal cells integumentary; epidermis; melanocyte; uv; application epidermis application" tabindex="0" aria-label="Card W1-440">
+        <div class="card-head">
+          <span class="cid">W1-440</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Application</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 7</span>
+          </span>
+        </div>
+        <p class="sub">Epidermal cells</p>
+        <p class="q">A person&#x27;s melanocytes make very little melanin. Which protection is most reduced?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Protection against UV light.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Less melanin means less UV shielding and a higher risk of burns and damage.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking low melanin mainly affects touch or immunity.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; melanocyte; UV; application</p>
+      </article>
+      <article class="card" data-topic="Epidermis" data-dok="3" data-search="name the four epidermal cell types and pair each with its one-word job. keratinocyte (protection), melanocyte (pigment), tactile/merkel cell (touch), dendritic/langerhans cell (immunity). epidermal cells integumentary; epidermis; epidermal cells; board epidermis board-style" tabindex="0" aria-label="Card W1-441">
+        <div class="card-head">
+          <span class="cid">W1-441</span>
+          <span class="chips">
+            <span class="chip chip-topic">Epidermis</span>
+            <span class="chip chip-type">Board-style</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 7</span>
+          </span>
+        </div>
+        <p class="sub">Epidermal cells</p>
+        <p class="q">Name the four epidermal cell types and pair each with its one-word job.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Keratinocyte (protection), melanocyte (pigment), tactile/Merkel cell (touch), dendritic/Langerhans cell (immunity).</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Four cells, four jobs, one epithelium.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Forgetting the immune and touch cells and listing only keratinocytes and melanocytes.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">List the five strata of the epidermis in order and identify the cell types of the epidermis.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; epidermis; epidermal cells; board</p>
+      </article>
+      <article class="card" data-topic="Dermis" data-dok="1" data-search="what are the two layers of the dermis? the papillary layer and the reticular layer. dermal layers integumentary; dermis; papillary layer; reticular layer dermis identification" tabindex="0" aria-label="Card W1-442">
+        <div class="card-head">
+          <span class="cid">W1-442</span>
+          <span class="chips">
+            <span class="chip chip-topic">Dermis</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 3</span>
+          </span>
+        </div>
+        <p class="sub">Dermal layers</p>
+        <p class="q">What are the two layers of the dermis?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The papillary layer and the reticular layer.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>The papillary layer is superficial; the reticular layer is deep.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Confusing the dermal layers with the epidermal strata.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Distinguish the papillary and reticular layers of the dermis and the structures each contains.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis; papillary layer; reticular layer</p>
+      </article>
+      <article class="card" data-topic="Dermis" data-dok="2" data-search="compare the papillary and reticular dermis by connective tissue type. the papillary layer is areolar connective tissue; the reticular layer is dense irregular connective tissue. dermal layers integumentary; dermis; papillary layer; reticular layer dermis comparison" tabindex="0" aria-label="Card W1-443">
+        <div class="card-head">
+          <span class="cid">W1-443</span>
+          <span class="chips">
+            <span class="chip chip-topic">Dermis</span>
+            <span class="chip chip-type">Comparison</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Dermal layers</p>
+        <p class="q">Compare the papillary and reticular dermis by connective tissue type.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The papillary layer is areolar connective tissue; the reticular layer is dense irregular connective tissue.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Loose tissue above, dense tissue below.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking both dermal layers are dense.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Distinguish the papillary and reticular layers of the dermis and the structures each contains.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis; papillary layer; reticular layer</p>
+      </article>
+      <article class="card" data-topic="Dermis" data-dok="2" data-search="what are dermal papillae? finger-like projections of the papillary layer that push up into the epidermis. dermal papillae integumentary; dermis; dermal papillae dermis definition" tabindex="0" aria-label="Card W1-444">
+        <div class="card-head">
+          <span class="cid">W1-444</span>
+          <span class="chips">
+            <span class="chip chip-topic">Dermis</span>
+            <span class="chip chip-type">Definition</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Dermal papillae</p>
+        <p class="q">What are dermal papillae?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Finger-like projections of the papillary layer that push up into the epidermis.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>They interlock dermis and epidermis and can raise friction ridges.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking the papillae are part of the epidermis.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Distinguish the papillary and reticular layers of the dermis and the structures each contains.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis; dermal papillae</p>
+      </article>
+      <article class="card" data-topic="Dermis" data-dok="2" data-search="how do dermal papillae produce fingerprints? on the palms and soles they raise the epidermis into friction ridges, the basis of fingerprints. dermal papillae integumentary; dermis; dermal papillae; fingerprints dermis structure-function" tabindex="0" aria-label="Card W1-445">
+        <div class="card-head">
+          <span class="cid">W1-445</span>
+          <span class="chips">
+            <span class="chip chip-topic">Dermis</span>
+            <span class="chip chip-type">Structure-function</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Dermal papillae</p>
+        <p class="q">How do dermal papillae produce fingerprints?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>On the palms and soles they raise the epidermis into friction ridges, the basis of fingerprints.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>The ridges improve grip and leave prints.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking fingerprints are formed in the epidermis alone.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Distinguish the papillary and reticular layers of the dermis and the structures each contains.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis; dermal papillae; fingerprints</p>
+      </article>
+      <article class="card" data-topic="Dermis" data-dok="2" data-search="which corpuscles sit in the dermal papillae, and what do they sense? tactile (meissner) corpuscles; they sense light touch. sensory receptors integumentary; dermis; meissner corpuscles; light touch dermis identification" tabindex="0" aria-label="Card W1-446">
+        <div class="card-head">
+          <span class="cid">W1-446</span>
+          <span class="chips">
+            <span class="chip chip-topic">Dermis</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Sensory receptors</p>
+        <p class="q">Which corpuscles sit in the dermal papillae, and what do they sense?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Tactile (Meissner) corpuscles; they sense light touch.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Their shallow position suits fine touch.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Placing Pacinian corpuscles in the papillae.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Distinguish the papillary and reticular layers of the dermis and the structures each contains.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis; Meissner corpuscles; light touch</p>
+      </article>
+      <article class="card" data-topic="Dermis" data-dok="2" data-search="which corpuscles lie in the deep reticular layer, and what do they sense? lamellated (pacinian) corpuscles; they sense deep pressure. sensory receptors integumentary; dermis; pacinian corpuscles; deep pressure dermis identification" tabindex="0" aria-label="Card W1-447">
+        <div class="card-head">
+          <span class="cid">W1-447</span>
+          <span class="chips">
+            <span class="chip chip-topic">Dermis</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Sensory receptors</p>
+        <p class="q">Which corpuscles lie in the deep reticular layer, and what do they sense?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Lamellated (Pacinian) corpuscles; they sense deep pressure.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Their deep location suits deep-pressure detection.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking Pacinian corpuscles sense light touch.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Distinguish the papillary and reticular layers of the dermis and the structures each contains.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis; Pacinian corpuscles; deep pressure</p>
+      </article>
+      <article class="card" data-topic="Dermis" data-dok="3" data-search="compare tactile (meissner) and lamellated (pacinian) corpuscles by location and stimulus. meissner corpuscles are in the papillary layer for light touch; pacinian corpuscles are in the deep reticular layer for deep pressure. sensory receptors integumentary; dermis; meissner corpuscles; pacinian corpuscles dermis comparison" tabindex="0" aria-label="Card W1-448">
+        <div class="card-head">
+          <span class="cid">W1-448</span>
+          <span class="chips">
+            <span class="chip chip-topic">Dermis</span>
+            <span class="chip chip-type">Comparison</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 7</span>
+          </span>
+        </div>
+        <p class="sub">Sensory receptors</p>
+        <p class="q">Compare tactile (Meissner) and lamellated (Pacinian) corpuscles by location and stimulus.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Meissner corpuscles are in the papillary layer for light touch; Pacinian corpuscles are in the deep reticular layer for deep pressure.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Depth matches the stimulus each receptor detects.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Swapping their depths or their stimuli.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Distinguish the papillary and reticular layers of the dermis and the structures each contains.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis; Meissner corpuscles; Pacinian corpuscles</p>
+      </article>
+      <article class="card" data-topic="Dermis" data-dok="2" data-search="what tissue makes up the bulk of the dermis, and in which layer? dense irregular connective tissue, in the reticular layer. reticular layer integumentary; dermis; reticular layer; dense irregular dermis identification" tabindex="0" aria-label="Card W1-449">
+        <div class="card-head">
+          <span class="cid">W1-449</span>
+          <span class="chips">
+            <span class="chip chip-topic">Dermis</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Reticular layer</p>
+        <p class="q">What tissue makes up the bulk of the dermis, and in which layer?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Dense irregular connective tissue, in the reticular layer.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>This is the strong, stretch-resistant core of the skin.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking areolar tissue makes up the bulk of the dermis.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Distinguish the papillary and reticular layers of the dermis and the structures each contains.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis; reticular layer; dense irregular</p>
+      </article>
+      <article class="card" data-topic="Dermis" data-dok="2" data-search="how do collagen and elastic fibers in the reticular layer serve the skin? collagen gives strength and elastic fibers give stretch and recoil. reticular layer integumentary; dermis; reticular layer; collagen; elastic fibers dermis structure-function" tabindex="0" aria-label="Card W1-450">
+        <div class="card-head">
+          <span class="cid">W1-450</span>
+          <span class="chips">
+            <span class="chip chip-topic">Dermis</span>
+            <span class="chip chip-type">Structure-function</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Reticular layer</p>
+        <p class="q">How do collagen and elastic fibers in the reticular layer serve the skin?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Collagen gives strength and elastic fibers give stretch and recoil.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Together they let skin resist tearing yet spring back.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking one fiber type provides both strength and recoil.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Distinguish the papillary and reticular layers of the dermis and the structures each contains.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis; reticular layer; collagen; elastic fibers</p>
+      </article>
+      <article class="card" data-topic="Dermis" data-dok="2" data-search="which dermal layer holds the blood vessels, nerve endings, glands, and hair follicles? the reticular layer. reticular layer integumentary; dermis; reticular layer dermis identification" tabindex="0" aria-label="Card W1-451">
+        <div class="card-head">
+          <span class="cid">W1-451</span>
+          <span class="chips">
+            <span class="chip chip-topic">Dermis</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Reticular layer</p>
+        <p class="q">Which dermal layer holds the blood vessels, nerve endings, glands, and hair follicles?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The reticular layer.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>The deep dermis houses the working structures of the skin.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Putting hair follicles in the papillary layer.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Distinguish the papillary and reticular layers of the dermis and the structures each contains.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis; reticular layer</p>
+      </article>
+      <article class="card" data-topic="Dermis" data-dok="1" data-search="what is the main cell of the dermis? the fibroblast. dermal cells integumentary; dermis; fibroblast dermis identification" tabindex="0" aria-label="Card W1-452">
+        <div class="card-head">
+          <span class="cid">W1-452</span>
+          <span class="chips">
+            <span class="chip chip-topic">Dermis</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 3</span>
+          </span>
+        </div>
+        <p class="sub">Dermal cells</p>
+        <p class="q">What is the main cell of the dermis?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The fibroblast.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>It builds the collagen and elastic fibers of the dermal matrix.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking keratinocytes are found in the dermis.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Distinguish the papillary and reticular layers of the dermis and the structures each contains.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis; fibroblast</p>
+      </article>
+      <article class="card" data-topic="Dermis" data-dok="2" data-search="compare the roles of dermal macrophages and mast cells. macrophages are wandering phagocytes that engulf debris and pathogens; mast cells release chemicals during injury and allergy. dermal cells integumentary; dermis; macrophages; mast cells dermis comparison" tabindex="0" aria-label="Card W1-453">
+        <div class="card-head">
+          <span class="cid">W1-453</span>
+          <span class="chips">
+            <span class="chip chip-topic">Dermis</span>
+            <span class="chip chip-type">Comparison</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Dermal cells</p>
+        <p class="q">Compare the roles of dermal macrophages and mast cells.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Macrophages are wandering phagocytes that engulf debris and pathogens; mast cells release chemicals during injury and allergy.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>One engulfs invaders, the other triggers responses.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking both cells are phagocytes.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Distinguish the papillary and reticular layers of the dermis and the structures each contains.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis; macrophages; mast cells</p>
+      </article>
+      <article class="card" data-topic="Dermis" data-dok="3" data-search="a biopsy of the superficial dermis shows loose areolar tissue thrown into papillae. which dermal layer is it? the papillary layer. papillary layer integumentary; dermis; papillary layer; classification dermis classification" tabindex="0" aria-label="Card W1-454">
+        <div class="card-head">
+          <span class="cid">W1-454</span>
+          <span class="chips">
+            <span class="chip chip-topic">Dermis</span>
+            <span class="chip chip-type">Classification</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 7</span>
+          </span>
+        </div>
+        <p class="sub">Papillary layer</p>
+        <p class="q">A biopsy of the superficial dermis shows loose areolar tissue thrown into papillae. Which dermal layer is it?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The papillary layer.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Areolar tissue and papillae mark the papillary layer.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Guessing the reticular layer.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Distinguish the papillary and reticular layers of the dermis and the structures each contains.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis; papillary layer; classification</p>
+      </article>
+      <article class="card" data-topic="Dermis" data-dok="3" data-search="why are fingerprints unique to the palms and soles rather than all skin? only there do dermal papillae raise the epidermis into friction ridges. dermal papillae integumentary; dermis; dermal papillae; fingerprints dermis structure-function" tabindex="0" aria-label="Card W1-455">
+        <div class="card-head">
+          <span class="cid">W1-455</span>
+          <span class="chips">
+            <span class="chip chip-topic">Dermis</span>
+            <span class="chip chip-type">Structure-function</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 7</span>
+          </span>
+        </div>
+        <p class="sub">Dermal papillae</p>
+        <p class="q">Why are fingerprints unique to the palms and soles rather than all skin?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Only there do dermal papillae raise the epidermis into friction ridges.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>These ridges form the fingerprint pattern.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking all skin has friction ridges.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Distinguish the papillary and reticular layers of the dermis and the structures each contains.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis; dermal papillae; fingerprints</p>
+      </article>
+      <article class="card" data-topic="Dermis" data-dok="1" data-search="which dermal cell releases chemicals during injury and allergy? the mast cell. dermal cells integumentary; dermis; mast cells dermis identification" tabindex="0" aria-label="Card W1-456">
+        <div class="card-head">
+          <span class="cid">W1-456</span>
+          <span class="chips">
+            <span class="chip chip-topic">Dermis</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 3</span>
+          </span>
+        </div>
+        <p class="sub">Dermal cells</p>
+        <p class="q">Which dermal cell releases chemicals during injury and allergy?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The mast cell.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>It drives inflammation and allergic responses.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Confusing mast cells with macrophages.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Distinguish the papillary and reticular layers of the dermis and the structures each contains.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis; mast cells</p>
+      </article>
+      <article class="card" data-topic="Dermis" data-dok="3" data-search="a splinter reaches a layer rich in blood vessels and nerve endings; it bleeds and hurts. which skin layer did it reach? the dermis, specifically the reticular layer. clinical integumentary; dermis; clinical dermis application" tabindex="0" aria-label="Card W1-457">
+        <div class="card-head">
+          <span class="cid">W1-457</span>
+          <span class="chips">
+            <span class="chip chip-topic">Dermis</span>
+            <span class="chip chip-type">Application</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 7</span>
+          </span>
+        </div>
+        <p class="sub">Clinical</p>
+        <p class="q">A splinter reaches a layer rich in blood vessels and nerve endings; it bleeds and hurts. Which skin layer did it reach?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The dermis, specifically the reticular layer.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>The vascular, innervated dermis bleeds and signals pain.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking the avascular epidermis is what bleeds.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Relate the anatomy of the skin layers to clinical scenarios such as burns, injections, and healing.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis; clinical</p>
+      </article>
+      <article class="card" data-topic="Dermis" data-dok="3" data-search="light touch and deep pressure on the same fingertip are detected by different receptors. name each and its dermal location. light touch by meissner corpuscles in the papillary layer; deep pressure by pacinian corpuscles in the deep reticular layer. sensory receptors integumentary; dermis; meissner corpuscles; pacinian corpuscles; board dermis board-style" tabindex="0" aria-label="Card W1-458">
+        <div class="card-head">
+          <span class="cid">W1-458</span>
+          <span class="chips">
+            <span class="chip chip-topic">Dermis</span>
+            <span class="chip chip-type">Board-style</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 7</span>
+          </span>
+        </div>
+        <p class="sub">Sensory receptors</p>
+        <p class="q">Light touch and deep pressure on the same fingertip are detected by different receptors. Name each and its dermal location.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Light touch by Meissner corpuscles in the papillary layer; deep pressure by Pacinian corpuscles in the deep reticular layer.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Receptor depth matches the stimulus.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Assuming a single receptor detects both.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Distinguish the papillary and reticular layers of the dermis and the structures each contains.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; dermis; Meissner corpuscles; Pacinian corpuscles; board</p>
+      </article>
+      <article class="card" data-topic="Hair" data-dok="1" data-search="what is hair? a strand of keratinized cells produced by a hair follicle. hair structure integumentary; hair hair definition" tabindex="0" aria-label="Card W1-459">
+        <div class="card-head">
+          <span class="cid">W1-459</span>
+          <span class="chips">
+            <span class="chip chip-topic">Hair</span>
+            <span class="chip chip-type">Definition</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 3</span>
+          </span>
+        </div>
+        <p class="sub">Hair structure</p>
+        <p class="q">What is hair?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>A strand of keratinized cells produced by a hair follicle.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Hair is dead keratinized tissue, like the outer epidermis.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking hair is living tissue along its length.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; hair</p>
+      </article>
+      <article class="card" data-topic="Hair" data-dok="2" data-search="compare the hair shaft and hair root by location. the shaft is the part above the skin surface; the root is the part within the follicle. hair structure integumentary; hair; hair shaft; hair root hair comparison" tabindex="0" aria-label="Card W1-460">
+        <div class="card-head">
+          <span class="cid">W1-460</span>
+          <span class="chips">
+            <span class="chip chip-topic">Hair</span>
+            <span class="chip chip-type">Comparison</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Hair structure</p>
+        <p class="q">Compare the hair shaft and hair root by location.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The shaft is the part above the skin surface; the root is the part within the follicle.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Surface versus embedded.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Swapping shaft and root.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; hair; hair shaft; hair root</p>
+      </article>
+      <article class="card" data-topic="Hair" data-dok="2" data-search="what is a hair follicle? a tube of epidermal and dermal tissue that surrounds the hair root. hair follicle integumentary; hair; hair follicle hair definition" tabindex="0" aria-label="Card W1-461">
+        <div class="card-head">
+          <span class="cid">W1-461</span>
+          <span class="chips">
+            <span class="chip chip-topic">Hair</span>
+            <span class="chip chip-type">Definition</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Hair follicle</p>
+        <p class="q">What is a hair follicle?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>A tube of epidermal and dermal tissue that surrounds the hair root.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>It combines both skin layers around the root.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking the follicle is purely epidermal.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; hair; hair follicle</p>
+      </article>
+      <article class="card" data-topic="Hair" data-dok="2" data-search="where in the follicle does the hair actually grow? in the hair bulb, the expanded base of the follicle. hair bulb integumentary; hair; hair bulb hair identification" tabindex="0" aria-label="Card W1-462">
+        <div class="card-head">
+          <span class="cid">W1-462</span>
+          <span class="chips">
+            <span class="chip chip-topic">Hair</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Hair bulb</p>
+        <p class="q">Where in the follicle does the hair actually grow?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>In the hair bulb, the expanded base of the follicle.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>New cells form here and are pushed upward.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking hair grows from its tip.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; hair; hair bulb</p>
+      </article>
+      <article class="card" data-topic="Hair" data-dok="2" data-search="what sets hair color, and which cells are responsible? melanocytes deposit pigment into the cortex and medulla of the hair. hair color integumentary; hair; melanocytes; hair color hair structure-function" tabindex="0" aria-label="Card W1-463">
+        <div class="card-head">
+          <span class="cid">W1-463</span>
+          <span class="chips">
+            <span class="chip chip-topic">Hair</span>
+            <span class="chip chip-type">Structure-function</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Hair color</p>
+        <p class="q">What sets hair color, and which cells are responsible?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Melanocytes deposit pigment into the cortex and medulla of the hair.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Loss of this pigment turns hair gray.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking the follicle wall colors the hair.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; hair; melanocytes; hair color</p>
+      </article>
+      <article class="card" data-topic="Hair" data-dok="2" data-search="what is the arrector pili, and what does it do? a small smooth muscle that pulls the hair upright. arrector pili integumentary; hair; arrector pili hair identification" tabindex="0" aria-label="Card W1-464">
+        <div class="card-head">
+          <span class="cid">W1-464</span>
+          <span class="chips">
+            <span class="chip chip-topic">Hair</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Arrector pili</p>
+        <p class="q">What is the arrector pili, and what does it do?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>A small smooth muscle that pulls the hair upright.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Its contraction produces goose bumps.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking the arrector pili is skeletal muscle.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; hair; arrector pili</p>
+      </article>
+      <article class="card" data-topic="Hair" data-dok="1" data-search="what does the hair root plexus detect? movement of the hair, through sensory nerve endings around the follicle. hair root plexus integumentary; hair; hair root plexus hair identification" tabindex="0" aria-label="Card W1-465">
+        <div class="card-head">
+          <span class="cid">W1-465</span>
+          <span class="chips">
+            <span class="chip chip-topic">Hair</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 3</span>
+          </span>
+        </div>
+        <p class="sub">Hair root plexus</p>
+        <p class="q">What does the hair root plexus detect?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Movement of the hair, through sensory nerve endings around the follicle.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>This makes hairs sensitive touch detectors.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking the plexus supplies blood rather than sensation.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; hair; hair root plexus</p>
+      </article>
+      <article class="card" data-topic="Hair" data-dok="2" data-search="compare the epithelial and dermal root sheaths of a hair. the epithelial root sheath is the epidermal tube wrapping the root; the dermal root sheath is the connective tissue layer around the follicle. root sheaths integumentary; hair; root sheaths hair comparison" tabindex="0" aria-label="Card W1-466">
+        <div class="card-head">
+          <span class="cid">W1-466</span>
+          <span class="chips">
+            <span class="chip chip-topic">Hair</span>
+            <span class="chip chip-type">Comparison</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Root sheaths</p>
+        <p class="q">Compare the epithelial and dermal root sheaths of a hair.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The epithelial root sheath is the epidermal tube wrapping the root; the dermal root sheath is the connective tissue layer around the follicle.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Epithelial inside, connective tissue outside.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Swapping the two sheaths.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; hair; root sheaths</p>
+      </article>
+      <article class="card" data-topic="Hair" data-dok="3" data-search="why does contraction of the arrector pili produce goose bumps? the smooth muscle pulls the hair upright, dimpling the skin at the follicle. arrector pili integumentary; hair; arrector pili hair structure-function" tabindex="0" aria-label="Card W1-467">
+        <div class="card-head">
+          <span class="cid">W1-467</span>
+          <span class="chips">
+            <span class="chip chip-topic">Hair</span>
+            <span class="chip chip-type">Structure-function</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 7</span>
+          </span>
+        </div>
+        <p class="sub">Arrector pili</p>
+        <p class="q">Why does contraction of the arrector pili produce goose bumps?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The smooth muscle pulls the hair upright, dimpling the skin at the follicle.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>It is a vestigial response that once fluffed fur for warmth.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking goose bumps come from the hair itself contracting.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; hair; arrector pili</p>
+      </article>
+      <article class="card" data-topic="Hair" data-dok="3" data-search="a structure is the expanded base of a follicle where new hair cells form. what is it? the hair bulb. hair bulb integumentary; hair; hair bulb; classification hair classification" tabindex="0" aria-label="Card W1-468">
+        <div class="card-head">
+          <span class="cid">W1-468</span>
+          <span class="chips">
+            <span class="chip chip-topic">Hair</span>
+            <span class="chip chip-type">Classification</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 7</span>
+          </span>
+        </div>
+        <p class="sub">Hair bulb</p>
+        <p class="q">A structure is the expanded base of a follicle where new hair cells form. What is it?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The hair bulb.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>It is the growth zone of the hair.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Confusing the bulb with the hair root plexus.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; hair; hair bulb; classification</p>
+      </article>
+      <article class="card" data-topic="Hair" data-dok="3" data-search="someone&#x27;s hair turns gray with age. what has changed at the cellular level? melanocytes are depositing little or no pigment into the cortex and medulla. hair color integumentary; hair; melanocytes; application hair application" tabindex="0" aria-label="Card W1-469">
+        <div class="card-head">
+          <span class="cid">W1-469</span>
+          <span class="chips">
+            <span class="chip chip-topic">Hair</span>
+            <span class="chip chip-type">Application</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 7</span>
+          </span>
+        </div>
+        <p class="sub">Hair color</p>
+        <p class="q">Someone&#x27;s hair turns gray with age. What has changed at the cellular level?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Melanocytes are depositing little or no pigment into the cortex and medulla.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>No pigment means no color.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking gray hair means the follicle has died.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; hair; melanocytes; application</p>
+      </article>
+      <article class="card" data-topic="Hair" data-dok="1" data-search="what is the part of the hair within the follicle called? the hair root. hair structure integumentary; hair; hair root hair identification" tabindex="0" aria-label="Card W1-470">
+        <div class="card-head">
+          <span class="cid">W1-470</span>
+          <span class="chips">
+            <span class="chip chip-topic">Hair</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 3</span>
+          </span>
+        </div>
+        <p class="sub">Hair structure</p>
+        <p class="q">What is the part of the hair within the follicle called?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The hair root.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>The shaft is the visible part above the surface.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Calling the visible hair the root.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; hair; hair root</p>
+      </article>
+      <article class="card" data-topic="Hair" data-dok="3" data-search="trace a hair from where it grows to where you see it, naming each part. new cells form in the hair bulb, become the root within the follicle, and emerge as the shaft above the skin. hair structure integumentary; hair; board hair board-style" tabindex="0" aria-label="Card W1-471">
+        <div class="card-head">
+          <span class="cid">W1-471</span>
+          <span class="chips">
+            <span class="chip chip-topic">Hair</span>
+            <span class="chip chip-type">Board-style</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 7</span>
+          </span>
+        </div>
+        <p class="sub">Hair structure</p>
+        <p class="q">Trace a hair from where it grows to where you see it, naming each part.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>New cells form in the hair bulb, become the root within the follicle, and emerge as the shaft above the skin.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Growth at the base, visibility at the top.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking hair grows from the shaft downward.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; hair; board</p>
+      </article>
+      <article class="card" data-topic="Nails" data-dok="1" data-search="what is a nail? a plate of hard keratin on the dorsal tip of a finger or toe. nail structure integumentary; nails nails definition" tabindex="0" aria-label="Card W1-472">
+        <div class="card-head">
+          <span class="cid">W1-472</span>
+          <span class="chips">
+            <span class="chip chip-topic">Nails</span>
+            <span class="chip chip-type">Definition</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 3</span>
+          </span>
+        </div>
+        <p class="sub">Nail structure</p>
+        <p class="q">What is a nail?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>A plate of hard keratin on the dorsal tip of a finger or toe.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Nails are a keratinized accessory structure of the skin.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking nails are made of bone.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; nails</p>
+      </article>
+      <article class="card" data-topic="Nails" data-dok="2" data-search="what is the nail matrix, and why does it matter? the growth region at the proximal end of the nail; new nail forms here. nail matrix integumentary; nails; nail matrix nails identification" tabindex="0" aria-label="Card W1-473">
+        <div class="card-head">
+          <span class="cid">W1-473</span>
+          <span class="chips">
+            <span class="chip chip-topic">Nails</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Nail matrix</p>
+        <p class="q">What is the nail matrix, and why does it matter?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The growth region at the proximal end of the nail; new nail forms here.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Damage to the matrix deforms nail growth.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking the nail grows from its tip.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; nails; nail matrix</p>
+      </article>
+      <article class="card" data-topic="Nails" data-dok="2" data-search="compare the nail plate and the nail bed. the nail plate is the visible body of the nail; the nail bed is the skin beneath it. nail structure integumentary; nails; nail plate; nail bed nails comparison" tabindex="0" aria-label="Card W1-474">
+        <div class="card-head">
+          <span class="cid">W1-474</span>
+          <span class="chips">
+            <span class="chip chip-topic">Nails</span>
+            <span class="chip chip-type">Comparison</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Nail structure</p>
+        <p class="q">Compare the nail plate and the nail bed.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The nail plate is the visible body of the nail; the nail bed is the skin beneath it.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Plate on top, bed underneath.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Swapping the plate and the bed.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; nails; nail plate; nail bed</p>
+      </article>
+      <article class="card" data-topic="Nails" data-dok="2" data-search="what is the lunule? the pale crescent at the base of the nail. lunule integumentary; nails; lunule nails identification" tabindex="0" aria-label="Card W1-475">
+        <div class="card-head">
+          <span class="cid">W1-475</span>
+          <span class="chips">
+            <span class="chip chip-topic">Nails</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 5</span>
+          </span>
+        </div>
+        <p class="sub">Lunule</p>
+        <p class="q">What is the lunule?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The pale crescent at the base of the nail.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>It overlies the thick nail matrix.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking the lunule is dead tissue lying on top of the nail.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; nails; lunule</p>
+      </article>
+      <article class="card" data-topic="Nails" data-dok="2" data-search="what is another name for the cuticle, and what is it? the eponychium; a fold of skin over the proximal nail. cuticle integumentary; nails; cuticle; eponychium nails identification" tabindex="0" aria-label="Card W1-476">
+        <div class="card-head">
+          <span class="cid">W1-476</span>
+          <span class="chips">
+            <span class="chip chip-topic">Nails</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 6</span>
+          </span>
+        </div>
+        <p class="sub">Cuticle</p>
+        <p class="q">What is another name for the cuticle, and what is it?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The eponychium; a fold of skin over the proximal nail.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>It seals the base of the nail.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Confusing the cuticle with the lunule.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; nails; cuticle; eponychium</p>
+      </article>
+      <article class="card" data-topic="Nails" data-dok="2" data-search="why does injury to the nail matrix affect the whole nail? the matrix is where new nail is produced, so damage there disrupts all subsequent growth. nail matrix integumentary; nails; nail matrix nails structure-function" tabindex="0" aria-label="Card W1-477">
+        <div class="card-head">
+          <span class="cid">W1-477</span>
+          <span class="chips">
+            <span class="chip chip-topic">Nails</span>
+            <span class="chip chip-type">Structure-function</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 6</span>
+          </span>
+        </div>
+        <p class="sub">Nail matrix</p>
+        <p class="q">Why does injury to the nail matrix affect the whole nail?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The matrix is where new nail is produced, so damage there disrupts all subsequent growth.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>The growth zone controls the plate that follows.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking the visible plate regrows itself.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; nails; nail matrix</p>
+      </article>
+      <article class="card" data-topic="Nails" data-dok="3" data-search="a pale crescent shows at the base of a nail. what structure is it, and what lies beneath it? the lunule, which overlies the nail matrix. lunule integumentary; nails; lunule; nail matrix nails classification" tabindex="0" aria-label="Card W1-478">
+        <div class="card-head">
+          <span class="cid">W1-478</span>
+          <span class="chips">
+            <span class="chip chip-topic">Nails</span>
+            <span class="chip chip-type">Classification</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 8</span>
+          </span>
+        </div>
+        <p class="sub">Lunule</p>
+        <p class="q">A pale crescent shows at the base of a nail. What structure is it, and what lies beneath it?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The lunule, which overlies the nail matrix.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Its paleness comes from the thick underlying matrix.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking the lunule is separate from the matrix.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; nails; lunule; nail matrix</p>
+      </article>
+      <article class="card" data-topic="Nails" data-dok="3" data-search="a nail grows out over months from one region. name that region and where you would find it. the nail matrix, at the proximal end of the nail beneath the lunule. nail matrix integumentary; nails; nail matrix; board nails board-style" tabindex="0" aria-label="Card W1-479">
+        <div class="card-head">
+          <span class="cid">W1-479</span>
+          <span class="chips">
+            <span class="chip chip-topic">Nails</span>
+            <span class="chip chip-type">Board-style</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 8</span>
+          </span>
+        </div>
+        <p class="sub">Nail matrix</p>
+        <p class="q">A nail grows out over months from one region. Name that region and where you would find it.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The nail matrix, at the proximal end of the nail beneath the lunule.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>All nail length originates here.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Believing the free edge generates new nail.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; nails; nail matrix; board</p>
+      </article>
+      <article class="card" data-topic="Glands" data-dok="1" data-search="which skin gland produces sebum, and where does it release it? the sebaceous gland; it releases oily sebum into hair follicles. sebaceous glands integumentary; glands; sebaceous glands; sebum glands identification" tabindex="0" aria-label="Card W1-480">
+        <div class="card-head">
+          <span class="cid">W1-480</span>
+          <span class="chips">
+            <span class="chip chip-topic">Glands</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Sebaceous glands</p>
+        <p class="q">Which skin gland produces sebum, and where does it release it?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The sebaceous gland; it releases oily sebum into hair follicles.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Sebum softens the hair and skin.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking sebaceous glands open directly onto the skin surface.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; glands; sebaceous glands; sebum</p>
+      </article>
+      <article class="card" data-topic="Glands" data-dok="2" data-search="which sweat gland is the most numerous, and where does it open? the eccrine sweat gland; it opens directly onto the skin surface. eccrine glands integumentary; glands; eccrine glands glands identification" tabindex="0" aria-label="Card W1-481">
+        <div class="card-head">
+          <span class="cid">W1-481</span>
+          <span class="chips">
+            <span class="chip chip-topic">Glands</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 6</span>
+          </span>
+        </div>
+        <p class="sub">Eccrine glands</p>
+        <p class="q">Which sweat gland is the most numerous, and where does it open?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The eccrine sweat gland; it opens directly onto the skin surface.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>It makes watery sweat for cooling.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Confusing eccrine glands with apocrine glands.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; glands; eccrine glands</p>
+      </article>
+      <article class="card" data-topic="Glands" data-dok="2" data-search="compare eccrine and apocrine sweat glands by secretion and where they open. eccrine glands make watery sweat onto the skin surface; apocrine glands make richer, thicker sweat into hair follicles of the axillary and genital regions. sweat glands integumentary; glands; eccrine glands; apocrine glands glands comparison" tabindex="0" aria-label="Card W1-482">
+        <div class="card-head">
+          <span class="cid">W1-482</span>
+          <span class="chips">
+            <span class="chip chip-topic">Glands</span>
+            <span class="chip chip-type">Comparison</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 6</span>
+          </span>
+        </div>
+        <p class="sub">Sweat glands</p>
+        <p class="q">Compare eccrine and apocrine sweat glands by secretion and where they open.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Eccrine glands make watery sweat onto the skin surface; apocrine glands make richer, thicker sweat into hair follicles of the axillary and genital regions.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Different secretions and different outlets.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking both open onto the skin surface.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; glands; eccrine glands; apocrine glands</p>
+      </article>
+      <article class="card" data-topic="Glands" data-dok="2" data-search="what do ceruminous glands produce, and where? cerumen, or earwax, released into the ear canal. ceruminous glands integumentary; glands; ceruminous glands; cerumen glands identification" tabindex="0" aria-label="Card W1-483">
+        <div class="card-head">
+          <span class="cid">W1-483</span>
+          <span class="chips">
+            <span class="chip chip-topic">Glands</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 6</span>
+          </span>
+        </div>
+        <p class="sub">Ceruminous glands</p>
+        <p class="q">What do ceruminous glands produce, and where?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Cerumen, or earwax, released into the ear canal.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>They are modified sweat glands.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking earwax comes only from sebaceous glands.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; glands; ceruminous glands; cerumen</p>
+      </article>
+      <article class="card" data-topic="Glands" data-dok="2" data-search="which gland is a modified sweat gland that produces milk? the mammary gland. mammary glands integumentary; glands; mammary glands glands identification" tabindex="0" aria-label="Card W1-484">
+        <div class="card-head">
+          <span class="cid">W1-484</span>
+          <span class="chips">
+            <span class="chip chip-topic">Glands</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 6</span>
+          </span>
+        </div>
+        <p class="sub">Mammary glands</p>
+        <p class="q">Which gland is a modified sweat gland that produces milk?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The mammary gland.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>It delivers milk through ducts to the nipple.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking mammary glands are modified sebaceous glands.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; glands; mammary glands</p>
+      </article>
+      <article class="card" data-topic="Glands" data-dok="2" data-search="why does sebum reach the skin surface through hair follicles rather than its own pore? sebaceous glands empty into hair follicles, and the sebum travels up along the hair. sebaceous glands integumentary; glands; sebaceous glands; sebum glands structure-function" tabindex="0" aria-label="Card W1-485">
+        <div class="card-head">
+          <span class="cid">W1-485</span>
+          <span class="chips">
+            <span class="chip chip-topic">Glands</span>
+            <span class="chip chip-type">Structure-function</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 6</span>
+          </span>
+        </div>
+        <p class="sub">Sebaceous glands</p>
+        <p class="q">Why does sebum reach the skin surface through hair follicles rather than its own pore?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Sebaceous glands empty into hair follicles, and the sebum travels up along the hair.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>This lubricates both the hair and the skin.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking sebaceous glands have surface pores like eccrine glands.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; glands; sebaceous glands; sebum</p>
+      </article>
+      <article class="card" data-topic="Glands" data-dok="2" data-search="compare sebaceous and eccrine glands by secretion and outlet. sebaceous glands release oily sebum into follicles; eccrine glands release watery sweat onto the skin surface. gland comparison integumentary; glands; sebaceous glands; eccrine glands glands comparison" tabindex="0" aria-label="Card W1-486">
+        <div class="card-head">
+          <span class="cid">W1-486</span>
+          <span class="chips">
+            <span class="chip chip-topic">Glands</span>
+            <span class="chip chip-type">Comparison</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 6</span>
+          </span>
+        </div>
+        <p class="sub">Gland comparison</p>
+        <p class="q">Compare sebaceous and eccrine glands by secretion and outlet.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Sebaceous glands release oily sebum into follicles; eccrine glands release watery sweat onto the skin surface.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Oil versus water, follicle versus surface.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking both glands secrete sweat.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; glands; sebaceous glands; eccrine glands</p>
+      </article>
+      <article class="card" data-topic="Glands" data-dok="3" data-search="a gland empties a rich, thick secretion into hair follicles of the armpit. which gland is it? an apocrine sweat gland. apocrine glands integumentary; glands; apocrine glands; classification glands classification" tabindex="0" aria-label="Card W1-487">
+        <div class="card-head">
+          <span class="cid">W1-487</span>
+          <span class="chips">
+            <span class="chip chip-topic">Glands</span>
+            <span class="chip chip-type">Classification</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 8</span>
+          </span>
+        </div>
+        <p class="sub">Apocrine glands</p>
+        <p class="q">A gland empties a rich, thick secretion into hair follicles of the armpit. Which gland is it?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>An apocrine sweat gland.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Apocrine glands localize to the axillary and genital regions.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Guessing eccrine because it is also a sweat gland.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; glands; apocrine glands; classification</p>
+      </article>
+      <article class="card" data-topic="Glands" data-dok="3" data-search="a modified sweat gland empties earwax into the ear canal. which gland is it? a ceruminous gland. ceruminous glands integumentary; glands; ceruminous glands; classification glands classification" tabindex="0" aria-label="Card W1-488">
+        <div class="card-head">
+          <span class="cid">W1-488</span>
+          <span class="chips">
+            <span class="chip chip-topic">Glands</span>
+            <span class="chip chip-type">Classification</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 8</span>
+          </span>
+        </div>
+        <p class="sub">Ceruminous glands</p>
+        <p class="q">A modified sweat gland empties earwax into the ear canal. Which gland is it?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>A ceruminous gland.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Cerumen protects the ear canal.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking it is a sebaceous gland.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; glands; ceruminous glands; classification</p>
+      </article>
+      <article class="card" data-topic="Glands" data-dok="1" data-search="what does the sebaceous gland&#x27;s secretion do for hair and skin? sebum softens the hair and skin. sebaceous glands integumentary; glands; sebaceous glands; sebum glands identification" tabindex="0" aria-label="Card W1-489">
+        <div class="card-head">
+          <span class="cid">W1-489</span>
+          <span class="chips">
+            <span class="chip chip-topic">Glands</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Sebaceous glands</p>
+        <p class="q">What does the sebaceous gland&#x27;s secretion do for hair and skin?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Sebum softens the hair and skin.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>It acts as an oily conditioner and mild water repellent.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking sebum&#x27;s main role is cooling.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; glands; sebaceous glands; sebum</p>
+      </article>
+      <article class="card" data-topic="Glands" data-dok="3" data-search="a blocked sebaceous gland traps oily secretion in a follicle. which secretion and outlet are involved? sebum, which normally drains into the hair follicle. clinical integumentary; glands; sebaceous glands; clinical; acne glands application" tabindex="0" aria-label="Card W1-490">
+        <div class="card-head">
+          <span class="cid">W1-490</span>
+          <span class="chips">
+            <span class="chip chip-topic">Glands</span>
+            <span class="chip chip-type">Application</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 8</span>
+          </span>
+        </div>
+        <p class="sub">Clinical</p>
+        <p class="q">A blocked sebaceous gland traps oily secretion in a follicle. Which secretion and outlet are involved?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Sebum, which normally drains into the hair follicle.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>This backup underlies common acne lesions.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking the blockage involves watery sweat.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Relate the anatomy of the skin layers to clinical scenarios such as burns, injections, and healing.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; glands; sebaceous glands; clinical; acne</p>
+      </article>
+      <article class="card" data-topic="Glands" data-dok="3" data-search="name the two sweat-derived &#x27;modified&#x27; glands and what each secretes. ceruminous glands (earwax) and mammary glands (milk). modified sweat glands integumentary; glands; ceruminous glands; mammary glands; board glands board-style" tabindex="0" aria-label="Card W1-491">
+        <div class="card-head">
+          <span class="cid">W1-491</span>
+          <span class="chips">
+            <span class="chip chip-topic">Glands</span>
+            <span class="chip chip-type">Board-style</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 8</span>
+          </span>
+        </div>
+        <p class="sub">Modified sweat glands</p>
+        <p class="q">Name the two sweat-derived &#x27;modified&#x27; glands and what each secretes.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Ceruminous glands (earwax) and mammary glands (milk).</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Both are modified sweat glands.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Listing sebaceous glands as modified sweat glands.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; glands; ceruminous glands; mammary glands; board</p>
+      </article>
+      <article class="card" data-topic="Glands" data-dok="1" data-search="name the three modes by which exocrine glands release their product. merocrine (eccrine), apocrine, and holocrine. secretion modes integumentary; glands; secretion modes glands identification" tabindex="0" aria-label="Card W1-492">
+        <div class="card-head">
+          <span class="cid">W1-492</span>
+          <span class="chips">
+            <span class="chip chip-topic">Glands</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Secretion modes</p>
+        <p class="q">Name the three modes by which exocrine glands release their product.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Merocrine (eccrine), apocrine, and holocrine.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>They differ in how much of the cell is lost during secretion.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Confusing the secretion mode with the gland&#x27;s name.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; glands; secretion modes</p>
+      </article>
+      <article class="card" data-topic="Glands" data-dok="2" data-search="compare merocrine and holocrine secretion. merocrine cells stay intact and release product by exocytosis; holocrine cells fill with product and rupture, becoming the secretion. secretion modes integumentary; glands; secretion modes; merocrine; holocrine glands comparison" tabindex="0" aria-label="Card W1-493">
+        <div class="card-head">
+          <span class="cid">W1-493</span>
+          <span class="chips">
+            <span class="chip chip-topic">Glands</span>
+            <span class="chip chip-type">Comparison</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 6</span>
+          </span>
+        </div>
+        <p class="sub">Secretion modes</p>
+        <p class="q">Compare merocrine and holocrine secretion.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Merocrine cells stay intact and release product by exocytosis; holocrine cells fill with product and rupture, becoming the secretion.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>No cell lost versus the whole cell lost.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking holocrine glands survive each release.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; glands; secretion modes; merocrine; holocrine</p>
+      </article>
+      <article class="card" data-topic="Glands" data-dok="2" data-search="sebaceous glands release product by the whole cell rupturing. which secretion mode is this? holocrine. secretion modes integumentary; glands; secretion modes; holocrine; sebaceous glands glands classification" tabindex="0" aria-label="Card W1-494">
+        <div class="card-head">
+          <span class="cid">W1-494</span>
+          <span class="chips">
+            <span class="chip chip-topic">Glands</span>
+            <span class="chip chip-type">Classification</span>
+            <span class="chip dok dok-2">DOK 2 · Concept</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 6</span>
+          </span>
+        </div>
+        <p class="sub">Secretion modes</p>
+        <p class="q">Sebaceous glands release product by the whole cell rupturing. Which secretion mode is this?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Holocrine.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>The ruptured cell becomes the sebum.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Calling it apocrine secretion.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; glands; secretion modes; holocrine; sebaceous glands</p>
+      </article>
+      <article class="card" data-topic="Glands" data-dok="3" data-search="a gland loses only the apical tip of each cell during secretion. which mode is it, and name a gland that uses it. apocrine secretion; apocrine sweat glands (and mammary glands) use it. secretion modes integumentary; glands; secretion modes; apocrine glands board-style" tabindex="0" aria-label="Card W1-495">
+        <div class="card-head">
+          <span class="cid">W1-495</span>
+          <span class="chips">
+            <span class="chip chip-topic">Glands</span>
+            <span class="chip chip-type">Board-style</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 8</span>
+          </span>
+        </div>
+        <p class="sub">Secretion modes</p>
+        <p class="q">A gland loses only the apical tip of each cell during secretion. Which mode is it, and name a gland that uses it.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Apocrine secretion; apocrine sweat glands (and mammary glands) use it.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>It falls between merocrine and holocrine in how much cell is lost.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Confusing the apocrine mode with the apocrine gland&#x27;s location.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Identify the accessory structures of the skin: hair, nails, and glands.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; glands; secretion modes; apocrine</p>
+      </article>
+      <article class="card" data-topic="Clinical" data-dok="1" data-search="a first-degree burn damages which skin layer only? the epidermis. burns integumentary; clinical; burns clinical identification" tabindex="0" aria-label="Card W1-496">
+        <div class="card-head">
+          <span class="cid">W1-496</span>
+          <span class="chips">
+            <span class="chip chip-topic">Clinical</span>
+            <span class="chip chip-type">Identification</span>
+            <span class="chip dok dok-1">DOK 1 · Recall</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 4</span>
+          </span>
+        </div>
+        <p class="sub">Burns</p>
+        <p class="q">A first-degree burn damages which skin layer only?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>The epidermis.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Like a mild sunburn, it heals without scarring.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking a first-degree burn reaches the dermis.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Relate the anatomy of the skin layers to clinical scenarios such as burns, injections, and healing.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; clinical; burns</p>
+      </article>
+      <article class="card" data-topic="Clinical" data-dok="3" data-search="compare a second-degree and a third-degree burn by the layers they reach and by pain. second-degree reaches into the dermis and blisters; third-degree destroys the full thickness of epidermis and dermis and can be painless because the dermal nerve endings are gone. burns integumentary; clinical; burns clinical comparison" tabindex="0" aria-label="Card W1-497">
+        <div class="card-head">
+          <span class="cid">W1-497</span>
+          <span class="chips">
+            <span class="chip chip-topic">Clinical</span>
+            <span class="chip chip-type">Comparison</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 8</span>
+          </span>
+        </div>
+        <p class="sub">Burns</p>
+        <p class="q">Compare a second-degree and a third-degree burn by the layers they reach and by pain.</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Second-degree reaches into the dermis and blisters; third-degree destroys the full thickness of epidermis and dermis and can be painless because the dermal nerve endings are gone.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>A deeper burn can hurt less, yet it is more serious.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Assuming the deepest burn is always the most painful.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Relate the anatomy of the skin layers to clinical scenarios such as burns, injections, and healing.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; clinical; burns</p>
+      </article>
+      <article class="card" data-topic="Clinical" data-dok="3" data-search="why can a full-thickness (third-degree) burn be painless? it destroys the dermis, including the nerve endings that sense pain. burns integumentary; clinical; burns clinical application" tabindex="0" aria-label="Card W1-498">
+        <div class="card-head">
+          <span class="cid">W1-498</span>
+          <span class="chips">
+            <span class="chip chip-topic">Clinical</span>
+            <span class="chip chip-type">Application</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 8</span>
+          </span>
+        </div>
+        <p class="sub">Burns</p>
+        <p class="q">Why can a full-thickness (third-degree) burn be painless?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>It destroys the dermis, including the nerve endings that sense pain.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>No nerves means no pain signal from that area.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking painlessness means the burn is minor.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Relate the anatomy of the skin layers to clinical scenarios such as burns, injections, and healing.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; clinical; burns</p>
+      </article>
+      <article class="card" data-topic="Clinical" data-dok="3" data-search="an injection is placed into the dermis for a skin test. what is this route called, and how does it differ from subcutaneous? intradermal, into the dermis; subcutaneous is deeper, into the hypodermis. injections integumentary; clinical; injections clinical classification" tabindex="0" aria-label="Card W1-499">
+        <div class="card-head">
+          <span class="cid">W1-499</span>
+          <span class="chips">
+            <span class="chip chip-topic">Clinical</span>
+            <span class="chip chip-type">Classification</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 8</span>
+          </span>
+        </div>
+        <p class="sub">Injections</p>
+        <p class="q">An injection is placed into the dermis for a skin test. What is this route called, and how does it differ from subcutaneous?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>Intradermal, into the dermis; subcutaneous is deeper, into the hypodermis.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Depth defines the injection route.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Using &#x27;subcutaneous&#x27; and &#x27;intradermal&#x27; interchangeably.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Relate the anatomy of the skin layers to clinical scenarios such as burns, injections, and healing.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; clinical; injections</p>
+      </article>
+      <article class="card" data-topic="Clinical" data-dok="3" data-search="two burns both remove the epidermis, but one heals on its own and one needs a graft. what structural difference explains this? if the stratum basale, the dividing layer, survives, the skin regenerates; if it is destroyed, a graft is needed. healing integumentary; clinical; healing; stratum basale; board clinical board-style" tabindex="0" aria-label="Card W1-500">
+        <div class="card-head">
+          <span class="cid">W1-500</span>
+          <span class="chips">
+            <span class="chip chip-topic">Clinical</span>
+            <span class="chip chip-type">Board-style</span>
+            <span class="chip dok dok-3">DOK 3 · Reasoning</span>
+            <span class="chip chip-diff" title="Difficulty 1 to 10">Diff 8</span>
+          </span>
+        </div>
+        <p class="sub">Healing</p>
+        <p class="q">Two burns both remove the epidermis, but one heals on its own and one needs a graft. What structural difference explains this?</p>
+        <details>
+          <summary><span class="sum-open">Show answer &amp; teaching notes</span><span class="sum-close">Hide</span></summary>
+          <div class="reveal">
+            <p class="a"><span class="lbl lbl-a">Answer</span>If the stratum basale, the dividing layer, survives, the skin regenerates; if it is destroyed, a graft is needed.</p>
+            <p class="ex"><span class="lbl">Why it matters</span>Regeneration depends on the basal layer.</p>
+            <p class="mc"><span class="lbl lbl-mc">Common misconception</span>Thinking any surviving skin can regrow the epidermis.</p>
+            <p class="lo"><span class="lbl">Objective</span><span class="lo-txt">Relate the anatomy of the skin layers to clinical scenarios such as burns, injections, and healing.</span></p>
+          </div>
+        </details>
+        <p class="tags">integumentary; clinical; healing; stratum basale; board</p>
+      </article>
+  </section>
+
+  <footer class="foot">
+    <p class="disc">Comprehensive schema: Card ID, Week, System, Module, Topic, Subtopic, Learning Objective, Difficulty, Depth of Knowledge, Question, Answer, Explanation, Common Misconception, Tags. Continues directly from cards 1 to 400 with no repeats. Competency tag reserved for a later pass. A study aid, not a substitute for lecture, lab, the structure list, or the syllabus.</p>
+    <p>Mastery OS · Spaced Recall · Batch 5 &nbsp;·&nbsp; <span class="sig">Dr. Sharilyn Rennie</span></p>
+  </footer>
+</main>
+<script>
+(function(){
+  var q=document.getElementById('q'),topic=document.getElementById('topic'),
+      dok=document.getElementById('dok'),count=document.getElementById('count'),
+      toggle=document.getElementById('toggleAll'),grid=document.getElementById('cards'),
+      cards=Array.prototype.slice.call(document.querySelectorAll('.card')),
+      empty=null;
+  function apply(){
+    var term=(q.value||'').trim().toLowerCase(), t=topic.value, d=dok.value, shown=0;
+    cards.forEach(function(c){
+      var ok=(t==='all'||c.dataset.topic===t)
+           &&(d==='all'||c.dataset.dok===d)
+           &&(!term||c.dataset.search.indexOf(term)>-1);
+      c.style.display=ok?'':'none'; if(ok) shown++;
+    });
+    count.textContent=shown+' of '+cards.length;
+    if(!empty){empty=document.createElement('p');empty.className='empty';empty.textContent='No cards match. Clear the filters or search.';grid.appendChild(empty);}
+    empty.style.display=shown?'none':'';
+  }
+  q.addEventListener('input',apply);
+  topic.addEventListener('change',apply);
+  dok.addEventListener('change',apply);
+  toggle.addEventListener('click',function(){
+    var open=toggle.getAttribute('aria-pressed')!=='true';
+    document.querySelectorAll('.card details').forEach(function(d){ if(d.closest('.card').style.display!=='none') d.open=open; });
+    toggle.setAttribute('aria-pressed',open?'true':'false');
+    toggle.textContent=open?'Hide all':'Reveal all';
+  });
+})();
+/* iframe height-sender for Kajabi / GitHub Pages embeds */
+(function(){
+  function send(){ try{parent.postMessage({id:'bio004-week1-batch5',frameId:'bio004-week1-batch5',type:'resize',height:document.documentElement.scrollHeight}, '*');}catch(e){} }
+  window.addEventListener('load',send); window.addEventListener('resize',send);
+  document.addEventListener('click',function(){setTimeout(send,300);});
+  if(window.ResizeObserver){ new ResizeObserver(send).observe(document.body); }
+})();
+</script>
+</body>
+</html>
