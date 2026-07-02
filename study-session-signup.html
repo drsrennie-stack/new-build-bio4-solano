@@ -207,6 +207,9 @@
   .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
   .dlg-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:8px;}
   .dlg-err{color:var(--red);font-family:var(--font-display);font-weight:700;font-size:.86rem;min-height:1.1em;margin:0 0 8px;}
+  .cf-line{font-family:var(--font-body);font-size:.95rem;color:var(--page-ink);margin:3px 0;}
+  .cf-line strong{color:var(--terra-cta);}
+  .cf-note{font-family:var(--font-body);font-size:.85rem;color:var(--page-soft);margin:8px 0 0;line-height:1.45;}
 
   footer{background:transparent;color:var(--page-soft);text-align:center;padding:1.9rem 1.5rem 1.7rem;margin-top:40px;}
   footer .by{font-family:var(--font-display);font-weight:700;color:var(--page-ink);font-size:1rem;margin-bottom:.15rem;}
@@ -313,11 +316,11 @@
     <div class="notice">
       <strong>How hosting works.</strong>
       <ul>
-        <li>When you offer to host, you run the session yourself, on your own Zoom or in person. If you host on Zoom, record it; that recording is what earns you host credit. For in-person sessions, type the location instead of a link.</li>
-        <li>After the session, click "Host? Add recording and attendance" on your session. Paste your recording link and your Zoom attendance report. That submits everyone's attendance for tracking and shares the replay.</li>
-        <li>When you sign up, use your full name as it appears on the class roster, and use that same name in Zoom, so the host can match you in the attendance report.</li>
-        <li>We collect emails only to match people to sessions and verify hosts. Emails and attendance reports are private to Dr. Rennie, never posted on this page.</li>
-        <li>Be respectful of classmates' time. If you sign up, show up, or cancel your seat so someone else can take it.</li>
+        <li>Host on your own Zoom or in person. On Zoom, record it, that recording earns your host credit.</li>
+        <li>After the session, tap "Host? Add recording and attendance" and paste your recording link and Zoom attendance report.</li>
+        <li>Sign up with your full roster name, and use it in Zoom, so hosts can match you.</li>
+        <li>Emails stay private to Dr. Rennie, never posted here.</li>
+        <li>If you sign up, show up, or cancel your seat so someone else can take it.</li>
       </ul>
     </div>
 
@@ -328,29 +331,12 @@
 <dialog id="hostDialog" aria-labelledby="hostDlgTitle">
   <form method="dialog" class="dlg-inner" id="hostForm">
     <p class="dlg-eyebrow">Offer to host</p>
-    <h2 class="dlg-title" id="hostDlgTitle">Set up a study session</h2>
-    <p class="dlg-sub">You lead it, classmates join. Pick a date, time, and topic.</p>
+    <h2 class="dlg-title" id="hostDlgTitle">Start a study session</h2>
+    <p class="dlg-sub">About a minute. You lead it, classmates join.</p>
     <p class="dlg-err" id="hostErr" role="alert"></p>
+
     <div class="field">
-      <label for="h-name">Your name <span class="req" aria-hidden="true">*</span></label>
-      <input id="h-name" name="hostName" type="text" autocomplete="name" required maxlength="60">
-    </div>
-    <div class="field">
-      <label for="h-email">Your email <span class="req" aria-hidden="true">*</span></label>
-      <input id="h-email" name="hostEmail" type="email" autocomplete="email" required maxlength="120">
-      <span class="hint">Used to identify you and share the recording. Not posted publicly.</span>
-    </div>
-    <div class="field">
-      <label for="h-role">I am hosting as <span class="req" aria-hidden="true">*</span></label>
-      <select id="h-role" name="role" required>
-        <option value="Student" selected>Student</option>
-        <option value="Tutor">Tutor</option>
-        <option value="Faculty">Faculty</option>
-      </select>
-      <span class="hint">Sets your card color: faculty terracotta, tutor gold, student white.</span>
-    </div>
-    <div class="field">
-      <label for="h-topic" id="h-topic-label">Topic or chapter <span class="req" aria-hidden="true">*</span></label>
+      <label for="h-topic" id="h-topic-label">What are you studying? <span class="req" aria-hidden="true">*</span></label>
       <input id="h-topic" name="topic" type="text" required maxlength="60" placeholder="e.g. Appendicular skeleton review">
     </div>
     <div class="field-row">
@@ -365,22 +351,30 @@
     </div>
     <div class="field-row">
       <div class="field">
-        <label for="h-cap">Seats (optional)</label>
-        <input id="h-cap" name="capacity" type="number" min="1" max="100" placeholder="No limit">
+        <label for="h-name">Your name <span class="req" aria-hidden="true">*</span></label>
+        <input id="h-name" name="hostName" type="text" autocomplete="name" required maxlength="60">
       </div>
       <div class="field">
-        <label for="h-dur">Length in minutes</label>
-        <input id="h-dur" name="duration" type="number" min="15" max="480" placeholder="90">
+        <label for="h-email">Your email <span class="req" aria-hidden="true">*</span></label>
+        <input id="h-email" name="hostEmail" type="email" autocomplete="email" required maxlength="120">
       </div>
     </div>
     <div class="field">
-      <label for="h-zoom">Online meeting link (if meeting on Zoom)</label>
+      <label for="h-role">Hosting as <span class="req" aria-hidden="true">*</span></label>
+      <select id="h-role" name="role" required>
+        <option value="Student" selected>Student</option>
+        <option value="Tutor">Tutor</option>
+        <option value="Faculty">Faculty</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="h-zoom">Online meeting link</label>
       <input id="h-zoom" name="zoomLink" type="url" maxlength="400" placeholder="https://zoom.us/j/...">
-      <span class="hint">Paste the link to the room you will host in. Leave blank if you are meeting in person.</span>
+      <span class="hint">Required for online sessions.</span>
     </div>
     <div class="field-row">
       <div class="field">
-        <label for="h-campus">Campus (if in person)</label>
+        <label for="h-campus">Campus</label>
         <select id="h-campus" name="campus">
           <option value="" selected>--</option>
           <option value="Fairfield">Fairfield</option>
@@ -389,15 +383,24 @@
         </select>
       </div>
       <div class="field">
-        <label for="h-loc">Room or place (if in person)</label>
-        <input id="h-loc" name="location" type="text" maxlength="30" placeholder="e.g. Room 812, Library">
+        <label for="h-loc">Room or place</label>
+        <input id="h-loc" name="location" type="text" maxlength="30" placeholder="e.g. Room 812">
       </div>
     </div>
-    <span class="hint" style="display:block;margin:-8px 0 14px;">Faculty: pick a campus and add the room. It shows as plain text, not a link.</span>
+    <span class="hint" style="display:block;margin:-8px 0 14px;">Meeting in person? Pick a campus and room.</span>
+    <div class="field-row">
+      <div class="field">
+        <label for="h-cap">Seats</label>
+        <input id="h-cap" name="capacity" type="number" min="1" max="100" placeholder="No limit">
+      </div>
+      <div class="field">
+        <label for="h-dur">Length (min)</label>
+        <input id="h-dur" name="duration" type="number" min="15" max="480" placeholder="90">
+      </div>
+    </div>
     <div class="field">
-      <label for="h-pass">Meeting passcode (optional)</label>
-      <input id="h-pass" name="passcode" type="text" maxlength="16" placeholder="Leave blank if none">
-      <span class="hint">If your Zoom needs a passcode, add it here so classmates can get in.</span>
+      <label for="h-pass">Passcode</label>
+      <input id="h-pass" name="passcode" type="text" maxlength="16" placeholder="Only if your Zoom needs one">
     </div>
     <div class="dlg-actions">
       <button type="button" class="btn btn-ghost btn-sm" data-close>Cancel</button>
@@ -429,6 +432,19 @@
     </div>
     <p style="margin:14px 0 0;text-align:center;"><button type="button" class="hostlink danger" id="suHostCancel">Are you the host? Cancel this session</button></p>
   </form>
+</dialog>
+
+<!-- SIGNUP CONFIRMATION DIALOG -->
+<dialog id="confirmDialog" aria-labelledby="cfTitle">
+  <div class="dlg-inner">
+    <p class="dlg-eyebrow">You're in</p>
+    <h2 class="dlg-title" id="cfTitle">See you there</h2>
+    <p class="dlg-sub" id="cfSub"></p>
+    <div id="cfDetails"></div>
+    <div class="dlg-actions">
+      <button type="button" class="btn btn-primary btn-sm" data-close>Got it</button>
+    </div>
+  </div>
 </dialog>
 
 <!-- HOST WRAP-UP DIALOG -->
@@ -520,6 +536,7 @@ const signupDialog = $("#signupDialog");
 const roomsDialog = $("#roomsDialog");
 const wrapDialog = $("#wrapDialog");
 const cancelDialog = $("#cancelDialog");
+const confirmDialog = $("#confirmDialog");
 let cancelMode = null;
 let pollTimer = null;
 let activeSessionId = null;
@@ -872,6 +889,13 @@ $("#hostForm").addEventListener("submit", async (e) => {
   if(!payload.hostName || !payload.hostEmail || !baseTopic || !payload.date || !payload.time){
     $("#hostErr").textContent = "Please fill in all required fields."; return;
   }
+  const inPerson = (campus && campus !== "Online") || !!roomText;
+  if(campus === "Online" && !payload.zoomLink){
+    $("#hostErr").textContent = "This is an online session. Please add the meeting link."; return;
+  }
+  if(!payload.zoomLink && !inPerson){
+    $("#hostErr").textContent = "Add an online meeting link, or pick a campus and room for an in-person session."; return;
+  }
   $("#hostSubmit").disabled = true;
   try{
     await api(payload);
@@ -908,13 +932,15 @@ $("#signupForm").addEventListener("submit", async (e) => {
   if(!payload.name || !payload.email){
     $("#suErr").textContent = "Please add your name and email."; return;
   }
+  const sessId = activeSessionId;
   $("#suSubmit").disabled = true;
   try{
     await api(payload);
     saveIdentity(payload.name, payload.email);
     signupDialog.close();
-    setStatus("You're signed up. See you on Zoom.", "ok");
+    setStatus("You're signed up.", "ok");
     await load();
+    openConfirm(rawSessions.find(x => x.id === sessId), payload.email);
   }catch(err){
     $("#suErr").textContent = err.message;
   }finally{
@@ -1053,8 +1079,27 @@ $("#suHostCancel").addEventListener("click", () => {
 /* ---------- dialog close buttons + backdrop ---------- */
 document.querySelectorAll("[data-close]").forEach(b =>
   b.addEventListener("click", () => b.closest("dialog").close()));
-[hostDialog, signupDialog, roomsDialog, wrapDialog, cancelDialog].forEach(d =>
+[hostDialog, signupDialog, roomsDialog, wrapDialog, cancelDialog, confirmDialog].forEach(d =>
   d.addEventListener("click", e => { if(e.target === d) d.close(); }));
+
+function openConfirm(s, email){
+  if(!s){ return; }
+  $("#cfSub").textContent = '"' + s.topic + '" on ' + fmtDate(s.date) + ' at ' + fmtTime(s.time) + ', hosted by ' + (s.hostName || "TBD") + '.';
+  const link = joinLink(s);
+  let html = "";
+  if(link){
+    html += '<a class="btn btn-navy btn-sm" href="' + esc(link) + '" target="_blank" rel="noopener" style="margin:2px 0 12px;">Open the meeting link</a>';
+    html += '<p class="cf-note">Tip: the same link is on this session’s card, and it lights up when the session starts.</p>';
+  } else if(s.location){
+    html += '<p class="cf-line"><strong>In person:</strong> ' + esc(s.location) + '</p>';
+  } else {
+    html += '<p class="cf-note">The host has not added a meeting link yet. Check back on the card, or watch your email.</p>';
+  }
+  if(s.passcode){ html += '<p class="cf-line"><strong>Passcode:</strong> ' + esc(s.passcode) + '</p>'; }
+  if(email){ html += '<p class="cf-note">We also emailed these details to <strong>' + esc(email) + '</strong>.</p>'; }
+  $("#cfDetails").innerHTML = html;
+  confirmDialog.showModal();
+}
 
 $("#refreshBtn").addEventListener("click", () => { setStatus("Refreshing..."); load().then(()=>setStatus("")); });
 
