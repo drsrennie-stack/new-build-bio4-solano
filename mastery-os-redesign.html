@@ -1831,7 +1831,9 @@ function resourceBtns(comp){
 }
 var FOCUS_VALS=[15,20,25,30,35,40,45,50,55,60,75,90];
 function pbField(label,id,vals,cur,labelFn){
-  var opts=vals.map(function(v){return '<option value="'+v+'"'+(v==cur?' selected':'')+'>'+(labelFn?labelFn(v):v)+'</option>';}).join('');
+  var list=vals.slice();var c=(cur===''||cur==null)?null:+cur;
+  if(c!=null&&!isNaN(c)&&list.indexOf(c)<0){list.push(c);list.sort(function(a,b){return a-b;});}
+  var opts=list.map(function(v){return '<option value="'+v+'"'+(v==cur?' selected':'')+'>'+(labelFn?labelFn(v):v)+'</option>';}).join('');
   return '<label style="font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);display:block">'+label+'<select id="'+id+'" style="display:block;width:100%;margin-top:5px;font-family:inherit;font-size:14px;padding:8px;border-radius:8px;border:1.5px solid var(--line);background:var(--offwhite)">'+opts+'</select></label>';
 }
 function pbRead(){return {focus:+$('#pbFocus').value,shortBrk:+$('#pbShort').value,longBrk:+$('#pbLong').value,blocks:+$('#pbBlocks').value,longEvery:+$('#pbEvery').value};}
@@ -1859,7 +1861,7 @@ function openSessionChooser(kind){
     '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:11px;margin-bottom:12px">'+
       pbField('Focus blocks','pbBlocks',[1,2,3,4,5,6,8],pm.blocks)+
       pbField('Focus min','pbFocus',FOCUS_VALS,pm.focus)+
-      pbField('Short break','pbShort',[3,5,8,10,15],pm.shortBrk)+
+      pbField('Short break','pbShort',[3,5,8,10,15,20],pm.shortBrk)+
       pbField('Long break','pbLong',[0,15,20,30,45],pm.longBrk,function(v){return v===0?'none':v;})+
       pbField('Long break after','pbEvery',[0,2,3,4],pm.longEvery,function(v){return v===0?'never':('every '+v);})+
     '</div>'+
@@ -2151,12 +2153,13 @@ function renderGrades(){
 
 function drawKnow(){
   gSet('Draw it to Know it','Given, not Googled');
-  var w=weaknesses();var c=(w[0]&&w[0].c)||allComps()[0].c;CUR_EX=c;
+  var c=exerciseComp();CUR_EX=c;
   var rub=rubricFor(c)||[];var shown=0;
   function render(){
     var revealed=rub.slice(0,shown);
     var b='<div class="g-qmeta"><span>Draw or mind-map from memory</span><span>'+esc(c.name)+'</span></div>';
-    b+='<p class="g-q">On paper, draw <b>'+esc(c.name)+'</b> from memory, or build a mini mind-map of it. No notes. Put it in the centre and branch out every part and connection you can.</p>';
+    b+='<p class="g-q">On paper or the drawing canvas, draw <b>'+esc(c.name)+'</b> from memory, or build a mini mind-map of it. No notes. Put it in the centre and branch out every part and connection you can.</p>';
+    b+='<div class="g-actions" style="margin-bottom:12px"><button class="btn" data-toolblank="mastery-canvas.html?title='+encodeURIComponent(c.name)+'">Draw on canvas (iPad friendly)</button></div>';
     if(rub.length){
       b+='<div class="reference-box"><h4>Self-check, should include ('+revealed.length+' of '+rub.length+')</h4><ul>'+(revealed.length?revealed.map(function(x){return '<li>'+esc(x)+'</li>';}).join(''):'<li style="list-style:none;color:var(--ink-faint)">Hidden. Draw or map it first, then reveal to grade yourself.</li>')+'</ul></div>';
       b+='<div class="g-actions">'+(shown<rub.length?'<button class="btn" id="dkHint">Reveal one</button><button class="btn" id="dkAll">Show full checklist</button>':'<span style="color:var(--ok);font-weight:700;align-self:center">Full checklist shown, grade yourself.</span>')+'</div>';
