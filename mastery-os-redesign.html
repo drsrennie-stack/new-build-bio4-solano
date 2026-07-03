@@ -415,6 +415,9 @@ section.block:first-of-type{border-top:none}
 .pm-step[aria-pressed="true"] .pm-box{background:var(--ok);border-color:var(--ok)}
 .pm-step[aria-pressed="true"] .pm-box::after{content:'✓'}
 .pm-step[aria-pressed="true"] .lbl{text-decoration:line-through;opacity:.7}
+.wk-pick[aria-pressed="true"]{background:rgba(63,122,91,.12);border-color:var(--ok)}
+.wk-pick[aria-pressed="true"] .lbl{text-decoration:none;opacity:1;color:var(--navy)}
+.wk-pick .lbl b{font-weight:800}
 /* floating pomodoro (dark, solid) */
 .pomo-float{position:fixed;right:20px;bottom:20px;width:322px;max-width:calc(100vw - 32px);background:#0B1530;background:linear-gradient(158deg,#17284a 0%,#0B1530 55%,#060A18 100%);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-lg);box-shadow:0 22px 48px -16px rgba(0,0,0,.62);color:var(--cream);z-index:75;overflow:hidden}
 .pomo-float[hidden]{display:none}
@@ -1461,17 +1464,38 @@ function logEvidence(k,compId){
 /* =========================================================
    PROVE-IT (competency evidence picker)
 ========================================================= */
+var PROVE_READY=['retrieval','draw','explain','teach'];
+var PROVE_HOW={
+  explain:'Say it out loud in plain language, no notes, as if teaching a friend. Where you get stuck is your gap.',
+  teach:'Explain it to another person until they can say it back. Their questions show you what you missed.'
+};
 function openProve(id){
-  var f=findComp(id);if(!f)return;var c=f.c;
-  SESS={title:'Prove: '+c.name,sub:'Choose your evidence',comps:[c],i:0,steps:[{stage:{n:'Evidence',t:'How will you prove '+c.name+'?',icon:I.target,p:'Mastery moves only after you demonstrate it. Pick a method.'},items:[],actions:EVIDENCE.filter(function(e){return ['retrieval','draw','label','cadaver','histo','explain','teach','clinical','questions'].indexOf(e.k)>-1;}).map(function(e){
-    return e.href?{label:e.name,attr:'data-tool="'+e.href+'" data-logafter="'+e.k+':'+c.id+'"'}:{label:e.name,kind:'primary',attr:'data-logev="'+e.k+':'+c.id+'"'};
-  }),reflect:false}]};
-  $('#sessTitle').textContent=SESS.title;$('#sessSub').textContent=SESS.sub;
-  renderSessStep();
-  var ov=$('#sessionOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');
-  lastFocus=document.activeElement;$('#sessClose').focus();
-  /* single step: Next becomes Done */
-  $('#sessNext').textContent='Done';
+  var f=findComp(id);if(!f)return;var c=f.c;CUR_EX=c;
+  clearG();var ov=$('#gameOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');lastFocus=document.activeElement;$('#gameClose').focus();
+  gSet('Prove: '+c.name,'Pick one way, then do it');
+  function methodBtn(e){
+    var ready=PROVE_READY.indexOf(e.k)>-1;
+    if(ready)return '<button class="btn prove-m" data-provem="'+e.k+'" style="text-align:left;display:block;width:100%;margin:0 0 8px;padding:12px 14px"><b>'+esc(e.name)+'</b><br><span style="font-size:12.5px;color:var(--ink-soft);font-weight:400">'+esc(e.desc)+'</span></button>';
+    return '<div class="prove-m soon" style="position:relative;text-align:left;width:100%;margin:0 0 8px;padding:12px 14px;border:1.5px solid var(--line);border-radius:var(--r);opacity:.6"><span class="proto-badge" style="position:absolute;top:10px;right:10px">Coming soon</span><b>'+esc(e.name)+'</b><br><span style="font-size:12.5px;color:var(--ink-soft);font-weight:400">'+esc(e.desc)+'</span></div>';
+  }
+  gBody('<div style="text-align:left"><p style="color:var(--ink-soft);margin:0 0 14px">Pick the one way you want to prove <b>'+esc(c.name)+'</b>, whatever way you are most comfortable. Do it, and your mastery moves. Spaced recall keeps it locked in over time.</p>'+
+    EVIDENCE.map(methodBtn).join('')+
+    '<div class="g-actions"><button class="btn" data-gameclose>Close</button></div></div>');
+  $$('#gameBody [data-provem]').forEach(function(b){b.onclick=function(){proveDo(c,b.getAttribute('data-provem'));};});
+}
+function proveDo(c,k){
+  var e=EVMAP[k];if(!e)return;
+  if(e.href){
+    var url=e.href;
+    if(k==='draw'||k==='label')url+='?title='+encodeURIComponent(c.name);
+    else if(e.href.indexOf('spaced-recall')>-1)url+='#comp='+encodeURIComponent(c.id);
+    window.open(url,'_blank','noopener');
+    logEvidence(k,c.id);closeGame();
+    return;
+  }
+  gBody('<div class="g-center"><div class="g-emoji">🎯</div><h3>'+esc(e.name)+'</h3><p>'+esc(PROVE_HOW[k]||e.desc)+'</p><p style="font-size:13px;color:var(--ink-soft)">When you are done, mark it and your mastery moves. Then run spaced recall to keep it.</p><div class="g-actions"><button class="btn gold" id="proveDone">I did it, mark done</button><button class="btn" data-toolblank="spaced-recall.html#comp='+encodeURIComponent(c.id)+'">Spaced recall</button><button class="btn" id="proveBack">Back</button></div></div>');
+  $('#proveDone').onclick=function(){logEvidence(k,c.id);closeGame();};
+  $('#proveBack').onclick=function(){openProve(c.id);};
 }
 
 /* =========================================================
@@ -2019,7 +2043,8 @@ function openCram(){
   var rows=weeks.map(function(w){var on=pre.indexOf(w.n)>-1;return '<li><button type="button" class="pm-step wk-pick" data-wk="'+w.n+'" aria-pressed="'+(on?'true':'false')+'"><span class="pm-box" aria-hidden="true"></span><span class="lbl"><b>Week '+w.n+'</b> &middot; '+esc(w.title)+'</span></button></li>';}).join('');
   gBody('<div class="g-qmeta"><span>Gap Finder + Cram</span><span>Next: '+esc(exam.name)+', '+Math.max(0,dayDiff(exam.date,TODAY))+' days</span></div>'+
     '<p class="g-q" style="font-size:16px">Which material are you cramming?</p>'+
-    '<div class="g-actions" style="margin-bottom:12px"><button class="btn" data-crampreset="exam">This exam</button><button class="btn" data-crampreset="midterm">Midterm, Weeks 1 to 4</button><button class="btn" data-crampreset="all">Everything</button></div>'+
+    '<div class="g-actions" style="margin-bottom:10px"><button class="btn" data-crampreset="exam">This exam</button><button class="btn" data-crampreset="midterm">Midterm, Weeks 1 to 4</button><button class="btn" data-crampreset="all">Everything</button></div>'+
+    '<p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 10px">A checked, highlighted week is <b>included</b> in this cram. Tap a week to add or remove it.</p>'+
     '<ul id="wkPick" style="list-style:none;padding:0;margin:0 0 14px;display:grid;gap:7px">'+rows+'</ul>'+
     '<div class="g-actions"><button class="btn gold big" id="cramGo">Run Gap Finder</button><button class="btn big" id="cramSkipSaved">Skip, use saved progress</button></div>');
   function selWeeks(){return $$('#wkPick .wk-pick[aria-pressed="true"]').map(function(b){return +b.getAttribute('data-wk');});}
