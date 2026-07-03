@@ -975,15 +975,15 @@ function ingestRecall(){
 
 /* evidence method metadata */
 var EVIDENCE=[
-  {k:'retrieval',name:'Retrieval practice',icon:I.recall,desc:'Answer questions from memory across DOK levels.',cta:'Open Reps',href:'reps.html'},
-  {k:'draw',name:'Draw from memory',icon:I.draw,desc:'Reconstruct the structure with nothing in front of you.',cta:'Open Freestyle',href:'freestyle.html'},
-  {k:'label',name:'Label diagrams',icon:I.label,desc:'Place every marker on a blank figure.',cta:'Open Anatomy Canvas',href:'anatomy-canvas.html'},
-  {k:'cadaver',name:'Cadaver identification',icon:I.eye,desc:'Name the structure on the specimen, not the textbook.',cta:'Open Anatomy Canvas',href:'anatomy-canvas.html'},
-  {k:'histo',name:'Histology identification',icon:I.micro,desc:'Identify the tissue at the microscope level.',cta:'Open Anatomy Canvas',href:'anatomy-canvas.html'},
+  {k:'retrieval',name:'Retrieval practice',icon:I.recall,desc:'Answer questions from memory across DOK levels.',cta:'Open Spaced Recall',href:'spaced-recall.html'},
+  {k:'draw',name:'Draw from memory',icon:I.draw,desc:'Reconstruct the structure with nothing in front of you.',cta:'Open drawing canvas',href:'mastery-canvas.html'},
+  {k:'label',name:'Label diagrams',icon:I.label,desc:'Place every marker on a blank figure.',cta:'Open drawing canvas',href:'mastery-canvas.html'},
+  {k:'cadaver',name:'Cadaver identification',icon:I.eye,desc:'Name the structure on the specimen, not the textbook.',cta:'Mark it done',href:null},
+  {k:'histo',name:'Histology identification',icon:I.micro,desc:'Identify the tissue at the microscope level.',cta:'Mark it done',href:null},
   {k:'explain',name:'Explain aloud',icon:I.speak,desc:'Say it out loud in plain language, no notes.',cta:'Start explaining',href:null},
   {k:'teach',name:'Teach another learner',icon:I.teach,desc:'The real test: can someone else follow you?',cta:'Start teaching',href:null},
-  {k:'clinical',name:'Clinical case',icon:I.clinical,desc:'Apply the structure to a patient scenario.',cta:'Open Gauntlet',href:'gauntlet.html'},
-  {k:'questions',name:'Create practice questions',icon:I.build,desc:'Write items that would trip up a classmate.',cta:'Open Bank Builder',href:'canvas-bank-builder.html'}
+  {k:'clinical',name:'Clinical case',icon:I.clinical,desc:'Apply the structure to a patient scenario.',cta:'Mark it done',href:null},
+  {k:'questions',name:'Create practice questions',icon:I.build,desc:'Write items that would trip up a classmate.',cta:'Mark it done',href:null}
 ];
 var EVMAP={};EVIDENCE.forEach(function(e){EVMAP[e.k]=e;});
 
@@ -1287,7 +1287,7 @@ function coachRespond(id,rawText){
       actions=[{label:'Run 20-min micro-session',kind:'gold',attr:'data-session="micro"'},{label:'Work weakness cards',attr:'data-toolblank="spaced-recall.html"'}];break;
     case 'prep-lab':
       reply='Lab today is <b>'+nm(lab)+'</b>. Lab is identification under pressure, so practice naming on blank figures and specimens, not reading. Cadaver and histology are your lowest dimensions right now.';
-      actions=[{label:'Open Anatomy Canvas',kind:'',attr:'data-tool="anatomy-canvas.html"'},{label:'Run lab prep',kind:'primary',attr:'data-session="lab"'}];break;
+      actions=[{label:'Open Anatomy Canvas',kind:'',attr:'data-tool="mastery-canvas.html"'},{label:'Run lab prep',kind:'primary',attr:'data-session="lab"'}];break;
     case 'test-weak':
       reply='You have <b>'+w.length+'</b> flagged competencies. I will build a session from only those, hardest first, starting with <b>'+(w[0]?esc(w[0].c.name):'')+'</b>.';
       actions=[{label:'Repair My Weaknesses',kind:'rust',attr:'data-session="repair"'}];break;
@@ -1329,7 +1329,7 @@ function coachFreeText(t){
 function coachFreeActions(t){
   t=t.toLowerCase();
   if(/weak|gap|struggl/.test(t))return [{label:'Repair My Weaknesses',kind:'rust',attr:'data-session="repair"'}];
-  if(/lab|cadaver/.test(t))return [{label:'Open Anatomy Canvas',kind:'',attr:'data-tool="anatomy-canvas.html"'}];
+  if(/lab|cadaver/.test(t))return [{label:'Open Anatomy Canvas',kind:'',attr:'data-tool="mastery-canvas.html"'}];
   return [{label:'Start Today\'s Session',kind:'gold',attr:'data-session="today"'}];
 }
 
@@ -1373,14 +1373,14 @@ function stageStep(st,ctx){
     actions=[{label:'See full weakness list',attr:'data-scroll="#s-weak" data-sclose'}];
   }else if(st.k==='repair'){
     picks.forEach(function(c){items.push('Reread and redraw <b>'+esc(c.name)+'</b>, then close the book');});
-    actions=[{label:'Draw from memory',attr:'data-tool="freestyle.html"'},{label:'Label a blank figure',attr:'data-tool="anatomy-canvas.html"'}];
+    actions=[{label:'Draw from memory',attr:'data-tool="mastery-canvas.html"'},{label:'Label a blank figure',attr:'data-tool="mastery-canvas.html"'}];
   }else if(st.k==='retrieve'){
     picks.forEach(function(c){items.push('Recall <b>'+esc(c.name)+'</b> cold, no notes');});
     if(ctx.due&&ctx.due.length)items.push(ctx.due.length+' scheduled recall items are due today');
-    actions=[{label:'Open Reps',kind:'primary',attr:'data-tool="reps.html"'},{label:'Spaced Recall',attr:'data-tool="spaced-recall.html"'}];
+    actions=[{label:'Open Reps',kind:'primary',attr:'data-tool="spaced-recall.html"'},{label:'Spaced Recall',attr:'data-tool="spaced-recall.html"'}];
   }else if(st.k==='apply'){
     picks.forEach(function(c){items.push('Use <b>'+esc(c.name)+'</b> in a case or on an image');});
-    actions=[{label:'Open Gauntlet',kind:'primary',attr:'data-tool="gauntlet.html"'}];
+    actions=[{label:'Open Gauntlet',kind:'primary',attr:'data-tool="spaced-recall.html"'}];
   }else if(st.k==='teach'){
     picks.forEach(function(c){items.push('Explain <b>'+esc(c.name)+'</b> out loud in plain language');});
     actions=[{label:'Mark taught',kind:'gold',attr:'data-logev="teach:'+(picks[0]?picks[0].id:'')+'"'}];
@@ -1827,7 +1827,7 @@ function resourceBtns(comp){
     if(r.notes)out+='<button class="btn" data-toolblank="'+r.notes+'">Notes</button>';
     if(out)return out;
   }
-  return '<button class="btn" data-toolblank="reps.html">Retrieve in Reps</button><button class="btn" data-toolblank="freestyle.html">Draw from memory</button><button class="btn" data-toolblank="spaced-recall.html">Spaced recall</button>';
+  return '<button class="btn" data-toolblank="spaced-recall.html">Retrieve in recall</button><button class="btn" data-toolblank="mastery-canvas.html">Draw from memory</button><button class="btn" data-toolblank="spaced-recall.html">Spaced recall</button>';
 }
 var FOCUS_VALS=[15,20,25,30,35,40,45,50,55,60,75,90];
 function pbField(label,id,vals,cur,labelFn){
