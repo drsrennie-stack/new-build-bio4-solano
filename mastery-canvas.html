@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drawing Canvas &middot; BIO 004 Human Anatomy</title>
+<meta name="description" content="A blank white canvas for drawing anatomy from memory. Pen sizes, lines, arrows, circles, boxes, and text. Save to PDF or print.">
+<link href="https://cdn.jsdelivr.net/npm/@fontsource-variable/plus-jakarta-sans/index.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--navy:#0B1530;--near-black:#060A18;--rust:#8B3A2E;--terra:#C2734D;--gold:#C9A14A;--gold-light:#D9B065;--cream:#F5F1E8;--white:#FFFFFF;--offwhite:#FAFAF9;--slate:#8C90A0;--line:rgba(11,21,48,.14);--disp:'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{font-family:var(--disp);background:var(--offwhite);color:var(--navy);font-size:16px;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh}
+button,select{font-family:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
+.bar{background:#fff;border-bottom:1px solid var(--line);padding:9px max(12px,2vw);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{display:inline-flex;align-items:center;gap:9px;text-decoration:none}
+.brand svg{height:30px;width:auto}
+.brand .lt{font-size:14px;font-weight:800;color:var(--navy);line-height:1}
+.brand .lt .ac{color:var(--rust)}
+.title{font-weight:800;font-size:14.5px;color:var(--navy);margin-left:4px;padding:5px 12px;background:var(--cream);border-radius:999px}
+.grow{flex:1}
+.toolbar{background:#fff;border-bottom:1px solid var(--line);padding:8px max(12px,2vw);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tgroup{display:flex;gap:4px;align-items:center;padding-right:8px;border-right:1px solid var(--line)}
+.tgroup:last-child{border-right:0}
+.tlabel{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);opacity:.55;margin-right:2px}
+.tbtn{border:1.5px solid var(--line);background:#fff;color:var(--navy);border-radius:8px;padding:8px 11px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px;min-height:40px}
+.tbtn:hover{border-color:var(--navy)}
+.tbtn[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tbtn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.tbtn.gold:hover{background:var(--gold-light)}
+.sz{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);background:#fff;display:grid;place-items:center}
+.sz i{display:block;border-radius:50%;background:var(--navy)}
+.tbtn[aria-pressed="true"] .sz i{background:#fff}
+.swatch{width:26px;height:26px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1.5px var(--line);padding:0}
+.swatch[aria-pressed="true"]{box-shadow:0 0 0 2.5px var(--navy)}
+input[type=color]{width:36px;height:36px;border:1.5px solid var(--line);border-radius:8px;background:#fff;padding:2px}
+.stage{flex:1;padding:14px max(12px,2vw);display:flex}
+.canvas-wrap{flex:1;background:#fff;border:1px solid var(--slate);border-radius:12px;box-shadow:0 1px 3px rgba(11,21,48,.08);overflow:hidden;position:relative;min-height:60vh}
+#pad{display:block;width:100%;height:100%;touch-action:none;cursor:crosshair;background:#fff}
+.hint{position:absolute;left:14px;bottom:12px;font-size:12px;color:var(--navy);opacity:.5;pointer-events:none}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media print{
+  .bar,.toolbar,.hint{display:none!important}
+  .stage{padding:0}
+  .canvas-wrap{border:0;box-shadow:none;border-radius:0}
+  body{background:#fff}
+}
+@media (max-width:640px){.tlabel{display:none}}
+</style>
+</head>
+<body>
+<header class="bar">
+  <a class="brand" href="https://drsrennie-stack.github.io/new-build-bio4-solano/index.html" target="_top" aria-label="BIO 004 Human Anatomy, course home">
+    <svg viewBox="40 10 125 148" role="img" aria-hidden="true" focusable="false"><g transform="translate(0,18)"><g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#0B1530"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#0B1530"/></g><g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/></g><g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/></g></g></svg>
+    <span class="lt">Human <span class="ac">Anatomy</span></span>
+  </a>
+  <span class="title" id="title">Drawing Canvas</span>
+  <span class="grow"></span>
+  <button class="tbtn" id="undo" aria-label="Undo last action"><span aria-hidden="true">&#8630;</span> Undo</button>
+  <button class="tbtn" id="clear" aria-label="Clear the canvas">Clear</button>
+  <button class="tbtn gold" id="savePdf" aria-label="Save as PDF">Save PDF</button>
+  <button class="tbtn" id="printBtn" aria-label="Print">Print</button>
+</header>
+<nav class="toolbar" aria-label="Drawing tools">
+  <div class="tgroup" role="group" aria-label="Tool">
+    <span class="tlabel">Tool</span>
+    <button class="tbtn tool" data-tool="pen" aria-pressed="true" title="Freehand pen">Pen</button>
+    <button class="tbtn tool" data-tool="line" aria-pressed="false" title="Straight line">Line</button>
+    <button class="tbtn tool" data-tool="arrow" aria-pressed="false" title="Arrow">Arrow</button>
+    <button class="tbtn tool" data-tool="rect" aria-pressed="false" title="Box">Box</button>
+    <button class="tbtn tool" data-tool="circle" aria-pressed="false" title="Circle">Circle</button>
+    <button class="tbtn tool" data-tool="text" aria-pressed="false" title="Type a text label">Text</button>
+    <button class="tbtn tool" data-tool="erase" aria-pressed="false" title="Eraser">Erase</button>
+  </div>
+  <div class="tgroup" role="group" aria-label="Pen size">
+    <span class="tlabel">Size</span>
+    <button class="tbtn sizebtn" data-size="1.5" aria-pressed="false" title="Very fine"><span class="sz"><i style="width:3px;height:3px"></i></span></button>
+    <button class="tbtn sizebtn" data-size="3" aria-pressed="true" title="Fine"><span class="sz"><i style="width:5px;height:5px"></i></span></button>
+    <button class="tbtn sizebtn" data-size="6" aria-pressed="false" title="Medium"><span class="sz"><i style="width:9px;height:9px"></i></span></button>
+    <button class="tbtn sizebtn" data-size="11" aria-pressed="false" title="Thick"><span class="sz"><i style="width:14px;height:14px"></i></span></button>
+    <button class="tbtn sizebtn" data-size="20" aria-pressed="false" title="Marker"><span class="sz"><i style="width:18px;height:18px"></i></span></button>
+  </div>
+  <div class="tgroup" role="group" aria-label="Color">
+    <span class="tlabel">Color</span>
+    <button class="tbtn swatch" data-color="#0B1530" aria-pressed="true" style="background:#0B1530" aria-label="Navy"></button>
+    <button class="tbtn swatch" data-color="#8B3A2E" aria-pressed="false" style="background:#8B3A2E" aria-label="Rust"></button>
+    <button class="tbtn swatch" data-color="#C9A14A" aria-pressed="false" style="background:#C9A14A" aria-label="Gold"></button>
+    <button class="tbtn swatch" data-color="#2E7D5B" aria-pressed="false" style="background:#2E7D5B" aria-label="Green"></button>
+    <button class="tbtn swatch" data-color="#2453A6" aria-pressed="false" style="background:#2453A6" aria-label="Blue"></button>
+    <label class="sr-only" for="customColor">Custom color</label>
+    <input type="color" id="customColor" value="#0B1530" title="Custom color">
+  </div>
+</nav>
+<main class="stage">
+  <div class="canvas-wrap">
+    <canvas id="pad"></canvas>
+    <span class="hint" id="hint">Draw from memory. Pen, shapes, arrows, and text. Save to PDF when you are done.</span>
+  </div>
+</main>
+<script>
+"use strict";
+(function(){
+  var $=function(s){return document.querySelector(s);};
+  var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s));};
+  var pad=$('#pad'), ctx=pad.getContext('2d');
+  var state={tool:'pen',size:3,color:'#0B1530'};
+  var objects=[], dpr=Math.max(1,window.devicePixelRatio||1);
+  var W=0,H=0;
+
+  /* title from ?title= or #comp= */
+  (function(){
+    var t=null;
+    try{var p=new URLSearchParams(location.search);t=p.get('title')||p.get('comp');}catch(e){}
+    if(!t&&location.hash){var m=location.hash.match(/(?:title|comp)=([^&]+)/);if(m)t=decodeURIComponent(m[1].replace(/\+/g,' '));}
+    if(t){t=t.replace(/[<>]/g,'');$('#title').textContent=t;document.title=t+' · Drawing Canvas';}
+  })();
+
+  function resize(){
+    var wrap=pad.parentElement, r=wrap.getBoundingClientRect();
+    W=Math.max(320,Math.floor(r.width)); H=Math.max(360,Math.floor(r.height));
+    pad.width=W*dpr; pad.height=H*dpr; pad.style.width=W+'px'; pad.style.height=H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    redraw();
+  }
+  window.addEventListener('resize',resize);
+
+  function stroke(o){
+    ctx.lineCap='round'; ctx.lineJoin='round';
+    ctx.strokeStyle=o.erase?'#FFFFFF':o.color; ctx.fillStyle=o.erase?'#FFFFFF':o.color; ctx.lineWidth=o.size;
+    if(o.tool==='pen'||o.tool==='erase'){
+      ctx.beginPath(); var pts=o.pts; if(!pts.length)return;
+      ctx.moveTo(pts[0].x,pts[0].y);
+      for(var i=1;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);
+      if(pts.length===1){ctx.lineTo(pts[0].x+0.1,pts[0].y+0.1);}
+      ctx.stroke();
+    }else if(o.tool==='line'||o.tool==='arrow'){
+      ctx.beginPath(); ctx.moveTo(o.x0,o.y0); ctx.lineTo(o.x1,o.y1); ctx.stroke();
+      if(o.tool==='arrow'){
+        var ang=Math.atan2(o.y1-o.y0,o.x1-o.x0), h=Math.max(9,o.size*3);
+        ctx.beginPath(); ctx.moveTo(o.x1,o.y1);
+        ctx.lineTo(o.x1-h*Math.cos(ang-0.4),o.y1-h*Math.sin(ang-0.4));
+        ctx.moveTo(o.x1,o.y1);
+        ctx.lineTo(o.x1-h*Math.cos(ang+0.4),o.y1-h*Math.sin(ang+0.4));
+        ctx.stroke();
+      }
+    }else if(o.tool==='rect'){
+      ctx.strokeRect(Math.min(o.x0,o.x1),Math.min(o.y0,o.y1),Math.abs(o.x1-o.x0),Math.abs(o.y1-o.y0));
+    }else if(o.tool==='circle'){
+      ctx.beginPath();
+      ctx.ellipse((o.x0+o.x1)/2,(o.y0+o.y1)/2,Math.abs(o.x1-o.x0)/2,Math.abs(o.y1-o.y0)/2,0,0,Math.PI*2);
+      ctx.stroke();
+    }else if(o.tool==='text'){
+      ctx.font='700 '+Math.max(13,o.size*5.5)+'px '+"'Plus Jakarta Sans Variable','Plus Jakarta Sans',sans-serif";
+      ctx.textBaseline='top'; ctx.fillText(o.text,o.x,o.y);
+    }
+  }
+  function redraw(prev){
+    ctx.save(); ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.fillStyle='#FFFFFF'; ctx.fillRect(0,0,W,H);
+    objects.forEach(stroke);
+    if(prev)stroke(prev);
+    ctx.restore();
+  }
+
+  function pos(e){var r=pad.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top};}
+  var drawing=false, cur=null;
+  pad.addEventListener('pointerdown',function(e){
+    e.preventDefault(); pad.setPointerCapture(e.pointerId); var p=pos(e);
+    if(state.tool==='text'){
+      var txt=window.prompt('Text to place:'); if(txt){objects.push({tool:'text',color:state.color,size:state.size,x:p.x,y:p.y,text:txt});redraw();}
+      return;
+    }
+    drawing=true;
+    if(state.tool==='pen'||state.tool==='erase'){cur={tool:state.tool,erase:state.tool==='erase',color:state.color,size:state.tool==='erase'?Math.max(state.size,12):state.size,pts:[p]};}
+    else{cur={tool:state.tool,color:state.color,size:state.size,x0:p.x,y0:p.y,x1:p.x,y1:p.y};}
+  });
+  pad.addEventListener('pointermove',function(e){
+    if(!drawing||!cur)return; var p=pos(e);
+    if(cur.tool==='pen'||cur.tool==='erase'){cur.pts.push(p);redraw(cur);}
+    else{cur.x1=p.x;cur.y1=p.y;redraw(cur);}
+  });
+  function end(){if(drawing&&cur){objects.push(cur);}drawing=false;cur=null;redraw();}
+  pad.addEventListener('pointerup',end);
+  pad.addEventListener('pointercancel',end);
+  pad.addEventListener('pointerleave',function(e){if(drawing)end();});
+
+  /* tool + size + color selection */
+  function press(sel,btn){$$(sel).forEach(function(b){b.setAttribute('aria-pressed','false');});btn.setAttribute('aria-pressed','true');}
+  $$('.tool').forEach(function(b){b.addEventListener('click',function(){state.tool=b.getAttribute('data-tool');press('.tool',b);pad.style.cursor=(state.tool==='text')?'text':'crosshair';});});
+  $$('.sizebtn').forEach(function(b){b.addEventListener('click',function(){state.size=parseFloat(b.getAttribute('data-size'));press('.sizebtn',b);});});
+  $$('.swatch').forEach(function(b){b.addEventListener('click',function(){state.color=b.getAttribute('data-color');press('.swatch',b);$('#customColor').value=state.color;});});
+  $('#customColor').addEventListener('input',function(){state.color=this.value;$$('.swatch').forEach(function(b){b.setAttribute('aria-pressed','false');});});
+
+  /* undo / clear */
+  $('#undo').addEventListener('click',function(){objects.pop();redraw();});
+  $('#clear').addEventListener('click',function(){if(objects.length&&!window.confirm('Clear the whole canvas?'))return;objects=[];redraw();});
+
+  /* save PDF */
+  $('#savePdf').addEventListener('click',function(){
+    try{
+      var jsPDF=(window.jspdf&&window.jspdf.jsPDF)||window.jsPDF; if(!jsPDF){window.print();return;}
+      var land=W>=H;
+      var pdf=new jsPDF({orientation:land?'landscape':'portrait',unit:'pt',format:'letter'});
+      var pw=pdf.internal.pageSize.getWidth(), ph=pdf.internal.pageSize.getHeight(), margin=36;
+      var title=$('#title').textContent||'Drawing';
+      pdf.setFont('helvetica','bold'); pdf.setFontSize(13); pdf.setTextColor('#0B1530');
+      pdf.text(title,margin,margin);
+      pdf.setFont('helvetica','normal'); pdf.setFontSize(9); pdf.setTextColor('#666666');
+      pdf.text('BIO 004 Human Anatomy · '+new Date().toLocaleDateString(),margin,margin+15);
+      var img=pad.toDataURL('image/png');
+      var availW=pw-margin*2, availH=ph-margin*2-30;
+      var ratio=Math.min(availW/W,availH/H), dw=W*ratio, dh=H*ratio;
+      pdf.addImage(img,'PNG',margin,margin+28,dw,dh);
+      var safe=title.replace(/[^a-z0-9]+/gi,'-').toLowerCase().slice(0,40)||'drawing';
+      pdf.save(safe+'.pdf');
+    }catch(err){window.print();}
+  });
+  $('#printBtn').addEventListener('click',function(){window.print();});
+
+  /* iframe height sender (harmless when opened full screen) */
+  function sendH(){try{parent.postMessage({type:'resize',id:'mastery-canvas',height:document.documentElement.scrollHeight},'*');}catch(e){}}
+  window.addEventListener('load',sendH); window.addEventListener('resize',sendH);
+
+  resize();
+})();
+</script>
+</body>
+</html>
