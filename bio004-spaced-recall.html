@@ -569,9 +569,8 @@
 <footer class="site">
   <div class="footer-inner">
     <a href="index.html" target="_top">Course home</a>
-    <a href="biol004_syllabus.html" target="_top">Syllabus</a>
-    <a href="concept_videos.html" target="_top">Concept videos</a>
-    <a href="biol004_accessibility.html" target="_top">Accessibility</a>
+    <a href="bio004-summer-2026-syllabus.html" target="_top">Syllabus</a>
+    <a href="accessibility.html" target="_top">Accessibility</a>
     <span class="byline">Dr. Sharilyn Rennie</span>
   </div>
 </footer>
@@ -1178,7 +1177,12 @@
       block = c.explanation ? '<div class="explain"><h4>'+verdict+'</h4><p style="margin:0;">'+escapeHtml(c.explanation)+'</p></div>'
                             : '<div class="explain"><h4>'+verdict+'</h4><p style="margin:0;">The correct answer is highlighted above.</p></div>';
     }
-    post.innerHTML = block +
+    var rubricHtml = "";
+    if (isBasic && c.rubric && c.rubric.length){
+      var _items = c.rubric.map(function(it){ return '<li style="margin:4px 0;"><label style="display:flex; gap:8px; align-items:flex-start; cursor:pointer;"><input type="checkbox" class="rubric-chk" style="margin-top:3px;"> <span>'+escapeHtml(it)+'</span></label></li>'; }).join("");
+      rubricHtml = '<div class="explain" style="border-left-color:var(--navy);"><h4>Check what you recalled</h4><ul style="list-style:none; padding:0; margin:4px 0 8px;">'+_items+'</ul><p class="field-help" id="rubric-count" aria-live="polite" style="margin:0;">Recalled 0 of '+c.rubric.length+'. Use this to pick your rating.</p></div>';
+    }
+    post.innerHTML = block + rubricHtml +
       '<p class="field-help" style="margin-top:14px;">How well did you know it? This sets when the card comes back.</p>'+
       '<div class="rate-row">'+
         '<button type="button" class="rate" data-r="again">Again</button>'+
@@ -1186,6 +1190,11 @@
         '<button type="button" class="rate" data-r="good">Good</button>'+
         '<button type="button" class="rate" data-r="easy">Easy</button>'+
       '</div>';
+    if (isBasic && c.rubric && c.rubric.length){
+      var _total = c.rubric.length;
+      var _upd = function(){ var n=post.querySelectorAll(".rubric-chk:checked").length; var el=document.getElementById("rubric-count"); if(el) el.textContent="Recalled "+n+" of "+_total+". Use this to pick your rating."; };
+      post.querySelectorAll(".rubric-chk").forEach(function(chk){ chk.addEventListener("change", _upd); });
+    }
     post.querySelectorAll(".rate").forEach(function(b){
       b.addEventListener("click", function(){
         var correctFinal = isBasic ? (b.dataset.r !== "again") : correct;
