@@ -18,7 +18,9 @@
       sprintBase:  HUB + "week-{N}-lab-sprints.html",
       sprintLabel: "Lab Sprint",
       canvas:  { label: "Atlas Canvas", url: HUB + "atlas-coloring-book.html" },
-      digital: { label: "Digital Atlas", url: "https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02", external: true }
+      digital: { label: "Digital Atlas", url: "https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02", external: true },
+      muscle:  { label: "Muscle Charts", url: "https://www.medmasterscollaborative.com/muscle-charts-i-o-a-inn", external: true },
+      loops:   { label: "Loops", url: "https://www.medmasterscollaborative.com/anatomy-loops", external: true }
     },
     topics: {
       foundations: {
@@ -87,160 +89,161 @@
       },
       "heart": {
         title: "The Heart",
-        notes:  [{ label: "Notes", url: HUB + "heart.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week3-Notes.pdf#page=3" }],
         videos: [{ label: "Concept videos", url: HUB + "heart-concept-videos.html" }],
         slides: [{ label: "HTML", url: HUB + "slides-heart-anatomy.html" }],
         recall: RECALL
       },
       "cardiac-conduction": {
         title: "Cardiac Conduction",
-        notes:  [{ label: "Notes", url: HUB + "cardiac-conduction.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week3-Notes.pdf#page=7" }],
         videos: [{ label: "Concept videos", url: HUB + "cardiac-conduction-concept-videos.html" }],
+        slides: [{ label: "HTML", url: HUB + "slides-cardiac-conduction.html" }],
         recall: RECALL
       },
       "blood-vessels": {
         title: "Blood Vessels",
-        notes:  [{ label: "Notes", url: HUB + "blood-vessels.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week3-Notes.pdf#page=9" }],
         videos: [{ label: "Concept videos", url: HUB + "blood-vessels-concept-videos.html" }],
         slides: [{ label: "HTML", url: HUB + "slides-blood-vessels.html" }],
         recall: RECALL
       },
       "respiratory": {
         title: "Respiratory System",
-        notes:  [{ label: "Notes", url: HUB + "respiratory.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week3-Notes.pdf#page=15" }],
         videos: [{ label: "Concept videos", url: HUB + "respiratory-concept-videos.html" }],
         slides: [{ label: "HTML", url: HUB + "slides-respiratory-anatomy.html" }],
         recall: RECALL
       },
       "muscle-structure": {
-        title: "Muscle Structure",
-        notes:  [{ label: "Notes", url: HUB + "muscle-structure.html" }],
-        videos: [{ label: "Concept videos", url: HUB + "muscle-structure-concept-videos.html" }],
-        slides: [{ label: "HTML", url: HUB + "slides-muscle-microanatomy.html" }],
+        title: "The Muscular System",
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week4-Notes.pdf#page=3" }],
+        videos: [{ label: "Concept videos", url: HUB + "muscular-system-concept-videos.html" }],
+        slides: [{ label: "HTML", url: HUB + "slides-muscular-system.html" }],
         recall: RECALL
       },
       "muscle-fascicles": {
         title: "Muscle Fascicles & Levers",
-        notes:  [{ label: "Notes", url: HUB + "muscle-fascicles.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week4-Notes.pdf#page=7" }],
         videos: [{ label: "Concept videos", url: HUB + "muscle-fascicles-concept-videos.html" }],
         recall: RECALL
       },
       "lymphatic": {
         title: "Lymphatic System",
-        notes:  [{ label: "Notes", url: HUB + "lymphatic-system.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week4-Notes.pdf#page=10" }],
         videos: [{ label: "Concept videos", url: HUB + "lymphatic-concept-videos.html" }],
-        slides: [{ label: "HTML", url: HUB + "slides-lymphatic-innate-immunity.html" }],
+        slides: [{ label: "HTML", url: HUB + "slides-lymphatic-system.html" }],
         recall: RECALL
       },
       "blood": {
         title: "Blood",
-        notes:  [{ label: "Notes", url: HUB + "blood.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week4-Notes.pdf#page=13" }],
         videos: [{ label: "Concept videos", url: HUB + "blood-concept-videos.html" }],
         recall: RECALL
       },
       "alimentary": {
         title: "Alimentary Canal",
-        notes:  [{ label: "Notes", url: HUB + "alimentary-canal.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week5-Notes.pdf#page=3" }],
         videos: [{ label: "Concept videos", url: HUB + "alimentary-concept-videos.html" }],
         slides: [{ label: "HTML", url: HUB + "slides-gi-alimentary-canal.html" }],
         recall: RECALL
       },
       "accessory-digestive": {
         title: "Accessory Digestive Organs",
-        notes:  [{ label: "Notes", url: HUB + "accessory-digestive-organs.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week5-Notes.pdf#page=7" }],
         videos: [{ label: "Concept videos", url: HUB + "accessory-digestive-concept-videos.html" }],
         slides: [{ label: "HTML", url: HUB + "slides-gi-accessory-structures.html" }],
         recall: RECALL
       },
       "urinary": {
         title: "Urinary System",
-        notes:  [{ label: "Notes", url: HUB + "urinary-system.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week6-Notes.pdf#page=3" }],
         videos: [{ label: "Concept videos", url: HUB + "urinary-concept-videos.html" }],
         slides: [{ label: "HTML", url: HUB + "slides-kidney-anatomy-gfr.html" }],
         recall: RECALL
       },
       "reproductive": {
         title: "Reproductive Systems",
-        notes:  [{ label: "Notes", url: HUB + "reproductive-male.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week6-Notes.pdf#page=6" }],
         videos: [{ label: "Concept videos", url: HUB + "reproductive-concept-videos.html" }],
         slides: [{ label: "HTML", url: HUB + "slides-reproductive-systems.html" }],
         recall: RECALL
       },
       "pregnancy": {
         title: "Pregnancy & Birth",
-        notes:  [{ label: "Notes", url: HUB + "pregnancy-and-birth.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week6-Notes.pdf#page=12" }],
         videos: [{ label: "Concept videos", url: HUB + "pregnancy-concept-videos.html" }],
         recall: RECALL
       },
       "endocrine": {
         title: "Endocrine System",
-        notes:  [{ label: "Notes", url: HUB + "endocrine.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week6-Notes.pdf#page=15" }],
         videos: [{ label: "Concept videos", url: HUB + "endocrine-concept-videos.html" }],
         slides: [{ label: "HTML", url: HUB + "slides-endocrine.html" }],
         recall: RECALL
       },
       "brain": {
         title: "The Brain",
-        notes:  [{ label: "Notes", url: HUB + "cns-brain.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week7-Notes.pdf#page=3" }],
         videos: [{ label: "Concept videos", url: HUB + "brain-concept-videos.html" }],
         slides: [{ label: "HTML", url: HUB + "slides-cns-organization.html" }],
         recall: RECALL
       },
       "brainstem": {
         title: "The Brainstem",
-        notes:  [{ label: "Notes", url: HUB + "cns-brainstem.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week7-Notes.pdf#page=8" }],
         videos: [{ label: "Concept videos", url: HUB + "brainstem-concept-videos.html" }],
         recall: RECALL
       },
       "meninges": {
         title: "Meninges & CSF",
-        notes:  [{ label: "Notes", url: HUB + "cns-meninges-csf.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week7-Notes.pdf#page=11" }],
         videos: [{ label: "Concept videos", url: HUB + "meninges-concept-videos.html" }],
         recall: RECALL
       },
       "spinal-cord": {
         title: "Spinal Cord",
-        notes:  [{ label: "Notes", url: HUB + "cns-spinal-cord.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week8-Notes.pdf#page=10" }],
         videos: [{ label: "Concept videos", url: HUB + "spinal-cord-concept-videos.html" }],
         recall: RECALL
       },
       "pns": {
         title: "Peripheral Nervous System",
-        notes:  [{ label: "Notes", url: HUB + "pns.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week8-Notes.pdf#page=13" }],
         videos: [{ label: "Concept videos", url: HUB + "pns-concept-videos.html" }],
         slides: [{ label: "HTML", url: HUB + "slides-pns-autonomic.html" }],
         recall: RECALL
       },
       "cranial-nerves": {
         title: "Cranial Nerves",
-        notes:  [{ label: "Notes", url: HUB + "cranial-nerves.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week8-Notes.pdf#page=16" }],
         videos: [{ label: "Concept videos", url: HUB + "cranial-nerves-concept-videos.html" }],
         recall: RECALL
       },
       "ans": {
         title: "Autonomic Nervous System",
-        notes:  [{ label: "Notes", url: HUB + "ans.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week8-Notes.pdf#page=20" }],
         videos: [{ label: "Concept videos", url: HUB + "ans-concept-videos.html" }],
         slides: [{ label: "HTML", url: HUB + "slides-pns-autonomic.html" }],
         recall: RECALL
       },
       "nervous-tissue": {
         title: "Nervous Tissue",
-        notes:  [{ label: "Notes", url: HUB + "nervous-tissue.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week8-Notes.pdf#page=3" }],
         videos: [{ label: "Concept videos", url: HUB + "nervous-tissue-concept-videos.html" }],
         slides: [{ label: "HTML", url: HUB + "slides-muscle-nervous-tissue.html" }],
         recall: RECALL
       },
       "brain-meninges": {
         title: "Brain, Brainstem & Meninges",
-        notes:  [{ label: "Notes", url: HUB + "cns-brain.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week7-Notes.pdf#page=3" }],
         videos: [{ label: "Concept videos", url: HUB + "brain-meninges-concept-videos.html" }],
         slides: [{ label: "HTML", url: HUB + "slides-cns-organization.html" }],
         recall: RECALL
       },
       "spinal-pns": {
         title: "Cranial Nerves, Spinal Cord & PNS",
-        notes:  [{ label: "Notes", url: HUB + "cns-spinal-cord.html" }],
+        notes:  [{ label: "Notes", url: HUB + "BIO004-Week8-Notes.pdf#page=10" }],
         videos: [{ label: "Concept videos", url: HUB + "spinal-pns-concept-videos.html" }],
         slides: [{ label: "HTML", url: HUB + "slides-pns-autonomic.html" }],
         recall: RECALL

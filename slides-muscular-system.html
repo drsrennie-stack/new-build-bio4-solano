@@ -153,4 +153,64 @@ cb.addEventListener('click',function(e){e.stopPropagation();close();});
 document.addEventListener('keydown',function(e){if(!lb.hidden&&e.key==='Escape')close();});})();
 </script>
 <script>(function(){var b=document.getElementById("backBtn");if(!b)return;if(document.referrer||window.history.length>1){b.hidden=false;}b.addEventListener("click",function(){if(history.length>1)history.back();else if(document.referrer)location.href=document.referrer;});})();</script>
+<style>
+.pencanvas{position:fixed;inset:0;z-index:200;pointer-events:none;touch-action:none}
+body.drawon .pencanvas{pointer-events:auto;cursor:crosshair}
+.penbar{position:fixed;left:14px;bottom:16px;z-index:201;display:flex;align-items:center;gap:8px;background:rgba(11,21,48,.94);border-radius:12px;padding:7px 9px;box-shadow:0 6px 20px rgba(0,0,0,.28);font-family:system-ui,sans-serif}
+.penbar .pentoggle{font-weight:800;font-size:13px;border:0;border-radius:8px;padding:8px 13px;background:#B8924A;color:#0B1530;cursor:pointer}
+body.drawon .penbar .pentoggle{background:#d62828;color:#fff}
+.pentools{display:none;align-items:center;gap:7px}
+body.drawon .pentools{display:flex}
+.pentools .sw{width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.5);cursor:pointer;padding:0}
+.pentools .sw.active{border-color:#fff;box-shadow:0 0 0 2px #B8924A}
+.pentools .sz{width:28px;height:28px;border-radius:7px;border:1px solid rgba(255,255,255,.35);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.pentools .sz.active{outline:2px solid #B8924A}
+.pentools .sz i{display:block;background:#0B1530;border-radius:50%}
+.pentools .act{font-weight:700;font-size:12px;border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;border-radius:7px;padding:7px 10px;cursor:pointer}
+.pentools .act.on{background:#fff;color:#0B1530}
+.pentools .sep{width:1px;height:22px;background:rgba(255,255,255,.25)}
+@media print{.penbar,.pencanvas{display:none}}
+</style>
+<canvas class="pencanvas" id="pencanvas"></canvas>
+<div class="penbar" id="penbar">
+<button class="pentoggle" id="pentoggle" type="button" aria-pressed="false">Draw</button>
+<div class="pentools">
+<button class="sw active" data-color="#d62828" style="background:#d62828" title="Red" aria-label="Red pen"></button>
+<button class="sw" data-color="#1f6feb" style="background:#1f6feb" title="Blue" aria-label="Blue pen"></button>
+<button class="sw" data-color="#1d7a46" style="background:#1d7a46" title="Green" aria-label="Green pen"></button>
+<button class="sw" data-color="#B8924A" style="background:#B8924A" title="Gold" aria-label="Gold pen"></button>
+<button class="sw" data-color="#8B3A2E" style="background:#8B3A2E" title="Terra" aria-label="Terra pen"></button>
+<button class="sw" data-color="#0B1530" style="background:#0B1530" title="Navy" aria-label="Navy pen"></button>
+<button class="sw" data-color="#111111" style="background:#111" title="Black" aria-label="Black pen"></button>
+<button class="sw" data-color="#ffffff" style="background:#fff" title="White" aria-label="White pen"></button>
+<span class="sep"></span>
+<button class="sz" data-size="3" aria-label="Thin pen"><i style="width:5px;height:5px"></i></button>
+<button class="sz active" data-size="6" aria-label="Medium pen"><i style="width:9px;height:9px"></i></button>
+<button class="sz" data-size="13" aria-label="Thick pen"><i style="width:15px;height:15px"></i></button>
+<span class="sep"></span>
+<button class="act" id="penerase" type="button" aria-pressed="false">Erase</button>
+<button class="act" id="penclear" type="button">Clear</button>
+</div>
+</div>
+<script>
+(function(){
+ var cv=document.getElementById('pencanvas');if(!cv)return;var ctx=cv.getContext('2d');
+ var color='#d62828',size=6,erasing=false,drawing=false,last=null,dpr=Math.max(1,window.devicePixelRatio||1);
+ function fit(){var w=window.innerWidth,h=window.innerHeight,img=null;try{img=ctx.getImageData(0,0,cv.width,cv.height);}catch(e){}cv.width=w*dpr;cv.height=h*dpr;cv.style.width=w+'px';cv.style.height=h+'px';ctx.setTransform(dpr,0,0,dpr,0,0);ctx.lineCap='round';ctx.lineJoin='round';if(img){try{ctx.putImageData(img,0,0);}catch(e){}}}
+ fit();window.addEventListener('resize',fit);
+ function P(e){return {x:e.clientX,y:e.clientY};}
+ cv.addEventListener('pointerdown',function(e){if(!document.body.classList.contains('drawon'))return;drawing=true;last=P(e);try{cv.setPointerCapture(e.pointerId);}catch(x){}e.preventDefault();});
+ cv.addEventListener('pointermove',function(e){if(!drawing)return;var p=P(e);ctx.globalCompositeOperation=erasing?'destination-out':'source-over';ctx.strokeStyle=color;ctx.lineWidth=erasing?size*3:size;ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y);ctx.stroke();last=p;e.preventDefault();});
+ function stop(){drawing=false;}
+ cv.addEventListener('pointerup',stop);cv.addEventListener('pointercancel',stop);cv.addEventListener('pointerleave',stop);
+ var tgl=document.getElementById('pentoggle');
+ tgl.addEventListener('click',function(){var on=document.body.classList.toggle('drawon');tgl.setAttribute('aria-pressed',on?'true':'false');});
+ [].forEach.call(document.querySelectorAll('.pentools .sw'),function(b){b.addEventListener('click',function(){color=b.getAttribute('data-color');erasing=false;var er=document.getElementById('penerase');er.classList.remove('on');er.setAttribute('aria-pressed','false');[].forEach.call(document.querySelectorAll('.pentools .sw'),function(x){x.classList.remove('active');});b.classList.add('active');});});
+ [].forEach.call(document.querySelectorAll('.pentools .sz'),function(b){b.addEventListener('click',function(){size=parseInt(b.getAttribute('data-size'),10);[].forEach.call(document.querySelectorAll('.pentools .sz'),function(x){x.classList.remove('active');});b.classList.add('active');});});
+ var er=document.getElementById('penerase');er.addEventListener('click',function(){erasing=!erasing;er.classList.toggle('on',erasing);er.setAttribute('aria-pressed',erasing?'true':'false');});
+ document.getElementById('penclear').addEventListener('click',function(){ctx.clearRect(0,0,cv.width,cv.height);});
+ document.addEventListener('keydown',function(e){if(document.body.classList.contains('present')&&['ArrowRight','ArrowLeft','PageUp','PageDown'].indexOf(e.key)>=0){ctx.clearRect(0,0,cv.width,cv.height);}});
+})();
+</script>
+
 </body></html>
