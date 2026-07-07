@@ -1,0 +1,1947 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Recall Rx &middot; BIO 004 &middot; Muscle, Lymphatic &amp; Blood</title>
+<!-- Add to Home Screen: behaves like an app on phones and tablets -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0B1530">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Recall Rx">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="recall-rx-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ===== MCAS palette, cream removed (no sage, no cream, never green for complete) ===== */
+  :root{
+    --navy:#0B1530; --navy-deep:#060A18; --navy-tint:#ECEEF2;  /* navy-tint is a cool neutral, not cream */
+    --gold:#C9A14A; --gold-deep:#B08B3A;
+    --terra:#8B3A2E; --terra-dark:#8B3A2E;                      /* MCAS rust */
+    --white:#FFFFFF; --off-white:#FAFAF9;
+    --gray-line:#D3DAE0; --gray-soft:#5c6970;
+    --rest-shadow:0 1px 3px rgba(0,0,0,0.08);
+    --hover-shadow:0 8px 16px rgba(0,0,0,0.10);
+    --t:200ms ease;
+    --btn-navy-bg:#0B1530; --btn-navy-fg:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--off-white); color:var(--navy);
+    font-family:"Plus Jakarta Sans",system-ui,sans-serif;
+    line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:0 18px 80px;}
+
+  /* Skip link */
+  .skip{position:absolute; left:-999px; top:0; background:var(--navy); color:#fff; padding:10px 16px; border-radius:0 0 8px 0; z-index:50;}
+  .skip:focus{left:0;}
+
+  /* Visible focus everywhere */
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible{
+    outline:3px solid var(--gold); outline-offset:2px; border-radius:6px;
+  }
+
+  /* Brand header */
+  header.brand{border-bottom:1px solid var(--gray-line); background:var(--off-white);}
+  .brand-inner{max-width:920px; margin:0 auto; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  /* two-column form rows collapse to one column on small screens */
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:560px){ .two-col{grid-template-columns:1fr;} }
+  /* MCAS three-figure logo lockup */
+  .site-logo{display:inline-flex; align-items:center; gap:14px; text-decoration:none;}
+  .site-logo svg{height:52px; width:auto; display:block; flex-shrink:0;}
+  .logo-text{display:flex; flex-direction:column; gap:3px;}
+  .logo-title{font-family:"Plus Jakarta Sans",sans-serif; font-size:24.6px; font-weight:800; letter-spacing:-.02em; color:var(--navy); line-height:1;}
+  .logo-title .logo-accent{color:var(--terra-dark);}
+  .logo-sub{font-family:"Plus Jakarta Sans",sans-serif; font-size:11.8px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--navy); opacity:.72;}
+  nav.top{display:flex; gap:6px; flex-wrap:wrap;}
+  nav.top button{
+    font:inherit; font-weight:600; font-size:15.7px; color:var(--navy);
+    background:transparent; border:1px solid transparent; border-radius:8px;
+    padding:7px 12px; cursor:pointer;
+  }
+  nav.top button:hover{border-color:var(--gray-line);}
+  nav.top button[aria-current="page"]{border-color:var(--navy); background:var(--navy-tint);}
+
+  /* Headings */
+  h1{font-family:"Plus Jakarta Sans"; font-weight:800; color:var(--navy); font-size:33.6px; margin:22px 0 4px; letter-spacing:-.01em;}
+  h2{font-family:"Plus Jakarta Sans"; font-weight:600; color:var(--terra-dark); font-size:23.5px; margin:26px 0 10px;}
+  h3{font-family:"Plus Jakarta Sans"; font-weight:600; color:var(--terra-dark); font-size:19px; margin:0 0 8px;}
+  .eyebrow{font-family:"Plus Jakarta Sans",sans-serif; font-size:13.4px; letter-spacing:.08em; text-transform:uppercase; color:var(--terra-dark); font-weight:700;}
+  .lead{font-family:"Plus Jakarta Sans",sans-serif; font-style:normal; color:var(--gray-soft); font-size:17.9px; margin:6px 0 0;}
+  .muted{color:var(--gray-soft);}
+
+  /* Cards */
+  .card{
+    background:var(--white); border:1px solid var(--gray-line); border-radius:12px;
+    padding:20px 22px; box-shadow:var(--rest-shadow); margin:14px 0;
+    transition:transform var(--t), box-shadow var(--t), border-color var(--t);
+  }
+  .card.lift:hover{transform:translateY(-2px); box-shadow:var(--hover-shadow);}
+
+  /* Buttons */
+  .btn{
+    font:inherit; font-weight:700; font-size:16.8px; cursor:pointer;
+    border-radius:10px; padding:11px 18px; border:1px solid var(--btn-navy-bg);
+    background:var(--btn-navy-bg); color:var(--btn-navy-fg); text-decoration:none; display:inline-flex;
+    align-items:center; gap:8px; transition:background var(--t), transform var(--t), border-color var(--t);
+  }
+  .btn:hover{filter:brightness(1.08);}
+  .btn.gold{background:var(--gold); border-color:var(--gold); color:#241a00;}
+  .btn.gold:hover{background:var(--gold-deep);}
+  .btn.ghost{background:transparent; color:var(--navy); border-color:var(--gray-line);}
+  .btn.ghost:hover{border-color:var(--navy); background:var(--navy-tint);}
+  .btn[disabled]{opacity:.5; cursor:not-allowed;}
+  .btn.big{font-size:19px; padding:16px 22px;}
+
+  /* Home choice grid */
+  .choice-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:8px;}
+  @media(max-width:640px){ .choice-grid{grid-template-columns:1fr;} }
+  .choice{
+    display:flex; flex-direction:column; gap:8px; text-align:left;
+    background:var(--white); border:1px solid var(--gray-line); border-radius:14px;
+    padding:24px; box-shadow:var(--rest-shadow); cursor:pointer; color:var(--navy);
+    font:inherit; transition:transform var(--t), box-shadow var(--t), border-color var(--t);
+  }
+  .choice:hover{transform:translateY(-2px); box-shadow:var(--hover-shadow); border-color:var(--navy);}
+  .choice .big-label{font-family:"Plus Jakarta Sans"; font-weight:800; font-size:24.6px; color:var(--navy);}
+  .choice .desc{color:var(--gray-soft); font-size:15.7px;}
+  .choice .tag{font-family:"Plus Jakarta Sans"; font-size:13.4px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--terra-dark);}
+
+  /* Stat strip */
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:16px 0;}
+  @media(max-width:640px){ .stats{grid-template-columns:repeat(2,1fr);} }
+  .stat{background:var(--white); border:1px solid var(--gray-line); border-radius:12px; padding:14px 16px; box-shadow:var(--rest-shadow);}
+  .stat .n{font-family:"Plus Jakarta Sans"; font-weight:800; font-size:31.4px; color:var(--navy); line-height:1;}
+  .stat .l{font-family:"Plus Jakarta Sans"; font-size:12.3px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--gray-soft); margin-top:6px;}
+
+  /* Topic / deck list */
+  .deck-list{display:flex; flex-direction:column; gap:10px;}
+  .deck{
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    background:var(--white); border:1px solid var(--gray-line); border-radius:12px;
+    padding:14px 18px; box-shadow:var(--rest-shadow); cursor:pointer; width:100%;
+    font:inherit; text-align:left; color:var(--navy);
+    transition:transform var(--t), box-shadow var(--t), border-color var(--t);
+  }
+  .deck:hover{transform:translateY(-2px); box-shadow:var(--hover-shadow); border-color:var(--navy);}
+  .deck .d-title{font-weight:700; font-size:17.9px;}
+  .deck .d-sub{font-size:14.6px; color:var(--gray-soft);}
+  .deck .d-right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
+  .module-label{font-family:"Plus Jakarta Sans"; font-size:13.4px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--terra-dark); margin:18px 0 6px;}
+
+  /* Progress dot states (palette compliant: gold=in progress, navy=complete, gray=untouched) */
+  .pdot{display:inline-block; width:auto; padding:3px 9px; border-radius:999px; font-size:13.4px; font-weight:700; font-family:"Plus Jakarta Sans"; border:1px solid var(--gray-line); color:var(--gray-soft);}
+  .pdot.started{border-color:var(--gold); color:var(--gold-deep); background:transparent;}
+  .pdot.done{border-color:var(--navy); color:var(--navy); background:var(--navy-tint);}
+
+  /* Study card */
+  .q-card{background:var(--white); border:1px solid var(--gray-line); border-radius:14px; padding:26px; box-shadow:var(--rest-shadow);}
+  .q-meta{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;}
+  .q-text{font-family:"Plus Jakarta Sans"; font-weight:700; font-size:22.4px; color:var(--navy); margin:4px 0 18px;}
+  .options{display:flex; flex-direction:column; gap:10px;}
+  .opt{
+    text-align:left; font:inherit; font-size:16.8px; color:var(--navy);
+    background:var(--white); border:1px solid var(--gray-line); border-radius:10px;
+    padding:13px 16px; cursor:pointer; transition:border-color var(--t), background var(--t);
+  }
+  .opt:hover{border-color:var(--navy);}
+  .opt.correct{border-color:var(--navy); background:var(--navy-tint); font-weight:700;}
+  .opt.wrong{border-color:var(--terra-dark); background:#F3E7E5;}
+  .opt[disabled]{cursor:default;}
+  .explain{margin-top:16px; padding:14px 16px; background:var(--off-white); border-left:3px solid var(--gold); border-radius:8px; font-size:16.8px;}
+  .explain h4{margin:0 0 4px; font-family:"Plus Jakarta Sans"; color:var(--navy); font-size:15.7px;}
+  .mode-toggle{margin-top:14px; border:1px solid var(--gray-line); border-radius:12px; padding:12px 14px;}
+  .mode-toggle legend{font-weight:700; color:var(--navy); padding:0 6px; font-size:15.7px;}
+  .mode-opts{display:flex; flex-direction:column; gap:8px;}
+  .mode-opt{display:flex; gap:10px; align-items:flex-start; border:1px solid var(--gray-line); border-radius:10px; padding:10px 12px; cursor:pointer; font-size:15.7px; line-height:1.4;}
+  .mode-opt:hover{border-color:var(--navy);}
+  .mode-opt input{margin-top:3px; accent-color:var(--navy);}
+  .mode-opt:has(input:checked){border-color:var(--navy); background:var(--navy-tint);}
+  @media(min-width:640px){ .mode-opts{flex-direction:row;} .mode-opt{flex:1;} }
+  .mode-pill{display:inline-block; font-size:13.4px; font-weight:700; color:var(--navy); background:var(--navy-tint); border:1px solid var(--navy); border-radius:999px; padding:3px 10px; margin-bottom:8px;}
+  .recall-input{width:100%; box-sizing:border-box; min-height:74px; font:inherit; font-size:17.9px; line-height:1.5; color:var(--navy); border:1px solid var(--gray-line); border-radius:10px; padding:10px 12px; margin:4px 0 10px; resize:vertical;}
+  .recall-input:focus{outline:none; border-color:var(--navy); box-shadow:0 0 0 3px var(--navy-tint);}
+  .answer-row{display:flex; gap:8px; align-items:flex-start; flex-wrap:wrap;}
+  .mic-btn{flex:0 0 auto; font:inherit; font-weight:700; font-size:15.7px; cursor:pointer; border-radius:10px; padding:10px 14px; border:1px solid var(--navy); background:var(--white); color:var(--navy); display:inline-flex; align-items:center; gap:7px;}
+  .mic-btn:hover{background:var(--navy-tint);}
+  .mic-btn[aria-pressed="true"]{background:var(--terra-dark); border-color:var(--terra-dark); color:var(--white);}
+  .mic-dot{width:10px; height:10px; border-radius:50%; background:currentColor; display:inline-block;}
+  .mic-btn[aria-pressed="true"] .mic-dot{animation:micpulse 1s ease-in-out infinite;}
+  @keyframes micpulse{0%,100%{opacity:1;} 50%{opacity:.35;}}
+  @media(prefers-reduced-motion:reduce){ .mic-btn[aria-pressed="true"] .mic-dot{animation:none;} }
+  .rate-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:18px;}
+  .rate{font:inherit; font-weight:700; font-size:15.7px; cursor:pointer; border-radius:10px; padding:10px 16px; border:1px solid var(--navy); background:var(--white); color:var(--navy);}
+  .rate:hover{background:var(--navy-tint);}
+  .progress-track{height:8px; background:var(--navy-tint); border-radius:5px; overflow:hidden; margin:0 0 16px;}
+  .progress-track > div{height:100%; background:var(--gold); width:0%; transition:width var(--t);}
+
+  /* Video */
+  .video-frame{position:relative; aspect-ratio:16/9; background:#000; border-radius:10px; overflow:hidden; margin:6px 0 12px;}
+  .video-frame iframe, .video-frame video{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .video-row{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:8px;}
+
+  /* Forms */
+  label{display:block; font-weight:700; font-size:15.7px; margin:14px 0 6px; color:var(--navy);}
+  input[type=text], textarea, select{
+    width:100%; font:inherit; font-size:16.8px; color:var(--navy);
+    background:var(--white); border:1px solid var(--gray-line); border-radius:9px; padding:11px 13px;
+  }
+  textarea{min-height:80px; resize:vertical;}
+  .field-help{font-size:14.6px; color:var(--gray-soft); margin:4px 0 0; font-family:"Plus Jakarta Sans",sans-serif; font-style:normal;}
+  .radio-line{display:flex; align-items:center; gap:9px; margin:7px 0; font-weight:600;}
+  .radio-line input{width:auto; margin:0;}
+
+  /* Weekly grade */
+  .grade-num{font-family:"Plus Jakarta Sans"; font-weight:800; font-size:53.8px; line-height:1; color:var(--navy);}
+  .grade-bar{position:relative; height:22px; background:var(--navy-tint); border:1px solid var(--gray-line); border-radius:8px; overflow:hidden; margin:12px 0 6px;}
+  .grade-fill{position:absolute; left:0; top:0; bottom:0; background:var(--gold); border-radius:7px 0 0 7px;}
+  .week-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:7px; margin:14px 0;}
+  @media(max-width:560px){ .week-grid{grid-template-columns:repeat(4,1fr);} }
+  .wday{border:1px solid var(--gray-line); border-radius:10px; padding:9px 5px; text-align:center; background:var(--white); position:relative;}
+  .wday .wn{font-family:"Plus Jakarta Sans"; font-size:11.2px; font-weight:700; text-transform:uppercase; color:var(--gray-soft);}
+  .wday .wc{font-family:"Plus Jakarta Sans"; font-weight:800; font-size:20.2px; color:var(--navy);}
+  .wday .ws{font-size:11.2px; color:var(--gray-soft);}
+  .wday.partial{border-color:var(--gold); background:var(--white);}
+  .wday.full{border-color:var(--navy); background:var(--navy-tint);}
+  .wday .vmark{position:absolute; top:5px; right:6px; font-size:11.2px; color:var(--gold-deep);}
+  .policy{font-size:14.6px; color:#3a4048; background:#F1F3F6; border:1px solid var(--gray-line); border-radius:8px; padding:11px 14px; margin-top:12px;}
+  .policy strong{color:var(--navy);}
+  input::placeholder, textarea::placeholder{color:var(--gray-soft); opacity:1;}
+
+  /* Setup wizard */
+  .wiz-progress{height:8px; background:var(--navy-tint); border-radius:5px; overflow:hidden; margin:10px 0 18px;}
+  .wiz-progress > div{height:100%; background:var(--gold); width:0%; transition:width var(--t);}
+  .wiz-h{font-family:"Plus Jakarta Sans"; font-weight:800; font-size:26.9px; color:var(--navy); margin:0 0 6px;}
+  .wiz-lead{font-size:17.9px; color:var(--gray-soft); margin:0 0 8px;}
+  .big-choice{display:flex; flex-direction:column; gap:6px; text-align:left; width:100%; font:inherit;
+    background:var(--white); border:2px solid var(--gray-line); border-radius:12px; padding:18px 20px; cursor:pointer;
+    color:var(--navy); margin:10px 0; transition:border-color var(--t), background var(--t), transform var(--t);}
+  .big-choice:hover{border-color:var(--navy); transform:translateY(-1px);}
+  .big-choice.sel{border-color:var(--navy); background:var(--navy-tint);}
+  .big-choice .bc-title{font-weight:800; font-size:20.2px;}
+  .big-choice .bc-desc{font-size:15.7px; color:var(--gray-soft);}
+
+  /* Walkthrough overlay (animated how-to) */
+  .wt-overlay{position:fixed; inset:0; background:rgba(11,21,48,0.55); display:flex; align-items:center; justify-content:center; z-index:200; padding:16px;}
+  .wt-overlay[hidden]{display:none;}
+  .wt-card{background:var(--white); border:1px solid var(--gray-line); border-radius:16px; max-width:560px; width:100%; padding:24px; box-shadow:var(--hover-shadow); position:relative; max-height:92vh; overflow:auto;}
+  .wt-close{position:absolute; top:8px; right:12px; background:none; border:0; font-size:29.1px; line-height:1; color:var(--gray-soft); cursor:pointer;}
+  .wt-step{font-family:"Plus Jakarta Sans"; font-size:13.4px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--terra-dark);}
+  .wt-prog{height:6px; background:var(--navy-tint); border-radius:4px; overflow:hidden; margin:8px 0 14px;}
+  .wt-prog>div{height:100%; background:var(--gold); width:0; transition:width var(--t);}
+  .wt-illus{background:var(--off-white); border:1px solid var(--gray-line); border-radius:12px; padding:18px; margin-bottom:14px; min-height:172px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;}
+  .mock-field{background:#fff; border:1.5px solid var(--gray-line); border-radius:8px; padding:9px 11px; font-size:14.6px; font-weight:600; color:var(--navy); display:flex; align-items:center; justify-content:space-between; gap:10px; min-width:150px;}
+  .mock-btn{background:var(--gold); color:#241a00; border-radius:9px; padding:9px 16px; font-weight:800; font-size:14.6px; display:inline-block;}
+  .mock-btn.ghost{background:#fff; color:var(--navy); border:1.5px solid var(--gray-line);}
+  .mock-row{display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
+  .mock-tab{font-size:13.4px; font-weight:700; color:var(--navy); border:1px solid var(--gray-line); border-radius:7px; padding:6px 10px; background:#fff;}
+  .mock-tab.hot{border-color:var(--navy); background:var(--navy-tint);}
+  .mock-radio{display:flex; align-items:center; gap:8px; font-size:14.6px; font-weight:600; color:var(--navy); margin:5px 0;}
+  .mock-dot{width:15px; height:15px; border-radius:50%; border:2px solid var(--gray-line); flex-shrink:0;}
+  .mock-dot.on{border-color:var(--gold); background:var(--gold);}
+  .mock-card{width:54px; height:36px; border-radius:6px; border:1.5px solid var(--navy); background:var(--navy-tint);}
+  /* animated drawn arrow */
+  .draw-arrow{position:absolute; pointer-events:none; animation:wt-bob 1.4s ease-in-out infinite;}
+  .draw-arrow path{stroke:var(--terra-dark); stroke-width:3; fill:none; stroke-linecap:round; stroke-linejoin:round;}
+  .draw-arrow .ln{stroke-dasharray:240; stroke-dashoffset:240; animation:wt-draw 1s ease forwards;}
+  .draw-arrow .hd{stroke-dasharray:42; stroke-dashoffset:42; animation:wt-draw .45s ease forwards; animation-delay:.75s;}
+  @keyframes wt-draw{to{stroke-dashoffset:0;}}
+  @keyframes wt-bob{0%,100%{transform:translate(0,0);} 50%{transform:translate(3px,-3px);}}
+  .wt-tap{position:absolute; width:30px; height:30px; border:3px solid var(--terra-dark); border-radius:50%; animation:wt-tap 1.4s ease-out infinite;}
+  @keyframes wt-tap{0%{transform:scale(.4); opacity:.85;} 100%{transform:scale(1.6); opacity:0;}}
+  .wt-fly{animation:wt-fly 1.6s ease-in-out infinite;}
+  @keyframes wt-fly{0%{transform:translateX(-26px); opacity:.2;} 40%{opacity:1;} 100%{transform:translateX(26px); opacity:.2;}}
+  .wt-draw-path{stroke-dasharray:60; stroke-dashoffset:60; animation:wt-draw 1s ease forwards .2s;}
+  /* QR / get-it-on-your-phone popup */
+  .qr-img{width:208px; height:208px; display:block; margin:2px auto 8px; border:1px solid var(--gray-line); border-radius:10px;}
+  .qr-url{font-size:13.4px; font-weight:700; word-break:break-all; background:var(--off-white); border:1px dashed var(--gray-line); border-radius:8px; padding:8px 10px; text-align:center; margin:0;}
+  .qr-steps{font-size:15.1px; color:var(--gray-soft); margin:14px 0 0; text-align:left;}
+  .qr-steps strong{color:var(--navy);}
+  .qr-warn{background:#8B3A2E; color:#FBEFEA; border-radius:10px; padding:14px 16px; margin-top:16px; font-size:15.7px; text-align:left;}
+  .qr-warn strong{color:#FFFFFF;}
+  @media(prefers-reduced-motion:reduce){
+    .draw-arrow, .draw-arrow .ln, .draw-arrow .hd, .wt-tap, .wt-fly, .wt-draw-path{animation:none !important;}
+    .draw-arrow .ln, .draw-arrow .hd, .wt-draw-path{stroke-dashoffset:0;}
+  }
+
+  .pill-row{display:flex; gap:10px; flex-wrap:wrap; margin:10px 0;}
+  .empty{color:var(--gray-soft); font-style:normal; font-family:"Plus Jakarta Sans",sans-serif;}
+
+  footer.site{border-top:1px solid var(--gray-line); margin-top:40px;}
+  .footer-inner{max-width:920px; margin:0 auto; padding:18px; display:flex; gap:16px; flex-wrap:wrap; font-size:14.6px;}
+  .footer-inner a{color:var(--navy); text-decoration:none; font-weight:600;}
+  .footer-inner a:hover{text-decoration:underline;}
+  .byline{color:var(--gray-soft); font-size:14.6px; margin-top:6px;}
+
+  .view{display:none;}
+  .view.active{display:block;}
+
+  .toast{position:fixed; left:50%; bottom:22px; transform:translateX(-50%); background:var(--btn-navy-bg); color:var(--btn-navy-fg); padding:10px 18px; border-radius:10px; font-weight:600; font-size:15.7px; box-shadow:var(--hover-shadow); opacity:0; pointer-events:none; transition:opacity var(--t);}
+  .toast.show{opacity:1;}
+
+  .sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); border:0;}
+
+  @media(prefers-reduced-motion:reduce){
+    *{transition:none !important;}
+  }
+
+
+
+  /* Weakness dashboard */
+  .weak-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:760px){ .weak-grid{grid-template-columns:1fr;} }
+  .weak-row{display:grid; grid-template-columns:minmax(120px,1fr) 92px 82px; gap:10px; align-items:center; padding:9px 0; border-bottom:1px solid var(--gray-line);}
+  .weak-row:last-child{border-bottom:0;}
+  .weak-label{font-weight:700; color:var(--navy);}
+  .weak-sub{font-size:13.4px; color:var(--gray-soft); font-weight:600;}
+  .weak-bar{height:10px; background:var(--navy-tint); border-radius:999px; overflow:hidden; border:1px solid var(--gray-line);}
+  .weak-fill{height:100%; background:var(--gold); width:0%;}
+  .weak-score{text-align:right; font-weight:800; color:var(--navy);}
+  .weak-risk{display:inline-block; font-size:12.3px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; border-radius:999px; padding:3px 8px; border:1px solid var(--gray-line); color:var(--gray-soft);}
+  .weak-risk.high{border-color:var(--terra-dark); color:var(--terra-dark); background:#F3E7E5;}
+  .weak-risk.mid{border-color:var(--gold); color:var(--gold-deep);}
+  .tag-chip{display:inline-block; margin:3px 5px 3px 0; padding:4px 8px; border:1px solid var(--gray-line); border-radius:999px; font-size:13.4px; font-weight:700; color:var(--navy); background:var(--off-white);}
+
+  /* Print: weekly report only */
+  @media print{
+    header.brand, nav.top, footer.site, .no-print{display:none !important;}
+    body{background:#fff;}
+    .view{display:none !important;}
+    #view-report.active{display:block !important;}
+    .card{box-shadow:none; break-inside:avoid;}
+    .wday.full, .wday.partial, .grade-fill{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  }
+</style>
+</head>
+<body>
+<a href="#main" class="skip">Skip to main content</a>
+
+<header class="brand">
+  <div class="brand-inner">
+    <a class="site-logo" href="index.html" target="_top" aria-label="BIO 004 Human Anatomy, course home">
+      <svg viewBox="40 10 125 148" role="img" aria-hidden="true" focusable="false">
+        <g transform="translate(0, 18)">
+          <g class="fig-navy" transform="translate(60, 0) rotate(8 0 130)">
+            <circle cx="0" cy="20" r="10" fill="#0B1530"/>
+            <path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#0B1530"/>
+          </g>
+          <g class="fig-rust" transform="translate(100, 0)">
+            <circle cx="0" cy="10" r="11" fill="#8B3A2E"/>
+            <path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/>
+          </g>
+          <g class="fig-gold" transform="translate(140, 0) rotate(-8 0 130)">
+            <circle cx="0" cy="20" r="10" fill="#C9A14A"/>
+            <path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/>
+          </g>
+        </g>
+      </svg>
+      <span class="logo-text">
+        <span class="logo-title">Recall <span class="logo-accent">Rx</span></span>
+        <span class="logo-sub">BIO 004 &middot; Human Anatomy</span>
+      </span>
+    </a>
+    <nav class="top" aria-label="Primary">
+      <button type="button" data-nav="home" aria-current="page">Home</button>
+      <button type="button" data-nav="study">Study cards</button>
+      <button type="button" data-nav="make">Make cards</button>
+      <button type="button" data-nav="weakness">Weakness dashboard</button>
+      <button type="button" data-nav="settings">Settings</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+
+  <!-- ===================== HOME ===================== -->
+  <section class="view active" id="view-home" aria-labelledby="home-h">
+    <p class="eyebrow">Welcome back</p>
+    <h1 id="home-h">What do you want to do?</h1>
+    <p class="lead">Study your anatomy cards or build your own. Everything you do is tracked for your weekly engagement bonus. Nothing is locked, study any time.</p>
+
+    <div class="choice-grid">
+      <button type="button" class="choice" data-nav="study">
+        <span class="tag">Recommended daily</span>
+        <span class="big-label">Study cards &rarr;</span>
+        <span class="desc">Review what is due today, or pick any topic. Watch a lecture video if your professor added one. Always open, never locked.</span>
+      </button>
+      <button type="button" class="choice" data-nav="make">
+        <span class="tag">Your own deck</span>
+        <span class="big-label">Make cards &rarr;</span>
+        <span class="desc">Write your own study cards. They live on this device and mix into your daily review alongside the course cards.</span>
+      </button>
+    </div>
+
+    <h2>This week at a glance</h2>
+    <div class="stats" id="home-stats" aria-live="polite"></div>
+    <div class="pill-row no-print">
+      <button type="button" class="btn" data-nav="study">Start studying</button>
+      <button type="button" class="btn ghost" data-nav="weakness">See my weakness dashboard</button>
+      <button type="button" class="btn ghost open-qr">Get it on your phone</button>
+    </div>
+  </section>
+
+  <!-- ===================== STUDY PICKER ===================== -->
+  <section class="view" id="view-study" aria-labelledby="study-h">
+    <p class="eyebrow">Study</p>
+    <h1 id="study-h">Pick what to study</h1>
+    <p class="lead">Start with today's due cards, then explore any topic you want. No topic is locked.</p>
+
+    <div class="card lift" style="border-color:var(--navy);">
+      <h3>Today's review</h3>
+      <p class="muted" id="due-summary">Loading...</p>
+      <div class="pill-row no-print">
+        <button type="button" class="btn gold" id="btn-start-due">Review due cards</button>
+        <button type="button" class="btn ghost" id="btn-study-mine">Study only my cards</button>
+      </div>
+
+      <fieldset class="mode-toggle no-print" aria-describedby="mode-help">
+        <legend>Answer mode</legend>
+        <div class="mode-opts" role="radiogroup" aria-label="Answer mode">
+          <label class="mode-opt"><input type="radio" name="study-mode" value="mcq"> <span><strong>Multiple choice</strong><br>Pick from options. Faster, builds recognition.</span></label>
+          <label class="mode-opt"><input type="radio" name="study-mode" value="written"> <span><strong>Written recall</strong><br>No options. Produce the answer from memory, then grade yourself. Harder, and what an exam actually asks.</span></label>
+        </div>
+        <p id="mode-help" class="field-help" style="margin:6px 0 0;">Written recall fights recognition bias: seeing the right answer in a list is not the same as remembering it.</p>
+      </fieldset>
+    </div>
+
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+      <h2 style="margin-bottom:0;">Your active topics</h2>
+      <button type="button" class="btn ghost no-print" data-nav="setup" style="padding:8px 14px;">Manage topics</button>
+    </div>
+    <div id="topic-list" class="deck-list" style="margin-top:12px;"></div>
+  </section>
+
+  <!-- ===================== STUDY CARD ===================== -->
+  <section class="view" id="view-card" aria-labelledby="card-h">
+    <button type="button" class="btn ghost no-print" data-nav="study" style="margin-bottom:14px;">&larr; Back to topics</button>
+    <p class="eyebrow" id="card-deck-label">Topic</p>
+    <h1 id="card-h" style="font-size:26.9px;">Studying</h1>
+
+    <div id="video-block" hidden></div>
+
+    <div class="progress-track no-print" aria-hidden="true"><div id="card-progress"></div></div>
+    <p class="sr-only" id="card-progress-sr" aria-live="polite"></p>
+
+    <div id="card-stage"></div>
+  </section>
+
+  <!-- ===================== MAKE CARDS ===================== -->
+  <section class="view" id="view-make" aria-labelledby="make-h">
+    <p class="eyebrow">Make cards</p>
+    <h1 id="make-h">Build your own card</h1>
+    <p class="lead">Write a question, choose multiple choice or a simple answer, and it joins your daily review. Your cards stay on this device.</p>
+    <div class="pill-row no-print">
+      <button type="button" class="btn ghost" id="btn-howto">Show me how &rarr;</button>
+    </div>
+
+    <form class="card" id="make-form" autocomplete="off">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div>
+          <label for="mk-unit">Unit</label>
+          <select id="mk-unit" name="unit"></select>
+        </div>
+        <div>
+          <label for="mk-topic">Topic in that unit</label>
+          <select id="mk-topic" name="topic"></select>
+        </div>
+      </div>
+      <div id="mk-new-topic-wrap" hidden>
+        <label for="mk-new-topic">Name your new topic</label>
+        <input type="text" id="mk-new-topic" placeholder="for example, Cranial nerves mnemonics">
+        <p class="field-help">This adds a topic you can activate and study, useful for this class or any other.</p>
+      </div>
+      <p class="field-help">Pick the unit first, then the topic list fills in for that unit. Choose "Whole unit (general)" if a card spans the unit, or "Add a new topic" to make your own.</p>
+
+      <fieldset style="border:0; padding:0; margin:14px 0 0;">
+        <legend style="font-weight:700; font-size:15.7px; color:var(--navy); padding:0;">Card type</legend>
+        <div class="radio-line"><input type="radio" name="ctype" id="ctype-mc" value="mc" checked><label for="ctype-mc" style="margin:0;">Multiple choice (four answers)</label></div>
+        <div class="radio-line"><input type="radio" name="ctype" id="ctype-basic" value="basic"><label for="ctype-basic" style="margin:0;">Simple (just a question and answer)</label></div>
+      </fieldset>
+
+      <label for="mk-q">Question</label>
+      <textarea id="mk-q" name="q" placeholder="What does the term supine describe?" required></textarea>
+
+      <div id="mc-fields">
+        <fieldset style="border:0; padding:0; margin:14px 0 0;">
+          <legend style="font-weight:700; font-size:15.7px; color:var(--navy); padding:0;">Four answers, choose the correct one</legend>
+          <div id="mk-options"></div>
+        </fieldset>
+      </div>
+      <div id="basic-fields" hidden>
+        <label for="mk-answer">Answer</label>
+        <textarea id="mk-answer" placeholder="Lying face up, on the back."></textarea>
+        <p class="field-help">You will see the question, try to recall the answer, then reveal it and rate how you did.</p>
+      </div>
+
+      <label for="mk-exp">Why (optional extra note shown with the answer)</label>
+      <textarea id="mk-exp" name="exp" placeholder="Supine means lying face up on the back. Prone is the opposite."></textarea>
+
+      <p id="mk-feedback" class="field-help" role="status" aria-live="polite"></p>
+      <div class="pill-row" style="margin-top:14px;">
+        <button type="submit" class="btn gold">Save card</button>
+        <button type="reset" class="btn ghost">Clear</button>
+      </div>
+    </form>
+
+    <div class="card">
+      <h3>Share cards with classmates</h3>
+      <p class="muted" style="margin-top:0;">Export your own cards to a file you can send to anyone. Importing a shared file adds those cards into your bank here. This only moves the cards people make, never the official course bank or anyone's scores.</p>
+      <div class="pill-row">
+        <button type="button" class="btn ghost" id="btn-export-cards">Export my cards</button>
+        <button type="button" class="btn ghost" id="btn-import-file">Import shared cards (file)</button>
+      </div>
+      <input type="file" id="import-file-input" accept="application/json,.json" class="sr-only" aria-hidden="true" tabindex="-1">
+      <label for="import-text" style="margin-top:14px;">Or paste shared card text and import</label>
+      <textarea id="import-text" placeholder="Paste the contents of a shared cards file here"></textarea>
+      <div class="pill-row" style="margin-top:10px;">
+        <button type="button" class="btn ghost" id="btn-import-text">Import from pasted text</button>
+      </div>
+      <p id="share-feedback" class="field-help" role="status" aria-live="polite"></p>
+    </div>
+
+    <h2>My cards (<span id="mine-count">0</span>)</h2>
+    <div style="margin:6px 0 10px;">
+      <label for="mine-filter" class="sr-only">Filter my cards by unit</label>
+      <select id="mine-filter" style="max-width:340px;"><option value="">All units</option></select>
+    </div>
+    <div id="mine-list" class="deck-list"></div>
+  </section>
+
+  <!-- ===================== SETUP WIZARD ===================== -->
+  <section class="view" id="view-setup" aria-labelledby="setup-h">
+    <p class="eyebrow" id="wizard-step-label">Setup</p>
+    <h1 id="setup-h">Let's get you set up</h1>
+    <div class="wiz-progress no-print" aria-hidden="true"><div id="wiz-progress-fill"></div></div>
+    <div class="card" id="wizard-card">
+      <div id="wizard-body"></div>
+      <div class="pill-row" id="wizard-nav" style="margin-top:18px;"></div>
+    </div>
+  </section>
+
+
+
+  <!-- ===================== WEAKNESS DASHBOARD ===================== -->
+  <section class="view" id="view-weakness" aria-labelledby="weak-h">
+    <p class="eyebrow">Study analytics</p>
+    <h1 id="weak-h">Weakness dashboard</h1>
+    <p class="lead">This uses the cards you have reviewed on this device. It shows your weakest systems and topics, how you do at each DOK level, your mastery by topic, and the cards you keep missing, so you know exactly what to study next.</p>
+    <div id="weakness-body" aria-live="polite"></div>
+  </section>
+
+  <!-- ===================== SETTINGS ===================== -->
+  <section class="view" id="view-settings" aria-labelledby="set-h">
+    <p class="eyebrow">Settings</p>
+    <h1 id="set-h">Settings</h1>
+    <div class="card">
+      <h3>Course and topics</h3>
+      <p class="muted">Change your course format, turn topics on or off, set exam dates, or add your own topics.</p>
+      <button type="button" class="btn" data-nav="setup" style="margin-top:10px;">Open course setup and topics</button>
+    </div>
+    <div class="card">
+      <h3>Use the same device and browser</h3>
+      <p class="muted">Your progress, streak, and your own cards are saved only in this browser on this device. Nothing is uploaded. Pick one place to study, your laptop, your phone, or your tablet, and always come back to it in the same browser. If you switch devices or clear your browser data, your progress will not follow you. Submit your weekly report each week so your work is recorded.</p>
+    </div>
+    <div class="card">
+      <h3>Put Recall Rx on your phone</h3>
+      <p class="muted">Recall Rx installs like an app, no app store needed.</p>
+      <p class="muted" style="margin-top:8px;"><strong>iPhone or iPad:</strong> tap the <strong>Share</strong> button (a box with an up arrow). In Chrome it is up in the address bar; in Safari it is at the bottom of the screen. Then tap "Add to Home Screen," then Add.</p>
+      <p class="muted" style="margin-top:8px;"><strong>Android phone:</strong> open in Chrome, tap the three-dot menu, then "Install app."</p>
+      <p class="muted" style="margin-top:8px;"><strong>Computer:</strong> in Chrome, click the Install icon in the address bar (a small screen with a down arrow).</p>
+      <p class="muted" style="margin-top:8px;">Remember this becomes its own device. Whatever you study there stays there, so study in one place.</p>
+      <button type="button" class="btn open-qr" style="margin-top:10px;">Show the QR code</button>
+    </div>
+    <div class="card">
+      <h3>Reset</h3>
+      <p class="muted">Erase all of your progress and your own cards on this device. This cannot be undone.</p>
+      <button type="button" class="btn ghost" id="btn-reset" style="margin-top:10px; border-color:var(--terra-dark); color:var(--terra-dark);">Erase everything on this device</button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="footer-inner">
+    <a href="index.html" target="_top">Course home</a>
+    <a href="bio004-summer-2026-syllabus.html" target="_top">Syllabus</a>
+    <a href="accessibility.html" target="_top">Accessibility</a>
+    <span class="byline">Dr. Sharilyn Rennie</span>
+  </div>
+</footer>
+
+<!-- Animated how-to walkthrough -->
+<div class="wt-overlay" id="walkthrough" hidden role="dialog" aria-modal="true" aria-labelledby="wt-title">
+  <div class="wt-card">
+    <button type="button" class="wt-close" id="wt-close" aria-label="Close the walkthrough">&times;</button>
+    <p class="wt-step" id="wt-step">Step 1</p>
+    <div class="wt-prog"><div id="wt-fill"></div></div>
+    <div class="wt-illus" id="wt-illus" aria-hidden="true"></div>
+    <h2 class="wiz-h" id="wt-title">How to add cards</h2>
+    <p class="wiz-lead" id="wt-text"></p>
+    <div class="pill-row" id="wt-nav"></div>
+  </div>
+</div>
+
+<!-- Get it on your phone (QR + saved-data warning) -->
+<div class="wt-overlay" id="qrmodal" hidden role="dialog" aria-modal="true" aria-labelledby="qr-title">
+  <div class="wt-card" style="max-width:430px;">
+    <button type="button" class="wt-close" id="qr-close" aria-label="Close">&times;</button>
+    <h2 class="wiz-h" style="text-align:center;" id="qr-title">Get Recall Rx on your phone</h2>
+    <p class="wiz-lead" style="text-align:center;">Scan this with your phone camera, then add it to your home screen so it opens like an app.</p>
+    <img class="qr-img" src="recall-rx-qr.png" alt="QR code that opens Recall Rx">
+    <p class="qr-url">drsrennie-stack.github.io/new-build-bio4-solano/bio004-spaced-recall.html</p>
+    <p class="qr-steps"><strong>iPhone or iPad:</strong> tap the <strong>Share</strong> button (a box with an up arrow). In Chrome it is up in the address bar; in Safari it is at the bottom. Then tap <strong>Add to Home Screen</strong>, then Add.<br><strong>Android phone:</strong> open in Chrome, tap the three-dot menu, then <strong>Install app</strong>.<br><strong>Computer:</strong> in Chrome, click the <strong>Install</strong> icon in the address bar (a small screen with a down arrow).</p>
+    <div class="qr-warn"><strong>Heads up about your saved work.</strong> Recall Rx saves your progress, your streak, and the cards you make only on the device and browser you use. They do not move between your phone and your laptop. Pick one place to study, come back to it each day, and save your weekly report so your work is recorded.</div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Course content (1110 cards). Edit course-content.js to change cards or add topic.videoUrl. -->
+<script src="recall-rx-cards.js"></script>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- config you can tune ---------- */
+  // Weekly bonus targets per course format. Summer is the 8-week intensive, so it expects more.
+  var FORMAT_TARGETS = {
+    summer:   { label:"Summer (8-week intensive)", activeDays:4, cards:75 },
+    semester: { label:"Semester (16-week)",        activeDays:3, cards:40 }
+  };
+  // Course categories, built from the BIO 004 schedule (mostly systems based, skeletal is region based).
+  // Each unit lists the official course topics it contains. Students activate the topics they want,
+  // and can add their own, so the tool also works in other classes. Edit titles or grouping here.
+  var COURSE_UNITS = [
+    { id:"u-foundations", title:"Onboarding and Foundations", topicIds:["t-anatomical-terminology","t-body-cavities","t-cell-anatomy","t-tissues","t-integumentary"] },
+    { id:"u-skeletal",    title:"Skeletal System", topicIds:["t-bone-histology","t-axial-skeleton-skull","t-axial-skeleton-spine","t-appendicular-skeleton-upper","t-appendicular-skeleton-lower"] },
+    { id:"u-joints-muscle", title:"Joints and the Muscular System", topicIds:["t-articulations","t-muscle-structure","t-muscle-fascicles"] },
+    { id:"u-nervous-1",   title:"Nervous System I", topicIds:["t-nervous-tissue","t-neuronal-integration","t-cns-brain","t-cns-brainstem","t-cns-spinal-cord"] },
+    { id:"u-nervous-2",   title:"Nervous System II, Senses, and Endocrine", topicIds:["t-cns-meninges-csf","t-cranial-nerves","t-nerve-plexuses","t-pns","t-ans","t-endocrine"] },
+    { id:"u-cardio-lymph", title:"Cardiovascular and Lymphatic Systems", topicIds:["t-heart","t-cardiac-conduction","t-blood","t-blood-vessels","t-blood-vessel-disorders","t-lymphatic-system"] },
+    { id:"u-resp-digest", title:"Respiratory and Digestive Systems", topicIds:["t-respiratory","t-alimentary-canal","t-accessory-digestive-organs"] },
+    { id:"u-urinary-repro", title:"Urinary and Reproductive Systems", topicIds:["t-urinary-system","t-reproductive-male","t-reproductive-female","t-pregnancy-and-birth"] },
+    { id:"u-custom",      title:"My own topics", topicIds:[] }  // holds student-added topics not tied to the course
+  ];
+  var MAX_INTERVAL_DAYS = 14; // cap so mastered cards still cycle back before the final
+  var DAY_MS = 86400000;
+  var STORAGE_KEY = "bio004-recall-v2";
+
+  function currentTargets(){
+    var f = (STATE && STATE.setup && STATE.setup.format) || "summer";
+    return FORMAT_TARGETS[f] || FORMAT_TARGETS.summer;
+  }
+
+  /* ---------- content ---------- */
+  var CONTENT = (typeof window !== "undefined" && window.BIO004_COURSE_CONTENT) ? window.BIO004_COURSE_CONTENT : null;
+  var CONTENT_OK = !!(CONTENT && CONTENT.modules && CONTENT.modules.length);
+
+  function allTopics(){
+    if (!CONTENT_OK) return [];
+    var out = [];
+    CONTENT.modules.forEach(function(m){
+      (m.topics || []).forEach(function(t){
+        out.push({ module:m.title, week:m.week, id:t.id, title:t.title, summary:t.summary || "",
+                   lecturePageUrl:t.lecturePageUrl || "", videoUrl:t.videoUrl || "", videoLabel:t.videoLabel || "",
+                   cards:(t.cards || []) });
+      });
+    });
+    return out;
+  }
+  function topicById(id){ return allTopics().filter(function(t){ return t.id === id; })[0] || null; }
+  function officialTitle(id){ var t = topicById(id); return t ? t.title : null; }
+
+  // Units built from COURSE_UNITS, resolving official topics by id and folding in custom topics.
+  function allUnits(){
+    var customByUnit = {};
+    (STATE.customTopics || []).forEach(function(ct){
+      var u = ct.unitId || "u-custom";
+      (customByUnit[u] = customByUnit[u] || []).push({ id:ct.id, title:ct.title, official:false, unitId:u });
+    });
+    return COURSE_UNITS.map(function(u){
+      var topics = [];
+      u.topicIds.forEach(function(tid){
+        var title = officialTitle(tid);
+        if (title) topics.push({ id:tid, title:title, official:true, unitId:u.id });
+      });
+      (customByUnit[u.id] || []).forEach(function(c){ topics.push(c); });
+      return { id:u.id, title:u.title, topics:topics };
+    }).filter(function(u){ return u.topics.length > 0 || u.id !== "u-custom"; });
+  }
+  function unitById(id){ return allUnits().filter(function(u){ return u.id === id; })[0] || null; }
+  function unitOfTopic(topicId){
+    var found = null;
+    allUnits().forEach(function(u){ u.topics.forEach(function(t){ if (t.id === topicId) found = u; }); });
+    return found;
+  }
+  function topicTitleAny(id){
+    var t = topicById(id); if (t) return t.title;
+    var ct = (STATE.customTopics || []).filter(function(c){ return c.id === id; })[0];
+    return ct ? ct.title : "";
+  }
+
+  /* ---------- activation + exam dates ---------- */
+  function isActive(id){ return !!(STATE.active && STATE.active[id]); }
+  function setActive(id, on){ STATE.active = STATE.active || {}; if (on) STATE.active[id] = true; else delete STATE.active[id]; }
+  function activeTopicIds(){ return Object.keys(STATE.active || {}); }
+  function examDateFor(unitId){ return (STATE.examDates && STATE.examDates[unitId]) || ""; }
+  function daysUntil(iso){
+    if (!iso) return null;
+    var today = new Date(todayISO()+"T00:00:00");
+    var ex = new Date(iso+"T00:00:00");
+    return Math.round((ex - today) / DAY_MS);
+  }
+
+  /* ---------- state ---------- */
+  var STATE = loadState();
+  function freshState(){
+    return { version:2, createdAt:new Date().toISOString(), name:"", nameLocked:false,
+             setup:{ done:false, format:"summer", studyMode:"mcq" },
+             active:{}, customTopics:[], examDates:{},
+             topics:{}, personal:[], sessions:[] };
+  }
+  function loadState(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return freshState();
+      var p = JSON.parse(raw);
+      if (!p || p.version !== 2) return freshState();
+      p.topics = p.topics || {}; p.personal = p.personal || []; p.sessions = p.sessions || [];
+      p.setup = p.setup || { done:false, format:"summer", studyMode:"mcq" };
+      if (!p.setup.format) p.setup.format = "summer";
+      if (p.setup.studyMode !== "written") p.setup.studyMode = "mcq";
+      p.active = p.active || {}; p.customTopics = p.customTopics || []; p.examDates = p.examDates || {};
+      return p;
+    }catch(e){ return freshState(); }
+  }
+  function save(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE)); }catch(e){} }
+
+  function topicState(id){
+    if (!STATE.topics[id]) STATE.topics[id] = { videoWatched:false, videoWatchedAt:"", cards:{} };
+    if (!STATE.topics[id].cards) STATE.topics[id].cards = {};
+    return STATE.topics[id];
+  }
+  function cardState(topicId, cardId, dok){
+    var ts = topicState(topicId);
+    if (!ts.cards[cardId]){
+      ts.cards[cardId] = { dok:dok||1, reps:0, lapses:0, ease:2.5, interval:0, nextDue:Date.now(), lastCorrect:null, history:[] };
+    }
+    return ts.cards[cardId];
+  }
+
+  /* ---------- date helpers (real local dates, rolling Mon-Sun week) ---------- */
+  function isoDay(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+  function todayISO(){ return isoDay(new Date()); }
+  function mondayOf(d){
+    var x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    var wd = (x.getDay()+6)%7; // Mon=0 ... Sun=6
+    x.setDate(x.getDate()-wd);
+    return x;
+  }
+  function weekDates(){
+    var mon = mondayOf(new Date());
+    var out = [];
+    for (var i=0;i<7;i++){ var d = new Date(mon); d.setDate(mon.getDate()+i); out.push(isoDay(d)); }
+    return out;
+  }
+
+  /* ---------- sessions ---------- */
+  function todaySession(){
+    var t = todayISO();
+    var s = STATE.sessions.filter(function(x){ return x.date === t; })[0];
+    if (!s){ s = { date:t, cardsReviewed:0, topics:[], videos:[] }; STATE.sessions.push(s); }
+    s.topics = s.topics || []; s.videos = s.videos || [];
+    return s;
+  }
+  function logCard(topicId){
+    var s = todaySession();
+    s.cardsReviewed += 1;
+    if (topicId && s.topics.indexOf(topicId) < 0) s.topics.push(topicId);
+    save();
+  }
+  function logVideo(topicId){
+    var s = todaySession();
+    if (s.videos.indexOf(topicId) < 0) s.videos.push(topicId);
+    save();
+  }
+
+  /* ---------- scheduler (SM2-lite, no gating) ---------- */
+  function schedule(cs, rating, correct){
+    var map = { again:1, hard:2, good:3, easy:4 };
+    var q = map[rating] || 3;
+    cs.history.push({ at:new Date().toISOString(), rating:rating, correct:!!correct });
+    cs.lastCorrect = !!correct;
+    if (!correct || q === 1){
+      cs.reps = 0; cs.lapses += 1; cs.interval = 0;
+      cs.ease = Math.max(1.3, cs.ease - 0.2);
+      cs.nextDue = Date.now() + 0.7*DAY_MS;
+      return;
+    }
+    cs.reps += 1;
+    if (cs.reps === 1) cs.interval = 1;
+    else if (cs.reps === 2) cs.interval = 3;
+    else cs.interval = Math.round(cs.interval * cs.ease);
+    if (q === 2){ cs.ease = Math.max(1.3, cs.ease - 0.15); cs.interval = Math.max(1, Math.round(cs.interval*0.8)); }
+    else if (q === 4){ cs.ease = cs.ease + 0.15; }
+    cs.interval = Math.min(MAX_INTERVAL_DAYS, Math.max(1, cs.interval));
+    cs.nextDue = Date.now() + cs.interval*DAY_MS;
+  }
+
+  /* ---------- card pools ---------- */
+  function officialCards(){
+    // returns array of { topicId, topicTitle, card, source:"course" }
+    var out = [];
+    allTopics().forEach(function(t){
+      t.cards.forEach(function(c){ out.push({ topicId:t.id, topicTitle:t.title, card:c, source:"course" }); });
+    });
+    return out;
+  }
+  function personalCards(){
+    return STATE.personal.map(function(p){
+      return { topicId:"personal", topicTitle:p.deck || "My cards", card:p, source:"mine" };
+    });
+  }
+  function allCards(){ return officialCards().concat(personalCards()); }
+  // Daily review pool: official cards from ACTIVE topics only, plus the student's own cards.
+  function activeCards(){
+    return officialCards().filter(function(e){ return isActive(e.topicId); }).concat(personalCards());
+  }
+
+  function peekCardState(topicId, cardId){
+    var ts = STATE.topics[topicId];
+    return (ts && ts.cards) ? ts.cards[cardId] : null;
+  }
+  function isDue(entry){
+    // Never instantiate state here, that would mark every card "seen" just by viewing a list.
+    var cs = peekCardState(entry.source === "mine" ? "personal" : entry.topicId, cardKey(entry.card));
+    if (!cs) return true;            // a card never reviewed is due now
+    return cs.nextDue <= Date.now();
+  }
+  function dueCount(){ return activeCards().filter(isDue).length; }
+  function dueMineCount(){ return personalCards().filter(isDue).length; }
+  // Sort key so cards from a unit with a sooner exam come up first as the exam nears.
+  function examUrgency(entry){
+    var u = entry.source === "mine" ? null : unitOfTopic(entry.topicId);
+    if (!u) return 9999;
+    var d = daysUntil(examDateFor(u.id));
+    return (d === null || d < 0) ? 9999 : d;
+  }
+
+  /* ---------- router ---------- */
+  var CURRENT = "home";
+  function nav(view){
+    CURRENT = view;
+    if (typeof stopDictation === "function") stopDictation();
+    document.querySelectorAll(".view").forEach(function(v){ v.classList.remove("active"); });
+    var el = document.getElementById("view-"+view);
+    if (el) el.classList.add("active");
+    document.querySelectorAll("nav.top button").forEach(function(b){
+      if (b.dataset.nav === view) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current");
+    });
+    try{ window.scrollTo(0,0); }catch(e){}
+    if (view === "home") renderHome();
+    if (view === "study") renderStudy();
+    if (view === "make") renderMake();
+    if (view === "weakness") renderWeakness();
+    if (view === "setup") renderSetup();
+    var h = el ? el.querySelector("h1") : null;
+    if (h){ h.setAttribute("tabindex","-1"); h.focus(); }
+  }
+
+  /* ---------- HOME ---------- */
+  function isMastered(cs){ return !!(cs && cs.reps >= 3 && cs.lastCorrect === true); }
+  function studyTotals(){
+    var reviewed = 0, mastered = 0;
+    Object.keys(STATE.topics || {}).forEach(function(tid){
+      var ts = STATE.topics[tid]; if (!ts || !ts.cards) return;
+      Object.keys(ts.cards).forEach(function(cid){
+        var cs = ts.cards[cid];
+        if (cs && cs.history && cs.history.length){ reviewed += 1; if (isMastered(cs)) mastered += 1; }
+      });
+    });
+    return { reviewed:reviewed, mastered:mastered };
+  }
+  function renderHome(){
+    var st = studyTotals();
+    var stats = document.getElementById("home-stats");
+    stats.innerHTML =
+      stat(dueCount(), "Cards due now") +
+      stat(st.reviewed, "Cards studied") +
+      stat(st.mastered, "Cards mastered") +
+      stat(activeTopicIds().length, "Topics on");
+  }
+  function stat(n,l){ return '<div class="stat"><div class="n">'+escapeHtml(String(n))+'</div><div class="l">'+escapeHtml(l)+'</div></div>'; }
+
+  /* ---------- STUDY PICKER ---------- */
+  function examNote(unitId){
+    var d = daysUntil(examDateFor(unitId));
+    if (d === null) return "";
+    if (d < 0) return "";
+    if (d === 0) return ' · <strong style="color:var(--terra-dark);">exam today</strong>';
+    if (d <= 10) return ' · <strong style="color:var(--terra-dark);">exam in '+d+' day'+(d===1?"":"s")+'</strong>';
+    return ' · exam in '+d+' days';
+  }
+  function studyMode(){ return (STATE.setup && STATE.setup.studyMode === "written") ? "written" : "mcq"; }
+  function syncModeRadios(){
+    var mode = studyMode();
+    document.querySelectorAll('input[name="study-mode"]').forEach(function(r){
+      r.checked = (r.value === mode);
+      if (!r.__wired){
+        r.__wired = true;
+        r.addEventListener("change", function(){
+          if (this.checked){ STATE.setup.studyMode = (this.value === "written" ? "written" : "mcq"); save(); }
+        });
+      }
+    });
+  }
+  function renderStudy(){
+    syncModeRadios();
+    var due = dueCount();
+    document.getElementById("due-summary").textContent =
+      due > 0 ? (due + " card" + (due===1?"":"s") + " due now in your active topics.")
+              : (activeTopicIds().length ? "Nothing is due this minute. Study any active topic below to work ahead."
+                                         : "You have not activated any topics yet. Use Manage topics to turn on what you are studying.");
+    var mineBtn = document.getElementById("btn-study-mine");
+    mineBtn.disabled = personalCards().length === 0;
+    mineBtn.textContent = personalCards().length ? ("Study only my cards (" + personalCards().length + ")") : "You have no cards yet";
+
+    var list = document.getElementById("topic-list");
+    list.innerHTML = "";
+    if (!CONTENT_OK){
+      list.innerHTML = '<div class="card"><p class="empty">No course content loaded. Make sure course-content.js is in the same folder as this file.</p></div>';
+      return;
+    }
+    var anyActive = false;
+    allUnits().forEach(function(u){
+      var activeTopics = u.topics.filter(function(t){ return isActive(t.id); });
+      if (!activeTopics.length) return;
+      anyActive = true;
+      var ml = document.createElement("div"); ml.className = "module-label";
+      ml.innerHTML = escapeHtml(u.title) + examNote(u.id);
+      list.appendChild(ml);
+      activeTopics.forEach(function(t){
+        var oc = t.official ? (topicById(t.id) || {cards:[]}) : null;
+        var total = oc ? oc.cards.length : countPersonalForTopic(t.id);
+        var prog = topicProgress(t.id, total);
+        var btn = document.createElement("button");
+        btn.type = "button"; btn.className = "deck";
+        var cls = total>0 && prog.done >= total ? "done" : (prog.done>0 ? "started" : "");
+        btn.innerHTML =
+          '<span><span class="d-title">'+escapeHtml(t.title)+'</span><br><span class="d-sub">'+total+' card'+(total===1?"":"s")+
+          (oc && oc.videoUrl? ' · video' : '')+(t.official? '' : ' · your topic')+'</span></span>'+
+          '<span class="d-right"><span class="pdot '+cls+'">'+prog.done+'/'+total+'</span></span>';
+        btn.addEventListener("click", function(){ startTopic(t.id); });
+        list.appendChild(btn);
+      });
+    });
+    if (!anyActive){
+      list.innerHTML = '<div class="card"><h3>No active topics yet</h3><p class="muted">Turn on the topics you are studying. You only see and review what you activate, so this works for this class or any other.</p>'+
+        '<button type="button" class="btn gold" data-nav="setup" style="margin-top:8px;">Manage topics</button></div>';
+      list.querySelector("[data-nav]").addEventListener("click", function(){ nav("setup"); });
+    }
+  }
+  function countPersonalForTopic(topicId){ return STATE.personal.filter(function(p){ return p.topicId === topicId; }).length; }
+  function topicProgress(id, total){
+    var ts = STATE.topics[id];
+    var seen = ts && ts.cards ? Object.keys(ts.cards).length : 0;
+    return { done: Math.min(seen, total) };
+  }
+
+  /* ---------- STUDY SESSION ---------- */
+  var QUEUE = [], QPOS = 0, QLABEL = "";
+
+  function startTopic(id){
+    var t = topicById(id);
+    if (t){
+      QLABEL = t.title;
+      QUEUE = t.cards.map(function(c){ return { topicId:id, topicTitle:t.title, card:c, source:"course" }; });
+    } else {
+      // custom (student-added) topic: study the personal cards tagged to it
+      var title = topicTitleAny(id) || "My topic";
+      QLABEL = title;
+      QUEUE = STATE.personal.filter(function(p){ return p.topicId === id; })
+        .map(function(p){ return { topicId:"personal", topicTitle:title, card:p, source:"mine" }; });
+      if (!QUEUE.length){ toast("No cards in this topic yet. Make some on the Make cards page."); nav("make"); return; }
+    }
+    QUEUE.sort(function(a,b){ return (isDue(b)?1:0) - (isDue(a)?1:0); }); // due first
+    QPOS = 0;
+    openCardView(t);
+  }
+  function startDue(){
+    var pool = activeCards().filter(isDue);
+    if (!pool.length){ toast("Nothing due in your active topics. Activate more or study ahead."); nav("study"); return; }
+    // soonest exam first, then keep order
+    pool.sort(function(a,b){ return examUrgency(a) - examUrgency(b); });
+    QLABEL = "Today's review";
+    QUEUE = pool; QPOS = 0;
+    openCardView(null);
+  }
+  function startMine(){
+    var pool = personalCards();
+    if (!pool.length){ toast("You have not made any cards yet."); nav("make"); return; }
+    QLABEL = "My cards";
+    QUEUE = pool.slice(); QPOS = 0;
+    openCardView(null);
+  }
+
+  function openCardView(topic){
+    nav("card");
+    document.getElementById("card-deck-label").textContent = QLABEL;
+    document.getElementById("card-h").textContent = topic ? topic.title : QLABEL;
+    var vb = document.getElementById("video-block");
+    if (topic && topic.videoUrl){ vb.hidden = false; renderVideo(vb, topic); }
+    else { vb.hidden = true; vb.innerHTML = ""; }
+    showCard();
+  }
+
+  function renderVideo(container, topic){
+    var ts = topicState(topic.id);
+    var watched = ts.videoWatched;
+    var url = topic.videoUrl;
+    var isYT = /youtu\.?be/.test(url);
+    var frame = '';
+    if (isYT){
+      var vid = ytId(url);
+      frame = '<div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/'+encodeURIComponent(vid)+'?rel=0&modestbranding=1" title="'+escapeHtml(topic.videoLabel||topic.title)+'" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
+    } else {
+      frame = '<div class="video-frame"><video src="'+escapeHtml(url)+'" controls preload="metadata"></video></div>';
+    }
+    container.innerHTML =
+      '<div class="card" style="margin-top:0;">'+
+      '<div class="video-row"><h3 style="margin:0;">Lecture video</h3>'+
+      '<span class="pdot '+(watched?'done':'')+'">'+(watched?'Watched':'Optional')+'</span></div>'+
+      frame+
+      '<div class="video-row">'+
+      '<button type="button" class="btn ghost" id="btn-watched">'+(watched?'Watched (tap to undo)':'I watched this')+'</button>'+
+      (topic.lecturePageUrl? '<a class="btn ghost" href="'+escapeHtml(topic.lecturePageUrl)+'" target="_top">Open full lecture page &rarr;</a>':'')+
+      '</div>'+
+      '<p class="field-help">Watching is tracked for your weekly report. It never locks your cards, study whenever you like.</p>'+
+      '</div>';
+    var native = container.querySelector("video");
+    if (native){ native.addEventListener("ended", function(){ markWatched(topic.id); }); }
+    var b = container.querySelector("#btn-watched");
+    b.addEventListener("click", function(){
+      var t2 = topicState(topic.id);
+      if (t2.videoWatched){ t2.videoWatched = false; t2.videoWatchedAt = ""; save(); }
+      else { markWatched(topic.id); }
+      renderVideo(container, topic);
+    });
+  }
+  function markWatched(id){
+    var ts = topicState(id);
+    if (!ts.videoWatched){ ts.videoWatched = true; ts.videoWatchedAt = new Date().toISOString(); logVideo(id); save(); toast("Video marked watched."); }
+  }
+  function ytId(url){
+    var m = url.match(/[?&]v=([^&]+)/); if (m) return m[1];
+    m = url.match(/youtu\.be\/([^?&]+)/); if (m) return m[1];
+    m = url.match(/embed\/([^?&]+)/); if (m) return m[1];
+    return url;
+  }
+
+  function showCard(){
+    var stage = document.getElementById("card-stage");
+    if (QPOS >= QUEUE.length){
+      stage.innerHTML = '<div class="q-card"><h3>Nice work.</h3><p class="muted">You finished this set: '+QUEUE.length+' card'+(QUEUE.length===1?"":"s")+'. Your progress is saved.</p>'+
+        '<div class="pill-row" style="margin-top:12px;"><button type="button" class="btn gold" id="more-due">Review due cards</button> <button type="button" class="btn ghost" data-nav="study">Back to topics</button></div></div>';
+      stage.querySelector("#more-due").addEventListener("click", startDue);
+      stage.querySelectorAll("[data-nav]").forEach(function(b){ b.addEventListener("click", function(){ nav(b.dataset.nav); }); });
+      setProgress(1);
+      return;
+    }
+    setProgress(QPOS/QUEUE.length);
+    var entry = QUEUE[QPOS];
+    var c = entry.card;
+    var hasOptions = !!(c.options && c.options.length >= 2);
+    var isBasic = c.type === "basic" || !hasOptions;
+    var written = studyMode() === "written";
+    var asRecall = isBasic || written; // present without answer choices
+    var modeTag = (hasOptions && written) ? '<span class="mode-pill">Written recall</span>' : '';
+    var meta = '<div class="q-meta"><span class="eyebrow">'+escapeHtml(entry.topicTitle)+'</span>'+
+      '<span class="muted" style="font-size:14.6px;">Card '+(QPOS+1)+' of '+QUEUE.length+'</span></div>'+
+      modeTag+'<p class="q-text">'+escapeHtml(c.q)+'</p>';
+    if (asRecall){
+      // recall card: try to produce the answer from memory, then reveal, then self-rate
+      var answerText = isBasic ? (c.answer||"")
+        : (c.options && c.options[c.correctIndex] != null ? c.options[c.correctIndex] : (c.answer||""));
+      var prompt = (hasOptions && written)
+        ? '<p class="field-help" style="margin:0 0 10px;">Say or write the answer in your own words first. No peeking, then check yourself.</p>'
+        : '';
+      stage.innerHTML = '<div class="q-card">'+meta+prompt+
+        '<label class="field-help" for="recall-answer" style="display:block; margin:0 0 4px;">Your answer (optional). Type it, or tap the mic to speak.</label>'+
+        '<textarea id="recall-answer" class="recall-input" rows="3" aria-label="Your answer" placeholder="Say it out loud or write it here, then reveal and check yourself."></textarea>'+
+        '<div class="pill-row">'+
+          '<button type="button" class="mic-btn" id="mic-btn" aria-pressed="false" hidden><span class="mic-dot" aria-hidden="true"></span><span id="mic-label">Speak answer</span></button> '+
+          '<button type="button" class="btn gold" id="show-ans">Show answer</button>'+
+        '</div>'+
+        '<p class="field-help" id="mic-status" aria-live="polite" style="margin:6px 0 0;"></p>'+
+        '<div id="post"></div></div>';
+      var ansEl = stage.querySelector("#recall-answer");
+      setupDictation(ansEl, stage.querySelector("#mic-btn"), stage.querySelector("#mic-status"));
+      stage.querySelector("#show-ans").addEventListener("click", function(){
+        this.disabled = true;
+        stopDictation();
+        revealAndRate(entry, c, null, true, answerText, ansEl ? ansEl.value.trim() : "");
+      });
+    } else {
+      var html = '<div class="q-card">'+meta+'<div class="options" role="group" aria-label="Answer choices">';
+      (c.options||[]).forEach(function(opt, i){ html += '<button type="button" class="opt" data-i="'+i+'">'+escapeHtml(opt)+'</button>'; });
+      html += '</div><div id="post"></div></div>';
+      stage.innerHTML = html;
+      var answered = false;
+      stage.querySelectorAll(".opt").forEach(function(b){
+        b.addEventListener("click", function(){
+          if (answered) return; answered = true;
+          var i = parseInt(b.dataset.i,10);
+          var correct = i === c.correctIndex;
+          stage.querySelectorAll(".opt").forEach(function(o,oi){
+            o.setAttribute("disabled","");
+            if (oi === c.correctIndex) o.classList.add("correct");
+            if (oi === i && !correct) o.classList.add("wrong");
+          });
+          revealAndRate(entry, c, correct, false);
+        });
+      });
+    }
+  }
+
+  /* ---------- VOICE TO TEXT (written-recall answers) ---------- */
+  var SR = (typeof window !== "undefined") && (window.SpeechRecognition || window.webkitSpeechRecognition);
+  var DICT = null; // active recognition instance
+  function stopDictation(){
+    if (DICT){ try{ DICT.onend = null; DICT.stop(); }catch(e){} DICT = null; }
+  }
+  function setupDictation(textarea, btn, statusEl){
+    if (!textarea || !btn) return;
+    if (!SR){ btn.hidden = true; if (statusEl) statusEl.textContent = ""; return; }
+    btn.hidden = false;
+    var baseText = "";
+    var listening = false;
+    function setLabel(t){ var l = btn.querySelector("#mic-label"); if (l) l.textContent = t; }
+    function start(){
+      stopDictation();
+      var rec = new SR();
+      rec.lang = "en-US"; rec.interimResults = true; rec.continuous = true;
+      baseText = textarea.value ? (textarea.value.replace(/\s+$/,"") + " ") : "";
+      rec.onresult = function(ev){
+        var finalT = "", interimT = "";
+        for (var i = ev.resultIndex; i < ev.results.length; i++){
+          var r = ev.results[i];
+          if (r.isFinal) finalT += r[0].transcript; else interimT += r[0].transcript;
+        }
+        if (finalT) baseText += finalT.replace(/\s+/g," ") + " ";
+        textarea.value = (baseText + interimT).replace(/\s+/g," ").replace(/^\s/,"");
+      };
+      rec.onerror = function(ev){
+        if (statusEl) statusEl.textContent = (ev && ev.error === "not-allowed")
+          ? "Microphone blocked. Allow mic access in your browser, or just type your answer."
+          : "Voice input stopped. You can keep typing.";
+        endUI();
+      };
+      rec.onend = function(){ if (listening){ try{ rec.start(); }catch(e){ endUI(); } } };
+      try{ rec.start(); }catch(e){ if (statusEl) statusEl.textContent = "Could not start the mic. You can type instead."; return; }
+      DICT = rec; listening = true;
+      btn.setAttribute("aria-pressed","true"); setLabel("Stop");
+      if (statusEl) statusEl.textContent = "Listening. Speak your answer, then tap Stop or Show answer.";
+    }
+    function endUI(){
+      listening = false; btn.setAttribute("aria-pressed","false"); setLabel("Speak answer");
+    }
+    function stop(){ listening = false; stopDictation(); endUI(); if (statusEl) statusEl.textContent = "Mic off. Edit your answer or reveal it."; }
+    btn.addEventListener("click", function(){
+      if (listening) stop(); else start();
+    });
+  }
+
+  function revealAndRate(entry, c, correct, isBasic, answerOverride, studentAns){
+    var post = document.getElementById("post");
+    var block;
+    if (isBasic){
+      var ans = (answerOverride != null && answerOverride !== "") ? answerOverride : (c.answer||"");
+      var yours = (studentAns && studentAns !== "")
+        ? '<div class="explain" style="border-left-color:var(--gold-deep);"><h4>Your answer</h4><p style="margin:0;">'+escapeHtml(studentAns)+'</p></div>'
+        : '';
+      block = yours +
+        '<div class="explain"><h4>Answer</h4><p style="margin:0;">'+escapeHtml(ans)+'</p>'+
+        (c.explanation ? '<p style="margin:8px 0 0;">'+escapeHtml(c.explanation)+'</p>' : '')+'</div>'+
+        '<p class="field-help" style="margin:10px 0 0;">Did you produce that answer from memory before revealing? Grade yourself honestly.</p>';
+    } else {
+      var verdict = correct ? "Correct" : "Not quite";
+      block = c.explanation ? '<div class="explain"><h4>'+verdict+'</h4><p style="margin:0;">'+escapeHtml(c.explanation)+'</p></div>'
+                            : '<div class="explain"><h4>'+verdict+'</h4><p style="margin:0;">The correct answer is highlighted above.</p></div>';
+    }
+    post.innerHTML = block +
+      '<p class="field-help" style="margin-top:14px;">How well did you know it? This sets when the card comes back.</p>'+
+      '<div class="rate-row">'+
+        '<button type="button" class="rate" data-r="again">Again</button>'+
+        '<button type="button" class="rate" data-r="hard">Hard</button>'+
+        '<button type="button" class="rate" data-r="good">Good</button>'+
+        '<button type="button" class="rate" data-r="easy">Easy</button>'+
+      '</div>';
+    post.querySelectorAll(".rate").forEach(function(b){
+      b.addEventListener("click", function(){
+        var correctFinal = isBasic ? (b.dataset.r !== "again") : correct;
+        var cs = entry.source === "mine" ? cardState("personal", cardKey(c), 1) : cardState(entry.topicId, cardKey(c), c.dok);
+        schedule(cs, b.dataset.r, correctFinal);
+        logCard(entry.source === "mine" ? null : entry.topicId);
+        stopDictation();
+        QPOS += 1;
+        showCard();
+      });
+    });
+    post.querySelectorAll(".rate")[2].focus();
+  }
+
+  function setProgress(frac){
+    var pct = Math.round(Math.max(0,Math.min(1,frac))*100);
+    var bar = document.getElementById("card-progress");
+    if (bar) bar.style.width = pct + "%";
+    var sr = document.getElementById("card-progress-sr");
+    if (sr) sr.textContent = "Progress " + pct + " percent.";
+  }
+
+
+
+  /* ---------- WEAKNESS DASHBOARD ---------- */
+  function cardKey(card){ return card.globalId || card.id; }
+  function cardMetaById(){
+    var map = {};
+    officialCards().forEach(function(e){ map[cardKey(e.card)] = e; });
+    personalCards().forEach(function(e){ map[cardKey(e.card)] = e; });
+    return map;
+  }
+  function riskLabel(pct, attempts){
+    if (attempts < 3) return { text:"Needs data", cls:"" };
+    if (pct < 70) return { text:"High risk", cls:"high" };
+    if (pct < 85) return { text:"Watch", cls:"mid" };
+    return { text:"Strong", cls:"" };
+  }
+  function addBucket(buckets, key, label, correct){
+    if (!label) label = "Uncategorized";
+    if (!buckets[key]) buckets[key] = {};
+    if (!buckets[key][label]) buckets[key][label] = { label:label, attempts:0, correct:0 };
+    buckets[key][label].attempts += 1;
+    if (correct) buckets[key][label].correct += 1;
+  }
+  function collectWeakness(){
+    var meta = cardMetaById();
+    var buckets = { system:{}, topic:{}, dok:{}, type:{} };
+    var totals = { attempts:0, correct:0, reviewedCards:0 };
+    Object.keys(STATE.topics || {}).forEach(function(topicId){
+      var ts = STATE.topics[topicId];
+      if (!ts || !ts.cards) return;
+      Object.keys(ts.cards).forEach(function(cid){
+        var cs = ts.cards[cid];
+        var hist = cs && cs.history ? cs.history : [];
+        if (!hist.length) return;
+        totals.reviewedCards += 1;
+        var e = meta[cid] || null;
+        var card = e ? e.card : { id:cid, dok:cs.dok || 1, tags:{} };
+        var tags = card.tags || {};
+        hist.forEach(function(h){
+          var ok = !!h.correct;
+          totals.attempts += 1; if (ok) totals.correct += 1;
+          addBucket(buckets, "system", tags.system || (e && unitOfTopic(e.topicId) ? unitOfTopic(e.topicId).title : "My Cards"), ok);
+          addBucket(buckets, "topic", tags.topic || (e ? e.topicTitle : topicTitleAny(topicId) || "My Cards"), ok);
+          addBucket(buckets, "dok", tags.dok || ("DOK " + (card.dok || cs.dok || 1)), ok);
+          addBucket(buckets, "type", tags.questionType || (card.type === "basic" ? "Short Answer" : "Multiple Choice"), ok);
+        });
+      });
+    });
+    return { buckets:buckets, totals:totals };
+  }
+  function sortedBucket(obj){
+    return Object.keys(obj).map(function(k){ return obj[k]; }).sort(function(a,b){
+      var ap = a.attempts ? a.correct/a.attempts : 0;
+      var bp = b.attempts ? b.correct/b.attempts : 0;
+      if (ap !== bp) return ap - bp;
+      return b.attempts - a.attempts;
+    });
+  }
+  function weakPanel(title, bucket, limit){
+    var rows = sortedBucket(bucket).slice(0, limit || 8);
+    if (!rows.length) return '<div class="card"><h3>'+escapeHtml(title)+'</h3><p class="empty">No review data yet.</p></div>';
+    var html = '<div class="card"><h3>'+escapeHtml(title)+'</h3>';
+    rows.forEach(function(r){
+      var pct = r.attempts ? Math.round((r.correct/r.attempts)*100) : 0;
+      var risk = riskLabel(pct, r.attempts);
+      html += '<div class="weak-row"><div><div class="weak-label">'+escapeHtml(r.label)+'</div><div class="weak-sub">'+r.correct+'/'+r.attempts+' correct</div></div>'+ 
+              '<div><div class="weak-bar" aria-hidden="true"><div class="weak-fill" style="width:'+pct+'%;"></div></div><span class="weak-risk '+risk.cls+'">'+risk.text+'</span></div>'+ 
+              '<div class="weak-score">'+pct+'%</div></div>';
+    });
+    html += '</div>';
+    return html;
+  }
+  function masteryAndMissed(){
+    var meta = cardMetaById();
+    var topicMastery = {};   // topicTitle -> {mastered, total}
+    var missed = [];         // {q, topic, wrong}
+    Object.keys(STATE.topics || {}).forEach(function(topicId){
+      var ts = STATE.topics[topicId];
+      if (!ts || !ts.cards) return;
+      Object.keys(ts.cards).forEach(function(cid){
+        var cs = ts.cards[cid];
+        var hist = cs && cs.history ? cs.history : [];
+        if (!hist.length) return;
+        var e = meta[cid] || null;
+        var topicTitle = e ? e.topicTitle : (topicTitleAny(topicId) || "My cards");
+        var tm = topicMastery[topicTitle] || (topicMastery[topicTitle] = { mastered:0, total:0 });
+        tm.total += 1; if (isMastered(cs)) tm.mastered += 1;
+        var wrong = hist.filter(function(h){ return !h.correct; }).length;
+        if (wrong >= 2){ var q = (e && e.card) ? (e.card.q || "(card)") : "(your card)"; missed.push({ q:q, topic:topicTitle, wrong:wrong }); }
+      });
+    });
+    missed.sort(function(a,b){ return b.wrong - a.wrong; });
+    return { topicMastery:topicMastery, missed:missed };
+  }
+  function masteryPanel(topicMastery){
+    var keys = Object.keys(topicMastery);
+    if (!keys.length) return '<div class="card"><h3>Mastery progress</h3><p class="empty">No review data yet.</p></div>';
+    keys.sort(function(a,b){ return (topicMastery[a].mastered/topicMastery[a].total) - (topicMastery[b].mastered/topicMastery[b].total); });
+    var html = '<div class="card"><h3>Mastery progress</h3><p class="muted" style="margin-top:0;">Cards mastered (answered right several times) versus still shaky, by topic.</p>';
+    keys.forEach(function(k){
+      var tm = topicMastery[k]; var pct = tm.total ? Math.round(tm.mastered/tm.total*100) : 0;
+      html += '<div class="weak-row"><div><div class="weak-label">'+escapeHtml(k)+'</div><div class="weak-sub">'+tm.mastered+'/'+tm.total+' mastered</div></div>'+
+              '<div><div class="weak-bar" aria-hidden="true"><div class="weak-fill" style="width:'+pct+'%;"></div></div></div>'+
+              '<div class="weak-score">'+pct+'%</div></div>';
+    });
+    return html + '</div>';
+  }
+  function missedPanel(missed){
+    if (!missed.length) return '<div class="card"><h3>Cards you keep missing</h3><p class="muted">Nothing repeatedly missed yet. Keep going.</p></div>';
+    var html = '<div class="card"><h3>Cards you keep missing</h3><p class="muted" style="margin-top:0;">You have missed each of these at least twice. Review them directly.</p>';
+    missed.slice(0, 10).forEach(function(m){
+      html += '<div style="padding:9px 0; border-bottom:1px solid var(--gray-line);"><div style="font-weight:600;">'+escapeHtml(m.q)+'</div><div class="weak-sub">'+escapeHtml(m.topic)+' &middot; missed '+m.wrong+' times</div></div>';
+    });
+    return html + '</div>';
+  }
+  // ---- DOK Mastery: recall vs understanding vs application ----
+  var DOK_INFO = {
+    1: { name:"Recall", sub:"facts, naming, definitions" },
+    2: { name:"Understanding", sub:"relationships, how parts connect" },
+    3: { name:"Application", sub:"reasoning, clinical and why-questions" }
+  };
+  function dokMastery(){
+    var meta = cardMetaById();
+    var lv = { 1:{attempts:0,correct:0,reviewed:0,mastered:0}, 2:{attempts:0,correct:0,reviewed:0,mastered:0}, 3:{attempts:0,correct:0,reviewed:0,mastered:0} };
+    Object.keys(STATE.topics || {}).forEach(function(tid){
+      var ts = STATE.topics[tid]; if (!ts || !ts.cards) return;
+      Object.keys(ts.cards).forEach(function(cid){
+        var cs = ts.cards[cid]; var hist = cs && cs.history ? cs.history : []; if (!hist.length) return;
+        var e = meta[cid]; var dok = (e && e.card && e.card.dok) || cs.dok || 1;
+        dok = dok < 1 ? 1 : (dok > 3 ? 3 : dok);
+        var L = lv[dok]; L.reviewed += 1; if (isMastered(cs)) L.mastered += 1;
+        hist.forEach(function(h){ L.attempts += 1; if (h.correct) L.correct += 1; });
+      });
+    });
+    return lv;
+  }
+  function dokMasteryPanel(lv){
+    var levels = [1,2,3].filter(function(d){ return lv[d].attempts > 0; });
+    if (!levels.length) return '';
+    // weakest level among those with enough attempts
+    var scored = levels.filter(function(d){ return lv[d].attempts >= 3; }).map(function(d){ return { d:d, acc:lv[d].correct/lv[d].attempts }; });
+    scored.sort(function(a,b){ return a.acc - b.acc; });
+    var headline = '';
+    if (scored.length){
+      var w = scored[0]; var info = DOK_INFO[w.d];
+      var pct = Math.round(w.acc*100);
+      headline = '<div class="policy" style="margin:0 0 14px;"><strong>Your weak spot: '+info.name+' (DOK '+w.d+'), '+pct+'% accurate.</strong> You are '+
+        (w.d===1 ? 'still shaky on the basic facts, build those first.' :
+         w.d===2 ? 'fine on facts but missing how the pieces relate.' :
+         'good at recognizing facts but struggle to apply them. Knowing it when you see it is not the same as producing and reasoning with it on an exam. Prioritize DOK 3 practice.')+'</div>';
+    }
+    var rows = '';
+    [1,2,3].forEach(function(d){
+      var L = lv[d]; var info = DOK_INFO[d];
+      if (!L.attempts){ rows += '<div class="weak-row"><div><div class="weak-label">DOK '+d+' &middot; '+info.name+'</div><div class="weak-sub">'+info.sub+'</div></div><div></div><div class="weak-score" style="color:var(--gray-soft);">no data</div></div>'; return; }
+      var acc = Math.round(L.correct/L.attempts*100);
+      var mast = L.reviewed ? Math.round(L.mastered/L.reviewed*100) : 0;
+      var risk = riskLabel(acc, L.attempts);
+      rows += '<div class="weak-row"><div><div class="weak-label">DOK '+d+' &middot; '+info.name+'</div><div class="weak-sub">'+info.sub+' &middot; '+L.mastered+'/'+L.reviewed+' mastered</div></div>'+
+              '<div><div class="weak-bar" aria-hidden="true"><div class="weak-fill" style="width:'+acc+'%;"></div></div><span class="weak-risk '+risk.cls+'">'+risk.text+'</span></div>'+
+              '<div class="weak-score">'+acc+'%</div></div>';
+    });
+    return '<div class="card"><h3>DOK Mastery: recall, understanding, application</h3>'+
+      '<p class="muted" style="margin-top:0;">Most students do not know whether they are weak at remembering, understanding, or applying. This is your accuracy and mastery at each level.</p>'+
+      headline + rows + '</div>';
+  }
+  function renderWeakness(){
+    var box = document.getElementById("weakness-body");
+    var data = collectWeakness();
+    var mm = masteryAndMissed();
+    var dlv = dokMastery();
+    var t = data.totals;
+    if (!t.attempts){
+      box.innerHTML = '<div class="card"><h3>No weakness data yet</h3><p class="muted">Study a few cards first. Once students answer cards, this page will show weak systems, topics, DOK levels, and question types.</p><button type="button" class="btn gold" data-nav="study">Start studying</button></div>';
+      box.querySelector('[data-nav]').addEventListener('click', function(){ nav('study'); });
+      return;
+    }
+    var overall = Math.round((t.correct/t.attempts)*100);
+    var weakestTopics = sortedBucket(data.buckets.topic).slice(0,3).map(function(r){ return r.label; });
+    box.innerHTML =
+      '<div class="stats">'+
+        stat(overall+'%', 'Overall accuracy')+
+        stat(t.attempts, 'Attempts logged')+
+        stat(t.reviewedCards, 'Cards with data')+
+        stat(dueCount(), 'Cards due now')+
+      '</div>'+ 
+      '<div class="card"><h3>Recommended next study</h3><p class="muted" style="margin-top:0;">Prioritize the lowest-accuracy areas with at least a few attempts. Current focus tags:</p>'+ 
+      weakestTopics.map(function(x){ return '<span class="tag-chip">'+escapeHtml(x)+'</span>'; }).join('')+
+      '</div>'+
+      dokMasteryPanel(dlv)+
+      '<div class="weak-grid">'+
+        weakPanel('Weakest systems', data.buckets.system, 8)+
+        weakPanel('Weakest topics', data.buckets.topic, 8)+
+        weakPanel('DOK performance', data.buckets.dok, 6)+
+        weakPanel('Question type performance', data.buckets.type, 6)+
+      '</div>'+
+      masteryPanel(mm.topicMastery)+
+      missedPanel(mm.missed);
+  }
+
+  /* ---------- MAKE CARDS ---------- */
+  function buildUnitSelect(sel, includeAll){
+    if (!sel) return;
+    var h = includeAll ? '<option value="">All units</option>' : "";
+    allUnits().forEach(function(u){
+      h += '<option value="'+escapeHtml(u.id)+'">'+escapeHtml((u.week? "Unit "+u.week+": " : "")+u.title)+'</option>';
+    });
+    sel.innerHTML = h;
+  }
+  function buildTopicSelect(unitId){
+    var sel = document.getElementById("mk-topic");
+    var u = allUnits().filter(function(x){ return x.id === unitId; })[0];
+    var h = '<option value="">Whole unit (general)</option>';
+    if (u){ u.topics.forEach(function(t){ h += '<option value="'+escapeHtml(t.id)+'">'+escapeHtml(t.title)+'</option>'; }); }
+    h += '<option value="__new__">+ Add a new topic...</option>';
+    sel.innerHTML = h;
+    syncNewTopicField();
+  }
+  function syncNewTopicField(){
+    var sel = document.getElementById("mk-topic");
+    var field = document.getElementById("mk-new-topic-wrap");
+    if (!field) return;
+    field.hidden = sel.value !== "__new__";
+  }
+  function cardTypeValue(){ return (document.querySelector('input[name="ctype"]:checked')||{}).value || "mc"; }
+  function syncCardType(){
+    var basic = cardTypeValue() === "basic";
+    var mc = document.getElementById("mc-fields"), bf = document.getElementById("basic-fields");
+    if (mc) mc.hidden = basic;
+    if (bf) bf.hidden = !basic;
+  }
+  function renderMake(){
+    var box = document.getElementById("mk-options");
+    if (!box.dataset.built){
+      var h = "";
+      for (var i=0;i<4;i++){
+        h += '<div class="radio-line"><input type="radio" name="correct" id="mk-correct-'+i+'" value="'+i+'"'+(i===0?' checked':'')+'>'+
+             '<label for="mk-opt-'+i+'" class="sr-only">Answer '+(i+1)+'</label>'+
+             '<input type="text" id="mk-opt-'+i+'" placeholder="Answer '+(i+1)+'" style="flex:1;"></div>';
+      }
+      box.innerHTML = h; box.dataset.built = "1";
+    }
+    var unitSel = document.getElementById("mk-unit");
+    if (unitSel && !unitSel.dataset.built){
+      buildUnitSelect(unitSel, false);
+      buildTopicSelect(unitSel.value);
+      unitSel.addEventListener("change", function(){ buildTopicSelect(unitSel.value); });
+      unitSel.dataset.built = "1";
+    }
+    buildUnitSelect(document.getElementById("mine-filter"), true);
+    renderMine();
+  }
+  function unitTitleById(id){ var u = allUnits().filter(function(x){ return x.id===id; })[0]; return u ? u.title : ""; }
+  function topicTitleById(id){ return topicTitleAny(id); }
+  function cardDeckLabel(p){
+    var unit = p.unitTitle || unitTitleById(p.unitId) || "My cards";
+    var topic = p.topicTitle || topicTitleById(p.topicId) || "";
+    return topic ? (unit + " · " + topic) : unit;
+  }
+  function renderMine(){
+    var list = document.getElementById("mine-list");
+    document.getElementById("mine-count").textContent = STATE.personal.length;
+    var filterEl = document.getElementById("mine-filter");
+    var filter = filterEl ? filterEl.value : "";
+    list.innerHTML = "";
+    var shown = STATE.personal.filter(function(p){ return !filter || p.unitId === filter; });
+    if (!shown.length){ list.innerHTML = '<p class="empty">'+(STATE.personal.length? "No cards in this unit yet." : "No cards yet. Make your first one above.")+'</p>'; return; }
+    shown.slice().reverse().forEach(function(p){
+      var row = document.createElement("div"); row.className = "deck"; row.style.cursor = "default";
+      row.innerHTML = '<span><span class="d-title">'+escapeHtml(p.q)+'</span><br><span class="d-sub">'+escapeHtml(cardDeckLabel(p))+'</span></span>'+
+        '<span class="d-right"><button type="button" class="btn ghost" data-del="'+escapeHtml(p.id)+'" style="padding:7px 12px;">Delete</button></span>';
+      row.querySelector("[data-del]").addEventListener("click", function(){
+        STATE.personal = STATE.personal.filter(function(x){ return x.id !== p.id; });
+        if (STATE.topics.personal && STATE.topics.personal.cards) delete STATE.topics.personal.cards[p.id];
+        save(); renderMine(); toast("Card deleted.");
+      });
+      list.appendChild(row);
+    });
+  }
+
+  // create (or reuse) a custom topic in a unit, return its id
+  function ensureCustomTopic(unitId, title){
+    title = (title||"").trim();
+    if (!title) return "";
+    var existing = (STATE.customTopics||[]).filter(function(c){ return c.unitId===unitId && c.title.toLowerCase()===title.toLowerCase(); })[0];
+    if (existing) return existing.id;
+    var id = "ct"+Date.now()+Math.floor(Math.random()*1000);
+    STATE.customTopics.push({ id:id, unitId:unitId||"u-custom", title:title });
+    setActive(id, true); // a topic you just made is active so you can study it right away
+    return id;
+  }
+  function setupMakeForm(){
+    var form = document.getElementById("make-form");
+    document.getElementById("mk-topic").addEventListener("change", syncNewTopicField);
+    form.querySelectorAll('input[name="ctype"]').forEach(function(r){ r.addEventListener("change", syncCardType); });
+    syncCardType();
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      var type = cardTypeValue();
+      var unitId = document.getElementById("mk-unit").value;
+      var topicId = document.getElementById("mk-topic").value;
+      var q = document.getElementById("mk-q").value.trim();
+      var exp = document.getElementById("mk-exp").value.trim();
+      var fb = document.getElementById("mk-feedback");
+      if (!q){ fb.textContent = "Add a question first."; fb.style.color = "var(--terra-dark)"; return; }
+
+      var opts = [], correct = 0, answer = "";
+      if (type === "basic"){
+        answer = document.getElementById("mk-answer").value.trim();
+        if (!answer){ fb.textContent = "Add the answer for your simple card."; fb.style.color = "var(--terra-dark)"; return; }
+      } else {
+        for (var i=0;i<4;i++){ opts.push((document.getElementById("mk-opt-"+i).value||"").trim()); }
+        correct = parseInt((form.querySelector('input[name="correct"]:checked')||{}).value || "0", 10);
+        if (opts.filter(Boolean).length < 2){ fb.textContent = "Add at least two answers, or switch to a simple card."; fb.style.color = "var(--terra-dark)"; return; }
+        if (!opts[correct]){ fb.textContent = "Fill in the answer you marked correct."; fb.style.color = "var(--terra-dark)"; return; }
+      }
+      if (topicId === "__new__"){
+        var newName = document.getElementById("mk-new-topic").value.trim();
+        if (!newName){ fb.textContent = "Name your new topic, or pick one from the list."; fb.style.color = "var(--terra-dark)"; return; }
+        topicId = ensureCustomTopic(unitId, newName);
+      }
+      var card = { id:"p"+Date.now()+Math.floor(Math.random()*1000), type:type, q:q,
+                   unitId:unitId, unitTitle:unitTitleById(unitId), topicId:topicId, topicTitle:topicTitleById(topicId),
+                   deck:cardDeckLabel({ unitId:unitId, topicId:topicId }),
+                   options:opts, correctIndex:correct, answer:answer, explanation:exp, dok:1, createdAt:new Date().toISOString() };
+      STATE.personal.push(card);
+      save();
+      var keepUnit = unitId;
+      form.reset();
+      buildUnitSelect(document.getElementById("mk-unit"), false);
+      document.getElementById("mk-unit").value = keepUnit; buildTopicSelect(keepUnit);
+      document.querySelectorAll('#mk-options input[type=radio]')[0].checked = true;
+      syncCardType();
+      buildUnitSelect(document.getElementById("mine-filter"), true);
+      fb.textContent = "Saved. It will show up in your daily review for active topics."; fb.style.color = "var(--navy)";
+      renderMine();
+    });
+    document.getElementById("mine-filter").addEventListener("change", renderMine);
+  }
+
+  /* ---------- EXPORT / IMPORT personal cards ---------- */
+  function exportCards(){
+    var fb = document.getElementById("share-feedback");
+    if (!STATE.personal.length){ fb.textContent = "You have no cards to export yet."; fb.style.color = "var(--terra-dark)"; return; }
+    var payload = { type:"bio004-cards", version:1, exportedAt:new Date().toISOString(), cards:STATE.personal };
+    var text = JSON.stringify(payload, null, 2);
+    try{
+      var blob = new Blob([text], { type:"application/json" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "bio004-shared-cards.json";
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+      fb.textContent = "Exported "+STATE.personal.length+" card"+(STATE.personal.length===1?"":"s")+" to a file you can share."; fb.style.color = "var(--navy)";
+    }catch(e){
+      document.getElementById("import-text").value = text;
+      fb.textContent = "Could not download a file here. Your export text is in the box below, copy it to share."; fb.style.color = "var(--navy)";
+    }
+  }
+  function importCardsText(text){
+    var fb = document.getElementById("share-feedback");
+    var parsed;
+    try{ parsed = JSON.parse(text); }catch(e){ fb.textContent = "That did not look like a valid cards file."; fb.style.color = "var(--terra-dark)"; return; }
+    var incoming = Array.isArray(parsed) ? parsed : (parsed && parsed.cards) ? parsed.cards : null;
+    if (!incoming || !incoming.length){ fb.textContent = "No cards found in that file."; fb.style.color = "var(--terra-dark)"; return; }
+    // Deduplicate by content so importing the same file five times does not make five copies.
+    var seen = {};
+    STATE.personal.forEach(function(p){ seen[cardSig(p)] = true; });
+    var added = 0, skipped = 0;
+    incoming.forEach(function(c){
+      if (!c || !c.q || (!Array.isArray(c.options) && !c.answer)) return;
+      var sig = cardSig(c);
+      if (seen[sig]){ skipped += 1; return; } // already in the bank, do not add again
+      seen[sig] = true;
+      var isBasic = c.type === "basic" || !(Array.isArray(c.options) && c.options.length >= 2);
+      var card = {
+        id:"p"+Date.now()+Math.floor(Math.random()*100000),
+        type:isBasic ? "basic" : "mc",
+        q:String(c.q),
+        unitId:c.unitId||"", unitTitle:c.unitTitle||"", topicId:c.topicId||"", topicTitle:c.topicTitle||"",
+        deck:c.deck||cardDeckLabel({ unitId:c.unitId, topicId:c.topicId }),
+        options:Array.isArray(c.options)?c.options.map(String).slice(0,4):[],
+        correctIndex:Math.max(0, Math.min(3, parseInt(c.correctIndex,10)||0)),
+        answer:c.answer? String(c.answer):"",
+        explanation:c.explanation? String(c.explanation):"",
+        dok:1, createdAt:new Date().toISOString(), shared:true
+      };
+      STATE.personal.push(card); added += 1;
+    });
+    save();
+    buildUnitSelect(document.getElementById("mine-filter"), true);
+    renderMine();
+    var msg = "Imported "+added+" new card"+(added===1?"":"s")+".";
+    if (skipped) msg += " Skipped "+skipped+" you already had.";
+    fb.textContent = msg; fb.style.color = "var(--navy)";
+  }
+  // content fingerprint: same question + same answers + same correct choice = same card
+  function cardSig(c){
+    var opts = (c.options||[]).map(function(o){ return String(o).trim().toLowerCase(); }).join("|");
+    return String(c.q||"").trim().toLowerCase() + "||" + opts + "||" + (parseInt(c.correctIndex,10)||0) + "||" + String(c.answer||"").trim().toLowerCase();
+  }
+  function setupShare(){
+    document.getElementById("btn-export-cards").addEventListener("click", exportCards);
+    document.getElementById("btn-import-text").addEventListener("click", function(){
+      importCardsText(document.getElementById("import-text").value.trim());
+    });
+    var fileInput = document.getElementById("import-file-input");
+    document.getElementById("btn-import-file").addEventListener("click", function(){ fileInput.click(); });
+    fileInput.addEventListener("change", function(){
+      var f = fileInput.files && fileInput.files[0];
+      if (!f) return;
+      var reader = new FileReader();
+      reader.onload = function(){ importCardsText(String(reader.result||"")); fileInput.value = ""; };
+      reader.readAsText(f);
+    });
+  }
+
+  /* ---------- SETUP WIZARD (one step at a time) ---------- */
+  var WSTEPS = ["welcome","name","course","topics","exams","done"];
+  var WIZARD = { step:0, pickMode:false, examMode:false };
+
+  function renderSetup(){
+    // entry point from nav("setup"); returning students start at the topics step
+    WIZARD.pickMode = false; WIZARD.examMode = false;
+    WIZARD.step = (STATE.setup && STATE.setup.done) ? WSTEPS.indexOf("topics") : 0;
+    renderStep();
+  }
+  function goStep(i){ WIZARD.step = Math.max(0, Math.min(WSTEPS.length-1, i)); renderStep(); try{ window.scrollTo(0,0); }catch(e){} }
+  function addNavBtn(container, label, kind, fn){
+    var b = document.createElement("button"); b.type="button";
+    b.className = "btn" + (kind==="ghost"?" ghost":(kind==="gold"?" gold":""));
+    b.textContent = label; b.addEventListener("click", fn); container.appendChild(b);
+  }
+  function bigChoice(val, title, desc){
+    return '<button type="button" class="big-choice" data-choice="'+escapeHtml(val)+'"><span class="bc-title">'+escapeHtml(title)+'</span><span class="bc-desc">'+escapeHtml(desc)+'</span></button>';
+  }
+  function renderStep(){
+    var key = WSTEPS[WIZARD.step];
+    var pct = Math.round(WIZARD.step / (WSTEPS.length-1) * 100);
+    document.getElementById("wiz-progress-fill").style.width = pct + "%";
+    document.getElementById("wizard-step-label").textContent = "Step " + (WIZARD.step+1) + " of " + WSTEPS.length;
+    var head = document.getElementById("setup-h");
+    var body = document.getElementById("wizard-body");
+    var navEl = document.getElementById("wizard-nav");
+    body.innerHTML = ""; navEl.innerHTML = "";
+
+    if (key === "welcome"){
+      head.textContent = "Let's get you set up";
+      body.innerHTML = '<h2 class="wiz-h">Welcome to Recall Rx</h2><p class="wiz-lead">Recall Rx is your daily dose of anatomy review. I will set it up with you, one small step at a time. It takes about a minute. When we finish, your cards are ready and you just review a few minutes a day.</p>';
+      addNavBtn(navEl, "Let's start", "gold", function(){ goStep(1); });
+    }
+    else if (key === "name"){
+      head.textContent = "Your name";
+      body.innerHTML = '<h2 class="wiz-h">What is your name?</h2><p class="wiz-lead">Optional. It just labels this study app for you, and it stays on this device.</p>'+
+        '<label for="wiz-name" class="sr-only">Your name</label><input type="text" id="wiz-name" placeholder="First and last name">';
+      var input = body.querySelector("#wiz-name");
+      input.value = STATE.name || "";
+      input.addEventListener("input", function(){ STATE.name = input.value; save(); });
+      addNavBtn(navEl, "Back", "ghost", function(){ goStep(0); });
+      addNavBtn(navEl, "Next", "gold", function(){ goStep(2); });
+    }
+    else if (key === "course"){
+      head.textContent = "Your class";
+      body.innerHTML = '<h2 class="wiz-h">Which class are you in?</h2><p class="wiz-lead">This just sets your weekly goal. You can change it later.</p>'+
+        bigChoice("summer", "Summer (8-week)", "The fast summer course. Aim for about 4 days and 75 cards a week.")+
+        bigChoice("semester", "Semester (16-week)", "The regular semester course. Aim for about 3 days and 40 cards a week.");
+      markSelectedChoice(body, (STATE.setup && STATE.setup.format));
+      body.querySelectorAll("[data-choice]").forEach(function(b){
+        b.addEventListener("click", function(){ STATE.setup = STATE.setup || {}; STATE.setup.format = b.dataset.choice; save(); goStep(3); });
+      });
+      addNavBtn(navEl, "Back", "ghost", function(){ goStep(1); });
+    }
+    else if (key === "topics"){
+      head.textContent = "Your units";
+      body.innerHTML = '<h2 class="wiz-h">Turn on a unit when we start it</h2>'+
+        '<p class="wiz-lead">Leave the rest off, so you only review what we have covered in class. When we begin a new unit, come back here and turn it on. Its cards drop into your daily mix.</p>'+
+        '<div id="wiz-units"></div>';
+      renderUnitSheet(body.querySelector("#wiz-units"));
+      addNavBtn(navEl, "Back", "ghost", function(){ goStep(2); });
+      addNavBtn(navEl, "Next", "gold", function(){ goStep(4); });
+      if (STATE.setup && STATE.setup.done) addNavBtn(navEl, "Study now", "ghost", function(){ nav("study"); });
+    }
+    else if (key === "exams"){
+      head.textContent = "Exam dates";
+      if (!WIZARD.examMode){
+        body.innerHTML = '<h2 class="wiz-h">Any exam dates? (optional)</h2><p class="wiz-lead">If you add a date, that unit’s cards move to the front as the exam gets close. Most students can skip this for now.</p>'+
+          bigChoice("skip", "No exams to add right now", "You can always add them later in Settings.")+
+          bigChoice("add", "Yes, I want to add exam dates", "Set a date for any unit you have turned on.");
+        body.querySelectorAll("[data-choice]").forEach(function(b){
+          b.addEventListener("click", function(){ if (b.dataset.choice === "skip"){ goStep(5); } else { WIZARD.examMode = true; renderStep(); } });
+        });
+        addNavBtn(navEl, "Back", "ghost", function(){ goStep(3); });
+      } else {
+        body.innerHTML = '<h2 class="wiz-h">Add your exam dates</h2><p class="wiz-lead">Only your active units are shown. Leave any blank.</p><div id="wiz-exams"></div>';
+        renderExamInputs(body.querySelector("#wiz-exams"));
+        addNavBtn(navEl, "Back", "ghost", function(){ WIZARD.examMode = false; renderStep(); });
+        addNavBtn(navEl, "Next", "gold", function(){ goStep(5); });
+      }
+    }
+    else if (key === "done"){
+      head.textContent = "All set";
+      var nm = STATE.name ? (", " + escapeHtml(STATE.name)) : "";
+      body.innerHTML = '<h2 class="wiz-h">You are all set'+nm+'</h2>'+
+        '<p class="wiz-lead">Here is the whole routine:</p>'+
+        '<ol style="margin:0; padding-left:18px; line-height:1.9;">'+
+        '<li>Open <strong>Study cards</strong> and answer a few. Tap an answer, read why, then tap how well you knew it.</li>'+
+        '<li>Come back tomorrow. The app brings back what you are about to forget.</li>'+
+        '<li>Open the <strong>Weakness dashboard</strong> any time to see your weak systems, topics, and DOK levels, and what to study next.</li>'+
+        '</ol>'+
+        '<div class="policy" style="margin-top:14px;"><strong>Important:</strong> your progress is saved only in this browser on this device. Use the <strong>same device and the same browser</strong> every time, or your streak and your cards will not be here. On a phone or tablet, use your browser’s <strong>Add to Home Screen</strong> to keep Recall Rx one tap away.</div>';
+      addNavBtn(navEl, "Start studying", "gold", finishWizard);
+      addNavBtn(navEl, "Back", "ghost", function(){ goStep(4); });
+    }
+    head.setAttribute("tabindex","-1"); head.focus();
+  }
+  function markSelectedChoice(scope, val){
+    if (!val) return;
+    scope.querySelectorAll("[data-choice]").forEach(function(b){ if (b.dataset.choice === val) b.classList.add("sel"); });
+  }
+  // Units sheet: one row per unit with an Activate button. Activating a unit drops its
+  // cards into the daily mix. Students turn on a unit only when the class reaches it.
+  var SHEET_EXPANDED = null;
+  function renderUnitSheet(box){
+    box.innerHTML = "";
+    allUnits().forEach(function(u){
+      var total = u.topics.length;
+      var activeN = u.topics.filter(function(t){ return isActive(t.id); }).length;
+      var full = total>0 && activeN===total;
+      var cardCount = u.topics.reduce(function(a,t){ var oc=topicById(t.id); return a + (oc ? oc.cards.length : countPersonalForTopic(t.id)); }, 0);
+      var wrap = document.createElement("div");
+      wrap.style.cssText = "border:1px solid var(--gray-line); border-radius:12px; padding:14px 16px; margin:10px 0; background:var(--white);" + (full? "border-color:var(--navy); background:var(--navy-tint);" : "");
+      var btnLabel = full ? "Active, tap to turn off" : (activeN>0 ? "Activate the rest" : "Activate this unit");
+      var sub = total + " topic" + (total===1?"":"s") + " · " + cardCount + " card" + (cardCount===1?"":"s") + (activeN&&!full ? (" · " + activeN + " on") : "");
+      var expanded = SHEET_EXPANDED === u.id;
+      var checks = "";
+      if (expanded){
+        checks = '<div style="margin-top:10px; border-top:1px solid var(--gray-line); padding-top:8px;">' +
+          (total ? u.topics.map(function(t){
+            return '<div class="radio-line" style="margin:6px 0;"><input type="checkbox" data-topic="'+escapeHtml(t.id)+'" id="chk-'+escapeHtml(t.id)+'"'+(isActive(t.id)?" checked":"")+'>'+
+                   '<label for="chk-'+escapeHtml(t.id)+'" style="margin:0; font-weight:500;">'+escapeHtml(t.title)+(t.official?'':' <span class="muted" style="font-weight:400;">(your topic)</span>')+'</label></div>';
+          }).join("") : '<p class="muted" style="margin:0;">No topics yet. Add your own on the Make cards page.</p>') +
+          '</div>';
+      }
+      wrap.innerHTML =
+        '<div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">'+
+          '<div><div style="font-weight:800; font-size:17.9px;">'+escapeHtml(u.title)+'</div>'+
+          '<div class="muted" style="font-size:14.6px;">'+escapeHtml(sub)+'</div></div>'+
+          (total ? '<button type="button" class="btn '+(full?"ghost":"gold")+'" data-unit="'+escapeHtml(u.id)+'" style="flex-shrink:0;">'+btnLabel+'</button>' : '')+
+        '</div>'+
+        (total ? '<button type="button" data-expand="'+escapeHtml(u.id)+'" style="background:none; border:0; color:var(--terra-dark); font:inherit; font-size:14.6px; font-weight:700; cursor:pointer; padding:8px 0 0;">'+(expanded?"Hide topics":"Choose specific topics")+'</button>' : '')+
+        checks;
+      box.appendChild(wrap);
+    });
+    box.querySelectorAll("[data-unit]").forEach(function(b){
+      b.addEventListener("click", function(){
+        var u = unitById(b.dataset.unit); if (!u) return;
+        var full = u.topics.length && u.topics.every(function(t){ return isActive(t.id); });
+        u.topics.forEach(function(t){ setActive(t.id, !full); });
+        save(); renderUnitSheet(box);
+        toast(full ? "Unit turned off." : "Unit activated. Cards added to your mix.");
+      });
+    });
+    box.querySelectorAll("[data-expand]").forEach(function(b){
+      b.addEventListener("click", function(){ SHEET_EXPANDED = (SHEET_EXPANDED===b.dataset.expand) ? null : b.dataset.expand; renderUnitSheet(box); });
+    });
+    box.querySelectorAll("[data-topic]").forEach(function(c){
+      c.addEventListener("change", function(){ setActive(c.dataset.topic, c.checked); save(); renderUnitSheet(box); });
+    });
+  }
+  function renderExamInputs(box){
+    box.innerHTML = ""; var any = false;
+    allUnits().forEach(function(u){
+      if (!u.topics.some(function(t){ return isActive(t.id); })) return;
+      any = true;
+      var ex = examDateFor(u.id);
+      var row = document.createElement("div"); row.style.cssText = "margin:10px 0;";
+      row.innerHTML = '<label for="exam-'+escapeHtml(u.id)+'" style="margin:0 0 4px;">'+escapeHtml(u.title)+'</label>'+
+        '<input type="date" data-exam="'+escapeHtml(u.id)+'" id="exam-'+escapeHtml(u.id)+'" value="'+escapeHtml(ex)+'" style="max-width:220px;">';
+      box.appendChild(row);
+    });
+    if (!any) box.innerHTML = '<p class="muted">Turn on some topics first, then you can add their exam dates.</p>';
+    box.querySelectorAll("[data-exam]").forEach(function(d){
+      d.addEventListener("change", function(){
+        STATE.examDates = STATE.examDates || {};
+        if (d.value) STATE.examDates[d.dataset.exam] = d.value; else delete STATE.examDates[d.dataset.exam];
+        save();
+      });
+    });
+  }
+  function finishWizard(){
+    STATE.setup = STATE.setup || {};
+    STATE.setup.done = true;
+    if (!STATE.setup.format) STATE.setup.format = "summer";
+    // Lock the name so a finished report cannot be re-credited to someone else.
+    save();
+    toast("You are all set.");
+    nav(activeTopicIds().length ? "study" : "home");
+  }
+
+  /* ---------- util ---------- */
+  function escapeHtml(s){ return String(s==null?"":s).replace(/[&<>"']/g, function(ch){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]; }); }
+  var toastTimer = null;
+  function toast(msg){
+    var t = document.getElementById("toast");
+    t.textContent = msg; t.classList.add("show");
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ t.classList.remove("show"); }, 2600);
+  }
+
+  /* ---------- HOW-TO WALKTHROUGH (animated) ---------- */
+  function aUp(s){ return '<svg class="draw-arrow" style="'+s+'" width="70" height="78" viewBox="0 0 70 78" aria-hidden="true"><path class="ln" d="M16,68 C6,44 18,24 40,16"/><path class="hd" d="M40,16 L30,24 M40,16 L47,28"/></svg>'; }
+  function aRight(s){ return '<svg class="draw-arrow" style="'+s+'" width="82" height="60" viewBox="0 0 82 60" aria-hidden="true"><path class="ln" d="M6,40 C26,28 46,28 66,34"/><path class="hd" d="M66,34 L55,28 M66,34 L55,42"/></svg>'; }
+  function aDownRight(s){ return '<svg class="draw-arrow" style="'+s+'" width="82" height="70" viewBox="0 0 82 70" aria-hidden="true"><path class="ln" d="M6,12 C30,6 56,16 66,48"/><path class="hd" d="M66,48 L55,40 M66,48 L52,52"/></svg>'; }
+  var FILE_MOCK = '<span class="wt-fly" style="display:inline-block;width:30px;height:38px;background:#fff;border:1.5px solid var(--gray-line);border-radius:4px;box-shadow:var(--rest-shadow);"></span>';
+
+  var WT_STEPS = [
+    { t:"Open Make cards", x:"Tap Make cards in the top menu. That is where you build your own cards.",
+      illus:function(){ return '<div class="mock-row"><span class="mock-tab">Home</span><span class="mock-tab">Study</span><span class="mock-tab hot" style="position:relative;">Make<span class="wt-tap" style="right:-8px;top:-8px;"></span></span></div>'+aUp('left:56%;top:88px;'); } },
+    { t:"Say where it goes", x:"Pick the unit, then the topic. Studying something new? Choose “Add a new topic” to name your own.",
+      illus:function(){ return '<div style="display:flex;flex-direction:column;gap:10px;"><div class="mock-field">Unit <span>▾</span></div><div class="mock-field">Topic <span>▾</span></div></div>'+aRight('left:2px;top:58px;'); } },
+    { t:"Pick the card type", x:"Multiple choice gives four answers. Simple is just a question and its answer. Your call.",
+      illus:function(){ return '<div><div class="mock-radio"><span class="mock-dot on"></span> Multiple choice</div><div class="mock-radio"><span class="mock-dot"></span> Simple (question and answer)</div></div>'+aRight('left:0;top:56px;'); } },
+    { t:"Write your question", x:"Type the question. For multiple choice, fill the answers and tap the circle next to the correct one. Add a why if you want.",
+      illus:function(){ return '<div style="width:212px;"><div class="mock-field" style="margin-bottom:8px;">What does supine mean?</div><div class="mock-radio"><span class="mock-dot on"></span><span class="mock-field" style="flex:1;">Lying face up</span></div><div class="mock-radio"><span class="mock-dot"></span><span class="mock-field" style="flex:1;">Lying face down</span></div></div>'+aDownRight('left:2px;top:2px;'); } },
+    { t:"Save it", x:"Tap Save card. It drops into your daily review for that unit, once the unit is turned on.",
+      illus:function(){ return '<span class="mock-btn" style="position:relative;">Save card<span class="wt-tap" style="left:50%;top:50%;transform:translate(-50%,-50%);"></span></span><span class="mock-card wt-fly" style="position:absolute;right:30px;top:26px;"></span>'+aUp('left:54%;top:70px;'); } },
+    { t:"Share your cards", x:"Export my cards makes a file you can send to a classmate, so they get your questions too.",
+      illus:function(){ return '<div class="mock-row"><span class="mock-btn ghost">Export my cards</span>'+FILE_MOCK+'</div>'+aRight('left:2px;top:54px;'); } },
+    { t:"Add a friend’s cards", x:"Import adds their file to your bank. The same card never doubles up, repeats are skipped automatically.",
+      illus:function(){ return '<div class="mock-row">'+FILE_MOCK+'<span class="mock-btn ghost">Import shared cards</span></div>'+aRight('left:2px;top:54px;'); } },
+    { t:"You’ve got it", x:"Make your first card now. You can reopen this guide any time from the Show me how button.",
+      illus:function(){ return '<svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true"><circle cx="36" cy="36" r="28" fill="var(--navy-tint)" stroke="var(--navy)" stroke-width="2"/><path class="wt-draw-path" d="M22,37 l9,9 l19,-21" stroke="var(--navy)" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'; } }
+  ];
+  var WT = { i:0 };
+  function openHowto(){ WT.i = 0; var ov = document.getElementById("walkthrough"); ov.hidden = false; renderWt(); document.getElementById("wt-close").focus(); }
+  function closeHowto(){ document.getElementById("walkthrough").hidden = true; var b = document.getElementById("btn-howto"); if (b) b.focus(); }
+  function wtGo(d){ WT.i = Math.max(0, Math.min(WT_STEPS.length-1, WT.i + d)); renderWt(); }
+  function renderWt(){
+    var st = WT_STEPS[WT.i];
+    document.getElementById("wt-step").textContent = "Step " + (WT.i+1) + " of " + WT_STEPS.length;
+    document.getElementById("wt-fill").style.width = Math.round(WT.i/(WT_STEPS.length-1)*100) + "%";
+    document.getElementById("wt-illus").innerHTML = st.illus();
+    document.getElementById("wt-title").textContent = st.t;
+    document.getElementById("wt-text").textContent = st.x;
+    var nav = document.getElementById("wt-nav"); nav.innerHTML = "";
+    if (WT.i > 0) addNavBtn(nav, "Back", "ghost", function(){ wtGo(-1); });
+    if (WT.i < WT_STEPS.length-1) addNavBtn(nav, "Next", "gold", function(){ wtGo(1); });
+    else addNavBtn(nav, "Make a card", "gold", function(){ closeHowto(); var u = document.getElementById("mk-unit"); if (u) u.focus(); });
+  }
+  function setupHowto(){
+    var b = document.getElementById("btn-howto");
+    if (b) b.addEventListener("click", openHowto);
+    document.getElementById("wt-close").addEventListener("click", closeHowto);
+    document.getElementById("walkthrough").addEventListener("click", function(e){ if (e.target === this) closeHowto(); });
+    document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !document.getElementById("walkthrough").hidden) closeHowto(); });
+  }
+
+  /* ---------- QR popup ---------- */
+  function openQR(){ var m = document.getElementById("qrmodal"); m.hidden = false; document.getElementById("qr-close").focus(); }
+  function closeQR(){ document.getElementById("qrmodal").hidden = true; }
+  function setupQR(){
+    document.querySelectorAll(".open-qr").forEach(function(b){ b.addEventListener("click", openQR); });
+    document.getElementById("qr-close").addEventListener("click", closeQR);
+    document.getElementById("qrmodal").addEventListener("click", function(e){ if (e.target === this) closeQR(); });
+    document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !document.getElementById("qrmodal").hidden) closeQR(); });
+  }
+
+  /* ---------- init ---------- */
+  function init(){
+    // First-run seed: activate all exam-unit topics so the study set is not empty.
+    if (CONTENT_OK && !(STATE && STATE.__seeded)){
+      try{ CONTENT.modules.forEach(function(m){ (m.topics||[]).forEach(function(t){ setActive(t.id, true); }); }); STATE.__seeded = true; save(); }catch(e){}
+    }
+    document.querySelectorAll("[data-nav]").forEach(function(b){
+      b.addEventListener("click", function(){ nav(b.dataset.nav); });
+    });
+    document.getElementById("btn-start-due").addEventListener("click", startDue);
+    document.getElementById("btn-study-mine").addEventListener("click", startMine);
+    document.getElementById("btn-reset").addEventListener("click", function(){
+      if (confirm("Erase all progress and your own cards on this device? This cannot be undone.")){
+        STATE = freshState(); save(); toast("Everything reset."); nav("home");
+      }
+    });
+    setupMakeForm();
+    setupShare();
+    setupHowto();
+    setupQR();
+    renderMake();
+    // First run goes to setup so students choose their course and turn on topics.
+    nav((STATE.setup && STATE.setup.done) ? "home" : "setup");
+    applyDeepLink();
+  }
+  // A lecture page can link here with #topic=<id> to open the activation page with that unit shown.
+  function applyDeepLink(){
+    var h = (location.hash || "").replace(/^#/, "");
+    if (!h) return;
+    var m = h.match(/topic=([A-Za-z0-9_-]+)/);
+    if (m){
+      var u = unitOfTopic(m[1]);
+      if (u) SHEET_EXPANDED = u.id;   // expand that unit so they can see and set its activation
+      nav("setup");
+      return;
+    }
+    if (/^(home|study|make|report|weakness|setup|settings)$/.test(h)) nav(h);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+
+  // expose a tiny bit for testing harnesses
+  if (typeof window !== "undefined"){ window.__BIO004 = { allCards:allCards, activeCards:activeCards, allTopics:allTopics, allUnits:allUnits, schedule:schedule, masteryAndMissed:masteryAndMissed, setActive:setActive, dueCount:dueCount, renderWeakness:renderWeakness, collectWeakness:collectWeakness, currentTargets:currentTargets, ensureCustomTopic:ensureCustomTopic, STATE:function(){ return STATE; }, save:save }; }
+})();
+</script>
+
+<!-- Register the service worker so Chrome offers Install and the app works offline -->
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("sw.js").catch(function () {});
+  });
+}
+</script>
+
+<!-- iframe height-sender: report height to a Kajabi/host page so the embed grows with content -->
+<script>
+(function(){
+  function sendHeight(){
+    try{
+      var h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+      parent.postMessage({ type:"mcas-embed-height", id:"bio004-spaced-recall", height:h }, "*");
+    }catch(e){}
+  }
+  window.addEventListener("load", sendHeight);
+  window.addEventListener("resize", sendHeight);
+  if (window.ResizeObserver){ try{ new ResizeObserver(sendHeight).observe(document.body); }catch(e){} }
+  setTimeout(sendHeight, 400);
+})();
+</script>
+</body>
+</html>
