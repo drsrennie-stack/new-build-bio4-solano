@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Card Gap Finder &middot; BIO 004 Human Anatomy</title>
+<style>
+  :root{
+    --navy:#0B1530; --navy-deep:#060A18; --terra:#8B3A2E; --terra2:#C2734D;
+    --gold:#C9A14A; --gold-deep:#B08B3A; --off:#FAFAF9; --white:#FFFFFF;
+    --line:#8C90A0; --line-soft:#D3DAE0; --ink:#0B1530; --ink-soft:#5c6970;
+    --ok:#2f7d55; --warn:#B08B3A; --bad:#A0402E;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--off);color:var(--ink);
+    font-family:"Plus Jakarta Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.55}
+  .wrap{max-width:820px;margin:0 auto;padding:26px max(18px,4vw) 60px}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin:0 0 6px}
+  h1{font-size:clamp(26px,4vw,38px);font-weight:800;letter-spacing:-.02em;margin:0 0 8px;color:var(--navy)}
+  .lead{font-size:16px;color:var(--ink-soft);margin:0 0 20px;max-width:640px}
+  .card{background:var(--white);border:1px solid var(--line-soft);border-radius:14px;padding:22px;box-shadow:0 1px 3px rgba(11,21,48,.06);margin-bottom:16px}
+  .btn{font:inherit;font-weight:700;font-size:15px;cursor:pointer;border-radius:10px;padding:11px 18px;border:1px solid var(--navy);background:var(--navy);color:#fff;transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(11,21,48,.14)}
+  .btn.ghost{background:#fff;color:var(--navy)}
+  .btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+  .btn.terra{background:var(--terra);border-color:var(--terra);color:#fff}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+  .btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .muted{color:var(--ink-soft);font-size:14px}
+  details.mod{border:1px solid var(--line-soft);border-radius:10px;padding:6px 14px;margin:8px 0;background:var(--white)}
+  details.mod>summary{font-weight:700;cursor:pointer;padding:8px 0;color:var(--navy);list-style:none}
+  details.mod>summary::-webkit-details-marker{display:none}
+  details.mod>summary::before{content:"+";display:inline-block;width:18px;color:var(--terra);font-weight:800}
+  details.mod[open]>summary::before{content:"\2212"}
+  .topic-row{display:flex;gap:9px;align-items:flex-start;padding:5px 0 5px 18px;font-size:14.5px}
+  .topic-row input{margin-top:3px}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .seg button{font:inherit;font-weight:700;font-size:13.5px;border:0;background:#fff;color:var(--navy);padding:8px 16px;cursor:pointer}
+  .seg button[aria-pressed="true"]{background:var(--navy);color:#fff}
+  .prog{height:8px;background:var(--line-soft);border-radius:999px;overflow:hidden;margin:2px 0 16px}
+  .prog>span{display:block;height:100%;background:var(--gold);width:0;transition:width .25s ease}
+  .q-meta{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--ink-soft);margin-bottom:8px}
+  .q-text{font-size:20px;font-weight:700;color:var(--navy);margin:2px 0 16px}
+  .opts{display:flex;flex-direction:column;gap:10px}
+  .opt{font:inherit;text-align:left;font-size:15.5px;background:#fff;border:1.5px solid var(--line-soft);border-radius:10px;padding:12px 14px;cursor:pointer;color:var(--ink)}
+  .opt:hover{border-color:var(--navy)}
+  .opt:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  .opt.correct{border-color:var(--ok);background:#e8f2ec}
+  .opt.wrong{border-color:var(--bad);background:#f6e7e4}
+  .opt[disabled]{cursor:default}
+  .explain{border-left:4px solid var(--gold);background:var(--off);border-radius:8px;padding:12px 14px;margin-top:14px;font-size:14.5px}
+  .explain h4{margin:0 0 4px;font-size:14px;color:var(--navy)}
+  .bar{height:12px;border-radius:999px;background:var(--line-soft);overflow:hidden;flex:1;min-width:120px}
+  .bar>span{display:block;height:100%}
+  .gap-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line-soft)}
+  .gap-row:last-child{border-bottom:0}
+  .gap-name{font-weight:700;font-size:15px;color:var(--navy);flex:1;min-width:140px}
+  .pct{font-weight:800;font-size:14px;width:46px;text-align:right}
+  .pill{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+  .pill.gap{background:#f6e7e4;color:var(--bad)}
+  .pill.ok{background:#e8f2ec;color:var(--ok)}
+  .hidden{display:none}
+  .recall-reveal{margin-top:14px}
+  .rubric{list-style:none;padding:0;margin:8px 0}
+  .rubric li{display:flex;gap:8px;align-items:flex-start;padding:4px 0}
+  .cta-note{font-size:13px;color:var(--ink-soft);margin:6px 0 0}
+  footer{margin-top:30px;font-size:12px;color:var(--ink-soft)}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; MedMasters Collaborative</p>
+  <h1>Card Gap Finder</h1>
+  <p class="lead">Work the cards, and your misses are your gaps. Pick what your exam covers, answer from memory, and this shows exactly which topics to fix, then drills the cards for each one.</p>
+
+  <!-- SCOPE -->
+  <section id="view-scope">
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <strong>1. Choose what to cover</strong>
+        <span class="row">
+          <button type="button" class="btn ghost" id="pick-all" style="padding:8px 14px">Select all</button>
+          <button type="button" class="btn ghost" id="pick-none" style="padding:8px 14px">Clear</button>
+        </span>
+      </div>
+      <p class="muted" style="margin:8px 0 4px">Tick the topics on your exam. This is by topic, so it works for any week or term.</p>
+      <div id="topic-picker"></div>
+    </div>
+    <div class="card">
+      <strong>2. How long?</strong>
+      <p class="muted" style="margin:8px 0 10px">Quick samples a few cards per topic for a fast read. Full uses every multiple-choice card in your selection.</p>
+      <div class="seg" role="group" aria-label="Diagnostic length">
+        <button type="button" id="len-quick" aria-pressed="true">Quick check</button>
+        <button type="button" id="len-full" aria-pressed="false">Full sweep</button>
+      </div>
+      <p class="cta-note" id="scope-count">No topics selected yet.</p>
+    </div>
+    <button type="button" class="btn gold" id="start" disabled>Start the gap finder</button>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="view-quiz" class="hidden">
+    <div class="prog"><span id="prog-bar"></span></div>
+    <div class="card">
+      <div class="q-meta"><span id="q-topic"></span><span id="q-count"></span></div>
+      <p class="q-text" id="q-text"></p>
+      <div class="opts" id="q-opts" role="group" aria-label="Answer choices"></div>
+      <div id="q-post"></div>
+    </div>
+    <button type="button" class="btn ghost" id="quiz-quit" style="padding:8px 14px">Stop and see results</button>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="view-results" class="hidden">
+    <div class="card">
+      <div class="row" style="justify-content:space-between;align-items:flex-end">
+        <div><div class="eyebrow" style="margin:0">Your read</div><div style="font-size:30px;font-weight:800;color:var(--navy)" id="res-score"></div></div>
+        <div class="muted" id="res-sub"></div>
+      </div>
+    </div>
+    <div class="card">
+      <strong>Your immediate gaps</strong>
+      <p class="muted" style="margin:8px 0 2px">Topics you missed on, weakest first. Drill each one to fix it: recognition cards first, then say-it-from-memory recall.</p>
+      <div id="gap-list"></div>
+    </div>
+    <div class="card" id="solid-card">
+      <strong>Solid for now</strong>
+      <div id="solid-list"></div>
+    </div>
+    <div class="row">
+      <button type="button" class="btn" id="drill-all">Drill all my gaps</button>
+      <button type="button" class="btn ghost" id="restart">Start over</button>
+    </div>
+  </section>
+
+  <!-- DRILL -->
+  <section id="view-drill" class="hidden">
+    <div class="prog"><span id="drill-bar"></span></div>
+    <div class="card">
+      <div class="q-meta"><span id="d-topic"></span><span id="d-count"></span></div>
+      <p class="q-text" id="d-text"></p>
+      <div class="opts" id="d-opts" role="group" aria-label="Answer choices"></div>
+      <div id="d-post"></div>
+    </div>
+    <button type="button" class="btn ghost" id="drill-back" style="padding:8px 14px">Back to results</button>
+  </section>
+
+  <footer>BIO 004 Human Anatomy &middot; Solano Community College &middot; Dr. Sharilyn Rennie</footer>
+</div>
+
+<script src="course-content-tagged.js"></script>
+<script>
+(function(){
+  "use strict";
+  var $ = function(s,r){return (r||document).querySelector(s);};
+  function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+  function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function show(id){["scope","quiz","results","drill"].forEach(function(v){$("#view-"+v).classList.toggle("hidden",v!==id);});window.scrollTo(0,0);}
+
+  var C = window.BIO004_COURSE_CONTENT;
+  if(!C || !C.modules){
+    $("#topic-picker").innerHTML = '<p class="muted">Could not load the card bank. Make sure <b>course-content-tagged.js</b> sits in the same folder as this page.</p>';
+    $("#start").disabled = true; return;
+  }
+
+  // Flatten topics, keep only those with at least one multiple-choice card
+  var TOPICS = {};   // id -> {id,title,module,cards,mc}
+  C.modules.forEach(function(m){
+    (m.topics||[]).forEach(function(t){
+      var mc = (t.cards||[]).filter(function(c){return c.options && c.options.length>=2 && typeof c.correctIndex==="number";});
+      TOPICS[t.id] = {id:t.id,title:t.title,module:m.title,cards:t.cards||[],mc:mc};
+    });
+  });
+
+  // Build the topic picker grouped by module
+  (function buildPicker(){
+    var html="";
+    C.modules.forEach(function(m){
+      var rows="";
+      (m.topics||[]).forEach(function(t){
+        var tp=TOPICS[t.id]; if(!tp||!tp.mc.length) return;
+        rows += '<label class="topic-row"><input type="checkbox" class="tchk" data-id="'+esc(t.id)+'"> <span>'+esc(t.title)+' <span class="muted">('+tp.mc.length+')</span></span></label>';
+      });
+      if(rows) html += '<details class="mod"><summary>'+esc(m.title)+'</summary>'+rows+'</details>';
+    });
+    $("#topic-picker").innerHTML = html || '<p class="muted">No multiple-choice cards found in the bank.</p>';
+  })();
+
+  var LEN = "quick";
+  function selectedIds(){return Array.prototype.map.call(document.querySelectorAll(".tchk:checked"),function(c){return c.getAttribute("data-id");});}
+  function refreshCount(){
+    var ids=selectedIds(), cards=0;
+    ids.forEach(function(id){var tp=TOPICS[id];if(tp)cards+= LEN==="quick"?Math.min(4,tp.mc.length):tp.mc.length;});
+    $("#scope-count").textContent = ids.length? (ids.length+" topic"+(ids.length>1?"s":"")+", about "+cards+" cards") : "No topics selected yet.";
+    $("#start").disabled = ids.length===0;
+  }
+  document.addEventListener("change",function(e){if(e.target.classList.contains("tchk"))refreshCount();});
+  $("#pick-all").onclick=function(){document.querySelectorAll(".tchk").forEach(function(c){c.checked=true;});refreshCount();};
+  $("#pick-none").onclick=function(){document.querySelectorAll(".tchk").forEach(function(c){c.checked=false;});refreshCount();};
+  $("#len-quick").onclick=function(){LEN="quick";$("#len-quick").setAttribute("aria-pressed","true");$("#len-full").setAttribute("aria-pressed","false");refreshCount();};
+  $("#len-full").onclick=function(){LEN="full";$("#len-full").setAttribute("aria-pressed","true");$("#len-quick").setAttribute("aria-pressed","false");refreshCount();};
+
+  // ---- Diagnostic ----
+  var QUEUE=[], QPOS=0, SCORE={};   // SCORE[topicId] = {title, correct, total}
+  $("#start").onclick=function(){
+    var ids=selectedIds(); if(!ids.length) return;
+    QUEUE=[]; SCORE={};
+    ids.forEach(function(id){
+      var tp=TOPICS[id]; if(!tp||!tp.mc.length) return;
+      SCORE[id]={title:tp.title, correct:0, total:0};
+      var pool=shuffle(tp.mc); if(LEN==="quick")pool=pool.slice(0,4);
+      pool.forEach(function(card){QUEUE.push({topicId:id,topicTitle:tp.title,card:card});});
+    });
+    QUEUE=shuffle(QUEUE); QPOS=0;
+    if(!QUEUE.length) return;
+    show("quiz"); renderQ();
+  };
+  $("#quiz-quit").onclick=function(){ if(QPOS>0){finishQuiz();} else {show("scope");} };
+
+  function renderQ(){
+    if(QPOS>=QUEUE.length){finishQuiz();return;}
+    $("#prog-bar").style.width = Math.round(QPOS/QUEUE.length*100)+"%";
+    var e=QUEUE[QPOS], c=e.card;
+    $("#q-topic").textContent=e.topicTitle;
+    $("#q-count").textContent="Card "+(QPOS+1)+" of "+QUEUE.length;
+    $("#q-text").textContent=c.q;
+    $("#q-post").innerHTML="";
+    var opts=$("#q-opts"); opts.innerHTML="";
+    var order=shuffle(c.options.map(function(o,i){return {t:o,correct:i===c.correctIndex};}));
+    var answered=false;
+    order.forEach(function(o){
+      var b=document.createElement("button");
+      b.className="opt"; b.type="button"; b.textContent=o.t;
+      b.onclick=function(){
+        if(answered)return; answered=true;
+        SCORE[e.topicId].total++;
+        if(o.correct){SCORE[e.topicId].correct++;}
+        Array.prototype.forEach.call(opts.children,function(btn){
+          btn.setAttribute("disabled","");
+          var isC = order[Array.prototype.indexOf.call(opts.children,btn)].correct;
+          if(isC)btn.classList.add("correct");
+        });
+        if(!o.correct)b.classList.add("wrong");
+        var verdict=o.correct?"Correct":"Not quite";
+        $("#q-post").innerHTML='<div class="explain"><h4>'+verdict+'</h4><p style="margin:0">'+esc(c.explanation||("Answer: "+(c.a||"")))+'</p></div>'+
+          '<div class="row" style="margin-top:14px"><button type="button" class="btn" id="q-next">'+(QPOS+1>=QUEUE.length?"See my gaps":"Next card")+'</button></div>';
+        $("#q-next").focus();
+        $("#q-next").onclick=function(){QPOS++;renderQ();};
+      };
+      opts.appendChild(b);
+    });
+  }
+
+  function finishQuiz(){
+    // overall
+    var tot=0,cor=0,gaps=[],solid=[];
+    Object.keys(SCORE).forEach(function(id){
+      var s=SCORE[id]; if(!s.total)return; tot+=s.total; cor+=s.correct;
+      var pct=Math.round(s.correct/s.total*100);
+      (pct<100?gaps:solid).push({id:id,title:s.title,pct:pct,correct:s.correct,total:s.total});
+    });
+    gaps.sort(function(a,b){return a.pct-b.pct;});
+    solid.sort(function(a,b){return a.title.localeCompare(b.title);});
+    var opct = tot? Math.round(cor/tot*100):0;
+    $("#res-score").textContent = opct+"%";
+    $("#res-sub").innerHTML = cor+" of "+tot+" cards &middot; "+gaps.length+" gap"+(gaps.length===1?"":"s")+" to fix";
+
+    function barColor(p){return p>=85?"var(--ok)":p>=60?"var(--warn)":"var(--bad)";}
+    function rowHtml(g,isGap){
+      return '<div class="gap-row"><span class="gap-name">'+esc(g.title)+'</span>'+
+        '<span class="bar"><span style="width:'+g.pct+'%;background:'+barColor(g.pct)+'"></span></span>'+
+        '<span class="pct">'+g.pct+'%</span>'+
+        (isGap?'<button type="button" class="btn terra" data-drill="'+esc(g.id)+'" style="padding:8px 13px;font-size:13.5px">Fix</button>':'<span class="pill ok">solid</span>')+
+        '</div>';
+    }
+    $("#gap-list").innerHTML = gaps.length? gaps.map(function(g){return rowHtml(g,true);}).join("") :
+      '<p class="muted" style="margin:10px 0 0">No gaps this round. Every topic came back clean. Keep it spaced across the week.</p>';
+    if(solid.length){$("#solid-card").classList.remove("hidden");$("#solid-list").innerHTML=solid.map(function(g){return rowHtml(g,false);}).join("");}
+    else{$("#solid-card").classList.add("hidden");}
+    GAP_IDS = gaps.map(function(g){return g.id;});
+    $("#drill-all").disabled = gaps.length===0;
+    show("results");
+    document.querySelectorAll("[data-drill]").forEach(function(b){b.onclick=function(){startDrill([b.getAttribute("data-drill")]);};});
+  }
+
+  // ---- Drill (fix) : MC recognition + free-recall production for the gap topics ----
+  var GAP_IDS=[], DQ=[], DPOS=0;
+  $("#drill-all").onclick=function(){ if(GAP_IDS.length)startDrill(GAP_IDS); };
+  $("#restart").onclick=function(){show("scope");};
+  $("#drill-back").onclick=function(){finishQuiz();};
+
+  function startDrill(ids){
+    DQ=[];
+    ids.forEach(function(id){
+      var tp=TOPICS[id]; if(!tp)return;
+      // recognition first (MC), then production (free-recall) for the same topic
+      tp.cards.filter(function(c){return c.options;}).forEach(function(c){DQ.push({topicTitle:tp.title,card:c,mode:"mc"});});
+      tp.cards.filter(function(c){return !c.options;}).forEach(function(c){DQ.push({topicTitle:tp.title,card:c,mode:"recall"});});
+    });
+    DPOS=0; if(!DQ.length)return; show("drill"); renderD();
+  }
+  function renderD(){
+    if(DPOS>=DQ.length){finishQuiz();return;}
+    $("#drill-bar").style.width=Math.round(DPOS/DQ.length*100)+"%";
+    var e=DQ[DPOS], c=e.card;
+    $("#d-topic").textContent=e.topicTitle;
+    $("#d-count").textContent=(e.mode==="mc"?"Recognize ":"Recall ")+(DPOS+1)+" of "+DQ.length;
+    $("#d-text").textContent=c.q;
+    $("#d-post").innerHTML="";
+    var opts=$("#d-opts"); opts.innerHTML="";
+    if(e.mode==="mc"){
+      var order=shuffle(c.options.map(function(o,i){return {t:o,correct:i===c.correctIndex};}));
+      var answered=false;
+      order.forEach(function(o){
+        var b=document.createElement("button"); b.className="opt"; b.type="button"; b.textContent=o.t;
+        b.onclick=function(){
+          if(answered)return; answered=true;
+          Array.prototype.forEach.call(opts.children,function(btn,ix){btn.setAttribute("disabled","");if(order[ix].correct)btn.classList.add("correct");});
+          if(!o.correct)b.classList.add("wrong");
+          $("#d-post").innerHTML='<div class="explain"><h4>'+(o.correct?"Correct":"Not quite")+'</h4><p style="margin:0">'+esc(c.explanation||("Answer: "+(c.a||"")))+'</p></div>'+nextBtn();
+          wireNext();
+        };
+        opts.appendChild(b);
+      });
+    } else {
+      // free-recall: say it, then reveal + rubric checklist
+      $("#d-post").innerHTML='<p class="muted" style="margin:0 0 10px">Say the answer out loud or write it, then reveal.</p>'+
+        '<button type="button" class="btn gold" id="d-reveal">Reveal answer</button>';
+      $("#d-reveal").onclick=function(){
+        var rub = (c.rubric&&c.rubric.length)? '<p style="margin:10px 0 4px;font-weight:700;font-size:13.5px">Check what you recalled:</p><ul class="rubric">'+
+          c.rubric.map(function(it){return '<li><input type="checkbox"> <span>'+esc(it)+'</span></li>';}).join("")+'</ul>' : '';
+        $("#d-post").innerHTML='<div class="explain"><h4>Answer</h4><p style="margin:0">'+esc(c.a||"")+'</p></div>'+rub+nextBtn();
+        wireNext();
+      };
+    }
+    function nextBtn(){return '<div class="row" style="margin-top:14px"><button type="button" class="btn" id="d-next">'+(DPOS+1>=DQ.length?"Done, back to results":"Next")+'</button></div>';}
+    function wireNext(){var n=$("#d-next");n.focus();n.onclick=function(){DPOS++;renderD();};}
+  }
+})();
+</script>
+<!-- iframe height-sender for Kajabi / GitHub Pages embed -->
+<script>
+(function(){
+  function send(){try{var h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);parent.postMessage({type:"mcas-embed-height",id:"card-gap-finder",height:h},"*");}catch(e){}}
+  window.addEventListener("load",send);window.addEventListener("resize",send);
+  if(window.ResizeObserver){try{new ResizeObserver(send).observe(document.body);}catch(e){}}
+  setTimeout(send,400);
+})();
+</script>
+</body>
+</html>
