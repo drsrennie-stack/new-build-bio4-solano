@@ -1099,6 +1099,7 @@ function renderPlan(){
     '<button class="btn ghost big" data-session="repair" style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">Repair weaknesses only</button>'+
     '<button class="btn ghost big" data-midcram style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">Mid-Module Gap Check</button>'+
     '<button class="btn ghost big" data-cram style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">3-Day Exam Cram</button>'+
+    '<button class="btn ghost big" data-gaptopic style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">Gap Check by Topic</button>'+
   '</div>'+
   '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">'+
     '<button class="btn" data-pomosetup style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">⏱ Pomodoro setup</button>'+
@@ -2036,6 +2037,27 @@ function examCoverageWeeks(exam){
 }
 function compsForWeeks(weeks){var out=[];S.units.forEach(function(u){if(weeks.indexOf(u.week)>-1)u.comps.forEach(function(c){out.push(c);});});return out;}
 function trackOf(comp){var f=comp.facets||[];var lab=f.some(function(x){return ['cadaver','histology','label','imaging'].indexOf(x)>-1;});var lec=f.some(function(x){return ['lecture','clinical','draw'].indexOf(x)>-1;});return (lab&&!lec)?'Lab':(lec&&!lab)?'Lecture':'Both';}
+function openGapByTopic(){
+  clearG();var ov=$('#gameOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');lastFocus=document.activeElement;$('#gameClose').focus();
+  var exam=nextExam();var cover=examCoverageWeeks(exam);var all=allComps();
+  var byWeek={};all.forEach(function(x){var w=x.c.week||x.u.week||0;(byWeek[w]=byWeek[w]||[]).push(x.c);});
+  var weeks=Object.keys(byWeek).map(Number).sort(function(a,b){return a-b;});
+  gSet('Gap Check by Topic','Check the topics your exam covers');
+  function chk(c,on){return '<label style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;cursor:pointer;font-size:13.5px"><input type="checkbox" class="topic-chk" data-cid="'+esc(c.id)+'"'+(on?' checked':'')+' style="margin-top:3px"><span>'+esc(c.name)+'</span></label>';}
+  var groups=weeks.map(function(w){var on=cover.indexOf(w)>-1;var items=byWeek[w].map(function(c){return chk(c,on);}).join('');return '<details'+(on?' open':'')+' style="border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0"><summary style="font-weight:700;cursor:pointer">Week '+w+' <span style="color:var(--ink-soft);font-weight:400">('+byWeek[w].length+')</span></summary>'+items+'</details>';}).join('');
+  gBody('<p style="font-size:13px;color:var(--ink-soft);margin:0 0 10px">Pick the topics on your exam, then run the gap finder. This is by topic, not by week, so it works no matter how your term is laid out.</p>'+
+    '<div class="g-actions" style="margin-bottom:8px"><button class="btn" id="tgMid">Midterm (Weeks 1 to 4)</button><button class="btn" id="tgAll">Select all</button><button class="btn" id="tgNone">Clear</button></div>'+
+    groups+
+    '<p class="g-q" id="tgCount" aria-live="polite" style="font-size:13px;margin:10px 0">0 topics selected</p>'+
+    '<div class="g-actions"><button class="btn gold big" id="tgRun">Run Gap Finder</button><button class="btn" data-gameclose>Cancel</button></div>');
+  function upd(){var n=$$('.topic-chk:checked').length;var el=$('#tgCount');if(el)el.textContent=n+' topic'+(n===1?'':'s')+' selected';}
+  $$('.topic-chk').forEach(function(cb){cb.onchange=upd;});
+  $('#tgMid').onclick=function(){$$('.topic-chk').forEach(function(cb){var c=findComp(cb.getAttribute('data-cid'));cb.checked=!!(c&&[1,2,3,4].indexOf(c.c.week)>-1);});upd();};
+  $('#tgAll').onclick=function(){$$('.topic-chk').forEach(function(cb){cb.checked=true;});upd();};
+  $('#tgNone').onclick=function(){$$('.topic-chk').forEach(function(cb){cb.checked=false;});upd();};
+  $('#tgRun').onclick=function(){var ids=$$('.topic-chk:checked').map(function(cb){return cb.getAttribute('data-cid');});if(!ids.length){toast('Pick at least one topic.');return;}var chosen=[];all.forEach(function(x){if(ids.indexOf(x.c.id)>-1)chosen.push(x.c);});CRAM={exam:exam,comps:chosen,gap:{},mode:'exam',key:'topic:'+Date.now(),counted:true,label:'Selected topics ('+chosen.length+')',weeks:[]};startGapFinder();};
+  upd();
+}
 function openCram(){
   clearG();var ov=$('#gameOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');lastFocus=document.activeElement;$('#gameClose').focus();
   var exam=nextExam();var pre=examCoverageWeeks(exam);var weeks=SCHEDULE.weeks;
@@ -2090,23 +2112,25 @@ function buildCramPlan(fromGap){
   var comps=CRAM.comps.slice();var day1,day2,t;
   if(fromGap){day1=comps.filter(function(c){return CRAM.gap[c.id]===2;});day2=comps.filter(function(c){return CRAM.gap[c.id]===1;});if(!day1.length&&!day2.length){comps.sort(function(a,b){return a.mastery-b.mastery;});t=Math.ceil(comps.length/3);day1=comps.slice(0,t);day2=comps.slice(t,2*t);}}
   else{comps.sort(function(a,b){return a.mastery-b.mastery;});t=Math.ceil(comps.length/3);day1=comps.slice(0,t);day2=comps.slice(t,2*t);}
-  CRAM.day1=day1;CRAM.day2=day2;CRAM.all=comps;CRAM.gapItems=comps.filter(function(c){return CRAM.gap&&CRAM.gap[c.id]>=1;});
+  CRAM.day1=day1;CRAM.day2=day2;CRAM.all=comps;CRAM.gapItems=comps.filter(function(c){return CRAM.gap&&CRAM.gap[c.id]>=1;});CRAM.fromGap=fromGap;
   renderCramPlan(fromGap);
 }
 function renderCramPlan(fromGap){
   var exam=CRAM.exam;
   gSet('Exam Cram',CRAM.label||exam.name);
+  if(!CRAM.nDays)CRAM.nDays=Math.max(2,Math.min(7,(dayDiff(CRAM.exam.date,TODAY)||3)));var N=CRAM.nDays;
+  var dayPick='<div class="card" style="padding:12px 14px;margin-bottom:12px"><div style="font-size:13px;color:var(--ink-soft);margin-bottom:6px">How many days do you have to prepare?</div><div>'+[2,3,4,5,6,7].map(function(d){return '<button type="button" class="btn'+(d===N?' gold':'')+'" data-setdays="'+d+'" style="padding:6px 11px;font-size:13px;margin:2px">'+d+'</button>';}).join('')+'</div><p style="font-size:12.5px;color:var(--ink-soft);margin:8px 0 0">You have <b>'+N+' days</b>. Spend the early days on repair (no-idea gaps), the middle days on apply (shaky ones), and the last day on a full simulate under exam pressure.</p></div>';
   function nm(arr){return arr.length?arr.map(function(c){return esc(c.name);}).join(', '):'nothing flagged, do a full sweep';}
   function card(tag,title,body,btn){return '<div class="card" style="padding:16px 18px;margin-bottom:12px"><div style="font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--terra-dark)">'+tag+'</div><h3 style="font-size:16px;margin:4px 0 6px">'+title+'</h3><p style="font-size:13px;color:var(--ink-soft);margin-bottom:10px">'+body+'</p>'+btn+'</div>';}
   var summary='';
   if(fromGap){var s=gapSummary();summary='<div class="weak-head" style="margin-bottom:14px"><div><div class="wc">'+(s.no+s.sh)+'</div><div class="wl">gaps found</div></div><p style="flex:1;min-width:180px">'+s.no+' no idea, '+s.sh+' shaky. Lab '+s.byTrack.Lab+', Lecture '+s.byTrack.Lecture+', Both '+s.byTrack.Both+'. Your three days are built around these.</p></div>';}
-  gBody(summary+'<p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px">Active formats only: retrieve, draw, label, apply, simulate. Intense review, not a grade guarantee.</p>'+
+  gBody(summary+dayPick+'<p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px">Active formats only: retrieve, draw, label, apply, simulate. Intense review, not a grade guarantee.</p>'+
     card('Day 1 · Repair','Biggest gaps first',nm(CRAM.day1)+'. Retrieve cold, then redraw or relabel from memory.','<button class="btn rust" data-cramday="1">Start Day 1</button>')+
     card('Day 2 · Apply','Shaky ones, solidify',nm(CRAM.day2)+'. Retrieve, then apply each to a case or an image.','<button class="btn gold" data-cramday="2">Start Day 2</button>')+
     card('Day 3 · Simulate','Everything, under pressure','Rapid retrieval of all of it, then a practice test and a lab race, then re-check the gaps you flagged.','<button class="btn primary" data-cramday="3">Start Day 3</button>')+
     '<div class="g-actions"><button class="btn" data-gameclose>Close</button></div>');
 }
-function cramDay3(){gBody('<div class="g-center"><div class="g-emoji">🏁</div><h3>Day 3: Simulate</h3><p>Rapid active review of everything, then test under pressure, then re-check the gaps you flagged.</p><div class="g-actions"><button class="btn primary" data-cramallpomo>Rapid retrieval</button><button class="btn" disabled aria-disabled="true" style="opacity:.55;cursor:not-allowed">Practice games (coming soon)</button></div><div class="g-actions"><button class="btn rust" data-cramretest>Re-check my gaps</button><button class="btn" data-toolblank="spaced-recall.html">Spaced recall</button><button class="btn" data-gameclose>Close</button></div></div>');}
+function cramDay3(){gBody('<div class="g-center"><div class="g-emoji">🏁</div><h3>Day 3: Simulate</h3><p>Rapid active review of everything, then test under pressure, then re-check the gaps you flagged.</p><div class="g-actions"><button class="btn primary" data-cramallpomo>Rapid retrieval</button><button class="btn" data-game="quiz">Practice games</button></div><div class="g-actions"><button class="btn rust" data-cramretest>Re-check my gaps</button><button class="btn" data-toolblank="spaced-recall.html">Spaced recall</button><button class="btn" data-gameclose>Close</button></div></div>');}
 
 /* ---- Mid-Module Gap Check (shares the 2-per-module cram cap) ---- */
 function moduleKey(){return nextExam().name;}
@@ -2219,7 +2243,7 @@ function renderTogether(){var el=$('#togetherGrid');if(!el)return;el.innerHTML=M
     var btn='<button class="btn primary" data-toolblank="'+esc(m.link)+'">'+esc(m.cta||'Open')+'</button>';
     return '<div class="mode-card"><div class="mode-top '+m.cls+'"><span class="mtag">'+esc(m.tag)+'</span><h3>'+m.emoji+' '+esc(m.name)+'</h3><div class="players">'+esc(m.players)+'</div></div><div class="mode-body"><p>'+esc(m.desc)+'</p>'+badge+btn+'</div></div>';
   }
-  return '<div class="mode-card is-soon"><span class="mode-soon">Coming soon</span><div class="mode-top '+m.cls+'"><span class="mtag">'+esc(m.tag)+'</span><h3>'+m.emoji+' '+esc(m.name)+'</h3><div class="players">'+esc(m.players)+'</div></div><div class="mode-body"><p>'+esc(m.desc)+'</p><span class="proto-badge">In development</span><button class="btn" disabled aria-disabled="true" style="opacity:.55;cursor:not-allowed">Coming soon</button></div></div>';
+  return '<div class="mode-card"><div class="mode-top '+m.cls+'"><span class="mtag">'+esc(m.tag)+'</span><h3>'+m.emoji+' '+esc(m.name)+'</h3><div class="players">'+esc(m.players)+'</div></div><div class="mode-body"><p>'+esc(m.desc)+'</p><button class="btn primary" data-game="'+esc(m.k)+'">Play</button></div></div>';
 }).join('');}
 
 /* =========================================================
@@ -2235,12 +2259,14 @@ function renderAll(){
 ========================================================= */
 var lastFocus=null;
 document.addEventListener('click',function(e){
-  var t=e.target.closest('[data-session],[data-prove],[data-tool],[data-toolblank],[data-selfev],[data-logev],[data-logafter],[data-stage],[data-unit],[data-prompt],[data-scroll],[data-sclose],[data-game],[data-exercise],[data-gameclose],[data-drawscore],[data-mmscore],[data-opengrades],[data-gradedel],[data-cram],[data-midcram],[data-midstart],[data-weakjump],[data-pomosetup],[data-baseline],[data-cramday],[data-cramallpomo],[data-gapstart],[data-cramskip],[data-cramretest],[data-daydone]');
+  var t=e.target.closest('[data-session],[data-prove],[data-tool],[data-toolblank],[data-selfev],[data-logev],[data-logafter],[data-stage],[data-unit],[data-prompt],[data-scroll],[data-sclose],[data-game],[data-exercise],[data-gameclose],[data-drawscore],[data-mmscore],[data-opengrades],[data-gradedel],[data-cram],[data-gaptopic],[data-midcram],[data-midstart],[data-weakjump],[data-pomosetup],[data-baseline],[data-cramday],[data-setdays],[data-cramallpomo],[data-gapstart],[data-cramskip],[data-cramretest],[data-daydone]');
   if(!t)return;
   if(t.hasAttribute('data-game')){openGame(t.getAttribute('data-game'));return;}
   if(t.hasAttribute('data-exercise')){openGame(t.getAttribute('data-exercise'));return;}
   if(t.hasAttribute('data-toolblank')){window.open(t.getAttribute('data-toolblank'),'_blank','noopener');return;}
   if(t.hasAttribute('data-cram')){openCram();return;}
+  if(t.hasAttribute('data-gaptopic')){openGapByTopic();return;}
+  if(t.hasAttribute('data-setdays')){if(CRAM){CRAM.nDays=+t.getAttribute('data-setdays');renderCramPlan(CRAM.fromGap);}return;}
   if(t.hasAttribute('data-midcram')){openMidCram();return;}
   if(t.hasAttribute('data-pomosetup')){openSessionChooser('today');return;}
   if(t.hasAttribute('data-baseline')){openBaseline('today');return;}
