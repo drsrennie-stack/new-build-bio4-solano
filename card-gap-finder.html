@@ -81,6 +81,8 @@
       <div class="row" style="justify-content:space-between">
         <strong>1. Choose what to cover</strong>
         <span class="row">
+          <button type="button" class="btn ghost" id="pick-mid" style="padding:8px 14px">Midterm (Weeks 1 to 4)</button>
+          <button type="button" class="btn ghost" id="pick-mid2" style="padding:8px 14px">Midterm (Weeks 5 to 8)</button>
           <button type="button" class="btn ghost" id="pick-all" style="padding:8px 14px">Select all</button>
           <button type="button" class="btn ghost" id="pick-none" style="padding:8px 14px">Clear</button>
         </span>
@@ -174,17 +176,28 @@
     });
   });
 
-  // Build the topic picker grouped by module
+  // topic -> week map (from the BIO 004 schedule)
+  var WEEK={"t-anatomical-terminology":1,"t-body-cavities":1,"t-cell-anatomy":1,"t-tissues":1,"t-integumentary":1,
+    "t-bone-histology":2,"t-axial-skeleton-skull":2,"t-axial-skeleton-spine":2,"t-appendicular-skeleton-upper":2,"t-appendicular-skeleton-lower":2,"t-articulations":2,
+    "t-heart":3,"t-cardiac-conduction":3,"t-blood-vessels":3,"t-blood-vessel-disorders":3,"t-respiratory":3,
+    "t-muscle-types":4,"t-muscle-gross":4,"t-muscle-naming-mechanics":4,"t-muscle-microanatomy":4,"t-muscle-sarcomere":4,
+    "t-blood-plasma":4,"t-blood-erythrocytes":4,"t-blood-hematopoiesis":4,"t-blood-leukocytes":4,"t-blood-groups-disorders":4,
+    "t-lymph-overview-vessels":4,"t-lymph-trunks-ducts":4,"t-lymph-primary-organs":4,"t-lymph-nodes-spleen":4,"t-lymph-malt-tonsils":4,
+    "t-alimentary-canal":5,"t-accessory-digestive-organs":5,
+    "t-urinary-system":6,"t-reproductive-male":6,"t-reproductive-female":6,"t-pregnancy-and-birth":6,"t-endocrine":6,
+    "t-cns-brain-spinal-cord":7,"t-cns-meninges-csf":7,
+    "t-nervous-tissue":8,"t-neuronal-integration":8,"t-pns":8,"t-ans":8};
+  var WEEKTITLE={1:"Week 1 \u00b7 Foundations & Integumentary",2:"Week 2 \u00b7 Skeletal & Joints",3:"Week 3 \u00b7 Cardiovascular & Respiratory",4:"Week 4 \u00b7 Muscles, Lymphatic & Blood",5:"Week 5 \u00b7 Digestive",6:"Week 6 \u00b7 Urinary, Reproductive & Endocrine",7:"Week 7 \u00b7 Head/Neck, Brain & Meninges",8:"Week 8 \u00b7 Spinal Cord & Nerves",0:"Other topics"};
+  // Build the topic picker grouped by week
   (function buildPicker(){
-    var html="";
-    C.modules.forEach(function(m){
-      var rows="";
-      (m.topics||[]).forEach(function(t){
-        var tp=TOPICS[t.id]; if(!tp||!tp.mc.length) return;
-        rows += '<label class="topic-row"><input type="checkbox" class="tchk" data-id="'+esc(t.id)+'"> <span>'+esc(t.title)+' <span class="muted">('+tp.mc.length+')</span></span></label>';
-      });
-      if(rows) html += '<details class="mod"><summary>'+esc(m.title)+'</summary>'+rows+'</details>';
-    });
+    var byWeek={};
+    C.modules.forEach(function(m){(m.topics||[]).forEach(function(t){var tp=TOPICS[t.id]; if(!tp||!tp.mc.length)return; var w=WEEK[t.id]||0; (byWeek[w]=byWeek[w]||[]).push(tp);});});
+    var weeks=Object.keys(byWeek).map(Number).sort(function(a,b){return a-b;});
+    var html=weeks.map(function(w){
+      var rows=byWeek[w].map(function(tp){return '<label class="topic-row"><input type="checkbox" class="tchk" data-id="'+esc(tp.id)+'" data-wk="'+w+'"> <span>'+esc(tp.title)+' <span class="muted">('+tp.mc.length+')</span></span></label>';}).join("");
+      var open=(w>=1&&w<=4)?" open":"";
+      return '<details class="mod"'+open+'><summary>'+esc(WEEKTITLE[w]||("Week "+w))+' <span class="muted">('+byWeek[w].length+')</span></summary><div style="margin:4px 0 2px 18px"><button type="button" class="btn ghost small" data-weekall="'+w+'" style="padding:5px 11px;font-size:12.5px">Select all in this week</button></div>'+rows+'</details>';
+    }).join("");
     $("#topic-picker").innerHTML = html || '<p class="muted">No multiple-choice cards found in the bank.</p>';
   })();
 
@@ -197,6 +210,9 @@
     $("#start").disabled = ids.length===0;
   }
   document.addEventListener("change",function(e){if(e.target.classList.contains("tchk"))refreshCount();});
+  document.addEventListener("click",function(e){var b=(e.target&&e.target.closest)?e.target.closest("[data-weekall]"):null;if(b){var w=b.getAttribute("data-weekall");document.querySelectorAll('.tchk[data-wk="'+w+'"]').forEach(function(c){c.checked=true;});refreshCount();}});
+  $("#pick-mid").onclick=function(){document.querySelectorAll(".tchk").forEach(function(c){var w=+c.getAttribute("data-wk");c.checked=w>=1&&w<=4;});refreshCount();};
+  $("#pick-mid2").onclick=function(){document.querySelectorAll(".tchk").forEach(function(c){var w=+c.getAttribute("data-wk");c.checked=w>=5&&w<=8;});refreshCount();};
   $("#pick-all").onclick=function(){document.querySelectorAll(".tchk").forEach(function(c){c.checked=true;});refreshCount();};
   $("#pick-none").onclick=function(){document.querySelectorAll(".tchk").forEach(function(c){c.checked=false;});refreshCount();};
   $("#len-quick").onclick=function(){LEN="quick";$("#len-quick").setAttribute("aria-pressed","true");$("#len-full").setAttribute("aria-pressed","false");refreshCount();};
