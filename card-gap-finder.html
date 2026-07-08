@@ -220,9 +220,11 @@
 
   // ---- Diagnostic ----
   var QUEUE=[], QPOS=0, SCORE={};   // SCORE[topicId] = {title, correct, total}
+  var LASTR=null, SAVED_THIS=false;
+  var SAVE_KEY="bio004-gapfinder-v1", PROGRESS_KEY="bio004-progress";
   $("#start").onclick=function(){
     var ids=selectedIds(); if(!ids.length) return;
-    QUEUE=[]; SCORE={};
+    QUEUE=[]; SCORE={}; SAVED_THIS=false;
     ids.forEach(function(id){
       var tp=TOPICS[id]; if(!tp||!tp.mc.length) return;
       SCORE[id]={title:tp.title, correct:0, total:0};
@@ -269,8 +271,7 @@
     });
   }
 
-  function finishQuiz(){
-    // overall
+  function computeResults(){
     var tot=0,cor=0,gaps=[],solid=[];
     Object.keys(SCORE).forEach(function(id){
       var s=SCORE[id]; if(!s.total)return; tot+=s.total; cor+=s.correct;
@@ -279,10 +280,12 @@
     });
     gaps.sort(function(a,b){return a.pct-b.pct;});
     solid.sort(function(a,b){return a.title.localeCompare(b.title);});
-    var opct = tot? Math.round(cor/tot*100):0;
-    $("#res-score").textContent = opct+"%";
-    $("#res-sub").innerHTML = cor+" of "+tot+" cards &middot; "+gaps.length+" gap"+(gaps.length===1?"":"s")+" to fix";
-
+    return {opct:(tot?Math.round(cor/tot*100):0),cor:cor,tot:tot,gaps:gaps,solid:solid};
+  }
+  function renderResults(R){
+    LASTR=R;
+    $("#res-score").textContent = R.opct+"%";
+    $("#res-sub").innerHTML = R.cor+" of "+R.tot+" cards &middot; "+R.gaps.length+" gap"+(R.gaps.length===1?"":"s")+" to fix";
     function barColor(p){return p>=85?"var(--ok)":p>=60?"var(--warn)":"var(--bad)";}
     function rowHtml(g,isGap){
       return '<div class="gap-row"><span class="gap-name">'+esc(g.title)+'</span>'+
@@ -291,21 +294,56 @@
         (isGap?'<button type="button" class="btn terra" data-drill="'+esc(g.id)+'" style="padding:8px 13px;font-size:13.5px">Fix</button>':'<span class="pill ok">solid</span>')+
         '</div>';
     }
-    $("#gap-list").innerHTML = gaps.length? gaps.map(function(g){return rowHtml(g,true);}).join("") :
+    $("#gap-list").innerHTML = R.gaps.length? R.gaps.map(function(g){return rowHtml(g,true);}).join("") :
       '<p class="muted" style="margin:10px 0 0">No gaps this round. Every topic came back clean. Keep it spaced across the week.</p>';
-    if(solid.length){$("#solid-card").classList.remove("hidden");$("#solid-list").innerHTML=solid.map(function(g){return rowHtml(g,false);}).join("");}
+    if(R.solid.length){$("#solid-card").classList.remove("hidden");$("#solid-list").innerHTML=R.solid.map(function(g){return rowHtml(g,false);}).join("");}
     else{$("#solid-card").classList.add("hidden");}
-    GAP_IDS = gaps.map(function(g){return g.id;});
-    $("#drill-all").disabled = gaps.length===0;
+    GAP_IDS = R.gaps.map(function(g){return g.id;});
+    $("#drill-all").disabled = R.gaps.length===0;
     show("results");
     document.querySelectorAll("[data-drill]").forEach(function(b){b.onclick=function(){startDrill([b.getAttribute("data-drill")]);};});
+  }
+  function saveResults(R){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify({ts:Date.now(), R:R})); }catch(e){} }
+  function loadSaved(){ try{ var r=localStorage.getItem(SAVE_KEY); return r?JSON.parse(r):null; }catch(e){ return null; } }
+  function todayISO(){ var d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+  // card topic id -> Mastery OS competency id(s), so the dashboard lights up the right competencies
+  var TOPIC2COMP={
+    "t-anatomical-terminology":["found-language"],"t-body-cavities":["found-cavities"],"t-cell-anatomy":["cell-anatomy"],
+    "t-tissues":["tissue-epithelial","tissue-connective","tissue-muscle-nervous"],"t-integumentary":["integumentary"],
+    "t-bone-histology":["bone-histology","bone-structure"],"t-axial-skeleton-skull":["axial-skull"],"t-axial-skeleton-spine":["axial-spine-thorax"],
+    "t-appendicular-skeleton-upper":["append-upper"],"t-appendicular-skeleton-lower":["append-lower"],"t-articulations":["joints"],
+    "t-heart":["heart-chambers-valves","great-vessels"],"t-cardiac-conduction":["cardiac-conduction"],"t-blood-vessels":["vessel-histology","regional-bvn1"],"t-respiratory":["respiratory"],
+    "t-muscle-gross":["musc-ct-sheaths","musc-upper-limb","musc-thoracic-back"],"t-muscle-naming-mechanics":["musc-naming"],"t-muscle-microanatomy":["musc-sr-triad"],"t-muscle-sarcomere":["musc-sarcomere","musc-filaments","musc-reg-proteins"],
+    "t-blood-plasma":["blood-plasma"],"t-blood-erythrocytes":["blood-rbc-hb"],"t-blood-hematopoiesis":["blood-hematopoiesis"],"t-blood-leukocytes":["blood-wbc-platelets"],"t-blood-groups-disorders":["blood-groups"],
+    "t-lymph-trunks-ducts":["lymph-trunks-ducts"],"t-lymph-primary-organs":["lymph-thymus"],"t-lymph-nodes-spleen":["lymph-nodes","lymph-spleen"],"t-lymph-malt-tonsils":["lymph-malt-tonsils"],
+    "t-alimentary-canal":["digestive-system-w5"],"t-endocrine":["endocrine-system-w6"],"t-urinary-system":["urinary-system-w6"],
+    "t-reproductive-male":["reproductive-system-w6"],"t-reproductive-female":["reproductive-system-w6"],
+    "t-cns-brain-spinal-cord":["cns-brain-w7","spinal-cord-w8"],"t-cns-meninges-csf":["ventricles-csf-meninges-w7"],"t-neuronal-integration":["integration-w8"],
+    "t-pns":["peripheral-nerves-and-plexuses-w8","cranial-nerves-w8"],"t-ans":["autonomic-nervous-system-w8"]
+  };
+  function feedWeakness(R){
+    var prog; try{ prog=JSON.parse(localStorage.getItem(PROGRESS_KEY))||{}; }catch(e){ prog={}; }
+    R.gaps.concat(R.solid).forEach(function(g){
+      var comps=TOPIC2COMP[g.id]||[];
+      comps.forEach(function(cid){
+        var pr=prog[cid]||{attempts:0,correct:0};
+        pr.attempts=(pr.attempts||0)+g.total; pr.correct=(pr.correct||0)+g.correct;
+        pr.reviewedAt=todayISO(); pr.source="gap-finder";
+        prog[cid]=pr;
+      });
+    });
+    try{ localStorage.setItem(PROGRESS_KEY, JSON.stringify(prog)); }catch(e){}
+  }
+  function finishQuiz(){
+    var R=computeResults(); renderResults(R);
+    if(!SAVED_THIS){ saveResults(R); feedWeakness(R); SAVED_THIS=true; }
   }
 
   // ---- Drill (fix) : MC recognition + free-recall production for the gap topics ----
   var GAP_IDS=[], DQ=[], DPOS=0;
   $("#drill-all").onclick=function(){ if(GAP_IDS.length)startDrill(GAP_IDS); };
   $("#restart").onclick=function(){show("scope");};
-  $("#drill-back").onclick=function(){finishQuiz();};
+  $("#drill-back").onclick=function(){ if(LASTR) renderResults(LASTR); else finishQuiz(); };
 
   function startDrill(ids){
     DQ=[];
@@ -354,6 +392,18 @@
     function nextBtn(){return '<div class="row" style="margin-top:14px"><button type="button" class="btn" id="d-next">'+(DPOS+1>=DQ.length?"Done, back to results":"Next")+'</button></div>';}
     function wireNext(){var n=$("#d-next");n.focus();n.onclick=function(){DPOS++;renderD();};}
   }
+  (function initResume(){
+    var sv=loadSaved(); if(!sv||!sv.R) return;
+    var when=""; try{ when=new Date(sv.ts).toLocaleDateString(); }catch(e){}
+    var host=$("#view-scope"); if(!host) return;
+    var c=document.createElement("div"); c.className="card"; c.style.borderColor="var(--gold)"; c.style.borderWidth="2px";
+    c.innerHTML='<div class="row" style="justify-content:space-between"><strong>Welcome back</strong><span class="muted">Your last gap finder'+(when?": "+when:"")+'</span></div>'+
+      '<p class="muted" style="margin:8px 0 12px">Your results are saved on this device. Pick up where you left off, no need to redo it.</p>'+
+      '<div class="row"><button type="button" class="btn gold" id="resume-see">See my scores and fixes</button><button type="button" class="btn ghost" id="resume-new">Start a new gap finder</button></div>';
+    host.parentNode.insertBefore(c, host);
+    $("#resume-see").onclick=function(){ renderResults(sv.R); if(c.parentNode)c.parentNode.removeChild(c); };
+    $("#resume-new").onclick=function(){ if(c.parentNode)c.parentNode.removeChild(c); };
+  })();
 })();
 </script>
 <!-- iframe height-sender for Kajabi / GitHub Pages embed -->
