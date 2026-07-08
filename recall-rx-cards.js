@@ -60,6 +60,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "types"
+       ],
+       "rubric": [
+        "Striated",
+        "Voluntary"
        ]
       },
       {
@@ -88,6 +92,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "types"
+       ],
+       "rubric": [
+        "Desmosomes",
+        "Gap junctions"
        ]
       },
       {
@@ -134,6 +142,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "types"
+       ],
+       "rubric": [
+        "Elongated",
+        "Spindle shaped"
        ]
       },
       {
@@ -162,6 +174,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "types"
+       ],
+       "rubric": [
+        "Single nucleus",
+        "Flat shape"
        ]
       },
       {
@@ -244,6 +260,12 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "properties"
+       ],
+       "rubric": [
+        "Excitability",
+        "Contractility",
+        "Extensibility",
+        "Elasticity"
        ]
       },
       {
@@ -254,6 +276,12 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "functions"
+       ],
+       "rubric": [
+        "Production of movement",
+        "Maintenance of posture",
+        "Stabilization of joints",
+        "Generation of heat"
        ]
       },
       {
@@ -354,6 +382,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "types"
+       ],
+       "rubric": [
+        "Smooth: nonstriated and involuntary",
+        "Skeletal: striated and voluntary"
        ]
       },
       {
@@ -382,6 +414,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "terminology"
+       ],
+       "rubric": [
+        "Sarcoplasm (muscle cell cytoplasm)",
+        "Sarcolemma (muscle cell plasma membrane)"
        ]
       },
       {
@@ -410,6 +446,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "properties"
+       ],
+       "rubric": [
+        "Elasticity (recoil to resting length)",
+        "Extensibility (stretch beyond resting length)"
        ]
       },
       {
@@ -456,6 +496,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "properties"
+       ],
+       "rubric": [
+        "Extensibility (the stretch)",
+        "Elasticity (the return)"
        ]
       },
       {
@@ -556,6 +600,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "types"
+       ],
+       "rubric": [
+        "Skeletal (voluntary, peripheral nuclei)",
+        "Cardiac (involuntary, intercalated discs)"
        ]
       },
       {
@@ -584,6 +632,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "terminology"
+       ],
+       "rubric": [
+        "Muscle fiber means elongated cell",
+        "Skeletal and smooth cells are elongated",
+        "Cardiac cells are short and branched"
        ]
       },
       {
@@ -594,6 +647,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "types"
+       ],
+       "rubric": [
+        "Skeletal muscle",
+        "Striated",
+        "Voluntary"
        ]
       }
      ]
@@ -629,6 +687,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "gross-anatomy"
+       ],
+       "rubric": [
+        "One nerve",
+        "One artery",
+        "One or more veins"
        ]
       },
       {
@@ -675,6 +738,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "attachments"
+       ],
+       "rubric": [
+        "Origin usually proximal",
+        "Insertion usually distal"
        ]
       },
       {
@@ -703,6 +770,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "ct-sheaths"
+       ],
+       "rubric": [
+        "Epimysium",
+        "Perimysium",
+        "Endomysium"
        ]
       },
       {
@@ -731,6 +803,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "ct-sheaths"
+       ],
+       "rubric": [
+        "Dense irregular connective tissue"
        ]
       },
       {
@@ -759,6 +834,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "ct-sheaths"
+       ],
+       "rubric": [
+        "Bundle of muscle fibers"
        ]
       },
       {
@@ -805,6 +883,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "attachments"
+       ],
+       "rubric": [
+        "Periosteum of bone",
+        "Perichondrium of cartilage"
        ]
       },
       {
@@ -869,6 +951,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "gross-anatomy"
+       ],
+       "rubric": [
+        "Central part of the muscle",
+        "Branch through connective tissue sheaths"
        ]
       },
       {
@@ -915,6 +1001,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "attachments"
+       ],
+       "rubric": [
+        "Tendon (cord)",
+        "Aponeurosis (sheet-like)"
        ]
       },
       {
@@ -925,6 +1015,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "attachments"
+       ],
+       "rubric": [
+        "Tendon: muscle to bone",
+        "Ligament: bone to bone"
        ]
       },
       {
@@ -953,6 +1047,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "attachments"
+       ],
+       "rubric": [
+        "Small and durable",
+        "More can pass over a joint",
+        "Conserve space"
        ]
       },
       {
@@ -981,6 +1080,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "ct-sheaths"
+       ],
+       "rubric": [
+        "Support and reinforce (prevent bursting)",
+        "Route for vessels and nerves",
+        "Continuous with tendons (transmit force)"
        ]
       },
       {
@@ -991,6 +1095,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "gross-anatomy"
+       ],
+       "rubric": [
+        "Accommodate length changes",
+        "Straighten when muscle is stretched"
        ]
       },
       {
@@ -1109,6 +1217,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "ct-sheaths"
+       ],
+       "rubric": [
+        "Perimysium was cut",
+        "Bundle is a fascicle"
        ]
       },
       {
@@ -1137,6 +1249,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "attachments"
+       ],
+       "rubric": [
+        "Stationary bone: origin",
+        "Moving bone: insertion"
        ]
       },
       {
@@ -1165,6 +1281,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "ct-sheaths"
+       ],
+       "rubric": [
+        "Pull passes through endomysium, perimysium, epimysium",
+        "Sheaths continuous with tendon",
+        "Tendon transmits force to bone"
        ]
       }
      ]
@@ -1182,6 +1303,14 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "naming"
+       ],
+       "rubric": [
+        "Direction",
+        "Size",
+        "Shape",
+        "Action",
+        "Number of origins",
+        "Location and origin/insertion"
        ]
       },
       {
@@ -1228,6 +1357,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "naming"
+       ],
+       "rubric": [
+        "Maximus means largest",
+        "Minimus means smallest"
        ]
       },
       {
@@ -1238,6 +1371,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "naming"
+       ],
+       "rubric": [
+        "Longus means long",
+        "Brevis means short"
        ]
       },
       {
@@ -1302,6 +1439,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "naming"
+       ],
+       "rubric": [
+        "Abductor: away from midline",
+        "Adductor: toward midline"
        ]
       },
       {
@@ -1312,6 +1453,12 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "naming"
+       ],
+       "rubric": [
+        "Number of origins",
+        "Biceps two",
+        "Triceps three",
+        "Quadriceps four"
        ]
       },
       {
@@ -1358,6 +1505,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "levers"
+       ],
+       "rubric": [
+        "Force opposing movement",
+        "Weight of body part or resistance"
        ]
       },
       {
@@ -1530,6 +1681,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "coordination"
+       ],
+       "rubric": [
+        "Group of skeletal muscles",
+        "With vessels and nerves",
+        "Sharing a common function"
        ]
       },
       {
@@ -1558,6 +1714,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "naming"
+       ],
+       "rubric": [
+        "Criterion: origin and insertion",
+        "Origin: sternum and clavicle",
+        "Insertion: mastoid process"
        ]
       },
       {
@@ -1568,6 +1729,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "naming"
+       ],
+       "rubric": [
+        "Criterion: direction",
+        "Fascicles parallel to midline"
        ]
       },
       {
@@ -1686,6 +1851,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "levers"
+       ],
+       "rubric": [
+        "Fulcrum: elbow",
+        "Load: forearm plus object",
+        "Effort: biceps brachii pull"
        ]
       },
       {
@@ -1714,6 +1884,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "coordination"
+       ],
+       "rubric": [
+        "Anterior (flexor) compartment",
+        "Posterior (extensor) compartment"
        ]
       },
       {
@@ -1742,6 +1916,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "levers"
+       ],
+       "rubric": [
+        "Back teeth closer to fulcrum (jaw joint)",
+        "Smaller effort moves load (mechanical advantage)",
+        "Front teeth farther, need more effort"
        ]
       },
       {
@@ -1752,6 +1931,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "coordination"
+       ],
+       "rubric": [
+        "Role is not fixed",
+        "Can be prime mover, antagonist, synergist, or fixator",
+        "Depends on the action"
        ]
       },
       {
@@ -1780,6 +1964,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "naming"
+       ],
+       "rubric": [
+        "Biceps: number of origins (two heads)",
+        "Femoris: location (femur/thigh)"
        ]
       },
       {
@@ -1808,6 +1996,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "levers"
+       ],
+       "rubric": [
+        "Head nodding: first class",
+        "Standing on toes: second class",
+        "Flexing elbow: third class"
        ]
       },
       {
@@ -1897,6 +2090,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "microanatomy"
+       ],
+       "rubric": [
+        "Granules of stored glycogen",
+        "Provide glucose for ATP during activity"
        ]
       },
       {
@@ -1925,6 +2122,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "microanatomy"
+       ],
+       "rubric": [
+        "Myofibrils",
+        "Sarcoplasmic reticulum",
+        "T tubules"
        ]
       },
       {
@@ -1953,6 +2155,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "microanatomy"
+       ],
+       "rubric": [
+        "Densely packed rod-like structures",
+        "Contain contractile elements (sarcomeres)"
        ]
       },
       {
@@ -1981,6 +2187,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "sr-ttubules"
+       ],
+       "rubric": [
+        "Interconnecting tubules",
+        "Run longitudinally around each myofibril (sleeve)"
        ]
       },
       {
@@ -2027,6 +2237,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "sr-ttubules"
+       ],
+       "rubric": [
+        "Stores and releases calcium ions",
+        "Regulates calcium level in the cell"
        ]
       },
       {
@@ -2037,6 +2251,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "sr-ttubules"
+       ],
+       "rubric": [
+        "Transverse tube",
+        "Inward extension of the sarcolemma",
+        "Reaches deep into cell interior"
        ]
       },
       {
@@ -2047,6 +2266,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "sr-ttubules"
+       ],
+       "rubric": [
+        "Between paired terminal cisterns"
        ]
       },
       {
@@ -2093,6 +2315,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "microanatomy"
+       ],
+       "rubric": [
+        "Myoglobin stores oxygen",
+        "Glycosomes supply glucose"
        ]
       },
       {
@@ -2103,6 +2329,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "microanatomy"
+       ],
+       "rubric": [
+        "Myofibrils densely packed",
+        "Crowd other organelles between them"
        ]
       },
       {
@@ -2203,6 +2433,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "sr-ttubules"
+       ],
+       "rubric": [
+        "Mitochondria",
+        "Glycogen granules"
        ]
       },
       {
@@ -2231,6 +2465,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "microanatomy"
+       ],
+       "rubric": [
+        "Muscle fiber",
+        "Myofibril",
+        "Myofilament"
        ]
       },
       {
@@ -2241,6 +2480,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "sr-ttubules"
+       ],
+       "rubric": [
+        "Triad",
+        "One T tubule",
+        "Two terminal cisterns"
        ]
       },
       {
@@ -2287,6 +2531,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "sr-ttubules"
+       ],
+       "rubric": [
+        "T tubule: inward extension of sarcolemma, carries signal",
+        "SR: smooth ER, stores and releases calcium",
+        "Triad: one T tubule between two terminal cisterns"
        ]
       },
       {
@@ -2333,6 +2582,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "microanatomy"
+       ],
+       "rubric": [
+        "Glycosomes",
+        "Store glycogen for glucose",
+        "For ATP during activity"
        ]
       },
       {
@@ -2343,6 +2597,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "microanatomy"
+       ],
+       "rubric": [
+        "Skeletal: many peripheral nuclei under sarcolemma",
+        "Cardiac: single central nucleus"
        ]
       },
       {
@@ -2353,6 +2611,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "microanatomy"
+       ],
+       "rubric": [
+        "Myofibrils densely packed (about 80 percent)",
+        "Mitochondria squeezed into rows between them"
        ]
       }
      ]
@@ -2370,6 +2632,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "sarcomere"
+       ],
+       "rubric": [
+        "Smallest contractile/functional unit",
+        "Region of myofibril between two Z discs"
        ]
       },
       {
@@ -2398,6 +2664,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "sarcomere"
+       ],
+       "rubric": [
+        "Repeating dark and light bands",
+        "A bands and I bands"
        ]
       },
       {
@@ -2516,6 +2786,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "filaments"
+       ],
+       "rubric": [
+        "Actin and myosin",
+        "Responsible for motility and shape change",
+        "Most developed in muscle fibers"
        ]
       },
       {
@@ -2544,6 +2819,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "filaments"
+       ],
+       "rubric": [
+        "Centrally located",
+        "Extend full length of A band",
+        "Connected at the M line"
        ]
       },
       {
@@ -2572,6 +2852,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "filaments"
+       ],
+       "rubric": [
+        "Extend across I band, partway into A band",
+        "Anchored by alpha-actinin at Z disc"
        ]
       },
       {
@@ -2600,6 +2884,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "proteins"
+       ],
+       "rubric": [
+        "Two heavy chains",
+        "Four light chains"
        ]
       },
       {
@@ -2610,6 +2898,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "proteins"
+       ],
+       "rubric": [
+        "Link thick and thin filaments (cross-bridges)",
+        "Swivel to act as motors generating force"
        ]
       },
       {
@@ -2638,6 +2930,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "proteins"
+       ],
+       "rubric": [
+        "Active sites for myosin heads"
        ]
       },
       {
@@ -2666,6 +2961,12 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "proteins"
+       ],
+       "rubric": [
+        "Three subunits",
+        "TnI",
+        "TnT",
+        "TnC"
        ]
       },
       {
@@ -2784,6 +3085,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "proteins"
+       ],
+       "rubric": [
+        "Tropomyosin",
+        "Troponin"
        ]
       },
       {
@@ -2830,6 +3135,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "filaments"
+       ],
+       "rubric": [
+        "Thick filament",
+        "Composed of myosin"
        ]
       },
       {
@@ -2840,6 +3149,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "proteins"
+       ],
+       "rubric": [
+        "Two intertwined helical heavy chains"
        ]
       },
       {
@@ -2850,6 +3162,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "sarcomere"
+       ],
+       "rubric": [
+        "Z disc anchors thin filaments",
+        "M line connects thick filaments"
        ]
       },
       {
@@ -2878,6 +3194,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "proteins"
+       ],
+       "rubric": [
+        "Nebulin",
+        "Myomesin",
+        "C proteins"
        ]
       },
       {
@@ -2924,6 +3245,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "proteins"
+       ],
+       "rubric": [
+        "Tropomyosin",
+        "Spirals around actin, blocks myosin-binding sites at rest"
        ]
       },
       {
@@ -2934,6 +3259,12 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "proteins"
+       ],
+       "rubric": [
+        "Troponin",
+        "TnI binds actin (inhibitory)",
+        "TnT binds tropomyosin, positions on actin",
+        "TnC binds calcium ions"
        ]
       },
       {
@@ -2962,6 +3293,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "filaments"
+       ],
+       "rubric": [
+        "Thick filament: myosin, joined at M line",
+        "Thin filament: actin, anchored at Z disc"
        ]
       },
       {
@@ -2972,6 +3307,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "muscular",
         "proteins"
+       ],
+       "rubric": [
+        "Titin: Z disc to thick filament, attaches at M line, elastic recoil",
+        "Myomesin: at M line, binds thick filaments together"
        ]
       },
       {
@@ -3031,6 +3370,12 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "overview"
+       ],
+       "rubric": [
+        "Lymph (fluid)",
+        "Lymphatic vessels",
+        "Structures and organs with lymphatic tissue",
+        "Red bone marrow"
        ]
       },
       {
@@ -3041,6 +3386,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lymph"
+       ],
+       "rubric": [
+        "Interstitial fluid inside lymphatic vessels",
+        "Clear pale-yellow fluid",
+        "Plasma and white blood cells"
        ]
       },
       {
@@ -3051,6 +3401,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lymph"
+       ],
+       "rubric": [
+        "Location",
+        "Interstitial fluid sits between cells",
+        "Lymph is the same fluid inside lymphatic vessels"
        ]
       },
       {
@@ -3061,6 +3416,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lacteals"
+       ],
+       "rubric": [
+        "Creamy-white lipid-rich lymph",
+        "Drains from the small intestine"
        ]
       },
       {
@@ -3071,6 +3430,12 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lacteals"
+       ],
+       "rubric": [
+        "Vitamin A",
+        "Vitamin D",
+        "Vitamin E",
+        "Vitamin K"
        ]
       },
       {
@@ -3081,6 +3446,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "overview"
+       ],
+       "rubric": [
+        "Reticular connective tissue",
+        "Contains many lymphocytes"
        ]
       },
       {
@@ -3091,6 +3460,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "overview"
+       ],
+       "rubric": [
+        "B cells",
+        "T cells"
        ]
       },
       {
@@ -3101,6 +3474,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "capillaries"
+       ],
+       "rubric": [
+        "In the tissue spaces between cells",
+        "Blind-ended tubes closed at one end"
        ]
       },
       {
@@ -3111,6 +3488,14 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "capillaries"
+       ],
+       "rubric": [
+        "Cartilage",
+        "Epidermis",
+        "Cornea",
+        "CNS",
+        "Parts of the spleen",
+        "Red bone marrow (any three)"
        ]
       },
       {
@@ -3121,6 +3506,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "capillaries"
+       ],
+       "rubric": [
+        "Elastic-fiber filaments anchoring capillaries to tissue",
+        "Pull endothelial cells apart when fluid accumulates"
        ]
       },
       {
@@ -3131,6 +3520,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lacteals"
+       ],
+       "rubric": [
+        "Specialized lymphatic capillaries",
+        "In the villi of the small intestine",
+        "Absorb dietary lipids"
        ]
       },
       {
@@ -3141,6 +3535,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "capillaries"
+       ],
+       "rubric": [
+        "A blind ending (closed at one end)"
        ]
       },
       {
@@ -3151,6 +3548,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "capillaries"
+       ],
+       "rubric": [
+        "Greater permeability",
+        "Absorb large molecules (proteins, lipids)"
        ]
       },
       {
@@ -3161,6 +3562,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "capillaries"
+       ],
+       "rubric": [
+        "Larger diameter"
        ]
       },
       {
@@ -3171,6 +3575,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "vessels-valves"
+       ],
+       "rubric": [
+        "Valves"
        ]
       },
       {
@@ -3181,6 +3588,12 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "vessels-valves"
+       ],
+       "rubric": [
+        "Lymphatic capillaries",
+        "Lymphatic (collecting) vessels",
+        "Lymph nodes",
+        "Lymph trunks"
        ]
       },
       {
@@ -3443,6 +3856,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "overview"
+       ],
+       "rubric": [
+        "Draining excess interstitial fluid",
+        "From tissue spaces into lymphatic vessels"
        ]
       },
       {
@@ -3471,6 +3888,12 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lacteals"
+       ],
+       "rubric": [
+        "Vitamin A",
+        "Vitamin D",
+        "Vitamin E",
+        "Vitamin K"
        ]
       },
       {
@@ -3517,6 +3940,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lacteals"
+       ],
+       "rubric": [
+        "In the villi (lining) of the small intestine"
        ]
       },
       {
@@ -3563,6 +3989,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "overview"
+       ],
+       "rubric": [
+        "B cells",
+        "T cells"
        ]
       },
       {
@@ -3591,6 +4021,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lymph"
+       ],
+       "rubric": [
+        "Clear",
+        "Pale-yellow"
        ]
       }
      ]
@@ -3608,6 +4042,13 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "trunks"
+       ],
+       "rubric": [
+        "Lumbar trunks",
+        "Intestinal trunk",
+        "Bronchomediastinal trunks",
+        "Subclavian trunks",
+        "Jugular trunks"
        ]
       },
       {
@@ -3618,6 +4059,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "trunks"
+       ],
+       "rubric": [
+        "Lower limbs",
+        "Pelvic wall",
+        "Kidneys"
        ]
       },
       {
@@ -3628,6 +4074,13 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "trunks"
+       ],
+       "rubric": [
+        "Stomach",
+        "Intestines",
+        "Pancreas",
+        "Spleen",
+        "Liver"
        ]
       },
       {
@@ -3638,6 +4091,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "trunks"
+       ],
+       "rubric": [
+        "Thoracic wall",
+        "Lungs",
+        "Heart"
        ]
       },
       {
@@ -3648,6 +4106,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "trunks"
+       ],
+       "rubric": [
+        "Upper limbs"
        ]
       },
       {
@@ -3658,6 +4119,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "trunks"
+       ],
+       "rubric": [
+        "Head",
+        "Neck"
        ]
       },
       {
@@ -3668,6 +4133,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "ducts"
+       ],
+       "rubric": [
+        "Dilated sac at start of thoracic duct",
+        "Anterior to L2 vertebra"
        ]
       },
       {
@@ -3678,6 +4147,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "ducts"
+       ],
+       "rubric": [
+        "Anterior to the second lumbar (L2) vertebra"
        ]
       },
       {
@@ -3688,6 +4160,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "ducts"
+       ],
+       "rubric": [
+        "At the cisterna chyli",
+        "Anterior to L2 vertebra"
        ]
       },
       {
@@ -3698,6 +4174,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "ducts"
+       ],
+       "rubric": [
+        "Left side of head, neck, and chest",
+        "Left upper limb",
+        "All areas inferior to the ribs"
        ]
       },
       {
@@ -3708,6 +4189,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "ducts"
+       ],
+       "rubric": [
+        "Junction of right internal jugular and right subclavian veins"
        ]
       },
       {
@@ -3718,6 +4202,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "ducts"
+       ],
+       "rubric": [
+        "Right jugular trunk",
+        "Right subclavian trunk",
+        "Right bronchomediastinal trunk"
        ]
       },
       {
@@ -3728,6 +4217,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "ducts"
+       ],
+       "rubric": [
+        "The thoracic duct"
        ]
       },
       {
@@ -3738,6 +4230,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "pumps"
+       ],
+       "rubric": [
+        "Skeletal muscle pump",
+        "Respiratory pump"
        ]
       },
       {
@@ -3748,6 +4244,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "pumps"
+       ],
+       "rubric": [
+        "Contracting skeletal muscles compress lymphatic vessels",
+        "Force lymph toward the heart"
        ]
       },
       {
@@ -3758,6 +4258,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "pumps"
+       ],
+       "rubric": [
+        "Pressure changes during inhalation and exhalation",
+        "Move lymph along vessels"
        ]
       },
       {
@@ -4074,6 +4578,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "ducts"
+       ],
+       "rubric": [
+        "The subclavian veins",
+        "At junction with internal jugular veins"
        ]
       },
       {
@@ -4120,6 +4628,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "ducts"
+       ],
+       "rubric": [
+        "Junction of right internal jugular and right subclavian veins"
        ]
       },
       {
@@ -4184,6 +4695,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "pumps"
+       ],
+       "rubric": [
+        "Skeletal muscle pump",
+        "Respiratory pump"
        ]
       }
      ]
@@ -4201,6 +4716,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "red-marrow"
+       ],
+       "rubric": [
+        "Red bone marrow",
+        "Thymus"
        ]
       },
       {
@@ -4211,6 +4730,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "red-marrow"
+       ],
+       "rubric": [
+        "Flat bones",
+        "Epiphyses of long bones"
        ]
       },
       {
@@ -4221,6 +4744,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "red-marrow"
+       ],
+       "rubric": [
+        "Pluripotent stem cells"
        ]
       },
       {
@@ -4231,6 +4757,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "red-marrow"
+       ],
+       "rubric": [
+        "Mature B cells",
+        "Pre-T cells (migrate to thymus)"
        ]
       },
       {
@@ -4241,6 +4771,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "red-marrow"
+       ],
+       "rubric": [
+        "They migrate to the thymus"
        ]
       },
       {
@@ -4251,6 +4784,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "thymus"
+       ],
+       "rubric": [
+        "In the mediastinum",
+        "Between the sternum and the aorta"
        ]
       },
       {
@@ -4261,6 +4798,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "thymus"
+       ],
+       "rubric": [
+        "Bilobed",
+        "Each lobe divided into lobules by connective tissue capsules"
        ]
       },
       {
@@ -4271,6 +4812,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "thymus"
+       ],
+       "rubric": [
+        "Outer cortex",
+        "Inner medulla"
        ]
       },
       {
@@ -4281,6 +4826,12 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "thymus"
+       ],
+       "rubric": [
+        "Immature T cells",
+        "Dendritic cells",
+        "Epithelial cells",
+        "Macrophages"
        ]
       },
       {
@@ -4291,6 +4842,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "thymus"
+       ],
+       "rubric": [
+        "Proliferate and mature",
+        "Dendritic cells assist",
+        "Epithelial cells educate them"
        ]
       },
       {
@@ -4301,6 +4857,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "thymus"
+       ],
+       "rubric": [
+        "Thymic hormones"
        ]
       },
       {
@@ -4311,6 +4870,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "thymus"
+       ],
+       "rubric": [
+        "About 2 percent survive",
+        "Rest undergo apoptosis"
        ]
       },
       {
@@ -4321,6 +4884,12 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "thymus"
+       ],
+       "rubric": [
+        "Mature T cells",
+        "Epithelial cells",
+        "Dendritic cells",
+        "Macrophages"
        ]
       },
       {
@@ -4331,6 +4900,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "thymus"
+       ],
+       "rubric": [
+        "Hassall's corpuscles"
        ]
       },
       {
@@ -4341,6 +4913,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "thymus"
+       ],
+       "rubric": [
+        "Epithelial cells in concentric layers",
+        "Found in the thymic medulla"
        ]
       },
       {
@@ -4351,6 +4927,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "thymus"
+       ],
+       "rubric": [
+        "In the medulla"
        ]
       },
       {
@@ -4613,6 +5192,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "thymus"
+       ],
+       "rubric": [
+        "They assist pre-T cells in maturation"
        ]
       },
       {
@@ -4677,6 +5259,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "thymus"
+       ],
+       "rubric": [
+        "The cortex"
        ]
       },
       {
@@ -4687,6 +5272,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "thymus"
+       ],
+       "rubric": [
+        "The medulla"
        ]
       },
       {
@@ -4769,6 +5357,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "red-marrow"
+       ],
+       "rubric": [
+        "Red bone marrow"
        ]
       }
      ]
@@ -4786,6 +5377,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lymph-nodes"
+       ],
+       "rubric": [
+        "About 600",
+        "Bean-shaped"
        ]
       },
       {
@@ -4796,6 +5391,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lymph-nodes"
+       ],
+       "rubric": [
+        "Mammary glands",
+        "Axillae",
+        "Groin"
        ]
       },
       {
@@ -4806,6 +5406,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lymph-nodes"
+       ],
+       "rubric": [
+        "A capsule of dense connective tissue"
        ]
       },
       {
@@ -4816,6 +5419,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lymph-nodes"
+       ],
+       "rubric": [
+        "Inward extensions of the capsule",
+        "Divide the node into compartments"
        ]
       },
       {
@@ -4826,6 +5433,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lymph-nodes"
+       ],
+       "rubric": [
+        "B cells"
        ]
       },
       {
@@ -4836,6 +5446,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lymph-nodes"
+       ],
+       "rubric": [
+        "T cells",
+        "Dendritic cells"
        ]
       },
       {
@@ -4846,6 +5460,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lymph-nodes"
+       ],
+       "rubric": [
+        "B cells",
+        "Plasma cells",
+        "Macrophages"
        ]
       },
       {
@@ -4856,6 +5475,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lymph-nodes"
+       ],
+       "rubric": [
+        "In the outer cortex"
        ]
       },
       {
@@ -4866,6 +5488,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lymph-nodes"
+       ],
+       "rubric": [
+        "Plasma cell formation",
+        "Memory B cell formation"
        ]
       },
       {
@@ -4876,6 +5502,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lymph-nodes"
+       ],
+       "rubric": [
+        "Mainly B cells"
        ]
       },
       {
@@ -4886,6 +5515,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lymph-nodes"
+       ],
+       "rubric": [
+        "Forms in response to an antigen",
+        "B cells proliferate into memory B cells or plasma cells"
        ]
       },
       {
@@ -4896,6 +5529,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "spleen"
+       ],
+       "rubric": [
+        "The left hypochondriac region"
        ]
       },
       {
@@ -4906,6 +5542,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "spleen"
+       ],
+       "rubric": [
+        "The spleen"
        ]
       },
       {
@@ -4916,6 +5555,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "spleen"
+       ],
+       "rubric": [
+        "Capsule of dense connective tissue",
+        "Inward trabeculae forming the stroma"
        ]
       },
       {
@@ -4926,6 +5569,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "spleen"
+       ],
+       "rubric": [
+        "Lymphatic tissue around the splenic (central) artery",
+        "B and T cells carry out immune functions"
        ]
       },
       {
@@ -4936,6 +5583,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "spleen"
+       ],
+       "rubric": [
+        "Venous sinuses and cords (Billroth's cords)",
+        "Macrophages, lymphocytes, and plasma cells"
        ]
       },
       {
@@ -4946,6 +5597,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "spleen"
+       ],
+       "rubric": [
+        "Cords of splenic tissue in the red pulp"
        ]
       },
       {
@@ -4956,6 +5610,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "spleen"
+       ],
+       "rubric": [
+        "Removing defective blood cells",
+        "Storing platelets",
+        "Producing blood cells in fetal life"
        ]
       },
       {
@@ -5236,6 +5895,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "lymph-nodes"
+       ],
+       "rubric": [
+        "The medulla"
        ]
       },
       {
@@ -5282,6 +5944,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "spleen"
+       ],
+       "rubric": [
+        "Around the splenic (central) artery"
        ]
       },
       {
@@ -5346,6 +6011,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "spleen"
+       ],
+       "rubric": [
+        "Lymphocytes",
+        "Plasma cells"
        ]
       }
      ]
@@ -5363,6 +6032,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "malt"
+       ],
+       "rubric": [
+        "Mucosa-associated lymphatic tissue"
        ]
       },
       {
@@ -5373,6 +6045,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "malt"
+       ],
+       "rubric": [
+        "In the lamina propria"
        ]
       },
       {
@@ -5383,6 +6058,12 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "malt"
+       ],
+       "rubric": [
+        "Gastrointestinal tract",
+        "Respiratory tract",
+        "Urinary tract",
+        "Reproductive tract"
        ]
       },
       {
@@ -5393,6 +6074,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "malt"
+       ],
+       "rubric": [
+        "MALT (mucosa-associated lymphatic tissue)"
        ]
       },
       {
@@ -5403,6 +6087,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "tonsils"
+       ],
+       "rubric": [
+        "Five tonsils",
+        "Form a ring at junctions of oral cavity, oropharynx, nasal cavity, nasopharynx"
        ]
       },
       {
@@ -5413,6 +6101,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "tonsils"
+       ],
+       "rubric": [
+        "The adenoid"
        ]
       },
       {
@@ -5423,6 +6114,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "tonsils"
+       ],
+       "rubric": [
+        "Posterior wall of the nasopharynx"
        ]
       },
       {
@@ -5433,6 +6127,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "tonsils"
+       ],
+       "rubric": [
+        "Posterior region of the oral cavity"
        ]
       },
       {
@@ -5443,6 +6140,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "tonsils"
+       ],
+       "rubric": [
+        "At the base of the tongue"
        ]
       },
       {
@@ -5453,6 +6153,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "tonsils"
+       ],
+       "rubric": [
+        "One (a single pharyngeal tonsil)"
        ]
       },
       {
@@ -5463,6 +6166,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "tonsils"
+       ],
+       "rubric": [
+        "Two (paired)"
        ]
       },
       {
@@ -5689,6 +6395,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "tonsils"
+       ],
+       "rubric": [
+        "The pharyngeal tonsil (adenoid) is single"
        ]
       },
       {
@@ -5735,6 +6444,10 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "tonsils"
+       ],
+       "rubric": [
+        "Oral cavity (with oropharynx)",
+        "Nasal cavity (with nasopharynx)"
        ]
       },
       {
@@ -5799,6 +6512,11 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "tonsils"
+       ],
+       "rubric": [
+        "Pharyngeal tonsil (adenoid)",
+        "Palatine tonsils",
+        "Lingual tonsils"
        ]
       },
       {
@@ -5845,6 +6563,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "malt"
+       ],
+       "rubric": [
+        "The lamina propria"
        ]
       },
       {
@@ -5909,6 +6630,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "tonsils"
+       ],
+       "rubric": [
+        "The pharyngeal tonsil"
        ]
       },
       {
@@ -5955,6 +6679,9 @@ window.BIO004_COURSE_CONTENT = {
        "tags": [
         "lymphatic",
         "tonsils"
+       ],
+       "rubric": [
+        "Five"
        ]
       }
      ]
@@ -5975,6 +6702,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "To which of the four primary tissue types does blood belong?",
        "a": "Connective tissue.",
+       "rubric": [
+        "Connective tissue"
+       ],
        "tags": [
         "blood",
         "overview"
@@ -5985,6 +6715,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "Blood is classified as which specific category of connective tissue?",
        "a": "Fluid connective tissue.",
+       "rubric": [
+        "Fluid connective tissue"
+       ],
        "tags": [
         "blood",
         "overview"
@@ -6031,6 +6764,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "State the two major fractions of whole blood and their approximate percentages.",
        "a": "Formed elements about 45 percent and plasma about 55 percent.",
+       "rubric": [
+        "Formed elements (about 45 percent)",
+        "Plasma (about 55 percent)"
+       ],
        "tags": [
         "blood",
         "overview"
@@ -6077,6 +6814,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "Blood makes up approximately what percentage of total body weight?",
        "a": "About 7 to 8 percent of total body weight.",
+       "rubric": [
+        "About 7 to 8 percent of body weight"
+       ],
        "tags": [
         "blood",
         "overview"
@@ -6105,6 +6845,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "Is normal blood slightly acidic or slightly alkaline?",
        "a": "Slightly alkaline, at pH 7.35 to 7.45.",
+       "rubric": [
+        "Slightly alkaline",
+        "pH 7.35 to 7.45"
+       ],
        "tags": [
         "blood",
         "overview"
@@ -6151,6 +6895,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What two components of blood are chiefly responsible for its high viscosity?",
        "a": "Its protein content and its formed elements.",
+       "rubric": [
+        "Protein content",
+        "Formed elements"
+       ],
        "tags": [
         "blood",
         "overview"
@@ -6161,6 +6909,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "Oxygen-rich blood appears which color?",
        "a": "Bright red.",
+       "rubric": [
+        "Bright red"
+       ],
        "tags": [
         "blood",
         "overview"
@@ -6189,6 +6940,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "What is the most abundant component of plasma?",
        "a": "Water, making up 91 to 92 percent of plasma.",
+       "rubric": [
+        "Water",
+        "91 to 92 percent of plasma"
+       ],
        "tags": [
         "blood",
         "plasma"
@@ -6235,6 +6990,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "Which is the most abundant plasma protein?",
        "a": "Albumin.",
+       "rubric": [
+        "Albumin"
+       ],
        "tags": [
         "blood",
         "plasma-proteins"
@@ -6245,6 +7003,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "Name the most abundant plasma protein and the approximate fraction of plasma proteins it represents.",
        "a": "Albumin, about 60 percent of plasma proteins.",
+       "rubric": [
+        "Albumin",
+        "About 60 percent of plasma proteins"
+       ],
        "tags": [
         "blood",
         "plasma-proteins"
@@ -6291,6 +7053,11 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "Name the three major classes of plasma proteins in order of abundance.",
        "a": "Albumin, globulins, then fibrinogen.",
+       "rubric": [
+        "Albumin",
+        "Globulins",
+        "Fibrinogen"
+       ],
        "tags": [
         "blood",
         "plasma-proteins"
@@ -6319,6 +7086,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "Globulins make up approximately what fraction of the plasma proteins?",
        "a": "About 35 percent of plasma proteins.",
+       "rubric": [
+        "About 35 percent of plasma proteins"
+       ],
        "tags": [
         "blood",
         "plasma-proteins"
@@ -6329,6 +7099,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "Where are all plasma proteins synthesized, except for the gamma globulins?",
        "a": "In the liver.",
+       "rubric": [
+        "The liver"
+       ],
        "tags": [
         "blood",
         "plasma-proteins"
@@ -6339,6 +7112,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "Which plasma proteins are NOT made in the liver, and what cells produce them?",
        "a": "Gamma globulins (antibodies), produced by plasma cells.",
+       "rubric": [
+        "Gamma globulins (antibodies)",
+        "Made by plasma cells"
+       ],
        "tags": [
         "blood",
         "plasma-proteins"
@@ -6385,6 +7162,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 3,
        "q": "Name a nutrient solute and a nitrogenous waste solute normally dissolved in plasma.",
        "a": "A nutrient such as glucose or amino acids; a waste such as urea or creatinine.",
+       "rubric": [
+        "A nutrient (glucose or amino acids)",
+        "A waste (urea or creatinine)"
+       ],
        "tags": [
         "blood",
         "plasma"
@@ -6395,6 +7176,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "Which of the following is a major electrolyte dissolved in plasma?",
        "a": "Na+.",
+       "rubric": [
+        "Na+"
+       ],
        "tags": [
         "blood",
         "plasma"
@@ -6405,6 +7189,13 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "List four electrolytes normally dissolved in plasma using ASCII ion notation.",
        "a": "Na+, K+, Ca2+, Cl- (and HCO3-).",
+       "rubric": [
+        "Na+",
+        "K+",
+        "Ca2+",
+        "Cl-",
+        "HCO3-"
+       ],
        "tags": [
         "blood",
         "plasma"
@@ -6415,6 +7206,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What is the liquid extracellular matrix of blood called?",
        "a": "Plasma.",
+       "rubric": [
+        "Plasma"
+       ],
        "tags": [
         "blood",
         "plasma"
@@ -6504,6 +7298,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What is the characteristic shape of a mature erythrocyte?",
        "a": "A biconcave disc.",
+       "rubric": [
+        "Biconcave disc"
+       ],
        "tags": [
         "blood",
         "erythrocytes"
@@ -6532,6 +7329,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "Give the approximate thickness of an erythrocyte at its edge and at its center.",
        "a": "About 2.5 um at the edge and about 1 um at the center.",
+       "rubric": [
+        "About 2.5 um at the edge",
+        "About 1 um at the center"
+       ],
        "tags": [
         "blood",
         "erythrocytes"
@@ -6578,6 +7379,11 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "Besides a nucleus, what other cellular structures does a mature erythrocyte lack?",
        "a": "Organelles such as mitochondria, endoplasmic reticulum, and Golgi apparatus.",
+       "rubric": [
+        "Mitochondria",
+        "Endoplasmic reticulum",
+        "Golgi apparatus"
+       ],
        "tags": [
         "blood",
         "erythrocytes"
@@ -6606,6 +7412,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What is the average lifespan of an erythrocyte?",
        "a": "About 120 days (roughly 4 months).",
+       "rubric": [
+        "About 120 days (4 months)"
+       ],
        "tags": [
         "blood",
         "erythrocytes"
@@ -6616,6 +7425,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What red, iron-containing protein fills the erythrocyte?",
        "a": "Hemoglobin.",
+       "rubric": [
+        "Hemoglobin"
+       ],
        "tags": [
         "blood",
         "hemoglobin"
@@ -6644,6 +7456,11 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "How many and which polypeptide chains make up one hemoglobin molecule?",
        "a": "Four chains: 2 alpha chains and 2 beta chains.",
+       "rubric": [
+        "Four chains total",
+        "2 alpha chains",
+        "2 beta chains"
+       ],
        "tags": [
         "blood",
         "hemoglobin"
@@ -6672,6 +7489,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "Each heme group is a porphyrin ring holding what single ion?",
        "a": "One iron ion in the Fe2+ (ferrous) state.",
+       "rubric": [
+        "One iron ion",
+        "Fe2+ (ferrous) state"
+       ],
        "tags": [
         "blood",
         "hemoglobin"
@@ -6682,6 +7503,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "In which oxidation state must the iron of heme be to bind oxygen?",
        "a": "Fe2+ (ferrous).",
+       "rubric": [
+        "Fe2+ (ferrous)"
+       ],
        "tags": [
         "blood",
         "hemoglobin"
@@ -6710,6 +7534,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What is the name of the hemoglobin form that is bound to oxygen?",
        "a": "Oxyhemoglobin (HbO2).",
+       "rubric": [
+        "Oxyhemoglobin (HbO2)"
+       ],
        "tags": [
         "blood",
         "hemoglobin"
@@ -6720,6 +7547,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "What is the name of the hemoglobin form that has released its oxygen?",
        "a": "Deoxyhemoglobin.",
+       "rubric": [
+        "Deoxyhemoglobin"
+       ],
        "tags": [
         "blood",
         "hemoglobin"
@@ -6766,6 +7596,12 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 3,
        "q": "Name the four structural forms of hemoglobin covered in this unit.",
        "a": "Oxyhemoglobin, deoxyhemoglobin, carboxyhemoglobin, and methemoglobin.",
+       "rubric": [
+        "Oxyhemoglobin",
+        "Deoxyhemoglobin",
+        "Carboxyhemoglobin",
+        "Methemoglobin"
+       ],
        "tags": [
         "blood",
         "hemoglobin"
@@ -6830,6 +7666,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What is the normal hematocrit range for men?",
        "a": "About 42 to 52 percent.",
+       "rubric": [
+        "About 42 to 52 percent"
+       ],
        "tags": [
         "blood",
         "values"
@@ -6840,6 +7679,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What is the normal hematocrit range for women?",
        "a": "About 37 to 47 percent.",
+       "rubric": [
+        "About 37 to 47 percent"
+       ],
        "tags": [
         "blood",
         "values"
@@ -6886,6 +7728,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "Which protein transports iron through the plasma?",
        "a": "Transferrin.",
+       "rubric": [
+        "Transferrin"
+       ],
        "tags": [
         "blood",
         "rbc-lifecycle"
@@ -6914,6 +7759,11 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "At what three sites are worn-out erythrocytes primarily removed?",
        "a": "The spleen, liver, and bone marrow.",
+       "rubric": [
+        "Spleen",
+        "Liver",
+        "Bone marrow"
+       ],
        "tags": [
         "blood",
         "rbc-lifecycle"
@@ -6924,6 +7774,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "By what cell type are aged erythrocytes engulfed during their removal?",
        "a": "Macrophages, by phagocytosis.",
+       "rubric": [
+        "Macrophages",
+        "By phagocytosis"
+       ],
        "tags": [
         "blood",
         "rbc-lifecycle"
@@ -6970,6 +7824,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 3,
        "q": "Breakdown of the heme protoporphyrin ring produces which yellow pigment carried to the liver?",
        "a": "Bilirubin.",
+       "rubric": [
+        "Bilirubin"
+       ],
        "tags": [
         "blood",
         "rbc-lifecycle"
@@ -7095,6 +7952,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What is the name of the pluripotent stem cell from which every formed element arises?",
        "a": "The hemocytoblast.",
+       "rubric": [
+        "The hemocytoblast"
+       ],
        "tags": [
         "blood",
         "hematopoiesis"
@@ -7105,6 +7965,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "The hemocytoblast divides into which two committed stem cell lines?",
        "a": "The myeloid stem cell and the lymphoid stem cell.",
+       "rubric": [
+        "Myeloid stem cell",
+        "Lymphoid stem cell"
+       ],
        "tags": [
         "blood",
         "hematopoiesis"
@@ -7115,6 +7979,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "Which stem cell line gives rise to the lymphocytes?",
        "a": "The lymphoid stem cell.",
+       "rubric": [
+        "The lymphoid stem cell"
+       ],
        "tags": [
         "blood",
         "hematopoiesis"
@@ -7143,6 +8010,12 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "Name the four myeloid lineages that branch from the myeloid stem cell.",
        "a": "The erythroid, granulocyte, monocyte, and megakaryocyte lineages.",
+       "rubric": [
+        "Erythroid",
+        "Granulocyte",
+        "Monocyte",
+        "Megakaryocyte"
+       ],
        "tags": [
         "blood",
         "hematopoiesis"
@@ -7171,6 +8044,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "In erythropoiesis, which committed cell comes immediately after the myeloid stem cell?",
        "a": "The proerythroblast.",
+       "rubric": [
+        "The proerythroblast"
+       ],
        "tags": [
         "blood",
         "hematopoiesis"
@@ -7181,6 +8057,14 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "List the erythropoiesis stages in order from hemocytoblast to mature red cell.",
        "a": "Hemocytoblast, myeloid stem cell, proerythroblast, erythroblast, normoblast, reticulocyte, erythrocyte.",
+       "rubric": [
+        "Hemocytoblast",
+        "Myeloid stem cell",
+        "Proerythroblast",
+        "Erythroblast",
+        "Normoblast",
+        "Reticulocyte, then erythrocyte"
+       ],
        "tags": [
         "blood",
         "hematopoiesis"
@@ -7209,6 +8093,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What is the last immature stage before a fully mature erythrocyte?",
        "a": "The reticulocyte.",
+       "rubric": [
+        "The reticulocyte"
+       ],
        "tags": [
         "blood",
         "hematopoiesis"
@@ -7219,6 +8106,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What structural remnant remains inside a reticulocyte that a mature erythrocyte lacks?",
        "a": "Ribosome remnants (giving a blue-gray, polychromatophilic cytoplasm).",
+       "rubric": [
+        "Ribosome remnants",
+        "Blue-gray (polychromatophilic) cytoplasm"
+       ],
        "tags": [
         "blood",
         "hematopoiesis"
@@ -7229,6 +8120,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "What percentage of circulating red blood cells are normally reticulocytes?",
        "a": "About 1 to 2 percent.",
+       "rubric": [
+        "About 1 to 2 percent"
+       ],
        "tags": [
         "blood",
         "values"
@@ -7275,6 +8169,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "The hormone that stimulates red blood cell production is named erythropoietin. Which organ is its main source?",
        "a": "The kidney.",
+       "rubric": [
+        "The kidney"
+       ],
        "tags": [
         "blood",
         "hematopoiesis"
@@ -7285,6 +8182,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "Which marrow cell is the committed precursor that develops into platelets?",
        "a": "The megakaryoblast (leading to the megakaryocyte).",
+       "rubric": [
+        "Megakaryoblast (to megakaryocyte)"
+       ],
        "tags": [
         "blood",
         "hematopoiesis"
@@ -7295,6 +8195,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "Which blast cell of the myeloid line develops into granulocytes?",
        "a": "The myeloblast.",
+       "rubric": [
+        "The myeloblast"
+       ],
        "tags": [
         "blood",
         "hematopoiesis"
@@ -7305,6 +8208,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "Which blast cell develops into monocytes?",
        "a": "The monoblast.",
+       "rubric": [
+        "The monoblast"
+       ],
        "tags": [
         "blood",
         "hematopoiesis"
@@ -7333,6 +8239,12 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "Which formed elements share the myeloid stem cell as a common ancestor?",
        "a": "Erythrocytes, platelets, granulocytes, and monocytes (all but lymphocytes).",
+       "rubric": [
+        "Erythrocytes",
+        "Platelets",
+        "Granulocytes",
+        "Monocytes"
+       ],
        "tags": [
         "blood",
         "hematopoiesis"
@@ -7469,6 +8381,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 3,
        "q": "Name the developmental process for white blood cells and for platelets.",
        "a": "Leukopoiesis for white cells; thrombopoiesis for platelets.",
+       "rubric": [
+        "Leukopoiesis (white cells)",
+        "Thrombopoiesis (platelets)"
+       ],
        "tags": [
         "blood",
         "hematopoiesis"
@@ -7594,6 +8510,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "The two structural classes of leukocytes are based on what feature?",
        "a": "The presence or absence of visible cytoplasmic granules (granulocytes versus agranulocytes).",
+       "rubric": [
+        "Presence or absence of cytoplasmic granules",
+        "Granulocytes versus agranulocytes"
+       ],
        "tags": [
         "blood",
         "granulocytes"
@@ -7604,6 +8524,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "To which class do neutrophils, eosinophils, and basophils belong?",
        "a": "The granulocytes.",
+       "rubric": [
+        "The granulocytes"
+       ],
        "tags": [
         "blood",
         "granulocytes"
@@ -7650,6 +8573,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What is the approximate percentage of circulating leukocytes that are neutrophils?",
        "a": "About 60 to 70 percent.",
+       "rubric": [
+        "About 60 to 70 percent"
+       ],
        "tags": [
         "blood",
         "granulocytes"
@@ -7678,6 +8604,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "Because of its multi-lobed nucleus, the neutrophil is also called what?",
        "a": "A polymorphonuclear cell.",
+       "rubric": [
+        "A polymorphonuclear cell"
+       ],
        "tags": [
         "blood",
         "granulocytes"
@@ -7706,6 +8635,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What is the characteristic nuclear shape of an eosinophil?",
        "a": "A bilobed (two-lobed) nucleus.",
+       "rubric": [
+        "A bilobed (two-lobed) nucleus"
+       ],
        "tags": [
         "blood",
         "granulocytes"
@@ -7716,6 +8648,11 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "The eosinophil is known for large crystalline granules containing which named protein?",
        "a": "Major basic protein (also eosinophil cationic protein and eosinophil peroxidase).",
+       "rubric": [
+        "Major basic protein",
+        "Eosinophil cationic protein",
+        "Eosinophil peroxidase"
+       ],
        "tags": [
         "blood",
         "granulocytes"
@@ -7780,6 +8717,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "Which tissue-resident cell is structurally similar to the circulating basophil?",
        "a": "The mast cell.",
+       "rubric": [
+        "The mast cell"
+       ],
        "tags": [
         "blood",
         "granulocytes"
@@ -7790,6 +8730,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What is the approximate percentage of circulating leukocytes that are lymphocytes?",
        "a": "About 20 to 30 percent.",
+       "rubric": [
+        "About 20 to 30 percent"
+       ],
        "tags": [
         "blood",
         "agranulocytes"
@@ -7818,6 +8761,11 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "Name the three lymphocyte subtypes.",
        "a": "B lymphocytes, T lymphocytes, and natural killer (NK) cells.",
+       "rubric": [
+        "B lymphocytes",
+        "T lymphocytes",
+        "Natural killer (NK) cells"
+       ],
        "tags": [
         "blood",
         "agranulocytes"
@@ -7864,6 +8812,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What is the approximate percentage of circulating leukocytes that are monocytes?",
        "a": "About 2 to 8 percent.",
+       "rubric": [
+        "About 2 to 8 percent"
+       ],
        "tags": [
         "blood",
         "agranulocytes"
@@ -7874,6 +8825,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "What is the characteristic nuclear shape of a monocyte?",
        "a": "A kidney-shaped (indented) nucleus.",
+       "rubric": [
+        "A kidney-shaped (indented) nucleus"
+       ],
        "tags": [
         "blood",
         "agranulocytes"
@@ -7902,6 +8856,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "When a monocyte leaves the blood and enters tissue, into what cell does it mature?",
        "a": "A macrophage.",
+       "rubric": [
+        "A macrophage"
+       ],
        "tags": [
         "blood",
         "agranulocytes"
@@ -7912,6 +8869,13 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 3,
        "q": "List the five leukocytes from most numerous to least numerous.",
        "a": "Neutrophils, lymphocytes, monocytes, eosinophils, basophils.",
+       "rubric": [
+        "Neutrophils",
+        "Lymphocytes",
+        "Monocytes",
+        "Eosinophils",
+        "Basophils"
+       ],
        "tags": [
         "blood",
         "granulocytes"
@@ -7958,6 +8922,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 3,
        "q": "Which structural feature separates a lymphocyte from a monocyte on a smear?",
        "a": "The lymphocyte has a large round nucleus with little cytoplasm; the monocyte is larger with an indented kidney-shaped nucleus.",
+       "rubric": [
+        "Lymphocyte: large round nucleus, little cytoplasm",
+        "Monocyte: larger, indented kidney-shaped nucleus"
+       ],
        "tags": [
         "blood",
         "agranulocytes"
@@ -8004,6 +8972,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What is the approximate diameter of a platelet?",
        "a": "About 2 to 4 um.",
+       "rubric": [
+        "About 2 to 4 um"
+       ],
        "tags": [
         "blood",
         "platelets"
@@ -8014,6 +8985,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What is the normal platelet count?",
        "a": "About 150,000 to 400,000 per uL.",
+       "rubric": [
+        "About 150,000 to 400,000 per uL"
+       ],
        "tags": [
         "blood",
         "values"
@@ -8024,6 +8998,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "Name the two types of platelet granules.",
        "a": "Alpha granules and dense granules.",
+       "rubric": [
+        "Alpha granules",
+        "Dense granules"
+       ],
        "tags": [
         "blood",
         "platelets"
@@ -8070,6 +9048,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "What is the normal total leukocyte (WBC) count?",
        "a": "About 4,000 to 11,000 per uL.",
+       "rubric": [
+        "About 4,000 to 11,000 per uL"
+       ],
        "tags": [
         "blood",
         "values"
@@ -8159,6 +9140,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "The ABO blood group is defined by antigens located where?",
        "a": "On the surface of the erythrocytes.",
+       "rubric": [
+        "On the erythrocyte surface"
+       ],
        "tags": [
         "blood",
         "blood-groups"
@@ -8223,6 +9207,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "Which surface antigens does a person with type AB blood carry?",
        "a": "Both the A and B antigens.",
+       "rubric": [
+        "A antigen",
+        "B antigen"
+       ],
        "tags": [
         "blood",
         "blood-groups"
@@ -8251,6 +9239,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "Which antibody is present in the plasma of a type A person?",
        "a": "Anti-B antibody.",
+       "rubric": [
+        "Anti-B antibody"
+       ],
        "tags": [
         "blood",
         "blood-groups"
@@ -8315,6 +9306,12 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 3,
        "q": "State the antibodies present in the plasma of each ABO type: A, B, AB, and O.",
        "a": "Type A has anti-B; type B has anti-A; type AB has neither; type O has both anti-A and anti-B.",
+       "rubric": [
+        "Type A: anti-B",
+        "Type B: anti-A",
+        "Type AB: neither",
+        "Type O: anti-A and anti-B"
+       ],
        "tags": [
         "blood",
         "blood-groups"
@@ -8325,6 +9322,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What molecule serves as the type A antigen?",
        "a": "N-acetylgalactosamine.",
+       "rubric": [
+        "N-acetylgalactosamine"
+       ],
        "tags": [
         "blood",
         "blood-groups"
@@ -8335,6 +9335,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What molecule serves as the type B antigen?",
        "a": "Galactose.",
+       "rubric": [
+        "Galactose"
+       ],
        "tags": [
         "blood",
         "blood-groups"
@@ -8345,6 +9348,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "The Rh blood group is defined by the presence or absence of which antigen?",
        "a": "The D antigen.",
+       "rubric": [
+        "The D antigen"
+       ],
        "tags": [
         "blood",
         "blood-groups"
@@ -8481,6 +9487,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 3,
        "q": "What is the structural definition of anemia?",
        "a": "A decreased oxygen-carrying capacity of the blood, from too few red cells or too little hemoglobin.",
+       "rubric": [
+        "Decreased oxygen-carrying capacity",
+        "Too few red cells or too little hemoglobin"
+       ],
        "tags": [
         "blood",
         "disorders"
@@ -8491,6 +9501,11 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "Name the three morphological categories used to classify anemias.",
        "a": "Microcytic, normocytic, and macrocytic.",
+       "rubric": [
+        "Microcytic",
+        "Normocytic",
+        "Macrocytic"
+       ],
        "tags": [
         "blood",
         "disorders"
@@ -8501,6 +9516,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What does the term microcytic describe about the red cells?",
        "a": "The red cells are abnormally small.",
+       "rubric": [
+        "Red cells abnormally small"
+       ],
        "tags": [
         "blood",
         "disorders"
@@ -8511,6 +9529,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "What does the term macrocytic describe about the red cells?",
        "a": "The red cells are abnormally large.",
+       "rubric": [
+        "Red cells abnormally large"
+       ],
        "tags": [
         "blood",
         "disorders"
@@ -8575,6 +9596,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "In sickle cell disease, which globin chain of hemoglobin carries the mutation?",
        "a": "The beta-globin chain.",
+       "rubric": [
+        "The beta-globin chain"
+       ],
        "tags": [
         "blood",
         "disorders"
@@ -8585,6 +9609,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "The abnormal hemoglobin produced in sickle cell disease is given what name?",
        "a": "Hemoglobin S (HbS).",
+       "rubric": [
+        "Hemoglobin S (HbS)"
+       ],
        "tags": [
         "blood",
         "disorders"
@@ -8595,6 +9622,10 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 2,
        "q": "What single amino acid substitution underlies sickle cell disease?",
        "a": "Glutamic acid is replaced by valine in the beta-globin chain.",
+       "rubric": [
+        "Glutamic acid replaced by valine",
+        "In the beta-globin chain"
+       ],
        "tags": [
         "blood",
         "disorders"
@@ -8659,6 +9690,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "In alpha-thalassemia, which globin chain is produced in reduced amounts?",
        "a": "The alpha-globin chain.",
+       "rubric": [
+        "The alpha-globin chain"
+       ],
        "tags": [
         "blood",
         "disorders"
@@ -8669,6 +9703,9 @@ window.BIO004_COURSE_CONTENT = {
        "dok": 1,
        "q": "In beta-thalassemia, which globin chain is produced in reduced amounts?",
        "a": "The beta-globin chain.",
+       "rubric": [
+        "The beta-globin chain"
+       ],
        "tags": [
         "blood",
         "disorders"

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mastery OS (beta) &middot; BIO 004 Human Anatomy</title>
+<style>
+  :root{--navy:#0B1530;--terra:#8B3A2E;--terra2:#C2734D;--gold:#C9A14A;--gold-deep:#B08B3A;
+    --off:#FAFAF9;--white:#fff;--line:#D3DAE0;--ink:#0B1530;--ink-soft:#5c6970;--ok:#2f7d55;--warn:#B08B3A;--bad:#A0402E;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--off);color:var(--ink);font-family:"Plus Jakarta Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.55}
+  .wrap{max-width:840px;margin:0 auto;padding:24px max(18px,4vw) 70px}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin:0 0 6px}
+  h1{font-size:clamp(24px,4vw,34px);font-weight:800;letter-spacing:-.02em;margin:0 0 4px;color:var(--navy)}
+  h2{font-size:19px;font-weight:800;color:var(--navy);margin:0 0 8px}
+  .lead{font-size:15.5px;color:var(--ink-soft);margin:0 0 18px}
+  .card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 1px 3px rgba(11,21,48,.06);margin-bottom:16px}
+  .hero{background:var(--navy);color:#fff;border:0}
+  .hero .eyebrow{color:var(--gold)}
+  .hero h2{color:#fff}
+  .btn{font:inherit;font-weight:700;font-size:15px;cursor:pointer;border-radius:10px;padding:11px 18px;border:1px solid var(--navy);background:var(--navy);color:#fff;transition:transform .15s,box-shadow .15s}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(11,21,48,.14)}
+  .btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+  .btn.terra{background:var(--terra);border-color:var(--terra);color:#fff}
+  .btn.ghost{background:#fff;color:var(--navy)}
+  .btn.small{padding:7px 13px;font-size:13.5px}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+  .btn:focus-visible,.opt:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .muted{color:var(--ink-soft);font-size:14px}
+  .prog{height:8px;background:var(--line);border-radius:999px;overflow:hidden;margin:0 0 16px}
+  .prog>span{display:block;height:100%;background:var(--gold);width:0;transition:width .25s}
+  .q-meta{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--ink-soft);margin-bottom:8px}
+  .q-text{font-size:20px;font-weight:700;color:var(--navy);margin:2px 0 16px}
+  .opts{display:flex;flex-direction:column;gap:10px}
+  .opt{font:inherit;text-align:left;font-size:15.5px;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;color:var(--ink)}
+  .opt:hover{border-color:var(--navy)}
+  .opt.correct{border-color:var(--ok);background:#e8f2ec}.opt.wrong{border-color:var(--bad);background:#f6e7e4}
+  .opt[disabled]{cursor:default}
+  .explain{border-left:4px solid var(--gold);background:var(--off);border-radius:8px;padding:12px 14px;margin-top:14px;font-size:14.5px}
+  .explain h4{margin:0 0 4px;font-size:14px;color:var(--navy)}
+  .how{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 12px}
+  .how button{font:inherit;font-weight:700;font-size:13px;border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:999px;padding:7px 13px;cursor:pointer}
+  .how button[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .bar{height:12px;border-radius:999px;background:var(--line);overflow:hidden;flex:1;min-width:120px}
+  .bar>span{display:block;height:100%}
+  .wk-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .wk-row:last-child{border-bottom:0}
+  .wk-name{font-weight:700;font-size:14.5px;color:var(--navy);flex:1;min-width:150px}
+  .pct{font-weight:800;font-size:13.5px;width:44px;text-align:right}
+  .pill{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+  .pill.gap{background:#f6e7e4;color:var(--bad)}.pill.ok{background:#e8f2ec;color:var(--ok)}.pill.due{background:#f3ead2;color:var(--gold-deep)}
+  .rubric{list-style:none;padding:0;margin:8px 0}
+  .rubric li{display:flex;gap:8px;align-items:flex-start;padding:4px 0;font-size:14.5px}
+  .daychip{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:#fff;color:var(--navy);cursor:pointer}
+  .daychip[aria-pressed="true"]{background:var(--navy);color:#fff}
+  .hidden{display:none}
+  nav.top{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 18px}
+  nav.top button{font:inherit;font-weight:700;font-size:13.5px;border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:8px;padding:8px 13px;cursor:pointer}
+  nav.top button[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+  footer{margin-top:26px;font-size:12px;color:var(--ink-soft)}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; MedMasters Collaborative</p>
+  <h1>Mastery OS <span style="color:var(--gold)">beta</span></h1>
+  <p class="lead">One plan. It tells you what to do each day, tests it with cards, and points your cram at exactly what you missed.</p>
+
+  <nav class="top" id="nav">
+    <button data-nav="home" aria-pressed="true">Today</button>
+    <button data-nav="gap">Gap finder</button>
+    <button data-nav="cram">Cram</button>
+    <button data-nav="weak">Weak spots</button>
+  </nav>
+
+  <!-- HOME / TODAY -->
+  <section id="v-home"></section>
+
+  <!-- DAILY CARDS -->
+  <section id="v-daily" class="hidden">
+    <div class="prog"><span id="d-prog"></span></div>
+    <div class="card">
+      <div class="q-meta"><span id="d-comp"></span><span id="d-count"></span></div>
+      <p class="q-text" id="d-q"></p>
+      <div id="d-how" class="how hidden"></div>
+      <div class="opts" id="d-opts" role="group" aria-label="Answer choices"></div>
+      <div id="d-post"></div>
+    </div>
+    <button type="button" class="btn ghost small" id="d-quit">Stop for now</button>
+  </section>
+
+  <!-- GAP FINDER -->
+  <section id="v-gap" class="hidden"></section>
+  <section id="v-gapq" class="hidden">
+    <div class="prog"><span id="g-prog"></span></div>
+    <div class="card">
+      <div class="q-meta"><span id="g-comp"></span><span id="g-count"></span></div>
+      <p class="q-text" id="g-q"></p>
+      <div class="opts" id="g-opts" role="group" aria-label="Answer choices"></div>
+      <div id="g-post"></div>
+    </div>
+  </section>
+
+  <!-- CRAM -->
+  <section id="v-cram" class="hidden"></section>
+  <section id="v-cramq" class="hidden">
+    <div class="prog"><span id="c-prog"></span></div>
+    <div class="card">
+      <div class="q-meta"><span id="c-comp"></span><span id="c-count"></span></div>
+      <p class="q-text" id="c-q"></p>
+      <div id="c-how" class="how hidden"></div>
+      <div class="opts" id="c-opts" role="group" aria-label="Answer choices"></div>
+      <div id="c-post"></div>
+    </div>
+    <button type="button" class="btn ghost small" id="c-quit">Back to cram plan</button>
+  </section>
+
+  <!-- WEAK SPOTS -->
+  <section id="v-weak" class="hidden"></section>
+
+  <footer>BIO 004 Human Anatomy &middot; Solano Community College &middot; Dr. Sharilyn Rennie</footer>
+</div>
+
+<script src="mastery-os-cards.js"></script>
+<script>
+(function(){
+  "use strict";
+  var $=function(s,r){return (r||document).querySelector(s);};
+  var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
+  function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+  function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+  var M=window.MASTERY_OS;
+  if(!M||!M.competencies){document.getElementById("v-home").innerHTML='<div class="card"><p class="muted">Could not load <b>mastery-os-cards.js</b>. It must sit in the same folder as this page.</p></div>';return;}
+  var CARD={}; M.cards.forEach(function(c){CARD[c.gid]=c;});
+  var COMP={}; M.competencies.forEach(function(k){COMP[k.id]=k;});
+  var DAYS=["Mon","Tue","Wed","Thu"];
+  var DAYNAME={Mon:"Monday",Tue:"Tuesday",Wed:"Wednesday",Thu:"Thursday"};
+
+  // ---- state ----
+  var KEY="mastery-os-loop-v1";
+  function fresh(){return {comp:{},flags:{},seen:{},cramDays:3,day:null};}
+  var S=load();
+  function load(){try{var r=localStorage.getItem(KEY);if(!r)return fresh();var p=JSON.parse(r);p.comp=p.comp||{};p.flags=p.flags||{};p.seen=p.seen||{};return p;}catch(e){return fresh();}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+  function cstate(id){if(!S.comp[id])S.comp[id]={correct:0,total:0};return S.comp[id];}
+  function record(compId,ok){var cs=cstate(compId);cs.total++;if(ok)cs.correct++;save();}
+  function acc(id){var cs=S.comp[id];return cs&&cs.total?cs.correct/cs.total:null;}
+
+  function realDay(){var d=new Date().getDay();return d>=1&&d<=4?DAYS[d-1]:(d===5?"Fri":"Weekend");}
+  function currentDay(){return S.day||realDay();}
+  function compsForDay(d){return M.competencies.filter(function(k){return k.day===d;});}
+  function weekComps(){return M.competencies;} // all week-4 competencies
+
+  function show(id){["home","daily","gap","gapq","cram","cramq","weak"].forEach(function(v){$("#v-"+v).classList.toggle("hidden",v!==id);});window.scrollTo(0,0);}
+  function setNav(n){$$("#nav button").forEach(function(b){b.setAttribute("aria-pressed",b.getAttribute("data-nav")===n?"true":"false");});}
+
+  // ================= TODAY / HOME =================
+  function renderHome(){
+    setNav("home");
+    var d=currentDay(), real=realDay();
+    var isStudyDay=DAYS.indexOf(d)>-1;
+    var comps=isStudyDay?compsForDay(d):[];
+    var unit=comps.length?COMP[comps[0].id].unit:null;
+    var directive, action;
+    if(isStudyDay){
+      directive="Work today's cards for "+(DAYNAME[d])+". Do the whole section at least once. How you drill each one is up to you.";
+      action='<button class="btn gold" data-go="daily">Start today’s cards ('+comps.length+' topics)</button>';
+    } else if(d==="Fri"){
+      directive="It’s Friday. Run the gap finder, one pass with fresh cards you have not seen. What you miss sets your weekend cram.";
+      action='<button class="btn gold" data-go="gap">Start the Friday gap finder</button>';
+    } else {
+      directive="Weekend cram. Work the topics you flagged in the gap finder plus anything the week left shaky, over the number of days you choose.";
+      action='<button class="btn gold" data-go="cram">Open my cram</button>';
+    }
+    var daychips=DAYS.concat(["Fri","Weekend"]).map(function(x){
+      return '<button class="daychip" data-day="'+x+'" aria-pressed="'+(x===d?"true":"false")+'">'+(DAYNAME[x]||x)+'</button>';
+    }).join(" ");
+    var flagN=Object.keys(S.flags).filter(function(k){return S.flags[k];}).length;
+    $("#v-home").innerHTML=
+      '<div class="card hero"><p class="eyebrow">Your plan for today</p><h2>'+(isStudyDay?DAYNAME[d]+" · "+(unit?unitName(unit):""):d==="Fri"?"Friday · Gap finder":"Weekend · Cram")+'</h2>'+
+      '<p style="color:#dfe4ee;margin:0 0 16px">'+esc(directive)+'</p>'+action+'</div>'+
+      '<div class="card"><div class="row" style="justify-content:space-between"><strong>Jump to a day</strong><span class="muted">Today is '+(DAYNAME[real]||real)+'</span></div>'+
+      '<p class="muted" style="margin:8px 0 10px">The plan follows the week automatically. You can look ahead or back here.</p><div class="row">'+daychips+'</div></div>'+
+      '<div class="card"><div class="row" style="justify-content:space-between"><strong>This week at a glance</strong>'+(flagN?'<span class="pill gap">'+flagN+' flagged</span>':'')+'</div>'+
+      '<p class="muted" style="margin:8px 0 0">Mon: muscle structure &middot; Tue: fascicles &amp; levers &middot; Wed: lymphatic &middot; Thu: blood &middot; Fri: gap finder &middot; weekend: cram.</p></div>';
+    $$("#v-home [data-go]").forEach(function(b){b.onclick=function(){var g=b.getAttribute("data-go");if(g==="daily")startDaily(d);else if(g==="gap")renderGapIntro();else renderCram();};});
+    $$("#v-home [data-day]").forEach(function(b){b.onclick=function(){S.day=b.getAttribute("data-day");save();renderHome();};});
+  }
+  function unitName(u){var m={"m-muscle":"Muscle","m-lymphatic":"Lymphatic system","m-blood":"Blood"};return m[u]||u;}
+
+  // ================= DAILY CARDS =================
+  var DQ=[],DP=0,DHOW="recall";
+  function startDaily(day){
+    var comps=compsForDay(day); DQ=[];
+    comps.forEach(function(k){
+      // study cards only (non-assess), recognition then production
+      k.study.forEach(function(gid){var c=CARD[gid];if(c)DQ.push({comp:k.id,card:c});});
+    });
+    DQ=shuffle(DQ); DP=0; if(!DQ.length){renderHome();return;}
+    show("daily"); renderDaily();
+  }
+  function renderDaily(){
+    if(DP>=DQ.length){ // done
+      $("#v-daily").classList.add("hidden");
+      show("home"); renderHome();
+      return;
+    }
+    $("#d-prog").style.width=Math.round(DP/DQ.length*100)+"%";
+    var e=DQ[DP], c=e.card; S.seen[c.gid]=1; save();
+    $("#d-comp").textContent=COMP[e.comp].name;
+    $("#d-count").textContent="Card "+(DP+1)+" of "+DQ.length;
+    $("#d-q").textContent=c.q;
+    $("#d-post").innerHTML=""; $("#d-opts").innerHTML=""; $("#d-how").classList.add("hidden");
+    if(c.options){ mcRender(c,"#d-opts","#d-post",e.comp,function(){DP++;renderDaily();}); }
+    else { recallRender(c,"#d-post","#d-how",e.comp,function(){DP++;renderDaily();}); }
+  }
+  $("#d-quit").onclick=function(){show("home");renderHome();};
+
+  // shared MC renderer: grades, records to competency, reveals, next
+  function mcRender(c,optSel,postSel,compId,next){
+    var opts=$(optSel); opts.innerHTML="";
+    var order=shuffle(c.options.map(function(o,i){return {t:o,correct:i===c.correctIndex};}));
+    var answered=false;
+    order.forEach(function(o){
+      var b=document.createElement("button");b.className="opt";b.type="button";b.textContent=o.t;
+      b.onclick=function(){
+        if(answered)return;answered=true;
+        record(compId,o.correct);
+        $$(".opt",opts).forEach(function(btn,ix){btn.setAttribute("disabled","");if(order[ix].correct)btn.classList.add("correct");});
+        if(!o.correct)b.classList.add("wrong");
+        $(postSel).innerHTML='<div class="explain"><h4>'+(o.correct?"Correct":"Not quite")+'</h4><p style="margin:0">'+esc(c.explanation||("Answer: "+(c.a||"")))+'</p></div>'+
+          '<div class="row" style="margin-top:14px"><button type="button" class="btn" id="nx">Next</button></div>';
+        $("#nx").focus();$("#nx").onclick=next;
+      };
+      opts.appendChild(b);
+    });
+  }
+  // recall renderer: pick HOW, produce, reveal answer + rubric self-check, record
+  function recallRender(c,postSel,howSel,compId,next){
+    var how=$(howSel);how.classList.remove("hidden");
+    how.innerHTML='<span class="muted" style="align-self:center">Prove it your way:</span>'+
+      ['Say it','Draw it','Teach it'].map(function(h,i){return '<button data-how="'+h+'" aria-pressed="'+(i===0?"true":"false")+'">'+h+'</button>';}).join("");
+    $$("button",how).forEach(function(b){b.onclick=function(){$$("button",how).forEach(function(x){x.setAttribute("aria-pressed","false");});b.setAttribute("aria-pressed","true");};});
+    $(postSel).innerHTML='<p class="muted" style="margin:0 0 10px">Produce the answer your chosen way, then reveal and check yourself honestly.</p><button type="button" class="btn gold" id="rv">Reveal answer</button>';
+    $("#rv").onclick=function(){
+      var rub=(c.rubric&&c.rubric.length)?'<p style="margin:10px 0 4px;font-weight:700;font-size:13.5px">Check what you got:</p><ul class="rubric">'+c.rubric.map(function(it){return '<li><input type="checkbox" class="rk"> <span>'+esc(it)+'</span></li>';}).join("")+'</ul>':'';
+      $(postSel).innerHTML='<div class="explain"><h4>Answer</h4><p style="margin:0">'+esc(c.a||"")+'</p></div>'+rub+
+        '<div class="row" style="margin-top:14px"><button type="button" class="btn" id="nx">Got it</button><button type="button" class="btn terra" id="nxm">Missed it</button></div>';
+      var total=(c.rubric&&c.rubric.length)||1;
+      function fin(ok){record(compId,ok);next();}
+      $("#nx").onclick=function(){
+        if(c.rubric&&c.rubric.length){var n=$$(".rk:checked",$(postSel)).length;fin(n/total>=0.6);}else fin(true);
+      };
+      $("#nxm").onclick=function(){fin(false);};
+      $("#nx").focus();
+    };
+  }
+
+  // ================= GAP FINDER (Friday, held-out assess cards) =================
+  function renderGapIntro(){
+    setNav("gap");
+    var comps=weekComps(), assessN=0; comps.forEach(function(k){assessN+=k.assess.length;});
+    $("#v-gap").innerHTML='<div class="card"><h2>Friday gap finder</h2>'+
+      '<p class="muted">Fresh cards you have not drilled this week, one for each competency across muscle, lymphatic, and blood. Answer from memory. Whatever you miss becomes the red flags that drive your cram.</p>'+
+      '<p class="muted" style="margin:8px 0 14px"><b>'+comps.length+'</b> competencies &middot; up to <b>'+assessN+'</b> held-out cards in the pool. Each run pulls one per competency, so a second run varies.</p>'+
+      '<button type="button" class="btn gold" id="gap-start">Start the gap finder</button></div>';
+    $("#gap-start").onclick=startGap;
+    show("gap");
+  }
+  var GQ=[],GP=0;
+  function startGap(){
+    GQ=[];
+    weekComps().forEach(function(k){
+      var pool=k.assess.map(function(g){return CARD[g];}).filter(function(c){return c&&c.options;});
+      if(!pool.length)return;
+      var pick=shuffle(pool)[0]; // one fresh card per competency
+      GQ.push({comp:k.id,card:pick});
+    });
+    GQ=shuffle(GQ);GP=0;if(!GQ.length){renderHome();return;}
+    // reset this run's flags
+    show("gapq");renderGap();
+  }
+  function renderGap(){
+    if(GP>=GQ.length){finishGap();return;}
+    $("#g-prog").style.width=Math.round(GP/GQ.length*100)+"%";
+    var e=GQ[GP],c=e.card;
+    $("#g-comp").textContent=COMP[e.comp].name;
+    $("#g-count").textContent="Card "+(GP+1)+" of "+GQ.length;
+    $("#g-q").textContent=c.q;$("#g-post").innerHTML="";$("#g-opts").innerHTML="";
+    var opts=$("#g-opts");
+    var order=shuffle(c.options.map(function(o,i){return {t:o,correct:i===c.correctIndex};}));
+    var answered=false;
+    order.forEach(function(o){
+      var b=document.createElement("button");b.className="opt";b.type="button";b.textContent=o.t;
+      b.onclick=function(){
+        if(answered)return;answered=true;
+        if(!o.correct)S.flags[e.comp]=1; else if(S.flags[e.comp]) {/*keep flag if previously flagged? no, this run decides*/}
+        GQ[GP].ok=o.correct;
+        $$(".opt",opts).forEach(function(btn,ix){btn.setAttribute("disabled","");if(order[ix].correct)btn.classList.add("correct");});
+        if(!o.correct)b.classList.add("wrong");
+        $("#g-post").innerHTML='<div class="explain"><h4>'+(o.correct?"Correct":"Flagged for your cram")+'</h4><p style="margin:0">'+esc(c.explanation||("Answer: "+(c.a||"")))+'</p></div>'+
+          '<div class="row" style="margin-top:14px"><button type="button" class="btn" id="gnx">'+(GP+1>=GQ.length?"See my flags":"Next")+'</button></div>';
+        $("#gnx").focus();$("#gnx").onclick=function(){GP++;renderGap();};
+      };
+      opts.appendChild(b);
+    });
+  }
+  function finishGap(){
+    // rebuild flags from this run
+    S.flags={};GQ.forEach(function(e){if(e.ok===false)S.flags[e.comp]=1;});save();
+    var flagged=Object.keys(S.flags);
+    var missed=GQ.filter(function(e){return e.ok===false;}).length;
+    setNav("gap");
+    $("#v-gap").innerHTML='<div class="card"><h2>'+(flagged.length?flagged.length+" gaps flagged":"No gaps this round")+'</h2>'+
+      '<p class="muted">You missed '+missed+' of '+GQ.length+' fresh cards. These are now the center of your cram.</p>'+
+      '<div style="margin-top:8px">'+(flagged.length?flagged.map(function(id){return '<div class="wk-row"><span class="wk-name">'+esc(COMP[id].name)+'</span><span class="pill gap">flagged</span></div>';}).join(""):'<p class="muted">Every fresh card came back. Keep it spaced over the weekend.</p>')+'</div>'+
+      '<div class="row" style="margin-top:16px"><button type="button" class="btn gold" id="to-cram">Build my cram from these</button><button type="button" class="btn ghost" id="gap-again">Run it again</button></div></div>';
+    $("#to-cram").onclick=renderCram;$("#gap-again").onclick=startGap;
+    show("gap");
+  }
+
+  // ================= CRAM (combine gap flags + weekly weak spots) =================
+  function cramTargets(){
+    // union of gap flags and daily weak competencies (accuracy < 0.7 with attempts)
+    var set={};
+    Object.keys(S.flags).forEach(function(id){if(S.flags[id])set[id]={id:id,why:"gap"};});
+    M.competencies.forEach(function(k){var a=acc(k.id);if(a!=null&&a<0.7){if(set[k.id])set[k.id].why="both";else set[k.id]={id:k.id,why:"weak"};}});
+    return Object.keys(set).map(function(id){return set[id];});
+  }
+  function renderCram(){
+    setNav("cram");
+    var targets=cramTargets();
+    var N=S.cramDays||3;
+    var daysToExam=null; // could compute; keep chooser
+    var chips=[2,3,4,5,6,7].map(function(d){return '<button class="daychip" data-days="'+d+'" aria-pressed="'+(d===N?"true":"false")+'">'+d+'</button>';}).join(" ");
+    var body;
+    if(!targets.length){
+      body='<p class="muted">Nothing flagged yet. Run the Friday gap finder, and your daily card misses also land here. Once there are flags, this builds your day-by-day cram.</p>';
+    } else {
+      // distribute across N-1 repair days + 1 simulate day
+      var work=Math.max(1,N-1), buckets=[];for(var i=0;i<work;i++)buckets.push([]);
+      targets.forEach(function(t,ix){buckets[ix%work].push(t);});
+      var cards='';
+      for(var d=1;d<=N;d++){
+        if(d<N){
+          var items=buckets[d-1]||[];
+          cards+='<div class="card" style="margin-bottom:12px"><div class="eyebrow" style="margin:0 0 4px">Day '+d+' · Repair</div>'+
+            '<p class="muted" style="margin:0 0 8px">'+(items.length?items.map(function(t){return esc(COMP[t.id].name)+(t.why==="gap"?' <span class="pill gap">gap</span>':t.why==="both"?' <span class="pill gap">gap+weak</span>':' <span class="pill due">weak</span>');}).join(", "):"nothing here")+'</p>'+
+            '<button type="button" class="btn terra small" data-cram="'+d+'">Drill Day '+d+'</button></div>';
+        } else {
+          cards+='<div class="card" style="margin-bottom:12px"><div class="eyebrow" style="margin:0 0 4px">Day '+d+' · Simulate</div>'+
+            '<p class="muted" style="margin:0 0 8px">Rapid pass over everything you flagged, recognition then produce-it, under time pressure.</p>'+
+            '<button type="button" class="btn small" data-cram="all">Drill everything</button></div>';
+        }
+      }
+      body='<p class="muted" style="margin:0 0 10px">'+targets.length+' topics need work: your gap-finder flags plus what the week left shaky. Pick how many days you have.</p>'+
+        '<div class="row" style="margin-bottom:14px">'+chips+'</div>'+cards;
+      window.__cramBuckets=buckets;window.__cramN=N;
+    }
+    $("#v-cram").innerHTML='<div class="card"><h2>Your cram</h2>'+body+'</div>';
+    $$("#v-cram [data-days]").forEach(function(b){b.onclick=function(){S.cramDays=+b.getAttribute("data-days");save();renderCram();};});
+    $$("#v-cram [data-cram]").forEach(function(b){b.onclick=function(){
+      var v=b.getAttribute("data-cram");
+      var list = v==="all"? cramTargets() : (window.__cramBuckets[(+v)-1]||[]);
+      startCramDrill(list.map(function(t){return t.id;}));
+    };});
+    show("cram");
+  }
+  var CQ=[],CP=0;
+  function startCramDrill(compIds){
+    CQ=[];
+    compIds.forEach(function(id){
+      var k=COMP[id];if(!k)return;
+      // recognition (study MC) then produce (recall) for each flagged competency
+      k.study.forEach(function(g){var c=CARD[g];if(c&&c.options)CQ.push({comp:id,card:c,mode:"mc"});});
+      k.study.forEach(function(g){var c=CARD[g];if(c&&!c.options)CQ.push({comp:id,card:c,mode:"recall"});});
+    });
+    CP=0;if(!CQ.length){renderCram();return;}
+    show("cramq");renderCram2();
+  }
+  function renderCram2(){
+    if(CP>=CQ.length){show("cram");renderCram();return;}
+    $("#c-prog").style.width=Math.round(CP/CQ.length*100)+"%";
+    var e=CQ[CP],c=e.card;
+    $("#c-comp").textContent=COMP[e.comp].name;
+    $("#c-count").textContent=(e.mode==="mc"?"Recognize ":"Produce ")+(CP+1)+" of "+CQ.length;
+    $("#c-q").textContent=c.q;$("#c-post").innerHTML="";$("#c-opts").innerHTML="";$("#c-how").classList.add("hidden");
+    if(e.mode==="mc"){mcRender(c,"#c-opts","#c-post",e.comp,function(){CP++;renderCram2();});}
+    else{recallRender(c,"#c-post","#c-how",e.comp,function(){CP++;renderCram2();});}
+  }
+  $("#c-quit").onclick=function(){show("cram");renderCram();};
+
+  // ================= WEAK SPOTS =================
+  function renderWeak(){
+    setNav("weak");
+    var rows=M.competencies.map(function(k){
+      var a=acc(k.id);var flagged=!!S.flags[k.id];
+      return {name:k.name,day:k.day,a:a,flagged:flagged};
+    }).filter(function(r){return r.a!=null||r.flagged;});
+    rows.sort(function(x,y){var ax=x.a==null?1:x.a,ay=y.a==null?1:y.a;return ax-ay;});
+    function color(p){return p>=85?"var(--ok)":p>=60?"var(--warn)":"var(--bad)";}
+    var html;
+    if(!rows.length){html='<p class="muted">No data yet. Do today’s cards or a gap finder, and your weak spots show up here.</p>';}
+    else{html=rows.map(function(r){
+      var pct=r.a==null?null:Math.round(r.a*100);
+      return '<div class="wk-row"><span class="wk-name">'+esc(r.name)+' <span class="muted" style="font-weight:400">('+DAYNAME[r.day]+')</span></span>'+
+        (pct==null?'<span class="bar"><span style="width:0"></span></span>':'<span class="bar"><span style="width:'+pct+'%;background:'+color(pct)+'"></span></span>')+
+        (pct==null?'<span class="pct muted">-</span>':'<span class="pct">'+pct+'%</span>')+
+        (r.flagged?'<span class="pill gap">flag</span>':'')+'</div>';
+    }).join("");}
+    $("#v-weak").innerHTML='<div class="card"><h2>Weak spots</h2>'+
+      '<p class="muted" style="margin:0 0 10px">Everything you have touched, weakest first. Flags are Friday gap-finder misses. Your cram already targets these.</p>'+html+
+      '<div class="row" style="margin-top:16px"><button type="button" class="btn gold" id="w-cram">Take these to my cram</button><button type="button" class="btn ghost small" id="w-reset">Reset my data</button></div></div>';
+    $("#w-cram").onclick=renderCram;
+    $("#w-reset").onclick=function(){if(confirm("Clear all your progress on this device?")){S=fresh();save();renderHome();}};
+    show("weak");
+  }
+
+  // ---- nav ----
+  $$("#nav button").forEach(function(b){b.onclick=function(){var n=b.getAttribute("data-nav");if(n==="home")renderHome();else if(n==="gap")renderGapIntro();else if(n==="cram")renderCram();else renderWeak();};});
+
+  renderHome();
+})();
+</script>
+<script>
+(function(){function send(){try{var h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);parent.postMessage({type:"mcas-embed-height",id:"mastery-os-loop",height:h},"*");}catch(e){}}
+window.addEventListener("load",send);window.addEventListener("resize",send);if(window.ResizeObserver){try{new ResizeObserver(send).observe(document.body);}catch(e){}}setTimeout(send,400);})();
+</script>
+</body>
+</html>
