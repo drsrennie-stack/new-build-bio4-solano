@@ -2043,8 +2043,8 @@ function openGapByTopic(){
   var byWeek={};all.forEach(function(x){var w=x.c.week||x.u.week||0;(byWeek[w]=byWeek[w]||[]).push(x.c);});
   var weeks=Object.keys(byWeek).map(Number).sort(function(a,b){return a-b;});
   gSet('Gap Check by Topic','Check the topics your exam covers');
-  function chk(c,on){return '<label style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;cursor:pointer;font-size:13.5px"><input type="checkbox" class="topic-chk" data-cid="'+esc(c.id)+'"'+(on?' checked':'')+' style="margin-top:3px"><span>'+esc(c.name)+'</span></label>';}
-  var groups=weeks.map(function(w){var on=cover.indexOf(w)>-1;var items=byWeek[w].map(function(c){return chk(c,on);}).join('');return '<details'+(on?' open':'')+' style="border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0"><summary style="font-weight:700;cursor:pointer">Week '+w+' <span style="color:var(--ink-soft);font-weight:400">('+byWeek[w].length+')</span></summary>'+items+'</details>';}).join('');
+  function chk(c,on,w){return '<label style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;cursor:pointer;font-size:13.5px"><input type="checkbox" class="topic-chk" data-cid="'+esc(c.id)+'" data-wk="'+w+'"'+(on?' checked':'')+' style="margin-top:3px"><span>'+esc(c.name)+'</span></label>';}
+  var groups=weeks.map(function(w){var on=cover.indexOf(w)>-1;var items=byWeek[w].map(function(c){return chk(c,on,w);}).join('');return '<details'+(on?' open':'')+' style="border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0"><summary style="font-weight:700;cursor:pointer">Week '+w+' <span style="color:var(--ink-soft);font-weight:400">('+byWeek[w].length+')</span></summary><div style="margin:6px 0 2px"><button type="button" class="btn" data-weekall="'+w+'" style="padding:5px 11px;font-size:12.5px;margin:0 6px 6px 0">Select all in Week '+w+'</button><button type="button" class="btn" data-weekclear="'+w+'" style="padding:5px 11px;font-size:12.5px;background:#fff;color:#0B1530;margin:0 0 6px">Clear week</button></div>'+items+'</details>';}).join('');
   gBody('<p style="font-size:13px;color:var(--ink-soft);margin:0 0 10px">Pick the topics on your exam, then run the gap finder. This is by topic, not by week, so it works no matter how your term is laid out.</p>'+
     '<div class="g-actions" style="margin-bottom:8px"><button class="btn" id="tgMid">Midterm (Weeks 1 to 4)</button><button class="btn" id="tgAll">Select all</button><button class="btn" id="tgNone">Clear</button></div>'+
     groups+
@@ -2052,9 +2052,11 @@ function openGapByTopic(){
     '<div class="g-actions"><button class="btn gold big" id="tgRun">Run Gap Finder</button><button class="btn" data-gameclose>Cancel</button></div>');
   function upd(){var n=$$('.topic-chk:checked').length;var el=$('#tgCount');if(el)el.textContent=n+' topic'+(n===1?'':'s')+' selected';}
   $$('.topic-chk').forEach(function(cb){cb.onchange=upd;});
-  $('#tgMid').onclick=function(){$$('.topic-chk').forEach(function(cb){var c=findComp(cb.getAttribute('data-cid'));cb.checked=!!(c&&[1,2,3,4].indexOf(c.c.week)>-1);});upd();};
+  $('#tgMid').onclick=function(){$$('.topic-chk').forEach(function(cb){var wk=+cb.getAttribute('data-wk');cb.checked=[1,2,3,4].indexOf(wk)>-1;});upd();};
   $('#tgAll').onclick=function(){$$('.topic-chk').forEach(function(cb){cb.checked=true;});upd();};
   $('#tgNone').onclick=function(){$$('.topic-chk').forEach(function(cb){cb.checked=false;});upd();};
+  $$('[data-weekall]').forEach(function(b){b.onclick=function(){var w=b.getAttribute('data-weekall');$$('.topic-chk[data-wk="'+w+'"]').forEach(function(cb){cb.checked=true;});upd();};});
+  $$('[data-weekclear]').forEach(function(b){b.onclick=function(){var w=b.getAttribute('data-weekclear');$$('.topic-chk[data-wk="'+w+'"]').forEach(function(cb){cb.checked=false;});upd();};});
   $('#tgRun').onclick=function(){var ids=$$('.topic-chk:checked').map(function(cb){return cb.getAttribute('data-cid');});if(!ids.length){toast('Pick at least one topic.');return;}var chosen=[];all.forEach(function(x){if(ids.indexOf(x.c.id)>-1)chosen.push(x.c);});CRAM={exam:exam,comps:chosen,gap:{},mode:'exam',key:'topic:'+Date.now(),counted:true,label:'Selected topics ('+chosen.length+')',weeks:[]};startGapFinder();};
   upd();
 }
