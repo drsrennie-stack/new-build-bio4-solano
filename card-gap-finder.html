@@ -224,6 +224,7 @@
   var LASTR=null, SAVED_THIS=false;
   var SAVE_KEY="bio004-gapfinder-v1", PROGRESS_KEY="bio004-progress";
   var SEEN={};
+  var MODE=(location.hash&&location.hash.indexOf("review")>-1)?"review":"gap";
   $("#start").onclick=function(){
     var ids=selectedIds(); if(!ids.length) return;
     QUEUE=[]; SCORE={}; SAVED_THIS=false; SEEN={};
@@ -344,7 +345,7 @@
   }
   function finishQuiz(){
     var R=computeResults(); renderResults(R);
-    if(!SAVED_THIS){ saveResults(R); feedWeakness(R); SAVED_THIS=true; }
+    if(!SAVED_THIS){ if(MODE!=="review")saveResults(R); feedWeakness(R); SAVED_THIS=true; }
   }
 
   // ---- Drill (fix) : MC recognition + free-recall production for the gap topics ----
@@ -409,6 +410,7 @@
     function wireNext(){var n=$("#d-next");n.focus();n.onclick=function(){DPOS++;renderD();};}
   }
   (function initResume(){
+    if(MODE==="review")return;
     var sv=loadSaved(); if(!sv||!sv.R) return;
     var when=""; try{ when=new Date(sv.ts).toLocaleDateString(); }catch(e){}
     var host=$("#view-scope"); if(!host) return;
@@ -419,6 +421,14 @@
     host.parentNode.insertBefore(c, host);
     $("#resume-see").onclick=function(){ renderResults(sv.R); if(c.parentNode)c.parentNode.removeChild(c); };
     $("#resume-new").onclick=function(){ if(c.parentNode)c.parentNode.removeChild(c); };
+  })();
+  (function initMode(){
+    if(MODE!=="review")return;
+    var h=document.querySelector("h1"); if(h)h.textContent="Topic Review";
+    var lead=document.querySelector(".lead"); if(lead)lead.textContent="Pick a topic and work all its cards. Flag anything you are guessing, and whatever you miss lands in your weak spots to bring back.";
+    var sb=$("#start"); if(sb)sb.textContent="Start the review";
+    LEN="full"; var lf=$("#len-full"),lq=$("#len-quick"); if(lf&&lq){lf.setAttribute("aria-pressed","true");lq.setAttribute("aria-pressed","false");}
+    refreshCount();
   })();
 })();
 </script>

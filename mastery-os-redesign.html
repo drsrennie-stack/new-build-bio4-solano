@@ -1100,6 +1100,7 @@ function renderPlan(){
     '<button class="btn ghost big" data-midcram style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">Mid-Module Gap Check</button>'+
     '<button class="btn ghost big" data-cram style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">3-Day Exam Cram</button>'+
     '<button class="btn ghost big" data-gaptopic style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">Gap Finder (cards)</button>'+
+    '<button class="btn ghost big" data-topicreview style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">Review a topic</button>'+
   '</div>'+
   '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">'+
     '<button class="btn" data-pomosetup style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.25)">⏱ Pomodoro setup</button>'+
@@ -2261,13 +2262,14 @@ function renderAll(){
 ========================================================= */
 var lastFocus=null;
 document.addEventListener('click',function(e){
-  var t=e.target.closest('[data-session],[data-prove],[data-tool],[data-toolblank],[data-selfev],[data-logev],[data-logafter],[data-stage],[data-unit],[data-prompt],[data-scroll],[data-sclose],[data-game],[data-exercise],[data-gameclose],[data-drawscore],[data-mmscore],[data-opengrades],[data-gradedel],[data-cram],[data-gaptopic],[data-midcram],[data-midstart],[data-weakjump],[data-pomosetup],[data-baseline],[data-cramday],[data-setdays],[data-cramallpomo],[data-gapstart],[data-cramskip],[data-cramretest],[data-daydone]');
+  var t=e.target.closest('[data-session],[data-prove],[data-tool],[data-toolblank],[data-selfev],[data-logev],[data-logafter],[data-stage],[data-unit],[data-prompt],[data-scroll],[data-sclose],[data-game],[data-exercise],[data-gameclose],[data-drawscore],[data-mmscore],[data-opengrades],[data-gradedel],[data-cram],[data-gaptopic],[data-topicreview],[data-midcram],[data-midstart],[data-weakjump],[data-pomosetup],[data-baseline],[data-cramday],[data-setdays],[data-cramallpomo],[data-gapstart],[data-cramskip],[data-cramretest],[data-daydone]');
   if(!t)return;
   if(t.hasAttribute('data-game')){openGame(t.getAttribute('data-game'));return;}
   if(t.hasAttribute('data-exercise')){openGame(t.getAttribute('data-exercise'));return;}
   if(t.hasAttribute('data-toolblank')){window.open(t.getAttribute('data-toolblank'),'_blank','noopener');return;}
   if(t.hasAttribute('data-cram')){openCram();return;}
   if(t.hasAttribute('data-gaptopic')){openTool('card-gap-finder.html');return;}
+  if(t.hasAttribute('data-topicreview')){openTool('card-gap-finder.html#review');return;}
   if(t.hasAttribute('data-setdays')){if(CRAM){CRAM.nDays=+t.getAttribute('data-setdays');renderCramPlan(CRAM.fromGap);}return;}
   if(t.hasAttribute('data-midcram')){openMidCram();return;}
   if(t.hasAttribute('data-pomosetup')){openSessionChooser('today');return;}
