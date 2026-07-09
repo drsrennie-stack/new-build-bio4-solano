@@ -108,6 +108,7 @@
     <div class="card">
       <div class="q-meta"><span id="q-topic"></span><span id="q-count"></span></div>
       <p class="q-text" id="q-text"></p>
+      <label class="row" style="margin:0 0 12px;cursor:pointer"><input type="checkbox" id="q-guess" style="width:17px;height:17px"> <span class="muted">I don't really know this, I'm just guessing</span></label>
       <div class="opts" id="q-opts" role="group" aria-label="Answer choices"></div>
       <div id="q-post"></div>
     </div>
@@ -222,9 +223,10 @@
   var QUEUE=[], QPOS=0, SCORE={};   // SCORE[topicId] = {title, correct, total}
   var LASTR=null, SAVED_THIS=false;
   var SAVE_KEY="bio004-gapfinder-v1", PROGRESS_KEY="bio004-progress";
+  var SEEN={};
   $("#start").onclick=function(){
     var ids=selectedIds(); if(!ids.length) return;
-    QUEUE=[]; SCORE={}; SAVED_THIS=false;
+    QUEUE=[]; SCORE={}; SAVED_THIS=false; SEEN={};
     ids.forEach(function(id){
       var tp=TOPICS[id]; if(!tp||!tp.mc.length) return;
       SCORE[id]={title:tp.title, correct:0, total:0};
@@ -241,10 +243,12 @@
     if(QPOS>=QUEUE.length){finishQuiz();return;}
     $("#prog-bar").style.width = Math.round(QPOS/QUEUE.length*100)+"%";
     var e=QUEUE[QPOS], c=e.card;
+    SEEN[e.topicId+"|"+c.id]=true;
     $("#q-topic").textContent=e.topicTitle;
     $("#q-count").textContent="Card "+(QPOS+1)+" of "+QUEUE.length;
     $("#q-text").textContent=c.q;
     $("#q-post").innerHTML="";
+    var gq=$("#q-guess"); if(gq){gq.checked=false;gq.disabled=false;}
     var opts=$("#q-opts"); opts.innerHTML="";
     var order=shuffle(c.options.map(function(o,i){return {t:o,correct:i===c.correctIndex};}));
     var answered=false;
@@ -253,16 +257,20 @@
       b.className="opt"; b.type="button"; b.textContent=o.t;
       b.onclick=function(){
         if(answered)return; answered=true;
+        var guessing = !!($("#q-guess") && $("#q-guess").checked);
+        if($("#q-guess"))$("#q-guess").disabled=true;
         SCORE[e.topicId].total++;
-        if(o.correct){SCORE[e.topicId].correct++;}
+        var credited = o.correct && !guessing;
+        if(credited){SCORE[e.topicId].correct++;}
         Array.prototype.forEach.call(opts.children,function(btn){
           btn.setAttribute("disabled","");
           var isC = order[Array.prototype.indexOf.call(opts.children,btn)].correct;
           if(isC)btn.classList.add("correct");
         });
         if(!o.correct)b.classList.add("wrong");
-        var verdict=o.correct?"Correct":"Not quite";
-        $("#q-post").innerHTML='<div class="explain"><h4>'+verdict+'</h4><p style="margin:0">'+esc(c.explanation||("Answer: "+(c.a||"")))+'</p></div>'+
+        var verdict = credited ? "Correct" : (o.correct && guessing ? "Lucky guess, flagged" : "Not quite");
+        var gnote = (o.correct && guessing) ? '<p style="margin:8px 0 0;color:var(--terra);font-weight:700">You flagged this a guess, so it stays in your gaps and we keep drilling it.</p>' : '';
+        $("#q-post").innerHTML='<div class="explain"><h4>'+verdict+'</h4><p style="margin:0">'+esc(c.explanation||("Answer: "+(c.a||"")))+'</p>'+gnote+'</div>'+
           '<div class="row" style="margin-top:14px"><button type="button" class="btn" id="q-next">'+(QPOS+1>=QUEUE.length?"See my gaps":"Next card")+'</button></div>';
         $("#q-next").focus();
         $("#q-next").onclick=function(){QPOS++;renderQ();};
@@ -349,9 +357,17 @@
     DQ=[];
     ids.forEach(function(id){
       var tp=TOPICS[id]; if(!tp)return;
-      // recognition first (MC), then production (free-recall) for the same topic
-      tp.cards.filter(function(c){return c.options;}).forEach(function(c){DQ.push({topicTitle:tp.title,card:c,mode:"mc"});});
-      tp.cards.filter(function(c){return !c.options;}).forEach(function(c){DQ.push({topicTitle:tp.title,card:c,mode:"recall"});});
+      function isSeen(c){return !!SEEN[id+"|"+c.id];}
+      // fresh angles first: cards they did NOT just see lead, then the ones they saw
+      function order(arr){ return shuffle(arr.filter(function(c){return !isSeen(c);})).concat(shuffle(arr.filter(isSeen))); }
+      var mc=order(tp.cards.filter(function(c){return c.options;}));
+      var rec=order(tp.cards.filter(function(c){return !c.options;}));
+      // interleave recognition and produce-it so it re-teaches the idea, not the card
+      var n=Math.max(mc.length,rec.length);
+      for(var i=0;i<n;i++){
+        if(i<mc.length)DQ.push({topicTitle:tp.title,card:mc[i],mode:"mc"});
+        if(i<rec.length)DQ.push({topicTitle:tp.title,card:rec[i],mode:"recall"});
+      }
     });
     DPOS=0; if(!DQ.length)return; show("drill"); renderD();
   }
