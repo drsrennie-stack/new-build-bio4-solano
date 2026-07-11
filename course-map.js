@@ -144,15 +144,15 @@
       "alimentary": {
         title: "Alimentary Canal",
         notes:  [{ label: "Notes", url: HUB + "BIO004-Week5-Notes.pdf#page=3" }],
-        videos: [{ label: "Concept videos", url: HUB + "alimentary-concept-videos.html" }],
-        slides: [{ label: "HTML", url: HUB + "slides-gi-alimentary-canal.html" }],
+        videos: [{ label: "Concept videos", url: HUB + "gi-concept-videos.html" }],
+        slides: [{ label: "HTML", url: HUB + "slides-gi-anatomy.html" }],
         recall: RECALL
       },
       "accessory-digestive": {
         title: "Accessory Digestive Organs",
         notes:  [{ label: "Notes", url: HUB + "BIO004-Week5-Notes.pdf#page=7" }],
-        videos: [{ label: "Concept videos", url: HUB + "accessory-digestive-concept-videos.html" }],
-        slides: [{ label: "HTML", url: HUB + "slides-gi-accessory-structures.html" }],
+        videos: [{ label: "Concept videos", url: HUB + "gi-concept-videos.html" }],
+        slides: [{ label: "HTML", url: HUB + "slides-gi-anatomy.html" }],
         recall: RECALL
       },
       "urinary": {
