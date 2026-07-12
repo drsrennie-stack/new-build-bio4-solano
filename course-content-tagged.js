@@ -10647,7 +10647,8 @@ window.BIO004_COURSE_CONTENT = {
      "id": "t-endocrine",
      "title": "Endocrine Anatomy",
      "summary": "The endocrine glands and their locations in the body.",
-     "lecturePageUrl": "endocrine.html",
+     "lecturePageUrl": "slides-endocrine.html",
+     "videoUrl": "endocrine-concept-videos.html",
      "cards": [
       {
        "id": "c1",
@@ -21035,7 +21036,8 @@ window.BIO004_COURSE_CONTENT = {
      "id": "t-alimentary-canal",
      "title": "The Alimentary Canal",
      "summary": "The organs of the alimentary canal and the layers of the GI tract wall.",
-     "lecturePageUrl": "alimentary-canal.html",
+     "lecturePageUrl": "slides-gi-anatomy.html",
+     "videoUrl": "gi-concept-videos.html",
      "cards": [
       {
        "id": "c1",
@@ -21673,7 +21675,8 @@ window.BIO004_COURSE_CONTENT = {
      "id": "t-accessory-digestive-organs",
      "title": "Accessory Organs of Digestion",
      "summary": "The accessory digestive organs: teeth, salivary glands, liver, gallbladder, and pancreas.",
-     "lecturePageUrl": "accessory-digestive-organs.html",
+     "lecturePageUrl": "slides-gi-anatomy.html",
+     "videoUrl": "gi-concept-videos.html",
      "cards": [
       {
        "id": "c1",
@@ -22311,7 +22314,8 @@ window.BIO004_COURSE_CONTENT = {
      "id": "t-urinary-system",
      "title": "The Urinary System",
      "summary": "The kidneys, nephron structure, the ureters, the bladder, and the urethra.",
-     "lecturePageUrl": "urinary-system.html",
+     "lecturePageUrl": "slides-renal-anatomy.html",
+     "videoUrl": "urinary-concept-videos.html",
      "cards": [
       {
        "id": "c1",
@@ -22949,7 +22953,8 @@ window.BIO004_COURSE_CONTENT = {
      "id": "t-reproductive-male",
      "title": "The Male Reproductive System",
      "summary": "The structures of the male reproductive system and the duct system.",
-     "lecturePageUrl": "reproductive-male.html",
+     "lecturePageUrl": "slides-reproductive-systems.html",
+     "videoUrl": "reproductive-concept-videos.html",
      "cards": [
       {
        "id": "c1",
@@ -23587,7 +23592,8 @@ window.BIO004_COURSE_CONTENT = {
      "id": "t-reproductive-female",
      "title": "The Female Reproductive System",
      "summary": "The structures of the female reproductive system and the external genitalia.",
-     "lecturePageUrl": "reproductive-female.html",
+     "lecturePageUrl": "slides-reproductive-systems.html",
+     "videoUrl": "reproductive-concept-videos.html",
      "cards": [
       {
        "id": "c1",
