@@ -152,6 +152,8 @@ button{font-family:inherit;cursor:pointer}
 .reveal-btn:hover{background:var(--navy);color:#fff}
 .reveal-body{display:none;margin-top:14px;background:var(--white);border:1px solid var(--line-soft);border-radius:var(--r);padding:16px 18px;box-shadow:0 14px 30px -12px rgba(11,21,48,.32),0 2px 6px rgba(11,21,48,.09)}
 .reveal-body.open{display:block;animation:fade .25s var(--ease)}
+.reveal-locked{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;color:var(--ink-soft);background:var(--offwhite);border:1px dashed var(--line);border-radius:var(--r);padding:12px 14px;line-height:1.5}
+.reveal-locked b{color:var(--navy)}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .reveal-body .rv-t{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ok);margin-bottom:7px}
 .reveal-body p{font-size:15px;line-height:1.65;color:var(--ink)}
@@ -737,7 +739,7 @@ function renderIntro(){
       <h3>How each station works</h3>
       <div class="howlist">
         <div class="howrow"><span class="hi">1️⃣</span><div>One <b>step</b> shows at a time — a drawing action or a direct question. Draw and answer it on your map first.</div></div>
-        <div class="howrow"><span class="hi">👁️</span><div>Hit <b>Reveal answer</b> only after you've committed an answer to your map, to check and fix your labels.</div></div>
+        <div class="howrow"><span class="hi">👁️</span><div><b>Answers stay locked while you build</b> — use your notes, lectures, textbook &amp; research. When every station is complete, <b>reveals unlock</b> so you can double-check your map and use it for recall.</div></div>
         <div class="howrow"><span class="hi">➡️</span><div><b>Next step</b> advances; the dots at the top track your place inside the station.</div></div>
         <div class="howrow"><span class="hi">✅</span><div><b>Mark station complete</b> on the last step — the sidebar shows how far you've come.</div></div>
       </div>
@@ -765,8 +767,11 @@ function renderStation(s,idx){
   const dots=steps.map((_,j)=>`<i class="${j<i?'done':(j===i?'on':'')}"></i>`).join('');
   const useChip=st.use?`<div class="uselegend">🎨 ${st.use}</div>`:'';
   const askBlock=st.ask?`<div class="ask"><div class="ask-t">❓ Answer on your map, then label it</div><p>${st.ask}</p></div>`:'';
-  const revealBtn=st.reveal?`<button class="reveal-btn" onclick="toggleReveal('${rkey}')">${isRev?'👁️ Hide answer':'👁️ Reveal answer'}</button>`:'';
-  const revealBody=st.reveal?`<div class="reveal-body ${isRev?'open':''}"><div class="rv-t">Expert answer — check &amp; fix your map</div><p>${st.reveal}</p></div>`:'';
+  const revealsUnlocked=allDone();
+  const revealBtn=st.reveal?(revealsUnlocked
+      ? `<button class="reveal-btn" onclick="toggleReveal('${rkey}')">${isRev?'👁️ Hide answer':'👁️ Reveal answer'}</button>`
+      : `<div class="reveal-locked">🔒 <span>Answers unlock once your <b>whole map is complete</b>. For now, build it from your notes, lectures, textbook &amp; research — then reveal to double-check your work and for recall.</span></div>`):'';
+  const revealBody=(st.reveal&&revealsUnlocked)?`<div class="reveal-body ${isRev?'open':''}"><div class="rv-t">Expert answer — check &amp; fix your map</div><p>${st.reveal}</p></div>`:'';
 
   const body = st.k==='checkpoint'
     ? `<div class="kind-eye"><span class="ke-ic ${km.cls}">${km.ic}</span><span class="ke-t">${km.t}</span><span class="ke-c">Step ${i+1} of ${n}</span></div>
