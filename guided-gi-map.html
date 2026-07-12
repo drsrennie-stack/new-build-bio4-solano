@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guided GI Map · Interactive Construction Lab</title>
+<meta name="theme-color" content="#0B1530">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1530; --card-navy:#1C2E4F; --near-black:#060A18;
+  --rust:#8B3A2E; --rust-hover:#A0452F; --terra:#C2734D; --terra-dark:#A0522D; --clay:#CE8166;
+  --gold:#C9A14A; --gold-light:#D9B065; --cream:#F5F1E8;
+  --white:#FFFFFF; --offwhite:#FAFAF9; --slate:#8C90A0;
+  --ink:#0B1530; --ink-soft:rgba(11,21,48,0.74); --ink-faint:rgba(11,21,48,0.52);
+  --line:rgba(11,21,48,0.12); --line-soft:rgba(11,21,48,0.07);
+  --ok:#3F7A5B; --warn:#B4772E; --bad:#8B3A2E;
+  --shadow:0 1px 3px rgba(11,21,48,0.08);
+  --lift:0 14px 34px -16px rgba(11,21,48,0.30);
+  --disp:'Plus Jakarta Sans',system-ui,sans-serif;
+  --serif:'Plus Jakarta Sans',system-ui,sans-serif;
+  --mono:'Plus Jakarta Sans',system-ui,sans-serif;
+  --r-sm:6px; --r:10px; --r-lg:16px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:linear-gradient(180deg,#0e1b35 0%,#0b1530 55%,#070c1a 100%);background-attachment:fixed;color:var(--cream);font-family:var(--disp);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+h1,h2,h3,h4{letter-spacing:-0.02em;color:var(--navy);line-height:1.15;margin:0}
+p{margin:0}
+button{font-family:inherit;cursor:pointer}
+.eyebrow{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--terra-dark)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:var(--r-sm)}
+
+/* header */
+.site-header{position:sticky;top:0;z-index:30;background:rgba(6,10,24,.74);backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid rgba(255,255,255,.10)}
+.hbar{max-width:1160px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:14px}
+.logo{display:inline-flex;align-items:center;gap:12px}
+.logo svg{height:40px;flex:none}
+.logo .lt{font-size:20px;font-weight:800;color:#fff;letter-spacing:-.02em;line-height:1}
+.logo .lt .ac{color:var(--gold-light)}
+.logo .ls{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(245,241,232,.62);display:block;margin-top:3px}
+.spacer{flex:1}
+.hbadge{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cream);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);padding:6px 12px;border-radius:999px}
+.icbtn{height:40px;padding:0 14px;border-radius:var(--r);border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:var(--cream);display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:13px;transition:.18s}
+.icbtn:hover{border-color:rgba(255,255,255,.5);transform:translateY(-1px)}
+.icbtn svg{width:16px;height:16px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1.5px solid var(--line);background:var(--white);color:var(--navy);font-weight:700;font-size:15px;padding:11px 18px;border-radius:var(--r);transition:transform .18s var(--ease),box-shadow .18s var(--ease),border-color .18s,background .18s}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--lift);border-color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;border-color:var(--line)}
+.btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn.primary:hover{background:var(--near-black);border-color:var(--near-black)}
+.btn.gold{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.btn.gold:hover{background:var(--gold-light);border-color:var(--gold-light)}
+.btn.rust{background:var(--rust);color:#fff;border-color:var(--rust)}
+.btn.rust:hover{background:var(--rust-hover);border-color:var(--rust-hover)}
+.btn.ghost{background:transparent}
+.btn.big{font-size:16px;padding:14px 24px}
+
+/* overall progress panel */
+.wrap{max-width:1160px;margin:0 auto;padding:20px 22px 70px}
+.plan{background:transparent;border:1px solid rgba(255,255,255,.14);color:var(--cream);border-radius:var(--r-lg);padding:22px 24px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 1px 0 rgba(255,255,255,.03);margin-bottom:20px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.plan .peyebrow{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-light);margin:0 0 5px}
+.plan h1{color:#fff;font-size:clamp(19px,3vw,24px);font-weight:800;margin:0 0 4px}
+.plan .psub{font-family:var(--serif);color:var(--cream);opacity:.85;margin:0;font-size:14px;max-width:56ch}
+.plan .pgrow{flex:1;min-width:220px}
+.plan-metric{text-align:center;min-width:120px}
+.plan-metric .num{font-size:40px;font-weight:800;color:#fff;line-height:1}
+.plan-metric .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-light);margin-top:4px}
+.otrack{height:10px;border-radius:99px;background:rgba(255,255,255,.14);overflow:hidden;margin-top:14px}
+.otrack > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--terra),var(--gold));transition:width .4s var(--ease);border-radius:99px}
+
+/* layout */
+.layout{display:grid;grid-template-columns:290px 1fr;gap:20px;align-items:start}
+@media(max-width:880px){.layout{grid-template-columns:1fr}}
+
+/* rail */
+.rail{background:var(--white);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:10px;box-shadow:0 22px 50px -26px rgba(11,21,48,.40),0 4px 12px -6px rgba(11,21,48,.12);position:sticky;top:74px;max-height:calc(100vh-90px);overflow:auto}
+@media(max-width:880px){.rail{position:static;max-height:none}}
+.rail .ptitle{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--terra-dark);padding:13px 10px 6px}
+.rail-item{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:none;background:transparent;padding:9px 10px;border-radius:var(--r);font-size:14px;color:var(--ink);transition:.14s}
+.rail-item:hover{background:var(--cream)}
+.rail-item.active{background:var(--white);font-weight:700;color:var(--navy);box-shadow:0 8px 18px -8px rgba(11,21,48,.34),0 1px 3px rgba(11,21,48,.10)}
+.rail-item .num{width:26px;height:26px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;background:var(--offwhite);border:1.5px solid var(--line);color:var(--ink-soft)}
+.rail-item.active .num{background:var(--navy);color:#fff;border-color:var(--navy)}
+.rail-item.done .num{background:var(--ok);color:#fff;border-color:var(--ok)}
+.rail-item .lbl{flex:1;line-height:1.25}
+.rail-item .tick{opacity:0;color:var(--ok);font-weight:800}
+.rail-item.done .tick{opacity:1}
+.rail-item.locked{opacity:.55;cursor:not-allowed}
+.rail-item.locked:hover{background:transparent}
+.rail-item.locked .num{background:var(--offwhite);color:var(--ink-faint);border-style:dashed}
+.rail-item .lock{margin-left:auto;font-size:13px;opacity:.7}
+.modenote{margin-top:13px;display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--gold-light);background:transparent;border:none;padding:6px 0}
+.modenote.review{color:#7fcfa8;background:transparent;border:none}
+.modes{display:inline-flex;flex-wrap:wrap;gap:4px;margin-top:14px;background:transparent;border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:4px}
+.modes button{border:none;background:transparent;color:var(--cream);font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:8px 14px;border-radius:999px;cursor:pointer;transition:.15s}
+.modes button:hover{background:rgba(255,255,255,.08)}
+.modes button[aria-pressed="true"]{background:var(--gold);color:var(--navy)}
+.physnote{margin-top:12px;background:rgba(201,161,74,.15);border:1px solid rgba(201,161,74,.42);color:#f3e6c8;border-radius:var(--r);padding:11px 15px;font-size:12.5px;line-height:1.55;max-width:70ch}
+.physnote b{color:#fff}
+/* save / QR panel */
+.savepanel{display:flex;gap:20px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;background:var(--offwhite);margin-top:4px}
+.savepanel .qrbox{width:132px;height:132px;flex:none;background:#fff;border:1px solid var(--line);border-radius:10px;display:grid;place-items:center;padding:6px}
+.savepanel .qrbox img,.savepanel .qrbox canvas{display:block;width:100%;height:100%}
+.savepanel .qrtext{flex:1;min-width:220px;font-size:14px;color:var(--ink-soft)}
+.savepanel .qrtext b{color:var(--navy)}
+.savepanel .qrlink{font-family:var(--mono);font-size:12px;color:var(--terra-dark);word-break:break-all;margin-top:6px}
+
+/* stage / step card */
+.stage{min-height:460px}
+.card{background:var(--white);color:var(--ink);border:1px solid var(--line-soft);border-radius:var(--r-lg);box-shadow:0 26px 60px -24px rgba(11,21,48,.42),0 6px 16px -8px rgba(11,21,48,.14);overflow:hidden}
+.card-head{padding:20px 26px 18px;background:#0b1530;color:#fff}
+.card-head .chd-eye{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-light);margin:0 0 6px}
+.card-head h2{color:#fff;font-size:clamp(20px,3vw,25px);font-weight:800}
+.card-head .region{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-light);background:transparent;border:1px solid rgba(255,255,255,.24);padding:4px 11px;border-radius:999px;margin-top:10px}
+.card-head .chd-intro{font-family:var(--serif);color:var(--cream);opacity:.9;font-size:14.5px;margin-top:12px;max-width:64ch;line-height:1.6}
+
+/* step dots */
+.stepdots{display:flex;gap:6px;padding:14px 26px 0;flex-wrap:wrap}
+.stepdots i{height:6px;flex:1;min-width:14px;border-radius:99px;background:var(--line-soft);transition:.2s}
+.stepdots i.on{background:var(--gold)}
+.stepdots i.done{background:var(--navy)}
+
+.card-body{padding:18px 26px 6px;min-height:230px}
+.kind-eye{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.kind-eye .ke-ic{width:34px;height:34px;flex:none;border-radius:9px;display:grid;place-items:center;font-size:17px}
+.ke-draw{background:#f6ecd9;color:var(--warn)}
+.ke-label{background:#e3edea;color:var(--ok)}
+.ke-cell{background:#f6e4e0;color:var(--rust)}
+.ke-function{background:#e9e2f2;color:#5b46a8}
+.ke-physio{background:#dceee9;color:#0b5e5a}
+.ke-checkpoint{background:var(--cream);color:var(--terra-dark)}
+.kind-eye .ke-t{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.kind-eye .ke-c{margin-left:auto;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ink-faint)}
+
+.do-line{font-size:18px;font-weight:700;color:var(--navy);line-height:1.4;margin-bottom:14px}
+.do-line .em{color:var(--rust)}
+.uselegend{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--terra-dark);background:var(--cream);border:1px solid var(--line);padding:5px 11px;border-radius:999px;margin-bottom:16px}
+
+/* ask / direct question — lifted card, no side accent */
+.ask{background:var(--white);border:1px solid var(--line-soft);border-radius:var(--r);padding:16px 18px;margin:2px 0 16px;box-shadow:0 12px 26px -12px rgba(11,21,48,.30),0 2px 5px rgba(11,21,48,.08)}
+.ask .ask-t{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-dark);margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.ask p{font-size:16px;line-height:1.6;color:var(--ink);font-weight:500}
+
+/* reveal */
+.reveal-btn{display:inline-flex;align-items:center;gap:9px;background:var(--white);border:1.5px solid var(--navy);color:var(--navy);font-weight:700;font-size:14px;padding:10px 16px;border-radius:var(--r);transition:.15s}
+.reveal-btn:hover{background:var(--navy);color:#fff}
+.reveal-body{display:none;margin-top:14px;background:var(--white);border:1px solid var(--line-soft);border-radius:var(--r);padding:16px 18px;box-shadow:0 14px 30px -12px rgba(11,21,48,.32),0 2px 6px rgba(11,21,48,.09)}
+.reveal-body.open{display:block;animation:fade .25s var(--ease)}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.reveal-body .rv-t{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ok);margin-bottom:7px}
+.reveal-body p{font-size:15px;line-height:1.65;color:var(--ink)}
+.reveal-body b{color:var(--navy)}
+.reveal-body .pill{display:inline-block;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:#e3edea;color:var(--ok);margin-right:5px}
+
+/* checkpoint step — lifted warm near-white card */
+.cp-box{background:#fffaf5;border:1px solid var(--line-soft);border-radius:var(--r);padding:17px 19px;box-shadow:0 14px 30px -12px rgba(139,58,46,.28),0 2px 6px rgba(11,21,48,.08)}
+.cp-box .cp-t{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--rust);margin-bottom:8px}
+.cp-box p{font-size:15.5px;line-height:1.6;color:var(--ink)}
+
+/* footer nav */
+.card-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:16px 26px 20px;border-top:1px solid var(--line-soft);background:var(--offwhite)}
+.foot-left{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.donebox{display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:14px;background:#fff;border:2px solid var(--ok);color:var(--ok);padding:9px 15px;border-radius:var(--r);cursor:pointer}
+.donebox.on{background:var(--ok);color:#fff}
+.donebox input{width:17px;height:17px;accent-color:var(--ok)}
+
+/* intro screen */
+.welcome-body{padding:24px 26px}
+.welcome-body h3{color:var(--navy);font-size:16px;margin:20px 0 10px;font-family:var(--disp);font-weight:800}
+.welcome-body h3:first-child{margin-top:0}
+.kit{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.kit{grid-template-columns:1fr}}
+.kit .k{border:1px solid var(--line);border-radius:var(--r);padding:13px 15px;background:var(--offwhite);font-size:14px}
+.kit .k b{display:block;color:var(--navy);margin-bottom:2px}
+.howlist{display:grid;gap:9px}
+.howrow{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line-soft);border-radius:var(--r);padding:12px 14px;background:var(--white);font-size:14px}
+.howrow .hi{width:30px;height:30px;flex:none;border-radius:8px;display:grid;place-items:center;font-size:15px;background:var(--cream)}
+.howrow b{color:var(--navy)}
+.routewrap{font-family:var(--serif);color:var(--ink-soft);font-size:15px;line-height:1.7}
+
+#toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);background:var(--navy);color:#fff;padding:13px 20px;border-radius:var(--r);font-weight:700;font-size:14px;box-shadow:var(--lift);opacity:0;pointer-events:none;transition:.3s var(--ease);z-index:90}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.foot-note{font-family:var(--serif);color:rgba(245,241,232,.6);font-size:13px;text-align:center;margin-top:22px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="hbar">
+    <span class="logo">
+      <svg viewBox="0 0 44 44" aria-hidden="true">
+        <rect x="2" y="2" width="40" height="40" rx="12" fill="#0B1530"/>
+        <path d="M15 8 v4 c0 5 10 4 10 10 c0 5 -7 4 -7 9" fill="none" stroke="#C9A14A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M18 31 c-6 .4 -7.5 6.4 0 6.6 c5.4 .2 5 -4.2 .3 -4" fill="none" stroke="#C2734D" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="15" cy="8" r="2.1" fill="#8B3A2E"/>
+      </svg>
+      <span><span class="lt">Guided <span class="ac">GI</span> Map</span><span class="ls">Interactive Construction Lab</span></span>
+    </span>
+    <span class="spacer"></span>
+    <span class="hbadge">Majors A&amp;P</span>
+    <button class="icbtn" id="printBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>Print</button>
+    <button class="icbtn" id="resetBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Reset</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="plan">
+    <div class="pgrow">
+      <p class="peyebrow">Guided Construction · Majors A&amp;P</p>
+      <h1>Build the GI Tract — one focused step at a time</h1>
+      <p class="psub">You draw the map by hand. The lab reveals a single instruction at a time so you can focus, answer, then check yourself.</p>
+      <div class="otrack"><span id="overallFill"></span></div>
+      <div class="modes" id="modeToggle" role="group" aria-label="Content mode">
+        <button data-m="anat" aria-pressed="true">Anatomy &amp; Histology</button>
+        <button data-m="both" aria-pressed="false">Combined</button>
+        <button data-m="phys" aria-pressed="false">Physiology</button>
+      </div>
+      <div class="physnote" id="physNote" hidden>You can't map physiology without the anatomy — hormones and feedback loops sit on top of the structures. If you haven't already built this as an anatomy map, switch to <b>Combined</b> first. (Already did the anatomy version? Physiology mode adds just the feedback-map layer to your saved map.)</div>
+      <div class="modenote" id="modeNote"></div>
+    </div>
+    <div class="plan-metric">
+      <div class="num" id="pctText">0%</div>
+      <div class="lbl" id="countText">0 / 0 stations</div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="rail" id="rail"></nav>
+    <main class="stage" id="stage"></main>
+  </div>
+
+  <p class="foot-note">A construction activity — you build the map; the lab coaches. Physiology (hormone feedback loops &amp; secretion control) layers onto this same map in a later unit.</p>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* ===== Set this to wherever you host/link this lab (Canvas page, Google Drive, course site) ===== */
+const LAB_URL = "https://www.medmasterscollaborative.com/gi-map";
+function fillQR(){
+  const box=document.getElementById('qrbox'), link=document.getElementById('qrlink');
+  if(link) link.textContent=LAB_URL;
+  if(box){ box.innerHTML=''; try{ if(window.QRCode) new QRCode(box,{text:LAB_URL,width:120,height:120,colorDark:'#0B1530',colorLight:'#ffffff'}); }catch(e){} }
+}
+</script>
+<script>
+/* =========================================================================
+   GI MAP LAB — micro-step curriculum
+   step kinds: draw | label | cell | function | checkpoint
+   fields: k, do, ask (direct question to answer & label), reveal, use (legend hint)
+   ========================================================================= */
+const PARTS = [
+  { title:"Start Here", stations:[ { id:"intro", isIntro:true } ] },
+
+  { title:"Set Up · Do This First", stations:[
+    {
+      id:"legend", name:"Set Up Your Map & Legend", region:"Set up · build your key first",
+      intro:"Before a single organ, build a legend. A consistent color + symbol key is what turns scattered labels into a readable map — and it's what lets you review fast later. Everything you invent here you reuse on every station.",
+      steps:[
+        { k:"draw", do:"In a top corner of your sheet or whiteboard, draw a boxed area titled <span class='em'>LEGEND</span> with room for about 8 entries. Leave the rest of the surface open for your map." },
+        { k:"draw", do:"Pick how you'll lay out the map.",
+          ask:"Will you draw one continuous GI tract, or a sequence of connected boxes (one structure per box, with a gross view + a zoom-in)? Sketch a light plan of your layout before you start.",
+          reveal:"Either works — just keep the structures in the correct <b>sequence</b>. Option A: one connected tract with zoom-in bubbles for histology. Option B: a flow of boxes, each holding the macro view + a micro/histology zoom, linked by arrows. Be creative; it doesn't have to look like a textbook." },
+        { k:"label", do:"<b>Layer colors.</b> In your legend, write these four labels on separate lines and give each its own color: <b>Mucosa</b>, <b>Submucosa</b>, <b>Muscularis externa</b>, <b>Serosa/Adventitia</b>. (Suggested: maroon, amber, teal, purple.)",
+          reveal:"Use these SAME four colors on every organ so the layers are instantly recognizable. You'll color every wall cross-section with this key." },
+        { k:"cell", do:"<b>Special cells.</b> Add this line to your legend: draw a <b>★</b> and write <b>= special / named cell</b> next to it.",
+          reveal:"You'll star parietal, chief, goblet, Paneth, Kupffer, and acinar cells — and write each cell's product right beside its star." },
+        { k:"label", do:"<b>Secretes.</b> Add this line: <b>&rarr; = &lsquo;secretes&rsquo;</b>.",
+          reveal:"Example on your map: Parietal cell &rarr; HCl. This keeps every cell's product visible instead of buried in your notes." },
+        { k:"label", do:"<b>Sphincters.</b> Add this line: <b>✕ = sphincter</b> (a small gate symbol works too).",
+          reveal:"You'll place these at the lower esophageal sphincter, pylorus, sphincter of Oddi, ileocecal valve, and anus." },
+        { k:"label", do:"<b>Exceptions.</b> Add this line: <b>▲ = exception to the four-tunic wall plan</b>.",
+          reveal:"You'll flag things like the esophagus's adventitia, the stomach's third muscle layer, and the teniae coli — all over Part 2." },
+        { k:"label", do:"<b>Blood colors.</b> Add three lines, one color each: <b>red = oxygen-rich (arterial) blood</b>, <b>blue = oxygen-poor (venous) blood</b>, and a third color for <b>hepatic portal blood</b> (e.g., purple).",
+          reveal:"The hepatic portal vein is the special case — it carries oxygen-poor but NUTRIENT-rich blood from the gut straight to the liver. You'll trace these at the small intestine and liver." },
+        { k:"label", do:"<b>Bile &amp; lymph.</b> Add two more lines: <b>green = bile</b> and <b>yellow = lymph / lacteals</b>.",
+          reveal:"Bile runs liver &rarr; gallbladder &rarr; duodenum; lymph/lacteals carry absorbed fat out of the villi." },
+        { k:"checkpoint", do:"Legend check.",
+          reveal:"Your legend should now hold: <b>4 tunic colors</b> · ★ special cell · &rarr; secretes · ✕ sphincter · ▲ exception · <b>arterial / venous / portal blood colors</b> · bile · lymph. Box it and keep it visible — every station tells you which key to use." },
+        { k:"physio", layer:"P", do:"Add physiology symbols to your legend (for the feedback maps).",
+          ask:"What symbols will you use for a hormone traveling in the blood, for &lsquo;stimulates&rsquo; (⊕), and for &lsquo;inhibits&rsquo; (⊖)? Add them.",
+          reveal:"Suggested: a <b>dashed arrow = hormone via blood</b>, <b>⊕ = stimulates</b>, <b>⊖ = inhibits</b>. Every feedback map you draw shows four things: what turns a secretion <b>ON (⊕)</b>, its <b>target tissue</b>, its <b>effect</b>, and what turns it <b>OFF (⊖)</b>." }
+      ]
+    }
+  ]},
+
+  { title:"Part 1 · Alimentary Canal (Primary Organs)", stations:[
+    {
+      id:"mouth", name:"Oral Cavity, Tongue & Teeth", region:"Foregut · digestion begins",
+      intro:"Where it all starts. Build the entry chamber, then the tongue and teeth that begin mechanical breakdown.",
+      steps:[
+        { k:"draw", do:"Draw the oral cavity: the <span class='em'>hard palate</span> (roof, front), the <span class='em'>soft palate + uvula</span> (back), and the <span class='em'>vestibule</span> (space between lips/cheeks and teeth)." },
+        { k:"draw", do:"Add the <span class='em'>tongue</span> on the floor of the mouth and anchor it with the <span class='em'>lingual frenulum</span> below." },
+        { k:"label", use:"Use your Mucosa color", do:"Label the lining epithelium.",
+          ask:"What type of epithelium lines the mouth — and where is it keratinized versus non-keratinized? Label it on your map.",
+          reveal:"<b>Stratified squamous</b>; <b>keratinized</b> on the gingiva &amp; hard palate for abrasion protection, non-keratinized elsewhere (flexible &amp; moist)." },
+        { k:"draw", do:"Draw an arch of teeth. On one tooth, label crown, neck, root, enamel, dentin, and pulp cavity.",
+          ask:"On your tooth, which structure is the hardest outer layer, which forms the bulk, and which holds the nerves and vessels? Label enamel, dentin, and pulp.",
+          reveal:"<b>Enamel</b> (hardest, from ameloblasts) &gt; <b>dentin</b> (from odontoblasts) &gt; <b>pulp</b> (nerves/vessels). Cementum + periodontal ligament anchor the root." },
+        { k:"cell", do:"On the tongue, draw the four papilla types.",
+          ask:"Which papilla type has NO taste buds, and which three carry them? Label each papilla on your tongue.",
+          reveal:"<span class='pill'>Tongue</span> <b>Filiform</b> = no taste buds. Taste buds sit in <b>fungiform, circumvallate, and foliate</b> papillae. A taste bud = gustatory (receptor) cells + supporting cells + basal (stem) cells." },
+        { k:"function", do:"Note what digestion happens here.",
+          ask:"What is the term for chewing, and which salivary enzyme starts which type of digestion? Note both by the mouth.",
+          reveal:"Chewing = <b>mastication</b> (mechanical &mdash; increases surface area). <b>Salivary amylase</b> begins starch digestion and lingual lipase begins fat; lysozyme &amp; IgA protect." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"Find the boundary where keratinized meets non-keratinized stratified squamous. Arrow-label each side — this &lsquo;tough vs. flexible&rsquo; logic returns at the anal canal." }
+      ]
+    },
+    {
+      id:"pharynx", name:"Pharynx", region:"Foregut · shared air/food path",
+      intro:"The muscular funnel shared by air and food — the last stop under voluntary control.",
+      steps:[
+        { k:"draw", do:"Draw the pharynx as a funnel behind the mouth. Stack its three regions top&rarr;bottom: <span class='em'>nasopharynx, oropharynx, laryngopharynx</span>." },
+        { k:"draw", do:"Show the bolus path (oropharynx &rarr; laryngopharynx &rarr; esophagus) and draw the <span class='em'>epiglottis</span> flipping down over the larynx during a swallow." },
+        { k:"label", use:"Use your Mucosa color", do:"Label the epithelium of the food regions.",
+          ask:"What epithelium lines the oropharynx and laryngopharynx, and how does the nasopharynx differ? Label each region.",
+          reveal:"Oropharynx/laryngopharynx = <b>non-keratinized stratified squamous</b> (food abrasion); nasopharynx = <b>pseudostratified ciliated columnar</b> (respiratory &mdash; air only)." },
+        { k:"label", use:"Use your Muscularis color", do:"Label the muscle layer.",
+          ask:"What muscle type builds the pharynx wall, and is swallowing here voluntary or involuntary? Label it.",
+          reveal:"<b>Skeletal muscle</b> (pharyngeal constrictors); swallowing = <b>deglutition</b>, voluntary/reflexive here." },
+        { k:"cell", do:"Mark the tonsils (palatine, pharyngeal/adenoid, lingual).",
+          reveal:"<b>Lymphoid tissue</b> guarding the entrance &mdash; immune surveillance." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"Circle the exact point where respiratory epithelium (nasopharynx) hands off to protective squamous (oropharynx) &mdash; the &lsquo;air &rarr; food&rsquo; switch." }
+      ]
+    },
+    {
+      id:"esophagus", name:"Esophagus", region:"Foregut · transport only",
+      intro:"A collapsible muscular tube — pure transport, and the first big exception to the wall plan.",
+      steps:[
+        { k:"draw", do:"Draw the esophagus from the laryngopharynx, through the diaphragm, to the stomach. Mark the <span class='em'>upper esophageal sphincter</span> (top) and <span class='em'>lower esophageal (cardiac) sphincter</span> at the stomach.", use:"Use your ✕ sphincter symbol" },
+        { k:"label", use:"Use your Mucosa color", do:"Label the lining.",
+          ask:"What epithelium lines the esophagus, and what does it protect against? Label it on your map.",
+          reveal:"<b>Non-keratinized stratified squamous</b>; resists abrasion from swallowed food. It switches abruptly to simple columnar at the stomach (the Z-line)." },
+        { k:"label", use:"Use your Submucosa color", do:"Add glands in the submucosa.",
+          reveal:"<b>Esophageal glands proper</b> secrete mucus to lubricate the bolus." },
+        { k:"label", use:"Use your Muscularis color", do:"Divide the tube into thirds and label each third's muscle type.",
+          ask:"What muscle type is found in each third of the esophagus — upper, middle, and lower? Label all three.",
+          reveal:"<b>Skeletal (upper 1/3) &rarr; mixed (middle) &rarr; smooth (lower 1/3)</b>. Voluntary at the top, involuntary below." },
+        { k:"label", use:"Flag it ▲", do:"Label the outer coat — and flag the exception.",
+          ask:"What is the esophagus's outer coat called, and why isn't it a serosa? Label and flag it.",
+          reveal:"▲ <b>Adventitia</b> (fibrous CT anchoring it) &mdash; because most of the esophagus lies above the diaphragm/in the thorax. This is the first big exception to the four-tunic rule." },
+        { k:"function", do:"Note its job.",
+          ask:"The esophagus does no digestion — what is its single job, and by what mechanism? Note it.",
+          reveal:"It <b>transports</b> the bolus via <b>peristalsis</b>; the sphincters block acid reflux and air entry." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"Star the outer layer and label it &lsquo;adventitia (no serosa here).&rsquo; You'll formalize this exception in Part 2." },
+        { k:"physio", layer:"P", do:"Map the control of swallowing (deglutition).",
+          ask:"What starts a swallow, what takes over involuntarily, and what happens at the lower esophageal sphincter?",
+          reveal:"<b>ON:</b> the voluntary buccal phase pushes the bolus back &rarr; the <b>swallowing center (medulla)</b> triggers the involuntary pharyngeal-esophageal phase. <b>Effect:</b> peristalsis sweeps the bolus down; the <b>LES relaxes</b> to admit it, then closes to block reflux." }
+      ]
+    },
+    {
+      id:"stomach", name:"Stomach", region:"Foregut · mixing & acid",
+      intro:"The muscular mixing bag — the richest station for special cells. Take your time in the gastric gland.",
+      steps:[
+        { k:"draw", do:"Draw the J-shaped stomach. Label its four regions: <span class='em'>cardia, fundus, body, pylorus</span>, and the <span class='em'>pyloric sphincter</span> at the exit.", use:"Use your ✕ sphincter symbol" },
+        { k:"draw", do:"Draw the internal <span class='em'>rugae</span> (folds). Then zoom in: a <span class='em'>gastric pit</span> leading into a <span class='em'>gastric gland</span>, with room to label the cells." },
+        { k:"label", use:"Use your Mucosa color", do:"Label the surface lining.",
+          ask:"What epithelium lines the stomach, and which cells cover its entire surface? Label them.",
+          reveal:"<b>Simple columnar</b>; <b>surface mucous cells</b> coat it entirely with an alkaline mucus + bicarbonate barrier so the stomach doesn't digest itself." },
+        { k:"cell", use:"★ + secretes arrow", do:"Label the acid-making cell.",
+          ask:"Which cell secretes HCl and intrinsic factor? Label it — and its two products — on your gland.",
+          reveal:"<span class='pill'>Gastric gland</span> <b>Parietal (oxyntic) cell &rarr; HCl</b> (activates pepsin, kills microbes) <b>+ intrinsic factor</b> (required for vitamin B12 absorption in the ileum)." },
+        { k:"cell", use:"★ + secretes arrow", do:"Label the enzyme-making cell.",
+          ask:"Which cell secretes pepsinogen and gastric lipase? Label it and its products.",
+          reveal:"<b>Chief (zymogenic) cell &rarr; pepsinogen</b> (&rarr; pepsin in acid) <b>+ gastric lipase</b>." },
+        { k:"cell", use:"★ + secretes arrow", do:"Label the hormone cells.",
+          ask:"Which hormone does each enteroendocrine cell release — the G cell, the ECL cell, and the D cell? Label them on your gland.",
+          reveal:"<b>G cell &rarr; gastrin</b> (&uarr;acid), <b>ECL &rarr; histamine</b> (&uarr;acid), <b>D cell &rarr; somatostatin</b> (brakes acid). These are your feedback hooks for the physiology unit." },
+        { k:"label", use:"Use your Muscularis color · Flag it ▲", do:"Label the muscle layers.",
+          ask:"How many muscle layers does the stomach's muscularis externa have, what extra layer does it add, and why? Label the layers and flag the exception.",
+          reveal:"▲ <b>THREE layers</b> (adds an inner <b>oblique</b> layer) for powerful churning. The outer coat is a true <b>serosa</b>." },
+        { k:"function", do:"Note the output.",
+          ask:"What does the stomach turn food into, and which type of digestion begins here? Note both.",
+          reveal:"It churns food + gastric juice into <b>chyme</b> and begins <b>protein</b> digestion (pepsin). Very little absorption (some water, alcohol, aspirin); it meters release through the pyloric sphincter." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"Draw a leader line from your parietal cell to a note: &lsquo;intrinsic factor &rarr; B12 absorbed in ileum.&rsquo; Leave the arrow pointing toward the ileum &mdash; you'll finish it there." },
+        { k:"physio", layer:"P", do:"Map the three phases of gastric secretion as a timeline.",
+          ask:"What triggers the cephalic, gastric, and intestinal phases — and which phase drives the most secretion?",
+          reveal:"<b>Cephalic:</b> sight/smell/thought of food &rarr; vagus &rarr; ⊕ secretion. <b>Gastric:</b> stomach stretch + peptides + rising pH &rarr; gastrin &rarr; the MOST secretion. <b>Intestinal:</b> chyme entering the duodenum briefly ⊕, then ⊖ to protect the duodenum." },
+        { k:"physio", layer:"P", do:"Draw a feedback map for stomach acid (parietal cell).",
+          ask:"Which three signals turn the parietal cell ON, what is the effect, and what turns it OFF?",
+          reveal:"<b>ON (⊕):</b> <b>ACh</b> (vagus), <b>gastrin</b> (G cells), and <b>histamine</b> (ECL cells) all converge on the parietal cell. <b>Effect:</b> ↑ HCl. <b>OFF (⊖):</b> low pH &rarr; <b>somatostatin</b> (D cells) inhibits gastrin; in the duodenum, <b>secretin &amp; CCK</b> plus the <b>enterogastric reflex</b> slow acid and emptying. (This is why antihistamines / PPIs cut acid.)" }
+      ]
+    },
+    {
+      id:"small", name:"Small Intestine (Duodenum · Jejunum · Ileum)", region:"Midgut · absorption engine",
+      intro:"The longest organ and the main site of digestion and absorption. Everything here maximizes surface area.",
+      steps:[
+        { k:"draw", do:"Draw the three regions in order: <span class='em'>duodenum</span> (C-shape), <span class='em'>jejunum</span>, <span class='em'>ileum</span>. Mark the <span class='em'>ileocecal valve</span> where the ileum meets the large intestine.", use:"Use your ✕ sphincter symbol" },
+        { k:"draw", do:"Draw the three nested surface-area amplifiers.",
+          ask:"Name the three surface-area amplifiers from largest to smallest, and draw each nested inside the last.",
+          reveal:"<b>Circular folds (plicae circulares) &rarr; villi &rarr; microvilli (brush border)</b>. Together ≈ 600&times; surface area." },
+        { k:"draw", do:"Inside one villus draw a central <span class='em'>lacteal</span> (lymphatic) and a blood capillary network; draw a <span class='em'>crypt of Lieberkühn</span> dipping between villi.", use:"Use your blood + lymph flow colors" },
+        { k:"label", use:"Use your Mucosa color", do:"Label the lining and its two main cells.",
+          ask:"What epithelium lines the small intestine, which cell absorbs nutrients, and which cell adds mucus? Label all three.",
+          reveal:"<b>Simple columnar</b>; <b>enterocytes</b> carry brush-border enzymes (lactase, maltase, sucrase, peptidases); <b>goblet cells</b> add mucus (increasing toward the ileum)." },
+        { k:"cell", use:"★ special cells", do:"Label the crypt-base cells.",
+          ask:"Which crypt-base cell is antimicrobial, and which one renews the lining? Label both.",
+          reveal:"<b>Paneth cells</b> (secrete lysozyme &amp; defensins &mdash; protect the crypt) and <b>intestinal stem cells</b> (renew the epithelium every 3&ndash;6 days)." },
+        { k:"label", do:"Add each region's signature feature.",
+          ask:"What unique structure marks the duodenum, and what marks the ileum? Label each region's signature feature.",
+          reveal:"<span class='pill'>Duodenum</span> <b>Brunner's glands</b> (submucosa) &rarr; alkaline mucus. <span class='pill'>Ileum</span> <b>Peyer's patches</b> (MALT) with M cells." },
+        { k:"label", do:"Mark where bile + pancreatic juice enter.",
+          reveal:"In the duodenum: the <b>hepatopancreatic ampulla</b>, guarded by the <b>sphincter of Oddi</b>." },
+        { k:"function", use:"Use your blood + lymph flow colors", do:"Note what's absorbed and where it goes.",
+          ask:"What two processes peak in the small intestine, where do absorbed nutrients drain, and where do fats go instead? Note the routes with your flow colors.",
+          reveal:"<b>Chemical digestion completes</b> and <b>most absorption</b> occurs; nutrients &rarr; <b>hepatic portal vein</b> &rarr; liver; fats &rarr; <b>lacteals</b> &rarr; lymph. The ileum absorbs B12 (with intrinsic factor) and reabsorbs bile salts." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"Finish the stomach's arrow: connect &lsquo;intrinsic factor&rsquo; to a spot in the ileum labeled &lsquo;B12 absorbed here,&rsquo; and label the ileocecal valve handoff to the large intestine." },
+        { k:"physio", layer:"P", do:"Draw a feedback map for secretin.",
+          ask:"What releases secretin, what tissue does it target, and what is the effect?",
+          reveal:"<b>ON:</b> <b>acidic chyme</b> in the duodenum. <b>Target:</b> pancreatic duct cells (and the liver). <b>Effect:</b> ↑ <b>bicarbonate</b> to neutralize the acid; also ⊖ gastric acid. <b>OFF:</b> pH normalizes." },
+        { k:"physio", layer:"P", do:"Draw a feedback map for CCK.",
+          ask:"What releases CCK, what are its target tissues, and what does it do to each?",
+          reveal:"<b>ON:</b> <b>fat &amp; protein</b> in the duodenum. <b>Targets/effects:</b> gallbladder → contracts; pancreas (acinar cells) → release <b>enzymes</b>; sphincter of Oddi → relaxes; stomach → <b>slows emptying</b>. <b>OFF:</b> nutrients absorbed." }
+      ]
+    },
+    {
+      id:"large", name:"Large Intestine (Cecum → Colon → Rectum → Anal Canal)", region:"Hindgut · water & storage",
+      intro:"The finishing stretch: reclaim water, compact waste, house the microbiome. Note what it does NOT have.",
+      steps:[
+        { k:"draw", do:"Frame the small intestine: <span class='em'>cecum</span> (+ appendix) &rarr; ascending &rarr; transverse &rarr; descending &rarr; sigmoid colon &rarr; <span class='em'>rectum</span> &rarr; <span class='em'>anal canal</span>." },
+        { k:"draw", do:"Draw the three <span class='em'>teniae coli</span> (longitudinal muscle bands) puckering the wall into <span class='em'>haustra</span>; add <span class='em'>epiploic appendages</span> (fat tags).", use:"Flag teniae coli ▲" },
+        { k:"label", use:"Use your Mucosa color", do:"Label the epithelium and its switch at the exit.",
+          ask:"What epithelium lines most of the large intestine, what does it switch to at the anal canal, and why? Label both.",
+          reveal:"<b>Simple columnar</b> for most of it; then <b>stratified squamous</b> at the anal canal (abrasion at the exit &mdash; just like the mouth)." },
+        { k:"label", do:"Note the key absences and the dominant cell.",
+          ask:"Which two absorptive structures (present in the small intestine) are ABSENT here, and which cell type is abundant instead? Note all three.",
+          reveal:"No <b>villi</b>, no <b>circular folds</b>; abundant <b>goblet cells</b> (mucus eases the drying feces). Absorptive cells here = <b>colonocytes</b>." },
+        { k:"label", use:"Use your ✕ sphincter symbol", do:"Draw the two anal sphincters.",
+          ask:"What are the two anal sphincters, and which is voluntary versus involuntary? Label both.",
+          reveal:"<b>Internal anal sphincter</b> = smooth muscle (involuntary); <b>external anal sphincter</b> = skeletal muscle (voluntary)." },
+        { k:"cell", do:"Mark abundant lymphoid tissue in the cecum/appendix.",
+          reveal:"<b>MALT</b> &mdash; immune surveillance of the gut microbiome." },
+        { k:"function", do:"Note its jobs.",
+          ask:"What does the large intestine absorb, what does it house, and what does it form and eliminate? Note its jobs.",
+          reveal:"Absorbs <b>water &amp; electrolytes</b>; houses <b>gut microbiota</b> (make vitamin K &amp; some B vitamins); forms and eliminates <b>feces</b> (defecation reflex)." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"Label the anal-canal epithelial switch on both sides, then bracket it back to your mouth/esophagus note &mdash; the tube starts AND ends with abrasion-resistant squamous." },
+        { k:"physio", layer:"P", do:"Map the gastrocolic &amp; defecation reflexes.",
+          ask:"What triggers mass movements after a meal, and how does the defecation reflex work (voluntary vs. involuntary)?",
+          reveal:"<b>Gastrocolic reflex:</b> stomach filling &rarr; mass movements push feces into the rectum. <b>Defecation reflex:</b> rectal stretch &rarr; parasympathetic contraction + the <b>internal sphincter relaxes</b> (involuntary); the <b>external sphincter</b> is skeletal/voluntary — you choose the moment." }
+      ]
+    }
+  ]},
+
+  { title:"Part 2 · The Wall — Four Tunics", stations:[
+    {
+      id:"tunics", name:"The Master Wall Template: 4 Tunics", region:"Applies to the whole canal",
+      intro:"Now zoom into the wall itself. Every organ you drew is a variation on this ONE four-layer plan. Draw it once, master it, then flag the exceptions.",
+      steps:[
+        { k:"draw", do:"Draw a large cross-section of the gut tube: a thick ring of wall around a central <span class='em'>lumen</span>." },
+        { k:"label", do:"Divide the wall into four concentric layers, from the lumen outward.",
+          ask:"What are the four tunics, in order from the lumen outward? Label each band and color it with your legend.",
+          reveal:"<b>1 Mucosa · 2 Submucosa · 3 Muscularis externa · 4 Serosa/Adventitia.</b>" },
+        { k:"label", use:"Use your Mucosa color", do:"Split the innermost layer (mucosa) into its three sublayers.",
+          ask:"What are the three sublayers of the mucosa, from the lumen outward? Label each.",
+          reveal:"<b>Epithelium &rarr; lamina propria</b> (areolar CT with vessels &amp; MALT) <b>&rarr; muscularis mucosae</b> (thin smooth muscle). The mucosa's job: secretion, absorption, protection." },
+        { k:"label", use:"Use your Submucosa color", do:"Describe the submucosa.",
+          ask:"What tissue makes up the submucosa, and which nerve plexus lives inside it (controlling what)? Label it.",
+          reveal:"<b>Dense irregular CT</b>; contains the <b>submucosal (Meissner) plexus</b> &rarr; controls glandular secretion &amp; local blood flow." },
+        { k:"label", use:"Use your Muscularis color", do:"Draw and label the two muscle layers.",
+          ask:"What are the two muscle layers of the muscularis externa, and which plexus sits between them (driving what)? Label all three.",
+          reveal:"<b>Inner circular + outer longitudinal</b> (smooth muscle); the <b>myenteric (Auerbach) plexus</b> between them drives <b>peristalsis &amp; segmentation</b>." },
+        { k:"label", use:"Use your Serosa color", do:"Label the outer coat and its two forms.",
+          ask:"What is the outer coat called when the organ is intraperitoneal versus retroperitoneal/thoracic? Label it.",
+          reveal:"<b>Serosa</b> (visceral peritoneum, mesothelium) vs. <b>adventitia</b> (fibrous CT). Peritoneal extensions off the serosa: <b>mesentery, greater &amp; lesser omentum, mesocolon</b> — they carry vessels &amp; nerves." },
+        { k:"label", do:"Bracket the two nerve plexuses together.",
+          ask:"What do the submucosal and myenteric plexuses form together, and what does it do? Bracket and label them.",
+          reveal:"Together they form the <b>enteric nervous system</b> (the &lsquo;gut brain&rsquo;) — it runs gut reflexes semi-independently, the hook for autonomic/hormonal control later." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"Write the four tunic names as a numbered key (1&ndash;4) in the margin &mdash; you'll tag every organ's exceptions with these numbers next." },
+        { k:"physio", layer:"P", do:"Map how the gut wall controls itself: short vs. long reflexes.",
+          ask:"What is the difference between a short (local) reflex and a long (CNS) reflex, and which ANS branch speeds the gut up vs. slows it down?",
+          reveal:"<b>Short reflex:</b> stays entirely within the enteric NS (myenteric &amp; submucosal plexuses) — local motility &amp; secretion. <b>Long reflex:</b> involves the CNS/ANS. <b>Parasympathetic (vagus) ⊕</b> digestion; <b>sympathetic ⊖</b> it." }
+      ]
+    },
+    {
+      id:"mods", name:"How Each Organ Bends the Template", region:"Exceptions & specializations",
+      intro:"Same four tunics everywhere — but each organ modifies them for its job. Add exception flags onto the organs you already drew.",
+      steps:[
+        { k:"draw", do:"No new drawing here — return to your Part 1 organs and add exception flags. Use your <span class='em'>▲</span> symbol so they stand out for review." },
+        { k:"label", do:"Flag the epithelium swaps (tunic 1).",
+          ask:"Which epithelium type protects the mouth, pharynx, esophagus, and anal canal, and which type lines the stomach and intestines? Flag each organ.",
+          reveal:"<b>Stratified squamous</b> (abrasion) vs. <b>simple columnar</b> (secretion/absorption). Flag each organ's lining with its type." },
+        { k:"label", do:"Flag the muscle exceptions (tunic 3).",
+          ask:"What is the muscle exception in the esophagus, in the stomach, and in the large intestine? Flag each.",
+          reveal:"Esophagus: <b>skeletal &rarr; mixed &rarr; smooth</b>. Stomach: a third <b>oblique</b> layer. Large intestine: <b>teniae coli</b> (&rarr; haustra)." },
+        { k:"label", do:"Flag serosa vs. adventitia (tunic 4).",
+          ask:"Which outer coat marks the retroperitoneal/thoracic parts, and which marks the intraperitoneal parts? Flag each organ.",
+          reveal:"<b>Adventitia</b>: esophagus, most of the duodenum, ascending &amp; descending colon, rectum. <b>Serosa</b>: stomach, jejunum, ileum, transverse &amp; sigmoid colon." },
+        { k:"label", do:"Flag the surface-area difference.",
+          ask:"Which intestine has circular folds, villi, and microvilli, and which has none? Flag both.",
+          reveal:"<b>Small intestine</b> (maximum absorption) vs. <b>large intestine</b> (smooth mucosa, deep crypts, goblet cells)." },
+        { k:"label", do:"Flag the two organs with glands in the submucosa.",
+          ask:"Which two organs have glands sitting in the submucosa? Flag both.",
+          reveal:"<b>Esophageal glands</b> (esophagus) and <b>Brunner's glands</b> (duodenum)." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"Using your numbered tunic key, put the right number (1&ndash;4) on every exception flag from mouth to anus. When you can explain each flag aloud without the reveal, Part 2 is done." }
+      ]
+    }
+  ]},
+
+  { title:"Part 3 · Accessory Organs (Last)", stations:[
+    {
+      id:"salivary", name:"Salivary Glands", region:"Accessory · secretes into mouth",
+      intro:"Accessory organs sit outside the tube and pipe secretions in through ducts. Start with the three paired salivary glands.",
+      steps:[
+        { k:"draw", do:"Draw the three paired glands + their ducts into the mouth: <span class='em'>parotid</span> (front of ear), <span class='em'>submandibular</span> (under the jaw), <span class='em'>sublingual</span> (under the tongue)." },
+        { k:"draw", do:"Zoom into one gland: draw an <span class='em'>acinus</span> (cluster of secretory cells) draining into a duct." },
+        { k:"cell", use:"★ + secretes arrow", do:"Label the cell types.",
+          ask:"Which acinar cell makes amylase, which makes mucin, and which squeezes saliva into the duct? Label all three.",
+          reveal:"<b>Serous cells &rarr; salivary amylase</b>; <b>mucous cells &rarr; mucin</b>; <b>myoepithelial cells</b> contract to expel saliva." },
+        { k:"label", do:"Note each gland's composition.",
+          ask:"Is each gland mostly serous, mostly mucous, or mixed — parotid, sublingual, submandibular? Note each.",
+          reveal:"Parotid = <b>serous</b>; sublingual = <b>mucous</b>; submandibular = <b>mixed</b> (serous-dominant)." },
+        { k:"function", do:"Note saliva's job.",
+          ask:"Which type of digestion does saliva begin, and what else does saliva provide? Note saliva's roles.",
+          reveal:"Begins <b>starch</b> digestion (amylase); also provides <b>mucus</b> (bolus), <b>lysozyme &amp; IgA</b> (antimicrobial), and bicarbonate (buffer). ~1&ndash;1.5 L/day." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"Connect each salivary duct to the salivary opening you drew at the Oral Cavity station; label the parotid duct &lsquo;serous &rarr; amylase&rsquo; so the enzyme's origin is traceable on the map." },
+        { k:"physio", layer:"P", do:"Draw a mini feedback map for salivation.",
+          ask:"What turns salivation ON (and through which nerves), what is the target tissue, the effect, and what turns it OFF?",
+          reveal:"<b>ON (⊕):</b> sight/smell/taste/thought of food &rarr; <b>parasympathetic</b> input (salivatory nuclei, CN VII &amp; IX). <b>Target:</b> the salivary glands. <b>Effect:</b> ↑ watery, enzyme-rich saliva. <b>OFF (⊖):</b> sympathetic activation &amp; dehydration &rarr; scant, thick saliva." }
+      ]
+    },
+    {
+      id:"liver", name:"Liver", region:"Accessory · bile + metabolism",
+      intro:"The body's biggest gland and metabolic hub. Focus on the repeating lobule — the key histology unit.",
+      steps:[
+        { k:"draw", do:"Draw the liver under the diaphragm with its lobes; tuck the <span class='em'>gallbladder</span> underneath (detailed next)." },
+        { k:"draw", do:"Zoom into one hexagonal <span class='em'>lobule</span>.",
+          ask:"What sits at the center of a lobule, and what cells radiate outward from it? Label both.",
+          reveal:"A <b>central vein</b> at the core; plates of <b>hepatocytes</b> radiating out (they do nearly all liver jobs)." },
+        { k:"label", do:"At the hexagon corners, draw the portal triads.",
+          ask:"What three vessels make up a portal triad? Label them at a hexagon corner.",
+          reveal:"<b>Hepatic artery + hepatic portal vein + bile duct.</b>" },
+        { k:"label", use:"Use your blood + bile flow colors", do:"Draw sinusoids and bile canaliculi — and their opposite flows.",
+          ask:"Which direction does blood flow, and which direction does bile flow? Draw and label both arrows pointing opposite ways.",
+          reveal:"<b>Blood &rarr; central vein</b> (through sinusoids); <b>bile &rarr; bile duct</b> (through canaliculi). Opposite directions &mdash; the classic exam point." },
+        { k:"cell", use:"★ special cells", do:"Add the sinusoid macrophages.",
+          ask:"What are the resident macrophages lining the liver sinusoids called? Label them.",
+          reveal:"<b>Kupffer cells</b> &mdash; phagocytose debris and aged red blood cells." },
+        { k:"function", do:"Note the liver's outputs.",
+          ask:"What does the liver produce for digestion, which vein delivers nutrients to it, and what plasma proteins does it make? Note its outputs.",
+          reveal:"Makes <b>bile</b> (emulsifies fat); processes nutrients from the <b>hepatic portal vein</b>; synthesizes <b>plasma proteins</b> (albumin, clotting factors); plus detox and glycogen/vitamin storage." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"On your lobule, draw and clearly label the two opposing flows (blood IN to the central vein, bile OUT to the bile duct). This is the #1 tested liver-histology idea &mdash; make it unmistakable." },
+        { k:"physio", layer:"P", do:"Map the liver's role in blood glucose (fed vs. fasting).",
+          ask:"After a meal vs. between meals, what does the liver do to blood glucose — and which hormone drives each?",
+          reveal:"<b>Fed (insulin ⊕):</b> the liver takes up glucose and stores it as <b>glycogen</b> &rarr; blood glucose falls. <b>Fasting (glucagon ⊕):</b> the liver breaks glycogen down and makes new glucose &rarr; releases it &rarr; blood glucose rises. Negative feedback keeps glucose steady." }
+      ]
+    },
+    {
+      id:"gallbladder", name:"Gallbladder", region:"Accessory · bile storage",
+      intro:"A small storage sac for bile — simple, with one notable wall exception.",
+      steps:[
+        { k:"draw", do:"Draw the pear-shaped gallbladder on the liver's underside. Draw the <span class='em'>cystic duct</span> joining the common hepatic duct &rarr; <span class='em'>common bile duct</span> &rarr; duodenum.", use:"Use your bile flow color" },
+        { k:"label", use:"Use your Mucosa color", do:"Label the lining and what it does.",
+          ask:"What epithelium lines the gallbladder, and what does it absorb to concentrate the bile? Label it.",
+          reveal:"<b>Simple columnar</b>; absorbs <b>water</b> to <b>concentrate</b> the bile (up to ~10&times;)." },
+        { k:"label", use:"Flag it ▲", do:"Flag the wall exception.",
+          ask:"Which two wall layers are missing from the gallbladder? Flag the exception.",
+          reveal:"▲ No <b>muscularis mucosae</b> and no <b>submucosa</b> &mdash; the mucosa sits directly on the muscular coat." },
+        { k:"function", do:"Note its role — and what it does NOT do.",
+          ask:"If it doesn't make bile, what two things does the gallbladder do to it — and what triggers release? Note its role.",
+          reveal:"It <b>stores</b> and <b>concentrates</b> bile; releases it into the duodenum when <b>fatty chyme</b> arrives (via CCK &mdash; physiology unit)." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"Highlight the whole bile path: liver &rarr; hepatic ducts &rarr; (store in gallbladder via cystic duct) &rarr; common bile duct &rarr; duodenum. Label the gallbladder &lsquo;store + concentrate,&rsquo; not &lsquo;produce.&rsquo;" },
+        { k:"physio", layer:"P", do:"Draw a feedback map for gallbladder emptying.",
+          ask:"What signal makes the gallbladder contract, and what happens at the sphincter of Oddi?",
+          reveal:"<b>ON:</b> <b>CCK</b> (released when fatty chyme hits the duodenum). <b>Effect:</b> the gallbladder contracts and the <b>sphincter of Oddi relaxes</b> &rarr; concentrated bile flows into the duodenum to emulsify fat. <b>OFF:</b> fat digested &amp; absorbed." }
+      ]
+    },
+    {
+      id:"pancreas", name:"Pancreas", region:"Accessory · dual gland",
+      intro:"The finale — a dual-function gland. The exocrine part finishes digestion; the endocrine part previews your physiology unit.",
+      steps:[
+        { k:"draw", do:"Draw the pancreas behind the stomach, its head nestled in the duodenum's C. Draw the <span class='em'>pancreatic duct</span> joining the common bile duct into the duodenum." },
+        { k:"draw", do:"Zoom in: draw dark clusters of <span class='em'>acini</span> next to a pale <span class='em'>islet</span>.",
+          ask:"Which tissue is the exocrine part of the pancreas, and which is the endocrine part? Label both.",
+          reveal:"<b>Acini</b> = exocrine (~99%); <b>islets of Langerhans</b> = endocrine (~1%) &mdash; two glands in one organ." },
+        { k:"cell", use:"★ + secretes arrow", do:"Label the exocrine secretions.",
+          ask:"Which enzymes do the acinar cells make for carbs, for fat, and for protein — and why are the proteases released inactive? Label them.",
+          reveal:"<b>Amylase</b> (carbs), <b>lipase</b> (fat), and proteases like <b>trypsinogen/chymotrypsinogen</b> (+ nucleases). Proteases are released inactive so they don't digest the gland. Duct cells add <b>bicarbonate</b> to neutralize chyme." },
+        { k:"cell", use:"★ + secretes arrow (into BLOOD)", do:"Label the endocrine cells.",
+          ask:"Which hormone does each islet cell secrete into the blood — alpha, beta, and delta? Label them.",
+          reveal:"<b>Alpha &rarr; glucagon, beta &rarr; insulin, delta &rarr; somatostatin</b> (+ PP cells &rarr; pancreatic polypeptide)." },
+        { k:"function", use:"Use two flow colors", do:"Contrast the two output routes.",
+          ask:"Where do the pancreatic enzymes and bicarbonate go, and where do insulin and glucagon go? Draw both routes.",
+          reveal:"Enzymes/bicarbonate &rarr; <b>duct &rarr; duodenum</b> (exocrine, digestion); hormones &rarr; <b>bloodstream</b> (endocrine, glucose control). The endocrine half is your bridge into the physiology / feedback-loop unit." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"Draw two arrows leaving the pancreas: one into the DUCT &rarr; duodenum (&lsquo;duct = digestion&rsquo;), one into the BLOOD (&lsquo;blood = glucose control&rsquo;). This split is where physiology picks up." },
+        { k:"physio", layer:"P", do:"Map the control of pancreatic exocrine secretion.",
+          ask:"Which hormone drives bicarbonate release, and which drives enzyme release?",
+          reveal:"<b>Secretin</b> (from duodenal acid) &rarr; duct cells release <b>bicarbonate</b> (neutralizes chyme). <b>CCK</b> (from fat/protein) &rarr; acinar cells release <b>enzymes</b>. Vagal (cephalic) input primes both." },
+        { k:"physio", layer:"P", do:"Draw the blood-glucose feedback loop (islets of Langerhans).",
+          ask:"When glucose is HIGH, what does the beta cell do; when LOW, what does the alpha cell do? Show both arrows returning glucose to normal.",
+          reveal:"<b>High glucose &rarr; insulin (beta cell):</b> cells take up glucose, the liver stores glycogen &rarr; glucose ↓. <b>Low glucose &rarr; glucagon (alpha cell):</b> the liver releases glucose &rarr; glucose ↑. Two opposing loops = negative feedback around a set point." }
+      ]
+    },
+    {
+      id:"capstone", name:"Capstone: The One-Map Review", region:"Integrate · make it whole",
+      intro:"Your organs are drawn and labeled. This last station adds the integrative threads lectures always test — the ideas that live BETWEEN organs — so everything sits on one map.",
+      steps:[
+        { k:"draw", do:"Add a legend box for the <span class='em'>6 digestive processes</span>: ingestion, propulsion, mechanical digestion, chemical digestion, absorption, defecation." },
+        { k:"label", use:"Use your ✕ sphincter symbol", do:"Draw one flow line mouth&rarr;anus and mark every sphincter in order.",
+          ask:"Name all seven sphincters in order from mouth to anus, and mark each one on your flow line.",
+          reveal:"Upper esophageal &rarr; lower esophageal (cardiac) &rarr; pyloric &rarr; hepatopancreatic (sphincter of Oddi) &rarr; ileocecal &rarr; internal &amp; external anal." },
+        { k:"label", do:"Add a compact enzyme table (enzyme &rarr; substrate &rarr; product).",
+          ask:"For carbohydrates, protein, and fat — what finishes each one's digestion? Fill in your enzyme table.",
+          reveal:"Carbs: amylase &rarr; brush-border <b>maltase/sucrase/lactase</b> &rarr; monosaccharides. Protein: pepsin/trypsin &rarr; <b>peptidases</b> &rarr; amino acids. Fat: bile + <b>pancreatic lipase</b> &rarr; fatty acids + monoglycerides (&rarr; lacteals). Nucleic acids: nucleases &rarr; nucleotides." },
+        { k:"label", use:"Use your blood + lymph flow colors", do:"Draw a small blood-flow inset.",
+          ask:"Where do absorbed nutrients travel first, and how do fats bypass that route? Draw the blood-flow inset.",
+          reveal:"Nutrients &rarr; <b>hepatic portal vein &rarr; liver first</b> (processed before reaching the body); fats travel via <b>lacteals/lymph</b>. This is the &lsquo;liver-first&rsquo; rule." },
+        { k:"checkpoint", do:"Final self-quiz &amp; submit.",
+          reveal:"Cover your labels and self-quiz: point to any organ and say its epithelium, its special cells + what each secretes, its wall exceptions, and its function. Fix any gap with that station's reveal. When you can narrate the whole tube mouth&rarr;anus, your map is complete &mdash; <b>take a photo of your finished map (or team whiteboard) and submit it to Canvas</b>." },
+        { k:"physio", layer:"P", do:"Build a master GI-hormone feedback summary box.",
+          ask:"For gastrin, secretin, CCK, and somatostatin — what turns each ON, its target, and its effect? Draw the four mini-loops together.",
+          reveal:"<b>Gastrin</b> (peptides/stretch → stomach) → ↑ acid &amp; motility. <b>Secretin</b> (acid → duodenum) → ↑ bicarbonate, ⊖ acid. <b>CCK</b> (fat/protein → duodenum) → gallbladder + pancreatic enzymes, slows emptying. <b>Somatostatin</b> (low pH) → ⊖ the whole system (global brake). Incretins (GIP) also ⊕ insulin." }
+      ]
+    }
+  ]}
+];
+
+/* ---------- flatten ---------- */
+const SCREENS=[];
+PARTS.forEach((p,pi)=>p.stations.forEach(s=>SCREENS.push(Object.assign({partIndex:pi,partTitle:p.title},s))));
+const TOTAL=SCREENS.filter(s=>!s.isIntro).length;
+
+const KIND={
+  draw:{t:"Draw",ic:"✏️",cls:"ke-draw"},
+  label:{t:"Label & recall",ic:"🏷️",cls:"ke-label"},
+  cell:{t:"Special cells",ic:"🔬",cls:"ke-cell"},
+  function:{t:"Function",ic:"⚙️",cls:"ke-function"},
+  physio:{t:"Physiology · feedback map",ic:"🔄",cls:"ke-physio"},
+  checkpoint:{t:"Map checkpoint",ic:"🔍",cls:"ke-checkpoint"}
+};
+
+let MODE='anat';
+const state={ cur:0, step:{}, done:{}, revealed:{} };
+SCREENS.forEach(s=>{ if(!s.isIntro) state.step[s.id]=0; });
+
+const stage=document.getElementById('stage');
+const rail=document.getElementById('rail');
+
+/* ---- mode filtering: each step carries layer 'A' (anatomy/histology, default) or 'P' (physiology) ---- */
+function stepVisible(st){ if(MODE==='both') return true; if(MODE==='phys') return st.layer==='P'; return (st.layer||'A')==='A'; }
+function visSteps(s){ return s.isIntro?[]:s.steps.filter(stepVisible); }
+function screenVisible(idx){ const s=SCREENS[idx]; return s.isIntro || visSteps(s).length>0; }
+function visStations(){ const a=[]; SCREENS.forEach((s,i)=>{ if(!s.isIntro && screenVisible(i)) a.push(i); }); return a; }
+function totalStations(){ return visStations().length; }
+function stationNum(idx){ const p=visStations().indexOf(idx); return p<0?0:p+1; }
+
+/* ---- guided-walkthrough lock: no peeking ahead until the whole map is done ---- */
+function firstIncomplete(){ const list=visStations(); for(const i of list){ if(!state.done[SCREENS[i].id]) return i; } return -1; }
+function allDone(){ return firstIncomplete()===-1; }
+function isUnlocked(idx){ if(SCREENS[idx].isIntro) return true; if(allDone()) return true; const list=visStations(); return list.indexOf(idx)<=list.indexOf(firstIncomplete()); }
+
+function buildRail(){
+  rail.innerHTML=''; let last=-1;
+  SCREENS.forEach((s,idx)=>{
+    if(!screenVisible(idx)) return;
+    if(s.partIndex!==last){ const pt=document.createElement('div'); pt.className='ptitle'; pt.textContent=s.partTitle; rail.appendChild(pt); last=s.partIndex; }
+    const unlocked=isUnlocked(idx);
+    const b=document.createElement('button');
+    b.className='rail-item'+(idx===state.cur?' active':'')+(state.done[s.id]?' done':'')+(unlocked?'':' locked');
+    const label=s.isIntro?'How to use this lab':s.name;
+    const badge=s.isIntro?'★':stationNum(idx);
+    const right=unlocked?'<span class="tick">✓</span>':'<span class="lock">🔒</span>';
+    b.innerHTML='<span class="num">'+badge+'</span><span class="lbl">'+label+'</span>'+right;
+    if(unlocked) b.onclick=()=>{ state.cur=idx; render(); };
+    else b.onclick=()=>toast('Finish your current station to unlock this one 🔒');
+    rail.appendChild(b);
+  });
+}
+function updateProgress(){
+  const list=visStations(), total=list.length;
+  const dc=list.filter(i=>state.done[SCREENS[i].id]).length;
+  const pct=total?Math.round(dc/total*100):0;
+  document.getElementById('overallFill').style.width=pct+'%';
+  document.getElementById('pctText').textContent=pct+'%';
+  document.getElementById('countText').textContent=dc+' / '+total+' stations';
+  const mn=document.getElementById('modeNote');
+  if(allDone()){ mn.className='modenote review'; mn.textContent='🔓 Review mode — revisit any station & reveal freely'; }
+  else { mn.className='modenote'; mn.textContent='🔒 Guided walkthrough — the next station unlocks when you finish this one'; }
+}
+
+function renderIntro(){
+  return `<div class="card">
+    <div class="card-head">
+      <p class="chd-eye">Start Here</p>
+      <h2>Build the GI tract — one focused step at a time</h2>
+      <span class="region">Majors A&amp;P · construction lab</span>
+      <p class="chd-intro">You are the cartographer. This lab reveals a single instruction at a time so you can draw it, answer the question on your own map, then reveal the answer to self-check. You build the map by hand — nothing here is auto-graded. The goal is one complete map you can explain.</p>
+    </div>
+    <div class="welcome-body">
+      <h3>What you'll need</h3>
+      <div class="kit">
+        <div class="k"><b>Paper or a whiteboard</b> Ledger/A3, taped pages, or a big team whiteboard — you're mapping the whole tract plus accessory organs.</div>
+        <div class="k"><b>Colored markers or pencils</b> You'll set a color per layer in the first station and reuse it everywhere.</div>
+        <div class="k"><b>Your resources</b> Textbook, lecture notes, histology atlas. Look things up — that's the point.</div>
+        <div class="k"><b>Room to annotate</b> Leave margins; several checkpoints link distant organs with arrows.</div>
+      </div>
+
+      <h3>Working solo or as a team? Both work</h3>
+      <div class="kit">
+        <div class="k"><b>✏️ Solo</b> Build your own map on paper and self-check with the reveals as you go.</div>
+        <div class="k"><b>👥 Team whiteboard</b> Gather your team at a whiteboard, grab the colored markers, and build one big map together. When you finish, <b>submit a photo of your whiteboard to Canvas</b>.</div>
+      </div>
+      <div class="howrow" style="margin-top:10px"><span class="hi">🤝</span><div><b>Everyone builds the whole map — don't split it up.</b> At each structure, the micro and macro leads bring their view to the SAME organ, so you draw it zoomed in and zoomed out together. Rotate roles every station so nobody gets stuck on just one part.</div></div>
+
+      <h3>Team roles — rotate at each station</h3>
+      <div class="kit">
+        <div class="k"><b>🔬 Micro lead</b> Histology, epithelium, and special cells + their secretions — the zoom-in view.</div>
+        <div class="k"><b>🫁 Macro lead</b> Gross anatomy — regions, shape, layers, and sphincters — the zoom-out view.</div>
+        <div class="k"><b>🖊️ Cartographer</b> Draws on the whiteboard as the team decides together.</div>
+        <div class="k"><b>🎙️ Guide &amp; checker</b> Drives the lab, reads each step aloud, and opens the reveal to check the team's work.</div>
+      </div>
+      <h3>How to lay out your map — your choice</h3>
+      <div class="kit">
+        <div class="k"><b>Option A · One continuous tract</b> Sketch the whole GI tract mouth→anus as one connected drawing, then add zoom-in bubbles for the histology/cells.</div>
+        <div class="k"><b>Option B · A sequence of boxes</b> Draw a row/flow of connected boxes — one per structure — each holding its gross (macro) view and a zoom-in (micro/histology) view. Arrows link box to box in order.</div>
+      </div>
+      <p class="routewrap" style="margin-top:10px">It doesn't have to look like a textbook. Be creative — zoom in, zoom out, use color. What matters is that structures follow the right <b>sequence</b> and every label is correct. Pick whichever layout is easiest for you to follow.</p>
+
+      <h3>How each station works</h3>
+      <div class="howlist">
+        <div class="howrow"><span class="hi">1️⃣</span><div>One <b>step</b> shows at a time — a drawing action or a direct question. Draw and answer it on your map first.</div></div>
+        <div class="howrow"><span class="hi">👁️</span><div>Hit <b>Reveal answer</b> only after you've committed an answer to your map, to check and fix your labels.</div></div>
+        <div class="howrow"><span class="hi">➡️</span><div><b>Next step</b> advances; the dots at the top track your place inside the station.</div></div>
+        <div class="howrow"><span class="hi">✅</span><div><b>Mark station complete</b> on the last step — the sidebar shows how far you've come.</div></div>
+      </div>
+      <h3>The route</h3>
+      <p class="routewrap">First you'll <b>build your legend</b> (color + symbol key). Then Part 1 walks the alimentary canal organ by organ (mouth → anus), Part 2 zooms into the four-tunic wall they all share and flags each organ's exceptions, and Part 3 covers the accessory organs. Use the <b>mode toggle</b> up top to choose Anatomy &amp; Histology, Combined, or Physiology.</p>
+
+      <h3>Keep this lab for next semester</h3>
+      <div class="savepanel">
+        <div class="qrbox" id="qrbox"></div>
+        <div class="qrtext"><b>Physiology builds on this same map.</b> Save or bookmark this page. Next semester in Physiology, reopen it, switch the mode to <b>Physiology</b>, and add the feedback-map layer to your saved anatomy map. Scan or screenshot this code to keep the link.<div class="qrlink" id="qrlink"></div></div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <div class="foot-left" style="font-family:var(--serif);color:var(--ink-soft);font-size:14px">Gather your materials, then start by building your legend.</div>
+      <button class="btn primary big" onclick="startFirst()">Start the walkthrough →</button>
+    </div>
+  </div>`;
+}
+
+function renderStation(s,idx){
+  const steps=visSteps(s), n=steps.length;
+  let i=state.step[s.id]||0; if(i>=n) i=n-1; if(i<0) i=0;
+  const st=steps[i]; const km=KIND[st.k]||KIND.draw;
+  const rkey=s.id+':'+i; const isRev=!!state.revealed[rkey];
+  const dots=steps.map((_,j)=>`<i class="${j<i?'done':(j===i?'on':'')}"></i>`).join('');
+  const useChip=st.use?`<div class="uselegend">🎨 ${st.use}</div>`:'';
+  const askBlock=st.ask?`<div class="ask"><div class="ask-t">❓ Answer on your map, then label it</div><p>${st.ask}</p></div>`:'';
+  const revealBtn=st.reveal?`<button class="reveal-btn" onclick="toggleReveal('${rkey}')">${isRev?'👁️ Hide answer':'👁️ Reveal answer'}</button>`:'';
+  const revealBody=st.reveal?`<div class="reveal-body ${isRev?'open':''}"><div class="rv-t">Expert answer — check &amp; fix your map</div><p>${st.reveal}</p></div>`:'';
+
+  const body = st.k==='checkpoint'
+    ? `<div class="kind-eye"><span class="ke-ic ${km.cls}">${km.ic}</span><span class="ke-t">${km.t}</span><span class="ke-c">Step ${i+1} of ${n}</span></div>
+       <div class="cp-box"><div class="cp-t">Annotate this on YOUR map</div><p>${st.reveal||st.do}</p></div>`
+    : `<div class="kind-eye"><span class="ke-ic ${km.cls}">${km.ic}</span><span class="ke-t">${km.t}</span><span class="ke-c">Step ${i+1} of ${n}</span></div>
+       <div class="do-line">${st.do}</div>
+       ${useChip}${askBlock}${revealBtn}${revealBody}`;
+
+  const isLastStep=i>=n-1;
+  const isDone=!!state.done[s.id];
+  const vl=visStations(); const vpos=vl.indexOf(idx);
+  const nextIdx=(vpos>=0 && vpos<vl.length-1)?vl[vpos+1]:-1;
+
+  return `<div class="card">
+    <div class="card-head">
+      <p class="chd-eye">${s.partTitle} · Station ${stationNum(idx)} of ${totalStations()}</p>
+      <h2>${s.name}</h2>
+      <span class="region">${s.region}</span>
+      <p class="chd-intro">${s.intro}</p>
+    </div>
+    <div class="stepdots">${dots}</div>
+    <div class="card-body">${body}</div>
+    <div class="card-foot">
+      <div class="foot-left">
+        <button class="btn ghost" onclick="stepMove(-1)" ${i===0?'disabled':''}>← Back</button>
+        ${ isLastStep
+            ? `<label class="donebox ${isDone?'on':''}"><input type="checkbox" ${isDone?'checked':''} onchange="toggleDone('${s.id}',this.checked)"> Mark station complete</label>`
+            : `<button class="btn primary" onclick="stepMove(1)">Next step →</button>` }
+      </div>
+      ${ isLastStep && nextIdx>=0
+          ? `<button class="btn gold" onclick="jump(${nextIdx})" ${isDone?'':'disabled'} title="${isDone?'':'Mark this station complete first'}">Next station →</button>`
+          : (isLastStep ? `<button class="btn gold" onclick="finish()" ${isDone?'':'disabled'}>Finish 🎉</button>` : `<span class="eyebrow">${n-1-i} step${n-1-i===1?'':'s'} left</span>`) }
+    </div>
+  </div>`;
+}
+
+function render(){
+  const s=SCREENS[state.cur];
+  stage.innerHTML=s.isIntro?renderIntro():renderStation(s,state.cur);
+  if(s.isIntro) fillQR();
+  buildRail(); updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function stepMove(d){
+  const s=SCREENS[state.cur]; if(s.isIntro) return;
+  const n=visSteps(s).length; let i=(state.step[s.id]||0)+d;
+  if(i<0)i=0; if(i>n-1)i=n-1; state.step[s.id]=i; render();
+}
+function startFirst(){ const list=visStations(); if(list.length) jump(list[0]); }
+function toggleReveal(key){ state.revealed[key]=!state.revealed[key]; render(); }
+function toggleDone(id,v){ state.done[id]=v; if(v){ toast(allDone()?'🔓 Map complete — review mode unlocked!':'Station complete ✓'); } render(); }
+function jump(idx){ if(!isUnlocked(idx)){ toast('Finish your current station to unlock the next one 🔒'); return; } state.cur=idx; render(); }
+function finish(){
+  const total=totalStations();
+  const dc=visStations().filter(i=>state.done[SCREENS[i].id]).length;
+  toast(dc===total?('Map complete — all '+total+' stations! 🎉'):('Nice work — '+dc+'/'+total+' stations done'));
+}
+function setMode(m){
+  MODE=m;
+  document.querySelectorAll('#modeToggle button').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.m===m)));
+  document.getElementById('physNote').hidden=(m!=='phys');
+  SCREENS.forEach(s=>{ if(!s.isIntro){ const n=visSteps(s).length; let i=state.step[s.id]||0; if(i>=n) i=Math.max(0,n-1); state.step[s.id]=i; } });
+  if(!screenVisible(state.cur)) state.cur=0;
+  render();
+}
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('show'),2400); }
+
+document.getElementById('resetBtn').onclick=()=>{ state.done={}; state.revealed={}; state.cur=0; SCREENS.forEach(s=>{ if(!s.isIntro) state.step[s.id]=0; }); render(); toast('Progress reset'); };
+document.getElementById('printBtn').onclick=()=>window.print();
+document.querySelectorAll('#modeToggle button').forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+
+render();
+</script>
+</body>
+</html>
