@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guided Renal Map · Interactive Construction Lab</title>
+<meta name="theme-color" content="#0B1530">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1530; --card-navy:#1C2E4F; --near-black:#060A18;
+  --rust:#8B3A2E; --rust-hover:#A0452F; --terra:#C2734D; --terra-dark:#A0522D; --clay:#CE8166;
+  --gold:#C9A14A; --gold-light:#D9B065; --cream:#F5F1E8;
+  --white:#FFFFFF; --offwhite:#FAFAF9; --slate:#8C90A0;
+  --ink:#0B1530; --ink-soft:rgba(11,21,48,0.74); --ink-faint:rgba(11,21,48,0.52);
+  --line:rgba(11,21,48,0.12); --line-soft:rgba(11,21,48,0.07);
+  --ok:#3F7A5B; --warn:#B4772E; --bad:#8B3A2E;
+  --shadow:0 1px 3px rgba(11,21,48,0.08);
+  --lift:0 14px 34px -16px rgba(11,21,48,0.30);
+  --disp:'Plus Jakarta Sans',system-ui,sans-serif;
+  --serif:'Plus Jakarta Sans',system-ui,sans-serif;
+  --mono:'Plus Jakarta Sans',system-ui,sans-serif;
+  --r-sm:6px; --r:10px; --r-lg:16px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--offwhite);color:var(--ink);font-family:var(--disp);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh}
+h1,h2,h3,h4{letter-spacing:-0.02em;color:var(--navy);line-height:1.15;margin:0}
+p{margin:0}
+button{font-family:inherit;cursor:pointer}
+.eyebrow{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--terra-dark)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:var(--r-sm)}
+
+/* header */
+.site-header{position:sticky;top:0;z-index:30;background:rgba(250,250,249,.88);backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line-soft)}
+.hbar{max-width:1160px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:14px}
+.logo{display:inline-flex;align-items:center;gap:12px}
+.logo svg{height:40px;flex:none}
+.logo .lt{font-size:20px;font-weight:800;color:var(--navy);letter-spacing:-.02em;line-height:1}
+.logo .lt .ac{color:var(--rust)}
+.logo .ls{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);display:block;margin-top:3px}
+.spacer{flex:1}
+.hbadge{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);background:var(--cream);border:1px solid var(--line);padding:6px 12px;border-radius:999px}
+.icbtn{height:40px;padding:0 14px;border-radius:var(--r);border:1.5px solid var(--line);background:var(--white);color:var(--navy);display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:13px;transition:.18s}
+.icbtn:hover{border-color:var(--navy);transform:translateY(-1px)}
+.icbtn svg{width:16px;height:16px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1.5px solid var(--line);background:var(--white);color:var(--navy);font-weight:700;font-size:15px;padding:11px 18px;border-radius:var(--r);transition:transform .18s var(--ease),box-shadow .18s var(--ease),border-color .18s,background .18s}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--lift);border-color:var(--navy)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;border-color:var(--line)}
+.btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn.primary:hover{background:var(--near-black);border-color:var(--near-black)}
+.btn.gold{background:var(--rust);color:#fff;border-color:var(--rust)}
+.btn.gold:hover{background:var(--rust-hover);border-color:var(--rust-hover)}
+.btn.rust{background:var(--rust);color:#fff;border-color:var(--rust)}
+.btn.rust:hover{background:var(--rust-hover);border-color:var(--rust-hover)}
+.btn.ghost{background:transparent}
+.btn.big{font-size:16px;padding:14px 24px}
+
+/* overall progress panel */
+.wrap{max-width:1160px;margin:0 auto;padding:20px 22px 70px}
+.plan{background:#0B1530;border:1px solid #0B1530;color:var(--cream);border-radius:var(--r-lg);padding:22px 26px;box-shadow:0 24px 50px -22px rgba(11,21,48,.5),0 6px 16px -8px rgba(11,21,48,.24);margin-bottom:20px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.plan .peyebrow{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-light);margin:0 0 5px}
+.plan h1{color:#fff;font-size:clamp(19px,3vw,24px);font-weight:800;margin:0 0 4px}
+.plan .psub{font-family:var(--serif);color:var(--cream);opacity:.85;margin:0;font-size:14px;max-width:56ch}
+.plan .pgrow{flex:1;min-width:220px}
+.plan-metric{text-align:center;min-width:120px}
+.plan-metric .num{font-size:40px;font-weight:800;color:#fff;line-height:1}
+.plan-metric .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-light);margin-top:4px}
+.otrack{height:10px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden;margin-top:14px}
+.otrack > span{display:block;height:100%;width:0;background:linear-gradient(90deg,#8B3A2E,#C2734D);transition:width .4s var(--ease);border-radius:99px}
+
+/* layout */
+.layout{display:grid;grid-template-columns:290px 1fr;gap:20px;align-items:start}
+@media(max-width:880px){.layout{grid-template-columns:1fr}}
+
+/* rail */
+.rail{background:var(--white);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:10px;box-shadow:0 22px 50px -26px rgba(11,21,48,.40),0 4px 12px -6px rgba(11,21,48,.12);position:sticky;top:74px;max-height:calc(100vh-90px);overflow:auto}
+@media(max-width:880px){.rail{position:static;max-height:none}}
+.rail .ptitle{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--terra-dark);padding:13px 10px 6px}
+.rail-item{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:none;background:transparent;padding:9px 10px;border-radius:var(--r);font-size:14px;color:var(--ink);transition:.14s}
+.rail-item:hover{background:var(--cream)}
+.rail-item.active{background:var(--cream);font-weight:700;color:var(--navy);box-shadow:inset 0 0 0 1px var(--line)}
+.rail-item .num{width:26px;height:26px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;background:var(--offwhite);border:1.5px solid var(--line);color:var(--ink-soft)}
+.rail-item.active .num{background:var(--navy);color:#fff;border-color:var(--navy)}
+.rail-item.done .num{background:var(--ok);color:#fff;border-color:var(--ok)}
+.rail-item .lbl{flex:1;line-height:1.25}
+.rail-item .tick{opacity:0;color:var(--ok);font-weight:800}
+.rail-item.done .tick{opacity:1}
+.rail-item.locked{opacity:.55;cursor:not-allowed}
+.rail-item.locked:hover{background:transparent}
+.rail-item.locked .num{background:var(--offwhite);color:var(--ink-faint);border-style:dashed}
+.rail-item .lock{margin-left:auto;font-size:13px;opacity:.7}
+.modenote{margin-top:13px;display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--gold-light);background:transparent;border:none;padding:6px 0}
+.modenote.review{color:#7fcfa8;background:transparent;border:none}
+.modes{display:inline-flex;flex-wrap:wrap;gap:4px;margin-top:14px;background:transparent;border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:4px}
+.modes button{border:none;background:transparent;color:var(--cream);font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:8px 14px;border-radius:999px;cursor:pointer;transition:.15s}
+.modes button:hover{background:rgba(255,255,255,.08)}
+.modes button[aria-pressed="true"]{background:var(--cream);color:var(--navy)}
+.physnote{margin-top:12px;background:rgba(201,161,74,.15);border:1px solid rgba(201,161,74,.42);color:#f3e6c8;border-radius:var(--r);padding:11px 15px;font-size:12.5px;line-height:1.55;max-width:70ch}
+.physnote b{color:#fff}
+/* save / QR panel */
+.savepanel{display:flex;gap:20px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;background:var(--offwhite);margin-top:4px}
+.savepanel .qrbox{width:132px;height:132px;flex:none;background:#fff;border:1px solid var(--line);border-radius:10px;display:grid;place-items:center;padding:6px}
+.savepanel .qrbox img,.savepanel .qrbox canvas{display:block;width:100%;height:100%}
+.savepanel .qrtext{flex:1;min-width:220px;font-size:14px;color:var(--ink-soft)}
+.savepanel .qrtext b{color:var(--navy)}
+.savepanel .qrlink{font-family:var(--mono);font-size:12px;color:var(--terra-dark);word-break:break-all;margin-top:6px}
+
+/* stage / step card */
+.stage{min-height:460px}
+.card{background:var(--white);color:var(--ink);border:1px solid var(--line-soft);border-radius:var(--r-lg);box-shadow:0 26px 60px -24px rgba(11,21,48,.42),0 6px 16px -8px rgba(11,21,48,.14);overflow:hidden}
+.card-head{padding:20px 26px 18px;background:#0b1530;color:#fff}
+.card-head .chd-eye{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-light);margin:0 0 6px}
+.card-head h2{color:#fff;font-size:clamp(20px,3vw,25px);font-weight:800}
+.card-head .region{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-light);background:transparent;border:1px solid rgba(255,255,255,.24);padding:4px 11px;border-radius:999px;margin-top:10px}
+.card-head .chd-intro{font-family:var(--serif);color:var(--cream);opacity:.9;font-size:14.5px;margin-top:12px;max-width:64ch;line-height:1.6}
+
+/* step dots */
+.stepdots{display:flex;gap:6px;padding:14px 26px 0;flex-wrap:wrap}
+.stepdots i{height:6px;flex:1;min-width:14px;border-radius:99px;background:var(--line-soft);transition:.2s}
+.stepdots i.on{background:var(--gold)}
+.stepdots i.done{background:var(--navy)}
+
+.card-body{padding:18px 26px 6px;min-height:230px}
+.kind-eye{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.kind-eye .ke-ic{width:34px;height:34px;flex:none;border-radius:9px;display:grid;place-items:center;font-size:17px}
+.ke-draw{background:#f6ecd9;color:var(--warn)}
+.ke-label{background:#e3edea;color:var(--ok)}
+.ke-cell{background:#f6e4e0;color:var(--rust)}
+.ke-function{background:#e9e2f2;color:#5b46a8}
+.ke-physio{background:#dceee9;color:#0b5e5a}
+.ke-checkpoint{background:var(--cream);color:var(--terra-dark)}
+.kind-eye .ke-t{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.kind-eye .ke-c{margin-left:auto;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ink-faint)}
+
+.do-line{font-size:18px;font-weight:700;color:var(--navy);line-height:1.4;margin-bottom:14px}
+.do-line .em{color:var(--rust)}
+.uselegend{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--terra-dark);background:var(--cream);border:1px solid var(--line);padding:5px 11px;border-radius:999px;margin-bottom:16px}
+
+/* ask / direct question — lifted card, no side accent */
+.ask{background:var(--white);border:1px solid var(--line-soft);border-radius:var(--r);padding:16px 18px;margin:2px 0 16px;box-shadow:0 12px 26px -12px rgba(11,21,48,.30),0 2px 5px rgba(11,21,48,.08)}
+.ask .ask-t{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-dark);margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.ask p{font-size:16px;line-height:1.6;color:var(--ink);font-weight:500}
+
+/* reveal */
+.reveal-btn{display:inline-flex;align-items:center;gap:9px;background:var(--white);border:1.5px solid var(--navy);color:var(--navy);font-weight:700;font-size:14px;padding:10px 16px;border-radius:var(--r);transition:.15s}
+.reveal-btn:hover{background:var(--navy);color:#fff}
+.reveal-body{display:none;margin-top:14px;background:var(--white);border:1px solid var(--line-soft);border-radius:var(--r);padding:16px 18px;box-shadow:0 14px 30px -12px rgba(11,21,48,.32),0 2px 6px rgba(11,21,48,.09)}
+.reveal-body.open{display:block;animation:fade .25s var(--ease)}
+.reveal-locked{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;color:var(--ink-soft);background:var(--offwhite);border:1px dashed var(--line);border-radius:var(--r);padding:12px 14px;line-height:1.5}
+.reveal-locked b{color:var(--navy)}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.reveal-body .rv-t{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ok);margin-bottom:7px}
+.reveal-body p{font-size:15px;line-height:1.65;color:var(--ink)}
+.reveal-body b{color:var(--navy)}
+.reveal-body .pill{display:inline-block;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:#e3edea;color:var(--ok);margin-right:5px}
+
+/* checkpoint step — dark terra-cotta card */
+.cp-box{background:linear-gradient(135deg,#9a3f30,#7c3127);border:none;border-radius:var(--r);padding:18px 20px;box-shadow:0 20px 42px -16px rgba(139,58,46,.5),0 4px 12px -6px rgba(11,21,48,.2)}
+.cp-box .cp-t{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#f6ddd4;margin-bottom:8px}
+.cp-box p{font-size:15.5px;line-height:1.6;color:#fff}
+
+/* footer nav */
+.card-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:16px 26px 20px;border-top:1px solid var(--line-soft);background:var(--offwhite)}
+.foot-left{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.donebox{display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:14px;background:#fff;border:2px solid var(--ok);color:var(--ok);padding:9px 15px;border-radius:var(--r);cursor:pointer}
+.donebox.on{background:var(--ok);color:#fff}
+.donebox input{width:17px;height:17px;accent-color:var(--ok)}
+
+/* intro screen */
+.welcome-body{padding:24px 26px}
+.welcome-body h3{color:var(--navy);font-size:16px;margin:20px 0 10px;font-family:var(--disp);font-weight:800}
+.welcome-body h3:first-child{margin-top:0}
+.kit{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.kit{grid-template-columns:1fr}}
+.kit .k{border:1px solid var(--line);border-radius:var(--r);padding:13px 15px;background:var(--offwhite);font-size:14px}
+.kit .k b{display:block;color:var(--navy);margin-bottom:2px}
+.howlist{display:grid;gap:9px}
+.howrow{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line-soft);border-radius:var(--r);padding:12px 14px;background:var(--white);font-size:14px}
+.howrow .hi{width:30px;height:30px;flex:none;border-radius:8px;display:grid;place-items:center;font-size:15px;background:var(--cream)}
+.howrow b{color:var(--navy)}
+.routewrap{font-family:var(--serif);color:var(--ink-soft);font-size:15px;line-height:1.7}
+
+#toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);background:var(--navy);color:#fff;padding:13px 20px;border-radius:var(--r);font-weight:700;font-size:14px;box-shadow:var(--lift);opacity:0;pointer-events:none;transition:.3s var(--ease);z-index:90}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.foot-note{font-family:var(--serif);color:var(--ink-faint);font-size:13px;text-align:center;margin-top:22px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="hbar">
+    <span class="logo">
+      <svg viewBox="0 0 44 44" aria-hidden="true">
+        <rect x="2" y="2" width="40" height="40" rx="12" fill="#0B1530"/>
+        <path d="M15 8 v4 c0 5 10 4 10 10 c0 5 -7 4 -7 9" fill="none" stroke="#C9A14A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M18 31 c-6 .4 -7.5 6.4 0 6.6 c5.4 .2 5 -4.2 .3 -4" fill="none" stroke="#C2734D" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="15" cy="8" r="2.1" fill="#8B3A2E"/>
+      </svg>
+      <span><span class="lt">Guided <span class="ac">Renal</span> Map</span><span class="ls">Interactive Construction Lab</span></span>
+    </span>
+    <span class="spacer"></span>
+    <span class="hbadge">Majors A&amp;P</span>
+    <button class="icbtn" id="printBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>Print</button>
+    <button class="icbtn" id="resetBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Reset</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="plan">
+    <div class="pgrow">
+      <p class="peyebrow">Guided Construction · Majors A&amp;P</p>
+      <h1>Build the Kidney &amp; Nephron — one focused step at a time</h1>
+      <p class="psub">You draw the map by hand. The lab reveals a single instruction at a time so you can focus, answer, then check yourself.</p>
+      <div class="otrack"><span id="overallFill"></span></div>
+      <div class="modes" id="modeToggle" role="group" aria-label="Content mode">
+        <button data-m="anat" aria-pressed="true">Anatomy &amp; Histology</button>
+        <button data-m="both" aria-pressed="false">Combined</button>
+        <button data-m="phys" aria-pressed="false">Physiology</button>
+      </div>
+      <div class="physnote" id="physNote" hidden>You can't map physiology without the anatomy — hormones and feedback loops sit on top of the structures. If you haven't already built this as an anatomy map, switch to <b>Combined</b> first. (Already did the anatomy version? Physiology mode adds just the feedback-map layer to your saved map.)</div>
+      <div class="modenote" id="modeNote"></div>
+    </div>
+    <div class="plan-metric">
+      <div class="num" id="pctText">0%</div>
+      <div class="lbl" id="countText">0 / 0 stations</div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="rail" id="rail"></nav>
+    <main class="stage" id="stage"></main>
+  </div>
+
+  <p class="foot-note">A construction activity — you build the map; the lab coaches. Physiology (hormone feedback loops &amp; secretion control) layers onto this same map in a later unit.</p>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* ===== Set this to wherever you host/link this lab (Canvas page, Google Drive, course site) ===== */
+const LAB_URL = "https://drsrennie-stack.github.io/new-build-bio4-solano/guided-renal-map.html";
+function fillQR(){
+  const box=document.getElementById('qrbox'), link=document.getElementById('qrlink');
+  if(link) link.textContent=LAB_URL;
+  if(box){ box.innerHTML=''; try{ if(window.QRCode) new QRCode(box,{text:LAB_URL,width:120,height:120,colorDark:'#0B1530',colorLight:'#ffffff'}); }catch(e){} }
+}
+</script>
+<script>
+/* =========================================================================
+   GI MAP LAB — micro-step curriculum
+   step kinds: draw | label | cell | function | checkpoint
+   fields: k, do, ask (direct question to answer & label), reveal, use (legend hint)
+   ========================================================================= */
+const PARTS = [
+  { title:"Start Here", stations:[ { id:"intro", isIntro:true } ] },
+
+  { title:"Set Up · Do This First", stations:[
+    {
+      id:"legend", name:"Set Up Your Map & Legend", region:"Set up · build your key first",
+      intro:"Before a single structure, build a legend. A consistent color + symbol key is what turns scattered labels into a readable map — and it uses the SAME colors as your other maps so everything stays consistent.",
+      steps:[
+        { k:"draw", do:"In a top corner of your sheet or whiteboard, draw a boxed area titled <span class='em'>LEGEND</span> with room for about 8 entries. Leave the rest of the surface open for your map." },
+        { k:"draw", do:"Pick how you'll lay out the map.",
+          ask:"Will you draw one continuous path (kidney → nephron → out of the body), or a sequence of connected boxes (one structure per box, with a gross view + a zoom-in)? Sketch a light plan first.",
+          reveal:"Either works — just keep the structures in the correct <b>sequence a drop of filtrate follows</b>. Option A: one connected path with zoom-in bubbles for histology. Option B: a flow of boxes, each with the macro view + a micro/histology zoom, linked by arrows. Be creative." },
+        { k:"label", do:"<b>Structures — keep them black or brown.</b> Draw the kidney regions and nephron segments in <b>black or brown</b> and tell them apart with a <b>pattern or a clear label</b> (solid, dots, diagonal lines, dashed).",
+          reveal:"Save your colors for what students most often confuse — vessels, nerves, and the transport cells. Black/brown structures with patterns keep everything distinct without color overload." },
+        { k:"cell", do:"<b>Transport / secretory cells — green.</b> Add to your legend: <b>green = a tubule cell that reabsorbs or secretes</b> (PCT brush-border cells, principal &amp; intercalated cells, macula densa, granular/JG cells). Draw a <b>★</b> for a named special cell and write its job beside it.",
+          reveal:"Coloring only the working tubule cells green makes &lsquo;who moves what&rsquo; jump off the map — and it matches the green = secretory cell rule from your GI map." },
+        { k:"label", do:"<b>Transport arrows.</b> Add these lines (in black): <b>&rarr; = reabsorb / secrete</b> (label which way — into blood = reabsorb, into filtrate = secrete).",
+          reveal:"Example: PCT cell &rarr; reabsorbs Na⁺, glucose; secretes H⁺. The arrow direction tells the whole transport story at a glance." },
+        { k:"label", do:"<b>Sphincters &amp; valves.</b> Add this line (in black): <b>✕ = sphincter / valve</b>.",
+          reveal:"You'll place these at the internal and external urethral sphincters (and note the ureter's one-way entry into the bladder that prevents reflux)." },
+        { k:"label", do:"<b>Special features.</b> Add this line (in black): <b>▲ = a special feature to flag</b>.",
+          reveal:"You'll flag things like the glomerulus (a capillary bed between TWO arterioles), the JGA, and the countercurrent loop." },
+        { k:"label", do:"<b>Vessels &amp; nerves — the three standard colors.</b> Use ONLY these three for tubes, and add them to your legend: <b>red = arteries/arterioles (oxygen-rich blood)</b>, <b>blue = veins (oxygen-poor blood)</b>, <b>yellow = nerves</b>.",
+          reveal:"Same atlas convention as your other maps. The afferent and efferent arterioles are BOTH red (both arterioles) — tell them apart with a label, not a new color. That afferent-in / efferent-out detail is the key to the whole kidney." },
+        { k:"label", do:"<b>Filtrate / urine path — no new color.</b> Draw the fluid's path in <b>black/brown with a distinct pattern or label</b> (e.g., a dashed &lsquo;filtrate&rsquo; line) so you can trace it end to end.",
+          reveal:"Now the whole map runs on just four meaningful colors — <b>red, blue, yellow, green</b> — plus black/brown patterns, so blood, nerves, tubules, and filtrate never blur together." },
+        { k:"checkpoint", do:"Legend check.",
+          reveal:"Your legend should now hold: <b>black/brown + patterns = structures &amp; the filtrate path</b> · ★ = special cell · &rarr; = reabsorb/secrete · ✕ = sphincter/valve · ▲ = special feature · <b>red = arteries</b> · <b>blue = veins</b> · <b>yellow = nerves</b> · <b>green = transport cells</b>. Keep these SAME meanings on every map you build." },
+        { k:"physio", layer:"P", do:"<b>Physiology symbols.</b> Add these three (in black) for the feedback maps: <b>dashed arrow = hormone (travels in blood)</b>, <b>⊕ = stimulates</b>, <b>⊖ = inhibits</b>.",
+          reveal:"Every feedback map shows four things: what turns a process ON (⊕), its target tissue, its effect, and what turns it OFF (⊖)." }
+      ]
+    }
+  ]},
+
+  { title:"Part 1 · Gross Anatomy & the Urinary Tract", stations:[
+    {
+      id:"kidney", name:"The Kidney — External & Internal", region:"Gross · the organ",
+      intro:"Start with the whole organ: its coverings, the cortex and medulla, and the collecting spaces that funnel urine toward the ureter.",
+      steps:[
+        { k:"draw", do:"Draw a bean-shaped kidney. Mark the concave <span class='em'>hilum</span> where the renal artery, renal vein, and ureter enter/leave. It sits <span class='em'>retroperitoneal</span>." },
+        { k:"draw", do:"Draw the three coverings from the surface out: <span class='em'>renal capsule</span> (fibrous), <span class='em'>perinephric fat</span>, and <span class='em'>renal fascia</span>." },
+        { k:"draw", do:"Inside, shade the outer <span class='em'>cortex</span> and the inner <span class='em'>medulla</span>; draw the medulla as triangular <span class='em'>renal pyramids</span> with <span class='em'>renal columns</span> of cortex between them. The pyramid tip = <span class='em'>renal papilla</span>." },
+        { k:"label", do:"Draw the urine-collecting spaces and label them in order.",
+          ask:"Starting at a renal papilla, name the collecting spaces urine passes through on its way to the ureter.",
+          reveal:"Papilla &rarr; <b>minor calyx</b> &rarr; <b>major calyx</b> &rarr; <b>renal pelvis</b> &rarr; <b>ureter</b>. The papilla drips urine into the minor calyx that cups it." },
+        { k:"label", use:"Layer: black or brown + a pattern", do:"Label the lining of the calyces &amp; pelvis.",
+          ask:"What epithelium lines the calyces, pelvis, and ureter — and why that type?",
+          reveal:"<b>Transitional epithelium (urothelium)</b> — it stretches and recoils as urine volume changes and resists the hyperosmotic, irritating urine." },
+        { k:"function", do:"Note the kidney's jobs.",
+          ask:"Beyond making urine, what four+ things does the kidney regulate or produce?",
+          reveal:"Filters blood to form <b>urine</b>; regulates <b>blood volume/pressure, osmolarity, electrolytes, and pH</b>; produces <b>erythropoietin (EPO)</b> and <b>renin</b>; and <b>activates vitamin D</b> (calcitriol)." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"Trace one urine drop with your dashed filtrate/urine line: cortex &rarr; pyramid &rarr; papilla &rarr; minor calyx &rarr; major calyx &rarr; renal pelvis &rarr; ureter. Keep this line going all the way out of the body by the end of the map." },
+        { k:"physio", layer:"P", do:"Draw a feedback map for erythropoietin (EPO).",
+          ask:"What does the kidney sense to release EPO, what tissue does EPO target, and what's the effect?",
+          reveal:"<b>ON:</b> low blood O₂ (hypoxia). <b>Target:</b> red bone marrow. <b>Effect:</b> ↑ red blood cell production &rarr; more O₂-carrying capacity. <b>OFF (⊖):</b> O₂ normalizes. (The kidney also activates vitamin D for Ca²⁺ absorption.)" }
+      ]
+    },
+    {
+      id:"tract", name:"Urinary Tract — Ureters, Bladder & Urethra", region:"Gross · path to outside",
+      intro:"The plumbing that carries urine out of the body. Follow it from the renal pelvis to the outside world.",
+      steps:[
+        { k:"draw", do:"Draw the two <span class='em'>ureters</span> running from each renal pelvis down to the <span class='em'>urinary bladder</span>; then the <span class='em'>urethra</span> exiting the bladder to the outside.", use:"Filtrate/urine = dashed line" },
+        { k:"label", use:"Layer: black or brown + a pattern", do:"Label the ureter wall.",
+          ask:"What epithelium lines the ureter, and how does urine move down it (gravity or muscle)?",
+          reveal:"<b>Transitional epithelium</b>; a muscularis of smooth muscle drives urine by <b>peristalsis</b> (not gravity). Ureters are retroperitoneal and enter the bladder at an angle that prevents backflow." },
+        { k:"label", do:"Draw the bladder wall and its landmarks.",
+          ask:"Name the bladder's muscle, its stretch-folds, and the smooth triangle between the ureter openings and urethra.",
+          reveal:"Muscle = <b>detrusor</b> (smooth); folds = <b>rugae</b> (flatten as it fills); the <b>trigone</b> is the smooth triangle (two ureteric orifices + internal urethral orifice) — a common infection site." },
+        { k:"label", use:"Use your ✕ sphincter symbol", do:"Draw the two urethral sphincters.",
+          ask:"What are the two urethral sphincters, and which is voluntary?",
+          reveal:"<b>Internal urethral sphincter</b> = smooth muscle (involuntary); <b>external urethral sphincter</b> = skeletal muscle (voluntary). Note: the female urethra is short (~4 cm); the male urethra is longer (~20 cm) and also carries semen." },
+        { k:"function", do:"Note each part's job.",
+          ask:"In one line each: ureters do ____, the bladder does ____, the urethra does ____.",
+          reveal:"Ureters <b>transport</b> urine (peristalsis); the bladder <b>stores</b> urine; the urethra <b>conducts</b> urine out during micturition." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"Finish your dashed urine line all the way out: renal pelvis &rarr; ureter &rarr; bladder &rarr; urethra &rarr; outside the body. Mark the two sphincters with your ✕ symbol." },
+        { k:"physio", layer:"P", do:"Map the micturition (urination) reflex.",
+          ask:"What triggers the reflex, which nerves fire, and what happens to the detrusor and the two sphincters?",
+          reveal:"<b>ON:</b> bladder stretch (~200–300 mL) &rarr; <b>parasympathetic</b> reflex &rarr; <b>detrusor contracts</b> + <b>internal sphincter relaxes</b> (involuntary). The <b>external sphincter</b> is skeletal/voluntary — you choose the moment. The pontine micturition center coordinates it." }
+      ]
+    },
+    {
+      id:"blood", name:"Renal Blood Supply", region:"Gross · two capillary beds",
+      intro:"The kidney gets ~20–25% of cardiac output. Its blood supply is unusual — two capillary beds in series, with the glomerulus sitting between two arterioles.",
+      steps:[
+        { k:"draw", do:"Draw the arterial cascade INTO the kidney, in order, using your red (artery) color.",
+          ask:"Name the arteries in order from the renal artery to the afferent arteriole.",
+          reveal:"Renal artery &rarr; <b>segmental</b> &rarr; <b>interlobar</b> (up the columns) &rarr; <b>arcuate</b> (arching over pyramid bases) &rarr; <b>cortical radiate / interlobular</b> &rarr; <b>afferent arteriole</b> &rarr; glomerulus." },
+        { k:"label", use:"Flag it ▲", do:"Draw the glomerulus between two arterioles.",
+          ask:"What's unusual about the glomerulus compared to a normal capillary bed — what's on each side of it?",
+          reveal:"▲ The <b>glomerulus is a capillary bed between TWO arterioles</b> — <b>afferent arteriole in</b>, <b>efferent arteriole out</b> (both red, label them). This lets the kidney control glomerular pressure precisely for filtration." },
+        { k:"label", do:"Draw the SECOND capillary bed off the efferent arteriole.",
+          ask:"After the efferent arteriole, blood enters which capillaries around the tubules — and what are the two names (cortex vs medulla)?",
+          reveal:"<b>Peritubular capillaries</b> wrap the cortical tubules (reabsorption); the <b>vasa recta</b> are long straight vessels following the loops of Henle into the medulla. Blood then drains to cortical radiate &rarr; arcuate &rarr; interlobar &rarr; renal vein (blue)." },
+        { k:"function", do:"Note the two-bed logic.",
+          ask:"Why two capillary beds in series — what does each one do?",
+          reveal:"<b>Glomerulus</b> = high-pressure bed for <b>filtration</b>; <b>peritubular/vasa recta</b> = low-pressure bed for <b>reabsorption</b> of the good stuff back into blood." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"On your map, label the afferent arteriole &lsquo;in&rsquo; and the efferent &lsquo;out&rsquo; and put a ▲ on the glomerulus. Trace red blood in &rarr; through both capillary beds &rarr; blue blood out." },
+        { k:"physio", layer:"P", do:"Draw a feedback map for GFR control at the arterioles.",
+          ask:"If you constrict the AFFERENT arteriole, what happens to GFR? If you constrict the EFFERENT? Show both.",
+          reveal:"<b>Constrict afferent</b> &rarr; less blood in &rarr; glomerular pressure ↓ &rarr; <b>GFR ↓</b>. <b>Constrict efferent</b> &rarr; blood backs up &rarr; glomerular pressure ↑ &rarr; <b>GFR ↑</b>. This is how the kidney fine-tunes filtration (myogenic + tubuloglomerular feedback)." }
+      ]
+    }
+  ]},
+
+  { title:"Part 2 · The Nephron (Follow the Filtrate)", stations:[
+    {
+      id:"corpuscle", name:"Renal Corpuscle — Glomerulus & Bowman's Capsule", region:"Nephron · filtration begins",
+      intro:"The nephron is the functional unit. It starts at the renal corpuscle, where blood is filtered into the tubule. Take your time with the podocytes.",
+      steps:[
+        { k:"draw", do:"Draw the <span class='em'>glomerulus</span> (a knot of capillaries) sitting inside the cup-shaped <span class='em'>Bowman's (glomerular) capsule</span>. Mark the <span class='em'>vascular pole</span> (arterioles) and the <span class='em'>tubular pole</span> (where the PCT leaves).", use:"Red = arterioles" },
+        { k:"label", use:"Layer: black or brown + a pattern", do:"Label the two layers of Bowman's capsule.",
+          ask:"What are the two layers of the glomerular capsule, and what cell type makes the inner one?",
+          reveal:"<b>Parietal layer</b> = simple squamous (outer wall). <b>Visceral layer</b> = <b>podocytes</b> — octopus-like cells whose foot processes (pedicels) wrap the capillaries. The gap between the layers = <b>capsular (Bowman's) space</b>, where filtrate collects." },
+        { k:"cell", use:"★ special cells", do:"Label the special cells of the corpuscle.",
+          ask:"Which cell forms the filtration slits, and which cell supports the capillary tuft and can contract?",
+          reveal:"<b>Podocytes</b> &rarr; their pedicels interlock leaving <b>filtration slits</b> (slit diaphragms). <b>Mesangial cells</b> support the tuft, clean the membrane, and contract to adjust surface area (and thus GFR)." },
+        { k:"function", do:"Note what happens here.",
+          ask:"What is formed here, and what stays behind in the blood?",
+          reveal:"<b>Filtration</b> forms <b>filtrate</b> = plasma minus blood cells and large proteins. Water, ions, glucose, amino acids, urea, and wastes pass into the capsular space." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"Start your dashed filtrate line HERE (capsular space) — it will run through every tubule segment to the collecting duct. Label the vascular pole (afferent/efferent) and tubular pole (to PCT)." },
+        { k:"physio", layer:"P", do:"Map net filtration pressure (what drives the GFR).",
+          ask:"Three pressures act at the glomerulus — which one pushes filtrate OUT, and which two push back IN?",
+          reveal:"<b>OUT:</b> glomerular blood <b>hydrostatic pressure</b> (~55 mmHg). <b>IN:</b> capsular hydrostatic pressure (~15) + blood <b>colloid osmotic pressure</b> (~30). <b>Net filtration pressure ≈ 10 mmHg</b> outward &rarr; drives the GFR (~125 mL/min)." }
+      ]
+    },
+    {
+      id:"pct", name:"Proximal Convoluted Tubule (PCT)", region:"Nephron · bulk reabsorption",
+      intro:"The workhorse of reabsorption. Most of the good stuff is reclaimed here, right after the filtrate leaves Bowman's capsule.",
+      steps:[
+        { k:"draw", do:"Draw the <span class='em'>PCT</span> as a coiled tube leaving Bowman's capsule, staying in the <span class='em'>cortex</span>. Wrap it with peritubular capillaries.", use:"Red = artery · blue = vein" },
+        { k:"label", use:"Layer: black or brown + a pattern", do:"Label the PCT lining cell (green = transport cell).",
+          ask:"What epithelium lines the PCT, and what surface feature makes it a reabsorption powerhouse?",
+          reveal:"<b>Simple cuboidal</b> with a dense <b>brush border of microvilli</b> (huge surface area) and lots of mitochondria for active transport. Color these cells green." },
+        { k:"function", do:"Note what's reabsorbed and secreted here.",
+          ask:"Roughly how much of the filtered load does the PCT reabsorb, and name the big-ticket items in and out.",
+          reveal:"Reabsorbs ~<b>65%</b> of Na⁺ and water, and ~<b>100% of glucose &amp; amino acids</b>, plus HCO₃⁻, K⁺, Cl⁻. <b>Secretes</b> H⁺, ammonia, and drugs/toxins into the filtrate. Water follows solutes (obligatory reabsorption)." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"On your PCT, draw green transport arrows: Na⁺, glucose, amino acids, water &rarr; into the peritubular blood (reabsorb); H⁺ &amp; drugs &rarr; into the filtrate (secrete)." }
+      ]
+    },
+    {
+      id:"loop", name:"Loop of Henle", region:"Nephron · the gradient builder",
+      intro:"The hairpin that dips into the medulla. Its two limbs do opposite jobs and together build the salty gradient that lets you concentrate urine.",
+      steps:[
+        { k:"draw", do:"Draw the loop diving from the cortex into the <span class='em'>medulla</span>: a <span class='em'>descending limb</span> down, a hairpin, and an <span class='em'>ascending limb</span> back up. Add the <span class='em'>vasa recta</span> alongside.", use:"Red = artery · blue = vein" },
+        { k:"label", use:"Layer: black or brown + a pattern", do:"Contrast the two limbs.",
+          ask:"The thin descending limb is permeable to ____ but not ____; the thick ascending limb pumps out ____ but is impermeable to ____.",
+          reveal:"<b>Descending (thin, simple squamous):</b> permeable to <b>water</b>, not salt &rarr; water leaves, filtrate concentrates. <b>Ascending (thick, simple cuboidal):</b> actively pumps out <b>Na⁺/K⁺/Cl⁻</b>, impermeable to <b>water</b> &rarr; filtrate is diluted." },
+        { k:"function", do:"Note the big picture job.",
+          ask:"What does the loop build in the medulla, and why does it matter downstream?",
+          reveal:"The <b>countercurrent multiplier</b> builds a high <b>medullary osmotic gradient</b> (salty deep medulla). That gradient later pulls water out of the collecting duct so you can make concentrated urine." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"Label the descending limb &lsquo;water out&rsquo; and the ascending limb &lsquo;salt out (no water)&rsquo;. Shade the deep medulla as &lsquo;most concentrated&rsquo; — you'll use this gradient at the collecting duct." },
+        { k:"physio", layer:"P", do:"Note how the vasa recta protect the gradient.",
+          ask:"Why don't the vasa recta wash away the salty medullary gradient the loop worked to build?",
+          reveal:"The <b>vasa recta</b> are a <b>countercurrent exchanger</b> — blood flows down then back up, so it picks up and drops off solute/water symmetrically, supplying the medulla with blood WITHOUT dissipating the gradient." }
+      ]
+    },
+    {
+      id:"dct", name:"DCT & the Juxtaglomerular Apparatus", region:"Nephron · fine-tuning + sensing",
+      intro:"The distal tubule fine-tunes what leaves the body — and where it brushes past its own glomerulus, it forms the sensor that controls filtration and blood pressure.",
+      steps:[
+        { k:"draw", do:"Draw the <span class='em'>DCT</span> coiling in the <span class='em'>cortex</span> after the loop. Where it passes the vascular pole of its OWN glomerulus, draw the <span class='em'>juxtaglomerular apparatus (JGA)</span>." },
+        { k:"label", use:"Layer: black or brown + a pattern", do:"Label the DCT cell and what it handles.",
+          ask:"What does the DCT reabsorb (and under which hormones), and what does it secrete?",
+          reveal:"<b>Simple cuboidal, few microvilli.</b> Reabsorbs <b>Na⁺</b> (under <b>aldosterone</b>) and <b>Ca²⁺</b> (under <b>PTH</b>); secretes <b>K⁺</b> and <b>H⁺</b>. It's the hormone-controlled fine-tuning segment." },
+        { k:"cell", use:"★ special cells (green)", do:"Label the three parts of the JGA.",
+          ask:"Name the three components of the JGA and what each one does.",
+          reveal:"<b>Macula densa</b> (tall DCT cells) sense <b>filtrate NaCl / flow</b>. <b>Granular (juxtaglomerular) cells</b> in the afferent arteriole wall secrete <b>renin</b>. <b>Extraglomerular mesangial cells</b> relay signals between them." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"Put a ▲ on the JGA. Draw the macula densa touching the afferent arteriole's granular cells — this contact point is where the kidney senses flow and controls both GFR and blood pressure." },
+        { k:"physio", layer:"P", do:"Draw the RAAS feedback map (renin → angiotensin → aldosterone).",
+          ask:"When blood pressure/NaCl is LOW, what do the granular cells release, and trace the cascade to its two big effects.",
+          reveal:"<b>ON:</b> low BP / low NaCl (sensed by macula densa) &rarr; granular cells release <b>renin</b> &rarr; angiotensinogen → <b>angiotensin I</b> → (ACE, in lungs) → <b>angiotensin II</b>. <b>Effects:</b> vasoconstriction (↑BP) + <b>aldosterone</b> (adrenal cortex) &rarr; DCT/collecting duct reabsorb <b>Na⁺ &amp; water</b> (↑ blood volume). <b>OFF (⊖):</b> BP restored." },
+        { k:"physio", layer:"P", do:"Add tubuloglomerular feedback (the fast local loop).",
+          ask:"If the macula densa senses filtrate flowing by TOO fast (high NaCl), what does it do to the afferent arteriole and GFR?",
+          reveal:"High flow/NaCl at the macula densa &rarr; ⊖ signal &rarr; <b>afferent arteriole constricts</b> &rarr; <b>GFR ↓</b> back to normal. A fast, local negative-feedback brake that keeps GFR steady." }
+      ]
+    },
+    {
+      id:"collecting", name:"Collecting Duct", region:"Nephron · final concentration",
+      intro:"Many nephrons drain into each collecting duct, which runs back down through the salty medulla to the papilla. This is where hormones set the final urine concentration.",
+      steps:[
+        { k:"draw", do:"Draw several DCTs joining a <span class='em'>collecting duct</span> that runs through the <span class='em'>medulla</span> to a <span class='em'>papilla</span>, dripping into a minor calyx.", use:"Filtrate/urine = dashed line" },
+        { k:"cell", use:"★ special cells (green)", do:"Label the two collecting-duct cells.",
+          ask:"Name the two cell types and what each controls.",
+          reveal:"<b>Principal cells</b> &rarr; water balance (via <b>ADH</b>/aquaporins) and Na⁺/K⁺ balance (via <b>aldosterone</b>). <b>Intercalated cells</b> &rarr; acid-base balance (secrete <b>H⁺</b> or <b>HCO₃⁻</b>)." },
+        { k:"function", do:"Note the final step.",
+          ask:"What determines whether the final urine is concentrated or dilute here?",
+          reveal:"Whether <b>ADH</b> is present. ADH &rarr; principal cells insert <b>aquaporins</b> &rarr; water is pulled out into the salty medulla &rarr; <b>concentrated urine</b>. No ADH &rarr; duct stays water-tight &rarr; <b>dilute urine</b>." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"Finish your filtrate line: collecting duct &rarr; papilla &rarr; minor calyx (connect to your Part 1 urine path). Note beside the duct: &lsquo;ADH ↑ &rarr; concentrated; no ADH &rarr; dilute.&rsquo;" },
+        { k:"physio", layer:"P", do:"Draw the ADH feedback map.",
+          ask:"What does the body sense to release ADH, where does ADH act, and what's the effect on urine and blood?",
+          reveal:"<b>ON:</b> high blood osmolarity (or low volume) sensed by hypothalamic osmoreceptors &rarr; posterior pituitary releases <b>ADH</b>. <b>Target:</b> collecting-duct principal cells. <b>Effect:</b> ↑ water reabsorption &rarr; blood diluted, <b>urine concentrated &amp; small</b>. <b>OFF (⊖):</b> osmolarity normalizes." },
+        { k:"physio", layer:"P", do:"Add the opposing hormone: ANP.",
+          ask:"When blood volume/pressure is HIGH, what hormone opposes RAAS/ADH, and what does it do?",
+          reveal:"<b>ANP</b> (atrial natriuretic peptide, from stretched heart atria) &rarr; ⊖ Na⁺ reabsorption + ⊖ renin/aldosterone/ADH &rarr; more Na⁺ &amp; water lost in urine &rarr; <b>blood volume &amp; pressure ↓</b>. The brake on RAAS." }
+      ]
+    }
+  ]},
+
+  { title:"Part 3 · Filtration Barrier & Integration", stations:[
+    {
+      id:"barrier", name:"The Filtration Membrane", region:"Zoom · what gets filtered",
+      intro:"Zoom all the way in on the wall between blood and filtrate. Its three layers decide what leaves the blood — and when they break, you see it in the urine.",
+      steps:[
+        { k:"draw", do:"Draw the three layers of the filtration membrane, from blood to capsular space.",
+          ask:"Name the three layers a molecule crosses to go from glomerular blood into the filtrate.",
+          reveal:"1) <b>Fenestrated glomerular endothelium</b> (pores block cells) &rarr; 2) <b>glomerular basement membrane</b> (blocks large/negative proteins) &rarr; 3) <b>podocyte filtration slits</b> (slit diaphragms, final sieve)." },
+        { k:"label", do:"Note what passes vs. what's blocked.",
+          ask:"What freely passes the membrane, and what is normally held back (by size and by charge)?",
+          reveal:"<b>Passes:</b> water, ions, glucose, amino acids, urea, small wastes. <b>Blocked:</b> blood cells and large/negatively-charged plasma proteins (e.g., albumin). Selectivity is by <b>size AND charge</b>." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"Label a leak: <b>protein in urine (proteinuria)</b> or <b>blood in urine (hematuria)</b> means the filtration membrane is damaged. Write this beside your zoom — it's the clinical payoff of the histology." }
+      ]
+    },
+    {
+      id:"nephrontypes", name:"Nephron Types & Cortex vs. Medulla", region:"Integrate · where things live",
+      intro:"Not all nephrons are the same, and where each segment sits (cortex vs. medulla) is exactly what exams test. Tie it together.",
+      steps:[
+        { k:"draw", do:"Draw the two nephron types side by side.",
+          ask:"What are the two nephron types, and which one has a long loop diving deep into the medulla with vasa recta?",
+          reveal:"<b>Cortical nephrons</b> (~85%) — short loops, mostly in the cortex. <b>Juxtamedullary nephrons</b> — long loops plunging deep into the medulla with <b>vasa recta</b>; these are the ones that build the strong gradient and concentrate urine." },
+        { k:"label", do:"Sort the segments into cortex vs. medulla.",
+          ask:"Which nephron parts sit in the CORTEX, and which run through the MEDULLA?",
+          reveal:"<b>Cortex:</b> renal corpuscle, PCT, DCT, and the start of the collecting duct. <b>Medulla:</b> the loop of Henle and the collecting duct on its way to the papilla." },
+        { k:"checkpoint", do:"Map checkpoint.",
+          reveal:"On your map, draw the cortex/medulla boundary and check that every segment is on the correct side. This single check catches the most common exam mistakes." }
+      ]
+    },
+    {
+      id:"capstone", name:"Capstone: The One-Map Review", region:"Integrate · make it whole",
+      intro:"Your structures are drawn and labeled. This last station ties in the three processes and the hormone control so the whole kidney sits on one map.",
+      steps:[
+        { k:"draw", do:"Add a legend box for the <span class='em'>3 renal processes</span>: <b>filtration</b> (corpuscle), <b>reabsorption</b> (tubules → blood), <b>secretion</b> (blood → tubules). Urine = filtered − reabsorbed + secreted." },
+        { k:"label", use:"Filtrate/urine = dashed line", do:"Trace one drop all the way through.",
+          ask:"Trace a drop from blood to outside the body, naming every structure in order.",
+          reveal:"Blood → afferent arteriole → <b>glomerulus</b> → (filter) → capsular space → <b>PCT</b> → <b>loop of Henle</b> → <b>DCT</b> → <b>collecting duct</b> → papilla → minor calyx → major calyx → renal pelvis → <b>ureter</b> → bladder → urethra → out." },
+        { k:"label", do:"Build a segment-job summary.",
+          ask:"In one line per segment: PCT = ____, loop = ____, DCT = ____, collecting duct = ____.",
+          reveal:"PCT = bulk reabsorption (~65%). Loop = build the medullary gradient. DCT = hormone-tuned Na⁺/Ca²⁺ reabsorb, K⁺/H⁺ secrete. Collecting duct = final water (ADH) &amp; acid-base concentration." },
+        { k:"physio", layer:"P", do:"Build a master hormone feedback summary box.",
+          ask:"For RAAS/aldosterone, ADH, ANP, EPO, and PTH — what turns each ON and its main effect? Draw the mini-loops.",
+          reveal:"<b>Renin→Ang II→aldosterone</b> (low BP/NaCl) → Na⁺ &amp; water retention, vasoconstriction → ↑BP. <b>ADH</b> (high osmolarity) → water reabsorption → concentrated urine. <b>ANP</b> (high volume) → Na⁺/water loss → ↓BP (the brake). <b>EPO</b> (low O₂) → more RBCs. <b>PTH</b> (low Ca²⁺) → DCT reabsorbs Ca²⁺." },
+        { k:"checkpoint", do:"Final self-quiz &amp; submit.",
+          reveal:"Cover your labels and self-quiz: point to any structure and say its epithelium, its special cells + what each transports, and its function. Fix any gap with that station's reveal (now unlocked). When you can trace a drop blood→urine→outside and explain each hormone loop, your map is complete — take a photo of your finished map (or team whiteboard) and submit it to Canvas." }
+      ]
+    }
+  ]}
+];
+
+/* ---------- flatten ---------- */
+const SCREENS=[];
+PARTS.forEach((p,pi)=>p.stations.forEach(s=>SCREENS.push(Object.assign({partIndex:pi,partTitle:p.title},s))));
+const TOTAL=SCREENS.filter(s=>!s.isIntro).length;
+
+const KIND={
+  draw:{t:"Draw",ic:"✏️",cls:"ke-draw"},
+  label:{t:"Label & recall",ic:"🏷️",cls:"ke-label"},
+  cell:{t:"Special cells",ic:"🔬",cls:"ke-cell"},
+  function:{t:"Function",ic:"⚙️",cls:"ke-function"},
+  physio:{t:"Physiology · feedback map",ic:"🔄",cls:"ke-physio"},
+  checkpoint:{t:"Map checkpoint",ic:"🔍",cls:"ke-checkpoint"}
+};
+
+let MODE='anat';
+const state={ cur:0, step:{}, done:{}, revealed:{} };
+SCREENS.forEach(s=>{ if(!s.isIntro) state.step[s.id]=0; });
+
+const stage=document.getElementById('stage');
+const rail=document.getElementById('rail');
+
+/* ---- mode filtering: each step carries layer 'A' (anatomy/histology, default) or 'P' (physiology) ---- */
+function stepVisible(st){ if(MODE==='both') return true; if(MODE==='phys') return st.layer==='P'; return (st.layer||'A')==='A'; }
+function visSteps(s){ return s.isIntro?[]:s.steps.filter(stepVisible); }
+function screenVisible(idx){ const s=SCREENS[idx]; return s.isIntro || visSteps(s).length>0; }
+function visStations(){ const a=[]; SCREENS.forEach((s,i)=>{ if(!s.isIntro && screenVisible(i)) a.push(i); }); return a; }
+function totalStations(){ return visStations().length; }
+function stationNum(idx){ const p=visStations().indexOf(idx); return p<0?0:p+1; }
+
+/* ---- guided-walkthrough lock: no peeking ahead until the whole map is done ---- */
+function firstIncomplete(){ const list=visStations(); for(const i of list){ if(!state.done[SCREENS[i].id]) return i; } return -1; }
+function allDone(){ return firstIncomplete()===-1; }
+function isUnlocked(idx){ if(SCREENS[idx].isIntro) return true; if(allDone()) return true; const list=visStations(); return list.indexOf(idx)<=list.indexOf(firstIncomplete()); }
+
+function buildRail(){
+  rail.innerHTML=''; let last=-1;
+  SCREENS.forEach((s,idx)=>{
+    if(!screenVisible(idx)) return;
+    if(s.partIndex!==last){ const pt=document.createElement('div'); pt.className='ptitle'; pt.textContent=s.partTitle; rail.appendChild(pt); last=s.partIndex; }
+    const unlocked=isUnlocked(idx);
+    const b=document.createElement('button');
+    b.className='rail-item'+(idx===state.cur?' active':'')+(state.done[s.id]?' done':'')+(unlocked?'':' locked');
+    const label=s.isIntro?'How to use this lab':s.name;
+    const badge=s.isIntro?'★':stationNum(idx);
+    const right=unlocked?'<span class="tick">✓</span>':'<span class="lock">🔒</span>';
+    b.innerHTML='<span class="num">'+badge+'</span><span class="lbl">'+label+'</span>'+right;
+    if(unlocked) b.onclick=()=>{ state.cur=idx; render(); };
+    else b.onclick=()=>toast('Finish your current station to unlock this one 🔒');
+    rail.appendChild(b);
+  });
+}
+function updateProgress(){
+  const list=visStations(), total=list.length;
+  const dc=list.filter(i=>state.done[SCREENS[i].id]).length;
+  const pct=total?Math.round(dc/total*100):0;
+  document.getElementById('overallFill').style.width=pct+'%';
+  document.getElementById('pctText').textContent=pct+'%';
+  document.getElementById('countText').textContent=dc+' / '+total+' stations';
+  const mn=document.getElementById('modeNote');
+  if(allDone()){ mn.className='modenote review'; mn.textContent='🔓 Review mode — revisit any station & reveal freely'; }
+  else { mn.className='modenote'; mn.textContent='🔒 Guided walkthrough — the next station unlocks when you finish this one'; }
+}
+
+function renderIntro(){
+  return `<div class="card">
+    <div class="card-head">
+      <p class="chd-eye">Start Here</p>
+      <h2>Build the kidney &amp; nephron — one focused step at a time</h2>
+      <span class="region">Majors A&amp;P · construction lab</span>
+      <p class="chd-intro">You are the cartographer. This lab reveals a single instruction at a time so you can draw it, answer the question on your own map, then reveal the answer to self-check. You build the map by hand — nothing here is auto-graded. The goal is one complete map you can explain.</p>
+    </div>
+    <div class="welcome-body">
+      <h3>What you'll need</h3>
+      <div class="kit">
+        <div class="k"><b>Paper or a whiteboard</b> Ledger/A3, taped pages, or a big team whiteboard — you're mapping the whole kidney, nephron, and urinary tract.</div>
+        <div class="k"><b>Colored markers or pencils</b> You'll set a color per layer in the first station and reuse it everywhere.</div>
+        <div class="k"><b>Your resources</b> Textbook, lecture notes, histology atlas. Look things up — that's the point.</div>
+        <div class="k"><b>Room to annotate</b> Leave margins; several checkpoints link distant organs with arrows.</div>
+      </div>
+
+      <h3>Working solo or as a team? Both work</h3>
+      <div class="kit">
+        <div class="k"><b>✏️ Solo</b> Build your own map on paper and self-check with the reveals as you go.</div>
+        <div class="k"><b>👥 Team whiteboard</b> Gather your team at a whiteboard, grab the colored markers, and build one big map together. When you finish, <b>submit a photo of your whiteboard to Canvas</b>.</div>
+      </div>
+      <div class="howrow" style="margin-top:10px"><span class="hi">🤝</span><div><b>Everyone builds the whole map — don't split it up.</b> At each structure, the micro and macro leads bring their view to the SAME organ, so you draw it zoomed in and zoomed out together. Rotate roles every station so nobody gets stuck on just one part.</div></div>
+
+      <h3>Team roles — rotate at each station</h3>
+      <div class="kit">
+        <div class="k"><b>🔬 Micro lead</b> Histology, epithelium, and special cells + their secretions — the zoom-in view.</div>
+        <div class="k"><b>🫁 Macro lead</b> Gross anatomy — regions, shape, layers, and sphincters — the zoom-out view.</div>
+        <div class="k"><b>🖊️ Cartographer</b> Draws on the whiteboard as the team decides together.</div>
+        <div class="k"><b>🎙️ Guide &amp; checker</b> Drives the lab, reads each step aloud, and opens the reveal to check the team's work.</div>
+      </div>
+      <h3>How to lay out your map — your choice</h3>
+      <div class="kit">
+        <div class="k"><b>Option A · One continuous tract</b> Sketch the whole path — kidney → nephron → bladder → out — as one connected drawing, then add zoom-in bubbles for the histology/cells.</div>
+        <div class="k"><b>Option B · A sequence of boxes</b> Draw a row/flow of connected boxes — one per structure — each holding its gross (macro) view and a zoom-in (micro/histology) view. Arrows link box to box in order.</div>
+      </div>
+      <p class="routewrap" style="margin-top:10px">It doesn't have to look like a textbook. Be creative — zoom in, zoom out, use color. What matters is that structures follow the right <b>sequence</b> and every label is correct. Pick whichever layout is easiest for you to follow.</p>
+
+      <h3>How each station works</h3>
+      <div class="howlist">
+        <div class="howrow"><span class="hi">1️⃣</span><div>One <b>step</b> shows at a time — a drawing action or a direct question. Draw and answer it on your map first.</div></div>
+        <div class="howrow"><span class="hi">👁️</span><div><b>Answers stay locked while you build</b> — use your notes, lectures, textbook &amp; research. When every station is complete, <b>reveals unlock</b> so you can double-check your map and use it for recall.</div></div>
+        <div class="howrow"><span class="hi">➡️</span><div><b>Next step</b> advances; the dots at the top track your place inside the station.</div></div>
+        <div class="howrow"><span class="hi">✅</span><div><b>Mark station complete</b> on the last step — the sidebar shows how far you've come.</div></div>
+      </div>
+      <h3>The route</h3>
+      <p class="routewrap">First you'll <b>build your legend</b> (color + symbol key). Then Part 1 covers the kidney, blood supply, and urinary tract (blood in &rarr; urine out), Part 2 follows a drop of filtrate through the nephron (corpuscle &rarr; PCT &rarr; loop &rarr; DCT &rarr; collecting duct), and Part 3 zooms into the filtration membrane and ties it together. Use the <b>mode toggle</b> up top to choose Anatomy &amp; Histology, Combined, or Physiology.</p>
+
+      <h3>Keep this lab for next semester</h3>
+      <div class="savepanel">
+        <div class="qrbox" id="qrbox"></div>
+        <div class="qrtext"><b>Physiology builds on this same map.</b> Save or bookmark this page. Next semester in Physiology, reopen it, switch the mode to <b>Physiology</b>, and add the feedback-map layer to your saved anatomy map. Scan or screenshot this code to keep the link.<div class="qrlink" id="qrlink"></div></div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <div class="foot-left" style="font-family:var(--serif);color:var(--ink-soft);font-size:14px">Gather your materials, then start by building your legend.</div>
+      <button class="btn primary big" onclick="startFirst()">Start the walkthrough →</button>
+    </div>
+  </div>`;
+}
+
+function renderStation(s,idx){
+  const steps=visSteps(s), n=steps.length;
+  let i=state.step[s.id]||0; if(i>=n) i=n-1; if(i<0) i=0;
+  const st=steps[i]; const km=KIND[st.k]||KIND.draw;
+  const rkey=s.id+':'+i; const isRev=!!state.revealed[rkey];
+  const dots=steps.map((_,j)=>`<i class="${j<i?'done':(j===i?'on':'')}"></i>`).join('');
+  const useChip=st.use?`<div class="uselegend">🎨 ${st.use}</div>`:'';
+  const askBlock=st.ask?`<div class="ask"><div class="ask-t">❓ Answer on your map, then label it</div><p>${st.ask}</p></div>`:'';
+  const revealsUnlocked=allDone();
+  const revealBtn=st.reveal?(revealsUnlocked
+      ? `<button class="reveal-btn" onclick="toggleReveal('${rkey}')">${isRev?'👁️ Hide answer':'👁️ Reveal answer'}</button>`
+      : `<div class="reveal-locked">🔒 <span>Answers unlock once your <b>whole map is complete</b>. For now, build it from your notes, lectures, textbook &amp; research — then reveal to double-check your work and for recall.</span></div>`):'';
+  const revealBody=(st.reveal&&revealsUnlocked)?`<div class="reveal-body ${isRev?'open':''}"><div class="rv-t">Expert answer — check &amp; fix your map</div><p>${st.reveal}</p></div>`:'';
+
+  const body = st.k==='checkpoint'
+    ? `<div class="kind-eye"><span class="ke-ic ${km.cls}">${km.ic}</span><span class="ke-t">${km.t}</span><span class="ke-c">Step ${i+1} of ${n}</span></div>
+       <div class="cp-box"><div class="cp-t">Annotate this on YOUR map</div><p>${st.reveal||st.do}</p></div>`
+    : `<div class="kind-eye"><span class="ke-ic ${km.cls}">${km.ic}</span><span class="ke-t">${km.t}</span><span class="ke-c">Step ${i+1} of ${n}</span></div>
+       <div class="do-line">${st.do}</div>
+       ${useChip}${askBlock}${revealBtn}${revealBody}`;
+
+  const isLastStep=i>=n-1;
+  const isDone=!!state.done[s.id];
+  const vl=visStations(); const vpos=vl.indexOf(idx);
+  const nextIdx=(vpos>=0 && vpos<vl.length-1)?vl[vpos+1]:-1;
+
+  return `<div class="card">
+    <div class="card-head">
+      <p class="chd-eye">${s.partTitle} · Station ${stationNum(idx)} of ${totalStations()}</p>
+      <h2>${s.name}</h2>
+      <span class="region">${s.region}</span>
+      <p class="chd-intro">${s.intro}</p>
+    </div>
+    <div class="stepdots">${dots}</div>
+    <div class="card-body">${body}</div>
+    <div class="card-foot">
+      <div class="foot-left">
+        <button class="btn ghost" onclick="stepMove(-1)" ${i===0?'disabled':''}>← Back</button>
+        ${ isLastStep
+            ? `<label class="donebox ${isDone?'on':''}"><input type="checkbox" ${isDone?'checked':''} onchange="toggleDone('${s.id}',this.checked)"> Mark station complete</label>`
+            : `<button class="btn primary" onclick="stepMove(1)">Next step →</button>` }
+      </div>
+      ${ isLastStep && nextIdx>=0
+          ? `<button class="btn gold" onclick="jump(${nextIdx})" ${isDone?'':'disabled'} title="${isDone?'':'Mark this station complete first'}">Next station →</button>`
+          : (isLastStep ? `<button class="btn gold" onclick="finish()" ${isDone?'':'disabled'}>Finish 🎉</button>` : `<span class="eyebrow">${n-1-i} step${n-1-i===1?'':'s'} left</span>`) }
+    </div>
+  </div>`;
+}
+
+function render(){
+  const s=SCREENS[state.cur];
+  stage.innerHTML=s.isIntro?renderIntro():renderStation(s,state.cur);
+  if(s.isIntro) fillQR();
+  buildRail(); updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function stepMove(d){
+  const s=SCREENS[state.cur]; if(s.isIntro) return;
+  const n=visSteps(s).length; let i=(state.step[s.id]||0)+d;
+  if(i<0)i=0; if(i>n-1)i=n-1; state.step[s.id]=i; render();
+}
+function startFirst(){ const list=visStations(); if(list.length) jump(list[0]); }
+function toggleReveal(key){ state.revealed[key]=!state.revealed[key]; render(); }
+function toggleDone(id,v){ state.done[id]=v; if(v){ toast(allDone()?'🔓 Map complete — review mode unlocked!':'Station complete ✓'); } render(); }
+function jump(idx){ if(!isUnlocked(idx)){ toast('Finish your current station to unlock the next one 🔒'); return; } state.cur=idx; render(); }
+function finish(){
+  const total=totalStations();
+  const dc=visStations().filter(i=>state.done[SCREENS[i].id]).length;
+  toast(dc===total?('Map complete — all '+total+' stations! 🎉'):('Nice work — '+dc+'/'+total+' stations done'));
+}
+function setMode(m){
+  MODE=m;
+  document.querySelectorAll('#modeToggle button').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.m===m)));
+  document.getElementById('physNote').hidden=(m!=='phys');
+  SCREENS.forEach(s=>{ if(!s.isIntro){ const n=visSteps(s).length; let i=state.step[s.id]||0; if(i>=n) i=Math.max(0,n-1); state.step[s.id]=i; } });
+  if(!screenVisible(state.cur)) state.cur=0;
+  render();
+}
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('show'),2400); }
+
+document.getElementById('resetBtn').onclick=()=>{ state.done={}; state.revealed={}; state.cur=0; SCREENS.forEach(s=>{ if(!s.isIntro) state.step[s.id]=0; }); render(); toast('Progress reset'); };
+document.getElementById('printBtn').onclick=()=>window.print();
+document.querySelectorAll('#modeToggle button').forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+
+render();
+</script>
+</body>
+</html>
