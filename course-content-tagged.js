@@ -4,7 +4,7 @@
    enhanced MC + free-recall decks with self-grading rubrics; all other
    topics carried from the intact bank. The app reads
    window.BIO004_COURSE_CONTENT at load time.
-   Total cards: 1972
+   Total cards: 2020
    ============================================================ */
 window.BIO004_COURSE_CONTENT = {
  "courseLabel": "BIO 004 Human Anatomy",
@@ -10649,6 +10649,212 @@ window.BIO004_COURSE_CONTENT = {
      "summary": "The endocrine glands and their locations in the body.",
      "lecturePageUrl": "endocrine-concept-videos.html",
      "cards": [
+      {
+       "id": "fr1",
+       "dok": 3,
+       "q": "Give the location of the pituitary gland and name its two lobes.",
+       "a": "In the sella turcica of the sphenoid bone, on the infundibulum; anterior lobe (adenohypophysis) and posterior lobe (neurohypophysis).",
+       "tags": [
+        "endocrine"
+       ],
+       "rubric": [
+        "Sella turcica of sphenoid, on infundibulum",
+        "Anterior adenohypophysis and posterior neurohypophysis"
+       ]
+      },
+      {
+       "id": "fr2",
+       "dok": 4,
+       "q": "Contrast how the hypothalamus connects to the anterior versus posterior pituitary.",
+       "a": "The anterior pituitary is linked by the hypophyseal portal system (blood vessels); the posterior pituitary by the hypothalamo-hypophyseal tract (axons).",
+       "tags": [
+        "endocrine"
+       ],
+       "rubric": [
+        "Anterior = hypophyseal portal system (vascular)",
+        "Posterior = hypothalamo-hypophyseal tract (neural)"
+       ]
+      },
+      {
+       "id": "fr3",
+       "dok": 3,
+       "q": "Give the location of the thyroid gland and name its two cell types.",
+       "a": "Anterior neck over the trachea, two lobes joined by an isthmus; follicular cells and parafollicular (C) cells.",
+       "tags": [
+        "endocrine"
+       ],
+       "rubric": [
+        "Anterior neck, two lobes + isthmus over trachea",
+        "Follicular and parafollicular (C) cells"
+       ]
+      },
+      {
+       "id": "fr4",
+       "dok": 2,
+       "q": "Give the number and location of the parathyroid glands.",
+       "a": "Usually four glands embedded on the posterior surface of the thyroid.",
+       "tags": [
+        "endocrine"
+       ],
+       "rubric": [
+        "Four glands",
+        "Posterior surface of thyroid"
+       ]
+      },
+      {
+       "id": "fr5",
+       "dok": 3,
+       "q": "Give the location of the adrenal glands and their two main regions.",
+       "a": "One superior to each kidney; an outer adrenal cortex and an inner adrenal medulla.",
+       "tags": [
+        "endocrine"
+       ],
+       "rubric": [
+        "Superior to each kidney",
+        "Cortex (outer) and medulla (inner)"
+       ]
+      },
+      {
+       "id": "fr6",
+       "dok": 3,
+       "q": "Name the three zones of the adrenal cortex from superficial to deep.",
+       "a": "Zona glomerulosa, zona fasciculata, and zona reticularis.",
+       "tags": [
+        "endocrine"
+       ],
+       "rubric": [
+        "All three zones in order"
+       ]
+      },
+      {
+       "id": "fr7",
+       "dok": 3,
+       "q": "Name the cell types of the pancreatic islets and what each secretes.",
+       "a": "Alpha cells (glucagon), beta cells (insulin), and delta cells (somatostatin).",
+       "tags": [
+        "endocrine"
+       ],
+       "rubric": [
+        "Alpha/beta/delta cells",
+        "Glucagon, insulin, somatostatin"
+       ]
+      },
+      {
+       "id": "fr8",
+       "dok": 2,
+       "q": "Give the location of the pineal gland and its secretion.",
+       "a": "In the epithalamus of the brain; secretes melatonin.",
+       "tags": [
+        "endocrine"
+       ],
+       "rubric": [
+        "Epithalamus",
+        "Melatonin"
+       ]
+      },
+      {
+       "id": "fr9",
+       "dok": 2,
+       "q": "Give the location of the thymus and its endocrine role.",
+       "a": "In the mediastinum behind the sternum; secretes thymosin for T-cell maturation.",
+       "tags": [
+        "endocrine"
+       ],
+       "rubric": [
+        "Mediastinum behind sternum",
+        "Thymosin / T-cell maturation"
+       ]
+      },
+      {
+       "id": "fr10",
+       "dok": 3,
+       "q": "Which hormones does the posterior pituitary store and release, and where are they made?",
+       "a": "Antidiuretic hormone (ADH) and oxytocin; both are made in the hypothalamus.",
+       "tags": [
+        "endocrine"
+       ],
+       "rubric": [
+        "ADH and oxytocin",
+        "Made in hypothalamus"
+       ]
+      },
+      {
+       "id": "fr11",
+       "dok": 2,
+       "q": "Name the gonads that act as endocrine glands and a hormone from each.",
+       "a": "Ovaries (estrogen and progesterone) and testes (testosterone).",
+       "tags": [
+        "endocrine"
+       ],
+       "rubric": [
+        "Ovaries and testes",
+        "One correct hormone each"
+       ]
+      },
+      {
+       "id": "fr12",
+       "dok": 3,
+       "q": "Describe the structure of a thyroid follicle.",
+       "a": "A sphere of follicular cells surrounding central colloid; parafollicular cells lie between follicles.",
+       "tags": [
+        "endocrine"
+       ],
+       "rubric": [
+        "Follicular cells around central colloid",
+        "Parafollicular cells between follicles"
+       ]
+      },
+      {
+       "id": "fr13",
+       "dok": 2,
+       "q": "Name the cells of the adrenal medulla and what they secrete.",
+       "a": "Chromaffin cells, which secrete epinephrine and norepinephrine.",
+       "tags": [
+        "endocrine"
+       ],
+       "rubric": [
+        "Chromaffin cells",
+        "Epinephrine and norepinephrine"
+       ]
+      },
+      {
+       "id": "fr14",
+       "dok": 3,
+       "q": "Which gland is both endocrine and exocrine, and name the structures for each role.",
+       "a": "The pancreas: exocrine acini secrete digestive juice into ducts, and endocrine islets of Langerhans secrete hormones into blood.",
+       "tags": [
+        "endocrine"
+       ],
+       "rubric": [
+        "Pancreas",
+        "Exocrine acini and endocrine islets"
+       ]
+      },
+      {
+       "id": "fr15",
+       "dok": 3,
+       "q": "Where is the hypothalamus and how does it relate to the pituitary?",
+       "a": "In the diencephalon, below the thalamus; it controls the pituitary and connects via the infundibulum.",
+       "tags": [
+        "endocrine"
+       ],
+       "rubric": [
+        "Diencephalon, below thalamus",
+        "Controls pituitary via infundibulum"
+       ]
+      },
+      {
+       "id": "fr16",
+       "dok": 3,
+       "q": "Name several hormones released by the anterior pituitary.",
+       "a": "Growth hormone, thyroid-stimulating hormone, adrenocorticotropic hormone, follicle-stimulating hormone, luteinizing hormone, and prolactin.",
+       "tags": [
+        "endocrine"
+       ],
+       "rubric": [
+        "Names multiple anterior pituitary hormones"
+       ]
+      },
       {
        "id": "c1",
        "dok": 1,
@@ -23616,6 +23822,228 @@ window.BIO004_COURSE_CONTENT = {
      "lecturePageUrl": "reproductive-concept-videos.html",
      "cards": [
       {
+       "id": "fr1",
+       "dok": 3,
+       "q": "Describe the scrotum: its external ridge, internal divider, and the two muscles that act on it.",
+       "a": "External median raphe, internal scrotal septum; the dartos (smooth muscle) and cremaster (skeletal muscle) adjust its position.",
+       "tags": [
+        "reproductive",
+        "male"
+       ],
+       "rubric": [
+        "Raphe and scrotal septum",
+        "Dartos (smooth) and cremaster (skeletal) muscles"
+       ]
+      },
+      {
+       "id": "fr2",
+       "dok": 3,
+       "q": "Name the tissue layers covering the testes and what the tunica albuginea forms inside.",
+       "a": "Tunica vaginalis (from peritoneum) and tunica albuginea (dense irregular CT), which forms septa dividing the testis into 200 to 300 lobules containing seminiferous tubules.",
+       "tags": [
+        "reproductive",
+        "male"
+       ],
+       "rubric": [
+        "Tunica vaginalis and tunica albuginea",
+        "Septa/lobules with seminiferous tubules"
+       ]
+      },
+      {
+       "id": "fr3",
+       "dok": 3,
+       "q": "Where are the Sertoli (sustentacular) cells and what barrier do they form?",
+       "a": "Within the seminiferous tubules, from basement membrane to lumen; their tight junctions form the blood-testis barrier.",
+       "tags": [
+        "reproductive",
+        "male"
+       ],
+       "rubric": [
+        "In seminiferous tubules",
+        "Tight junctions form blood-testis barrier"
+       ]
+      },
+      {
+       "id": "fr4",
+       "dok": 2,
+       "q": "Where are the interstitial (Leydig) cells and what do they secrete?",
+       "a": "In the spaces between seminiferous tubules; they secrete testosterone.",
+       "tags": [
+        "reproductive",
+        "male"
+       ],
+       "rubric": [
+        "Between seminiferous tubules",
+        "Secrete testosterone"
+       ]
+      },
+      {
+       "id": "fr5",
+       "dok": 3,
+       "q": "Name the parts of a mature sperm cell and what each does.",
+       "a": "Head with acrosome (enzymes to penetrate the oocyte), midpiece (mitochondria for energy), and tail/flagellum (motility).",
+       "tags": [
+        "reproductive",
+        "male"
+       ],
+       "rubric": [
+        "Head/acrosome, midpiece, tail",
+        "Correct role of each"
+       ]
+      },
+      {
+       "id": "fr6",
+       "dok": 4,
+       "q": "Trace sperm from the seminiferous tubules to the epididymis.",
+       "a": "Seminiferous tubules, straight tubules, rete testis, efferent ducts, ductus epididymis.",
+       "tags": [
+        "reproductive",
+        "male"
+       ],
+       "rubric": [
+        "Seminiferous to straight tubules to rete testis",
+        "Efferent ducts to epididymis"
+       ]
+      },
+      {
+       "id": "fr7",
+       "dok": 2,
+       "q": "Give the shape, location, and functions of the epididymis.",
+       "a": "Comma-shaped organ along the posterior testis; matures and stores sperm and propels them by peristalsis.",
+       "tags": [
+        "reproductive",
+        "male"
+       ],
+       "rubric": [
+        "Comma-shaped, posterior testis",
+        "Sperm maturation, storage, propulsion"
+       ]
+      },
+      {
+       "id": "fr8",
+       "dok": 3,
+       "q": "Trace the ductus deferens and name its dilated terminal portion.",
+       "a": "Ascends in the spermatic cord, enters the pelvis, loops over the ureter along the posterior bladder; its terminal dilation is the ampulla.",
+       "tags": [
+        "reproductive",
+        "male"
+       ],
+       "rubric": [
+        "Ascends via spermatic cord over the ureter",
+        "Terminal ampulla"
+       ]
+      },
+      {
+       "id": "fr9",
+       "dok": 3,
+       "q": "List the structures contained in the spermatic cord.",
+       "a": "Ductus deferens, pampiniform (venous) plexus, testicular artery, autonomic nerves, lymphatic vessels, and the cremaster muscle.",
+       "tags": [
+        "reproductive",
+        "male"
+       ],
+       "rubric": [
+        "Ductus deferens and pampiniform plexus",
+        "Testicular artery, nerves, lymphatics, cremaster"
+       ]
+      },
+      {
+       "id": "fr10",
+       "dok": 3,
+       "q": "How is each ejaculatory duct formed and where does it end?",
+       "a": "Union of the duct of the seminal vesicle and the ampulla of the ductus deferens; it ends in the prostatic urethra.",
+       "tags": [
+        "reproductive",
+        "male"
+       ],
+       "rubric": [
+        "Seminal vesicle duct + ampulla of ductus deferens",
+        "Terminates in prostatic urethra"
+       ]
+      },
+      {
+       "id": "fr11",
+       "dok": 2,
+       "q": "Name the three accessory sex glands.",
+       "a": "Seminal vesicles, prostate, and bulbourethral (Cowper) glands.",
+       "tags": [
+        "reproductive",
+        "male"
+       ],
+       "rubric": [
+        "All three glands named"
+       ]
+      },
+      {
+       "id": "fr12",
+       "dok": 2,
+       "q": "Give the location and secretion of the seminal vesicles.",
+       "a": "Posterior to the base of the bladder; secrete an alkaline, fructose-rich fluid with prostaglandins and clotting proteins.",
+       "tags": [
+        "reproductive",
+        "male"
+       ],
+       "rubric": [
+        "Posterior to bladder base",
+        "Alkaline fluid with fructose/prostaglandins"
+       ]
+      },
+      {
+       "id": "fr13",
+       "dok": 2,
+       "q": "Give the shape, location, and secretion of the prostate.",
+       "a": "A single walnut-sized gland inferior to the bladder surrounding the prostatic urethra; secretes a milky, slightly acidic fluid.",
+       "tags": [
+        "reproductive",
+        "male"
+       ],
+       "rubric": [
+        "Surrounds prostatic urethra, inferior to bladder",
+        "Milky slightly acidic secretion"
+       ]
+      },
+      {
+       "id": "fr14",
+       "dok": 2,
+       "q": "Give the location and function of the bulbourethral (Cowper) glands.",
+       "a": "Pea-sized glands inferior to the prostate beside the membranous urethra; secrete alkaline mucus into the spongy urethra.",
+       "tags": [
+        "reproductive",
+        "male"
+       ],
+       "rubric": [
+        "Inferior to prostate by membranous urethra",
+        "Alkaline mucus into spongy urethra"
+       ]
+      },
+      {
+       "id": "fr15",
+       "dok": 3,
+       "q": "Name the three components of the penis and its three columns of erectile tissue.",
+       "a": "Root, body, and glans; two corpora cavernosa and one corpus spongiosum, which surrounds the spongy urethra.",
+       "tags": [
+        "reproductive",
+        "male"
+       ],
+       "rubric": [
+        "Root, body, glans",
+        "Two corpora cavernosa, one corpus spongiosum with urethra"
+       ]
+      },
+      {
+       "id": "fr16",
+       "dok": 3,
+       "q": "Name the four sources of the fluid in semen.",
+       "a": "Seminiferous tubules (sperm), seminal vesicles, prostate, and bulbourethral glands.",
+       "tags": [
+        "reproductive",
+        "male"
+       ],
+       "rubric": [
+        "All four sources named"
+       ]
+      },
+      {
        "id": "c1",
        "dok": 1,
        "q": "What is the skin-covered sac that holds the testes outside the body cavity?",
@@ -24253,6 +24681,225 @@ window.BIO004_COURSE_CONTENT = {
      "summary": "The structures of the female reproductive system and the external genitalia.",
      "lecturePageUrl": "reproductive-concept-videos.html",
      "cards": [
+      {
+       "id": "fr1",
+       "dok": 2,
+       "q": "List the organs of the female reproductive system.",
+       "a": "Ovaries, uterine tubes, uterus, vagina, the vulva (external genitalia), and the mammary glands.",
+       "tags": [
+        "reproductive",
+        "female"
+       ],
+       "rubric": [
+        "All organs named including vulva and mammary glands"
+       ]
+      },
+      {
+       "id": "fr2",
+       "dok": 3,
+       "q": "Name the histological layers of the ovary from superficial to deep.",
+       "a": "Germinal epithelium, tunica albuginea, cortex (with follicles), and medulla.",
+       "tags": [
+        "reproductive",
+        "female"
+       ],
+       "rubric": [
+        "All layers in order superficial to deep"
+       ]
+      },
+      {
+       "id": "fr3",
+       "dok": 2,
+       "q": "Give the ovary's role, location, and its male homolog.",
+       "a": "The female gonad, located on either side of the uterus; homologous to the testes.",
+       "tags": [
+        "reproductive",
+        "female"
+       ],
+       "rubric": [
+        "Female gonad beside the uterus",
+        "Homolog = testes"
+       ]
+      },
+      {
+       "id": "fr4",
+       "dok": 3,
+       "q": "Name the regions of the uterine tube from the ovary to the uterus.",
+       "a": "Infundibulum with fimbriae, ampulla, and isthmus.",
+       "tags": [
+        "reproductive",
+        "female"
+       ],
+       "rubric": [
+        "Infundibulum/fimbriae, ampulla, isthmus in order"
+       ]
+      },
+      {
+       "id": "fr5",
+       "dok": 3,
+       "q": "Name the divisions of the uterus and define the internal and external os.",
+       "a": "Fundus, body, and cervix, with the isthmus between body and cervix; the cervical canal opens into the uterine cavity at the internal os and into the vagina at the external os.",
+       "tags": [
+        "reproductive",
+        "female"
+       ],
+       "rubric": [
+        "Fundus, body, cervix (+ isthmus)",
+        "Internal os to cavity, external os to vagina"
+       ]
+      },
+      {
+       "id": "fr6",
+       "dok": 3,
+       "q": "Name the ligaments that hold the uterus in position.",
+       "a": "Broad ligaments, uterosacral ligaments, cardinal (lateral cervical) ligaments, and round ligaments.",
+       "tags": [
+        "reproductive",
+        "female"
+       ],
+       "rubric": [
+        "All four ligaments named"
+       ]
+      },
+      {
+       "id": "fr7",
+       "dok": 3,
+       "q": "Name the three layers of the uterine wall from outside in and the tissue of each.",
+       "a": "Perimetrium (serosa), myometrium (smooth muscle, thickest in the fundus), and endometrium (inner mucosal layer).",
+       "tags": [
+        "reproductive",
+        "female"
+       ],
+       "rubric": [
+        "All three in order",
+        "Correct tissue; myometrium thickest in fundus"
+       ]
+      },
+      {
+       "id": "fr8",
+       "dok": 3,
+       "q": "What is the rectouterine pouch, and what is it also called?",
+       "a": "The deep peritoneal pouch between the uterus and rectum, the most inferior point of the pelvic cavity; also called the pouch of Douglas.",
+       "tags": [
+        "reproductive",
+        "female"
+       ],
+       "rubric": [
+        "Pouch between uterus and rectum, lowest pelvic point",
+        "Pouch of Douglas"
+       ]
+      },
+      {
+       "id": "fr9",
+       "dok": 3,
+       "q": "Give the vagina's location, its special features, and its lining.",
+       "a": "Between the bladder and rectum; has a fornix around the cervix and rugae; lined by mucous membrane (stratified squamous epithelium).",
+       "tags": [
+        "reproductive",
+        "female"
+       ],
+       "rubric": [
+        "Between bladder and rectum",
+        "Fornix, rugae, mucous membrane lining"
+       ]
+      },
+      {
+       "id": "fr10",
+       "dok": 3,
+       "q": "Name the components of the vulva.",
+       "a": "Mons pubis, labia majora, labia minora, clitoris, vestibule, and the greater vestibular (Bartholin) glands.",
+       "tags": [
+        "reproductive",
+        "female"
+       ],
+       "rubric": [
+        "All components named"
+       ]
+      },
+      {
+       "id": "fr11",
+       "dok": 4,
+       "q": "Give the male homolog of the labia majora, the clitoris, and the greater vestibular glands.",
+       "a": "Labia majora are homologous to the scrotum, the clitoris to the penis, and the greater vestibular glands to the bulbourethral glands.",
+       "tags": [
+        "reproductive",
+        "female"
+       ],
+       "rubric": [
+        "Labia majora to scrotum, clitoris to penis",
+        "Greater vestibular glands to bulbourethral glands"
+       ]
+      },
+      {
+       "id": "fr12",
+       "dok": 3,
+       "q": "Define the perineum and name its two triangles.",
+       "a": "The diamond-shaped area between the thighs bounded by the pubic symphysis, ischial tuberosities, and coccyx; the anterior urogenital triangle and the posterior anal triangle.",
+       "tags": [
+        "reproductive",
+        "female"
+       ],
+       "rubric": [
+        "Diamond area with correct boundaries",
+        "Urogenital and anal triangles"
+       ]
+      },
+      {
+       "id": "fr13",
+       "dok": 3,
+       "q": "Describe the mammary glands: the muscles they sit on, what suspends them, and their internal structures.",
+       "a": "They overlie pectoralis major and serratus anterior, are suspended by the suspensory ligaments of Cooper, and contain lobes, lobules, alveoli, and lactiferous ducts and sinuses opening at the nipple.",
+       "tags": [
+        "reproductive",
+        "female"
+       ],
+       "rubric": [
+        "Over pectoralis major/serratus, Cooper's ligaments",
+        "Lobes/lobules/alveoli/lactiferous ducts to nipple"
+       ]
+      },
+      {
+       "id": "fr14",
+       "dok": 2,
+       "q": "What is the broad ligament and what does it carry?",
+       "a": "A double fold of peritoneum draped over the uterus and tubes on each side of the pelvis; it carries blood vessels, lymphatics, and nerves.",
+       "tags": [
+        "reproductive",
+        "female"
+       ],
+       "rubric": [
+        "Double peritoneal fold beside the uterus",
+        "Carries vessels/lymphatics/nerves"
+       ]
+      },
+      {
+       "id": "fr15",
+       "dok": 2,
+       "q": "Describe the structure of the clitoris.",
+       "a": "A small cylindrical mass of two erectile bodies (corpora cavernosa) that is homologous to the penis.",
+       "tags": [
+        "reproductive",
+        "female"
+       ],
+       "rubric": [
+        "Two erectile corpora cavernosa",
+        "Homologous to penis"
+       ]
+      },
+      {
+       "id": "fr16",
+       "dok": 3,
+       "q": "Distinguish the internal os, external os, and cervical canal.",
+       "a": "The cervical canal is the interior of the cervix; it opens superiorly into the uterine cavity at the internal os and inferiorly into the vagina at the external os.",
+       "tags": [
+        "reproductive",
+        "female"
+       ],
+       "rubric": [
+        "Cervical canal = interior of cervix",
+        "Internal os to cavity, external os to vagina"
+       ]
+      },
       {
        "id": "c1",
        "dok": 1,
