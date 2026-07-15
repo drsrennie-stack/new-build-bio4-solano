@@ -4,7 +4,7 @@
    enhanced MC + free-recall decks with self-grading rubrics; all other
    topics carried from the intact bank. The app reads
    window.BIO004_COURSE_CONTENT at load time.
-   Total cards: 1924
+   Total cards: 1972
    ============================================================ */
 window.BIO004_COURSE_CONTENT = {
  "courseLabel": "BIO 004 Human Anatomy",
@@ -10647,8 +10647,7 @@ window.BIO004_COURSE_CONTENT = {
      "id": "t-endocrine",
      "title": "Endocrine Anatomy",
      "summary": "The endocrine glands and their locations in the body.",
-     "lecturePageUrl": "slides-endocrine.html",
-     "videoUrl": "endocrine-concept-videos.html",
+     "lecturePageUrl": "endocrine-concept-videos.html",
      "cards": [
       {
        "id": "c1",
@@ -21036,9 +21035,228 @@ window.BIO004_COURSE_CONTENT = {
      "id": "t-alimentary-canal",
      "title": "The Alimentary Canal",
      "summary": "The organs of the alimentary canal and the layers of the GI tract wall.",
-     "lecturePageUrl": "slides-gi-anatomy.html",
-     "videoUrl": "gi-concept-videos.html",
+     "lecturePageUrl": "gi-concept-videos.html",
      "cards": [
+      {
+       "id": "fr1",
+       "dok": 3,
+       "q": "Name the four tunics of the GI wall from the lumen outward, and the tissue of the innermost lining.",
+       "a": "Mucosa (epithelium), submucosa, muscularis, serosa/adventitia; the mucosal lining is epithelium.",
+       "tags": [
+        "digestive",
+        "alimentary"
+       ],
+       "rubric": [
+        "All four in order: mucosa, submucosa, muscularis, serosa/adventitia",
+        "Innermost lining named as epithelium"
+       ]
+      },
+      {
+       "id": "fr2",
+       "dok": 4,
+       "q": "Trace a bolus from the oral cavity to the stomach, naming each organ and the sphincter at the stomach entrance.",
+       "a": "Oral cavity, oropharynx, laryngopharynx, esophagus, lower esophageal (cardiac) sphincter, stomach.",
+       "tags": [
+        "digestive",
+        "alimentary"
+       ],
+       "rubric": [
+        "Correct order mouth to pharynx to esophagus to stomach",
+        "Names the lower esophageal / cardiac sphincter"
+       ]
+      },
+      {
+       "id": "fr3",
+       "dok": 3,
+       "q": "Name the three muscle layers of the stomach's muscularis and the one unique to the stomach.",
+       "a": "Outer longitudinal, middle circular, inner oblique; the inner oblique is unique to the stomach.",
+       "tags": [
+        "digestive",
+        "alimentary"
+       ],
+       "rubric": [
+        "All three: longitudinal, circular, oblique",
+        "Identifies inner oblique as the unique layer"
+       ]
+      },
+      {
+       "id": "fr4",
+       "dok": 2,
+       "q": "Name the three sublayers of the mucosa from the lumen outward and the tissue of each.",
+       "a": "Epithelium (lines the lumen), lamina propria (areolar connective tissue), muscularis mucosae (smooth muscle).",
+       "tags": [
+        "digestive",
+        "alimentary"
+       ],
+       "rubric": [
+        "All three sublayers in order",
+        "Correct tissue for each"
+       ]
+      },
+      {
+       "id": "fr5",
+       "dok": 3,
+       "q": "Name the two plexuses of the enteric nervous system, where each sits, and what each controls.",
+       "a": "Myenteric (Auerbach) plexus between the longitudinal and circular muscle layers controls motility; submucosal (Meissner) plexus in the submucosa controls secretion.",
+       "tags": [
+        "digestive",
+        "alimentary"
+       ],
+       "rubric": [
+        "Both plexuses named with alternate names",
+        "Correct location and function of each"
+       ]
+      },
+      {
+       "id": "fr6",
+       "dok": 2,
+       "q": "Name the four regions of the stomach.",
+       "a": "Cardia, fundus, body, and pyloric part.",
+       "tags": [
+        "digestive",
+        "alimentary"
+       ],
+       "rubric": [
+        "All four regions named"
+       ]
+      },
+      {
+       "id": "fr7",
+       "dok": 3,
+       "q": "Name the three subdivisions of the pyloric part of the stomach in order toward the duodenum.",
+       "a": "Pyloric antrum, pyloric canal, pylorus.",
+       "tags": [
+        "digestive",
+        "alimentary"
+       ],
+       "rubric": [
+        "All three in correct order antrum to canal to pylorus"
+       ]
+      },
+      {
+       "id": "fr8",
+       "dok": 3,
+       "q": "Give the epithelium of the esophagus and state where its muscularis is skeletal versus smooth muscle.",
+       "a": "Nonkeratinized stratified squamous epithelium; skeletal muscle in the superior third, mixed in the middle, smooth muscle in the inferior third.",
+       "tags": [
+        "digestive",
+        "alimentary"
+       ],
+       "rubric": [
+        "Stratified squamous epithelium",
+        "Skeletal superiorly, smooth inferiorly"
+       ]
+      },
+      {
+       "id": "fr9",
+       "dok": 2,
+       "q": "Contrast the hard and soft palate by what forms each.",
+       "a": "Hard palate: maxillae and palatine bones covered by mucous membrane; soft palate: arch-shaped muscular partition covered by mucous membrane.",
+       "tags": [
+        "digestive",
+        "alimentary"
+       ],
+       "rubric": [
+        "Hard palate = bone (maxillae + palatine)",
+        "Soft palate = muscle"
+       ]
+      },
+      {
+       "id": "fr10",
+       "dok": 4,
+       "q": "Name the three regions of the small intestine in order, which is retroperitoneal, and the sphincter at each end.",
+       "a": "Duodenum (retroperitoneal, C-shaped), jejunum, ileum; pyloric sphincter at the start, ileocecal sphincter (valve) at the end.",
+       "tags": [
+        "digestive",
+        "alimentary"
+       ],
+       "rubric": [
+        "Duodenum, jejunum, ileum in order; duodenum retroperitoneal",
+        "Pyloric sphincter proximally, ileocecal valve distally"
+       ]
+      },
+      {
+       "id": "fr11",
+       "dok": 3,
+       "q": "Name the gross surface features unique to the large intestine.",
+       "a": "Teniae coli (three bands of longitudinal muscle), haustra (pouches), and omental (epiploic) appendages.",
+       "tags": [
+        "digestive",
+        "alimentary"
+       ],
+       "rubric": [
+        "Teniae coli",
+        "Haustra and omental appendages"
+       ]
+      },
+      {
+       "id": "fr12",
+       "dok": 3,
+       "q": "Define gastric pits and gastric glands.",
+       "a": "Gastric pits are narrow channels in the mucosal surface; gastric glands are the columns of secretory cells that empty into the bottom of the pits.",
+       "tags": [
+        "digestive",
+        "alimentary"
+       ],
+       "rubric": [
+        "Pits = surface channels/openings",
+        "Glands = secretory cell columns emptying into pits"
+       ]
+      },
+      {
+       "id": "fr13",
+       "dok": 3,
+       "q": "Name the five peritoneal folds.",
+       "a": "Falciform ligament, lesser omentum, greater omentum, mesentery, and mesocolon.",
+       "tags": [
+        "digestive",
+        "alimentary"
+       ],
+       "rubric": [
+        "All five folds named"
+       ]
+      },
+      {
+       "id": "fr14",
+       "dok": 3,
+       "q": "List the retroperitoneal organs given in the lecture.",
+       "a": "Kidneys, adrenal glands, ascending and descending colon, duodenum, and pancreas.",
+       "tags": [
+        "digestive",
+        "alimentary"
+       ],
+       "rubric": [
+        "Names the retroperitoneal organs including duodenum and pancreas"
+       ]
+      },
+      {
+       "id": "fr15",
+       "dok": 3,
+       "q": "Contrast the lesser and greater omentum by their attachments.",
+       "a": "Lesser omentum connects the stomach and duodenum to the liver; greater omentum hangs from the greater curvature and drapes over the intestines.",
+       "tags": [
+        "digestive",
+        "alimentary"
+       ],
+       "rubric": [
+        "Lesser omentum = stomach/duodenum to liver",
+        "Greater omentum = greater curvature draping over intestines"
+       ]
+      },
+      {
+       "id": "fr16",
+       "dok": 2,
+       "q": "Give the tissue of the tongue, the fold that anchors it, and name the types of papillae.",
+       "a": "Skeletal muscle covered by mucous membrane; anchored by the lingual frenulum; papillae are filiform, fungiform, vallate (circumvallate), and foliate.",
+       "tags": [
+        "digestive",
+        "alimentary"
+       ],
+       "rubric": [
+        "Skeletal muscle + lingual frenulum",
+        "Names papillae types"
+       ]
+      },
       {
        "id": "c1",
        "dok": 1,
@@ -21675,9 +21893,231 @@ window.BIO004_COURSE_CONTENT = {
      "id": "t-accessory-digestive-organs",
      "title": "Accessory Organs of Digestion",
      "summary": "The accessory digestive organs: teeth, salivary glands, liver, gallbladder, and pancreas.",
-     "lecturePageUrl": "slides-gi-anatomy.html",
-     "videoUrl": "gi-concept-videos.html",
+     "lecturePageUrl": "gi-concept-videos.html",
      "cards": [
+      {
+       "id": "fr1",
+       "dok": 2,
+       "q": "Name the three pairs of salivary glands and the location of each.",
+       "a": "Parotid (anterior/inferior to the ear), submandibular (floor of the mouth along the mandible), and sublingual (beneath the tongue).",
+       "tags": [
+        "digestive",
+        "accessory"
+       ],
+       "rubric": [
+        "All three pairs named",
+        "Correct location of each"
+       ]
+      },
+      {
+       "id": "fr2",
+       "dok": 2,
+       "q": "Which enzyme in saliva begins chemical digestion and what does it act on?",
+       "a": "Salivary amylase, which begins the breakdown of starch.",
+       "tags": [
+        "digestive",
+        "accessory"
+       ],
+       "rubric": [
+        "Salivary amylase",
+        "Acts on starch"
+       ]
+      },
+      {
+       "id": "fr3",
+       "dok": 2,
+       "q": "Name the four lobes of the liver.",
+       "a": "Right lobe, left lobe, caudate lobe, and quadrate lobe.",
+       "tags": [
+        "digestive",
+        "accessory"
+       ],
+       "rubric": [
+        "All four lobes named"
+       ]
+      },
+      {
+       "id": "fr4",
+       "dok": 3,
+       "q": "Name the structures that pass through the porta hepatis, and identify the round and falciform ligaments.",
+       "a": "Hepatic portal vein, hepatic artery proper, and common bile duct pass through the porta hepatis; the falciform ligament attaches the liver to the anterior wall and the round ligament (ligamentum teres) is its inferior free edge.",
+       "tags": [
+        "digestive",
+        "accessory"
+       ],
+       "rubric": [
+        "Porta hepatis: portal vein, hepatic artery, bile duct",
+        "Falciform and round ligament identified"
+       ]
+      },
+      {
+       "id": "fr5",
+       "dok": 3,
+       "q": "Describe liver histology: hepatocytes, hepatic laminae, sinusoids, and bile canaliculi.",
+       "a": "Hepatocytes are the functional cells arranged in plates one cell thick (hepatic laminae) bordered by endothelial-lined hepatic sinusoids; bile canaliculi are small ducts between hepatocytes that collect bile.",
+       "tags": [
+        "digestive",
+        "accessory"
+       ],
+       "rubric": [
+        "Hepatocytes in plates (laminae) with sinusoids between",
+        "Bile canaliculi collect bile between hepatocytes"
+       ]
+      },
+      {
+       "id": "fr6",
+       "dok": 4,
+       "q": "Trace bile from the hepatocytes that make it to the duodenum, naming the storage step.",
+       "a": "Hepatocytes to bile canaliculi to bile ducts to hepatic ducts to common hepatic duct; via the cystic duct to the gallbladder for storage; then common bile duct to the duodenum.",
+       "tags": [
+        "digestive",
+        "accessory"
+       ],
+       "rubric": [
+        "Canaliculi to ducts to hepatic/common hepatic duct",
+        "Cystic duct to gallbladder, then common bile duct to duodenum"
+       ]
+      },
+      {
+       "id": "fr7",
+       "dok": 3,
+       "q": "Name the parts of the gallbladder and the sphincter that controls bile entry into the duodenum.",
+       "a": "Fundus, body, infundibulum, and neck; the sphincter of Oddi (hepatopancreatic sphincter) controls entry into the duodenum.",
+       "tags": [
+        "digestive",
+        "accessory"
+       ],
+       "rubric": [
+        "Fundus, body, infundibulum, neck",
+        "Sphincter of Oddi"
+       ]
+      },
+      {
+       "id": "fr8",
+       "dok": 3,
+       "q": "Name the three parts of the pancreas, which part sits in the C of the duodenum, and its position relative to the peritoneum.",
+       "a": "Head, body, and tail; the head sits in the C of the duodenum; the pancreas is retroperitoneal.",
+       "tags": [
+        "digestive",
+        "accessory"
+       ],
+       "rubric": [
+        "Head, body, tail; head in the duodenal C",
+        "Retroperitoneal"
+       ]
+      },
+      {
+       "id": "fr9",
+       "dok": 3,
+       "q": "Name the two ducts that connect the pancreas to the duodenum.",
+       "a": "The main pancreatic duct (of Wirsung) and the accessory duct (of Santorini).",
+       "tags": [
+        "digestive",
+        "accessory"
+       ],
+       "rubric": [
+        "Main pancreatic duct",
+        "Accessory duct"
+       ]
+      },
+      {
+       "id": "fr10",
+       "dok": 3,
+       "q": "What does the hepatic portal vein carry, and from where?",
+       "a": "Nutrient-rich, deoxygenated blood drained from the GI tract, delivered to the liver.",
+       "tags": [
+        "digestive",
+        "accessory"
+       ],
+       "rubric": [
+        "Nutrient-rich blood from the GI tract",
+        "Delivered to the liver"
+       ]
+      },
+      {
+       "id": "fr11",
+       "dok": 3,
+       "q": "Distinguish the exocrine pancreas from where its secretions ultimately go.",
+       "a": "Exocrine acini secrete pancreatic juice into small ducts that unite into the pancreatic and accessory ducts, emptying into the small intestine (duodenum).",
+       "tags": [
+        "digestive",
+        "accessory"
+       ],
+       "rubric": [
+        "Exocrine acini secrete into ducts",
+        "Empties into the duodenum/small intestine"
+       ]
+      },
+      {
+       "id": "fr12",
+       "dok": 2,
+       "q": "List the primary anatomical roles of the liver, including its fetal role.",
+       "a": "Produces and secretes bile, stores vitamins and minerals (iron), and metabolizes nutrients; in the fetus it is a site of hematopoiesis.",
+       "tags": [
+        "digestive",
+        "accessory"
+       ],
+       "rubric": [
+        "Bile production, storage, metabolism",
+        "Fetal hematopoiesis"
+       ]
+      },
+      {
+       "id": "fr13",
+       "dok": 4,
+       "q": "Describe the biliary tree from the liver and gallbladder to the duodenum.",
+       "a": "Right and left hepatic ducts join as the common hepatic duct; the cystic duct from the gallbladder joins it to form the common bile duct, which enters the duodenum.",
+       "tags": [
+        "digestive",
+        "accessory"
+       ],
+       "rubric": [
+        "Hepatic ducts to common hepatic duct",
+        "Cystic duct joins to form common bile duct to duodenum"
+       ]
+      },
+      {
+       "id": "fr14",
+       "dok": 2,
+       "q": "Describe a hepatocyte's structure, including its shape and share of liver volume.",
+       "a": "Specialized epithelial cells with 5 to 12 sides that make up about 80% of the liver's volume.",
+       "tags": [
+        "digestive",
+        "accessory"
+       ],
+       "rubric": [
+        "5 to 12 sided epithelial cells",
+        "About 80% of liver volume"
+       ]
+      },
+      {
+       "id": "fr15",
+       "dok": 2,
+       "q": "Give the location, shape, and function of the gallbladder.",
+       "a": "A pear-shaped sac on the posterior/inferior surface of the liver; it stores and concentrates bile.",
+       "tags": [
+        "digestive",
+        "accessory"
+       ],
+       "rubric": [
+        "Pear-shaped, on posteroinferior liver",
+        "Stores/concentrates bile"
+       ]
+      },
+      {
+       "id": "fr16",
+       "dok": 3,
+       "q": "Match each salivary gland to its duct's opening region.",
+       "a": "Parotid duct (Stensen) opens near the second upper molar; submandibular duct (Wharton) opens at the sublingual caruncle beside the frenulum; sublingual ducts open along the floor of the mouth.",
+       "tags": [
+        "digestive",
+        "accessory"
+       ],
+       "rubric": [
+        "Parotid near upper second molar",
+        "Submandibular at floor beside frenulum; sublingual along floor"
+       ]
+      },
       {
        "id": "c1",
        "dok": 1,
@@ -22314,9 +22754,229 @@ window.BIO004_COURSE_CONTENT = {
      "id": "t-urinary-system",
      "title": "The Urinary System",
      "summary": "The kidneys, nephron structure, the ureters, the bladder, and the urethra.",
-     "lecturePageUrl": "slides-renal-anatomy.html",
-     "videoUrl": "urinary-concept-videos.html",
+     "lecturePageUrl": "urinary-concept-videos.html",
      "cards": [
+      {
+       "id": "fr1",
+       "dok": 2,
+       "q": "Name the four organs of the urinary system and the job of each.",
+       "a": "Kidneys (filter blood, form urine), ureters (transport urine to the bladder), urinary bladder (stores urine), urethra (carries urine out).",
+       "tags": [
+        "urinary",
+        "renal"
+       ],
+       "rubric": [
+        "All four organs named",
+        "Correct function of each"
+       ]
+      },
+      {
+       "id": "fr2",
+       "dok": 3,
+       "q": "Name the three external layers of the kidney from superficial to deep and the tissue of each.",
+       "a": "Renal fascia (dense irregular connective tissue), perirenal fat capsule (adipose), renal capsule (dense irregular connective tissue).",
+       "tags": [
+        "urinary",
+        "renal"
+       ],
+       "rubric": [
+        "All three in order superficial to deep",
+        "Correct tissue of each"
+       ]
+      },
+      {
+       "id": "fr3",
+       "dok": 2,
+       "q": "Give the kidney's location and say which kidney is lower and why.",
+       "a": "Retroperitoneal, between T12 and L3; the right kidney is lower because of the liver.",
+       "tags": [
+        "urinary",
+        "renal"
+       ],
+       "rubric": [
+        "Retroperitoneal, T12 to L3",
+        "Right lower due to the liver"
+       ]
+      },
+      {
+       "id": "fr4",
+       "dok": 3,
+       "q": "Contrast the renal cortex and medulla by components and primary function.",
+       "a": "Cortex: renal corpuscles and convoluted tubules, filtration; medulla: renal pyramids and collecting ducts, concentration of urine.",
+       "tags": [
+        "urinary",
+        "renal"
+       ],
+       "rubric": [
+        "Cortex = corpuscles/tubules, filtration",
+        "Medulla = pyramids/collecting ducts, concentration"
+       ]
+      },
+      {
+       "id": "fr5",
+       "dok": 3,
+       "q": "Name the components of a nephron in order.",
+       "a": "Renal corpuscle (glomerulus and Bowman's capsule), proximal convoluted tubule, loop of Henle, distal convoluted tubule, collecting duct.",
+       "tags": [
+        "urinary",
+        "renal"
+       ],
+       "rubric": [
+        "Corpuscle, PCT, loop of Henle, DCT, collecting duct in order"
+       ]
+      },
+      {
+       "id": "fr6",
+       "dok": 4,
+       "q": "Contrast cortical and juxtamedullary nephrons by loop length, percentage, and glomerulus position.",
+       "a": "Cortical (about 85%): short loops, glomerulus farther from the cortex-medulla junction; juxtamedullary (about 15%): long loops into the medulla with vasa recta, glomerulus closer to the junction.",
+       "tags": [
+        "urinary",
+        "renal"
+       ],
+       "rubric": [
+        "Cortical ~85% short loops",
+        "Juxtamedullary ~15% long loops with vasa recta"
+       ]
+      },
+      {
+       "id": "fr7",
+       "dok": 3,
+       "q": "Name the two parts of the renal corpuscle and the tissue of each layer of Bowman's capsule.",
+       "a": "Glomerulus and Bowman's capsule; parietal layer is simple squamous epithelium, visceral layer is podocytes.",
+       "tags": [
+        "urinary",
+        "renal"
+       ],
+       "rubric": [
+        "Glomerulus + Bowman's capsule",
+        "Parietal simple squamous, visceral podocytes"
+       ]
+      },
+      {
+       "id": "fr8",
+       "dok": 4,
+       "q": "Trace one drop of filtrate from the glomerulus to the ureter, naming each structure.",
+       "a": "Glomerulus, glomerular (Bowman's) capsule, PCT, loop of Henle, DCT, collecting duct, papillary duct, renal papilla, minor calyx, major calyx, renal pelvis, ureter.",
+       "tags": [
+        "urinary",
+        "renal"
+       ],
+       "rubric": [
+        "Corpuscle through tubules to collecting duct",
+        "Papilla, minor/major calyces, renal pelvis, ureter"
+       ]
+      },
+      {
+       "id": "fr9",
+       "dok": 4,
+       "q": "Give the arterial blood path from the renal artery to the glomerulus and out to the renal vein.",
+       "a": "Renal artery, segmental, interlobar, arcuate, cortical radiate arteries, afferent arteriole, glomerulus, efferent arteriole, peritubular capillaries or vasa recta, cortical radiate, arcuate, interlobar veins, renal vein.",
+       "tags": [
+        "urinary",
+        "renal"
+       ],
+       "rubric": [
+        "Renal artery to glomerulus via afferent arteriole",
+        "Efferent to peritubular/vasa recta back to renal vein"
+       ]
+      },
+      {
+       "id": "fr10",
+       "dok": 3,
+       "q": "List the structures that pass through the renal hilum.",
+       "a": "Renal artery, renal vein, ureter (renal pelvis), nerves (renal plexus), and lymphatics.",
+       "tags": [
+        "urinary",
+        "renal"
+       ],
+       "rubric": [
+        "Renal artery, vein, ureter",
+        "Nerves and lymphatics"
+       ]
+      },
+      {
+       "id": "fr11",
+       "dok": 3,
+       "q": "Describe the juxtaglomerular apparatus: the JG cells and their location.",
+       "a": "Modified smooth muscle cells (juxtaglomerular cells) in the wall of the afferent arteriole that synthesize, store, and secrete renin, working with the macula densa of the DCT.",
+       "tags": [
+        "urinary",
+        "renal"
+       ],
+       "rubric": [
+        "JG cells = modified smooth muscle in afferent arteriole, secrete renin",
+        "Associated with the macula densa"
+       ]
+      },
+      {
+       "id": "fr12",
+       "dok": 3,
+       "q": "Name the tissue layers of the ureter wall from the lumen outward.",
+       "a": "Transitional epithelium (urothelium), lamina propria, muscularis, and adventitia.",
+       "tags": [
+        "urinary",
+        "renal"
+       ],
+       "rubric": [
+        "All layers in order from urothelium to adventitia"
+       ]
+      },
+      {
+       "id": "fr13",
+       "dok": 3,
+       "q": "Name the bladder's muscle, its epithelium, and its approximate capacity.",
+       "a": "Detrusor muscle (smooth muscle), transitional epithelium; about 400 to 600 mL capacity.",
+       "tags": [
+        "urinary",
+        "renal"
+       ],
+       "rubric": [
+        "Detrusor muscle + transitional epithelium",
+        "Roughly 400 to 600 mL"
+       ]
+      },
+      {
+       "id": "fr14",
+       "dok": 3,
+       "q": "Name the three regions of the male urethra in order.",
+       "a": "Prostatic urethra, membranous urethra, and spongy (penile) urethra.",
+       "tags": [
+        "urinary",
+        "renal"
+       ],
+       "rubric": [
+        "All three in order"
+       ]
+      },
+      {
+       "id": "fr15",
+       "dok": 4,
+       "q": "Trace urine through the collecting system and state where filtrate becomes urine.",
+       "a": "Collecting duct, papillary duct, renal papilla (filtrate becomes urine here), minor calyx, major calyx, renal pelvis, ureter.",
+       "tags": [
+        "urinary",
+        "renal"
+       ],
+       "rubric": [
+        "Collecting duct through papilla to calyces to pelvis",
+        "Becomes urine at the renal papilla"
+       ]
+      },
+      {
+       "id": "fr16",
+       "dok": 3,
+       "q": "Contrast the internal and external urethral sphincters by control, muscle type, and location.",
+       "a": "Internal sphincter: involuntary smooth muscle at the bladder-urethra junction; external sphincter: voluntary skeletal muscle in the urogenital diaphragm.",
+       "tags": [
+        "urinary",
+        "renal"
+       ],
+       "rubric": [
+        "Internal = involuntary smooth muscle at bladder neck",
+        "External = voluntary skeletal muscle in urogenital diaphragm"
+       ]
+      },
       {
        "id": "c1",
        "dok": 1,
@@ -22953,8 +23613,7 @@ window.BIO004_COURSE_CONTENT = {
      "id": "t-reproductive-male",
      "title": "The Male Reproductive System",
      "summary": "The structures of the male reproductive system and the duct system.",
-     "lecturePageUrl": "slides-reproductive-systems.html",
-     "videoUrl": "reproductive-concept-videos.html",
+     "lecturePageUrl": "reproductive-concept-videos.html",
      "cards": [
       {
        "id": "c1",
@@ -23592,8 +24251,7 @@ window.BIO004_COURSE_CONTENT = {
      "id": "t-reproductive-female",
      "title": "The Female Reproductive System",
      "summary": "The structures of the female reproductive system and the external genitalia.",
-     "lecturePageUrl": "slides-reproductive-systems.html",
-     "videoUrl": "reproductive-concept-videos.html",
+     "lecturePageUrl": "reproductive-concept-videos.html",
      "cards": [
       {
        "id": "c1",
