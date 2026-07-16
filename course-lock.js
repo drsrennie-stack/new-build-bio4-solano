@@ -34,9 +34,9 @@
     3: Date.UTC(2026, 5, 28, 7, 1),    // Sun Jun 28, 2026
     4: Date.UTC(2026, 6, 5,  7, 1),    // Sun Jul 5,  2026
     5: Date.UTC(2026, 6, 12, 7, 1),    // Sun Jul 12, 2026
-    6: Date.UTC(2026, 6, 19, 7, 1),    // Sun Jul 19, 2026
-    7: Date.UTC(2026, 6, 26, 7, 1),    // Sun Jul 26, 2026
-    8: Date.UTC(2026, 7, 2,  7, 1)     // Sun Aug 2,  2026
+    6: 0,                              // opened early: rest of semester unlocked
+    7: 0,                              // opened early: rest of semester unlocked
+    8: 0                               // opened early: rest of semester unlocked
   };
 
   var HOME = "https://drsrennie-stack.github.io/new-build-bio4-solano/index.html";
