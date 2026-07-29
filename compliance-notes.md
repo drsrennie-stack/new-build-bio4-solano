@@ -58,16 +58,19 @@ Dr. Sharilyn Rennie
 
 # Part B: Nervous System concept-video pages
 
-**Files covered:** nervous-tissue-concept-videos.html, brain-meninges-concept-videos.html
-**Date:** July 28, 2026
+**Files covered:** nervous-tissue-concept-videos.html, brain-meninges-concept-videos.html, spinal-pns-concept-videos.html, cranial-nerves-concept-videos.html, ans-concept-videos.html
+**Date:** July 29, 2026
 **Reviewer:** Dr. Sharilyn Rennie
 
 ## B1. Scope
 
-Two standalone lecture-video companion pages built to the same design and component set documented above (header, embedded Loom player, "Video chapters" navigation with jump-to-timestamp, "mark watched" checkboxes, progress bar, and reset). These pages carry the video block only; they do not include the slide deck or present mode. The reused component code is identical to the reviewed foundations block, so sections 2 through 6 above apply unchanged, with the differences noted here.
+Five standalone lecture-video companion pages (the full Week 7 nervous-system set) built to the same design and component set documented above (header, embedded Loom player, "Video chapters" navigation with jump-to-timestamp, "mark watched" checkboxes, progress bar, and reset). These pages carry the video block only; they do not include the slide deck or present mode. The reused component code is identical to the reviewed foundations block, so sections 2 through 6 above apply unchanged, with the differences noted here.
 
 - nervous-tissue-concept-videos.html: 10 chapters, 0:00 through 1:03:05. Loom c19eeb650b3a4b28b5fb51d05d89dcb6.
 - brain-meninges-concept-videos.html: 8 chapters, 0:00 through 1:03:59. Loom d9a1a81c31ec4f77bc47cce7cfd3d623.
+- spinal-pns-concept-videos.html: 9 chapters, 0:00 through 37:09. Loom e2c45ffd382d4310a41cd649bc3179e0.
+- cranial-nerves-concept-videos.html: 8 chapters, 0:00 through 45:43. Loom 9be47df95feb41b69701ebed83791774.
+- ans-concept-videos.html: 9 chapters, 0:00 through 1:17:30. Loom 2c9e0c00f8c64be48820b2cfe62a0cc9.
 
 ## B2. Differences from the foundations review
 
@@ -96,5 +99,53 @@ Rendered both pages in headless Chromium: no console or page errors. Confirmed a
 Same as section 6 above. Additionally, the three resource buttons link to existing course pages (slides, workbook, Recall Rx). If any of those target pages is renamed, update the hrefs. Resource links open in a new tab (`target="_blank"`) by design so the lecture keeps playing; top-level navigation would use `target="_top"`.
 
 ## B6. Reviewer
+
+Dr. Sharilyn Rennie
+
+---
+
+# Part C: Nervous System study-question guides
+
+**Files covered:** nervous-tissue-study-guide.html, brain-meninges-study-guide.html, spinal-cord-study-guide.html, cranial-nerves-study-guide.html, ans-study-guide.html
+**Date:** July 29, 2026
+**Reviewer:** Dr. Sharilyn Rennie
+
+## C1. Scope
+
+Five "questions only, answer from memory" study guides, one per Week 7 lecture, built to the established BIO 004 study-guide pattern (muscle-tissue-study-guide.html). Each has an eyebrow, H1, a Print button and a "Watch the lecture" link back to its concept-video page, a level-filter bar, a two-column topic index, and topic cards of numbered questions. Every question carries a depth tag (Recall / Apply / Reason) and a scope tag (Core / Mechanism / Clinical). Core is the anatomy layer every student answers; Mechanism is tagged for majors and can be filtered out; Clinical is the applied layer. This keeps the non-majors "Core" view within the anatomy-only scope of BIO 004 while letting majors see the mechanism content the lectures cover.
+
+## C2. WCAG conformance
+
+Target: WCAG 2.2 AA (floor), AAA where achievable.
+
+- 1.3.1 Info and relationships: AA. Skip link, one H1, section H2s, a labeled "Topics" nav, and ordered lists for questions.
+- 1.4.3 / 1.4.6 Contrast: navy #0B1530 body text on off-white #FAFAF9 is 17.3:1 (AAA). Terra2 #A0522D eyebrow and tag borders on off-white are 5.6:1 (AA). Gold #B8924A DOK label on white is 3.7:1, used only for a bold 11px uppercase label (large-text AA); the question text beside it carries the meaning, so no information is lost if the label is hard to read.
+- 1.4.1 Use of color: AA. Depth and scope are conveyed by tag text (RECALL, CORE, and so on), not by color alone.
+- 2.1.1 Keyboard: AA. The print button, filter buttons, and preset buttons are native buttons; the filter state is exposed with aria-pressed. Filtering only hides or shows questions; it never moves focus or traps it.
+- 2.4.1 Bypass blocks: AA. Skip link to the questions.
+- 4.1.2 Name, role, value: AA. The filter bar is a labeled group; each toggle reports pressed state.
+- Reduced motion and print styles included; the filter bar and index are hidden on print so a clean question sheet prints.
+
+## C3. Color contrast audit
+
+| Text / background | Ratio | Result |
+|---|---|---|
+| Navy #0B1530 body on off-white #FAFAF9 | 17.3:1 | AAA |
+| White on navy filter button #0B1530 | 17.9:1 | AAA |
+| Navy #0B1530 on gold active toggle #B8924A | 4.9:1 | AA |
+| Terra2 #A0522D eyebrow / tag on off-white | 5.6:1 | AA |
+| Gold #B8924A DOK label (bold 11px) on white | 3.7:1 | AA (large text) |
+
+## C4. Verification performed
+
+Rendered headless: no console or page errors. Confirmed the "Non-majors (core)" preset hides every Mechanism and Clinical question and leaves exactly the Core-tagged set (33 to 22 on the nervous-tissue guide), and that empty topics and their index entries hide with them. HTML parsed cleanly (lxml). Zero em dashes. Byline carries no credential suffix.
+
+## C5. Known limitations and remediation plan
+
+- The guides are questions only, by design (the "Given not Googled" integrity approach). No answer key ships with them.
+- Content scope: questions were written from each lecture's chapter list and summary, not a full transcript. Spot-check against the recordings before first use and adjust any wording that does not match how a concept was taught.
+- The "Open the slides" button on each concept-video page points to the closest existing course page for now; swap in the real slide URLs when available. The cranial-nerves page points at the-cranial-nerves.html rather than a dedicated slide deck.
+
+## C6. Reviewer
 
 Dr. Sharilyn Rennie
