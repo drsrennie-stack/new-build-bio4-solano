@@ -64,7 +64,7 @@
   thead th{font-family:var(--fe);font-weight:700;font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);border-bottom:2px solid var(--line);}
   tbody tr{border-bottom:1px solid var(--line);}
   tbody td .tp{font-weight:800;}
-  .tp.host{color:var(--terra);} .tp.attend{color:var(--navy);} .tp.lab{color:#1f7a4d;}
+  .tp.host{color:var(--terra);} .tp.attend{color:var(--navy);} .tp.lab{color:#1f7a4d;} .tp.other{color:#7a4fa3;}
   td a{color:var(--terra);font-weight:700;word-break:break-all;}
   .hrs{font-weight:800;white-space:nowrap;}
   .rm{background:none;border:none;color:var(--red);font-weight:800;cursor:pointer;font-size:.82rem;text-decoration:underline;}
@@ -73,7 +73,7 @@
   .totals{position:relative;overflow:hidden;background:
       radial-gradient(130% 120% at 100% 0%, rgba(164,71,47,.14), rgba(164,71,47,0) 55%),
       var(--card-soft);}
-  .tot-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:6px;}
+  .tot-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:6px;}
   @media(max-width:640px){.tot-grid{grid-template-columns:1fr 1fr;}}
   .tot{background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 2px 8px rgba(11,21,48,.06);}
   .tot .lbl{font-family:var(--fe);font-weight:700;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);}
@@ -128,7 +128,7 @@
 <main id="main" class="wrap">
   <p class="eyebrow">BIO 004 &middot; Study With Me</p>
   <h1>My Study With Me <span class="a">Hours</span></h1>
-  <p class="lead">Log every session you host or attend, plus open lab. It <b>saves in your browser</b>, so add to it each week. At the end of the semester, <b>Print to PDF and upload it to Canvas.</b> A session only counts if it was on the schedule, your professor checks.</p>
+  <p class="lead">Log every session you host or attend, plus open lab and other activities. It <b>saves in your browser</b>, so add to it each week. At the end of the semester, <b>Print to PDF and upload it to Canvas.</b> A session only counts if it was on the schedule, your professor checks.</p>
 
   <!-- YOUR INFO -->
   <section class="card no-print" aria-labelledby="infoH">
@@ -157,6 +157,7 @@
           <option value="host">Hosted a session</option>
           <option value="attend" selected>Attended a session</option>
           <option value="lab">Open lab</option>
+          <option value="other">Other activity</option>
         </select>
       </div>
       <div class="field"><label for="e-date">Date <span class="req">*</span></label><input id="e-date" type="date"></div>
@@ -194,7 +195,7 @@
     <p class="sub" id="wkSub">Hours per week.</p>
     <div style="overflow-x:auto;">
       <table>
-        <thead><tr><th>Week of</th><th>Hosted</th><th>Attended</th><th>Open lab</th><th>Logged</th><th>Banked</th></tr></thead>
+        <thead><tr><th>Week of</th><th>Hosted</th><th>Attended</th><th>Open lab</th><th>Other</th><th>Logged</th><th>Banked</th></tr></thead>
         <tbody id="wkBody"></tbody>
       </table>
     </div>
@@ -207,6 +208,7 @@
       <div class="tot"><div class="lbl">Hosted</div><div class="big" id="t-host-h">0.00</div><div class="pts" id="t-host-p">0 pts</div></div>
       <div class="tot"><div class="lbl">Attended</div><div class="big" id="t-att-h">0.00</div><div class="pts" id="t-att-p">0 pts</div></div>
       <div class="tot"><div class="lbl">Open lab</div><div class="big" id="t-lab-h">0.00</div><div class="pts" id="t-lab-p">0 pts</div></div>
+      <div class="tot"><div class="lbl">Other</div><div class="big" id="t-other-h">0.00</div><div class="pts" id="t-other-p">0 pts</div></div>
       <div class="tot grand"><div class="lbl">Total</div><div class="big" id="t-all-h">0.00</div><div class="pts" id="t-all-p">0 pts</div></div>
     </div>
     <p class="rubric" id="rubricLine"></p>
@@ -226,6 +228,7 @@
       <li>Add entries as you go, they save in this browser automatically.</li>
       <li>At the end of the semester, click <strong>Save as PDF</strong> below and upload the PDF to the Canvas assignment.</li>
       <li>Open lab: sign in when you arrive, that is how those hours are verified.</li>
+      <li>Other activities: name what you did (for example, AI tutor session or lab clean up) so it can be verified.</li>
       <li>Only sessions that were on the Study With Me schedule count. Your professor compares your links to the schedule.</li>
     </ul>
   </div>
@@ -250,12 +253,12 @@ const TERMS = {
   full:   { label: "Full semester (16 weeks)", weeks: 16, weeklyCap: 3, required: 36 }
 };
 const MAX_HOST_PER_WEEK = 2;
-const RATE = { host: 2, attend: 1, lab: 1 };   // points per hour (optional)
+const RATE = { host: 2, attend: 1, lab: 1, other: 1 };   // points per hour (optional)
 /* ============================================================ */
 
 const $ = s => document.querySelector(s);
 const KEY = "swm_hours_v1";
-const TYPES = { host:"Hosted", attend:"Attended", lab:"Open lab" };
+const TYPES = { host:"Hosted", attend:"Attended", lab:"Open lab", other:"Other" };
 let state = { name:"", email:"", term:"", entries:[] };
 
 function load(){ try{ const s = JSON.parse(localStorage.getItem(KEY)); if(s) state = Object.assign(state, s); }catch(e){} }
@@ -287,11 +290,11 @@ termEl.addEventListener("change", ()=>{ state.term = termEl.value; save(); rende
 /* ---- type-driven labels ---- */
 function syncTypeUI(){
   const t = $("#e-type").value;
-  $("#e-topic-lbl").textContent = t==="lab" ? "Note (optional)" : "Topic";
-  $("#e-topic").placeholder = t==="lab" ? "e.g. Fairfield open lab" : "e.g. Skull and spine";
-  const lab = t==="lab";
-  $("#e-link-lbl").textContent = lab ? "Link (not needed for open lab)" : (t==="host" ? "Recording link" : "Recording or session link");
-  $("#e-link-hint").textContent = lab ? "Open lab is verified by your sign-in, no link needed." : "Paste your link so it can be verified.";
+  const isLab = t==="lab", isOther = t==="other";
+  $("#e-topic-lbl").textContent = isLab ? "Note (optional)" : (isOther ? "Activity" : "Topic");
+  $("#e-topic").placeholder = isLab ? "e.g. Fairfield open lab" : (isOther ? "e.g. AI tutor session, lab clean up" : "e.g. Skull and spine");
+  $("#e-link-lbl").textContent = isLab ? "Link (not needed for open lab)" : (isOther ? "Link (optional)" : (t==="host" ? "Recording link" : "Recording or session link"));
+  $("#e-link-hint").textContent = isLab ? "Open lab is verified by your sign-in, no link needed." : (isOther ? "Optional. Add a link or note if you have one." : "Paste your link so it can be verified.");
   $("#e-att-wrap").style.display = (t==="host") ? "flex" : "none";
 }
 $("#e-type").addEventListener("change", syncTypeUI);
@@ -305,7 +308,8 @@ $("#addBtn").addEventListener("click", ()=>{
   if(!date || !from || !to){ err.textContent="Please add a date, start time, and end time."; return; }
   const hrs = hoursBetween(from,to);
   if(hrs <= 0){ err.textContent="End time must be after start time."; return; }
-  if(type!=="lab" && !link){ err.textContent="Paste your recording or session link so it can be verified."; return; }
+  if(type!=="lab" && type!=="other" && !link){ err.textContent="Paste your recording or session link so it can be verified."; return; }
+  if(type==="other" && !topic){ err.textContent="Name the activity, for example AI tutor session or lab clean up."; return; }
   state.entries.push({ id:Date.now()+"-"+Math.random().toString(36).slice(2,6), type, date, topic, from, to, link, link2 });
   state.entries.sort((a,b)=> (a.date+a.from).localeCompare(b.date+b.from));
   save(); render();
@@ -328,15 +332,15 @@ function render(){
         const p=[];
         if(e.link) p.push('<a href="'+esc(e.link)+'" target="_blank" rel="noopener">recording</a>');
         if(e.link2) p.push('<a href="'+esc(e.link2)+'" target="_blank" rel="noopener">attendance</a>');
-        linkCell = p.length ? p.join(' &middot; ') : '<span style="color:var(--soft)">—</span>';
+        linkCell = p.length ? p.join(' &middot; ') : '<span style="color:var(--soft)">&mdash;</span>';
       } else {
-        linkCell = e.link ? '<a href="'+esc(e.link)+'" target="_blank" rel="noopener">open link</a>' : '<span style="color:var(--soft)">—</span>';
+        linkCell = e.link ? '<a href="'+esc(e.link)+'" target="_blank" rel="noopener">open link</a>' : '<span style="color:var(--soft)">&mdash;</span>';
       }
       return '<tr>'+
         '<td><span class="tp '+e.type+'">'+TYPES[e.type]+'</span></td>'+
         '<td>'+esc(fmtDate(e.date))+'</td>'+
         '<td>'+esc(e.topic||"")+'</td>'+
-        '<td>'+esc(fmtTime(e.from))+' – '+esc(fmtTime(e.to))+'</td>'+
+        '<td>'+esc(fmtTime(e.from))+' &ndash; '+esc(fmtTime(e.to))+'</td>'+
         '<td class="hrs">'+hrs.toFixed(2)+'</td>'+
         '<td>'+linkCell+'</td>'+
         '<td class="no-print"><button type="button" class="rm" data-rm="'+e.id+'">Remove</button></td>'+
@@ -353,24 +357,25 @@ function render(){
   let bankedTotal = 0, loggedTotal = 0;
   const rows = wkKeys.map(k=>{
     const list = weeks[k].slice().sort((a,b)=> a.from.localeCompare(b.from));
-    let host=0, attend=0, lab=0, hostSeen=0, hostCounted=0;
+    let host=0, attend=0, lab=0, other=0, hostSeen=0, hostCounted=0;
     list.forEach(e=>{ const h=hoursBetween(e.from,e.to);
       if(e.type==="host"){ host+=h; hostSeen++; if(hostSeen<=MAX_HOST_PER_WEEK) hostCounted+=h; }
       else if(e.type==="attend"){ attend+=h; }
-      else { lab+=h; }
+      else if(e.type==="lab"){ lab+=h; }
+      else { other+=h; }
     });
-    const logged = host+attend+lab;
-    const counted = attend + lab + hostCounted;
+    const logged = host+attend+lab+other;
+    const counted = attend + lab + other + hostCounted;
     const banked = Math.min(counted, cap);
     bankedTotal += banked; loggedTotal += logged;
     const capped = banked < logged - 0.001;
     return '<tr><td><b>'+esc(fmtDate(k))+'</b></td>'+
-      '<td>'+host.toFixed(2)+'</td><td>'+attend.toFixed(2)+'</td><td>'+lab.toFixed(2)+'</td>'+
+      '<td>'+host.toFixed(2)+'</td><td>'+attend.toFixed(2)+'</td><td>'+lab.toFixed(2)+'</td><td>'+other.toFixed(2)+'</td>'+
       '<td>'+logged.toFixed(2)+'</td>'+
       '<td class="hrs'+(capped?' capped':'')+'">'+banked.toFixed(2)+(capped?' <span class="capnote">cap '+cap+'</span>':'')+'</td></tr>';
   });
   const wkBody=$("#wkBody");
-  wkBody.innerHTML = wkKeys.length ? rows.join("") : '<tr><td colspan="6" class="empty">No entries yet.</td></tr>';
+  wkBody.innerHTML = wkKeys.length ? rows.join("") : '<tr><td colspan="7" class="empty">No entries yet.</td></tr>';
   $("#wkSub").textContent = "Only up to " + cap + " hours a week bank toward your requirement (log more if you like, extra is encouraged bonus). Up to " + MAX_HOST_PER_WEEK + " hosted sessions a week count.";
 
   // requirement progress
@@ -385,17 +390,18 @@ function render(){
     (loggedTotal > bankedTotal + 0.001 ? (" You have logged " + loggedTotal.toFixed(2) + " total; hours over the weekly cap are bonus, they do not add to the requirement.") : "");
 
   // totals
-  const sum = { host:0, attend:0, lab:0 };
+  const sum = { host:0, attend:0, lab:0, other:0 };
   state.entries.forEach(e=> sum[e.type] += hoursBetween(e.from,e.to));
   const set=(h,p,hrs,rate)=>{ $(h).textContent=hrs.toFixed(2); $(p).textContent=Math.round(hrs*rate*100)/100+" pts"; };
   set("#t-host-h","#t-host-p",sum.host,RATE.host);
   set("#t-att-h","#t-att-p",sum.attend,RATE.attend);
   set("#t-lab-h","#t-lab-p",sum.lab,RATE.lab);
-  const allH = sum.host+sum.attend+sum.lab;
-  const allP = sum.host*RATE.host + sum.attend*RATE.attend + sum.lab*RATE.lab;
+  set("#t-other-h","#t-other-p",sum.other,RATE.other);
+  const allH = sum.host+sum.attend+sum.lab+sum.other;
+  const allP = sum.host*RATE.host + sum.attend*RATE.attend + sum.lab*RATE.lab + sum.other*RATE.other;
   $("#t-all-h").textContent = allH.toFixed(2);
   $("#t-all-p").textContent = (Math.round(allP*100)/100) + " pts";
-  $("#rubricLine").textContent = "Estimated points shown. Hosting "+RATE.host+" pts/hour, attending "+RATE.attend+" pt/hour, open lab "+RATE.lab+" pt/hour. Your professor sets the official credit.";
+  $("#rubricLine").textContent = "Estimated points shown. Hosting "+RATE.host+" pts/hour, attending "+RATE.attend+" pt/hour, open lab "+RATE.lab+" pt/hour, other "+RATE.other+" pt/hour. Your professor sets the official credit.";
 }
 
 /* ---- buttons ---- */
