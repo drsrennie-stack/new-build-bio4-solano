@@ -534,6 +534,103 @@
     .status-dot .dot{animation:none!important;}
     .btn,a.launch,a.chip,.rescard{transition:none!important;}
   }
+
+  /* ---- welcome-back: navy all the way down ----
+     The body was off-white under a navy header, which read as two
+     different surfaces. One navy for the whole screen instead. */
+  #screen-back{background:var(--navy);color:#F4EFE8;border-top:0}
+  .back-head{background:var(--navy);border-bottom:0}
+
+  /* The hubgate used to separate from an off-white page by contrast
+     alone. On a navy body it needs its own edge, so it gets a
+     hairline and a lift rather than a different fill. */
+  .hubgate{
+    background:var(--navy);
+    border:1px solid rgba(244,239,232,.16);
+    box-shadow:0 10px 26px rgba(0,0,0,.34);
+  }
+
+  /* Section pill: maroon, lifted off the page, label above detail. */
+  .back-head .intro-sec-chip{
+    display:inline-flex;flex-direction:column;align-items:center;gap:3px;
+    background:var(--maroon);
+    border:1px solid var(--maroon);
+    border-radius:16px;
+    padding:11px 24px;
+    box-shadow:0 6px 16px rgba(0,0,0,.34);
+    max-width:min(92vw,660px);
+  }
+  .back-head .intro-sec-chip .sc-lab{
+    font-family:'DM Sans',sans-serif;
+    font-size:15px;font-weight:700;letter-spacing:.04em;
+    /* A lighter straw than --gold. #DCB45C on this maroon measures
+       4.92, which clears AA but not AAA. #F5E3B8 measures 7.59 and
+       still reads as the same warm yellow. */
+    color:#F5E3B8;
+  }
+  .back-head .intro-sec-chip .sc-det{
+    font-size:13.5px;font-weight:600;line-height:1.45;
+    color:#FFFFFF;
+  }
+
+  /* These were coloured for an off-white page. */
+  .back-body .chips-eyebrow{color:var(--gold)}
+  footer{background:var(--navy);border-top:1px solid rgba(244,239,232,.16)}
+
+  /* A navy chip on a navy body is invisible. The course-material row
+     is deliberately multicoloured, so only the navy one needs to
+     change: it gets a hairline and a lift so it still reads as a
+     pill rather than as bare text. */
+  .back-body .chip{
+    background:rgba(244,239,232,.06);
+    border:1px solid rgba(244,239,232,.28);
+    box-shadow:0 3px 10px rgba(0,0,0,.28);
+  }
+  .back-body .chip:hover{background:rgba(244,239,232,.12)}
+
+  /* The manage row was grey-on-off-white; on navy it disappears. */
+  .back-body .manage button{color:#C6CEDA}
+  .back-body .manage button:hover{color:var(--gold)}
+
+  /* Header and footer float rather than being divided by a rule.
+     position + z-index are required: without them the body paints
+     over the shadow and nothing appears to change. */
+  .back-head{position:relative;z-index:2;box-shadow:0 12px 26px rgba(0,0,0,.42)}
+  footer{position:relative;z-index:2;box-shadow:0 -12px 26px rgba(0,0,0,.42);border-top:0}
+  #screen-back{border-top:0}
+  .back-body{position:relative;z-index:1}
+
+  /* ================= WHITE HEADER AND FOOTER =================
+     Everything else (the two-line maroon pill, the hubgate, the
+     shadows) is inherited from the navy build. Only the three
+     surfaces flip, plus the text that was written for a dark band.
+     Appended last so it beats the base rules on source order. */
+  #screen-back{background:var(--page);color:var(--ink)}
+  .back-head{background:#FFFFFF;color:var(--navy);box-shadow:0 12px 26px rgba(8,16,31,.15)}
+  footer{background:#FFFFFF;color:#3A4358;box-shadow:0 -12px 26px rgba(8,16,31,.15)}
+
+  .back-head h2{color:var(--navy)}
+  .back-head .back-date{color:#3A4358;opacity:1}
+  .back-head .status-dot{color:var(--maroon)}
+  footer strong,footer b{color:var(--navy)}
+
+  /* The hubgate is navy on a light page again, so it does not need
+     the hairline it needed when it sat on navy. */
+  .hubgate{border:1px solid rgba(11,21,48,.12);box-shadow:0 10px 26px rgba(0,0,0,.14)}
+
+  /* Chips and the manage row go back to their light-page colours. */
+  .back-body .chip{background:var(--navy);border:1px solid var(--navy);box-shadow:none}
+  .back-body .chip:hover{background:var(--navy)}
+  .back-body .chips-eyebrow{color:var(--maroon)}
+  .back-body .manage button{color:#3A4358}
+  .back-body .manage button:hover{color:var(--maroon)}
+
+  /* Far-left figure navy, not cream. On the white band the cream one
+     was near-invisible. Done in CSS rather than by editing the SVG so
+     the navy build keeps its cream figure, where cream is correct and
+     navy would vanish instead. CSS fill beats the fill attribute. */
+  .back-head .logo-figures svg:first-child circle,
+  .back-head .logo-figures svg:first-child path{fill:var(--navy)}
 </style>
 </head>
 <body>
@@ -958,7 +1055,19 @@
     var s = SECTIONS[section];
     document.getElementById('greetName').textContent = timeGreeting();
     document.getElementById('backDate').textContent = longDate();
-    document.getElementById('backSecChip').textContent = 'Your section: ' + s.label + '  ·  ' + s.meet;
+    /* Two lines on purpose: the label reads as a heading for the
+       pill and the detail wraps under it. textContent would flatten a
+       line break, so label and detail are separate spans. */
+    var chip = document.getElementById('backSecChip');
+    chip.innerHTML = '';
+    var lab = document.createElement('span');
+    lab.className = 'sc-lab';
+    lab.textContent = 'Your section:';
+    var det = document.createElement('span');
+    det.className = 'sc-det';
+    det.textContent = s.label + '  ·  ' + s.meet;
+    chip.appendChild(lab);
+    chip.appendChild(det);
 
     renderHubGate(s);
 
