@@ -1360,6 +1360,26 @@
 
     var tourDone = getLS(LS_DONE) === '1';
 
+    /* ?tour=1 forces the animated welcome and the walkthrough, no
+       matter what this browser has stored.
+
+       Two reasons it exists. First, a Canvas page whose whole job is
+       "here is the walkthrough" must show the walkthrough, not the
+       welcome-back screen a returning student would otherwise get.
+       Second, the tour-done flag lives in localStorage, which is
+       third-party storage inside a Canvas iframe and is blocked
+       outright in Safari. ?sec= already covers the section half of
+       that problem; this covers the tour half.
+
+       ?tour=start goes one step further and opens the walkthrough
+       immediately, skipping the "Show me around" button. */
+    var tourParam = null;
+    try {
+      var tp = location.search.match(/[?&]tour=([^&#]+)/);
+      if(tp) tourParam = decodeURIComponent(tp[1]);
+    } catch(e){}
+    if(tourParam) tourDone = false;
+
     if(section && tourDone){
       // Returning visitor: straight to welcome back.
       renderBack();
@@ -1374,6 +1394,11 @@
       RESOURCES = buildResources(section);
       renderTourGrid();
       showIntroReady();
+      /* ?tour=start opens the walkthrough straight away. Deferred a
+         beat so the intro animation is not cut off mid-greeting. */
+      if(tourParam === 'start'){
+        window.setTimeout(function(){ startTour(); }, 1500);
+      }
     } else {
       showIntroNeedsSection();
     }
