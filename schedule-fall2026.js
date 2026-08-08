@@ -382,21 +382,49 @@ window.BIO004_SESSIONS = {
 /* ============================================================
    MODULES
    ------------------------------------------------------------
-   The course is organised into five modules, each ending in an
-   exam. Week ranges are taken from the module overview table in
-   the syllabi and are NOT invented here.
+   Five modules. A week can belong to two of them, and which
+   weeks those are is DERIVED, not guessed.
 
-   Weeks 4 and 7 deliberately appear in TWO modules. That is not
-   a mistake in the data, it is what actually happens: the exam
-   sits in the first half of the week and the next module's
-   content starts in the second half. Week 4 is Exam 1 on the
-   Wednesday and Module 2 bone content on the Thursday. Week 7 is
-   Exam 2 then Module 3 heart content. The navigator marks these
-   as changeover weeks rather than pretending they belong to one
-   module.
+   THE RULE
+   --------
+   A week is shared with the next module when all three hold:
 
-   exam is the exam number that closes the module. Dates for it
-   are per section, in sections[].exams above, because the three
+     1. it is the closing module's last week,
+     2. that module's exam sits in it, and
+     3. at least one class session comes AFTER the exam that week.
+
+   Condition 3 is the one that does the work. An exam on the last
+   teaching day of a week ends the module cleanly and shares
+   nothing. An exam mid-week is followed by sessions that are
+   already the next module's material, so the week genuinely
+   belongs to both.
+
+   RUN AGAINST THE SESSION DATA, THE RULE GIVES:
+
+     Week 4  SHARED, Module 1 into Module 2
+             Exam 1, then Thu Sep 10 is Exam 1 rebuttals plus
+             Long Bone and Bone Microanatomy. That is Module 2.
+     Week 7  SHARED, Module 2 into Module 3
+             Exam 2, then Thu Oct 1 is Exam 2 rebuttals plus the
+             Heart lecture. That is Module 3.
+     Week 10 NOT shared. Exam 3 is the last session of the week
+             on both tracks. Module 4 opens in week 11.
+     Week 14 NOT shared. Exam 4 does not close Module 4, which
+             runs on to week 15, and the sessions after it that
+             week are renal, still Module 4.
+     Week 17 NOT shared. Exam 5 is the last session of the term.
+
+   Note that this makes Module 3 start at week 7, where the
+   syllabus module table says week 8. The syllabus table is a
+   summary and does not carry the mid-week changeover. The
+   sessions do, and they are what students actually sit in.
+
+   A shared week is drawn in BOTH module tabs: annotated as the
+   exam in the module it closes, and as the opening week in the
+   module it starts, carrying that module's information.
+
+   exam is the exam number belonging to the module. Its dates are
+   per section in sections[].exams above, because the three
    sections do not share exam dates.
    ============================================================ */
 
@@ -409,7 +437,7 @@ window.BIO004_MODULES = [
     title:'Skeletal system',
     detail:'Bone tissue, axial and appendicular skeleton, joints. TBL 3 Bone tissue, cartilage and microanatomy.' },
 
-  { n:3, weeks:[8,9,10], exam:3,
+  { n:3, weeks:[7,8,9,10], exam:3,
     title:'Cardiovascular, muscle and blood',
     detail:'Heart, blood vessels, muscle microanatomy, blood. TBL 4 Heart, TBL 5 Blood.' },
 

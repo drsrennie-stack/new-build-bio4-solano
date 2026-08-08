@@ -4,384 +4,66 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BIO 004 Human Anatomy &middot; Fall 2026 &middot; Course Home</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="canonical" href="welcome.html">
+<meta name="robots" content="noindex">
 
 <!--
   ============================================================
   BIO 004 Human Anatomy, Fall 2026
   canvas-home.html
 
-  The front door. This is the page that goes in the Canvas
-  iframe, and it has two states:
+  REDIRECT. The real front door is welcome.html.
 
-    1. NOT SET UP. The student has never told us their section.
-       They get "Set up my course", pick one of the three
-       sections, and that choice is written to localStorage.
+  This briefly existed as its own front door with a "set up your
+  course" step and an Enter Course screen. It was retired because
+  welcome.html already does that job and does it better: the
+  greeting, the aurora, the section picker, the walkthrough, the
+  welcome-back screen and the module and week hubgate are all
+  there and all designed as one piece.
 
-    2. SET UP. Every visit after that, they get the Enter Course
-       screen and one button that takes them to their own hub.
+  Kept as a redirect rather than deleted so any Canvas page,
+  bookmark or link already pointing here keeps working. If nothing
+  points at it, this file is safe to delete.
 
-  The choice is the SAME key every other page reads,
-  'bio004-section' (mw / tr-am / tr-eve). Setting it here means
-  the week pages, the calendar, the syllabus links and Mastery OS
-  all follow, and the student is never asked again.
+  THE CANVAS IFRAME SHOULD POINT AT welcome.html.
 
-  CANVAS NOTES
-  ------------
-  Every internal link carries target="_top" so it breaks out of
-  the iframe instead of nesting the course inside itself.
-
-  The height sender at the bottom posts the document height to
-  the parent on load, on resize, and whenever the content changes,
-  so Canvas can size the frame with no scrollbar.
-
-  localStorage inside a Canvas iframe is third-party storage. If a
-  browser blocks it, the page falls back to a URL parameter and
-  simply asks again rather than breaking. See the storage note in
-  the script.
+  Redirect order matters. The meta refresh is the fallback; the
+  script runs first and uses replace() so this page does not land
+  in the student's back-button history and trap them bouncing
+  between the two. Any ?sec= or ?frameId= parameters are carried
+  across, because dropping them would lose the section a link was
+  trying to set.
   ============================================================
 -->
 
+<meta http-equiv="refresh" content="0; url=welcome.html">
+
 <style>
-  :root{
-    --navy:#08101F; --navy-soft:#101B2E;
-    --maroon:#7A2A22; --maroon-dark:#5E201A; --terra:#C08268;
-    --gold:#DCB45C;
-    --offwhite:#F3F5F8; --line:rgba(255,255,255,.16);
-    --font:'Plus Jakarta Sans',system-ui,sans-serif;
-    --eb:'DM Sans',system-ui,sans-serif;
-    --shadow-rest:0 1px 3px rgba(0,0,0,.08);
-    --shadow-hover:0 8px 16px rgba(0,0,0,.10);
-    --radius:16px;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  /* Navy, not white. In the Canvas frame the stage rarely fills the
-     reported height exactly, and a white body showed as a band under
-     the panel. */
-  html,body{background:var(--navy)}
-  body{
-    font-family:var(--font);
-    color:var(--navy);
-    -webkit-font-smoothing:antialiased;
-  }
-
-  .skip{position:absolute;left:-9999px;top:0;background:var(--gold);color:var(--navy);
-        padding:11px 18px;font-weight:700;border-radius:0 0 10px 0;z-index:99}
-  .skip:focus{left:0}
-
-  .stage{
-    background:var(--navy);
-    color:#fff;
-    padding:64px 24px 56px;
-    min-height:100vh;
-    display:flex;align-items:center;justify-content:center;
-  }
-  .inner{max-width:720px;width:100%;text-align:center}
-
-  .eyebrow{
-    font-family:var(--eb);
-    font-size:13px;letter-spacing:.1em;text-transform:uppercase;
-    font-weight:700;color:var(--gold);margin:0 0 18px;
-  }
-
-  h1{
-    font-size:clamp(30px,5vw,44px);
-    line-height:1.15;font-weight:800;margin:0 0 20px;color:#fff;
-  }
-  h1 .accent{color:var(--terra)}
-
-  .lede{
-    font-size:clamp(15px,2.2vw,17.5px);
-    line-height:1.72;color:#EEF1F6;margin:0 auto 30px;max-width:34em;
-  }
-
-  .cta{
-    display:inline-flex;align-items:center;gap:11px;
-    font-family:var(--font);font-size:17px;font-weight:700;
-    background:var(--maroon);color:#fff;
-    border:1px solid var(--maroon);
-    border-radius:12px;padding:16px 34px;
-    text-decoration:none;cursor:pointer;
-    box-shadow:var(--shadow-rest);
-    transition:transform 200ms ease,box-shadow 200ms ease,background 200ms ease;
-  }
-  .cta:hover{background:var(--maroon-dark);transform:translateY(-2px);box-shadow:var(--shadow-hover)}
-  .cta .ic{line-height:0}
-
-  .foot{
-    font-size:14.5px;line-height:1.7;color:#D7DDE7;margin:26px auto 0;max-width:30em;
-  }
-  .sig{
-    font-family:var(--eb);font-size:14px;font-weight:700;
-    color:var(--gold);margin:30px 0 0;
-  }
-
-  .secline{
-    display:inline-flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:center;
-    font-family:var(--eb);font-size:12.5px;font-weight:700;letter-spacing:.05em;
-    text-transform:uppercase;color:var(--navy);
-    background:var(--gold);border-radius:999px;padding:7px 15px;margin:0 0 20px;
-  }
-
-  .change{
-    display:inline-block;margin-top:20px;
-    background:transparent;border:0;padding:6px 4px;
-    font-family:var(--font);font-size:14px;font-weight:700;color:#D7DDE7;
-    text-decoration:underline;text-underline-offset:3px;cursor:pointer;
-  }
-  .change:hover{color:var(--gold)}
-
-  /* ---------- setup state ---------- */
-  .setup-q{font-size:16.5px;color:#EEF1F6;margin:0 0 22px;line-height:1.6}
-  .cards{
-    display:grid;gap:14px;text-align:left;
-    grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
-    margin:0 0 8px;
-  }
-  .card{
-    background:#fff;color:var(--navy);
-    border:1px solid rgba(11,21,48,.12);border-radius:var(--radius);
-    padding:18px 18px 17px;cursor:pointer;font-family:inherit;text-align:left;
-    box-shadow:var(--shadow-rest);
-    transition:transform 200ms ease,box-shadow 200ms ease,border-color 200ms ease;
-    display:flex;flex-direction:column;gap:5px;
-  }
-  .card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);border-color:var(--maroon)}
-  .card .cn{font-family:var(--eb);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;
-            font-weight:700;color:var(--maroon)}
-  .card .ct{font-size:17px;font-weight:800;margin:0}
-  .card .cm{font-size:13px;line-height:1.55;color:#3A4358;margin:0}
-  .card .crn{font-family:var(--eb);font-size:11.5px;font-weight:700;color:#3A4358;opacity:.85}
-
-  .hint{font-size:13.5px;color:#C6CEDA;margin:18px 0 0;line-height:1.6}
-
-  .mark{margin:0 auto 22px;display:block}
-
-  :focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:6px}
-
-  @media (prefers-reduced-motion:reduce){
-    .cta,.card{transition:none}
-    .cta:hover,.card:hover{transform:none}
-  }
-  @media (max-width:520px){
-    .stage{padding:44px 18px 40px}
-  }
+  body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;
+       background:#08101F;color:#fff;display:flex;align-items:center;
+       justify-content:center;min-height:100vh;text-align:center;padding:24px}
+  a{color:#DCB45C;font-weight:700}
 </style>
 </head>
 <body>
 
-<a class="skip" href="#main">Skip to main content</a>
-
-<main id="main" class="stage">
-  <div class="inner">
-
-    <!-- Three-figure mark, same one the rest of the site uses. -->
-    <svg class="mark" viewBox="40 10 125 148" width="58" height="69" role="img" aria-label="MedMasters Collaborative">
-      <g transform="translate(0,18)">
-        <g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#FFFFFF"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#FFFFFF"/></g>
-        <g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#C08268"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#C08268"/></g>
-        <g transform="translate(138,0) rotate(-7 0 130)"><circle cx="0" cy="18" r="10" fill="#DCB45C"/><path d="M 0,30 C -10,30 -16,34 -16,40 C -16,54 -13,68 -11,84 C -10,102 -12,118 -14,130 L 14,130 C 12,118 10,102 11,84 C 13,68 16,54 16,40 C 16,34 10,30 0,30 Z" fill="#DCB45C"/></g>
-      </g>
-    </svg>
-
-    <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
-
-    <!-- ============ STATE 1: SET UP ============ -->
-    <section id="setup" hidden aria-labelledby="setup-h1">
-      <h1 id="setup-h1">Let's set up <span class="accent">your course</span>.</h1>
-      <p class="lede">
-        One question, then you are done. Everything after this, your schedule,
-        your exam dates, your lab days, will match the section you actually sit in.
-      </p>
-      <p class="setup-q"><strong>Which section are you in?</strong></p>
-
-      <div class="cards" id="cards" role="group" aria-label="Choose your section"></div>
-
-      <p class="hint">
-        Not sure? Check your Canvas course name or your registration for the CRN.
-        You can change this later.
-      </p>
-    </section>
-
-    <!-- ============ STATE 2: ENTER COURSE ============ -->
-    <section id="enter" hidden aria-labelledby="enter-h1">
-      <p class="secline" id="secLine"></p>
-
-      <h1 id="enter-h1">Welcome to <span class="accent">Human Anatomy</span>.</h1>
-
-      <p class="lede">
-        I'm really glad you're here. This term we'll explore the human body together,
-        one system at a time. Everything you need lives in one place, your weekly pages,
-        study tools, lab structure lists, and schedule, so you are never left hunting
-        for anything.
-      </p>
-
-      <a class="cta" id="enterBtn" href="class1.html" target="_top">
-        Enter Course
-        <span class="ic" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 12h14M13 6l6 6-6 6"/>
-          </svg>
-        </span>
-      </a>
-
-      <p class="foot">
-        This is your front door. Every time you log into Canvas, the Enter Course
-        button is right here, and it takes you straight to your course hub.
-      </p>
-
-      <button type="button" class="change" id="changeBtn">Not your section? Change it</button>
-
-      <p class="sig">Dr. Sharilyn Rennie</p>
-    </section>
-
-  </div>
-</main>
-
-<!-- Shared course data. Hootie and the section bridge read these. -->
-<script src="schedule-fall2026.js"></script>
-<script src="section-sync.js"></script>
+<p>
+  Taking you to the course home.<br>
+  <a href="welcome.html" target="_top">Continue to BIO 004 Human Anatomy</a>
+</p>
 
 <script>
-(function(){
+(function () {
   'use strict';
-
-  /* The three sections. Values match every other page on the site:
-     mw = Class 1, tr-am = Class 2, tr-eve = Class 3. */
-  var SECTIONS = {
-    'mw':     {n:'Class 1', label:'Mon / Wed, Afternoon', crn:'80650',
-               meet:'Lecture 12:30 to 1:50 pm, VC 118. Lab 2:00 to 4:50 pm, VC 1137.',
-               hub:'class1.html'},
-    'tr-am':  {n:'Class 2', label:'Tue / Thu, Morning',   crn:'80654',
-               meet:'Lecture 9:30 to 10:45 am, VC 212. Lab 11:00 am to 1:50 pm, VC 1137.',
-               hub:'class2.html'},
-    'tr-eve': {n:'Class 3', label:'Tue / Thu, Evening',   crn:'80655',
-               meet:'Lecture 5:30 to 6:45 pm, VC 118. Lab 7:00 to 9:50 pm, VC 1137.',
-               hub:'class3.html'}
-  };
-  var ORDER = ['mw','tr-am','tr-eve'];
-  var KEY = 'bio004-section';
-
-  /* STORAGE NOTE. Inside a Canvas iframe this is third-party
-     storage and some browsers block it outright. Every read and
-     write is guarded, and if storage is unavailable the page
-     simply shows the setup step again rather than throwing. The
-     ?sec= parameter is the escape hatch: a link with it works
-     even with storage fully blocked. */
-  function read(){
-    try{
-      var m = location.search.match(/[?&]sec=([^&#]+)/);
-      if(m){ var v = decodeURIComponent(m[1]); if(SECTIONS[v]) return v; }
-    }catch(e){}
-    try{ var s = localStorage.getItem(KEY); return SECTIONS[s] ? s : null; }
-    catch(e){ return null; }
+  var q = '';
+  try { q = location.search || ''; } catch (e) {}
+  try {
+    location.replace('welcome.html' + q);
+  } catch (e) {
+    location.href = 'welcome.html' + q;
   }
-  function write(sec){
-    try{ localStorage.setItem(KEY, sec); }catch(e){}
-    /* Keep Mastery OS in step, same as every other page. */
-    try{ if(window.BIO004_SECTION && window.BIO004_SECTION.set) window.BIO004_SECTION.set(sec); }catch(e){}
-  }
-
-  /* Resolved BEFORE anything calls postHeight(). var hoisting made
-     this bite once already: the first few height messages went out
-     with frameId undefined because the state functions run above
-     where this used to sit, and a parent filtering by frameId
-     would have dropped them. */
-  var frameId = (function(){
-    try{
-      var m = location.search.match(/[?&]frameId=([^&#]+)/);
-      if(m) return decodeURIComponent(m[1]);
-    }catch(e){}
-    return 'bio004-canvas-home';
-  })();
-
-  var setup = document.getElementById('setup');
-  var enter = document.getElementById('enter');
-  var cards = document.getElementById('cards');
-
-  /* Build the three section cards. */
-  ORDER.forEach(function(key){
-    var s = SECTIONS[key];
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'card';
-    b.setAttribute('data-sec', key);
-    b.innerHTML =
-      '<span class="cn">' + s.n + '</span>' +
-      '<p class="ct">' + s.label + '</p>' +
-      '<p class="cm">' + s.meet + '</p>' +
-      '<span class="crn">CRN ' + s.crn + '</span>';
-    b.setAttribute('aria-label', s.n + ', ' + s.label + ', CRN ' + s.crn + '. ' + s.meet);
-    b.addEventListener('click', function(){
-      write(key);
-      showEnter(key, true);
-    });
-    cards.appendChild(b);
-  });
-
-  function showSetup(){
-    enter.hidden = true;
-    setup.hidden = false;
-    postHeight();
-  }
-
-  function showEnter(sec, justChosen){
-    var s = SECTIONS[sec];
-    document.getElementById('secLine').textContent = s.n + ' · ' + s.label + ' · CRN ' + s.crn;
-    var btn = document.getElementById('enterBtn');
-    btn.href = s.hub;
-    btn.setAttribute('aria-label', 'Enter Course, ' + s.n + ' ' + s.label);
-    setup.hidden = true;
-    enter.hidden = false;
-    /* Coming straight from a choice, put focus on the thing they
-       are meant to press next rather than leaving it on a button
-       that has just disappeared. */
-    if (justChosen) btn.focus();
-    postHeight();
-  }
-
-  document.getElementById('changeBtn').addEventListener('click', function(){
-    try{ localStorage.removeItem(KEY); }catch(e){}
-    showSetup();
-    var first = cards.querySelector('.card');
-    if (first) first.focus();
-  });
-
-  var have = read();
-  if (have) { write(have); showEnter(have, false); } else { showSetup(); }
-
-  /* ----------------------------------------------------------
-     IFRAME HEIGHT SENDER
-     Canvas sizes the frame from this. Posts on load, on resize,
-     and whenever the rendered content changes, because switching
-     between the setup and enter states changes the height and a
-     load-only sender would leave a scrollbar or a gap.
-     ---------------------------------------------------------- */
-  function postHeight(){
-    try{
-      var h = Math.max(
-        document.documentElement.scrollHeight,
-        document.body ? document.body.scrollHeight : 0
-      );
-      window.parent.postMessage({frameId:frameId, type:'resize', height:h}, '*');
-    }catch(e){}
-  }
-
-  window.addEventListener('load', postHeight);
-  window.addEventListener('resize', postHeight);
-  if (window.ResizeObserver) {
-    try{ new ResizeObserver(postHeight).observe(document.documentElement); }catch(e){}
-  }
-  postHeight();
 })();
 </script>
-
-<!-- Hootie, so a student who lands here confused has somewhere to go. -->
-<script src="course-links.js"></script>
-<script src="hootie.js"></script>
 
 </body>
 </html>

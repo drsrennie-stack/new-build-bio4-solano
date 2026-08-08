@@ -256,18 +256,29 @@
         a.href = 'week-' + wk + '.html';
         a.setAttribute('target', '_top');
 
-        var shared = modulesFor(wk, modules).length > 1;
+        /* A shared week is drawn in both tabs, but it must not say the
+           same thing in each. In the module the exam CLOSES it reads
+           as that exam. In the module it OPENS it reads as the start,
+           because that is what the week is for a student sitting in
+           the second half of it. */
+        var sharedMods = modulesFor(wk, modules);
+        var shared = sharedMods.length > 1;
         var exN = exams[wk];
-        var label = exN ? ('Exam ' + (exN === true ? m.exam : exN))
-                  : shared ? 'Changeover'
+        var opensHere = shared && m.n === sharedMods[sharedMods.length - 1].n;
+        var closesHere = exN && (exN === true || exN === m.exam);
+
+        var label = opensHere ? 'Starts here'
+                  : closesHere ? ('Exam ' + (exN === true ? m.exam : exN))
+                  : exN ? ('Exam ' + (exN === true ? m.exam : exN))
                   : 'Week';
 
         a.innerHTML = '<span class="n">' + wk + '</span><span class="l">' + label + '</span>';
 
         var bits = ['Week ' + wk];
         if (exN) bits.push('Exam ' + (exN === true ? m.exam : exN) + ' week');
-        if (shared) bits.push('shared between Module '
-          + modulesFor(wk, modules).map(function (x) { return x.n; }).join(' and Module '));
+        if (opensHere) bits.push('Module ' + m.n + ' starts this week, after the exam');
+        else if (shared) bits.push('shared with Module '
+          + sharedMods.map(function (x) { return x.n; }).filter(function (n) { return n !== m.n; }).join(' and '));
         if (now && now.state === 'during' && wk === now.wk) bits.push('this week');
         if (viewWk === wk) bits.push('you are viewing this week');
         a.setAttribute('aria-label', bits.join(', '));
@@ -283,6 +294,19 @@
         ul.appendChild(li);
       });
       panel.appendChild(ul);
+
+      /* On a module that opens mid-week, say so under the weeks, so a
+         student looking at week 4 inside Module 2 knows why it is here. */
+      var opener = m.weeks[0];
+      if (modulesFor(opener, modules).length > 1 && exams[opener]) {
+        var note = document.createElement('p');
+        note.className = 'mnav-detail';
+        note.style.margin = '11px 0 0';
+        note.textContent = 'Module ' + m.n + ' starts part way through week ' + opener
+          + '. Exam ' + (exams[opener] === true ? '' : exams[opener])
+          + ' closes the module before it, then this module begins in the same week.';
+        panel.appendChild(note);
+      }
 
       if (now && now.state === 'during' && m.weeks.indexOf(now.wk) > -1) {
         var flag = document.createElement('p');
