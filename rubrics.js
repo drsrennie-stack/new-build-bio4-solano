@@ -1,30 +1,54 @@
 /* ============================================================
-   BIO 004 self-check rubrics, "should include" lists.
+   BIO 004 Human Anatomy, Fall 2026
+   rubrics.js
 
-   NOT answer keys. These are the must-have elements a complete
-   drawing, label, or mind-map should contain, pulled from the
-   master structure list. Students draw from memory first, then
-   reveal these one at a time to grade their own coverage. The
-   value is the retrieval; the rubric only confirms completeness.
+   Per-competency self-check rubrics for Mastery OS. Both Mastery
+   OS pages load this file and it was missing from the repo, so
+   every visit fired a 404.
 
-   Keyed by competency ID (see competency-tags.md). Used by the
-   "Draw it to Know it" exercise and the drawing self-check.
+   This is a STUB. The map is empty. Nothing is invented.
 
-   STATUS: Week 3 built. Other weeks follow the same pattern,
-   drawn straight from the structure list.
+   HOW MASTERY OS READS IT
+   -----------------------
+       function rubricFor(comp){
+         var R = window.BIO004_RUBRICS;
+         return (R && comp && R[comp.id]) ? R[comp.id] : null;
+       }
+
+   A rubric is an ARRAY OF STRINGS, one per thing the student
+   should have produced. It drives two of the signature exercises:
+
+   - Blank-Page Brain Dump. With a rubric, the student ticks off
+     each item they actually recalled and gets a score out of the
+     list. Without one, they fall back to rating their own dump as
+     patchy, solid or thorough, which is the current behaviour.
+
+   - Draw it to Know it. With a rubric, the self-check box reveals
+     the expected items one at a time after the drawing is done.
+     Without one, the reveal step is skipped and the drawing step
+     also drops out of the focus-block checklist.
+
+   So an empty map behaves exactly as the missing file did, minus
+   the 404. Filling in even a handful of competencies turns the
+   scored version of both exercises back on for those.
+
+   SHAPE
+   -----
+   Keyed by competency id, the same ids used in
+   competenciesfall2026.js.
+
+     window.BIO004_RUBRICS = {
+       'w1-directional-terms': [
+         'Superior and inferior, with an example of each',
+         'Anterior and posterior, and why ventral and dorsal differ in four-legged animals',
+         'Medial and lateral, referenced to the midline',
+         'Proximal and distal, and why they apply to limbs',
+         'Superficial and deep'
+       ]
+     };
+
+   Write each item as something the student can look at and answer
+   yes or no to. Items they can argue about do not score cleanly.
    ============================================================ */
-window.BIO004_RUBRICS = {
-  'cv-chambers': ['Right and left atria on top','Right and left ventricles below','Interatrial septum','Interventricular septum','Left ventricle wall drawn thickest'],
-  'cv-valves': ['Tricuspid (right AV) valve','Mitral / bicuspid (left AV) valve','Pulmonary semilunar valve','Aortic semilunar valve','Chordae tendineae','Papillary muscles'],
-  'cv-coronary': ['Right coronary artery','Left coronary artery','Anterior interventricular artery (LAD)','Circumflex artery','Cardiac veins','Coronary sinus'],
-  'cv-surfaces': ['Fibrous pericardium','Parietal and visceral serous pericardium','Epicardium, myocardium, endocardium','Auricles','Pectinate muscles','Fossa ovalis','Trabeculae carneae'],
-  'cv-conduction-anat': ['SA node','AV node','Bundle of His','Right and left bundle branches','Purkinje fibers'],
-  'resp-larynx': ['Thyroid cartilage','Cricoid cartilage','Arytenoid cartilages','Epiglottis','Vocal cords (folds)','Glottis','Cricothyroid ligament'],
-  'resp-tree': ['Trachea with C-ring cartilages','Trachealis muscle','Carina','Primary (main) bronchi','Secondary (lobar) bronchi','Tertiary (segmental) bronchi','Alveolar ducts and alveoli'],
-  'resp-lungs-pleura': ['Right lung: superior, middle, inferior lobes','Left lung: superior, inferior lobes','Fissures','Hilum / root of lung','Parietal and visceral pleura','Pleural cavities'],
-  'resp-thoracic-diaphragm': ['Diaphragm','External and internal intercostals','T8 caval opening (IVC)','T10 esophageal hiatus','T12 aortic hiatus'],
-  'resp-histo': ['Pseudostratified ciliated columnar epithelium','Cilia','Goblet cells','Thin squamous alveolar wall'],
-  'bvn-great-vessels': ['Ascending aorta','Aortic arch','Brachiocephalic trunk','Left common carotid','Left subclavian','Pulmonary trunk and arteries','Superior and inferior vena cava','Four pulmonary veins'],
-  'bvn-vessel-tunics': ['Tunica intima (endothelium)','Internal elastic lamina','Tunica media (smooth muscle, elastic)','Tunica externa (adventitia)','Lumen'],
-  'bvn-fetal-remnants': ['Fossa ovalis (was foramen ovale)','Ligamentum arteriosum (was ductus arteriosus)','Right-to-left atrial bypass in the fetus','Trace through the pulmonary circuit']
-};
+
+window.BIO004_RUBRICS = {};

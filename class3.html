@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIO 004 Human Anatomy · Tue / Thu Evening · Fall 2026 Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#08101F; --navy-deep:#08101F; --navy-darkest:#060A18; --navy-tint:#ECEFF4;
+    --terra:#8B1D1D; --terra-dark:#6B1616; --terra-deep:#A0452F;
+    --gold:#DCB45C; --gold-soft:#DCB45C;
+    --white:#FFFFFF; --offwhite:#FAFAF9; --gray:#6B7280; --gray-light:#D1D5DB;
+    --radius:8px;
+    --shadow-rest:0 1px 3px rgba(0,0,0,0.08);
+    --shadow-hover:0 10px 22px rgba(0,0,0,0.12);
+    --t:transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease, background 200ms ease;
+    --font-display:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    --font-body:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+    --font-eyebrow:'DM Sans',-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:var(--font-body);color:var(--navy);background:var(--offwhite);line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1040px;margin:0 auto;padding:30px 20px 56px;}
+  .skip{position:absolute;left:-9999px;top:auto;background:var(--terra-dark);color:#fff;padding:10px 16px;border-radius:8px;font-weight:700;z-index:50;}
+  .skip:focus{left:16px;top:16px;}
+  :focus-visible{outline:3px solid var(--terra-dark);outline-offset:3px;border-radius:6px;}
+
+  /* ---------- HEADER ---------- */
+  .site-header{background:#fff;border-bottom:.5px solid rgba(11,21,48,.10);padding:22px max(20px,4vw);}
+  .site-header-inner{max-width:1040px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .hdr-syl{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-display);font-weight:700;font-size:.9rem;color:var(--navy);background:#fff;border:1.5px solid var(--navy-tint);border-radius:999px;padding:9px 18px;text-decoration:none;transition:var(--t);}
+  .hdr-syl:hover{border-color:var(--terra-dark);background:var(--offwhite);}
+  .site-logo{display:inline-flex;align-items:center;gap:16px;text-decoration:none;}
+  .site-logo svg{height:54px;width:auto;display:block;}
+  .logo-text{display:flex;flex-direction:column;gap:3px;}
+  .logo-title{font-family:var(--font-display);font-size:1.68rem;font-weight:800;letter-spacing:-.02em;color:var(--navy);line-height:1;}
+  .logo-title .logo-accent{color:var(--terra-dark);}
+  .logo-sub{font-family:var(--font-eyebrow);font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);opacity:.72;}
+
+  /* ---------- COVER HERO ---------- */
+  .cover{background:var(--navy-darkest);border-radius:var(--radius);padding:clamp(24px,4.5vw,42px);color:#fff;border-top:3px solid #1E2A47;}
+  .cover-eyebrow{font-family:var(--font-eyebrow);font-size:.78rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-soft);margin:0 0 12px;}
+  .cover-title{font-family:var(--font-display);font-weight:800;font-size:clamp(28px,5vw,42px);line-height:1.05;letter-spacing:-.02em;color:#fff;margin:0;}
+  .cover-title span{color:var(--terra);}
+  .cover-section{font-family:var(--font-display);font-weight:700;font-size:clamp(1.05rem,2.4vw,1.35rem);color:var(--gold-soft);margin:10px 0 0;letter-spacing:.01em;}
+  .cover-meta{display:flex;flex-wrap:wrap;gap:10px 12px;margin:18px 0 0;}
+  .chipm{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:7px 14px;font-family:var(--font-display);font-weight:600;font-size:.86rem;color:#fff;}
+  .chipm b{color:var(--gold-soft);font-weight:700;}
+  .cover-times{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 0;}
+  .timecard{background:rgba(255,255,255,.06);border-radius:6px;padding:9px 14px;font-family:var(--font-display);font-weight:600;font-size:.9rem;color:#fff;}
+  .timecard .tl{display:block;font-family:var(--font-eyebrow);font-weight:700;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:2px;}
+
+  /* ---------- STATUS STRIP (countdown + jump) ---------- */
+  .status{display:flex;flex-wrap:wrap;gap:14px;align-items:stretch;margin-top:18px;}
+  .countdown{flex:1 1 260px;display:flex;align-items:center;gap:16px;background:#fff;border:1px solid var(--navy-tint);border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow-rest);}
+  .cd-num{font-family:var(--font-display);font-weight:800;font-size:2.4rem;line-height:1;color:var(--terra-dark);font-variant-numeric:tabular-nums;}
+  .cd-num.done{font-size:1.5rem;color:var(--navy);}
+  .cd-text{display:flex;flex-direction:column;gap:2px;}
+  .cd-lab{font-family:var(--font-eyebrow);font-weight:700;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--terra-dark);}
+  .cd-main{font-family:var(--font-display);font-weight:700;font-size:1.02rem;color:var(--navy);}
+  .cd-sub{font-size:.85rem;color:var(--navy);opacity:.7;}
+  .jump{display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border:none;font-family:var(--font-display);font-weight:700;font-size:.95rem;padding:0 22px;border-radius:var(--radius);cursor:pointer;transition:var(--t);flex:0 0 auto;}
+  .jump:hover.jump:focus-visible{background:var(--terra-dark);transform:translateY(-2px);box-shadow:var(--shadow-hover);}
+  .jump[hidden]{display:none;}
+
+  /* ---------- TOOLBAR (filters) ---------- */
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:26px 0 6px;}
+  .toolbar .tb-lab{font-family:var(--font-eyebrow);font-weight:700;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--terra-dark);margin-right:6px;}
+  .chip{font-family:var(--font-display);font-weight:700;font-size:.85rem;color:var(--navy);background:#fff;border:1.5px solid var(--navy-tint);border-radius:999px;padding:7px 15px;cursor:pointer;transition:var(--t);}
+  .chip:hover{border-color:var(--terra-dark);}
+  .chip[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+  /* ---------- WEEK BLOCKS ---------- */
+  .weeks{margin-top:14px;display:flex;flex-direction:column;gap:10px;}
+  .week{border:1px solid var(--navy-tint);border-radius:var(--radius);overflow:hidden;background:#fff;box-shadow:var(--shadow-rest);}
+  .week.hidden{display:none;}
+  .week-head{display:flex;align-items:center;gap:12px;background:#8FA98A;color:#08101F;padding:9px 16px;font-family:var(--font-display);font-weight:800;font-size:.92rem;letter-spacing:.02em;}
+  .week-head .wk-n{font-family:var(--font-eyebrow);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:.72rem;}
+  .week-head .wk-range{font-weight:600;font-size:.8rem;opacity:.85;margin-left:auto;}
+  .week.wk-current .week-head{background:var(--terra-dark);color:#fff;}
+  .week.wk-current .week-head .wk-range{opacity:.9;}
+  .week-current-tag{display:none;font-family:var(--font-eyebrow);font-weight:700;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;background:var(--gold);color:#08101F;padding:2px 8px;border-radius:999px;}
+  .week.wk-current .week-current-tag{display:inline-block;}
+
+  /* ---------- SESSION ROWS ---------- */
+  .sess{border-top:1px solid var(--navy-tint);}
+  .sess:first-child{border-top:none;}
+  .sess.hidden{display:none;}
+  .sess-btn{width:100%;text-align:left;display:flex;align-items:center;gap:14px;background:#fff;border:none;font:inherit;color:inherit;padding:14px 16px;cursor:pointer;transition:background 160ms ease;}
+  .sess-btn:hover{background:var(--offwhite);}
+  .sess.noexp .sess-btn{cursor:default;}
+  .sess.noexp .sess-btn:hover{background:#fff;}
+  .date-badge{flex:0 0 auto;width:56px;text-align:center;line-height:1;}
+  .date-badge .dow{display:block;font-family:var(--font-eyebrow);font-weight:700;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-dark);}
+  .date-badge .dnum{display:block;font-family:var(--font-display);font-weight:800;font-size:1.5rem;color:var(--navy);margin-top:1px;}
+  .date-badge .mon{display:block;font-family:var(--font-eyebrow);font-weight:700;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);opacity:.6;}
+  .sess-main{flex:1 1 auto;min-width:0;}
+  .sess-topic{font-family:var(--font-display);font-weight:700;font-size:1.04rem;color:var(--navy);line-height:1.25;}
+  .sess-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:5px;align-items:center;}
+  .tag{font-family:var(--font-eyebrow);font-weight:700;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid var(--terra-dark);color:var(--terra-dark);}
+  .tag.lab{border-color:var(--terra-dark);color:var(--terra-dark);}
+  .tag.exam{background:var(--terra-dark);color:#fff;border-color:var(--terra-dark);}
+  .tag.holiday{background:var(--gold);color:#08101F;border-color:var(--gold);}
+  .tag.open{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .tag.today{background:var(--gold);color:#08101F;border-color:var(--gold);}
+  .caret{flex:0 0 auto;color:var(--terra-dark);transition:transform 200ms ease;font-size:1.1rem;}
+  .sess[aria-expanded-row="true"] .caret{transform:rotate(90deg);}
+  .sess.noexp .caret{visibility:hidden;}
+
+  /* today / this-week accents */
+  .sess.is-today .sess-btn{background:#FBF4E4;box-shadow:inset 4px 0 0 var(--gold);}
+  .sess.is-today .sess-btn:hover{background:#f7ecd3;}
+  .sess.is-week .sess-btn{box-shadow:inset 4px 0 0 var(--terra);}
+
+  /* exam / holiday / open row tints */
+  .sess.type-exam .sess-topic{color:var(--terra-dark);}
+  .sess.type-holiday .sess-btn{background:#FDF6E9;}
+  .sess.type-holiday .sess-topic{color:var(--navy);opacity:.72;font-weight:600;}
+
+  /* ---------- DETAIL PANEL ---------- */
+  .detail{background:var(--offwhite);border-top:1px dashed var(--navy-tint);padding:0 16px;max-height:0;overflow:hidden;transition:max-height 260ms ease;}
+  .sess[aria-expanded-row="true"] .detail{max-height:640px;}
+  .detail-inner{padding:16px 0 20px 70px;}
+  .detail-block{margin:0 0 14px;}
+  .detail-block:last-child{margin-bottom:0;}
+  .detail-h{font-family:var(--font-eyebrow);font-weight:700;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--terra-dark);margin:0 0 4px;}
+  .detail-p{margin:0;color:var(--navy);font-size:.95rem;}
+  .detail-note{font-family:var(--font-display);color:var(--navy);opacity:.82;font-size:.95rem;margin:0;}
+  .detail-custom{white-space:pre-line;color:var(--navy);font-size:.98rem;}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--navy-darkest);color:var(--navy-tint);text-align:center;padding:1.9rem 1.5rem 1.7rem;border-top:2px solid #1E2A47;border-radius:var(--radius);margin-top:42px;}
+  footer .by{font-family:var(--font-display);font-weight:700;color:#fff;font-size:1rem;margin-bottom:.15rem;}
+  footer .role{font-size:.82rem;color:var(--navy-tint);}
+  footer .brand{font-family:var(--font-eyebrow);font-weight:700;color:var(--terra);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.9rem;}
+  .print-link{background:none;border:none;color:var(--gold-soft);font-family:var(--font-display);font-weight:700;font-size:.82rem;cursor:pointer;text-decoration:underline;margin-top:.8rem;}
+  .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+
+  @media (max-width:560px){
+    .detail-inner{padding-left:16px;}
+    .date-badge{width:48px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition-duration:.01ms !important;animation:none !important;scroll-behavior:auto !important;}
+  }
+  @media print{
+    .status.toolbar.jump.caret.print-link.cover-cta{display:none !important;}
+    .week{break-inside:avoid;}
+    .detail{max-height:none !important;overflow:visible;}
+    body{background:#fff;}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="index.html" class="site-logo" target="_top" aria-label="BIO 004 Human Anatomy, course home">
+      <svg viewBox="40 10 125 148" role="img" aria-hidden="true" focusable="false">
+        <g transform="translate(0, 18)">
+          <g transform="translate(60, 0) rotate(8 0 130)">
+            <circle cx="0" cy="20" r="10" fill="#08101F"/>
+            <path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#08101F"/>
+          </g>
+          <g transform="translate(100, 0)">
+            <circle cx="0" cy="10" r="11" fill="#6B1616"/>
+            <path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#6B1616"/>
+          </g>
+          <g transform="translate(140, 0) rotate(-8 0 130)">
+            <circle cx="0" cy="20" r="10" fill="#DCB45C"/>
+            <path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#DCB45C"/>
+          </g>
+        </g>
+      </svg>
+      <span class="logo-text">
+        <span class="logo-title">Human <span class="logo-accent">Anatomy</span></span>
+        <span class="logo-sub">BIO 004 &middot; Solano Community College</span>
+      </span>
+    </a>
+    <a class="hdr-syl" href="syllabus-class3.html" target="_top">Syllabus &rarr;</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <main id="main">
+
+    <section class="cover">
+      <p class="cover-eyebrow">BIO 004 &middot; Fall 2026 Lab Schedule</p>
+      <h1 class="cover-title" id="coverTitle">Human <span>Anatomy</span></h1>
+      <p class="cover-section" id="coverSection"></p>
+      <div class="cover-meta" id="coverMeta"></div>
+      <div class="cover-times" id="coverTimes"></div>
+    </section>
+
+    <div class="status">
+      <div class="countdown" id="countdown" aria-live="polite">
+        <span class="cd-num" id="cdNum">–</span>
+        <span class="cd-text">
+          <span class="cd-lab">Next Exam</span>
+          <span class="cd-main" id="cdMain">Loading…</span>
+          <span class="cd-sub" id="cdSub"></span>
+        </span>
+      </div>
+      <button class="jump" id="jumpBtn" type="button">Jump to this week &#8595;</button>
+    </div>
+
+    <div class="toolbar" role="group" aria-label="Filter sessions">
+      <span class="tb-lab">Show</span>
+      <button class="chip" data-filter="all" aria-pressed="true" type="button">All</button>
+      <button class="chip" data-filter="lab" aria-pressed="false" type="button">Labs</button>
+      <button class="chip" data-filter="exam" aria-pressed="false" type="button">Exams</button>
+      <button class="chip" data-filter="off" aria-pressed="false" type="button">Days off</button>
+    </div>
+
+    <div class="weeks" id="weeks"></div>
+
+    <section class="card">
+
+      <h2><span class="n">Where we are</span>Modules &amp; weeks</h2>
+
+      <div data-module-nav></div>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="by">Dr. Sharilyn Rennie</div>
+    <div class="role">Professor of Anatomy &amp; Physiology</div>
+    <button class="print-link" id="printBtn" type="button">Print / save this schedule</button>
+  </footer>
+  <p class="visually-hidden" role="status" aria-live="polite" id="live"></p>
+</div>
+
+<script>
+/* ============================================================
+   EDIT HERE, everything below the two data blocks is the app.
+   ============================================================ */
+
+/* 1) CLASS INFO, edit times, room, CRN as needed */
+const CONFIG = {
+    "section": "Class 3", "crn": "80655", "days": "Tue / Thu", "when": "Evening", "lecture": "Lecture · TR · 5:30–6:45 pm · VC 118", "lab": "Lab · TR · 7:00–9:50 pm · VC 1137", "room": "Vacaville Center 1137"
+  };
+
+/* 2) SESSIONS, edit topics or fill "details" for click-to-expand.
+      type: "lab" | "exam" | "holiday" | "open"
+      details: leave "" for the friendly placeholder, or write text
+               (line breaks are preserved) to show your own notes. */
+const SCHEDULE = [
+    { week:1, date:"2026-08-18", day:"Tue", type:"lab", topic:"Intro to Anatomy Lab, Lab Safety & Introduction to Histology", details:"Day one. Lab safety, the anatomical terminology you will use all term, and we start histology right away.\n\nCell anatomy is a lecture topic in this course, not a lab topic, so it is not on the lab structure list. We also do not run a separate microscope lab. You will learn the scope inside the histology work, where you actually need it.\n\nBring the Part C lab structure list." }, { week:1, date:"2026-08-20", day:"Thu", type:"lab", topic:"Epithelial Tissues", details:"" }, { week:2, date:"2026-08-25", day:"Tue", type:"lab", topic:"Connective Tissue I", details:"" }, { week:2, date:"2026-08-27", day:"Thu", type:"lab", topic:"Connective Tissue II", details:"" }, { week:3, date:"2026-09-01", day:"Tue", type:"lab", topic:"Muscle & Nervous Tissue", details:"" }, { week:3, date:"2026-09-03", day:"Thu", type:"lab", topic:"Integumentary", details:"" }, { week:4, date:"2026-09-08", day:"Tue", type:"exam", topic:"Exam 1", details:"" }, { week:4, date:"2026-09-10", day:"Thu", type:"lab", topic:"Bone Tissue, Long Bone & Microanatomy", details:"" }, { week:5, date:"2026-09-15", day:"Tue", type:"lab", topic:"Axial Skeleton: Skull", details:"" }, { week:5, date:"2026-09-17", day:"Thu", type:"lab", topic:"Axial Skeleton: Vertebrae & Ribs", details:"" }, { week:6, date:"2026-09-22", day:"Tue", type:"lab", topic:"Upper Extremity", details:"" }, { week:6, date:"2026-09-24", day:"Thu", type:"lab", topic:"Lower Extremity", details:"" }, { week:7, date:"2026-09-29", day:"Tue", type:"exam", topic:"Exam 2", details:"" }, { week:7, date:"2026-10-01", day:"Thu", type:"lab", topic:"Thoracic Anatomy (Heart); BV Histology & Anatomy", details:"" }, { week:8, date:"2026-10-06", day:"Tue", type:"lab", topic:"Muscle Microanatomy & Sarcomere", details:"" }, { week:8, date:"2026-10-08", day:"Thu", type:"lab", topic:"Muscles of the Face, Chest & Back", details:"" }, { week:9, date:"2026-10-13", day:"Tue", type:"holiday", topic:"Professional Development, No Class", details:"" }, { week:9, date:"2026-10-15", day:"Thu", type:"lab", topic:"Muscles & NAV of the Upper Arm; Anterior Forearm", details:"" }, { week:10, date:"2026-10-20", day:"Tue", type:"lab", topic:"Muscles & NAV of Posterior Forearm", details:"" }, { week:10, date:"2026-10-22", day:"Thu", type:"exam", topic:"Exam 3", details:"" }, { week:11, date:"2026-10-27", day:"Tue", type:"lab", topic:"Thoracic Anatomy (Respiratory) & Respiratory Histology", details:"" }, { week:11, date:"2026-10-29", day:"Thu", type:"lab", topic:"(Anterior) Thigh Muscles & NAV", details:"" }, { week:12, date:"2026-11-03", day:"Tue", type:"lab", topic:"(Posterior) Thigh Muscle & NAV", details:"" }, { week:12, date:"2026-11-05", day:"Thu", type:"lab", topic:"Anterior/Posterior Lower Leg Muscles", details:"" }, { week:13, date:"2026-11-10", day:"Tue", type:"lab", topic:"GI Organs (Primary)", details:"" }, { week:13, date:"2026-11-12", day:"Thu", type:"lab", topic:"GI Organs (Accessory)", details:"" }, { week:14, date:"2026-11-17", day:"Tue", type:"exam", topic:"Exam 4", details:"" }, { week:14, date:"2026-11-19", day:"Thu", type:"lab", topic:"Renal Anatomy", details:"" }, { week:15, date:"2026-11-24", day:"Tue", type:"lab", topic:"M & F Reproductive Anatomy", details:"" }, { week:15, date:"2026-11-26", day:"Thu", type:"holiday", topic:"Thanksgiving, No Class", details:"" }, { week:16, date:"2026-12-01", day:"Tue", type:"lab", topic:"CNS Brain, Meninges & CSF", details:"" }, { week:16, date:"2026-12-03", day:"Thu", type:"lab", topic:"Brain Stem (CNS) & Cranial Nerves (PNS)", details:"" }, { week:17, date:"2026-12-08", day:"Tue", type:"lab", topic:"CNS Spinal Cord, Spinal Nerves", details:"" }, { week:17, date:"2026-12-10", day:"Thu", type:"exam", topic:"Exam 5", details:"" }, ];
+
+/* ---------- app (no need to edit below) ---------- */
+(function(){
+  const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  function d(str){const p=str.split('-').map(Number);return new Date(p[0],p[1]-1,p[2]);}
+  function midnight(dt){return new Date(dt.getFullYear(),dt.getMonth(),dt.getDate());}
+  function fmt(dt){return MONTHS[dt.getMonth()]+' '+dt.getDate();}
+  const today=midnight(new Date());
+  const todayMs=today.getTime();
+  const DAY=86400000;
+
+  // Monday of the week containing today (treat Sun as end of prior week)
+  const dowToday=today.getDay(); // 0 Sun .. 6 Sat
+  const offsetToMon=(dowToday===0?6:dowToday-1);
+  const monThisWeek=new Date(today.getFullYear(),today.getMonth(),today.getDate()-offsetToMon);
+  const sunThisWeek=new Date(monThisWeek.getFullYear(),monThisWeek.getMonth(),monThisWeek.getDate()+6);
+
+  // decorate sessions
+  const sessions=SCHEDULE.map(s=>{const dt=d(s.date);return Object.assign({},s,{dt,ms:dt.getTime()});});
+
+  // next upcoming session (>= today) → drives "current week"
+  let nextUp=sessions.find(s=>s.ms>=todayMs)||null;
+  const currentWeek=nextUp?nextUp.week:null;
+
+  // next exam
+  const nextExam=sessions.find(s=>s.type==='exam'&&s.ms>=todayMs)||null;
+
+  /* ---- cover ---- */
+  document.getElementById('coverSection').textContent=CONFIG.days+' · '+CONFIG.when+' Section';
+  const meta=document.getElementById('coverMeta');
+  meta.innerHTML=''
+    +'<span class="chipm"><b>'+CONFIG.days+'</b> &middot; '+CONFIG.when+'</span>'
+    +'<span class="chipm">CRN <b>'+CONFIG.crn+'</b></span>'
+    +'<span class="chipm">'+CONFIG.room+'</span>';
+  document.getElementById('coverTimes').innerHTML=''
+    +'<div class="timecard"><span class="tl">Lecture</span>'+CONFIG.lecture.replace(/^Lecture · /,'')+'</div>'
+    +'<div class="timecard"><span class="tl">Lab</span>'+CONFIG.lab.replace(/^Lab · /,'')+'</div>';
+
+  /* ---- countdown ---- */
+  const cdNum=document.getElementById('cdNum'),cdMain=document.getElementById('cdMain'),cdSub=document.getElementById('cdSub');
+  if(nextExam){
+    const days=Math.round((midnight(nextExam.dt).getTime()-todayMs)/DAY);
+    if(days===0){cdNum.textContent='Today';cdNum.classList.add('done');cdMain.textContent=nextExam.topic;cdSub.textContent=DOW[nextExam.dt.getDay()]+', '+fmt(nextExam.dt);}
+    else{cdNum.textContent=days;cdMain.textContent=nextExam.topic;cdSub.textContent=(days===1?'day':'days')+' away &middot; '+DOW[nextExam.dt.getDay()]+', '+fmt(nextExam.dt);cdSub.innerHTML=(days===1?'day':'days')+' away &middot; '+DOW[nextExam.dt.getDay()]+', '+fmt(nextExam.dt);}
+  } else {
+    cdNum.textContent='✓';cdNum.classList.add('done');
+    cdMain.textContent=(todayMs>sessions[sessions.length-1].ms)?'Term complete':'All exams complete';
+    cdSub.textContent='';
+    document.querySelector('.cd-lab').textContent='Exams';
+  }
+
+  /* ---- build weeks ---- */
+  const weeksEl=document.getElementById('weeks');
+  const byWeek={};
+  sessions.forEach(s=>{(byWeek[s.week]=byWeek[s.week]||[]).push(s);});
+  const weekNums=Object.keys(byWeek).map(Number).sort((a,b)=>a-b);
+
+  function detailHTML(s){
+    if(s.type==='holiday') return '';
+    if(s.details&&s.details.trim()){
+      return '<div class="detail-inner"><div class="detail-custom">'+escapeHTML(s.details)+'</div></div>';
+    }
+    if(s.type==='exam'){
+      return '<div class="detail-inner">'
+        +'<div class="detail-block"><p class="detail-h">Exam Day</p><p class="detail-p">'+escapeHTML(s.topic)+', bring a pencil and your student ID. No notes unless announced.</p></div>'
+        +'<div class="detail-block"><p class="detail-note">Details coming soon, your instructor will post the exact stations, coverage, and format here.</p></div>'
+        +'</div>';
+    }
+    // lab / open
+    return '<div class="detail-inner">'
+      +'<div class="detail-block"><p class="detail-h">Objectives</p><p class="detail-note">Coming soon.</p></div>'
+      +'<div class="detail-block"><p class="detail-h">Structures to know</p><p class="detail-note">Coming soon.</p></div>'
+      +'<div class="detail-block"><p class="detail-h">Pre-lab prep</p><p class="detail-note">Coming soon.</p></div>'
+      +'</div>';
+  }
+  function escapeHTML(t){return t.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+
+  weekNums.forEach(wk=>{
+    const list=byWeek[wk];
+    const first=list[0].dt,last=list[list.length-1].dt;
+    const week=document.createElement('section');
+    week.className='week';
+    week.dataset.week=wk;
+    if(wk===currentWeek) week.classList.add('wk-current');
+    let html='<div class="week-head"><span class="wk-n">Week '+wk+'</span>'
+      +'<span class="week-current-tag">This week</span>'
+      +'<span class="wk-range">'+fmt(first)+' – '+fmt(last)+'</span></div>';
+    list.forEach((s,i)=>{
+      const isToday=s.ms===todayMs;
+      const isWeek=s.ms>=monThisWeek.getTime()&&s.ms<=sunThisWeek.getTime();
+      const canExp=s.type!=='holiday';
+      let cls='sess type-'+s.type;
+      if(!canExp)cls+=' noexp';
+      if(isToday)cls+=' is-today'; else if(isWeek)cls+=' is-week';
+      const rowId='w'+wk+'s'+i;
+      html+='<div class="'+cls+'" data-type="'+s.type+'" aria-expanded-row="false">';
+      html+='<button class="sess-btn" type="button" '+(canExp?'aria-expanded="false" aria-controls="'+rowId+'"':'aria-disabled="true"')+'>';
+      html+='<span class="date-badge"><span class="dow">'+s.day+'</span><span class="dnum">'+s.dt.getDate()+'</span><span class="mon">'+MONTHS[s.dt.getMonth()]+'</span></span>';
+      html+='<span class="sess-main"><span class="sess-topic">'+escapeHTML(s.topic)+'</span><span class="sess-tags">';
+      const tlabel={lab:'Lab',exam:'Exam',holiday:'No Class',open:'Open Lab'}[s.type];
+      html+='<span class="tag '+s.type+'">'+tlabel+'</span>';
+      if(isToday)html+='<span class="tag today">Today</span>';
+      html+='</span></span>';
+      html+='<span class="caret" aria-hidden="true">&#9656;</span>';
+      html+='</button>';
+      html+='<div class="detail" id="'+rowId+'" role="region">'+detailHTML(s)+'</div>';
+      html+='</div>';
+    });
+    week.innerHTML=html;
+    weeksEl.appendChild(week);
+  });
+
+  /* ---- expand / collapse ---- */
+  weeksEl.addEventListener('click',e=>{
+    const btn=e.target.closest('.sess-btn');
+    if(!btn)return;
+    const row=btn.closest('.sess');
+    if(row.classList.contains('noexp'))return;
+    const open=row.getAttribute('aria-expanded-row')==='true';
+    row.setAttribute('aria-expanded-row',open?'false':'true');
+    btn.setAttribute('aria-expanded',open?'false':'true');
+  });
+
+  /* ---- filters ---- */
+  const chips=[...document.querySelectorAll('.chip')];
+  chips.forEach(ch=>ch.addEventListener('click',()=>{
+    chips.forEach(c=>c.setAttribute('aria-pressed','false'));
+    ch.setAttribute('aria-pressed','true');
+    const f=ch.dataset.filter;
+    document.querySelectorAll('.sess').forEach(row=>{
+      const t=row.dataset.type;
+      let show=true;
+      if(f==='lab')show=(t==='lab'||t==='open');
+      else if(f==='exam')show=(t==='exam');
+      else if(f==='off')show=(t==='holiday');
+      row.classList.toggle('hidden',!show);
+    });
+    document.querySelectorAll('.week').forEach(w=>{
+      const any=[...w.querySelectorAll('.sess')].some(r=>!r.classList.contains('hidden'));
+      w.classList.toggle('hidden',!any);
+    });
+  }));
+
+  /* ---- jump to this week ---- */
+  const jump=document.getElementById('jumpBtn');
+  if(currentWeek){
+    jump.addEventListener('click',()=>{
+      const el=document.querySelector('.week[data-week="'+currentWeek+'"]');
+      if(el){el.scrollIntoView({behavior:'smooth',block:'start'});
+        el.querySelector('.week-head').animate?el.querySelector('.week-head').animate([{filter:'brightness(1.25)'},{filter:'brightness(1)'}],{duration:900}):0;}
+    });
+    // auto-scroll on load if the term is in progress
+    const firstMs=sessions[0].ms,lastMs=sessions[sessions.length-1].ms;
+    if(todayMs>=firstMs&&todayMs<=lastMs){
+      setTimeout(()=>{const el=document.querySelector('.week[data-week="'+currentWeek+'"]');if(el)el.scrollIntoView({behavior:'smooth',block:'center'});},400);
+    }
+  } else { jump.hidden=true; }
+
+  /* ---- print ---- */
+  document.getElementById('printBtn').addEventListener('click',()=>window.print());
+})();
+</script>
+<script src="schedule-fall2026.js"></script>
+<script src="module-nav.js"></script>
+<script src="section-sync.js"></script>
+<script src="course-links.js"></script>
+<script src="hootie.js"></script>
+</body>
+</html>

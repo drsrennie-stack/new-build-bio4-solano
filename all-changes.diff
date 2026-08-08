@@ -1,0 +1,3439 @@
+diff --git a/bio004-course-calendar.html b/bio004-course-calendar.html
+index 1e1200a..6efb41f 100644
+--- a/bio004-course-calendar.html
++++ b/bio004-course-calendar.html
+@@ -249,6 +249,8 @@
+       </aside>
+     </div>
+ 
++    <div data-module-nav></div>
++
+   </main>
+ 
+   <footer>
+@@ -453,5 +455,10 @@ const SECTIONS = {
+   renderDetail();
+ })();
+ </script>
++<script src="schedule-fall2026.js"></script>
++<script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ </body>
+ </html>
+diff --git a/canvas-home.html b/canvas-home.html
+new file mode 100644
+index 0000000..3fe3262
+--- /dev/null
++++ b/canvas-home.html
+@@ -0,0 +1,387 @@
++<!DOCTYPE html>
++<html lang="en">
++<head>
++<meta charset="UTF-8">
++<meta name="viewport" content="width=device-width, initial-scale=1.0">
++<title>BIO 004 Human Anatomy &middot; Fall 2026 &middot; Course Home</title>
++<link rel="preconnect" href="https://fonts.googleapis.com">
++<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
++<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
++
++<!--
++  ============================================================
++  BIO 004 Human Anatomy, Fall 2026
++  canvas-home.html
++
++  The front door. This is the page that goes in the Canvas
++  iframe, and it has two states:
++
++    1. NOT SET UP. The student has never told us their section.
++       They get "Set up my course", pick one of the three
++       sections, and that choice is written to localStorage.
++
++    2. SET UP. Every visit after that, they get the Enter Course
++       screen and one button that takes them to their own hub.
++
++  The choice is the SAME key every other page reads,
++  'bio004-section' (mw / tr-am / tr-eve). Setting it here means
++  the week pages, the calendar, the syllabus links and Mastery OS
++  all follow, and the student is never asked again.
++
++  CANVAS NOTES
++  ------------
++  Every internal link carries target="_top" so it breaks out of
++  the iframe instead of nesting the course inside itself.
++
++  The height sender at the bottom posts the document height to
++  the parent on load, on resize, and whenever the content changes,
++  so Canvas can size the frame with no scrollbar.
++
++  localStorage inside a Canvas iframe is third-party storage. If a
++  browser blocks it, the page falls back to a URL parameter and
++  simply asks again rather than breaking. See the storage note in
++  the script.
++  ============================================================
++-->
++
++<style>
++  :root{
++    --navy:#08101F; --navy-soft:#101B2E;
++    --maroon:#7A2A22; --maroon-dark:#5E201A; --terra:#C08268;
++    --gold:#DCB45C;
++    --offwhite:#F3F5F8; --line:rgba(255,255,255,.16);
++    --font:'Plus Jakarta Sans',system-ui,sans-serif;
++    --eb:'DM Sans',system-ui,sans-serif;
++    --shadow-rest:0 1px 3px rgba(0,0,0,.08);
++    --shadow-hover:0 8px 16px rgba(0,0,0,.10);
++    --radius:16px;
++  }
++  *{box-sizing:border-box}
++  html,body{margin:0;padding:0}
++  /* Navy, not white. In the Canvas frame the stage rarely fills the
++     reported height exactly, and a white body showed as a band under
++     the panel. */
++  html,body{background:var(--navy)}
++  body{
++    font-family:var(--font);
++    color:var(--navy);
++    -webkit-font-smoothing:antialiased;
++  }
++
++  .skip{position:absolute;left:-9999px;top:0;background:var(--gold);color:var(--navy);
++        padding:11px 18px;font-weight:700;border-radius:0 0 10px 0;z-index:99}
++  .skip:focus{left:0}
++
++  .stage{
++    background:var(--navy);
++    color:#fff;
++    padding:64px 24px 56px;
++    min-height:100vh;
++    display:flex;align-items:center;justify-content:center;
++  }
++  .inner{max-width:720px;width:100%;text-align:center}
++
++  .eyebrow{
++    font-family:var(--eb);
++    font-size:13px;letter-spacing:.1em;text-transform:uppercase;
++    font-weight:700;color:var(--gold);margin:0 0 18px;
++  }
++
++  h1{
++    font-size:clamp(30px,5vw,44px);
++    line-height:1.15;font-weight:800;margin:0 0 20px;color:#fff;
++  }
++  h1 .accent{color:var(--terra)}
++
++  .lede{
++    font-size:clamp(15px,2.2vw,17.5px);
++    line-height:1.72;color:#EEF1F6;margin:0 auto 30px;max-width:34em;
++  }
++
++  .cta{
++    display:inline-flex;align-items:center;gap:11px;
++    font-family:var(--font);font-size:17px;font-weight:700;
++    background:var(--maroon);color:#fff;
++    border:1px solid var(--maroon);
++    border-radius:12px;padding:16px 34px;
++    text-decoration:none;cursor:pointer;
++    box-shadow:var(--shadow-rest);
++    transition:transform 200ms ease,box-shadow 200ms ease,background 200ms ease;
++  }
++  .cta:hover{background:var(--maroon-dark);transform:translateY(-2px);box-shadow:var(--shadow-hover)}
++  .cta .ic{line-height:0}
++
++  .foot{
++    font-size:14.5px;line-height:1.7;color:#D7DDE7;margin:26px auto 0;max-width:30em;
++  }
++  .sig{
++    font-family:var(--eb);font-size:14px;font-weight:700;
++    color:var(--gold);margin:30px 0 0;
++  }
++
++  .secline{
++    display:inline-flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:center;
++    font-family:var(--eb);font-size:12.5px;font-weight:700;letter-spacing:.05em;
++    text-transform:uppercase;color:var(--navy);
++    background:var(--gold);border-radius:999px;padding:7px 15px;margin:0 0 20px;
++  }
++
++  .change{
++    display:inline-block;margin-top:20px;
++    background:transparent;border:0;padding:6px 4px;
++    font-family:var(--font);font-size:14px;font-weight:700;color:#D7DDE7;
++    text-decoration:underline;text-underline-offset:3px;cursor:pointer;
++  }
++  .change:hover{color:var(--gold)}
++
++  /* ---------- setup state ---------- */
++  .setup-q{font-size:16.5px;color:#EEF1F6;margin:0 0 22px;line-height:1.6}
++  .cards{
++    display:grid;gap:14px;text-align:left;
++    grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
++    margin:0 0 8px;
++  }
++  .card{
++    background:#fff;color:var(--navy);
++    border:1px solid rgba(11,21,48,.12);border-radius:var(--radius);
++    padding:18px 18px 17px;cursor:pointer;font-family:inherit;text-align:left;
++    box-shadow:var(--shadow-rest);
++    transition:transform 200ms ease,box-shadow 200ms ease,border-color 200ms ease;
++    display:flex;flex-direction:column;gap:5px;
++  }
++  .card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);border-color:var(--maroon)}
++  .card .cn{font-family:var(--eb);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;
++            font-weight:700;color:var(--maroon)}
++  .card .ct{font-size:17px;font-weight:800;margin:0}
++  .card .cm{font-size:13px;line-height:1.55;color:#3A4358;margin:0}
++  .card .crn{font-family:var(--eb);font-size:11.5px;font-weight:700;color:#3A4358;opacity:.85}
++
++  .hint{font-size:13.5px;color:#C6CEDA;margin:18px 0 0;line-height:1.6}
++
++  .mark{margin:0 auto 22px;display:block}
++
++  :focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:6px}
++
++  @media (prefers-reduced-motion:reduce){
++    .cta,.card{transition:none}
++    .cta:hover,.card:hover{transform:none}
++  }
++  @media (max-width:520px){
++    .stage{padding:44px 18px 40px}
++  }
++</style>
++</head>
++<body>
++
++<a class="skip" href="#main">Skip to main content</a>
++
++<main id="main" class="stage">
++  <div class="inner">
++
++    <!-- Three-figure mark, same one the rest of the site uses. -->
++    <svg class="mark" viewBox="40 10 125 148" width="58" height="69" role="img" aria-label="MedMasters Collaborative">
++      <g transform="translate(0,18)">
++        <g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#FFFFFF"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#FFFFFF"/></g>
++        <g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#C08268"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#C08268"/></g>
++        <g transform="translate(138,0) rotate(-7 0 130)"><circle cx="0" cy="18" r="10" fill="#DCB45C"/><path d="M 0,30 C -10,30 -16,34 -16,40 C -16,54 -13,68 -11,84 C -10,102 -12,118 -14,130 L 14,130 C 12,118 10,102 11,84 C 13,68 16,54 16,40 C 16,34 10,30 0,30 Z" fill="#DCB45C"/></g>
++      </g>
++    </svg>
++
++    <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
++
++    <!-- ============ STATE 1: SET UP ============ -->
++    <section id="setup" hidden aria-labelledby="setup-h1">
++      <h1 id="setup-h1">Let's set up <span class="accent">your course</span>.</h1>
++      <p class="lede">
++        One question, then you are done. Everything after this, your schedule,
++        your exam dates, your lab days, will match the section you actually sit in.
++      </p>
++      <p class="setup-q"><strong>Which section are you in?</strong></p>
++
++      <div class="cards" id="cards" role="group" aria-label="Choose your section"></div>
++
++      <p class="hint">
++        Not sure? Check your Canvas course name or your registration for the CRN.
++        You can change this later.
++      </p>
++    </section>
++
++    <!-- ============ STATE 2: ENTER COURSE ============ -->
++    <section id="enter" hidden aria-labelledby="enter-h1">
++      <p class="secline" id="secLine"></p>
++
++      <h1 id="enter-h1">Welcome to <span class="accent">Human Anatomy</span>.</h1>
++
++      <p class="lede">
++        I'm really glad you're here. This term we'll explore the human body together,
++        one system at a time. Everything you need lives in one place, your weekly pages,
++        study tools, lab structure lists, and schedule, so you are never left hunting
++        for anything.
++      </p>
++
++      <a class="cta" id="enterBtn" href="class1.html" target="_top">
++        Enter Course
++        <span class="ic" aria-hidden="true">
++          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
++            <path d="M5 12h14M13 6l6 6-6 6"/>
++          </svg>
++        </span>
++      </a>
++
++      <p class="foot">
++        This is your front door. Every time you log into Canvas, the Enter Course
++        button is right here, and it takes you straight to your course hub.
++      </p>
++
++      <button type="button" class="change" id="changeBtn">Not your section? Change it</button>
++
++      <p class="sig">Dr. Sharilyn Rennie</p>
++    </section>
++
++  </div>
++</main>
++
++<!-- Shared course data. Hootie and the section bridge read these. -->
++<script src="schedule-fall2026.js"></script>
++<script src="section-sync.js"></script>
++
++<script>
++(function(){
++  'use strict';
++
++  /* The three sections. Values match every other page on the site:
++     mw = Class 1, tr-am = Class 2, tr-eve = Class 3. */
++  var SECTIONS = {
++    'mw':     {n:'Class 1', label:'Mon / Wed, Afternoon', crn:'80650',
++               meet:'Lecture 12:30 to 1:50 pm, VC 118. Lab 2:00 to 4:50 pm, VC 1137.',
++               hub:'class1.html'},
++    'tr-am':  {n:'Class 2', label:'Tue / Thu, Morning',   crn:'80654',
++               meet:'Lecture 9:30 to 10:45 am, VC 212. Lab 11:00 am to 1:50 pm, VC 1137.',
++               hub:'class2.html'},
++    'tr-eve': {n:'Class 3', label:'Tue / Thu, Evening',   crn:'80655',
++               meet:'Lecture 5:30 to 6:45 pm, VC 118. Lab 7:00 to 9:50 pm, VC 1137.',
++               hub:'class3.html'}
++  };
++  var ORDER = ['mw','tr-am','tr-eve'];
++  var KEY = 'bio004-section';
++
++  /* STORAGE NOTE. Inside a Canvas iframe this is third-party
++     storage and some browsers block it outright. Every read and
++     write is guarded, and if storage is unavailable the page
++     simply shows the setup step again rather than throwing. The
++     ?sec= parameter is the escape hatch: a link with it works
++     even with storage fully blocked. */
++  function read(){
++    try{
++      var m = location.search.match(/[?&]sec=([^&#]+)/);
++      if(m){ var v = decodeURIComponent(m[1]); if(SECTIONS[v]) return v; }
++    }catch(e){}
++    try{ var s = localStorage.getItem(KEY); return SECTIONS[s] ? s : null; }
++    catch(e){ return null; }
++  }
++  function write(sec){
++    try{ localStorage.setItem(KEY, sec); }catch(e){}
++    /* Keep Mastery OS in step, same as every other page. */
++    try{ if(window.BIO004_SECTION && window.BIO004_SECTION.set) window.BIO004_SECTION.set(sec); }catch(e){}
++  }
++
++  /* Resolved BEFORE anything calls postHeight(). var hoisting made
++     this bite once already: the first few height messages went out
++     with frameId undefined because the state functions run above
++     where this used to sit, and a parent filtering by frameId
++     would have dropped them. */
++  var frameId = (function(){
++    try{
++      var m = location.search.match(/[?&]frameId=([^&#]+)/);
++      if(m) return decodeURIComponent(m[1]);
++    }catch(e){}
++    return 'bio004-canvas-home';
++  })();
++
++  var setup = document.getElementById('setup');
++  var enter = document.getElementById('enter');
++  var cards = document.getElementById('cards');
++
++  /* Build the three section cards. */
++  ORDER.forEach(function(key){
++    var s = SECTIONS[key];
++    var b = document.createElement('button');
++    b.type = 'button';
++    b.className = 'card';
++    b.setAttribute('data-sec', key);
++    b.innerHTML =
++      '<span class="cn">' + s.n + '</span>' +
++      '<p class="ct">' + s.label + '</p>' +
++      '<p class="cm">' + s.meet + '</p>' +
++      '<span class="crn">CRN ' + s.crn + '</span>';
++    b.setAttribute('aria-label', s.n + ', ' + s.label + ', CRN ' + s.crn + '. ' + s.meet);
++    b.addEventListener('click', function(){
++      write(key);
++      showEnter(key, true);
++    });
++    cards.appendChild(b);
++  });
++
++  function showSetup(){
++    enter.hidden = true;
++    setup.hidden = false;
++    postHeight();
++  }
++
++  function showEnter(sec, justChosen){
++    var s = SECTIONS[sec];
++    document.getElementById('secLine').textContent = s.n + ' · ' + s.label + ' · CRN ' + s.crn;
++    var btn = document.getElementById('enterBtn');
++    btn.href = s.hub;
++    btn.setAttribute('aria-label', 'Enter Course, ' + s.n + ' ' + s.label);
++    setup.hidden = true;
++    enter.hidden = false;
++    /* Coming straight from a choice, put focus on the thing they
++       are meant to press next rather than leaving it on a button
++       that has just disappeared. */
++    if (justChosen) btn.focus();
++    postHeight();
++  }
++
++  document.getElementById('changeBtn').addEventListener('click', function(){
++    try{ localStorage.removeItem(KEY); }catch(e){}
++    showSetup();
++    var first = cards.querySelector('.card');
++    if (first) first.focus();
++  });
++
++  var have = read();
++  if (have) { write(have); showEnter(have, false); } else { showSetup(); }
++
++  /* ----------------------------------------------------------
++     IFRAME HEIGHT SENDER
++     Canvas sizes the frame from this. Posts on load, on resize,
++     and whenever the rendered content changes, because switching
++     between the setup and enter states changes the height and a
++     load-only sender would leave a scrollbar or a gap.
++     ---------------------------------------------------------- */
++  function postHeight(){
++    try{
++      var h = Math.max(
++        document.documentElement.scrollHeight,
++        document.body ? document.body.scrollHeight : 0
++      );
++      window.parent.postMessage({frameId:frameId, type:'resize', height:h}, '*');
++    }catch(e){}
++  }
++
++  window.addEventListener('load', postHeight);
++  window.addEventListener('resize', postHeight);
++  if (window.ResizeObserver) {
++    try{ new ResizeObserver(postHeight).observe(document.documentElement); }catch(e){}
++  }
++  postHeight();
++})();
++</script>
++
++<!-- Hootie, so a student who lands here confused has somewhere to go. -->
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
++
++</body>
++</html>
+diff --git a/class1.html b/class1.html
+index 948374f..e54ec90 100644
+--- a/class1.html
++++ b/class1.html
+@@ -219,6 +219,14 @@
+ 
+     <div class="weeks" id="weeks"></div>
+ 
++    <section class="card">
++
++      <h2><span class="n">Where we are</span>Modules &amp; weeks</h2>
++
++      <div data-module-nav></div>
++
++    </section>
++
+   </main>
+ 
+   <footer>
+@@ -408,5 +416,10 @@ const SCHEDULE = [
+   document.getElementById('printBtn').addEventListener('click',()=>window.print());
+ })();
+ </script>
++<script src="schedule-fall2026.js"></script>
++<script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ </body>
+ </html>
+diff --git a/class2.html b/class2.html
+index 9cb8e57..16ce642 100644
+--- a/class2.html
++++ b/class2.html
+@@ -219,6 +219,14 @@
+ 
+     <div class="weeks" id="weeks"></div>
+ 
++    <section class="card">
++
++      <h2><span class="n">Where we are</span>Modules &amp; weeks</h2>
++
++      <div data-module-nav></div>
++
++    </section>
++
+   </main>
+ 
+   <footer>
+@@ -408,5 +416,10 @@ const SCHEDULE = [
+   document.getElementById('printBtn').addEventListener('click',()=>window.print());
+ })();
+ </script>
++<script src="schedule-fall2026.js"></script>
++<script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ </body>
+ </html>
+diff --git a/class3.html b/class3.html
+index f89dbaa..64c9326 100644
+--- a/class3.html
++++ b/class3.html
+@@ -219,6 +219,14 @@
+ 
+     <div class="weeks" id="weeks"></div>
+ 
++    <section class="card">
++
++      <h2><span class="n">Where we are</span>Modules &amp; weeks</h2>
++
++      <div data-module-nav></div>
++
++    </section>
++
+   </main>
+ 
+   <footer>
+@@ -408,5 +416,10 @@ const SCHEDULE = [
+   document.getElementById('printBtn').addEventListener('click',()=>window.print());
+ })();
+ </script>
++<script src="schedule-fall2026.js"></script>
++<script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ </body>
+ </html>
+diff --git a/compliance-notes.md b/compliance-notes.md
+index ef28b1f..32ba555 100644
+--- a/compliance-notes.md
++++ b/compliance-notes.md
+@@ -159,8 +159,69 @@ Accessibility consequences:
+ - The exam table was restructured from four date columns (lecture and practical per track) to two, plus a coverage column and a department duty column. Fewer columns means less horizontal scroll on narrow viewports, which improves 1.4.10 Reflow.
+ - One rendering bug was caught in verification: the Exam 4 warning chip was firing on the Exam 1 row because a non-empty data field was being read as a boolean flag. Fixed and re-verified; exactly one chip renders, on Exam 4.
+ 
++## 11. Revision: week page dates moved to a single source
++
++The 17 week pages each hardcoded their own two dates per track, 68 date strings in total. They now render the class-days block from `BIO004_SESSIONS` in `schedule-fall2026.js` via a new `week-schedule.js`.
++
++**Files added:** `week-schedule.js` (renderer, no rendered chrome of its own), `week-links.js` (data stub, no rendered output, no WCAG surface).
++
++**Files modified:** `week-1.html` through `week-17.html`, `schedule-fall2026.js`, `syllabus-class1.html`.
++
++Accessibility consequences:
++
++- **Rendered output is unchanged.** All 17 pages were rendered in headless Chromium and compared element by element against the pre-change files: same day classes, same date labels, same body text, same order. No heading, landmark, contrast or focus surface moved, so the prior posture on those criteria carries over unmodified.
++- **4.1.3 Status Messages (AA), newly satisfied.** Pressing a section button swaps the visible schedule. Previously that swap happened silently, so a screen reader user pressing "Tue / Thu AM" got no confirmation that the class days had changed under them. The days container is now `aria-live="polite"`. The attribute is set after the first render, deliberately, so the block is not read aloud on page load.
++- **Weekday labels are now derived, not stored.** A label like "Mon Sep 14" is computed from the ISO date at render time. A date can no longer disagree with its own day name, which was a live risk while 68 of them were maintained by hand. Verified by setting one session to a Tuesday date and confirming the rendered label followed.
++- **Dates are parsed as local time.** `new Date('2026-09-14')` parses as midnight UTC and renders as the previous day for any viewer west of Greenwich, which is every student in this course. The renderer splits the ISO string and constructs a local date instead.
++- **Non-JS fallback added.** The days block previously showed the Mon/Wed schedule to a visitor without JavaScript, silently wrong for two of the three sections. It now carries a `<noscript>` block linking all three syllabi, each of which contains the full weekly table.
++- **17 console 404s removed.** Every week page was requesting a `week-links.js` that did not exist. The stub resolves this. `competencies.js`, `resources.js` and `rubrics.js` remain missing and still 404 on the two Mastery OS pages; those hold real data and were left for the instructor rather than guessed at.
++
++Data defect corrected in the same pass: the Class 1 syllabus module-overview table and key-dates table both listed Exam 4 as Wed Nov 18. The correct date is Mon Nov 16; Nov 18 is the rebuttals session. The weekly table on the same page was already correct, so the error was confined to the two summaries. Classes 2 and 3 were audited identically and are correct throughout.
++
++## 12. Revision: module navigator, Hootie, Mastery OS data
++
++**Files added:** `module-nav.js`, `hootie.js`, `section-sync.js`, `resources.js`, `rubrics.js`.
++**Files modified:** `week-1.html` to `week-17.html`, `class1/2/3.html`, `bio004-course-calendar.html`, both `mastery-os-fall-2026*.html`.
++
++### Module and week navigator
++
++Replaces the flat strip of 17 week numbers, and adds week navigation to the section home pages, which previously had none.
++
++| Criterion | Level | Achieved | Note |
++|---|---|---|---|
++| 1.4.1 Use of Color | A | Pass | Current week carries a gold ring AND an `aria-current`, AND a text line reading "You are in Week N of this module". Exam weeks are labelled "Exam N" in text, not signalled by colour. |
++| 1.4.3 / 1.4.6 Contrast | AA / AAA | Pass | Every text pair measured with opacity folded in. All at or above 7:1. The module number chip was 5.37:1 at .62 opacity, AA only, and was raised to .78 for 9.70:1. |
++| 2.1.1 Keyboard | A | Pass | Tablist with roving tabindex. Arrow Left and Right cycle, Home and End jump to the ends, focus follows selection. |
++| 2.4.7 Focus Visible | AA | Pass | 3px gold outline with 2px offset on tabs and week links. |
++| 4.1.2 Name, Role, Value | A | Pass | `role="tablist"` with `aria-label`, `role="tab"` with `aria-selected`, panel `role="tabpanel"` labelled by its tab. Each week link carries its own `aria-label` naming the exam and the changeover. |
++| 2.3.3 Animation from Interactions | AAA | Pass | Hover lift and transitions disabled under `prefers-reduced-motion`. |
++
++Week 4 belongs to two modules and is announced as "shared between Module 1 and Module 2" rather than being silently duplicated.
++
++### Hootie the Knowfish
++
++A grounded question answerer on the week pages, section home pages and calendar. It is not a language model. It answers only from the schedule, module and exam data on the page, and states plainly when a question is outside that scope rather than guessing at anatomy.
++
++| Criterion | Level | Achieved | Note |
++|---|---|---|---|
++| 4.1.3 Status Messages | AA | Pass | Transcript is `role="log"` with `aria-live="polite"`, so replies are announced without moving focus. |
++| 1.3.1 Info and Relationships | A | Pass | Panel is `role="dialog"` with `aria-label`. Text input has a visually hidden `<label for>`. Close button has an accessible name. |
++| 2.1.1 Keyboard, 2.1.2 No Trap | A | Pass | Launcher is a real button with `aria-expanded`. Focus moves to the input on open and returns to the launcher on close. Escape closes. The panel is non-modal and does not trap focus. |
++| 1.4.3 / 1.4.6 Contrast | AA / AAA | Pass | Nine text pairs measured. Lowest is 9.63:1. |
++| 1.4.10 Reflow | AA | Pass | Panel width is `min(390px, 100vw - 36px)` and height is capped against the viewport, so it does not overflow small screens. |
++
++Known limitation, recorded deliberately: Hootie cannot answer anatomy content questions. This is a scope decision, not a defect. The fallback names the notes packet, the week's Loops video and the Atlas, and suggests class or office hours. The entire answering surface is one function so it can be replaced later without touching the pages.
++
++### Mastery OS
++
++Both pages were loading `competencies.js`, which does not exist in the repo, so the app ran with zero competencies on every visit. They now load `competenciesfall2026.js`, the file that is present and the only one carrying the `general` body-system tag the grouping logic requires. `resources.js` and `rubrics.js` added as documented empty maps, removing three console 404s per page. No file was deleted.
++
++`section-sync.js` makes the section chosen on `welcome.html` carry into Mastery OS, so a student is not asked the same question twice and cannot end up with two disagreeing schedules in one browser.
++
++Outstanding: `icon.svg` is referenced as a favicon by both Mastery OS pages and does not exist. Cosmetic 404, no WCAG surface. No artwork was invented to close it.
++
+ ## 11. Reviewer
+ 
+ Reviewed by: Dr. Sharilyn Rennie
+ Built and audited: August 8, 2026
+-Verification method: headless Chromium render, computed WCAG relative luminance contrast audit across 19 text and background pairs, sequential Tab traversal, arrow-key tablist traversal, accessibility tree inspection, heading level extraction, and a data assertion suite comparing every exam date and session against the department lab master and the course lecture schedule.
++Verification method (August 8 revision): headless Chromium render of all 17 week pages compared element by element against the pre-change files, section picker exercised across all three sections with persistence and `?sec=` override checked, non-JS render confirmed, console and network error capture on every page. Earlier method: headless Chromium render, computed WCAG relative luminance contrast audit across 19 text and background pairs, sequential Tab traversal, arrow-key tablist traversal, accessibility tree inspection, heading level extraction, and a data assertion suite comparing every exam date and session against the department lab master and the course lecture schedule.
+diff --git a/course-links.js b/course-links.js
+new file mode 100644
+index 0000000..09f3cad
+--- /dev/null
++++ b/course-links.js
+@@ -0,0 +1,93 @@
++/* ============================================================
++   BIO 004 Human Anatomy, Fall 2026
++   course-links.js
++
++   Every course URL, in one place.
++
++   WHY
++   ---
++   These URLs were written by hand in welcome.html, and the stub
++   files week-links.js and resources.js shipped empty while the
++   real addresses sat a few hundred lines away in another file.
++   Same URL in three places is three places to update when a link
++   moves, and two of them will be missed.
++
++   Anything that needs to point a student at the Atlas, the Loops,
++   the study session signup or the calendar reads it from here.
++
++   ADDING A LINK
++   -------------
++   Put it in the right group and it becomes available everywhere.
++   Nothing here is invented: every URL below was already live in
++   welcome.html.
++
++   INTERNAL vs EXTERNAL
++   --------------------
++   internal: true  means a page on this GitHub Pages site. It gets
++                   target="_top" so it breaks out of the Canvas
++                   iframe instead of nesting the course in itself.
++   internal: false means somewhere else. It gets target="_blank"
++                   with rel="noopener".
++
++   Getting this backwards is the single most common way a Canvas
++   course ends up rendering inside its own iframe, so the flag is
++   explicit on every entry rather than guessed from the URL.
++   ============================================================ */
++
++window.BIO004_LINKS = {
++
++  /* ---------- on this site ---------- */
++  calendar:  { url: 'bio004-course-calendar.html',      internal: true,  label: 'course calendar' },
++  masteryOS: { url: 'mastery-os-fall-2026.html',        internal: true,  label: 'Mastery OS' },
++  home:      { url: 'canvas-home.html',                 internal: true,  label: 'course home' },
++  syllabusGeneric: { url: 'fall-2026-syllabus.html',    internal: true,  label: 'syllabus' },
++
++  /* ---------- elsewhere ---------- */
++  atlas: { url: 'https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02',
++           internal: false, label: 'Digital Atlas' },
++
++  loops: { url: 'https://medmasterscollaborative.com/anatomy-loops',
++           internal: false, label: 'Loops' },
++
++  study: { url: 'https://drsrennie-stack.github.io/new-build-bio4-solano/study-session-signup.html',
++           internal: false, label: 'Study With Me' },
++
++  astc:  { url: 'https://welcome.solano.edu/astc-homepage',
++           internal: false, label: 'ASTC homepage' },
++
++  /* ---------- per section ---------- */
++  sections: {
++    'mw':     { syllabus: 'syllabus-class1.html', hub: 'class1.html' },
++    'tr-am':  { syllabus: 'syllabus-class2.html', hub: 'class2.html' },
++    'tr-eve': { syllabus: 'syllabus-class3.html', hub: 'class3.html' }
++  },
++
++  /* ---------- contact ---------- */
++  contact: {
++    canvasInbox: 'the Canvas Inbox',
++    email:       'srennie@solano.edu',
++    turnaround:  'about 48 to 72 hours on weekdays',
++    officeHours: '30 minutes before each class, or by appointment',
++    ascEmail:    'ASC@solano.edu',
++    ascPhone:    '(707) 864-7136'
++  }
++};
++
++/* Build an anchor for a link key, with the right target. */
++window.BIO004_LINKS.a = function (key, text) {
++  var L = window.BIO004_LINKS[key];
++  if (!L) return text || key;
++  var t = L.internal ? ' target="_top"' : ' target="_blank" rel="noopener"';
++  return '<a href="' + L.url + '"' + t + '>' + (text || L.label) + '</a>';
++};
++
++/* Section-aware anchor. Falls back to the generic syllabus and the
++   calendar when the student has not picked a section yet, which is
++   exactly what welcome.html did. */
++window.BIO004_LINKS.forSection = function (sec) {
++  var s = window.BIO004_LINKS.sections[sec];
++  return {
++    syllabus: s ? s.syllabus : window.BIO004_LINKS.syllabusGeneric.url,
++    hub:      s ? s.hub      : window.BIO004_LINKS.calendar.url
++  };
++};
+diff --git a/hootie.js b/hootie.js
+new file mode 100644
+index 0000000..01a83e5
+--- /dev/null
++++ b/hootie.js
+@@ -0,0 +1,668 @@
++/* ============================================================
++   BIO 004 Human Anatomy, Fall 2026
++   hootie.js
++
++   Hootie the Knowfish, on the week pages.
++
++   WHAT THIS IS, AND WHAT IT IS NOT
++   --------------------------------
++   This is NOT an AI. There is no model behind it and no network
++   call. It is a grounded answerer: it reads the course data
++   already loaded on the page and answers questions it can answer
++   from that data with certainty.
++
++   It knows, because the data says so:
++     - what is happening this week, today, and next class
++     - which module the course is in, and which weeks it covers
++     - when the student's next exam is, and how many days away
++     - what a given exam covers
++     - the pre-work sequence and how to study for this course
++
++   It does NOT know anatomy content, and it says so plainly rather
++   than guessing. A student asking "what is the difference between
++   compact and spongy bone" gets pointed at the notes packet, the
++   week's Loops video and the Atlas. Guessing at anatomy would be
++   worse than useless in a course where the answer gets examined.
++
++   The whole answering surface is one function, hootieAnswer(),
++   which takes a question and a context object and returns a
++   reply. Everything it depends on is in that context. If a real
++   model is ever wired in behind a proxy, that one function is the
++   only thing that changes, and the 17 pages stay untouched.
++
++   HOW TO MOUNT
++   ------------
++       <script src="schedule-fall2026.js"></script>
++       <script src="section-sync.js"></script>
++       <script src="hootie.js"></script>
++
++   It mounts a launcher button in the bottom corner by itself. To
++   scope it to a week, the page's nav already carries the week
++   number and Hootie reads it:
++
++       <div data-module-nav data-week="5"></div>
++
++   Suppress it on a page with:
++
++       <body data-hootie="off">
++
++   ACCESSIBILITY
++   -------------
++   The panel is a labelled dialog. The launcher is a real button
++   with aria-expanded. The transcript is an aria-live polite log
++   so replies are announced. Focus moves into the input on open
++   and back to the launcher on close. Escape closes. Nothing here
++   depends on colour alone.
++   ============================================================ */
++
++(function () {
++  'use strict';
++
++  var DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
++  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
++             'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
++
++  function parseISO(iso) {
++    var p = String(iso).split('-');
++    return new Date(+p[0], +p[1] - 1, +p[2]);
++  }
++  function fmt(iso) {
++    var d = parseISO(iso);
++    return DOW[d.getDay()] + ' ' + MON[d.getMonth()] + ' ' + d.getDate();
++  }
++  function todayISO() {
++    try {
++      var m = location.search.match(/[?&]today=(\d{4}-\d{2}-\d{2})/);
++      if (m) return m[1];
++    } catch (e) {}
++    var d = new Date();
++    function p(n) { return (n < 10 ? '0' : '') + n; }
++    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
++  }
++  function daysBetween(a, b) {
++    return Math.round((parseISO(b) - parseISO(a)) / 86400000);
++  }
++  function esc(s) {
++    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
++  }
++  /* Session text carries trusted markup AND HTML entities from the
++     schedule file (<strong>, &middot;, &amp;). Strip the tags and
++     DECODE the entities, otherwise esc() re-escapes the ampersand
++     and students read "TBL 7 &amp;middot; GI System". */
++  var _dec = document.createElement('textarea');
++  function plain(s) {
++    _dec.innerHTML = String(s).replace(/<[^>]+>/g, '');
++    return _dec.value.replace(/\s+/g, ' ').trim();
++  }
++
++  /* ----------------------------------------------------------
++     CONTEXT. Everything Hootie is allowed to know.
++     ---------------------------------------------------------- */
++  function buildContext() {
++    var S = window.BIO004_SESSIONS;
++    var M = window.BIO004_MODULES;
++    var X = window.BIO004_SECTIONS;
++    if (!S || !M) return null;
++
++    var sec = null;
++    try { sec = window.BIO004_SECTION && window.BIO004_SECTION.get(); } catch (e) {}
++    var track = sec === 'tr-am' || sec === 'tr-eve' ? 'tr' : 'mw';
++    var secKey = sec === 'tr-am' ? 'class2' : sec === 'tr-eve' ? 'class3' : 'class1';
++
++    var rows = S[track] || [];
++    var today = todayISO();
++
++    var nav = document.querySelector('[data-module-nav][data-week]');
++    var viewWk = nav ? parseInt(nav.getAttribute('data-week'), 10) : null;
++
++    /* Where the course actually is. */
++    var curWk = rows.length ? rows[0].wk : 1, state = 'during';
++    if (rows.length) {
++      if (today < rows[0].date) { state = 'before'; curWk = rows[0].wk; }
++      else if (today > rows[rows.length - 1].date) { state = 'after'; curWk = rows[rows.length - 1].wk; }
++      else {
++        for (var i = 0; i < rows.length; i++) {
++          if (rows[i].date <= today) curWk = rows[i].wk; else break;
++        }
++      }
++    }
++
++    var next = null;
++    for (var j = 0; j < rows.length; j++) {
++      if (rows[j].date >= today) { next = rows[j]; break; }
++    }
++    var todayRow = rows.filter(function (r) { return r.date === today; })[0] || null;
++
++    var exams = (X && X.sections && X.sections[secKey] && X.sections[secKey].exams) || [];
++    var nextExam = null;
++    for (var k = 0; k < exams.length; k++) {
++      if (exams[k].lecture >= today) { nextExam = exams[k]; break; }
++    }
++
++    var secName = (X && X.sections && X.sections[secKey]) || null;
++
++    return {
++      sessions: rows, track: track, section: sec, sectionName: secName,
++      modules: M, exams: exams,
++      today: today, curWk: curWk, state: state, viewWk: viewWk,
++      next: next, todayRow: todayRow, nextExam: nextExam,
++      weekOf: function (wk) { return rows.filter(function (r) { return r.wk === wk; }); },
++      moduleOf: function (wk) {
++        return M.filter(function (m) { return m.weeks.indexOf(wk) > -1; });
++      },
++      links: window.BIO004_WEEK_LINKS || {}
++    };
++  }
++
++  /* ----------------------------------------------------------
++     FORMATTERS
++     ---------------------------------------------------------- */
++  function describeDay(r) {
++    if (!r) return '';
++    if (r.kind === 'off')  return fmt(r.date) + ': no class. ' + plain([].concat(r.text).join(' '));
++    if (r.kind === 'exam') return fmt(r.date) + ': ' + plain([].concat(r.text).join(' '));
++    return fmt(r.date) + ': ' + (r.lines || []).map(function (l) {
++      return l[0] + ' ' + plain(l[1]);
++    }).join('. ');
++  }
++
++  function weekLine(ctx, wk, skipDate) {
++    var days = ctx.weekOf(wk).filter(function (d) { return d.date !== skipDate; });
++    if (!days.length) {
++      return ctx.weekOf(wk).length ? '' : 'I do not have week ' + wk + ' in the schedule.';
++    }
++    var mods = ctx.moduleOf(wk).map(function (m) { return 'Module ' + m.n; }).join(' into ');
++    return '<b>Week ' + wk + '</b>, ' + mods + '.<br>'
++      + days.map(function (d) { return esc(describeDay(d)); }).join('<br>');
++  }
++
++  function examLine(ctx, ex) {
++    if (!ex) return 'You have no exams left in the schedule.';
++    var mod = ctx.modules.filter(function (m) { return m.exam === ex.n; })[0];
++    var d = daysBetween(ctx.today, ex.lecture);
++    var when = d === 0 ? 'today' : d === 1 ? 'tomorrow' : 'in ' + d + ' days';
++    var s = '<b>Exam ' + ex.n + ' is ' + fmt(ex.lecture) + '</b>, ' + when + '. '
++      + 'Lecture exam and lab practical on the same day.';
++    if (ex.note) s += '<br>' + esc(plain(ex.note));
++    if (mod) {
++      s += '<br>It closes <b>Module ' + mod.n + ', ' + esc(mod.title) + '</b>, '
++        + 'which covers weeks ' + mod.weeks.join(', ') + '.<br>' + esc(mod.detail);
++    }
++    if (ex.practicalCovers) s += '<br>The practical covers ' + esc(ex.practicalCovers) + '.';
++    return s;
++  }
++
++  /* Links for a week, only if the week-links file has been filled in. */
++  function weekResources(ctx, wk) {
++    var L = ctx.links[wk] || {};
++    var out = [];
++    if (L.lecture)   out.push('<a href="' + esc(L.lecture) + '" target="_top">the Loops video for week ' + wk + '</a>');
++    if (L.worksheet) out.push('<a href="' + esc(L.worksheet) + '" target="_top">the guided worksheet</a>');
++    return out;
++  }
++
++  /* ----------------------------------------------------------
++     THE ANSWERING SURFACE
++
++     Merged from two Hooties that both already existed:
++
++     - welcome.html knew the COURSE. Grading weights, how TBLs
++       work, who to contact, where to go when you are drowning.
++       It had no idea what day it was.
++     - The week-page version knew the SCHEDULE. Dates, modules,
++       exam scope, per-section rooms. It could not answer a single
++       question about how the course actually runs.
++
++     Each covered the other's gap exactly, so this is one matcher
++     over one answer bank rather than two half-Hooties.
++
++     The intent matcher is welcome.html's: score every intent by
++     how many of its keywords appear, highest score wins. Order
++     matters on a tie, so the list runs most urgent first. A
++     student typing "I am drowning and behind" must reach
++     'struggle' before anything else, which is why it sits near
++     the top and why 'contact' sits above it: someone asking who
++     to email needs the address, not a pep talk.
++
++     Everything anatomical still gets refused. That has not
++     changed and should not.
++     ---------------------------------------------------------- */
++
++  /* Order is the tie-break. Most urgent first. */
++  var INTENTS = [
++    {id:'contact',  kw:['contact','email','e-mail','reach','who do i','who should i','talk to','office hour','professor','instructor','teacher','rennie','tutor','tutoring','accommodat','disab','dsp','tech ','technolog','login','log in','canvas help','password','it help']},
++    {id:'struggle', kw:['struggl','behind','failing','fail ','so hard','too hard','confus','overwhelm','stress','anxious','burn','falling','fall behind','drowning','give up','quit','really hard','cant keep','can not keep','keep up','lost and','hate this','crying','panic']},
++    {id:'grades',   kw:['grade','grading','points','percent','weight','how much is','worth','scholar point','extra credit','curve','my grade','pass the class','passing','gpa']},
++    {id:'exams',    kw:['exam','test','midterm','practical','how many test','final']},
++    {id:'tbl',      kw:['tbl','team based','team-based','irat','trat','readiness','team quiz']},
++    {id:'mastery',  kw:['mastery','recall','flashcard','gap finder','cram','spaced','study tool','study engine']},
++    {id:'study',    kw:['study with me','co-study','study session','study group','sign up','study hours','engagement hour']},
++    {id:'atlas',    kw:['atlas','3d','model','viewer','explore structure']},
++    {id:'loops',    kw:['loop','practice question','practice q']},
++    {id:'prework',  kw:['pre-work','prework','packet','before class','homework','tonight','what should i do','assignment']},
++    {id:'howstudy', kw:['how do i study','how should i study','memor','forget','remember','stick','retain','draw','retrieval','revise','review']},
++    {id:'week',     kw:['this week','today','due','coming up','next class','whats due','what is due','what is on','schedule']},
++    {id:'module',   kw:['module','unit','where are we','what are we on','what are we doing']},
++    {id:'room',     kw:['room','where is','what time','when does','which section','my section','crn','building']},
++    {id:'start',    kw:['start','begin','where do i','first','brand new','beginning','what do i do','orientation','new here','getting started','get started']}
++  ];
++
++  function matchIntent(text) {
++    var q = ' ' + text.toLowerCase() + ' ';
++    var best = null, bestScore = 0;
++    INTENTS.forEach(function (it) {
++      var score = 0;
++      it.kw.forEach(function (k) { if (q.indexOf(k) !== -1) score++; });
++      if (score > bestScore) { bestScore = score; best = it.id; }
++    });
++    return bestScore > 0 ? best : null;
++  }
++
++  /* Links come from course-links.js so a URL lives in one place.
++     Everything degrades to plain text if that file is absent. */
++  function L() { return window.BIO004_LINKS || null; }
++  function a(key, text) {
++    var l = L();
++    return l && l.a ? l.a(key, text) : (text || key);
++  }
++  function secL(ctx) {
++    var l = L();
++    return l && l.forSection ? l.forSection(ctx.section)
++                             : {syllabus:'fall-2026-syllabus.html', hub:'bio004-course-calendar.html'};
++  }
++  function ilink(url, text) { return '<a href="' + url + '" target="_top">' + text + '</a>'; }
++
++  /* Her pre-work sequence. Load-bearing, and the step students most
++     often invert: the video comes AFTER the questions, not before. */
++  function prework(ctx, wk) {
++    var res = weekResources(ctx, wk);
++    return '<b>The order matters more than the pre-work itself.</b> Do it in this order:'
++      + '<br>1. Organise the reading and lecture material into your notes.'
++      + '<br>2. Study those notes.'
++      + '<br>3. Answer the pre-work questions with your notes and book open.'
++      + '<br>4. Then watch the video.'
++      + '<br>5. Later in the week, cover everything and redraw your mini visuals from memory.'
++      + '<br><br>Context before content. Step 5 is retrieval, not rereading, and it is the step that makes it stick. This is not a night-before task.'
++      + (res.length ? '<br><br>For this week: ' + res.join(' and ') + '.' : '');
++  }
++
++  function answerFor(id, ctx) {
++    var wk = ctx.viewWk || ctx.curWk;
++    var s = secL(ctx);
++
++    switch (id) {
++
++      case 'start':
++        return '<p>Three moves and you are ahead:</p>'
++          + '1. Skim your ' + ilink(s.syllabus, 'syllabus') + ' so you know how the course runs.'
++          + '<br>2. Do the pre-work for your next class, in order. Ask me about pre-work and I will walk you through it.'
++          + '<br>3. Open ' + a('masteryOS') + ' and set up your study plan.'
++          + '<br><br>' + weekLine(ctx, wk);
++
++      /* Hers, but now it can actually name the days. */
++      case 'week': {
++        var parts = [];
++        if (ctx.state === 'before') {
++          parts.push('The term has not started yet. First class is <b>' + fmt(ctx.sessions[0].date) + '</b>.');
++        } else if (ctx.state === 'after') {
++          parts.push('The term has ended.');
++        }
++        if (ctx.todayRow) parts.push('<b>Today.</b> ' + esc(describeDay(ctx.todayRow)));
++        else if (ctx.next) parts.push('<b>Next class.</b> ' + esc(describeDay(ctx.next)));
++        parts.push(weekLine(ctx, wk, ctx.todayRow ? ctx.todayRow.date : null));
++        parts.push('Your lab work is on your ' + ilink(s.hub, 'section hub') + ', and the whole term is on the ' + a('calendar') + '.');
++        return parts.filter(Boolean).join('<br><br>');
++      }
++
++      /* The one the schedule-only version could not answer at all. */
++      case 'struggle':
++        return '<p>This is normal and it is fixable. Try this, in order:</p>'
++          + '1. Open the ' + a('masteryOS', 'Mastery OS') + ' Gap Finder to see exactly what is weak.'
++          + '<br>2. Run a 3-Day Cram before your next exam.'
++          + '<br>3. Join a ' + a('study') + ' session.'
++          + '<br><br>After Exam 1 the free Success Sprint opens as a guided catch-up, with steps posted in Canvas.'
++          + '<br><br>Reach out early. Do not wait for the next exam, and do not wait until you feel you have earned the right to ask.'
++          + (ctx.nextExam ? '<br><br>' + examLine(ctx, ctx.nextExam) : '');
++
++      case 'grades':
++        return '<p>Your grade:</p>'
++          + '1. TBL team quizzes: 30% (9 across the term)'
++          + '<br>2. Lecture exams: 30% (5, one per module)'
++          + '<br>3. Lab practical exams: 30% (5)'
++          + '<br>4. Lab quizzes: 5%'
++          + '<br>5. iChecks and tChecks: 5%'
++          + '<br><br>Up to 3% in Scholar Points for verified engagement hours plus a strong exam average. No exam counts above 102%. Full detail in your ' + ilink(s.syllabus, 'syllabus') + '.';
++
++      case 'exams':
++        return examLine(ctx, ctx.nextExam)
++          + '<br><br>Five exams in all, one at the end of each module, each with a lecture part and a lab practical. No exam counts above 102%, in-exam bonus only. Every date is on the ' + a('calendar') + ' and in your ' + ilink(s.syllabus, 'syllabus') + '.';
++
++      case 'tbl':
++        return '<p>TBLs are Team-Based Learning days, 9 across the term, worth 30% of your grade.</p>'
++          + 'You take a short readiness quiz on your own (iRAT), then the same quiz with your team (tRAT), then you discuss it.'
++          + '<br><br>Studying the night before is what makes these go well. There is no version of a TBL day that goes well without the pre-work. More in your ' + ilink(s.syllabus, 'syllabus') + '.';
++
++      case 'mastery':
++        return a('masteryOS', 'Mastery OS') + ' is your study engine: spaced recall, a 3-Day Cram planner, and a Gap Finder that shows exactly what is weak. Open it and set up your plan.';
++
++      case 'study':
++        return a('study') + ' is live co-study time. Sign up, show up, and you bank verified engagement hours toward Scholar Points at the same time.';
++
++      case 'atlas':
++        return 'The ' + a('atlas') + ' lets you explore structures interactively. It is the fastest way to build the mental picture before lab.';
++
++      case 'loops':
++        return a('loops') + ' are quick lab-based practice questions. Use them for fast visual review between study blocks.';
++
++      case 'contact': {
++        var c = (L() && L().contact) || {};
++        return '<p><b>Class, grades, or an extension.</b> Message Dr. Rennie in ' + (c.canvasInbox || 'the Canvas Inbox')
++          + ', or email ' + (c.email || 'srennie@solano.edu') + ' (' + (c.turnaround || 'about 48 to 72 hours on weekdays') + '). '
++          + 'Office hours are ' + (c.officeHours || '30 minutes before each class, or by appointment') + '.</p>'
++          + '<p><b>Accommodations.</b> The Accessibility Support Center, ' + (c.ascEmail || 'ASC@solano.edu')
++          + ' or ' + (c.ascPhone || '(707) 864-7136') + '. Set this up in Week 1, then tell Dr. Rennie your approved accommodations.</p>'
++          + '<p><b>Free tutoring.</b> In person at Fairfield, Vacaville and Vallejo, or online by Zoom. See the ' + a('astc') + '.</p>';
++      }
++
++      case 'prework':
++        return prework(ctx, wk);
++
++      case 'howstudy':
++        return 'Rereading feels productive and does almost nothing. Three things work in this course:'
++          + '<br><br><b>Retrieve cold.</b> Blank paper, two minutes, write everything you know before you look at anything.'
++          + '<br><b>Draw it.</b> If you cannot draw the structure from memory and label it, you do not know it yet.'
++          + '<br><b>Space it.</b> Recall it today, again in two days, then further out.'
++          + '<br><br>When you get something wrong, name which kind of wrong it was: could not recall it, recalled it wrong, or knew it but could not apply it. Those three need different repairs.';
++
++      case 'module': {
++        var mods = ctx.moduleOf(wk);
++        if (!mods.length) return 'I could not place week ' + wk + ' in a module.';
++        return mods.map(function (m) {
++          return '<b>Module ' + m.n + '. ' + esc(m.title) + '</b><br>' + esc(m.detail)
++            + '<br>Weeks ' + m.weeks.join(', ') + ', ends in Exam ' + m.exam + '.';
++        }).join('<br><br>');
++      }
++
++      case 'room': {
++        var sn = ctx.sectionName;
++        if (!sn) return 'Pick your section on the ' + a('home', 'course home page') + ' and I can tell you your room and times.';
++        return '<b>' + esc(sn.name) + '</b>, ' + esc(sn.days) + ', CRN ' + esc(sn.crn)
++          + '<br>Lecture: ' + esc(sn.lecture)
++          + '<br>Lab: ' + esc(sn.lab);
++      }
++    }
++    return null;
++  }
++
++  /* One function, everything it needs passed in. Swap this for a
++     proxied model call if free-form content answers are ever
++     wanted, and the 22 pages do not change. */
++  function hootieAnswer(qRaw, ctx) {
++    var q = String(qRaw || '').toLowerCase().trim();
++    if (!q) return { html: 'Ask me what is on this week, when your next exam is, how grading works, or what to do tonight.' };
++
++    /* Explicit week number wins over everything. */
++    var wkAsk = q.match(/week\s*(\d{1,2})/);
++    if (wkAsk) {
++      var n = parseInt(wkAsk[1], 10);
++      if (n >= 1 && n <= 17) return { html: weekLine(ctx, n) };
++      return { html: 'The term runs weeks 1 to 17. There is no week ' + n + '.' };
++    }
++
++    /* Explicit exam number. Any digit, so "exam 9" is corrected
++       rather than silently answered with the next exam. */
++    var exAsk = q.match(/exam\s*(\d+)/);
++    if (exAsk) {
++      var want = parseInt(exAsk[1], 10);
++      var ex = ctx.exams.filter(function (e) { return e.n === want; })[0];
++      if (!ex) return { html: 'There are five exams in this course, 1 to 5. There is no Exam ' + want + '.' };
++      return { html: examLine(ctx, ex) };
++    }
++
++    var id = matchIntent(q);
++    if (id) {
++      var html = answerFor(id, ctx);
++      if (html) return { html: html, intent: id };
++    }
++
++    /* Anatomy content, or anything else. Say so; do not guess. */
++    var res = weekResources(ctx, ctx.viewWk || ctx.curWk);
++    return { html:
++      'I did not quite catch that, and I will not guess at anatomy when the answer is going to be examined.'
++      + '<br><br>I can help with where to start, what is on this week, grading, exams, TBLs, pre-work, how to study, and who to contact.'
++      + '<br><br>For content, go to your notes packet for this module, '
++      + (res.length ? res.join(', ') + ', ' : a('loops', 'the Loops') + ', ')
++      + 'or the ' + a('atlas') + '.'
++      + '<br><br>Still stuck? Message Dr. Rennie in the Canvas Inbox, or bring it to class. A question you had to fight for is worth asking out loud.',
++      unanswered: true };
++  }
++
++  /* ----------------------------------------------------------
++     UI
++     ---------------------------------------------------------- */
++  var CSS = [
++    '.hoo-btn{position:fixed;right:18px;bottom:18px;z-index:60;display:inline-flex;align-items:center;gap:8px;',
++    '  font:inherit;font-size:.85rem;font-weight:700;cursor:pointer;padding:11px 16px;border-radius:999px;',
++    '  background:var(--navy,#08101F);color:#fff;border:1px solid var(--navy,#08101F);',
++    '  box-shadow:0 8px 16px rgba(0,0,0,.18);transition:transform 180ms ease,box-shadow 180ms ease}',
++    '.hoo-btn:hover{transform:translateY(-2px);box-shadow:0 12px 22px rgba(0,0,0,.22)}',
++    '.hoo-btn .fish{line-height:0;display:inline-flex;background:#fff;border-radius:50%;padding:2px}',
++    /* Sits ABOVE the launcher, not beside it. Beside meant guessing
++       the pill's width, and the guess was wrong once the label and
++       the mark were in place, so the bubble overlapped the button. */
++    '.hoo-nudge{position:fixed;right:18px;bottom:82px;z-index:59;',
++    '  background:var(--gold,#DCB45C);color:var(--navy,#08101F);',
++    "  font-family:var(--eb,inherit);font-size:12.5px;font-weight:700;white-space:nowrap;",
++    '  padding:7px 12px;border-radius:9px;box-shadow:0 6px 14px rgba(0,0,0,.18)}',
++    ".hoo-nudge::after{content:'';position:absolute;bottom:-6px;right:22px;border:6px solid transparent;border-top-color:var(--gold,#DCB45C)}",
++    '.hoo-nudge[hidden]{display:none}',
++    '.hoo-panel{position:fixed;right:18px;bottom:76px;z-index:61;width:min(390px,calc(100vw - 36px));',
++    '  max-height:min(560px,calc(100vh - 110px));display:none;flex-direction:column;',
++    '  background:#fff;border:1px solid var(--line,rgba(11,21,48,.12));border-radius:var(--radius,16px);',
++    '  box-shadow:0 18px 44px rgba(0,0,0,.24);overflow:hidden}',
++    '.hoo-panel.on{display:flex}',
++    '.hoo-hd{display:flex;align-items:center;gap:9px;padding:12px 14px;background:var(--navy,#08101F);color:#fff}',
++    '.hoo-hd .fish{line-height:0;display:inline-flex;background:#fff;border-radius:50%;padding:2px}',
++    '.hoo-hd h2{margin:0;font-size:.95rem;font-weight:700;color:#fff}',
++    '.hoo-hd .sub{margin:1px 0 0;font-size:11.5px;color:#fff;opacity:.85}',
++    '.hoo-x{margin-left:auto;background:transparent;border:0;color:#fff;cursor:pointer;font-size:1.25rem;line-height:1;padding:3px 6px;border-radius:7px}',
++    '.hoo-x:hover{background:rgba(255,255,255,.16)}',
++    '.hoo-log{flex:1;overflow-y:auto;padding:13px 14px;display:flex;flex-direction:column;gap:10px;background:var(--offwhite,#F3F5F8)}',
++    '.hoo-msg{max-width:92%;padding:10px 12px;border-radius:13px;font-size:13.5px;line-height:1.55}',
++    '.hoo-msg.bot{background:#fff;border:1px solid var(--line,rgba(11,21,48,.12));color:var(--navy,#08101F);align-self:flex-start}',
++    '.hoo-msg.you{background:var(--navy,#08101F);color:#fff;align-self:flex-end}',
++    '.hoo-msg a{color:var(--terra-dark,#7A2A22);font-weight:700}',
++    '.hoo-msg.you a{color:var(--gold,#DCB45C)}',
++    '.hoo-name{display:block;font-family:var(--eb,inherit);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;',
++    '  color:var(--terra-dark,#7A2A22);font-weight:700;margin-bottom:4px}',
++    '.hoo-chips{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px;border-top:1px solid var(--line,rgba(11,21,48,.12));background:#fff}',
++    '.hoo-chip{font:inherit;font-size:11.5px;font-weight:700;cursor:pointer;padding:6px 10px;border-radius:999px;',
++    '  background:#fff;color:var(--navy,#08101F);border:1px solid var(--line,rgba(11,21,48,.12))}',
++    '.hoo-chip:hover{border-color:var(--terra-dark,#7A2A22)}',
++    '.hoo-form{display:flex;gap:7px;padding:10px 14px;border-top:1px solid var(--line,rgba(11,21,48,.12));background:#fff}',
++    '.hoo-in{flex:1;font:inherit;font-size:13.5px;padding:9px 11px;border-radius:10px;',
++    '  border:1.5px solid var(--line,rgba(11,21,48,.12));background:var(--offwhite,#F3F5F8);color:var(--navy,#08101F)}',
++    '.hoo-send{font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;padding:9px 14px;border-radius:10px;',
++    '  background:var(--gold,#DCB45C);color:var(--navy,#08101F);border:1px solid var(--gold,#DCB45C)}',
++    '.hoo-btn:focus-visible,.hoo-x:focus-visible,.hoo-chip:focus-visible,.hoo-in:focus-visible,.hoo-send:focus-visible{',
++    '  outline:3px solid var(--gold,#DCB45C);outline-offset:2px}',
++    '@media (prefers-reduced-motion:reduce){.hoo-btn{transition:none}.hoo-btn:hover{transform:none}}',
++    '@media print{.hoo-btn,.hoo-panel{display:none !important}}'
++  ].join('');
++
++  /* Six of these are welcome.html's, kept because they are framed
++     the way a stuck student actually thinks. "I'm struggling" is
++     the one that matters most and the schedule-only version had no
++     answer for it at all. */
++  var CHIPS = [
++    'Where do I start?',
++    "What's on this week?",
++    "I'm struggling",
++    'When is my next exam?',
++    'How does grading work?',
++    'What should I do tonight?',
++    'Who do I contact?'
++  ];
++
++  /* The real Hootie. This mark already existed in welcome.html, a
++     pufferfish in a mortarboard with round glasses and a maroon bow
++     tie, drawn in the Mastery OS palette. Reused here rather than
++     redrawn, so there is one Hootie across the site instead of two.
++     Source of truth: the hootieBtn svg in welcome.html. */
++  function hootieMark(size) {
++    return '<svg viewBox="0 0 64 64" width="' + size + '" height="' + size + '" aria-hidden="true" focusable="false">'
++      + '<path d="M20 39 L6 28 Q3 39 6 50 Z" fill="#DCB45C"/>'
++      + '<ellipse cx="35" cy="40" rx="19" ry="16" fill="#E8CE85"/>'
++      + '<ellipse cx="37" cy="44" rx="12" ry="9" fill="#F2E2B0"/>'
++      + '<path d="M28 25 Q36 21 44 25 L42 31 Q36 34 30 31 Z" fill="#08101F"/>'
++      + '<path d="M36 11 L55 20 L36 29 L17 20 Z" fill="#08101F"/>'
++      + '<circle cx="36" cy="20" r="1.5" fill="#DCB45C"/>'
++      + '<path d="M36 20 L53 21 L53 32" fill="none" stroke="#DCB45C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>'
++      + '<circle cx="53" cy="34" r="2.4" fill="#DCB45C"/>'
++      + '<circle cx="31" cy="39" r="7" fill="#FFFFFF" stroke="#08101F" stroke-width="2.4"/>'
++      + '<circle cx="45" cy="39" r="7" fill="#FFFFFF" stroke="#08101F" stroke-width="2.4"/>'
++      + '<path d="M37.6 39 H38.4" stroke="#08101F" stroke-width="2.2"/>'
++      + '<circle cx="32" cy="40" r="3" fill="#08101F"/>'
++      + '<circle cx="44" cy="40" r="3" fill="#08101F"/>'
++      + '<circle cx="33.1" cy="38.8" r="1" fill="#FFFFFF"/>'
++      + '<circle cx="45.1" cy="38.8" r="1" fill="#FFFFFF"/>'
++      + '<path d="M33 46 Q38 51 43 46 Q38.5 48.5 33 46 Z" fill="#7A2A22"/>'
++      + '<path d="M31 49 L31 55 L36.5 52 Z" fill="#7A2A22"/>'
++      + '<path d="M42 49 L42 55 L36.5 52 Z" fill="#7A2A22"/>'
++      + '<rect x="35" y="50.2" width="3" height="3.6" rx="1" fill="#5E201A"/>'
++      + '</svg>';
++  }
++
++  function mount() {
++    if (document.body.getAttribute('data-hootie') === 'off') return;
++    var ctx = buildContext();
++    if (!ctx) return;                       /* no data, no Hootie */
++
++    var st = document.createElement('style');
++    st.textContent = CSS;
++    document.head.appendChild(st);
++
++    var btn = document.createElement('button');
++    btn.type = 'button';
++    btn.className = 'hoo-btn';
++    btn.setAttribute('aria-expanded', 'false');
++    btn.setAttribute('aria-controls', 'hoo-panel');
++    btn.innerHTML = '<span class="fish" aria-hidden="true">' + hootieMark(26) + '</span>Ask Hootie';
++
++    var panel = document.createElement('div');
++    panel.className = 'hoo-panel';
++    panel.id = 'hoo-panel';
++    panel.setAttribute('role', 'dialog');
++    panel.setAttribute('aria-modal', 'false');
++    panel.setAttribute('aria-label', 'Ask Hootie the Knowfish about your schedule');
++
++    panel.innerHTML =
++      '<div class="hoo-hd">'
++      + '<span class="fish" aria-hidden="true">' + hootieMark(30) + '</span>'
++      + '<div><h2>Hootie the Knowfish</h2><p class="sub">Your schedule, modules and exams</p></div>'
++      + '<button type="button" class="hoo-x" aria-label="Close Hootie">&times;</button>'
++      + '</div>'
++      + '<div class="hoo-log" id="hoo-log" role="log" aria-live="polite" aria-label="Conversation with Hootie"></div>'
++      + '<div class="hoo-chips" id="hoo-chips"></div>'
++      + '<form class="hoo-form" id="hoo-form">'
++      + '<label class="sr-only" for="hoo-in" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">Your question</label>'
++      + '<input class="hoo-in" id="hoo-in" type="text" autocomplete="off" placeholder="Ask about your schedule...">'
++      + '<button type="submit" class="hoo-send">Ask</button>'
++      + '</form>';
++
++    /* "Stuck? Ask Hootie." Borrowed from welcome.html, where it is
++       the thing that actually gets students to open the panel. It is
++       role="status" so it is announced once, and it retires the
++       moment Hootie is opened so it does not nag. */
++    var nudge = document.createElement('div');
++    nudge.className = 'hoo-nudge';
++    nudge.setAttribute('role', 'status');
++    nudge.textContent = 'Stuck? Ask Hootie.';
++
++    document.body.appendChild(btn);
++    document.body.appendChild(nudge);
++    document.body.appendChild(panel);
++
++    var log = panel.querySelector('#hoo-log');
++    var chips = panel.querySelector('#hoo-chips');
++    var form = panel.querySelector('#hoo-form');
++    var input = panel.querySelector('#hoo-in');
++
++    function say(who, html) {
++      var d = document.createElement('div');
++      d.className = 'hoo-msg ' + who;
++      d.innerHTML = (who === 'bot' ? '<span class="hoo-name">Hootie</span>' : '') + html;
++      log.appendChild(d);
++      log.scrollTop = log.scrollHeight;
++    }
++
++    function ask(q) {
++      say('you', esc(q));
++      var a = hootieAnswer(q, buildContext() || ctx);
++      say('bot', a.html);
++    }
++
++    CHIPS.forEach(function (t) {
++      var c = document.createElement('button');
++      c.type = 'button';
++      c.className = 'hoo-chip';
++      c.textContent = t;
++      c.addEventListener('click', function () { ask(t); });
++      chips.appendChild(c);
++    });
++
++    form.addEventListener('submit', function (e) {
++      e.preventDefault();
++      var v = input.value.trim();
++      if (!v) return;
++      input.value = '';
++      ask(v);
++    });
++
++    var greeted = false;
++    function open() {
++      nudge.hidden = true;
++      panel.classList.add('on');
++      btn.setAttribute('aria-expanded', 'true');
++      if (!greeted) {
++        greeted = true;
++        var c = buildContext() || ctx;
++        var wk = c.viewWk || c.curWk;
++        var hi = 'I know your schedule, your modules and your exam dates. I do not know anatomy content, and I will tell you when a question is outside what I can answer.';
++        if (c.state === 'during') {
++          hi += '<br><br>Right now you are in <b>week ' + c.curWk + '</b>';
++          var mods = c.moduleOf(c.curWk).map(function (m) { return 'Module ' + m.n; }).join(' into ');
++          if (mods) hi += ', ' + mods;
++          hi += '.';
++        } else if (c.state === 'before') {
++          hi += '<br><br>The term starts <b>' + fmt(c.sessions[0].date) + '</b>.';
++        }
++        if (c.viewWk && c.viewWk !== c.curWk) hi += ' You are looking at week ' + c.viewWk + '.';
++        say('bot', hi);
++      }
++      input.focus();
++    }
++    function close() {
++      panel.classList.remove('on');
++      btn.setAttribute('aria-expanded', 'false');
++      btn.focus();
++    }
++
++    btn.addEventListener('click', function () {
++      panel.classList.contains('on') ? close() : open();
++    });
++    panel.querySelector('.hoo-x').addEventListener('click', close);
++    document.addEventListener('keydown', function (e) {
++      if (e.key === 'Escape' && panel.classList.contains('on')) close();
++    });
++  }
++
++  /* Exposed for testing and for a future swap of the answer layer. */
++  window.BIO004_HOOTIE = { answer: hootieAnswer, context: buildContext };
++
++  if (document.readyState === 'loading') {
++    document.addEventListener('DOMContentLoaded', mount);
++  } else {
++    mount();
++  }
++})();
+diff --git a/mastery-os-fall-2026-instructor.html b/mastery-os-fall-2026-instructor.html
+index 0290dc4..effe4dc 100644
+--- a/mastery-os-fall-2026-instructor.html
++++ b/mastery-os-fall-2026-instructor.html
+@@ -727,9 +727,13 @@ section.block:first-of-type{border-top:none}
+ <div id="toast" role="status" aria-live="polite"></div>
+ 
+ <!-- Live data sources. In production these sit alongside the page; if absent, the app falls back to schedule-derived topics. -->
+-<script src="competencies.js"></script>
++<!-- The competency map lives in competenciesfall2026.js. The hyphenated
++     competencies-fall2026.js is an older copy without the "general" body-system
++     tag that buildFromSchedule() groups by, so it must not be used here. -->
++<script src="competenciesfall2026.js"></script>
+ <script src="resources.js"></script>
+ <script src="rubrics.js"></script>
++<script src="section-sync.js"></script>
+ <script>
+ "use strict";
+ (function(){
+@@ -1548,7 +1552,19 @@ function markToday(name,type){var lc=name.toLowerCase();var m=allComps().filter(
+ /* =========================================================
+    ONBOARDING
+ ========================================================= */
+-var OB={step:0,data:{}};
++function obSeedData(){
++  /* The section the student already picked on welcome.html, mapped into
++     this app's vocabulary by section-sync.js. Used everywhere the
++     onboarding draft is created or reset, so the "Which class are you
++     in?" step arrives pre-answered rather than asking a second time.
++     No saved choice returns an empty draft and the step behaves exactly
++     as it always did. */
++  try{
++    var s = window.BIO004_SECTION && window.BIO004_SECTION.toMasteryOS();
++    return s ? {section:s} : {};
++  }catch(e){ return {}; }
++}
++var OB={step:0,data:obSeedData()};
+ var OB_LOGO='<svg viewBox="40 10 125 148" width="70" height="83" aria-hidden="true" style="display:block;margin:0 auto"><g transform="translate(0,18)">'+
+   '<g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#8B1D1D"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#8B1D1D"/></g>'+
+   '<g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#6B1616"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#6B1616"/></g>'+
+@@ -2412,7 +2428,7 @@ $('#gameOverlay').addEventListener('click',function(e){if(e.target===this)closeG
+ 
+ /* reset */
+ $('#openReset').addEventListener('click',function(){
+-  if(confirm('Reset all progress and setup? This clears the sample data on this device.')){store.del(KEY);S=clone(SEED);OB={step:0,data:{}};showOnboard();}
++  if(confirm('Reset all progress and setup? This clears the sample data on this device.')){store.del(KEY);S=clone(SEED);OB={step:0,data:obSeedData()};showOnboard();}
+ });
+ 
+ /* coach form */
+@@ -2483,7 +2499,7 @@ applySchedule(false);
+ ingestRecall();
+ renderCoachPrompts();
+ coachSay('bot','Blub blub. I am Hootie the Knowfish, your Mastery Coach. I read your progress and point you at the single best next move. Ask me anything, or tap a prompt below.');
+-if(!S.profile.onboarded){OB={step:0,data:{}};showOnboard();}
++if(!S.profile.onboarded){OB={step:0,data:obSeedData()};showOnboard();}
+ else{renderAll();}
+ 
+ })();
+diff --git a/mastery-os-fall-2026.html b/mastery-os-fall-2026.html
+index d98b2d3..6e00205 100644
+--- a/mastery-os-fall-2026.html
++++ b/mastery-os-fall-2026.html
+@@ -725,9 +725,13 @@ section.block:first-of-type{border-top:none}
+ <div id="toast" role="status" aria-live="polite"></div>
+ 
+ <!-- Live data sources. In production these sit alongside the page; if absent, the app falls back to schedule-derived topics. -->
+-<script src="competencies.js"></script>
++<!-- The competency map lives in competenciesfall2026.js. The hyphenated
++     competencies-fall2026.js is an older copy without the "general" body-system
++     tag that buildFromSchedule() groups by, so it must not be used here. -->
++<script src="competenciesfall2026.js"></script>
+ <script src="resources.js"></script>
+ <script src="rubrics.js"></script>
++<script src="section-sync.js"></script>
+ <script>
+ "use strict";
+ (function(){
+@@ -1541,7 +1545,19 @@ function markToday(name,type){var lc=name.toLowerCase();var m=allComps().filter(
+ /* =========================================================
+    ONBOARDING
+ ========================================================= */
+-var OB={step:0,data:{}};
++function obSeedData(){
++  /* The section the student already picked on welcome.html, mapped into
++     this app's vocabulary by section-sync.js. Used everywhere the
++     onboarding draft is created or reset, so the "Which class are you
++     in?" step arrives pre-answered rather than asking a second time.
++     No saved choice returns an empty draft and the step behaves exactly
++     as it always did. */
++  try{
++    var s = window.BIO004_SECTION && window.BIO004_SECTION.toMasteryOS();
++    return s ? {section:s} : {};
++  }catch(e){ return {}; }
++}
++var OB={step:0,data:obSeedData()};
+ var OB_LOGO='<svg viewBox="40 10 125 148" width="70" height="83" aria-hidden="true" style="display:block;margin:0 auto"><g transform="translate(0,18)">'+
+   '<g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#8B1D1D"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#8B1D1D"/></g>'+
+   '<g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#6B1616"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#6B1616"/></g>'+
+@@ -2405,7 +2421,7 @@ $('#gameOverlay').addEventListener('click',function(e){if(e.target===this)closeG
+ 
+ /* reset */
+ $('#openReset').addEventListener('click',function(){
+-  if(confirm('Reset all progress and setup? This clears the sample data on this device.')){store.del(KEY);S=clone(SEED);OB={step:0,data:{}};showOnboard();}
++  if(confirm('Reset all progress and setup? This clears the sample data on this device.')){store.del(KEY);S=clone(SEED);OB={step:0,data:obSeedData()};showOnboard();}
+ });
+ 
+ /* coach form */
+@@ -2475,7 +2491,7 @@ applySchedule(false);
+ ingestRecall();
+ renderCoachPrompts();
+ coachSay('bot','Blub blub. I am Hootie the Knowfish, your Mastery Coach. I read your progress and point you at the single best next move. Ask me anything, or tap a prompt below.');
+-if(!S.profile.onboarded){OB={step:0,data:{}};showOnboard();}
++if(!S.profile.onboarded){OB={step:0,data:obSeedData()};showOnboard();}
+ else{renderAll();}
+ 
+ })();
+diff --git a/module-nav.js b/module-nav.js
+new file mode 100644
+index 0000000..fc5d885
+--- /dev/null
++++ b/module-nav.js
+@@ -0,0 +1,351 @@
++/* ============================================================
++   BIO 004 Human Anatomy, Fall 2026
++   module-nav.js
++
++   Module-and-week navigator. Tabs across the five modules, the
++   weeks of the selected module underneath, and a marker showing
++   which module and week the course is actually in today.
++
++   WHY
++   ---
++   The week pages carried a flat strip of 17 numbers. A student
++   looking at "11" had no way to know which module it belonged to,
++   which exam it counted toward, or whether it was near. The
++   section home pages had no week links at all.
++
++   HOW TO MOUNT
++   ------------
++   Put an empty element where it should appear:
++
++       <div data-module-nav></div>
++
++   Optionally tell it which week the page is about, so that week is
++   marked as the one being viewed and its module opens first:
++
++       <div data-module-nav data-week="5"></div>
++
++   Then load, in this order:
++
++       <script src="schedule-fall2026.js"></script>
++       <script src="module-nav.js"></script>
++
++   It reads BIO004_MODULES and BIO004_SESSIONS. If either is
++   missing it removes itself rather than rendering an empty shell.
++
++   TODAY
++   -----
++   The "you are here" marker is computed from the real date against
++   the session data, so it follows the term with no maintenance.
++   Before the term it points at Week 1, after it points at Week 17,
++   and it says so rather than pretending the course is running.
++   Override for testing with ?today=YYYY-MM-DD, the same parameter
++   Mastery OS uses.
++
++   WEEK 4 APPEARS TWICE, ON PURPOSE
++   --------------------------------
++   See the note above BIO004_MODULES in schedule-fall2026.js. Week
++   4 closes Module 1 with Exam 1 and opens Module 2 in the same
++   week. It is drawn as a changeover week in both tabs rather than
++   forced into one.
++
++   STYLING
++   -------
++   The stylesheet is injected once, and every colour comes from the
++   CSS custom properties the pages already define (--navy, --terra,
++   --terra-dark, --gold, --offwhite, --line). Nothing is hardcoded,
++   so this inherits whatever palette the host page is using and
++   does not need 21 stylesheets edited.
++   ============================================================ */
++
++(function () {
++  'use strict';
++
++  var CSS = [
++    '.mnav{margin:10px 0 18px}',
++    '.mnav-hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:9px}',
++    '.mnav-eb{font-family:var(--eb,inherit);font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--terra-dark,#7A2A22);font-weight:700}',
++    '.mnav-here{font-size:12.5px;color:var(--navy,#08101F);opacity:.78}',
++    '.mnav-here b{opacity:1}',
++    '.mnav-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px;padding:0;list-style:none}',
++    '.mnav-tab{appearance:none;font:inherit;font-size:.8rem;font-weight:700;cursor:pointer;',
++    '  padding:7px 12px;border-radius:9px;background:#fff;color:var(--navy,#08101F);',
++    '  border:1px solid var(--line,rgba(11,21,48,.12));transition:background var(--t,180ms ease),color var(--t,180ms ease),border-color var(--t,180ms ease)}',
++    '.mnav-tab:hover{border-color:var(--terra-dark,#7A2A22)}',
++    '.mnav-tab[aria-selected="true"]{background:var(--navy,#08101F);color:#fff;border-color:var(--navy,#08101F)}',
++    '.mnav-tab .mnav-tn{opacity:.78;font-weight:600;margin-right:6px}',  /* .78 keeps the module number at AAA on white; .62 was AA only */
++    '.mnav-tab[aria-selected="true"] .mnav-tn{opacity:.8}',
++    '.mnav-tab.is-now{box-shadow:0 0 0 2px var(--gold,#DCB45C)}',
++    '.mnav-panel{border:1px solid var(--line,rgba(11,21,48,.12));border-radius:var(--radius,16px);background:#fff;padding:13px 14px}',
++    '.mnav-title{margin:0 0 3px;font-size:1rem;font-weight:700;color:var(--navy,#08101F)}',
++    '.mnav-detail{margin:0 0 11px;font-size:.85rem;line-height:1.5;color:var(--navy,#08101F);opacity:.75}',
++    '.mnav-weeks{display:flex;flex-wrap:wrap;gap:7px;margin:0;padding:0;list-style:none}',
++    '.mnav-wk{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:56px;padding:8px 9px;',
++    '  border-radius:10px;text-decoration:none;background:#fff;color:var(--navy,#08101F);',
++    '  border:1px solid var(--line,rgba(11,21,48,.12));transition:transform var(--t,180ms ease),box-shadow var(--t,180ms ease),border-color var(--t,180ms ease)}',
++    '.mnav-wk:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,0,0,.10);border-color:var(--terra-dark,#7A2A22)}',
++    '.mnav-wk .n{font-weight:800;font-size:.95rem;line-height:1.1}',
++    '.mnav-wk .l{font-family:var(--eb,inherit);font-size:10px;letter-spacing:.05em;text-transform:uppercase;opacity:.7;white-space:nowrap}',
++    '.mnav-wk.is-view{background:var(--navy,#08101F);color:#fff;border-color:var(--navy,#08101F)}',
++    '.mnav-wk.is-view .l{opacity:.85}',
++    '.mnav-wk.is-now{border-color:var(--gold,#DCB45C);box-shadow:0 0 0 2px var(--gold,#DCB45C)}',
++    '.mnav-wk.is-exam .l{color:var(--terra-dark,#7A2A22);opacity:1;font-weight:700}',
++    '.mnav-wk.is-view.is-exam .l{color:var(--gold,#DCB45C)}',
++    '.mnav-wk:focus-visible,.mnav-tab:focus-visible{outline:3px solid var(--gold,#DCB45C);outline-offset:2px}',
++    '.mnav-now{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:12px;',
++    '  color:var(--terra-dark,#7A2A22);font-weight:700}',
++    '.mnav-now .dot{width:7px;height:7px;border-radius:50%;background:var(--gold,#DCB45C);box-shadow:0 0 0 2px rgba(220,180,92,.32)}',
++    '@media (prefers-reduced-motion:reduce){.mnav-wk,.mnav-tab{transition:none}.mnav-wk:hover{transform:none}}'
++  ].join('');
++
++  function injectCSS() {
++    if (document.getElementById('mnav-css')) return;
++    var st = document.createElement('style');
++    st.id = 'mnav-css';
++    st.textContent = CSS;
++    document.head.appendChild(st);
++  }
++
++  /* Local-time parse. new Date('2026-09-14') is midnight UTC and
++     renders as the previous day for everyone in California. */
++  function parseISO(iso) {
++    var p = String(iso).split('-');
++    return new Date(+p[0], +p[1] - 1, +p[2]);
++  }
++
++  function todayISO() {
++    try {
++      var m = location.search.match(/[?&]today=(\d{4}-\d{2}-\d{2})/);
++      if (m) return m[1];
++    } catch (e) {}
++    var d = new Date();
++    function p(n) { return (n < 10 ? '0' : '') + n; }
++    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
++  }
++
++  /* Which week is the course in? Uses the mw track for the week
++     boundaries: both tracks share week numbering, and Monday is
++     the earliest a given week can start. Returns a week number
++     plus a state, so callers can say "not started" honestly
++     rather than silently clamping to week 1. */
++  function currentWeek(sessions) {
++    var rows = (sessions && sessions.mw) || [];
++    if (!rows.length) return null;
++    var t = parseISO(todayISO());
++
++    var first = parseISO(rows[0].date);
++    var last = parseISO(rows[rows.length - 1].date);
++    if (t < first) return { wk: rows[0].wk, state: 'before' };
++    if (t > last)  return { wk: rows[rows.length - 1].wk, state: 'after' };
++
++    /* The week of the latest session on or before today. */
++    var wk = rows[0].wk;
++    for (var i = 0; i < rows.length; i++) {
++      if (parseISO(rows[i].date) <= t) wk = rows[i].wk; else break;
++    }
++    return { wk: wk, state: 'during' };
++  }
++
++  function modulesFor(wk, modules) {
++    return modules.filter(function (m) { return m.weeks.indexOf(wk) > -1; });
++  }
++
++  /* Week number -> the exam number that actually sits in that week,
++     read out of the session text. Taken from the sessions rather
++     than from the module's own exam field, because a changeover
++     week belongs to two modules and must not be labelled with the
++     later module's exam. Week 4 holds Exam 1 even when it is being
++     drawn inside the Module 2 tab. */
++  function examWeeks(sessions) {
++    var out = {};
++    ['mw', 'tr'].forEach(function (tr) {
++      (sessions[tr] || []).forEach(function (s) {
++        if (s.kind !== 'exam') return;
++        var txt = [].concat(s.text || []).join(' ');
++        var m = txt.match(/Exam\s*(\d+)/);
++        out[s.wk] = m ? parseInt(m[1], 10) : true;
++      });
++    });
++    return out;
++  }
++
++  function build(host) {
++    var modules = window.BIO004_MODULES;
++    var sessions = window.BIO004_SESSIONS;
++    if (!modules || !modules.length || !sessions) { host.remove(); return; }
++
++    injectCSS();
++
++    var exams = examWeeks(sessions);
++    var now = currentWeek(sessions);
++    var viewWk = parseInt(host.getAttribute('data-week'), 10) || null;
++
++    /* Open the module of the week being viewed, else the module the
++       course is in today, else the first. */
++    var openOn = viewWk || (now && now.wk) || modules[0].weeks[0];
++    /* First module containing that week wins. A changeover week sits
++       in two modules, and the earlier one is the right place to land:
++       on week 4 the salient thing is Exam 1 closing Module 1, not
++       Module 2 opening. */
++    var openIdx = 0, found = false;
++    modules.forEach(function (m, i) {
++      if (!found && m.weeks.indexOf(openOn) > -1) { openIdx = i; found = true; }
++    });
++
++    var wrap = document.createElement('div');
++    wrap.className = 'mnav';
++
++    /* Header, with the you-are-here line. */
++    var hd = document.createElement('div');
++    hd.className = 'mnav-hd';
++    var eb = document.createElement('span');
++    eb.className = 'mnav-eb';
++    eb.textContent = 'Modules and weeks';
++    hd.appendChild(eb);
++
++    if (now) {
++      var here = document.createElement('span');
++      here.className = 'mnav-here';
++      var mods = modulesFor(now.wk, modules);
++      var modTxt = mods.map(function (m) { return 'Module ' + m.n; }).join(' into ');
++      if (now.state === 'before') {
++        here.innerHTML = 'The term starts <b>Monday August 17</b>.';
++      } else if (now.state === 'after') {
++        here.innerHTML = 'The term has ended. <b>Week ' + now.wk + '</b> was the last.';
++      } else {
++        here.innerHTML = 'Right now: <b>' + modTxt + ', Week ' + now.wk + '</b>';
++      }
++      hd.appendChild(here);
++    }
++    wrap.appendChild(hd);
++
++    /* Tabs. */
++    var tablist = document.createElement('ul');
++    tablist.className = 'mnav-tabs';
++    tablist.setAttribute('role', 'tablist');
++    tablist.setAttribute('aria-label', 'Course modules');
++
++    var panel = document.createElement('div');
++    panel.className = 'mnav-panel';
++    panel.setAttribute('role', 'tabpanel');
++    panel.setAttribute('tabindex', '0');
++
++    var tabs = [];
++
++    function renderPanel(i) {
++      var m = modules[i];
++      panel.setAttribute('aria-labelledby', 'mnav-tab-' + m.n);
++      panel.innerHTML = '';
++
++      var h = document.createElement('p');
++      h.className = 'mnav-title';
++      h.textContent = 'Module ' + m.n + '. ' + m.title;
++      panel.appendChild(h);
++
++      var d = document.createElement('p');
++      d.className = 'mnav-detail';
++      d.textContent = m.detail;
++      panel.appendChild(d);
++
++      var ul = document.createElement('ul');
++      ul.className = 'mnav-weeks';
++
++      m.weeks.forEach(function (wk) {
++        var li = document.createElement('li');
++        var a = document.createElement('a');
++        a.className = 'mnav-wk';
++        a.href = 'week-' + wk + '.html';
++        a.setAttribute('target', '_top');
++
++        var shared = modulesFor(wk, modules).length > 1;
++        var exN = exams[wk];
++        var label = exN ? ('Exam ' + (exN === true ? m.exam : exN))
++                  : shared ? 'Changeover'
++                  : 'Week';
++
++        a.innerHTML = '<span class="n">' + wk + '</span><span class="l">' + label + '</span>';
++
++        var bits = ['Week ' + wk];
++        if (exN) bits.push('Exam ' + (exN === true ? m.exam : exN) + ' week');
++        if (shared) bits.push('shared between Module '
++          + modulesFor(wk, modules).map(function (x) { return x.n; }).join(' and Module '));
++        if (now && now.state === 'during' && wk === now.wk) bits.push('this week');
++        if (viewWk === wk) bits.push('you are viewing this week');
++        a.setAttribute('aria-label', bits.join(', '));
++
++        if (exN) a.classList.add('is-exam');
++        if (viewWk === wk) { a.classList.add('is-view'); a.setAttribute('aria-current', 'page'); }
++        if (now && now.state === 'during' && wk === now.wk) {
++          a.classList.add('is-now');
++          if (viewWk !== wk) a.setAttribute('aria-current', 'date');
++        }
++
++        li.appendChild(a);
++        ul.appendChild(li);
++      });
++      panel.appendChild(ul);
++
++      if (now && now.state === 'during' && m.weeks.indexOf(now.wk) > -1) {
++        var flag = document.createElement('p');
++        flag.className = 'mnav-now';
++        flag.innerHTML = '<span class="dot" aria-hidden="true"></span>You are in Week ' + now.wk + ' of this module';
++        panel.appendChild(flag);
++      }
++    }
++
++    function select(i, focus) {
++      tabs.forEach(function (t, j) {
++        var on = i === j;
++        t.setAttribute('aria-selected', on ? 'true' : 'false');
++        t.setAttribute('tabindex', on ? '0' : '-1');
++      });
++      renderPanel(i);
++      if (focus) tabs[i].focus();
++    }
++
++    modules.forEach(function (m, i) {
++      var li = document.createElement('li');
++      li.setAttribute('role', 'presentation');
++      var b = document.createElement('button');
++      b.type = 'button';
++      b.className = 'mnav-tab';
++      b.id = 'mnav-tab-' + m.n;
++      b.setAttribute('role', 'tab');
++      b.innerHTML = '<span class="mnav-tn">' + m.n + '</span>' + m.title;
++      b.setAttribute('aria-label', 'Module ' + m.n + ', ' + m.title
++        + ', weeks ' + m.weeks.join(', ') + ', ends in Exam ' + m.exam);
++      if (now && now.state === 'during' && m.weeks.indexOf(now.wk) > -1) b.classList.add('is-now');
++
++      b.addEventListener('click', function () { select(i, false); });
++      b.addEventListener('keydown', function (e) {
++        var k = e.key, next = null;
++        if (k === 'ArrowRight') next = (i + 1) % modules.length;
++        else if (k === 'ArrowLeft') next = (i - 1 + modules.length) % modules.length;
++        else if (k === 'Home') next = 0;
++        else if (k === 'End') next = modules.length - 1;
++        if (next !== null) { e.preventDefault(); select(next, true); }
++      });
++
++      tabs.push(b);
++      li.appendChild(b);
++      tablist.appendChild(li);
++    });
++
++    wrap.appendChild(tablist);
++    wrap.appendChild(panel);
++
++    host.innerHTML = '';
++    host.appendChild(wrap);
++    select(openIdx, false);
++  }
++
++  function init() {
++    var hosts = document.querySelectorAll('[data-module-nav]');
++    for (var i = 0; i < hosts.length; i++) build(hosts[i]);
++  }
++
++  if (document.readyState === 'loading') {
++    document.addEventListener('DOMContentLoaded', init);
++  } else {
++    init();
++  }
++})();
+diff --git a/resources.js b/resources.js
+new file mode 100644
+index 0000000..a152e92
+--- /dev/null
++++ b/resources.js
+@@ -0,0 +1,47 @@
++/* ============================================================
++   BIO 004 Human Anatomy, Fall 2026
++   resources.js
++
++   Per-competency study resources for Mastery OS. Both Mastery OS
++   pages load this file and it was missing from the repo, so every
++   visit fired a 404.
++
++   This is a STUB. The map is empty. Nothing is invented.
++
++   HOW MASTERY OS READS IT
++   -----------------------
++       function resFor(comp){
++         var R = window.BIO004_RESOURCES;
++         return (R && comp && R[comp.id]) ? R[comp.id] : null;
++       }
++
++   A competency with no entry falls back to the app's generic
++   button, exactly as it does today with the file missing. An empty
++   map therefore changes nothing except the 404, and partial
++   fill-in is safe: add the competencies you have links for and
++   leave the rest out.
++
++   SHAPE
++   -----
++   Keyed by competency id, the same ids used in
++   competenciesfall2026.js, for example 'w1-directional-terms'.
++
++     window.BIO004_RESOURCES = {
++       'w1-directional-terms': {
++         loom:      'https://...',   // button: Watch concept video
++         labSprint: 'https://...',   // button: Lab sprint
++         loops:     'https://...',   // button: Lab ID loops
++         recall:    'https://...',   // button: Spaced recall
++         notes:     'https://...'    // button: Notes
++       }
++     };
++
++   Each key present draws its own button; keys you omit draw
++   nothing. The 'loom' key name is internal and predates the
++   rename, the button it draws reads "Watch concept video".
++
++   Where the URLs live: concept videos in the new-build-bio4-solano
++   repo, guided lecture pages in A-P-lecture-core.
++   ============================================================ */
++
++window.BIO004_RESOURCES = {};
+diff --git a/rubrics.js b/rubrics.js
+new file mode 100644
+index 0000000..d79084b
+--- /dev/null
++++ b/rubrics.js
+@@ -0,0 +1,54 @@
++/* ============================================================
++   BIO 004 Human Anatomy, Fall 2026
++   rubrics.js
++
++   Per-competency self-check rubrics for Mastery OS. Both Mastery
++   OS pages load this file and it was missing from the repo, so
++   every visit fired a 404.
++
++   This is a STUB. The map is empty. Nothing is invented.
++
++   HOW MASTERY OS READS IT
++   -----------------------
++       function rubricFor(comp){
++         var R = window.BIO004_RUBRICS;
++         return (R && comp && R[comp.id]) ? R[comp.id] : null;
++       }
++
++   A rubric is an ARRAY OF STRINGS, one per thing the student
++   should have produced. It drives two of the signature exercises:
++
++   - Blank-Page Brain Dump. With a rubric, the student ticks off
++     each item they actually recalled and gets a score out of the
++     list. Without one, they fall back to rating their own dump as
++     patchy, solid or thorough, which is the current behaviour.
++
++   - Draw it to Know it. With a rubric, the self-check box reveals
++     the expected items one at a time after the drawing is done.
++     Without one, the reveal step is skipped and the drawing step
++     also drops out of the focus-block checklist.
++
++   So an empty map behaves exactly as the missing file did, minus
++   the 404. Filling in even a handful of competencies turns the
++   scored version of both exercises back on for those.
++
++   SHAPE
++   -----
++   Keyed by competency id, the same ids used in
++   competenciesfall2026.js.
++
++     window.BIO004_RUBRICS = {
++       'w1-directional-terms': [
++         'Superior and inferior, with an example of each',
++         'Anterior and posterior, and why ventral and dorsal differ in four-legged animals',
++         'Medial and lateral, referenced to the midline',
++         'Proximal and distal, and why they apply to limbs',
++         'Superficial and deep'
++       ]
++     };
++
++   Write each item as something the student can look at and answer
++   yes or no to. Items they can argue about do not score cleanly.
++   ============================================================ */
++
++window.BIO004_RUBRICS = {};
+diff --git a/schedule-fall2026.js b/schedule-fall2026.js
+index cba0ee8..efa8ef5 100644
+--- a/schedule-fall2026.js
++++ b/schedule-fall2026.js
+@@ -45,7 +45,7 @@
+    Solano Fall 2026 calendar:
+      First day of instruction .... Mon Aug 17
+      Labor Day .................. Mon Sep 7        campus closed
+-     Faculty Development ........ Tue Oct 13       no class
++     Professional Development ... Tue Oct 13       no class
+      Veterans Day ............... Wed Nov 11       campus closed
+      Travel Day ................. Wed Nov 25       no class
+      Thanksgiving ............... Thu Nov 26 to Fri Nov 27
+@@ -69,7 +69,7 @@ window.BIO004_SECTIONS = {
+ 
+   closures: [
+     { date:'2026-09-07', day:'Mon', name:'Labor Day',           affects:['class1'] },
+-    { date:'2026-10-13', day:'Tue', name:'Faculty Development', affects:['class2','class3'] },
++    { date:'2026-10-13', day:'Tue', name:'Professional Development', affects:['class2','class3'] },
+     { date:'2026-11-11', day:'Wed', name:'Veterans Day',        affects:['class1'] },
+     { date:'2026-11-25', day:'Wed', name:'Travel Day',          affects:['class1'] },
+     { date:'2026-11-26', day:'Thu', name:'Thanksgiving',        affects:['class2','class3'] }
+@@ -157,3 +157,267 @@ window.BIO004_SECTIONS = {
+     { exam:5, setup:'Jim', takedown:'Jim', sittings:[] }
+   ]
+ };
++
++/* ============================================================
++   SESSION-LEVEL SCHEDULE
++   ------------------------------------------------------------
++   Added so the week pages stop hardcoding their own dates.
++   This is now the ONE place a session date is written down.
++   Change a date here and every wired page follows.
++
++   Two tracks, because content follows the day-of-week pattern:
++     mw  drives Class 1 (Mon / Wed)
++     tr  drives Class 2 and Class 3 (Tue / Thu)
++
++   kind:
++     'class'  normal session; lines[] are [label, text] pairs
++     'exam'   exam day; text[] is one entry per paragraph
++     'off'    closure or no-class day; text[] same
++
++   date is ISO. The label a student sees ("Mon Sep 14") is
++   DERIVED at render time, never stored, so a weekday can no
++   longer drift out of sync with its date. The comment on each
++   row is generated for readability, not authoritative.
++   ============================================================ */
++
++window.BIO004_SESSIONS = {
++
++  mw: [
++    /* Mon Aug 17 */ { wk:1,   date:'2026-08-17', kind:'class',
++      lines:[['In class', 'Intro to Anatomy, team formation &amp; Canvas setup'],
++             ['Lab', 'Intro to Anatomy Lab, Lab Safety &amp; Introduction to Histology']] },
++    /* Wed Aug 19 */ { wk:1,   date:'2026-08-19', kind:'class',
++      lines:[['In class', 'Guided Cell Activity (iCheck)'],
++             ['Lab', 'Epithelial Tissues']] },
++    /* Mon Aug 24 */ { wk:2,   date:'2026-08-24', kind:'class',
++      lines:[['In class', '<strong>TBL 1</strong> &middot; Cell Anatomy'],
++             ['Lab', 'Connective Tissue I']] },
++    /* Wed Aug 26 */ { wk:2,   date:'2026-08-26', kind:'class',
++      lines:[['In class', 'Interactive Histology Lecture (iCheck)'],
++             ['Lab', 'Connective Tissue II']] },
++    /* Mon Aug 31 */ { wk:3,   date:'2026-08-31', kind:'class',
++      lines:[['In class', '<strong>TBL 2</strong> &middot; Histology'],
++             ['Lab', 'Muscle Tissue &amp; Nervous Tissue']] },
++    /* Wed Sep 2  */ { wk:3,   date:'2026-09-02', kind:'class',
++      lines:[['In class', 'Exam 1 Review Game'],
++             ['Lab', 'Integumentary']] },
++    /* Mon Sep 7  */ { wk:4,   date:'2026-09-07', kind:'off',   tag:'No class',
++      text:['Labor Day, campus closed'] },
++    /* Wed Sep 9  */ { wk:4,   date:'2026-09-09', kind:'exam',  tag:'Exam day',
++      text:['<strong>Exam 1</strong>, lecture exam + lab practical. Doors lock at start.'] },
++    /* Mon Sep 14 */ { wk:5,   date:'2026-09-14', kind:'class',
++      lines:[['In class', 'Exam 1 rebuttals + Long Bone &amp; Bone Microanatomy (iCheck)'],
++             ['Lab', 'Bone Tissue, Long Bone &amp; Microanatomy']] },
++    /* Wed Sep 16 */ { wk:5,   date:'2026-09-16', kind:'class',
++      lines:[['In class', 'Skull Walk-Through (iCheck)'],
++             ['Lab', 'Axial Skeleton: Skull']] },
++    /* Mon Sep 21 */ { wk:6,   date:'2026-09-21', kind:'class',
++      lines:[['In class', 'Spine Walk-Through (iCheck)'],
++             ['Lab', 'Upper Extremity']] },
++    /* Wed Sep 23 */ { wk:6,   date:'2026-09-23', kind:'class',
++      lines:[['In class', '<strong>TBL 3</strong> &middot; Bone Tissue, Cartilage &amp; Microanatomy'],
++             ['Lab', 'Lower Extremity']] },
++    /* Mon Sep 28 */ { wk:7,   date:'2026-09-28', kind:'class',
++      lines:[['In class', 'Kahoot Review: Bone'],
++             ['Lab', 'Lower Extremity']] },
++    /* Wed Sep 30 */ { wk:7,   date:'2026-09-30', kind:'exam',  tag:'Exam day',
++      text:['<strong>Exam 2</strong>, lecture exam + lab practical. Doors lock at start.'] },
++    /* Mon Oct 5  */ { wk:8,   date:'2026-10-05', kind:'class',
++      lines:[['In class', 'Exam 2 rebuttals + Heart Lecture &amp; Cardiac Conduction (iCheck)'],
++             ['Lab', 'Thoracic Anatomy (Heart); Blood Vessel Histology']] },
++    /* Wed Oct 7  */ { wk:8,   date:'2026-10-07', kind:'class',
++      lines:[['In class', 'Muscle Microanatomy &amp; Sarcomere (iCheck)'],
++             ['Lab', 'Muscle Microanatomy &amp; Sarcomere']] },
++    /* Mon Oct 12 */ { wk:9,   date:'2026-10-12', kind:'class',
++      lines:[['In class', '<strong>TBL 4</strong> &middot; Heart Anatomy'],
++             ['Lab', 'Muscles of the Face, Chest &amp; Back']] },
++    /* Wed Oct 14 */ { wk:9,   date:'2026-10-14', kind:'class',
++      lines:[['In class', 'Blood Cell Interactive Lecture (iCheck)'],
++             ['Lab', 'Upper Arm &amp; Anterior Forearm (NAV)']] },
++    /* Mon Oct 19 */ { wk:10,  date:'2026-10-19', kind:'class',
++      lines:[['In class', '<strong>TBL 5</strong> &middot; Blood'],
++             ['Lab', 'Posterior Forearm (NAV)']] },
++    /* Wed Oct 21 */ { wk:10,  date:'2026-10-21', kind:'exam',  tag:'Exam day',
++      text:['<strong>Exam 3</strong>, lecture exam + lab practical. Doors lock at start.'] },
++    /* Mon Oct 26 */ { wk:11,  date:'2026-10-26', kind:'class',
++      lines:[['In class', 'Respiratory Anatomy &amp; Histology Walk-Through (iCheck)'],
++             ['Lab', 'Respiratory Anatomy &amp; Histology']] },
++    /* Wed Oct 28 */ { wk:11,  date:'2026-10-28', kind:'class',
++      lines:[['In class', 'Endocrine Walk-Through (iCheck)'],
++             ['Lab', 'Anterior Lower-Extremity Muscles &amp; NAV']] },
++    /* Mon Nov 2  */ { wk:12,  date:'2026-11-02', kind:'class',
++      lines:[['In class', '<strong>TBL 6</strong> &middot; Respiratory'],
++             ['Lab', 'Posterior Thigh Muscle &amp; NAV']] },
++    /* Wed Nov 4  */ { wk:12,  date:'2026-11-04', kind:'class',
++      lines:[['In class', 'GI Map Activity I and II (iCheck)'],
++             ['Lab', 'Anterior/Posterior Lower-Leg Muscles']] },
++    /* Mon Nov 9  */ { wk:13,  date:'2026-11-09', kind:'class',
++      lines:[['In class', '<strong>TBL 7</strong> &middot; GI System'],
++             ['Lab', 'GI Organs (Primary and Accessory)']] },
++    /* Wed Nov 11 */ { wk:13,  date:'2026-11-11', kind:'off',   tag:'No class',
++      text:['Veterans Day, campus closed'] },
++    /* Mon Nov 16 */ { wk:14,  date:'2026-11-16', kind:'exam',  tag:'Exam day',
++      text:['<strong>Exam 4</strong>, lecture exam + lab practical. Doors lock at start.',
++            '<span class="day-k">Heads up</span> this exam is on a Monday, not the usual Wednesday.'] },
++    /* Wed Nov 18 */ { wk:14,  date:'2026-11-18', kind:'class',
++      lines:[['In class', 'Exam 4 rebuttals + Guided Renal Map'],
++             ['Lab', 'Renal Anatomy']] },
++    /* Mon Nov 23 */ { wk:15,  date:'2026-11-23', kind:'class',
++      lines:[['In class', 'Kahoot: Renal'],
++             ['Lab', 'Male &amp; Female Reproductive Anatomy']] },
++    /* Wed Nov 25 */ { wk:15,  date:'2026-11-25', kind:'off',   tag:'No class',
++      text:['Travel Day, no class'] },
++    /* Mon Nov 30 */ { wk:16,  date:'2026-11-30', kind:'class',
++      lines:[['In class', '<strong>TBL 8</strong> &middot; Renal'],
++             ['Lab', 'CNS: Brain, Meninges &amp; CSF']] },
++    /* Wed Dec 2  */ { wk:16,  date:'2026-12-02', kind:'class',
++      lines:[['In class', 'Clinical: Cranial Nerve Stations (iCheck)'],
++             ['Lab', 'Brain Stem (CNS) &amp; Cranial Nerves (PNS)']] },
++    /* Mon Dec 7  */ { wk:17,  date:'2026-12-07', kind:'class',
++      lines:[['In class', '<strong>TBL 9</strong> &middot; Cranial Nerves'],
++             ['Lab', 'CNS: Spinal Cord &amp; Spinal Nerves']] },
++    /* Wed Dec 9  */ { wk:17,  date:'2026-12-09', kind:'exam',  tag:'Exam day',
++      text:['<strong>Exam 5</strong>, lecture exam + lab practical. Doors lock at start.'] }
++  ],
++
++  tr: [
++    /* Tue Aug 18 */ { wk:1,   date:'2026-08-18', kind:'class',
++      lines:[['In class', 'Intro to Anatomy &amp; team formation'],
++             ['Lab', 'Intro to Anatomy Lab, Lab Safety &amp; Introduction to Histology']] },
++    /* Thu Aug 20 */ { wk:1,   date:'2026-08-20', kind:'class',
++      lines:[['In class', 'Guided Cell Activity (iCheck)'],
++             ['Lab', 'Epithelial Tissues']] },
++    /* Tue Aug 25 */ { wk:2,   date:'2026-08-25', kind:'class',
++      lines:[['In class', '<strong>TBL 1</strong> &middot; Cell Anatomy'],
++             ['Lab', 'Connective Tissue I']] },
++    /* Thu Aug 27 */ { wk:2,   date:'2026-08-27', kind:'class',
++      lines:[['In class', 'Interactive Histology Lecture (iCheck)'],
++             ['Lab', 'Connective Tissue II']] },
++    /* Tue Sep 1  */ { wk:3,   date:'2026-09-01', kind:'class',
++      lines:[['In class', '<strong>TBL 2</strong> &middot; Histology'],
++             ['Lab', 'Muscle &amp; Nervous Tissue']] },
++    /* Thu Sep 3  */ { wk:3,   date:'2026-09-03', kind:'class',
++      lines:[['In class', 'Exam 1 Review Game'],
++             ['Lab', 'Integumentary']] },
++    /* Tue Sep 8  */ { wk:4,   date:'2026-09-08', kind:'exam',  tag:'Exam day',
++      text:['<strong>Exam 1</strong>, lecture exam + lab practical. Doors lock at start.'] },
++    /* Thu Sep 10 */ { wk:4,   date:'2026-09-10', kind:'class',
++      lines:[['In class', 'Exam 1 rebuttals + Long Bone &amp; Bone Microanatomy (iCheck)'],
++             ['Lab', 'Bone Tissue, Long Bone &amp; Microanatomy']] },
++    /* Tue Sep 15 */ { wk:5,   date:'2026-09-15', kind:'class',
++      lines:[['In class', 'Skull Walk-Through (iCheck)'],
++             ['Lab', 'Axial Skeleton: Skull']] },
++    /* Thu Sep 17 */ { wk:5,   date:'2026-09-17', kind:'class',
++      lines:[['In class', 'Spine Walk-Through (iCheck)'],
++             ['Lab', 'Axial Skeleton: Vertebrae &amp; Ribs']] },
++    /* Tue Sep 22 */ { wk:6,   date:'2026-09-22', kind:'class',
++      lines:[['In class', '<strong>TBL 3</strong> &middot; Bone Tissue, Cartilage &amp; Microanatomy'],
++             ['Lab', 'Upper Extremity']] },
++    /* Thu Sep 24 */ { wk:6,   date:'2026-09-24', kind:'class',
++      lines:[['In class', 'Kahoot Review: Bone'],
++             ['Lab', 'Lower Extremity']] },
++    /* Tue Sep 29 */ { wk:7,   date:'2026-09-29', kind:'exam',  tag:'Exam day',
++      text:['<strong>Exam 2</strong>, lecture exam + lab practical. Doors lock at start.'] },
++    /* Thu Oct 1  */ { wk:7,   date:'2026-10-01', kind:'class',
++      lines:[['In class', 'Exam 2 rebuttals + Heart Lecture &amp; Cardiac Conduction (iCheck)'],
++             ['Lab', 'Thoracic Anatomy (Heart); Blood Vessel Histology']] },
++    /* Tue Oct 6  */ { wk:8,   date:'2026-10-06', kind:'class',
++      lines:[['In class', 'Muscle Microanatomy &amp; Sarcomere (iCheck)'],
++             ['Lab', 'Muscle Microanatomy &amp; Sarcomere']] },
++    /* Thu Oct 8  */ { wk:8,   date:'2026-10-08', kind:'class',
++      lines:[['In class', '<strong>TBL 4</strong> &middot; Heart Anatomy'],
++             ['Lab', 'Muscles of the Face, Chest &amp; Back']] },
++    /* Tue Oct 13 */ { wk:9,   date:'2026-10-13', kind:'off',   tag:'No class',
++      text:['Professional Development, no class'] },
++    /* Thu Oct 15 */ { wk:9,   date:'2026-10-15', kind:'class',
++      lines:[['In class', 'Blood Cell Interactive Lecture (iCheck)'],
++             ['Lab', 'Upper Arm &amp; Anterior Forearm (NAV)']] },
++    /* Tue Oct 20 */ { wk:10,  date:'2026-10-20', kind:'class',
++      lines:[['In class', '<strong>TBL 5</strong> &middot; Blood'],
++             ['Lab', 'Posterior Forearm (NAV)']] },
++    /* Thu Oct 22 */ { wk:10,  date:'2026-10-22', kind:'exam',  tag:'Exam day',
++      text:['<strong>Exam 3</strong>, lecture exam + lab practical. Doors lock at start.'] },
++    /* Tue Oct 27 */ { wk:11,  date:'2026-10-27', kind:'class',
++      lines:[['In class', 'Respiratory Anatomy &amp; Histology Walk-Through (iCheck)'],
++             ['Lab', 'Respiratory Anatomy &amp; Histology']] },
++    /* Thu Oct 29 */ { wk:11,  date:'2026-10-29', kind:'class',
++      lines:[['In class', 'Endocrine Walk-Through (iCheck)'],
++             ['Lab', 'Anterior Thigh Muscles &amp; NAV']] },
++    /* Tue Nov 3  */ { wk:12,  date:'2026-11-03', kind:'class',
++      lines:[['In class', '<strong>TBL 6</strong> &middot; Respiratory'],
++             ['Lab', 'Posterior Thigh Muscle &amp; NAV']] },
++    /* Thu Nov 5  */ { wk:12,  date:'2026-11-05', kind:'class',
++      lines:[['In class', 'GI Map Activity I (iCheck)'],
++             ['Lab', 'Anterior/Posterior Lower-Leg Muscles']] },
++    /* Tue Nov 10 */ { wk:13,  date:'2026-11-10', kind:'class',
++      lines:[['In class', 'GI Map Activity II (iCheck)'],
++             ['Lab', 'GI Organs (Primary)']] },
++    /* Thu Nov 12 */ { wk:13,  date:'2026-11-12', kind:'class',
++      lines:[['In class', '<strong>TBL 7</strong> &middot; GI System'],
++             ['Lab', 'GI Organs (Accessory)']] },
++    /* Tue Nov 17 */ { wk:14,  date:'2026-11-17', kind:'exam',  tag:'Exam day',
++      text:['<strong>Exam 4</strong>, lecture exam + lab practical. Doors lock at start.'] },
++    /* Thu Nov 19 */ { wk:14,  date:'2026-11-19', kind:'class',
++      lines:[['In class', 'Renal Map Walk-Through (iCheck)'],
++             ['Lab', 'Renal Anatomy']] },
++    /* Tue Nov 24 */ { wk:15,  date:'2026-11-24', kind:'class',
++      lines:[['In class', 'Kahoot Review: Renal'],
++             ['Lab', 'Male &amp; Female Reproductive Anatomy']] },
++    /* Thu Nov 26 */ { wk:15,  date:'2026-11-26', kind:'off',   tag:'No class',
++      text:['Thanksgiving, campus closed'] },
++    /* Tue Dec 1  */ { wk:16,  date:'2026-12-01', kind:'class',
++      lines:[['In class', '<strong>TBL 8</strong> &middot; Renal'],
++             ['Lab', 'CNS: Brain, Meninges &amp; CSF']] },
++    /* Thu Dec 3  */ { wk:16,  date:'2026-12-03', kind:'class',
++      lines:[['In class', 'Clinical: Cranial Nerve Stations (iCheck)'],
++             ['Lab', 'Brain Stem (CNS) &amp; Cranial Nerves (PNS)']] },
++    /* Tue Dec 8  */ { wk:17,  date:'2026-12-08', kind:'class',
++      lines:[['In class', '<strong>TBL 9</strong> &middot; Cranial Nerves'],
++             ['Lab', 'CNS: Spinal Cord &amp; Spinal Nerves']] },
++    /* Thu Dec 10 */ { wk:17,  date:'2026-12-10', kind:'exam',  tag:'Exam day',
++      text:['<strong>Exam 5</strong>, lecture exam + lab practical. Doors lock at start.'] }
++  ]
++};
++
++/* ============================================================
++   MODULES
++   ------------------------------------------------------------
++   The course is organised into five modules, each ending in an
++   exam. Week ranges are taken from the module overview table in
++   the syllabi and are NOT invented here.
++
++   Weeks 4 and 7 deliberately appear in TWO modules. That is not
++   a mistake in the data, it is what actually happens: the exam
++   sits in the first half of the week and the next module's
++   content starts in the second half. Week 4 is Exam 1 on the
++   Wednesday and Module 2 bone content on the Thursday. Week 7 is
++   Exam 2 then Module 3 heart content. The navigator marks these
++   as changeover weeks rather than pretending they belong to one
++   module.
++
++   exam is the exam number that closes the module. Dates for it
++   are per section, in sections[].exams above, because the three
++   sections do not share exam dates.
++   ============================================================ */
++
++window.BIO004_MODULES = [
++  { n:1, weeks:[1,2,3,4], exam:1,
++    title:'Foundations, cells, tissues and skin',
++    detail:'Cells, tissues (histology), and the integument. TBL 1 Cells, TBL 2 Histology.' },
++
++  { n:2, weeks:[4,5,6,7], exam:2,
++    title:'Skeletal system',
++    detail:'Bone tissue, axial and appendicular skeleton, joints. TBL 3 Bone tissue, cartilage and microanatomy.' },
++
++  { n:3, weeks:[8,9,10], exam:3,
++    title:'Cardiovascular, muscle and blood',
++    detail:'Heart, blood vessels, muscle microanatomy, blood. TBL 4 Heart, TBL 5 Blood.' },
++
++  { n:4, weeks:[11,12,13,14,15], exam:4,
++    title:'Respiratory, endocrine, GI, renal and reproductive',
++    detail:'Respiratory, endocrine, GI, urinary and renal, reproductive. TBL 6 Respiratory, TBL 7 GI, TBL 8 Renal.' },
++
++  { n:5, weeks:[16,17], exam:5,
++    title:'Nervous system',
++    detail:'Brain, brainstem, cranial nerves, spinal cord, PNS and ANS. TBL 9 Cranial nerves.' }
++];
+diff --git a/section-sync.js b/section-sync.js
+new file mode 100644
+index 0000000..60f2dbe
+--- /dev/null
++++ b/section-sync.js
+@@ -0,0 +1,129 @@
++/* ============================================================
++   BIO 004 Human Anatomy, Fall 2026
++   section-sync.js
++
++   ONE section choice across the whole site.
++
++   THE PROBLEM
++   -----------
++   welcome.html is the chooser. It writes the student's section to
++   localStorage under 'bio004-section' as a raw string, one of:
++
++       mw       Class 1, Mon / Wed, afternoon
++       tr-am    Class 2, Tue / Thu, morning
++       tr-eve   Class 3, Tue / Thu, evening
++
++   The week pages and the course calendar all read that key, so a
++   student picks once and those pages follow.
++
++   Mastery OS did not. It keeps its own key, 'mos-section', in its
++   own vocabulary ('mw' / 'tr-early' / 'tr-eve'), JSON encoded,
++   and it never looked at 'bio004-section'. So a student picked
++   their section on welcome, walked into Mastery OS, and got asked
++   a second time. Worse, they could answer differently and end up
++   with two disagreeing schedules in one browser.
++
++   WHAT THIS DOES
++   --------------
++   Loaded BEFORE the Mastery OS app script, this seeds 'mos-section'
++   from the canonical choice, so Mastery OS starts on the section
++   the student already picked.
++
++   THE mos-schedule TRAP
++   ---------------------
++   Mastery OS resolves its schedule as:
++
++       store.get('mos-schedule')  ||  FALL_SECTIONS[MOS_SECTION]  || ...
++
++   'mos-schedule' is a CACHED COPY of a resolved schedule and it
++   wins outright. Updating 'mos-section' alone would therefore do
++   nothing for a student who had already been through onboarding:
++   the stale cached schedule would keep answering first.
++
++   So when the mapped section actually changes, the cache is
++   dropped and Mastery OS re-resolves from FALL_SECTIONS. The cache
++   is left alone when nothing changed, so a student who never
++   switches sections sees no churn.
++
++   ENCODING, easy to get wrong
++   ---------------------------
++   'bio004-section' is written with setItem(key, value), a raw
++   string:            mw
++   'mos-section' is written through Mastery OS's own store, which
++   JSON encodes:      "mw"
++   Read and write each in its own format. Do not unify them; the
++   two readers are independent and both already ship.
++   ============================================================ */
++
++(function () {
++  'use strict';
++
++  var KEY = 'bio004-section';
++
++  /* Canonical section id -> Mastery OS section id.
++     Mastery OS's FALL_SECTIONS accepts mw, tr-early, tr-eve and tr.
++     tr-early and tr-eve both resolve to the same Tue/Thu schedule
++     there, which is correct: Classes 2 and 3 share every date and
++     differ only by time of day. */
++  var TO_MOS = { 'mw': 'mw', 'tr-am': 'tr-early', 'tr-eve': 'tr-eve' };
++  var VALID = { 'mw': 1, 'tr-am': 1, 'tr-eve': 1 };
++
++  function fromParam() {
++    try {
++      var m = location.search.match(/[?&]sec=([^&#]+)/);
++      if (m) {
++        var v = decodeURIComponent(m[1]);
++        if (VALID[v]) return v;
++      }
++    } catch (e) {}
++    return null;
++  }
++
++  function saved() {
++    try {
++      var v = localStorage.getItem(KEY);
++      return VALID[v] ? v : null;
++    } catch (e) { return null; }
++  }
++
++  /* ?sec= wins and is persisted, matching what the week pages do,
++     so a link into any page can set the section for the site. */
++  var section = fromParam();
++  if (section) {
++    try { localStorage.setItem(KEY, section); } catch (e) {}
++  } else {
++    section = saved();
++  }
++
++  function syncToMasteryOS(sec) {
++    if (!sec || !TO_MOS[sec]) return;
++    var want = TO_MOS[sec];
++    try {
++      var have = null;
++      try { have = JSON.parse(localStorage.getItem('mos-section')); } catch (e) { have = null; }
++      if (have === want) return;              /* already in step, leave the cache alone */
++
++      localStorage.setItem('mos-section', JSON.stringify(want));
++      /* The cached schedule belongs to the previous section and
++         would otherwise win. Drop it so Mastery OS re-resolves. */
++      localStorage.removeItem('mos-schedule');
++    } catch (e) {}
++  }
++
++  syncToMasteryOS(section);
++
++  /* Exposed so a page can ask without re-implementing the rules. */
++  window.BIO004_SECTION = {
++    key: KEY,
++    get: function () { return section; },
++    track: function () { return section === 'mw' ? 'mw' : section ? 'tr' : null; },
++    toMasteryOS: function (s) { return TO_MOS[s || section] || null; },
++    set: function (s) {
++      if (!VALID[s]) return false;
++      section = s;
++      try { localStorage.setItem(KEY, s); } catch (e) {}
++      syncToMasteryOS(s);
++      return true;
++    }
++  };
++})();
+diff --git a/syllabus-class1.html b/syllabus-class1.html
+index 4593595..5f2ce33 100644
+--- a/syllabus-class1.html
++++ b/syllabus-class1.html
+@@ -1292,7 +1292,7 @@ html { scroll-behavior: smooth; }
+         <tr><td class="wk-cell">1</td><td>Wk 1&ndash;4</td><td>Cells, tissues (histology), and the integument. <strong>TBL 1</strong> Cells &middot; <strong>TBL 2</strong> Histology.</td><td><strong>Wed Sep 9</strong></td></tr>
+         <tr><td class="wk-cell">2</td><td>Wk 4&ndash;7</td><td>Skeletal: bone tissue, axial &amp; appendicular skeleton, joints. <strong>TBL 3</strong> Bone tissue, cartilage &amp; microanatomy.</td><td><strong>Wed Sep 30</strong></td></tr>
+         <tr><td class="wk-cell">3</td><td>Wk 8&ndash;10</td><td>Cardiovascular, muscle, and blood. <strong>TBL 4</strong> Heart &middot; <strong>TBL 5</strong> Blood.</td><td><strong>Wed Oct 21</strong></td></tr>
+-        <tr><td class="wk-cell">4</td><td>Wk 11&ndash;15</td><td>Respiratory, endocrine, GI, urinary &amp; renal, reproductive. <strong>TBL 6</strong> Respiratory &middot; <strong>TBL 7</strong> GI &middot; <strong>TBL 8</strong> Renal.</td><td><strong>Wed Nov 18</strong></td></tr>
++        <tr><td class="wk-cell">4</td><td>Wk 11&ndash;15</td><td>Respiratory, endocrine, GI, urinary &amp; renal, reproductive. <strong>TBL 6</strong> Respiratory &middot; <strong>TBL 7</strong> GI &middot; <strong>TBL 8</strong> Renal.</td><td><strong>Mon Nov 16</strong></td></tr>
+         <tr><td class="wk-cell">5</td><td>Wk 16&ndash;17</td><td>Nervous system: brain, brainstem, cranial nerves, spinal cord, PNS &amp; ANS. <strong>TBL 9</strong> Cranial nerves.</td><td><strong>Wed Dec 9</strong></td></tr>
+       </tbody>
+     </table>
+@@ -1521,7 +1521,7 @@ html { scroll-behavior: smooth; }
+         <tr><td class="wk-cell">Wed Sep 30</td><td>Exam 2 (Module 2)</td></tr>
+         <tr><td class="wk-cell">Wed Oct 21</td><td>Exam 3 (Module 3)</td></tr>
+         <tr><td class="wk-cell">Wed Nov 11</td><td>Veterans Day, campus closed (no class)</td></tr>
+-        <tr><td class="wk-cell">Wed Nov 18</td><td>Exam 4 (Module 4)</td></tr>
++        <tr><td class="wk-cell">Mon Nov 16</td><td>Exam 4 (Module 4). Note the day, this one is a Monday.</td></tr>
+         <tr><td class="wk-cell">Wed Nov 25</td><td>Travel Day, no class</td></tr>
+         <tr><td class="wk-cell">Wed Dec 9</td><td>Exam 5 (Module 5)</td></tr>
+         <tr><td class="wk-cell">Fri Dec 11</td><td>Last day of instruction</td></tr>
+diff --git a/week-1.html b/week-1.html
+index 4277256..374877c 100644
+--- a/week-1.html
++++ b/week-1.html
+@@ -178,7 +178,7 @@
+ 
+   <nav class="weeknav" aria-label="Week navigation">
+     <span class="nav-btn is-off">&larr; Week</span>
+-    <div class="wstrip"><a class="ws-item is-cur" href="week-1.html">1</a><a class="ws-item" href="week-2.html">2</a><a class="ws-item" href="week-3.html">3</a><a class="ws-item" href="week-4.html">4</a><a class="ws-item" href="week-5.html">5</a><a class="ws-item" href="week-6.html">6</a><a class="ws-item" href="week-7.html">7</a><a class="ws-item" href="week-8.html">8</a><a class="ws-item" href="week-9.html">9</a><a class="ws-item" href="week-10.html">10</a><a class="ws-item" href="week-11.html">11</a><a class="ws-item" href="week-12.html">12</a><a class="ws-item" href="week-13.html">13</a><a class="ws-item" href="week-14.html">14</a><a class="ws-item" href="week-15.html">15</a><a class="ws-item" href="week-16.html">16</a><a class="ws-item" href="week-17.html">17</a></div>
++    <div data-module-nav data-week="1"></div>
+     <a class="nav-btn nav-next" href="week-2.html">Week 2 &rarr;</a>
+   </nav>
+ 
+@@ -208,16 +208,11 @@
+       <ul class="hy"><li>Anatomical position, planes &amp; directional terms</li><li>Levels of structural organization</li><li>Using the microscope</li><li>Cell structure &amp; function</li><li>Intro to epithelial tissue</li></ul>
+     </section>
+ 
+-    <section class="card">
++    <section class="card" data-week-days="1">
+       <h2><span class="n">Your two class days</span>In class &amp; lab</h2>
+-      <div class="days" data-track="mw">
+-        <div class="day"><div class="day-date">Mon Aug 17</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Intro to Anatomy, team formation &amp; Canvas setup</p><p class="day-line"><span class="day-k">Lab</span> Intro to Anatomy Lab, Lab Safety &amp; Introduction to Histology</p></div></div>
+-        <div class="day"><div class="day-date">Wed Aug 19</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Guided Cell Activity (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Epithelial Tissues</p></div></div>
+-      </div>
+-      <div class="days" data-track="tr" hidden>
+-        <div class="day"><div class="day-date">Tue Aug 18</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Intro to Anatomy &amp; team formation</p><p class="day-line"><span class="day-k">Lab</span> Intro to Anatomy Lab, Lab Safety &amp; Introduction to Histology</p></div></div>
+-        <div class="day"><div class="day-date">Thu Aug 20</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Guided Cell Activity (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Epithelial Tissues</p></div></div>
+-      </div>
++      <noscript>
++        <p class="day-line">Your class days for this week are listed in your syllabus. <a href="syllabus-class1.html" target="_top">Class 1 syllabus</a>, <a href="syllabus-class2.html" target="_top">Class 2 syllabus</a>, <a href="syllabus-class3.html" target="_top">Class 3 syllabus</a>.</p>
++      </noscript>
+     </section>
+ 
+     <section class="card">
+@@ -247,6 +242,13 @@
+ </div>
+ 
+ <script src="week-links.js"></script>
++<!-- Schedule comes from schedule-fall2026.js. Do not hardcode dates in this file. -->
++<script src="schedule-fall2026.js"></script>
++<script src="week-schedule.js"></script>
++  <script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ <script>
+ (function(){
+   var N=1;
+diff --git a/week-10.html b/week-10.html
+index c7baa15..48071a2 100644
+--- a/week-10.html
++++ b/week-10.html
+@@ -178,7 +178,7 @@
+ 
+   <nav class="weeknav" aria-label="Week navigation">
+     <a class="nav-btn" href="week-9.html">&larr; Week 9</a>
+-    <div class="wstrip"><a class="ws-item" href="week-1.html">1</a><a class="ws-item" href="week-2.html">2</a><a class="ws-item" href="week-3.html">3</a><a class="ws-item" href="week-4.html">4</a><a class="ws-item" href="week-5.html">5</a><a class="ws-item" href="week-6.html">6</a><a class="ws-item" href="week-7.html">7</a><a class="ws-item" href="week-8.html">8</a><a class="ws-item" href="week-9.html">9</a><a class="ws-item is-cur" href="week-10.html">10</a><a class="ws-item" href="week-11.html">11</a><a class="ws-item" href="week-12.html">12</a><a class="ws-item" href="week-13.html">13</a><a class="ws-item" href="week-14.html">14</a><a class="ws-item" href="week-15.html">15</a><a class="ws-item" href="week-16.html">16</a><a class="ws-item" href="week-17.html">17</a></div>
++    <div data-module-nav data-week="10"></div>
+     <a class="nav-btn nav-next" href="week-11.html">Week 11 &rarr;</a>
+   </nav>
+ 
+@@ -208,16 +208,11 @@
+       <ul class="hy"><li>Blood: composition, cells &amp; formation</li><li>Posterior forearm NAV</li><li><strong>Exam 3</strong>: heart, muscle microanatomy, blood, upper limb</li></ul>
+     </section>
+ 
+-    <section class="card">
++    <section class="card" data-week-days="10">
+       <h2><span class="n">Your two class days</span>In class &amp; lab</h2>
+-      <div class="days" data-track="mw">
+-        <div class="day"><div class="day-date">Mon Oct 19</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> <strong>TBL 5</strong> &middot; Blood</p><p class="day-line"><span class="day-k">Lab</span> Posterior Forearm (NAV)</p></div></div>
+-        <div class="day day-exam"><div class="day-date">Wed Oct 21</div><div class="day-body"><span class="day-tag tag-exam">Exam day</span><p class="day-line"><strong>Exam 3</strong>, lecture exam + lab practical. Doors lock at start.</p></div></div>
+-      </div>
+-      <div class="days" data-track="tr" hidden>
+-        <div class="day"><div class="day-date">Tue Oct 20</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> <strong>TBL 5</strong> &middot; Blood</p><p class="day-line"><span class="day-k">Lab</span> Posterior Forearm (NAV)</p></div></div>
+-        <div class="day day-exam"><div class="day-date">Thu Oct 22</div><div class="day-body"><span class="day-tag tag-exam">Exam day</span><p class="day-line"><strong>Exam 3</strong>, lecture exam + lab practical. Doors lock at start.</p></div></div>
+-      </div>
++      <noscript>
++        <p class="day-line">Your class days for this week are listed in your syllabus. <a href="syllabus-class1.html" target="_top">Class 1 syllabus</a>, <a href="syllabus-class2.html" target="_top">Class 2 syllabus</a>, <a href="syllabus-class3.html" target="_top">Class 3 syllabus</a>.</p>
++      </noscript>
+     </section>
+ 
+     <section class="card">
+@@ -249,6 +244,13 @@
+ </div>
+ 
+ <script src="week-links.js"></script>
++<!-- Schedule comes from schedule-fall2026.js. Do not hardcode dates in this file. -->
++<script src="schedule-fall2026.js"></script>
++<script src="week-schedule.js"></script>
++  <script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ <script>
+ (function(){
+   var N=10;
+diff --git a/week-11.html b/week-11.html
+index e897109..231307a 100644
+--- a/week-11.html
++++ b/week-11.html
+@@ -178,7 +178,7 @@
+ 
+   <nav class="weeknav" aria-label="Week navigation">
+     <a class="nav-btn" href="week-10.html">&larr; Week 10</a>
+-    <div class="wstrip"><a class="ws-item" href="week-1.html">1</a><a class="ws-item" href="week-2.html">2</a><a class="ws-item" href="week-3.html">3</a><a class="ws-item" href="week-4.html">4</a><a class="ws-item" href="week-5.html">5</a><a class="ws-item" href="week-6.html">6</a><a class="ws-item" href="week-7.html">7</a><a class="ws-item" href="week-8.html">8</a><a class="ws-item" href="week-9.html">9</a><a class="ws-item" href="week-10.html">10</a><a class="ws-item is-cur" href="week-11.html">11</a><a class="ws-item" href="week-12.html">12</a><a class="ws-item" href="week-13.html">13</a><a class="ws-item" href="week-14.html">14</a><a class="ws-item" href="week-15.html">15</a><a class="ws-item" href="week-16.html">16</a><a class="ws-item" href="week-17.html">17</a></div>
++    <div data-module-nav data-week="11"></div>
+     <a class="nav-btn nav-next" href="week-12.html">Week 12 &rarr;</a>
+   </nav>
+ 
+@@ -208,16 +208,11 @@
+       <ul class="hy"><li>Lymphatic system essentials</li><li>Respiratory anatomy &amp; histology</li><li>Endocrine glands &amp; hormones</li><li>Anterior thigh muscles + NAV</li></ul>
+     </section>
+ 
+-    <section class="card">
++    <section class="card" data-week-days="11">
+       <h2><span class="n">Your two class days</span>In class &amp; lab</h2>
+-      <div class="days" data-track="mw">
+-        <div class="day"><div class="day-date">Mon Oct 26</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Respiratory Anatomy &amp; Histology Walk-Through (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Respiratory Anatomy &amp; Histology</p></div></div>
+-        <div class="day"><div class="day-date">Wed Oct 28</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Endocrine Walk-Through (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Anterior Lower-Extremity Muscles &amp; NAV</p></div></div>
+-      </div>
+-      <div class="days" data-track="tr" hidden>
+-        <div class="day"><div class="day-date">Tue Oct 27</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Respiratory Anatomy &amp; Histology Walk-Through (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Respiratory Anatomy &amp; Histology</p></div></div>
+-        <div class="day"><div class="day-date">Thu Oct 29</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Endocrine Walk-Through (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Anterior Thigh Muscles &amp; NAV</p></div></div>
+-      </div>
++      <noscript>
++        <p class="day-line">Your class days for this week are listed in your syllabus. <a href="syllabus-class1.html" target="_top">Class 1 syllabus</a>, <a href="syllabus-class2.html" target="_top">Class 2 syllabus</a>, <a href="syllabus-class3.html" target="_top">Class 3 syllabus</a>.</p>
++      </noscript>
+     </section>
+ 
+     <section class="card">
+@@ -247,6 +242,13 @@
+ </div>
+ 
+ <script src="week-links.js"></script>
++<!-- Schedule comes from schedule-fall2026.js. Do not hardcode dates in this file. -->
++<script src="schedule-fall2026.js"></script>
++<script src="week-schedule.js"></script>
++  <script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ <script>
+ (function(){
+   var N=11;
+diff --git a/week-12.html b/week-12.html
+index 82d96fe..4402831 100644
+--- a/week-12.html
++++ b/week-12.html
+@@ -178,7 +178,7 @@
+ 
+   <nav class="weeknav" aria-label="Week navigation">
+     <a class="nav-btn" href="week-11.html">&larr; Week 11</a>
+-    <div class="wstrip"><a class="ws-item" href="week-1.html">1</a><a class="ws-item" href="week-2.html">2</a><a class="ws-item" href="week-3.html">3</a><a class="ws-item" href="week-4.html">4</a><a class="ws-item" href="week-5.html">5</a><a class="ws-item" href="week-6.html">6</a><a class="ws-item" href="week-7.html">7</a><a class="ws-item" href="week-8.html">8</a><a class="ws-item" href="week-9.html">9</a><a class="ws-item" href="week-10.html">10</a><a class="ws-item" href="week-11.html">11</a><a class="ws-item is-cur" href="week-12.html">12</a><a class="ws-item" href="week-13.html">13</a><a class="ws-item" href="week-14.html">14</a><a class="ws-item" href="week-15.html">15</a><a class="ws-item" href="week-16.html">16</a><a class="ws-item" href="week-17.html">17</a></div>
++    <div data-module-nav data-week="12"></div>
+     <a class="nav-btn nav-next" href="week-13.html">Week 13 &rarr;</a>
+   </nav>
+ 
+@@ -208,16 +208,11 @@
+       <ul class="hy"><li>Respiratory tract review</li><li>GI tract: alimentary canal &amp; accessory organs</li><li>Posterior thigh &amp; lower-leg muscles + NAV</li></ul>
+     </section>
+ 
+-    <section class="card">
++    <section class="card" data-week-days="12">
+       <h2><span class="n">Your two class days</span>In class &amp; lab</h2>
+-      <div class="days" data-track="mw">
+-        <div class="day"><div class="day-date">Mon Nov 2</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> <strong>TBL 6</strong> &middot; Respiratory</p><p class="day-line"><span class="day-k">Lab</span> Posterior Thigh Muscle &amp; NAV</p></div></div>
+-        <div class="day"><div class="day-date">Wed Nov 4</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> GI Map Activity I and II (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Anterior/Posterior Lower-Leg Muscles</p></div></div>
+-      </div>
+-      <div class="days" data-track="tr" hidden>
+-        <div class="day"><div class="day-date">Tue Nov 3</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> <strong>TBL 6</strong> &middot; Respiratory</p><p class="day-line"><span class="day-k">Lab</span> Posterior Thigh Muscle &amp; NAV</p></div></div>
+-        <div class="day"><div class="day-date">Thu Nov 5</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> GI Map Activity I (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Anterior/Posterior Lower-Leg Muscles</p></div></div>
+-      </div>
++      <noscript>
++        <p class="day-line">Your class days for this week are listed in your syllabus. <a href="syllabus-class1.html" target="_top">Class 1 syllabus</a>, <a href="syllabus-class2.html" target="_top">Class 2 syllabus</a>, <a href="syllabus-class3.html" target="_top">Class 3 syllabus</a>.</p>
++      </noscript>
+     </section>
+ 
+     <section class="card">
+@@ -249,6 +244,13 @@
+ </div>
+ 
+ <script src="week-links.js"></script>
++<!-- Schedule comes from schedule-fall2026.js. Do not hardcode dates in this file. -->
++<script src="schedule-fall2026.js"></script>
++<script src="week-schedule.js"></script>
++  <script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ <script>
+ (function(){
+   var N=12;
+diff --git a/week-13.html b/week-13.html
+index cc92817..c0f43fa 100644
+--- a/week-13.html
++++ b/week-13.html
+@@ -178,7 +178,7 @@
+ 
+   <nav class="weeknav" aria-label="Week navigation">
+     <a class="nav-btn" href="week-12.html">&larr; Week 12</a>
+-    <div class="wstrip"><a class="ws-item" href="week-1.html">1</a><a class="ws-item" href="week-2.html">2</a><a class="ws-item" href="week-3.html">3</a><a class="ws-item" href="week-4.html">4</a><a class="ws-item" href="week-5.html">5</a><a class="ws-item" href="week-6.html">6</a><a class="ws-item" href="week-7.html">7</a><a class="ws-item" href="week-8.html">8</a><a class="ws-item" href="week-9.html">9</a><a class="ws-item" href="week-10.html">10</a><a class="ws-item" href="week-11.html">11</a><a class="ws-item" href="week-12.html">12</a><a class="ws-item is-cur" href="week-13.html">13</a><a class="ws-item" href="week-14.html">14</a><a class="ws-item" href="week-15.html">15</a><a class="ws-item" href="week-16.html">16</a><a class="ws-item" href="week-17.html">17</a></div>
++    <div data-module-nav data-week="13"></div>
+     <a class="nav-btn nav-next" href="week-14.html">Week 14 &rarr;</a>
+   </nav>
+ 
+@@ -208,16 +208,11 @@
+       <ul class="hy"><li>GI organs, primary &amp; accessory</li><li>Abdominal viscera</li><li>Urinary system: kidneys, ureters, bladder, urethra</li></ul>
+     </section>
+ 
+-    <section class="card">
++    <section class="card" data-week-days="13">
+       <h2><span class="n">Your two class days</span>In class &amp; lab</h2>
+-      <div class="days" data-track="mw">
+-        <div class="day"><div class="day-date">Mon Nov 9</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> <strong>TBL 7</strong> &middot; GI System</p><p class="day-line"><span class="day-k">Lab</span> GI Organs (Primary and Accessory)</p></div></div>
+-        <div class="day day-off"><div class="day-date">Wed Nov 11</div><div class="day-body"><span class="day-tag tag-off">No class</span><p class="day-line">Veterans Day, campus closed</p></div></div>
+-      </div>
+-      <div class="days" data-track="tr" hidden>
+-        <div class="day"><div class="day-date">Tue Nov 10</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> GI Map Activity II (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> GI Organs (Primary)</p></div></div>
+-        <div class="day"><div class="day-date">Thu Nov 12</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> <strong>TBL 7</strong> &middot; GI System</p><p class="day-line"><span class="day-k">Lab</span> GI Organs (Accessory)</p></div></div>
+-      </div>
++      <noscript>
++        <p class="day-line">Your class days for this week are listed in your syllabus. <a href="syllabus-class1.html" target="_top">Class 1 syllabus</a>, <a href="syllabus-class2.html" target="_top">Class 2 syllabus</a>, <a href="syllabus-class3.html" target="_top">Class 3 syllabus</a>.</p>
++      </noscript>
+     </section>
+ 
+     <section class="card">
+@@ -248,6 +243,13 @@
+ </div>
+ 
+ <script src="week-links.js"></script>
++<!-- Schedule comes from schedule-fall2026.js. Do not hardcode dates in this file. -->
++<script src="schedule-fall2026.js"></script>
++<script src="week-schedule.js"></script>
++  <script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ <script>
+ (function(){
+   var N=13;
+diff --git a/week-14.html b/week-14.html
+index f40e346..5d2ee2f 100644
+--- a/week-14.html
++++ b/week-14.html
+@@ -178,7 +178,7 @@
+ 
+   <nav class="weeknav" aria-label="Week navigation">
+     <a class="nav-btn" href="week-13.html">&larr; Week 13</a>
+-    <div class="wstrip"><a class="ws-item" href="week-1.html">1</a><a class="ws-item" href="week-2.html">2</a><a class="ws-item" href="week-3.html">3</a><a class="ws-item" href="week-4.html">4</a><a class="ws-item" href="week-5.html">5</a><a class="ws-item" href="week-6.html">6</a><a class="ws-item" href="week-7.html">7</a><a class="ws-item" href="week-8.html">8</a><a class="ws-item" href="week-9.html">9</a><a class="ws-item" href="week-10.html">10</a><a class="ws-item" href="week-11.html">11</a><a class="ws-item" href="week-12.html">12</a><a class="ws-item" href="week-13.html">13</a><a class="ws-item is-cur" href="week-14.html">14</a><a class="ws-item" href="week-15.html">15</a><a class="ws-item" href="week-16.html">16</a><a class="ws-item" href="week-17.html">17</a></div>
++    <div data-module-nav data-week="14"></div>
+     <a class="nav-btn nav-next" href="week-15.html">Week 15 &rarr;</a>
+   </nav>
+ 
+@@ -208,16 +208,11 @@
+       <ul class="hy"><li>Male &amp; female reproductive systems</li><li>Labor &amp; delivery overview</li><li><strong>Exam 4</strong>: respiratory, endocrine, GI, urinary/renal, reproductive. Mon/Wed section sits it <strong>Mon Nov 16</strong>, a Monday rather than the usual Wednesday. Tue/Thu sections sit it <strong>Tue Nov 17</strong>. Both parts on the same day either way.</li></ul>
+     </section>
+ 
+-    <section class="card">
++    <section class="card" data-week-days="14">
+       <h2><span class="n">Your two class days</span>In class &amp; lab</h2>
+-      <div class="days" data-track="mw">
+-        <div class="day day-exam"><div class="day-date">Mon Nov 16</div><div class="day-body"><span class="day-tag tag-exam">Exam day</span><p class="day-line"><strong>Exam 4</strong>, lecture exam + lab practical. Doors lock at start.</p><p class="day-line"><span class="day-k">Heads up</span> this exam is on a Monday, not the usual Wednesday.</p></div></div>
+-        <div class="day"><div class="day-date">Wed Nov 18</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Exam 4 rebuttals + Guided Renal Map</p><p class="day-line"><span class="day-k">Lab</span> Renal Anatomy</p></div></div>
+-      </div>
+-      <div class="days" data-track="tr" hidden>
+-        <div class="day day-exam"><div class="day-date">Tue Nov 17</div><div class="day-body"><span class="day-tag tag-exam">Exam day</span><p class="day-line"><strong>Exam 4</strong>, lecture exam + lab practical. Doors lock at start.</p></div></div>
+-        <div class="day"><div class="day-date">Thu Nov 19</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Renal Map Walk-Through (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Renal Anatomy</p></div></div>
+-      </div>
++      <noscript>
++        <p class="day-line">Your class days for this week are listed in your syllabus. <a href="syllabus-class1.html" target="_top">Class 1 syllabus</a>, <a href="syllabus-class2.html" target="_top">Class 2 syllabus</a>, <a href="syllabus-class3.html" target="_top">Class 3 syllabus</a>.</p>
++      </noscript>
+     </section>
+ 
+     <section class="card">
+@@ -249,6 +244,13 @@
+ </div>
+ 
+ <script src="week-links.js"></script>
++<!-- Schedule comes from schedule-fall2026.js. Do not hardcode dates in this file. -->
++<script src="schedule-fall2026.js"></script>
++<script src="week-schedule.js"></script>
++  <script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ <script>
+ (function(){
+   var N=14;
+diff --git a/week-15.html b/week-15.html
+index 92e30a2..2a1ae96 100644
+--- a/week-15.html
++++ b/week-15.html
+@@ -178,7 +178,7 @@
+ 
+   <nav class="weeknav" aria-label="Week navigation">
+     <a class="nav-btn" href="week-14.html">&larr; Week 14</a>
+-    <div class="wstrip"><a class="ws-item" href="week-1.html">1</a><a class="ws-item" href="week-2.html">2</a><a class="ws-item" href="week-3.html">3</a><a class="ws-item" href="week-4.html">4</a><a class="ws-item" href="week-5.html">5</a><a class="ws-item" href="week-6.html">6</a><a class="ws-item" href="week-7.html">7</a><a class="ws-item" href="week-8.html">8</a><a class="ws-item" href="week-9.html">9</a><a class="ws-item" href="week-10.html">10</a><a class="ws-item" href="week-11.html">11</a><a class="ws-item" href="week-12.html">12</a><a class="ws-item" href="week-13.html">13</a><a class="ws-item" href="week-14.html">14</a><a class="ws-item is-cur" href="week-15.html">15</a><a class="ws-item" href="week-16.html">16</a><a class="ws-item" href="week-17.html">17</a></div>
++    <div data-module-nav data-week="15"></div>
+     <a class="nav-btn nav-next" href="week-16.html">Week 16 &rarr;</a>
+   </nav>
+ 
+@@ -208,16 +208,11 @@
+       <ul class="hy"><li>Renal anatomy &amp; the nephron</li><li>Male &amp; female reproductive anatomy &amp; histology</li></ul>
+     </section>
+ 
+-    <section class="card">
++    <section class="card" data-week-days="15">
+       <h2><span class="n">Your two class days</span>In class &amp; lab</h2>
+-      <div class="days" data-track="mw">
+-        <div class="day"><div class="day-date">Mon Nov 23</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Kahoot: Renal</p><p class="day-line"><span class="day-k">Lab</span> Male &amp; Female Reproductive Anatomy</p></div></div>
+-        <div class="day day-off"><div class="day-date">Wed Nov 25</div><div class="day-body"><span class="day-tag tag-off">No class</span><p class="day-line">Travel Day, no class</p></div></div>
+-      </div>
+-      <div class="days" data-track="tr" hidden>
+-        <div class="day"><div class="day-date">Tue Nov 24</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Kahoot Review: Renal</p><p class="day-line"><span class="day-k">Lab</span> Male &amp; Female Reproductive Anatomy</p></div></div>
+-        <div class="day day-off"><div class="day-date">Thu Nov 26</div><div class="day-body"><span class="day-tag tag-off">No class</span><p class="day-line">Thanksgiving, campus closed</p></div></div>
+-      </div>
++      <noscript>
++        <p class="day-line">Your class days for this week are listed in your syllabus. <a href="syllabus-class1.html" target="_top">Class 1 syllabus</a>, <a href="syllabus-class2.html" target="_top">Class 2 syllabus</a>, <a href="syllabus-class3.html" target="_top">Class 3 syllabus</a>.</p>
++      </noscript>
+     </section>
+ 
+     <section class="card">
+@@ -246,6 +241,13 @@
+ </div>
+ 
+ <script src="week-links.js"></script>
++<!-- Schedule comes from schedule-fall2026.js. Do not hardcode dates in this file. -->
++<script src="schedule-fall2026.js"></script>
++<script src="week-schedule.js"></script>
++  <script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ <script>
+ (function(){
+   var N=15;
+diff --git a/week-16.html b/week-16.html
+index 0c755f2..6bc90b0 100644
+--- a/week-16.html
++++ b/week-16.html
+@@ -178,7 +178,7 @@
+ 
+   <nav class="weeknav" aria-label="Week navigation">
+     <a class="nav-btn" href="week-15.html">&larr; Week 15</a>
+-    <div class="wstrip"><a class="ws-item" href="week-1.html">1</a><a class="ws-item" href="week-2.html">2</a><a class="ws-item" href="week-3.html">3</a><a class="ws-item" href="week-4.html">4</a><a class="ws-item" href="week-5.html">5</a><a class="ws-item" href="week-6.html">6</a><a class="ws-item" href="week-7.html">7</a><a class="ws-item" href="week-8.html">8</a><a class="ws-item" href="week-9.html">9</a><a class="ws-item" href="week-10.html">10</a><a class="ws-item" href="week-11.html">11</a><a class="ws-item" href="week-12.html">12</a><a class="ws-item" href="week-13.html">13</a><a class="ws-item" href="week-14.html">14</a><a class="ws-item" href="week-15.html">15</a><a class="ws-item is-cur" href="week-16.html">16</a><a class="ws-item" href="week-17.html">17</a></div>
++    <div data-module-nav data-week="16"></div>
+     <a class="nav-btn nav-next" href="week-17.html">Week 17 &rarr;</a>
+   </nav>
+ 
+@@ -208,16 +208,11 @@
+       <ul class="hy"><li>CNS: brain regions, meninges &amp; CSF</li><li>Brainstem</li><li>Cranial nerves, names &amp; functions</li></ul>
+     </section>
+ 
+-    <section class="card">
++    <section class="card" data-week-days="16">
+       <h2><span class="n">Your two class days</span>In class &amp; lab</h2>
+-      <div class="days" data-track="mw">
+-        <div class="day"><div class="day-date">Mon Nov 30</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> <strong>TBL 8</strong> &middot; Renal</p><p class="day-line"><span class="day-k">Lab</span> CNS: Brain, Meninges &amp; CSF</p></div></div>
+-        <div class="day"><div class="day-date">Wed Dec 2</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Clinical: Cranial Nerve Stations (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Brain Stem (CNS) &amp; Cranial Nerves (PNS)</p></div></div>
+-      </div>
+-      <div class="days" data-track="tr" hidden>
+-        <div class="day"><div class="day-date">Tue Dec 1</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> <strong>TBL 8</strong> &middot; Renal</p><p class="day-line"><span class="day-k">Lab</span> CNS: Brain, Meninges &amp; CSF</p></div></div>
+-        <div class="day"><div class="day-date">Thu Dec 3</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Clinical: Cranial Nerve Stations (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Brain Stem (CNS) &amp; Cranial Nerves (PNS)</p></div></div>
+-      </div>
++      <noscript>
++        <p class="day-line">Your class days for this week are listed in your syllabus. <a href="syllabus-class1.html" target="_top">Class 1 syllabus</a>, <a href="syllabus-class2.html" target="_top">Class 2 syllabus</a>, <a href="syllabus-class3.html" target="_top">Class 3 syllabus</a>.</p>
++      </noscript>
+     </section>
+ 
+     <section class="card">
+@@ -249,6 +244,13 @@
+ </div>
+ 
+ <script src="week-links.js"></script>
++<!-- Schedule comes from schedule-fall2026.js. Do not hardcode dates in this file. -->
++<script src="schedule-fall2026.js"></script>
++<script src="week-schedule.js"></script>
++  <script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ <script>
+ (function(){
+   var N=16;
+diff --git a/week-17.html b/week-17.html
+index 62111f3..1bbf1dd 100644
+--- a/week-17.html
++++ b/week-17.html
+@@ -178,7 +178,7 @@
+ 
+   <nav class="weeknav" aria-label="Week navigation">
+     <a class="nav-btn" href="week-16.html">&larr; Week 16</a>
+-    <div class="wstrip"><a class="ws-item" href="week-1.html">1</a><a class="ws-item" href="week-2.html">2</a><a class="ws-item" href="week-3.html">3</a><a class="ws-item" href="week-4.html">4</a><a class="ws-item" href="week-5.html">5</a><a class="ws-item" href="week-6.html">6</a><a class="ws-item" href="week-7.html">7</a><a class="ws-item" href="week-8.html">8</a><a class="ws-item" href="week-9.html">9</a><a class="ws-item" href="week-10.html">10</a><a class="ws-item" href="week-11.html">11</a><a class="ws-item" href="week-12.html">12</a><a class="ws-item" href="week-13.html">13</a><a class="ws-item" href="week-14.html">14</a><a class="ws-item" href="week-15.html">15</a><a class="ws-item" href="week-16.html">16</a><a class="ws-item is-cur" href="week-17.html">17</a></div>
++    <div data-module-nav data-week="17"></div>
+     <span class="nav-btn nav-next is-off">Week &rarr;</span>
+   </nav>
+ 
+@@ -208,16 +208,11 @@
+       <ul class="hy"><li>Spinal cord &amp; spinal nerves</li><li>Peripheral nervous system (PNS)</li><li>Autonomic nervous system (ANS)</li><li><strong>Exam 5</strong>: the whole nervous system</li></ul>
+     </section>
+ 
+-    <section class="card">
++    <section class="card" data-week-days="17">
+       <h2><span class="n">Your two class days</span>In class &amp; lab</h2>
+-      <div class="days" data-track="mw">
+-        <div class="day"><div class="day-date">Mon Dec 7</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> <strong>TBL 9</strong> &middot; Cranial Nerves</p><p class="day-line"><span class="day-k">Lab</span> CNS: Spinal Cord &amp; Spinal Nerves</p></div></div>
+-        <div class="day day-exam"><div class="day-date">Wed Dec 9</div><div class="day-body"><span class="day-tag tag-exam">Exam day</span><p class="day-line"><strong>Exam 5</strong>, lecture exam + lab practical. Doors lock at start.</p></div></div>
+-      </div>
+-      <div class="days" data-track="tr" hidden>
+-        <div class="day"><div class="day-date">Tue Dec 8</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> <strong>TBL 9</strong> &middot; Cranial Nerves</p><p class="day-line"><span class="day-k">Lab</span> CNS: Spinal Cord &amp; Spinal Nerves</p></div></div>
+-        <div class="day day-exam"><div class="day-date">Thu Dec 10</div><div class="day-body"><span class="day-tag tag-exam">Exam day</span><p class="day-line"><strong>Exam 5</strong>, lecture exam + lab practical. Doors lock at start.</p></div></div>
+-      </div>
++      <noscript>
++        <p class="day-line">Your class days for this week are listed in your syllabus. <a href="syllabus-class1.html" target="_top">Class 1 syllabus</a>, <a href="syllabus-class2.html" target="_top">Class 2 syllabus</a>, <a href="syllabus-class3.html" target="_top">Class 3 syllabus</a>.</p>
++      </noscript>
+     </section>
+ 
+     <section class="card">
+@@ -249,6 +244,13 @@
+ </div>
+ 
+ <script src="week-links.js"></script>
++<!-- Schedule comes from schedule-fall2026.js. Do not hardcode dates in this file. -->
++<script src="schedule-fall2026.js"></script>
++<script src="week-schedule.js"></script>
++  <script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ <script>
+ (function(){
+   var N=17;
+diff --git a/week-2.html b/week-2.html
+index 288fa67..a2e0d60 100644
+--- a/week-2.html
++++ b/week-2.html
+@@ -178,7 +178,7 @@
+ 
+   <nav class="weeknav" aria-label="Week navigation">
+     <a class="nav-btn" href="week-1.html">&larr; Week 1</a>
+-    <div class="wstrip"><a class="ws-item" href="week-1.html">1</a><a class="ws-item is-cur" href="week-2.html">2</a><a class="ws-item" href="week-3.html">3</a><a class="ws-item" href="week-4.html">4</a><a class="ws-item" href="week-5.html">5</a><a class="ws-item" href="week-6.html">6</a><a class="ws-item" href="week-7.html">7</a><a class="ws-item" href="week-8.html">8</a><a class="ws-item" href="week-9.html">9</a><a class="ws-item" href="week-10.html">10</a><a class="ws-item" href="week-11.html">11</a><a class="ws-item" href="week-12.html">12</a><a class="ws-item" href="week-13.html">13</a><a class="ws-item" href="week-14.html">14</a><a class="ws-item" href="week-15.html">15</a><a class="ws-item" href="week-16.html">16</a><a class="ws-item" href="week-17.html">17</a></div>
++    <div data-module-nav data-week="2"></div>
+     <a class="nav-btn nav-next" href="week-3.html">Week 3 &rarr;</a>
+   </nav>
+ 
+@@ -208,16 +208,11 @@
+       <ul class="hy"><li>Epithelial tissue types &amp; where each is found</li><li>Glands: endocrine vs exocrine</li><li>Connective tissue, classes &amp; fibers</li><li>Reading histology slides</li></ul>
+     </section>
+ 
+-    <section class="card">
++    <section class="card" data-week-days="2">
+       <h2><span class="n">Your two class days</span>In class &amp; lab</h2>
+-      <div class="days" data-track="mw">
+-        <div class="day"><div class="day-date">Mon Aug 24</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> <strong>TBL 1</strong> &middot; Cell Anatomy</p><p class="day-line"><span class="day-k">Lab</span> Connective Tissue I</p></div></div>
+-        <div class="day"><div class="day-date">Wed Aug 26</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Interactive Histology Lecture (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Connective Tissue II</p></div></div>
+-      </div>
+-      <div class="days" data-track="tr" hidden>
+-        <div class="day"><div class="day-date">Tue Aug 25</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> <strong>TBL 1</strong> &middot; Cell Anatomy</p><p class="day-line"><span class="day-k">Lab</span> Connective Tissue I</p></div></div>
+-        <div class="day"><div class="day-date">Thu Aug 27</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Interactive Histology Lecture (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Connective Tissue II</p></div></div>
+-      </div>
++      <noscript>
++        <p class="day-line">Your class days for this week are listed in your syllabus. <a href="syllabus-class1.html" target="_top">Class 1 syllabus</a>, <a href="syllabus-class2.html" target="_top">Class 2 syllabus</a>, <a href="syllabus-class3.html" target="_top">Class 3 syllabus</a>.</p>
++      </noscript>
+     </section>
+ 
+     <section class="card">
+@@ -249,6 +244,13 @@
+ </div>
+ 
+ <script src="week-links.js"></script>
++<!-- Schedule comes from schedule-fall2026.js. Do not hardcode dates in this file. -->
++<script src="schedule-fall2026.js"></script>
++<script src="week-schedule.js"></script>
++  <script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ <script>
+ (function(){
+   var N=2;
+diff --git a/week-3.html b/week-3.html
+index 0ae61cc..119a105 100644
+--- a/week-3.html
++++ b/week-3.html
+@@ -178,7 +178,7 @@
+ 
+   <nav class="weeknav" aria-label="Week navigation">
+     <a class="nav-btn" href="week-2.html">&larr; Week 2</a>
+-    <div class="wstrip"><a class="ws-item" href="week-1.html">1</a><a class="ws-item" href="week-2.html">2</a><a class="ws-item is-cur" href="week-3.html">3</a><a class="ws-item" href="week-4.html">4</a><a class="ws-item" href="week-5.html">5</a><a class="ws-item" href="week-6.html">6</a><a class="ws-item" href="week-7.html">7</a><a class="ws-item" href="week-8.html">8</a><a class="ws-item" href="week-9.html">9</a><a class="ws-item" href="week-10.html">10</a><a class="ws-item" href="week-11.html">11</a><a class="ws-item" href="week-12.html">12</a><a class="ws-item" href="week-13.html">13</a><a class="ws-item" href="week-14.html">14</a><a class="ws-item" href="week-15.html">15</a><a class="ws-item" href="week-16.html">16</a><a class="ws-item" href="week-17.html">17</a></div>
++    <div data-module-nav data-week="3"></div>
+     <a class="nav-btn nav-next" href="week-4.html">Week 4 &rarr;</a>
+   </nav>
+ 
+@@ -208,16 +208,11 @@
+       <ul class="hy"><li>The three muscle tissue types</li><li>Nervous tissue: neurons &amp; neuroglia</li><li>Integument: epidermis, dermis &amp; appendages</li></ul>
+     </section>
+ 
+-    <section class="card">
++    <section class="card" data-week-days="3">
+       <h2><span class="n">Your two class days</span>In class &amp; lab</h2>
+-      <div class="days" data-track="mw">
+-        <div class="day"><div class="day-date">Mon Aug 31</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> <strong>TBL 2</strong> &middot; Histology</p><p class="day-line"><span class="day-k">Lab</span> Muscle Tissue &amp; Nervous Tissue</p></div></div>
+-        <div class="day"><div class="day-date">Wed Sep 2</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Exam 1 Review Game</p><p class="day-line"><span class="day-k">Lab</span> Integumentary</p></div></div>
+-      </div>
+-      <div class="days" data-track="tr" hidden>
+-        <div class="day"><div class="day-date">Tue Sep 1</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> <strong>TBL 2</strong> &middot; Histology</p><p class="day-line"><span class="day-k">Lab</span> Muscle &amp; Nervous Tissue</p></div></div>
+-        <div class="day"><div class="day-date">Thu Sep 3</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Exam 1 Review Game</p><p class="day-line"><span class="day-k">Lab</span> Integumentary</p></div></div>
+-      </div>
++      <noscript>
++        <p class="day-line">Your class days for this week are listed in your syllabus. <a href="syllabus-class1.html" target="_top">Class 1 syllabus</a>, <a href="syllabus-class2.html" target="_top">Class 2 syllabus</a>, <a href="syllabus-class3.html" target="_top">Class 3 syllabus</a>.</p>
++      </noscript>
+     </section>
+ 
+     <section class="card">
+@@ -247,6 +242,13 @@
+ </div>
+ 
+ <script src="week-links.js"></script>
++<!-- Schedule comes from schedule-fall2026.js. Do not hardcode dates in this file. -->
++<script src="schedule-fall2026.js"></script>
++<script src="week-schedule.js"></script>
++  <script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ <script>
+ (function(){
+   var N=3;
+diff --git a/week-4.html b/week-4.html
+index 6510509..582788a 100644
+--- a/week-4.html
++++ b/week-4.html
+@@ -178,7 +178,7 @@
+ 
+   <nav class="weeknav" aria-label="Week navigation">
+     <a class="nav-btn" href="week-3.html">&larr; Week 3</a>
+-    <div class="wstrip"><a class="ws-item" href="week-1.html">1</a><a class="ws-item" href="week-2.html">2</a><a class="ws-item" href="week-3.html">3</a><a class="ws-item is-cur" href="week-4.html">4</a><a class="ws-item" href="week-5.html">5</a><a class="ws-item" href="week-6.html">6</a><a class="ws-item" href="week-7.html">7</a><a class="ws-item" href="week-8.html">8</a><a class="ws-item" href="week-9.html">9</a><a class="ws-item" href="week-10.html">10</a><a class="ws-item" href="week-11.html">11</a><a class="ws-item" href="week-12.html">12</a><a class="ws-item" href="week-13.html">13</a><a class="ws-item" href="week-14.html">14</a><a class="ws-item" href="week-15.html">15</a><a class="ws-item" href="week-16.html">16</a><a class="ws-item" href="week-17.html">17</a></div>
++    <div data-module-nav data-week="4"></div>
+     <a class="nav-btn nav-next" href="week-5.html">Week 5 &rarr;</a>
+   </nav>
+ 
+@@ -208,16 +208,11 @@
+       <ul class="hy"><li><strong>Exam 1</strong>: cells, tissues, histology, integument</li><li>Bone tissue &amp; long-bone microanatomy (new material begins)</li></ul>
+     </section>
+ 
+-    <section class="card">
++    <section class="card" data-week-days="4">
+       <h2><span class="n">Your two class days</span>In class &amp; lab</h2>
+-      <div class="days" data-track="mw">
+-        <div class="day day-off"><div class="day-date">Mon Sep 7</div><div class="day-body"><span class="day-tag tag-off">No class</span><p class="day-line">Labor Day, campus closed</p></div></div>
+-        <div class="day day-exam"><div class="day-date">Wed Sep 9</div><div class="day-body"><span class="day-tag tag-exam">Exam day</span><p class="day-line"><strong>Exam 1</strong>, lecture exam + lab practical. Doors lock at start.</p></div></div>
+-      </div>
+-      <div class="days" data-track="tr" hidden>
+-        <div class="day day-exam"><div class="day-date">Tue Sep 8</div><div class="day-body"><span class="day-tag tag-exam">Exam day</span><p class="day-line"><strong>Exam 1</strong>, lecture exam + lab practical. Doors lock at start.</p></div></div>
+-        <div class="day"><div class="day-date">Thu Sep 10</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Exam 1 rebuttals + Long Bone &amp; Bone Microanatomy (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Bone Tissue, Long Bone &amp; Microanatomy</p></div></div>
+-      </div>
++      <noscript>
++        <p class="day-line">Your class days for this week are listed in your syllabus. <a href="syllabus-class1.html" target="_top">Class 1 syllabus</a>, <a href="syllabus-class2.html" target="_top">Class 2 syllabus</a>, <a href="syllabus-class3.html" target="_top">Class 3 syllabus</a>.</p>
++      </noscript>
+     </section>
+ 
+     <section class="card">
+@@ -248,6 +243,13 @@
+ </div>
+ 
+ <script src="week-links.js"></script>
++<!-- Schedule comes from schedule-fall2026.js. Do not hardcode dates in this file. -->
++<script src="schedule-fall2026.js"></script>
++<script src="week-schedule.js"></script>
++  <script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ <script>
+ (function(){
+   var N=4;
+diff --git a/week-5.html b/week-5.html
+index 2c14c3f..a52f7b4 100644
+--- a/week-5.html
++++ b/week-5.html
+@@ -178,7 +178,7 @@
+ 
+   <nav class="weeknav" aria-label="Week navigation">
+     <a class="nav-btn" href="week-4.html">&larr; Week 4</a>
+-    <div class="wstrip"><a class="ws-item" href="week-1.html">1</a><a class="ws-item" href="week-2.html">2</a><a class="ws-item" href="week-3.html">3</a><a class="ws-item" href="week-4.html">4</a><a class="ws-item is-cur" href="week-5.html">5</a><a class="ws-item" href="week-6.html">6</a><a class="ws-item" href="week-7.html">7</a><a class="ws-item" href="week-8.html">8</a><a class="ws-item" href="week-9.html">9</a><a class="ws-item" href="week-10.html">10</a><a class="ws-item" href="week-11.html">11</a><a class="ws-item" href="week-12.html">12</a><a class="ws-item" href="week-13.html">13</a><a class="ws-item" href="week-14.html">14</a><a class="ws-item" href="week-15.html">15</a><a class="ws-item" href="week-16.html">16</a><a class="ws-item" href="week-17.html">17</a></div>
++    <div data-module-nav data-week="5"></div>
+     <a class="nav-btn nav-next" href="week-6.html">Week 6 &rarr;</a>
+   </nav>
+ 
+@@ -208,16 +208,11 @@
+       <ul class="hy"><li>Bone tissue, ossification &amp; growth</li><li>The axial skeleton: skull</li><li>Vertebral column &amp; thoracic cage</li></ul>
+     </section>
+ 
+-    <section class="card">
++    <section class="card" data-week-days="5">
+       <h2><span class="n">Your two class days</span>In class &amp; lab</h2>
+-      <div class="days" data-track="mw">
+-        <div class="day"><div class="day-date">Mon Sep 14</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Exam 1 rebuttals + Long Bone &amp; Bone Microanatomy (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Bone Tissue, Long Bone &amp; Microanatomy</p></div></div>
+-        <div class="day"><div class="day-date">Wed Sep 16</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Skull Walk-Through (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Axial Skeleton: Skull</p></div></div>
+-      </div>
+-      <div class="days" data-track="tr" hidden>
+-        <div class="day"><div class="day-date">Tue Sep 15</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Skull Walk-Through (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Axial Skeleton: Skull</p></div></div>
+-        <div class="day"><div class="day-date">Thu Sep 17</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Spine Walk-Through (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Axial Skeleton: Vertebrae &amp; Ribs</p></div></div>
+-      </div>
++      <noscript>
++        <p class="day-line">Your class days for this week are listed in your syllabus. <a href="syllabus-class1.html" target="_top">Class 1 syllabus</a>, <a href="syllabus-class2.html" target="_top">Class 2 syllabus</a>, <a href="syllabus-class3.html" target="_top">Class 3 syllabus</a>.</p>
++      </noscript>
+     </section>
+ 
+     <section class="card">
+@@ -247,6 +242,13 @@
+ </div>
+ 
+ <script src="week-links.js"></script>
++<!-- Schedule comes from schedule-fall2026.js. Do not hardcode dates in this file. -->
++<script src="schedule-fall2026.js"></script>
++<script src="week-schedule.js"></script>
++  <script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ <script>
+ (function(){
+   var N=5;
+diff --git a/week-6.html b/week-6.html
+index efd2cf2..fbcb748 100644
+--- a/week-6.html
++++ b/week-6.html
+@@ -178,7 +178,7 @@
+ 
+   <nav class="weeknav" aria-label="Week navigation">
+     <a class="nav-btn" href="week-5.html">&larr; Week 5</a>
+-    <div class="wstrip"><a class="ws-item" href="week-1.html">1</a><a class="ws-item" href="week-2.html">2</a><a class="ws-item" href="week-3.html">3</a><a class="ws-item" href="week-4.html">4</a><a class="ws-item" href="week-5.html">5</a><a class="ws-item is-cur" href="week-6.html">6</a><a class="ws-item" href="week-7.html">7</a><a class="ws-item" href="week-8.html">8</a><a class="ws-item" href="week-9.html">9</a><a class="ws-item" href="week-10.html">10</a><a class="ws-item" href="week-11.html">11</a><a class="ws-item" href="week-12.html">12</a><a class="ws-item" href="week-13.html">13</a><a class="ws-item" href="week-14.html">14</a><a class="ws-item" href="week-15.html">15</a><a class="ws-item" href="week-16.html">16</a><a class="ws-item" href="week-17.html">17</a></div>
++    <div data-module-nav data-week="6"></div>
+     <a class="nav-btn nav-next" href="week-7.html">Week 7 &rarr;</a>
+   </nav>
+ 
+@@ -208,16 +208,11 @@
+       <ul class="hy"><li>Skull &amp; spine landmarks</li><li>Appendicular skeleton: pectoral girdle &amp; upper limb</li><li>Pelvic girdle &amp; lower limb</li><li>Joint classification</li></ul>
+     </section>
+ 
+-    <section class="card">
++    <section class="card" data-week-days="6">
+       <h2><span class="n">Your two class days</span>In class &amp; lab</h2>
+-      <div class="days" data-track="mw">
+-        <div class="day"><div class="day-date">Mon Sep 21</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Spine Walk-Through (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Upper Extremity</p></div></div>
+-        <div class="day"><div class="day-date">Wed Sep 23</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> <strong>TBL 3</strong> &middot; Bone Tissue, Cartilage &amp; Microanatomy</p><p class="day-line"><span class="day-k">Lab</span> Lower Extremity</p></div></div>
+-      </div>
+-      <div class="days" data-track="tr" hidden>
+-        <div class="day"><div class="day-date">Tue Sep 22</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> <strong>TBL 3</strong> &middot; Bone Tissue, Cartilage &amp; Microanatomy</p><p class="day-line"><span class="day-k">Lab</span> Upper Extremity</p></div></div>
+-        <div class="day"><div class="day-date">Thu Sep 24</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Kahoot Review: Bone</p><p class="day-line"><span class="day-k">Lab</span> Lower Extremity</p></div></div>
+-      </div>
++      <noscript>
++        <p class="day-line">Your class days for this week are listed in your syllabus. <a href="syllabus-class1.html" target="_top">Class 1 syllabus</a>, <a href="syllabus-class2.html" target="_top">Class 2 syllabus</a>, <a href="syllabus-class3.html" target="_top">Class 3 syllabus</a>.</p>
++      </noscript>
+     </section>
+ 
+     <section class="card">
+@@ -248,6 +243,13 @@
+ </div>
+ 
+ <script src="week-links.js"></script>
++<!-- Schedule comes from schedule-fall2026.js. Do not hardcode dates in this file. -->
++<script src="schedule-fall2026.js"></script>
++<script src="week-schedule.js"></script>
++  <script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ <script>
+ (function(){
+   var N=6;
+diff --git a/week-7.html b/week-7.html
+index eba7b19..f08f4b7 100644
+--- a/week-7.html
++++ b/week-7.html
+@@ -178,7 +178,7 @@
+ 
+   <nav class="weeknav" aria-label="Week navigation">
+     <a class="nav-btn" href="week-6.html">&larr; Week 6</a>
+-    <div class="wstrip"><a class="ws-item" href="week-1.html">1</a><a class="ws-item" href="week-2.html">2</a><a class="ws-item" href="week-3.html">3</a><a class="ws-item" href="week-4.html">4</a><a class="ws-item" href="week-5.html">5</a><a class="ws-item" href="week-6.html">6</a><a class="ws-item is-cur" href="week-7.html">7</a><a class="ws-item" href="week-8.html">8</a><a class="ws-item" href="week-9.html">9</a><a class="ws-item" href="week-10.html">10</a><a class="ws-item" href="week-11.html">11</a><a class="ws-item" href="week-12.html">12</a><a class="ws-item" href="week-13.html">13</a><a class="ws-item" href="week-14.html">14</a><a class="ws-item" href="week-15.html">15</a><a class="ws-item" href="week-16.html">16</a><a class="ws-item" href="week-17.html">17</a></div>
++    <div data-module-nav data-week="7"></div>
+     <a class="nav-btn nav-next" href="week-8.html">Week 8 &rarr;</a>
+   </nav>
+ 
+@@ -208,16 +208,11 @@
+       <ul class="hy"><li>Synovial joints &amp; movements</li><li><strong>Exam 2</strong>: bone, cartilage, axial &amp; appendicular skeleton</li></ul>
+     </section>
+ 
+-    <section class="card">
++    <section class="card" data-week-days="7">
+       <h2><span class="n">Your two class days</span>In class &amp; lab</h2>
+-      <div class="days" data-track="mw">
+-        <div class="day"><div class="day-date">Mon Sep 28</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Kahoot Review: Bone</p><p class="day-line"><span class="day-k">Lab</span> Lower Extremity</p></div></div>
+-        <div class="day day-exam"><div class="day-date">Wed Sep 30</div><div class="day-body"><span class="day-tag tag-exam">Exam day</span><p class="day-line"><strong>Exam 2</strong>, lecture exam + lab practical. Doors lock at start.</p></div></div>
+-      </div>
+-      <div class="days" data-track="tr" hidden>
+-        <div class="day day-exam"><div class="day-date">Tue Sep 29</div><div class="day-body"><span class="day-tag tag-exam">Exam day</span><p class="day-line"><strong>Exam 2</strong>, lecture exam + lab practical. Doors lock at start.</p></div></div>
+-        <div class="day"><div class="day-date">Thu Oct 1</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Exam 2 rebuttals + Heart Lecture &amp; Cardiac Conduction (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Thoracic Anatomy (Heart); Blood Vessel Histology</p></div></div>
+-      </div>
++      <noscript>
++        <p class="day-line">Your class days for this week are listed in your syllabus. <a href="syllabus-class1.html" target="_top">Class 1 syllabus</a>, <a href="syllabus-class2.html" target="_top">Class 2 syllabus</a>, <a href="syllabus-class3.html" target="_top">Class 3 syllabus</a>.</p>
++      </noscript>
+     </section>
+ 
+     <section class="card">
+@@ -248,6 +243,13 @@
+ </div>
+ 
+ <script src="week-links.js"></script>
++<!-- Schedule comes from schedule-fall2026.js. Do not hardcode dates in this file. -->
++<script src="schedule-fall2026.js"></script>
++<script src="week-schedule.js"></script>
++  <script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ <script>
+ (function(){
+   var N=7;
+diff --git a/week-8.html b/week-8.html
+index 68b3f9c..490621d 100644
+--- a/week-8.html
++++ b/week-8.html
+@@ -178,7 +178,7 @@
+ 
+   <nav class="weeknav" aria-label="Week navigation">
+     <a class="nav-btn" href="week-7.html">&larr; Week 7</a>
+-    <div class="wstrip"><a class="ws-item" href="week-1.html">1</a><a class="ws-item" href="week-2.html">2</a><a class="ws-item" href="week-3.html">3</a><a class="ws-item" href="week-4.html">4</a><a class="ws-item" href="week-5.html">5</a><a class="ws-item" href="week-6.html">6</a><a class="ws-item" href="week-7.html">7</a><a class="ws-item is-cur" href="week-8.html">8</a><a class="ws-item" href="week-9.html">9</a><a class="ws-item" href="week-10.html">10</a><a class="ws-item" href="week-11.html">11</a><a class="ws-item" href="week-12.html">12</a><a class="ws-item" href="week-13.html">13</a><a class="ws-item" href="week-14.html">14</a><a class="ws-item" href="week-15.html">15</a><a class="ws-item" href="week-16.html">16</a><a class="ws-item" href="week-17.html">17</a></div>
++    <div data-module-nav data-week="8"></div>
+     <a class="nav-btn nav-next" href="week-9.html">Week 9 &rarr;</a>
+   </nav>
+ 
+@@ -208,16 +208,11 @@
+       <ul class="hy"><li>Heart chambers, valves &amp; great vessels</li><li>Cardiac conduction system</li><li>Blood-vessel histology</li><li>Skeletal-muscle microanatomy &amp; the sarcomere</li></ul>
+     </section>
+ 
+-    <section class="card">
++    <section class="card" data-week-days="8">
+       <h2><span class="n">Your two class days</span>In class &amp; lab</h2>
+-      <div class="days" data-track="mw">
+-        <div class="day"><div class="day-date">Mon Oct 5</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Exam 2 rebuttals + Heart Lecture &amp; Cardiac Conduction (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Thoracic Anatomy (Heart); Blood Vessel Histology</p></div></div>
+-        <div class="day"><div class="day-date">Wed Oct 7</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Muscle Microanatomy &amp; Sarcomere (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Muscle Microanatomy &amp; Sarcomere</p></div></div>
+-      </div>
+-      <div class="days" data-track="tr" hidden>
+-        <div class="day"><div class="day-date">Tue Oct 6</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Muscle Microanatomy &amp; Sarcomere (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Muscle Microanatomy &amp; Sarcomere</p></div></div>
+-        <div class="day"><div class="day-date">Thu Oct 8</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> <strong>TBL 4</strong> &middot; Heart Anatomy</p><p class="day-line"><span class="day-k">Lab</span> Muscles of the Face, Chest &amp; Back</p></div></div>
+-      </div>
++      <noscript>
++        <p class="day-line">Your class days for this week are listed in your syllabus. <a href="syllabus-class1.html" target="_top">Class 1 syllabus</a>, <a href="syllabus-class2.html" target="_top">Class 2 syllabus</a>, <a href="syllabus-class3.html" target="_top">Class 3 syllabus</a>.</p>
++      </noscript>
+     </section>
+ 
+     <section class="card">
+@@ -248,6 +243,13 @@
+ </div>
+ 
+ <script src="week-links.js"></script>
++<!-- Schedule comes from schedule-fall2026.js. Do not hardcode dates in this file. -->
++<script src="schedule-fall2026.js"></script>
++<script src="week-schedule.js"></script>
++  <script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ <script>
+ (function(){
+   var N=8;
+diff --git a/week-9.html b/week-9.html
+index 48a8321..a01ed92 100644
+--- a/week-9.html
++++ b/week-9.html
+@@ -178,7 +178,7 @@
+ 
+   <nav class="weeknav" aria-label="Week navigation">
+     <a class="nav-btn" href="week-8.html">&larr; Week 8</a>
+-    <div class="wstrip"><a class="ws-item" href="week-1.html">1</a><a class="ws-item" href="week-2.html">2</a><a class="ws-item" href="week-3.html">3</a><a class="ws-item" href="week-4.html">4</a><a class="ws-item" href="week-5.html">5</a><a class="ws-item" href="week-6.html">6</a><a class="ws-item" href="week-7.html">7</a><a class="ws-item" href="week-8.html">8</a><a class="ws-item is-cur" href="week-9.html">9</a><a class="ws-item" href="week-10.html">10</a><a class="ws-item" href="week-11.html">11</a><a class="ws-item" href="week-12.html">12</a><a class="ws-item" href="week-13.html">13</a><a class="ws-item" href="week-14.html">14</a><a class="ws-item" href="week-15.html">15</a><a class="ws-item" href="week-16.html">16</a><a class="ws-item" href="week-17.html">17</a></div>
++    <div data-module-nav data-week="9"></div>
+     <a class="nav-btn nav-next" href="week-10.html">Week 10 &rarr;</a>
+   </nav>
+ 
+@@ -208,16 +208,11 @@
+       <ul class="hy"><li>Pathway of blood through the heart</li><li>Muscles of the face, chest &amp; back</li><li>Upper-arm &amp; forearm muscles + NAV (nerves, arteries, veins)</li></ul>
+     </section>
+ 
+-    <section class="card">
++    <section class="card" data-week-days="9">
+       <h2><span class="n">Your two class days</span>In class &amp; lab</h2>
+-      <div class="days" data-track="mw">
+-        <div class="day"><div class="day-date">Mon Oct 12</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> <strong>TBL 4</strong> &middot; Heart Anatomy</p><p class="day-line"><span class="day-k">Lab</span> Muscles of the Face, Chest &amp; Back</p></div></div>
+-        <div class="day"><div class="day-date">Wed Oct 14</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Blood Cell Interactive Lecture (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Upper Arm &amp; Anterior Forearm (NAV)</p></div></div>
+-      </div>
+-      <div class="days" data-track="tr" hidden>
+-        <div class="day day-off"><div class="day-date">Tue Oct 13</div><div class="day-body"><span class="day-tag tag-off">No class</span><p class="day-line">Professional Development, no class</p></div></div>
+-        <div class="day"><div class="day-date">Thu Oct 15</div><div class="day-body"><p class="day-line"><span class="day-k">In class</span> Blood Cell Interactive Lecture (iCheck)</p><p class="day-line"><span class="day-k">Lab</span> Upper Arm &amp; Anterior Forearm (NAV)</p></div></div>
+-      </div>
++      <noscript>
++        <p class="day-line">Your class days for this week are listed in your syllabus. <a href="syllabus-class1.html" target="_top">Class 1 syllabus</a>, <a href="syllabus-class2.html" target="_top">Class 2 syllabus</a>, <a href="syllabus-class3.html" target="_top">Class 3 syllabus</a>.</p>
++      </noscript>
+     </section>
+ 
+     <section class="card">
+@@ -248,6 +243,13 @@
+ </div>
+ 
+ <script src="week-links.js"></script>
++<!-- Schedule comes from schedule-fall2026.js. Do not hardcode dates in this file. -->
++<script src="schedule-fall2026.js"></script>
++<script src="week-schedule.js"></script>
++  <script src="module-nav.js"></script>
++<script src="section-sync.js"></script>
++<script src="course-links.js"></script>
++<script src="hootie.js"></script>
+ <script>
+ (function(){
+   var N=9;
+diff --git a/week-links.js b/week-links.js
+new file mode 100644
+index 0000000..d17fcd5
+--- /dev/null
++++ b/week-links.js
+@@ -0,0 +1,51 @@
++/* ============================================================
++   BIO 004 Human Anatomy, Fall 2026
++   week-links.js
++
++   All 17 week pages load this file. It was missing from the
++   repo, so every week page was firing a 404 on load and the
++   "Concept lecture" and "Guided worksheet" buttons fell through
++   to their disabled "Coming soon" state.
++
++   This is a STUB. The structure is right, the URLs are not
++   filled in. Nothing here is invented: every week is left empty
++   so the pages behave exactly as they did before, minus the 404.
++
++   TO FILL IN
++   ----------
++   Per week, add either or both keys:
++
++     lecture    URL of the concept video for that week
++                (these live in the new-build-bio4-solano repo)
++     worksheet  URL of the guided worksheet for that week
++                (these live in the A-P-lecture-core repo)
++
++   Example:
++
++     3: { lecture:   'https://drsrennie-stack.github.io/new-build-bio4-solano/w3-histology.html',
++          worksheet: 'https://drsrennie-stack.github.io/A-P-lecture-core/w3-worksheet.html' },
++
++   A week with no entry, or an entry missing one of the two keys,
++   renders that button as "Coming soon" and disables it. That is
++   the intended fallback, so partial fill-in is safe.
++   ============================================================ */
++
++window.BIO004_WEEK_LINKS = {
++   1: {},   /* Intro to Anatomy, cells, histology            */
++   2: {},   /* TBL 1 Cell Anatomy, connective tissue         */
++   3: {},   /* TBL 2 Histology, integumentary                */
++   4: {},   /* Exam 1                                        */
++   5: {},   /* Bone tissue, skull                            */
++   6: {},   /* Spine, upper and lower extremity, TBL 3       */
++   7: {},   /* Exam 2                                        */
++   8: {},   /* Heart, muscle microanatomy                    */
++   9: {},   /* TBL 4 Heart, blood                            */
++  10: {},   /* TBL 5 Blood, Exam 3                           */
++  11: {},   /* Respiratory, endocrine                        */
++  12: {},   /* TBL 6 Respiratory, GI map                     */
++  13: {},   /* TBL 7 GI System                               */
++  14: {},   /* Exam 4, renal                                 */
++  15: {},   /* Renal, reproductive                           */
++  16: {},   /* TBL 8 Renal, CNS                              */
++  17: {}    /* TBL 9 Cranial nerves, Exam 5                  */
++};
+diff --git a/week-schedule.js b/week-schedule.js
+new file mode 100644
+index 0000000..9d76f96
+--- /dev/null
++++ b/week-schedule.js
+@@ -0,0 +1,172 @@
++/* ============================================================
++   BIO 004 Human Anatomy, Fall 2026
++   week-schedule.js
++
++   Renders the "Your two class days" block on a week page from
++   window.BIO004_SESSIONS (defined in schedule-fall2026.js).
++
++   WHY THIS EXISTS
++   ---------------
++   Every week page used to hardcode its own two dates per track,
++   68 date strings across 17 files. Changing the term schedule
++   meant editing all of them by hand and hoping none drifted.
++   Now the dates live in one file and the pages read them.
++
++   HOW TO WIRE A PAGE
++   ------------------
++   1. Give the wrapper the week number:
++
++        <section class="card" data-week-days="5">
++
++   2. Load, in this order, before the page's own inline script:
++
++        <script src="schedule-fall2026.js"></script>
++        <script src="week-schedule.js"></script>
++
++   That is all. This script builds the two <div class="days">
++   containers itself, with exactly the markup the pages used
++   before, so the existing CSS and the existing section-picker
++   script keep working untouched. The picker still toggles
++   [data-track] the same way it always did.
++
++   FAILURE BEHAVIOUR
++   -----------------
++   If the schedule file is missing or the week has no sessions,
++   this leaves whatever static markup is already inside the
++   wrapper alone. A page that ships with its old hardcoded block
++   as a fallback therefore degrades to that block rather than
++   rendering empty.
++   ============================================================ */
++
++(function () {
++  'use strict';
++
++  var DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
++  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
++             'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
++
++  /* Parse as local time, not UTC. new Date('2026-09-14') is
++     parsed as midnight UTC and renders as the previous day for
++     anyone west of Greenwich, which is everyone here. */
++  function parseISO(iso) {
++    var p = String(iso).split('-');
++    return new Date(+p[0], +p[1] - 1, +p[2]);
++  }
++
++  function label(iso) {
++    var d = parseISO(iso);
++    return DOW[d.getDay()] + ' ' + MON[d.getMonth()] + ' ' + d.getDate();
++  }
++
++  function el(tag, cls, html) {
++    var n = document.createElement(tag);
++    if (cls) n.className = cls;
++    if (html != null) n.innerHTML = html;
++    return n;
++  }
++
++  function dayNode(s) {
++    var cls = 'day' + (s.kind === 'exam' ? ' day-exam'
++                     : s.kind === 'off'  ? ' day-off' : '');
++    var day = el('div', cls);
++    day.appendChild(el('div', 'day-date', label(s.date)));
++
++    var body = el('div', 'day-body');
++
++    if (s.kind === 'exam' || s.kind === 'off') {
++      var tagCls = s.kind === 'exam' ? 'day-tag tag-exam' : 'day-tag tag-off';
++      body.appendChild(el('span', tagCls, s.tag || (s.kind === 'exam' ? 'Exam day' : 'No class')));
++      /* text is an array, one entry per paragraph. Week 14's exam
++         row carries a second paragraph flagging the Monday. */
++      var paras = Array.isArray(s.text) ? s.text : (s.text ? [s.text] : []);
++      paras.forEach(function (t) { body.appendChild(el('p', 'day-line', t)); });
++    } else {
++      (s.lines || []).forEach(function (pair) {
++        var p = el('p', 'day-line');
++        p.appendChild(el('span', 'day-k', pair[0]));
++        p.insertAdjacentHTML('beforeend', ' ' + pair[1]);
++        body.appendChild(p);
++      });
++    }
++
++    day.appendChild(body);
++    return day;
++  }
++
++  /* Section to track. Must stay in step with the picker script
++     on the week pages, which uses the same key and the same
++     three section ids. mw is Class 1, both tr-* are Classes 2
++     and 3, which share a schedule and differ only by time. */
++  var KEY = 'bio004-section';
++  var SEC_TRACK = { 'mw': 'mw', 'tr-am': 'tr', 'tr-eve': 'tr' };
++
++  function currentTrack() {
++    var sec = null;
++    try {
++      var m = location.search.match(/[?&]sec=([^&#]+)/);
++      if (m) sec = decodeURIComponent(m[1]);
++    } catch (e) {}
++    if (!SEC_TRACK[sec]) {
++      try { sec = localStorage.getItem(KEY); } catch (e) { sec = null; }
++    }
++    return SEC_TRACK[sec] || 'mw';
++  }
++
++  function render() {
++    var host = document.querySelector('[data-week-days]');
++    if (!host) return;
++
++    var sessions = window.BIO004_SESSIONS;
++    if (!sessions) return;                    /* leave fallback markup in place */
++
++    var wk = parseInt(host.getAttribute('data-week-days'), 10);
++    if (!wk) return;
++
++    /* Build both tracks first. Only replace the existing markup
++       once we know we have something real to put there. */
++    var built = [];
++    ['mw', 'tr'].forEach(function (track) {
++      var rows = (sessions[track] || []).filter(function (s) { return s.wk === wk; });
++      if (!rows.length) return;
++
++      var box = el('div', 'days');
++      box.setAttribute('data-track', track);
++      rows.forEach(function (s) { box.appendChild(dayNode(s)); });
++      built.push(box);
++    });
++
++    if (!built.length) return;                /* leave fallback markup in place */
++
++    /* Work out which track to show. The page's own picker script
++       does this too, but it runs at parse time, before these
++       blocks exist, so its first apply() cannot reach them. The
++       renderer therefore resolves the section itself. Same key,
++       same ?sec= override, same default, so the two agree. */
++    var showing = currentTrack();
++
++    host.querySelectorAll('.days[data-track]').forEach(function (n) { n.remove(); });
++
++    built.forEach(function (box) {
++      box.hidden = box.getAttribute('data-track') !== showing;
++      host.appendChild(box);
++    });
++
++    /* Switching section swaps the visible schedule with no visual
++       transition and, until now, no announcement. Marking the
++       block polite means a screen reader reads the new class days
++       after the student presses a section button.
++
++       Set AFTER the first render on purpose. A live region that
++       already contains content when it is populated announces the
++       whole block on page load, which is noise. */
++    if (!host.hasAttribute('aria-live')) {
++      window.setTimeout(function () { host.setAttribute('aria-live', 'polite'); }, 0);
++    }
++  }
++
++  if (document.readyState === 'loading') {
++    document.addEventListener('DOMContentLoaded', render);
++  } else {
++    render();
++  }
++})();
