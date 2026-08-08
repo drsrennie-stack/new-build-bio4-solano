@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exam Modules · BIO 004 Human Anatomy · Fall 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#08101F; --navy-darkest:#08101F; --navy-tint:#ECEFF4;
+    --terra:#8B1D1D; --terra-dark:#6B1616; --gold:#DCB45C; --gold-soft:#DCB45C;
+    --offwhite:#FAFAF9; --gray:#6B7280;
+    --radius:8px;
+    --shadow-lift:0 2px 4px rgba(11,21,48,.05), 0 12px 26px -8px rgba(11,21,48,.18);
+    --shadow-lift-strong:0 4px 8px rgba(11,21,48,.07), 0 22px 44px -10px rgba(11,21,48,.28);
+    --font-display:'Plus Jakarta Sans',-apple-system,sans-serif;
+    --font-eyebrow:'DM Sans',-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:var(--font-display);color:var(--navy);background:var(--offwhite);line-height:1.55;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1000px;margin:0 auto;padding:28px 20px 56px;}
+  .site-header{background:#fff;border-bottom:.5px solid rgba(11,21,48,.10);padding:20px max(20px,4vw);}
+  .site-header-inner{max-width:1000px;margin:0 auto;display:flex;align-items:center;gap:14px;}
+  .site-header svg{height:46px;width:auto;}
+  .logo-title{font-family:var(--font-display);font-size:1.45rem;font-weight:800;letter-spacing:-.02em;line-height:1;}
+  .logo-title .a{color:var(--terra-dark);}
+  .logo-sub{font-family:var(--font-eyebrow);font-size:.66rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);opacity:.72;margin-top:3px;}
+
+  .cover{background:var(--navy-darkest);border-radius:var(--radius);padding:clamp(22px,4vw,38px);color:#fff;border-top:3px solid #1E2A47;}
+  .cover-eyebrow{font-family:var(--font-eyebrow);font-size:.74rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-soft);margin:0 0 10px;}
+  .cover-title{font-family:var(--font-display);font-weight:800;font-size:clamp(26px,4.6vw,40px);line-height:1.04;letter-spacing:-.02em;margin:0;}
+  .cover-title span{color:var(--terra);}
+  .cover-tag{font-size:clamp(14px,1.5vw,17px);opacity:.9;margin:12px 0 0;max-width:60ch;}
+
+  .whatschanged{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid rgba(11,21,48,.05);border-radius:14px;box-shadow:var(--shadow-lift);padding:16px 20px;margin-top:18px;}
+  .whatschanged .wc-badge{flex:0 0 auto;width:44px;height:44px;border-radius:12px;background:linear-gradient(145deg,#DCB45C,#DCB45C);color:#08101F;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.3rem;box-shadow:0 8px 16px -5px rgba(201,161,74,.5);}
+  .whatschanged h2{font-size:1.05rem;margin:0 0 3px;font-weight:800;}
+  .whatschanged p{margin:0;font-size:.92rem;color:var(--navy);opacity:.85;}
+  .whatschanged b{color:var(--terra-dark);}
+
+  .modules{display:flex;flex-direction:column;gap:16px;margin-top:24px;}
+  .mod{background:#fff;border:1px solid rgba(11,21,48,.05);border-radius:16px;box-shadow:var(--shadow-lift);padding:20px 22px;transition:transform .18s ease,box-shadow .18s ease;}
+  .mod:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift-strong);}
+  .mod.changed{border:1.5px solid var(--gold);}
+  .mod-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:14px;}
+  .mod-num{flex:0 0 auto;width:46px;height:46px;border-radius:12px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:1.3rem;box-shadow:0 8px 16px -5px rgba(11,21,48,.4);}
+  .mod.changed .mod-num{background:linear-gradient(145deg,#A0452F,#6B1616);}
+  .mod-title{font-family:var(--font-display);font-weight:800;font-size:1.25rem;line-height:1.1;}
+  .mod-exam{font-family:var(--font-eyebrow);font-weight:700;font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-dark);margin-top:4px;}
+  .mod-dates{margin-left:auto;text-align:right;font-size:.82rem;color:var(--navy);opacity:.8;line-height:1.5;}
+  .mod-dates b{color:var(--navy);opacity:1;}
+  .changed-pill{display:inline-block;font-family:var(--font-eyebrow);font-weight:700;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;background:var(--gold);color:#08101F;padding:3px 9px;border-radius:999px;margin-left:8px;vertical-align:middle;}
+  .systems{display:flex;flex-wrap:wrap;gap:8px;}
+  .sys{display:inline-flex;align-items:center;gap:7px;background:var(--offwhite);border:1px solid var(--navy-tint);border-radius:999px;padding:6px 13px;font-size:.88rem;font-weight:600;}
+  .sys.new{background:#FBF4E4;border-color:var(--gold);}
+  .sys .n{font-family:var(--font-eyebrow);font-weight:700;font-size:.66rem;color:var(--terra-dark);background:#fff;border:1px solid var(--navy-tint);border-radius:999px;padding:1px 7px;}
+  .mod-foot{margin-top:12px;font-size:.82rem;color:var(--navy);opacity:.7;font-weight:600;}
+
+  footer{background:var(--navy-darkest);color:var(--navy-tint);text-align:center;padding:1.8rem 1.5rem 1.6rem;border-top:2px solid #1E2A47;border-radius:var(--radius);margin-top:36px;}
+  footer .by{font-family:var(--font-display);font-weight:700;color:#fff;font-size:1rem;margin-bottom:.15rem;}
+  footer .role{font-size:.82rem;}
+  .note{font-size:.82rem;color:var(--navy);opacity:.65;margin-top:18px;;}
+  @media (prefers-reduced-motion: reduce){*{transition-duration:.01ms !important;}}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="site-header-inner">
+    <svg viewBox="40 10 125 148" role="img" aria-hidden="true" focusable="false">
+      <g transform="translate(0,18)">
+        <g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#08101F"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#08101F"/></g>
+        <g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#6B1616"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#6B1616"/></g>
+        <g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#DCB45C"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#DCB45C"/></g>
+      </g>
+    </svg>
+    <span>
+      <span class="logo-title">Human <span class="a">Anatomy</span></span>
+      <span class="logo-sub" style="display:block">BIO 004 &middot; Solano Community College</span>
+    </span>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="cover">
+    <p class="cover-eyebrow">BIO 004 &middot; Fall 2026 &middot; Exam Modules</p>
+    <h1 class="cover-title">Five modules, <span>five exams</span></h1>
+    <p class="cover-tag">Each exam covers one module. Updated so Renal and Reproductive finish Module 4, leaving Module 5 as a focused Nervous System final, more room for neuro, which matters most with the Thanksgiving days lost.</p>
+  </section>
+
+  <div class="whatschanged">
+    <span class="wc-badge">&#8635;</span>
+    <div>
+      <h2>What changed</h2>
+      <p><b>Renal (Urinary)</b> and <b>Reproductive</b> moved from Module 5 into the end of <b>Module 4</b>. <b>Module 5</b> is now the Nervous System only, the largest block (43 competencies) gets its own final.</p>
+    </div>
+  </div>
+
+  <div class="modules" id="mods"></div>
+
+  <p class="note">Exam dates: Class 1 (Mon/Wed) sits its exams on Wednesday; Class 2 &amp; 3 (Tue/Thu) on Tuesday or Thursday. Competency counts are from competenciesfall2026.js. If your fixed exam dates place Renal/Reproductive teaching after Exam 4, tell me and I'll shift the teaching weeks or the exam date in the dated calendar.</p>
+
+  <footer>
+    <div class="by">Dr. Sharilyn Rennie</div>
+    <div class="role">Professor of Anatomy &amp; Physiology</div>
+  </footer>
+</div>
+
+<script>
+  const MODULES=[
+    {n:1,title:'Foundations to Integumentary',exam:'Exam 1',mw:'Wed · Sep 9',tr:'Tue · Sep 8',changed:false, systems:[['Foundations',10],['Cells & Tissues',11],['Integumentary',4]]}, {n:2,title:'Skeletal & Joints',exam:'Exam 2',mw:'Wed · Sep 30',tr:'Tue · Sep 29',changed:false, systems:[['Skeletal',24],['Joints',6]]}, {n:3,title:'Cardiovascular, Muscle & Blood',exam:'Exam 3',mw:'Wed · Oct 21',tr:'Thu · Oct 22',changed:false, systems:[['Cardiovascular',16],['Muscular',19],['Blood',4],['Regional Vessels & Nerves',4]]}, {n:4,title:'Organ Systems',exam:'Exam 4',mw:'Mon · Nov 16',tr:'Tue · Nov 17',changed:true, systems:[['Respiratory',8],['Lymphatic & Immune',4],['Digestive',17],['Endocrine',5],['Urinary (Renal)',8,true],['Reproductive',13,true]]}, {n:5,title:'Nervous System',exam:'Exam 5 · Final',mw:'Wed · Dec 9',tr:'Thu · Dec 10',changed:true, systems:[['Nervous System',43]]}, ];
+  function count(m){return m.systems.reduce((s,x)=>s+x[1],0);}
+  document.getElementById('mods').innerHTML=MODULES.map(function(m){
+    var sys=m.systems.map(function(s){return '<span class="sys'+(s[2]?' new':'')+'">'+s[0]+'<span class="n">'+s[1]+'</span></span>';}).join('');
+    return '<div class="mod'+(m.changed?' changed':'')+'">'+
+      '<div class="mod-head"><span class="mod-num">'+m.n+'</span>'+
+        '<span><span class="mod-title">Module '+m.n+', '+m.title+(m.changed?'<span class="changed-pill">Updated</span>':'')+'</span>'+
+        '<span class="mod-exam">'+m.exam+'</span></span>'+
+        '<span class="mod-dates"><b>M/W</b> '+m.mw+'<br><b>T/R</b> '+m.tr+'</span>'+
+      '</div>'+
+      '<div class="systems">'+sys+'</div>'+
+      '<div class="mod-foot">'+count(m)+' competencies</div>'+
+    '</div>';
+  }).join('');
+</script>
+</body>
+</html>

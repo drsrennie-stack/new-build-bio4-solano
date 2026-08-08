@@ -7,59 +7,65 @@ cd /path/to/Fall-2026-Anatomy
 cp /path/to/fall2026-updates/*.html .
 cp /path/to/fall2026-updates/*.js .
 cp /path/to/fall2026-updates/compliance-notes.md .
-git add -A && git commit -m "Front door, pick-once, shared weeks, Hootie" && git push
+git add -A && git commit -m "Front door, pick-once, shared weeks, one navy, Hootie" && git push
 ```
 
-Do not copy `PUSH-ME.md`, `REUSE-INVENTORY.md`, `all-changes.diff` or `schedule-audit-report.md` into the repo.
+Do not copy `PUSH-ME.md`, `all-changes.diff` or `schedule-audit-report.md` into the repo.
 
 ---
 
 ## The front door is `welcome.html`
 
-**Point the Canvas iframe at `welcome.html`.** It already has the greeting, the aurora, the section picker, the walkthrough, the welcome-back screen and the module and week hubgate, all designed as one piece.
+**Point the Canvas iframe at `welcome.html`.** `canvas-home.html` is now a redirect to it, kept so any existing link survives. Safe to delete if nothing points at it.
 
-`canvas-home.html` is now a redirect to it. It briefly had its own front door; yours is better. Kept as a redirect rather than deleted so any existing link survives. Safe to delete if nothing points at it.
+## One very dark navy
+
+The site had two structural darks: `--navy` at `#08101F` and a second token `--dark` at `#060A18` used for footers in 21 files. Side by side the footer read as black and the body read as navy.
+
+Two gradients on the welcome page made it worse: the header band was flat `#08101F` while the panel under it was a gradient ending at `#152139`, and the tour panel ended at `#1E2A47`. That is the black-over-navy you spotted.
+
+Now: both gradients are flat `var(--navy)`, and `--dark` resolves to `#08101F`. The token name is kept so anything referencing `var(--dark)` still works. **43 occurrences across 21 files.** Verified that welcome, index, class1, start-here and syllabus-class1 each report exactly one dark structural background.
+
+Deliberately left alone: `#1E2A47` on chips and the 4px divider, which are meant to read as separate from the surface behind them; the tour modal scrim, since a scrim matching its surface would not dim anything; and the Mastery OS `.mode-top` colours, where purple, red, teal, gold and green are mode identities rather than structural navy.
 
 ## Pick once, never asked again
 
-This was genuinely broken. `index.html` showed three class cards, each a plain link to `class1/2/3.html`. Clicking "Open my class" navigated but **saved nothing**, so a student was then asked again by welcome, again by a week page, and again by Mastery OS.
+`index.html`'s class cards were plain links that **saved nothing**, so a student who picked their class was asked again by welcome, again by a week page, and again by Mastery OS.
 
-`section-pick.js` closes it with two attributes:
+`section-pick.js` fixes it with `data-pick-sec` on anything clickable that means "this is my section", and `data-is-sec` on a page that IS one section's page so a direct link or bookmark records it too. Verified end to end.
 
-- `data-pick-sec="mw"` on anything clickable that means "this is my section". Writes before navigating.
-- `data-is-sec="tr-eve"` on the body of a page that IS one section's page. Stamps on arrival, so a direct link or bookmark to `class3.html` records Class 3.
-
-Verified end to end: pick any card on `index.html`, then welcome, a week page, Mastery OS and the calendar all know the section and none of them ask again.
-
-Also restored the lecture rooms on `index.html`, which listed no lecture room at all for any section. VC 118 and VC 212 are back.
+Also restored the lecture rooms on `index.html`, which named no lecture room for any section.
 
 ## Shared weeks, derived not guessed
 
-A week is shared with the next module when it is the closing module's last week, that module's exam sits in it, **and at least one class session comes after the exam that week**.
-
-That third condition is what makes it right. Run against your sessions:
+A week is shared with the next module when it is the closing module's last week, that module's exam sits in it, **and at least one session comes after the exam that week**.
 
 | Week | Verdict | Why |
 |---|---|---|
-| 4 | **Shared**, M1 into M2 | Exam 1, then Thu Sep 10 is rebuttals plus Long Bone. That is Module 2. |
-| 7 | **Shared**, M2 into M3 | Exam 2, then Thu Oct 1 is rebuttals plus the Heart lecture. That is Module 3. |
-| 10 | Not shared | Exam 3 is the last session of the week on both tracks. |
-| 14 | Not shared | Exam 4 does not close Module 4, which runs to week 15, and the sessions after it are still renal. |
-| 17 | Not shared | Exam 5 is the last session of the term. |
+| 4 | **Shared**, M1 into M2 | Exam 1, then Thu Sep 10 is rebuttals plus Long Bone |
+| 7 | **Shared**, M2 into M3 | Exam 2, then Thu Oct 1 is rebuttals plus the Heart lecture |
+| 10 | Not shared | Exam 3 is the last session of the week on both tracks |
+| 14 | Not shared | Exam 4 does not close Module 4, which runs to week 15 |
+| 17 | Not shared | Exam 5 is the last session of the term |
 
-**One consequence to check:** Module 3 now starts at week 7, where your syllabus module table says week 8. The table is a summary and cannot express a mid-week changeover. If you want the syllabus to match, that cell needs updating.
+A shared week appears on **both** tabs: "Exam 1" in the module it closes, "Starts here" in the module it opens.
 
-A shared week is drawn on **both** module tabs and reads differently on each: "Exam 1" in the module it closes, "Starts here" in the module it opens, with a line underneath explaining why it is there. Same in the welcome page hubgate and in `module-nav.js`, from the same ranges, so they cannot drift.
+**Check this:** Module 3 now starts at week 7, where your syllabus module table says week 8. The table cannot express a mid-week changeover. That cell needs updating to match.
 
 ## Hootie, merged
 
-There were two. `welcome.html` knew the course, the week pages knew the schedule. Now one weighted intent matcher over one answer bank, using your matcher and your copy with live dates folded in.
+One weighted intent matcher over one answer bank: your matcher and copy, with live dates folded in. The gain is the `struggle` intent — "I am drowning and so far behind" now gets the Gap Finder, a 3-Day Cram, Study With Me and the Success Sprint, ending with their real next exam date.
 
-The gain: **the `struggle` intent**. "I am drowning and so far behind" used to get a refusal about anatomy content. It now gets the Gap Finder, a 3-Day Cram, Study With Me, and the Success Sprint after Exam 1, ending with their actual next exam date.
+## Mastery OS was running on zero competencies
 
-## Still open
+Both pages loaded `competencies.js`, which does not exist. They now load `competenciesfall2026.js`. 196 competencies, 16 body systems. Nothing deleted.
 
-1. **Sage and cream are live on all three section home pages.** `.week-head{background:#8FA98A}` is a sage band on every week block; `#FBF4E4`, `#FDF6E9` and `#f7ecd3` are cream tints on today, holidays and hover. Both are on your no-list, as are pastel tints and shaded row backgrounds. Not fixed yet.
-2. `welcome.html` still has its own inline Hootie. One duplicate left.
-3. `icon.svg` favicon 404 on both Mastery OS pages.
-4. `week-1-mw.html` looks like an orphan.
+---
+
+## Parked, at your call
+
+1. **Sage and cream on the three section home pages.** `.week-head{background:#8FA98A}` and cream tints `#FBF4E4`, `#FDF6E9`, `#f7ecd3`.
+2. `welcome.html` still has its own inline Hootie, the last duplicate.
+3. Module 3's start week in the syllabus table.
+4. `icon.svg` favicon 404 on both Mastery OS pages.
+5. `week-1-mw.html` orphan.
