@@ -1,0 +1,420 @@
+/* ============================================================
+   BIO 004 Human Anatomy, Fall 2026
+   bio004-dock.js
+
+   ONE DOCK, EVERY PAGE.
+
+   WHY
+   ---
+   Every tool in this course lived somewhere different. Loops on
+   the hub, Recall Rx in a block halfway down, Mastery OS in a
+   panel at the bottom, the calendar in the header, the syllabus
+   in a chip. A student reading a notes page who wanted a card
+   deck had to go back, find the hub, scroll, and click. That is
+   four decisions to reach one tool, repeated all term.
+
+   This is one launcher, bottom left, on every page. Same place,
+   same contents, same behaviour, whatever page they are on.
+
+   WHY BOTTOM LEFT
+   ---------------
+   Hootie sits at right:18px bottom:18px. Two floating buttons in
+   the same corner would overlap on a phone.
+
+   DESIGN NOTES
+   ------------
+   Closed, it is a single pill. That is the whole resting state:
+   one target, no menu bar, nothing competing with the page.
+
+   Open, it is a search box plus grouped app tiles. Typing filters
+   instantly, so a student who knows what they want types three
+   letters and presses Enter. A student who does not know browses
+   the tiles. Both paths are one interaction from anywhere.
+
+   Every tile carries a QR so a student on a laptop can send the
+   tool to their phone without typing a URL. The QR codes are
+   inline SVG baked in at build time: no third-party script, no
+   network request, nothing that can track a student, and they
+   still work if the page is loaded and the wifi drops.
+
+   ACCESSIBILITY
+   -------------
+   role="dialog" with aria-modal, focus moves to the search box on
+   open and returns to the launcher on close, Tab is trapped while
+   open, Escape closes, arrow keys walk the tiles, aria-expanded on
+   the launcher, a live region announces the filtered count, and
+   every colour pair in here was measured at 7:1 or better.
+   prefers-reduced-motion removes the transitions.
+
+   DEPENDENCIES
+   ------------
+   None required. If course-links.js, schedule-fall2026.js or
+   session-links.js happen to be on the page the dock uses them to
+   resolve the student's section and this week. If they are absent
+   it still works, it just shows the generic links.
+   ============================================================ */
+(function () {
+  'use strict';
+  if (window.__BIO004_DOCK__) return;      /* never inject twice */
+  window.__BIO004_DOCK__ = true;
+
+  var BASE = 'https://drsrennie-stack.github.io/new-build-bio4-solano/';
+  var SEC_KEY = 'bio004-section';
+
+  var SECTIONS = {
+    'mw':     { label: 'Mon / Wed · Afternoon', syllabus: 'syllabus-class1.html', hub: 'class1.html' },
+    'tr-am':  { label: 'Tue / Thu · Morning',   syllabus: 'syllabus-class2.html', hub: 'class2.html' },
+    'tr-eve': { label: 'Tue / Thu · Evening',   syllabus: 'syllabus-class3.html', hub: 'class3.html' }
+  };
+
+  function section() {
+    var s = null;
+    try { var m = location.search.match(/[?&]sec=([^&#]+)/); if (m) s = decodeURIComponent(m[1]); } catch (e) {}
+    if (!SECTIONS[s]) { try { s = localStorage.getItem(SEC_KEY); } catch (e) { s = null; } }
+    return SECTIONS[s] ? s : null;
+  }
+
+  /* Term starts Monday August 17, 2026. Same arithmetic the welcome
+     hub uses, so the dock cannot disagree with it. */
+  function currentWeek() {
+    var start = new Date(2026, 7, 17), now = new Date();
+    var wk = Math.floor((now - start) / (7 * 24 * 3600 * 1000)) + 1;
+    if (wk < 1) return { wk: 1, pre: true };
+    return { wk: Math.min(17, wk), pre: false };
+  }
+
+  /* QR codes, inline SVG, generated at build time. */
+  var QR = {
+    mastery: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" class=\"segno\"><path class=\"qrline\" stroke=\"#0b1530\" d=\"M1 1.5h7m1 0h1m1 0h4m1 0h1m2 0h1m1 0h3m7 0h7m-37 1h1m5 0h1m2 0h2m6 0h2m2 0h2m1 0h1m3 0h1m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m1 0h2m1 0h2m2 0h1m1 0h1m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m2 0h2m1 0h2m1 0h1m1 0h2m2 0h3m1 0h2m3 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m4 0h2m3 0h1m1 0h1m1 0h3m2 0h2m3 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m1 0h1m1 0h9m1 0h3m2 0h1m4 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-27 1h4m2 0h1m2 0h2m2 0h2m1 0h3m-29 1h1m1 0h1m3 0h2m3 0h5m8 0h1m3 0h1m2 0h1m2 0h1m1 0h1m-37 1h1m2 0h2m4 0h1m2 0h1m4 0h1m1 0h1m1 0h1m1 0h1m2 0h3m1 0h2m3 0h2m-37 1h2m1 0h1m1 0h3m2 0h1m1 0h4m3 0h5m1 0h1m1 0h1m2 0h1m2 0h1m2 0h1m-37 1h1m2 0h3m2 0h1m2 0h2m6 0h1m2 0h2m2 0h1m1 0h1m2 0h3m-34 1h1m2 0h2m1 0h2m1 0h1m2 0h5m2 0h2m2 0h2m1 0h1m1 0h1m1 0h2m1 0h1m2 0h1m-37 1h3m2 0h1m2 0h2m1 0h3m1 0h3m1 0h2m1 0h2m3 0h5m1 0h1m2 0h1m-35 1h2m1 0h3m1 0h2m1 0h4m1 0h3m1 0h3m1 0h1m1 0h2m4 0h2m1 0h1m-37 1h2m3 0h1m3 0h1m2 0h3m7 0h2m3 0h2m2 0h3m1 0h1m-36 1h2m2 0h1m1 0h1m4 0h2m1 0h1m1 0h1m11 0h1m1 0h2m-31 1h1m7 0h1m3 0h2m1 0h1m1 0h2m3 0h3m1 0h2m1 0h2m2 0h3m-37 1h4m1 0h2m2 0h1m6 0h2m1 0h3m1 0h1m1 0h1m1 0h1m1 0h2m3 0h1m1 0h1m-37 1h2m1 0h3m3 0h3m1 0h1m1 0h2m1 0h1m4 0h2m1 0h3m1 0h1m2 0h1m-34 1h1m1 0h1m3 0h3m4 0h2m1 0h1m2 0h2m3 0h1m3 0h1m1 0h2m1 0h1m1 0h1m-34 1h3m4 0h2m1 0h1m2 0h2m1 0h4m1 0h2m1 0h5m5 0h1m-37 1h1m3 0h3m1 0h1m2 0h1m3 0h1m1 0h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h2m2 0h4m-36 1h2m1 0h2m5 0h2m3 0h1m2 0h2m2 0h1m2 0h1m1 0h2m1 0h3m-32 1h1m1 0h1m1 0h1m8 0h2m6 0h2m2 0h2m1 0h1m5 0h1m-35 1h1m4 0h6m1 0h1m4 0h1m1 0h1m1 0h2m1 0h2m2 0h2m1 0h2m1 0h1m-37 1h2m1 0h7m2 0h2m1 0h2m2 0h5m2 0h2m1 0h2m1 0h1m3 0h1m-34 1h1m3 0h4m3 0h1m3 0h2m4 0h1m1 0h7m2 0h1m-36 1h4m2 0h5m1 0h1m1 0h2m2 0h3m3 0h1m3 0h5m2 0h2m-29 1h2m1 0h2m2 0h3m1 0h1m1 0h4m1 0h1m1 0h1m3 0h1m3 0h1m-37 1h7m1 0h1m4 0h1m1 0h3m1 0h3m1 0h1m2 0h1m1 0h1m1 0h1m1 0h1m3 0h1m-37 1h1m5 0h1m4 0h3m1 0h1m2 0h2m7 0h2m3 0h1m-33 1h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h4m2 0h1m2 0h3m2 0h6m-33 1h1m1 0h3m1 0h1m5 0h1m4 0h1m1 0h1m3 0h1m2 0h1m1 0h2m2 0h2m1 0h1m-36 1h1m1 0h3m1 0h1m1 0h2m3 0h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m1 0h2m2 0h4m1 0h1m-37 1h1m5 0h1m3 0h1m3 0h1m1 0h1m1 0h1m1 0h1m1 0h1m5 0h3m1 0h1m-33 1h7m1 0h2m1 0h2m3 0h1m3 0h1m3 0h1m3 0h2m1 0h1m1 0h1m2 0h1\"/></svg>",
+    recall: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" class=\"segno\"><path class=\"qrline\" stroke=\"#0b1530\" d=\"M1 1.5h7m1 0h2m2 0h7m1 0h1m2 0h1m2 0h3m1 0h7m-37 1h1m5 0h1m2 0h3m1 0h2m1 0h2m1 0h4m2 0h2m1 0h1m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m2 0h1m3 0h2m2 0h2m1 0h2m4 0h3m1 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h1m2 0h3m1 0h2m1 0h2m3 0h1m1 0h2m1 0h1m1 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h3m1 0h1m2 0h1m1 0h2m1 0h1m2 0h1m2 0h3m1 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m1 0h4m2 0h4m1 0h1m2 0h1m1 0h1m5 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-29 1h3m1 0h1m2 0h1m1 0h1m1 0h3m2 0h1m1 0h1m-27 1h1m3 0h1m1 0h5m1 0h2m2 0h2m2 0h5m1 0h2m1 0h5m2 0h1m-35 1h1m1 0h2m3 0h1m1 0h1m1 0h2m2 0h2m2 0h1m1 0h1m1 0h1m1 0h2m3 0h1m2 0h1m-34 1h2m1 0h4m1 0h1m1 0h1m2 0h1m2 0h1m2 0h4m1 0h3m2 0h3m-34 1h1m2 0h1m4 0h5m2 0h3m2 0h2m1 0h1m2 0h1m1 0h2m1 0h2m1 0h2m-36 1h1m1 0h1m2 0h3m2 0h5m2 0h1m2 0h3m1 0h1m1 0h1m2 0h3m2 0h3m-33 1h2m1 0h1m1 0h1m1 0h1m1 0h6m3 0h8m2 0h2m-34 1h2m1 0h1m1 0h2m1 0h1m1 0h1m4 0h1m1 0h1m2 0h2m1 0h2m2 0h2m1 0h5m-34 1h1m1 0h1m5 0h1m1 0h2m2 0h3m3 0h2m6 0h1m1 0h2m1 0h1m-32 1h1m2 0h1m5 0h1m1 0h2m1 0h1m2 0h2m1 0h2m1 0h2m1 0h3m1 0h3m-36 1h1m1 0h1m5 0h3m3 0h1m1 0h1m6 0h1m3 0h2m3 0h1m1 0h2m-34 1h1m2 0h2m2 0h1m1 0h1m1 0h2m1 0h3m1 0h2m1 0h1m2 0h2m1 0h1m1 0h2m1 0h1m-35 1h2m5 0h1m3 0h3m3 0h2m2 0h3m2 0h1m2 0h2m3 0h2m-36 1h1m1 0h9m2 0h3m1 0h1m1 0h4m1 0h1m2 0h1m1 0h3m2 0h1m-35 1h2m1 0h2m2 0h2m1 0h1m2 0h4m4 0h1m1 0h1m1 0h1m1 0h3m1 0h2m-33 1h3m2 0h3m1 0h1m1 0h2m2 0h1m1 0h2m2 0h1m1 0h2m2 0h1m1 0h1m1 0h5m-36 1h5m5 0h1m1 0h2m1 0h1m1 0h1m1 0h3m5 0h1m3 0h2m1 0h2m-35 1h2m3 0h1m4 0h2m1 0h1m2 0h1m2 0h3m3 0h1m2 0h2m2 0h4m-37 1h3m6 0h2m2 0h2m3 0h1m2 0h3m1 0h1m1 0h1m4 0h3m-33 1h5m1 0h2m1 0h2m1 0h3m1 0h1m1 0h6m1 0h1m1 0h1m1 0h1m-30 1h1m1 0h2m1 0h1m3 0h2m1 0h6m1 0h2m3 0h1m3 0h5m-35 1h2m2 0h5m3 0h1m1 0h1m1 0h7m1 0h1m2 0h8m1 0h1m-29 1h2m1 0h1m2 0h5m1 0h1m1 0h2m1 0h1m2 0h1m3 0h1m-33 1h7m1 0h1m1 0h1m1 0h2m1 0h4m3 0h3m1 0h1m1 0h1m1 0h1m1 0h1m-33 1h1m5 0h1m2 0h2m1 0h1m3 0h4m1 0h3m4 0h1m3 0h4m-36 1h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h2m3 0h1m1 0h4m3 0h1m1 0h8m-36 1h1m1 0h3m1 0h1m4 0h1m1 0h2m2 0h2m4 0h1m1 0h2m1 0h4m1 0h1m1 0h2m-37 1h1m1 0h3m1 0h1m2 0h1m4 0h5m1 0h2m1 0h2m1 0h3m1 0h1m2 0h2m-35 1h1m5 0h1m2 0h1m4 0h2m1 0h2m1 0h2m1 0h2m2 0h1m2 0h1m1 0h4m-36 1h7m1 0h1m1 0h3m2 0h1m1 0h1m1 0h6m2 0h1m3 0h1m2 0h3\"/></svg>",
+    loops: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 31 31\" class=\"segno\"><path class=\"qrline\" stroke=\"#0b1530\" d=\"M1 1.5h7m1 0h1m1 0h3m1 0h1m3 0h1m3 0h7m-29 1h1m5 0h1m2 0h3m1 0h2m1 0h2m2 0h1m1 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h2m1 0h3m3 0h1m2 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h1m3 0h3m1 0h1m4 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h1m2 0h2m4 0h1m3 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m1 0h1m1 0h2m5 0h2m1 0h1m1 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-20 1h4m3 0h1m-17 1h1m1 0h1m3 0h2m1 0h1m1 0h2m3 0h1m2 0h2m2 0h1m2 0h1m1 0h1m-27 1h1m1 0h1m3 0h1m1 0h2m2 0h3m2 0h2m1 0h2m3 0h2m-29 1h2m2 0h3m1 0h1m2 0h1m2 0h2m3 0h2m1 0h2m1 0h2m1 0h1m-29 1h2m2 0h1m5 0h1m3 0h3m1 0h1m1 0h2m3 0h1m-25 1h2m3 0h1m1 0h3m3 0h1m1 0h1m2 0h1m2 0h1m5 0h1m-29 1h2m1 0h3m2 0h1m2 0h3m1 0h1m1 0h1m1 0h2m1 0h2m3 0h2m-27 1h2m2 0h1m1 0h1m1 0h1m4 0h1m1 0h3m8 0h1m-29 1h1m1 0h1m1 0h2m2 0h1m2 0h2m1 0h3m1 0h2m2 0h1m-23 1h1m1 0h1m2 0h4m4 0h2m1 0h1m2 0h1m2 0h1m5 0h1m-28 1h5m1 0h4m1 0h1m2 0h2m1 0h3m1 0h2m2 0h3m-29 1h3m3 0h1m1 0h4m1 0h3m1 0h1m1 0h1m3 0h1m1 0h1m2 0h1m-27 1h1m1 0h1m2 0h1m1 0h1m1 0h1m8 0h1m1 0h1m-23 1h3m1 0h1m1 0h1m3 0h1m1 0h3m1 0h1m3 0h6m1 0h1m-20 1h4m1 0h1m1 0h3m2 0h1m3 0h3m1 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m2 0h4m1 0h1m1 0h1m1 0h1m3 0h1m-29 1h1m5 0h1m2 0h2m1 0h2m1 0h2m3 0h1m3 0h1m-25 1h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h1m2 0h1m2 0h7m1 0h1m-28 1h1m1 0h3m1 0h1m3 0h2m3 0h1m2 0h2m1 0h1m1 0h4m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m3 0h2m1 0h3m2 0h2m2 0h1m2 0h2m-29 1h1m5 0h1m2 0h1m1 0h1m1 0h3m2 0h1m1 0h1m1 0h1m2 0h1m-26 1h7m1 0h1m1 0h7m3 0h1m1 0h1m1 0h2m2 0h1\"/></svg>",
+    atlas: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 35 35\" class=\"segno\"><path class=\"qrline\" stroke=\"#0b1530\" d=\"M1 1.5h7m1 0h6m2 0h1m1 0h1m4 0h2m1 0h7m-33 1h1m5 0h1m3 0h1m1 0h3m1 0h1m1 0h3m1 0h1m3 0h1m5 0h1m-33 1h1m1 0h3m1 0h1m2 0h1m1 0h2m1 0h1m2 0h2m1 0h2m1 0h2m1 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h2m6 0h2m1 0h1m1 0h1m1 0h2m1 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h3m2 0h1m2 0h1m2 0h1m1 0h3m2 0h1m1 0h3m1 0h1m-33 1h1m5 0h1m1 0h1m1 0h4m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m5 0h1m-33 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-25 1h2m4 0h1m2 0h7m-24 1h1m3 0h1m1 0h3m1 0h1m1 0h2m1 0h1m1 0h1m2 0h10m2 0h1m-31 1h1m6 0h2m1 0h1m1 0h2m1 0h1m5 0h1m1 0h1m3 0h3m-32 1h1m1 0h1m3 0h1m1 0h2m3 0h3m2 0h1m1 0h2m1 0h1m1 0h2m2 0h1m1 0h1m-27 1h1m4 0h2m1 0h1m1 0h1m4 0h2m3 0h1m5 0h1m-32 1h3m2 0h2m4 0h3m1 0h2m2 0h2m1 0h1m3 0h1m1 0h2m2 0h1m-33 1h1m2 0h1m4 0h1m1 0h1m3 0h1m3 0h3m1 0h1m3 0h2m1 0h2m-31 1h2m2 0h1m1 0h1m5 0h1m1 0h2m1 0h2m2 0h3m1 0h4m2 0h1m-31 1h1m2 0h1m2 0h11m3 0h1m2 0h3m1 0h2m-28 1h2m1 0h3m3 0h1m1 0h1m3 0h1m1 0h1m1 0h3m2 0h1m1 0h2m1 0h1m-31 1h2m1 0h1m4 0h2m1 0h1m1 0h3m1 0h1m3 0h2m5 0h4m-33 1h4m1 0h2m2 0h1m3 0h1m1 0h1m1 0h1m2 0h2m1 0h3m1 0h1m1 0h1m1 0h1m-29 1h1m3 0h1m2 0h1m1 0h3m2 0h3m1 0h3m3 0h1m-28 1h3m1 0h1m1 0h2m1 0h1m3 0h3m2 0h3m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m-32 1h3m1 0h2m4 0h2m1 0h2m1 0h1m2 0h2m2 0h1m1 0h3m2 0h2m-30 1h6m2 0h2m4 0h3m3 0h2m3 0h1m2 0h2m-30 1h1m4 0h1m1 0h4m1 0h1m2 0h3m1 0h6m1 0h1m3 0h1m-33 1h4m2 0h1m1 0h3m1 0h4m1 0h6m1 0h6m1 0h2m-25 1h5m1 0h5m3 0h1m1 0h1m3 0h1m1 0h3m-33 1h7m1 0h2m4 0h2m2 0h1m1 0h2m2 0h1m1 0h1m1 0h2m1 0h1m-32 1h1m5 0h1m3 0h4m2 0h1m4 0h1m2 0h1m3 0h1m2 0h2m-33 1h1m1 0h3m1 0h1m1 0h1m2 0h1m4 0h1m4 0h1m2 0h6m-30 1h1m1 0h3m1 0h1m2 0h1m1 0h3m3 0h2m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-31 1h1m1 0h3m1 0h1m2 0h1m2 0h4m2 0h1m2 0h1m1 0h2m1 0h4m-30 1h1m5 0h1m2 0h1m2 0h2m1 0h3m3 0h2m1 0h1m4 0h1m-30 1h7m1 0h3m1 0h1m4 0h1m1 0h4m1 0h1m4 0h1m2 0h1\"/></svg>",
+    calendar: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" class=\"segno\"><path class=\"qrline\" stroke=\"#0b1530\" d=\"M1 1.5h7m1 0h5m4 0h7m1 0h1m2 0h1m1 0h7m-37 1h1m5 0h1m1 0h1m1 0h3m5 0h1m1 0h4m2 0h1m1 0h1m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m2 0h3m1 0h1m1 0h1m2 0h3m2 0h1m1 0h2m1 0h1m1 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h1m1 0h1m5 0h2m4 0h1m1 0h3m3 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m2 0h1m1 0h1m2 0h4m1 0h2m3 0h5m1 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m3 0h3m1 0h3m2 0h4m3 0h1m1 0h1m1 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-29 1h2m1 0h2m1 0h2m1 0h3m2 0h1m1 0h1m2 0h2m-29 1h1m1 0h2m1 0h3m8 0h3m2 0h1m1 0h2m2 0h2m1 0h1m2 0h1m1 0h2m-37 1h1m2 0h2m4 0h2m3 0h2m1 0h1m1 0h2m2 0h1m2 0h1m1 0h1m2 0h1m1 0h1m1 0h1m-32 1h4m2 0h1m1 0h3m3 0h1m1 0h1m2 0h2m6 0h1m2 0h1m-35 1h5m7 0h3m1 0h1m3 0h1m3 0h5m3 0h3m-35 1h1m1 0h1m3 0h1m1 0h3m2 0h3m1 0h1m1 0h1m2 0h1m1 0h2m1 0h1m1 0h2m1 0h5m-37 1h2m2 0h1m2 0h2m1 0h2m3 0h3m1 0h1m2 0h1m3 0h3m1 0h4m1 0h2m-37 1h2m4 0h1m2 0h1m2 0h3m2 0h1m1 0h2m3 0h2m2 0h3m1 0h1m1 0h2m-34 1h4m1 0h1m1 0h2m1 0h1m1 0h2m2 0h1m2 0h4m3 0h1m1 0h3m2 0h2m-35 1h1m2 0h4m2 0h3m1 0h1m3 0h3m2 0h4m5 0h2m1 0h1m-36 1h3m4 0h5m1 0h1m1 0h1m3 0h1m1 0h3m1 0h2m2 0h1m4 0h2m-36 1h1m2 0h1m1 0h1m3 0h1m4 0h1m4 0h3m3 0h3m1 0h3m2 0h2m-37 1h1m2 0h3m1 0h1m1 0h1m1 0h1m1 0h1m2 0h3m5 0h1m2 0h4m1 0h2m1 0h1m-36 1h1m1 0h6m7 0h5m1 0h1m1 0h1m2 0h4m1 0h2m3 0h1m-35 1h2m1 0h1m1 0h1m1 0h1m1 0h1m2 0h1m1 0h2m1 0h2m2 0h1m2 0h1m1 0h2m3 0h1m-34 1h10m1 0h1m2 0h1m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1m1 0h2m1 0h1m3 0h1m-35 1h2m4 0h2m1 0h1m1 0h1m1 0h1m5 0h1m2 0h1m1 0h1m3 0h1m2 0h3m-35 1h3m3 0h1m1 0h1m1 0h1m4 0h1m1 0h1m1 0h1m2 0h1m1 0h2m1 0h1m1 0h4m1 0h3m-36 1h1m1 0h1m1 0h1m4 0h1m2 0h5m1 0h1m1 0h1m2 0h1m2 0h1m1 0h8m-36 1h3m2 0h1m1 0h7m2 0h3m2 0h1m1 0h1m8 0h1m1 0h1m-36 1h1m2 0h2m2 0h1m5 0h4m3 0h2m1 0h2m1 0h1m1 0h2m1 0h3m1 0h1m-31 1h2m4 0h2m2 0h2m2 0h5m1 0h1m1 0h9m-28 1h1m2 0h3m1 0h1m1 0h1m5 0h4m1 0h1m3 0h1m1 0h1m1 0h1m-37 1h7m1 0h3m3 0h2m2 0h1m7 0h1m1 0h1m1 0h1m1 0h1m1 0h3m-37 1h1m5 0h1m1 0h3m4 0h1m1 0h1m1 0h2m1 0h2m2 0h3m3 0h1m2 0h1m-36 1h1m1 0h3m1 0h1m2 0h2m1 0h1m1 0h1m1 0h4m1 0h1m6 0h6m1 0h2m-37 1h1m1 0h3m1 0h1m1 0h5m3 0h2m1 0h3m1 0h1m3 0h4m1 0h1m2 0h2m-37 1h1m1 0h3m1 0h1m1 0h2m1 0h3m3 0h2m3 0h3m5 0h1m1 0h1m-33 1h1m5 0h1m2 0h3m1 0h1m4 0h2m4 0h2m3 0h4m1 0h1m-35 1h7m1 0h1m1 0h3m2 0h1m1 0h1m4 0h5m5 0h5\"/></svg>",
+    study: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" class=\"segno\"><path class=\"qrline\" stroke=\"#0b1530\" d=\"M1 1.5h7m1 0h1m1 0h1m2 0h1m1 0h2m1 0h1m1 0h3m7 0h7m-37 1h1m5 0h1m1 0h10m1 0h4m2 0h2m3 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m1 0h2m1 0h1m2 0h2m3 0h1m1 0h1m2 0h4m2 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h2m1 0h2m2 0h2m1 0h3m2 0h1m1 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h1m1 0h4m4 0h3m5 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m3 0h1m4 0h1m4 0h2m1 0h2m1 0h1m1 0h1m1 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-27 1h2m1 0h1m2 0h1m1 0h1m3 0h2m1 0h1m1 0h2m-29 1h1m2 0h6m1 0h1m1 0h1m1 0h2m1 0h1m2 0h1m2 0h2m1 0h1m2 0h1m2 0h1m1 0h3m-36 1h1m3 0h1m1 0h3m6 0h4m1 0h3m2 0h2m3 0h2m1 0h2m-36 1h1m3 0h3m1 0h1m2 0h1m2 0h3m4 0h1m1 0h1m3 0h2m1 0h2m1 0h2m1 0h1m-29 1h1m1 0h1m5 0h3m1 0h1m3 0h1m1 0h11m-37 1h1m2 0h2m1 0h2m1 0h1m2 0h5m2 0h2m2 0h2m1 0h3m1 0h2m1 0h1m2 0h1m-37 1h1m3 0h2m1 0h1m1 0h1m1 0h1m2 0h5m2 0h9m2 0h2m-31 1h2m1 0h3m1 0h3m1 0h2m2 0h3m4 0h5m2 0h5m-35 1h1m2 0h1m2 0h2m6 0h1m1 0h1m1 0h1m1 0h3m1 0h2m2 0h2m1 0h4m-36 1h1m1 0h1m2 0h2m3 0h4m4 0h1m5 0h1m2 0h1m1 0h1m3 0h1m-35 1h1m1 0h4m3 0h6m2 0h1m1 0h2m1 0h1m2 0h3m1 0h1m1 0h1m-32 1h3m2 0h3m1 0h1m1 0h1m4 0h2m1 0h3m1 0h1m1 0h1m1 0h1m1 0h2m3 0h1m1 0h1m-33 1h2m3 0h2m1 0h1m1 0h3m6 0h3m1 0h2m2 0h3m2 0h1m-37 1h1m4 0h3m3 0h1m1 0h1m2 0h2m6 0h1m1 0h1m1 0h6m-34 1h1m2 0h2m3 0h1m5 0h2m3 0h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m-34 1h1m2 0h5m1 0h2m1 0h1m1 0h3m2 0h4m2 0h6m1 0h1m1 0h2m-36 1h2m11 0h1m2 0h4m3 0h1m1 0h1m3 0h7m-36 1h2m1 0h1m1 0h1m2 0h2m2 0h1m1 0h2m3 0h1m2 0h1m2 0h3m1 0h1m5 0h1m-37 1h1m8 0h2m2 0h2m3 0h1m2 0h3m1 0h3m4 0h3m-35 1h5m1 0h1m2 0h1m2 0h6m1 0h4m4 0h1m2 0h1m4 0h2m-37 1h1m1 0h1m1 0h1m3 0h2m1 0h1m4 0h1m2 0h1m2 0h1m4 0h1m1 0h1m1 0h1m2 0h3m-37 1h1m2 0h2m1 0h4m2 0h5m1 0h1m1 0h1m1 0h4m2 0h5m1 0h3m-29 1h3m2 0h1m1 0h1m2 0h2m5 0h2m1 0h1m3 0h1m1 0h2m-36 1h7m1 0h1m6 0h3m1 0h2m1 0h2m1 0h1m2 0h1m1 0h1m1 0h1m3 0h1m-37 1h1m5 0h1m1 0h1m2 0h1m2 0h2m4 0h1m1 0h1m1 0h2m1 0h2m3 0h1m3 0h1m-37 1h1m1 0h3m1 0h1m1 0h3m3 0h4m1 0h1m4 0h1m1 0h7m2 0h1m-36 1h1m1 0h3m1 0h1m1 0h1m3 0h1m1 0h1m1 0h4m2 0h2m5 0h2m2 0h4m-37 1h1m1 0h3m1 0h1m2 0h3m3 0h1m1 0h1m3 0h3m3 0h1m4 0h2m2 0h1m-37 1h1m5 0h1m4 0h2m1 0h1m2 0h1m6 0h1m7 0h1m1 0h3m-37 1h7m1 0h2m2 0h1m3 0h1m3 0h1m2 0h2m3 0h2m1 0h1m1 0h1m2 0h1\"/></svg>",
+    home: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" class=\"segno\"><path class=\"qrline\" stroke=\"#0b1530\" d=\"M1 1.5h7m4 0h1m5 0h2m1 0h2m1 0h1m1 0h1m2 0h1m1 0h7m-37 1h1m5 0h1m2 0h1m2 0h1m4 0h1m1 0h1m2 0h1m4 0h2m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m1 0h1m1 0h1m5 0h1m2 0h4m3 0h3m1 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h2m1 0h1m1 0h2m2 0h1m1 0h1m2 0h6m2 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h1m3 0h1m5 0h2m3 0h1m1 0h1m2 0h1m1 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m1 0h3m1 0h1m2 0h2m1 0h1m1 0h3m1 0h1m1 0h2m2 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-29 1h2m4 0h2m3 0h3m1 0h1m4 0h1m-29 1h1m1 0h5m2 0h1m2 0h1m5 0h4m1 0h4m3 0h5m-33 1h1m1 0h1m2 0h3m1 0h2m1 0h4m5 0h1m4 0h1m2 0h1m1 0h1m1 0h1m-35 1h2m1 0h4m2 0h5m2 0h1m2 0h2m2 0h1m1 0h11m-37 1h2m1 0h3m7 0h1m2 0h1m1 0h1m2 0h2m3 0h1m1 0h1m1 0h3m3 0h1m-35 1h1m3 0h1m10 0h1m4 0h1m1 0h2m1 0h1m1 0h2m1 0h5m-37 1h1m1 0h4m1 0h3m1 0h1m1 0h1m2 0h9m3 0h2m1 0h1m-32 1h9m1 0h8m2 0h2m3 0h1m1 0h1m1 0h1m1 0h3m1 0h2m-35 1h4m2 0h5m1 0h2m1 0h2m2 0h1m1 0h2m1 0h1m1 0h1m1 0h3m2 0h2m-37 1h2m1 0h4m1 0h2m1 0h1m1 0h2m1 0h1m2 0h1m1 0h1m1 0h1m1 0h2m1 0h3m1 0h1m1 0h2m-35 1h1m2 0h1m3 0h1m1 0h1m1 0h2m1 0h1m2 0h1m1 0h2m1 0h1m1 0h1m2 0h1m2 0h1m1 0h3m-36 1h1m1 0h2m2 0h1m2 0h1m1 0h1m2 0h3m2 0h1m1 0h2m1 0h1m1 0h3m1 0h3m2 0h2m-34 1h3m2 0h1m1 0h3m1 0h2m3 0h3m2 0h1m1 0h1m1 0h1m7 0h1m-35 1h1m2 0h2m4 0h1m3 0h1m1 0h1m1 0h1m2 0h5m2 0h2m1 0h3m-34 1h1m2 0h1m2 0h2m3 0h2m2 0h1m2 0h2m2 0h1m1 0h2m1 0h2m3 0h1m-34 1h3m2 0h2m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1m3 0h1m2 0h4m1 0h4m2 0h1m-37 1h2m1 0h3m1 0h1m1 0h1m1 0h2m1 0h3m2 0h2m2 0h2m1 0h7m3 0h1m-35 1h2m1 0h2m1 0h4m1 0h3m2 0h5m1 0h4m1 0h4m1 0h3m-37 1h1m2 0h3m1 0h1m1 0h1m1 0h2m1 0h3m6 0h1m7 0h1m2 0h1m-35 1h1m2 0h2m1 0h2m1 0h1m1 0h4m2 0h1m2 0h2m2 0h2m1 0h2m1 0h2m2 0h3m-37 1h1m2 0h3m1 0h2m1 0h5m1 0h1m4 0h1m1 0h1m2 0h1m1 0h2m1 0h3m2 0h1m-37 1h1m2 0h1m2 0h3m1 0h1m1 0h3m1 0h3m3 0h5m1 0h5m1 0h3m-29 1h1m1 0h1m5 0h4m1 0h3m1 0h4m3 0h2m-34 1h7m3 0h1m4 0h1m1 0h1m3 0h1m4 0h1m1 0h1m1 0h1m1 0h1m1 0h3m-37 1h1m5 0h1m1 0h1m2 0h2m4 0h3m1 0h2m1 0h1m1 0h1m1 0h1m3 0h2m2 0h1m-37 1h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h4m4 0h1m2 0h9m1 0h2m-36 1h1m1 0h3m1 0h1m1 0h4m3 0h1m1 0h2m1 0h5m2 0h4m1 0h1m3 0h1m-37 1h1m1 0h3m1 0h1m1 0h1m3 0h5m2 0h1m1 0h2m3 0h2m1 0h1m3 0h1m1 0h2m-37 1h1m5 0h1m2 0h2m1 0h1m2 0h1m3 0h4m4 0h3m2 0h2m2 0h1m-37 1h7m1 0h4m2 0h2m1 0h1m1 0h1m2 0h1m1 0h3m5 0h5\"/></svg>",
+    exams: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" class=\"segno\"><path class=\"qrline\" stroke=\"#0b1530\" d=\"M1 1.5h7m2 0h3m2 0h1m1 0h1m1 0h1m2 0h2m1 0h1m1 0h1m3 0h7m-37 1h1m5 0h1m1 0h2m1 0h3m3 0h1m3 0h2m5 0h1m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m1 0h2m2 0h3m4 0h4m3 0h2m2 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h1m2 0h1m2 0h1m1 0h2m1 0h3m1 0h3m1 0h2m1 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m2 0h2m1 0h2m2 0h4m3 0h1m1 0h1m2 0h1m1 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m3 0h4m1 0h1m2 0h1m1 0h1m1 0h1m1 0h3m3 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-29 1h4m1 0h4m1 0h3m1 0h2m2 0h3m-29 1h1m5 0h1m1 0h3m6 0h1m1 0h1m2 0h4m3 0h2m2 0h3m-35 1h2m2 0h1m1 0h1m2 0h1m1 0h2m3 0h1m1 0h5m3 0h1m3 0h2m1 0h2m-36 1h2m2 0h1m1 0h7m4 0h1m2 0h2m4 0h2m1 0h8m-34 1h1m1 0h1m2 0h1m1 0h1m1 0h1m1 0h3m1 0h2m2 0h1m1 0h1m1 0h2m2 0h4m2 0h1m-34 1h1m1 0h4m1 0h1m2 0h1m2 0h1m2 0h2m2 0h2m1 0h3m1 0h2m1 0h1m2 0h1m-37 1h2m1 0h1m1 0h1m1 0h1m3 0h1m1 0h4m1 0h7m2 0h3m1 0h1m1 0h1m-34 1h3m1 0h4m1 0h1m1 0h6m3 0h3m4 0h1m1 0h1m1 0h3m1 0h2m-37 1h6m2 0h2m1 0h1m4 0h1m1 0h1m1 0h1m2 0h2m1 0h2m2 0h2m1 0h4m-37 1h1m2 0h5m3 0h2m1 0h1m1 0h2m1 0h2m1 0h4m3 0h2m1 0h1m1 0h2m-36 1h6m1 0h2m9 0h3m2 0h1m1 0h4m2 0h1m2 0h2m-35 1h3m2 0h2m1 0h1m3 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1m1 0h2m3 0h1m1 0h1m-37 1h1m2 0h3m2 0h2m1 0h1m1 0h2m5 0h1m3 0h1m1 0h3m4 0h1m2 0h1m-37 1h2m4 0h4m2 0h4m1 0h1m4 0h5m2 0h2m1 0h3m-35 1h3m1 0h2m2 0h5m2 0h1m1 0h1m1 0h1m1 0h3m3 0h1m1 0h1m2 0h1m1 0h1m-34 1h2m1 0h1m1 0h2m1 0h1m2 0h2m1 0h2m5 0h1m4 0h2m1 0h4m2 0h1m-37 1h4m1 0h1m1 0h2m1 0h4m2 0h1m2 0h2m1 0h3m3 0h6m2 0h1m-35 1h5m2 0h1m1 0h2m1 0h3m3 0h1m2 0h1m2 0h3m1 0h1m5 0h1m-37 1h4m4 0h1m7 0h1m1 0h4m1 0h1m2 0h2m3 0h1m1 0h2m-35 1h1m1 0h1m3 0h3m2 0h1m5 0h1m3 0h1m3 0h1m1 0h2m1 0h2m2 0h3m-37 1h1m1 0h4m1 0h1m1 0h3m3 0h1m6 0h1m4 0h1m1 0h1m1 0h1m2 0h1m1 0h1m-37 1h1m5 0h3m1 0h3m1 0h1m1 0h4m2 0h1m1 0h3m1 0h5m1 0h1m1 0h1m-29 1h1m4 0h7m2 0h2m2 0h1m1 0h1m3 0h1m-33 1h7m2 0h1m1 0h1m2 0h4m1 0h3m1 0h1m1 0h1m2 0h1m1 0h1m1 0h1m3 0h1m-37 1h1m5 0h1m2 0h2m2 0h1m1 0h1m2 0h2m4 0h1m2 0h2m3 0h1m3 0h1m-37 1h1m1 0h3m1 0h1m2 0h3m3 0h1m2 0h1m3 0h1m1 0h2m1 0h6m1 0h2m-36 1h1m1 0h3m1 0h1m2 0h4m3 0h4m3 0h1m2 0h1m2 0h2m2 0h4m-37 1h1m1 0h3m1 0h1m3 0h3m1 0h2m4 0h3m3 0h2m1 0h1m3 0h1m1 0h2m-37 1h1m5 0h1m4 0h1m1 0h1m6 0h1m1 0h1m5 0h2m2 0h1m3 0h1m-37 1h7m1 0h1m4 0h1m1 0h2m2 0h2m3 0h1m3 0h2m1 0h1m1 0h1m2 0h1\"/></svg>",
+    canvas: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" class=\"segno\"><path class=\"qrline\" stroke=\"#0b1530\" d=\"M1 1.5h7m1 0h2m2 0h3m1 0h1m1 0h4m8 0h7m-37 1h1m5 0h1m3 0h1m2 0h1m3 0h2m2 0h2m5 0h1m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m1 0h4m5 0h1m1 0h3m3 0h1m1 0h2m1 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m2 0h1m2 0h1m4 0h2m2 0h3m1 0h2m3 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m2 0h5m1 0h2m1 0h1m1 0h3m2 0h2m3 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m1 0h1m3 0h2m2 0h3m1 0h3m2 0h1m4 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-28 1h1m1 0h1m2 0h4m1 0h2m2 0h2m1 0h3m-29 1h1m1 0h1m3 0h2m4 0h1m2 0h1m1 0h1m2 0h1m3 0h1m3 0h1m2 0h1m2 0h1m1 0h1m-36 1h1m2 0h2m2 0h1m2 0h1m5 0h1m3 0h1m1 0h2m1 0h3m1 0h2m3 0h2m-37 1h2m3 0h3m3 0h2m2 0h1m3 0h5m1 0h1m1 0h1m2 0h1m2 0h1m2 0h1m-37 1h1m1 0h2m4 0h1m1 0h2m1 0h2m5 0h1m1 0h1m3 0h1m1 0h1m2 0h3m-33 1h1m3 0h3m1 0h8m3 0h1m2 0h2m1 0h1m1 0h1m1 0h2m1 0h1m2 0h1m-37 1h2m1 0h3m1 0h1m1 0h5m1 0h2m2 0h2m1 0h2m3 0h5m1 0h1m2 0h1m-35 1h1m2 0h2m2 0h2m1 0h1m2 0h1m1 0h3m1 0h3m1 0h1m1 0h2m4 0h2m1 0h1m-35 1h1m2 0h1m1 0h3m4 0h1m3 0h1m3 0h2m3 0h2m2 0h3m1 0h1m-35 1h1m2 0h1m1 0h1m5 0h3m1 0h3m1 0h1m3 0h1m3 0h1m1 0h2m-32 1h1m2 0h2m3 0h3m1 0h1m1 0h1m1 0h1m1 0h3m1 0h4m1 0h2m1 0h2m2 0h3m-34 1h5m1 0h3m2 0h1m1 0h2m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h2m3 0h1m1 0h1m-36 1h2m4 0h1m2 0h2m3 0h2m1 0h1m1 0h1m2 0h1m2 0h3m1 0h1m2 0h1m-34 1h2m1 0h2m1 0h1m2 0h1m1 0h2m1 0h1m1 0h1m3 0h1m2 0h2m3 0h1m1 0h2m1 0h1m1 0h1m-36 1h2m2 0h2m1 0h1m1 0h1m3 0h8m2 0h2m1 0h5m5 0h1m-37 1h2m2 0h1m1 0h3m1 0h1m1 0h4m3 0h2m1 0h2m1 0h1m1 0h1m1 0h2m2 0h4m-34 1h1m3 0h1m4 0h3m1 0h2m1 0h2m1 0h2m2 0h1m1 0h2m1 0h3m-34 1h1m1 0h1m1 0h5m1 0h3m2 0h1m1 0h1m2 0h1m1 0h3m2 0h2m1 0h1m5 0h1m-36 1h3m1 0h1m2 0h1m2 0h4m4 0h3m1 0h2m1 0h2m2 0h2m1 0h2m1 0h1m-37 1h4m2 0h1m2 0h4m1 0h2m3 0h5m2 0h2m1 0h2m1 0h1m3 0h1m-34 1h1m4 0h1m3 0h1m1 0h1m3 0h1m1 0h1m3 0h1m1 0h7m2 0h2m-37 1h3m1 0h1m1 0h4m1 0h3m1 0h1m2 0h3m3 0h1m3 0h5m2 0h1m-28 1h1m3 0h1m2 0h2m2 0h1m1 0h4m1 0h1m1 0h1m3 0h1m3 0h1m-37 1h7m1 0h2m3 0h1m1 0h6m2 0h1m2 0h1m1 0h1m1 0h1m1 0h1m3 0h1m-37 1h1m5 0h1m4 0h2m1 0h2m2 0h2m7 0h2m3 0h1m-33 1h1m1 0h3m1 0h1m3 0h1m1 0h2m1 0h5m3 0h2m2 0h6m-33 1h1m1 0h3m1 0h1m2 0h1m1 0h3m2 0h5m2 0h1m2 0h1m1 0h2m2 0h2m-34 1h1m1 0h3m1 0h1m1 0h1m2 0h2m3 0h2m1 0h3m1 0h1m1 0h1m1 0h2m2 0h4m1 0h1m-37 1h1m5 0h1m2 0h8m1 0h1m3 0h1m5 0h3m1 0h1m-33 1h7m1 0h1m1 0h1m1 0h2m2 0h1m3 0h1m3 0h1m3 0h2m1 0h1m1 0h1m2 0h1\"/></svg>",
+    weak: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 43 43\" class=\"segno\"><path class=\"qrline\" stroke=\"#0b1530\" d=\"M1 1.5h7m2 0h2m2 0h5m1 0h2m2 0h1m4 0h1m1 0h2m2 0h7m-41 1h1m5 0h1m3 0h2m2 0h1m2 0h1m2 0h3m2 0h1m1 0h4m3 0h1m5 0h1m-41 1h1m1 0h3m1 0h1m1 0h2m1 0h3m1 0h1m1 0h2m1 0h3m9 0h1m1 0h1m1 0h3m1 0h1m-41 1h1m1 0h3m1 0h1m1 0h2m1 0h3m1 0h1m3 0h1m2 0h1m1 0h4m1 0h1m4 0h1m1 0h3m1 0h1m-41 1h1m1 0h3m1 0h1m1 0h1m2 0h1m2 0h2m1 0h5m1 0h1m1 0h1m2 0h1m1 0h3m1 0h1m1 0h3m1 0h1m-41 1h1m5 0h1m1 0h2m1 0h3m2 0h2m2 0h1m3 0h5m5 0h1m5 0h1m-41 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-33 1h1m7 0h1m1 0h2m1 0h4m2 0h2m1 0h3m-33 1h1m1 0h5m5 0h3m2 0h1m4 0h1m2 0h3m1 0h1m1 0h1m2 0h5m-39 1h2m5 0h2m3 0h3m2 0h3m2 0h2m1 0h1m2 0h1m2 0h6m1 0h3m-41 1h1m1 0h1m1 0h1m1 0h2m1 0h1m1 0h1m5 0h1m2 0h2m5 0h2m3 0h2m1 0h2m-36 1h2m4 0h2m2 0h2m2 0h2m2 0h1m1 0h2m3 0h3m2 0h2m1 0h1m2 0h1m2 0h1m-41 1h1m1 0h1m1 0h1m1 0h1m3 0h1m1 0h1m1 0h2m1 0h1m1 0h2m1 0h8m1 0h3m3 0h4m-40 1h1m1 0h3m2 0h1m1 0h2m2 0h1m3 0h1m2 0h1m1 0h1m4 0h2m1 0h6m1 0h3m-41 1h2m2 0h5m1 0h2m1 0h5m2 0h1m3 0h1m1 0h3m3 0h2m-34 1h1m3 0h2m1 0h1m2 0h1m1 0h1m1 0h2m5 0h2m3 0h2m6 0h2m1 0h1m1 0h2m-40 1h3m2 0h1m1 0h4m3 0h1m1 0h1m4 0h1m1 0h4m1 0h1m2 0h2m1 0h1m1 0h2m1 0h1m-41 1h4m1 0h1m1 0h1m2 0h1m1 0h1m2 0h1m2 0h2m3 0h1m4 0h2m1 0h1m2 0h7m-39 1h1m2 0h3m1 0h4m1 0h2m2 0h1m2 0h2m1 0h1m1 0h3m1 0h1m2 0h2m1 0h3m-37 1h1m1 0h1m3 0h1m2 0h4m5 0h2m1 0h2m2 0h1m2 0h1m5 0h1m2 0h1m-39 1h1m2 0h3m2 0h3m4 0h1m1 0h4m2 0h2m1 0h3m5 0h1m2 0h1m-39 1h1m1 0h1m1 0h2m3 0h1m1 0h1m1 0h2m1 0h1m2 0h3m1 0h1m1 0h1m2 0h1m1 0h11m-40 1h1m1 0h1m1 0h2m1 0h2m1 0h7m2 0h3m2 0h3m1 0h2m1 0h1m1 0h2m2 0h1m-37 1h2m1 0h1m1 0h4m2 0h3m4 0h2m8 0h3m1 0h1m1 0h2m1 0h1m-38 1h1m1 0h3m2 0h5m2 0h2m1 0h1m2 0h6m1 0h1m1 0h1m1 0h1m4 0h1m-39 1h4m1 0h1m1 0h1m1 0h2m2 0h1m2 0h5m2 0h3m2 0h1m2 0h1m2 0h4m1 0h2m-41 1h1m1 0h2m1 0h3m1 0h3m3 0h2m3 0h1m1 0h1m3 0h2m1 0h1m2 0h1m1 0h1m-33 1h2m3 0h3m1 0h1m2 0h3m1 0h2m1 0h2m8 0h2m3 0h2m-37 1h3m2 0h1m1 0h1m1 0h2m1 0h1m2 0h2m7 0h3m1 0h3m5 0h3m-40 1h1m1 0h1m1 0h1m2 0h3m1 0h3m4 0h1m1 0h4m4 0h1m1 0h5m1 0h2m1 0h2m-41 1h1m4 0h4m5 0h1m1 0h1m2 0h1m1 0h1m2 0h1m1 0h5m2 0h2m2 0h1m-38 1h1m1 0h1m5 0h1m1 0h3m3 0h1m2 0h4m1 0h1m3 0h1m3 0h3m1 0h2m-38 1h1m2 0h5m1 0h1m1 0h5m1 0h1m1 0h1m2 0h2m1 0h1m3 0h1m2 0h5m1 0h2m-32 1h1m2 0h2m1 0h8m1 0h1m1 0h1m2 0h1m2 0h2m3 0h3m1 0h1m-41 1h7m3 0h5m1 0h2m3 0h1m3 0h3m1 0h4m1 0h1m1 0h3m-39 1h1m5 0h1m1 0h2m1 0h1m3 0h1m1 0h2m1 0h2m5 0h1m2 0h1m1 0h1m3 0h2m-38 1h1m1 0h3m1 0h1m1 0h4m7 0h1m1 0h1m1 0h5m1 0h1m2 0h5m1 0h3m-41 1h1m1 0h3m1 0h1m1 0h2m2 0h1m4 0h3m1 0h1m1 0h3m2 0h1m1 0h1m2 0h1m1 0h1m1 0h1m1 0h2m-41 1h1m1 0h3m1 0h1m1 0h5m3 0h1m4 0h1m2 0h1m2 0h4m2 0h5m-38 1h1m5 0h1m2 0h3m3 0h2m3 0h3m3 0h3m3 0h1m1 0h1m1 0h2m1 0h1m-40 1h7m1 0h3m1 0h2m1 0h1m1 0h1m4 0h1m1 0h3m1 0h2m4 0h5\"/></svg>",
+  };
+
+  var I = {
+    brain:'<path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-1 5 3 3 0 0 0 2 5 3 3 0 0 0 4 1V4z"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 1 5 3 3 0 0 1-2 5 3 3 0 0 1-4 1"/>',
+    cards:'<rect x="3" y="5" width="14" height="14" rx="2"/><path d="M7 9h6M7 13h4"/><path d="M21 8v9a2 2 0 0 1-2 2"/>',
+    loop:'<path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>',
+    globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>',
+    cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+    people:'<path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="3.2"/><path d="M22 20v-2a4 4 0 0 0-3-3.8"/>',
+    home:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+    doc:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
+    pencil:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+    target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4"/>',
+    flask:'<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/><path d="M6.5 15h11"/>',
+    play:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/>'
+  };
+  function icon(k) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+           'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (I[k] || '') + '</svg>';
+  }
+
+  /* One definition per tool. tone drives the icon gradient. */
+  function tools() {
+    var sec = section(), S = sec ? SECTIONS[sec] : null;
+    var cw = currentWeek();
+    var q = sec ? ('?sec=' + sec) : '';
+    var t = [];
+
+    t.push({ g: 'This week', name: 'Week ' + cw.wk + ' hub', sub: cw.pre ? 'Term starts Aug 17' : 'Your week, day by day',
+             url: BASE + 'week-' + cw.wk + '-hub.html' + q, icon: 'home', tone: 'navy', key: 'week', kw: 'week hub current' });
+    t.push({ g: 'This week', name: 'Week ' + cw.wk + ' detail', sub: 'Pre-work, class days, graded',
+             url: BASE + 'week-' + cw.wk + '.html' + q, icon: 'doc', tone: 'navy', kw: 'week detail prework' });
+    t.push({ g: 'This week', name: 'Course calendar', sub: 'Every class day and what to prep',
+             url: BASE + 'bio004-course-calendar.html' + q, icon: 'cal', tone: 'navy', qr: 'calendar', kw: 'calendar schedule dates' });
+
+    t.push({ g: 'Study tools', name: 'Mastery OS', sub: 'Weak spots, plan, exam cram',
+             url: BASE + 'mastery-os-fall-2026.html' + q, icon: 'brain', tone: 'gold', qr: 'mastery', kw: 'mastery os plan cram competency' });
+    t.push({ g: 'Study tools', name: 'Recall Rx', sub: 'Spaced recall cards',
+             url: BASE + 'bio004-spaced-recall.html', icon: 'cards', tone: 'green', qr: 'recall', kw: 'recall cards flashcards spaced' });
+    t.push({ g: 'Study tools', name: 'Loops', sub: '39 image loops, fast visual practice',
+             url: 'https://drsrennie-stack.github.io/loops/', icon: 'loop', tone: 'terra', qr: 'loops', ext: true, kw: 'loops images practice lab' });
+    t.push({ g: 'Study tools', name: 'Weak spot board', sub: 'What your answers say is weakest',
+             url: BASE + 'bio004-spaced-recall-weakness-dashboard.html', icon: 'target', tone: 'terra', qr: 'weak', kw: 'weakness weak spot dashboard' });
+    t.push({ g: 'Study tools', name: 'Drawing canvas', sub: 'Redraw it from memory',
+             url: BASE + 'mastery-canvas.html', icon: 'pencil', tone: 'green', qr: 'canvas', kw: 'draw drawing canvas' });
+
+    t.push({ g: 'Reference', name: 'Digital Atlas', sub: 'Explore structures interactively',
+             url: 'https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02', icon: 'globe', tone: 'gold', qr: 'atlas', ext: true, kw: 'atlas 3d explore' });
+    t.push({ g: 'Reference', name: 'Exam modules', sub: 'What each exam covers',
+             url: BASE + 'bio004-exam-modules.html' + q, icon: 'flask', tone: 'navy', qr: 'exams', kw: 'exam modules covers scope' });
+    t.push({ g: 'Reference', name: 'Syllabus', sub: S ? S.label : 'Pick your section first',
+             url: BASE + (S ? S.syllabus : 'fall-2026-syllabus.html'), icon: 'doc', tone: 'navy', kw: 'syllabus grading policy' });
+
+    t.push({ g: 'Course', name: 'Study With Me', sub: 'Host or join a study session',
+             url: BASE + 'study-session-signup.html', icon: 'people', tone: 'terra', qr: 'study', kw: 'study with me sessions group' });
+    t.push({ g: 'Course', name: 'Course home', sub: S ? S.label : 'Pick your section',
+             url: BASE + 'welcome.html' + q, icon: 'home', tone: 'gold', qr: 'home', kw: 'home welcome start' });
+    t.push({ g: 'Course', name: 'Start here', sub: 'Week one checklist',
+             url: BASE + 'start-here.html' + q, icon: 'play', tone: 'navy', kw: 'start here checklist orientation' });
+    return t;
+  }
+
+  var CSS = [
+'.bd-launch{position:fixed;left:18px;bottom:18px;z-index:2147483000;display:inline-flex;align-items:center;gap:9px;',
+'  background:#0B1530;color:#fff;border:0;border-radius:999px;padding:12px 18px 12px 14px;cursor:pointer;',
+'  font:800 14px/1 "Plus Jakarta Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;letter-spacing:-.01em;',
+'  box-shadow:0 14px 34px -12px rgba(11,21,48,.62),0 3px 10px -4px rgba(11,21,48,.4);',
+'  transition:transform .18s ease,box-shadow .18s ease}',
+'.bd-launch:hover{transform:translateY(-2px);box-shadow:0 20px 44px -14px rgba(11,21,48,.7)}',
+'.bd-launch:focus-visible{outline:3px solid #C9A14A;outline-offset:3px}',
+'.bd-launch svg{width:19px;height:19px;color:#C9A14A}',
+'@media(max-width:520px){.bd-launch .bd-lt{display:none}.bd-launch{padding:14px}}',
+
+'.bd-scrim{position:fixed;inset:0;z-index:2147483001;background:rgba(6,10,24,.62);',
+'  opacity:0;pointer-events:none;transition:opacity .2s ease}',
+'.bd-scrim.on{opacity:1;pointer-events:auto}',
+
+'.bd-panel{position:fixed;left:14px;bottom:14px;z-index:2147483002;width:min(680px,calc(100vw - 28px));',
+'  max-height:min(78vh,720px);display:flex;flex-direction:column;background:#0B1530;border-radius:22px;',
+'  box-shadow:0 40px 90px -24px rgba(0,0,0,.7);overflow:hidden;',
+'  transform:translateY(14px) scale(.985);opacity:0;pointer-events:none;',
+'  transition:transform .22s cubic-bezier(.2,.8,.3,1),opacity .18s ease;',
+'  font-family:"Plus Jakarta Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif}',
+'.bd-panel.on{transform:none;opacity:1;pointer-events:auto}',
+
+'.bd-top{display:flex;align-items:center;gap:12px;padding:16px 16px 12px}',
+'.bd-title{font-weight:800;font-size:15px;color:#fff;letter-spacing:-.01em;white-space:nowrap}',
+'.bd-sec{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#F2E2B8}',
+'.bd-x{margin-left:auto;background:rgba(255,255,255,.12);border:0;color:#fff;width:34px;height:34px;',
+'  border-radius:50%;cursor:pointer;font-size:17px;line-height:1;display:flex;align-items:center;justify-content:center}',
+'.bd-x:hover{background:rgba(255,255,255,.22)}',
+'.bd-x:focus-visible{outline:3px solid #C9A14A;outline-offset:2px}',
+
+'.bd-search{margin:0 16px 6px;display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.10);',
+'  border:1px solid rgba(255,255,255,.20);border-radius:12px;padding:10px 13px}',
+'.bd-search:focus-within{border-color:#C9A14A;box-shadow:0 0 0 3px rgba(201,161,74,.35)}',
+'.bd-search svg{width:16px;height:16px;color:#F2E2B8;flex:0 0 auto}',
+'.bd-search input{flex:1;background:none;border:0;outline:none;color:#fff;font:600 14.5px/1.3 inherit}',
+'.bd-search input::placeholder{color:rgba(255,255,255,.72)}',
+'.bd-hint{font-size:11px;color:rgba(255,255,255,.72);white-space:nowrap}',
+
+'.bd-body{overflow:auto;padding:6px 16px 18px;scrollbar-width:thin}',
+'.bd-g{font-size:10.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#F2E2B8;',
+'  margin:14px 2px 9px}',
+'.bd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}',
+
+'.bd-tile{position:relative;display:flex;align-items:flex-start;gap:11px;text-decoration:none;',
+'  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:16px;padding:12px;',
+'  transition:transform .16s ease,background .16s ease,border-color .16s ease}',
+'.bd-tile:hover{transform:translateY(-2px);background:rgba(255,255,255,.13);border-color:#C9A14A}',
+'.bd-tile:focus-visible{outline:3px solid #C9A14A;outline-offset:2px}',
+'.bd-ic{flex:0 0 auto;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;',
+'  box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}',
+'.bd-ic svg{width:20px;height:20px}',
+'.bd-ic.navy{background:linear-gradient(145deg,#31527a,#16294a);color:#fff}',
+'.bd-ic.gold{background:linear-gradient(145deg,#DCB45C,#A87F2E);color:#0B1530}',
+'.bd-ic.terra{background:linear-gradient(145deg,#C2734D,#8B3A2E);color:#fff}',
+'.bd-ic.green{background:linear-gradient(145deg,#7FA8A0,#2f7d64);color:#0B1530}',
+'.bd-tx{min-width:0;padding-right:22px}',
+'/* Room for the QR button so a long name never runs under it. */',
+'.bd-n{display:block;font-weight:800;font-size:14px;color:#fff;letter-spacing:-.01em}',
+'.bd-s{display:block;font-size:11.5px;line-height:1.35;color:#fff;opacity:.86;margin-top:2px}',
+'.bd-ext{font-size:10px;color:#F2E2B8;margin-left:5px}',
+
+'.bd-qrb{position:absolute;z-index:2;top:8px;right:8px;width:26px;height:26px;border-radius:8px;border:0;cursor:pointer;',
+'  background:rgba(255,255,255,.14);color:#fff;display:flex;align-items:center;justify-content:center;padding:0}',
+'.bd-qrb:hover{background:#C9A14A;color:#0B1530}',
+'.bd-qrb:focus-visible{outline:3px solid #C9A14A;outline-offset:2px}',
+'.bd-qrb svg{width:14px;height:14px}',
+'.bd-qr{display:none;margin-top:10px;background:#fff;border-radius:10px;padding:7px;width:104px;height:104px}',
+'.bd-qr svg{width:100%;height:100%;display:block;shape-rendering:crispEdges}',
+'.bd-cell.qron .bd-qr{display:block}',
+'.bd-cell{position:relative;display:flex;flex-direction:column}',
+'/* The QR button is a sibling of the tile, so the cell has to be the\n   positioning context or every button stacks against the panel and the\n   tile swallows the click. */',
+
+'.bd-none{color:#fff;opacity:.86;font-size:14px;padding:22px 2px}',
+'.bd-live{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}',
+'@media(prefers-reduced-motion:reduce){.bd-launch,.bd-panel,.bd-tile,.bd-scrim{transition:none}}'
+  ].join('');
+
+  var SEARCH_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>';
+  var GRID_IC   = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.6"/><rect x="14" y="3" width="7" height="7" rx="1.6"/><rect x="3" y="14" width="7" height="7" rx="1.6"/><rect x="14" y="14" width="7" height="7" rx="1.6"/></svg>';
+  var QR_IC     = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM19 19h2v2h-2z"/></svg>';
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  var launcher, scrim, panel, input, body, live, lastFocus = null, open = false;
+
+  function build() {
+    var st = document.createElement('style');
+    st.setAttribute('data-bio004-dock', '');
+    st.textContent = CSS;
+    document.head.appendChild(st);
+
+    launcher = document.createElement('button');
+    launcher.type = 'button';
+    launcher.className = 'bd-launch';
+    launcher.setAttribute('aria-expanded', 'false');
+    launcher.setAttribute('aria-haspopup', 'dialog');
+    launcher.innerHTML = GRID_IC + '<span class="bd-lt">Course tools</span>';
+    launcher.setAttribute('aria-label', 'Course tools. Opens every study tool for this course.');
+    document.body.appendChild(launcher);
+
+    scrim = document.createElement('div');
+    scrim.className = 'bd-scrim';
+    document.body.appendChild(scrim);
+
+    panel = document.createElement('div');
+    panel.className = 'bd-panel';
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-modal', 'true');
+    panel.setAttribute('aria-label', 'Course tools');
+    panel.hidden = true;
+
+    var sec = section();
+    panel.innerHTML =
+      '<div class="bd-top"><span class="bd-title">Course tools</span>' +
+      (sec ? '<span class="bd-sec">' + esc(SECTIONS[sec].label) + '</span>' : '') +
+      '<button class="bd-x" type="button" aria-label="Close course tools">&#10005;</button></div>' +
+      '<div class="bd-search">' + SEARCH_IC +
+        '<input type="search" autocomplete="off" placeholder="Type to find a tool, then Enter" ' +
+        'aria-label="Filter course tools" aria-describedby="bd-hint-x">' +
+        '<span class="bd-hint" id="bd-hint-x">Esc to close</span></div>' +
+      '<div class="bd-body"></div>' +
+      '<div class="bd-live" role="status" aria-live="polite"></div>';
+    document.body.appendChild(panel);
+
+    input = panel.querySelector('input');
+    body  = panel.querySelector('.bd-body');
+    live  = panel.querySelector('.bd-live');
+
+    render('');
+
+    launcher.addEventListener('click', toggle);
+    panel.querySelector('.bd-x').addEventListener('click', close);
+    scrim.addEventListener('click', close);
+    input.addEventListener('input', function () { render(input.value); });
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        var first = body.querySelector('.bd-tile');
+        if (first) { e.preventDefault(); first.click(); }
+      } else if (e.key === 'ArrowDown') {
+        var f = body.querySelector('.bd-tile');
+        if (f) { e.preventDefault(); f.focus(); }
+      }
+    });
+    document.addEventListener('keydown', onKey, true);
+  }
+
+  function render(q) {
+    q = String(q || '').trim().toLowerCase();
+    var list = tools().filter(function (t) {
+      if (!q) return true;
+      return (t.name + ' ' + t.sub + ' ' + (t.kw || '') + ' ' + t.g).toLowerCase().indexOf(q) >= 0;
+    });
+
+    if (!list.length) {
+      body.innerHTML = '<p class="bd-none">Nothing matches &ldquo;' + esc(q) + '&rdquo;. Clear the box to see everything.</p>';
+      live.textContent = 'No tools match';
+      return;
+    }
+
+    var groups = [], seen = {};
+    list.forEach(function (t) { if (!seen[t.g]) { seen[t.g] = []; groups.push(t.g); } seen[t.g].push(t); });
+
+    var html = '';
+    groups.forEach(function (g) {
+      html += '<p class="bd-g">' + esc(g) + '</p><div class="bd-grid">';
+      seen[g].forEach(function (t) {
+        var target = t.ext ? ' target="_blank" rel="noopener"' : ' target="_top"';
+        html += '<div class="bd-cell">' +
+          '<a class="bd-tile" href="' + esc(t.url) + '"' + target + '>' +
+            '<span class="bd-ic ' + t.tone + '">' + icon(t.icon) + '</span>' +
+            '<span class="bd-tx"><span class="bd-n">' + esc(t.name) +
+              (t.ext ? '<span class="bd-ext" aria-label="opens in a new tab">&#8599;</span>' : '') +
+            '</span><span class="bd-s">' + esc(t.sub) + '</span></span>' +
+          '</a>' +
+          (t.qr && QR[t.qr] ?
+            '<button class="bd-qrb" type="button" aria-expanded="false" ' +
+            'aria-label="Show a QR code for ' + esc(t.name) + ' to open it on your phone">' + QR_IC + '</button>' +
+            '<span class="bd-qr">' + QR[t.qr] + '</span>' : '') +
+        '</div>';
+      });
+      html += '</div>';
+    });
+    body.innerHTML = html;
+
+    body.querySelectorAll('.bd-qrb').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var cell = b.parentNode, on = cell.classList.toggle('qron');
+        b.setAttribute('aria-expanded', on ? 'true' : 'false');
+      });
+    });
+
+    /* Arrow keys walk the tiles, so the whole dock is usable without
+       a mouse and without 15 tab stops. */
+    var tiles = [].slice.call(body.querySelectorAll('.bd-tile'));
+    tiles.forEach(function (a, i) {
+      a.addEventListener('keydown', function (e) {
+        var n = null;
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') n = i + 1;
+        else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') n = i - 1;
+        else if (e.key === 'Home') n = 0;
+        else if (e.key === 'End') n = tiles.length - 1;
+        else return;
+        e.preventDefault();
+        if (n < 0) { input.focus(); return; }
+        if (tiles[n]) tiles[n].focus();
+      });
+    });
+
+    live.textContent = list.length + (list.length === 1 ? ' tool' : ' tools') + (q ? ' match ' + q : ' available');
+  }
+
+  function toggle() { open ? close() : show(); }
+
+  function show() {
+    lastFocus = document.activeElement;
+    panel.hidden = false;
+    /* next frame so the transition actually runs */
+    window.requestAnimationFrame(function () {
+      scrim.classList.add('on');
+      panel.classList.add('on');
+    });
+    launcher.setAttribute('aria-expanded', 'true');
+    open = true;
+    input.value = '';
+    render('');
+    window.setTimeout(function () { input.focus(); }, 60);
+  }
+
+  function close() {
+    if (!open) return;
+    scrim.classList.remove('on');
+    panel.classList.remove('on');
+    launcher.setAttribute('aria-expanded', 'false');
+    open = false;
+    window.setTimeout(function () { if (!open) panel.hidden = true; }, 220);
+    if (lastFocus && lastFocus.focus) { try { lastFocus.focus(); } catch (e) {} }
+  }
+
+  function onKey(e) {
+    if (!open) {
+      /* "t" opens the dock, but never while the student is typing. */
+      var el = document.activeElement, tag = el ? (el.tagName || '').toLowerCase() : '';
+      if (tag === 'input' || tag === 'textarea' || tag === 'select' || (el && el.isContentEditable)) return;
+      if (e.key === 't' && !e.metaKey && !e.ctrlKey && !e.altKey) { e.preventDefault(); show(); }
+      return;
+    }
+    if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+    if (e.key !== 'Tab') return;
+    var f = panel.querySelectorAll('button, a[href], input');
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build);
+  else build();
+})();
