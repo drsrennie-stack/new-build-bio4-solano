@@ -894,7 +894,7 @@ function buildFromSchedule(){
     genOrder.sort(function(a,b){return firstWeek(byGen[a])-firstWeek(byGen[b]);});
     units=genOrder.map(function(g,idx){
       var list=byGen[g];
-      var comps=list.map(function(cd){return {id:cd.id,name:cd.name,mastery:0,conf:'low',last:'',next:nextForWeek(cd.week),ev:[],today:null,yield:cd.yield,est:cd.est,facets:cd.facets,system:cd.system,general:cd.general,can:cd.can,dok:cd.dok};});
+      var comps=list.map(function(cd){return {id:cd.id,name:cd.name,week:cd.week,mastery:0,conf:'low',last:'',next:nextForWeek(cd.week),ev:[],today:null,yield:cd.yield,est:cd.est,facets:cd.facets,system:cd.system,general:cd.general,can:cd.can,dok:cd.dok};});
       return {id:'gen-'+idx,name:g,week:firstWeek(list),comps:comps};
     });
   }else{
@@ -1068,11 +1068,52 @@ function allComps(){var out=[];S.units.forEach(function(u){u.comps.forEach(funct
 function findComp(id){var a=allComps();for(var i=0;i<a.length;i++)if(a[i].c.id===id)return a[i];return null;}
 function unitMastery(u){var s=0;u.comps.forEach(function(c){s+=c.mastery;});return u.comps.length?Math.round(s/u.comps.length):0;}
 function readiness(){var s=0;S.dims.forEach(function(d){s+=d.val;});return Math.round(s/S.dims.length);}
+/* WHICH WEEK IS A COMPETENCY FROM?
+
+   Saved state from before this change has no week on the competency,
+   and rebuilding units to add one would wipe a student's mastery. So
+   the week is looked up from the competency map by id instead, which
+   works for old and new state alike. */
+var WEEK_BY_ID = null;
+function weekOf(c){
+  if(typeof c.week === 'number') return c.week;
+  if(!WEEK_BY_ID){
+    WEEK_BY_ID = {};
+    (window.BIO004_COMPETENCIES||[]).forEach(function(d){ WEEK_BY_ID[d.id] = d.week; });
+  }
+  var w = WEEK_BY_ID[c.id];
+  return (typeof w === 'number') ? w : 1;
+}
+
+/* NEVER TAUGHT IS NOT THE SAME AS WEAK.
+
+   Every competency starts at 0% with low confidence. Without this
+   gate, a student in week 1 opens a Repair Session and is told their
+   gaps are the respiratory tract, which is week 11 material they have
+   not been shown yet. That is not a gap, it is the future, and it
+   reads as "you are already failing" on day one.
+
+   Only competencies from weeks that have actually happened are
+   eligible. */
+function inPlay(c){ return weekOf(c) <= currentWeekNumber(); }
+
+function currentWeekNumber(){
+  var cw = scheduleCurrentWeek();
+  return (cw && typeof cw.n === 'number') ? cw.n : 1;
+}
+
+/* Taught, but not attempted yet. Different message, different action:
+   these need a first pass, not repair. */
+function untouched(){
+  return allComps().filter(function(x){ return inPlay(x.c) && !x.c.last; });
+}
+
 function weaknesses(){
   var out=[];
   allComps().forEach(function(x){
     var c=x.c,reasons=[];
     if(!c.last)return;
+    if(!inPlay(c))return;
     if(c.mastery<50)reasons.push('missed');
     if(c.conf==='low')reasons.push('conf');
     if(isOverdue(c.next))reasons.push('overdue');
@@ -1082,6 +1123,16 @@ function weaknesses(){
   return out;
 }
 function dueToday(){return allComps().filter(function(x){return x.c.last&&isDue(x.c.next);});}
+
+/* A small read-only window onto the selection logic. Useful for
+   checking, from the console, why a competency is or is not being
+   offered for repair. Reads only; changes nothing. */
+window.MOS_DEBUG = {
+  weaknesses: function(){ return weaknesses(); },
+  untouched: function(){ return untouched(); },
+  weekOf: function(c){ return weekOf(c); },
+  currentWeek: function(){ return currentWeekNumber(); }
+};
 function todayLecture(){return (S.course.lecture||[]).map(function(n){return {c:{name:n}};});}
 function todayLab(){return (S.course.lab||[]).map(function(n){return {c:{name:n}};});}
 function recommendedChallenge(){
