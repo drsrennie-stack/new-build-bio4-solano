@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Outbreak: Ward 4 | BIO 004 Histology Escape Room</title>
+<meta name="description" content="A 90 minute histology escape room for BIO 004 Human Anatomy. Students read tissue biopsies at microscope benches and on screen to trace the route of an outbreak.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   OUTBREAK: WARD 4
+   BIO 004 Human Anatomy - Solano Community College
+   Dr. Sharilyn Rennie
+   ============================================================ */
+:root{
+  --navy:#08101F; --navy-mid:#1E2A47; --navy-tint:#ECEFF4;
+  --terra:#8B1D1D; --terra-dark:#6B1616;
+  --gold:#DCB45C; --gold-deep:#6E5018;
+  --off-white:#FAFAF9; --ink:#14202F; --ink-muted:#3D4860;
+  --rule:#B8BEC8; --rule-soft:#DCE0E6; --white:#FFFFFF;
+  --shadow-card:0 1px 3px rgba(8,16,31,.08), 0 1px 2px rgba(8,16,31,.05);
+  --shadow-lift:0 6px 16px rgba(8,16,31,.10), 0 3px 6px rgba(8,16,31,.06);
+  --r-block:8px; --r-card:16px; --pill:99px;
+  --beat:620ms;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+main:focus{outline:none}
+body{
+  margin:0;font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color:var(--ink);background:var(--white);font-size:17px;line-height:1.55;
+}
+em,i,cite,dfn,var,address{font-style:normal}
+h1,h2,h3{margin:0 0 .4em;line-height:1.15;font-weight:800}
+h1{color:var(--navy);font-size:clamp(30px,4.6vw,46px);letter-spacing:-.025em}
+h2{color:var(--navy);font-size:clamp(21px,2.6vw,28px);font-weight:700}
+h3{color:var(--terra-dark);font-size:18px;font-weight:700}
+p{margin:0 0 .9em}
+ul,ol{margin:0 0 .9em;padding-left:1.2em}
+li{margin-bottom:.35em}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--navy);outline-offset:2px;border-radius:4px;box-shadow:0 0 0 6px var(--gold)}
+.stage :focus-visible,.statusbar :focus-visible,.evidence :focus-visible{outline-color:#FFFFFF;box-shadow:0 0 0 6px var(--gold)}
+.skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--navy);color:#fff;padding:12px 18px;border-radius:var(--r-block);font-weight:700}
+.skip:focus{left:12px;top:12px}
+.wrap{max-width:1000px;margin:0 auto;padding:0 22px}
+.vh{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.hidden{display:none !important}
+
+/* ---------- header ---------- */
+.site-header{background:var(--white);padding:13px 0}
+.hdr-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand-line{font-weight:800;color:var(--navy);font-size:15.5px;line-height:1.25}
+.brand-sub{font-weight:500;color:var(--ink-muted);font-size:13px;line-height:1.25}
+
+/* ---------- status bar ---------- */
+.statusbar{position:sticky;top:0;z-index:60;background:var(--navy);color:#fff}
+.status-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:9px 0}
+.clock{font-weight:800;font-size:28px;color:var(--gold);font-variant-numeric:tabular-nums;line-height:1}
+.clock.low{color:#F2B8B8}
+.status-meta{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:#D7DCE5;font-weight:500}
+.status-meta b{color:#fff;font-weight:700}
+.status-actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  border:1px solid var(--navy);background:var(--navy);color:#fff;font-weight:700;font-size:16px;
+  padding:13px 24px;border-radius:var(--r-block);cursor:pointer;text-decoration:none;
+  transition:transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+.btn:hover{background:#111d33;transform:translateY(-1px);box-shadow:var(--shadow-lift)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-ghost{background:transparent;color:var(--navy);border-color:var(--rule)}
+.btn-ghost:hover{background:var(--navy-tint);color:var(--navy)}
+.btn-light{background:#fff;color:var(--navy);border-color:#fff}
+.btn-light:hover{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.btn-on-dark{background:transparent;color:#fff;border-color:rgba(255,255,255,.5)}
+.btn-on-dark:hover{background:rgba(255,255,255,.12)}
+.btn-terra{background:var(--terra);border-color:var(--terra)}
+.btn-terra:hover{background:var(--terra-dark)}
+.btn-sm{font-size:13px;padding:8px 13px}
+
+/* ============================================================
+   CINEMATIC STAGE
+   ============================================================ */
+.stage{
+  background:var(--navy);color:#EAEEF5;border-radius:var(--r-card);
+  min-height:min(74vh,620px);display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(30px,6vw,64px);position:relative;overflow:hidden;
+}
+.stage-inner{max-width:44ch;position:relative;z-index:2}
+.stage-wide .stage-inner{max-width:62ch}
+.stage h1,.stage h2{color:#fff}
+.stage p{color:#DDE3EC}
+.stage-eyebrow{
+  font-size:12.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 18px;
+}
+.stage-line{
+  font-size:clamp(19px,2.5vw,25px);line-height:1.45;color:#E6EBF3;font-weight:500;margin:0 0 14px;
+}
+.stage-line.dim{color:#AEB9C9;font-size:clamp(16px,1.9vw,18px);font-weight:500}
+.stage-h{margin:0 0 22px}
+.stage-nav{margin-top:34px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.stage-skip{
+  position:absolute;top:16px;right:18px;z-index:3;background:transparent;border:1px solid rgba(255,255,255,.4);
+  color:#D7DCE5;font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:7px 13px;border-radius:var(--pill);cursor:pointer;
+}
+.stage-skip:hover{background:rgba(255,255,255,.12);color:#fff}
+.beatdots{display:flex;gap:7px;margin-left:auto}
+.beatdot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.25)}
+.beatdot.on{background:var(--gold)}
+
+/* the fade-in */
+.ln{opacity:0;transform:translateY(14px);animation:riseIn var(--beat) cubic-bezier(.22,.68,.24,1) forwards;animation-delay:calc(var(--d,0) * 560ms)}
+@keyframes riseIn{to{opacity:1;transform:translateY(0)}}
+.instant .ln{animation:none;opacity:1;transform:none}
+.stage-glow{
+  position:absolute;inset:auto -20% -45% -20%;height:70%;pointer-events:none;z-index:1;
+  background:radial-gradient(ellipse at 50% 100%, rgba(220,180,92,.16), rgba(220,180,92,0) 62%);
+}
+
+/* ============================================================
+   PANELS
+   ============================================================ */
+.panel{background:var(--white);border:1px solid var(--rule-soft);border-radius:var(--r-card);box-shadow:var(--shadow-card);padding:26px 28px;margin-bottom:20px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--terra-dark);margin:0 0 8px}
+.lede{font-size:19px;max-width:62ch}
+.muted{color:var(--ink-muted)}
+.small{font-size:14px}
+
+/* ---------- progress rail ---------- */
+.rail{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.rail-label{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep)}
+.pips{display:flex;gap:6px}
+.pip{width:26px;height:6px;border-radius:99px;background:var(--rule-soft)}
+.pip.done{background:#1E3D4C}
+.pip.now{background:var(--gold)}
+
+/* ---------- single question stage ---------- */
+.qcard{background:var(--white);border:1px solid var(--rule-soft);border-radius:var(--r-card);box-shadow:var(--shadow-card);padding:clamp(22px,3.4vw,34px);margin-bottom:20px}
+.qtext{font-weight:700;font-family:inherit;color:var(--navy);font-size:clamp(19px,2.3vw,23px);margin:0 0 20px;max-width:60ch;line-height:1.3}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend{padding:0}
+.opt{display:block;margin-bottom:10px}
+.opt label{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1px solid var(--rule-soft);border-radius:var(--r-block);cursor:pointer;background:var(--white);transition:border-color 150ms ease, background 150ms ease}
+.opt label:hover{border-color:var(--navy-mid);background:var(--off-white)}
+.opt input{margin:3px 0 0;flex:none;width:19px;height:19px;accent-color:var(--terra)}
+.opt input:checked + span{font-weight:700}
+.matchrow{display:grid;grid-template-columns:1fr 1.15fr;gap:14px;align-items:center;padding:11px 0;border-bottom:1px solid var(--rule-soft)}
+.matchrow:last-child{border-bottom:0}
+.matchrow label{font-weight:700;color:var(--ink)}
+select{width:100%;font-family:inherit;font-size:15px;padding:11px 12px;border:1px solid var(--rule);border-radius:var(--r-block);background:var(--white);color:var(--ink)}
+.orderlist{list-style:none;padding:0;margin:0}
+.orderitem{display:flex;align-items:center;gap:12px;padding:12px 15px;margin-bottom:9px;border:1px solid var(--rule-soft);border-radius:var(--r-block);background:var(--white)}
+.orderitem .ord{flex:none;width:30px;height:30px;border-radius:var(--r-block);background:var(--navy-tint);color:var(--navy);font-weight:800;font-size:14px;display:grid;place-items:center}
+.orderitem .txt{flex:1;font-weight:600}
+.ordbtns{display:flex;gap:6px;flex:none}
+.iconbtn{width:36px;height:36px;border-radius:var(--r-block);border:1px solid var(--rule);background:var(--white);color:var(--navy);font-weight:800;font-size:15px;cursor:pointer;line-height:1}
+.iconbtn:hover{background:var(--navy-tint)}
+.iconbtn[disabled]{opacity:.35;cursor:not-allowed}
+
+/* ---------- mind map ---------- */
+.mm-center{background:var(--navy);color:#fff;border-radius:var(--r-card);padding:15px 20px;font-weight:800;font-size:18px;text-align:center;margin-bottom:16px}
+.mm-branches{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}
+.mm-branch{border:1px solid var(--rule-soft);border-radius:var(--r-card);padding:14px;background:var(--white);box-shadow:var(--shadow-card)}
+.mm-branch h3{margin:0 0 3px;font-size:15px;font-weight:800;color:var(--terra-dark)}
+.mm-branch .mm-hint{font-size:12.5px;color:var(--ink-muted);margin:0 0 10px}
+.mm-slot{width:100%;text-align:left;min-height:46px;border:1px dashed var(--rule);border-radius:var(--r-block);background:var(--off-white);color:var(--ink-muted);font-size:14px;font-weight:600;padding:11px 12px;margin-bottom:8px;cursor:pointer}
+.mm-slot:hover{border-color:var(--navy-mid);background:var(--navy-tint)}
+.mm-slot.filled{border-style:solid;border-color:var(--navy);background:var(--white);color:var(--ink);font-weight:700}
+.mm-bank{margin-top:16px;border-top:1px solid var(--rule-soft);padding-top:14px}
+.mm-bank h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep);margin:0 0 10px}
+.mm-words{display:flex;flex-wrap:wrap;gap:8px}
+.mm-word{border:1px solid var(--rule);background:var(--white);color:var(--ink);border-radius:var(--pill);padding:9px 16px;font-size:14px;font-weight:600;cursor:pointer}
+.mm-word:hover{background:var(--navy-tint);border-color:var(--navy-mid)}
+.mm-word.armed{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+/* ---------- feedback ---------- */
+.result{display:flex;gap:11px;align-items:flex-start;border-radius:var(--r-block);padding:13px 16px;font-size:15.5px;font-weight:600;margin-top:16px;border:1px solid var(--rule-soft);background:var(--white);box-shadow:var(--shadow-card)}
+.result .tag{font-weight:800;flex:none}
+.result-ok{border-left:4px solid #1E3D4C;color:#12303c}
+.result-no{border-left:4px solid var(--terra);color:var(--terra-dark)}
+.result-hint{border-left:4px solid var(--gold);background:var(--off-white)}
+.qactions{display:flex;gap:11px;flex-wrap:wrap;align-items:center;margin-top:24px}
+
+/* ---------- bench gate ---------- */
+.bench{border:2px solid var(--terra);border-radius:var(--r-card);padding:clamp(22px,3.4vw,32px);background:var(--white);box-shadow:var(--shadow-card);margin-bottom:20px}
+.bench-head{display:flex;align-items:center;gap:16px;margin-bottom:6px;flex-wrap:wrap}
+.bench-letter{font-size:52px;font-weight:800;color:var(--terra);line-height:.9}
+.scoperow{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px}
+.scopefield{flex:1;min-width:150px}
+.scopefield label{display:block;font-weight:700;font-size:14px;color:var(--navy);margin-bottom:6px}
+.scopefield input{width:100%;font-family:inherit;font-size:26px;font-weight:800;letter-spacing:.14em;padding:13px 12px;border:1px solid var(--rule);border-radius:var(--r-block);color:var(--navy);background:var(--white);text-align:center}
+.scopefield .fhint{font-size:12.5px;color:var(--ink-muted);margin-top:6px;font-weight:500}
+
+/* ---------- station board ---------- */
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:15px;margin-bottom:10px}
+.stationcard{text-align:left;width:100%;background:var(--white);border-radius:var(--r-card);padding:19px;cursor:pointer;display:flex;flex-direction:column;gap:8px;border:1px dashed var(--rule);color:var(--ink);box-shadow:var(--shadow-card);transition:transform 180ms ease, box-shadow 180ms ease}
+.stationcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-lift)}
+.stationcard[disabled]{cursor:not-allowed;opacity:.6}
+.stationcard[disabled]:hover{transform:none;box-shadow:var(--shadow-card)}
+.stationcard.is-open{border:2px solid var(--gold)}
+.stationcard.is-done{border:2px solid #1E3D4C;background:var(--navy-tint)}
+.sc-top{display:flex;align-items:center;gap:10px}
+.sc-num{flex:none;width:34px;height:34px;border-radius:var(--r-block);display:grid;place-items:center;font-weight:800;font-size:15px;background:var(--navy);color:#fff}
+.stationcard.is-done .sc-num{background:#1E3D4C}
+.stationcard[disabled] .sc-num{background:var(--ink-muted)}
+.sc-name{font-weight:800;color:var(--navy);font-size:17px;line-height:1.2}
+.sc-desc{font-size:14px;color:var(--ink-muted)}
+.badge{display:inline-flex;align-items:center;border-radius:var(--pill);padding:4px 12px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;align-self:flex-start}
+.badge-locked{background:var(--navy-tint);color:var(--ink-muted);border:1px solid var(--rule)}
+.badge-open{background:#fff;color:var(--gold-deep);border:2px solid var(--gold)}
+.badge-done{background:#fff;color:#1E3D4C;border:1px solid #1E3D4C}
+.badge-scope{background:#fff;color:var(--terra-dark);border:1px solid var(--terra)}
+.acthead{display:flex;align-items:baseline;gap:12px;margin:26px 0 12px;flex-wrap:wrap}
+.acthead h2{margin:0;font-size:20px}
+.acthead .actnote{font-size:14px;color:var(--ink-muted)}
+
+/* ---------- rotation picker ---------- */
+.rotgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:13px;margin-top:6px}
+.rotcard{border:1px solid var(--rule);border-radius:var(--r-card);padding:17px;background:var(--white);cursor:pointer;text-align:left;box-shadow:var(--shadow-card)}
+.rotcard:hover{border-color:var(--navy-mid)}
+.rotcard.sel{border:2px solid var(--gold);background:#fff}
+.rotcard .rn{display:block;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-deep)}
+.rotcard .rp{display:block;font-weight:800;color:var(--navy);font-size:17px;margin-top:3px;line-height:1.2}
+.rotcard .rs{display:block;font-size:13.5px;color:var(--ink-muted);margin-top:5px;line-height:1.35}
+
+/* ---------- evidence reveal ---------- */
+.evidence{background:var(--navy);color:#EAEEF5;border-radius:var(--r-card);padding:clamp(26px,4.6vw,44px);margin-bottom:20px;position:relative;overflow:hidden}
+.evidence h2{color:#fff}
+.evidence p{color:#DDE3EC}
+.evidence .stage-eyebrow{color:var(--gold)}
+
+/* ---------- notebook ---------- */
+.nb-list{list-style:none;padding:0;margin:0}
+.nb-list li{border:1px solid var(--rule-soft);border-radius:var(--r-block);padding:14px 17px;margin-bottom:11px;background:var(--white);box-shadow:var(--shadow-card)}
+.nb-src{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-deep);display:block;margin-bottom:3px}
+
+/* ---------- cipher ---------- */
+details.cipher{border:1px solid var(--rule-soft);border-radius:var(--r-card);background:var(--white);box-shadow:var(--shadow-card);margin-bottom:20px}
+details.cipher > summary{cursor:pointer;list-style:none;padding:16px 22px;font-weight:800;color:var(--navy);font-size:16px;display:flex;align-items:center;gap:10px}
+details.cipher > summary::-webkit-details-marker{display:none}
+details.cipher > summary::after{content:"+";margin-left:auto;font-size:22px;font-weight:800;color:var(--terra)}
+details.cipher[open] > summary::after{content:"\2212"}
+.cipher-body{padding:0 22px 20px}
+.ciphergrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:20px}
+table.cip{width:100%;border-collapse:collapse;font-size:14.5px}
+table.cip caption{text-align:left;font-weight:800;color:var(--terra-dark);font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;padding-bottom:6px}
+table.cip th,table.cip td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--rule-soft)}
+table.cip th{font-weight:800;color:var(--navy);width:52px}
+
+/* ---------- data table ---------- */
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:16px}
+.tablewrap table{margin-bottom:0}
+table.data{width:100%;border-collapse:collapse;font-size:15px;margin:4px 0 14px}
+table.data caption{text-align:left;font-weight:700;color:var(--ink-muted);font-size:14px;padding-bottom:8px}
+table.data th,table.data td{padding:10px 12px;border-bottom:1px solid var(--rule-soft);text-align:left}
+table.data thead th{background:var(--navy);color:#fff;font-weight:700;border-bottom:0}
+table.data td.num{font-variant-numeric:tabular-nums}
+
+/* ---------- modal ---------- */
+.modal-back{position:fixed;inset:0;background:rgba(8,16,31,.66);display:none;align-items:center;justify-content:center;padding:20px;z-index:120}
+.modal-back.show{display:flex}
+.modal{background:var(--white);border-radius:var(--r-card);max-width:530px;width:100%;padding:26px 28px;box-shadow:0 18px 40px rgba(8,16,31,.35);max-height:88vh;overflow:auto}
+.modal h2{margin-top:0}
+.field{margin-bottom:14px}
+.field label{display:block;font-weight:700;font-size:14px;color:var(--navy);margin-bottom:6px}
+.field input[type=text],.field input[type=number],.field input[type=password]{width:100%;font-family:inherit;font-size:16px;padding:11px 13px;border:1px solid var(--rule);border-radius:var(--r-block);color:var(--ink);background:var(--white)}
+.modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+/* ---------- finale ---------- */
+.scoreboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin:28px 0 6px}
+.scorebox{background:rgba(255,255,255,.07);border-radius:var(--r-block);padding:18px 14px}
+.scorebox .sv{font-size:30px;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums;line-height:1.1}
+.scorebox .sl{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#C9D1DE;font-weight:700;margin-top:4px}
+
+/* ---------- footer ---------- */
+.site-footer{background:var(--navy);color:#C9D1DE;padding:30px 0;margin-top:42px}
+.site-footer .name{color:#fff;font-weight:800;font-size:17px}
+.site-footer p{margin:0 0 4px;font-size:14px}
+
+@media (max-width:640px){
+  .matchrow{grid-template-columns:1fr;gap:6px}
+  .status-actions{margin-left:0;width:100%}
+  .stage{min-height:auto;padding:28px 22px}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-delay:0ms !important;transition-duration:.001ms !important}
+  .ln{opacity:1;transform:none}
+}
+@media print{
+  .statusbar,.status-actions,.modal-back,.stage-skip{display:none !important}
+  body{font-size:12pt}
+  .stage,.evidence{background:none;color:var(--ink);border:2px solid var(--navy)}
+  .stage h1,.stage h2,.evidence h2{color:var(--navy)}
+  .stage p,.evidence p{color:var(--ink)}
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to main content</a>
+
+<header class="site-header">
+  <div class="wrap hdr-row">
+    <svg width="42" height="42" viewBox="0 0 44 44" role="img" aria-label="BIO 004 course mark">
+      <circle cx="22" cy="22" r="21" fill="none" stroke="#08101F" stroke-width="2"/>
+      <circle cx="22" cy="22" r="13" fill="none" stroke="#8B1D1D" stroke-width="2"/>
+      <circle cx="22" cy="22" r="5" fill="#DCB45C"/>
+    </svg>
+    <div>
+      <div class="brand-line">Human Anatomy / BIO 004 &middot; Solano Community College</div>
+      <div class="brand-sub">Histology Escape Room &middot; Outbreak: Ward 4</div>
+    </div>
+  </div>
+</header>
+
+<div class="statusbar" id="statusbar" role="region" aria-label="Game status and controls">
+  <div class="wrap status-row">
+    <div class="clock" id="clock" role="timer" aria-live="off">90:00</div>
+    <div class="status-meta">
+      <span>Team <b id="mTeam">Not set</b></span>
+      <span id="mRotWrap" class="hidden">Route <b id="mRot">1</b></span>
+      <span>Cleared <b id="mCleared">0 of 8</b></span>
+      <span>Hints <b id="mHints">0</b></span>
+      <span>Penalty <b id="mPenalty">0:00</b></span>
+    </div>
+    <div class="status-actions">
+      <button class="btn btn-on-dark btn-sm" id="btnBoard" type="button">Case board</button>
+      <button class="btn btn-on-dark btn-sm" id="btnNotebook" type="button">Field notebook</button>
+      <button class="btn btn-on-dark btn-sm" id="btnPause" type="button">Pause</button>
+      <button class="btn btn-on-dark btn-sm" id="btnInstructor" type="button">Instructor</button>
+    </div>
+  </div>
+</div>
+
+<main id="main" tabindex="-1" class="wrap" style="padding-top:24px;padding-bottom:18px">
+  <div id="screen"></div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="name">Dr. Sharilyn Rennie</p>
+    <p>Professor of Anatomy &amp; Physiology</p>
+    <p>BIO 004 Human Anatomy &middot; Solano Community College</p>
+  </div>
+</footer>
+
+<div class="modal-back" id="modalBack" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal" id="modalBox">
+    <h2 id="modalTitle">Instructor controls</h2>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   CIPHER
+   ========================================================= */
+const CIPHER = {
+  epithelial:[["11","Simple squamous"],["12","Simple cuboidal"],["13","Simple columnar"],
+    ["14","Pseudostratified ciliated columnar"],["15","Stratified squamous, nonkeratinized"],
+    ["16","Stratified squamous, keratinized"],["17","Transitional (urothelium)"],["18","Stratified cuboidal"]],
+  connective:[["21","Areolar"],["22","Adipose"],["23","Reticular"],["24","Dense regular"],["25","Dense irregular"],
+    ["26","Elastic connective"],["27","Hyaline cartilage"],["28","Elastic cartilage"],["29","Fibrocartilage"],
+    ["30","Compact bone"],["31","Blood"]],
+  other:[["41","Skeletal muscle"],["42","Cardiac muscle"],["43","Smooth muscle"],["44","Nervous tissue"]]
+};
+
+const EPI_TABLE = `
+<div class="tablewrap" tabindex="0" role="group" aria-label="Scrollable table: exposure table">
+<table class="data">
+  <caption>Carquinez Regional Medical Center, exposure table for the fourteen cases, compiled by Public Health</caption>
+  <thead><tr><th scope="col">Exposure</th><th scope="col">Exposed</th><th scope="col">Ill</th><th scope="col">Attack rate</th></tr></thead>
+  <tbody>
+    <tr><td>Ate at the salad bar</td><td class="num">62</td><td class="num">7</td><td class="num">11 percent</td></tr>
+    <tr><td>Used the main elevators</td><td class="num">210</td><td class="num">13</td><td class="num">6 percent</td></tr>
+    <tr><td>Sat within six meters of the West Atrium fountain</td><td class="num">31</td><td class="num">13</td><td class="num">42 percent</td></tr>
+    <tr><td>Drank from the third floor water cooler</td><td class="num">88</td><td class="num">6</td><td class="num">7 percent</td></tr>
+    <tr><td>Waited more than thirty minutes in the ground floor waiting room</td><td class="num">44</td><td class="num">5</td><td class="num">11 percent</td></tr>
+  </tbody>
+</table></div>`;
+
+/* =========================================================
+   OPENING BEATS
+   ========================================================= */
+const OPENING = [
+  { eyebrow:"Carquinez Regional Medical Center", h:"06:40",
+    lines:["Fourteen people who have never met",
+           "are sick with exactly the same thing.",
+           "Every one of them walked through the same building."] },
+  { eyebrow:"Ward 4", h:"Outbreak: Ward 4", big:true,
+    lines:["Dry cough. Fever.",
+           "Oxygen falling and not coming back up.",
+           "Six of them are on Ward 4 tonight."] },
+  { eyebrow:"Your assignment", h:"You are the histopathology rapid response team",
+    lines:["Public Health has the epidemiology.",
+           "They do not have the tissue.",
+           "You will never name the organism. That is not this job.",
+           "You will read what this thing damaged and what it left alone."] },
+  { eyebrow:"The idea", h:"Tissue tropism is a map",
+    lines:["Every pathogen has surfaces it can attack and surfaces it cannot.",
+           "The damaged list tells you where it got in.",
+           "Where it got in tells you what to shut off.",
+           "Find the map. Find the source."] },
+  { eyebrow:"How this works", h:"Two gates per station", rules:true,
+    lines:["Case work on screen comes first. One question at a time.",
+           "Then the bench. You identify the real slide and enter its cipher code.",
+           "Both gates clear before the next station opens.",
+           "Everything you confirm goes into your field notebook.",
+           "The last station is built entirely from that notebook."] },
+  { eyebrow:"House rules", h:"Three things", rules:true,
+    lines:["A hint costs two minutes. A wrong cipher code costs thirty seconds.",
+           "Talk before you type. The driver enters nothing the team has not said out loud.",
+           "Do not refresh the page. If something breaks, your instructor can restore you."] }
+];
+
+/* =========================================================
+   STATIONS
+   ========================================================= */
+const S = {};
+
+S.intake = {
+  id:"intake", name:"Intake Bay", tag:"Microscopy and the bench check", track:null,
+  brief:[
+    { eyebrow:"Case file 001", h:"Twenty two specimens, no labels",
+      lines:["The night courier delivered biopsies from four patients.",
+             "The requisition slips came off in transit.",
+             "Nothing gets read until somebody proves they can drive a scope."] }
+  ],
+  items:[
+    {type:"mcq",q:"Your ocular lens is 10x and you have rotated to the 40x objective. What is the total magnification?",
+     options:["50x","400x","4000x","40x"],answer:1},
+    {type:"mcq",q:"A specimen focused on 10x stays nearly focused when you rotate to 40x. The objectives are:",
+     options:["Parcentral","Parfocal","Achromatic","Oil immersion"],answer:1},
+    {type:"multi",q:"You move from the 4x scanning objective to the 40x high power objective. Select everything that decreases.",
+     options:["Field of view","Working distance","Total magnification","Amount of light reaching your eye"],answers:[0,1,3]},
+    {type:"mcq",q:"Your field is glaring bright and the cells look washed out with almost no visible edges. The correct first adjustment is:",
+     options:["Raise the stage with the coarse adjustment","Switch to a higher objective","Close the iris diaphragm slightly","Add immersion oil"],answer:2},
+    {type:"order",q:"Put the focusing sequence in working order, first step at the top.",
+     items:["Start on the scanning objective","Bring the specimen into focus with the coarse adjustment","Center the structure you want in the middle of the field","Rotate to the next objective","Sharpen with the fine adjustment only"]}
+  ],
+  bench:null,
+  evidence:{ eyebrow:"Logged", h:"Bench check cleared",
+    lines:["Twenty two specimens released to your team.","Now sort them."],
+    note:{src:"Intake bay",text:"Bench check cleared. All twenty two specimens released for reading."} },
+  hints:["Total magnification is ocular times objective. Nothing is added or divided.",
+    "Higher magnification narrows what you see and brings the lens closer to the slide, so field of view and working distance both shrink. A narrower cone also lets less light through.",
+    "Contrast problems are iris diaphragm problems. Brightness problems are light source problems."]
+};
+
+S.triage = {
+  id:"triage", name:"Triage Board", tag:"The four tissue families", track:null,
+  brief:[
+    { eyebrow:"Case file 002", h:"Sort before you read",
+      lines:["The pathology board will not accept a specimen log that says tissue.",
+             "Four families. Every descriptor belongs on exactly one branch."] }
+  ],
+  items:[
+    {type:"mindmap",q:"Sort every descriptor onto the correct tissue family.",
+     center:"The four primary tissue types",
+     branches:[
+       {name:"Epithelial",hint:"Covering, lining, glandular",slots:["Sheets of cells with a free apical surface and a basement membrane","Avascular; fed by diffusion from the tissue underneath","Regenerates rapidly and is the origin of most carcinomas"]},
+       {name:"Connective",hint:"Support, bind, transport",slots:["Few cells scattered in abundant extracellular matrix","Fibers and ground substance built mostly by fibroblasts","Includes the only fluid tissue in the body"]},
+       {name:"Muscle",hint:"Movement",slots:["Elongated cells packed with actin and myosin","Three varieties: one voluntary, two involuntary"]},
+       {name:"Nervous",hint:"Control and communication",slots:["Cells with long processes that conduct signals","Supported by cells that do not conduct, called neuroglia"]}
+     ]},
+    {type:"mcq",q:"Every epithelium shares one structural feature that connective tissue never has. It is:",
+     options:["A rich blood supply of its own","Polarity, with an apical surface and a basal surface anchored to a basement membrane","An extracellular matrix greater in volume than the cells","Contractile protein filaments"],answer:1}
+  ],
+  bench:null,
+  evidence:{ eyebrow:"Logged", h:"Specimen log rebuilt",
+    lines:["Airway, lung, kidney, esophagus, tendon, cartilage, bone, blood and skin.","All present. All family sorted."],
+    note:{src:"Triage board",text:"Specimen log rebuilt and family sorted. Nine tissue sites confirmed present across the four patients."} },
+  hints:["Ask one question of each descriptor: is this about a surface, a matrix, a contraction, or a signal?",
+    "Epithelium has no blood vessels of its own. That one fact drives its diffusion feeding, its fast turnover, and why it always sits on connective tissue.",
+    "Blood counts as connective tissue because its matrix is plasma. Matrix decides, not appearance."]
+};
+
+/* ---------------- TRACK A: AIRWAY ---------------- */
+S.secretion = {
+  id:"secretion", name:"Secretion Log", tag:"Glands and membranes", track:"A",
+  brief:[
+    { eyebrow:"Airway track", h:"The mucus is missing",
+      lines:["Respiratory therapy reports something odd.",
+             "These patients cough hard and produce almost nothing.",
+             "A healthy airway traps inhaled particles in mucus and sweeps them up.",
+             "If the mucus is gone, half the defense is already down."] }
+  ],
+  items:[
+    {type:"match",q:"Match each gland type to its defining description.",
+     choices:["Ductless; releases hormones directly into the bloodstream","Releases product through a duct onto a surface or into a cavity","Secretes by exocytosis and the cell stays intact","The apical portion of the cell pinches off and is released","The entire cell ruptures and becomes the secretion","A unicellular exocrine gland that secretes mucin"],
+     rows:[{left:"Endocrine gland",answer:0},{left:"Exocrine gland",answer:1},{left:"Merocrine secretion",answer:2},
+       {left:"Apocrine secretion",answer:3},{left:"Holocrine secretion",answer:4},{left:"Goblet cell",answer:5}]},
+    {type:"match",q:"Match each membrane to its description.",
+     choices:["Two layers, parietal and visceral, around a closed ventral cavity","Lines cavities that open to the exterior and has a lamina propria","The skin: a dry membrane of keratinized epithelium on dense irregular connective tissue","Dense connective tissue only, with no epithelium at all"],
+     rows:[{left:"Serous membrane",answer:0},{left:"Mucous membrane",answer:1},{left:"Cutaneous membrane",answer:2},{left:"Synovial membrane",answer:3}]},
+    {type:"mcq",q:"Remember the memory tool: HOL equals WHOLE cell secreted. Which is the classic holocrine gland?",
+     options:["Eccrine sweat gland","Sebaceous gland","Pancreatic acinar cell","Parotid salivary gland"],answer:1},
+    {type:"mcq",q:"Goblet cells disappear from a stretch of airway epithelium. The immediate consequence is:",
+     options:["Loss of the mucus layer that traps inhaled particles","Loss of the basement membrane","Loss of blood supply to the epithelium","Conversion of the epithelium to stratified squamous"],answer:0},
+    {type:"multi",q:"Select every true statement about the mucus escalator.",
+     options:["Goblet cells and mucous glands supply the mucus","Cilia beat toward the pharynx to move trapped debris upward","It still works when cilia are destroyed, because mucus alone clears particles","Losing it lets inhaled particles travel deeper into the lung"],answers:[0,1,3]}
+  ],
+  bench:null,
+  evidence:{ eyebrow:"Evidence", h:"Half the defense is down",
+    lines:["Goblet cells depleted along the airway.","Mucus layer thin to absent.","Anything inhaled is now travelling further than it should."],
+    note:{src:"Secretion log",text:"Goblet cells depleted along the airway and the mucus layer thin to absent. Inhaled particles are no longer being trapped and swept upward."} },
+  hints:["Merocrine keeps the cell. Apocrine loses the tip. Holocrine loses everything.",
+    "Serous membranes wrap closed cavities in two layers. Mucous membranes line anything open to the outside world.",
+    "The escalator needs both parts. Mucus with no cilia is a trap with no conveyor."]
+};
+
+S.epithelial = {
+  id:"epithelial", name:"Epithelial Ward", tag:"Identification, location, function", track:"A", bench:"A",
+  brief:[
+    { eyebrow:"Airway track", h:"How deep did it go?",
+      lines:["The lung team needs to know where the damage stops.",
+             "Upper airway only means a droplet.",
+             "Gas exchange surface means something far smaller and far more inhalable."] }
+  ],
+  items:[
+    {type:"match",q:"Match each epithelium to where you would find it.",
+     choices:["Alveoli, capillary endothelium, serous membranes","Kidney tubules, thyroid follicles, small gland ducts","Stomach and intestinal lining","Trachea and upper respiratory tract","Esophagus, oral cavity, vagina","Epidermis of the skin","Urinary bladder and ureters","Ducts of sweat and larger salivary glands"],
+     rows:[{left:"Simple squamous",answer:0},{left:"Simple cuboidal",answer:1},{left:"Simple columnar",answer:2},
+       {left:"Pseudostratified ciliated columnar",answer:3},{left:"Stratified squamous, nonkeratinized",answer:4},
+       {left:"Stratified squamous, keratinized",answer:5},{left:"Transitional",answer:6},{left:"Stratified cuboidal",answer:7}]},
+    {type:"order",q:"Order these coverings from the thinnest, most permeable barrier to the thickest, most protective.",
+     items:["Simple squamous","Simple cuboidal","Pseudostratified ciliated columnar","Stratified squamous, nonkeratinized","Stratified squamous, keratinized"]},
+    {type:"mcq",q:"A stratified epithelium is named for the shape of which cells?",
+     options:["The cells touching the basement membrane","The cells at the free apical surface","The largest cells anywhere in the sheet","The cells in the middle layer"],answer:1},
+    {type:"mcq",q:"Transitional epithelium goes from rounded and piled up to flattened and stretched. What does that buy the bladder?",
+     options:["Faster absorption of urine","Volume change without tearing the lining","Secretion of urea into the lumen","Movement of urine by ciliary action"],answer:1},
+    {type:"multi",q:"Select every epithelium built primarily for diffusion or filtration rather than protection.",
+     options:["Simple squamous","Stratified squamous, keratinized","Simple cuboidal in the kidney tubule","Transitional"],answers:[0,2]}
+  ],
+  gateB:{
+    bench:"A", label:"Bench A",
+    instruction:"Four slides. Identify the epithelium each one is set up to show, name it out loud, then enter its cipher code.",
+    fields:[
+      {label:"Slide A1",hint:"Trachea. Look at the free surface.",answer:"14"},
+      {label:"Slide A2",hint:"Lung. Find the thinnest wall in the body.",answer:"11"},
+      {label:"Slide A3",hint:"Kidney cortex. The tubule wall, not the glomerulus.",answer:"12"},
+      {label:"Slide A4",hint:"Esophagus. Layers, and it stays moist.",answer:"15"}
+    ],
+    observe:{q:"Read the patient specimen report on the Bench A card. What separates the patient airway and lung from the reference?",
+      options:["Cilia blunted and stripped in patches, and alveolar walls thickened with air spaces flooded","The epithelium has become stratified squamous throughout","Cilia have appeared on the alveolar surface","Cartilage has replaced the airway lining"],answer:0}
+  },
+  evidence:{ eyebrow:"Evidence", h:"It reached the alveoli",
+    lines:["Ciliated airway epithelium damaged.","Alveolar simple squamous damaged, air spaces flooded.","Kidney tubules normal. Esophagus normal.",
+           "Whatever carried this was small enough to bypass the upper airway entirely."],
+    note:{src:"Bench A, slides A1 to A4",text:"Ciliated airway epithelium stripped and alveolar simple squamous damaged with flooded air spaces. Kidney simple cuboidal and esophageal stratified squamous both normal. The agent reached the gas exchange surface."} },
+  hints:["Layers first, then apical shape. Say the whole name out loud before you write anything.",
+    "Built for diffusion means thin and simple. Built for abrasion means thick and stratified.",
+    "To reach an alveolus a particle has to be roughly five micrometers or smaller. Droplets are much larger and land high in the airway."]
+};
+
+/* ---------------- TRACK B: FRAMEWORK ---------------- */
+S.cells = {
+  id:"cells", name:"Cell Registry", tag:"Special cells and what they do", track:"B",
+  brief:[
+    { eyebrow:"Framework track", h:"Who showed up, and who left",
+      lines:["Pathology tells you what a tissue is.",
+             "The cell registry tells you what a tissue was doing.",
+             "In the lung washings the cell population has shifted hard.",
+             "That shift is a fingerprint of the response."] }
+  ],
+  items:[
+    {type:"match",q:"Match each connective tissue and bone cell to its job.",
+     choices:["Builds the fibers and ground substance of connective tissue proper","Mature cartilage cell sitting inside a lacuna","Mature bone cell in a lacuna, maintaining matrix and communicating through canaliculi","Bone building cell that deposits new matrix","Bone dissolving cell derived from fused white blood cells","Stores triglyceride; nucleus and cytoplasm squeezed to the rim"],
+     rows:[{left:"Fibroblast",answer:0},{left:"Chondrocyte",answer:1},{left:"Osteocyte",answer:2},
+       {left:"Osteoblast",answer:3},{left:"Osteoclast",answer:4},{left:"Adipocyte",answer:5}]},
+    {type:"match",q:"Match each defense or secretion cell to its job.",
+     choices:["Unicellular gland that secretes mucin onto an epithelial surface","Releases histamine and heparin near small vessels, increasing capillary permeability","Phagocyte derived from a monocyte that has entered the tissue","Antibody producing cell derived from an activated B lymphocyte","First responder phagocyte in acute inflammation, multilobed nucleus"],
+     rows:[{left:"Goblet cell",answer:0},{left:"Mast cell",answer:1},{left:"Macrophage",answer:2},
+       {left:"Plasma cell",answer:3},{left:"Neutrophil",answer:4}]},
+    {type:"mcq",q:"A lung washing comes back loaded with large phagocytic cells full of engulfed debris. These are:",
+     options:["Alveolar macrophages","Plasma cells","Chondrocytes","Goblet cells"],answer:0},
+    {type:"mcq",q:"Mast cell degranulation makes an inflamed tissue swell. The mechanism is:",
+     options:["Histamine increases capillary permeability, so fluid leaves the vessels","Heparin thickens the extracellular matrix","Mast cells phagocytize fluid out of the tissue","Mast cells lay down collagen fibers"],answer:0},
+    {type:"multi",q:"Select every cell you would expect resident in areolar connective tissue.",
+     options:["Fibroblast","Macrophage","Mast cell","Osteocyte"],answers:[0,1,2]}
+  ],
+  bench:null,
+  evidence:{ eyebrow:"Evidence", h:"This exposure is recent",
+    lines:["Alveolar macrophages loaded with engulfed debris.","Neutrophils dominant.",
+           "Plasma cells still scarce, and antibody producing cells take days to appear.",
+           "These patients were exposed inside the last week."],
+    note:{src:"Cell registry, lung washing",text:"Alveolar macrophages heavily loaded and neutrophils dominant. Plasma cell numbers still low, so the adaptive antibody response has barely started. Exposure is recent, roughly within the last week."} },
+  hints:["Blast builds. Clast breaks down. Cyte maintains.",
+    "If a cell sits in a lacuna it is cartilage or bone. The matrix around it decides which.",
+    "A low plasma cell count is a clock, not a defect. Antibody producing cells take days to appear."]
+};
+
+S.connective = {
+  id:"connective", name:"Connective Vault", tag:"Support tissues and their matrix", track:"B", bench:"B",
+  brief:[
+    { eyebrow:"Framework track", h:"Rule things out",
+      lines:["Half of a tropism map is what was spared.",
+             "If the connective tissues are untouched, this is not spreading through the blood to every organ.",
+             "It is staying where it landed."] }
+  ],
+  items:[
+    {type:"mindmap",q:"Sort each connective tissue onto its class.",
+     center:"Connective tissue",
+     branches:[
+       {name:"Connective tissue proper",hint:"Loose and dense",slots:["Areolar","Adipose","Reticular","Dense regular","Dense irregular","Elastic connective"]},
+       {name:"Supporting",hint:"Cartilage and bone",slots:["Hyaline cartilage","Elastic cartilage","Fibrocartilage","Compact bone"]},
+       {name:"Fluid",hint:"The matrix is liquid",slots:["Blood"]}
+     ]},
+    {type:"match",q:"Match each connective tissue proper to the job its structure is built for.",
+     choices:["Universal packing material and the site of immune surveillance under epithelia","Energy storage and insulation","Forms the soft internal skeleton of lymph nodes, spleen and bone marrow","Parallel collagen bundles resisting tension in one direction","Interwoven collagen resisting tension pulled from many directions","Recoils after stretch in the walls of large arteries"],
+     rows:[{left:"Areolar",answer:0},{left:"Adipose",answer:1},{left:"Reticular",answer:2},
+       {left:"Dense regular",answer:3},{left:"Dense irregular",answer:4},{left:"Elastic connective",answer:5}]},
+    {type:"match",q:"Match each supporting or fluid tissue to its job.",
+     choices:["Glassy matrix on articular surfaces and in the respiratory passages","Keeps a springy shape in the external ear and epiglottis","Thick collagen bundles resisting compression and shear in discs and menisci","Rigid calcified matrix organized into osteons","Transports cells, gases and nutrients in a liquid matrix"],
+     rows:[{left:"Hyaline cartilage",answer:0},{left:"Elastic cartilage",answer:1},{left:"Fibrocartilage",answer:2},
+       {left:"Compact bone",answer:3},{left:"Blood",answer:4}]},
+    {type:"order",q:"Order these by the firmness of the extracellular matrix, most fluid at the top, hardest at the bottom.",
+     items:["Blood","Areolar","Dense regular","Hyaline cartilage","Fibrocartilage","Compact bone"]},
+    {type:"mcq",q:"Cartilage heals slowly after injury. The structural reason is:",
+     options:["It has no extracellular matrix","It is avascular, so cells rely on diffusion through the matrix","Its cells cannot divide at any age","It contains no collagen"],answer:1}
+  ],
+  gateB:{
+    bench:"B", label:"Bench B",
+    instruction:"Four slides. Ask what the matrix is before you name anything, then enter each cipher code.",
+    fields:[
+      {label:"Slide B1",hint:"Tendon, longitudinal. Fibers all pull one way.",answer:"24"},
+      {label:"Slide B2",hint:"Tracheal ring. Chondrocytes in lacunae, glassy matrix.",answer:"27"},
+      {label:"Slide B3",hint:"Ground section. Concentric rings around a central canal.",answer:"30"},
+      {label:"Slide B4",hint:"Smear. The matrix is liquid.",answer:"31"}
+    ],
+    observe:{q:"Read the patient specimen report on the Bench B card. What does it show?",
+      options:["Tendon, cartilage and bone normal; blood smear shows a sharp neutrophil rise","All four specimens show matrix breakdown","Cartilage has calcified and bone has softened","The blood smear shows nucleated erythrocytes"],answer:0}
+  },
+  evidence:{ eyebrow:"Evidence", h:"The framework is untouched",
+    lines:["Tendon, cartilage and bone all within normal limits.","Blood smear shows neutrophils climbing hard.",
+           "This is not damaging connective tissue systemically.","The response is inflammatory, and it is centered on the lung."],
+    note:{src:"Bench B, slides B1 to B4",text:"Tendon dense regular, tracheal hyaline cartilage and compact bone all within normal limits. Blood smear shows a sharp neutrophil rise. The agent is not damaging connective tissue systemically and the response is centered on the lung."} },
+  hints:["Every connective tissue answer starts with the matrix: liquid, gel, firm gel, or calcified.",
+    "Dense regular is a rope. Dense irregular is a sheet of felt. One direction against many.",
+    "Chondrocytes sit in lacunae and get everything by diffusion, which is exactly why cartilage repairs so poorly."]
+};
+
+/* ---------------- TRACK C: BARRIER ---------------- */
+S.skin = {
+  id:"skin", name:"Skin Lab", tag:"Integument layers and microscopic structures", track:"C", bench:"C",
+  brief:[
+    { eyebrow:"Barrier track", h:"Rule out contact spread",
+      lines:["Infection Prevention will not commit resources until they know one thing.",
+             "If the skin is breached, this spreads hand to hand and every surface in the building is suspect.",
+             "If the skin is intact on all fourteen, contact spread is off the table",
+             "and the money goes to the air."] }
+  ],
+  items:[
+    {type:"order",q:"Order the epidermal strata of thick skin from deepest to most superficial. Your mnemonic: Baby Screams Grandpa Loves Coffee.",
+     items:["Stratum basale","Stratum spinosum","Stratum granulosum","Stratum lucidum","Stratum corneum"]},
+    {type:"mindmap",q:"Place each structure or cell in the layer where you would find it.",
+     center:"Skin, from the surface down",
+     branches:[
+       {name:"Epidermis",hint:"Keratinized stratified squamous, avascular",slots:["Keratinocyte","Melanocyte","Tactile (Merkel) cell","Dendritic (Langerhans) cell","Keratohyaline granules"]},
+       {name:"Dermis",hint:"Papillary and reticular layers",slots:["Dermal papillae","Tactile (Meissner) corpuscle","Hair follicle","Arrector pili muscle","Sebaceous gland","Eccrine sweat gland"]},
+       {name:"Hypodermis",hint:"Subcutaneous, not skin proper",slots:["Adipose tissue","Lamellar (Pacinian) corpuscle"]}
+     ]},
+    {type:"match",q:"Match each epidermal cell or structure to its job.",
+     choices:["Produces the pigment that shields nuclei from ultraviolet light","Touch receptor cell of the stratum basale, paired with a sensory nerve ending","Antigen presenting immune cell patrolling the epidermis","Interlocks with epidermal ridges, anchoring the layers and forming fingerprints"],
+     rows:[{left:"Melanocyte",answer:0},{left:"Tactile (Merkel) cell",answer:1},{left:"Dendritic (Langerhans) cell",answer:2},{left:"Dermal papillae",answer:3}]},
+    {type:"match",q:"Match each dermal or hypodermal structure to its job.",
+     choices:["Holocrine gland that oils the hair shaft and the skin surface","Merocrine gland producing watery sweat for thermoregulation","Smooth muscle that pulls the hair upright","Fine touch and light pressure receptor in the dermal papillae","Deep pressure and vibration receptor in the hypodermis","Dense irregular connective tissue giving skin its tensile strength"],
+     rows:[{left:"Sebaceous gland",answer:0},{left:"Eccrine sweat gland",answer:1},{left:"Arrector pili",answer:2},
+       {left:"Tactile (Meissner) corpuscle",answer:3},{left:"Lamellar (Pacinian) corpuscle",answer:4},{left:"Reticular layer of the dermis",answer:5}]},
+    {type:"mcq",q:"Which stratum is present in thick skin and absent in thin skin?",
+     options:["Stratum basale","Stratum lucidum","Stratum spinosum","Stratum granulosum"],answer:1},
+    {type:"multi",q:"Select every statement that is true about the epidermis in a healthy adult.",
+     options:["Cells are pushed superficially as new ones divide in the stratum basale","Cells accumulate keratin and lose organelles as they rise","The stratum corneum is a living, dividing layer","Deep keratinocytes are fed by diffusion from capillaries in the dermal papillae"],answers:[0,1,3]}
+  ],
+  gateB:{
+    bench:"C", label:"Bench C",
+    instruction:"Two slides. Name the tissue each field is set up to demonstrate, then enter its cipher code.",
+    fields:[
+      {label:"Slide C1",hint:"Thick skin, palm. Name the epidermis itself.",answer:"16"},
+      {label:"Slide C2",hint:"Scalp, deep field below the follicles. Name the hypodermal tissue.",answer:"22"}
+    ],
+    observe:{q:"Read the patient specimen report on the Bench C card. What does the patient epidermis show?",
+      options:["Ulceration through the stratum corneum with a breached basement membrane","Intact through all five strata, no breach and no inflammatory infiltrate in the dermis","Replacement by simple squamous epithelium","Complete destruction of hair follicles"],answer:1}
+  },
+  evidence:{ eyebrow:"Evidence", h:"The skin held",
+    lines:["Epidermis intact through all five strata.","No ulceration. No breach of the basement membrane. No infiltrate in the dermis.",
+           "Contact spread and cutaneous inoculation are both off the table.","The route of entry is not the skin."],
+    note:{src:"Bench C, slides C1 and C2",text:"Epidermis intact through all five strata with no ulceration, no breach of the basement membrane and no dermal infiltrate. Contact and cutaneous inoculation ruled out."} },
+  hints:["Baby Screams Grandpa Loves Coffee runs deep to superficial: basale, spinosum, granulosum, lucidum, corneum.",
+    "If a structure needs a blood supply or feels something, it lives in the dermis or deeper. The epidermis has neither.",
+    "The hypodermis is subcutaneous and is not skin proper. Adipose and the deep pressure receptor live there."]
+};
+
+/* ---------------- FINAL ---------------- */
+S.outbreak = {
+  id:"outbreak", name:"Outbreak Board", tag:"Tropism map and source control", track:null, final:true,
+  brief:[
+    { eyebrow:"Case file 008", h:"Public Health is on the line",
+      lines:["They need a route of transmission in the next ten minutes.",
+             "Everything you need is already in your field notebook.",
+             "You are not naming the organism.",
+             "You are naming how it got in and what to shut off."] }
+  ],
+  items:[
+    {type:"mindmap",q:"Sort every tissue you examined into damaged or spared.",
+     center:"Tissue tropism of the Ward 4 agent",
+     branches:[
+       {name:"Damaged",hint:"Showed injury on the patient specimens",slots:["Pseudostratified ciliated columnar epithelium","Alveolar simple squamous epithelium","Goblet cells of the airway"]},
+       {name:"Spared",hint:"Within normal limits",slots:["Keratinized stratified squamous epidermis","Dense regular connective tissue","Simple cuboidal of the kidney tubule","Nonkeratinized stratified squamous of the esophagus","Compact bone"]}
+     ]},
+    {type:"mcq",q:"The agent damaged the ciliated airway lining and the alveolar wall but spared the esophageal lining and the skin. Which route of entry fits?",
+     options:["Ingestion of contaminated food or water","Direct contact with a contaminated surface","Inhalation of a fine aerosol small enough to reach the alveoli","Injection through a break in the skin"],answer:2},
+    {type:"mcq",q:"Why does damage reaching the alveoli argue against ordinary person to person droplet spread?",
+     options:["Droplets are too large and deposit in the upper airway before reaching the alveoli","Droplets cannot carry infectious agents","Droplet spread only damages connective tissue","Droplets are destroyed by the stratum corneum"],answer:0},
+    {type:"mcq",q:"Read the exposure table. Which exposure has both the highest attack rate and a mechanism consistent with a fine aerosol?",
+     table:"epi",
+     options:["Ate at the salad bar","Used the main elevators","Sat within six meters of the West Atrium fountain","Drank from the third floor water cooler","Waited more than thirty minutes in the ground floor waiting room"],answer:2},
+    {type:"mcq",q:"One of the fourteen never entered the atrium seating area. Facilities records show she serviced the fountain recirculation pump on the eleventh. Does that weaken or strengthen the conclusion?",
+     options:["Weakens it, because she was not exposed to the atrium air","Strengthens it, because her exposure was to the same water system by a different path","Neither, because a single case cannot inform an outbreak investigation","Weakens it, because maintenance workers are not counted in attack rates"],answer:1},
+    {type:"mcq",q:"Final call. What single control measure should Public Health order today?",
+     options:["Close the cafeteria and discard all prepared food","Shut down, drain and disinfect the West Atrium fountain and its recirculation system","Place all fourteen patients in contact isolation and increase hand hygiene only","Replace the third floor water cooler"],answer:1}
+  ],
+  bench:null,
+  evidence:{ eyebrow:"Transmitted to Public Health", h:"Source identified",
+    lines:["Route: inhalation of a fine aerosol reaching the alveolar surface.",
+           "Source: the West Atrium fountain recirculation system.",
+           "Control: shut down, drain, disinfect."],
+    note:{src:"Outbreak board",text:"Route of transmission: inhalation of a fine aerosol reaching the alveolar surface. Source: the West Atrium fountain recirculation system. Control: shut down, drain and disinfect."} },
+  hints:["Damaged against spared is the whole map. Write the damaged list and ask what those surfaces have in common.",
+    "Attack rate is ill divided by exposed. Compare rates, never raw counts.",
+    "The maintenance case is the confirmatory link: same water system, different path, same illness."]
+};
+
+/* =========================================================
+   TRACKS AND ROUTES
+   ========================================================= */
+const TRACKS = {
+  A:{name:"Airway",   bench:"Bench A", ids:["secretion","epithelial"]},
+  B:{name:"Framework",bench:"Bench B", ids:["cells","connective"]},
+  C:{name:"Barrier",  bench:"Bench C", ids:["skin"]}
+};
+const ROUTES = {
+  1:{order:["A","B","C"], blurb:"Bench A first, then B, then C"},
+  2:{order:["B","C","A"], blurb:"Bench B first, then C, then A"},
+  3:{order:["C","A","B"], blurb:"Bench C first, then A, then B"}
+};
+
+function buildOrder(){
+  if(state.benchMode==="own") return ["intake","triage","secretion","epithelial","cells","connective","skin","outbreak"];
+  const mid = [];
+  ROUTES[state.route].order.forEach(t=>TRACKS[t].ids.forEach(id=>mid.push(id)));
+  return ["intake","triage",...mid,"outbreak"];
+}
+function ORDER(){ return state._order || (state._order = buildOrder()); }
+function stationAt(i){ return S[ORDER()[i]]; }
+const TOTAL = 8;
+
+/* =========================================================
+   STATE
+   ========================================================= */
+const state = {
+  team:"", route:1, benchMode:"rotate",
+  totalSeconds:90*60, remaining:90*60, running:false, started:false,
+  hints:0, penalty:0, requireScopes:true,
+  view:"opening", openingBeat:0, instant:false,
+  openStation:null, phase:"brief", beat:0, qi:0, benchStep:0,
+  st:{}, answers:{}, notebook:[], finished:false, _order:null
+};
+Object.keys(S).forEach(k=>{ state.st[k]={quizDone:false,benchDone:false,obsDone:false,seen:false,hintsShown:[],wrong:0,qi:0}; });
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function fmt(sec){ sec=Math.max(0,Math.round(sec)); const m=Math.floor(sec/60),s=sec%60; return m+":"+String(s).padStart(2,"0"); }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function needBench(s){ return !!(s.gateB && state.requireScopes); }
+function done(s){ const r=state.st[s.id]; return r.quizDone && (!needBench(s) || (r.benchDone && r.obsDone)) && r.seen; }
+function clearedCount(){ return ORDER().filter(id=>done(S[id])).length; }
+function unlocked(i){ return i===0 || done(stationAt(i-1)); }
+function announce(m){ const l=$("#live"); if(l){ l.textContent=""; setTimeout(()=>{l.textContent=m;},60); } }
+
+/* =========================================================
+   TIMER
+   ========================================================= */
+let tick=null;
+function startTimer(){
+  if(tick) return;
+  state.running=true; $("#btnPause").textContent="Pause";
+  tick=setInterval(()=>{ if(!state.running) return;
+    state.remaining--; if(state.remaining<=0){state.remaining=0;state.running=false;} paintStatus(); },1000);
+}
+function paintStatus(){
+  const c=$("#clock"); c.textContent=fmt(state.remaining); c.classList.toggle("low",state.remaining<=300);
+  $("#mCleared").textContent=clearedCount()+" of "+TOTAL;
+  $("#mHints").textContent=String(state.hints);
+  $("#mPenalty").textContent=fmt(state.penalty);
+  $("#mTeam").textContent=state.team||"Not set";
+  if(state.started && state.benchMode==="rotate"){ $("#mRotWrap").classList.remove("hidden"); $("#mRot").textContent=String(state.route); }
+  else $("#mRotWrap").classList.add("hidden");
+}
+function penalize(sec,why){ state.penalty+=sec; state.remaining=Math.max(0,state.remaining-sec); paintStatus(); if(why) announce(why+" Penalty "+fmt(sec)+"."); }
+
+/* =========================================================
+   CINEMATIC BEAT
+   ========================================================= */
+function beatHTML(b, navHTML, opts){
+  opts = opts || {};
+  let d=0;
+  let h = `<section class="stage ${opts.wide?"stage-wide":""} ${state.instant?"instant":""}" aria-label="${esc(b.h||"Story beat")}">`;
+  h += `<div class="stage-glow" aria-hidden="true"></div>`;
+  if(!state.instant) h += `<button class="stage-skip" type="button" id="btnInstant">Show all text</button>`;
+  h += `<div class="stage-inner">`;
+  if(b.eyebrow) h += `<p class="stage-eyebrow ln" style="--d:${d++}">${esc(b.eyebrow)}</p>`;
+  if(b.h) h += `<h1 class="stage-h ln" style="--d:${d++}">${esc(b.h)}</h1>`;
+  (b.lines||[]).forEach(l=>{ h += `<p class="stage-line ln ${b.rules?"dim":""}" style="--d:${d++}">${esc(l)}</p>`; });
+  if(opts.extra) h += `<div class="ln" style="--d:${d++}">${opts.extra}</div>`;
+  h += `<div class="stage-nav ln" style="--d:${d++}">${navHTML}</div>`;
+  h += `</div></section>`;
+  return h;
+}
+function dots(n,i){
+  let h='<span class="beatdots" aria-hidden="true">';
+  for(let k=0;k<n;k++) h+=`<span class="beatdot ${k<=i?"on":""}"></span>`;
+  return h+'</span>';
+}
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+function render(){
+  let h = '<div id="live" aria-live="polite" class="vh"></div>';
+  if(state.view==="opening") h += viewOpening();
+  else if(state.view==="setup") h += viewSetup();
+  else if(state.view==="board") h += viewBoard();
+  else if(state.view==="station") h += viewStation();
+  else if(state.view==="notebook") h += viewNotebook();
+  else if(state.view==="finale") h += viewFinale();
+  $("#screen").innerHTML = h;
+  wire(); paintStatus(); window.scrollTo({top:0}); sendHeight();
+}
+
+/* ---------- opening ---------- */
+function viewOpening(){
+  const i = state.openingBeat, last = i===OPENING.length-1;
+  const nav = `<button class="btn btn-light" id="btnBeatNext" type="button">${last?"Set up my team":"Next"}</button>${dots(OPENING.length,i)}`;
+  return beatHTML(OPENING[i], nav, {wide:OPENING[i].rules});
+}
+
+/* ---------- setup ---------- */
+function viewSetup(){
+  const rot = [1,2,3].map(n=>{
+    const r=ROUTES[n];
+    return `<button class="rotcard ${state.route===n?"sel":""}" type="button" data-route="${n}" aria-pressed="${state.route===n}">
+      <span class="rn">Route ${n}</span>
+      <span class="rp">${esc(TRACKS[r.order[0]].name)} first</span>
+      <span class="rs">${esc(r.blurb)}</span>
+    </button>`;
+  }).join("");
+  return `
+  <div class="panel">
+    <p class="eyebrow">Before the clock starts</p>
+    <h1>Name your team</h1>
+    <div class="field" style="max-width:430px;margin-top:18px">
+      <label for="teamName">Team name</label>
+      <input type="text" id="teamName" maxlength="40" autocomplete="off" placeholder="Enter your team name">
+    </div>
+  </div>
+
+  <div class="panel" id="routePanel">
+    <p class="eyebrow">Bench routing</p>
+    <h2>Which route did your instructor give you?</h2>
+    <p class="muted">Three investigation tracks, three benches. Your route decides which bench you go to first so the room does not pile up at one microscope. The evidence is independent, so any route reaches the same conclusion.</p>
+    <div class="rotgrid">${rot}</div>
+    <p class="small muted" style="margin-top:14px">If every team has its own slide tray at their table, your instructor will switch this off from the instructor panel and everyone runs the same order.</p>
+  </div>
+
+  <div class="panel">
+    <button class="btn btn-terra" id="btnStart" type="button">Start the clock</button>
+  </div>`;
+}
+
+/* ---------- board ---------- */
+function viewBoard(){
+  const ids = ORDER();
+  const card = (id,i)=>{
+    const s=S[id], d=done(s), open=!d&&unlocked(i);
+    const badge = d?'<span class="badge badge-done">Cleared</span>'
+      :(open?'<span class="badge badge-open">Open</span>':'<span class="badge badge-locked">Locked</span>');
+    const bb = (s.gateB && state.requireScopes) ? `<span class="badge badge-scope">${esc(s.gateB.label)}</span>` : '';
+    return `<button class="stationcard ${d?"is-done":(open?"is-open":"")}" type="button" data-station="${id}" ${(!d&&!open)?'disabled aria-disabled="true"':''}>
+      <span class="sc-top"><span class="sc-num" aria-hidden="true">${i+1}</span><span class="sc-name">${esc(s.name)}</span></span>
+      <span class="sc-desc">${esc(s.tag)}</span>
+      <span style="display:flex;gap:6px;flex-wrap:wrap">${badge}${bb}</span>
+    </button>`;
+  };
+  let h = `<div class="panel">
+    <p class="eyebrow">Case board</p>
+    <h1>Outbreak: Ward 4</h1>
+    <p class="lede">${state.benchMode==="rotate"
+      ? "Route "+state.route+". Your three investigation tracks run in the order below so your team and the bench you need line up."
+      : "Every team has its own slide tray, so the stations run straight through in order."}</p>
+  </div>`;
+
+  h += `<div class="acthead"><h2>Act one</h2><span class="actnote">Everyone starts here, no benches</span></div>`;
+  h += `<div class="board">${card(ids[0],0)}${card(ids[1],1)}</div>`;
+  h += `<div class="acthead"><h2>Act two</h2><span class="actnote">${state.benchMode==="rotate"?"Your route through the three tracks":"All three tracks in order"}</span></div>`;
+  h += `<div class="board">${ids.slice(2,7).map((id,k)=>card(id,k+2)).join("")}</div>`;
+  h += `<div class="acthead"><h2>Act three</h2><span class="actnote">Built entirely from your field notebook</span></div>`;
+  h += `<div class="board">${card(ids[7],7)}</div>`;
+  h += cipherPanel();
+  return h;
+}
+
+/* ---------- notebook ---------- */
+function viewNotebook(){
+  const items = state.notebook.length
+    ? state.notebook.map(n=>`<li><span class="nb-src">${esc(n.src)}</span>${esc(n.text)}</li>`).join("")
+    : '<li class="muted">Nothing recorded yet. Clear a station to add evidence.</li>';
+  return `<div class="panel">
+    <p class="eyebrow">Field notebook</p>
+    <h1>Evidence log</h1>
+    <p class="lede">Everything your team has confirmed. The Outbreak Board is built from this list.</p>
+    <ul class="nb-list" style="margin-top:18px">${items}</ul>
+    <button class="btn btn-ghost" data-go="board" type="button">Back to the case board</button>
+  </div>`;
+}
+
+/* =========================================================
+   STATION
+   ========================================================= */
+function viewStation(){
+  const s = S[state.openStation];
+  const i = ORDER().indexOf(s.id);
+  const rec = state.st[s.id];
+  let h = `<h1 class="vh">Station ${i+1} of ${TOTAL}: ${esc(s.name)}</h1>`;
+
+  if(state.phase==="brief"){
+    const b = s.brief[state.beat], last = state.beat===s.brief.length-1;
+    const nav = `<button class="btn btn-light" id="btnBriefNext" type="button">${last?"Open the case work":"Next"}</button>${dots(s.brief.length,state.beat)}`;
+    return h + beatHTML(b,nav);
+  }
+
+  if(state.phase==="quiz"){
+    const item = s.items[state.qi];
+    h += railHTML(s,i);
+    h += `<div class="qcard"><form id="qForm" novalidate>`;
+    h += `<p class="rail-label">Item ${state.qi+1} of ${s.items.length}</p>`;
+    h += `<h2 class="qtext" id="qt">${esc(item.q)}</h2>`;
+    if(item.table==="epi") h += EPI_TABLE;
+    h += itemBody(s,item,state.qi);
+    h += `<div id="qResult" aria-live="polite"></div>`;
+    h += `<div class="qactions">
+      <button class="btn" type="submit" id="btnCheck">Check</button>
+      <button class="btn btn-ghost btn-sm" type="button" id="btnHint" ${rec.hintsShown.length>=s.hints.length?"disabled":""}>${rec.hintsShown.length>=s.hints.length?"No hints left":"Hint, costs 2:00"}</button>
+      <span class="small muted">Hints used here: ${rec.hintsShown.length} of ${s.hints.length}</span>
+    </div></form>`;
+    h += rec.hintsShown.map(k=>`<div class="result result-hint"><span class="tag">Hint ${k+1}</span><span>${esc(s.hints[k])}</span></div>`).join("");
+    h += `</div>`;
+    h += navRow();
+    return h;
+  }
+
+  if(state.phase==="bench"){
+    const g = s.gateB;
+    h += railHTML(s,i);
+    if(state.benchStep===0){
+      h += `<div class="bench">
+        <div class="bench-head"><span class="bench-letter" aria-hidden="true">${esc(g.bench)}</span>
+          <div><p class="eyebrow" style="margin:0">Gate two</p><h2 style="margin:0">${esc(g.label)}</h2></div></div>
+        <p>${esc(g.instruction)}</p>
+        <form id="benchForm" novalidate><div class="scoperow">`;
+      g.fields.forEach((f,k)=>{
+        h += `<div class="scopefield">
+          <label for="code_${k}">${esc(f.label)}</label>
+          <input type="text" id="code_${k}" inputmode="numeric" maxlength="2" autocomplete="off" aria-describedby="fh_${k}">
+          <p class="fhint" id="fh_${k}">${esc(f.hint)}</p></div>`;
+      });
+      h += `</div><div id="benchResult" aria-live="polite"></div>
+        <div class="qactions"><button class="btn btn-terra" type="submit">Submit cipher codes</button></div>
+        </form></div>`;
+    } else {
+      h += `<div class="qcard"><form id="obsForm" novalidate>
+        <p class="rail-label">Direct observation</p>
+        <h2 class="qtext" id="qt">${esc(g.observe.q)}</h2><fieldset><legend class="vh">${esc(g.observe.q)}</legend>`;
+      g.observe.options.forEach((o,k)=>{
+        h += `<div class="opt"><label for="obs_${k}"><input type="radio" id="obs_${k}" name="obs" value="${k}"><span>${esc(o)}</span></label></div>`;
+      });
+      h += `</fieldset><div id="obsResult" aria-live="polite"></div>
+        <div class="qactions"><button class="btn btn-terra" type="submit">Confirm findings</button></div></form></div>`;
+    }
+    h += navRow();
+    return h;
+  }
+
+  if(state.phase==="evidence"){
+    const e = s.evidence;
+    const isLast = ORDER().indexOf(s.id)===TOTAL-1;
+    const nav = `<button class="btn btn-light" id="btnEvidenceNext" type="button">${isLast?"Close the case":"Back to the case board"}</button>`;
+    let x = `<section class="evidence ${state.instant?"instant":""}" aria-label="Evidence recorded">`;
+    let d=0;
+    x += `<div class="stage-inner">`;
+    x += `<p class="stage-eyebrow ln" style="--d:${d++}">${esc(e.eyebrow)}</p>`;
+    x += `<h2 class="ln" style="--d:${d++};color:#fff">${esc(e.h)}</h2>`;
+    e.lines.forEach(l=>{ x += `<p class="stage-line ln" style="--d:${d++}">${esc(l)}</p>`; });
+    x += `<div class="stage-nav ln" style="--d:${d++}">${nav}</div></div></section>`;
+    return h + x;
+  }
+  return h;
+}
+
+function railHTML(s,i){
+  const n = s.items.length + (needBench(s)?2:0);
+  let atk = state.phase==="quiz" ? state.qi : s.items.length + state.benchStep;
+  let pips='';
+  for(let k=0;k<n;k++) pips += `<span class="pip ${k<atk?"done":(k===atk?"now":"")}"></span>`;
+  return `<div class="rail">
+    <span class="rail-label">Station ${i+1} &middot; ${esc(s.name)}</span>
+    <span class="pips" aria-hidden="true">${pips}</span>
+  </div>`;
+}
+function navRow(){
+  return `<div class="panel" style="display:flex;gap:10px;flex-wrap:wrap">
+    <button class="btn btn-ghost btn-sm" data-go="board" type="button">Case board</button>
+    <button class="btn btn-ghost btn-sm" data-go="notebook" type="button">Field notebook</button>
+  </div>` + cipherPanel();
+}
+
+/* ---------- item bodies ---------- */
+function itemBody(s,item,qi){
+  const key = s.id+"_"+qi;
+  if(item.type==="mcq"){
+    let h=`<fieldset><legend class="vh">${esc(item.q)}</legend>`;
+    item.options.forEach((o,k)=>{ h+=`<div class="opt"><label for="${key}_${k}"><input type="radio" id="${key}_${k}" name="${key}" value="${k}"><span>${esc(o)}</span></label></div>`; });
+    return h+`</fieldset>`;
+  }
+  if(item.type==="multi"){
+    let h=`<p class="small muted" style="margin-top:-10px">Select all that apply.</p><fieldset><legend class="vh">${esc(item.q)} Select all that apply.</legend>`;
+    item.options.forEach((o,k)=>{ h+=`<div class="opt"><label for="${key}_${k}"><input type="checkbox" id="${key}_${k}" name="${key}" value="${k}"><span>${esc(o)}</span></label></div>`; });
+    return h+`</fieldset>`;
+  }
+  if(item.type==="match"){
+    if(!state.answers[key]) state.answers[key]={order:shuffle(item.choices.map((_,n)=>n))};
+    const ord=state.answers[key].order;
+    let h=`<div role="group" aria-labelledby="qt">`;
+    item.rows.forEach((r,ri)=>{
+      h+=`<div class="matchrow"><label for="${key}_r${ri}">${esc(r.left)}</label>
+        <select id="${key}_r${ri}"><option value="">Choose</option>
+        ${ord.map(ci=>`<option value="${ci}">${esc(item.choices[ci])}</option>`).join("")}</select></div>`;
+    });
+    return h+`</div>`;
+  }
+  if(item.type==="order"){
+    if(!state.answers[key]){
+      let a=shuffle(item.items.map((_,n)=>n));
+      if(a.every((v,n)=>v===n)) a=a.reverse();
+      state.answers[key]={order:a};
+    }
+    return orderHTML(key,item);
+  }
+  if(item.type==="mindmap"){
+    if(!state.answers[key]){
+      const words=[]; item.branches.forEach((b,bi)=>b.slots.forEach((w,si)=>words.push({w:w,b:bi,s:si})));
+      state.answers[key]={bank:shuffle(words.map((_,n)=>n)),words:words,
+        placed:item.branches.map(b=>b.slots.map(()=>null)),armedWord:null};
+    }
+    return `<div class="mindmap" id="mm_${key}">`+mmInner(key,item)+`</div>`;
+  }
+  return "";
+}
+
+function orderHTML(key,item){
+  const ord=state.answers[key].order;
+  let h=`<ol class="orderlist" id="ol_${key}" aria-labelledby="qt">`;
+  ord.forEach((oi,pos)=>{
+    h+=`<li class="orderitem"><span class="ord" aria-hidden="true">${pos+1}</span>
+      <span class="txt">${esc(item.items[oi])}</span>
+      <span class="ordbtns">
+        <button class="iconbtn" type="button" data-move="up" data-key="${key}" data-pos="${pos}" ${pos===0?"disabled":""} aria-label="Move ${esc(item.items[oi])} up">&#9650;</button>
+        <button class="iconbtn" type="button" data-move="down" data-key="${key}" data-pos="${pos}" ${pos===ord.length-1?"disabled":""} aria-label="Move ${esc(item.items[oi])} down">&#9660;</button>
+      </span></li>`;
+  });
+  return h+`</ol>`;
+}
+
+function mmInner(key,item){
+  const st=state.answers[key];
+  let h=`<div class="mm-center">${esc(item.center)}</div><div class="mm-branches">`;
+  item.branches.forEach((b,bi)=>{
+    h+=`<div class="mm-branch"><h3>${esc(b.name)}</h3><p class="mm-hint">${esc(b.hint)}</p>`;
+    b.slots.forEach((_,si)=>{
+      const v=st.placed[bi][si];
+      const label=v===null?"Empty slot":st.words[v].w;
+      h+=`<button type="button" class="mm-slot ${v!==null?"filled":""}" data-mm="slot" data-key="${key}" data-b="${bi}" data-s="${si}"
+        aria-label="${esc(b.name)} slot ${si+1}: ${esc(label)}">${esc(label)}</button>`;
+    });
+    h+=`</div>`;
+  });
+  h+=`</div><div class="mm-bank"><h3>Word bank</h3><div class="mm-words">`;
+  const rem=st.bank.filter(wi=>!st.placed.some(r=>r.includes(wi)));
+  if(!rem.length) h+=`<span class="small muted">Word bank empty. Every term is placed.</span>`;
+  rem.forEach(wi=>{ h+=`<button type="button" class="mm-word ${st.armedWord===wi?"armed":""}" data-mm="word" data-key="${key}" data-w="${wi}">${esc(st.words[wi].w)}</button>`; });
+  return h+`</div></div>`;
+}
+
+/* =========================================================
+   GRADING
+   ========================================================= */
+function gradeItem(s,item,qi){
+  const key=s.id+"_"+qi;
+  if(item.type==="mcq"){ const e=document.querySelector(`input[name="${key}"]:checked`); return !!e && Number(e.value)===item.answer; }
+  if(item.type==="multi"){
+    const p=Array.from(document.querySelectorAll(`input[name="${key}"]:checked`)).map(e=>Number(e.value)).sort((a,b)=>a-b);
+    const w=item.answers.slice().sort((a,b)=>a-b);
+    return p.length===w.length && p.every((v,n)=>v===w[n]);
+  }
+  if(item.type==="match"){
+    return item.rows.every((r,ri)=>{ const sel=document.getElementById(`${key}_r${ri}`); return sel && sel.value!=="" && Number(sel.value)===r.answer; });
+  }
+  if(item.type==="order"){ return state.answers[key].order.every((v,n)=>v===n); }
+  if(item.type==="mindmap"){
+    const st=state.answers[key];
+    return st.placed.every((row,bi)=>row.every((wi,si)=>wi!==null && st.words[wi].b===bi));
+  }
+  return false;
+}
+
+function advanceAfterQuiz(s){
+  if(needBench(s)){ state.phase="bench"; state.benchStep=0; }
+  else { state.phase="evidence"; commitEvidence(s); }
+}
+function commitEvidence(s){
+  const r=state.st[s.id]; r.seen=true;
+  const n=s.evidence.note;
+  if(n && !state.notebook.some(x=>x.src===n.src)) state.notebook.push({src:n.src,text:n.text});
+}
+
+/* =========================================================
+   FINALE
+   ========================================================= */
+function viewFinale(){
+  const used=state.totalSeconds-state.remaining;
+  return `
+  <section class="evidence ${state.instant?"instant":""}">
+    <div class="stage-inner stage-wide" style="max-width:62ch">
+      <p class="stage-eyebrow ln" style="--d:0">Case closed</p>
+      <h1 class="ln" style="--d:1;color:#fff">Outbreak contained</h1>
+      <p class="stage-line ln" style="--d:2">${esc(state.team||"Your team")} traced the Ward 4 agent to a fine aerosol from the West Atrium fountain recirculation system by reading tissue alone.</p>
+      <p class="stage-line ln" style="--d:3">Airway and alveolar epithelium damaged. Skin, esophagus, kidney, tendon and bone spared. That pattern is a route of entry, and the route named the source.</p>
+      <div class="scoreboard ln" style="--d:4">
+        <div class="scorebox"><div class="sv">${fmt(used)}</div><div class="sl">Time on the case</div></div>
+        <div class="scorebox"><div class="sv">${fmt(state.remaining)}</div><div class="sl">Time remaining</div></div>
+        <div class="scorebox"><div class="sv">${state.hints}</div><div class="sl">Hints taken</div></div>
+        <div class="scorebox"><div class="sv">${fmt(state.penalty)}</div><div class="sl">Penalty time</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="panel">
+    <p class="eyebrow">Debrief</p>
+    <h2>Answer these out loud before you leave the lab</h2>
+    <ol>
+      <li>Name every epithelium you identified today and give one location for each. From memory first, then check the cipher.</li>
+      <li>The agent damaged the airway lining and the alveolar wall. What do those two surfaces have in common, and what does that tell you about particle size?</li>
+      <li>Two defenses failed at once in the airway. Name both and explain why losing either one alone would have been less dangerous.</li>
+      <li>The skin was intact through all five strata. Write the strata deep to superficial and say what that finding ruled out.</li>
+      <li>Which of your findings were about damage and which were about what was spared? Which type did more work in this case?</li>
+      <li>Plasma cell numbers were low. What does that tell you about how long ago these patients were exposed?</li>
+    </ol>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+      <button class="btn btn-ghost" data-go="notebook" type="button">Field notebook</button>
+      <button class="btn btn-ghost" data-go="board" type="button">Case board</button>
+      <button class="btn btn-ghost" id="btnPrint" type="button">Print this summary</button>
+    </div>
+  </div>`;
+}
+
+/* =========================================================
+   CIPHER PANEL
+   ========================================================= */
+function cipherPanel(){
+  const t=(cap,rows)=>`<table class="cip"><caption>${cap}</caption><tbody>${rows.map(r=>`<tr><th scope="row">${r[0]}</th><td>${esc(r[1])}</td></tr>`).join("")}</tbody></table>`;
+  return `<details class="cipher"><summary>Tissue cipher key</summary><div class="cipher-body">
+    <p class="small muted">Every bench answer is a two digit code from this table. The code is only worth something if the identification is right.</p>
+    <div class="ciphergrid">${t("Epithelial",CIPHER.epithelial)}${t("Connective",CIPHER.connective)}${t("Muscle and nervous",CIPHER.other)}</div>
+  </div></details>`;
+}
+
+/* =========================================================
+   WIRING
+   ========================================================= */
+function wire(){
+  const bi=$("#btnInstant");
+  if(bi) bi.addEventListener("click",()=>{ state.instant=true; render(); });
+
+  const bn=$("#btnBeatNext");
+  if(bn) bn.addEventListener("click",()=>{
+    if(state.openingBeat<OPENING.length-1){ state.openingBeat++; state.instant=false; }
+    else state.view="setup";
+    render();
+  });
+
+  document.querySelectorAll("[data-route]").forEach(b=>b.addEventListener("click",()=>{
+    state.route=Number(b.getAttribute("data-route")); state._order=null; render();
+    const f=document.querySelector(`[data-route="${state.route}"]`); if(f) f.focus();
+  }));
+
+  const st=$("#btnStart");
+  if(st){
+    st.addEventListener("click",()=>{
+      state.team=($("#teamName").value||"").trim()||"Unnamed team";
+      state.started=true; state._order=null; state.view="board"; startTimer(); render();
+    });
+    $("#teamName").addEventListener("keydown",e=>{ if(e.key==="Enter"){e.preventDefault();st.click();} });
+  }
+
+  document.querySelectorAll("[data-station]").forEach(b=>b.addEventListener("click",()=>{
+    if(b.hasAttribute("disabled")) return;
+    const id=b.getAttribute("data-station");
+    const s=S[id], r=state.st[id];
+    state.openStation=id; state.view="station"; state.instant=false;
+    if(!r.quizDone){ state.phase="brief"; state.beat=0; state.qi=r.qi||0; }
+    else if(needBench(s) && !(r.benchDone&&r.obsDone)){ state.phase="bench"; state.benchStep=r.benchDone?1:0; }
+    else { state.phase="evidence"; commitEvidence(s); }
+    render();
+  }));
+
+  document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{ state.view=b.getAttribute("data-go"); render(); }));
+
+  const brn=$("#btnBriefNext");
+  if(brn) brn.addEventListener("click",()=>{
+    const s=S[state.openStation];
+    if(state.beat<s.brief.length-1){ state.beat++; state.instant=false; }
+    else { state.phase="quiz"; state.qi=state.st[s.id].qi||0; }
+    render();
+  });
+
+  const qf=$("#qForm");
+  if(qf) qf.addEventListener("submit",e=>{
+    e.preventDefault();
+    const s=S[state.openStation], item=s.items[state.qi], out=$("#qResult");
+    if(gradeItem(s,item,state.qi)){
+      out.innerHTML=`<div class="result result-ok"><span class="tag">Correct</span><span>Moving on.</span></div>`;
+      announce("Correct.");
+      setTimeout(()=>{
+        if(state.qi<s.items.length-1){ state.qi++; state.st[s.id].qi=state.qi; state.st[s.id].hintsShown=[]; }
+        else { state.st[s.id].quizDone=true; advanceAfterQuiz(s); }
+        render();
+      },620);
+    } else {
+      state.st[s.id].wrong++;
+      out.innerHTML=`<div class="result result-no"><span class="tag">Not yet</span><span>Rework this one. Nothing advances until it is right.</span></div>`;
+      announce("Not yet. Rework this item.");
+    }
+  });
+
+  const hb=$("#btnHint");
+  if(hb) hb.addEventListener("click",()=>{
+    const s=S[state.openStation], r=state.st[s.id];
+    if(r.hintsShown.length>=s.hints.length) return;
+    r.hintsShown.push(r.hintsShown.length); state.hints++;
+    penalize(120,"Hint taken."); render();
+  });
+
+  const bf=$("#benchForm");
+  if(bf) bf.addEventListener("submit",e=>{
+    e.preventDefault();
+    const s=S[state.openStation], g=s.gateB, out=$("#benchResult");
+    const bad=[];
+    g.fields.forEach((f,k)=>{ if((document.getElementById("code_"+k).value||"").trim()!==f.answer) bad.push(f.label); });
+    if(!bad.length){
+      state.st[s.id].benchDone=true;
+      out.innerHTML=`<div class="result result-ok"><span class="tag">Codes accepted</span><span>Now the observation.</span></div>`;
+      announce("Cipher codes accepted.");
+      setTimeout(()=>{ state.benchStep=1; render(); },620);
+    } else {
+      penalize(30,"Cipher rejected.");
+      out.innerHTML=`<div class="result result-no"><span class="tag">Rejected</span><span>Check these again: ${esc(bad.join(", "))}. Thirty second penalty.</span></div>`;
+    }
+  });
+
+  const of=$("#obsForm");
+  if(of) of.addEventListener("submit",e=>{
+    e.preventDefault();
+    const s=S[state.openStation], g=s.gateB, out=$("#obsResult");
+    const el=document.querySelector('input[name="obs"]:checked');
+    if(el && Number(el.value)===g.observe.answer){
+      state.st[s.id].obsDone=true;
+      out.innerHTML=`<div class="result result-ok"><span class="tag">Confirmed</span><span>Logging to your field notebook.</span></div>`;
+      announce("Bench findings confirmed.");
+      setTimeout(()=>{ state.phase="evidence"; commitEvidence(s); render(); },620);
+    } else {
+      penalize(30,"Observation rejected.");
+      out.innerHTML=`<div class="result result-no"><span class="tag">Rejected</span><span>Read the bench card again. Thirty second penalty.</span></div>`;
+    }
+  });
+
+  const en=$("#btnEvidenceNext");
+  if(en) en.addEventListener("click",()=>{
+    const s=S[state.openStation];
+    if(ORDER().indexOf(s.id)===TOTAL-1){ state.finished=true; state.running=false; state.view="finale"; state.instant=false; }
+    else state.view="board";
+    render();
+  });
+
+  const pr=$("#btnPrint");
+  if(pr) pr.addEventListener("click",()=>window.print());
+
+  document.querySelectorAll("[data-move]").forEach(b=>b.addEventListener("click",()=>{
+    const key=b.getAttribute("data-key"), pos=Number(b.getAttribute("data-pos"));
+    const dir=b.getAttribute("data-move")==="up"?-1:1;
+    const arr=state.answers[key].order, t=pos+dir;
+    if(t<0||t>=arr.length) return;
+    [arr[pos],arr[t]]=[arr[t],arr[pos]];
+    const s=S[state.openStation], item=s.items[state.qi];
+    document.getElementById("ol_"+key).outerHTML=orderHTML(key,item);
+    wire();
+    const nb=document.querySelector(`[data-key="${key}"][data-pos="${t}"][data-move="${dir===-1?"up":"down"}"]`);
+    if(nb && !nb.disabled) nb.focus();
+    announce(item.items[arr[t]]+" moved to position "+(t+1)+".");
+    sendHeight();
+  }));
+
+  wireMM();
+}
+
+function wireMM(){
+  document.querySelectorAll('[data-mm="word"]').forEach(b=>b.addEventListener("click",()=>{
+    const key=b.getAttribute("data-key"), wi=Number(b.getAttribute("data-w")), st=state.answers[key];
+    st.armedWord = st.armedWord===wi ? null : wi;
+    redrawMM(key);
+    announce(st.armedWord===null?"Selection cleared.":st.words[wi].w+" selected. Now choose a slot.");
+  }));
+  document.querySelectorAll('[data-mm="slot"]').forEach(b=>b.addEventListener("click",()=>{
+    const key=b.getAttribute("data-key"), bi=Number(b.getAttribute("data-b")), si=Number(b.getAttribute("data-s"));
+    const st=state.answers[key], cur=st.placed[bi][si];
+    if(st.armedWord!==null){
+      st.placed[bi][si]=st.armedWord;
+      const w=st.words[st.armedWord].w; st.armedWord=null;
+      redrawMM(key); announce(w+" placed.");
+    } else if(cur!==null){
+      st.placed[bi][si]=null; redrawMM(key); announce(st.words[cur].w+" returned to the word bank.");
+    } else announce("Choose a term from the word bank first.");
+  }));
+}
+function redrawMM(key){
+  const s=S[state.openStation], item=s.items[state.qi];
+  const host=document.getElementById("mm_"+key);
+  if(!host) return;
+  host.innerHTML=mmInner(key,item);
+  wireMM(); sendHeight();
+}
+
+/* =========================================================
+   TOP BAR
+   ========================================================= */
+$("#btnBoard").addEventListener("click",()=>{ if(!state.started) return; state.view="board"; render(); });
+$("#btnNotebook").addEventListener("click",()=>{ if(!state.started) return; state.view="notebook"; render(); });
+$("#btnPause").addEventListener("click",()=>{
+  if(!state.started) return;
+  state.running=!state.running;
+  $("#btnPause").textContent=state.running?"Pause":"Resume";
+  announce(state.running?"Timer resumed.":"Timer paused.");
+});
+
+/* ---------- modal ---------- */
+const modalBack=$("#modalBack"); let lastFocus=null;
+function openModal(html,title){
+  lastFocus=document.activeElement;
+  $("#modalTitle").textContent=title; $("#modalBody").innerHTML=html;
+  modalBack.classList.add("show");
+  const f=$("#modalBox").querySelector("input,button,select"); if(f) f.focus();
+  wireModal();
+}
+function closeModal(){ modalBack.classList.remove("show"); if(lastFocus) lastFocus.focus(); }
+modalBack.addEventListener("click",e=>{ if(e.target===modalBack) closeModal(); });
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape" && modalBack.classList.contains("show")) closeModal();
+  if(modalBack.classList.contains("show") && e.key==="Tab"){
+    const f=Array.from($("#modalBox").querySelectorAll("button,input,select,textarea,[href]")).filter(el=>!el.disabled);
+    if(!f.length) return;
+    const first=f[0],last=f[f.length-1];
+    if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+  }
+});
+$("#btnInstructor").addEventListener("click",()=>{
+  openModal(`<p>Enter the instructor passcode.</p>
+    <div class="field"><label for="pc">Passcode</label><input type="password" id="pc" autocomplete="off"></div>
+    <div class="modal-actions"><button class="btn" id="pcGo" type="button">Unlock</button>
+    <button class="btn btn-ghost" id="pcCancel" type="button">Cancel</button></div>
+    <div id="pcMsg" aria-live="polite"></div>`,"Instructor controls");
+});
+function instructorPanel(){
+  const opts=ORDER().map((id,i)=>`<option value="${i}">${i+1}. ${esc(S[id].name)}</option>`).join("");
+  return `
+  <div class="field"><label for="setMin">Set the clock, in minutes</label>
+    <input type="number" id="setMin" min="1" max="240" value="${Math.max(1,Math.round(state.remaining/60))}"></div>
+  <div class="field"><label for="benchMode">Bench model</label>
+    <select id="benchMode">
+      <option value="rotate" ${state.benchMode==="rotate"?"selected":""}>Shared benches, teams routed 1, 2, 3</option>
+      <option value="own" ${state.benchMode==="own"?"selected":""}>Every team has its own slide tray, fixed order</option>
+    </select>
+    <p class="small muted" style="margin-top:6px">Routing spreads teams across Bench A, B and C so nobody queues. Switch to own tray when every table has a scope and a full slide set.</p></div>
+  <div class="field"><label for="routeSel">This team's route</label>
+    <select id="routeSel">${[1,2,3].map(n=>`<option value="${n}" ${state.route===n?"selected":""}>Route ${n}: ${esc(ROUTES[n].blurb)}</option>`).join("")}</select></div>
+  <div class="field"><label for="scopeToggle">Microscope gates</label>
+    <select id="scopeToggle">
+      <option value="on" ${state.requireScopes?"selected":""}>On, bench work required</option>
+      <option value="off" ${!state.requireScopes?"selected":""}>Off, screen only</option></select></div>
+  <div class="field"><label for="jump">Unlock through station</label>
+    <select id="jump">${opts}</select>
+    <p class="small muted" style="margin-top:6px">Marks every station before this one as cleared and reloads its evidence. Use it to restore a team after a refresh.</p></div>
+  <div class="modal-actions">
+    <button class="btn" id="applyBtn" type="button">Apply</button>
+    <button class="btn btn-ghost" id="resetBtn" type="button">Reset the run</button>
+    <button class="btn btn-ghost" id="closeBtn" type="button">Close</button></div>`;
+}
+function wireModal(){
+  const go=$("#pcGo");
+  if(go){
+    const run=()=>{ if($("#pc").value.trim()==="4004") openModal(instructorPanel(),"Instructor controls");
+      else $("#pcMsg").innerHTML=`<div class="result result-no"><span class="tag">No</span><span>Passcode not recognized.</span></div>`; };
+    go.addEventListener("click",run);
+    $("#pc").addEventListener("keydown",e=>{ if(e.key==="Enter"){e.preventDefault();run();} });
+    $("#pcCancel").addEventListener("click",closeModal);
+  }
+  const ap=$("#applyBtn");
+  if(ap){
+    ap.addEventListener("click",()=>{
+      const mins=Math.max(1,Math.min(240,Number($("#setMin").value)||90));
+      state.remaining=mins*60; if(!state.started) state.totalSeconds=mins*60;
+      state.benchMode=$("#benchMode").value;
+      state.route=Number($("#routeSel").value);
+      state.requireScopes=$("#scopeToggle").value==="on";
+      state._order=null;
+      const upto=Number($("#jump").value);
+      ORDER().forEach((id,i)=>{ if(i<upto){ const r=state.st[id]; r.quizDone=true;r.benchDone=true;r.obsDone=true; commitEvidence(S[id]); } });
+      if(!state.started){ state.started=true; state.team=state.team||"Unnamed team"; startTimer(); }
+      state.view="board"; closeModal(); render();
+    });
+    $("#resetBtn").addEventListener("click",()=>window.location.reload());
+    $("#closeBtn").addEventListener("click",closeModal);
+  }
+}
+
+/* =========================================================
+   IFRAME HEIGHT
+   ========================================================= */
+function sendHeight(){
+  try{
+    const h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);
+    window.parent.postMessage({id:"bio004-histology-escape-room",height:h,type:"resize"},"*");
+  }catch(e){}
+}
+window.addEventListener("load",sendHeight);
+window.addEventListener("resize",sendHeight);
+if(window.ResizeObserver) new ResizeObserver(sendHeight).observe(document.body);
+
+paintStatus();
+render();
+</script>
+</body>
+</html>
