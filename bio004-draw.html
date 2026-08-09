@@ -29,6 +29,9 @@
   ============================================================
 -->
 <style>
+  .skip{position:absolute;left:-9999px;top:0;background:#0B1530;color:#fff;padding:10px 16px;
+        border-radius:0 0 10px 0;font-weight:700;font-size:14px;z-index:60;text-decoration:none}
+  .skip:focus{left:0}
   *{box-sizing:border-box}
   body{margin:0;font-family:'Plus Jakarta Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
        background:#FAFAF9;color:#0B1530;line-height:1.55}
@@ -45,6 +48,20 @@
   @media(max-width:900px){.grid{grid-template-columns:1fr}}
   .panel{background:#fff;border:1px solid #ECE7DE;border-radius:14px;padding:18px 20px;
          box-shadow:0 16px 38px -22px rgba(11,21,48,.34),0 3px 10px -6px rgba(11,21,48,.1)}
+  .topic{font-size:clamp(24px,3.2vw,34px);font-weight:800;letter-spacing:-.02em;line-height:1.12;
+         margin:14px 0 0;color:#0B1530}
+  .confq{font-size:14px;opacity:.84;margin:0 0 12px}
+  .confbtns{display:grid;gap:9px}
+  .cbtn{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;
+        background:#fff;border:1.5px solid #D6D0C6;border-radius:12px;padding:13px 16px;cursor:pointer;
+        transition:border-color .15s ease,background .15s ease,transform .15s ease}
+  .cbtn:hover{border-color:#C9A14A;transform:translateY(-1px)}
+  .cbtn b{font-size:15.5px;font-weight:800}
+  .cbtn span{font-size:12.5px;opacity:.78}
+  .cbtn[aria-pressed="true"]{background:#0B1530;border-color:#0B1530;color:#fff}
+  .cbtn[aria-pressed="true"] span{opacity:.88}
+  .confmark{font-size:12.5px;font-weight:800;letter-spacing:.04em;color:#8B3A2E;margin:0 0 12px}
+  .over{background:#7E2E1C;color:#fff;border-radius:10px;padding:11px 14px;margin-top:12px;font-size:14px;line-height:1.45}
   .ph{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#8B3A2E;margin:0 0 10px}
   select,button{font:inherit}
   select{width:100%;padding:11px 13px;border:1.5px solid #D6D0C6;border-radius:10px;background:#fff;color:#0B1530;font-weight:600}
@@ -67,7 +84,7 @@
   .none{font-size:14px;opacity:.8;background:#FEFCF7;border:1px dashed #D6D0C6;border-radius:10px;padding:12px 14px;margin:0 0 10px}
   .scorebar{display:flex;align-items:center;gap:14px;margin-top:16px;flex-wrap:wrap}
   .score{font-size:30px;font-weight:800;letter-spacing:-.02em;min-width:92px}
-  .score small{font-size:13px;font-weight:700;opacity:.7;display:block;letter-spacing:0}
+  .score small{font-size:13px;font-weight:700;opacity:.82;display:block;letter-spacing:0}
   .save{background:#7E2E1C;color:#fff;border:0;border-radius:11px;padding:13px 24px;font-weight:800;font-size:15px;cursor:pointer;
         transition:transform .16s ease,background .16s ease}
   .save:hover{transform:translateY(-2px);background:#8B3A2E}
@@ -80,11 +97,12 @@
 </style>
 </head>
 <body>
+<a class="skip" href="#work">Skip to the drawing</a>
 <header class="site pad"><div class="wrap">
   <a class="crumb" href="https://drsrennie-stack.github.io/new-build-bio4-solano/welcome.html" target="_top">&larr; Course home</a>
 </div></header>
 
-<div class="wrap pad">
+<main class="wrap pad" id="work">
   <section class="intro">
     <p class="eyebrow">BIO 004 &middot; Draw to know it</p>
     <h1>Draw it <span class="a">from memory</span>.</h1>
@@ -97,6 +115,8 @@
       <p class="ph">Pick what to draw</p>
       <label for="pick" class="sr" style="position:absolute;left:-9999px">Choose a drawing assignment</label>
       <select id="pick"></select>
+
+      <p class="topic" id="topic">&nbsp;</p>
 
       <div class="standard">
         <p class="sh">The standard</p>
@@ -111,7 +131,18 @@
     </div>
 
     <div class="panel">
-      <form id="form">
+      <div id="confStep">
+        <p class="ph">Before you draw &mdash; how well do you know this?</p>
+        <p class="confq">Answer honestly. The point is to catch the ones you <em>think</em> you know.</p>
+        <div class="confbtns" role="group" aria-label="Rate your confidence before drawing">
+          <button type="button" class="cbtn" data-conf="high"><b>I know this cold</b><span>I could draw it right now</span></button>
+          <button type="button" class="cbtn" data-conf="med"><b>Partly</b><span>I would get the main parts</span></button>
+          <button type="button" class="cbtn" data-conf="low"><b>Not really</b><span>I would be guessing</span></button>
+        </div>
+      </div>
+
+      <form id="form" hidden>
+        <p class="confmark" id="confmark"></p>
         <fieldset>
           <legend id="listLegend">What a correct drawing contains</legend>
           <div id="items"></div>
@@ -130,7 +161,7 @@
       </form>
     </div>
   </div>
-</div>
+</main>
 
 <footer class="pad"><div class="wrap">
   <p>BIO 004 Human Anatomy &middot; Fall 2026 &middot; Solano Community College &middot; Dr. Sharilyn Rennie</p>
@@ -157,6 +188,7 @@
      not happened. A week-1 student should not meet the nephron. */
   var LIST = ALL.filter(function (d) { return d.week <= wk; });
 
+  var CONF = null;
   var pick = document.getElementById('pick');
   var itemsBox = document.getElementById('items');
   var rubricBox = document.getElementById('rubric');
@@ -170,15 +202,34 @@
   function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
   if (!LIST.length) {
+    /* Pre-term, or before the first drawing week. The big topic line is
+       the loudest thing on the page, so it says why the page is empty
+       rather than sitting blank and looking broken. */
     pick.innerHTML = '<option>Nothing to draw yet</option>';
     pick.disabled = true;
+    document.getElementById('topic').textContent = 'Nothing to draw yet';
     document.getElementById('standard').textContent =
-      'Drawing assignments open as each topic is taught. The first one arrives in week 4.';
+      'Drawing assignments open as each topic is taught. The first one arrives in week 4, the gross anatomy of a long bone.';
+    document.getElementById('confStep').hidden = true;
+    document.getElementById('form').hidden = true;
     saveBtn.disabled = true;
   } else {
     pick.innerHTML = LIST.map(function (d, i) {
       return '<option value="' + i + '">Week ' + d.week + ' · ' + esc(d.name) + '</option>';
     }).join('');
+
+    /* ?id=<competency> opens straight onto that topic, so the Mastery
+       OS can send a student here for the exact weak spot it just named
+       instead of dropping them at the top of a list of fifty. */
+    try {
+      var m = location.search.match(/[?&]id=([^&#]+)/);
+      if (m) {
+        var want = decodeURIComponent(m[1]);
+        for (var i = 0; i < LIST.length; i++) {
+          if (LIST[i].id === want) { pick.value = String(i); break; }
+        }
+      }
+    } catch (e) {}
   }
 
   function checkbox(label, group) {
@@ -190,7 +241,17 @@
   function render() {
     if (!LIST.length) return;
     var d = LIST[pick.value | 0];
+    document.getElementById('topic').textContent = d.name;
     document.getElementById('standard').textContent = d.standard;
+
+    /* Confidence first, every time. Asking after they have seen the
+       checklist would just measure how the checklist made them feel. */
+    CONF = null;
+    document.getElementById('confStep').hidden = false;
+    document.getElementById('form').hidden = true;
+    [].slice.call(document.querySelectorAll('.cbtn')).forEach(function (b) {
+      b.setAttribute('aria-pressed', 'false');
+    });
 
     if (d.items && d.items.length) {
       legend.textContent = 'What a correct drawing contains';
@@ -232,20 +293,69 @@
   document.getElementById('form').addEventListener('change', update);
   pick.addEventListener('change', render);
 
+  var LABEL = { high: 'I know this cold', med: 'Partly', low: 'Not really' };
+  [].slice.call(document.querySelectorAll('.cbtn')).forEach(function (b) {
+    b.addEventListener('click', function () {
+      CONF = b.getAttribute('data-conf');
+      [].slice.call(document.querySelectorAll('.cbtn')).forEach(function (x) {
+        x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+      });
+      document.getElementById('confmark').textContent =
+        'You said: ' + LABEL[CONF] + '. Draw it on paper first, then tick what you actually got.';
+      document.getElementById('form').hidden = false;
+      document.getElementById('form').scrollIntoView({ block: 'nearest' });
+    });
+  });
+
   document.getElementById('form').addEventListener('submit', function (e) {
     e.preventDefault();
     var d = LIST[pick.value | 0];
     var b = boxes(), got = b.filter(function (x) { return x.checked; }).length;
     var E = window.BIO004_EVIDENCE;
     if (!E) { saidEl.textContent = 'Could not save, the evidence store is missing.'; return; }
-    E.record(d.id, 'draw', got, b.length);
+    E.record(d.id, 'draw', got, b.length, CONF);
+    var pct = b.length ? Math.round(got / b.length * 100) : 0;
     saidEl.textContent = 'Logged. This now counts on your weak spot board.';
+    /* The one comparison worth making out loud. */
+    var old = document.querySelector('.over');
+    if (old) old.remove();
+    if ((CONF === 'high' || CONF === 'med') && pct < 60) {
+      var n = document.createElement('p');
+      n.className = 'over';
+      n.textContent = 'You went in saying "' + LABEL[CONF] + '" and scored ' + pct +
+        '%. That gap is the useful part: this is a topic you would have walked into the exam ' +
+        'believing you knew. It is flagged.';
+      histEl.parentNode.insertBefore(n, histEl);
+    }
     showHistory(d);
   });
 
   render();
 })();
 </script>
+<!-- Iframe height sender. Canvas strips <script> from page CONTENT,
+     not from a page served off GitHub Pages, so this runs and posts
+     the real height up to any parent that is listening. -->
+<script>
+(function(){
+  'use strict';
+  var frameId=null;
+  try{ var m=location.search.match(/[?&]frameId=([^&#]+)/); if(m) frameId=decodeURIComponent(m[1]); }catch(e){}
+  var last=0;
+  function postHeight(){
+    var h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);
+    if(Math.abs(h-last)<2) return;
+    last=h;
+    try{ parent.postMessage({frameId:frameId,type:'resize',height:h},'*'); }catch(e){}
+  }
+  window.addEventListener('load',postHeight);
+  window.addEventListener('resize',postHeight);
+  if(window.ResizeObserver){ try{ new ResizeObserver(postHeight).observe(document.body); }catch(e){} }
+  document.addEventListener('click',function(){ window.setTimeout(postHeight,60); });
+  postHeight();
+})();
+</script>
+
 <script src="bio004-dock.js"></script>
 </body>
 </html>

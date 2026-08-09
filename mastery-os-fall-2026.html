@@ -733,6 +733,7 @@ section.block:first-of-type{border-top:none}
 <script src="competenciesfall2026.js"></script>
 <script src="resources.js"></script>
 <script src="rubrics.js"></script>
+<script src="draw-checklists.js"></script>
 <script src="section-sync.js"></script>
 <script>
 "use strict";
@@ -829,7 +830,26 @@ var FALL_SECTIONS={mw:FALL_MW,'tr-early':FALL_TR,'tr-eve':FALL_TR,tr:FALL_TR};
 var MOS_SECTION=store.get('mos-section')||'mw';
 function mosResolveSchedule(){
   var s=store.get('mos-schedule');
-  if(s) return s;
+  /* A cached schedule from a term that has already ended is worse than
+     no cache at all: it silently hands the app last term's week titles
+     and exam dates, which is how a week-1 student got shown week-11
+     respiratory work. If the cached term ends before Fall 2026 starts,
+     drop it and fall through to the per-section data below. */
+  if(s){
+    var endsBeforeFall=false;
+    try{
+      var last=s.end||(s.weeks&&s.weeks.length&&s.weeks[s.weeks.length-1].start);
+      if(last) endsBeforeFall=Date.parse(last) < Date.parse('2026-08-17');
+    }catch(e){}
+    if(endsBeforeFall){
+      try{ store.set('mos-schedule',null); localStorage.removeItem('mos-schedule'); }catch(e){}
+      if(typeof console!=='undefined'&&console.warn){
+        console.warn('[Mastery OS] Dropped a cached schedule that ended before Fall 2026 started.');
+      }
+    } else {
+      return s;
+    }
+  }
 
   if(FALL_SECTIONS[MOS_SECTION]) return FALL_SECTIONS[MOS_SECTION];
 
@@ -1098,9 +1118,23 @@ function weekOf(c){
    eligible. */
 function inPlay(c){ return weekOf(c) <= currentWeekNumber(); }
 
+/* WHICH WEEK IS IT REALLY?
+
+   This used to ask scheduleCurrentWeek(), which reads SCHEDULE, which
+   can come from a cached mos-schedule in localStorage. A schedule left
+   over from a previous term has every week starting in the past, so
+   "the current week" resolves to the LAST week of that old schedule
+   and the whole term is suddenly in play. That is how respiratory,
+   week 11, showed up as a weakness in week 1.
+
+   The fall term starts Monday 17 August 2026. That is a fact about the
+   calendar, not about anything cached, so compute from it directly.
+   Every other page in the course does the same arithmetic, which also
+   means they can no longer disagree with each other. */
+var TERM_START = new Date(2026, 7, 17);
 function currentWeekNumber(){
-  var cw = scheduleCurrentWeek();
-  return (cw && typeof cw.n === 'number') ? cw.n : 1;
+  var wk = Math.floor((new Date() - TERM_START) / (7 * 24 * 3600 * 1000)) + 1;
+  return Math.max(1, Math.min(17, wk));
 }
 
 /* Taught, but not attempted yet. Different message, different action:
@@ -1109,20 +1143,22 @@ function untouched(){
   return allComps().filter(function(x){ return inPlay(x.c) && !x.c.last; });
 }
 
-/* HOW MUCH EVIDENCE IS BEHIND THAT NUMBER?
+/* Anything last touched before the fall term began is left over from
+   another term. It is not evidence about this student in this course,
+   and it should not put a competency on the repair list. */
+function staleFromLastTerm(c){
+  if(!c.last) return false;
+  var t = Date.parse(c.last);
+  return !isNaN(t) && t < TERM_START.getTime();
+}
 
-   Getting one card wrong once and failing twenty attempts both read
-   as 0% mastery. Only one of those is a weakness; the other is a
-   single bad guess. mastery-evidence.js counts attempts per
-   competency, so ask it. Under three attempts the number is noise
-   and the competency is held back from repair.
-
-   If the evidence store is not on the page the check passes, so this
-   never makes Mastery OS depend on it. */
+/* One wrong answer once is a bad guess, not a weakness. Under three
+   attempts the percentage is noise. If the evidence store is absent
+   this passes, so Mastery OS never depends on it. */
 function attemptsFor(id){
   var E = window.BIO004_EVIDENCE;
   if(!E || !E.summary) return null;
-  try { var s = E.summary()[id]; return s ? s.of : 0; } catch(e){ return null; }
+  try { var g = E.summary()[id]; return g ? g.of : 0; } catch(e){ return null; }
 }
 function thinEvidence(c){
   var n = attemptsFor(c.id);
@@ -1134,6 +1170,7 @@ function weaknesses(){
   allComps().forEach(function(x){
     var c=x.c,reasons=[];
     if(!c.last)return;
+    if(staleFromLastTerm(c))return;
     if(!inPlay(c))return;
     if(thinEvidence(c))return;
     if(c.mastery<50)reasons.push('missed');
@@ -1151,11 +1188,12 @@ function dueToday(){return allComps().filter(function(x){return x.c.last&&isDue(
    offered for repair. Reads only; changes nothing. */
 window.MOS_DEBUG = {
   weaknesses: function(){ return weaknesses(); },
-  attempts: function(id){ return attemptsFor(id); },
-  thin: function(c){ return thinEvidence(c); },
   untouched: function(){ return untouched(); },
   weekOf: function(c){ return weekOf(c); },
-  currentWeek: function(){ return currentWeekNumber(); }
+  currentWeek: function(){ return currentWeekNumber(); },
+  stale: function(c){ return staleFromLastTerm(c); },
+  attempts: function(id){ return attemptsFor(id); },
+  thin: function(c){ return thinEvidence(c); }
 };
 function todayLecture(){return (S.course.lecture||[]).map(function(n){return {c:{name:n}};});}
 function todayLab(){return (S.course.lab||[]).map(function(n){return {c:{name:n}};});}
@@ -2437,7 +2475,14 @@ function drawKnow(){
     var revealed=rub.slice(0,shown);
     var b='<div class="g-qmeta"><span>Draw or mind-map from memory</span><span>'+esc(c.name)+'</span></div>';
     b+='<p class="g-q">On paper or the drawing canvas, draw <b>'+esc(c.name)+'</b> from memory, or build a mini mind-map of it. No notes. Put it in the centre and branch out every part and connection you can.</p>';
-    b+='<div class="g-actions" style="margin-bottom:12px"><button class="btn" data-toolblank="mastery-canvas.html?title='+encodeURIComponent(c.name)+'">Draw on canvas (iPad friendly)</button></div>';
+    /* If this competency has a written checklist, send them to the
+       scored flow: big topic, confidence BEFORE the attempt, then the
+       list to tick. That is the version whose result reaches the weak
+       spot board. The blank canvas stays for everything else. */
+    var hasChecklist=(window.BIO004_DRAW||[]).some(function(d){return d.id===c.id;});
+    b+='<div class="g-actions" style="margin-bottom:12px">';
+    if(hasChecklist){b+='<button class="btn primary" data-toolblank="bio004-draw.html?id='+encodeURIComponent(c.id)+'">Score this drawing (rate your confidence first)</button>';}
+    b+='<button class="btn" data-toolblank="mastery-canvas.html?title='+encodeURIComponent(c.name)+'">Draw on canvas (iPad friendly)</button></div>';
     if(rub.length){
       b+='<div class="reference-box"><h4>Self-check, should include ('+revealed.length+' of '+rub.length+')</h4><ul>'+(revealed.length?revealed.map(function(x){return '<li>'+esc(x)+'</li>';}).join(''):'<li style="list-style:none;color:var(--ink-faint)">Hidden. Draw or map it first, then reveal to grade yourself.</li>')+'</ul></div>';
       b+='<div class="g-actions">'+(shown<rub.length?'<button class="btn" id="dkHint">Reveal one</button><button class="btn" id="dkAll">Show full checklist</button>':'<span style="color:var(--ok);font-weight:700;align-self:center">Full checklist shown, grade yourself.</span>')+'</div>';

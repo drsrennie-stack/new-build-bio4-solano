@@ -71,14 +71,20 @@
   /* Record one piece of evidence. comps may be a single id or a
      list, because one drawing or one Loop usually speaks to
      several competencies at once. */
-  function record(comps, source, got, of, when) {
+  /* conf is the student's confidence BEFORE they attempted it:
+     'high' | 'med' | 'low'. Recorded separately from the score so the
+     two can be compared. High confidence with low retrieval is the
+     most useful signal in the whole system: it is the gap a student
+     cannot feel, and it is exactly what they will walk into an exam
+     believing they know. */
+  function record(comps, source, got, of, conf, when) {
     if (!comps) return false;
     if (typeof comps === 'string') comps = [comps];
     if (!of || of < 0) return false;
     var at = when || new Date().toISOString();
     var list = read();
     comps.forEach(function (c) {
-      list.push({ comp: c, source: source, got: got, of: of, at: at });
+      list.push({ comp: c, source: source, got: got, of: of, conf: conf || null, at: at });
     });
     /* Keep the log bounded. 4000 entries is far more than a term
        produces, and trimming the oldest keeps recent work honest. */
@@ -88,8 +94,19 @@
 
   /* Fold Recall Rx's own store in, without asking it to change.
      Its truth is history[], one entry per attempt, under
-     topics[topicId].cards[cardId]. card-competency-map.js says
-     which competencies a topic speaks to. */
+     topics[topicId].cards[cardId], shaped
+     { at: ISO, rating: n, correct: bool }.
+     card-competency-map.js says which competencies a topic speaks to.
+
+     ONE ENTRY PER ATTEMPT, NOT ONE PER TOPIC.
+     An earlier version rolled a whole topic up into a single entry
+     stamped with the most recent attempt's time. Term totals came out
+     right, but anything that asks "what happened today" came out very
+     wrong: a student who answered eight cards this morning on a topic
+     they have drilled since August would have been told they attempted
+     two hundred items today, and the time estimate had one timestamp to
+     work from instead of eight. Attempts carry their own times, so they
+     are kept apart. */
   function fromCards() {
     var MAP = window.BIO004_CARD_COMPETENCY_MAP;
     if (!MAP) return [];
@@ -103,24 +120,25 @@
       var entry = MAP[tid];
       if (!entry || !entry.comps.length) return;
       var cards = (st.topics[tid] && st.topics[tid].cards) || {};
-      var got = 0, of = 0, at = '';
       Object.keys(cards).forEach(function (cid) {
         var r = cards[cid] || {};
         var hist = r.history;
         if (hist && hist.length) {
           hist.forEach(function (h) {
-            of += 1;
-            if (h && h.correct) got += 1;
-            var w = h && (h.at || h.date || h.reviewedAt);
-            if (w && w > at) at = w;
+            if (!h) return;
+            var w = h.at || h.date || h.reviewedAt || '';
+            entry.comps.forEach(function (c) {
+              out.push({ comp: c, source: 'card', got: h.correct ? 1 : 0, of: 1, conf: null, at: w });
+            });
           });
         } else if (r.attempts) {
-          of += r.attempts; got += (r.correct || 0);
+          /* Older stores kept a running count with no per-attempt time.
+             Nothing better to date it with, so it is left undated and
+             counts toward the term but never toward a single day. */
+          entry.comps.forEach(function (c) {
+            out.push({ comp: c, source: 'card', got: r.correct || 0, of: r.attempts, conf: null, at: '' });
+          });
         }
-      });
-      if (!of) return;
-      entry.comps.forEach(function (c) {
-        out.push({ comp: c, source: 'card', got: got, of: of, at: at });
       });
     });
     return out;
@@ -138,16 +156,21 @@
     all().forEach(function (e) {
       var s = out[e.comp] || (out[e.comp] = {
         card: { got: 0, of: 0 }, loop: { got: 0, of: 0 }, draw: { got: 0, of: 0 },
-        got: 0, of: 0, last: ''
+        got: 0, of: 0, last: '', lastConf: null
       });
       var bucket = s[e.source];
       if (bucket) { bucket.got += e.got; bucket.of += e.of; }
       s.got += e.got; s.of += e.of;
-      if (e.at && e.at > s.last) s.last = e.at;
+      if (e.at && e.at > s.last) { s.last = e.at; if (e.conf) s.lastConf = e.conf; }
     });
     Object.keys(out).forEach(function (id) {
       var s = out[id];
       s.pct = s.of ? Math.round(s.got / s.of * 100) : null;
+      /* Overconfident: they said high or medium going in, and scored
+         under 60. Worth surfacing above a plain low score, because the
+         student does not know this one is a problem. */
+      s.overconfident = (s.pct !== null && s.pct < 60 &&
+                         (s.lastConf === 'high' || s.lastConf === 'med'));
       ['card', 'loop', 'draw'].forEach(function (k) {
         s[k].pct = s[k].of ? Math.round(s[k].got / s[k].of * 100) : null;
       });
