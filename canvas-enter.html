@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enter BIO 004 Human Anatomy</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<!--
+  ============================================================
+  BIO 004 Human Anatomy, Fall 2026
+  canvas-enter.html
+
+  THE FRONT DOOR. Canvas holds this one card; everything else
+  lives in the browser.
+
+  This is the "Enter Course" card rebuilt, with one change that
+  matters: the button opens in a NEW TAB. Canvas keeps its place,
+  so a student can flip back to the gradebook or an assignment
+  without losing the course tab.
+
+  Opening full screen instead of running inside the Canvas frame
+  fixes three things that cannot be fixed from inside it:
+
+    1. Canvas strips <script> from page content, so no embedded
+       page can size itself. Heights have to be hard-coded, which
+       means dead space or a page cut off.
+    2. localStorage inside the frame is third-party storage and
+       Safari blocks it. welcome.html uses it to remember a
+       section, so Safari students were re-picking every visit.
+    3. Dialogs get clipped. Mastery OS has three.
+
+  USE
+  ---
+  One snippet per Canvas course, on the home page:
+
+    <p><iframe src=".../canvas-enter.html?sec=mw"
+      width="100%" height="560" style="border:0;width:100%"
+      title="Enter BIO 004 Human Anatomy"></iframe></p>
+
+  sec=  mw | tr-am | tr-eve. Bakes the section into the link so it
+        survives even where storage is blocked. Leave it off and
+        the card still works; the student picks on the far side.
+  ============================================================
+-->
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+       background:#0B1530;color:#fff;line-height:1.55;
+       display:flex;align-items:center;justify-content:center;
+       min-height:100vh;padding:34px 20px;text-align:center}
+  .card{max-width:620px}
+  .mark{margin:0 auto 14px;display:block}
+  .eyebrow{font-size:11.5px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
+           color:#C9A14A;margin:0 0 12px}
+  .pill{display:inline-block;background:#C9A14A;color:#0B1530;font-size:11.5px;font-weight:800;
+        letter-spacing:.1em;text-transform:uppercase;border-radius:999px;padding:7px 16px;margin:0 0 20px}
+  h1{font-size:clamp(30px,5vw,44px);font-weight:800;letter-spacing:-.025em;line-height:1.1;margin:0 0 16px}
+  h1 .a{color:#C2734D}
+  .lead{font-size:16.5px;color:#fff;opacity:.9;margin:0 auto 26px;max-width:52ch}
+  .enter{display:inline-flex;align-items:center;gap:11px;background:#7E2E1C;color:#fff;text-decoration:none;
+         font-weight:800;font-size:18px;border-radius:12px;padding:17px 34px;
+         box-shadow:0 18px 40px -14px rgba(0,0,0,.65);
+         transition:transform .18s ease,background .18s ease}
+  .enter:hover{transform:translateY(-2px);background:#8B3A2E}
+  .enter:focus-visible{outline:3px solid #C9A14A;outline-offset:4px}
+  .note{font-size:13.5px;color:#fff;opacity:.82;margin:22px auto 0;max-width:46ch}
+  .change{display:inline-block;margin-top:18px;font-size:13.5px;font-weight:800;color:#F2E2B8}
+  .sig{font-size:13px;font-weight:800;color:#C9A14A;margin-top:22px}
+  @media(prefers-reduced-motion:reduce){.enter{transition:none}}
+</style>
+</head>
+<body>
+<main class="card">
+  <span class="mark"><svg viewBox="40 10 125 148" width="54" height="64" role="img" aria-hidden="true" focusable="false"><g transform="translate(0,18)"><g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#FFFFFF"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#FFFFFF"/></g><g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/></g><g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/></g></g></svg></span>
+  <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
+  <p class="pill" id="pill" hidden></p>
+  <h1>Welcome to <span class="a">Human Anatomy</span>.</h1>
+  <p class="lead">I&rsquo;m really glad you&rsquo;re here. This term we&rsquo;ll explore the human body
+     together, one system at a time. Everything you need lives in one place: your weekly pages,
+     study tools, lab structure lists, and schedule. You are never left hunting for anything.</p>
+
+  <p style="margin:0"><a class="enter" id="enter" href="https://drsrennie-stack.github.io/new-build-bio4-solano/welcome.html" target="_blank" rel="noopener">
+     Enter Course <span aria-hidden="true">&rarr;</span></a></p>
+
+  <p class="note">This is your front door. Every time you log into Canvas, the Enter Course button is
+     right here, and it takes you straight to your course hub. It opens in a new tab, so Canvas stays
+     where you left it.</p>
+
+  <a class="change" id="change" href="https://drsrennie-stack.github.io/new-build-bio4-solano/welcome.html" target="_blank" rel="noopener">Not your section? Change it</a>
+  <p class="sig">Dr. Sharilyn Rennie</p>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var BASE = 'https://drsrennie-stack.github.io/new-build-bio4-solano/';
+  var SEC = {
+    'mw':     'Class 1 \u00b7 Mon / Wed, Afternoon \u00b7 CRN 80650',
+    'tr-am':  'Class 2 \u00b7 Tue / Thu, Morning \u00b7 CRN 80654',
+    'tr-eve': 'Class 3 \u00b7 Tue / Thu, Evening \u00b7 CRN 80655'
+  };
+  var sec = null;
+  try { var m = location.search.match(/[?&]sec=([^&#]+)/); if (m) sec = decodeURIComponent(m[1]); } catch (e) {}
+  if (!SEC[sec]) sec = null;
+
+  if (sec) {
+    var p = document.getElementById('pill');
+    p.textContent = SEC[sec];
+    p.hidden = false;
+    document.getElementById('enter').href = BASE + 'welcome.html?sec=' + sec;
+    /* "Change it" has to clear the saved pick, or welcome just shows
+       the same section straight back. tour=1 reopens the chooser. */
+    document.getElementById('change').href = BASE + 'welcome.html?tour=1';
+  } else {
+    document.getElementById('change').hidden = true;
+  }
+})();
+</script>
+</body>
+</html>
