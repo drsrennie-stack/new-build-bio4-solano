@@ -3,6 +3,11 @@
 Fall 2026. One row per video page. Every file lives in `drsrennie-stack/Fall-2026-Anatomy`,
 flat alongside the module packets, because every link is a bare relative filename.
 
+The named muscles of the back, thorax, and upper limb, and the named vessels and nerves of the
+thorax and upper limb, are anatomy lab only. They have no notes page. They are in the Module 3
+structure list, and origin, insertion, action, and innervation come from the muscle chart on the
+Loops page.
+
 ## Buttons to place on each video page
 
 | Video topic | Notes button links to | Worksheet button links to |
@@ -20,15 +25,14 @@ flat alongside the module packets, because every link is a bare relative filenam
 | Module 2 Joints | `m2-joints-notes.html` | `m2-joints-worksheet.html` |
 | Module 3 Muscle Structure | `m3-muscle-notes.html` | `m3-muscle-worksheet.html` |
 | Module 3 Fascicles and Levers | `m3-fascicles-notes.html` | `m3-muscle-worksheet.html` |
-| Module 3 Back and Thorax Muscles | `m3-back-thorax-notes.html` | `m3-muscle-worksheet.html` |
-| Module 3 Upper Limb Muscles | `m3-arm-muscles-notes.html` | `m3-muscle-worksheet.html` |
 | Module 3 Heart | `m3-heart-notes.html` | `m3-heart-worksheet.html` |
 | Module 3 Cardiac Conduction | `m3-conduction-notes.html` | `m3-heart-worksheet.html` |
 | Module 3 Blood Vessels | `m3-vessels-notes.html` | `m3-vessels-blood-worksheet.html` |
 | Module 3 Vessel Disorders and Fetal Circulation | `m3-vessel-disorders-notes.html` | `m3-vessels-blood-worksheet.html` |
 | Module 3 Blood | `m3-blood-notes.html` | `m3-vessels-blood-worksheet.html` |
-| Module 3 Upper Limb Vessels and Nerves | `m3-limb-vessels-notes.html` | `m3-limb-vessels-worksheet.html` |
 | Module 3 Respiratory System | `m3-respiratory-notes.html` | `m3-respiratory-worksheet.html` |
+| Module 3 Back, Thorax, and Upper Limb Muscles (lab) | none, lab only | `m3-muscle-worksheet.html` |
+| Module 3 Upper Limb Vessels and Nerves (lab) | none, lab only | `m3-limb-vessels-worksheet.html` |
 
 ## The 13 worksheets
 
@@ -44,15 +48,15 @@ Some topics share a worksheet, because a pre-work packet covers more than one ch
 | `m2-axial-worksheet.html` | Module 2 Skull, Module 2 Spine and Thoracic Cage |
 | `m2-appendicular-worksheet.html` | Module 2 Upper Extremity, Module 2 Lower Extremity |
 | `m2-joints-worksheet.html` | Module 2 Joints |
-| `m3-muscle-worksheet.html` | Module 3 Muscle Structure, Module 3 Fascicles and Levers, Module 3 Back and Thorax Muscles, Module 3 Upper Limb Muscles |
+| `m3-muscle-worksheet.html` | Module 3 Muscle Structure, Module 3 Fascicles and Levers, plus the lab muscles of the back, thorax, and upper limb |
 | `m3-heart-worksheet.html` | Module 3 Heart, Module 3 Cardiac Conduction |
 | `m3-vessels-blood-worksheet.html` | Module 3 Blood Vessels, Module 3 Vessel Disorders and Fetal Circulation, Module 3 Blood |
-| `m3-limb-vessels-worksheet.html` | Module 3 Upper Limb Vessels and Nerves |
+| `m3-limb-vessels-worksheet.html` | Upper limb vessels and nerves, lab only |
 | `m3-respiratory-worksheet.html` | Module 3 Respiratory System |
 
 ## Files to publish
 
-70 files: 22 notes pages, 13 worksheet pages, and a PDF for each.
+64 files: 19 notes pages, 13 worksheet pages, and a PDF for each.
 
 | HTML | PDF beside it |
 |---|---|
@@ -69,14 +73,11 @@ Some topics share a worksheet, because a pre-work packet covers more than one ch
 | `m2-joints-notes.html` | `BIO004-M2-Joints-Notes.pdf` |
 | `m3-muscle-notes.html` | `BIO004-M3-Muscle-Notes.pdf` |
 | `m3-fascicles-notes.html` | `BIO004-M3-Fascicles-Notes.pdf` |
-| `m3-back-thorax-notes.html` | `BIO004-M3-Back-Thorax-Notes.pdf` |
-| `m3-arm-muscles-notes.html` | `BIO004-M3-Arm-Muscles-Notes.pdf` |
 | `m3-heart-notes.html` | `BIO004-M3-Heart-Notes.pdf` |
 | `m3-conduction-notes.html` | `BIO004-M3-Conduction-Notes.pdf` |
 | `m3-vessels-notes.html` | `BIO004-M3-Vessels-Notes.pdf` |
 | `m3-vessel-disorders-notes.html` | `BIO004-M3-Vessel-Disorders-Notes.pdf` |
 | `m3-blood-notes.html` | `BIO004-M3-Blood-Notes.pdf` |
-| `m3-limb-vessels-notes.html` | `BIO004-M3-Limb-Vessels-Notes.pdf` |
 | `m3-respiratory-notes.html` | `BIO004-M3-Respiratory-Notes.pdf` |
 | `m1-intro-worksheet.html` | `BIO004-M1-Intro-Worksheet.pdf` |
 | `m1-cell-worksheet.html` | `BIO004-M1-Cell-Worksheet.pdf` |
@@ -94,8 +95,8 @@ Some topics share a worksheet, because a pre-work packet covers more than one ch
 
 ## Button markup
 
-Paste this next to a video. It meets the accessibility floor: real anchors, visible focus,
-40px minimum target height, `target="_top"` so it works inside a Kajabi iframe.
+Paste this next to a video. Real anchors, visible focus, 40px minimum target height,
+`target="_top"` so it works inside a Kajabi iframe.
 
 ```html
 <div class="topic-buttons">
@@ -116,5 +117,15 @@ Paste this next to a video. It meets the accessibility floor: real anchors, visi
 </style>
 ```
 
-Contrast: maroon-dark `#5E201A` on white is 12.37:1, white on maroon-dark is 12.37:1.
-Both clear AAA.
+For a lab-only video, swap the notes button for the structure list:
+
+```html
+  <a class="tb tb-solid" href="module-3-structure-list.html" target="_top">Lab structure list</a>
+```
+
+Contrast: maroon-dark `#5E201A` on white is 12.37:1, white on maroon-dark is 12.37:1. Both clear AAA.
+
+## Still to wire
+
+The muscle chart on the Loops page is referenced in Module 3 chapter text and on the muscle
+worksheet, but not yet hyperlinked. Send the URL and it becomes a live link and a QR code.
