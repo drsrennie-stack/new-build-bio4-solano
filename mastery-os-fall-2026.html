@@ -734,6 +734,7 @@ section.block:first-of-type{border-top:none}
 <script src="resources.js"></script>
 <script src="rubrics.js"></script>
 <script src="draw-checklists.js"></script>
+<script src="loops-index.js"></script>
 <script src="section-sync.js"></script>
 <script>
 "use strict";
@@ -971,15 +972,65 @@ var RECALL_KEY='bio004-progress';
    A competency fed by several topics takes the pooled accuracy
    across all of them, not the last one written, so studying two
    topics that both touch it cannot make it look worse. */
+/* Merge one source's aggregate into another. Both are keyed by
+   competency id and shaped {a: attempts, c: correct, seen: latest ISO}.
+   Attempts and correct SUM, they do not overwrite: a student who is
+   strong on cards and weak on the cadaver Loop for the same competency
+   should land in between, not at whichever engine ran last. */
+function mergeAgg(into, from){
+  Object.keys(from).forEach(function(id){
+    var g = into[id] || (into[id] = {a:0, c:0, seen:''});
+    g.a += from[id].a; g.c += from[id].c;
+    if(from[id].seen > g.seen) g.seen = from[id].seen;
+  });
+  return into;
+}
+
+/* Loops is its own engine with its own store, on the same origin, so
+   its scores are readable from here directly. loopScores_v1 holds one
+   entry per scored session:
+     { "<loopId>": [ {t, right, denom, pct, ms} ] }
+   loops-index.js says which competencies each loop covers. For the
+   cadaver and specimen competencies, Loops is the ONLY engine that
+   covers them at all, so without this they could never be diagnosed.
+   Watch mode writes nothing, which is correct. Mixed reviews are
+   stored under ids that carry no record of which loops went into
+   them, so they are skipped rather than guessed at. */
+function loopAgg(){
+  var agg = {};
+  var LOOPS = window.BIO004_LOOPS; if(!LOOPS) return agg;
+  var st; try{ st = JSON.parse(localStorage.getItem('loopScores_v1')||'null'); }catch(e){ return agg; }
+  if(!st) return agg;
+  var byId = {}; LOOPS.forEach(function(l){ byId[l.id] = l.comps || []; });
+  Object.keys(st).forEach(function(loopId){
+    var comps = byId[loopId]; if(!comps || !comps.length) return;
+    var runs = st[loopId]; if(!runs || !runs.length) return;
+    var a = 0, c = 0, seen = '';
+    runs.forEach(function(r){
+      if(!r || !r.denom) return;
+      a += r.denom; c += (r.right || 0);
+      var when = ''; try{ when = new Date(r.t).toISOString(); }catch(e){}
+      if(when > seen) seen = when;
+    });
+    if(!a) return;
+    comps.forEach(function(id){
+      var g = agg[id] || (agg[id] = {a:0, c:0, seen:''});
+      g.a += a; g.c += c;
+      if(seen > g.seen) g.seen = seen;
+    });
+  });
+  return agg;
+}
+
 function ingestRecallCards(){
   var MAP = window.BIO004_CARD_COMPETENCY_MAP;
-  if(!MAP) return false;
-  var raw; try{ raw = localStorage.getItem('bio004-recall-v2'); }catch(e){ raw = null; }
-  if(!raw) return false;
-  var st; try{ st = JSON.parse(raw); }catch(e){ return false; }
-  if(!st || !st.topics) return false;
-
   var agg = {};   /* competency id -> {a: attempts, c: correct, seen: latest ISO} */
+  var raw = null, st = null;
+  if(MAP){
+    try{ raw = localStorage.getItem('bio004-recall-v2'); }catch(e){ raw = null; }
+    if(raw){ try{ st = JSON.parse(raw); }catch(e){ st = null; } }
+  }
+  if(!st || !st.topics) st = {topics:{}};
   Object.keys(st.topics).forEach(function(tid){
     var entry = MAP[tid]; if(!entry || !entry.comps.length) return;
     var cards = (st.topics[tid] && st.topics[tid].cards) || {};
@@ -1012,6 +1063,9 @@ function ingestRecallCards(){
       if(seen > g.seen) g.seen = seen;
     });
   });
+
+  /* Loops folds in here, summed with cards rather than replacing them. */
+  mergeAgg(agg, loopAgg());
 
   var changed = false;
   allComps().forEach(function(x){
@@ -1353,12 +1407,59 @@ function renderMap(){
 /* =========================================================
    RENDER: SECTION 4 - WEAKNESS
 ========================================================= */
+var LOOPS_BASE='https://drsrennie-stack.github.io/loops/';
+/* Smallest loop that covers this competency. Smallest, not first: a
+   13-competency omnibus loop is a worse repair target than a focused
+   one, even though both technically cover it. */
+function loopShort(t){ return String(t).replace(/\s*Loop\s*$/,''); }
+function loopAvgPct(loopId){
+  var st; try{ st=JSON.parse(localStorage.getItem('loopScores_v1')||'null'); }catch(e){ return null; }
+  var runs = st && st[loopId];
+  if(!runs || !runs.length) return null;
+  var got=0, of=0;
+  runs.forEach(function(r){ if(r && r.denom){ of+=r.denom; got+=(r.right||0); } });
+  return of ? Math.round(got/of*100) : null;
+}
+/* Which loop to send them to for this weak spot.
+
+   The loop they ALREADY DID BADLY ON wins. That is the one carrying
+   the evidence that put this competency on the board, and redoing it
+   is what will move the number. Only when no covering loop has been
+   scored does this fall back to the smallest, on the grounds that a
+   four-competency loop is a tighter repair target than a thirteen. */
+function loopFor(compId){
+  var L=window.BIO004_LOOPS||[];
+  var hits=L.filter(function(l){return (l.comps||[]).indexOf(compId)>=0;});
+  if(!hits.length) return null;
+  var scored=hits.filter(function(l){return loopAvgPct(l.id)!==null;});
+  if(scored.length){
+    scored.sort(function(a,b){return loopAvgPct(a.id)-loopAvgPct(b.id);});
+    return scored[0];
+  }
+  hits.sort(function(a,b){return (a.comps||[]).length-(b.comps||[]).length;});
+  return hits[0];
+}
+
 function renderWeakness(){
   var w=weaknesses();
   var tagMap={missed:['tag-missed','Frequently missed'],conf:['tag-conf','Low confidence'],overdue:['tag-overdue','Overdue recall']};
   var items=w.slice(0,10).map(function(x){
     var tags=x.reasons.map(function(r){return '<span class="tag '+tagMap[r][0]+'">'+tagMap[r][1]+'</span>';}).join('');
-    return '<div class="weak-item">'+tags+'<span class="wn">'+esc(x.c.name)+'</span><span class="wu">'+esc(x.u.name)+'</span><button class="btn" data-prove="'+x.c.id+'" style="padding:7px 12px;font-size:12.5px">Repair</button></div>';
+    /* Loops is a separate engine, and for the cadaver and specimen
+       competencies it is the ONLY engine that covers them. If a Loop
+       speaks to this weak spot, send them straight into it rather than
+       making them go hunt for which one it was. */
+    var lp=loopFor(x.c.id);
+    /* NAME the loop rather than saying "Run the Loop". The Loops app has
+       no URL routing, so this link lands on its hub and the student has
+       to pick from 39 tiles. Telling them which one is the difference
+       between a working instruction and a scavenger hunt. */
+    var loopBtn = lp
+      ? '<a class="btn" href="'+esc(LOOPS_BASE)+'" target="_blank" rel="noopener" '+
+        'style="padding:7px 12px;font-size:12.5px" '+
+        'title="Opens the Loops hub. Choose '+esc(lp.title)+'">Loop: '+esc(loopShort(lp.title))+'</a>'
+      : '';
+    return '<div class="weak-item">'+tags+'<span class="wn">'+esc(x.c.name)+'</span><span class="wu">'+esc(x.u.name)+'</span>'+loopBtn+'<button class="btn" data-prove="'+x.c.id+'" style="padding:7px 12px;font-size:12.5px">Repair</button></div>';
   }).join('');
   var head='<div class="weak-head"><div><div class="wc">'+w.length+'</div><div class="wl">competencies need repair</div></div>'+
     '<p class="serif" style="flex:1;min-width:200px">Collected automatically from missed questions, low-confidence concepts, and overdue recall items. One session repairs the top ones.</p>'+
@@ -1749,7 +1850,7 @@ var OB_LOGO='<svg viewBox="40 10 125 148" width="70" height="83" aria-hidden="tr
   '<g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#F5F1E8"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#F5F1E8"/></g>'+
   '</g></svg>';
 var OB_STEPS=[
-  {t:'Welcome to Mastery OS',s:'This is your learning operating system. It tells you the single highest-value thing to do next, then coaches you through proving you know it.',kind:'intro'}, {t:'What should we call you?',s:'Just a first name is fine. It stays on this device.',kind:'name'}, {t:'Which class are you in?',s:'Pick your section so every date matches your class: your exams, TBLs, and nightly pre-work.',kind:'section',opts:[['mw','Mon / Wed, Afternoon','Lecture 12:30–1:50 pm, Lab 2:00–4:50 pm (CRN 80650)'],['tr-early','Tue / Thu, Early','Lecture 9:30–10:45 am, Lab 11:00 am–1:50 pm (CRN 80654)'],['tr-eve','Tue / Thu, Evening','Lecture 5:30–6:45 pm, Lab 7:00–9:50 pm (CRN 80655)']]}, {t:'What grade are you aiming for?',s:'Anatomy is heavy. Your goal sets a realistic weekly time commitment outside class.',kind:'grade',opts:[['A','Mastery. Plan on about 20 hours a week outside class. Recall stays tight, gaps repaired fast.'],['B','Strong. Plan on about 16 hours a week outside class.'],['C to pass','The high-yield essentials to clear the bar. About 14 hours a week.']]}, {t:'How many days a week will you study?',s:'Be honest. A plan you keep beats a plan you admire.',kind:'days'}, {t:'Your weekly study plan',s:'Based on your goal and the days you picked. You can adjust anytime.',kind:'plan'}, {t:'Which ways of proving mastery do you like?',s:'Pick any. We weight your plan toward these, but still stretch you.',kind:'activities',opts:[['retrieval','Retrieval practice'],['draw','Draw from memory'],['label','Label diagrams'],['cadaver','Cadaver ID'],['histo','Histology ID'],['teach','Teach someone'],['clinical','Clinical cases']]}, {t:'How confident do you feel right now?',s:'No wrong answer. It just tunes the tone of your coach.',kind:'confidence',opts:[['shaky','Shaky. I need structure.'],['building','Building. I know some of it.'],['solid','Solid. I want to be pushed.']]}, {t:'You are set',s:'Your Mastery OS is built. Every day it shows you the one best move. One thing to remember: this is a study aid, not a replacement for class, the structure list, or the syllabus, and it does not guarantee a grade. Use it alongside your course materials.',kind:'done'}
+  {t:'Welcome to Mastery OS',s:'This is your learning operating system. It tells you the single highest-value thing to do next, then coaches you through proving you know it.',kind:'intro'}, {t:'What should we call you?',s:'Just a first name is fine. It stays on this device.',kind:'name'}, {t:'Which class are you in?',s:'Pick your section so every date matches your class: your exams, TBLs, and nightly pre-work.',kind:'section',opts:[['mw','Mon / Wed, Afternoon','Lecture 12:30 to 1:50 pm, Lab 2:00 to 4:50 pm (CRN 80650)'],['tr-early','Tue / Thu, Early','Lecture 9:30 to 10:45 am, Lab 11:00 am to 1:50 pm (CRN 80654)'],['tr-eve','Tue / Thu, Evening','Lecture 5:30 to 6:45 pm, Lab 7:00 to 9:50 pm (CRN 80655)']]}, {t:'What grade are you aiming for?',s:'Anatomy is heavy. Your goal sets a realistic weekly time commitment outside class.',kind:'grade',opts:[['A','Mastery. Plan on about 20 hours a week outside class. Recall stays tight, gaps repaired fast.'],['B','Strong. Plan on about 16 hours a week outside class.'],['C to pass','The high-yield essentials to clear the bar. About 14 hours a week.']]}, {t:'How many days a week will you study?',s:'Be honest. A plan you keep beats a plan you admire.',kind:'days'}, {t:'Your weekly study plan',s:'Based on your goal and the days you picked. You can adjust anytime.',kind:'plan'}, {t:'Which ways of proving mastery do you like?',s:'Pick any. We weight your plan toward these, but still stretch you.',kind:'activities',opts:[['retrieval','Retrieval practice'],['draw','Draw from memory'],['label','Label diagrams'],['cadaver','Cadaver ID'],['histo','Histology ID'],['teach','Teach someone'],['clinical','Clinical cases']]}, {t:'How confident do you feel right now?',s:'No wrong answer. It just tunes the tone of your coach.',kind:'confidence',opts:[['shaky','Shaky. I need structure.'],['building','Building. I know some of it.'],['solid','Solid. I want to be pushed.']]}, {t:'You are set',s:'Your Mastery OS is built. Every day it shows you the one best move. One thing to remember: this is a study aid, not a replacement for class, the structure list, or the syllabus, and it does not guarantee a grade. Use it alongside your course materials.',kind:'done'}
 ];
 function showOnboard(){
   var ob=$('#onboard');ob.hidden=false;

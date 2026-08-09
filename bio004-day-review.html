@@ -46,7 +46,7 @@
   .stat{background:#0B1530;color:#fff;border-radius:14px;padding:16px 18px}
   .stat .v{font-size:31px;font-weight:800;letter-spacing:-.02em;line-height:1.05}
   .stat .k{font-size:11.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:#F2E2B8;margin-top:5px}
-  .stat.warm{background:#7E2E1C}
+  .stat.warm{background:#4A3A0E}
   .sec{margin-top:26px}
   .sh{font-size:11.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#8B3A2E;margin:0 0 10px}
   .skip{position:absolute;left:-9999px;top:0;background:#0B1530;color:#fff;padding:10px 16px;
@@ -189,7 +189,7 @@
   ];
   var over = doneIds.filter(function(id){ var r=perComp[id]; var p=r.of?r.got/r.of*100:100;
     return p < 60 && (r.conf === 'high' || r.conf === 'med'); });
-  if (over.length) stats.push({ v: over.length, k: 'thought you knew', warm: true });
+  if (over.length) stats.push({ v: over.length, k: 'to aim higher on', warm: true });
 
   document.getElementById('stats').innerHTML = stats.map(function (s) {
     return '<div class="stat' + (s.warm ? ' warm' : '') + '"><div class="v">' + s.v + '</div><div class="k">' + s.k + '</div></div>';
@@ -226,8 +226,8 @@
     if (r.src.draw) spoken.push('drawing');
     if (r.src.loop) spoken.push('loop');
     if (pct < 60 && (r.conf === 'high' || r.conf === 'med')) {
-      flags += '<span class="pill p-over">Thought you knew it</span> ';
-      spoken.push('you went in confident and scored under 60 percent');
+      flags += '<span class="pill p-over">Aim higher here</span> ';
+      spoken.push('the bar on this one sits higher than you pitched for, worth a second pass');
     }
     if (r.of < 3) {
       flags += '<span class="pill p-thin">Thin, needs more</span> ';
@@ -241,6 +241,22 @@
            '<span class="pills" aria-hidden="true">' + flags + '</span>' +
            '<span class="pct" aria-hidden="true">' + pct + '%</span></div>';
   }), 'Nothing logged today yet. Anything you do in Recall Rx or a drawing shows up here.');
+
+  /* Say what the flag means, in the tone it is meant in. A student who
+     rated themselves honestly and came up short did not fail; they found
+     out the bar is higher than they pitched for, which is worth far more
+     here than on an exam. Punishing that just teaches them to hedge the
+     confidence rating, and then the signal is gone. */
+  if (over.length) {
+    var expl = document.createElement('p');
+    expl.className = 'note';
+    expl.innerHTML = '<b>About "aim higher here".</b> You went into ' + over.length +
+      (over.length === 1 ? ' topic' : ' topics') + ' today feeling reasonably solid and the ' +
+      'checklist wanted more than you had ready. That is useful, not bad. It means the bar on ' +
+      'those sits a little above what you prepared for. Next pass, assume slightly more detail ' +
+      'is wanted rather than less, and they stop being the ones that surprise you.';
+    document.getElementById('done').parentNode.appendChild(expl);
+  }
 
   /* Not touched today, but taught by now. This is the list that
      prevents the surprise. */

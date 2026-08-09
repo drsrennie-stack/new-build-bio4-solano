@@ -2,24 +2,24 @@
    BIO 004 Human Anatomy, Fall 2026
    mastery-evidence.js
 
-   ONE EVIDENCE STORE, THREE SOURCES.
+   ONE EVIDENCE STORE, THREE ENGINES.
 
    THE PROBLEM
    -----------
-   Every study tool in this course kept its own score in its own
-   place, in its own shape:
+   Three separate engines each kept score in its own place, in its
+   own shape, and nothing read across them:
 
      Recall Rx      localStorage['bio004-recall-v2']
                     topics[topicId].cards[cardId].history[]
-     Loops          nothing. Not recorded anywhere.
-     Drawing        nothing. mastery-canvas.html has no storage
+     Loops          localStorage['loopScores_v1']
+                    { loopId: [ {t, right, denom, pct, ms} ] }
+     Drawing        nothing. mastery-canvas.html had no storage
                     call of any kind.
      Mastery OS     localStorage['bio004-progress'], a key nothing
                     ever wrote to.
 
-   So the weak spot board could only ever see cards, and a
-   competency a student had drawn ten times or watched every Loop
-   for still read as no evidence.
+   So the weak spot board could only ever see cards. A student who
+   had run every Loop for a unit still read as no evidence.
 
    WHAT THIS IS
    ------------
@@ -38,14 +38,17 @@
    store directly and folds it in, so card history keeps working
    whether or not a student ever opens anything else.
 
-   WHY SOURCE MATTERS
-   ------------------
-   Recall and reconstruction fail differently. A student can
-   recognise every structure on a multiple-choice card and be
-   unable to draw the thing from a blank page. Keeping the source
-   on every entry is what lets the board say "strong on cards,
-   weak on drawing", which is the signal worth acting on. Averaging
-   them into one number throws that away.
+   NEITHER ENGINE IS ASKED TO CHANGE
+   ---------------------------------
+   Recall Rx and Loops both keep writing exactly what they already
+   wrote. This file reads their stores where they sit and translates
+   both into competencies. Adding a fourth engine later means adding
+   one more reader here, nothing else.
+
+   The source field is kept on every entry because the Mastery OS
+   needs to know which engine to send a student back to when it
+   names a weak spot. It is not there to build a side by side
+   comparison of the engines.
    ============================================================ */
 
 (function () {
@@ -53,6 +56,7 @@
 
   var KEY = 'bio004-evidence-v1';
   var RECALL_KEY = 'bio004-recall-v2';
+  var LOOPS_KEY = 'loopScores_v1';
 
   function read() {
     try {
@@ -144,9 +148,72 @@
     return out;
   }
 
-  /* Everything, cards included, as one list. */
+  /* Fold the Loops engine in, without asking it to change either.
+
+     THE ONE FACT THAT MAKES THIS WORK
+     ---------------------------------
+     Loops and this course site are BOTH served from
+     drsrennie-stack.github.io. localStorage is scoped to an origin,
+     not to a path, so the Loops app's own score history is readable
+     from here directly. No postMessage bridge, no export button, no
+     change to the Loops code. It already writes everything needed.
+
+     Its store is loopScores_v1:
+
+       { "<loopId>": [ { t: epoch_ms, right: n, denom: n, pct: n, ms: n } ] }
+
+     one entry per scored session. loops-index.js says which
+     competencies each loop speaks to. That is the whole connection.
+
+     Watch mode is not scored and writes nothing, which is correct:
+     watching a loop is not evidence that anything was retrieved.
+
+     Review sessions are stored under 'review-weak' and
+     'review-mixed', which are assembled on the fly and carry no
+     record of which loops went into them. Those are skipped rather
+     than guessed at, so a mixed review counts for nothing here even
+     though it counts inside Loops. */
+  function fromLoops() {
+    var LOOPS = window.BIO004_LOOPS;
+    if (!LOOPS) return [];
+    var byId = {};
+    LOOPS.forEach(function (l) { byId[l.id] = l.comps || []; });
+
+    var st;
+    try { st = JSON.parse(localStorage.getItem(LOOPS_KEY) || 'null'); }
+    catch (e) { return []; }
+    if (!st) return [];
+
+    var out = [];
+    Object.keys(st).forEach(function (loopId) {
+      var comps = byId[loopId];
+      if (!comps || !comps.length) return;
+      var runs = st[loopId];
+      if (!runs || !runs.length) return;
+      runs.forEach(function (r) {
+        if (!r || !r.denom) return;
+        var at = '';
+        try { at = new Date(r.t).toISOString(); } catch (e) { at = ''; }
+        comps.forEach(function (c) {
+          out.push({ comp: c, source: 'loop', got: r.right || 0, of: r.denom, conf: null, at: at });
+        });
+      });
+    });
+    return out;
+  }
+
+  /* Which loops a student has actually run, for "you have not opened
+     this one yet" messaging on the board. */
+  function loopsTouched() {
+    var st;
+    try { st = JSON.parse(localStorage.getItem(LOOPS_KEY) || 'null'); }
+    catch (e) { return {}; }
+    return st || {};
+  }
+
+  /* Everything, cards and Loops included, as one list. */
   function all() {
-    return fromCards().concat(read());
+    return fromCards().concat(fromLoops()).concat(read());
   }
 
   /* Per-competency rollup, split by source so the board can show
@@ -219,6 +286,8 @@
 
   window.BIO004_EVIDENCE = {
     record: record,
+    fromLoops: fromLoops,
+    loopsTouched: loopsTouched,
     all: all,
     summary: summary,
     weakest: weakest,

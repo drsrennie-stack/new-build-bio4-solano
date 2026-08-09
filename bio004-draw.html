@@ -44,7 +44,11 @@
   h1{font-size:clamp(27px,4vw,40px);font-weight:800;letter-spacing:-.025em;line-height:1.08;margin:0 0 10px}
   h1 .a{color:#8B3A2E}
   .lead{font-size:16px;opacity:.86;margin:0 0 4px;max-width:64ch}
+    /* The checklist runs to 21 rows on some topics, so the left column
+     sticks rather than stranding the topic and the standard at the top
+     of a long scroll. Students need both while they tick. */
   .grid{display:grid;grid-template-columns:1fr 1.35fr;gap:20px;padding:22px 0 46px;align-items:start}
+  @media(min-width:901px){.grid > .panel:first-child{position:sticky;top:16px}}
   @media(max-width:900px){.grid{grid-template-columns:1fr}}
   .panel{background:#fff;border:1px solid #ECE7DE;border-radius:14px;padding:18px 20px;
          box-shadow:0 16px 38px -22px rgba(11,21,48,.34),0 3px 10px -6px rgba(11,21,48,.1)}
@@ -61,7 +65,7 @@
   .cbtn[aria-pressed="true"]{background:#0B1530;border-color:#0B1530;color:#fff}
   .cbtn[aria-pressed="true"] span{opacity:.88}
   .confmark{font-size:12.5px;font-weight:800;letter-spacing:.04em;color:#8B3A2E;margin:0 0 12px}
-  .over{background:#7E2E1C;color:#fff;border-radius:10px;padding:11px 14px;margin-top:12px;font-size:14px;line-height:1.45}
+  .over{background:#FBF3DE;color:#2A2418;box-shadow:inset 0 0 0 1px #C9A14A;border-left:4px solid #B8924A;border-radius:10px;padding:11px 14px;margin-top:12px;font-size:14px;line-height:1.45}
   .ph{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#8B3A2E;margin:0 0 10px}
   select,button{font:inherit}
   select{width:100%;padding:11px 13px;border:1.5px solid #D6D0C6;border-radius:10px;background:#fff;color:#0B1530;font-weight:600}
@@ -132,7 +136,7 @@
 
     <div class="panel">
       <div id="confStep">
-        <p class="ph">Before you draw &mdash; how well do you know this?</p>
+        <p class="ph">Before you draw. How well do you know this?</p>
         <p class="confq">Answer honestly. The point is to catch the ones you <em>think</em> you know.</p>
         <div class="confbtns" role="group" aria-label="Rate your confidence before drawing">
           <button type="button" class="cbtn" data-conf="high"><b>I know this cold</b><span>I could draw it right now</span></button>
@@ -316,15 +320,25 @@
     E.record(d.id, 'draw', got, b.length, CONF);
     var pct = b.length ? Math.round(got / b.length * 100) : 0;
     saidEl.textContent = 'Logged. This now counts on your weak spot board.';
-    /* The one comparison worth making out loud. */
+    /* The one comparison worth making out loud, and the tone matters.
+       This is not a student who did badly. It is a student who
+       prepared honestly and found the bar sits a little higher than
+       they had pitched for. Said harshly it teaches them to hedge
+       their confidence rating, which destroys the signal. Said
+       gently it teaches them to aim high, which is the actual
+       lesson. */
     var old = document.querySelector('.over');
     if (old) old.remove();
     if ((CONF === 'high' || CONF === 'med') && pct < 60) {
       var n = document.createElement('p');
       n.className = 'over';
-      n.textContent = 'You went in saying "' + LABEL[CONF] + '" and scored ' + pct +
-        '%. That gap is the useful part: this is a topic you would have walked into the exam ' +
-        'believing you knew. It is flagged.';
+      n.innerHTML = '<b>Worth knowing, and not a bad thing.</b><br>' +
+        'You went in saying "' + esc(LABEL[CONF]) + '" and ticked ' + pct + '%. ' +
+        'That is not a sign you do not know this. It means the bar for this one sits a little ' +
+        'higher than what you prepared for, and finding that out here is much better than ' +
+        'finding it out on the exam. When you come back to it, aim a bit past what you think ' +
+        'is enough. Assume slightly more detail is wanted rather than less. That is the habit ' +
+        'that keeps this from catching you off guard.';
       histEl.parentNode.insertBefore(n, histEl);
     }
     showHistory(d);

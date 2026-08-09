@@ -1,7 +1,7 @@
 # Accessibility compliance notes
 
 **Project:** BIO 004 Human Anatomy, Fall 2026 study tools
-**Files covered:** `bio004-draw.html`, `bio004-day-review.html`, `mastery-os-fall-2026.html` (changed sections), `mastery-evidence.js`, `draw-checklists.js`, `bio004-dock.js` (two new tiles)
+**Files covered:** `bio004-draw.html`, `bio004-day-review.html`, `mastery-os-fall-2026.html` (changed sections), `mastery-evidence.js`, `draw-checklists.js`, `loops-index.js`, `bio004-dock.js` (two new tiles)
 **Repo:** drsrennie-stack/new-build-bio4-solano
 **Date:** August 9, 2026
 **Reviewer:** Dr. Sharilyn Rennie
@@ -55,8 +55,16 @@ All three passed AA before the change and missed AAA. Fixed anyway.
 
 The drawing source pill was `#2f7d64`, a green. Green is not in the palette and,
 worse, green reads as "done and fine", which is the opposite of what a source tag
-means. Replaced with slate `#4A545C`. The overconfidence pill is brushed gold on
-navy text so it reads as a flag rather than a failure.
+means. Replaced with slate `#4A545C`.
+
+The overconfidence flag was originally a white-on-maroon panel reading "you would
+have walked into the exam believing you knew it". It is now brushed gold on dark
+text, headed "Worth knowing, and not a bad thing", and says the bar sits higher
+than they pitched for and to aim a bit past what feels like enough. The pill reads
+"Aim higher here" rather than "Thought you knew it". This is not only a tone
+change: a student who is scolded for rating themselves honestly learns to hedge
+the confidence rating, and the moment they hedge, the signal the whole mechanism
+depends on is gone.
 
 ---
 
@@ -100,19 +108,27 @@ so it is not mistaken for an NVDA or VoiceOver pass.
 ## 5. Known limitations and remediation plan
 
 1. **No live screen reader pass.** Accessibility tree only.
-2. **`draw-checklists.js` ships with empty `items: []` on all 50 entries.** The
-   standard and the four general criteria are there and score correctly. Three
-   attempts at generating the structure lists produced mangled fragments, so
-   nothing was written rather than putting wrong words in your mouth on a page
-   students score themselves against. Week 4 and week 7 are the ones to fill first.
-3. **Loops record no evidence yet.** `loops-index.js` tags all 39 by competency,
-   but nothing writes a `loop` entry, so the Loop pill only appears if something
-   else writes one. The Loops app itself needs one `BIO004_EVIDENCE.record` call.
-4. **Time on the day review is derived, not measured.** Sittings are inferred from
+2. **Checklist wording is derived from your notes, not reviewed by you.** All 845
+   items were written against your m1 to m5 notes pages, using your terminology
+   and your ordering. 20 items are flagged in `checklist-review-flags.md` where a
+   competency's standard asked for something the matching notes page does not
+   name. Those are the ones to read first.
+3. **Loops deep links land on the hub, not the loop.** The Loops app has no URL
+   routing, so a "Loop: Cadaver UE" button opens the hub and the student picks
+   from 39 tiles. The button names the right one and the tooltip repeats it.
+   Adding `?loop=<id>` support to the Loops index is about six lines if you want
+   one-click.
+4. **Mixed Loop reviews count for nothing here.** Loops stores review sessions
+   under `review-weak` and `review-mixed`, which carry no record of which loops
+   went into them. Those are skipped rather than attributed to a guess.
+5. **Third-party storage.** Loops read is same-origin, so it works on GitHub
+   Pages. If a student runs Loops inside a Kajabi iframe, Safari's storage
+   partitioning can isolate it, the same limitation Canvas has.
+6. **Time on the day review is derived, not measured.** Sittings are inferred from
    evidence timestamps with a 25 minute gap rule and a 3 minute floor per sitting.
    It under-counts thinking time and over-counts a tab left open. Labelled "about"
    everywhere it appears.
-5. **Old Recall Rx entries with no per-attempt timestamps** count toward the term
+7. **Old Recall Rx entries with no per-attempt timestamps** count toward the term
    total but never toward a single day. There is nothing to date them with.
 
 ---
