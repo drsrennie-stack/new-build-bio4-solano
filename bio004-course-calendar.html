@@ -408,9 +408,11 @@ const SECTIONS = {
       /* Her notes packet sits WITH the worksheet, not before it and
          not as a separate step. The sheet is worked against the notes
          and the reading, both open. */
-      var step1=matLink(M.worksheet,'&#9998;','Pre-work')+matLink(M.worksheet2,'&#9998;','Pre-work')+
-                (M.notes||[]).map(function(o){return matLink(o,'&#9776;','Notes');}).join('');
-      var step2=matLink(M.lecture,'&#9658;','Video')+matLink(M.lecture2,'&#9658;','Video');
+      function many(list,icon,kind){ return (list||[]).map(function(o){return matLink(o,icon,kind);}).join(''); }
+      var step1=many(M.sheets,'&#9998;','Pre-work')+
+                many(M.notes,'&#9776;','Notes')+
+                many(M.workbooks,'&#9636;','Workbook');
+      var step2=many(M.videos,'&#9658;','Video');
       var pw='';
       if(step1) pw+='<div class="stephead"><span class="step-n">1</span>Work the sheet with these notes and the reading open</div>'+step1;
       if(step2) pw+='<div class="stephead"><span class="step-n">2</span>Then watch the video</div>'+step2;

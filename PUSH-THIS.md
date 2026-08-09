@@ -1,48 +1,53 @@
 # Push to drsrennie-stack/new-build-bio4-solano
 
-Everything goes in the repo root, overwriting. Nothing is deleted.
+Repo root, overwriting. Nothing deleted.
 
-## What changed since the last zip
+## The 17 week hubs
 
-Your 35 new pages are placed. All of them, none left over:
-22 notes packets and 13 pre-work sheets across m1, m2 and m3.
+`week-1-hub.html` through `week-17-hub.html`, generated from **your own
+`week5hub.html`**. Transferred, not recreated. Every block is your markup and
+your CSS, byte for byte:
 
-They sit in **step 1**, together, because the sheet is worked against the
-notes and the reading with all of them open. Not notes first, not notes as a
-separate step.
+- White site header with the logo
+- Navy **Lab, start of the week** block with the numbered pills
+- Maroon **Study With Me** card
+- White **Other tools** block with the **Loops** pill
+- White **Spaced Recall** block with the Course Deck / Your Deck pair
+- Gold weekend banner
+- Navy **Mastery OS** panel at the bottom
+- Dark footer
 
-Example, Monday October 19:
+What changed per week, and only this: the week number, the H1 and its accent
+word, the lead sentence, the day cards, the weekend dates, and Summer 2026 to
+Fall 2026.
 
-```
-1  Work the sheet with these notes and the reading open
-     Blood Vessels and Blood                    PRE-WORK
-     Upper Limb Vessels and Nerves              PRE-WORK
-     Blood                                      NOTES
-     Upper Limb Vessels and Nerves              NOTES
-     Vessel Disorders and Fetal Circulation     NOTES
-2  Then watch the video
-     Blood                                      VIDEO
-3  Then spaced retrieval, later in the week
-     Mastery OS, spaced recall for this topic   RECALL
-```
+### Two structural differences from summer, both forced by the fall schedule
 
-Where one of your m-pages exists it replaces the older summer workbook.
-36 of 63 class days now run on the new material. The rest fall back to the
-summer workbooks until modules 4 and 5 are written.
+1. **Two class days a week, not four.** Fall meets Mon/Wed or Tue/Thu.
+2. **Three sections.** Each hub carries both tracks and shows only the
+   student's, using the same `bio004-section` key and `?sec=` parameter as the
+   rest of the site. Mon/Wed sees Mon and Wed. Both Tue/Thu sections see Tue
+   and Thu.
 
-## Files
+### The green Active Drawing block
 
-| File | New or changed |
-|---|---|
-| `session-links.js` | NEW. All 68 class days, wired |
-| `compliance-notes.md` | NEW. Accessibility audit record |
-| `week-links.js` | Overwrites the empty stub |
-| `bio004-course-calendar.html` | Overwrites |
-| `week-1.html` … `week-17.html` | Overwrite. Three numbered steps |
+Kept only on **week 12** (Guided GI Map) and **week 14** (Guided Renal Map),
+because those are the only two guided maps that exist. It is removed from the
+other fifteen rather than filled with something invented.
 
-## Verified before shipping
+## Day card pills
 
-- 113 unique link targets, every one returns 200
-- Zero "Coming soon" left on any of the 17 week pages
-- 179 text nodes on the calendar, every one passes WCAG AAA
-- All 35 of your new pages placed, none orphaned
+Each day carries its own material as pills: Notes, Worksheet, Video, Lab
+sprint, Recall Rx. Where a day has more than one of a kind the pill names the
+topic, otherwise it just says the type, which is how yours read.
+
+## Also in this zip
+
+`session-links.js`, `week-links.js`, `bio004-course-calendar.html`,
+`week-1.html` … `week-17.html`, `compliance-notes.md`.
+
+## Verified
+
+- 140 unique internal links across the 17 hubs, every one returns 200
+- Section switching checked for mw, tr-am and tr-eve
+- Zero duplicate pill labels
