@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Draw It From Memory &middot; BIO 004 Human Anatomy</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<!--
+  ============================================================
+  BIO 004 Human Anatomy, Fall 2026
+  bio004-draw.html
+
+  DRAWING ASSIGNMENTS, SELF-SCORED.
+
+  There is deliberately NO answer image. A picture of the correct
+  drawing turns the task into copying, and copying is the thing
+  drawing was supposed to replace. The student draws on paper,
+  then ticks a checklist of what a correct drawing contains.
+
+  The score is items ticked over items shown. It goes to the shared
+  evidence store as source 'draw', which is what lets the weak spot
+  board say "strong on cards, weak on drawing" for the same
+  competency. Recall and reconstruction fail differently, and that
+  difference is the whole point of asking for a drawing.
+
+  Only competencies from weeks that have already happened are
+  offered, for the same reason the Repair Session gates by week: a
+  student in week 1 should not be handed the nephron.
+  ============================================================
+-->
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Plus Jakarta Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+       background:#FAFAF9;color:#0B1530;line-height:1.55}
+  .pad{padding-left:max(24px,5vw);padding-right:max(24px,5vw)}
+  header.site{background:#fff;padding:20px 0;box-shadow:0 8px 22px -14px rgba(11,21,48,.3);position:relative;z-index:2}
+  .crumb{font-size:11.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#8B3A2E;text-decoration:none}
+  .wrap{max-width:1080px;margin:0 auto}
+  .intro{padding-top:30px;padding-bottom:6px}
+  .eyebrow{font-size:12px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:#8B3A2E;margin:0 0 10px}
+  h1{font-size:clamp(27px,4vw,40px);font-weight:800;letter-spacing:-.025em;line-height:1.08;margin:0 0 10px}
+  h1 .a{color:#8B3A2E}
+  .lead{font-size:16px;opacity:.86;margin:0 0 4px;max-width:64ch}
+  .grid{display:grid;grid-template-columns:1fr 1.35fr;gap:20px;padding:22px 0 46px;align-items:start}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}}
+  .panel{background:#fff;border:1px solid #ECE7DE;border-radius:14px;padding:18px 20px;
+         box-shadow:0 16px 38px -22px rgba(11,21,48,.34),0 3px 10px -6px rgba(11,21,48,.1)}
+  .ph{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#8B3A2E;margin:0 0 10px}
+  select,button{font:inherit}
+  select{width:100%;padding:11px 13px;border:1.5px solid #D6D0C6;border-radius:10px;background:#fff;color:#0B1530;font-weight:600}
+  select:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #C9A14A;outline-offset:2px}
+  .standard{background:#0B1530;color:#fff;border-radius:12px;padding:16px 18px;margin:14px 0 0}
+  .standard .sh{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#F2E2B8;margin:0 0 6px}
+  .standard p{margin:0;font-size:15px;line-height:1.5}
+  .steps{list-style:none;margin:14px 0 0;padding:0;font-size:14.5px}
+  .steps li{display:flex;gap:10px;padding:7px 0}
+  .steps .n{flex:0 0 auto;width:21px;height:21px;border-radius:50%;background:#7E2E1C;color:#F2E2B8;
+            font-weight:800;font-size:11.5px;display:flex;align-items:center;justify-content:center}
+  fieldset{border:0;margin:0;padding:0}
+  legend{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#8B3A2E;padding:0;margin:0 0 8px}
+  .chk{display:flex;gap:11px;align-items:flex-start;padding:10px 12px;border:1px solid #ECE7DE;border-radius:10px;
+       margin-bottom:7px;cursor:pointer;background:#fff;transition:border-color .15s ease,background .15s ease}
+  .chk:hover{border-color:#C9A14A;background:#FEFCF7}
+  .chk input{margin:3px 0 0;width:18px;height:18px;accent-color:#7E2E1C;flex:0 0 auto}
+  .chk span{font-size:14.5px;line-height:1.45}
+  .chk.done{background:#F4F8F5;border-color:#2f7d64}
+  .none{font-size:14px;opacity:.8;background:#FEFCF7;border:1px dashed #D6D0C6;border-radius:10px;padding:12px 14px;margin:0 0 10px}
+  .scorebar{display:flex;align-items:center;gap:14px;margin-top:16px;flex-wrap:wrap}
+  .score{font-size:30px;font-weight:800;letter-spacing:-.02em;min-width:92px}
+  .score small{font-size:13px;font-weight:700;opacity:.7;display:block;letter-spacing:0}
+  .save{background:#7E2E1C;color:#fff;border:0;border-radius:11px;padding:13px 24px;font-weight:800;font-size:15px;cursor:pointer;
+        transition:transform .16s ease,background .16s ease}
+  .save:hover{transform:translateY(-2px);background:#8B3A2E}
+  .save[disabled]{opacity:.45;cursor:not-allowed;transform:none;background:#7E2E1C}
+  .said{font-size:13.5px;font-weight:700;color:#2f7d64;margin-left:2px}
+  .hist{font-size:13px;opacity:.82;margin-top:12px}
+  footer{background:#0B1530;color:#fff;padding:26px 0;margin-top:10px}
+  footer p{margin:0;font-size:12.5px;opacity:.8}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="site pad"><div class="wrap">
+  <a class="crumb" href="https://drsrennie-stack.github.io/new-build-bio4-solano/welcome.html" target="_top">&larr; Course home</a>
+</div></header>
+
+<div class="wrap pad">
+  <section class="intro">
+    <p class="eyebrow">BIO 004 &middot; Draw to know it</p>
+    <h1>Draw it <span class="a">from memory</span>.</h1>
+    <p class="lead">There is no answer picture here on purpose. If you can copy it, you have not tested anything.
+       Draw it on paper first, then score yourself against what a correct drawing has to contain.</p>
+  </section>
+
+  <div class="grid">
+    <div class="panel">
+      <p class="ph">Pick what to draw</p>
+      <label for="pick" class="sr" style="position:absolute;left:-9999px">Choose a drawing assignment</label>
+      <select id="pick"></select>
+
+      <div class="standard">
+        <p class="sh">The standard</p>
+        <p id="standard">&nbsp;</p>
+      </div>
+
+      <ol class="steps">
+        <li><span class="n">1</span><span>Close everything. Notes, phone, this page if you can.</span></li>
+        <li><span class="n">2</span><span>Draw it on blank paper and label every part.</span></li>
+        <li><span class="n">3</span><span>Only then come back and tick what you actually got.</span></li>
+      </ol>
+    </div>
+
+    <div class="panel">
+      <form id="form">
+        <fieldset>
+          <legend id="listLegend">What a correct drawing contains</legend>
+          <div id="items"></div>
+        </fieldset>
+        <fieldset style="margin-top:16px">
+          <legend>Every drawing, whatever the topic</legend>
+          <div id="rubric"></div>
+        </fieldset>
+
+        <div class="scorebar">
+          <div class="score" id="score">0%<small id="scoreSub">nothing ticked yet</small></div>
+          <button class="save" id="save" type="submit">Log this drawing</button>
+          <span class="said" id="said" role="status" aria-live="polite"></span>
+        </div>
+        <p class="hist" id="hist"></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer class="pad"><div class="wrap">
+  <p>BIO 004 Human Anatomy &middot; Fall 2026 &middot; Solano Community College &middot; Dr. Sharilyn Rennie</p>
+</div></footer>
+
+<script src="competenciesfall2026.js"></script>
+<script src="draw-checklists.js"></script>
+<script src="card-competency-map.js"></script>
+<script src="mastery-evidence.js"></script>
+<script>
+(function () {
+  'use strict';
+  var TERM_START = new Date(2026, 7, 17);
+
+  function currentWeek() {
+    var wk = Math.floor((new Date() - TERM_START) / (7 * 24 * 3600 * 1000)) + 1;
+    return Math.max(1, Math.min(17, wk));
+  }
+
+  var ALL = window.BIO004_DRAW || [];
+  var RUBRIC = window.BIO004_DRAW_RUBRIC || [];
+  var wk = currentWeek();
+  /* Same rule as the Repair Session: nothing from a week that has
+     not happened. A week-1 student should not meet the nephron. */
+  var LIST = ALL.filter(function (d) { return d.week <= wk; });
+
+  var pick = document.getElementById('pick');
+  var itemsBox = document.getElementById('items');
+  var rubricBox = document.getElementById('rubric');
+  var scoreEl = document.getElementById('score');
+  var subEl = document.getElementById('scoreSub');
+  var saveBtn = document.getElementById('save');
+  var saidEl = document.getElementById('said');
+  var histEl = document.getElementById('hist');
+  var legend = document.getElementById('listLegend');
+
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  if (!LIST.length) {
+    pick.innerHTML = '<option>Nothing to draw yet</option>';
+    pick.disabled = true;
+    document.getElementById('standard').textContent =
+      'Drawing assignments open as each topic is taught. The first one arrives in week 4.';
+    saveBtn.disabled = true;
+  } else {
+    pick.innerHTML = LIST.map(function (d, i) {
+      return '<option value="' + i + '">Week ' + d.week + ' · ' + esc(d.name) + '</option>';
+    }).join('');
+  }
+
+  function checkbox(label, group) {
+    var id = group + '-' + Math.random().toString(36).slice(2, 8);
+    return '<label class="chk" for="' + id + '"><input type="checkbox" id="' + id +
+           '" data-g="' + group + '"><span>' + esc(label) + '</span></label>';
+  }
+
+  function render() {
+    if (!LIST.length) return;
+    var d = LIST[pick.value | 0];
+    document.getElementById('standard').textContent = d.standard;
+
+    if (d.items && d.items.length) {
+      legend.textContent = 'What a correct drawing contains';
+      itemsBox.innerHTML = d.items.map(function (t) { return checkbox(t, 'item'); }).join('');
+    } else {
+      /* No item list written for this one yet. Say so plainly rather
+         than showing an empty box, and score on the rubric alone. */
+      legend.textContent = 'What a correct drawing contains';
+      itemsBox.innerHTML = '<p class="none">A structure-by-structure list has not been written for this one yet. ' +
+        'Score yourself against the standard above and the four criteria below.</p>';
+    }
+    rubricBox.innerHTML = RUBRIC.map(function (t) { return checkbox(t, 'rubric'); }).join('');
+    saidEl.textContent = '';
+    saveBtn.disabled = false;
+    update();
+    showHistory(d);
+  }
+
+  function boxes() { return [].slice.call(document.querySelectorAll('#form input[type=checkbox]')); }
+
+  function update() {
+    var b = boxes(), got = b.filter(function (x) { return x.checked; }).length;
+    var pct = b.length ? Math.round(got / b.length * 100) : 0;
+    scoreEl.firstChild.nodeValue = pct + '%';
+    subEl.textContent = got + ' of ' + b.length + ' ticked';
+    b.forEach(function (x) { x.closest('.chk').classList.toggle('done', x.checked); });
+  }
+
+  function showHistory(d) {
+    var E = window.BIO004_EVIDENCE;
+    if (!E) { histEl.textContent = ''; return; }
+    var mine = E.all().filter(function (e) { return e.comp === d.id && e.source === 'draw'; });
+    if (!mine.length) { histEl.textContent = 'You have not logged a drawing for this one yet.'; return; }
+    var last = mine[mine.length - 1];
+    histEl.textContent = 'Logged ' + mine.length + ' time' + (mine.length === 1 ? '' : 's') +
+      '. Last one: ' + Math.round(last.got / last.of * 100) + '%.';
+  }
+
+  document.getElementById('form').addEventListener('change', update);
+  pick.addEventListener('change', render);
+
+  document.getElementById('form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var d = LIST[pick.value | 0];
+    var b = boxes(), got = b.filter(function (x) { return x.checked; }).length;
+    var E = window.BIO004_EVIDENCE;
+    if (!E) { saidEl.textContent = 'Could not save, the evidence store is missing.'; return; }
+    E.record(d.id, 'draw', got, b.length);
+    saidEl.textContent = 'Logged. This now counts on your weak spot board.';
+    showHistory(d);
+  });
+
+  render();
+})();
+</script>
+<script src="bio004-dock.js"></script>
+</body>
+</html>

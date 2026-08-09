@@ -729,6 +729,7 @@ section.block:first-of-type{border-top:none}
      competencies-fall2026.js is an older copy without the "general" body-system
      tag that buildFromSchedule() groups by, so it must not be used here. -->
 <script src="card-competency-map.js"></script>
+<script src="mastery-evidence.js"></script>
 <script src="competenciesfall2026.js"></script>
 <script src="resources.js"></script>
 <script src="rubrics.js"></script>
@@ -1108,12 +1109,33 @@ function untouched(){
   return allComps().filter(function(x){ return inPlay(x.c) && !x.c.last; });
 }
 
+/* HOW MUCH EVIDENCE IS BEHIND THAT NUMBER?
+
+   Getting one card wrong once and failing twenty attempts both read
+   as 0% mastery. Only one of those is a weakness; the other is a
+   single bad guess. mastery-evidence.js counts attempts per
+   competency, so ask it. Under three attempts the number is noise
+   and the competency is held back from repair.
+
+   If the evidence store is not on the page the check passes, so this
+   never makes Mastery OS depend on it. */
+function attemptsFor(id){
+  var E = window.BIO004_EVIDENCE;
+  if(!E || !E.summary) return null;
+  try { var s = E.summary()[id]; return s ? s.of : 0; } catch(e){ return null; }
+}
+function thinEvidence(c){
+  var n = attemptsFor(c.id);
+  return (n !== null) && n > 0 && n < 3;
+}
+
 function weaknesses(){
   var out=[];
   allComps().forEach(function(x){
     var c=x.c,reasons=[];
     if(!c.last)return;
     if(!inPlay(c))return;
+    if(thinEvidence(c))return;
     if(c.mastery<50)reasons.push('missed');
     if(c.conf==='low')reasons.push('conf');
     if(isOverdue(c.next))reasons.push('overdue');
@@ -1129,6 +1151,8 @@ function dueToday(){return allComps().filter(function(x){return x.c.last&&isDue(
    offered for repair. Reads only; changes nothing. */
 window.MOS_DEBUG = {
   weaknesses: function(){ return weaknesses(); },
+  attempts: function(id){ return attemptsFor(id); },
+  thin: function(c){ return thinEvidence(c); },
   untouched: function(){ return untouched(); },
   weekOf: function(c){ return weekOf(c); },
   currentWeek: function(){ return currentWeekNumber(); }
