@@ -1,53 +1,59 @@
-# Push to drsrennie-stack/new-build-bio4-solano
+# One Recall Rx, wired into Mastery OS
 
-Repo root, overwriting. Nothing deleted.
+Repo root, overwriting. Nothing deleted, including `spaced-recall.html`
+and `recall-cards.html` (just no longer linked).
 
-## The 17 week hubs
+## Files
 
-`week-1-hub.html` through `week-17-hub.html`, generated from **your own
-`week5hub.html`**. Transferred, not recreated. Every block is your markup and
-your CSS, byte for byte:
+| File | New or changed |
+|---|---|
+| `competenciesfall2026.js` | **NEW.** 196 competencies |
+| `card-competency-map.js` | **NEW.** 44 card topics to competencies |
+| `mastery-os-fall-2026.html` | Overwrites |
+| `week-1-hub.html` … `week-17-hub.html` | Overwrite |
 
-- White site header with the logo
-- Navy **Lab, start of the week** block with the numbered pills
-- Maroon **Study With Me** card
-- White **Other tools** block with the **Loops** pill
-- White **Spaced Recall** block with the Course Deck / Your Deck pair
-- Gold weekend banner
-- Navy **Mastery OS** panel at the bottom
-- Dark footer
+## 1. One deck
 
-What changed per week, and only this: the week number, the H1 and its accent
-word, the lead sentence, the day cards, the weekend dates, and Summer 2026 to
-Fall 2026.
+Mastery OS pointed at `spaced-recall.html` (the 1,110-question bank). Your
+hubs pointed at Recall Rx (the 2,020-question bank). Two decks, separate
+progress. Mastery OS now points at **Recall Rx**, same as everything else.
 
-### Two structural differences from summer, both forced by the fall schedule
+## 2. The Recall Rx block is one thing now
 
-1. **Two class days a week, not four.** Fall meets Mon/Wed or Tue/Thu.
-2. **Three sections.** Each hub carries both tracks and shows only the
-   student's, using the same `bio004-section` key and `?sec=` parameter as the
-   rest of the site. Mon/Wed sees Mon and Wed. Both Tue/Thu sections see Tue
-   and Thu.
+It was a white block holding two white cards, so the two decks read as two
+unrelated boxes. The container now takes the navy surface (same treatment as
+the Lab block) and the two white cards read as the choice inside it.
 
-### The green Active Drawing block
+"Your Deck" also **repointed**, see below.
 
-Kept only on **week 12** (Guided GI Map) and **week 14** (Guided Renal Map),
-because those are the only two guided maps that exist. It is removed from the
-other fifteen rather than filled with something invented.
+## 3. A bug I shipped in the last zip, caught and fixed
 
-## Day card pills
+My first bridge read `card.attempts` and `card.correct`. **Those fields do not
+exist.** Recall Rx stores the truth in `history[]`, one entry per attempt. The
+bridge would have read zero for every real card and done nothing. It reads
+`history[]` now, with attempts/correct kept only as a fallback for imported
+state. Re-verified against the real shape:
 
-Each day carries its own material as pills: Notes, Worksheet, Video, Lab
-sprint, Recall Rx. Where a day has more than one of a kind the pill names the
-topic, otherwise it just says the type, which is how yours read.
+- 20 of 20 on The Language of Anatomy → 5 Foundations competencies at **100%**
+- 10 of 20 on The Heart → 16 cardiovascular competencies at **50%**
 
-## Also in this zip
+## 4. Student-made cards
 
-`session-links.js`, `week-links.js`, `bio004-course-calendar.html`,
-`week-1.html` … `week-17.html`, `compliance-notes.md`.
+**Only if they are made inside Recall Rx.**
 
-## Verified
+- Recall Rx's own card maker (`#make`) stores cards in `STATE.personal` with a
+  **`topicId`**, in the same `bio004-recall-v2` store. Those answers roll up to
+  competencies exactly like yours.
+- The standalone `recall-cards.html` stores in **IndexedDB** (`recall-cards-db`).
+  Mastery OS and the weak spot board both read localStorage. Nothing made there
+  is visible to either.
 
-- 140 unique internal links across the 17 hubs, every one returns 200
-- Section switching checked for mw, tr-am and tr-eve
-- Zero duplicate pill labels
+So "Your Deck" on every hub now points at `bio004-spaced-recall.html#make`
+instead of `recall-cards.html`. Same card maker, but the results count.
+
+## 5. The weak spot board
+
+It already reads the right key, `bio004-recall-v2`, and loads
+`course-content-tagged.js`. It was working. It was just **linked from nowhere**
+in Mastery OS, zero references. It is now an evidence route inside Mastery OS,
+so students can actually reach it.

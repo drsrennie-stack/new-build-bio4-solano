@@ -728,6 +728,7 @@ section.block:first-of-type{border-top:none}
 <!-- The competency map lives in competenciesfall2026.js. The hyphenated
      competencies-fall2026.js is an older copy without the "general" body-system
      tag that buildFromSchedule() groups by, so it must not be used here. -->
+<script src="card-competency-map.js"></script>
 <script src="competenciesfall2026.js"></script>
 <script src="resources.js"></script>
 <script src="rubrics.js"></script>
@@ -936,9 +937,80 @@ function importSchedule(){
 }
 /* Read spaced-recall results written by the recall engine (shared same-origin store). */
 var RECALL_KEY='bio004-progress';
+/* Roll Spaced Recall card results up to competencies.
+
+   Recall writes localStorage['bio004-recall-v2'] shaped as
+   topics[topicId].cards[cardId] = {history:[{correct}], ...}.
+   Cards a STUDENT makes inside Recall Rx carry a topicId and land
+   in the same map, so their own cards count toward mastery too.
+   Mastery OS wants mastery per competency. card-competency-map.js
+   says which competencies a topic gives evidence for, so accuracy
+   on a topic becomes mastery on each of its competencies.
+
+   A competency fed by several topics takes the pooled accuracy
+   across all of them, not the last one written, so studying two
+   topics that both touch it cannot make it look worse. */
+function ingestRecallCards(){
+  var MAP = window.BIO004_CARD_COMPETENCY_MAP;
+  if(!MAP) return false;
+  var raw; try{ raw = localStorage.getItem('bio004-recall-v2'); }catch(e){ raw = null; }
+  if(!raw) return false;
+  var st; try{ st = JSON.parse(raw); }catch(e){ return false; }
+  if(!st || !st.topics) return false;
+
+  var agg = {};   /* competency id -> {a: attempts, c: correct, seen: latest ISO} */
+  Object.keys(st.topics).forEach(function(tid){
+    var entry = MAP[tid]; if(!entry || !entry.comps.length) return;
+    var cards = (st.topics[tid] && st.topics[tid].cards) || {};
+    var a = 0, c = 0, seen = '';
+    Object.keys(cards).forEach(function(cid){
+      var r = cards[cid] || {};
+      /* Recall Rx stores the truth in history[], one entry per
+         attempt: {correct:bool, at:iso}. There is no attempts or
+         correct field on the card itself. Reading those directly
+         gives zero for every real card. attempts/correct are only
+         honoured as a fallback for hand-made or imported state. */
+      var hist = r.history;
+      if (hist && hist.length) {
+        hist.forEach(function(h){
+          a += 1;
+          if (h && h.correct) c += 1;
+          var when = h && (h.at || h.date || h.reviewedAt);
+          if (when && when > seen) seen = when;
+        });
+      } else if (r.attempts) {
+        a += r.attempts; c += (r.correct || 0);
+      }
+      if(r.reviewedAt && r.reviewedAt > seen) seen = r.reviewedAt;
+      if(r.lastAt && r.lastAt > seen) seen = r.lastAt;
+    });
+    if(!a) return;
+    entry.comps.forEach(function(id){
+      var g = agg[id] || (agg[id] = {a:0, c:0, seen:''});
+      g.a += a; g.c += c;
+      if(seen > g.seen) g.seen = seen;
+    });
+  });
+
+  var changed = false;
+  allComps().forEach(function(x){
+    var g = agg[x.c.id]; if(!g || !g.a) return;
+    var m = Math.round(g.c / g.a * 100);
+    x.c.mastery = m;
+    x.c.conf = m >= 75 ? 'high' : m >= 50 ? 'med' : 'low';
+    if(g.seen) x.c.last = g.seen;
+    changed = true;
+  });
+  return changed;
+}
+
 function ingestRecall(){
+  /* Cards first, then the older bio004-progress feed if a student
+     has one. The old feed is per-competency and more specific, so
+     it is allowed to overwrite the rolled-up number. */
+  var fromCards = ingestRecallCards();
   var raw;try{raw=localStorage.getItem(RECALL_KEY);}catch(e){raw=null;}
-  if(!raw)return false;
+  if(!raw)return fromCards;
   var data;try{data=JSON.parse(raw);}catch(e){return false;}
   var changed=false;
   allComps().forEach(function(x){
@@ -951,12 +1023,12 @@ function ingestRecall(){
     if(m!=null){c.mastery=m;c.conf=m>=75?'high':m>=50?'med':'low';}
     changed=true;
   });
-  return changed;
+  return changed || fromCards;
 }
 
 /* evidence method metadata */
 var EVIDENCE=[
-  {k:'retrieval',name:'Retrieval practice',icon:I.recall,desc:'Answer questions from memory across DOK levels.',cta:'Open Spaced Recall',href:'spaced-recall.html'}, {k:'draw',name:'Draw from memory',icon:I.draw,desc:'Reconstruct the structure with nothing in front of you.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'label',name:'Label diagrams',icon:I.label,desc:'Place every marker on a blank figure.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'cadaver',name:'Cadaver identification',icon:I.eye,desc:'Name the structure on the specimen, not the textbook.',cta:'Mark it done',href:null}, {k:'histo',name:'Histology identification',icon:I.micro,desc:'Identify the tissue at the microscope level.',cta:'Mark it done',href:null}, {k:'explain',name:'Explain aloud',icon:I.speak,desc:'Say it out loud in plain language, no notes.',cta:'Start explaining',href:null}, {k:'teachai',name:'Teach it to an AI',icon:I.teach,desc:'Explain it out loud to a free AI tutor, like teaching a 5-year-old, and let it quiz you back.',cta:'Open AI tutor',href:null}, {k:'teach',name:'Teach another learner',icon:I.teach,desc:'The real test: can someone else follow you?',cta:'Start teaching',href:null}, {k:'clinical',name:'Clinical case',icon:I.clinical,desc:'Apply the structure to a patient scenario.',cta:'Mark it done',href:null}, {k:'questions',name:'Create practice questions',icon:I.build,desc:'Write items that would trip up a classmate.',cta:'Mark it done',href:null}
+  {k:'retrieval',name:'Retrieval practice',icon:I.recall,desc:'Answer questions from memory across DOK levels.',cta:'Open Spaced Recall',href:'bio004-spaced-recall.html'}, {k:'weakness',name:'Weak spot dashboard',icon:I.recall,desc:'See which competencies your card answers say are weakest, ranked.',cta:'Open the weak spot board',href:'bio004-spaced-recall-weakness-dashboard.html'}, {k:'draw',name:'Draw from memory',icon:I.draw,desc:'Reconstruct the structure with nothing in front of you.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'label',name:'Label diagrams',icon:I.label,desc:'Place every marker on a blank figure.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'cadaver',name:'Cadaver identification',icon:I.eye,desc:'Name the structure on the specimen, not the textbook.',cta:'Mark it done',href:null}, {k:'histo',name:'Histology identification',icon:I.micro,desc:'Identify the tissue at the microscope level.',cta:'Mark it done',href:null}, {k:'explain',name:'Explain aloud',icon:I.speak,desc:'Say it out loud in plain language, no notes.',cta:'Start explaining',href:null}, {k:'teachai',name:'Teach it to an AI',icon:I.teach,desc:'Explain it out loud to a free AI tutor, like teaching a 5-year-old, and let it quiz you back.',cta:'Open AI tutor',href:null}, {k:'teach',name:'Teach another learner',icon:I.teach,desc:'The real test: can someone else follow you?',cta:'Start teaching',href:null}, {k:'clinical',name:'Clinical case',icon:I.clinical,desc:'Apply the structure to a patient scenario.',cta:'Mark it done',href:null}, {k:'questions',name:'Create practice questions',icon:I.build,desc:'Write items that would trip up a classmate.',cta:'Mark it done',href:null}
 ];
 var EVMAP={};EVIDENCE.forEach(function(e){EVMAP[e.k]=e;});
 
@@ -2488,7 +2560,9 @@ if('IntersectionObserver' in window){
 ========================================================= */
 if(!Array.isArray(S.grades))S.grades=[];
 applySchedule(false);
-ingestRecall();
+/* Persist what the cards contributed, otherwise the rolled-up
+   mastery is recomputed but never written and is lost on reload. */
+if(ingestRecall()) save();
 renderCoachPrompts();
 coachSay('bot','Blub blub. I am Hootie the Knowfish, your Mastery Coach. I read your progress and point you at the single best next move. Ask me anything, or tap a prompt below.');
 if(!S.profile.onboarded){OB={step:0,data:obSeedData()};showOnboard();}
