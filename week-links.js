@@ -2,50 +2,34 @@
    BIO 004 Human Anatomy, Fall 2026
    week-links.js
 
-   All 17 week pages load this file. It was missing from the
-   repo, so every week page was firing a 404 on load and the
-   "Concept lecture" and "Guided worksheet" buttons fell through
-   to their disabled "Coming soon" state.
+   FILLED IN. This was a stub with 17 empty objects, which is why
+   every week page showed "Coming soon" on both buttons.
 
-   This is a STUB. The structure is right, the URLs are not
-   filled in. Nothing here is invented: every week is left empty
-   so the pages behave exactly as they did before, minus the 404.
+   worksheet  the pre-work sheet for that week. Where one of her
+              m1/m2/m3 pre-work pages exists it is used; the older
+              summer workbook is the fallback for topics that do
+              not have one yet (modules 4 and 5).
+   lecture    the concept video, which is watched AFTER the sheet.
 
-   TO FILL IN
-   ----------
-   Per week, add either or both keys:
-
-     lecture    URL of the concept video for that week
-                (these live in the new-build-bio4-solano repo)
-     worksheet  URL of the guided worksheet for that week
-                (these live in the A-P-lecture-core repo)
-
-   Example:
-
-     3: { lecture:   'https://drsrennie-stack.github.io/new-build-bio4-solano/w3-histology.html',
-          worksheet: 'https://drsrennie-stack.github.io/A-P-lecture-core/w3-worksheet.html' },
-
-   A week with no entry, or an entry missing one of the two keys,
-   renders that button as "Coming soon" and disables it. That is
-   the intended fallback, so partial fill-in is safe.
+   Generated from session-links.js so the two cannot drift.
    ============================================================ */
 
 window.BIO004_WEEK_LINKS = {
-   1: {},   /* Intro to Anatomy, cells, histology            */
-   2: {},   /* TBL 1 Cell Anatomy, connective tissue         */
-   3: {},   /* TBL 2 Histology, integumentary                */
-   4: {},   /* Exam 1                                        */
-   5: {},   /* Bone tissue, skull                            */
-   6: {},   /* Spine, upper and lower extremity, TBL 3       */
-   7: {},   /* Exam 2                                        */
-   8: {},   /* Heart, muscle microanatomy                    */
-   9: {},   /* TBL 4 Heart, blood                            */
-  10: {},   /* TBL 5 Blood, Exam 3                           */
-  11: {},   /* Respiratory, endocrine                        */
-  12: {},   /* TBL 6 Respiratory, GI map                     */
-  13: {},   /* TBL 7 GI System                               */
-  14: {},   /* Exam 4, renal                                 */
-  15: {},   /* Renal, reproductive                           */
-  16: {},   /* TBL 8 Renal, CNS                              */
-  17: {}    /* TBL 9 Cranial nerves, Exam 5                  */
+   1: { worksheet:"m1-intro-worksheet.html", lecture:"week1-concept-videos.html" }, /* Intro to Anatomy, cells, histology */
+   2: { worksheet:"m1-cell-worksheet.html", lecture:"cell-concept-videos.html" }, /* TBL 1 Cell Anatomy, connective tissue */
+   3: { worksheet:"m1-tissues-worksheet.html", lecture:"tissues-concept-videos.html" }, /* TBL 2 Histology, integumentary */
+   4: { worksheet:"BIO004-Midterm-Practice-Exams.html", lecture:"tissues-concept-videos.html" }, /* Exam 1 week: practice exams + rewatch */
+   5: { worksheet:"m2-bone-worksheet.html", lecture:"bone-concept-videos.html" }, /* Bone tissue, skull */
+   6: { worksheet:"m2-axial-worksheet.html", lecture:"axial-concept-videos.html" }, /* Spine, upper and lower extremity, TBL 3 */
+   7: { worksheet:"m2-appendicular-worksheet.html", lecture:"appendicular-concept-videos.html" }, /* Exam 2 */
+   8: { worksheet:"m3-heart-worksheet.html", lecture:"heart-concept-videos.html" }, /* Heart, muscle microanatomy */
+   9: { worksheet:"m3-heart-worksheet.html", lecture:"heart-concept-videos.html" }, /* TBL 4 Heart, blood */
+  10: { worksheet:"m3-vessels-blood-worksheet.html", lecture:"blood-concept-videos.html" }, /* TBL 5 Blood, Exam 3 */
+  11: { worksheet:"m3-respiratory-worksheet.html", lecture:"respiratory-concept-videos.html" }, /* Respiratory, endocrine */
+  12: { worksheet:"m3-respiratory-worksheet.html", lecture:"respiratory-concept-videos.html" }, /* TBL 6 Respiratory, GI map */
+  13: { worksheet:"accessory-digestive-organs-workbook.html", lecture:"accessory-digestive-concept-videos.html" }, /* TBL 7 GI System */
+  14: { worksheet:"urinary-system-workbook.html", lecture:"urinary-concept-videos.html" }, /* Exam 4, renal */
+  15: { worksheet:"reproductive-female-workbook.html", lecture:"reproductive-concept-videos.html" }, /* Renal, reproductive */
+  16: { worksheet:"urinary-system-workbook.html", lecture:"urinary-concept-videos.html" }, /* TBL 8 Renal, CNS */
+  17: { worksheet:"cranial-nerves-workbook.html", lecture:"cranial-nerves-concept-videos.html" }, /* TBL 9 Cranial nerves, Exam 5 */
 };

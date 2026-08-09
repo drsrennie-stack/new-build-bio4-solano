@@ -6,11 +6,13 @@
 <title>Course Calendar · BIO 004 Human Anatomy · Fall 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
     --navy:#08101F; --navy-deep:#08101F; --navy-darkest:#08101F; --navy-tint:#ECEFF4;
     --terra:#8B1D1D; --terra-dark:#6B1616; --terra-deep:#A0452F;
+    /* terra is 2.08:1 on navy, unreadable. This tint is 7.32:1, AAA. */
+    --terra-on-navy:#D98E77;
     --gold:#DCB45C; --gold-soft:#DCB45C;
     --white:#FFFFFF; --offwhite:#FAFAF9; --gray:#6B7280; --gray-light:#D1D5DB;
     --radius:8px;
@@ -19,7 +21,7 @@
     --t:transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
     --font-display:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif;
     --font-body:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif;
-    --font-eyebrow:'DM Sans',-apple-system,sans-serif;
+    --font-eyebrow:'Plus Jakarta Sans',-apple-system,sans-serif;
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -29,7 +31,7 @@
   .skip:focus{left:16px;top:16px;}
   :focus-visible{outline:3px solid var(--terra-dark);outline-offset:2px;border-radius:6px;}
 
-  .site-header{background:#fff;border-bottom:.5px solid rgba(11,21,48,.10);padding:20px max(20px,4vw);}
+  .site-header{background:#fff;box-shadow:0 10px 24px rgba(8,16,31,.13);position:relative;z-index:3;padding:20px max(20px,4vw);}
   .site-header-inner{max-width:1100px;margin:0 auto;}
   .site-logo{display:inline-flex;align-items:center;gap:14px;text-decoration:none;}
   .site-logo svg{height:48px;width:auto;display:block;}
@@ -39,15 +41,15 @@
   .logo-sub{font-family:var(--font-eyebrow);font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--navy);opacity:.72;}
 
   /* hero */
-  .cover{background:var(--navy-darkest);border-radius:var(--radius);padding:clamp(22px,4vw,36px);color:#fff;border-top:3px solid #1E2A47;}
+  .cover{background:var(--navy-darkest);border-radius:var(--radius);padding:clamp(22px,4vw,36px);color:#fff;box-shadow:0 10px 26px rgba(8,16,31,.22);}
   .cover-eyebrow{font-family:var(--font-eyebrow);font-size:.74rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-soft);margin:0 0 10px;}
   .cover-title{font-family:var(--font-display);font-weight:800;font-size:clamp(26px,4.6vw,40px);line-height:1.04;letter-spacing:-.02em;margin:0;}
-  .cover-title span{color:var(--terra);}
+  .cover-title span{color:var(--terra-on-navy);}
   .cover-tag{font-size:clamp(14px,1.5vw,17px);opacity:.9;margin:12px 0 0;max-width:56ch;}
 
   /* section switcher */
   .switch{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:22px 0 0;}
-  .switch .sw-lab{font-family:var(--font-eyebrow);font-weight:700;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--terra-dark);width:100%;}
+  .switch .sw-lab{font-family:var(--font-eyebrow);font-weight:700;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--terra-on-navy);width:100%;}
   .sw-btn{text-align:left;background:#fff;border:1.5px solid var(--navy-tint);border-radius:var(--radius);padding:11px 16px;cursor:pointer;transition:var(--t);min-width:180px;flex:1 1 180px;}
   .sw-btn .swn{font-family:var(--font-display);font-weight:800;font-size:1rem;color:var(--navy);display:block;}
   .sw-btn .swd{font-family:var(--font-eyebrow);font-weight:700;font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;color:var(--terra-dark);margin-top:3px;display:block;}
@@ -84,16 +86,12 @@
   .how summary .pill{font-family:var(--font-eyebrow);font-weight:700;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;background:var(--terra-dark);color:#fff;padding:3px 9px;border-radius:999px;}
   .how-body{padding:0 20px 20px;}
   .how-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:6px 0 0;}
-  .hstep{background:var(--offwhite);border:1px solid var(--navy-tint);border-radius:8px;padding:13px 15px;border-top:3px solid var(--terra);}
-  .hstep:nth-child(1){border-top-color:var(--terra-dark);}
-  .hstep:nth-child(2){border-top-color:var(--navy);}
-  .hstep:nth-child(3){border-top-color:var(--terra);}
+  .hstep{background:#fff;border:1px solid var(--navy-tint);border-radius:8px;padding:13px 15px;box-shadow:var(--shadow-rest);}
   .hstep .hs-k{font-family:var(--font-eyebrow);font-weight:700;font-size:.6rem;letter-spacing:.09em;text-transform:uppercase;color:var(--terra-dark);}
   .hstep .hs-t{font-family:var(--font-display);font-weight:800;font-size:1.02rem;color:var(--navy);margin:3px 0 4px;}
   .hstep p{margin:0;font-size:.9rem;color:var(--navy);}
   .how-note{margin:14px 0 0;font-size:.92rem;color:#F4EFE8;background:#7A2A22;border-radius:10px;padding:12px 15px;}
   .how-note b{color:#fff;}
-  .how-note b{color:var(--terra-dark);}
 
   /* calendar layout */
   .cal-wrap{display:grid;grid-template-columns:1.35fr 1fr;gap:20px;margin-top:24px;align-items:start;}
@@ -106,18 +104,18 @@
   .navbtn:hover:not(:disabled){background:var(--navy);color:#fff;border-color:var(--navy);}
   .navbtn:disabled{opacity:.35;cursor:not-allowed;}
   .dow-head{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:5px;}
-  .dow-head span{text-align:center;font-family:var(--font-eyebrow);font-weight:700;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);opacity:.55;padding:4px 0;}
+  .dow-head span{text-align:center;font-family:var(--font-eyebrow);font-weight:700;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);opacity:.78;padding:4px 0;}
   .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
   .cell{aspect-ratio:1/1;border-radius:7px;border:1px solid transparent;display:flex;flex-direction:column;padding:5px 4px 4px;background:var(--offwhite);position:relative;min-height:52px;}
   .cell.empty{background:transparent;}
-  .cell .dn{font-family:var(--font-display);font-weight:700;font-size:.82rem;color:var(--navy);opacity:.5;line-height:1;}
+  .cell .dn{font-family:var(--font-display);font-weight:700;font-size:.82rem;color:var(--navy);opacity:.78;line-height:1;}
   .cell.session{cursor:pointer;background:#fff;border-color:var(--navy-tint);transition:var(--t);}
   .cell.session:hover{border-color:var(--terra-dark);transform:translateY(-1px);box-shadow:var(--shadow-rest);}
   .cell.session .dn{opacity:1;}
   .cell .tag{margin-top:auto;font-family:var(--font-eyebrow);font-weight:700;font-size:.56rem;letter-spacing:.02em;text-transform:uppercase;padding:2px 4px;border-radius:4px;text-align:center;line-height:1.15;overflow:hidden;}
   .cell.lm-tbl .tag{background:var(--navy);color:#fff;}
   .cell.lm-interactive .tag{background:var(--terra);color:#fff;}
-  .cell.lm-game .tag{background:#5F6B73;color:#fff;}
+  .cell.lm-game .tag{background:#4A545C;color:#fff;}
   .cell.lm-exam{background:#fbeae4;border-color:var(--terra-dark);}
   .cell.lm-exam .tag{background:var(--terra-dark);color:#fff;}
   .cell.lm-orientation .tag{background:var(--navy-tint);color:var(--navy);}
@@ -135,9 +133,9 @@
   .detail .d-meet{font-size:.86rem;color:var(--navy);opacity:.7;}
   .d-card{border:1px solid var(--navy-tint);border-radius:8px;padding:13px 14px;margin-top:12px;}
   .d-card.prework{background:#7A2A22;border-color:#7A2A22;}
-  .d-card.prework .dc-k{color:#E8CE85;} .d-card.prework .dc-t{color:#F4EFE8;} .d-card.prework .dc-when{color:#F4EFE8;opacity:.85;}
+  .d-card.prework .dc-k{color:#F2E2B8;} .d-card.prework .dc-t{color:#F4EFE8;} .d-card.prework .dc-when{color:#F4EFE8;opacity:1;}
   .d-card.prework .pw-link{color:#F4EFE8;border-color:rgba(244,239,232,.6);} .d-card.prework .pw-link:hover{background:#fff;color:#7A2A22;}
-  .d-card.prework .pw-link.pending{color:#F4EFE8;opacity:.75;border-color:rgba(244,239,232,.5);}
+  .d-card.prework .pw-link.pending{color:#F4EFE8;opacity:1;border-color:rgba(244,239,232,.65);}
   .d-card.lecture .dc-k{color:var(--navy);}
   .d-card.lab .dc-k{color:var(--terra-dark);}
   .d-card .dc-k{font-family:var(--font-eyebrow);font-weight:700;font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;color:var(--terra-dark);display:flex;align-items:center;gap:8px;}
@@ -148,28 +146,40 @@
   .cb-icheck{background:var(--terra);color:#fff;}
   .cb-tbl{background:var(--navy);color:#fff;}
   .cb-exam{background:var(--terra-dark);color:#fff;}
-  .cb-game{background:#5F6B73;color:#fff;}
+  .cb-game{background:#4A545C;color:#fff;}
   .cb-orient{background:var(--navy-tint);color:var(--navy);}
   .pw-link{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-family:var(--font-display);font-weight:700;font-size:.88rem;color:var(--terra-dark);text-decoration:none;border:1.5px solid var(--terra-dark);border-radius:7px;padding:6px 12px;transition:var(--t);}
   .pw-link:hover{background:var(--terra-dark);color:#fff;}
+  .mat{display:flex;flex-direction:column;gap:6px;margin-top:9px;}
+  .step-n{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:19px;height:19px;border-radius:50%;font-family:var(--font-display);font-weight:800;font-size:.66rem;background:#F2E2B8;color:#7A2A22;}
+  .mat .stephead{display:flex;align-items:center;gap:7px;font-family:var(--font-eyebrow);font-weight:700;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:#F2E2B8;margin-top:4px;}
+  .mat .stephead:first-child{margin-top:0;}
+  .mat a{display:flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;color:var(--navy);text-decoration:none;background:#fff;border:1px solid var(--navy-tint);border-radius:7px;padding:8px 11px;transition:var(--t);}
+  .mat a:hover{border-color:var(--terra-dark);transform:translateY(-1px);box-shadow:var(--shadow-rest);}
+  .mat a .mi{flex:0 0 auto;font-size:.9rem;color:var(--terra-dark);}
+  .mat a .mk{font-family:var(--font-eyebrow);font-weight:700;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-dark);margin-left:auto;white-space:nowrap;}
+  .d-card.prework .mat a{background:rgba(0,0,0,.18);border-color:rgba(244,239,232,.5);color:#F4EFE8;}
+  .d-card.prework .mat a:hover{background:#fff;color:#7A2A22;}
+  .d-card.prework .mat a .mi,.d-card.prework .mat a .mk{color:#F2E2B8;}
+  .d-card.prework .mat a:hover .mi,.d-card.prework .mat a:hover .mk{color:#7A2A22;}
   .pw-link.pending{border-style:dashed;color:var(--navy);opacity:.6;border-color:var(--gray-light);pointer-events:none;}
   .d-holiday{text-align:center;padding:24px 8px;}
   .d-holiday .dh-emoji{font-family:var(--font-display);font-weight:800;font-size:1.3rem;color:var(--navy);}
-  .d-empty{color:var(--navy);opacity:.6;font-size:.92rem;padding:12px 2px;}
+  .d-empty{color:var(--navy);opacity:.75;font-size:.92rem;padding:12px 2px;}
 
   /* legend */
   .legend{display:flex;flex-wrap:wrap;gap:9px 16px;margin-top:16px;padding:14px 16px;background:#fff;border:1px solid var(--navy-tint);border-radius:var(--radius);box-shadow:var(--shadow-rest);}
   .legend .lg{display:inline-flex;align-items:center;gap:7px;font-size:.82rem;font-weight:600;color:var(--navy);}
   .legend .sw{width:13px;height:13px;border-radius:4px;}
-  .sw.tbl{background:var(--navy);} .sw.interactive{background:var(--terra);} .sw.game{background:#5F6B73;}
+  .sw.tbl{background:var(--navy);} .sw.interactive{background:var(--terra);} .sw.game{background:#4A545C;}
   .sw.exam{background:var(--terra-dark);} .sw.orientation{background:var(--navy-tint);}
   .sw.holiday{background:repeating-linear-gradient(45deg,#ECEFF4,#ECEFF4 4px,#fff 4px,#fff 8px);border:1px solid #D1D5DB;}
   .sw.labd{background:var(--terra);border-radius:50%;}
 
-  footer{background:var(--navy-darkest);color:var(--navy-tint);text-align:center;padding:1.8rem 1.5rem 1.6rem;border-top:2px solid #1E2A47;border-radius:var(--radius);margin-top:40px;}
+  footer{background:var(--navy-darkest);color:var(--navy-tint);text-align:center;padding:1.8rem 1.5rem 1.6rem;box-shadow:0 10px 26px rgba(8,16,31,.22);border-radius:var(--radius);margin-top:40px;}
   footer .by{font-family:var(--font-display);font-weight:700;color:#fff;font-size:1rem;margin-bottom:.15rem;}
   footer .role{font-size:.82rem;color:var(--navy-tint);}
-  footer .brand{font-family:var(--font-eyebrow);font-weight:700;color:var(--terra);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.9rem;}
+  footer .brand{font-family:var(--font-eyebrow);font-weight:700;color:var(--terra-on-navy);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.9rem;}
   @media (prefers-reduced-motion: reduce){*{transition-duration:.01ms !important;}}
 </style>
 </head>
@@ -216,8 +226,8 @@
       <div class="how-body">
         <p style="margin:0 0 4px;max-width:64ch;">This course is <b>flipped</b>: you meet each concept first on your own, then we spend class time using it. Here is the rhythm every week:</p>
         <div class="how-steps">
-          <div class="hstep"><span class="hs-k">The night before</span><div class="hs-t">1 · Prepare</div><p>Watch the assigned online concept lecture and do the guided notes in Canvas. This is your pre-work, always due the night before class.</p></div>
-          <div class="hstep"><span class="hs-k">In class</span><div class="hs-t">2 · Clarify + check</div><p>A short interactive lecture on the tricky, high-yield parts. Quick <b>iCheck / tCheck</b> questions during it confirm you prepped and keep you engaged. They count.</p></div>
+          <div class="hstep"><span class="hs-k">The night before</span><div class="hs-t">1 · Prepare</div><p>Work the pre-work sheet with your notes and the reading open. <b>Then</b> watch the concept video. Then come back for spaced retrieval later in the week. Context before content, and it is not a night-before task.</p></div>
+          <div class="hstep"><span class="hs-k">In class</span><div class="hs-t">2 · Clarify + check</div><p>A short interactive lecture on the tricky, high-yield parts. It opens with a <b>brain dump</b>: a few timed minutes writing what you remember from the last class day, on paper, before anything else. Reasonable effort earns full credit. They count.</p></div>
           <div class="hstep"><span class="hs-k">In class</span><div class="hs-t">3 · Engage</div><p>We apply it, cases, clinical correlations, walk-through maps, or a game. On <b>TBL days</b> this is a full Team-Based Learning event with <b>IRAT / TRAT</b>.</p></div>
         </div>
         <p class="how-note"><b>The one rule that makes it work:</b> do the pre-work the night before. If you walk in having watched the lecture, the checks are easy and class actually makes sense. Click any day below to see exactly what to prep.</p>
@@ -232,10 +242,10 @@
           <button class="navbtn" id="nextM" type="button" aria-label="Next month">&#8250;</button>
         </div>
         <div class="dow-head"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
-        <div class="grid" id="grid"></div>
-        <div class="legend" aria-label="Legend">
+        <div class="grid" id="grid" role="group" aria-label="Class days. Use the arrow keys to move between days, Enter to open one."></div>
+        <div class="legend" role="group" aria-label="Calendar legend">
           <span class="lg"><span class="sw tbl"></span>TBL (IRAT/TRAT)</span>
-          <span class="lg"><span class="sw interactive"></span>Interactive lecture (iCheck)</span>
+          <span class="lg"><span class="sw interactive"></span>Interactive lecture (brain dump)</span>
           <span class="lg"><span class="sw game"></span>Review game</span>
           <span class="lg"><span class="sw exam"></span>Exam</span>
           <span class="lg"><span class="sw orientation"></span>Welcome</span>
@@ -244,7 +254,7 @@
         </div>
       </div>
 
-      <aside class="detail" id="detail" aria-live="polite">
+      <aside class="detail" id="detail" aria-live="polite" aria-label="Plan for the selected day">
         <p class="d-empty">Select a class day to see the plan.</p>
       </aside>
     </div>
@@ -277,9 +287,9 @@
    (orientation|interactive|tbl|game|exam|holiday), tag=calendar chip, lab=lab topic, pw={t:title, l:link}  (l:"" shows "link coming soon")
    ============================================================ */
 const SESS_MW = [
-  {d:"2026-08-17", lec:"Intro to Course; Team Formation & Canvas Resources", lm:"orientation", tag:"Welcome", lab:"Intro to Anatomy Lab, Lab Safety & Introduction to Histology", pw:{t:"Course orientation video, syllabus & Canvas setup", l:""}}, {d:"2026-08-19", lec:"Guided DITKI Cell Activity Lecture", lm:"interactive", tag:"iCheck", lab:"Epithelial Tissues", pw:{t:"Cell anatomy concept lecture + guided notes", l:""}}, {d:"2026-08-24", lec:"TBL 1: Cell Anatomy", lm:"tbl", tag:"TBL 1", lab:"Connective Tissue I", pw:{t:"Finish cell anatomy lectures, come ready for TBL 1", l:""}}, {d:"2026-08-26", lec:"Interactive Histology Lecture", lm:"interactive", tag:"iCheck", lab:"Connective Tissue II", pw:{t:"Histology (epithelium) concept lecture + guided notes", l:""}}, {d:"2026-08-31", lec:"TBL 2: Histology", lm:"tbl", tag:"TBL 2", lab:"Muscle Tissue & Nervous Tissue", pw:{t:"Finish histology lectures, come ready for TBL 2", l:""}}, {d:"2026-09-02", lec:"Exam 1 Review Game", lm:"game", tag:"Review", lab:"Integumentary", pw:{t:"Review Units 1–2 for the Exam 1 review game", l:""}}, {d:"2026-09-07", lec:"Labor Day, No Class", lm:"holiday", tag:"Labor Day", lab:null, pw:null}, {d:"2026-09-09", lec:"Exam 1", lm:"exam", tag:"Exam 1", lab:"Exam 1", pw:{t:"Study for Exam 1 (Cell + Histology)", l:""}}, {d:"2026-09-14", lec:"Exam 1 Rebuttals; Guided DITKI Long Bone Anatomy & Bone Microanatomy", lm:"interactive", tag:"iCheck", lab:"Bone Tissue, Long Bone & Microanatomy", pw:{t:"Long bone anatomy & bone microanatomy concept lecture + notes", l:""}}, {d:"2026-09-16", lec:"Skull Walk-Through Lecture", lm:"interactive", tag:"iCheck", lab:"Axial Skeleton: Skull", pw:{t:"Axial skeleton, skull concept lecture + notes", l:""}}, {d:"2026-09-21", lec:"Spine Walk-Through Lecture", lm:"interactive", tag:"iCheck", lab:"Axial Skeleton: Vertebrae & Ribs", pw:{t:"Axial skeleton, spine concept lecture + notes", l:""}}, {d:"2026-09-23", lec:"TBL 3: Bone Tissue, Cartilage & Microanatomy", lm:"tbl", tag:"TBL 3", lab:"Upper Extremity", pw:{t:"Bone tissue & cartilage, come ready for TBL 3", l:""}}, {d:"2026-09-28", lec:"Kahoot Review: Bone & Bone Details", lm:"game", tag:"Kahoot", lab:"Lower Extremity", pw:{t:"Review bone & skeletal details for the Kahoot", l:""}}, {d:"2026-09-30", lec:"Exam 2", lm:"exam", tag:"Exam 2", lab:"Exam 2", pw:{t:"Study for Exam 2 (Skeletal)", l:""}}, {d:"2026-10-05", lec:"Exam 2 Rebuttals; Interactive Heart Lecture; Cardiac Conduction", lm:"interactive", tag:"iCheck", lab:"Thoracic Anatomy (Heart); BV Histology & Anatomy", pw:{t:"Heart anatomy + cardiac conduction concept lecture + notes", l:""}}, {d:"2026-10-07", lec:"DITKI Guided Interactive Muscle Microanatomy & Sarcomere Lecture", lm:"interactive", tag:"iCheck", lab:"Muscle Microanatomy & Sarcomere", pw:{t:"Muscle microanatomy & sarcomere concept lecture + notes", l:""}}, {d:"2026-10-12", lec:"TBL 4: Heart Anatomy", lm:"tbl", tag:"TBL 4", lab:"Muscles of the Face, Chest & Back", pw:{t:"Finish heart anatomy lectures, come ready for TBL 4", l:""}}, {d:"2026-10-14", lec:"Blood Cell Interactive Lecture", lm:"interactive", tag:"iCheck", lab:"Muscles & NAV of the Upper Arm; Anterior Forearm", pw:{t:"Blood cells concept lecture + notes", l:""}}, {d:"2026-10-19", lec:"TBL 5: Blood", lm:"tbl", tag:"TBL 5", lab:"Muscles & NAV of Posterior Forearm", pw:{t:"Finish blood lectures, come ready for TBL 5", l:""}}, {d:"2026-10-21", lec:"Exam 3", lm:"exam", tag:"Exam 3", lab:"Exam 3", pw:{t:"Study for Exam 3 (Heart, Muscle micro, Blood)", l:""}}, {d:"2026-10-26", lec:"Guided Walk-Through: Thoracic (Respiratory) Anatomy & Respiratory Histology", lm:"interactive", tag:"iCheck", lab:"Thoracic Anatomy (Respiratory) & Respiratory Histology", pw:{t:"Respiratory anatomy & histology concept lecture + notes", l:""}}, {d:"2026-10-28", lec:"Endocrine Guided Walk-Through Activity", lm:"interactive", tag:"iCheck", lab:"(Anterior) Thigh Muscles & NAV", pw:{t:"Endocrine concept lecture + notes", l:""}}, {d:"2026-11-02", lec:"TBL 6: Respiratory", lm:"tbl", tag:"TBL 6", lab:"(Posterior) Thigh Muscle & NAV", pw:{t:"Finish respiratory lectures, come ready for TBL 6", l:""}}, {d:"2026-11-04", lec:"Guided DITKI GI Map Activity I and II", lm:"interactive", tag:"iCheck", lab:"Anterior/Posterior Lower Leg Muscles", pw:{t:"GI tract (primary organs) concept lecture + notes", l:""}}, {d:"2026-11-09", lec:"TBL 7: GI System", lm:"tbl", tag:"TBL 7", lab:"GI Organs (Primary and Accessory)", pw:{t:"GI accessory organs concept lecture + notes", l:""}}, {d:"2026-11-11", lec:"Veteran's Day, No Class", lm:"holiday", tag:"Veterans", lab:null, pw:null}, {d:"2026-11-16", lec:"Exam 4", lm:"exam", tag:"Exam 4", lab:"Exam 4", pw:{t:"Study for Exam 4. Both parts today, lecture exam and lab practical. Note the Monday.", l:""}}, {d:"2026-11-18", lec:"Exam 4 Rebuttal; Guided Renal Map", lm:"interactive", tag:"iCheck", lab:"Renal Anatomy", pw:{t:"Renal anatomy concept lecture + notes", l:""}}, {d:"2026-11-23", lec:"Kahoot: Renal", lm:"game", tag:"Kahoot", lab:"Male & Female Reproductive Anatomy", pw:{t:"Male and female reproductive anatomy concept lecture + notes", l:""}}, {d:"2026-11-25", lec:"Travel Day, No Class", lm:"holiday", tag:"Travel Day", lab:null, pw:null}, {d:"2026-11-30", lec:"TBL 8: Renal", lm:"tbl", tag:"TBL 8", lab:"CNS Brain, Meninges & CSF", pw:{t:"Finish renal lectures, come ready for TBL 8", l:""}}, {d:"2026-12-02", lec:"Clinical: Cranial Nerve Exam Stations", lm:"interactive", tag:"iCheck", lab:"Brain Stem (CNS) & Cranial Nerves (PNS)", pw:{t:"Cranial nerves + brain stem concept lecture + notes", l:""}}, {d:"2026-12-07", lec:"TBL 9: Cranial Nerves", lm:"tbl", tag:"TBL 9", lab:"CNS Spinal Cord, Spinal Nerves", pw:{t:"Finish cranial nerve lectures, come ready for TBL 9", l:""}}, {d:"2026-12-09", lec:"Exam 5", lm:"exam", tag:"Exam 5", lab:"Exam 5", pw:{t:"Study for Exam 5 (Renal, Repro, Neuro)", l:""}}, ];
+  {d:"2026-08-17", lec:"Intro to Course; Team Formation & Canvas Resources", lm:"orientation", tag:"Welcome", lab:"Intro to Anatomy Lab, Lab Safety & Introduction to Histology", pw:{t:"Course orientation video, syllabus & Canvas setup", l:""}}, {d:"2026-08-19", lec:"Guided DITKI Cell Activity Lecture", lm:"interactive", tag:"Brain dump", lab:"Epithelial Tissues", pw:{t:"Cell anatomy concept lecture + guided notes", l:""}}, {d:"2026-08-24", lec:"TBL 1: Cell Anatomy", lm:"tbl", tag:"TBL 1", lab:"Connective Tissue I", pw:{t:"Finish cell anatomy lectures, come ready for TBL 1", l:""}}, {d:"2026-08-26", lec:"Interactive Histology Lecture", lm:"interactive", tag:"Brain dump", lab:"Connective Tissue II", pw:{t:"Histology (epithelium) concept lecture + guided notes", l:""}}, {d:"2026-08-31", lec:"TBL 2: Histology", lm:"tbl", tag:"TBL 2", lab:"Muscle Tissue & Nervous Tissue", pw:{t:"Finish histology lectures, come ready for TBL 2", l:""}}, {d:"2026-09-02", lec:"Exam 1 Review Game", lm:"game", tag:"Review", lab:"Integumentary", pw:{t:"Review Units 1–2 for the Exam 1 review game", l:""}}, {d:"2026-09-07", lec:"Labor Day, No Class", lm:"holiday", tag:"Labor Day", lab:null, pw:null}, {d:"2026-09-09", lec:"Exam 1", lm:"exam", tag:"Exam 1", lab:"Exam 1", pw:{t:"Study for Exam 1 (Cell + Histology)", l:""}}, {d:"2026-09-14", lec:"Exam 1 Rebuttals; Guided DITKI Long Bone Anatomy & Bone Microanatomy", lm:"interactive", tag:"Brain dump", lab:"Bone Tissue, Long Bone & Microanatomy", pw:{t:"Long bone anatomy & bone microanatomy concept lecture + notes", l:""}}, {d:"2026-09-16", lec:"Skull Walk-Through Lecture", lm:"interactive", tag:"Brain dump", lab:"Axial Skeleton: Skull", pw:{t:"Axial skeleton, skull concept lecture + notes", l:""}}, {d:"2026-09-21", lec:"Spine Walk-Through Lecture", lm:"interactive", tag:"Brain dump", lab:"Axial Skeleton: Vertebrae & Ribs", pw:{t:"Axial skeleton, spine concept lecture + notes", l:""}}, {d:"2026-09-23", lec:"TBL 3: Bone Tissue, Cartilage & Microanatomy", lm:"tbl", tag:"TBL 3", lab:"Upper Extremity", pw:{t:"Bone tissue & cartilage, come ready for TBL 3", l:""}}, {d:"2026-09-28", lec:"Kahoot Review: Bone & Bone Details", lm:"game", tag:"Kahoot", lab:"Lower Extremity", pw:{t:"Review bone & skeletal details for the Kahoot", l:""}}, {d:"2026-09-30", lec:"Exam 2", lm:"exam", tag:"Exam 2", lab:"Exam 2", pw:{t:"Study for Exam 2 (Skeletal)", l:""}}, {d:"2026-10-05", lec:"Exam 2 Rebuttals; Interactive Heart Lecture; Cardiac Conduction", lm:"interactive", tag:"Brain dump", lab:"Thoracic Anatomy (Heart); BV Histology & Anatomy", pw:{t:"Heart anatomy + cardiac conduction concept lecture + notes", l:""}}, {d:"2026-10-07", lec:"DITKI Guided Interactive Muscle Microanatomy & Sarcomere Lecture", lm:"interactive", tag:"Brain dump", lab:"Muscle Microanatomy & Sarcomere", pw:{t:"Muscle microanatomy & sarcomere concept lecture + notes", l:""}}, {d:"2026-10-12", lec:"TBL 4: Heart Anatomy", lm:"tbl", tag:"TBL 4", lab:"Muscles of the Face, Chest & Back", pw:{t:"Finish heart anatomy lectures, come ready for TBL 4", l:""}}, {d:"2026-10-14", lec:"Blood Cell Interactive Lecture", lm:"interactive", tag:"Brain dump", lab:"Muscles & NAV of the Upper Arm; Anterior Forearm", pw:{t:"Blood cells concept lecture + notes", l:""}}, {d:"2026-10-19", lec:"TBL 5: Blood", lm:"tbl", tag:"TBL 5", lab:"Muscles & NAV of Posterior Forearm", pw:{t:"Finish blood lectures, come ready for TBL 5", l:""}}, {d:"2026-10-21", lec:"Exam 3", lm:"exam", tag:"Exam 3", lab:"Exam 3", pw:{t:"Study for Exam 3 (Heart, Muscle micro, Blood)", l:""}}, {d:"2026-10-26", lec:"Guided Walk-Through: Thoracic (Respiratory) Anatomy & Respiratory Histology", lm:"interactive", tag:"Brain dump", lab:"Thoracic Anatomy (Respiratory) & Respiratory Histology", pw:{t:"Respiratory anatomy & histology concept lecture + notes", l:""}}, {d:"2026-10-28", lec:"Endocrine Guided Walk-Through Activity", lm:"interactive", tag:"Brain dump", lab:"(Anterior) Thigh Muscles & NAV", pw:{t:"Endocrine concept lecture + notes", l:""}}, {d:"2026-11-02", lec:"TBL 6: Respiratory", lm:"tbl", tag:"TBL 6", lab:"(Posterior) Thigh Muscle & NAV", pw:{t:"Finish respiratory lectures, come ready for TBL 6", l:""}}, {d:"2026-11-04", lec:"Guided DITKI GI Map Activity I and II", lm:"interactive", tag:"Brain dump", lab:"Anterior/Posterior Lower Leg Muscles", pw:{t:"GI tract (primary organs) concept lecture + notes", l:""}}, {d:"2026-11-09", lec:"TBL 7: GI System", lm:"tbl", tag:"TBL 7", lab:"GI Organs (Primary and Accessory)", pw:{t:"GI accessory organs concept lecture + notes", l:""}}, {d:"2026-11-11", lec:"Veteran's Day, No Class", lm:"holiday", tag:"Veterans", lab:null, pw:null}, {d:"2026-11-16", lec:"Exam 4", lm:"exam", tag:"Exam 4", lab:"Exam 4", pw:{t:"Study for Exam 4. Both parts today, lecture exam and lab practical. Note the Monday.", l:""}}, {d:"2026-11-18", lec:"Exam 4 Rebuttal; Guided Renal Map", lm:"interactive", tag:"Brain dump", lab:"Renal Anatomy", pw:{t:"Renal anatomy concept lecture + notes", l:""}}, {d:"2026-11-23", lec:"Kahoot: Renal", lm:"game", tag:"Kahoot", lab:"Male & Female Reproductive Anatomy", pw:{t:"Male and female reproductive anatomy concept lecture + notes", l:""}}, {d:"2026-11-25", lec:"Travel Day, No Class", lm:"holiday", tag:"Travel Day", lab:null, pw:null}, {d:"2026-11-30", lec:"TBL 8: Renal", lm:"tbl", tag:"TBL 8", lab:"CNS Brain, Meninges & CSF", pw:{t:"Finish renal lectures, come ready for TBL 8", l:""}}, {d:"2026-12-02", lec:"Clinical: Cranial Nerve Exam Stations", lm:"interactive", tag:"Brain dump", lab:"Brain Stem (CNS) & Cranial Nerves (PNS)", pw:{t:"Cranial nerves + brain stem concept lecture + notes", l:""}}, {d:"2026-12-07", lec:"TBL 9: Cranial Nerves", lm:"tbl", tag:"TBL 9", lab:"CNS Spinal Cord, Spinal Nerves", pw:{t:"Finish cranial nerve lectures, come ready for TBL 9", l:""}}, {d:"2026-12-09", lec:"Exam 5", lm:"exam", tag:"Exam 5", lab:"Exam 5", pw:{t:"Study for Exam 5 (Renal, Repro, Neuro)", l:""}}, ];
 const SESS_TR = [
-  {d:"2026-08-18", lec:"Intro to Course; Team Formation & Canvas Resources", lm:"orientation", tag:"Welcome", lab:"Intro to Anatomy Lab, Lab Safety & Introduction to Histology", pw:{t:"Course orientation video, syllabus & Canvas setup", l:""}}, {d:"2026-08-20", lec:"Guided DITKI Cell Activity Lecture", lm:"interactive", tag:"iCheck", lab:"Epithelial Tissues", pw:{t:"Cell anatomy concept lecture + guided notes", l:""}}, {d:"2026-08-25", lec:"TBL 1: Cell Anatomy", lm:"tbl", tag:"TBL 1", lab:"Connective Tissue I", pw:{t:"Finish cell anatomy lectures, come ready for TBL 1", l:""}}, {d:"2026-08-27", lec:"Interactive Histology Lecture", lm:"interactive", tag:"iCheck", lab:"Connective Tissue II", pw:{t:"Histology (epithelium) concept lecture + guided notes", l:""}}, {d:"2026-09-01", lec:"TBL 2: Histology", lm:"tbl", tag:"TBL 2", lab:"Muscle & Nervous Tissue", pw:{t:"Finish histology lectures, come ready for TBL 2", l:""}}, {d:"2026-09-03", lec:"Exam 1 Review Game", lm:"game", tag:"Review", lab:"Integumentary", pw:{t:"Review Units 1–2 for the Exam 1 review game", l:""}}, {d:"2026-09-08", lec:"Exam 1", lm:"exam", tag:"Exam 1", lab:"Exam 1", pw:{t:"Study for Exam 1 (Cell + Histology)", l:""}}, {d:"2026-09-10", lec:"Exam 1 Rebuttals; Guided DITKI Long Bone Anatomy & Bone Microanatomy", lm:"interactive", tag:"iCheck", lab:"Bone Tissue, Long Bone & Microanatomy", pw:{t:"Long bone anatomy & bone microanatomy concept lecture + notes", l:""}}, {d:"2026-09-15", lec:"Skull Walk-Through Lecture", lm:"interactive", tag:"iCheck", lab:"Axial Skeleton: Skull", pw:{t:"Axial skeleton, skull concept lecture + notes", l:""}}, {d:"2026-09-17", lec:"Spine Walk-Through Lecture", lm:"interactive", tag:"iCheck", lab:"Axial Skeleton: Vertebrae & Ribs", pw:{t:"Axial skeleton, spine concept lecture + notes", l:""}}, {d:"2026-09-22", lec:"TBL 3: Bone Tissue, Cartilage & Microanatomy", lm:"tbl", tag:"TBL 3", lab:"Upper Extremity", pw:{t:"Bone tissue & cartilage, come ready for TBL 3", l:""}}, {d:"2026-09-24", lec:"Kahoot Review: Bone & Bone Details", lm:"game", tag:"Kahoot", lab:"Lower Extremity", pw:{t:"Review bone & skeletal details for the Kahoot", l:""}}, {d:"2026-09-29", lec:"Exam 2", lm:"exam", tag:"Exam 2", lab:"Exam 2", pw:{t:"Study for Exam 2 (Skeletal)", l:""}}, {d:"2026-10-01", lec:"Exam 2 Rebuttals; Interactive Heart Lecture; Cardiac Conduction", lm:"interactive", tag:"iCheck", lab:"Thoracic Anatomy (Heart); BV Histology & Anatomy", pw:{t:"Heart anatomy + cardiac conduction concept lecture + notes", l:""}}, {d:"2026-10-06", lec:"DITKI Guided Interactive Muscle Microanatomy & Sarcomere Lecture", lm:"interactive", tag:"iCheck", lab:"Muscle Microanatomy & Sarcomere", pw:{t:"Muscle microanatomy & sarcomere concept lecture + notes", l:""}}, {d:"2026-10-08", lec:"TBL 4: Heart Anatomy", lm:"tbl", tag:"TBL 4", lab:"Muscles of the Face, Chest & Back", pw:{t:"Finish heart anatomy lectures, come ready for TBL 4", l:""}}, {d:"2026-10-13", lec:"Professional Development, No Class", lm:"holiday", tag:"Prof Dev", lab:null, pw:null}, {d:"2026-10-15", lec:"Blood Cell Interactive Lecture", lm:"interactive", tag:"iCheck", lab:"Muscles & NAV of the Upper Arm; Anterior Forearm", pw:{t:"Blood cells concept lecture + notes", l:""}}, {d:"2026-10-20", lec:"TBL 5: Blood", lm:"tbl", tag:"TBL 5", lab:"Muscles & NAV of Posterior Forearm", pw:{t:"Finish blood lectures, come ready for TBL 5", l:""}}, {d:"2026-10-22", lec:"Exam 3", lm:"exam", tag:"Exam 3", lab:"Exam 3", pw:{t:"Study for Exam 3 (Heart, Muscle micro, Blood)", l:""}}, {d:"2026-10-27", lec:"Guided Walk-Through: Thoracic (Respiratory) Anatomy & Respiratory Histology", lm:"interactive", tag:"iCheck", lab:"Thoracic Anatomy (Respiratory) & Respiratory Histology", pw:{t:"Respiratory anatomy & histology concept lecture + notes", l:""}}, {d:"2026-10-29", lec:"Endocrine Guided Walk-Through Activity", lm:"interactive", tag:"iCheck", lab:"(Anterior) Thigh Muscles & NAV", pw:{t:"Endocrine concept lecture + notes", l:""}}, {d:"2026-11-03", lec:"TBL 6: Respiratory", lm:"tbl", tag:"TBL 6", lab:"(Posterior) Thigh Muscle & NAV", pw:{t:"Finish respiratory lectures, come ready for TBL 6", l:""}}, {d:"2026-11-05", lec:"Guided DITKI GI Map Activity I", lm:"interactive", tag:"iCheck", lab:"Anterior/Posterior Lower Leg Muscles", pw:{t:"GI tract (primary organs) concept lecture + notes", l:""}}, {d:"2026-11-10", lec:"Guided DITKI GI Map Activity II", lm:"interactive", tag:"iCheck", lab:"GI Organs (Primary)", pw:{t:"GI accessory organs concept lecture + notes", l:""}}, {d:"2026-11-12", lec:"TBL 7: GI System", lm:"tbl", tag:"TBL 7", lab:"GI Organs (Accessory)", pw:{t:"Finish GI lectures, come ready for TBL 7", l:""}}, {d:"2026-11-17", lec:"Exam 4", lm:"exam", tag:"Exam 4", lab:"Exam 4", pw:{t:"Study for Exam 4 (Respiratory, Endocrine, GI)", l:""}}, {d:"2026-11-19", lec:"Guided Renal Map", lm:"interactive", tag:"iCheck", lab:"Renal Anatomy", pw:{t:"Renal anatomy concept lecture + notes", l:""}}, {d:"2026-11-24", lec:"Kahoot Review: Renal", lm:"game", tag:"Kahoot", lab:"M & F Reproductive Anatomy", pw:{t:"Review renal for the Kahoot", l:""}}, {d:"2026-11-26", lec:"Thanksgiving, No Class", lm:"holiday", tag:"Thanksgiving", lab:null, pw:null}, {d:"2026-12-01", lec:"TBL 8: Renal", lm:"tbl", tag:"TBL 8", lab:"CNS Brain, Meninges & CSF", pw:{t:"Finish renal lectures, come ready for TBL 8", l:""}}, {d:"2026-12-03", lec:"Clinical: Cranial Nerve Exam Stations", lm:"interactive", tag:"iCheck", lab:"Brain Stem (CNS) & Cranial Nerves (PNS)", pw:{t:"Cranial nerves + brain stem concept lecture + notes", l:""}}, {d:"2026-12-08", lec:"TBL 9: Cranial Nerves", lm:"tbl", tag:"TBL 9", lab:"CNS Spinal Cord, Spinal Nerves", pw:{t:"Finish cranial nerve lectures, come ready for TBL 9", l:""}}, {d:"2026-12-10", lec:"Exam 5", lm:"exam", tag:"Exam 5", lab:"Exam 5", pw:{t:"Study for Exam 5 (Renal, Repro, Neuro)", l:""}}, ];
+  {d:"2026-08-18", lec:"Intro to Course; Team Formation & Canvas Resources", lm:"orientation", tag:"Welcome", lab:"Intro to Anatomy Lab, Lab Safety & Introduction to Histology", pw:{t:"Course orientation video, syllabus & Canvas setup", l:""}}, {d:"2026-08-20", lec:"Guided DITKI Cell Activity Lecture", lm:"interactive", tag:"Brain dump", lab:"Epithelial Tissues", pw:{t:"Cell anatomy concept lecture + guided notes", l:""}}, {d:"2026-08-25", lec:"TBL 1: Cell Anatomy", lm:"tbl", tag:"TBL 1", lab:"Connective Tissue I", pw:{t:"Finish cell anatomy lectures, come ready for TBL 1", l:""}}, {d:"2026-08-27", lec:"Interactive Histology Lecture", lm:"interactive", tag:"Brain dump", lab:"Connective Tissue II", pw:{t:"Histology (epithelium) concept lecture + guided notes", l:""}}, {d:"2026-09-01", lec:"TBL 2: Histology", lm:"tbl", tag:"TBL 2", lab:"Muscle & Nervous Tissue", pw:{t:"Finish histology lectures, come ready for TBL 2", l:""}}, {d:"2026-09-03", lec:"Exam 1 Review Game", lm:"game", tag:"Review", lab:"Integumentary", pw:{t:"Review Units 1–2 for the Exam 1 review game", l:""}}, {d:"2026-09-08", lec:"Exam 1", lm:"exam", tag:"Exam 1", lab:"Exam 1", pw:{t:"Study for Exam 1 (Cell + Histology)", l:""}}, {d:"2026-09-10", lec:"Exam 1 Rebuttals; Guided DITKI Long Bone Anatomy & Bone Microanatomy", lm:"interactive", tag:"Brain dump", lab:"Bone Tissue, Long Bone & Microanatomy", pw:{t:"Long bone anatomy & bone microanatomy concept lecture + notes", l:""}}, {d:"2026-09-15", lec:"Skull Walk-Through Lecture", lm:"interactive", tag:"Brain dump", lab:"Axial Skeleton: Skull", pw:{t:"Axial skeleton, skull concept lecture + notes", l:""}}, {d:"2026-09-17", lec:"Spine Walk-Through Lecture", lm:"interactive", tag:"Brain dump", lab:"Axial Skeleton: Vertebrae & Ribs", pw:{t:"Axial skeleton, spine concept lecture + notes", l:""}}, {d:"2026-09-22", lec:"TBL 3: Bone Tissue, Cartilage & Microanatomy", lm:"tbl", tag:"TBL 3", lab:"Upper Extremity", pw:{t:"Bone tissue & cartilage, come ready for TBL 3", l:""}}, {d:"2026-09-24", lec:"Kahoot Review: Bone & Bone Details", lm:"game", tag:"Kahoot", lab:"Lower Extremity", pw:{t:"Review bone & skeletal details for the Kahoot", l:""}}, {d:"2026-09-29", lec:"Exam 2", lm:"exam", tag:"Exam 2", lab:"Exam 2", pw:{t:"Study for Exam 2 (Skeletal)", l:""}}, {d:"2026-10-01", lec:"Exam 2 Rebuttals; Interactive Heart Lecture; Cardiac Conduction", lm:"interactive", tag:"Brain dump", lab:"Thoracic Anatomy (Heart); BV Histology & Anatomy", pw:{t:"Heart anatomy + cardiac conduction concept lecture + notes", l:""}}, {d:"2026-10-06", lec:"DITKI Guided Interactive Muscle Microanatomy & Sarcomere Lecture", lm:"interactive", tag:"Brain dump", lab:"Muscle Microanatomy & Sarcomere", pw:{t:"Muscle microanatomy & sarcomere concept lecture + notes", l:""}}, {d:"2026-10-08", lec:"TBL 4: Heart Anatomy", lm:"tbl", tag:"TBL 4", lab:"Muscles of the Face, Chest & Back", pw:{t:"Finish heart anatomy lectures, come ready for TBL 4", l:""}}, {d:"2026-10-13", lec:"Professional Development, No Class", lm:"holiday", tag:"Prof Dev", lab:null, pw:null}, {d:"2026-10-15", lec:"Blood Cell Interactive Lecture", lm:"interactive", tag:"Brain dump", lab:"Muscles & NAV of the Upper Arm; Anterior Forearm", pw:{t:"Blood cells concept lecture + notes", l:""}}, {d:"2026-10-20", lec:"TBL 5: Blood", lm:"tbl", tag:"TBL 5", lab:"Muscles & NAV of Posterior Forearm", pw:{t:"Finish blood lectures, come ready for TBL 5", l:""}}, {d:"2026-10-22", lec:"Exam 3", lm:"exam", tag:"Exam 3", lab:"Exam 3", pw:{t:"Study for Exam 3 (Heart, Muscle micro, Blood)", l:""}}, {d:"2026-10-27", lec:"Guided Walk-Through: Thoracic (Respiratory) Anatomy & Respiratory Histology", lm:"interactive", tag:"Brain dump", lab:"Thoracic Anatomy (Respiratory) & Respiratory Histology", pw:{t:"Respiratory anatomy & histology concept lecture + notes", l:""}}, {d:"2026-10-29", lec:"Endocrine Guided Walk-Through Activity", lm:"interactive", tag:"Brain dump", lab:"(Anterior) Thigh Muscles & NAV", pw:{t:"Endocrine concept lecture + notes", l:""}}, {d:"2026-11-03", lec:"TBL 6: Respiratory", lm:"tbl", tag:"TBL 6", lab:"(Posterior) Thigh Muscle & NAV", pw:{t:"Finish respiratory lectures, come ready for TBL 6", l:""}}, {d:"2026-11-05", lec:"Guided DITKI GI Map Activity I", lm:"interactive", tag:"Brain dump", lab:"Anterior/Posterior Lower Leg Muscles", pw:{t:"GI tract (primary organs) concept lecture + notes", l:""}}, {d:"2026-11-10", lec:"Guided DITKI GI Map Activity II", lm:"interactive", tag:"Brain dump", lab:"GI Organs (Primary)", pw:{t:"GI accessory organs concept lecture + notes", l:""}}, {d:"2026-11-12", lec:"TBL 7: GI System", lm:"tbl", tag:"TBL 7", lab:"GI Organs (Accessory)", pw:{t:"Finish GI lectures, come ready for TBL 7", l:""}}, {d:"2026-11-17", lec:"Exam 4", lm:"exam", tag:"Exam 4", lab:"Exam 4", pw:{t:"Study for Exam 4 (Respiratory, Endocrine, GI)", l:""}}, {d:"2026-11-19", lec:"Guided Renal Map", lm:"interactive", tag:"Brain dump", lab:"Renal Anatomy", pw:{t:"Renal anatomy concept lecture + notes", l:""}}, {d:"2026-11-24", lec:"Kahoot Review: Renal", lm:"game", tag:"Kahoot", lab:"M & F Reproductive Anatomy", pw:{t:"Review renal for the Kahoot", l:""}}, {d:"2026-11-26", lec:"Thanksgiving, No Class", lm:"holiday", tag:"Thanksgiving", lab:null, pw:null}, {d:"2026-12-01", lec:"TBL 8: Renal", lm:"tbl", tag:"TBL 8", lab:"CNS Brain, Meninges & CSF", pw:{t:"Finish renal lectures, come ready for TBL 8", l:""}}, {d:"2026-12-03", lec:"Clinical: Cranial Nerve Exam Stations", lm:"interactive", tag:"Brain dump", lab:"Brain Stem (CNS) & Cranial Nerves (PNS)", pw:{t:"Cranial nerves + brain stem concept lecture + notes", l:""}}, {d:"2026-12-08", lec:"TBL 9: Cranial Nerves", lm:"tbl", tag:"TBL 9", lab:"CNS Spinal Cord, Spinal Nerves", pw:{t:"Finish cranial nerve lectures, come ready for TBL 9", l:""}}, {d:"2026-12-10", lec:"Exam 5", lm:"exam", tag:"Exam 5", lab:"Exam 5", pw:{t:"Study for Exam 5 (Renal, Repro, Neuro)", l:""}}, ];
 const SECTIONS = {
   class1:{lecT:"12:30–1:50 pm · VC 118", labT:"2:00–4:50 pm · VC 1137", sess:SESS_MW}, class2:{lecT:"9:30–10:45 am · VC 212", labT:"11:00 am–1:50 pm · VC 1137", sess:SESS_TR}, class3:{lecT:"5:30–6:45 pm · VC 118", labT:"7:00–9:50 pm · VC 1137", sess:SESS_TR}, };
 
@@ -328,17 +338,41 @@ const SECTIONS = {
       let inner='<span class="dn">'+day+'</span>';
       if(s){
         cell.classList.add('session','lm-'+s.lm);
-        cell.tabIndex=0;cell.setAttribute('role','button');
+        /* Roving tabindex: one stop for the whole grid, arrows move
+           inside it. Every session cell used to be tabbable, which
+           put 34 tab stops between the month buttons and the plan. */
+        cell.tabIndex=-1;cell.setAttribute('role','button');
         cell.dataset.d=dk;
-        cell.setAttribute('aria-label',DOWL[first.getDay()]+' '+MON3[monthPtr]+' '+day+', '+(s.lm==='holiday'?s.lec:s.tag));
-        if(s.lab) inner+='<span class="lab-dot" title="Lab meets"></span>';
+        /* The weekday came from first.getDay(), the 1st of the month,
+           so every cell announced the same wrong day. Read it off the
+           real date instead. */
+        var cellDow=DOWL[new Date(2026,monthPtr,day).getDay()];
+        var name=cellDow+' '+MON3[monthPtr]+' '+day+', '+(s.lm==='holiday'?s.lec:s.tag);
+        if(s.lab) name+=', lab meets';
+        if(dk===todayKey) name+=', today';
+        if(dk===selected) name+=', selected';
+        cell.setAttribute('aria-label',name);
+        /* The dot is a colour-only signal on its own. title= is not
+           reliably announced, so the fact is in the name above and
+           the dot is hidden from assistive tech. */
+        if(s.lab) inner+='<span class="lab-dot" aria-hidden="true"></span>';
         inner+='<span class="tag">'+s.tag+'</span>';
-        if(dk===selected) cell.classList.add('selected');
+        if(dk===selected){ cell.classList.add('selected'); cell.setAttribute('aria-current','true'); }
       }
-      if(dk===todayKey) cell.classList.add('today');
+      if(dk===todayKey){ cell.classList.add('today'); if(s) cell.setAttribute('aria-current', dk===selected?'true':'date'); }
       cell.innerHTML=inner;
       grid.appendChild(cell);
     }
+    setRover();
+  }
+
+  /* Exactly one cell in the grid is tab-reachable: the selected day
+     if it is in view, otherwise the first session of the month. */
+  function setRover(){
+    var cells=grid.querySelectorAll('.cell.session');
+    if(!cells.length) return;
+    var target=grid.querySelector('.cell.session.selected')||cells[0];
+    cells.forEach(function(c){ c.tabIndex = (c===target ? 0 : -1); });
   }
 
   function renderDetail(){
@@ -358,32 +392,63 @@ const SECTIONS = {
     html+='<h3 class="d-title">'+(isExam?s.lec:'Class Day')+'</h3>';
     html+='<p class="d-meet">Lecture '+sec.lecT+' &nbsp;·&nbsp; Lab '+sec.labT+'</p>';
 
-    // pre-work
+    // pre-work. Material comes from session-links.js, keyed by date.
+    const M=(window.BIO004_SESSION_LINKS||{})[s.d]||{};
+    function matLink(o,icon,kind){
+      if(!o) return '';
+      return '<a href="'+o.u+'" target="_top"><span class="mi" aria-hidden="true">'+icon+'</span>'+
+             '<span>'+o.t+'</span><span class="mk">'+kind+'</span></a>';
+    }
     if(s.pw){
       html+='<div class="d-card prework"><div class="dc-k">Pre-work<span class="dc-when">by '+nbLabel+' night</span></div>';
       html+='<div class="dc-t">'+s.pw.t+'</div>';
-      if(s.pw.l){html+='<a class="pw-link" href="'+s.pw.l+'" target="_blank" rel="noopener">Open pre-work &#8599;</a>';}
+      /* Order is load-bearing. Worksheet with the notes and the
+         reading open FIRST, then the video, then spaced retrieval
+         later in the week. Not video-first. */
+      /* Her notes packet sits WITH the worksheet, not before it and
+         not as a separate step. The sheet is worked against the notes
+         and the reading, both open. */
+      var step1=matLink(M.worksheet,'&#9998;','Pre-work')+matLink(M.worksheet2,'&#9998;','Pre-work')+
+                (M.notes||[]).map(function(o){return matLink(o,'&#9776;','Notes');}).join('');
+      var step2=matLink(M.lecture,'&#9658;','Video')+matLink(M.lecture2,'&#9658;','Video');
+      var pw='';
+      if(step1) pw+='<div class="stephead"><span class="step-n">1</span>Work the sheet with these notes and the reading open</div>'+step1;
+      if(step2) pw+='<div class="stephead"><span class="step-n">2</span>Then watch the video</div>'+step2;
+      if(step1||step2) pw+='<div class="stephead"><span class="step-n">3</span>Then spaced retrieval, later in the week</div>'+
+        '<a href="mastery-os-fall-2026.html" target="_top"><span class="mi" aria-hidden="true">&#9673;</span><span>Mastery OS, spaced recall for this topic</span><span class="mk">Recall</span></a>';
+      if(pw){ html+='<div class="mat">'+pw+'</div>'; }
+      else if(s.pw.l){html+='<a class="pw-link" href="'+s.pw.l+'" target="_blank" rel="noopener">Open pre-work &#8599;</a>';}
       else{html+='<span class="pw-link pending">Link coming soon</span>';}
       html+='</div>';
     }
 
     if(isExam){
-      html+='<div class="d-card lecture"><div class="dc-k">Exam</div><div class="dc-t">'+s.lec+'</div><div class="dc-sub">Covers the unit since the last exam. Lecture and lab time both used for the exam.</div><span class="checkbadge cb-exam">Exam</span></div>';
+      html+='<div class="d-card lecture"><div class="dc-k">Exam</div><div class="dc-t">'+s.lec+'</div><div class="dc-sub">Covers the unit since the last exam. Lecture and lab time both used for the exam.</div><span class="checkbadge cb-exam">Exam</span>';
+      html+='<div class="mat"><a href="mastery-os-fall-2026.html" target="_top"><span class="mi" aria-hidden="true">&#9673;</span><span>Mastery OS, build a cram plan</span><span class="mk">Study</span></a>'+
+            '<a href="bio004-exam-modules.html" target="_top"><span class="mi" aria-hidden="true">&#9636;</span><span>What this exam covers</span><span class="mk">Scope</span></a></div>';
+      html+='</div>';
       detail.innerHTML=html;return;
     }
 
     // lecture
-    const badge={interactive:['cb-icheck','iCheck → tCheck'],tbl:['cb-tbl','IRAT → TRAT · TBL'],game:['cb-game','Review game'],orientation:['cb-orient','Welcome & setup']}[s.lm]||['cb-orient',''];
+    const badge={interactive:['cb-icheck','Brain dump'],tbl:['cb-tbl','IRAT → TRAT · TBL'],game:['cb-game','Review game'],orientation:['cb-orient','Welcome & setup']}[s.lm]||['cb-orient',''];
     html+='<div class="d-card lecture"><div class="dc-k">Lecture<span class="dc-when">'+sec.lecT.split(' · ')[0]+'</span></div>';
     html+='<div class="dc-t">'+s.lec+'</div>';
     if(badge[1]) html+='<span class="checkbadge '+badge[0]+'">'+badge[1]+'</span>';
+    var lec=matLink(M.slides,'&#9635;','Slides');
+    if(lec) html+='<div class="mat">'+lec+'</div>';
     html+='</div>';
 
     // lab
     if(s.lab){
       html+='<div class="d-card lab"><div class="dc-k">Lab<span class="dc-when">'+sec.labT.split(' · ')[0]+'</span></div>';
-      html+='<div class="dc-t">'+s.lab+'</div></div>';
+      html+='<div class="dc-t">'+s.lab+'</div>';
+      var labs=(M.lab||[]).map(function(o){return matLink(o,'&#9679;','Lab sprint');}).join('');
+      if(labs) html+='<div class="mat">'+labs+'</div>';
+      html+='</div>';
     }
+    html+='<div class="mat" style="margin-top:14px;">'+
+          '<a href="'+((window.BIO004_LINKS&&window.BIO004_LINKS.loops)?window.BIO004_LINKS.loops.url:'https://medmasterscollaborative.com/anatomy-loops')+'" target="_blank" rel="noopener"><span class="mi" aria-hidden="true">&#8635;</span><span>Loops, quick visual practice</span><span class="mk">Practice</span></a></div>';
     detail.innerHTML=html;
   }
 
@@ -395,7 +460,34 @@ const SECTIONS = {
   }
 
   grid.addEventListener('click',e=>{const c=e.target.closest('.cell.session');if(c)selectDate(c.dataset.d);});
-  grid.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('session')){e.preventDefault();selectDate(e.target.dataset.d);}});
+  grid.addEventListener('keydown',e=>{
+    const t=e.target;
+    if(!t.classList||!t.classList.contains('session')) return;
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();selectDate(t.dataset.d);return;}
+    const cells=[...grid.querySelectorAll('.cell.session')];
+    const i=cells.indexOf(t);
+    if(i<0) return;
+    let j=null;
+    if(e.key==='ArrowRight'||e.key==='ArrowDown') j=i+1;
+    else if(e.key==='ArrowLeft'||e.key==='ArrowUp') j=i-1;
+    else if(e.key==='Home') j=0;
+    else if(e.key==='End') j=cells.length-1;
+    else if(e.key==='PageDown'||e.key==='PageUp'){
+      e.preventDefault();
+      const dir=e.key==='PageDown'?1:-1;
+      const np=monthPtr+dir;
+      if(np>=TERM_MONTHS[0]&&np<=TERM_MONTHS[TERM_MONTHS.length-1]){
+        monthPtr=np;renderMonth();
+        const first=grid.querySelector('.cell.session');
+        if(first){first.tabIndex=0;first.focus();}
+      }
+      return;
+    }
+    if(j===null) return;
+    e.preventDefault();
+    if(j<0||j>=cells.length) return;
+    t.tabIndex=-1; cells[j].tabIndex=0; cells[j].focus();
+  });
   prevM.addEventListener('click',()=>{if(monthPtr>TERM_MONTHS[0]){monthPtr--;renderMonth();}});
   nextM.addEventListener('click',()=>{if(monthPtr<TERM_MONTHS[TERM_MONTHS.length-1]){monthPtr++;renderMonth();}});
 
@@ -424,9 +516,30 @@ const SECTIONS = {
 
   // reset (custom confirm modal, no native dialog)
   const modal=document.getElementById('resetModal');
-  document.getElementById('swReset').addEventListener('click',()=>modal.classList.add('on'));
-  document.getElementById('rmCancel').addEventListener('click',()=>modal.classList.remove('on'));
-  modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('on');});
+  let modalReturn=null;
+  function openModal(){
+    modalReturn=document.activeElement;
+    modal.classList.add('on');
+    document.getElementById('rmCancel').focus();
+  }
+  function closeModal(){
+    modal.classList.remove('on');
+    if(modalReturn&&modalReturn.focus){try{modalReturn.focus();}catch(e){}}
+  }
+  document.getElementById('swReset').addEventListener('click',openModal);
+  document.getElementById('rmCancel').addEventListener('click',closeModal);
+  modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
+  /* Escape closes, and Tab is kept inside while it is open. */
+  document.addEventListener('keydown',e=>{
+    if(!modal.classList.contains('on')) return;
+    if(e.key==='Escape'){e.preventDefault();closeModal();return;}
+    if(e.key!=='Tab') return;
+    const f=[...modal.querySelectorAll('button')];
+    if(!f.length) return;
+    const first=f[0],last=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+  });
   document.getElementById('rmConfirm').addEventListener('click',()=>{
     try{localStorage.removeItem(KEY);}catch(e){}
     window.location.href='welcome.html';
@@ -455,10 +568,34 @@ const SECTIONS = {
   renderDetail();
 })();
 </script>
+<script src="session-links.js"></script>
 <script src="schedule-fall2026.js"></script>
 <script src="module-nav.js"></script>
 <script src="section-sync.js"></script>
 <script src="course-links.js"></script>
 <script src="hootie.js"></script>
+
+<!-- Iframe height sender. Canvas strips <script> from page CONTENT,
+     not from a page served off GitHub Pages, so this runs and posts
+     the real height up to any parent that is listening. -->
+<script>
+(function(){
+  'use strict';
+  var frameId=null;
+  try{ var m=location.search.match(/[?&]frameId=([^&#]+)/); if(m) frameId=decodeURIComponent(m[1]); }catch(e){}
+  var last=0;
+  function postHeight(){
+    var h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);
+    if(Math.abs(h-last)<2) return;
+    last=h;
+    try{ parent.postMessage({frameId:frameId,type:'resize',height:h},'*'); }catch(e){}
+  }
+  window.addEventListener('load',postHeight);
+  window.addEventListener('resize',postHeight);
+  if(window.ResizeObserver){ try{ new ResizeObserver(postHeight).observe(document.body); }catch(e){} }
+  document.addEventListener('click',function(){ window.setTimeout(postHeight,60); });
+  postHeight();
+})();
+</script>
 </body>
 </html>
