@@ -108,27 +108,39 @@ so it is not mistaken for an NVDA or VoiceOver pass.
 ## 5. Known limitations and remediation plan
 
 1. **No live screen reader pass.** Accessibility tree only.
-2. **Checklist wording is derived from your notes, not reviewed by you.** All 845
-   items were written against your m1 to m5 notes pages, using your terminology
-   and your ordering. 20 items are flagged in `checklist-review-flags.md` where a
-   competency's standard asked for something the matching notes page does not
-   name. Those are the ones to read first.
-3. **Loops deep links land on the hub, not the loop.** The Loops app has no URL
+2. **Checklist wording is derived from your own worksheets, not reviewed by you.**
+   1,132 items across the 69 drawings you had already written into your 23 module
+   packets. Each item comes from your instruction paragraph first, since it
+   already enumerates the structures, and from the matching m1 to m5 notes page
+   second for terminology. 36 judgement calls are listed in
+   `checklist-review-flags.md`, covering 31 of the 69.
+
+   **Scope rule, set August 9:** basic function is appropriate on any anatomy
+   item. What stays out is physiology that runs as a sequence, the multi-step
+   mechanisms. A sweep of all 846 items found 78 that state a basic function, all
+   kept, and zero multi-step sequences. The rule is in the header of
+   `draw-checklists.js`.
+3. **Notebook codes were renumbered.** Every packet used to number its drawings
+   1, 2, 3 and head every notebook page M1-1, M1-2, M1-3, so four different module
+   1 drawings were all called M1-1. Codes are now sequential across each module in
+   teaching order, M1-1 through M1-12 and so on. 18 of the 23 worksheets changed;
+   the 5 whose codes were already correct are untouched.
+4. **Loops deep links land on the hub, not the loop.** The Loops app has no URL
    routing, so a "Loop: Cadaver UE" button opens the hub and the student picks
    from 39 tiles. The button names the right one and the tooltip repeats it.
    Adding `?loop=<id>` support to the Loops index is about six lines if you want
    one-click.
-4. **Mixed Loop reviews count for nothing here.** Loops stores review sessions
+5. **Mixed Loop reviews count for nothing here.** Loops stores review sessions
    under `review-weak` and `review-mixed`, which carry no record of which loops
    went into them. Those are skipped rather than attributed to a guess.
-5. **Third-party storage.** Loops read is same-origin, so it works on GitHub
+6. **Third-party storage.** Loops read is same-origin, so it works on GitHub
    Pages. If a student runs Loops inside a Kajabi iframe, Safari's storage
    partitioning can isolate it, the same limitation Canvas has.
-6. **Time on the day review is derived, not measured.** Sittings are inferred from
+7. **Time on the day review is derived, not measured.** Sittings are inferred from
    evidence timestamps with a 25 minute gap rule and a 3 minute floor per sitting.
    It under-counts thinking time and over-counts a tab left open. Labelled "about"
    everywhere it appears.
-7. **Old Recall Rx entries with no per-attempt timestamps** count toward the term
+8. **Old Recall Rx entries with no per-attempt timestamps** count toward the term
    total but never toward a single day. There is nothing to date them with.
 
 ---

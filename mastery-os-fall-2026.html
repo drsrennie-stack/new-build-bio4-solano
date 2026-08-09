@@ -2580,9 +2580,16 @@ function drawKnow(){
        scored flow: big topic, confidence BEFORE the attempt, then the
        list to tick. That is the version whose result reaches the weak
        spot board. The blank canvas stays for everything else. */
-    var hasChecklist=(window.BIO004_DRAW||[]).some(function(d){return d.id===c.id;});
+    /* The drawing bank is keyed by HER worksheet assignments now, not by
+       competency, so the lookup goes through comps. A competency can be
+       covered by more than one drawing; take the first. */
+    var dw=null;
+    (window.BIO004_DRAW||[]).forEach(function(d){
+      if(!dw && (d.comps||[]).indexOf(c.id)>=0) dw=d;
+    });
     b+='<div class="g-actions" style="margin-bottom:12px">';
-    if(hasChecklist){b+='<button class="btn primary" data-toolblank="bio004-draw.html?id='+encodeURIComponent(c.id)+'">Score this drawing (rate your confidence first)</button>';}
+    if(dw){b+='<button class="btn primary" data-toolblank="bio004-draw.html?id='+encodeURIComponent(c.id)+
+      '">Score drawing '+esc(dw.code)+', '+esc(dw.name)+'</button>';}
     b+='<button class="btn" data-toolblank="mastery-canvas.html?title='+encodeURIComponent(c.name)+'">Draw on canvas (iPad friendly)</button></div>';
     if(rub.length){
       b+='<div class="reference-box"><h4>Self-check, should include ('+revealed.length+' of '+rub.length+')</h4><ul>'+(revealed.length?revealed.map(function(x){return '<li>'+esc(x)+'</li>';}).join(''):'<li style="list-style:none;color:var(--ink-faint)">Hidden. Draw or map it first, then reveal to grade yourself.</li>')+'</ul></div>';

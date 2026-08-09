@@ -29,6 +29,22 @@
   ============================================================
 -->
 <style>
+  /* Her worksheet fields, carried through so the tool and the packet
+     say the same thing. The notebook code is the load-bearing one: it
+     is how a student finds this page again in December. */
+  .code{font-size:12px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;
+        color:#8B3A2E;margin:14px 0 4px}
+  .dump{background:#FBF3DE;box-shadow:inset 0 0 0 1px #C9A14A;border-left:4px solid #B8924A;
+        border-radius:12px;padding:14px 16px;margin:14px 0 0;color:#2A2418}
+  .dump .sh{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+        color:#63480F;margin:0 0 6px}
+  .dump p{margin:0;font-size:14.5px;line-height:1.5}
+  .know{background:#fff;box-shadow:inset 0 0 0 1px #ECE7DE;border-radius:12px;
+        padding:14px 16px;margin:14px 0 0}
+  .know .sh{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+        color:#8B3A2E;margin:0 0 6px}
+  .know p{margin:0;font-size:14.5px;line-height:1.5;font-style:italic}
+
   .skip{position:absolute;left:-9999px;top:0;background:#0B1530;color:#fff;padding:10px 16px;
         border-radius:0 0 10px 0;font-weight:700;font-size:14px;z-index:60;text-decoration:none}
   .skip:focus{left:0}
@@ -120,18 +136,29 @@
       <label for="pick" class="sr" style="position:absolute;left:-9999px">Choose a drawing assignment</label>
       <select id="pick"></select>
 
+      <p class="code" id="code"></p>
       <p class="topic" id="topic">&nbsp;</p>
 
+      <div class="dump" id="dumpBox">
+        <p class="sh">Brain dump first</p>
+        <p id="dump">&nbsp;</p>
+      </div>
+
       <div class="standard">
-        <p class="sh">The standard</p>
+        <p class="sh">Then draw it</p>
         <p id="standard">&nbsp;</p>
       </div>
 
       <ol class="steps">
         <li><span class="n">1</span><span>Close everything. Notes, phone, this page if you can.</span></li>
-        <li><span class="n">2</span><span>Draw it on blank paper and label every part.</span></li>
-        <li><span class="n">3</span><span>Only then come back and tick what you actually got.</span></li>
+        <li><span class="n">2</span><span>Brain dump, then draw it on blank paper and label every part.</span></li>
+        <li><span class="n">3</span><span>Head your notebook page with the code above, then come back and tick what you actually got.</span></li>
       </ol>
+
+      <div class="know" id="knowBox">
+        <p class="sh">You know it when</p>
+        <p id="know">&nbsp;</p>
+      </div>
     </div>
 
     <div class="panel">
@@ -213,13 +240,15 @@
     pick.disabled = true;
     document.getElementById('topic').textContent = 'Nothing to draw yet';
     document.getElementById('standard').textContent =
-      'Drawing assignments open as each topic is taught. The first one arrives in week 4, the gross anatomy of a long bone.';
+      'Drawing assignments open as each packet is assigned. The first three arrive with the intro packet in week 1.';
+    document.getElementById('dumpBox').hidden = true;
+    document.getElementById('knowBox').hidden = true;
     document.getElementById('confStep').hidden = true;
     document.getElementById('form').hidden = true;
     saveBtn.disabled = true;
   } else {
     pick.innerHTML = LIST.map(function (d, i) {
-      return '<option value="' + i + '">Week ' + d.week + ' · ' + esc(d.name) + '</option>';
+      return '<option value="' + i + '">' + esc(d.code) + '  ' + esc(d.name) + '</option>';
     }).join('');
 
     /* ?id=<competency> opens straight onto that topic, so the Mastery
@@ -229,9 +258,17 @@
       var m = location.search.match(/[?&]id=([^&#]+)/);
       if (m) {
         var want = decodeURIComponent(m[1]);
-        for (var i = 0; i < LIST.length; i++) {
-          if (LIST[i].id === want) { pick.value = String(i); break; }
+        var hit = -1;
+        /* Accept three things: the drawing id, her notebook code, or a
+           competency id. The Mastery OS sends competency ids, the
+           worksheets carry codes, and links inside the tool use the id. */
+        for (var i = 0; i < LIST.length && hit < 0; i++) {
+          if (LIST[i].id === want || LIST[i].code === want) hit = i;
         }
+        for (var j = 0; j < LIST.length && hit < 0; j++) {
+          if ((LIST[j].comps || []).indexOf(want) >= 0) hit = j;
+        }
+        if (hit >= 0) pick.value = String(hit);
       }
     } catch (e) {}
   }
@@ -247,6 +284,12 @@
     var d = LIST[pick.value | 0];
     document.getElementById('topic').textContent = d.name;
     document.getElementById('standard').textContent = d.standard;
+    document.getElementById('code').textContent =
+      d.code + '  \u00b7  Week ' + d.week + '  \u00b7  head your notebook page with this';
+    document.getElementById('dump').textContent = d.brainDump || '';
+    document.getElementById('dumpBox').hidden = !d.brainDump;
+    document.getElementById('know').textContent = d.youKnowItWhen || '';
+    document.getElementById('knowBox').hidden = !d.youKnowItWhen;
 
     /* Confidence first, every time. Asking after they have seen the
        checklist would just measure how the checklist made them feel. */
@@ -287,7 +330,8 @@
   function showHistory(d) {
     var E = window.BIO004_EVIDENCE;
     if (!E) { histEl.textContent = ''; return; }
-    var mine = E.all().filter(function (e) { return e.comp === d.id && e.source === 'draw'; });
+    var first = (d.comps && d.comps.length) ? d.comps[0] : d.id;
+    var mine = E.all().filter(function (e) { return e.comp === first && e.source === 'draw'; });
     if (!mine.length) { histEl.textContent = 'You have not logged a drawing for this one yet.'; return; }
     var last = mine[mine.length - 1];
     histEl.textContent = 'Logged ' + mine.length + ' time' + (mine.length === 1 ? '' : 's') +
@@ -317,7 +361,10 @@
     var b = boxes(), got = b.filter(function (x) { return x.checked; }).length;
     var E = window.BIO004_EVIDENCE;
     if (!E) { saidEl.textContent = 'Could not save, the evidence store is missing.'; return; }
-    E.record(d.id, 'draw', got, b.length, CONF);
+    /* One drawing speaks to several competencies, so the result is
+       written against all of them. d.comps comes from her worksheet
+       mapping, not from a guess. */
+    E.record((d.comps && d.comps.length) ? d.comps : [d.id], 'draw', got, b.length, CONF);
     var pct = b.length ? Math.round(got / b.length * 100) : 0;
     saidEl.textContent = 'Logged. This now counts on your weak spot board.';
     /* The one comparison worth making out loud, and the tone matters.
