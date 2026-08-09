@@ -150,8 +150,13 @@
 
     t.push({ g: 'Course', name: 'Study With Me', sub: 'Host or join a study session',
              url: BASE + 'study-session-signup.html', icon: 'people', tone: 'terra', qr: 'study', kw: 'study with me sessions group' });
-    t.push({ g: 'Course', name: 'Course home', sub: S ? S.label : 'Pick your section',
-             url: BASE + 'welcome.html' + q, icon: 'home', tone: 'gold', qr: 'home', kw: 'home welcome start' });
+    /* welcome.html IS the course home. Offering a "Course home" tile
+       while a student is standing on it is a dead click, so it is left
+       out on that page. */
+    if (!/\/welcome\.html$|\/$/.test(location.pathname)) {
+      t.push({ g: 'Course', name: 'Course home', sub: S ? S.label : 'Pick your section',
+               url: BASE + 'welcome.html' + q, icon: 'home', tone: 'gold', qr: 'home', kw: 'home welcome start' });
+    }
     t.push({ g: 'Course', name: 'Start here', sub: 'Week one checklist',
              url: BASE + 'start-here.html' + q, icon: 'play', tone: 'navy', kw: 'start here checklist orientation' });
     return t;

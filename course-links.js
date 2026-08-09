@@ -39,7 +39,7 @@ window.BIO004_LINKS = {
   /* ---------- on this site ---------- */
   calendar:  { url: 'bio004-course-calendar.html',      internal: true,  label: 'course calendar' },
   masteryOS: { url: 'mastery-os-fall-2026.html',        internal: true,  label: 'Mastery OS' },
-  home:      { url: 'canvas-home.html',                 internal: true,  label: 'course home' },
+  homeLegacy:{ url: 'canvas-home.html',                 internal: true,  label: 'course home (redirect)' },
   syllabusGeneric: { url: 'fall-2026-syllabus.html',    internal: true,  label: 'syllabus' },
 
   /* ---------- elsewhere ---------- */
@@ -81,13 +81,19 @@ window.BIO004_LINKS.a = function (key, text) {
   return '<a href="' + L.url + '"' + t + '>' + (text || L.label) + '</a>';
 };
 
-/* Section-aware anchor. Falls back to the generic syllabus and the
-   calendar when the student has not picked a section yet, which is
-   exactly what welcome.html did. */
+/* Section-aware anchor.
+
+   The no-section fallback for `hub` used to be the CALENDAR. That is
+   how "course home" ended up taking students to a list of dates
+   instead of home. Home is welcome.html: it shows the week hub to a
+   student who has picked a section and the picker to one who has not,
+   so it is the right answer in both cases. */
+window.BIO004_LINKS.home = { url: 'welcome.html', internal: true, label: 'course home' };
+
 window.BIO004_LINKS.forSection = function (sec) {
   var s = window.BIO004_LINKS.sections[sec];
   return {
     syllabus: s ? s.syllabus : window.BIO004_LINKS.syllabusGeneric.url,
-    hub:      s ? s.hub      : window.BIO004_LINKS.calendar.url
+    hub:      s ? s.hub      : window.BIO004_LINKS.home.url
   };
 };
