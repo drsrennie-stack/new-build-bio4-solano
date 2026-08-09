@@ -1,59 +1,42 @@
-# One Recall Rx, wired into Mastery OS
+# Home now goes to the welcome hub, not the section picker
 
-Repo root, overwriting. Nothing deleted, including `spaced-recall.html`
-and `recall-cards.html` (just no longer linked).
+Repo root, overwriting. Nothing deleted.
 
-## Files
+## The change you asked for
 
-| File | New or changed |
-|---|---|
-| `competenciesfall2026.js` | **NEW.** 196 competencies |
-| `card-competency-map.js` | **NEW.** 44 card topics to competencies |
-| `mastery-os-fall-2026.html` | Overwrites |
-| `week-1-hub.html` … `week-17-hub.html` | Overwrite |
+Every "course home" affordance pointed at `index.html`, the one-time section
+chooser. A student deep in a notes page or a worksheet who tapped the logo
+landed back on "Pick your class" instead of their week.
 
-## 1. One deck
+**705 links across 367 files** now point at `welcome.html`.
 
-Mastery OS pointed at `spaced-recall.html` (the 1,110-question bank). Your
-hubs pointed at Recall Rx (the 2,020-question bank). Two decks, separate
-progress. Mastery OS now points at **Recall Rx**, same as everything else.
+That is the right target because welcome decides for itself: a student who
+has already picked a section gets the welcome-back hub with their week, the
+module tabs and the gold arrow on the current week. A student who has not
+picked yet still gets the picker. Nobody has to choose twice, and nobody
+lands somewhere useless.
 
-## 2. The Recall Rx block is one thing now
+Repointed: header logos, footer logos, breadcrumbs, "Course home" buttons,
+"Back to course resources" links, hub cards.
 
-It was a white block holding two white cards, so the two decks read as two
-unrelated boxes. The container now takes the navy surface (same treatment as
-the Lab block) and the two white cards read as the choice inside it.
+**Deliberately left alone:** `index.html` itself, `welcome.html`,
+`welcome-canvas.html`, `canvas-home.html` and `404.html`. Repointing those
+would either make a page link to itself or break the picker.
 
-"Your Deck" also **repointed**, see below.
+Verified across notes pages, worksheets, hubs, week pages, the calendar,
+video pages, class pages and syllabi: home resolves to `welcome.html`
+everywhere, and **zero `index.html` links remain** in the patched files.
 
-## 3. A bug I shipped in the last zip, caught and fixed
+## Also in this zip, from earlier in the session
 
-My first bridge read `card.attempts` and `card.correct`. **Those fields do not
-exist.** Recall Rx stores the truth in `history[]`, one entry per attempt. The
-bridge would have read zero for every real card and done nothing. It reads
-`history[]` now, with attempts/correct kept only as a fallback for imported
-state. Re-verified against the real shape:
+- All 17 week hubs, the 17 week pages, the calendar
+- 38 video pages with topic HTML notes buttons (51 of them)
+- `session-links.js`, `week-links.js` with modules 4 and 5 wired
+- `loops-index.js`, `mastery-evidence.js`, `card-competency-map.js`,
+  `competenciesfall2026.js`
 
-- 20 of 20 on The Language of Anatomy → 5 Foundations competencies at **100%**
-- 10 of 20 on The Heart → 16 cardiovascular competencies at **50%**
+## The six large pages ship separately
 
-## 4. Student-made cards
-
-**Only if they are made inside Recall Rx.**
-
-- Recall Rx's own card maker (`#make`) stores cards in `STATE.personal` with a
-  **`topicId`**, in the same `bio004-recall-v2` store. Those answers roll up to
-  competencies exactly like yours.
-- The standalone `recall-cards.html` stores in **IndexedDB** (`recall-cards-db`).
-  Mastery OS and the weak spot board both read localStorage. Nothing made there
-  is visible to either.
-
-So "Your Deck" on every hub now points at `bio004-spaced-recall.html#make`
-instead of `recall-cards.html`. Same card maker, but the results count.
-
-## 5. The weak spot board
-
-It already reads the right key, `bio004-recall-v2`, and loads
-`course-content-tagged.js`. It was working. It was just **linked from nowhere**
-in Mastery OS, zero references. It is now an evidence route inside Mastery OS,
-so students can actually reach it.
+`integumentary-concept-videos.html` (24 MB), `joints`, `tissues`, `cell`,
+`week1` and `appendicular` carry embedded base64 images. They are in the
+second zip so this one stays quick to download. **Both zips are needed.**
