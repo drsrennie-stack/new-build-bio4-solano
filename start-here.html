@@ -207,9 +207,21 @@
     <a href="mastery-os-fall-2026.html"><div class="mt">Mastery OS</div><div class="md">Your study tool: it tells you the best next move.</div></a>
   </div>
 
-  <p class="section-label">Your section syllabus</p>
-  <h2 class="sec">Pick your class</h2>
-  <div class="more">
+  <!-- Your section syllabus.
+
+       This used to be a static three-card picker, which asked a
+       question the site had already answered: step 1 of the very
+       checklist above is picking your section, and welcome.html
+       writes it to localStorage where every other page reads it.
+       So a student who had done step 1 was still shown three
+       choices at the bottom of the same page.
+
+       Now it collapses to the one card that is theirs. The three
+       card picker only appears when no section has been set yet,
+       which is the only case where the question is real. -->
+  <p class="section-label" id="sylLabel">Your section syllabus</p>
+  <h2 class="sec" id="sylHead">Pick your class</h2>
+  <div class="more" id="sylBox">
     <a href="syllabus-class1.html"><div class="mt">Mon / Wed &middot; Afternoon</div><div class="md">Your times, your dates, your week-by-week schedule.</div></a>
     <a href="syllabus-class2.html"><div class="mt">Tue / Thu &middot; Morning</div><div class="md">Your times, your dates, your week-by-week schedule.</div></a>
     <a href="syllabus-class3.html"><div class="mt">Tue / Thu &middot; Evening</div><div class="md">Your times, your dates, your week-by-week schedule.</div></a>
@@ -221,6 +233,9 @@
   </footer>
 </div>
 
+<!-- section-sync.js must load BEFORE the inline script below, which asks it
+     which section the student picked. Loaded at the foot it was undefined. -->
+<script src="section-sync.js"></script>
 <script>
   var KEY='bio004-starthere-fall2026';
   var done={};
@@ -238,6 +253,33 @@
     });
   });
   refresh();
+
+  /* Collapse the syllabus picker down to the student's own section. */
+  (function(){
+    var S = window.BIO004_SECTION && window.BIO004_SECTION.get && window.BIO004_SECTION.get();
+    var MAP = {
+      'mw':     { label:'Mon / Wed \u00b7 Afternoon', file:'syllabus-class1.html' },
+      'tr-am':  { label:'Tue / Thu \u00b7 Morning',   file:'syllabus-class2.html' },
+      'tr-eve': { label:'Tue / Thu \u00b7 Evening',   file:'syllabus-class3.html' }
+    };
+    var m = S && MAP[S];
+    if (!m) return;   /* no section chosen yet, the three card picker is the right thing */
+    var head = document.getElementById('sylHead');
+    var box  = document.getElementById('sylBox');
+    if (!head || !box) return;
+    head.textContent = 'Your syllabus';
+    box.innerHTML =
+      '<a href="' + m.file + '"><div class="mt">' + m.label + '</div>' +
+      '<div class="md">Your times, your dates, your week-by-week schedule.</div></a>' +
+      '<a href="#" id="sylSwitch"><div class="mt">Not your section?</div>' +
+      '<div class="md">Change it and every date on the site follows.</div></a>';
+    var sw = document.getElementById('sylSwitch');
+    if (sw) sw.addEventListener('click', function(e){
+      e.preventDefault();
+      try { localStorage.removeItem('bio004-section'); } catch(err) {}
+      location.reload();
+    });
+  })();
 </script>
 
 <script src="bio004-dock.js"></script>
