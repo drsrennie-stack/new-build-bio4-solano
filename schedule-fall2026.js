@@ -409,10 +409,20 @@ window.BIO004_SESSIONS = {
              Heart lecture. That is Module 3.
      Week 10 NOT shared. Exam 3 is the last session of the week
              on both tracks. Module 4 opens in week 11.
-     Week 14 NOT shared. Exam 4 does not close Module 4, which
-             runs on to week 15, and the sessions after it that
-             week are renal, still Module 4.
+     Week 14 SHARED, Module 4 into Module 5
+             Exam 4, then Wed Nov 18 (Thu Nov 19 on the Tue/Thu
+             track) is Exam 4 rebuttals plus the Guided Renal Map,
+             with Renal Anatomy in lab. That is Module 5.
      Week 17 NOT shared. Exam 5 is the last session of the term.
+
+   WHY RENAL AND REPRODUCTIVE SIT IN MODULE 5
+   ------------------------------------------
+   Every renal and reproductive session in the term falls AFTER
+   Exam 4: renal lab Nov 18/19, reproductive lab Nov 23/24, TBL 8
+   Renal Nov 30/Dec 1. Nothing about them can be assessed on an
+   exam that has already been sat. They are taught in Module 5 and
+   assessed on Exam 5, which carries 64 competencies: Urinary 8,
+   Reproductive 13, Nervous System 43. Exam 4 carries 34.
 
    Note that this makes Module 3 start at week 7, where the
    syllabus module table says week 8. The syllabus table is a
@@ -441,11 +451,11 @@ window.BIO004_MODULES = [
     title:'Cardiovascular, muscle and blood',
     detail:'Heart, blood vessels, muscle microanatomy, blood. TBL 4 Heart, TBL 5 Blood.' },
 
-  { n:4, weeks:[11,12,13,14,15], exam:4,
-    title:'Respiratory, endocrine, GI, renal and reproductive',
-    detail:'Respiratory, endocrine, GI, urinary and renal, reproductive. TBL 6 Respiratory, TBL 7 GI, TBL 8 Renal.' },
+  { n:4, weeks:[11,12,13,14], exam:4,
+    title:'Respiratory, endocrine and GI',
+    detail:'Respiratory, endocrine, lymphatic and immune, GI primary and accessory. TBL 6 Respiratory, TBL 7 GI.' },
 
-  { n:5, weeks:[16,17], exam:5,
-    title:'Nervous system',
-    detail:'Brain, brainstem, cranial nerves, spinal cord, PNS and ANS. TBL 9 Cranial nerves.' }
+  { n:5, weeks:[14,15,16,17], exam:5,
+    title:'Renal, reproductive and nervous system',
+    detail:'Urinary and renal, reproductive, brain, brainstem, cranial nerves, spinal cord, PNS and ANS. TBL 8 Renal, TBL 9 Cranial nerves.' }
 ];
