@@ -190,6 +190,16 @@
   .is-done .step-title{color:var(--ink-mid)}
   .step-hint{display:block;margin:4px 0 0;font-size:13.5px;color:var(--ink-mid);line-height:1.45}
 
+  .step-meta{flex:0 0 auto;display:flex;align-items:center;gap:9px;white-space:nowrap}
+  .step-mins{
+    font-size:12.5px;font-weight:700;color:var(--ink-mid);letter-spacing:.01em;
+  }
+  .hl-time{
+    margin:14px 0 0 !important;font-size:13.5px;font-weight:700;
+    color:var(--terra-dark) !important;
+  }
+  .hl-time[hidden]{display:none}
+
   /* state is never colour alone: it is spelled out */
   .step-state{
     flex:0 0 auto;font-size:11px;font-weight:800;letter-spacing:.12em;
@@ -369,6 +379,7 @@
     <p class="kicker" id="hl-kicker">Right now</p>
     <h2 id="hl-title">Working out where you are</h2>
     <p id="hl-body">One moment.</p>
+    <p class="hl-time" id="hl-time" hidden></p>
 
     <div class="gloss-block">
       <button class="gloss" type="button" id="gloss-all" aria-expanded="false" aria-controls="gloss-list">
@@ -445,11 +456,11 @@
   /* section keys used across this repo: mw | tr-am | tr-eve */
   var SEC_META = {
     'mw':     { label:'Mon / Wed, Afternoon', track:'mw', hub:'class1.html', crn:'80650',
-                id:'class1', lec:'12:30 to 1:50 pm, VC 118',   lab:'2:00 to 4:50 pm, VC 1137',  endHour:17 },
+                id:'class1', lec:'12:30 to 1:50 pm, VC 118',   lab:'2:00 to 4:50 pm, VC 1137',  endHour:17, lecMin:80, labMin:170 },
     'tr-am':  { label:'Tue / Thu, Morning',   track:'tr', hub:'class2.html', crn:'80654',
-                id:'class2', lec:'9:30 to 10:45 am, VC 212',   lab:'11:00 am to 1:50 pm, VC 1137', endHour:14 },
+                id:'class2', lec:'9:30 to 10:45 am, VC 212',   lab:'11:00 am to 1:50 pm, VC 1137', endHour:14, lecMin:75, labMin:170 },
     'tr-eve': { label:'Tue / Thu, Evening',   track:'tr', hub:'class3.html', crn:'80655',
-                id:'class3', lec:'5:30 to 6:45 pm, VC 118',    lab:'7:00 to 9:50 pm, VC 1137',  endHour:22 }
+                id:'class3', lec:'5:30 to 6:45 pm, VC 118',    lab:'7:00 to 9:50 pm, VC 1137',  endHour:22, lecMin:75, labMin:170 }
   };
   var secKey = ls(STORE_SEC);
   if(!SEC_META[secKey]) secKey = null;
@@ -591,6 +602,40 @@
 
   var LOOPS_URL = 'https://drsrennie-stack.github.io/loops/';
 
+  /* ---------- HOW LONG THINGS TAKE ----------
+     Minutes, and the ONLY place they are set. Students chronically
+     underestimate pre-work and then feel ambushed by it, so the honest
+     number is shown up front rather than discovered at midnight.
+
+     These are estimates for a student who did the reading, not a floor
+     and not a target. Change a number here and it changes on the step,
+     in the nightly total, and nowhere else needs touching.
+
+     In-class steps are NOT estimated, they are timetabled: the lecture
+     and lab block lengths come from the section itself, below. */
+  var EST = {
+    worksheet:  40,   // the substantial one. Handwritten, notes open.
+    videos:     15,   // concept videos plus annotating the notes
+    structures: 15,   // structure list, atlas, a look at the lab sprint
+    cards:      15,   // a Recall Rx session
+    loops:      10,
+    slides:     10,   // one read, no notes taken
+    gapfinder:  10,
+    plan:       10,   // writing the three day plan
+    prerecall:  15,   // Mastery OS on the topic you just prepped, same night
+    braindump:   5    // start of class, on the clock
+  };
+
+  function mins(n){
+    if(!n) return '';
+    if(n < 60) return n + ' min';
+    var h = Math.floor(n/60), m = n % 60;
+    return h + (h===1?' hour':' hours') + (m ? ' ' + m + ' min' : '');
+  }
+  function totalMins(steps){
+    return (steps||[]).reduce(function(a,st){ return a + (st.mins || 0); }, 0);
+  }
+
   function buildPlan(){
     var meta   = SEC_META[secKey];
     var track  = meta.track;
@@ -639,13 +684,13 @@
           heroSub:longDate(TODAY) + '. ' + (tblName(today) || 'Team-Based Learning') + '.',
           kicker:'Today', title:'Readiness first, then the application',
           body:'You take the readiness test alone, then again with your team, then the whole room works the same problem at the same time. Come with the pre-work done, there is no catching up inside a TBL.',
-          target:TODAY_ISO, steps:tblDaySteps(today), foot:eveningFoot(track) };
+          target:TODAY_ISO, steps:tblDaySteps(today), timetabled:true, foot:eveningFoot(track) };
       }
       return { heroH1:'Class <span class="a">today.</span>',
         heroSub:longDate(TODAY) + '. Here is the order it runs in.',
         kicker:'Today', title:'Bring your written pre-work',
         body:'Class opens with a brain dump on the pre-work you did last night. That one cannot be made up if you arrive without it.',
-        target:TODAY_ISO, steps:classDaySteps(today), foot:eveningFoot(track) };
+        target:TODAY_ISO, steps:classDaySteps(today), timetabled:true, foot:eveningFoot(track) };
     }
 
     /* ===== everything below is the evening, or a day with no class ===== */
@@ -704,9 +749,9 @@
     /* PRE-WORK. The night before a class day. */
     if(preworkTonight){
       return { heroH1:'Tonight is <span class="a">pre-work.</span>',
-        heroSub:'Class is ' + longDate(parseIso(next.date)) + '. Three things, in this order.',
-        kicker:'Tonight', title:'Worksheet, then videos, then lab structures',
-        body:'The order is the whole point. The worksheet finds out what you do not know, the videos fill it in, and the structures get your eyes on lab before you walk in.',
+        heroSub:'Class is ' + longDate(parseIso(next.date)) + '. Four things, in this order.',
+        kicker:'Tonight', title:'Sheet, video, lab structures, then recall',
+        body:'The order is the whole point. The sheet finds out what you do not know, the video fills it in, the structures get your eyes on lab before you walk in, and the recall makes tomorrow morning\'s brain dump something you can actually do.',
         target:next.date, steps:preworkSteps(next),
         foot:'Bring the written sheet. Class opens with a brain dump on it.' };
     }
@@ -736,7 +781,7 @@
     var day = findDay(track, dateIso);
     return { heroH1:'Getting <span class="a">ahead.</span>',
       heroSub:'Pre-work for ' + longDate(parseIso(dateIso)) + '. Nothing here is due tonight.',
-      kicker:'Optional', title:'Worksheet, then videos, then lab structures',
+      kicker:'Optional', title:'Sheet, video, lab structures, then recall',
       body:'You do not have to do this tonight. If you would rather stop, stop. It will be here.',
       target:dateIso, steps:preworkSteps(day),
       foot:'Bring the written sheet. Class opens with a brain dump on it.' };
@@ -777,30 +822,56 @@
     var s = [];
 
     s.push({
-      title:'Work the worksheet',
-      hint:'Handwritten, with the notes and the reading open beside you.',
+      title:'Work the pre-work sheet',
+      mins:EST.worksheet,
+      hint:'Handwritten. This is the one thing that has to happen tonight.',
       body:'<p class="lead-in">This is the real work of the night. Where you cannot answer something, leave the gap visible rather than tidying it away. That gap is the point.</p>',
-      also:'With these open beside you',
-      links:(L && L.sheets ? L.sheets.map(function(n){ return {kind:'Worksheet', url:n.u, title:n.t, cta:'Open the worksheet'}; }) : [])
+      /* Notes and workbooks are NOT tasks. They are what the sheet is
+         worked against. They ride under the one action rather than
+         becoming three more things that look due. */
+      also:'Open these beside it, they are reference and not tasks',
+      links:(L && L.sheets ? L.sheets.map(function(n){ return {kind:'Worksheet', url:n.u, title:n.t, cta:'Open the pre-work sheet'}; }) : [])
             .concat(L && L.notes ? L.notes.map(function(n){ return {kind:'Notes', url:n.u, title:n.t}; }) : [])
+            .concat(L && L.workbooks ? L.workbooks.map(function(n){ return {kind:'Workbook', url:n.u, title:n.t}; }) : [])
     });
 
     s.push({
       title:'Watch the videos and add to your notes',
+      mins:EST.videos,
       hint:'After the worksheet. The video is the check, not the source.',
       body:'<p>Write straight onto your notes as you watch. Anything the video says that you did not have, add it. Anything you had wrong, correct it in a different colour so you can find it later.</p>',
       also:'Also this week',
       links:(L && L.videos ? L.videos.map(function(n,ix){ return {kind:'Video', url:n.u, title:n.t, cta: ix===0 ? 'Watch the video' : null}; }) : [])
     });
 
-    var lab = (L && L.lab ? L.lab.map(function(n){ return {kind:'Lab sprint', url:n.u, title:n.t}; }) : []);
+    /* Two things, not six. The structure list NAMES the structures, the
+       atlas is where you SEE them. That pair is the whole of pre-study.
+       The lab sprints are deliberately not here: they are the lab itself,
+       they already sit on the class day, and four of them turns a 15
+       minute step into a menu. */
+    var lab = [{kind:'Atlas', url:'atlas-coloring-book.html', title:'the atlas'}];
     if(mod) lab.unshift({kind:'Structures', url:'module-' + mod + '-structure-list.html', title:'Module ' + mod + ' lab structure list', cta:'Open the structure list'});
     s.push({
       title:'Pre-study the lab structures',
+      mins:EST.structures,
       hint:'So lab is recognition, not first contact.',
-      body:'<p>Read through the structures you will be handed tomorrow. You are not memorising here, you are making tomorrow familiar. Bring the list with you, you fill it in as you go.</p>',
-      also:'Tomorrow\'s lab, if you want a closer look',
+      body:'<p>Read through the structures you will be handed tomorrow, then put your eyes on them in the atlas. You are not memorising here, you are making tomorrow familiar. Bring the list with you, you fill it in as you go.</p>',
+      also:'Then put your eyes on them in',
       links:lab
+    });
+
+    /* The brain dump lands in the morning, on exactly this material. Running
+       it through Mastery OS tonight makes that dump retrieval rather than a
+       surprise, and it is the ONLY retrieval that belongs on a pre-work
+       night, because the material has just been processed. */
+    s.push({
+      title:'Run it through Mastery OS',
+      mins:EST.prerecall,
+      hint:'Last thing. On tonight\'s topics, not the whole course.',
+      body:'<p>Class opens with a brain dump on this exact material. A short run of cards tonight is the difference between retrieving it in the morning and meeting it cold.</p>',
+      also:'Or go straight to',
+      links:[{kind:'Hub', url:'mastery-os-fall-2026.html', title:'Mastery OS', cta:'Run tonight\'s topics'},
+             {kind:'Cards', url:'bio004-spaced-recall.html', title:'the cards'}]
     });
     return s;
   }
@@ -820,15 +891,15 @@
     }
 
     return [
-      { title:'Brain dump',
+      { title:'Brain dump', mins:EST.braindump,
         hint:'Lecture block, ' + meta.lec + '. First thing, five minutes.',
         body:'<p>Blank paper, closed notes, closed book, phone away. On the pre-work you did last night. A real organised attempt earns full credit, a few scattered words earns nothing.</p>',
         links:[] },
-      { title:'Active learning and success',
+      { title:'Active learning and success', mins:meta.lecMin - EST.braindump,
         hint:'Lecture block. The rest of the lecture hour.',
         body:'<p>This is the part that only works if the pre-work is done. We are applying it, not receiving it.</p>' + rows(lecture),
         links:[] },
-      { title:'Round tables, practice rounds',
+      { title:'Round tables, practice rounds', mins:meta.labMin,
         hint:'Lab block, ' + meta.lab + '.',
         body:'<p>Rotating rounds at the bench. Name it, place it, describe it, connect it, then teach it back to your table.</p>' + rows(labs),
         links:[{kind:'How it runs', url:'spiral-rounds.html', title:'how the rounds work', cta:'How the rounds work'}] }
@@ -841,16 +912,16 @@
     var topics = dayTopics(today);
     var labs = topics.filter(function(t){ return /lab/i.test(t.k); });
     return [
-      { title:'iRAT, then tRAT',
+      { title:'iRAT, then tRAT', mins:Math.round(meta.lecMin/2),
         hint:'Lecture block, ' + meta.lec + '.',
         body:'<p>The same readiness questions twice. Alone first, in silence, on your own judgement. Then again with your team, arguing it out until you commit as a group. Then appeals on anything you think was unfair.</p>' +
              '<p>There is no preparing for this in the room. It is the pre-work being checked.</p>',
         links:[] },
-      { title:'Application exercise',
+      { title:'Application exercise', mins:Math.round(meta.lecMin/2),
         hint:'Lecture block. The main event.',
         body:'<p>One hard problem. Every team works the same one at the same time, and every team reveals their answer at the same moment. You will have to defend a choice, so make sure you know why your team picked it.</p>',
         links:[] },
-      { title:'Round tables, practice rounds',
+      { title:'Round tables, practice rounds', mins:meta.labMin,
         hint:'Lab block, ' + meta.lab + '.',
         body:'<p>Rounds at the bench as usual.</p>' + (labs.length
           ? '<ul class="link-list">' + labs.map(function(t){ return '<li class="go is-static"><span class="go-kind">Lab</span><span>' + t.v + '</span></li>'; }).join('') + '</ul>'
@@ -879,19 +950,19 @@
   function afterClassSteps(today){
     var L = today && LINKS ? LINKS[today.date] : null;
     var s = [
-      { title:'Lecture: Mastery OS and Recall Rx cards',
+      { title:'Lecture: Mastery OS and Recall Rx cards', mins:EST.cards,
         hint:'Short. Tonight, while it is still warm.',
         body:'<p>Run the cards on what was taught today. Getting it wrong tonight is cheap. Getting it wrong on the exam is not.</p>',
         also:'Lives in',
         links:[{kind:'Cards', url:'bio004-spaced-recall.html', title:'Recall Rx cards', cta:'Run tonight\'s cards'},
                {kind:'Hub', url:'mastery-os-fall-2026.html', title:'Mastery OS'}] },
-      { title:'Labs: Loops',
+      { title:'Labs: Loops', mins:EST.loops,
         hint:'The lab half of today.',
         body:'<p>Run the loops for the structures you had at the bench today, while you can still picture the model in front of you.</p>',
         links:[{kind:'Loops', url:LOOPS_URL, title:'Anatomy Loops', ext:true, cta:'Run the loops'}] }
     ];
     if(L && L.slides){
-      s.push({ title:'If you have time, read the slides once',
+      s.push({ title:'If you have time, read the slides once', mins:EST.slides,
         hint:'Ten minutes, no notes taken.',
         body:'<p>Looking for what did not land, not building a second set of notes.</p>',
         links:[{kind:'Slides', url:L.slides.u, title:L.slides.t, cta:'Open the slides'}] });
@@ -902,19 +973,19 @@
   /* NON-CLASS DAY :: Mastery OS / Recall cards > Loops, with an occasional Gap Finder */
   function nonClassSteps(ex, toExam){
     var s = [
-      { title:'Mastery OS and Recall cards',
+      { title:'Mastery OS and Recall cards', mins:EST.cards,
         hint:'Built into the Mastery recall, so it knows what you got wrong.',
         body:'<p>Short session. The cards bring back what you missed last time first, which is exactly the material you would otherwise skip.</p>',
         also:'Lives in',
         links:[{kind:'Cards', url:'bio004-spaced-recall.html', title:'Recall Rx cards', cta:'Run today\'s cards'},
                {kind:'Hub', url:'mastery-os-fall-2026.html', title:'Mastery OS'}] },
-      { title:'Labs: Loops',
+      { title:'Labs: Loops', mins:EST.loops,
         hint:'Also built into the Mastery recall.',
         body:'<p>Structures fade faster than concepts. This is the cheapest way to keep them.</p>',
         links:[{kind:'Loops', url:LOOPS_URL, title:'Anatomy Loops', ext:true, cta:'Run the loops'}] }
     ];
     if(dueForGapFinder()){
-      s.push({ title:'Run a Gap Finder',
+      s.push({ title:'Run a Gap Finder', mins:EST.gapfinder,
         hint:'Occasional. It has been a week or more.',
         body:'<p>This looks for topics you have no card history on at all, the ones you have never been tested on rather than the ones you got wrong. Those are the quiet gaps.</p>',
         links:[{kind:'Tool', url:'card-gap-finder.html', title:'Card Gap Finder', cta:'Find my gaps'}] });
@@ -927,17 +998,17 @@
     var d1 = new Date(TODAY); d1.setDate(d1.getDate()+1);
     var d2 = new Date(TODAY); d2.setDate(d2.getDate()+2);
     return [
-      { title:'Gap Finder on the recall cards',
+      { title:'Gap Finder on the recall cards', mins:EST.gapfinder,
         hint:'First. Before you decide what to study.',
         body:'<p>It surfaces the lecture topics with no card history and the ones you keep missing. Write the list down, it becomes the plan.</p>',
         also:'Then check',
         links:[{kind:'Tool', url:'card-gap-finder.html', title:'Card Gap Finder', cta:'Find my gaps'},
                {kind:'Weak spots', url:'bio004-spaced-recall-weakness-dashboard.html', title:'your weakest topics'}] },
-      { title:'Gap Finder on the loops',
+      { title:'Gap Finder on the loops', mins:EST.gapfinder,
         hint:'The lab half. Same job, different material.',
         body:'<p>Structures you cannot name cold are the ones the practical will find. Add them to the same list.</p>',
         links:[{kind:'Loops', url:LOOPS_URL, title:'Anatomy Loops', ext:true, cta:'Run the loops'}] },
-      { title:'Write the three day plan',
+      { title:'Write the three day plan', mins:EST.plan,
         hint:'Three days, three passes. Not three days of rereading.',
         body:'<p><strong>' + shortDate(TODAY) + ', tonight.</strong> The weakest third of your list. Cards and loops only, no notes open.</p>' +
              '<p><strong>' + shortDate(d1) + '.</strong> The middle third, then go back over tonight\'s weakest third blind.</p>' +
@@ -966,6 +1037,17 @@
     document.getElementById('hl-kicker').textContent = PLAN.kicker;
     document.getElementById('hl-title').textContent = PLAN.title;
     document.getElementById('hl-body').innerHTML = glossify(PLAN.body || '');
+
+    /* The total goes up front, not discovered at midnight. Class-day plans
+       are timetabled rather than homework, so they say so. */
+    var tot = totalMins(PLAN.steps);
+    var totEl = document.getElementById('hl-time');
+    if(tot){
+      totEl.hidden = false;
+      totEl.textContent = PLAN.timetabled
+        ? 'About ' + mins(tot) + ' of class time, lecture and lab together.'
+        : 'About ' + mins(tot) + ' in total. Estimates, not a target.';
+    } else { totEl.hidden = true; }
     document.getElementById('foot-line').textContent = PLAN.foot || '';
 
     var meta = SEC_META[secKey];
@@ -1016,7 +1098,10 @@
             '<span class="step-title">' + st.title + '</span>' +
             (st.hint ? '<span class="step-hint">' + st.hint + '</span>' : '') +
           '</span>' +
-          '<span class="step-state">' + state + '</span>' +
+          '<span class="step-meta">' +
+            (st.mins ? '<span class="step-mins">' + mins(st.mins) + '</span>' : '') +
+            '<span class="step-state">' + state + '</span>' +
+          '</span>' +
         '</button>' +
         '<div class="step-body" id="sb' + i + '"' + (open ? '' : ' hidden') + '>' +
           glossify(st.body || '') + links +

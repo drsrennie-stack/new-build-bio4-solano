@@ -153,6 +153,9 @@
   .d-card.prework .dc-k{color:#F2E2B8;} .d-card.prework .dc-t{color:#F4EFE8;} .d-card.prework .dc-when{color:#F4EFE8;opacity:1;}
   .d-card.prework .pw-link{color:#F4EFE8;border-color:rgba(244,239,232,.6);} .d-card.prework .pw-link:hover{background:#fff;color:#7A2A22;}
   .d-card.prework .pw-link.pending{color:#F4EFE8;opacity:1;border-color:rgba(244,239,232,.65);}
+  .d-card.reference{background:#fff;border-color:var(--navy-tint);}
+  .d-card.reference .dc-k{color:var(--navy);opacity:.75;}
+  .d-card.reference .ref-note{font-size:.8rem;color:var(--navy);opacity:.7;margin:6px 0 0;line-height:1.45;}
   .d-card.lecture .dc-k{color:var(--navy);}
   .d-card.lab .dc-k{color:var(--terra-dark);}
   .d-card .dc-k{font-family:var(--font-eyebrow);font-weight:700;font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;color:var(--terra-dark);display:flex;align-items:center;gap:8px;}
@@ -460,6 +463,44 @@ const SECTIONS = {
        inside a block is block-scoped, so the pre-work-night branch above
        could not see it and threw "many is not a function". */
     function many(list,icon,kind){ return (list||[]).map(function(o){return matLink(o,icon,kind);}).join(''); }
+
+    /* THINGS TO DO versus THINGS TO USE.
+       Notes and workbooks are not tasks. They are the reference the sheet
+       is worked against, and putting them in the numbered red list made
+       a three-step night look like a six-step one. They now sit in their
+       own white card with no numbers and nothing to tick off.
+
+       The red card is the work, in order: sheet, video, lab structures,
+       then Mastery OS on what you just did, so the brain dump in the
+       morning is retrieval rather than a surprise. */
+    function preworkBlocks(P, headline, whenLine){
+      var pmod = P.wk ? moduleForWeek(P.wk) : null;
+      var s1 = many(P.sheets,'&#9998;','Worksheet');
+      var s2 = many(P.videos,'&#9658;','Video');
+      var s3 = (pmod ? '<a href="module-'+pmod+'-structure-list.html" target="_top"><span class="mi" aria-hidden="true">&#9636;</span><span>Module '+pmod+' lab structure list</span><span class="mk">Structures</span></a>' : '')
+             + '<a href="atlas-coloring-book.html" target="_top"><span class="mi" aria-hidden="true">&#9673;</span><span>The atlas</span><span class="mk">Atlas</span></a>';
+      var s4 = '<a href="mastery-os-fall-2026.html" target="_top"><span class="mi" aria-hidden="true">&#9678;</span><span>Mastery OS, on tonight\'s topics</span><span class="mk">Recall</span></a>';
+
+      var red = '';
+      if(s1 || s2){
+        red += '<div class="d-card prework"><div class="dc-k">Do tonight<span class="dc-when">'+whenLine+'</span></div>';
+        if(headline) red += '<div class="dc-t">'+headline+'</div>';
+        var body = '';
+        if(s1) body += '<div class="stephead"><span class="step-n">1</span>Work the pre-work sheet</div>'+s1;
+        if(s2) body += '<div class="stephead"><span class="step-n">2</span>Then the video, and add to your notes</div>'+s2;
+        body += '<div class="stephead"><span class="step-n">3</span>Then pre-study the lab structures</div>'+s3;
+        body += '<div class="stephead"><span class="step-n">4</span>Then Mastery OS, so the brain dump is not a surprise</div>'+s4;
+        red += '<div class="mat">'+body+'</div></div>';
+      }
+
+      var refs = many(P.notes,'&#9776;','Notes') + many(P.workbooks,'&#9636;','Workbook');
+      var white = refs
+        ? '<div class="d-card reference"><div class="dc-k">Resources<span class="dc-when">open as needed</span></div>' +
+          '<p class="ref-note">Not tasks. These are what you work the sheet against, and what you come back to later.</p>' +
+          '<div class="mat">'+refs+'</div></div>'
+        : '';
+      return { red: red, white: white };
+    }
     /* A pre-work night is not a class day. It shows one thing: the work,
        and which class it is for. */
     if(s.prework){
@@ -474,18 +515,9 @@ const SECTIONS = {
            '<span class="walk-k">Not sure where to start?</span>' +
            '<span class="walk-t">Walk me through tonight, one step at a time</span>' +
            '<span class="walk-a" aria-hidden="true">&rarr;</span></a>';
-      h += '<div class="d-card prework"><div class="dc-k">Tonight<span class="dc-when">for ' + forLabel + '</span></div>';
-      h += '<div class="dc-t">' + (T.lec || '') + '</div>';
-      var m1 = many(P.sheets,'&#9998;','Worksheet') + many(P.notes,'&#9776;','Notes') + many(P.workbooks,'&#9636;','Workbook');
-      var m2 = many(P.videos,'&#9658;','Video');
-      var pmod = P.wk ? moduleForWeek(P.wk) : null;
-      var m3 = (pmod ? '<a href="module-'+pmod+'-structure-list.html" target="_top"><span class="mi" aria-hidden="true">&#9636;</span><span>Module '+pmod+' lab structure list</span><span class="mk">Structures</span></a>' : '') + many(P.lab,'&#9673;','Lab sprint');
-      var pw2 = '';
-      if(m1) pw2 += '<div class="stephead"><span class="step-n">1</span>Work the sheet with these notes and the reading open</div>' + m1;
-      if(m2) pw2 += '<div class="stephead"><span class="step-n">2</span>Then watch the video and add to your notes</div>' + m2;
-      if(m3) pw2 += '<div class="stephead"><span class="step-n">3</span>Then pre-study the lab structures</div>' + m3;
-      h += pw2 ? '<div class="mat">' + pw2 + '</div>' : '<a class="pw-link" href="today.html" target="_top">Open tonight\'s walkthrough &#8594;</a>';
-      h += '</div>';
+      var B = preworkBlocks(P, (T.lec || ''), 'for ' + forLabel);
+      h += B.red || '<a class="pw-link" href="today.html" target="_top">Open tonight\'s walkthrough &#8594;</a>';
+      h += B.white;
       h += '<p class="d-empty" style="text-align:left;">Bring the written sheet to class. ' + forLabel + ' opens with a brain dump on it.</p>';
       detail.innerHTML = h; return;
     }
@@ -493,33 +525,9 @@ const SECTIONS = {
     /* No pre-work card on an exam day. There is no pre-work for an exam,
        and the evening after one is a night off. */
     if(s.pw && !isExam){
-      html+='<div class="d-card prework"><div class="dc-k">Pre-work<span class="dc-when">work it on '+nbLabel+', the night before</span></div>';
-      html+='<div class="dc-t">'+s.pw.t+'</div>';
-      /* Order is load-bearing. Worksheet with the notes and the
-         reading open FIRST, then the video, then spaced retrieval
-         later in the week. Not video-first. */
-      /* Her notes packet sits WITH the worksheet, not before it and
-         not as a separate step. The sheet is worked against the notes
-         and the reading, both open. */
-      var step1=many(M.sheets,'&#9998;','Pre-work')+
-                many(M.notes,'&#9776;','Notes')+
-                many(M.workbooks,'&#9636;','Workbook');
-      var step2=many(M.videos,'&#9658;','Video');
-      var pw='';
-      if(step1) pw+='<div class="stephead"><span class="step-n">1</span>Work the sheet with these notes and the reading open</div>'+step1;
-      if(step2) pw+='<div class="stephead"><span class="step-n">2</span>Then watch the video</div>'+step2;
-      /* Step 3 is pre-study the lab structures, per her pre-work flow:
-         worksheet, then videos and add to notes, then lab structures.
-         Spaced retrieval is NOT a pre-work step. It belongs after the
-         class that taught the material, which is where today.html puts it. */
-      var mod3 = M.wk ? moduleForWeek(M.wk) : null;
-      var step3 = (mod3 ? '<a href="module-'+mod3+'-structure-list.html" target="_top"><span class="mi" aria-hidden="true">&#9636;</span><span>Module '+mod3+' lab structure list</span><span class="mk">Structures</span></a>' : '')
-                + many(M.lab,'&#9673;','Lab sprint');
-      if((step1||step2) && step3) pw+='<div class="stephead"><span class="step-n">3</span>Then pre-study the lab structures</div>'+step3;
-      if(pw){ html+='<div class="mat">'+pw+'</div>'; }
-      else if(s.pw.l){html+='<a class="pw-link" href="'+s.pw.l+'" target="_blank" rel="noopener">Open pre-work &#8599;</a>';}
-      else{html+='<a class="pw-link" href="today.html" target="_top">Open tonight\'s walkthrough &#8594;</a>';}
-      html+='</div>';
+      var B2 = preworkBlocks(M, s.pw.t, 'work it on ' + nbLabel + ', the night before');
+      html += B2.red || '<a class="pw-link" href="today.html" target="_top">Open the walkthrough &#8594;</a>';
+      html += B2.white;
     }
 
     if(isExam){
