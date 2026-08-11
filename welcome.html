@@ -197,7 +197,7 @@
   .tour-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(228px,1fr));gap:16px;}
   .tcard{position:relative;text-align:left;background:#fff;color:var(--navy);border:1px solid var(--border);border-radius:16px;padding:22px 20px;cursor:pointer;box-shadow:var(--shadow-rest);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;display:flex;flex-direction:column;gap:8px;font-family:inherit;}
   .tcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover);border-color:var(--maroon);}
-  .tcard:focus-visible{outline:3px solid #6B1616;outline-offset:2px;box-shadow:0 0 0 5px rgba(255,255,255,.92);}
+  .tcard:focus-visible{outline:3px solid var(--gold);outline-offset:3px;}
   .tcard .ico{width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:rgba(122,42,34,.09);color:var(--maroon);}
   .tcard h3{font-size:18px;font-weight:800;margin:2px 0 0;}
   .tcard p{font-size:14px;color:#3a4358;margin:0;flex:1;}
@@ -788,7 +788,8 @@
       <div class="hg-weeks" id="hgWeeks"></div>
     </section>
 
-    <nav class="chips chips--course" id="chipCourse" aria-label="Start here"></nav>
+    <p class="chips-eyebrow chips-eyebrow--course">Course material</p>
+    <nav class="chips chips--course" id="chipCourse" aria-label="Course material"></nav>
 
     <p class="chips-eyebrow">Course admin</p>
     <nav class="chips chips--admin" id="chipAdmin" aria-label="Course admin and support"></nav>
@@ -855,7 +856,7 @@
       {key:'mastery', name:'Mastery OS', icon:iconBrain, internal:true, frame:true, url:'mastery-os-fall-2026.html',
        desc:'Spaced recall, cram plans, and gap finders that adapt to your schedule.',
        say:'The Mastery OS is your study engine. Spaced recall, cram plans, and gap finders that already know your section schedule.'},
-      {key:'loops', name:'Loops', icon:iconLoop, internal:false, frame:false, url:'https://medmasterscollaborative.com/anatomy-loops',
+      {key:'loops', name:'Loops', icon:iconLoop, internal:false, frame:false, url:'https://drsrennie-stack.github.io/loops/',
        desc:'Quick lab-based practice questions for fast visual review.',
        say:'Loops are quick lab-based practice questions. Use them for fast visual review between study blocks.'},
       {key:'videos', name:"This week's videos", icon:iconPlay, internal:true, frame:true, url:'bio004-course-calendar.html',
@@ -1075,13 +1076,13 @@
 
     var STUDY = 'https://drsrennie-stack.github.io/new-build-bio4-solano/study-session-signup.html';
     // Course material (prominent pills)
-    /* ONE pill, not six. Mastery OS, Lab Sprints, Loops, the Atlas and
-       Study With Me all live in the Course tools dock, which is on every
-       page including this one. Repeating them here made the welcome page
-       a competing menu and put five equal choices in front of a student
-       who only needed to know where to start. */
     fillChips(document.getElementById('chipCourse'), [
-      {label:"What to do today", internal:true, url:'bio004-course-calendar.html'}
+      {label:"This week's pre-work", internal:true,  url:'bio004-course-calendar.html'},
+      {label:'Mastery OS',           internal:true,  url:'mastery-os-fall-2026.html'},
+      {label:'Lab Sprints',          internal:true,  url:s.hub},
+      {label:'Loops',                internal:false, url:'https://drsrennie-stack.github.io/loops/'},
+      {label:'Digital Atlas',        internal:false, url:'https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02'},
+      {label:'Study With Me',        internal:false, url:STUDY}
     ]);
     // Course admin and support (muted pills)
     fillChips(document.getElementById('chipAdmin'), [
@@ -1312,7 +1313,7 @@
     var STUDY = 'https://drsrennie-stack.github.io/new-build-bio4-solano/study-session-signup.html';
 
     var ATLAS = 'https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02';
-    var LOOPS = 'https://medmasterscollaborative.com/anatomy-loops';
+    var LOOPS = 'https://drsrennie-stack.github.io/loops/';
 
     // Quick-start chips shown under the ask box.
     var SUGGEST = [
@@ -1365,8 +1366,9 @@
         case 'struggle': return '<p>This is normal and fixable. Try this, in order:</p><ol class="steps">'+
           '<li>Open the '+link(MOS,'Mastery OS',true)+' Gap Finder to see exactly what is weak.</li>'+
           '<li>Run a 3-Day Cram before an exam.</li>'+
-          '<li>Join a '+link(STUDY,'Study With Me',false)+' session.</li></ol>'+
-          '<p>After Exam 1, the free Success Sprint opens as a guided catch-up (steps posted in Canvas). Reach out early, do not wait for the next exam.</p>';
+          '<li>Join a '+link(STUDY,'Study With Me',false)+' session.</li>'+
+          '<li>Come to office hours, 30 minutes before every class, or book free tutoring through the '+link('https://welcome.solano.edu/astc-homepage','ASTC',false)+'.</li></ol>'+
+          '<p>Reach out early. Do not wait for the next exam, and do not wait until you feel you have earned the right to ask.</p>';
         case 'grades': return '<p>Your grade:</p><ol class="steps">'+
           '<li>TBL team quizzes: 30% (9 across the term)</li>'+
           '<li>Lecture exams: 30% (5, one per module)</li>'+
