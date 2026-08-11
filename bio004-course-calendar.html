@@ -48,13 +48,12 @@
   .cover-tag{font-size:clamp(14px,1.5vw,17px);opacity:.9;margin:12px 0 0;max-width:56ch;}
 
   /* section switcher */
+  .cell.lm-study{background:#fff;}
+  .cell.lm-study .tag{background:var(--navy-tint);color:var(--navy);opacity:.85;}
+  .d-card.offer{background:#FFFDF7;border-color:rgba(220,180,92,.6);}
+  .d-card.offer .pw-link{margin-top:10px;background:none;font-family:var(--font-eyebrow);cursor:pointer;}
   .cell.lm-prework{background:#FFFDF7;border-color:rgba(220,180,92,.55);}
   .cell.lm-prework .tag{background:var(--gold);color:var(--navy);}
-  .walk-link{display:flex;align-items:center;gap:10px;flex-wrap:wrap;text-decoration:none;
-    background:var(--navy);color:#fff;border-radius:var(--radius);padding:14px 16px;margin:0 0 14px;
-    min-height:44px;transition:var(--t);}
-  .walk-link:hover{background:#101B33;}
-  .walk-link .walk-k{font-family:var(--font-eyebrow);font-weight:700;font-size:.66rem;letter-spacing:.14em;
     text-transform:uppercase;color:var(--gold-soft);width:100%;}
   .walk-link .walk-t{font-weight:700;font-size:.95rem;flex:1 1 auto;}
   .walk-link .walk-a{font-weight:800;color:var(--gold-soft);font-size:1.1rem;}
@@ -374,9 +373,8 @@ const SECTIONS = {
   let index={};
 
   /* ---------- WHAT IS DONE ----------
-     One store, keyed "YYYY-MM-DD|file.html". Shared with today.html so a
-     tick made on either surface shows on both. Nothing here is graded, it
-     is the student's own record. */
+     One store, keyed "YYYY-MM-DD|file.html". Nothing here is graded, it is
+     the student's own record of what they have finished. */
   var DONE_KEY = 'bio004-done';
   var DONE = (function(){ try{ return JSON.parse(localStorage.getItem(DONE_KEY)) || {}; }catch(e){ return {}; } })();
   function isDoneItem(k){ return !!DONE[k]; }
@@ -411,6 +409,29 @@ const SECTIONS = {
       if(index[nbKey]) return;
       index[nbKey] = { d: nbKey, lm: 'prework', tag: 'Pre-work', prework: true, forDay: dk };
     });
+
+    /* STUDY DAYS.
+       Every remaining day of the term becomes clickable too. A student who
+       opens the calendar on a Saturday used to find a dead square and no
+       answer. Now every day says what it is for, and a day with no class
+       offers the next class's pre-work rather than nothing. */
+    var TERM_START = (window.BIO004_SECTIONS && BIO004_SECTIONS.start) || '2026-08-17';
+    var TERM_END   = (window.BIO004_SECTIONS && BIO004_SECTIONS.end)   || '2026-12-11';
+    var cur = parse(TERM_START), stop = parse(TERM_END);
+    while (cur <= stop){
+      var key = cur.getFullYear()+'-'+pad(cur.getMonth()+1)+'-'+pad(cur.getDate());
+      if(!index[key]) index[key] = { d:key, lm:'study', tag:'Study', study:true };
+      cur = new Date(cur.getFullYear(), cur.getMonth(), cur.getDate()+1);
+    }
+  }
+
+  /* The next class day strictly after a date, skipping days off. */
+  function nextClassAfter(isoDate){
+    var keys = Object.keys(index).filter(function(k){
+      var e = index[k];
+      return k > isoDate && e && !e.prework && !e.study && e.lm !== 'holiday';
+    }).sort();
+    return keys.length ? index[keys[0]] : null;
   }
 
   const grid=document.getElementById('grid');
@@ -486,16 +507,9 @@ const SECTIONS = {
     const nb=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate()-1);
     const nbLabel=DOWL[nb.getDay()].slice(0,3)+' '+MON3[nb.getMonth()]+' '+nb.getDate();
     const isExam=s.lm==='exam';
-    html+='<h3 class="d-title">'+(isExam?s.lec:'Class Day')+'</h3>';
+    var isTBL = /TBL\s*\d/.test((s.lec||'') + ' ' + (s.tag||''));
+    html+='<h3 class="d-title">'+(isExam ? s.lec : (isTBL ? 'TBL day' : 'Class Day'))+'</h3>';
     html+='<p class="d-meet">Lecture '+sec.lecT+' &nbsp;·&nbsp; Lab '+sec.labT+'</p>';
-
-    /* One line, plain language, pointing at the one place that walks them
-       through it. The calendar shows any day. today.html tells you what to
-       actually do, in order, for the day you are standing in. */
-    html+='<a class="walk-link" href="today.html" target="_top">'+
-          '<span class="walk-k">Not sure where to start?</span>'+
-          '<span class="walk-t">Walk me through this, one step at a time</span>'+
-          '<span class="walk-a" aria-hidden="true">&rarr;</span></a>';
 
     // pre-work. Material comes from session-links.js, keyed by date.
     const M=(window.BIO004_SESSION_LINKS||{})[s.d]||{};
@@ -505,8 +519,7 @@ const SECTIONS = {
       return found;
     }
     /* Each item gets its own tick. The store is keyed date|url, and
-       today.html writes the same keys when a step is marked done, so a
-       student who works from either surface sees the same ticks. */
+       ticks persist across visits and across months. */
     /* The tile treatment from the week pages, brought here so the design
        lives in ONE place. Icon square, numbered step chip, title, the
        one-line why, and its own tick. */
@@ -566,6 +579,36 @@ const SECTIONS = {
         : '';
       return { red: red, white: white };
     }
+    /* A DAY WITH NO CLASS.
+       Says what the day is for, then offers the next class's pre-work, which
+       is the question a student actually has when they open a blank day. */
+    if(s.study){
+      var nx = nextClassAfter(s.d);
+      let h = '<p class="d-date">'+DOWL[dt.getDay()]+' &middot; '+MONTHS[dt.getMonth()]+' '+dt.getDate()+'</p>';
+      h += '<h3 class="d-title">No class today</h3>';
+      if(nx){
+        var nd = parse(nx.d);
+        var ndLabel = DOWL[nd.getDay()]+' '+MON3[nd.getMonth()]+' '+nd.getDate();
+        var gap = Math.round((nd - dt)/86400000);
+        h += '<p class="d-meet">Next class is <strong>'+ndLabel+'</strong>'+(gap>1?', '+gap+' days away':'')+'.</p>';
+      } else {
+        h += '<p class="d-meet">No class days left this term.</p>';
+      }
+      h += '<div class="d-card"><div class="dc-k">Today is for retrieval</div>' +
+           '<p class="ref-note">Getting it back out is what moves it. Rereading feels productive and does almost nothing, which is why it is not on this list.</p>' +
+           '<div class="mat">' +
+             matLink({u:'bio004-spaced-recall.html', t:'Recall Rx cards'},'&#9636;','Cards',s.d) +
+             matLink({u:'mastery-os-fall-2026.html', t:'Mastery OS'},'&#9678;','Hub',s.d) +
+             matLink({u:'bio004-draw.html', t:'Draw it from memory'},'&#9998;','Draw',s.d) +
+           '</div></div>';
+      if(nx){
+        h += '<div class="d-card offer"><div class="dc-k">Working ahead?</div>' +
+             '<p class="ref-note">The pre-work for '+ndLabel+' is ready whenever you want it. It is not due until the night before.</p>' +
+             '<button type="button" class="pw-link jump-day" data-d="'+nx.d+'">Show me that pre-work &#8594;</button></div>';
+      }
+      detail.innerHTML = h; return;
+    }
+
     /* A pre-work night is not a class day. It shows one thing: the work,
        and which class it is for. */
     if(s.prework){
@@ -576,12 +619,8 @@ const SECTIONS = {
       let h = '<p class="d-date">' + DOWL[dt.getDay()] + ' &middot; ' + MONTHS[dt.getMonth()] + ' ' + dt.getDate() + '</p>';
       h += '<h3 class="d-title">Pre-work night</h3>';
       h += '<p class="d-meet">No class today. This is the work for <strong>' + forLabel + '</strong>, and it has to be done tonight.</p>';
-      h += '<a class="walk-link" href="today.html" target="_top">' +
-           '<span class="walk-k">Not sure where to start?</span>' +
-           '<span class="walk-t">Walk me through tonight, one step at a time</span>' +
-           '<span class="walk-a" aria-hidden="true">&rarr;</span></a>';
       var B = preworkBlocks(P, (T.lec || ''), 'for ' + forLabel, s.forDay);
-      h += B.red || '<a class="pw-link" href="today.html" target="_top">Open tonight\'s walkthrough &#8594;</a>';
+      h += B.red || '<p class="ref-note">No pre-work material is wired to this day yet.</p>';
       h += B.white;
       h += '<p class="d-empty" style="text-align:left;">Bring the written sheet to class. ' + forLabel + ' opens with a brain dump on it.</p>';
       detail.innerHTML = h; return;
@@ -591,7 +630,7 @@ const SECTIONS = {
        and the evening after one is a night off. */
     if(s.pw && !isExam){
       var B2 = preworkBlocks(M, s.pw.t, 'work it on ' + nbLabel + ', the night before', s.d);
-      html += B2.red || '<a class="pw-link" href="today.html" target="_top">Open the walkthrough &#8594;</a>';
+      html += B2.red || '<p class="ref-note">No pre-work material is wired to this day yet.</p>';
       html += B2.white;
     }
 
@@ -687,6 +726,8 @@ const SECTIONS = {
   }));
 
   detail.addEventListener('click', function(e){
+    var j = e.target.closest('.jump-day');
+    if(j){ selected = j.dataset.d; renderMonth(); renderDetail(); return; }
     var b = e.target.closest('.tick');
     if(!b) return;
     var on = toggleDoneItem(b.dataset.k);

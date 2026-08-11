@@ -126,16 +126,15 @@
 
     /* First tile, on purpose. One place that answers "what do I do now",
        so the student never has to choose between the other twenty. */
-    t.push({ g: 'This week', name: 'Today', sub: 'What to do right now, step by step',
-             url: BASE + 'today.html' + q, icon: 'target', tone: 'gold', qr: 'today', key: 'today',
-             kw: 'today now what do i do walkthrough start here prework tonight' });
+    t.push({ g: 'This week', name: 'Today', sub: 'What to do today, and any other day',
+             url: BASE + 'bio004-course-calendar.html' + q, icon: 'target', tone: 'gold', qr: 'today', key: 'today',
+             kw: 'today now what do i do walkthrough start here prework tonight calendar schedule dates' });
 
     t.push({ g: 'This week', name: 'Week ' + cw.wk + ' hub', sub: cw.pre ? 'Term starts Aug 17' : 'Your week, day by day',
              url: BASE + 'week-' + cw.wk + '-hub.html' + q, icon: 'home', tone: 'navy', key: 'week', kw: 'week hub current' });
     t.push({ g: 'This week', name: 'Week ' + cw.wk + ' detail', sub: 'Pre-work, class days, graded',
              url: BASE + 'week-' + cw.wk + '.html' + q, icon: 'doc', tone: 'navy', kw: 'week detail prework' });
-    t.push({ g: 'This week', name: 'Course calendar', sub: 'Every class day and what to prep',
-             url: BASE + 'bio004-course-calendar.html' + q, icon: 'cal', tone: 'navy', qr: 'calendar', kw: 'calendar schedule dates' });
+
 
     t.push({ g: 'Study tools', name: 'Mastery OS', sub: 'Weak spots, plan, exam cram',
              url: BASE + 'mastery-os-fall-2026.html' + q, icon: 'brain', tone: 'gold', qr: 'mastery', kw: 'mastery os plan cram competency' });

@@ -45,7 +45,7 @@ a{color:var(--rust)}
 .serif{font-family:var(--serif);font-style:normal;color:var(--ink-soft)}
 .skip{position:absolute;left:-999px;top:0;background:var(--navy);color:#fff;padding:10px 16px;border-radius:var(--r);z-index:999;text-decoration:none;font-weight:700}
 .skip:focus{left:12px;top:12px}
-:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:var(--r-sm)}
+:focus-visible{outline:3px solid #6B1616;outline-offset:2px;box-shadow:0 0 0 5px rgba(255,255,255,.92);border-radius:var(--r-sm)}
 .on-dark :focus-visible{outline-color:var(--gold-light)}
 .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
@@ -1680,13 +1680,22 @@ function quizGame(){
     $('#qStart').onclick=function(){qi=0;ask();};
   }
   function ask(){
-    var q=qs[qi];var answered=false;var DUR=12;var start=Date.now();
-    gBody('<div class="g-qmeta"><span>Question '+(qi+1)+' of '+qs.length+'</span><span id="qtime">'+DUR+'s</span></div><div class="g-timer" id="qbar"><span style="width:100%"></span></div><p class="g-q">'+esc(q.q)+'</p><div class="g-tiles" id="tiles">'+q.opts.map(function(o,i){return '<button class="g-tile t'+i+'" data-i="'+i+'"><span class="sym">'+'◆■●▲'.charAt(i)+'</span><span>'+esc(o)+'</span></button>';}).join('')+'</div><div class="g-feedback" id="qfb" aria-live="polite"></div>');
-    var iv=gI(setInterval(function(){var left=Math.max(0,DUR-(Date.now()-start)/1000);var tt=$('#qtime');if(tt)tt.textContent=Math.ceil(left)+'s';var bar=$('#qbar');if(bar){bar.firstChild.style.width=(left/DUR*100)+'%';if(left<DUR*0.34)bar.classList.add('warn');}if(left<=0&&!answered)pick(-1,0);},250));
-    $$('#tiles .g-tile').forEach(function(b){b.onclick=function(){if(answered)return;pick(+b.getAttribute('data-i'),Math.max(0,DUR-(Date.now()-start)/1000));};});
+    /* WCAG 2.2.1. A 12 second limit that auto-scored the question wrong at
+       zero, with no way to pause, extend or turn it off, is a Level A
+       failure and it excludes anyone who reads or moves slowly. The clock
+       is now a preference, it defaults to relaxed, and reaching zero NEVER
+       answers for you. It stops, and you answer untimed. */
+    var q=qs[qi];var answered=false;
+    var TPREF=(function(){try{return localStorage.getItem('mos-quiz-timer')||'relaxed';}catch(e){return 'relaxed';}})();
+    var DUR=(TPREF==='off'?0:(TPREF==='standard'?12:30));var start=Date.now();var expired=false;
+    gBody('<div class="g-qmeta"><span>Question '+(qi+1)+' of '+qs.length+'</span><span id="qtime">'+(DUR?DUR+'s':'No clock')+'</span> <button type="button" id="qtoggle" class="btn" style="padding:2px 10px;font-size:.7rem;">'+(DUR?'Turn the clock off':'Turn the clock on')+'</button></div>'+(DUR?'<div class="g-timer" id="qbar"><span style="width:100%"></span></div>':'')+'<p class="g-q">'+esc(q.q)+'</p><div class="g-tiles" id="tiles">'+q.opts.map(function(o,i){return '<button class="g-tile t'+i+'" data-i="'+i+'"><span class="sym">'+'◆■●▲'.charAt(i)+'</span><span>'+esc(o)+'</span></button>';}).join('')+'</div><div class="g-feedback" id="qfb" aria-live="polite"></div>');
+    var iv=DUR?gI(setInterval(function(){var left=Math.max(0,DUR-(Date.now()-start)/1000);var tt=$('#qtime');if(tt)tt.textContent=Math.ceil(left)+'s';var bar=$('#qbar');if(bar){bar.firstChild.style.width=(left/DUR*100)+'%';if(left<DUR*0.34)bar.classList.add('warn');}if(left<=0&&!answered&&!expired){expired=true;clearInterval(iv);var t2=$('#qtime');if(t2)t2.textContent='Take your time';var fb0=$('#qfb');if(fb0){fb0.textContent='The clock ran out. Answer when you are ready, it still counts.';fb0.className='g-feedback';}}},250)):null;
+    var tg=$('#qtoggle');
+    if(tg)tg.onclick=function(){try{localStorage.setItem('mos-quiz-timer',DUR?'off':'relaxed');}catch(e){}if(iv)clearInterval(iv);ask();};
+    $$('#tiles .g-tile').forEach(function(b){b.onclick=function(){if(answered)return;pick(+b.getAttribute('data-i'),DUR?Math.max(0,DUR-(Date.now()-start)/1000):0);};});
     function pick(idx,timeLeft){
-      answered=true;clearInterval(iv);
-      var correct=idx===q.c;var gain=correct?Math.round(600+(timeLeft/DUR)*400):0;you().score+=gain;
+      answered=true;if(iv)clearInterval(iv);
+      var correct=idx===q.c;var gain=correct?Math.round(600+(DUR?(timeLeft/DUR)*400:200)):0;you().score+=gain;
       players.forEach(function(p){if(p.you)return;var pc=Math.random()<p.skill;p.score+=pc?Math.round(500+Math.random()*450):0;});
       $$('#tiles .g-tile').forEach(function(b){var bi=+b.getAttribute('data-i');b.disabled=true;if(bi===q.c)b.classList.add('correct');else if(bi===idx)b.classList.add('wrong');});
       var fb=$('#qfb');if(fb){fb.textContent=correct?('Correct  +'+gain):(idx<0?'Time up':'Not quite');fb.className='g-feedback '+(correct?'good':'bad');}
@@ -1745,6 +1754,7 @@ function tblGame(){
 /* ---- Escape Room ---- */
 function escapeGame(){
   gSet('Escape Room','Solve to escape');
+  /* Same rule: the clock informs, it does not fail you. */
   var P=ESCAPE.puzzles;var DUR=300;var start=Date.now();var solved=0;var tick=null;var over=false;
   function heads(){return '<div class="locks">'+P.map(function(p,i){return '<div class="lock '+(i<solved?'open':'')+'">'+(i<solved?'🔓':'🔒')+'</div>';}).join('')+'</div>';}
   function clock(){var left=Math.max(0,DUR-(Date.now()-start)/1000);var m=Math.floor(left/60),s=Math.floor(left%60);return m+':'+(s<10?'0':'')+s;}
