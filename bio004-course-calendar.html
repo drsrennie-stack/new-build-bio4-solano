@@ -176,6 +176,23 @@
   .mat .stephead:first-child{margin-top:0;}
   .mat a{display:flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;color:var(--navy);text-decoration:none;background:#fff;border:1px solid var(--navy-tint);border-radius:7px;padding:8px 11px;transition:var(--t);}
   .mat a:hover{border-color:var(--terra-dark);transform:translateY(-1px);box-shadow:var(--shadow-rest);}
+  .matrow{display:flex;align-items:stretch;gap:6px;}
+  .matrow > a{flex:1 1 auto;min-width:0;}
+  .tick{display:flex;align-items:center;gap:6px;flex:0 0 auto;min-height:44px;padding:0 11px;
+    background:#fff;border:1px solid var(--navy-tint);border-radius:7px;cursor:pointer;
+    font-family:var(--font-eyebrow);font-weight:700;font-size:.58rem;letter-spacing:.07em;
+    text-transform:uppercase;color:var(--terra-dark);transition:var(--t);}
+  .tick:hover{border-color:var(--terra-dark);}
+  .tick-box{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;
+    border:1.5px solid var(--terra-dark);border-radius:4px;font-size:.7rem;line-height:1;}
+  .tick[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff;}
+  .tick[aria-pressed="true"] .tick-box{border-color:#fff;background:#fff;color:var(--navy);}
+  /* Done is never colour alone: the label changes and the row dims. */
+  .matrow.is-done > a{opacity:.62;}
+  .d-card.prework .tick{background:rgba(0,0,0,.18);border-color:rgba(244,239,232,.5);color:#F4EFE8;}
+  .d-card.prework .tick-box{border-color:#F4EFE8;}
+  .d-card.prework .tick[aria-pressed="true"]{background:#fff;color:#7A2A22;border-color:#fff;}
+  .d-card.prework .tick[aria-pressed="true"] .tick-box{background:#7A2A22;color:#fff;border-color:#7A2A22;}
   .mat a .mi{flex:0 0 auto;font-size:.9rem;color:var(--terra-dark);}
   .mat a .mk{font-family:var(--font-eyebrow);font-weight:700;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-dark);margin-left:auto;white-space:nowrap;}
   .d-card.prework .mat a{background:rgba(0,0,0,.18);border-color:rgba(244,239,232,.5);color:#F4EFE8;}
@@ -336,6 +353,19 @@ const SECTIONS = {
   let selected=null;
   let index={};
 
+  /* ---------- WHAT IS DONE ----------
+     One store, keyed "YYYY-MM-DD|file.html". Shared with today.html so a
+     tick made on either surface shows on both. Nothing here is graded, it
+     is the student's own record. */
+  var DONE_KEY = 'bio004-done';
+  var DONE = (function(){ try{ return JSON.parse(localStorage.getItem(DONE_KEY)) || {}; }catch(e){ return {}; } })();
+  function isDoneItem(k){ return !!DONE[k]; }
+  function toggleDoneItem(k){
+    if(DONE[k]) delete DONE[k]; else DONE[k] = 1;
+    try{ localStorage.setItem(DONE_KEY, JSON.stringify(DONE)); }catch(e){}
+    return !!DONE[k];
+  }
+
   function buildIndex(){
     index={};
     SECTIONS[section].sess.forEach(s=>{index[s.d]=s;});
@@ -454,15 +484,25 @@ const SECTIONS = {
       MM.forEach(function(m){ if(m.weeks.indexOf(wk)!==-1) found=m.n; });
       return found;
     }
-    function matLink(o,icon,kind){
+    /* Each item gets its own tick. The store is keyed date|url, and
+       today.html writes the same keys when a step is marked done, so a
+       student who works from either surface sees the same ticks. */
+    function matLink(o,icon,kind,dayKey){
       if(!o) return '';
-      return '<a href="'+o.u+'" target="_top"><span class="mi" aria-hidden="true">'+icon+'</span>'+
-             '<span>'+o.t+'</span><span class="mk">'+kind+'</span></a>';
+      var k = (dayKey || s.d) + '|' + o.u;
+      var on = isDoneItem(k);
+      return '<div class="matrow'+(on?' is-done':'')+'">' +
+        '<a href="'+o.u+'" target="_top"><span class="mi" aria-hidden="true">'+icon+'</span>'+
+        '<span>'+o.t+'</span><span class="mk">'+kind+'</span></a>' +
+        '<button type="button" class="tick" data-k="'+k+'" aria-pressed="'+(on?'true':'false')+'">' +
+          '<span class="tick-box" aria-hidden="true">'+(on?'&#10003;':'')+'</span>' +
+          '<span class="tick-t">'+(on?'Done':'Mark done')+'</span>' +
+        '</button></div>';
     }
     /* Declared here, not inside the pre-work block. A function declaration
        inside a block is block-scoped, so the pre-work-night branch above
        could not see it and threw "many is not a function". */
-    function many(list,icon,kind){ return (list||[]).map(function(o){return matLink(o,icon,kind);}).join(''); }
+    function many(list,icon,kind,dayKey){ return (list||[]).map(function(o){return matLink(o,icon,kind,dayKey);}).join(''); }
 
     /* THINGS TO DO versus THINGS TO USE.
        Notes and workbooks are not tasks. They are the reference the sheet
@@ -473,13 +513,13 @@ const SECTIONS = {
        The red card is the work, in order: sheet, video, lab structures,
        then Mastery OS on what you just did, so the brain dump in the
        morning is retrieval rather than a surprise. */
-    function preworkBlocks(P, headline, whenLine){
+    function preworkBlocks(P, headline, whenLine, dayKey){
       var pmod = P.wk ? moduleForWeek(P.wk) : null;
-      var s1 = many(P.sheets,'&#9998;','Worksheet');
-      var s2 = many(P.videos,'&#9658;','Video');
-      var s3 = (pmod ? '<a href="module-'+pmod+'-structure-list.html" target="_top"><span class="mi" aria-hidden="true">&#9636;</span><span>Module '+pmod+' lab structure list</span><span class="mk">Structures</span></a>' : '')
-             + '<a href="atlas-coloring-book.html" target="_top"><span class="mi" aria-hidden="true">&#9673;</span><span>The atlas</span><span class="mk">Atlas</span></a>';
-      var s4 = '<a href="mastery-os-fall-2026.html" target="_top"><span class="mi" aria-hidden="true">&#9678;</span><span>Mastery OS, on tonight\'s topics</span><span class="mk">Recall</span></a>';
+      var s1 = many(P.sheets,'&#9998;','Worksheet',dayKey);
+      var s2 = many(P.videos,'&#9658;','Video',dayKey);
+      var s3 = (pmod ? matLink({u:'module-'+pmod+'-structure-list.html', t:'Module '+pmod+' lab structure list'},'&#9636;','Structures',dayKey) : '')
+             + matLink({u:'atlas-coloring-book.html', t:'The atlas'},'&#9673;','Atlas',dayKey);
+      var s4 = matLink({u:'mastery-os-fall-2026.html', t:"Mastery OS, on tonight's topics"},'&#9678;','Recall',dayKey);
 
       var red = '';
       if(s1 || s2){
@@ -493,7 +533,7 @@ const SECTIONS = {
         red += '<div class="mat">'+body+'</div></div>';
       }
 
-      var refs = many(P.notes,'&#9776;','Notes') + many(P.workbooks,'&#9636;','Workbook');
+      var refs = many(P.notes,'&#9776;','Notes',dayKey) + many(P.workbooks,'&#9636;','Workbook',dayKey);
       var white = refs
         ? '<div class="d-card reference"><div class="dc-k">Resources<span class="dc-when">open as needed</span></div>' +
           '<p class="ref-note">Not tasks. These are what you work the sheet against, and what you come back to later.</p>' +
@@ -515,7 +555,7 @@ const SECTIONS = {
            '<span class="walk-k">Not sure where to start?</span>' +
            '<span class="walk-t">Walk me through tonight, one step at a time</span>' +
            '<span class="walk-a" aria-hidden="true">&rarr;</span></a>';
-      var B = preworkBlocks(P, (T.lec || ''), 'for ' + forLabel);
+      var B = preworkBlocks(P, (T.lec || ''), 'for ' + forLabel, s.forDay);
       h += B.red || '<a class="pw-link" href="today.html" target="_top">Open tonight\'s walkthrough &#8594;</a>';
       h += B.white;
       h += '<p class="d-empty" style="text-align:left;">Bring the written sheet to class. ' + forLabel + ' opens with a brain dump on it.</p>';
@@ -525,7 +565,7 @@ const SECTIONS = {
     /* No pre-work card on an exam day. There is no pre-work for an exam,
        and the evening after one is a night off. */
     if(s.pw && !isExam){
-      var B2 = preworkBlocks(M, s.pw.t, 'work it on ' + nbLabel + ', the night before');
+      var B2 = preworkBlocks(M, s.pw.t, 'work it on ' + nbLabel + ', the night before', s.d);
       html += B2.red || '<a class="pw-link" href="today.html" target="_top">Open the walkthrough &#8594;</a>';
       html += B2.white;
     }
@@ -620,6 +660,16 @@ const SECTIONS = {
     renderMonth();renderDetail();
     switchEl.classList.add('locked');
   }));
+
+  detail.addEventListener('click', function(e){
+    var b = e.target.closest('.tick');
+    if(!b) return;
+    var on = toggleDoneItem(b.dataset.k);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.querySelector('.tick-box').innerHTML = on ? '&#10003;' : '';
+    b.querySelector('.tick-t').textContent = on ? 'Done' : 'Mark done';
+    b.closest('.matrow').classList.toggle('is-done', on);
+  });
 
   document.getElementById('swChange').addEventListener('click',()=>switchEl.classList.remove('locked'));
 

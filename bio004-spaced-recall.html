@@ -15,10 +15,16 @@
 <link rel="icon" type="image/png" sizes="192x192" href="recall-rx-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   /* ===== MCAS palette, cream removed (no sage, no cream, never green for complete) ===== */
   :root{
+    /* ONE font token. Every rule below uses it. Several rules used to say
+       font-family:"Plus Jakarta Sans" with no fallback at all, so the
+       moment the webfont was slow or blocked the page rendered in the
+       browser's default serif. That is what was happening. */
+    --font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,system-ui,sans-serif;
+
     --navy:#0B1530; --navy-deep:#060A18; --navy-tint:#ECEEF2;  /* navy-tint is a cool neutral, not cream */
     --gold:#C9A14A; --gold-deep:#B08B3A;
     --terra:#8B3A2E; --terra-dark:#8B3A2E;                      /* MCAS rust */
@@ -33,7 +39,7 @@
   html,body{margin:0;padding:0;}
   body{
     background:var(--off-white); color:var(--navy);
-    font-family:"Plus Jakarta Sans",system-ui,sans-serif;
+    font-family:var(--font);
     line-height:1.55; -webkit-font-smoothing:antialiased;
   }
   .wrap{max-width:920px; margin:0 auto; padding:0 18px 80px;}
@@ -44,8 +50,14 @@
 
   /* Visible focus everywhere */
   a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible{
-    outline:3px solid var(--gold); outline-offset:2px; border-radius:6px;
+    /* Gold on white is 2.32:1, under the 3:1 non-text minimum, and this
+       selector puts it on EVERY focusable element on the page. Terra dark
+       is 11.99:1 on white. Gold stays where it belongs, on navy. */
+    outline:3px solid var(--terra-dark); outline-offset:2px; border-radius:6px;
   }
+  /* nav() moves focus to each view's h1 for screen readers. That is correct,
+     but it should not paint a ring around the headline every time. */
+  [tabindex="-1"]:focus{outline:none;}
 
   /* Brand header */
   header.brand{border-bottom:1px solid var(--gray-line); background:var(--off-white);}
@@ -57,9 +69,9 @@
   .site-logo{display:inline-flex; align-items:center; gap:14px; text-decoration:none;}
   .site-logo svg{height:52px; width:auto; display:block; flex-shrink:0;}
   .logo-text{display:flex; flex-direction:column; gap:3px;}
-  .logo-title{font-family:"Plus Jakarta Sans",sans-serif; font-size:24.6px; font-weight:800; letter-spacing:-.02em; color:var(--navy); line-height:1;}
+  .logo-title{font-family:var(--font); font-size:24.6px; font-weight:800; letter-spacing:-.02em; color:var(--navy); line-height:1;}
   .logo-title .logo-accent{color:var(--terra-dark);}
-  .logo-sub{font-family:"Plus Jakarta Sans",sans-serif; font-size:11.8px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--navy); opacity:.72;}
+  .logo-sub{font-family:var(--font); font-size:11.8px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--navy); opacity:.72;}
   nav.top{display:flex; gap:6px; flex-wrap:wrap;}
   nav.top button{
     font:inherit; font-weight:600; font-size:15.7px; color:var(--navy);
@@ -70,11 +82,11 @@
   nav.top button[aria-current="page"]{border-color:var(--navy); background:var(--navy-tint);}
 
   /* Headings */
-  h1{font-family:"Plus Jakarta Sans"; font-weight:800; color:var(--navy); font-size:33.6px; margin:22px 0 4px; letter-spacing:-.01em;}
-  h2{font-family:"Plus Jakarta Sans"; font-weight:600; color:var(--terra-dark); font-size:23.5px; margin:26px 0 10px;}
-  h3{font-family:"Plus Jakarta Sans"; font-weight:600; color:var(--terra-dark); font-size:19px; margin:0 0 8px;}
-  .eyebrow{font-family:"Plus Jakarta Sans",sans-serif; font-size:13.4px; letter-spacing:.08em; text-transform:uppercase; color:var(--terra-dark); font-weight:700;}
-  .lead{font-family:"Plus Jakarta Sans",sans-serif; font-style:normal; color:var(--gray-soft); font-size:17.9px; margin:6px 0 0;}
+  h1{font-family:var(--font); font-weight:800; color:var(--navy); font-size:33.6px; margin:22px 0 4px; letter-spacing:-.01em;}
+  h2{font-family:var(--font); font-weight:600; color:var(--terra-dark); font-size:23.5px; margin:26px 0 10px;}
+  h3{font-family:var(--font); font-weight:600; color:var(--terra-dark); font-size:19px; margin:0 0 8px;}
+  .eyebrow{font-family:var(--font); font-size:13.4px; letter-spacing:.08em; text-transform:uppercase; color:var(--terra-dark); font-weight:700;}
+  .lead{font-family:var(--font); font-style:normal; color:var(--gray-soft); font-size:17.9px; margin:6px 0 0;}
   .muted{color:var(--gray-soft);}
 
   /* Cards */
@@ -110,16 +122,16 @@
     font:inherit; transition:transform var(--t), box-shadow var(--t), border-color var(--t);
   }
   .choice:hover{transform:translateY(-2px); box-shadow:var(--hover-shadow); border-color:var(--navy);}
-  .choice .big-label{font-family:"Plus Jakarta Sans"; font-weight:800; font-size:24.6px; color:var(--navy);}
+  .choice .big-label{font-family:var(--font); font-weight:800; font-size:24.6px; color:var(--navy);}
   .choice .desc{color:var(--gray-soft); font-size:15.7px;}
-  .choice .tag{font-family:"Plus Jakarta Sans"; font-size:13.4px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--terra-dark);}
+  .choice .tag{font-family:var(--font); font-size:13.4px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--terra-dark);}
 
   /* Stat strip */
   .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:16px 0;}
   @media(max-width:640px){ .stats{grid-template-columns:repeat(2,1fr);} }
   .stat{background:var(--white); border:1px solid var(--gray-line); border-radius:12px; padding:14px 16px; box-shadow:var(--rest-shadow);}
-  .stat .n{font-family:"Plus Jakarta Sans"; font-weight:800; font-size:31.4px; color:var(--navy); line-height:1;}
-  .stat .l{font-family:"Plus Jakarta Sans"; font-size:12.3px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--gray-soft); margin-top:6px;}
+  .stat .n{font-family:var(--font); font-weight:800; font-size:31.4px; color:var(--navy); line-height:1;}
+  .stat .l{font-family:var(--font); font-size:12.3px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--gray-soft); margin-top:6px;}
 
   /* Topic / deck list */
   .deck-list{display:flex; flex-direction:column; gap:10px;}
@@ -134,17 +146,17 @@
   .deck .d-title{font-weight:700; font-size:17.9px;}
   .deck .d-sub{font-size:14.6px; color:var(--gray-soft);}
   .deck .d-right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
-  .module-label{font-family:"Plus Jakarta Sans"; font-size:13.4px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--terra-dark); margin:18px 0 6px;}
+  .module-label{font-family:var(--font); font-size:13.4px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--terra-dark); margin:18px 0 6px;}
 
   /* Progress dot states (palette compliant: gold=in progress, navy=complete, gray=untouched) */
-  .pdot{display:inline-block; width:auto; padding:3px 9px; border-radius:999px; font-size:13.4px; font-weight:700; font-family:"Plus Jakarta Sans"; border:1px solid var(--gray-line); color:var(--gray-soft);}
+  .pdot{display:inline-block; width:auto; padding:3px 9px; border-radius:999px; font-size:13.4px; font-weight:700; font-family:var(--font); border:1px solid var(--gray-line); color:var(--gray-soft);}
   .pdot.started{border-color:var(--gold); color:var(--gold-deep); background:transparent;}
   .pdot.done{border-color:var(--navy); color:var(--navy); background:var(--navy-tint);}
 
   /* Study card */
   .q-card{background:var(--white); border:1px solid var(--gray-line); border-radius:14px; padding:26px; box-shadow:var(--rest-shadow);}
   .q-meta{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px;}
-  .q-text{font-family:"Plus Jakarta Sans"; font-weight:700; font-size:22.4px; color:var(--navy); margin:4px 0 18px;}
+  .q-text{font-family:var(--font); font-weight:700; font-size:22.4px; color:var(--navy); margin:4px 0 18px;}
   .options{display:flex; flex-direction:column; gap:10px;}
   .opt{
     text-align:left; font:inherit; font-size:16.8px; color:var(--navy);
@@ -156,7 +168,7 @@
   .opt.wrong{border-color:var(--terra-dark); background:#F3E7E5;}
   .opt[disabled]{cursor:default;}
   .explain{margin-top:16px; padding:14px 16px; background:var(--off-white); border-left:3px solid var(--gold); border-radius:8px; font-size:16.8px;}
-  .explain h4{margin:0 0 4px; font-family:"Plus Jakarta Sans"; color:var(--navy); font-size:15.7px;}
+  .explain h4{margin:0 0 4px; font-family:var(--font); color:var(--navy); font-size:15.7px;}
   .mode-toggle{margin-top:14px; border:1px solid var(--gray-line); border-radius:12px; padding:12px 14px;}
   .mode-toggle legend{font-weight:700; color:var(--navy); padding:0 6px; font-size:15.7px;}
   .mode-opts{display:flex; flex-direction:column; gap:8px;}
@@ -167,6 +179,28 @@
   @media(min-width:640px){ .mode-opts{flex-direction:row;} .mode-opt{flex:1;} }
   .mode-pill{display:inline-block; font-size:13.4px; font-weight:700; color:var(--navy); background:var(--navy-tint); border:1px solid var(--navy); border-radius:999px; padding:3px 10px; margin-bottom:8px;}
   .recall-input{width:100%; box-sizing:border-box; min-height:74px; font:inherit; font-size:17.9px; line-height:1.5; color:var(--navy); border:1px solid var(--gray-line); border-radius:10px; padding:10px 12px; margin:4px 0 10px; resize:vertical;}
+  .entry-card{max-width:520px;text-align:center;}
+  .entry-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0 6px;}
+  @media (max-width:520px){ .entry-grid{grid-template-columns:1fr;} }
+  .entry-btn{
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    padding:26px 18px;min-height:44px;cursor:pointer;
+    background:#fff;color:var(--navy);border:1.5px solid var(--navy-tint);
+    border-radius:14px;font:inherit;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+  }
+  .entry-btn:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(0,0,0,.12);border-color:var(--terra-dark);}
+  .entry-btn.primary{background:var(--navy);border-color:var(--navy);color:#fff;}
+  .entry-btn.primary:hover{background:#101B33;}
+  .entry-t{font-family:var(--font);font-weight:800;font-size:1.15rem;letter-spacing:-.01em;}
+  .entry-d{font-size:.85rem;opacity:.8;}
+  .entry-skip{margin-top:14px;}
+  .today-box{margin:22px 0 30px}
+  .btn.big{font-size:1.05rem;padding:16px 30px;min-height:52px}
+  .today-note{margin:12px 0 0;font-size:.88rem;color:var(--navy);opacity:.72;max-width:52ch}
+  .home-more{margin:18px 0 0;font-size:.88rem;color:var(--navy);opacity:.85;line-height:2.2}
+  .linky{background:none;border:0;padding:6px 2px;min-height:44px;font:inherit;font-size:.88rem;
+    font-weight:700;color:var(--terra-dark);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+  .linky:hover{color:var(--navy)}
   .recall-input:focus{outline:none; border-color:var(--navy); box-shadow:0 0 0 3px var(--navy-tint);}
   .answer-row{display:flex; gap:8px; align-items:flex-start; flex-wrap:wrap;}
   .mic-btn{flex:0 0 auto; font:inherit; font-weight:700; font-size:15.7px; cursor:pointer; border-radius:10px; padding:10px 14px; border:1px solid var(--navy); background:var(--white); color:var(--navy); display:inline-flex; align-items:center; gap:7px;}
@@ -194,19 +228,19 @@
     background:var(--white); border:1px solid var(--gray-line); border-radius:9px; padding:11px 13px;
   }
   textarea{min-height:80px; resize:vertical;}
-  .field-help{font-size:14.6px; color:var(--gray-soft); margin:4px 0 0; font-family:"Plus Jakarta Sans",sans-serif; font-style:normal;}
+  .field-help{font-size:14.6px; color:var(--gray-soft); margin:4px 0 0; font-family:var(--font); font-style:normal;}
   .radio-line{display:flex; align-items:center; gap:9px; margin:7px 0; font-weight:600;}
   .radio-line input{width:auto; margin:0;}
 
   /* Weekly grade */
-  .grade-num{font-family:"Plus Jakarta Sans"; font-weight:800; font-size:53.8px; line-height:1; color:var(--navy);}
+  .grade-num{font-family:var(--font); font-weight:800; font-size:53.8px; line-height:1; color:var(--navy);}
   .grade-bar{position:relative; height:22px; background:var(--navy-tint); border:1px solid var(--gray-line); border-radius:8px; overflow:hidden; margin:12px 0 6px;}
   .grade-fill{position:absolute; left:0; top:0; bottom:0; background:var(--gold); border-radius:7px 0 0 7px;}
   .week-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:7px; margin:14px 0;}
   @media(max-width:560px){ .week-grid{grid-template-columns:repeat(4,1fr);} }
   .wday{border:1px solid var(--gray-line); border-radius:10px; padding:9px 5px; text-align:center; background:var(--white); position:relative;}
-  .wday .wn{font-family:"Plus Jakarta Sans"; font-size:11.2px; font-weight:700; text-transform:uppercase; color:var(--gray-soft);}
-  .wday .wc{font-family:"Plus Jakarta Sans"; font-weight:800; font-size:20.2px; color:var(--navy);}
+  .wday .wn{font-family:var(--font); font-size:11.2px; font-weight:700; text-transform:uppercase; color:var(--gray-soft);}
+  .wday .wc{font-family:var(--font); font-weight:800; font-size:20.2px; color:var(--navy);}
   .wday .ws{font-size:11.2px; color:var(--gray-soft);}
   .wday.partial{border-color:var(--gold); background:var(--white);}
   .wday.full{border-color:var(--navy); background:var(--navy-tint);}
@@ -218,7 +252,7 @@
   /* Setup wizard */
   .wiz-progress{height:8px; background:var(--navy-tint); border-radius:5px; overflow:hidden; margin:10px 0 18px;}
   .wiz-progress > div{height:100%; background:var(--gold); width:0%; transition:width var(--t);}
-  .wiz-h{font-family:"Plus Jakarta Sans"; font-weight:800; font-size:26.9px; color:var(--navy); margin:0 0 6px;}
+  .wiz-h{font-family:var(--font); font-weight:800; font-size:26.9px; color:var(--navy); margin:0 0 6px;}
   .wiz-lead{font-size:17.9px; color:var(--gray-soft); margin:0 0 8px;}
   .big-choice{display:flex; flex-direction:column; gap:6px; text-align:left; width:100%; font:inherit;
     background:var(--white); border:2px solid var(--gray-line); border-radius:12px; padding:18px 20px; cursor:pointer;
@@ -233,7 +267,7 @@
   .wt-overlay[hidden]{display:none;}
   .wt-card{background:var(--white); border:1px solid var(--gray-line); border-radius:16px; max-width:560px; width:100%; padding:24px; box-shadow:var(--hover-shadow); position:relative; max-height:92vh; overflow:auto;}
   .wt-close{position:absolute; top:8px; right:12px; background:none; border:0; font-size:29.1px; line-height:1; color:var(--gray-soft); cursor:pointer;}
-  .wt-step{font-family:"Plus Jakarta Sans"; font-size:13.4px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--terra-dark);}
+  .wt-step{font-family:var(--font); font-size:13.4px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--terra-dark);}
   .wt-prog{height:6px; background:var(--navy-tint); border-radius:4px; overflow:hidden; margin:8px 0 14px;}
   .wt-prog>div{height:100%; background:var(--gold); width:0; transition:width var(--t);}
   .wt-illus{background:var(--off-white); border:1px solid var(--gray-line); border-radius:12px; padding:18px; margin-bottom:14px; min-height:172px; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;}
@@ -272,7 +306,7 @@
   }
 
   .pill-row{display:flex; gap:10px; flex-wrap:wrap; margin:10px 0;}
-  .empty{color:var(--gray-soft); font-style:normal; font-family:"Plus Jakarta Sans",sans-serif;}
+  .empty{color:var(--gray-soft); font-style:normal; font-family:var(--font);}
 
   footer.site{border-top:1px solid var(--gray-line); margin-top:40px;}
   .footer-inner{max-width:920px; margin:0 auto; padding:18px; display:flex; gap:16px; flex-wrap:wrap; font-size:14.6px;}
@@ -362,29 +396,24 @@
   <!-- ===================== HOME ===================== -->
   <section class="view active" id="view-home" aria-labelledby="home-h">
     <p class="eyebrow">Welcome back</p>
-    <h1 id="home-h">What do you want to do?</h1>
-    <p class="lead">Study your anatomy cards or build your own. Everything you do is tracked for your weekly engagement bonus. Nothing is locked, study any time.</p>
+    <!-- A question invited a decision. This states the one thing to do,
+         and the number is the daily dose, not the whole deck. -->
+    <h1 id="home-h">Today's review</h1>
+    <p class="lead" id="home-lead">Loading your session.</p>
 
-    <div class="choice-grid">
-      <button type="button" class="choice" data-nav="study">
-        <span class="tag">Recommended daily</span>
-        <span class="big-label">Study cards &rarr;</span>
-        <span class="desc">Review what is due today, or pick any topic. Watch a lecture video if your professor added one. Always open, never locked.</span>
-      </button>
-      <button type="button" class="choice" data-nav="make">
-        <span class="tag">Your own deck</span>
-        <span class="big-label">Make cards &rarr;</span>
-        <span class="desc">Write your own study cards. They live on this device and mix into your daily review alongside the course cards.</span>
-      </button>
+    <div class="today-box">
+      <button type="button" class="btn big" id="btn-start-dose" data-nav="dose">Start today's review</button>
+      <p class="today-note" id="home-rest"></p>
     </div>
 
-    <h2>This week at a glance</h2>
+    <h2>This week</h2>
     <div class="stats" id="home-stats" aria-live="polite"></div>
-    <div class="pill-row no-print">
-      <button type="button" class="btn" data-nav="study">Start studying</button>
-      <button type="button" class="btn ghost" data-nav="weakness">See my weakness dashboard</button>
-      <button type="button" class="btn ghost open-qr">Get it on your phone</button>
-    </div>
+    <p class="home-more no-print">
+      <button type="button" class="linky" data-nav="study">Pick a topic instead</button> &middot;
+      <button type="button" class="linky" data-nav="make">Make your own cards</button> &middot;
+      <button type="button" class="linky" data-nav="weakness">Weak spots</button> &middot;
+      <button type="button" class="linky open-qr">Get it on your phone</button>
+    </p>
   </section>
 
   <!-- ===================== STUDY PICKER ===================== -->
@@ -598,6 +627,29 @@
     <p class="qr-url">drsrennie-stack.github.io/new-build-bio4-solano/bio004-spaced-recall.html</p>
     <p class="qr-steps"><strong>iPhone or iPad:</strong> tap the <strong>Share</strong> button (a box with an up arrow). In Chrome it is up in the address bar; in Safari it is at the bottom. Then tap <strong>Add to Home Screen</strong>, then Add.<br><strong>Android phone:</strong> open in Chrome, tap the three-dot menu, then <strong>Install app</strong>.<br><strong>Computer:</strong> in Chrome, click the <strong>Install</strong> icon in the address bar (a small screen with a down arrow).</p>
     <div class="qr-warn"><strong>Heads up about your saved work.</strong> Recall Rx saves your progress, your streak, and the cards you make only on the device and browser you use. They do not move between your phone and your laptop. Pick one place to study, come back to it each day, and save your weekly report so your work is recorded.</div>
+  </div>
+</div>
+
+<!-- THE FRONT DOOR.
+     Landing on a home page and then choosing meant two decisions before
+     any studying happened. This asks the one question that matters and
+     drops the student straight into the answer. -->
+<div class="wt-overlay" id="entry" hidden role="dialog" aria-modal="true" aria-labelledby="entry-title">
+  <div class="wt-card entry-card">
+    <p class="eyebrow" style="text-align:center;">Recall Rx</p>
+    <h2 class="wiz-h" style="text-align:center;" id="entry-title">What are you here for?</h2>
+    <p class="wiz-lead" style="text-align:center;" id="entry-sub"></p>
+    <div class="entry-grid">
+      <button type="button" class="entry-btn primary" id="entry-study">
+        <span class="entry-t">Study cards</span>
+        <span class="entry-d" id="entry-study-d">Today's review</span>
+      </button>
+      <button type="button" class="entry-btn" id="entry-make">
+        <span class="entry-t">Make cards</span>
+        <span class="entry-d">Write your own</span>
+      </button>
+    </div>
+    <button type="button" class="linky entry-skip" id="entry-skip">Just show me the home page</button>
   </div>
 </div>
 
@@ -838,6 +890,9 @@
   /* ---------- router ---------- */
   var CURRENT = "home";
   function nav(view){
+    /* "dose" is an action, not a view: it starts today's session directly
+       rather than dropping the student on a picker first. */
+    if (view === "dose"){ startDue(); return; }
     CURRENT = view;
     if (typeof stopDictation === "function") stopDictation();
     document.querySelectorAll(".view").forEach(function(v){ v.classList.remove("active"); });
@@ -871,12 +926,32 @@
   }
   function renderHome(){
     var st = studyTotals();
+    var pool = duePool();
+    var dose = Math.min(pool.length, dailyDose());
+    var rest = pool.length - dose;
+
+    document.getElementById("home-lead").textContent = dose
+      ? dose + " card" + (dose===1?"":"s") + " today, drawn from the topics you have on. Short and often beats long and rare."
+      : (activeTopicIds().length
+          ? "Nothing is due right now. You are up to date, and more will come back as the spacing brings it round."
+          : "No topics are on yet. Turn on what you are studying and the daily review builds itself.");
+
+    var startBtn = document.getElementById("btn-start-dose");
+    startBtn.textContent = dose ? ("Start today's review, " + dose + " card" + (dose===1?"":"s")) : "Pick a topic to study";
+    startBtn.setAttribute("data-nav", dose ? "dose" : "study");
+
+    /* The rest of the deck is stated as reassurance, never as a debt. */
+    document.getElementById("home-rest").textContent = rest > 0
+      ? rest + " more are waiting in the deck. They come back a few at a time, you are not behind."
+      : "";
+
+    /* "0 cards mastered" next to "465 due" was the first thing a new
+       student saw. Counts that are still zero stay out until they mean
+       something. */
     var stats = document.getElementById("home-stats");
-    stats.innerHTML =
-      stat(dueCount(), "Cards due now") +
-      stat(st.reviewed, "Cards studied") +
-      stat(st.mastered, "Cards mastered") +
-      stat(activeTopicIds().length, "Topics on");
+    var out = stat(st.reviewed, "Cards studied") + stat(activeTopicIds().length, "Topics on");
+    if (st.mastered > 0) out = stat(st.mastered, "Cards mastered") + out;
+    stats.innerHTML = out;
   }
   function stat(n,l){ return '<div class="stat"><div class="n">'+escapeHtml(String(n))+'</div><div class="l">'+escapeHtml(l)+'</div></div>'; }
 
@@ -975,13 +1050,32 @@
     QPOS = 0;
     openCardView(t);
   }
-  function startDue(){
+  /* THE DAILY DOSE.
+     A card that has never been reviewed counts as due, so a student who
+     activates eight topics is told 465 cards are due. That is not a
+     backlog, it is the whole deck with no cap on it, and it reads as a
+     punishment for turning topics on.
+
+     A spaced system hands out a fixed daily portion. This is that portion.
+     Everything else stays in the deck and comes back tomorrow. */
+  var DAILY_DOSE = 20;
+  function dailyDose(){
+    var n = (STATE.setup && +STATE.setup.dailyDose) || DAILY_DOSE;
+    return Math.max(5, Math.min(60, n));
+  }
+  function duePool(){
     var pool = activeCards().filter(isDue);
-    if (!pool.length){ toast("Nothing due in your active topics. Activate more or study ahead."); nav("study"); return; }
-    // soonest exam first, then keep order
     pool.sort(function(a,b){ return examUrgency(a) - examUrgency(b); });
+    return pool;
+  }
+  function todaysDose(){ return duePool().slice(0, dailyDose()); }
+
+  function startDue(){
+    var pool = duePool();
+    if (!pool.length){ toast("Nothing due in your active topics. Activate more or study ahead."); nav("study"); return; }
+    var dose = pool.slice(0, dailyDose());
     QLABEL = "Today's review";
-    QUEUE = pool; QPOS = 0;
+    QUEUE = dose; QPOS = 0;
     openCardView(null);
   }
   function startMine(){
@@ -1879,6 +1973,51 @@
   function closeQR(){ document.getElementById("qrmodal").hidden = true; }
   function setupQR(){
     document.querySelectorAll(".open-qr").forEach(function(b){ b.addEventListener("click", openQR); });
+
+    /* ---------- THE FRONT DOOR ----------
+       Two ways in, asked once, then straight into the answer. Study is the
+       primary because it is the thing that has to happen daily. Escape and
+       the skip link both fall back to the home page, so nobody is trapped. */
+    (function(){
+      var box   = document.getElementById("entry");
+      var study = document.getElementById("entry-study");
+      var make  = document.getElementById("entry-make");
+      var skip  = document.getElementById("entry-skip");
+      var last  = null;
+
+      window.openEntry = function(){
+        var pool = duePool();
+        var dose = Math.min(pool.length, dailyDose());
+        document.getElementById("entry-sub").textContent = dose
+          ? "Pick one. You can always switch at the top."
+          : "Nothing is due right now, so either is a good use of the time.";
+        document.getElementById("entry-study-d").textContent = dose
+          ? ("Today's review, " + dose + " card" + (dose===1?"":"s"))
+          : (activeTopicIds().length ? "Study ahead on any topic" : "Turn on your topics first");
+        last = document.activeElement;
+        box.hidden = false;
+        study.focus();
+      };
+      function closeEntry(go){
+        box.hidden = true;
+        if (go) go(); else if (last && last.focus) last.focus();
+      }
+      study.addEventListener("click", function(){
+        var dose = Math.min(duePool().length, dailyDose());
+        closeEntry(function(){ nav(dose ? "dose" : "study"); });
+      });
+      make.addEventListener("click", function(){ closeEntry(function(){ nav("make"); }); });
+      skip.addEventListener("click",  function(){ closeEntry(null); });
+      box.addEventListener("keydown", function(e){
+        if (e.key === "Escape"){ closeEntry(null); return; }
+        if (e.key === "Tab"){
+          var f = [study, make, skip];
+          var i = f.indexOf(document.activeElement);
+          e.preventDefault();
+          f[(i + (e.shiftKey ? f.length - 1 : 1)) % f.length].focus();
+        }
+      });
+    })();
     document.getElementById("qr-close").addEventListener("click", closeQR);
     document.getElementById("qrmodal").addEventListener("click", function(e){ if (e.target === this) closeQR(); });
     document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !document.getElementById("qrmodal").hidden) closeQR(); });
@@ -1902,7 +2041,8 @@
     setupQR();
     renderMake();
     // First run goes to setup so students choose their course and turn on topics.
-    nav((STATE.setup && STATE.setup.done) ? "home" : "setup");
+    if (STATE.setup && STATE.setup.done){ nav("home"); openEntry(); }
+    else { nav("setup"); }
     applyDeepLink();
   }
   // A lecture page can link here with #topic=<id> to open the activation page with that unit shown.

@@ -554,6 +554,25 @@
     var k = doneKey(targetIso, idx);
     if(val) doneMap[k] = 1; else delete doneMap[k];
     ls(STORE_STEPS, JSON.stringify(doneMap));
+    syncItemTicks(targetIso, idx, val);
+  }
+
+  /* The calendar ticks individual materials in localStorage['bio004-done'],
+     keyed "YYYY-MM-DD|file.html". Marking a step done here ticks everything
+     that step linked to, so the two surfaces never disagree about what a
+     student has finished. */
+  function syncItemTicks(targetIso, idx, val){
+    if(!PLAN || !PLAN.steps || !PLAN.steps[idx]) return;
+    var links = PLAN.steps[idx].links || [];
+    if(!links.length) return;
+    var store = {};
+    try{ store = JSON.parse(ls('bio004-done') || '{}') || {}; }catch(e){ store = {}; }
+    links.forEach(function(l){
+      if(!l.url || l.ext) return;
+      var key = targetIso + '|' + l.url;
+      if(val) store[key] = 1; else delete store[key];
+    });
+    ls('bio004-done', JSON.stringify(store));
   }
 
   var GLOSSARY = {
