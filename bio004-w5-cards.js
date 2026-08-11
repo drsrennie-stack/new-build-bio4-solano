@@ -1,4 +1,4 @@
-/* bio004-w5-cards.js  —  BIO 004 competency-tagged recall + practice pool (Week 5: Digestive System and Lower Limb)
+/* bio004-w5-cards.js, BIO 004 competency-tagged recall + practice pool (Week 5: Digestive System and Lower Limb)
    card-maker-brief.md. Additive: appends to window.BIO004_COURSE_CONTENT and
    window.BIO004_PRACTICE_POOL; never edits existing multiple-choice cards. */
 (function (w) {

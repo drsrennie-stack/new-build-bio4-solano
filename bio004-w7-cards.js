@@ -1,4 +1,4 @@
-/* bio004-w7-cards.js  —  BIO 004 competency-tagged recall + practice pool (Week 7: Brain, Brainstem, Meninges and CSF)
+/* bio004-w7-cards.js, BIO 004 competency-tagged recall + practice pool (Week 7: Brain, Brainstem, Meninges and CSF)
    card-maker-brief.md. Additive: appends to window.BIO004_COURSE_CONTENT and
    window.BIO004_PRACTICE_POOL; never edits existing multiple-choice cards. */
 (function (w) {

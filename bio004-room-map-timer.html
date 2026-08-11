@@ -21,7 +21,7 @@
   .skip-link:focus{left:0;}
   .wrap{max-width:1280px; margin:0 auto; padding:22px 22px 60px;}
   a{color:inherit;}
-  :focus-visible{outline:3px solid #6B1616;outline-offset:2px;box-shadow:0 0 0 5px rgba(255,255,255,.92); box-shadow:0 0 0 6px var(--navy-deep);}
+  :focus-visible{outline:3px solid var(--gold); outline-offset:2px; box-shadow:0 0 0 6px var(--navy-deep);}
 
   .brandbar{display:flex; align-items:center; gap:14px; text-decoration:none; padding-bottom:16px; margin-bottom:18px; border-bottom:.5px solid rgba(11,21,48,.10);}
   .brandbar svg{height:44px; width:auto; display:block;}
@@ -355,13 +355,13 @@
   function phaseTotal(){ return phase==="rotate"?ROTATE:STATION; }
   function render2(){
     clock.textContent = done ? "Done" : fmt(remaining);
-    clock.classList.toggle("warn", !done && phase==="station" && remaining<=10);
-    clock.classList.toggle("rotate", !done && phase==="rotate");
+    clock.classList.toggle("warn"!done && phase==="station" && remaining<=10);
+    clock.classList.toggle("rotate"!done && phase==="rotate");
     var tot=phaseTotal()||1;
     bar.style.width=(done?0:(remaining/tot*100))+"%";
     bar.style.background = phase==="rotate" ? "var(--gold)" : "var(--terra)";
     if(done){ phaseEl.textContent="Complete"; cycleEl.textContent="Practical complete"; }
-    else if(phase==="rotate"){ phaseEl.textContent="Rotate now — move to the next station"; cycleEl.textContent="Rotating · "+ROTATE+"s"; }
+    else if(phase==="rotate"){ phaseEl.textContent="Rotate now, move to the next station"; cycleEl.textContent="Rotating · "+ROTATE+"s"; }
     else { phaseEl.textContent="At your station"; cycleEl.textContent="Station interval "+cycle+(MAXCYCLES?(" of "+MAXCYCLES):"")+" · "+fmt(STATION)+" each"; }
   }
   function finish(){ running=false; done=true; if(raf) cancelAnimationFrame(raf); startBtn.textContent="Start"; startBtn.setAttribute("aria-pressed","false"); render2(); }

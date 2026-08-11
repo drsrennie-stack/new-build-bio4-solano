@@ -1,4 +1,4 @@
-/* bio004-w6-cards.js  —  BIO 004 competency-tagged recall + practice pool (Week 6: Urinary, Reproductive, Endocrine)
+/* bio004-w6-cards.js, BIO 004 competency-tagged recall + practice pool (Week 6: Urinary, Reproductive, Endocrine)
    card-maker-brief.md. Additive: appends to window.BIO004_COURSE_CONTENT and
    window.BIO004_PRACTICE_POOL; never edits existing multiple-choice cards. */
 (function (w) {

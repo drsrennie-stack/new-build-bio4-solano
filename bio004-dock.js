@@ -124,40 +124,35 @@
     var q = sec ? ('?sec=' + sec) : '';
     var t = [];
 
-    /* First tile, on purpose. One place that answers "what do I do now",
-       so the student never has to choose between the other twenty. */
-    t.push({ g: 'This week', name: 'Today', sub: 'What to do today, and any other day',
-             url: BASE + 'bio004-course-calendar.html' + q, icon: 'target', tone: 'gold', qr: 'today', key: 'today',
-             kw: 'today now what do i do walkthrough start here prework tonight calendar schedule dates' });
+    t.push({ g: 'This week', name: 'Week ' + cw.wk, sub: cw.pre ? 'Term starts Aug 17' : 'Pre-work, your class days, and lab',
+             url: BASE + 'week-' + cw.wk + '.html' + q, icon: 'home', tone: 'navy', key: 'week', kw: 'week hub current detail prework' });
+    t.push({ g: 'This week', name: 'Study With Me', sub: 'Join a session this week or start one yourself',
+             url: BASE + 'study-session-signup.html' + q, icon: 'people', tone: 'terra', qr: 'study', kw: 'study with me sessions group hours host' });
+    t.push({ g: 'This week', name: 'Course calendar', sub: 'Every class day and what to prepare for it',
+             url: BASE + 'bio004-course-calendar.html' + q, icon: 'cal', tone: 'navy', qr: 'calendar', kw: 'calendar schedule dates' });
 
-    t.push({ g: 'This week', name: 'Week ' + cw.wk + ' hub', sub: cw.pre ? 'Term starts Aug 17' : 'Your week, day by day',
-             url: BASE + 'week-' + cw.wk + '-hub.html' + q, icon: 'home', tone: 'navy', key: 'week', kw: 'week hub current' });
-    t.push({ g: 'This week', name: 'Week ' + cw.wk + ' detail', sub: 'Pre-work, class days, graded',
-             url: BASE + 'week-' + cw.wk + '.html' + q, icon: 'doc', tone: 'navy', kw: 'week detail prework' });
-
-
-    t.push({ g: 'Study tools', name: 'Mastery OS', sub: 'Weak spots, plan, exam cram',
+    t.push({ g: 'Study tools', name: 'Mastery OS', sub: 'Find your weak spots and plan around them',
              url: BASE + 'mastery-os-fall-2026.html' + q, icon: 'brain', tone: 'gold', qr: 'mastery', kw: 'mastery os plan cram competency' });
-    t.push({ g: 'Study tools', name: 'Recall Rx', sub: 'Spaced recall cards',
+    t.push({ g: 'Study tools', name: 'Recall Rx', sub: 'Question cards that come back until they stick',
              url: BASE + 'bio004-spaced-recall.html', icon: 'cards', tone: 'green', qr: 'recall', kw: 'recall cards flashcards spaced' });
-    t.push({ g: 'Study tools', name: 'Loops', sub: '39 image loops, fast visual practice',
+    t.push({ g: 'Study tools', name: 'Loops', sub: 'Thirty-nine image loops for fast visual practice',
              url: 'https://drsrennie-stack.github.io/loops/', icon: 'loop', tone: 'terra', qr: 'loops', ext: true, kw: 'loops images practice lab' });
-    t.push({ g: 'Study tools', name: 'Weak spot board', sub: 'What your answers say is weakest',
+    t.push({ g: 'Study tools', name: 'Weak spot board', sub: 'The topics your own answers say are weakest',
              url: BASE + 'bio004-spaced-recall-weakness-dashboard.html', icon: 'target', tone: 'terra', qr: 'weak', kw: 'weakness weak spot dashboard' });
-    t.push({ g: 'Study tools', name: 'Draw it from memory', sub: 'Topic, confidence, then the checklist',
+    t.push({ g: 'Study tools', name: 'Draw it from memory', sub: 'Draw the structure first, then check it against the list',
              url: BASE + 'bio004-draw.html', icon: 'pencil', tone: 'gold', qr: 'canvas', kw: 'draw drawing canvas memory checklist' });
-    t.push({ g: 'Study tools', name: 'What I did today', sub: 'And what you did not get to',
+    t.push({ g: 'Study tools', name: 'What I got done today', sub: 'And what you meant to do and did not',
              url: BASE + 'bio004-day-review.html', icon: 'target', tone: 'terra', qr: 'today', kw: 'today review day summary time missed' });
 
-    t.push({ g: 'Reference', name: 'Digital Atlas', sub: 'Explore structures interactively',
+    t.push({ g: 'Reference', name: 'Digital Atlas', sub: 'Turn the structures around and look at them',
              url: 'https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02', icon: 'globe', tone: 'gold', qr: 'atlas', ext: true, kw: 'atlas 3d explore' });
-    t.push({ g: 'Reference', name: 'Exam modules', sub: 'What each exam covers',
+    t.push({ g: 'Reference', name: 'Exam modules', sub: 'Exactly what each exam covers',
              url: BASE + 'bio004-exam-modules.html' + q, icon: 'flask', tone: 'navy', qr: 'exams', kw: 'exam modules covers scope' });
+    t.push({ g: 'Reference', name: 'Case deep dives', sub: 'One clinical case per topic, with the PDF',
+             url: BASE + 'course-index.html' + q, icon: 'flask', tone: 'terra', kw: 'deep dive cases clinical index topics' });
     t.push({ g: 'Reference', name: 'Syllabus', sub: S ? S.label : 'Pick your section first',
              url: BASE + (S ? S.syllabus : 'fall-2026-syllabus.html'), icon: 'doc', tone: 'navy', kw: 'syllabus grading policy' });
 
-    t.push({ g: 'Course', name: 'Study With Me', sub: 'Host or join a study session',
-             url: BASE + 'study-session-signup.html', icon: 'people', tone: 'terra', qr: 'study', kw: 'study with me sessions group' });
     /* welcome.html IS the course home. Offering a "Course home" tile
        while a student is standing on it is a dead click, so it is left
        out on that page. */
@@ -165,8 +160,10 @@
       t.push({ g: 'Course', name: 'Course home', sub: S ? S.label : 'Pick your section',
                url: BASE + 'welcome.html' + q, icon: 'home', tone: 'gold', qr: 'home', kw: 'home welcome start' });
     }
-    t.push({ g: 'Course', name: 'Start here', sub: 'Week one checklist',
+    t.push({ g: 'Course', name: 'Start here', sub: 'Everything to set up in week one',
              url: BASE + 'start-here.html' + q, icon: 'play', tone: 'navy', kw: 'start here checklist orientation' });
+    t.push({ g: 'Course', name: 'How this course works', sub: 'Why the week is built the way it is',
+             url: BASE + 'how-this-course-works.html' + q, icon: 'doc', tone: 'terra', kw: 'how course works pedagogy tbl why' });
     return t;
   }
 

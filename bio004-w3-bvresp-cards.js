@@ -1,4 +1,4 @@
-/* bio004-w3-bvresp-cards.js  —  PROOF batch (Week 3 blood vessels + respiratory)
+/* bio004-w3-bvresp-cards.js, PROOF batch (Week 3 blood vessels + respiratory)
    Text recall cards, tagged to competency IDs (card-maker-brief.md).
    Drop-in: appends a module to window.BIO004_COURSE_CONTENT if present, same
    pattern as heart-cards.js. Does NOT touch existing multiple-choice cards.

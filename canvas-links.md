@@ -28,23 +28,23 @@ HTML version:
 **The 17 week modules**
 
 ```
-Week 1   https://drsrennie-stack.github.io/new-build-bio4-solano/week-1-hub.html?sec=mw
-Week 2   https://drsrennie-stack.github.io/new-build-bio4-solano/week-2-hub.html?sec=mw
-Week 3   https://drsrennie-stack.github.io/new-build-bio4-solano/week-3-hub.html?sec=mw
-Week 4   https://drsrennie-stack.github.io/new-build-bio4-solano/week-4-hub.html?sec=mw
-Week 5   https://drsrennie-stack.github.io/new-build-bio4-solano/week-5-hub.html?sec=mw
-Week 6   https://drsrennie-stack.github.io/new-build-bio4-solano/week-6-hub.html?sec=mw
-Week 7   https://drsrennie-stack.github.io/new-build-bio4-solano/week-7-hub.html?sec=mw
-Week 8   https://drsrennie-stack.github.io/new-build-bio4-solano/week-8-hub.html?sec=mw
-Week 9   https://drsrennie-stack.github.io/new-build-bio4-solano/week-9-hub.html?sec=mw
-Week 10  https://drsrennie-stack.github.io/new-build-bio4-solano/week-10-hub.html?sec=mw
-Week 11  https://drsrennie-stack.github.io/new-build-bio4-solano/week-11-hub.html?sec=mw
-Week 12  https://drsrennie-stack.github.io/new-build-bio4-solano/week-12-hub.html?sec=mw
-Week 13  https://drsrennie-stack.github.io/new-build-bio4-solano/week-13-hub.html?sec=mw
-Week 14  https://drsrennie-stack.github.io/new-build-bio4-solano/week-14-hub.html?sec=mw
-Week 15  https://drsrennie-stack.github.io/new-build-bio4-solano/week-15-hub.html?sec=mw
-Week 16  https://drsrennie-stack.github.io/new-build-bio4-solano/week-16-hub.html?sec=mw
-Week 17  https://drsrennie-stack.github.io/new-build-bio4-solano/week-17-hub.html?sec=mw
+Week 1   https://drsrennie-stack.github.io/new-build-bio4-solano/week-1.html?sec=mw
+Week 2   https://drsrennie-stack.github.io/new-build-bio4-solano/week-2.html?sec=mw
+Week 3   https://drsrennie-stack.github.io/new-build-bio4-solano/week-3.html?sec=mw
+Week 4   https://drsrennie-stack.github.io/new-build-bio4-solano/week-4.html?sec=mw
+Week 5   https://drsrennie-stack.github.io/new-build-bio4-solano/week-5.html?sec=mw
+Week 6   https://drsrennie-stack.github.io/new-build-bio4-solano/week-6.html?sec=mw
+Week 7   https://drsrennie-stack.github.io/new-build-bio4-solano/week-7.html?sec=mw
+Week 8   https://drsrennie-stack.github.io/new-build-bio4-solano/week-8.html?sec=mw
+Week 9   https://drsrennie-stack.github.io/new-build-bio4-solano/week-9.html?sec=mw
+Week 10  https://drsrennie-stack.github.io/new-build-bio4-solano/week-10.html?sec=mw
+Week 11  https://drsrennie-stack.github.io/new-build-bio4-solano/week-11.html?sec=mw
+Week 12  https://drsrennie-stack.github.io/new-build-bio4-solano/week-12.html?sec=mw
+Week 13  https://drsrennie-stack.github.io/new-build-bio4-solano/week-13.html?sec=mw
+Week 14  https://drsrennie-stack.github.io/new-build-bio4-solano/week-14.html?sec=mw
+Week 15  https://drsrennie-stack.github.io/new-build-bio4-solano/week-15.html?sec=mw
+Week 16  https://drsrennie-stack.github.io/new-build-bio4-solano/week-16.html?sec=mw
+Week 17  https://drsrennie-stack.github.io/new-build-bio4-solano/week-17.html?sec=mw
 ```
 
 ---
@@ -65,23 +65,23 @@ HTML version:
 **The 17 week modules**
 
 ```
-Week 1   https://drsrennie-stack.github.io/new-build-bio4-solano/week-1-hub.html?sec=tr-am
-Week 2   https://drsrennie-stack.github.io/new-build-bio4-solano/week-2-hub.html?sec=tr-am
-Week 3   https://drsrennie-stack.github.io/new-build-bio4-solano/week-3-hub.html?sec=tr-am
-Week 4   https://drsrennie-stack.github.io/new-build-bio4-solano/week-4-hub.html?sec=tr-am
-Week 5   https://drsrennie-stack.github.io/new-build-bio4-solano/week-5-hub.html?sec=tr-am
-Week 6   https://drsrennie-stack.github.io/new-build-bio4-solano/week-6-hub.html?sec=tr-am
-Week 7   https://drsrennie-stack.github.io/new-build-bio4-solano/week-7-hub.html?sec=tr-am
-Week 8   https://drsrennie-stack.github.io/new-build-bio4-solano/week-8-hub.html?sec=tr-am
-Week 9   https://drsrennie-stack.github.io/new-build-bio4-solano/week-9-hub.html?sec=tr-am
-Week 10  https://drsrennie-stack.github.io/new-build-bio4-solano/week-10-hub.html?sec=tr-am
-Week 11  https://drsrennie-stack.github.io/new-build-bio4-solano/week-11-hub.html?sec=tr-am
-Week 12  https://drsrennie-stack.github.io/new-build-bio4-solano/week-12-hub.html?sec=tr-am
-Week 13  https://drsrennie-stack.github.io/new-build-bio4-solano/week-13-hub.html?sec=tr-am
-Week 14  https://drsrennie-stack.github.io/new-build-bio4-solano/week-14-hub.html?sec=tr-am
-Week 15  https://drsrennie-stack.github.io/new-build-bio4-solano/week-15-hub.html?sec=tr-am
-Week 16  https://drsrennie-stack.github.io/new-build-bio4-solano/week-16-hub.html?sec=tr-am
-Week 17  https://drsrennie-stack.github.io/new-build-bio4-solano/week-17-hub.html?sec=tr-am
+Week 1   https://drsrennie-stack.github.io/new-build-bio4-solano/week-1.html?sec=tr-am
+Week 2   https://drsrennie-stack.github.io/new-build-bio4-solano/week-2.html?sec=tr-am
+Week 3   https://drsrennie-stack.github.io/new-build-bio4-solano/week-3.html?sec=tr-am
+Week 4   https://drsrennie-stack.github.io/new-build-bio4-solano/week-4.html?sec=tr-am
+Week 5   https://drsrennie-stack.github.io/new-build-bio4-solano/week-5.html?sec=tr-am
+Week 6   https://drsrennie-stack.github.io/new-build-bio4-solano/week-6.html?sec=tr-am
+Week 7   https://drsrennie-stack.github.io/new-build-bio4-solano/week-7.html?sec=tr-am
+Week 8   https://drsrennie-stack.github.io/new-build-bio4-solano/week-8.html?sec=tr-am
+Week 9   https://drsrennie-stack.github.io/new-build-bio4-solano/week-9.html?sec=tr-am
+Week 10  https://drsrennie-stack.github.io/new-build-bio4-solano/week-10.html?sec=tr-am
+Week 11  https://drsrennie-stack.github.io/new-build-bio4-solano/week-11.html?sec=tr-am
+Week 12  https://drsrennie-stack.github.io/new-build-bio4-solano/week-12.html?sec=tr-am
+Week 13  https://drsrennie-stack.github.io/new-build-bio4-solano/week-13.html?sec=tr-am
+Week 14  https://drsrennie-stack.github.io/new-build-bio4-solano/week-14.html?sec=tr-am
+Week 15  https://drsrennie-stack.github.io/new-build-bio4-solano/week-15.html?sec=tr-am
+Week 16  https://drsrennie-stack.github.io/new-build-bio4-solano/week-16.html?sec=tr-am
+Week 17  https://drsrennie-stack.github.io/new-build-bio4-solano/week-17.html?sec=tr-am
 ```
 
 ---
@@ -102,23 +102,23 @@ HTML version:
 **The 17 week modules**
 
 ```
-Week 1   https://drsrennie-stack.github.io/new-build-bio4-solano/week-1-hub.html?sec=tr-eve
-Week 2   https://drsrennie-stack.github.io/new-build-bio4-solano/week-2-hub.html?sec=tr-eve
-Week 3   https://drsrennie-stack.github.io/new-build-bio4-solano/week-3-hub.html?sec=tr-eve
-Week 4   https://drsrennie-stack.github.io/new-build-bio4-solano/week-4-hub.html?sec=tr-eve
-Week 5   https://drsrennie-stack.github.io/new-build-bio4-solano/week-5-hub.html?sec=tr-eve
-Week 6   https://drsrennie-stack.github.io/new-build-bio4-solano/week-6-hub.html?sec=tr-eve
-Week 7   https://drsrennie-stack.github.io/new-build-bio4-solano/week-7-hub.html?sec=tr-eve
-Week 8   https://drsrennie-stack.github.io/new-build-bio4-solano/week-8-hub.html?sec=tr-eve
-Week 9   https://drsrennie-stack.github.io/new-build-bio4-solano/week-9-hub.html?sec=tr-eve
-Week 10  https://drsrennie-stack.github.io/new-build-bio4-solano/week-10-hub.html?sec=tr-eve
-Week 11  https://drsrennie-stack.github.io/new-build-bio4-solano/week-11-hub.html?sec=tr-eve
-Week 12  https://drsrennie-stack.github.io/new-build-bio4-solano/week-12-hub.html?sec=tr-eve
-Week 13  https://drsrennie-stack.github.io/new-build-bio4-solano/week-13-hub.html?sec=tr-eve
-Week 14  https://drsrennie-stack.github.io/new-build-bio4-solano/week-14-hub.html?sec=tr-eve
-Week 15  https://drsrennie-stack.github.io/new-build-bio4-solano/week-15-hub.html?sec=tr-eve
-Week 16  https://drsrennie-stack.github.io/new-build-bio4-solano/week-16-hub.html?sec=tr-eve
-Week 17  https://drsrennie-stack.github.io/new-build-bio4-solano/week-17-hub.html?sec=tr-eve
+Week 1   https://drsrennie-stack.github.io/new-build-bio4-solano/week-1.html?sec=tr-eve
+Week 2   https://drsrennie-stack.github.io/new-build-bio4-solano/week-2.html?sec=tr-eve
+Week 3   https://drsrennie-stack.github.io/new-build-bio4-solano/week-3.html?sec=tr-eve
+Week 4   https://drsrennie-stack.github.io/new-build-bio4-solano/week-4.html?sec=tr-eve
+Week 5   https://drsrennie-stack.github.io/new-build-bio4-solano/week-5.html?sec=tr-eve
+Week 6   https://drsrennie-stack.github.io/new-build-bio4-solano/week-6.html?sec=tr-eve
+Week 7   https://drsrennie-stack.github.io/new-build-bio4-solano/week-7.html?sec=tr-eve
+Week 8   https://drsrennie-stack.github.io/new-build-bio4-solano/week-8.html?sec=tr-eve
+Week 9   https://drsrennie-stack.github.io/new-build-bio4-solano/week-9.html?sec=tr-eve
+Week 10  https://drsrennie-stack.github.io/new-build-bio4-solano/week-10.html?sec=tr-eve
+Week 11  https://drsrennie-stack.github.io/new-build-bio4-solano/week-11.html?sec=tr-eve
+Week 12  https://drsrennie-stack.github.io/new-build-bio4-solano/week-12.html?sec=tr-eve
+Week 13  https://drsrennie-stack.github.io/new-build-bio4-solano/week-13.html?sec=tr-eve
+Week 14  https://drsrennie-stack.github.io/new-build-bio4-solano/week-14.html?sec=tr-eve
+Week 15  https://drsrennie-stack.github.io/new-build-bio4-solano/week-15.html?sec=tr-eve
+Week 16  https://drsrennie-stack.github.io/new-build-bio4-solano/week-16.html?sec=tr-eve
+Week 17  https://drsrennie-stack.github.io/new-build-bio4-solano/week-17.html?sec=tr-eve
 ```
 
 ---
