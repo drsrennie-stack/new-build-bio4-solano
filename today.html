@@ -280,6 +280,21 @@
   }
   .gloss-note[hidden]{display:none}
 
+  /* ---------- an optional offer, never a demand ---------- */
+  .optional{
+    background:var(--white);border:1px dashed var(--line-strong);
+    border-radius:var(--radius);padding:20px 22px;margin-top:4px;
+  }
+  .optional[hidden]{display:none}
+  .opt-t{margin:0 0 14px;font-size:15px;color:var(--ink-mid)}
+  .opt-btn{
+    background:var(--white);color:var(--terra-dark);
+    border:1.5px solid var(--line-strong);border-radius:10px;
+    padding:12px 20px;min-height:44px;font:inherit;font-weight:700;
+    font-size:14.5px;cursor:pointer;transition:border-color 180ms ease;
+  }
+  .opt-btn:hover{border-color:var(--terra-dark)}
+
   /* ---------- footer strip ---------- */
   .foot{
     margin-top:34px;padding-top:20px;border-top:1px solid var(--line);
@@ -367,6 +382,8 @@
   <p class="sr-only" role="status" aria-live="polite" id="announce"></p>
 
   <ol class="steps" id="steps"></ol>
+
+  <div class="optional" id="optional" hidden></div>
 
   <div class="foot">
     <p id="foot-line"></p>
@@ -488,6 +505,15 @@
     var found = null;
     M.forEach(function(m){ if(m.weeks.indexOf(wk) !== -1) found = m.n; });
     return found;
+  }
+
+  function nextExamJustSat(){
+    var sec = SECTIONS && SECTIONS.sections ? SECTIONS.sections[SEC_META[secKey].id] : null;
+    if(!sec || !sec.exams) return null;
+    for(var i=0;i<sec.exams.length;i++){
+      if((sec.exams[i].practical || sec.exams[i].lecture) === TODAY_ISO) return sec.exams[i];
+    }
+    return null;
   }
 
   function nextExam(){
@@ -641,7 +667,35 @@
         foot:'Nothing new goes in after tonight. The next three days are repair and retrieval only.' };
     }
 
-    if(!next){
+    /* THE EVENING OF AN EXAM DAY. Nothing is due. Note that "the next
+       class" is NOT tomorrow: sections meet Mon/Wed or Tue/Thu, so an
+       exam on a Wednesday is followed by five days, and an exam on a
+       Tuesday by two. It is computed, never assumed. */
+    if(isClassToday && today.kind === 'exam'){
+      var sat = nextExamJustSat();
+      if(!next){
+        return { heroH1:'That was the <span class="a">last one.</span>',
+          heroSub:(sat ? 'Exam ' + sat.n + ' is behind you, and so is the term.' : 'The term is behind you.'),
+          kicker:'Tonight', title:'Nothing is due, tonight or after',
+          body:'Close the laptop. The notes and the atlas stay up if you are heading into the next course.',
+          target:TODAY_ISO, steps:[], foot:'Thank you for the term.' };
+      }
+      var gapAfter = daysBetween(TODAY, parseIso(next.date));
+      return {
+        heroH1:'You earned the <span class="a">night off.</span>',
+        heroSub:(sat ? 'Exam ' + sat.n + ' is behind you. ' : '') +
+                'Next class is ' + longDate(parseIso(next.date)) +
+                (gapAfter > 1 ? ', ' + gapAfter + ' days away.' : '.'),
+        kicker:'Tonight',
+        title:'Nothing is due tonight',
+        body:'Close the laptop. You have spent a whole day proving what you know, and another hour tonight will not add to it. Rest is part of the method, not a break from it.',
+        target:TODAY_ISO, steps:[],
+        optional:{ text:'If you would rather get ahead, the pre-work for ' + shortDate(parseIso(next.date)) + ' is ready whenever you want it. It is not due until the night before.',
+                   cta:'Start it early', date:next.date },
+        foot:'Rebuttals happen at the next class meeting, so keep your exam questions.' };
+    }
+
+    if(!next && !(isClassToday && today.kind === 'exam')){
       return { heroH1:'No class today.', heroSub:'And no class days left on the schedule.',
         kicker:'Nothing due', title:'Nothing scheduled', body:'',
         target:TODAY_ISO, steps:[], foot:'' };
@@ -674,6 +728,18 @@
       body:'This is the gap the course is designed around. Rereading feels productive and does almost nothing. Getting it back out is what moves it.',
       target:TODAY_ISO, steps:nonClassSteps(ex3, toExam),
       foot:'Pre-work for ' + shortDate(parseIso(next.date)) + ' opens here the night before.' };
+  }
+
+  /* Getting ahead is the same pre-work, framed as a choice rather than a task. */
+  function buildPreworkPlan(dateIso){
+    var track = SEC_META[secKey].track;
+    var day = findDay(track, dateIso);
+    return { heroH1:'Getting <span class="a">ahead.</span>',
+      heroSub:'Pre-work for ' + longDate(parseIso(dateIso)) + '. Nothing here is due tonight.',
+      kicker:'Optional', title:'Worksheet, then videos, then lab structures',
+      body:'You do not have to do this tonight. If you would rather stop, stop. It will be here.',
+      target:dateIso, steps:preworkSteps(day),
+      foot:'Bring the written sheet. Class opens with a brain dump on it.' };
   }
 
   function eveningFoot(track){
@@ -960,6 +1026,19 @@
         '</div>' +
       '</li>';
     }).join('');
+
+    /* An optional offer is a plain link, never a button. A night off that
+       carries a call to action is not a night off. */
+    var opt = document.getElementById('optional');
+    if(PLAN.optional){
+      opt.hidden = false;
+      opt.innerHTML = '<p class="opt-t">' + PLAN.optional.text + '</p>' +
+        '<button class="opt-btn" type="button" id="opt-go">' + PLAN.optional.cta + '</button>';
+      document.getElementById('opt-go').addEventListener('click', function(){
+        PLAN = buildPreworkPlan(PLAN.optional.date);
+        render(); focusCurrent();
+      });
+    } else { opt.hidden = true; opt.innerHTML = ''; }
 
     if(PLAN.steps.some(function(st){ return st.title === 'Run a Gap Finder'; })) markGapFinderShown();
 

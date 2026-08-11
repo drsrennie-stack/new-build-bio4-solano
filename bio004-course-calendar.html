@@ -48,6 +48,8 @@
   .cover-tag{font-size:clamp(14px,1.5vw,17px);opacity:.9;margin:12px 0 0;max-width:56ch;}
 
   /* section switcher */
+  .cell.lm-prework{background:#FFFDF7;border-color:rgba(220,180,92,.55);}
+  .cell.lm-prework .tag{background:var(--gold);color:var(--navy);}
   .walk-link{display:flex;align-items:center;gap:10px;flex-wrap:wrap;text-decoration:none;
     background:var(--navy);color:#fff;border-radius:var(--radius);padding:14px 16px;margin:0 0 14px;
     min-height:44px;transition:var(--t);}
@@ -334,6 +336,28 @@ const SECTIONS = {
   function buildIndex(){
     index={};
     SECTIONS[section].sess.forEach(s=>{index[s.d]=s;});
+
+    /* PRE-WORK NIGHTS.
+       The sheet belongs to a class day, but it has to be WORKED the day
+       before. A student looking at Sunday used to see an empty square and
+       conclude nothing was due. So every teaching day that has a worksheet
+       also puts a pre-work night on the day before it.
+
+       No collision is possible: a Mon/Wed section's nights fall on Sun and
+       Tue, a Tue/Thu section's on Mon and Wed. Exam days are skipped on
+       purpose, there is no pre-work for an exam. */
+    const L = window.BIO004_SESSION_LINKS || {};
+    Object.keys(index).slice().forEach(function(dk){
+      const day = index[dk];
+      if(!day || day.lm === 'holiday' || day.lm === 'exam') return;
+      const M = L[dk];
+      if(!M || !M.sheets || !M.sheets.length) return;
+      const d = parse(dk);
+      const nb = new Date(d.getFullYear(), d.getMonth(), d.getDate() - 1);
+      const nbKey = nb.getFullYear() + '-' + pad(nb.getMonth() + 1) + '-' + pad(nb.getDate());
+      if(index[nbKey]) return;
+      index[nbKey] = { d: nbKey, lm: 'prework', tag: 'Pre-work', prework: true, forDay: dk };
+    });
   }
 
   const grid=document.getElementById('grid');
@@ -432,8 +456,44 @@ const SECTIONS = {
       return '<a href="'+o.u+'" target="_top"><span class="mi" aria-hidden="true">'+icon+'</span>'+
              '<span>'+o.t+'</span><span class="mk">'+kind+'</span></a>';
     }
-    if(s.pw){
-      html+='<div class="d-card prework"><div class="dc-k">Pre-work<span class="dc-when">by '+nbLabel+' night</span></div>';
+    /* Declared here, not inside the pre-work block. A function declaration
+       inside a block is block-scoped, so the pre-work-night branch above
+       could not see it and threw "many is not a function". */
+    function many(list,icon,kind){ return (list||[]).map(function(o){return matLink(o,icon,kind);}).join(''); }
+    /* A pre-work night is not a class day. It shows one thing: the work,
+       and which class it is for. */
+    if(s.prework){
+      const T = index[s.forDay] || {};
+      const P = (window.BIO004_SESSION_LINKS || {})[s.forDay] || {};
+      const td = parse(s.forDay);
+      const forLabel = DOWL[td.getDay()] + ' ' + MON3[td.getMonth()] + ' ' + td.getDate();
+      let h = '<p class="d-date">' + DOWL[dt.getDay()] + ' &middot; ' + MONTHS[dt.getMonth()] + ' ' + dt.getDate() + '</p>';
+      h += '<h3 class="d-title">Pre-work night</h3>';
+      h += '<p class="d-meet">No class today. This is the work for <strong>' + forLabel + '</strong>, and it has to be done tonight.</p>';
+      h += '<a class="walk-link" href="today.html" target="_top">' +
+           '<span class="walk-k">Not sure where to start?</span>' +
+           '<span class="walk-t">Walk me through tonight, one step at a time</span>' +
+           '<span class="walk-a" aria-hidden="true">&rarr;</span></a>';
+      h += '<div class="d-card prework"><div class="dc-k">Tonight<span class="dc-when">for ' + forLabel + '</span></div>';
+      h += '<div class="dc-t">' + (T.lec || '') + '</div>';
+      var m1 = many(P.sheets,'&#9998;','Worksheet') + many(P.notes,'&#9776;','Notes') + many(P.workbooks,'&#9636;','Workbook');
+      var m2 = many(P.videos,'&#9658;','Video');
+      var pmod = P.wk ? moduleForWeek(P.wk) : null;
+      var m3 = (pmod ? '<a href="module-'+pmod+'-structure-list.html" target="_top"><span class="mi" aria-hidden="true">&#9636;</span><span>Module '+pmod+' lab structure list</span><span class="mk">Structures</span></a>' : '') + many(P.lab,'&#9673;','Lab sprint');
+      var pw2 = '';
+      if(m1) pw2 += '<div class="stephead"><span class="step-n">1</span>Work the sheet with these notes and the reading open</div>' + m1;
+      if(m2) pw2 += '<div class="stephead"><span class="step-n">2</span>Then watch the video and add to your notes</div>' + m2;
+      if(m3) pw2 += '<div class="stephead"><span class="step-n">3</span>Then pre-study the lab structures</div>' + m3;
+      h += pw2 ? '<div class="mat">' + pw2 + '</div>' : '<a class="pw-link" href="today.html" target="_top">Open tonight\'s walkthrough &#8594;</a>';
+      h += '</div>';
+      h += '<p class="d-empty" style="text-align:left;">Bring the written sheet to class. ' + forLabel + ' opens with a brain dump on it.</p>';
+      detail.innerHTML = h; return;
+    }
+
+    /* No pre-work card on an exam day. There is no pre-work for an exam,
+       and the evening after one is a night off. */
+    if(s.pw && !isExam){
+      html+='<div class="d-card prework"><div class="dc-k">Pre-work<span class="dc-when">work it on '+nbLabel+', the night before</span></div>';
       html+='<div class="dc-t">'+s.pw.t+'</div>';
       /* Order is load-bearing. Worksheet with the notes and the
          reading open FIRST, then the video, then spaced retrieval
@@ -441,7 +501,6 @@ const SECTIONS = {
       /* Her notes packet sits WITH the worksheet, not before it and
          not as a separate step. The sheet is worked against the notes
          and the reading, both open. */
-      function many(list,icon,kind){ return (list||[]).map(function(o){return matLink(o,icon,kind);}).join(''); }
       var step1=many(M.sheets,'&#9998;','Pre-work')+
                 many(M.notes,'&#9776;','Notes')+
                 many(M.workbooks,'&#9636;','Workbook');
@@ -464,6 +523,7 @@ const SECTIONS = {
     }
 
     if(isExam){
+      html+='<p class="d-empty" style="text-align:left;">No pre-work for an exam, and nothing is due tonight. You earn the night off.</p>';
       html+='<div class="d-card lecture"><div class="dc-k">Exam</div><div class="dc-t">'+s.lec+'</div><div class="dc-sub">Covers the unit since the last exam. Lecture and lab time both used for the exam.</div><span class="checkbadge cb-exam">Exam</span>';
       html+='<div class="mat"><a href="mastery-os-fall-2026.html" target="_top"><span class="mi" aria-hidden="true">&#9673;</span><span>Mastery OS, build a cram plan</span><span class="mk">Study</span></a>'+
             '<a href="bio004-exam-modules.html" target="_top"><span class="mi" aria-hidden="true">&#9636;</span><span>What this exam covers</span><span class="mk">Scope</span></a></div>';
