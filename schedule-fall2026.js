@@ -90,17 +90,17 @@ window.BIO004_SECTIONS = {
         { n:3, lecture:'2026-10-21', practical:'2026-10-21', sameDay:true,
           practicalCovers:'5 lab sessions, 3.1 through 3.5' },
         { n:4, lecture:'2026-11-16', practical:'2026-11-16', sameDay:true,
-          practicalCovers:'5 lab sessions, 4.1 through 4.6',
+          practicalCovers:'lab sessions 4.1 through 4.6',
           note:'MONDAY. Every other Class 1 exam is a Wednesday. This one sits '
              + 'Mon Nov 16 because that is the department lab practical date, and '
              + 'the lecture exam was moved to join it so both parts stay on one day.' },
         { n:5, lecture:'2026-12-09', practical:'2026-12-09', sameDay:true,
-          practicalCovers:'5 lab sessions, 5.1 through 5.5' }
+          practicalCovers:'lab sessions 5.1 through 5.5, which is where renal and reproductive sit' }
       ]
     },
 
     class2: {
-      name:'Class 2', crn:'80654', days:'Tue / Thu', when:'Early',
+      name:'Class 2', crn:'80654', days:'Tue / Thu', when:'Morning',
       lecture:'9:30 to 10:45 am, VC 212',
       lab:'11:00 am to 1:50 pm, VC 1137',
       masterColumn:'Tues. / Thurs',
@@ -112,9 +112,9 @@ window.BIO004_SECTIONS = {
         { n:3, lecture:'2026-10-22', practical:'2026-10-22', sameDay:true,
           practicalCovers:'5 lab sessions, 3.1 through 3.5' },
         { n:4, lecture:'2026-11-17', practical:'2026-11-17', sameDay:true,
-          practicalCovers:'6 lab sessions, 4.1 through 4.6' },
+          practicalCovers:'lab sessions 4.1 through 4.6' },
         { n:5, lecture:'2026-12-10', practical:'2026-12-10', sameDay:true,
-          practicalCovers:'5 lab sessions, 5.1 through 5.5' }
+          practicalCovers:'lab sessions 5.1 through 5.5, which is where renal and reproductive sit' }
       ]
     },
 
@@ -132,9 +132,9 @@ window.BIO004_SECTIONS = {
         { n:3, lecture:'2026-10-22', practical:'2026-10-22', sameDay:true,
           practicalCovers:'5 lab sessions, 3.1 through 3.5' },
         { n:4, lecture:'2026-11-17', practical:'2026-11-17', sameDay:true,
-          practicalCovers:'6 lab sessions, 4.1 through 4.6' },
+          practicalCovers:'lab sessions 4.1 through 4.6' },
         { n:5, lecture:'2026-12-10', practical:'2026-12-10', sameDay:true,
-          practicalCovers:'5 lab sessions, 5.1 through 5.5' }
+          practicalCovers:'lab sessions 5.1 through 5.5, which is where renal and reproductive sit' }
       ]
     }
   },
@@ -213,10 +213,10 @@ window.BIO004_SESSIONS = {
              ['Lab', 'Axial Skeleton: Skull']] },
     /* Mon Sep 21 */ { wk:6,   date:'2026-09-21', kind:'class',
       lines:[['In class', 'Spine Walk-Through (Brain dump)'],
-             ['Lab', 'Upper Extremity']] },
+             ['Lab', 'Axial Skeleton: Vertebrae &amp; Ribs']] },
     /* Wed Sep 23 */ { wk:6,   date:'2026-09-23', kind:'class',
       lines:[['In class', '<strong>TBL 3</strong> &middot; Bone Tissue, Cartilage &amp; Microanatomy'],
-             ['Lab', 'Lower Extremity']] },
+             ['Lab', 'Upper Extremity']] },
     /* Mon Sep 28 */ { wk:7,   date:'2026-09-28', kind:'class',
       lines:[['In class', 'Kahoot Review: Bone'],
              ['Lab', 'Lower Extremity']] },
@@ -244,7 +244,7 @@ window.BIO004_SESSIONS = {
              ['Lab', 'Respiratory Anatomy &amp; Histology']] },
     /* Wed Oct 28 */ { wk:11,  date:'2026-10-28', kind:'class',
       lines:[['In class', 'Endocrine Walk-Through (Brain dump)'],
-             ['Lab', 'Anterior Lower-Extremity Muscles &amp; NAV']] },
+             ['Lab', 'Anterior Thigh Muscles &amp; NAV']] },
     /* Mon Nov 2  */ { wk:12,  date:'2026-11-02', kind:'class',
       lines:[['In class', '<strong>TBL 6</strong> &middot; Respiratory'],
              ['Lab', 'Posterior Thigh Muscle &amp; NAV']] },
@@ -409,20 +409,10 @@ window.BIO004_SESSIONS = {
              Heart lecture. That is Module 3.
      Week 10 NOT shared. Exam 3 is the last session of the week
              on both tracks. Module 4 opens in week 11.
-     Week 14 SHARED, Module 4 into Module 5
-             Exam 4, then Wed Nov 18 (Thu Nov 19 on the Tue/Thu
-             track) is Exam 4 rebuttals plus the Guided Renal Map,
-             with Renal Anatomy in lab. That is Module 5.
+     Week 14 NOT shared. Exam 4 does not close Module 4, which
+             runs on to week 15, and the sessions after it that
+             week are renal, still Module 4.
      Week 17 NOT shared. Exam 5 is the last session of the term.
-
-   WHY RENAL AND REPRODUCTIVE SIT IN MODULE 5
-   ------------------------------------------
-   Every renal and reproductive session in the term falls AFTER
-   Exam 4: renal lab Nov 18/19, reproductive lab Nov 23/24, TBL 8
-   Renal Nov 30/Dec 1. Nothing about them can be assessed on an
-   exam that has already been sat. They are taught in Module 5 and
-   assessed on Exam 5, which carries 64 competencies: Urinary 8,
-   Reproductive 13, Nervous System 43. Exam 4 carries 34.
 
    Note that this makes Module 3 start at week 7, where the
    syllabus module table says week 8. The syllabus table is a
@@ -440,22 +430,22 @@ window.BIO004_SESSIONS = {
 
 window.BIO004_MODULES = [
   { n:1, weeks:[1,2,3,4], exam:1,
-    title:'Foundations, cells, tissues and skin',
-    detail:'Cells, tissues (histology), and the integument. TBL 1 Cells, TBL 2 Histology.' },
+    title:'Foundations, cells, tissues (histology) and the integument',
+    detail:'TBL 1 Cells. TBL 2 Histology.' },
 
   { n:2, weeks:[4,5,6,7], exam:2,
-    title:'Skeletal system',
-    detail:'Bone tissue, axial and appendicular skeleton, joints. TBL 3 Bone tissue, cartilage and microanatomy.' },
+    title:'Skeletal system: bone tissue, axial and appendicular skeleton, joints',
+    detail:'TBL 3 Bone tissue, cartilage and microanatomy.' },
 
   { n:3, weeks:[7,8,9,10], exam:3,
-    title:'Cardiovascular, muscle and blood',
-    detail:'Heart, blood vessels, muscle microanatomy, blood. TBL 4 Heart, TBL 5 Blood.' },
+    title:'Cardiovascular, muscle and blood: heart, vessels, muscle microanatomy',
+    detail:'TBL 4 Heart. TBL 5 Blood.' },
 
   { n:4, weeks:[11,12,13,14], exam:4,
-    title:'Respiratory, endocrine and GI',
-    detail:'Respiratory, endocrine, lymphatic and immune, GI primary and accessory. TBL 6 Respiratory, TBL 7 GI.' },
+    title:'Respiratory, lymphatic and immune, digestive, endocrine',
+    detail:'34 competencies. TBL 6 Respiratory. TBL 7 GI.' },
 
   { n:5, weeks:[14,15,16,17], exam:5,
-    title:'Renal, reproductive and nervous system',
-    detail:'Urinary and renal, reproductive, brain, brainstem, cranial nerves, spinal cord, PNS and ANS. TBL 8 Renal, TBL 9 Cranial nerves.' }
+    title:'Urinary and renal, reproductive, and the nervous system',
+    detail:'64 competencies. TBL 8 Renal. TBL 9 Cranial nerves.' }
 ];

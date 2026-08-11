@@ -1,151 +1,152 @@
-# Accessibility Compliance Notes
+# Accessibility compliance notes
 
-## 1. Project
-
-**Project:** BIO 004 Human Anatomy, Fall 2026. Module 1, 2, and 3 packets, structure lists, and the per-topic page set
-**Repo:** drsrennie-stack/Fall-2026-Anatomy
-**Files covered:**
-
-- `BIO004-Module1-Packet.html` and `BIO004-Module1-Packet.pdf` (66 pages, five chapters, four pre-work packets, five-chapter structure list)
-- `BIO004-Module2-Packet.html` and `BIO004-Module2-Packet.pdf` (69 pages, six chapters, four pre-work packets, six-chapter structure list)
-- `BIO004-Module3-Packet.html` and `BIO004-Module3-Packet.pdf` (96 pages: Part A pages 1 to 53, Part B landscape pages 54 to 83, Part C pages 84 to 96. Eleven chapters, five pre-work packets, nine-chapter structure list)
-- `module-1-structure-list.html` and `BIO004-Module1-StructureList.pdf` (12 pages)
-- `module-2-structure-list.html` and `BIO004-Module2-StructureList.pdf` (11 pages)
-- `module-3-structure-list.html` and `BIO004-Module3-StructureList.pdf` (14 pages)
-- `module-1-notes.html` (Part A source, standalone)
-- 22 per-topic notes pages, `m1-intro-notes.html` through `m3-respiratory-notes.html`, plus a PDF for each
-- 13 per-topic worksheet pages, `m1-intro-worksheet.html` through `m3-respiratory-worksheet.html`, landscape, plus a PDF for each
-- `topic-page-index.md`, the button wiring table
-
-41 HTML documents and 41 PDFs in total. Every check in this document was run across all of them.
-
-All builds are WeasyPrint 69.0. Plus Jakarta Sans and DM Sans are embedded as base64 woff2, so the page and the PDF render in the correct typefaces with no external font request. Verified by `pdffonts` on all six PDFs: no fallback face appears in any of them.
-
-**Date:** August 8, 2026, revised
+**Project:** BIO 004 Human Anatomy, Fall 2026 site sweep
+**Repo:** drsrennie-stack/new-build-bio4-solano, branch `fall-2026-sweep`
+**Date:** August 11, 2026
 **Reviewer:** Dr. Sharilyn Rennie
 
-## 2. WCAG version and target level
+---
 
-Target: WCAG 2.2 Level AA minimum, Level AAA where achievable.
+## 1. Files covered
 
-| Criterion | Level achieved | Notes |
+This pass covered the files touched during the Fall 2026 audit sweep. Pages that were not edited
+keep whatever compliance state they already had, and they are noted as still owing a review in
+section 6.
+
+**Created**
+
+- `syllabus-schedule.js`, the module map and day-by-day tables in the three section syllabi
+- `week-extras.js`, the lab and study block that now renders on all seventeen week pages
+- `missing-figure.js`, the placeholder for figures whose image folders were never pushed
+- `index.html`, rebuilt as a redirect to the single course home
+
+**Edited**
+
+- `week-1.html` through `week-17.html`
+- `syllabus-class1.html`, `syllabus-class2.html`, `syllabus-class3.html`, `fall-2026-syllabus.html`
+- `bio004-master-schedule-fall2026.html`, `bio004-course-calendar.html`
+- `mastery-os-fall-2026.html`, `mastery-os-fall-2026-instructor.html`
+- `bio004-dock.js`, `schedule-fall2026.js`, `session-links.js`, `slide-modal.js`,
+  `course-content-tagged.js`, `loops-index.js`
+- `404.html`, `histology-escape-room-lab-kit.html`, `histology-escape-room_1.html`
+- 310 files modified in total, including the em dash and italics sweeps
+- Second pass, August 11: the three section syllabi rewritten for voice and policy;
+  `fall-2026-syllabus.html` retired to a section-aware redirect
+
+---
+
+## 2. WCAG version and level achieved
+
+Target is WCAG 2.2 Level AA as the floor, Level AAA wherever it was reachable without changing
+the palette.
+
+| Criterion | Level | Status on the changed files |
 |---|---|---|
-| 1.1.1 Non-text Content | AAA | Logo SVG is `aria-hidden` inside a labeled link. Each QR SVG carries `role="img"` and an `aria-label` naming its destination, and the destination URL is also printed in text beside it. Module 3 carries 12 QR codes, all labeled |
-| 1.3.1 Info and Relationships | AAA | Semantic `header`, `nav`, `main`, `section`, `footer`. All 91 data tables in the Module 3 packet use `caption`, `thead`, `th scope="col"`, `th scope="row"`. Contents is a `nav` with an ordered list; dot leaders are `aria-hidden` decoration |
-| 1.3.2 Meaningful Sequence | AAA | Single-column reading order in DOM; sidebar precedes main but is a labeled nav |
-| 1.4.1 Use of Color | AAA | No information is conveyed by color alone. Callouts carry a text label ("By the end", "Hold onto this", "Structures to identify") in addition to the accent border |
-| 1.4.3 Contrast (Minimum) | AAA | All 20 text pairs exceed 7:1. See section 3. Palette is unchanged from Modules 1 and 2, so the audit carries forward |
-| 1.4.4 Resize Text | AA | Layout is fluid to 200 percent; `clamp()` type, no fixed-height text containers |
-| 1.4.6 Contrast (Enhanced) | AAA | Lowest measured ratio is 8.80:1 |
-| 1.4.10 Reflow | AA | Single-column below 940px, no horizontal scroll at 320px except within `.tw` table wrappers, which is the permitted data-table exception |
-| 1.4.11 Non-text Contrast | AA | Focus ring 11.99:1, input borders and card rules meet 3:1 against adjacent surfaces |
-| 1.4.12 Text Spacing | AA | No fixed line-height on containers; spacing overrides do not clip content |
-| 2.1.1 Keyboard | AAA | All interactive elements are native `a`, `button`, `input`. No custom widgets, no keyboard traps |
-| 2.4.1 Bypass Blocks | AAA | Skip link as first focusable element on every page |
-| 2.4.2 Page Titled | AAA | Descriptive title naming module, course, and term |
-| 2.4.3 Focus Order | AAA | DOM order matches visual order |
-| 2.4.4 Link Purpose | AA | Link text is self-describing. QR destinations named in both `aria-label` and visible URL text. The PDF link reads "Download the PDF" within a region labeled with the module name |
-| 2.4.6 Headings and Labels | AA, corrected from a false AAA claim | The previous revision of this document asserted no skipped heading levels. That was wrong. See section 6 |
-| 2.4.7 Focus Visible | AAA | 3px `:focus-visible` outline with 3px offset, global |
-| 2.4.11 Focus Not Obscured | AA | Sticky sidebar does not overlay the main column; no fixed overlays |
-| 2.5.8 Target Size | AA | All interactive targets are 24 by 24 CSS pixels or larger. Nav links, the PDF link, and the print button exceed 40px in height |
-| 1.3.5 Identify Input Purpose | n/a | Fill-in rules and tick boxes across Parts B and C are print-only writing space, not form fields, so no autocomplete token applies |
-| 3.1.1 Language of Page | AAA | `lang="en"` |
-| 3.2.1 On Focus | AAA | No context change on focus |
-| 3.3.2 Labels or Instructions | AAA | Term finder has a visible label plus `aria-describedby` help text |
-| 4.1.2 Name, Role, Value | AAA | `aria-current` on the active nav link, `aria-labelledby` on every section, `role="status"` on the finder output |
-| 4.1.3 Status Messages | AA | Finder result count is announced through `role="status"` with `aria-live="polite"` |
+| 1.1.1 Non-text content | A | Pass. `missing-figure.js` carries the original `alt` text into the placeholder as an `aria-label` on a `role="img"` element, so a screen reader still hears what the figure was meant to show. |
+| 1.3.1 Info and relationships | A | Pass. The lab block renders a real `h2` inside the existing card, and its entries are `a` elements with text, not click handlers on divs. |
+| 1.3.2 Meaningful sequence | A | Pass. The lab block sits between the class days card and the graded card, which is the order a student works in. |
+| 1.4.3 Contrast, minimum | AA | Pass, see section 3. |
+| 1.4.6 Contrast, enhanced | AAA | Pass on every measured pair. |
+| 1.4.10 Reflow | AA | **Fixed.** `mastery-os-fall-2026.html` had `.g2.g3.g4` where it needed `.g2,.g3,.g4`. The mobile breakpoint matched nothing, so two, three, and four column grids never collapsed on a narrow screen. Repaired in the student build and the instructor build. |
+| 1.4.11 Non-text contrast | AA | **Fixed.** The brushed gold focus ring measured 2.77:1 against off-white, below the 3:1 floor. On the rebuilt `index.html` it is now `#8B3A2E` at 7.33:1. |
+| 1.4.12 Text spacing | AA | Pass. All new copy sits in flowed paragraphs with no fixed heights. |
+| 2.1.1 Keyboard | A | Pass, see section 4. |
+| 2.4.1 Bypass blocks | A | Pass. Skip links on the worksheet and week pages were not disturbed. |
+| 2.4.7 Focus visible | AA | Pass. New links inherit the page focus style. The redirect page has its own visible ring. |
+| 2.4.11 Focus not obscured, minimum | AA (2.2) | Pass. The dock is fixed bottom left and does not cover the new lab block. |
+| 2.4.13 Focus appearance | AAA (2.2) | Pass on the redirect page, 3px solid ring with offset. |
+| 3.2.3 Consistent navigation | AA | **Improved.** One week system instead of two, one front door instead of five, one Mastery OS instead of two, and the dock is now identical on every page. |
+| 3.2.4 Consistent identification | AA | **Fixed.** The same content was labelled Module 4 in one place and Module 5 in another after the exam-scope decision. Module labels now agree across the syllabi, the exam-module page, seven week pages, and five study pages. |
+| 3.3.1 Error identification, policy clarity | A | **Fixed.** Attendance stated two incompatible rules (90% of a session, and a 20-minute threshold). One rule now stands. |
+| 3.3.2 Labels or instructions | A | **Improved.** The week page now tells a student when it is guessing at their class instead of silently showing Class 1. The retired generic syllabus now names all three sections with their CRNs rather than sending everyone to one document. |
+| 1.3.1 Info and relationships, schedule tables | A | Pass. The generated tables keep `caption`, `th scope="col"`, and the `rowspan` week cell, so a screen reader still announces which week a row belongs to. Verified on all three sections under jsdom. |
+| 2.4.6 Headings and labels | AA | **Improved.** Section headings no longer end in a full stop, which a screen reader reads aloud as a sentence break in the middle of a navigation list. |
+| 4.1.1 Parsing, progressive enhancement | n/a | The generated tables replace a static table that is valid on its own. If the script fails or is blocked, a student still sees a complete schedule rather than an empty box. |
+| 4.1.2 Name, role, value | A | Pass. `role="status"` on the section notice, `role="img"` with an accessible name on the figure placeholder, `aria-hidden` on the decorative arrow in each lab block link. |
+| 4.1.3 Status messages | AA | Pass. `role="status"` is polite, so the notice is announced without interrupting. |
 
-## 3. Color contrast audit
+A second selector bug was repaired in the same pass: `.field input.field textarea` should have
+been `.field input,.field textarea`. Every form field in Mastery OS was rendering unstyled,
+including its focus treatment, which is a 2.4.7 failure as well as a visual one.
 
-Palette: Mastery OS accent, unchanged across Modules 1, 2, and 3. Navy `#08101F`, navy-darkest `#060A18`, navy-tint `#ECEFF4`, maroon `#7A2A22`, maroon-dark `#5E201A`, gold `#DCB45C`, off-white `#FAFAF9`, gray `#414B5C`, rule `#D5DAE2`. Sage and cream do not appear anywhere in the build; verified by grep on the emitted HTML.
+---
 
-| Text / background pair | Ratio | AA | AAA |
-|---|---|---|---|
-| Body text navy `#08101F` on white | 19.02:1 | pass | pass |
-| Cover band white on maroon `#7A2A22` | 9.63:1 | pass | pass |
-| Cover eyebrow maroon on white | 9.63:1 | pass | pass |
-| Contents numeral maroon on white | 9.63:1 | pass | pass |
-| Running head navy on white | 19.02:1 | pass | pass |
-| Chapter h2 navy on white | 19.02:1 | pass | pass |
-| Cover title navy on white | 19.02:1 | pass | pass |
-| h3 maroon-dark `#5E201A` on white | 12.37:1 | pass | pass |
-| Eyebrow maroon-dark on white | 12.37:1 | pass | pass |
-| Intro line gray `#414B5C` on white | 8.80:1 | pass | pass |
-| QR caption URL gray on white | 8.80:1 | pass | pass |
-| Table header white on navy | 19.02:1 | pass | pass |
-| Table zebra row navy on off-white `#FAFAF9` | 18.21:1 | pass | pass |
-| Memory callout navy on navy-tint `#ECEFF4` | 16.50:1 | pass | pass |
-| Active nav link white on navy | 19.02:1 | pass | pass |
-| Footer name white on navy-darkest `#060A18` (screen only) | 19.73:1 | pass | pass |
-| Footer role navy-tint on navy-darkest | 17.12:1 | pass | pass |
-| Link maroon-dark on white | 12.37:1 | pass | pass |
-| PDF link maroon-dark on white, 1.5px maroon-dark border | 12.37:1 | pass | pass |
-| Focus indicator maroon-dark on white (non-text) | 12.37:1 | pass | pass |
+## 3. Colour contrast audit
 
-Lowest ratio across the packet is 8.80:1, above the 7:1 AAA threshold for normal text. No pair fails.
+Measured with the WCAG relative luminance formula. Backgrounds are off-white `#FAFAF9`, card
+white `#FFFFFF`, and the week page hero navy `#08101F`.
 
-## 4. Keyboard navigation flow verified
+| Text or element | Foreground | Background | Ratio | Level |
+|---|---|---|---|---|
+| Body copy, notes, lab block links | `#1E3D4C` | `#FAFAF9` | 11.01:1 | AAA |
+| Body copy on cards | `#1E3D4C` | `#FFFFFF` | 11.49:1 | AAA |
+| Missing-figure placeholder text | `#1E3D4C` | `#FAFAF9` | 11.01:1 | AAA |
+| Section notice text on the hero | `#FFFFFF` | `#08101F` | 19.02:1 | AAA |
+| Section notice gold left border, non-text | `#DCB45C` | `#08101F` | 9.71:1 | Pass, needs 3:1 |
+| Redirect page link | `#8B3A2E` | `#FAFAF9` | 7.33:1 | AAA |
+| Redirect page focus ring, non-text | `#8B3A2E` | `#FAFAF9` | 7.33:1 | Pass |
+| Redirect page heading and body | `#1E3D4C` | `#FAFAF9` | 11.01:1 | AAA |
 
-1. Tab 1: skip link appears at top left, activates and moves focus to the packet region.
-2. Tabs 2 to 3: course home logo link, course home button.
-3. Tabs 4 to 14: the eleven chapter links in the sidebar nav. Enter jumps to the chapter, `scroll-margin-top` keeps the heading clear of the viewport edge.
-4. Tab 15: term finder input. Typing filters headings; results appear as a list of links below and are reachable by continued tabbing.
-5. Tabs 16 to 18: "Everything else" link, "Download the PDF" link, "Print / save this packet" button. The button fires `window.print()` on Enter and Space.
-6. Remaining tabs: in-content links and the QR destination URLs, which are real anchors so a keyboard or screen reader user never needs to scan a code.
+One pair failed and was changed rather than accepted: brushed gold `#B8924A` on off-white at
+2.77:1. Gold is still used for focus and accent on dark backgrounds, where it measures 9.71:1.
 
-No keyboard traps. No custom focus management. `prefers-reduced-motion: reduce` disables smooth scrolling and all transitions.
+---
 
-## 4b. Automated checks run across all 41 documents
+## 4. Keyboard navigation verified
 
-Each of these was run programmatically, not by inspection:
+Walked with Tab, Shift Tab, Enter, and Escape.
 
-- Exactly one `h1` per page, and no skipped heading levels anywhere in the outline.
-- No duplicate `id` attributes.
-- No same-page anchor pointing at a missing `id`.
-- Every relative link carries `target="_top"`.
-- Every referenced local `.html` and `.pdf` file exists.
-- Skip link, `lang="en"`, print button, PDF link, and the iframe height-sender present on every page.
-- Zero em dashes, zero `font-style:italic`, no sage and no cream.
-- Every PDF: correct orientation, no blank pages, and no font outside Plus Jakarta Sans and DM Sans.
+- **Week page:** skip link, then the three section buttons, then the three pre-work links, then
+  the day cards, then the new lab block links in reading order, then the graded chips, then the
+  quick links, then the dock launcher. No trap. Nothing reachable by mouse only.
+- **Lab block:** every entry is a real anchor. Focus order matches visual order, which is lab
+  sprints, then notes, then practice questions, then slides, then the study session link.
+- **Section notice:** not focusable, correct for a status message. It is announced rather than
+  being something a student has to go and find.
+- **Dock:** re-verified after the tile changes. Escape closes, focus returns to the launcher, Tab
+  is trapped while open, arrow keys walk the tiles, `aria-expanded` tracks state.
+- **Redirect page:** the single link is reachable with a visible ring. The page also redirects by
+  script and by meta refresh, so a keyboard user never has to interact with it.
+- **Missing-figure placeholder:** not focusable, correct for a non-interactive substitute.
+
+---
 
 ## 5. Screen reader testing
 
-**Readers used:** VoiceOver (macOS, Safari), NVDA (Windows, Firefox).
+Verified by DOM inspection under jsdom and by reading the accessibility tree for the changed
+regions. All seventeen week pages were rendered and inspected programmatically.
 
-Verified:
+Confirmed:
 
-- Landmarks announce as banner, navigation ("Chapters in this packet"), main, contentinfo.
-- Heading tree reads h1 to h4 with no skipped levels across all 11 Part A chapters and all 9 Part C chapters.
-- All 91 tables in the Module 3 packet announce their caption, then column and row headers with each cell.
-- QR images announce as "QR code linking to the Heart concept videos" rather than as decorative or unlabeled graphics.
-- Term finder announces the match count through the polite live region without interrupting typing.
-- Active chapter link announces as "current" while scrolling.
+- Landmarks intact on the week pages: `main#main`, the `nav` labelled "Week navigation", and the
+  footer.
+- The lab block heading is a real `h2` in sequence under the page `h1`, so heading navigation
+  lands on it.
+- `role="status"` on the section notice.
+- `role="img"` with `aria-label` on the figure placeholder.
+- `aria-hidden="true"` on the decorative arrow glyph in each lab block link, so the accessible
+  name is the structure name rather than the name of the triangle character.
 
-## 6. Defects found and fixed
+**Owed:** a listening pass with VoiceOver on Safari and with NVDA on Windows, on one week page
+and one worksheet. Nothing here is expected to fail, but these notes should not claim a
+verification that has not happened.
 
-| Defect | Scope | Fix |
-|---|---|---|
-| **Skipped heading levels, 42 instances.** The previous revision of this document claimed a strict hierarchy with no skips. It was not true and had not been tested. Three separate sources: the cover page part rows used `h3` directly under the cover `h1`; the QR callouts used `h4` directly under an `h2`, both in the contents block and at the top of every chapter; and the pre-work drawing titles used `h4` directly under the panel `h2`. Module 1 Part C added two more inside a list item | All three packets, all three structure lists, and every derived topic page | Tags corrected at source, with the CSS selectors widened so nothing changed visually. All 41 documents now pass a programmatic outline check with zero skips |
-| **Duplicate element IDs, 12 instances.** Module 2 Part C reused all six Part A chapter IDs, and Module 1 reused one. Duplicate IDs make anchors ambiguous and leave the Part C sections unreachable from any link | Module 1 and Module 2 packets and structure lists | Part C chapter IDs suffixed with `-lab`, matching what Module 3 already did. Zero duplicates across all 41 documents |
-| **Dead "Back to top" links.** The five Module 1 chapters carry links aimed at `#notes`, the `main` ID of the standalone notes page. Inside the combined packet `main` is `#packet`, so every one of those links went nowhere | Module 1 packet | Retargeted during assembly. Zero broken same-page anchors across all 41 documents |
-| The three standalone structure list pages shipped with no JavaScript at all. `buildC.py`, `buildC2.py`, and `buildC3.py` searched `part1.html` for the page script, but the script lives in `part3.html`, so the regex returned `None` and the placeholder resolved to an empty string. Consequences: dead "Print / save this packet" button, dead "Find a structure" box, and no iframe height-sender, so an embedded page would not resize its host frame | Modules 1, 2, and 3 structure lists | All three builders now read the script from `part3.html` and raise if it is absent, rather than failing silently. All three pages rebuilt and re-rendered |
-| The "Download the PDF" link carried no `target="_top"`, so inside a Kajabi iframe the download could be blocked by frame sandboxing | All six deliverables plus the Repair Round build | `target="_top"` added to every PDF link across all seven builders |
+---
 
-## 7. Known limitations and remediation plan
+## 6. Known limitations and remediation plan
 
 | Limitation | Impact | Plan |
 |---|---|---|
-| Wide data tables scroll horizontally inside `.tw` on narrow viewports | Low. Permitted data-table exception under 1.4.10 | Keep. Alternative would be to restructure tables as definition lists, which loses the comparison value |
-| The PDF build is untagged (WeasyPrint 69.0 does not emit a full structure tree by default) | Moderate for anyone reading the PDF with a screen reader | The HTML page is the accessible primary. Add `pdf_variant="pdf/ua-1"` on the next build and re-verify, or direct screen reader users to the HTML |
-| QR codes are visual-only as a mechanism | Low. Mitigated | Every QR is paired with its destination URL as live link text, so the code is a convenience and never the only route |
-| Module 3 concept video pages do not exist yet in `new-build-bio4-solano`. Ten QR destinations are predicted filenames | Moderate. A student scanning before those pages are published gets a 404 | Create the ten pages, or send corrected filenames and the links will be regenerated. Filenames are listed in `build.py` |
-| Module 3 Part A chapters 3, 4, and 10 (back and thorax muscles, upper limb muscles, vessels and nerves of the thorax and upper limb) were drafted at course level rather than carried over from supplied notes | Content accuracy, not accessibility | Review and correct before the term starts. Everything else in Module 3 comes from her Week 3 and Week 4 course notes |
-| Fonts embedded rather than CDN-linked | None. This removes a third-party request | Keep. Embedding also means no Google Fonts call from student browsers |
-| Seven topics share a worksheet with another topic, because a pre-work packet covers more than one chapter | None. Both buttons still resolve | By her decision. The sharing is documented in `topic-page-index.md` so no video page links to a missing file |
+| Four image folders were never pushed: `blood-img`, `musc-img`, `musc-tissue-img`, and part of `lym-img`. 104 figures across six pages. | Students see a labelled placeholder instead of the figure. The alt text still describes it, so nothing is silently missing, but the teaching image is absent. | Push the four folders. Then delete `missing-figure.js` and its six script tags. |
+| Screen reader listening pass not yet done. | Unverified claim risk only. | One VoiceOver pass and one NVDA pass before the term opens. |
+| The em dash and italics sweeps touched files that had no other review. | Those pages now follow the house style rules but have not had a full accessibility review. | Review each as it is next touched. |
+| Summer 2026 pages still carry the old contradictory attendance rule. | Those pages are not Fall-facing, but they are still reachable. | One edit each, if the instructor wants them matched to the Fall rule. |
+| 63 pages still have no inbound link from anywhere. | Not an accessibility failure, but content a student cannot reach is content a student cannot use. | The case deep dives now have a dock route. The study guides and the workbook family still do not, and that is a curriculum decision rather than a technical one. |
+| `font-style: italic` was globally neutralised to satisfy the no-italics rule. | Some captions and citations that relied on italics for emphasis now rely on position and wording alone. | Spot check captions on the image-heavy pages and add a non-italic emphasis treatment where one is genuinely needed. |
 
-## 8. Reviewer
+---
+
+## 7. Reviewer
 
 Dr. Sharilyn Rennie
-Professor of Anatomy and Physiology
-Solano Community College
+BIO 004 Human Anatomy, Solano Community College

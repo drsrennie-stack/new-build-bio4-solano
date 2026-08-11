@@ -109,6 +109,9 @@
   .lk .lk-s{font-size:.78rem;color:var(--navy);opacity:.7;}
   .lk.todo{opacity:.72;cursor:default;background:repeating-linear-gradient(45deg,#F1F3F6,#F1F3F6 10px,#E7EAF0 10px,#E7EAF0 20px);}
   .lk.todo .lk-ic{background:#9aa0ad;}
+  .hero-note{margin:16px 0 0;font-size:.9rem;line-height:1.55;color:#fff;
+    background:rgba(255,255,255,.10);border:1px solid rgba(220,180,92,.55);
+    border-left:3px solid var(--gold);padding:12px 15px;border-radius:10px;}
   .note{margin:12px 0 0;font-size:.9rem;color:var(--navy);opacity:.85;background:rgba(8,16,31,.05);border:1px solid var(--line);padding:12px 15px;border-radius:12px;}
 
   /* day cards */
@@ -185,7 +188,7 @@
 
   <main id="main">
     <section class="hero">
-      <div class="eyebrow">Module 4 &middot; Respiratory, Endocrine &amp; GI</div>
+      <div class="eyebrow">Module 4 &middot; Respiratory, Lymphatic, Digestive &amp; Endocrine</div>
       <h1><span class="wk">Week 12</span> &middot; Respiratory &amp; Lower Limb</h1>
       <div class="hmeta">
         <span id="secLabel">Mon / Wed &middot; Afternoon</span>
@@ -193,11 +196,17 @@
         <span id="secLab">Lab MW 2:00&ndash;4:50 pm &middot; VC 1137</span>
         <span><b id="secCrn">CRN 80650</b></span>
       </div>
+      <p class="hero-note" id="secAssumed" role="status" hidden>I have not been told which class you are in yet, so this is showing Mon / Wed by default. If that is not you, pick your class with the buttons above and the whole site will follow.</p>
     </section>
 
     <section class="card">
       <h2><span class="n">Before class, do the pre-work</span>Sheet with the notes and reading, then the video</h2>
-            <p class="note" style="margin:0;"><strong>Your pre-work lives on the calendar now.</strong> It is attached to each class day, with the sheet, the video, the lab structures and the recall in order, and you can tick each one off as you go. <a href="bio004-course-calendar.html" target="_top">What to do today</a> or <a href="bio004-course-calendar.html" target="_top">open the calendar</a>.</p>
+      <div class="prework">
+        <a class="lk" id="lkWk" href="#"><span class="lk-ic" aria-hidden="true">&#9998;</span><span class="lk-w"><span class="lk-t"><span class="lk-num">1</span>Work the pre-work sheet first</span><span class="lk-s">Keep your notes and the reading open beside you</span></span></a>
+        <a class="lk" id="lkLec" href="#"><span class="lk-ic" aria-hidden="true">&#9658;</span><span class="lk-w"><span class="lk-t"><span class="lk-num">2</span>Then watch the video</span><span class="lk-s">Watch it after the sheet, not before</span></span></a>
+        <a class="lk" id="lkSR" href="mastery-os-fall-2026.html" target="_top"><span class="lk-ic" aria-hidden="true">&#9673;</span><span class="lk-w"><span class="lk-t"><span class="lk-num">3</span>Then come back and test yourself</span><span class="lk-s">In Mastery OS, later in the week rather than the same night</span></span></a>
+      </div>
+      <p class="note"><strong>The order matters more than how fast you go.</strong> Work the sheet first, with your notes and the reading open beside you. The video is there to check what you did, not to hand it to you. Then come back later in the week and test yourself, not on the same night. None of this works as a night-before task.</p>
     </section>
 
     <section class="card" data-week-days="12">
@@ -207,6 +216,7 @@
       </noscript>
     </section>
 
+    <section class="card" data-week-extras="12"></section>
     <section class="card">
       <h2><span class="n">Counts toward your grade</span>Graded this week</h2>
       <div class="chips" data-track="mw">
@@ -239,6 +249,8 @@
 <!-- Schedule comes from schedule-fall2026.js. Do not hardcode dates in this file. -->
 <script src="schedule-fall2026.js"></script>
 <script src="week-schedule.js"></script>
+<script src="session-links.js"></script>
+<script src="week-extras.js"></script>
   <script src="module-nav.js"></script>
 <script src="section-sync.js"></script>
 <script src="course-links.js"></script>
@@ -252,7 +264,8 @@
   var KEY='bio004-section';
   function _pSec(){try{var m=location.search.match(/[?&]sec=([^&#]+)/);if(m){var v=decodeURIComponent(m[1]);if(SEC[v])return v;}}catch(e){}return null;}
   var sec=_pSec(); if(sec){try{localStorage.setItem(KEY,sec);}catch(e){}}
-  if(!sec){ sec=localStorage.getItem(KEY); if(!SEC[sec]) sec='mw'; }
+  var assumed=false;
+  if(!sec){ sec=localStorage.getItem(KEY); if(!SEC[sec]){ sec='mw'; assumed=true; } }
   function $(s){return document.querySelector(s);}
   function apply(){
     var s=SEC[sec];
@@ -261,6 +274,11 @@
     document.querySelectorAll('[data-track]').forEach(function(el){el.hidden = el.getAttribute('data-track')!==s.track;});
     var syl=$('#sylLink'); if(syl) syl.href=s.syl;
     var hub=$('#hubLink'); if(hub) hub.href=s.hub;
+    /* Say so when we are guessing. A student in Class 2 or Class 3 who
+       lands here on a direct link would otherwise read Class 1's dates
+       with nothing on the page telling them so. */
+    var warn=$('#secAssumed');
+    if(warn) warn.hidden = !assumed;
   }
   document.querySelectorAll('[data-sec]').forEach(function(b){
     b.addEventListener('click',function(){ sec=b.getAttribute('data-sec'); try{localStorage.setItem(KEY,sec);}catch(e){} apply(); });
@@ -274,8 +292,8 @@
     else { a.href='#'; a.classList.add('todo'); a.setAttribute('aria-disabled','true'); a.querySelector('.lk-s').textContent='Coming soon';
            a.addEventListener('click',function(e){e.preventDefault();}); }
   }
-  fill('lkLec',L.lecture,'Online. After the sheet, not before');
-  fill('lkWk',L.worksheet,'Notes and the reading open beside you');
+  fill('lkLec',L.lecture,'Watch it after the sheet, not before');
+  fill('lkWk',L.worksheet,'Keep your notes and the reading open beside you');
 })();
 </script>
 
