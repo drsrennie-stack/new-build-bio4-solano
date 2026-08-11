@@ -7,7 +7,7 @@
    Spans two pages:
      index.html      -> orient + open Week 1
      week-1-hub.html -> find Concept videos, Recall Rx cards,
-                        and the Thursday InteDashboard TBL button
+                        and the Thursday TBL button
 
    Drop into any page with one line before </body>:
      <script src="course-tour.js" defer></script>
@@ -124,15 +124,10 @@
       eyebrow: "Stop 6 of 7 · Your weekly lab",
       title: "The blue Lab card sets up your week",
       body: "Lab Sprint, Atlas Canvas, and the Digital Atlas live here. Set these up on Monday. " +
-            "One last stop: the button that runs your <strong>TBL</strong>."
-    },
-
-    /* 7 · hub: InteDashboard TBL button (intercept, stay) */
-    {
-      page: "hub", find: "a.inted-btn", mode: "click-stay",
+            "One last stop: the button that runs your <strong>TBL</strong>.inted-btn", mode: "click-stay",
       eyebrow: "Stop 7 of 7 · The Thursday TBL",
       title: "This button runs every TBL",
-      body: "Your Team-Based Learning happens on <strong>InteDashboard</strong> every Thursday. This is the same button you click for it, week after week. " +
+      body: "Your Team-Based Learning happens on <strong></strong> every Thursday. This is the same button you click for it, week after week. " +
             "Click it to finish your setup."
     },
 
@@ -142,7 +137,7 @@
       eyebrow: "You're all set",
       title: "Setup complete 🎉",
       body: "You found your <strong>syllabus</strong>, learned how to <strong>open a week</strong>, and located your <strong>concept videos</strong>, " +
-            "your <strong>Recall Rx cards</strong>, and the <strong>InteDashboard TBL</strong> button. " +
+            "your <strong>Recall Rx cards</strong>, and the <strong> TBL</strong> button. " +
             "Replay this anytime with the <strong>Course setup</strong> button in the corner."
     }
   ];
