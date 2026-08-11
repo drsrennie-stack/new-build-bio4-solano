@@ -7,7 +7,7 @@
 <meta name="description" content="A personal learning operating system: diagnose weaknesses, repair gaps, build durable memory, and prove mastery.">
 <!-- Installable app (Add to Home Screen) -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#08101F">
+<meta name="theme-color" content="#1E3D4C">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -16,20 +16,25 @@
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Lora:ital,wght@0,400;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy:#08101F; --card-navy:#1C2E4F; --near-black:#08101F;
-  --rust:#6B1616; --rust-hover:#A0452F; --terra:#8B1D1D; --terra-dark:#A0522D; --clay:#CE8166;
-  --gold:#C9A14A; --gold-light:#D9B065; --cream:#F5F1E8;
-  --white:#FFFFFF; --offwhite:#FAFAF9; --slate:#8C90A0;
-  --ink:#08101F; --ink-soft:rgba(8,16,31,0.74); --ink-faint:rgba(8,16,31,0.52);
-  --line:rgba(8,16,31,0.12); --line-soft:rgba(8,16,31,0.07);
-  --ok:#3F7A5B; --warn:#B4772E; --bad:#6B1616;
-  --shadow:0 1px 3px rgba(8,16,31,0.08);
-  --lift:0 14px 34px -16px rgba(8,16,31,0.30);
+  /* PRIMARY teaching palette. See palettes.md. Sage and cream are NOT in this
+     palette. Repainted 2026-08-11 from the off-spec values (08101F navy,
+     8B1D1D terra, F5F1E8 cream) that had drifted into this build. */
+  --navy:#1E3D4C; --navy-deep:#142a36; --navy-tint:#EDF1F3;
+  --card-navy:#1E3D4C; --near-black:#142a36;
+  --rust:#A0522D; --rust-hover:#8A4526; --terra:#C2734D; --terra-dark:#A0522D; --clay:#C2734D;
+  --gold:#B8924A; --gold-light:#CFA95F;
+  --white:#FFFFFF; --offwhite:#FAFAF9; --slate:#5B7480;
+  --ink:#1E3D4C; --ink-soft:#3D5966; --ink-faint:rgba(30,61,76,0.62);
+  --line:rgba(30,61,76,0.16); --line-soft:rgba(30,61,76,0.08);
+  --ok:#1E4C33; --warn:#8A5A1E; --bad:#7A2E2E;
+  --shadow:0 1px 3px rgba(0,0,0,0.08);
+  --lift:0 8px 16px rgba(0,0,0,0.10);
   --disp:'Plus Jakarta Sans',system-ui,sans-serif;
-  --serif:'Plus Jakarta Sans',system-ui,sans-serif;
+  --serif:'Lora',Georgia,serif;
+  --eyebrow:'DM Sans',system-ui,sans-serif;
   --mono:'Plus Jakarta Sans',system-ui,sans-serif;
   --r-sm:6px; --r:10px; --r-lg:16px;
   --ease:cubic-bezier(.22,.61,.36,1);
@@ -72,7 +77,7 @@ a{color:var(--rust)}
 .logo .lt .ac{color:var(--rust)}
 .logo .ls{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);display:block;margin-top:3px}
 .spacer{flex:1}
-.hbadge{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);background:var(--cream);border:1px solid var(--line);padding:6px 12px;border-radius:999px}
+.hbadge{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);background:var(--white);border:1px solid var(--line);padding:6px 12px;border-radius:999px}
 .icbtn{width:40px;height:40px;border-radius:var(--r);border:1.5px solid var(--line);background:var(--white);color:var(--navy);display:grid;place-items:center;transition:.18s}
 .icbtn:hover{border-color:var(--navy);transform:translateY(-1px)}
 .icbtn svg{width:19px;height:19px}
@@ -82,8 +87,8 @@ a{color:var(--rust)}
 .secnav::-webkit-scrollbar{display:none}
 .secnav ul{max-width:1120px;margin:0 auto;padding:8px 16px;display:flex;gap:4px;list-style:none}
 .secnav a{white-space:nowrap;font-size:13px;font-weight:700;color:var(--ink-soft);text-decoration:none;padding:8px 13px;border-radius:999px;transition:.15s}
-.secnav a:hover{color:var(--navy);background:var(--cream)}
-.secnav a[aria-current="true"]{color:var(--navy);background:var(--cream)}
+.secnav a:hover{color:var(--navy);background:var(--white)}
+.secnav a[aria-current="true"]{color:var(--navy);background:var(--white)}
 
 /* ---------- layout ---------- */
 .wrap{max-width:1120px;margin:0 auto;padding:0 22px}
@@ -99,13 +104,13 @@ section.block:first-of-type{border-top:none}
 .g3{grid-template-columns:repeat(3,1fr)}
 .g4{grid-template-columns:repeat(4,1fr)}
 @media(max-width:860px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}}
+@media(max-width:600px){.g2.g3.g4{grid-template-columns:1fr}}
 
 /* ---------- Section 1: Today's plan ---------- */
-.plan{background:var(--navy);background:radial-gradient(140% 135% at 12% 0%,#12203f 0%,var(--navy) 48%,var(--near-black) 100%);color:var(--cream);border-radius:var(--r-lg);padding:28px;box-shadow:var(--lift)}
+.plan{background:var(--navy);background:radial-gradient(140% 135% at 12% 0%,#12203f 0%,var(--navy) 48%,var(--near-black) 100%);color:var(--offwhite);border-radius:var(--r-lg);padding:28px;box-shadow:var(--lift)}
 .plan .peyebrow{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-light);margin:0 0 6px}
 .plan h1{color:#fff;font-size:clamp(24px,4vw,32px);font-weight:800;margin:0 0 6px}
-.plan .psub{font-family:var(--serif);font-style:normal;color:var(--cream);opacity:.86;margin:0 0 22px;max-width:60ch}
+.plan .psub{font-family:var(--serif);font-style:normal;color:var(--offwhite);opacity:.86;margin:0 0 22px;max-width:60ch}
 .plan-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:22px;align-items:start}
 @media(max-width:760px){.plan-grid{grid-template-columns:1fr}}
 .plan-list{display:grid;gap:12px}
@@ -113,12 +118,12 @@ section.block:first-of-type{border-top:none}
 .pl-item .ic{flex:none;width:34px;height:34px;border-radius:9px;background:rgba(201,161,74,.16);color:var(--gold);display:grid;place-items:center}
 .pl-item .ic svg{width:18px;height:18px}
 .pl-item h3{color:#fff;font-size:13px;font-weight:700;margin:0 0 3px;letter-spacing:0}
-.pl-item p{color:var(--cream);opacity:.82;font-size:13px;line-height:1.4}
+.pl-item p{color:var(--offwhite);opacity:.82;font-size:13px;line-height:1.4}
 .plan-side{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);padding:18px}
 .count{text-align:center;padding:8px 0 14px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:14px}
 .count .num{font-size:44px;font-weight:800;color:#fff;line-height:1}
 .count .lbl{font-family:var(--mono);font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-light);margin-top:4px}
-.metric-row{display:flex;justify-content:space-between;font-size:14px;padding:7px 0;color:var(--cream)}
+.metric-row{display:flex;justify-content:space-between;font-size:14px;padding:7px 0;color:var(--offwhite)}
 .metric-row b{color:#fff}
 .plan-cta{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap}
 /* today's build (daily budget pack) */
@@ -149,12 +154,12 @@ section.block:first-of-type{border-top:none}
 .readiness{grid-column:1/-1;display:flex;align-items:center;gap:26px;padding:22px 26px;background:var(--navy);background:linear-gradient(120deg,#17284a,var(--navy));color:#fff;flex-wrap:wrap}
 .readiness .ring text{fill:#fff}
 .readiness .rtext h3{color:#fff;font-size:20px}
-.readiness .rtext p{color:var(--cream);opacity:.85;font-family:var(--serif);font-style:normal;margin-top:4px;max-width:52ch}
+.readiness .rtext p{color:var(--offwhite);opacity:.85;font-family:var(--serif);font-style:normal;margin-top:4px;max-width:52ch}
 
 /* ---------- Section 3: competency map ---------- */
 .unit{margin-bottom:12px;overflow:hidden}
 .unit-head{width:100%;display:flex;align-items:center;gap:14px;padding:16px 20px;background:var(--white);border:none;text-align:left}
-.unit-head:hover{background:var(--cream)}
+.unit-head:hover{background:var(--white)}
 .unit-head .chev{transition:transform .2s;color:var(--ink-faint)}
 .unit-head[aria-expanded="true"] .chev{transform:rotate(90deg)}
 .unit-head h3{font-size:16px;font-weight:700}
@@ -195,7 +200,7 @@ section.block:first-of-type{border-top:none}
 @media(max-width:560px){.flow{grid-template-columns:repeat(2,1fr)}}
 .stage{padding:18px 16px;text-align:left;display:flex;flex-direction:column;gap:8px;cursor:pointer;background:var(--white)}
 .stage .sn{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--gold);letter-spacing:.1em}
-.stage .si{width:38px;height:38px;border-radius:10px;background:var(--cream);color:var(--navy);display:grid;place-items:center}
+.stage .si{width:38px;height:38px;border-radius:10px;background:var(--white);color:var(--navy);display:grid;place-items:center}
 .stage .si svg{width:20px;height:20px}
 .stage h3{font-size:15px;font-weight:700}
 .stage p{font-size:12.5px;color:var(--ink-soft);line-height:1.45}
@@ -203,7 +208,7 @@ section.block:first-of-type{border-top:none}
 
 /* ---------- Section 6: evidence ---------- */
 .ev-card{padding:18px;display:flex;flex-direction:column;gap:10px;text-align:left}
-.ev-card .ei{width:40px;height:40px;border-radius:10px;background:var(--cream);color:var(--navy);display:grid;place-items:center}
+.ev-card .ei{width:40px;height:40px;border-radius:10px;background:var(--white);color:var(--navy);display:grid;place-items:center}
 .ev-card .ei svg{width:21px;height:21px}
 .ev-card h3{font-size:15px;font-weight:700}
 .ev-card p{font-size:12.5px;color:var(--ink-soft);line-height:1.45;flex:1}
@@ -221,7 +226,7 @@ section.block:first-of-type{border-top:none}
 /* ---------- Section 8: coach ---------- */
 .coach{display:grid;grid-template-columns:1fr;gap:0;overflow:hidden}
 .coach-hdr{display:flex;align-items:center;gap:13px;padding:16px 20px;border-bottom:1px solid var(--line-soft);background:var(--white)}
-.coach-ava{width:44px;height:44px;border-radius:12px;background:var(--cream);border:1px solid var(--line);display:grid;place-items:center;font-size:24px;line-height:1}
+.coach-ava{width:44px;height:44px;border-radius:12px;background:var(--white);border:1px solid var(--line);display:grid;place-items:center;font-size:24px;line-height:1}
 .coach-hdr strong{display:block;font-size:16px;color:var(--navy);font-weight:800}
 .coach-hdr span{display:block;font-family:var(--mono);font-size:12px;color:var(--terra-dark);font-weight:700;letter-spacing:.04em}
 .botname{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;font-weight:700;color:var(--terra-dark);margin-bottom:6px}
@@ -233,7 +238,7 @@ section.block:first-of-type{border-top:none}
 .msg .m-actions{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
 .msg .m-actions .btn{font-size:12.5px;padding:7px 12px}
 .coach-prompts{padding:14px 18px;display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line-soft);background:var(--white)}
-.pchip{font-size:12.5px;font-weight:700;color:var(--navy);background:var(--cream);border:1px solid var(--line);padding:8px 13px;border-radius:999px;transition:.15s}
+.pchip{font-size:12.5px;font-weight:700;color:var(--navy);background:var(--white);border:1px solid var(--line);padding:8px 13px;border-radius:999px;transition:.15s}
 .pchip:hover{background:var(--gold);border-color:var(--gold)}
 .coach-input{display:flex;gap:10px;padding:14px 18px;border-top:1px solid var(--line-soft);background:var(--white)}
 .coach-input input{flex:1;font-family:inherit;font-size:15px;padding:12px 14px;border:1.5px solid var(--line);border-radius:var(--r);background:var(--offwhite)}
@@ -252,7 +257,7 @@ section.block:first-of-type{border-top:none}
 .dots span{flex:1;height:5px;border-radius:99px;background:var(--line-soft)}
 .dots span.on{background:var(--gold)}
 .dots span.done{background:var(--navy)}
-.step-icon{width:52px;height:52px;border-radius:13px;background:var(--cream);color:var(--navy);display:grid;place-items:center;margin-bottom:14px}
+.step-icon{width:52px;height:52px;border-radius:13px;background:var(--white);color:var(--navy);display:grid;place-items:center;margin-bottom:14px}
 .step-icon svg{width:26px;height:26px}
 .step h3{font-size:20px;font-weight:800;margin-bottom:6px}
 .step .sn{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
@@ -268,20 +273,20 @@ section.block:first-of-type{border-top:none}
 /* instructor config fields */
 .field{margin-bottom:16px}
 .field label{display:block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px}
-.field input,.field textarea{width:100%;font-family:inherit;font-size:15px;padding:11px 13px;border:1.5px solid var(--line);border-radius:var(--r);background:var(--offwhite)}
+.field input.field textarea{width:100%;font-family:inherit;font-size:15px;padding:11px 13px;border:1.5px solid var(--line);border-radius:var(--r);background:var(--offwhite)}
 .field input:focus.field textarea:focus{border-color:var(--gold);outline:none;background:#fff}
 .field .hint{font-size:12px;color:var(--ink-faint);margin-top:5px;font-family:var(--serif);font-style:normal}
-.note{background:var(--cream);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;font-size:13px;color:var(--ink-soft);line-height:1.5;margin-bottom:18px}
+.note{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;font-size:13px;color:var(--ink-soft);line-height:1.5;margin-bottom:18px}
 
 /* ---------- onboarding ---------- */
-#onboard{position:fixed;inset:0;z-index:80;background:radial-gradient(120% 120% at 50% 0%,#12203f 0%,var(--navy) 46%,var(--near-black) 100%);color:var(--cream);display:flex;flex-direction:column}
+#onboard{position:fixed;inset:0;z-index:80;background:radial-gradient(120% 120% at 50% 0%,#12203f 0%,var(--navy) 46%,var(--near-black) 100%);color:var(--offwhite);display:flex;flex-direction:column}
 #onboard[hidden]{display:none}
 .ob-stage{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 24px;overflow:auto}
 .ob-panel{width:100%;max-width:540px;text-align:center}
 #onboard h2{color:#fff;font-size:clamp(24px,5vw,34px);font-weight:800;margin:0 0 12px}
-#onboard p.sub{font-family:var(--serif);font-style:normal;color:var(--cream);opacity:.86;font-size:16px;max-width:46ch;margin:0 auto 26px;line-height:1.6}
+#onboard p.sub{font-family:var(--serif);font-style:normal;color:var(--offwhite);opacity:.86;font-size:16px;max-width:46ch;margin:0 auto 26px;line-height:1.6}
 .ob-choices{display:grid;gap:11px;max-width:440px;margin:0 auto;text-align:left}
-.ob-choice{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.16);border-radius:var(--r);padding:15px 17px;color:var(--cream);transition:.18s;display:flex;gap:13px;align-items:flex-start;text-align:left;width:100%}
+.ob-choice{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.16);border-radius:var(--r);padding:15px 17px;color:var(--offwhite);transition:.18s;display:flex;gap:13px;align-items:flex-start;text-align:left;width:100%}
 .ob-choice:hover{border-color:rgba(201,161,74,.6);transform:translateY(-1px)}
 .ob-choice[aria-pressed="true"]{border-color:var(--gold);background:rgba(201,161,74,.14)}
 .ob-choice .ck{flex:none;width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.35);margin-top:1px;display:grid;place-items:center;transition:.2s}
@@ -291,7 +296,7 @@ section.block:first-of-type{border-top:none}
 .ob-choice .ttl{font-weight:700;color:#fff;font-size:15px;display:block;margin-bottom:2px}
 .ob-choice .dsc{font-size:13px;opacity:.78;line-height:1.4}
 .ob-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:440px;margin:0 auto}
-.ob-chip{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.18);color:var(--cream);font-family:inherit;font-size:15px;font-weight:600;padding:11px 18px;border-radius:999px;transition:.18s}
+.ob-chip{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.18);color:var(--offwhite);font-family:inherit;font-size:15px;font-weight:600;padding:11px 18px;border-radius:999px;transition:.18s}
 .ob-chip:hover{border-color:rgba(201,161,74,.6)}
 .ob-chip[aria-pressed="true"]{border-color:var(--gold);background:var(--gold);color:var(--navy)}
 .ob-txt{width:100%;max-width:420px;margin:0 auto;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.18);color:#fff;font-family:inherit;font-size:18px;padding:14px 16px;border-radius:var(--r);outline:none;text-align:center}
@@ -310,7 +315,7 @@ section.block:first-of-type{border-top:none}
 
 /* ---------- signature solo exercises ---------- */
 .exercise-card{padding:18px;display:flex;flex-direction:column;gap:9px;text-align:left}
-.exercise-card .ei{width:40px;height:40px;border-radius:10px;background:var(--cream);color:var(--navy);display:grid;place-items:center}
+.exercise-card .ei{width:40px;height:40px;border-radius:10px;background:var(--white);color:var(--navy);display:grid;place-items:center}
 .exercise-card .ei svg{width:21px;height:21px}
 .exercise-card h3{font-size:15px;font-weight:700}
 .exercise-card p{font-size:12.5px;color:var(--ink-soft);line-height:1.45;flex:1}
@@ -320,8 +325,8 @@ section.block:first-of-type{border-top:none}
 .mode-card{padding:0;overflow:hidden;text-align:left;display:flex;flex-direction:column;background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg)}
 .mode-top{padding:18px 18px 14px;color:#fff;background:var(--navy);position:relative}
 .mode-top.quiz{background:linear-gradient(130deg,#6d2f8f,#3b1a52)}
-.mode-top.race{background:linear-gradient(130deg,#6B1616,#5c241c)}
-.mode-top.tbl{background:linear-gradient(130deg,#1E3D4C,#08101F)}
+.mode-top.race{background:linear-gradient(130deg,#A0522D,#5c241c)}
+.mode-top.tbl{background:linear-gradient(130deg,#1E3D4C,#1E3D4C)}
 .mode-top.escape{background:linear-gradient(130deg,#B8924A,#7a5f28)}
 .mode-top.draw{background:linear-gradient(130deg,#2b6b57,#163b30)}
 .mode-top .mtag{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.9}
@@ -330,7 +335,7 @@ section.block:first-of-type{border-top:none}
 .mode-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:12px;flex:1}
 .mode-body p{font-size:13px;color:var(--ink-soft);line-height:1.5;flex:1}
 .mode-body .btn{align-self:flex-start}
-.proto-badge{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--terra-dark);background:var(--cream);border:1px solid var(--line);padding:3px 8px;border-radius:999px}
+.proto-badge{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--terra-dark);background:var(--white);border:1px solid var(--line);padding:3px 8px;border-radius:999px}
 .mode-card.is-soon{position:relative}
 .mode-card.is-soon .mode-body{opacity:.9}
 .mode-card.is-soon .mode-top{filter:saturate(.65)}
@@ -344,7 +349,7 @@ section.block:first-of-type{border-top:none}
 .g-center h3{font-size:22px;font-weight:800;margin:12px 0 6px}
 .g-center p{color:var(--ink-soft);max-width:52ch;margin:0 auto 18px}
 .lobby-players{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:6px 0 22px}
-.lp{display:flex;align-items:center;gap:7px;background:var(--cream);border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-weight:700;font-size:13px;animation:pop .3s var(--ease) both}
+.lp{display:flex;align-items:center;gap:7px;background:var(--white);border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-weight:700;font-size:13px;animation:pop .3s var(--ease) both}
 .lp .av{width:20px;height:20px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:11px}
 .lp.you .av{background:var(--gold);color:var(--navy)}
 
@@ -360,7 +365,7 @@ section.block:first-of-type{border-top:none}
 .g-tile:hover{transform:translateY(-2px);filter:brightness(1.06)}
 .g-tile:disabled{cursor:default}
 .g-tile .sym{width:26px;height:26px;flex:none;display:grid;place-items:center;background:rgba(255,255,255,.25);border-radius:6px;font-weight:800}
-.g-tile.t0{background:#6B1616}.g-tile.t1{background:#1E6091}.g-tile.t2{background:#B8924A;color:#08101F}.g-tile.t3{background:#2b6b57}
+.g-tile.t0{background:#A0522D}.g-tile.t1{background:#1E6091}.g-tile.t2{background:#B8924A;color:#1E3D4C}.g-tile.t3{background:#2b6b57}
 .g-tile.correct{outline:4px solid #2b6b57;box-shadow:0 0 0 4px rgba(43,107,87,.3)}
 .g-tile.wrong{opacity:.4}
 .g-feedback{text-align:center;font-weight:800;font-size:17px;margin:16px 0 0}
@@ -369,7 +374,7 @@ section.block:first-of-type{border-top:none}
 /* leaderboard */
 .lb{display:grid;gap:8px;margin:8px 0 20px}
 .lb-row{display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:center;padding:11px 14px;border-radius:var(--r);background:var(--offwhite);border:1px solid var(--line-soft);font-weight:700}
-.lb-row.you{background:var(--cream);border-color:var(--gold)}
+.lb-row.you{background:var(--white);border-color:var(--gold)}
 .lb-row .rank{font-family:var(--mono);color:var(--terra-dark);text-align:center}
 .lb-row .pts{font-family:var(--mono);color:var(--navy)}
 .lb-row.first .rank{color:var(--gold)}
@@ -397,7 +402,7 @@ section.block:first-of-type{border-top:none}
 .locks{display:flex;gap:10px;justify-content:center;margin:0 0 20px}
 .lock{width:46px;height:46px;border-radius:11px;background:var(--offwhite);border:2px solid var(--line);display:grid;place-items:center;font-size:22px;color:var(--ink-faint)}
 .lock.open{background:#e2efe8;border-color:var(--ok);color:var(--ok)}
-.esc-clue{background:var(--cream);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;margin-bottom:16px;font-size:15px;line-height:1.5}
+.esc-clue{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;margin-bottom:16px;font-size:15px;line-height:1.5}
 .esc-clue b{color:var(--navy)}
 
 /* draw canvas */
@@ -419,7 +424,7 @@ section.block:first-of-type{border-top:none}
 .wk-pick[aria-pressed="true"] .lbl{text-decoration:none;opacity:1;color:var(--navy)}
 .wk-pick .lbl b{font-weight:800}
 /* floating pomodoro (dark, solid) */
-.pomo-float{position:fixed;right:20px;bottom:20px;width:322px;max-width:calc(100vw - 32px);background:#08101F;background:linear-gradient(158deg,#17284a 0%,#08101F 55%,#08101F 100%);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-lg);box-shadow:0 22px 48px -16px rgba(0,0,0,.62);color:var(--cream);z-index:75;overflow:hidden}
+.pomo-float{position:fixed;right:20px;bottom:20px;width:322px;max-width:calc(100vw - 32px);background:#1E3D4C;background:linear-gradient(158deg,#17284a 0%,#1E3D4C 55%,#1E3D4C 100%);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-lg);box-shadow:0 22px 48px -16px rgba(0,0,0,.62);color:var(--offwhite);z-index:75;overflow:hidden}
 .pomo-float[hidden]{display:none}
 .pf-head{display:flex;align-items:center;gap:8px;padding:9px 12px;background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.10);cursor:grab;user-select:none;touch-action:none}
 .pf-head:active{cursor:grabbing}
@@ -438,9 +443,9 @@ section.block:first-of-type{border-top:none}
 .pf-ring-lbl{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-light)}
 .pf-body{padding:6px 14px 12px}
 .pf-comp{font-weight:800;font-size:16px;color:#fff;margin-bottom:8px}
-.pf-body p{color:var(--cream);opacity:.85}
+.pf-body p{color:var(--offwhite);opacity:.85}
 .pf-actions{display:flex;gap:8px;flex-wrap:wrap}
-.pomo-float .pm-step{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:var(--cream)}
+.pomo-float .pm-step{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);color:var(--offwhite)}
 .pomo-float .pm-step .pm-box{border-color:rgba(255,255,255,.35)}
 .pomo-float .pm-step[aria-pressed="true"]{background:rgba(63,122,91,.30);border-color:var(--ok)}
 .pomo-float .pm-step[aria-pressed="true"] .pm-box{background:var(--ok);border-color:var(--ok)}
@@ -451,7 +456,7 @@ section.block:first-of-type{border-top:none}
 .pf-sound{border-top:1px solid rgba(255,255,255,.10);padding:10px 12px;display:grid;gap:8px}
 .pf-slabel{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,241,232,.55)}
 .pf-sbtns{display:flex;gap:6px;flex-wrap:wrap}
-.pf-s{font-size:12px;font-weight:700;color:var(--cream);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:5px 11px;cursor:pointer}
+.pf-s{font-size:12px;font-weight:700;color:var(--offwhite);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:5px 11px;cursor:pointer}
 .pf-s[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--navy)}
 .pf-link{display:flex;gap:6px}
 .pf-link input,#pfSaved{flex:1;min-width:0;font-family:inherit;font-size:12px;padding:6px 8px;border:1.5px solid rgba(255,255,255,.18);border-radius:8px;background:rgba(255,255,255,.06);color:#fff}
@@ -485,7 +490,7 @@ section.block:first-of-type{border-top:none}
     <div class="ob-panel" id="obPanel"><!-- filled by JS --></div>
   </div>
   <div class="ob-foot">
-    <button class="btn ghost" id="obBack" style="background:transparent;color:var(--cream);border-color:rgba(255,255,255,.25)">Back</button>
+    <button class="btn ghost" id="obBack" style="background:transparent;color:var(--offwhite);border-color:rgba(255,255,255,.25)">Back</button>
     <button class="btn gold" id="obNext">Continue</button>
   </div>
 </div>
@@ -495,9 +500,9 @@ section.block:first-of-type{border-top:none}
   <div class="hbar">
     <span class="logo">
       <svg viewBox="40 10 125 148" aria-hidden="true"><g transform="translate(0,18)">
-        <g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#8B1D1D"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#8B1D1D"/></g>
-        <g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#6B1616"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#6B1616"/></g>
-        <g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#08101F"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#08101F"/></g>
+        <g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#C2734D"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C2734D"/></g>
+        <g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#A0522D"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#A0522D"/></g>
+        <g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#1E3D4C"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#1E3D4C"/></g>
       </g></svg>
       <span><span class="lt">Mastery <span class="ac">OS</span></span><span class="ls">Human Anatomy</span></span>
     </span>
@@ -540,7 +545,7 @@ section.block:first-of-type{border-top:none}
   <section class="block" id="s-dash" aria-labelledby="h-dash">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Section 2</p><h2 id="h-dash">Mastery Dashboard</h2><p class="lead">This is where you can see what you have solid and what you are still exposed on.</p></div>
+        <div><p class="eyebrow">Section 2</p><h2 id="h-dash">Mastery Dashboard</h2><p class="lead">Where you are strong and where you are exposed, at a glance.</p></div>
       </div>
       <div class="grid g4" id="dashGrid"><!-- JS --></div>
     </div>
@@ -550,9 +555,9 @@ section.block:first-of-type{border-top:none}
   <section class="block" id="s-map" aria-labelledby="h-map">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Section 3</p><h2 id="h-map">Competency Map</h2><p class="lead">This map is organized by competency rather than by chapter, so you can see exactly which skills you have proved and which ones are still open.</p></div>
+        <div><p class="eyebrow">Section 3</p><h2 id="h-map">Competency Map</h2><p class="lead">Not chapters. Measurable competencies you can prove, one at a time.</p></div>
       </div>
-      <p style="background:var(--cream);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-bottom:18px">These competencies are the majority of what the course covers, and working through them honestly and consistently is very likely to be effective. No tool can promise a grade, though. Your result also depends on how much time you put in, how honest you are in your own self-assessment, exam-day factors like anxiety, and other things beyond this app. Use it alongside class, the structure list, and the syllabus.</p>
+      <p style="background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-bottom:18px">These competencies are the majority of what the course covers, and working through them honestly and consistently is very likely to be effective. No tool can promise a grade, though. Your result also depends on how much time you put in, how honest you are in your own self-assessment, exam-day factors like anxiety, and other things beyond this app. Use it alongside class, the structure list, and the syllabus.</p>
       <div id="mapWrap"><!-- JS --></div>
     </div>
   </section>
@@ -571,13 +576,13 @@ section.block:first-of-type{border-top:none}
   <section class="block" id="s-flow" aria-labelledby="h-flow">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Section 5</p><h2 id="h-flow">Self-Tutoring Workflow</h2><p class="lead">Every session runs the same six steps, so after a couple of weeks you stop deciding what to do and just start.</p></div>
+        <div><p class="eyebrow">Section 5</p><h2 id="h-flow">Self-Tutoring Workflow</h2><p class="lead">The same six-step cycle every session, so learning becomes a habit, not a guess.</p></div>
         <button class="btn primary" data-session="today">Run the full cycle</button>
       </div>
       <div class="flow" id="flowWrap"><!-- JS --></div>
       <h3 style="margin:30px 0 4px;font-size:17px">Signature exercises</h3>
-      <p style="font-size:14px;color:var(--ink-soft);margin:0 0 12px">There are two deep-practice moves here, and you can run either one on any competency. Both of them ask you to produce the anatomy from memory instead of looking it up.</p>
-      <div class="tip-note" style="display:flex;gap:10px;align-items:flex-start;background:var(--cream);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:var(--r);padding:11px 14px;margin:0 0 16px;font-size:13.5px;color:var(--navy)"><span aria-hidden="true">📓</span><span>Keep one dedicated notebook for these written exercises: your drawings, mind-maps, and brain dumps. Date each page and label it with the competency. It becomes your own recall log to review before exams, and the act of writing by hand is part of what makes it stick.</span></div>
+      <p style="font-size:14px;color:var(--ink-soft);margin:0 0 12px">Two deep-practice moves you can run on any competency. Given, not Googled.</p>
+      <div class="tip-note" style="display:flex;gap:10px;align-items:flex-start;background:var(--white);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:var(--r);padding:11px 14px;margin:0 0 16px;font-size:13.5px;color:var(--navy)"><span aria-hidden="true">📓</span><span>Keep one dedicated notebook for these written exercises: your drawings, mind-maps, and brain dumps. Date each page and label it with the competency. It becomes your own recall log to review before exams, and the act of writing by hand is part of what makes it stick.</span></div>
       <div class="grid g3" id="exGrid"><!-- JS --></div>
     </div>
   </section>
@@ -625,7 +630,7 @@ section.block:first-of-type{border-top:none}
   <section class="block" id="s-together" aria-labelledby="h-tog">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Section 9</p><h2 id="h-tog">Study Together</h2><p class="lead">Most of this gets easier with other people in the room. Compete, work together, teach each other, and race the clock. Working single-device prototypes built on your own question bank.</p></div>
+        <div><p class="eyebrow">Section 9</p><h2 id="h-tog">Study Together</h2><p class="lead">Mastery is social. Compete, cooperate, teach, and race. Working single-device prototypes built on your own question bank.</p></div>
       </div>
       <div class="grid g3" id="togetherGrid"><!-- JS --></div>
     </div>
@@ -661,7 +666,7 @@ section.block:first-of-type{border-top:none}
     </div>
     <div class="sheet-body">
       <div class="note">Upload once. Mastery OS generates the daily plans, spaced-recall schedule, competency tracking, weakness dashboard, and recommendations automatically. Students never build the course structure.</div>
-      <div class="note" id="instrSchedInfo" style="background:var(--navy);color:var(--cream);border-color:var(--navy)"></div>
+      <div class="note" id="instrSchedInfo" style="background:var(--navy);color:var(--offwhite);border-color:var(--navy)"></div>
       <div class="field"><label>Term start and end</label><div style="display:flex;gap:8px"><input id="cfgStart" type="date" aria-label="Term start"><input id="cfgEnd" type="date" aria-label="Term end"></div><p class="hint">Set the semester dates. The course length (8, 16, or any) comes from the schedule you import.</p></div>
       <div class="field"><label for="cfgPaste">Import schedule</label><textarea id="cfgPaste" rows="4" placeholder="Paste your schedule.js contents or JSON, or choose a file below."></textarea><input id="cfgFile" type="file" accept=".js.json.txt.html" style="margin-top:8px"><div style="margin-top:8px"><button class="btn gold" id="cfgImport">Import schedule</button></div><p class="hint" id="cfgImportInfo">It reads the weeks and exam dates automatically.</p></div>
       <button class="btn block" id="instrReload" style="margin-bottom:18px">Reload plan from current schedule</button>
@@ -698,7 +703,7 @@ section.block:first-of-type{border-top:none}
   </div>
   <div class="pf-ring" id="pfRing">
     <svg class="pf-ring-svg" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
-      <defs><linearGradient id="pfGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B8924A"/><stop offset="1" stop-color="#8B1D1D"/></linearGradient></defs>
+      <defs><linearGradient id="pfGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B8924A"/><stop offset="1" stop-color="#C2734D"/></linearGradient></defs>
       <circle class="pf-ring-track" cx="60" cy="60" r="52"/>
       <circle class="pf-ring-arc" id="pfArc" cx="60" cy="60" r="52"/>
     </svg>
@@ -759,7 +764,7 @@ var TODAY=(function(){
    ICONS
 ========================================================= */
 var I={
-  target:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>', flask:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 18l-5-9V3"/><path d="M7 15h10"/></svg>', recall:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4M9 4h6"/><rect x="5" y="8" width="14" height="12" rx="2"/><path d="M9 13h6M9 16h4"/></svg>', weak:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>', bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>', clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>', diagnose:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>', repair:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2-2z"/></svg>', retrieve:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v6h6"/><path d="M4 10a8 8 0 1 1 2 5"/></svg>', apply:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 7v6c0 5 3.4 7.7 8 9 4.6-1.3 8-4 8-9V7z"/></svg>', teach:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11h-6M19 8v6"/></svg>', reflect:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-4 10.5V17h8v-3.5A6 6 0 0 0 12 3z"/><path d="M9 21h6"/></svg>', draw:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18z"/></svg>', label:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 12 22l-9-9V3h10z"/><circle cx="7.5" cy="7.5" r="1.5" fill="currentColor"/></svg>', eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>', micro:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 19v3"/></svg>', speak:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>', clinical:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M12 9v6M9 12h6"/></svg>', build:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/><circle cx="12" cy="12" r="3"/></svg>', check:'<svg viewBox="0 0 24 24" fill="none" stroke="#08101F" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>', chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>'
+  target:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>', flask:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 18l-5-9V3"/><path d="M7 15h10"/></svg>', recall:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4M9 4h6"/><rect x="5" y="8" width="14" height="12" rx="2"/><path d="M9 13h6M9 16h4"/></svg>', weak:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>', bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>', clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>', diagnose:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>', repair:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2-2z"/></svg>', retrieve:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v6h6"/><path d="M4 10a8 8 0 1 1 2 5"/></svg>', apply:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 7v6c0 5 3.4 7.7 8 9 4.6-1.3 8-4 8-9V7z"/></svg>', teach:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11h-6M19 8v6"/></svg>', reflect:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-4 10.5V17h8v-3.5A6 6 0 0 0 12 3z"/><path d="M9 21h6"/></svg>', draw:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18z"/></svg>', label:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 12 22l-9-9V3h10z"/><circle cx="7.5" cy="7.5" r="1.5" fill="currentColor"/></svg>', eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>', micro:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 19v3"/></svg>', speak:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>', clinical:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M12 9v6M9 12h6"/></svg>', build:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/><circle cx="12" cy="12" r="3"/></svg>', check:'<svg viewBox="0 0 24 24" fill="none" stroke="#1E3D4C" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>', chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>'
 };
 
 /* =========================================================
@@ -799,10 +804,10 @@ var SEED={
    cumulative lecture final + cumulative lab final Thu Aug 6.
 ========================================================= */
 var FALL_MW={course:'BIO 004 Human Anatomy',section:'Mon / Wed (Afternoon)',term:'Fall 2026',start:'2026-08-17',end:'2026-12-11',highyield:'Tissue types, bone and skeletal landmarks, heart blood flow, muscle actions and NAV, cranial nerves, GI and renal organs',weeks:[
-{n:1,start:'2026-08-17',title:'Cells, Tissues and Epithelium',lecture:['Intro and Team Formation','Guided Cell Activity (Brain dump)'],lab:['Intro, Lab Safety and Introduction to Histology','Epithelial Tissues'],labExam:null,tbl:null}, {n:2,start:'2026-08-24',title:'Cell Anatomy and Connective Tissue',lecture:['TBL 1: Cell Anatomy','Interactive Histology Lecture (Brain dump)'],lab:['Connective Tissue I','Connective Tissue II'],labExam:null,tbl:'2026-08-24'}, {n:3,start:'2026-08-31',title:'Histology and Integument',lecture:['TBL 2: Histology','Exam 1 Review Game'],lab:['Muscle and Nervous Tissue','Integumentary'],labExam:null,tbl:'2026-08-31'}, {n:4,start:'2026-09-07',title:'Exam 1',lecture:['Labor Day (no class)','Exam 1'],lab:['Cell, Tissue and Integument Review'],labExam:{name:'Exam 1',date:'2026-09-09',covers:'Cells, tissues, histology, integument'},tbl:null}, {n:5,start:'2026-09-14',title:'Bone and Axial Skeleton',lecture:['Long Bone and Bone Microanatomy (Brain dump)','Skull Walk-Through (Brain dump)'],lab:['Bone Tissue and Long Bone Microanatomy','Axial Skeleton: Skull'],labExam:null,tbl:null}, {n:6,start:'2026-09-21',title:'Skeleton and Appendicular',lecture:['Spine Walk-Through (Brain dump)','TBL 3: Bone, Cartilage and Micro'],lab:['Axial Skeleton: Vertebrae and Ribs','Upper Extremity'],labExam:null,tbl:'2026-09-23'}, {n:7,start:'2026-09-28',title:'Exam 2',lecture:['Kahoot Review: Bone','Exam 2'],lab:['Lower Extremity'],labExam:{name:'Exam 2',date:'2026-09-30',covers:'Bone, cartilage, axial and appendicular skeleton'},tbl:null}, {n:8,start:'2026-10-05',title:'Heart and Muscle Microanatomy',lecture:['Interactive Heart Lecture; Cardiac Conduction (Brain dump)','Muscle Microanatomy and Sarcomere (Brain dump)'],lab:['Thoracic Anatomy (Heart) and BV Histology','Muscle Microanatomy and Sarcomere'],labExam:null,tbl:null}, {n:9,start:'2026-10-12',title:'Heart, Blood and Upper Limb',lecture:['TBL 4: Heart Anatomy','Blood Cell Interactive Lecture (Brain dump)'],lab:['Muscles of Face, Chest and Back','Upper Arm and Anterior Forearm (NAV)'],labExam:null,tbl:'2026-10-12'}, {n:10,start:'2026-10-19',title:'Blood and Exam 3',lecture:['TBL 5: Blood','Exam 3'],lab:['Posterior Forearm (NAV)','Heart, Muscle and Blood Review'],labExam:{name:'Exam 3',date:'2026-10-21',covers:'Heart, muscle microanatomy, blood, upper limb'},tbl:'2026-10-19'}, {n:11,start:'2026-10-26',title:'Respiratory and Endocrine',lecture:['Respiratory Anatomy and Histology Walk-Through (Brain dump)','Endocrine Walk-Through (Brain dump)'],lab:['Respiratory Anatomy and Histology','Anterior Thigh Muscles and NAV'],labExam:null,tbl:null}, {n:12,start:'2026-11-02',title:'Respiratory and Lower Limb',lecture:['TBL 6: Respiratory','GI Map Activity I and II (Brain dump)'],lab:['Posterior Thigh Muscle and NAV','Anterior/Posterior Lower Leg Muscles'],labExam:null,tbl:'2026-11-02'}, {n:13,start:'2026-11-09',title:'GI System',lecture:['TBL 7: GI System','Veterans Day (no class)'],lab:['GI Organs (Primary and Accessory)'],labExam:null,tbl:'2026-11-09'}, {n:14,start:'2026-11-16',title:'Exam 4 and Renal',lecture:['Exam 4','Exam 4 Rebuttal; Guided Renal Map'],lab:['Renal Anatomy'],labExam:{name:'Exam 4',date:'2026-11-16',covers:'Respiratory, endocrine, GI, urinary and renal, reproductive'},tbl:null}, {n:15,start:'2026-11-23',title:'Reproduction',lecture:['Kahoot: Renal','Travel Day (no class)'],lab:['M and F Reproductive Anatomy'],labExam:null,tbl:null}, {n:16,start:'2026-11-30',title:'Renal and CNS',lecture:['TBL 8: Renal','Clinical: Cranial Nerve Stations (Brain dump)'],lab:['CNS Brain, Meninges and CSF','Brain Stem and Cranial Nerves (PNS)'],labExam:null,tbl:'2026-11-30'}, {n:17,start:'2026-12-07',title:'Neuro and Final Exam 5',lecture:['TBL 9: Cranial Nerves','Exam 5'],lab:['CNS Spinal Cord and Spinal Nerves','Neuro Review'],labExam:{name:'Exam 5',date:'2026-12-09',covers:'Nervous system: brain, brainstem, cranial nerves, spinal cord, PNS and ANS'},tbl:'2026-12-07'}
+{n:1,start:'2026-08-17',title:'Cells, Tissues and Epithelium',lecture:['Intro and Team Formation','Guided Cell Activity (Brain dump)'],lab:['Intro, Lab Safety and Introduction to Histology','Epithelial Tissues'],labExam:null,tbl:null}, {n:2,start:'2026-08-24',title:'Cell Anatomy and Connective Tissue',lecture:['TBL 1: Cell Anatomy','Interactive Histology Lecture (Brain dump)'],lab:['Connective Tissue I','Connective Tissue II'],labExam:null,tbl:'2026-08-24'}, {n:3,start:'2026-08-31',title:'Histology and Integument',lecture:['TBL 2: Histology','Exam 1 Review Game'],lab:['Muscle and Nervous Tissue','Integumentary'],labExam:null,tbl:'2026-08-31'}, {n:4,start:'2026-09-07',title:'Exam 1',lecture:['Labor Day (no class)','Exam 1'],lab:['Cell, Tissue and Integument Review'],labExam:{name:'Exam 1',date:'2026-09-09',covers:'Cells, tissues, histology, integument'},tbl:null}, {n:5,start:'2026-09-14',title:'Bone and Axial Skeleton',lecture:['Long Bone and Bone Microanatomy (Brain dump)','Skull Walk-Through (Brain dump)'],lab:['Bone Tissue and Long Bone Microanatomy','Axial Skeleton: Skull'],labExam:null,tbl:null}, {n:6,start:'2026-09-21',title:'Skeleton and Appendicular',lecture:['Spine Walk-Through (Brain dump)','TBL 3: Bone, Cartilage and Micro'],lab:['Axial Skeleton: Vertebrae and Ribs','Upper Extremity'],labExam:null,tbl:'2026-09-23'}, {n:7,start:'2026-09-28',title:'Exam 2',lecture:['Kahoot Review: Bone','Exam 2'],lab:['Lower Extremity'],labExam:{name:'Exam 2',date:'2026-09-30',covers:'Bone, cartilage, axial and appendicular skeleton'},tbl:null}, {n:8,start:'2026-10-05',title:'Heart and Muscle Microanatomy',lecture:['Interactive Heart Lecture; Cardiac Conduction (Brain dump)','Muscle Microanatomy and Sarcomere (Brain dump)'],lab:['Thoracic Anatomy (Heart) and BV Histology','Muscle Microanatomy and Sarcomere'],labExam:null,tbl:null}, {n:9,start:'2026-10-12',title:'Heart, Blood and Upper Limb',lecture:['TBL 4: Heart Anatomy','Blood Cell Interactive Lecture (Brain dump)'],lab:['Muscles of Face, Chest and Back','Upper Arm and Anterior Forearm (NAV)'],labExam:null,tbl:'2026-10-12'}, {n:10,start:'2026-10-19',title:'Blood and Exam 3',lecture:['TBL 5: Blood','Exam 3'],lab:['Posterior Forearm (NAV)','Heart, Muscle and Blood Review'],labExam:{name:'Exam 3',date:'2026-10-21',covers:'Heart, muscle microanatomy, blood, upper limb'},tbl:'2026-10-19'}, {n:11,start:'2026-10-26',title:'Respiratory and Endocrine',lecture:['Respiratory Anatomy and Histology Walk-Through (Brain dump)','Endocrine Walk-Through (Brain dump)'],lab:['Respiratory Anatomy and Histology','Anterior Thigh Muscles and NAV'],labExam:null,tbl:null}, {n:12,start:'2026-11-02',title:'Respiratory and Lower Limb',lecture:['TBL 6: Respiratory','GI Map Activity I and II (Brain dump)'],lab:['Posterior Thigh Muscle and NAV','Anterior/Posterior Lower Leg Muscles'],labExam:null,tbl:'2026-11-02'}, {n:13,start:'2026-11-09',title:'GI System',lecture:['TBL 7: GI System','Veterans Day (no class)'],lab:['GI Organs (Primary and Accessory)'],labExam:null,tbl:'2026-11-09'}, {n:14,start:'2026-11-16',title:'Exam 4 and Renal',lecture:['Exam 4','Exam 4 Rebuttal; Guided Renal Map'],lab:['Renal Anatomy'],labExam:{name:'Exam 4',date:'2026-11-16',covers:'Respiratory, endocrine, lymphatic and immune, GI primary and accessory'},tbl:null}, {n:15,start:'2026-11-23',title:'Reproduction',lecture:['Kahoot: Renal','Travel Day (no class)'],lab:['M and F Reproductive Anatomy'],labExam:null,tbl:null}, {n:16,start:'2026-11-30',title:'Renal and CNS',lecture:['TBL 8: Renal','Clinical: Cranial Nerve Stations (Brain dump)'],lab:['CNS Brain, Meninges and CSF','Brain Stem and Cranial Nerves (PNS)'],labExam:null,tbl:'2026-11-30'}, {n:17,start:'2026-12-07',title:'Neuro and Final Exam 5',lecture:['TBL 9: Cranial Nerves','Exam 5'],lab:['CNS Spinal Cord and Spinal Nerves','Neuro Review'],labExam:{name:'Exam 5',date:'2026-12-09',covers:'Nervous system: brain, brainstem, cranial nerves, spinal cord, PNS and ANS'},tbl:'2026-12-07'}
 ]};
 var FALL_TR={course:'BIO 004 Human Anatomy',section:'Tue / Thu',term:'Fall 2026',start:'2026-08-18',end:'2026-12-11',highyield:'Tissue types, bone and skeletal landmarks, heart blood flow, muscle actions and NAV, cranial nerves, GI and renal organs',weeks:[
-{n:1,start:'2026-08-17',title:'Cells, Tissues and Epithelium',lecture:['Intro and Team Formation','Guided Cell Activity (Brain dump)'],lab:['Intro, Lab Safety and Introduction to Histology','Epithelial Tissues'],labExam:null,tbl:null}, {n:2,start:'2026-08-24',title:'Cell Anatomy and Connective Tissue',lecture:['TBL 1: Cell Anatomy','Interactive Histology Lecture (Brain dump)'],lab:['Connective Tissue I','Connective Tissue II'],labExam:null,tbl:'2026-08-25'}, {n:3,start:'2026-08-31',title:'Histology and Integument',lecture:['TBL 2: Histology','Exam 1 Review Game'],lab:['Muscle and Nervous Tissue','Integumentary'],labExam:null,tbl:'2026-09-01'}, {n:4,start:'2026-09-07',title:'Exam 1 and Bone',lecture:['Exam 1','Long Bone and Bone Microanatomy (Brain dump)'],lab:['Cell, Tissue and Integument Review','Bone Tissue and Long Bone Microanatomy'],labExam:{name:'Exam 1',date:'2026-09-08',covers:'Cells, tissues, histology, integument'},tbl:null}, {n:5,start:'2026-09-14',title:'Axial Skeleton',lecture:['Skull Walk-Through (Brain dump)','Spine Walk-Through (Brain dump)'],lab:['Axial Skeleton: Skull','Axial Skeleton: Vertebrae and Ribs'],labExam:null,tbl:null}, {n:6,start:'2026-09-21',title:'Skeleton and Appendicular',lecture:['TBL 3: Bone, Cartilage and Micro','Kahoot Review: Bone'],lab:['Upper Extremity','Lower Extremity'],labExam:null,tbl:'2026-09-22'}, {n:7,start:'2026-09-28',title:'Exam 2 and Heart',lecture:['Exam 2','Interactive Heart Lecture; Cardiac Conduction (Brain dump)'],lab:['Skeletal and Joints Review','Thoracic Anatomy (Heart) and BV Histology'],labExam:{name:'Exam 2',date:'2026-09-29',covers:'Bone, cartilage, axial and appendicular skeleton'},tbl:null}, {n:8,start:'2026-10-05',title:'Muscle Micro and Heart',lecture:['Muscle Microanatomy and Sarcomere (Brain dump)','TBL 4: Heart Anatomy'],lab:['Muscle Microanatomy and Sarcomere','Muscles of Face, Chest and Back'],labExam:null,tbl:'2026-10-08'}, {n:9,start:'2026-10-12',title:'Blood and Upper Limb',lecture:['Professional Development (no class)','Blood Cell Interactive Lecture (Brain dump)'],lab:['Upper Arm and Anterior Forearm (NAV)'],labExam:null,tbl:null}, {n:10,start:'2026-10-19',title:'Blood and Exam 3',lecture:['TBL 5: Blood','Exam 3'],lab:['Posterior Forearm (NAV)','Heart, Muscle and Blood Review'],labExam:{name:'Exam 3',date:'2026-10-22',covers:'Heart, muscle microanatomy, blood, upper limb'},tbl:'2026-10-20'}, {n:11,start:'2026-10-26',title:'Respiratory and Endocrine',lecture:['Respiratory Anatomy and Histology Walk-Through (Brain dump)','Endocrine Walk-Through (Brain dump)'],lab:['Respiratory Anatomy and Histology','Anterior Thigh Muscles and NAV'],labExam:null,tbl:null}, {n:12,start:'2026-11-02',title:'Respiratory and Lower Limb',lecture:['TBL 6: Respiratory','GI Map Activity I (Brain dump)'],lab:['Posterior Thigh Muscle and NAV','Anterior/Posterior Lower Leg Muscles'],labExam:null,tbl:'2026-11-03'}, {n:13,start:'2026-11-09',title:'GI System',lecture:['GI Map Activity II (Brain dump)','TBL 7: GI System'],lab:['GI Organs (Primary)','GI Organs (Accessory)'],labExam:null,tbl:'2026-11-12'}, {n:14,start:'2026-11-16',title:'Exam 4 and Renal',lecture:['Exam 4','Renal Map Walk-Through (Brain dump)'],lab:['Respiratory, Endocrine and GI Review','Renal Anatomy'],labExam:{name:'Exam 4',date:'2026-11-17',covers:'Respiratory, endocrine, GI, urinary and renal, reproductive'},tbl:null}, {n:15,start:'2026-11-23',title:'Reproduction',lecture:['Kahoot Review: Renal','Thanksgiving (no class)'],lab:['M and F Reproductive Anatomy'],labExam:null,tbl:null}, {n:16,start:'2026-11-30',title:'Renal and CNS',lecture:['TBL 8: Renal','Clinical: Cranial Nerve Stations (Brain dump)'],lab:['CNS Brain, Meninges and CSF','Brain Stem and Cranial Nerves (PNS)'],labExam:null,tbl:'2026-12-01'}, {n:17,start:'2026-12-07',title:'Neuro and Final Exam 5',lecture:['TBL 9: Cranial Nerves','Exam 5'],lab:['CNS Spinal Cord and Spinal Nerves','Neuro Review'],labExam:{name:'Exam 5',date:'2026-12-10',covers:'Nervous system: brain, brainstem, cranial nerves, spinal cord, PNS and ANS'},tbl:'2026-12-08'}
+{n:1,start:'2026-08-17',title:'Cells, Tissues and Epithelium',lecture:['Intro and Team Formation','Guided Cell Activity (Brain dump)'],lab:['Intro, Lab Safety and Introduction to Histology','Epithelial Tissues'],labExam:null,tbl:null}, {n:2,start:'2026-08-24',title:'Cell Anatomy and Connective Tissue',lecture:['TBL 1: Cell Anatomy','Interactive Histology Lecture (Brain dump)'],lab:['Connective Tissue I','Connective Tissue II'],labExam:null,tbl:'2026-08-25'}, {n:3,start:'2026-08-31',title:'Histology and Integument',lecture:['TBL 2: Histology','Exam 1 Review Game'],lab:['Muscle and Nervous Tissue','Integumentary'],labExam:null,tbl:'2026-09-01'}, {n:4,start:'2026-09-07',title:'Exam 1 and Bone',lecture:['Exam 1','Long Bone and Bone Microanatomy (Brain dump)'],lab:['Cell, Tissue and Integument Review','Bone Tissue and Long Bone Microanatomy'],labExam:{name:'Exam 1',date:'2026-09-08',covers:'Cells, tissues, histology, integument'},tbl:null}, {n:5,start:'2026-09-14',title:'Axial Skeleton',lecture:['Skull Walk-Through (Brain dump)','Spine Walk-Through (Brain dump)'],lab:['Axial Skeleton: Skull','Axial Skeleton: Vertebrae and Ribs'],labExam:null,tbl:null}, {n:6,start:'2026-09-21',title:'Skeleton and Appendicular',lecture:['TBL 3: Bone, Cartilage and Micro','Kahoot Review: Bone'],lab:['Upper Extremity','Lower Extremity'],labExam:null,tbl:'2026-09-22'}, {n:7,start:'2026-09-28',title:'Exam 2 and Heart',lecture:['Exam 2','Interactive Heart Lecture; Cardiac Conduction (Brain dump)'],lab:['Skeletal and Joints Review','Thoracic Anatomy (Heart) and BV Histology'],labExam:{name:'Exam 2',date:'2026-09-29',covers:'Bone, cartilage, axial and appendicular skeleton'},tbl:null}, {n:8,start:'2026-10-05',title:'Muscle Micro and Heart',lecture:['Muscle Microanatomy and Sarcomere (Brain dump)','TBL 4: Heart Anatomy'],lab:['Muscle Microanatomy and Sarcomere','Muscles of Face, Chest and Back'],labExam:null,tbl:'2026-10-08'}, {n:9,start:'2026-10-12',title:'Blood and Upper Limb',lecture:['Professional Development (no class)','Blood Cell Interactive Lecture (Brain dump)'],lab:['Upper Arm and Anterior Forearm (NAV)'],labExam:null,tbl:null}, {n:10,start:'2026-10-19',title:'Blood and Exam 3',lecture:['TBL 5: Blood','Exam 3'],lab:['Posterior Forearm (NAV)','Heart, Muscle and Blood Review'],labExam:{name:'Exam 3',date:'2026-10-22',covers:'Heart, muscle microanatomy, blood, upper limb'},tbl:'2026-10-20'}, {n:11,start:'2026-10-26',title:'Respiratory and Endocrine',lecture:['Respiratory Anatomy and Histology Walk-Through (Brain dump)','Endocrine Walk-Through (Brain dump)'],lab:['Respiratory Anatomy and Histology','Anterior Thigh Muscles and NAV'],labExam:null,tbl:null}, {n:12,start:'2026-11-02',title:'Respiratory and Lower Limb',lecture:['TBL 6: Respiratory','GI Map Activity I (Brain dump)'],lab:['Posterior Thigh Muscle and NAV','Anterior/Posterior Lower Leg Muscles'],labExam:null,tbl:'2026-11-03'}, {n:13,start:'2026-11-09',title:'GI System',lecture:['GI Map Activity II (Brain dump)','TBL 7: GI System'],lab:['GI Organs (Primary)','GI Organs (Accessory)'],labExam:null,tbl:'2026-11-12'}, {n:14,start:'2026-11-16',title:'Exam 4 and Renal',lecture:['Exam 4','Renal Map Walk-Through (Brain dump)'],lab:['Respiratory, Endocrine and GI Review','Renal Anatomy'],labExam:{name:'Exam 4',date:'2026-11-17',covers:'Respiratory, endocrine, lymphatic and immune, GI primary and accessory'},tbl:null}, {n:15,start:'2026-11-23',title:'Reproduction',lecture:['Kahoot Review: Renal','Thanksgiving (no class)'],lab:['M and F Reproductive Anatomy'],labExam:null,tbl:null}, {n:16,start:'2026-11-30',title:'Renal and CNS',lecture:['TBL 8: Renal','Clinical: Cranial Nerve Stations (Brain dump)'],lab:['CNS Brain, Meninges and CSF','Brain Stem and Cranial Nerves (PNS)'],labExam:null,tbl:'2026-12-01'}, {n:17,start:'2026-12-07',title:'Neuro and Final Exam 5',lecture:['TBL 9: Cranial Nerves','Exam 5'],lab:['CNS Spinal Cord and Spinal Nerves','Neuro Review'],labExam:{name:'Exam 5',date:'2026-12-10',covers:'Nervous system: brain, brainstem, cranial nerves, spinal cord, PNS and ANS'},tbl:'2026-12-08'}
 ]};
 var FALL_SECTIONS={mw:FALL_MW,'tr-early':FALL_TR,'tr-eve':FALL_TR,tr:FALL_TR};
 
@@ -1358,15 +1363,15 @@ function renderDailyBuild(){
 function ring(pct,color,big){
   var r=big?46:42,c=2*Math.PI*r,off=c*(1-pct/100),sz=big?120:112,cx=sz/2;
   return '<svg class="ring" viewBox="0 0 '+sz+' '+sz+'" width="'+sz+'" height="'+sz+'" role="img" aria-label="'+pct+' percent">'+
-    '<circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="rgba(8,16,31,.10)" stroke-width="9"/>'+
+    '<circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="rgba(30,61,76,.10)" stroke-width="9"/>'+
     '<circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'" transform="rotate(-90 '+cx+' '+cx+')"/>'+
     '<text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="'+(big?26:23)+'" font-weight="800" fill="var(--navy)">'+pct+'</text>'+
   '</svg>';
 }
-function ringColor(v){return v>=70?'#3F7A5B':v>=50?'#C9A14A':'#6B1616';}
+function ringColor(v){return v>=70?'#3F7A5B':v>=50?'#B8924A':'#A0522D';}
 function renderDashboard(){
   var rd=readiness();
-  var top='<div class="card readiness">'+ring(rd,'#C9A14A',true)+'<div class="rtext"><p class="eyebrow" style="color:var(--gold)">Practice Readiness</p><h3>Practice readiness: '+rd+'%</h3><p>'+readinessLine(rd)+'</p><p style="font-size:12px;opacity:.72;margin-top:8px">This reflects only what you have practiced here, not everything your exam may cover. Always cross-check the structure list and syllabus.</p></div><div style="flex:1"></div><button class="btn gold" data-session="today">Close the gap</button></div>';
+  var top='<div class="card readiness">'+ring(rd,'#B8924A',true)+'<div class="rtext"><p class="eyebrow" style="color:var(--gold)">Practice Readiness</p><h3>Practice readiness: '+rd+'%</h3><p>'+readinessLine(rd)+'</p><p style="font-size:12px;opacity:.72;margin-top:8px">This reflects only what you have practiced here, not everything your exam may cover. Always cross-check the structure list and syllabus.</p></div><div style="flex:1"></div><button class="btn gold" data-session="today">Close the gap</button></div>';
   var cards=S.dims.map(function(d){
     return '<div class="card hover ring-card"><div class="ring-wrap">'+ring(d.val,ringColor(d.val))+'</div><h3>'+esc(d.name)+'</h3><p class="rsub">'+bandWord(d.val)+'</p></div>';
   }).join('');
@@ -1713,7 +1718,7 @@ function openProve(id){
     return '<div class="prove-m soon" style="position:relative;text-align:left;width:100%;margin:0 0 8px;padding:12px 14px;border:1.5px solid var(--line);border-radius:var(--r);opacity:.6"><span class="proto-badge" style="position:absolute;top:10px;right:10px">Coming soon</span><b>'+esc(e.name)+'</b><br><span style="font-size:12.5px;color:var(--ink-soft);font-weight:400">'+esc(e.desc)+'</span></div>';
   }
   gBody('<div style="text-align:left"><p style="color:var(--ink-soft);margin:0 0 14px">Pick the one way you want to prove <b>'+esc(c.name)+'</b>, whatever way you are most comfortable. Do it, and your mastery moves. Spaced recall keeps it locked in over time.</p>'+
-    (c.ev.length?'<p style="background:var(--cream);border:1px solid var(--line-soft);border-radius:var(--r);padding:10px 13px;font-size:13px;margin:0 0 14px">Already proven <b>'+c.ev.length+'</b> way'+(c.ev.length>1?'s':'')+': '+esc(c.ev.map(function(k){return EVMAP[k]?EVMAP[k].name:k;}).join(' · '))+'. A <b>different</b> way locks it in harder.</p>':'')+
+    (c.ev.length?'<p style="background:var(--white);border:1px solid var(--line-soft);border-radius:var(--r);padding:10px 13px;font-size:13px;margin:0 0 14px">Already proven <b>'+c.ev.length+'</b> way'+(c.ev.length>1?'s':'')+': '+esc(c.ev.map(function(k){return EVMAP[k]?EVMAP[k].name:k;}).join(' · '))+'. A <b>different</b> way locks it in harder.</p>':'')+
     EVIDENCE.map(methodBtn).join('')+
     '<div class="g-actions"><button class="btn" data-gameclose>Close</button></div></div>');
   $$('#gameBody [data-provem]').forEach(function(b){b.onclick=function(){proveDo(c,b.getAttribute('data-provem'));};});
@@ -1769,7 +1774,7 @@ function aiTutorScreen(c){
   gSet('Teach it to an AI: '+c.name,'Use your own free AI account');
   gBody('<div style="text-align:left">'+
     '<p style="color:var(--ink-soft);margin:0 0 12px">Explain <b>'+esc(c.name)+'</b> out loud to a free AI tutor, like you are teaching a five-year-old. It listens, tells you what you missed, and quizzes you back.</p>'+
-    '<div style="background:var(--cream);border:1px solid var(--line);border-radius:var(--r);padding:11px 13px;font-size:12.5px;color:var(--ink-soft);margin-bottom:12px">This uses <b>your own free AI account</b> (ChatGPT, Claude, or Gemini), so it is free to you. Free plans cap how many messages you can send in a rolling window, usually enough for several teach-backs, and the exact limit varies by provider and changes over time. If you hit a limit on one, <b>switch to a different AI</b> for a while (each has its own separate free limit), or <b>prove it another way</b> and come back later.</div>'+
+    '<div style="background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:11px 13px;font-size:12.5px;color:var(--ink-soft);margin-bottom:12px">This uses <b>your own free AI account</b> (ChatGPT, Claude, or Gemini), so it is free to you. Free plans cap how many messages you can send in a rolling window, usually enough for several teach-backs, and the exact limit varies by provider and changes over time. If you hit a limit on one, <b>switch to a different AI</b> for a while (each has its own separate free limit), or <b>prove it another way</b> and come back later.</div>'+
     '<div style="font-family:var(--mono);font-size:12px;background:var(--offwhite);border:1px solid var(--line);border-radius:var(--r);padding:12px;white-space:pre-wrap;max-height:150px;overflow:auto;margin-bottom:12px">'+esc(prompt)+'</div>'+
     '<p style="font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin:0 0 8px">Open your AI, prompt loaded</p>'+
     '<div class="g-actions" style="flex-wrap:wrap;gap:8px"><button class="btn primary" id="aiChatgpt">ChatGPT</button>'+
@@ -1847,9 +1852,9 @@ function obSeedData(){
 }
 var OB={step:0,data:obSeedData()};
 var OB_LOGO='<svg viewBox="40 10 125 148" width="70" height="83" aria-hidden="true" style="display:block;margin:0 auto"><g transform="translate(0,18)">'+
-  '<g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#8B1D1D"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#8B1D1D"/></g>'+
-  '<g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#6B1616"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#6B1616"/></g>'+
-  '<g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#F5F1E8"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#F5F1E8"/></g>'+
+  '<g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#C2734D"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C2734D"/></g>'+
+  '<g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#A0522D"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#A0522D"/></g>'+
+  '<g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#FFFFFF"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#FFFFFF"/></g>'+
   '</g></svg>';
 var OB_STEPS=[
   {t:'Welcome to Mastery OS',s:'This is your learning operating system. It tells you the single highest-value thing to do next, then coaches you through proving you know it.',kind:'intro'}, {t:'What should we call you?',s:'Just a first name is fine. It stays on this device.',kind:'name'}, {t:'Which class are you in?',s:'Pick your section so every date matches your class: your exams, TBLs, and nightly pre-work.',kind:'section',opts:[['mw','Mon / Wed, Afternoon','Lecture 12:30 to 1:50 pm, Lab 2:00 to 4:50 pm (CRN 80650)'],['tr-early','Tue / Thu, Early','Lecture 9:30 to 10:45 am, Lab 11:00 am to 1:50 pm (CRN 80654)'],['tr-eve','Tue / Thu, Evening','Lecture 5:30 to 6:45 pm, Lab 7:00 to 9:50 pm (CRN 80655)']]}, {t:'What grade are you aiming for?',s:'Anatomy is heavy. Your goal sets a realistic weekly time commitment outside class.',kind:'grade',opts:[['A','Mastery. Plan on about 20 hours a week outside class. Recall stays tight, gaps repaired fast.'],['B','Strong. Plan on about 16 hours a week outside class.'],['C to pass','The high-yield essentials to clear the bar. About 14 hours a week.']]}, {t:'How many days a week will you study?',s:'Be honest. A plan you keep beats a plan you admire.',kind:'days'}, {t:'Your weekly study plan',s:'Based on your goal and the days you picked. You can adjust anytime.',kind:'plan'}, {t:'Which ways of proving mastery do you like?',s:'Pick any. We weight your plan toward these, but still stretch you.',kind:'activities',opts:[['retrieval','Retrieval practice'],['draw','Draw from memory'],['label','Label diagrams'],['cadaver','Cadaver ID'],['histo','Histology ID'],['teach','Teach someone'],['clinical','Clinical cases']]}, {t:'How confident do you feel right now?',s:'No wrong answer. It just tunes the tone of your coach.',kind:'confidence',opts:[['shaky','Shaky. I need structure.'],['building','Building. I know some of it.'],['solid','Solid. I want to be pushed.']]}, {t:'You are set',s:'Your Mastery OS is built. Every day it shows you the one best move. One thing to remember: this is a study aid, not a replacement for class, the structure list, or the syllabus, and it does not guarantee a grade. Use it alongside your course materials.',kind:'done'}
@@ -2047,7 +2052,7 @@ function drawGuess(){
   gSet('Draw & Guess','Draw from memory');
   var item=DRAW_BANK[Math.floor(Math.random()*DRAW_BANK.length)];var DUR=60;
   gBody('<div class="draw-wrap"><div class="g-qmeta"><span>Draw from memory</span><span id="dtime">'+DUR+'s</span></div><p class="g-q">Draw: '+esc(item.name)+'</p><canvas id="drawCanvas" width="640" height="300"></canvas><div class="draw-tools"><button class="btn" id="dClear">Clear</button><button class="btn gold" id="dReveal">I am done, reveal</button></div></div>');
-  var cv=$('#drawCanvas');if(!cv)return;var ctx=cv.getContext('2d');ctx.lineWidth=2.4;ctx.lineCap='round';ctx.strokeStyle='#08101F';var drawing=false;
+  var cv=$('#drawCanvas');if(!cv)return;var ctx=cv.getContext('2d');ctx.lineWidth=2.4;ctx.lineCap='round';ctx.strokeStyle='#1E3D4C';var drawing=false;
   function pos(e){var r=cv.getBoundingClientRect();var sx=cv.width/r.width,sy=cv.height/r.height;var cx=((e.touches?e.touches[0].clientX:e.clientX)-r.left)*sx;var cy=((e.touches?e.touches[0].clientY:e.clientY)-r.top)*sy;return {x:cx,y:cy};}
   function down(e){drawing=true;var p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);if(e.cancelable)e.preventDefault();}
   function move(e){if(!drawing)return;var p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();if(e.cancelable)e.preventDefault();}
@@ -2176,7 +2181,7 @@ function pwCard(id,title,desc,gold,badge){
   return '<button type="button" id="'+id+'" style="position:relative;display:block;width:100%;text-align:left;padding:16px 18px;border-radius:var(--r);cursor:pointer;border:1.5px solid '+(gold?'var(--gold)':'var(--line)')+';background:'+(gold?'var(--gold)':'var(--white)')+';transition:.15s">'+
     (badge?'<span style="position:absolute;top:13px;right:15px;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:'+(gold?'var(--navy)':'var(--terra-dark)')+'">'+badge+'</span>':'')+
     '<span style="font-family:var(--disp);font-weight:800;font-size:16px;color:var(--navy);display:block">'+title+'</span>'+
-    '<span style="display:block;font-size:12.5px;margin-top:3px;color:'+(gold?'rgba(8,16,31,.75)':'var(--ink-soft)')+'">'+desc+'</span></button>';
+    '<span style="display:block;font-size:12.5px;margin-top:3px;color:'+(gold?'rgba(30,61,76,.75)':'var(--ink-soft)')+'">'+desc+'</span></button>';
 }
 function pwRow(k,title,desc){
   return '<button type="button" data-pw="'+k+'" style="display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;text-align:left;padding:13px 15px;border-radius:var(--r);cursor:pointer;border:1.5px solid var(--line);background:var(--white);transition:.15s"><span><span style="font-family:var(--disp);font-weight:700;font-size:15px;color:var(--navy);display:block">'+title+'</span><span style="font-size:12px;color:var(--ink-soft)">'+desc+'</span></span><span style="color:var(--terra-dark);font-weight:800;font-size:18px">&#8250;</span></button>';
@@ -2200,7 +2205,7 @@ function pwDecide(){
 }
 function pwRecommend(){
   var r=planRecommendation();PW_REC=r;PW_FROM='rec';
-  pwWrap('Recommended for today','The system picked', '<div style="background:var(--cream);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;margin-bottom:16px">'+
+  pwWrap('Recommended for today','The system picked', '<div style="background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;margin-bottom:16px">'+
       '<div style="font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-dark);margin-bottom:6px">Do this first</div>'+
       '<div style="font-family:var(--disp);font-weight:800;font-size:19px;color:var(--navy);margin-bottom:4px">'+esc(r.label)+'</div>'+
       '<div style="font-size:13.5px;color:var(--ink-soft)">'+r.why+'</div></div>'+
@@ -2265,7 +2270,7 @@ function openSessionChooser(kind){
   clearG();var ov=$('#gameOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');lastFocus=document.activeElement;$('#gameClose').focus();
   gSet(kind==='repair'?'Repair Session':"Today's Session",'Set up your focus session');
   var pm=pomo();var bl=S.profile.baseline;
-  function chip(k,label){return '<button type="button" data-preset="'+k+'" class="proto-badge" style="cursor:pointer;font-size:12px;padding:7px 13px;background:var(--cream);border:1px solid var(--line);color:var(--navy)">'+label+'</button>';}
+  function chip(k,label){return '<button type="button" data-preset="'+k+'" class="proto-badge" style="cursor:pointer;font-size:12px;padding:7px 13px;background:var(--white);border:1px solid var(--line);color:var(--navy)">'+label+'</button>';}
   gBody('<p style="color:var(--ink-soft);font-size:14px;margin-bottom:14px">Work one competency per focus block, then a break. Pick a preset, build your own, or find your natural focus length first. Some people focus best at 25 minutes, some at 90. There is no single right number.</p>'+
     '<div style="font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:8px">Quick presets</div>'+
     '<div id="pbPresets" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px">'+chip('classic','Classic 25 / 5')+chip('long','Long 50 / 10')+chip('deep','Deep 90 / 20')+(bl?chip('baseline','My baseline '+bl.mins+'m'):'')+'</div>'+
@@ -2277,7 +2282,7 @@ function openSessionChooser(kind){
       pbField('Long break','pbLong',[0,15,20,30,45],pm.longBrk,function(v){return v===0?'none':v;})+
       pbField('Long break after','pbEvery',[0,2,3,4],pm.longEvery,function(v){return v===0?'never':('every '+v);})+
     '</div>'+
-    '<div id="pbSummary" style="background:var(--cream);border:1px solid var(--line-soft);border-radius:var(--r);padding:11px 14px;font-size:13px;color:var(--navy);margin-bottom:16px"></div>'+
+    '<div id="pbSummary" style="background:var(--white);border:1px solid var(--line-soft);border-radius:var(--r);padding:11px 14px;font-size:13px;color:var(--navy);margin-bottom:16px"></div>'+
     '<div class="g-actions"><button class="btn gold big" id="pbStart">Start session</button><button class="btn big" id="pbBaseline">Find my focus baseline</button></div>'+
     '<div class="g-actions"><button class="btn" id="pmFocused">Focused run, no timer</button></div>');
   function refresh(){$('#pbSummary').textContent=pbSummaryText(pbRead());}
@@ -2316,13 +2321,52 @@ function blFinish(){
 /* ---- Focus sound (background audio behind the floating timer) ---- */
 /* Lo-fi, Classical, Jazz are user-assigned slots: paste a link, Save link as, then the button plays it. */
 var SLOT_LABEL={lofi:'Lo-fi',classical:'Classical',jazz:'Jazz'};
-var AUDIO={cur:'off',yt:null,ytReady:false,ctx:null,noise:null,vol:55};
+var AUDIO={cur:'off',yt:null,ytReady:false,booting:false,pending:null,blocked:false,ctx:null,noise:null,vol:55};
 function soundSlots(){if(!S.profile.soundSlots)S.profile.soundSlots={lofi:'',classical:'',jazz:''};return S.profile.soundSlots;}
 function ensureYT(cb){
-  if(AUDIO.ytReady&&AUDIO.yt){cb();return;}
-  if(!window.YT){var t=document.createElement('script');t.src='https://www.youtube.com/iframe_api';document.head.appendChild(t);}
-  window.onYouTubeIframeAPIReady=function(){try{AUDIO.yt=new YT.Player('pfYT',{height:'150',width:'220',playerVars:{autoplay:1,controls:0,disablekb:1,rel:0,playsinline:1},events:{onReady:function(){AUDIO.ytReady=true;cb();}}});}catch(e){}};
-  var tries=0,iv=setInterval(function(){tries++;if(window.YT&&window.YT.Player&&!AUDIO.yt){clearInterval(iv);window.onYouTubeIframeAPIReady();}else if(AUDIO.ytReady||tries>40){clearInterval(iv);}},150);
+  /* Boot the player ONCE, early, and keep it. The old version built the player
+     on the first click, so playVideo() ran long after the user gesture had
+     expired and the browser silently blocked it. Every error was swallowed by
+     an empty catch, so a blocked or embed-disabled track looked identical to
+     nothing happening. */
+  if(AUDIO.ytReady&&AUDIO.yt){ if(cb)cb(); return; }
+  if(cb)AUDIO.pending=cb;
+  if(AUDIO.booting)return;
+  AUDIO.booting=true;
+  function build(){
+    if(AUDIO.yt)return;
+    try{
+      AUDIO.yt=new YT.Player('pfYT',{
+        height:'150',width:'220',
+        playerVars:{controls:0,disablekb:1,rel:0,playsinline:1,origin:location.origin},
+        events:{
+          onReady:function(){AUDIO.ytReady=true;var f=AUDIO.pending;AUDIO.pending=null;if(f)f();},
+          onError:function(e){ytError(e&&e.data);},
+          onStateChange:function(e){if(e&&e.data===1)AUDIO.blocked=false;}
+        }
+      });
+    }catch(err){AUDIO.booting=false;}
+  }
+  if(window.YT&&window.YT.Player){build();return;}
+  window.onYouTubeIframeAPIReady=build;
+  if(!document.getElementById('ytapi')){
+    var t=document.createElement('script');t.id='ytapi';t.src='https://www.youtube.com/iframe_api';
+    t.onerror=function(){AUDIO.booting=false;toast('YouTube could not load. A browser setting, extension, or campus network may be blocking youtube.com. Green noise still works.');};
+    document.head.appendChild(t);
+  }
+  var tries=0,iv=setInterval(function(){
+    tries++;
+    if(window.YT&&window.YT.Player){clearInterval(iv);build();}
+    else if(tries>60){clearInterval(iv);AUDIO.booting=false;toast('YouTube did not load. Check that youtube.com is not blocked, then try again. Green noise always works.');}
+  },150);
+}
+function ytError(code){
+  var msg='That link would not play.';
+  if(code===2)msg='That is not a valid YouTube video or playlist link.';
+  else if(code===5)msg='That video cannot play in an embedded player. Pick a different track.';
+  else if(code===100)msg='That video is private, deleted, or unavailable.';
+  else if(code===101||code===150)msg='The owner of that video blocked embedding, which is common on music channels. Pick a different track, or use Green noise.';
+  toast(msg);AUDIO.cur='off';setSoundPressed('off');
 }
 function startNoise(){
   try{var Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return;if(!AUDIO.ctx)AUDIO.ctx=new Ctx();if(AUDIO.ctx.resume)AUDIO.ctx.resume();
@@ -2339,14 +2383,25 @@ function stopNoise(){if(AUDIO.noise){try{AUDIO.noise.src.stop();}catch(e){}AUDIO
 function audioStopAll(){stopNoise();if(AUDIO.yt&&AUDIO.yt.stopVideo){try{AUDIO.yt.stopVideo();}catch(e){}}}
 function setSoundPressed(kind){$$('#pomoFloat .pf-s').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-psound')===kind?'true':'false');});}
 function refreshSlotChips(){var s=soundSlots();['lofi','classical','jazz'].forEach(function(k){var b=$('#pomoFloat .pf-s[data-psound="'+k+'"]');if(b)b.setAttribute('data-set',s[k]?'1':'0');});}
-function playUrl(url){var list=ytList(url),id=ytId(url);if(!list&&!id)return;ensureYT(function(){try{if(list)AUDIO.yt.loadPlaylist({list:list,listType:'playlist'});else AUDIO.yt.loadVideoById(id);AUDIO.yt.setVolume(AUDIO.vol);AUDIO.yt.playVideo();}catch(e){}});}
-function audioSet(kind){
-  audioStopAll();AUDIO.cur=kind;setSoundPressed(kind);
-  if(kind==='off')return;
-  if(kind==='green'){startNoise();return;}
-  var url=soundSlots()[kind];
-  if(!url){toast('Paste a link, then Save link as '+(SLOT_LABEL[kind]||kind)+'.');AUDIO.cur='off';setSoundPressed('off');return;}
-  playUrl(url);
+function playUrl(url){
+  var list=ytList(url),id=ytId(url);
+  if(!list&&!id){toast('Paste a YouTube video or playlist link.');return;}
+  ensureYT(function(){
+    try{
+      if(list)AUDIO.yt.loadPlaylist({list:list,listType:'playlist'});
+      else AUDIO.yt.loadVideoById(id);
+      if(AUDIO.yt.unMute)AUDIO.yt.unMute();
+      AUDIO.yt.setVolume(AUDIO.vol);
+      AUDIO.yt.playVideo();
+      setTimeout(function(){
+        try{
+          if(AUDIO.yt.getPlayerState&&AUDIO.yt.getPlayerState()!==1&&AUDIO.cur!=='off'){
+            toast('Your browser blocked autoplay. Tap the sound chip once more and it will start.');
+          }
+        }catch(e){}
+      },2000);
+    }catch(e){toast('Could not start that link.');}
+  });
 }
 function assignSlot(kind){var url=String(($('#pfLink')||{}).value||'').trim();if(!ytId(url)&&!ytList(url)){toast('Paste a YouTube link first, then Save link as '+(SLOT_LABEL[kind]||kind)+'.');return;}soundSlots()[kind]=url;save();refreshSlotChips();toast('Saved as '+(SLOT_LABEL[kind]||kind)+'.');audioSet(kind);}
 function audioVol(v){AUDIO.vol=v;if(AUDIO.noise&&AUDIO.noise.gain)AUDIO.noise.gain.gain.value=(v/100)*0.5;if(AUDIO.yt&&AUDIO.yt.setVolume){try{AUDIO.yt.setVolume(v);}catch(e){}}}
@@ -2370,6 +2425,9 @@ function openPomodoro(kind,picksArg){
   PF={picks:picks,blocks:blocks,i:0,mode:'focus',focus:pm.focus*60,shortBrk:pm.shortBrk*60,longBrk:(pm.longBrk||0)*60,longEvery:pm.longEvery||0,breakKind:null,remaining:pm.focus*60,paused:false,timer:null};
   var el=$('#pomoFloat');el.hidden=false;el.classList.remove('mini');
   refreshSlotChips();setSoundPressed(AUDIO.cur||'off');
+  /* Warm the YouTube player now, so the first chip tap plays inside the click
+     gesture instead of minutes later when the browser has stopped trusting it. */
+  try{ensureYT();}catch(e){}
   pfRender();
   PF.timer=setInterval(pfTick,250);
 }
@@ -2431,7 +2489,7 @@ function openGapByTopic(){
   var weeks=Object.keys(byWeek).map(Number).sort(function(a,b){return a-b;});
   gSet('Gap Check by Topic','Check the topics your exam covers');
   function chk(c,on,w){return '<label style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;cursor:pointer;font-size:13.5px"><input type="checkbox" class="topic-chk" data-cid="'+esc(c.id)+'" data-wk="'+w+'"'+(on?' checked':'')+' style="margin-top:3px"><span>'+esc(c.name)+'</span></label>';}
-  var groups=weeks.map(function(w){var on=cover.indexOf(w)>-1;var items=byWeek[w].map(function(c){return chk(c,on,w);}).join('');return '<details'+(on?' open':'')+' style="border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0"><summary style="font-weight:700;cursor:pointer">Week '+w+' <span style="color:var(--ink-soft);font-weight:400">('+byWeek[w].length+')</span></summary><div style="margin:6px 0 2px"><button type="button" class="btn" data-weekall="'+w+'" style="padding:5px 11px;font-size:12.5px;margin:0 6px 6px 0">Select all in Week '+w+'</button><button type="button" class="btn" data-weekclear="'+w+'" style="padding:5px 11px;font-size:12.5px;background:#fff;color:#08101F;margin:0 0 6px">Clear week</button></div>'+items+'</details>';}).join('');
+  var groups=weeks.map(function(w){var on=cover.indexOf(w)>-1;var items=byWeek[w].map(function(c){return chk(c,on,w);}).join('');return '<details'+(on?' open':'')+' style="border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0"><summary style="font-weight:700;cursor:pointer">Week '+w+' <span style="color:var(--ink-soft);font-weight:400">('+byWeek[w].length+')</span></summary><div style="margin:6px 0 2px"><button type="button" class="btn" data-weekall="'+w+'" style="padding:5px 11px;font-size:12.5px;margin:0 6px 6px 0">Select all in Week '+w+'</button><button type="button" class="btn" data-weekclear="'+w+'" style="padding:5px 11px;font-size:12.5px;background:#fff;color:#1E3D4C;margin:0 0 6px">Clear week</button></div>'+items+'</details>';}).join('');
   gBody('<p style="font-size:13px;color:var(--ink-soft);margin:0 0 10px">Pick the topics on your exam, then run the gap finder. This is by topic, not by week, so it works no matter how your term is laid out.</p>'+
     '<div class="g-actions" style="margin-bottom:8px"><button class="btn" id="tgMid">Midterm (Weeks 1 to 4)</button><button class="btn" id="tgAll">Select all</button><button class="btn" id="tgNone">Clear</button></div>'+
     groups+
@@ -2590,7 +2648,7 @@ function renderGrades(){
 }
 
 function drawKnow(){
-  gSet('Draw it to Know it','Produce it from memory, then check');
+  gSet('Draw it to Know it','Given, not Googled');
   var c=exerciseComp();CUR_EX=c;
   var rub=rubricFor(c)||[];var shown=0;
   function render(){
@@ -2611,7 +2669,7 @@ function drawKnow(){
     b+='<div class="g-actions" style="margin-bottom:12px">';
     if(dw){b+='<button class="btn primary" data-toolblank="bio004-draw.html?id='+encodeURIComponent(c.id)+
       '">Score drawing '+esc(dw.code)+', '+esc(dw.name)+'</button>';}
-    b+='<button class="btn" data-toolblank="mastery-canvas.html?title='+encodeURIComponent(c.name)+'">Draw on canvas (iPad friendly)</button></div>';
+    b+='<button class="btn" data-toolblank="mastery-canvas.html?comp='+encodeURIComponent(c.id)+'&title='+encodeURIComponent(c.name)+'">Draw on canvas (iPad friendly)</button></div>';
     if(rub.length){
       b+='<div class="reference-box"><h4>Self-check, should include ('+revealed.length+' of '+rub.length+')</h4><ul>'+(revealed.length?revealed.map(function(x){return '<li>'+esc(x)+'</li>';}).join(''):'<li style="list-style:none;color:var(--ink-faint)">Hidden. Draw or map it first, then reveal to grade yourself.</li>')+'</ul></div>';
       b+='<div class="g-actions">'+(shown<rub.length?'<button class="btn" id="dkHint">Reveal one</button><button class="btn" id="dkAll">Show full checklist</button>':'<span style="color:var(--ok);font-weight:700;align-self:center">Full checklist shown, grade yourself.</span>')+'</div>';
@@ -2631,9 +2689,19 @@ var EXERCISES=[
 function renderExercises(){var el=$('#exGrid');if(!el)return;el.innerHTML=EXERCISES.map(function(e){return '<div class="card hover exercise-card"><span class="ei">'+e.icon+'</span><span class="tagline">'+esc(e.tag)+'</span><h3>'+esc(e.name)+'</h3><p>'+esc(e.desc)+'</p><button class="btn primary" data-exercise="'+e.k+'">Start exercise</button></div>';}).join('');}
 
 var MODES=[
-  {k:'studywith',cls:'tbl',emoji:'📅',tag:'Live · peer-hosted',name:'Study With Me',players:'Real sessions',desc:'Find and join a peer-hosted study session on the live hosting schedule.',link:'https://www.medmasterscollaborative.com/student-hosting-schedule',cta:'Find a session'}, {k:'quiz',cls:'quiz',emoji:'🎯',tag:'Live · 2 to 40 players',name:'Live Quiz',players:'Kahoot-style race',desc:'Fast multiple-choice showdown on your question bank. Speed and accuracy both score, with a live leaderboard between questions.'}, {k:'tbl',cls:'tbl',emoji:'👥',tag:'Teams',name:'Practice TBL',players:'iRAT, tRAT, appeals',desc:'Answer alone, then as a team with scratch-to-reveal scoring, then appeal. Confidence-based and 4S ready.'}, {k:'race',cls:'race',emoji:'🏁',tag:'Head to head',name:'Lab Races',players:'Timed sprint',desc:'Identify structures against the clock and a rival. First to the finish wins. Built for practical prep.'}, {k:'escape',cls:'escape',emoji:'🚪',tag:'Co-op',name:'Escape Room',players:'Team puzzle',desc:'A locked clinical case. Solve each anatomy puzzle to open the next lock and escape before time runs out.'}, {k:'draw',cls:'draw',emoji:'✏️',tag:'Bonus',name:'Draw and Guess',players:'From memory',desc:'Draw a structure from memory on the clock, then check it against the key. Drawing as the integrity test.'}
+  {k:'studywith',cls:'tbl',emoji:'\u{1F4C5}',tag:'Live \u00b7 peer-hosted',name:'Study With Me',players:'Real sessions',desc:'Find and join a peer-hosted study session on the live hosting schedule.',link:'https://www.medmasterscollaborative.com/student-hosting-schedule',cta:'Find a session'},
+  /* The five game modes (Live Quiz, Practice TBL, Lab Races, Escape Room,
+     Draw and Guess) are parked behind one Coming soon card until they run on
+     the real card bank instead of the built-in demo questions. The game
+     functions themselves are untouched below. */
+  {k:'games',cls:'quiz',emoji:'\u{1F3AE}',tag:'In development',name:'Games',players:'Quiz \u00b7 TBL \u00b7 Races \u00b7 Escape Room',desc:'Live Quiz, Practice TBL, Lab Races, Escape Room, and Draw and Guess. Being rebuilt to run on your full question bank rather than a sample set.',soon:true}
 ];
+
 function renderTogether(){var el=$('#togetherGrid');if(!el)return;el.innerHTML=MODES.map(function(m){
+  if(m.soon){
+    var sb='<span class="proto-badge" style="color:var(--terra-dark);background:#FAF1EC;border-color:var(--terra-dark)">Coming soon</span>';
+    return '<div class="mode-card"><div class="mode-top '+m.cls+'"><span class="mtag">'+esc(m.tag)+'</span><h3>'+m.emoji+' '+esc(m.name)+'</h3><div class="players">'+esc(m.players)+'</div></div><div class="mode-body"><p>'+esc(m.desc)+'</p>'+sb+'<button class="btn" disabled aria-disabled="true">Not yet available</button></div></div>';
+  }
   if(m.link){
     var badge='<span class="proto-badge" style="color:var(--ok);background:#e2efe8;border-color:#cfe3d7">Live session</span>';
     var btn='<button class="btn primary" data-toolblank="'+esc(m.link)+'">'+esc(m.cta||'Open')+'</button>';
