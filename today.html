@@ -202,6 +202,7 @@
 
   .step-body{padding:0 20px 20px 64px}
   .step-body p{margin:0 0 14px;font-size:15px;color:var(--ink-mid)}
+  .step-foot{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
   .step-body p.lead-in{color:var(--ink)}
 
   .link-list{list-style:none;margin:0 0 16px;padding:0}
@@ -224,14 +225,28 @@
     padding:2px 6px;
   }
 
+  /* the one action */
+  .primary{
+    display:inline-flex;align-items:center;gap:11px;
+    background:var(--navy);color:var(--white);text-decoration:none;
+    border-radius:10px;padding:15px 24px;min-height:44px;
+    font-weight:800;font-size:16px;letter-spacing:-.005em;
+    transition:background 180ms ease,transform 180ms ease;
+  }
+  .primary:hover{background:#101B33;transform:translateY(-1px)}
+  .primary .arr{color:var(--gold);font-weight:800}
+  .also{margin:12px 0 0;font-size:13.5px;color:var(--ink-mid);line-height:1.6}
+  .also a{color:var(--terra-dark);font-weight:600;text-underline-offset:3px}
+
   .done-btn{
     display:inline-flex;align-items:center;gap:9px;
-    background:var(--oxblood);color:var(--white);
-    border:0;border-radius:10px;padding:13px 22px;min-height:44px;
-    font:inherit;font-weight:800;font-size:15px;cursor:pointer;
-    transition:background 180ms ease;
+    background:var(--white);color:var(--terra-dark);
+    border:1.5px solid var(--line-strong);border-radius:10px;
+    padding:12px 20px;min-height:44px;
+    font:inherit;font-weight:700;font-size:14.5px;cursor:pointer;
+    transition:border-color 180ms ease,background 180ms ease;
   }
-  .done-btn:hover{background:var(--oxblood-hover)}
+  .done-btn:hover{border-color:var(--terra-dark);background:#FCFAF8}
   .undo-btn{
     display:inline-flex;align-items:center;min-height:44px;
     background:none;border:0;padding:10px 4px;font:inherit;
@@ -266,20 +281,6 @@
   .gloss-note[hidden]{display:none}
 
   /* ---------- footer strip ---------- */
-  .after{
-    margin-top:30px;padding-top:24px;border-top:1px solid var(--line);
-  }
-  .after h3{font-size:14px;font-weight:800;letter-spacing:.05em;
-    text-transform:uppercase;color:var(--ink-mid);margin:0 0 12px}
-  .after-row{display:flex;flex-wrap:wrap;gap:10px}
-  .after-row a{
-    display:inline-flex;align-items:center;min-height:44px;
-    padding:10px 16px;border:1px solid var(--line);border-radius:999px;
-    text-decoration:none;color:var(--ink);font-weight:600;font-size:14px;
-    background:var(--white);
-  }
-  .after-row a:hover{border-color:var(--gold)}
-
   .foot{
     margin-top:34px;padding-top:20px;border-top:1px solid var(--line);
     font-size:13px;color:var(--ink-mid);
@@ -360,16 +361,12 @@
       </button>
       <dl class="gloss-list" id="gloss-list" hidden></dl>
     </div>
+
   </div>
 
   <p class="sr-only" role="status" aria-live="polite" id="announce"></p>
 
   <ol class="steps" id="steps"></ol>
-
-  <div class="after" id="after" hidden>
-    <h3>If you have more time</h3>
-    <div class="after-row" id="after-row"></div>
-  </div>
 
   <div class="foot">
     <p id="foot-line"></p>
@@ -430,9 +427,12 @@
 
   /* section keys used across this repo: mw | tr-am | tr-eve */
   var SEC_META = {
-    'mw':     { label:'Mon / Wed, Afternoon', track:'mw', hub:'class1.html', crn:'80650' },
-    'tr-am':  { label:'Tue / Thu, Morning',   track:'tr', hub:'class2.html', crn:'80654' },
-    'tr-eve': { label:'Tue / Thu, Evening',   track:'tr', hub:'class3.html', crn:'80655' }
+    'mw':     { label:'Mon / Wed, Afternoon', track:'mw', hub:'class1.html', crn:'80650',
+                id:'class1', lec:'12:30 to 1:50 pm, VC 118',   lab:'2:00 to 4:50 pm, VC 1137',  endHour:17 },
+    'tr-am':  { label:'Tue / Thu, Morning',   track:'tr', hub:'class2.html', crn:'80654',
+                id:'class2', lec:'9:30 to 10:45 am, VC 212',   lab:'11:00 am to 1:50 pm, VC 1137', endHour:14 },
+    'tr-eve': { label:'Tue / Thu, Evening',   track:'tr', hub:'class3.html', crn:'80655',
+                id:'class3', lec:'5:30 to 6:45 pm, VC 118',    lab:'7:00 to 9:50 pm, VC 1137',  endHour:22 }
   };
   var secKey = ls(STORE_SEC);
   if(!SEC_META[secKey]) secKey = null;
@@ -466,6 +466,39 @@
   }
 
   function stripTags(s){ return String(s||'').replace(/<[^>]*>/g,'').replace(/&middot;/g,'·').replace(/&amp;/g,'&'); }
+
+  /* A TBL day announces itself in the session copy as "TBL 6 · Respiratory". */
+  function isTBLDay(day){
+    if(!day || !day.lines) return false;
+    return day.lines.some(function(l){ return /TBL\s*\d/.test(l[1] || ''); });
+  }
+  function tblName(day){
+    if(!day || !day.lines) return '';
+    for(var i=0;i<day.lines.length;i++){
+      var m = stripTags(day.lines[i][1]).match(/TBL\s*\d+\s*·?\s*(.*)/);
+      if(m) return stripTags(day.lines[i][1]);
+    }
+    return '';
+  }
+
+  /* Which module a week belongs to. Shared weeks resolve FORWARD, because a
+     shared week is the one that opens the next module. */
+  function moduleForWeek(wk){
+    var M = window.BIO004_MODULES || [];
+    var found = null;
+    M.forEach(function(m){ if(m.weeks.indexOf(wk) !== -1) found = m.n; });
+    return found;
+  }
+
+  function nextExam(){
+    var sec = SECTIONS && SECTIONS.sections ? SECTIONS.sections[SEC_META[secKey].id] : null;
+    if(!sec || !sec.exams) return null;
+    for(var i=0;i<sec.exams.length;i++){
+      var d = sec.exams[i].practical || sec.exams[i].lecture;
+      if(d >= TODAY_ISO) return { n:sec.exams[i].n, date:d, covers:sec.exams[i].practicalCovers || '' };
+    }
+    return null;
+  }
 
   function dayTopics(day){
     if(!day) return [];
@@ -508,291 +541,353 @@
     return out;
   }
 
-  function linkItem(kind, url, title){
-    return '<li><a class="go" href="' + url + '" target="_top">' +
+  function linkItem(kind, url, title, ext){
+    var t = ext ? ' target="_blank" rel="noopener"' : ' target="_top"';
+    return '<li><a class="go" href="' + url + '"' + t + '>' +
            '<span class="go-kind">' + kind + '</span>' +
            '<span>' + title + '</span>' +
            '<span class="arr" aria-hidden="true">&rarr;</span>' +
-           '<span class="sr-only">, opens ' + title + '</span>' +
+           '<span class="sr-only">, opens ' + title + (ext ? ' in a new tab' : '') + '</span>' +
            '</a></li>';
   }
 
-  /* ---------- build the plan for the moment ---------- */
-  function buildPlan(){
-    var meta = SEC_META[secKey];
-    var track = meta.track;
-    var todaySess = findDay(track, TODAY_ISO);
-    var isClassToday = todaySess && todaySess.kind !== 'off';
-    var termStart = '2026-08-17';
+  /* ---------- build the plan for the moment ----------
+     Seven day-types, taken straight from her own flow diagrams:
 
-    /* BEFORE THE TERM.
-       The night before day one is NOT this case. It falls through
-       to the ordinary pre-work path below, because that is exactly
-       what that night is for. */
+       Prework .............. Worksheet > Videos + add to notes > Pre-study lab structures
+       Class day, regular ... Brain dump > Active Learning/Success > Round Tables (Lab)
+       Class day, TBL ....... iRAT/tRAT > Application Exercise > Round Tables (Lab)
+       Class day, exam ...... Lab exam > Lecture exam
+       After class day ...... Mastery OS + Recall Rx (lecture) > Loops (labs)
+       Non-class day ........ Mastery OS / Recall cards > Loops, plus an occasional Gap Finder
+       Exam minus 3 ......... Gap Finder on both banks > build a 3 day plan
+     -------------------------------------------------------- */
+
+  var LOOPS_URL = 'https://drsrennie-stack.github.io/loops/';
+
+  function buildPlan(){
+    var meta   = SEC_META[secKey];
+    var track  = meta.track;
+    var today  = findDay(track, TODAY_ISO);
+    var isClassToday = today && today.kind !== 'off';
+    var termStart = (SECTIONS && SECTIONS.start) || '2026-08-17';
+    var inClassNow  = isClassToday && HOUR < meta.endHour;
+
+    /* BEFORE THE TERM. The night before day one is NOT this case, it falls
+       through to the ordinary pre-work path. */
     if(TODAY_ISO < termStart && daysBetween(TODAY, parseIso(termStart)) > 1){
       var d = daysBetween(TODAY, parseIso(termStart));
       var first = findDay(track, termStart) || nextClassDay(track, '2026-08-16');
-      return {
-        heroH1: 'Not yet. <span class="a">Soon.</span>',
-        heroSub: 'The term starts ' + longDate(parseIso(termStart)) + '. Here is what to do before then.',
+      return { heroH1:'Not yet. <span class="a">Soon.</span>',
+        heroSub:'The term starts ' + longDate(parseIso(termStart)) + '. Here is what to do before then.',
         kicker: d === 1 ? 'Tomorrow' : 'In ' + d + ' days',
-        title: 'Get set up before day one',
-        body: 'Nothing is due yet. These four things take about half an hour and mean you walk in on day one already oriented.',
-        target: termStart,
-        steps: preTermSteps(first),
-        foot: 'Come back here on ' + shortDate(parseIso(termStart)) + ' and this page will show you that day.'
-      };
+        title:'Get set up before day one',
+        body:'Nothing is due yet. These take about half an hour and mean you walk in on day one already oriented.',
+        target:termStart, steps:preTermSteps(first),
+        foot:'Come back here on ' + shortDate(parseIso(termStart)) + ' and this page will show you that day.' };
     }
 
     /* AFTER THE LAST DAY */
     var lastDay = sessionsFor(track).slice(-1)[0];
     if(lastDay && TODAY_ISO > lastDay.date){
-      return {
-        heroH1: 'That is the <span class="a">whole term.</span>',
-        heroSub: 'Every class day is behind you.',
-        kicker: 'Done',
-        title: 'The course is finished',
-        body: 'Your grade is in Canvas. If you are heading into the next course, the notes and the atlas stay up.',
-        target: TODAY_ISO,
-        steps: [],
-        foot: 'Thank you for the term.'
-      };
+      return { heroH1:'That is the <span class="a">whole term.</span>',
+        heroSub:'Every class day is behind you.', kicker:'Done',
+        title:'The course is finished',
+        body:'Your grade is in Canvas. The notes and the atlas stay up if you are heading into the next course.',
+        target:TODAY_ISO, steps:[], foot:'Thank you for the term.' };
     }
 
-    /* EXAM DAY */
-    if(isClassToday && todaySess.kind === 'exam'){
-      return {
-        heroH1: 'Exam day.',
-        heroSub: longDate(TODAY) + '. Both parts today, lecture exam and lab practical.',
-        kicker: 'Today',
-        title: 'Doors lock when it starts',
-        body: 'Bring a pen. Not a pencil. Spelling counts on the lab practical. There is nothing left to cram, so read your own pre-work sheets rather than starting anything new.',
-        target: TODAY_ISO,
-        steps: examSteps(todaySess),
-        foot: 'Rebuttals happen at the next class meeting, so keep your exam questions.'
-      };
+    /* ===== CLASS DAY, while it is still running ===== */
+    if(inClassNow){
+      if(today.kind === 'exam'){
+        var ex = nextExam();
+        return { heroH1:'Exam day.',
+          heroSub:longDate(TODAY) + '. Both parts today. Doors lock when each one starts.',
+          kicker:'Today', title:'Lab practical, then the lecture exam',
+          body:'Pen only, not pencil. Spelling counts on the practical. Nothing new goes in today, so read your own pre-work sheets rather than starting anything fresh.',
+          target:TODAY_ISO, steps:examSteps(ex),
+          foot:'Rebuttals happen at the next class meeting, so keep your questions.' };
+      }
+      if(isTBLDay(today)){
+        return { heroH1:'TBL <span class="a">today.</span>',
+          heroSub:longDate(TODAY) + '. ' + (tblName(today) || 'Team-Based Learning') + '.',
+          kicker:'Today', title:'Readiness first, then the application',
+          body:'You take the readiness test alone, then again with your team, then the whole room works the same problem at the same time. Come with the pre-work done, there is no catching up inside a TBL.',
+          target:TODAY_ISO, steps:tblDaySteps(today), foot:eveningFoot(track) };
+      }
+      return { heroH1:'Class <span class="a">today.</span>',
+        heroSub:longDate(TODAY) + '. Here is the order it runs in.',
+        kicker:'Today', title:'Bring your written pre-work',
+        body:'Class opens with a brain dump on the pre-work you did last night. That one cannot be made up if you arrive without it.',
+        target:TODAY_ISO, steps:classDaySteps(today), foot:eveningFoot(track) };
     }
 
-    /* CLASS DAY */
-    if(isClassToday){
-      var tonightNext = nextClassDay(track, TODAY_ISO);
-      return {
-        heroH1: 'Class <span class="a">today.</span>',
-        heroSub: longDate(TODAY) + '. Here is the order it happens in.',
-        kicker: 'Today',
-        title: 'Bring your written pre-work',
-        body: 'Class opens with a brain dump on the pre-work you did last night. You cannot make that up if you arrive without it.',
-        target: TODAY_ISO,
-        steps: classDaySteps(todaySess, tonightNext),
-        foot: tonightNext ? 'Tonight becomes pre-work for ' + shortDate(parseIso(tonightNext.date)) + '.' : 'No further class days.'
-      };
-    }
-
-    /* NO CLASS TODAY. Either the night before, or a gap day. */
+    /* ===== everything below is the evening, or a day with no class ===== */
     var next = nextClassDay(track, TODAY_ISO);
+    var gap  = next ? daysBetween(TODAY, parseIso(next.date)) : null;
+    var preworkTonight = (gap === 1) || (isClassToday && next && daysBetween(TODAY, parseIso(next.date)) === 1);
+    var ex3 = nextExam();
+    var toExam = ex3 ? daysBetween(TODAY, parseIso(ex3.date)) : null;
+
+    /* EXAM MINUS 3. The gap finder run, and the three day plan. */
+    if(toExam === 3){
+      var steps = examPlanSteps(ex3);
+      if(preworkTonight) steps = steps.concat(preworkSteps(next));
+      return { heroH1:'Exam 4 <span class="a">in three days.</span>'.replace('4', ex3.n),
+        heroSub:'Exam ' + ex3.n + ' is ' + longDate(parseIso(ex3.date)) + '. Tonight you find the gaps and plan the three days.',
+        kicker:'Three days out', title:'Find the gaps before you study anything',
+        body:'Studying what you already know feels good and changes nothing. Run both gap finders first, then the plan writes itself around what they surface.',
+        target:TODAY_ISO, steps:steps,
+        foot:'Nothing new goes in after tonight. The next three days are repair and retrieval only.' };
+    }
+
     if(!next){
-      return {
-        heroH1: 'No class today.',
-        heroSub: 'And no class days left on the schedule.',
-        kicker: 'Nothing due', title:'Nothing scheduled', body:'',
-        target: TODAY_ISO, steps: [], foot:''
-      };
-    }
-    var gap = daysBetween(TODAY, parseIso(next.date));
-
-    /* the night before: pre-work mode, the main case */
-    if(gap === 1){
-      return {
-        heroH1: 'Tonight is <span class="a">pre-work.</span>',
-        heroSub: 'Class is ' + longDate(parseIso(next.date)) + '. Do these in order, they are not interchangeable.',
-        kicker: 'Tonight',
-        title: 'Work the sheet first, watch the video second',
-        body: 'The video is the check on your thinking, not the place you get the answers. Doing it the other way round feels faster and teaches you less.',
-        target: next.date,
-        steps: preworkSteps(next),
-        foot: 'Bring the written sheet to class. Class opens with a brain dump on it.'
-      };
+      return { heroH1:'No class today.', heroSub:'And no class days left on the schedule.',
+        kicker:'Nothing due', title:'Nothing scheduled', body:'',
+        target:TODAY_ISO, steps:[], foot:'' };
     }
 
-    /* a gap day: retrieval, not new intake */
-    var prev = prevClassDay(track, TODAY_ISO);
-    return {
-      heroH1: 'No class today.',
-      heroSub: 'Next class is ' + longDate(parseIso(next.date)) + ', in ' + gap + ' days. Today is for retrieval.',
-      kicker: 'Today',
-      title: 'Cover it up and get it back out',
-      body: 'This is the gap the whole course is designed around. Rereading feels productive and does almost nothing. Retrieving is what moves it.',
-      target: TODAY_ISO,
-      steps: gapDaySteps(prev, next),
-      foot: 'Pre-work for ' + shortDate(parseIso(next.date)) + ' opens here the night before.'
-    };
+    /* PRE-WORK. The night before a class day. */
+    if(preworkTonight){
+      return { heroH1:'Tonight is <span class="a">pre-work.</span>',
+        heroSub:'Class is ' + longDate(parseIso(next.date)) + '. Three things, in this order.',
+        kicker:'Tonight', title:'Worksheet, then videos, then lab structures',
+        body:'The order is the whole point. The worksheet finds out what you do not know, the videos fill it in, and the structures get your eyes on lab before you walk in.',
+        target:next.date, steps:preworkSteps(next),
+        foot:'Bring the written sheet. Class opens with a brain dump on it.' };
+    }
+
+    /* AFTER A CLASS DAY. The evening of a day you were in class. */
+    if(isClassToday){
+      return { heroH1:'After class.',
+        heroSub:'Next class is ' + longDate(parseIso(next.date)) + '. Tonight is consolidation, not new intake.',
+        kicker:'Tonight', title:'Lock in what you sat through today',
+        body:'Two passes, one for the lecture material and one for lab. Short beats long here.',
+        target:TODAY_ISO, steps:afterClassSteps(findDay(track, TODAY_ISO)),
+        foot:'Pre-work for ' + shortDate(parseIso(next.date)) + ' opens here the night before.' };
+    }
+
+    /* NON-CLASS DAY. */
+    return { heroH1:'No class today.',
+      heroSub:'Next class is ' + longDate(parseIso(next.date)) + ', in ' + gap + ' days.',
+      kicker:'Today', title:'Retrieval day',
+      body:'This is the gap the course is designed around. Rereading feels productive and does almost nothing. Getting it back out is what moves it.',
+      target:TODAY_ISO, steps:nonClassSteps(ex3, toExam),
+      foot:'Pre-work for ' + shortDate(parseIso(next.date)) + ' opens here the night before.' };
+  }
+
+  function eveningFoot(track){
+    var nx = nextClassDay(track, TODAY_ISO);
+    if(!nx) return 'No further class days.';
+    return daysBetween(TODAY, parseIso(nx.date)) === 1
+      ? 'Tonight becomes pre-work for ' + shortDate(parseIso(nx.date)) + '. Come back and it will be laid out.'
+      : 'Tonight is consolidation. Come back this evening and it will change over.';
   }
 
   /* ---------- step builders ---------- */
+
   function preTermSteps(first){
-    var s = [];
-    s.push({
-      title:'Read your syllabus once, all the way through',
-      hint:'Ten minutes. It answers most of what you will want to ask in week one.',
-      body:'<p>Yours is the one for your section, with your dates and your room on it.</p>',
-      links:[{kind:'Syllabus', url: secKey==='mw'?'syllabus-class1.html':(secKey==='tr-am'?'syllabus-class2.html':'syllabus-class3.html'), title:'Your section syllabus'}]
-    });
-    s.push({
-      title:'Sign the device policy',
-      hint:'You cannot enter lab without it.',
-      body:'<p>Read it here, then sign it in Canvas. The signing link is in the Week 1 module in Canvas, not on this site.</p>',
-      links:[{kind:'Policy', url:'digital-device-policy.html', title:'Digital device policy'}]
-    });
-    s.push({
-      title:'Get your books and your lab kit',
-      hint:'You need them in week one, not week three.',
-      body:'',
-      links:[{kind:'List', url:'required-materials.html', title:'What to buy'}]
-    });
-    s.push({
-      title:'Do the first pre-work the night before day one',
-      hint:first ? 'Day one is ' + shortDate(parseIso(first.date)) + '.' : '',
-      body:'<p>Come back to this page that night and it will lay the sheet out for you. Nothing to do about it yet.</p>',
-      links:[]
-    });
-    return s;
-  }
-
-  function preworkSteps(next){
-    var L = LINKS ? LINKS[next.date] : null;
-    var s = [];
-    var topics = dayTopics(next);
-
-    var topicHtml = topics.length
-      ? '<p class="lead-in">What tomorrow covers:</p><ul class="link-list">' + topics.map(function(t){
-          return '<li class="go is-static"><span class="go-kind">' + (t.k || 'Topic') + '</span><span>' + t.v + '</span></li>';
-        }).join('') + '</ul>'
-      : '';
-    s.push({
-      title:'Open your notes and the reading',
-      hint:'These stay open. You work against them, you do not read them cover to cover first.',
-      body:topicHtml,
-      links:(L && L.notes ? L.notes.map(function(n){ return {kind:'Notes', url:n.u, title:n.t}; }) : [])
-            .concat(L && L.workbooks ? L.workbooks.map(function(n){ return {kind:'Workbook', url:n.u, title:n.t}; }) : [])
-    });
-
-    s.push({
-      title:'Work the pre-work sheet',
-      hint:'This is the real work of the night. Handwritten, with the notes open.',
-      body:'<p>Answer it, map it, draw the mini visuals. If you cannot answer something, that is information, leave it visible rather than tidying it away.</p>',
-      links:(L && L.sheets ? L.sheets.map(function(n){ return {kind:'Pre-work', url:n.u, title:n.t}; }) : [])
-    });
-
-    s.push({
-      title:'Now watch the video',
-      hint:'After the sheet. It is the check, not the source.',
-      body:'<p>Where the video disagrees with what you wrote, mark it on your sheet. Those marks are the most useful thing you will bring to class.</p>',
-      links:(L && L.videos ? L.videos.map(function(n){ return {kind:'Loops', url:n.u, title:n.t}; }) : [])
-    });
-
-    var bring = [];
-    if(L && L.lab && L.lab.length){
-      bring = L.lab.map(function(n){ return {kind:'Lab sprint', url:n.u, title:n.t}; });
-    }
-    s.push({
-      title:'Put the written sheet in your bag',
-      hint:'Class opens with a brain dump on it. No sheet, no dump.',
-      body:'<p>Bring your structure list too if tomorrow has a lab.</p>' +
-           (bring.length ? '<p>Tomorrow’s lab, if you want to look ahead:</p>' : ''),
-      links:bring
-    });
-    return s;
-  }
-
-  function classDaySteps(today, next){
-    var L = LINKS ? LINKS[today.date] : null;
-    var topics = dayTopics(today);
-    var s = [];
-
-    s.push({
-      title:'Brain dump opens the class',
-      hint:'Five minutes, blank paper, closed everything.',
-      body:'<p>On the pre-work you did last night. A real organized attempt earns full credit.</p>',
-      links:[]
-    });
-
-    var body = '';
-    if(topics.length){
-      body = '<ul class="link-list">' + topics.map(function(t){
-        return '<li class="go is-static"><span class="go-kind">' + (t.k||'Today') + '</span><span>' + t.v + '</span></li>';
-      }).join('') + '</ul>';
-    }
-    s.push({
-      title:'What we are doing today',
-      hint:'So nothing lands cold.',
-      body:body,
-      links:[]
-    });
-
-    s.push({
-      title:'After class, read the slides once',
-      hint:'Same day, ten minutes, no notes taken.',
-      body:'<p>You are looking for the parts that did not land, not making a second set of notes.</p>',
-      links:(L && L.slides ? [{kind:'Slides', url:L.slides.u, title:L.slides.t}] : [])
-    });
-
-    if(next){
-      s.push({
-        title:'Tonight, pre-work for ' + shortDate(parseIso(next.date)),
-        hint:'Come back to this page tonight and it will be laid out.',
-        body:'<p>Nothing to open yet. This page changes over when the day does.</p>',
-        links:[]
-      });
-    }
-    return s;
-  }
-
-  function gapDaySteps(prev, next){
-    var s = [];
-    var L = prev && LINKS ? LINKS[prev.date] : null;
-    s.push({
-      title:'Blind redraw, before you look at anything',
-      hint:'Two minutes on blank paper. No notes.',
-      body:'<p>Draw what you remember from the last class. Then, and only then, open your notes and mark what was missing.</p>',
-      links:[{kind:'Tool', url:'bio004-draw.html', title:'Draw it from memory'}]
-    });
-    s.push({
-      title:'Run your spaced recall',
-      hint:'Short. It counts more than a long session would.',
-      body:'<p>The cards know what you got wrong last time and will bring those back first.</p>',
-      links:[{kind:'Cards', url:'bio004-spaced-recall.html', title:'Spaced recall'}]
-    });
-    s.push({
-      title:'Check where you are actually weak',
-      hint:'Rather than restudying what you already know.',
-      body:'<p>The dashboard reads your card history and tells you which topics to spend the next session on.</p>',
-      links:[{kind:'Dashboard', url:'bio004-spaced-recall-weakness-dashboard.html', title:'Your weak spots'}]
-    });
-    if(L && L.slides){
-      s.push({
-        title:'Reread the last class once',
-        hint:'Last, not first.',
-        body:'<p>Rereading only helps after you have already tried to retrieve. That is why it is at the bottom.</p>',
-        links:[{kind:'Slides', url:L.slides.u, title:L.slides.t}]
-      });
-    }
-    return s;
-  }
-
-  function examSteps(today){
     return [
-      { title:'Bring a pen. Pen only.',
-        hint:'Pencil is not accepted on the lab practical.',
-        body:'<p>Spelling counts. Cover your answers and keep your eyes on your own station.</p>', links:[] },
-      { title:'Read your own pre-work sheets',
-        hint:'Your handwriting, your gaps, your marks.',
-        body:'<p>This is better than anything new. You already found your weak spots, they are written on those pages.</p>', links:[] },
-      { title:'Doors lock at the start',
-        hint:'Of each part, lecture and lab.',
-        body:'<p>If you are late you cannot enter. Give yourself a buffer.</p>',
-        links:[{kind:'Scope', url:'bio004-exam-modules.html', title:'What this exam covers'}] }
+      { title:'Read your syllabus once, all the way through',
+        hint:'Ten minutes. It answers most of what you will want to ask in week one.',
+        body:'', links:[{kind:'Syllabus', url: secKey==='mw'?'syllabus-class1.html':(secKey==='tr-am'?'syllabus-class2.html':'syllabus-class3.html'), title:'your syllabus', cta:'Open your syllabus'}] },
+      { title:'Sign the device policy',
+        hint:'You cannot enter lab without it.',
+        body:'<p>Read it here, then sign it in Canvas. The signing link is in the Week 1 module in Canvas, not on this site.</p>',
+        links:[{kind:'Policy', url:'digital-device-policy.html', title:'the device policy', cta:'Read the device policy'}] },
+      { title:'Get your books and your lab kit',
+        hint:'You need them in week one, not week three.',
+        body:'', links:[{kind:'List', url:'required-materials.html', title:'the list', cta:'See what to buy'}] },
+      { title:'Do the first pre-work the night before day one',
+        hint:first ? 'Day one is ' + shortDate(parseIso(first.date)) + '.' : '',
+        body:'<p>Come back that night and this page will lay it out. Nothing to do about it yet.</p>', links:[] }
     ];
   }
+
+  /* PREWORK :: Worksheet > Watch videos and add to notes > Pre-study lab structures */
+  function preworkSteps(next){
+    var L = LINKS ? LINKS[next.date] : null;
+    var mod = moduleForWeek(next.wk);
+    var s = [];
+
+    s.push({
+      title:'Work the worksheet',
+      hint:'Handwritten, with the notes and the reading open beside you.',
+      body:'<p class="lead-in">This is the real work of the night. Where you cannot answer something, leave the gap visible rather than tidying it away. That gap is the point.</p>',
+      also:'With these open beside you',
+      links:(L && L.sheets ? L.sheets.map(function(n){ return {kind:'Worksheet', url:n.u, title:n.t, cta:'Open the worksheet'}; }) : [])
+            .concat(L && L.notes ? L.notes.map(function(n){ return {kind:'Notes', url:n.u, title:n.t}; }) : [])
+    });
+
+    s.push({
+      title:'Watch the videos and add to your notes',
+      hint:'After the worksheet. The video is the check, not the source.',
+      body:'<p>Write straight onto your notes as you watch. Anything the video says that you did not have, add it. Anything you had wrong, correct it in a different colour so you can find it later.</p>',
+      also:'Also this week',
+      links:(L && L.videos ? L.videos.map(function(n,ix){ return {kind:'Video', url:n.u, title:n.t, cta: ix===0 ? 'Watch the video' : null}; }) : [])
+    });
+
+    var lab = (L && L.lab ? L.lab.map(function(n){ return {kind:'Lab sprint', url:n.u, title:n.t}; }) : []);
+    if(mod) lab.unshift({kind:'Structures', url:'module-' + mod + '-structure-list.html', title:'Module ' + mod + ' lab structure list', cta:'Open the structure list'});
+    s.push({
+      title:'Pre-study the lab structures',
+      hint:'So lab is recognition, not first contact.',
+      body:'<p>Read through the structures you will be handed tomorrow. You are not memorising here, you are making tomorrow familiar. Bring the list with you, you fill it in as you go.</p>',
+      also:'Tomorrow\'s lab, if you want a closer look',
+      links:lab
+    });
+    return s;
+  }
+
+  /* CLASS DAY :: Brain dump > Active Learning/Success > Round Tables, Practice Rounds */
+  function classDaySteps(today){
+    var meta = SEC_META[secKey];
+    var topics = dayTopics(today);
+    var lecture = topics.filter(function(t){ return /class|lecture/i.test(t.k); });
+    var labs    = topics.filter(function(t){ return /lab/i.test(t.k); });
+
+    function rows(list){
+      if(!list.length) return '';
+      return '<ul class="link-list">' + list.map(function(t){
+        return '<li class="go is-static"><span class="go-kind">' + (t.k || 'Today') + '</span><span>' + t.v + '</span></li>';
+      }).join('') + '</ul>';
+    }
+
+    return [
+      { title:'Brain dump',
+        hint:'Lecture block, ' + meta.lec + '. First thing, five minutes.',
+        body:'<p>Blank paper, closed notes, closed book, phone away. On the pre-work you did last night. A real organised attempt earns full credit, a few scattered words earns nothing.</p>',
+        links:[] },
+      { title:'Active learning and success',
+        hint:'Lecture block. The rest of the lecture hour.',
+        body:'<p>This is the part that only works if the pre-work is done. We are applying it, not receiving it.</p>' + rows(lecture),
+        links:[] },
+      { title:'Round tables, practice rounds',
+        hint:'Lab block, ' + meta.lab + '.',
+        body:'<p>Rotating rounds at the bench. Name it, place it, describe it, connect it, then teach it back to your table.</p>' + rows(labs),
+        links:[{kind:'How it runs', url:'spiral-rounds.html', title:'how the rounds work', cta:'How the rounds work'}] }
+    ];
+  }
+
+  /* TBL DAY :: iRAT/tRAT > Application Exercise > Round Tables, Practice Rounds */
+  function tblDaySteps(today){
+    var meta = SEC_META[secKey];
+    var topics = dayTopics(today);
+    var labs = topics.filter(function(t){ return /lab/i.test(t.k); });
+    return [
+      { title:'iRAT, then tRAT',
+        hint:'Lecture block, ' + meta.lec + '.',
+        body:'<p>The same readiness questions twice. Alone first, in silence, on your own judgement. Then again with your team, arguing it out until you commit as a group. Then appeals on anything you think was unfair.</p>' +
+             '<p>There is no preparing for this in the room. It is the pre-work being checked.</p>',
+        links:[] },
+      { title:'Application exercise',
+        hint:'Lecture block. The main event.',
+        body:'<p>One hard problem. Every team works the same one at the same time, and every team reveals their answer at the same moment. You will have to defend a choice, so make sure you know why your team picked it.</p>',
+        links:[] },
+      { title:'Round tables, practice rounds',
+        hint:'Lab block, ' + meta.lab + '.',
+        body:'<p>Rounds at the bench as usual.</p>' + (labs.length
+          ? '<ul class="link-list">' + labs.map(function(t){ return '<li class="go is-static"><span class="go-kind">Lab</span><span>' + t.v + '</span></li>'; }).join('') + '</ul>'
+          : ''),
+        links:[{kind:'How it runs', url:'spiral-rounds.html', title:'how the rounds work', cta:'How the rounds work'}] }
+    ];
+  }
+
+  /* EXAM DAY :: Lab exam > Lecture exam */
+  function examSteps(ex){
+    var meta = SEC_META[secKey];
+    return [
+      { title:'Lab practical',
+        hint:'Doors lock at the start. Pen only, no pencil.',
+        body:'<p>Timed station rotation. Spelling counts. Cover your answers and keep your eyes on your own station.</p>' +
+             (ex && ex.covers ? '<p>Covers ' + ex.covers + '.</p>' : ''),
+        links:[] },
+      { title:'Lecture exam',
+        hint:meta.lec.split(',')[0] + '. Doors lock at the start of this one too.',
+        body:'<p>Mostly apply and reason, not pure recall. There are built-in bonus questions, but no exam scores above 102 percent.</p>',
+        links:ex ? [{kind:'Scope', url:'bio004-exam-modules.html', title:'the scope', cta:'What Exam ' + ex.n + ' covers'}] : [] }
+    ];
+  }
+
+  /* AFTER CLASS :: Mastery OS + Recall Rx (lecture) > Loops (labs) */
+  function afterClassSteps(today){
+    var L = today && LINKS ? LINKS[today.date] : null;
+    var s = [
+      { title:'Lecture: Mastery OS and Recall Rx cards',
+        hint:'Short. Tonight, while it is still warm.',
+        body:'<p>Run the cards on what was taught today. Getting it wrong tonight is cheap. Getting it wrong on the exam is not.</p>',
+        also:'Lives in',
+        links:[{kind:'Cards', url:'bio004-spaced-recall.html', title:'Recall Rx cards', cta:'Run tonight\'s cards'},
+               {kind:'Hub', url:'mastery-os-fall-2026.html', title:'Mastery OS'}] },
+      { title:'Labs: Loops',
+        hint:'The lab half of today.',
+        body:'<p>Run the loops for the structures you had at the bench today, while you can still picture the model in front of you.</p>',
+        links:[{kind:'Loops', url:LOOPS_URL, title:'Anatomy Loops', ext:true, cta:'Run the loops'}] }
+    ];
+    if(L && L.slides){
+      s.push({ title:'If you have time, read the slides once',
+        hint:'Ten minutes, no notes taken.',
+        body:'<p>Looking for what did not land, not building a second set of notes.</p>',
+        links:[{kind:'Slides', url:L.slides.u, title:L.slides.t, cta:'Open the slides'}] });
+    }
+    return s;
+  }
+
+  /* NON-CLASS DAY :: Mastery OS / Recall cards > Loops, with an occasional Gap Finder */
+  function nonClassSteps(ex, toExam){
+    var s = [
+      { title:'Mastery OS and Recall cards',
+        hint:'Built into the Mastery recall, so it knows what you got wrong.',
+        body:'<p>Short session. The cards bring back what you missed last time first, which is exactly the material you would otherwise skip.</p>',
+        also:'Lives in',
+        links:[{kind:'Cards', url:'bio004-spaced-recall.html', title:'Recall Rx cards', cta:'Run today\'s cards'},
+               {kind:'Hub', url:'mastery-os-fall-2026.html', title:'Mastery OS'}] },
+      { title:'Labs: Loops',
+        hint:'Also built into the Mastery recall.',
+        body:'<p>Structures fade faster than concepts. This is the cheapest way to keep them.</p>',
+        links:[{kind:'Loops', url:LOOPS_URL, title:'Anatomy Loops', ext:true, cta:'Run the loops'}] }
+    ];
+    if(dueForGapFinder()){
+      s.push({ title:'Run a Gap Finder',
+        hint:'Occasional. It has been a week or more.',
+        body:'<p>This looks for topics you have no card history on at all, the ones you have never been tested on rather than the ones you got wrong. Those are the quiet gaps.</p>',
+        links:[{kind:'Tool', url:'card-gap-finder.html', title:'Card Gap Finder', cta:'Find my gaps'}] });
+    }
+    return s;
+  }
+
+  /* EXAM MINUS 3 :: Gap Finder on both banks > build the three day plan */
+  function examPlanSteps(ex){
+    var d1 = new Date(TODAY); d1.setDate(d1.getDate()+1);
+    var d2 = new Date(TODAY); d2.setDate(d2.getDate()+2);
+    return [
+      { title:'Gap Finder on the recall cards',
+        hint:'First. Before you decide what to study.',
+        body:'<p>It surfaces the lecture topics with no card history and the ones you keep missing. Write the list down, it becomes the plan.</p>',
+        also:'Then check',
+        links:[{kind:'Tool', url:'card-gap-finder.html', title:'Card Gap Finder', cta:'Find my gaps'},
+               {kind:'Weak spots', url:'bio004-spaced-recall-weakness-dashboard.html', title:'your weakest topics'}] },
+      { title:'Gap Finder on the loops',
+        hint:'The lab half. Same job, different material.',
+        body:'<p>Structures you cannot name cold are the ones the practical will find. Add them to the same list.</p>',
+        links:[{kind:'Loops', url:LOOPS_URL, title:'Anatomy Loops', ext:true, cta:'Run the loops'}] },
+      { title:'Write the three day plan',
+        hint:'Three days, three passes. Not three days of rereading.',
+        body:'<p><strong>' + shortDate(TODAY) + ', tonight.</strong> The weakest third of your list. Cards and loops only, no notes open.</p>' +
+             '<p><strong>' + shortDate(d1) + '.</strong> The middle third, then go back over tonight\'s weakest third blind.</p>' +
+             '<p><strong>' + shortDate(d2) + '.</strong> The last third, then one full pass of everything the gap finders flagged. Stop early. Sleep beats one more hour.</p>' +
+             '<p>Nothing new goes in after tonight.</p>',
+        links:ex ? [{kind:'Scope', url:'bio004-exam-modules.html', title:'the scope', cta:'What Exam ' + ex.n + ' covers'}] : [] }
+    ];
+  }
+
+  /* "Occasional" means it has actually been a while, not a calendar trick. */
+  function dueForGapFinder(){
+    var last = ls('bio004-today-gapfinder');
+    if(!last) return true;
+    return daysBetween(parseIso(last), TODAY) >= 7;
+  }
+  function markGapFinderShown(){ ls('bio004-today-gapfinder', TODAY_ISO); }
 
   /* ---------- render ---------- */
   var elSteps = document.getElementById('steps');
@@ -826,9 +921,27 @@
       var state = done ? 'Done' : (isNow ? 'Now' : 'Later');
       var open = isNow;
 
-      var links = (st.links && st.links.length)
-        ? '<ul class="link-list">' + st.links.map(function(l){ return linkItem(l.kind, l.url, l.title); }).join('') + '</ul>'
-        : '';
+      /* ONE thing to click. The step's first link is the action. Anything
+         else it needs sits underneath as plain text links, deliberately
+         quieter, so the student is never choosing between equals. */
+      var links = '';
+      if(st.links && st.links.length){
+        var first = st.links[0];
+        var attr  = first.ext ? ' target="_blank" rel="noopener"' : ' target="_top"';
+        links = '<a class="primary" href="' + first.url + '"' + attr + '>' +
+                  '<span>' + (first.cta || 'Open ' + first.title) + '</span>' +
+                  '<span class="arr" aria-hidden="true">&rarr;</span>' +
+                  (first.ext ? '<span class="sr-only"> (opens in a new tab)</span>' : '') +
+                '</a>';
+        var rest = st.links.slice(1);
+        if(rest.length){
+          links += '<p class="also">' + (st.also || 'Open beside it') + ': ' +
+            rest.map(function(l){
+              var a = l.ext ? ' target="_blank" rel="noopener"' : ' target="_top"';
+              return '<a href="' + l.url + '"' + a + '>' + l.title + '</a>';
+            }).join(', ') + '</p>';
+        }
+      }
 
       return '<li class="' + cls + '"' + (isNow ? ' aria-current="step"' : '') + '>' +
         '<button class="step-head" type="button" aria-expanded="' + open + '" aria-controls="sb' + i + '">' +
@@ -841,12 +954,14 @@
         '</button>' +
         '<div class="step-body" id="sb' + i + '"' + (open ? '' : ' hidden') + '>' +
           glossify(st.body || '') + links +
-          (done
+          '<div class="step-foot">' + (done
             ? '<button class="undo-btn" type="button" data-undo="' + i + '">Not done after all</button>'
-            : '<button class="done-btn" type="button" data-done="' + i + '">Mark this done</button>') +
+            : '<button class="done-btn" type="button" data-done="' + i + '">Done, next step</button>') + '</div>' +
         '</div>' +
       '</li>';
     }).join('');
+
+    if(PLAN.steps.some(function(st){ return st.title === 'Run a Gap Finder'; })) markGapFinderShown();
 
     if(allDone){
       document.getElementById('hl-kicker').textContent = 'All done';
@@ -854,18 +969,6 @@
       document.getElementById('hl-body').textContent = 'Nothing else is asked of you today. Close the laptop.';
     }
 
-    var after = document.getElementById('after');
-    var row = document.getElementById('after-row');
-    if(PLAN.steps.length){
-      after.hidden = false;
-      row.innerHTML =
-        '<a href="bio004-spaced-recall.html" target="_top">Spaced recall</a>' +
-        '<a href="bio004-draw.html" target="_top">Draw from memory</a>' +
-        '<a href="' + SEC_META[secKey].hub + '" target="_top">Your lab schedule</a>' +
-        '<a href="bio004-course-calendar.html" target="_top">Full calendar</a>';
-    } else {
-      after.hidden = true;
-    }
   }
 
   /* ---------- interaction ---------- */
@@ -956,7 +1059,6 @@
     document.getElementById('hl-kicker').textContent = 'One question';
     document.getElementById('hl-title').textContent = 'Pick your section';
     document.getElementById('hl-body').textContent = 'Your CRN is on your Solano registration. This is the only time you will be asked.';
-    document.getElementById('after').hidden = true;
     document.getElementById('foot-line').textContent = '';
     elSteps.innerHTML = Object.keys(SEC_META).map(function(k){
       var m = SEC_META[k];

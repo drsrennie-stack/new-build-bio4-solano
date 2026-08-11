@@ -124,6 +124,12 @@
     var q = sec ? ('?sec=' + sec) : '';
     var t = [];
 
+    /* First tile, on purpose. One place that answers "what do I do now",
+       so the student never has to choose between the other twenty. */
+    t.push({ g: 'This week', name: 'Today', sub: 'What to do right now, step by step',
+             url: BASE + 'today.html' + q, icon: 'target', tone: 'gold', qr: 'today', key: 'today',
+             kw: 'today now what do i do walkthrough start here prework tonight' });
+
     t.push({ g: 'This week', name: 'Week ' + cw.wk + ' hub', sub: cw.pre ? 'Term starts Aug 17' : 'Your week, day by day',
              url: BASE + 'week-' + cw.wk + '-hub.html' + q, icon: 'home', tone: 'navy', key: 'week', kw: 'week hub current' });
     t.push({ g: 'This week', name: 'Week ' + cw.wk + ' detail', sub: 'Pre-work, class days, graded',
