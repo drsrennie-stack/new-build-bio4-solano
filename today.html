@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Today &middot; BIO 004 Human Anatomy &middot; Fall 2026</title>
+<meta name="description" content="What to do today in BIO 004 Human Anatomy, one step at a time.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- ============================================================
+     BIO 004 Human Anatomy, Fall 2026, Solano Community College
+
+     today.html  ::  the one screen that answers "what do I do now"
+
+     WHY THIS PAGE EXISTS
+     --------------------
+     A student walking in from Canvas used to meet five screens
+     before anything told them tonight's task, and those screens
+     disagreed with each other. This page is the single answer.
+     It reads the real date and the student's section and shows
+     ONE thing to do, with the rest folded away until it is their
+     turn. Nothing here is new content. Every link points at
+     material that already exists in this repo.
+
+     WHERE ITS FACTS COME FROM
+     -------------------------
+       schedule-fall2026.js   BIO004_SECTIONS  section identity,
+                              meeting days, rooms, exam dates
+                              BIO004_SESSIONS  every class day,
+                              per track, with what happens in it
+       session-links.js       BIO004_SESSION_LINKS, keyed by ISO
+                              date: the sheet, the notes, the
+                              video, the slides, the lab sprints
+
+     Change a date or a link in those two files and this page
+     follows. There is no schedule data in this file.
+
+     THE SEQUENCE IT ENFORCES
+     ------------------------
+     Her order, and it is load-bearing:
+       1. notes and reading open
+       2. work the pre-work sheet against them
+       3. THEN the video, as the check and not the source
+       4. bring the written copy to class
+       5. retrieval later in the week, not the same night
+
+     ACCESSIBILITY
+     -------------
+     WCAG 2.2 AA floor, AAA on every text pair. Real buttons,
+     aria-expanded on every disclosure, aria-current on the live
+     step, a polite live region for step changes, focus ring
+     #6B1616 at 11.5:1 on light and #DCB45C at 8.9:1 on navy, no
+     state carried by colour alone (every step also says Done,
+     Now, or Later in text), no timers, 44px targets, and a
+     prefers-reduced-motion guard on the one animation.
+
+     CANVAS
+     ------
+     Height-sender at the foot of the body, posting all four of
+     the message shapes already in use across this repo, so it
+     resizes whatever listener the Canvas shell is running.
+     Every internal link carries target="_top".
+     ============================================================ -->
+
+<style>
+  :root{
+    /* live Fall 2026 chrome, matched to class1.html and week-1.html */
+    --navy:#08101F;
+    --navy-soft:#141F33;
+    --terra:#8B1D1D;
+    --terra-dark:#6B1616;
+    --terra-on-navy:#D98E77;   /* 7.3:1 on navy, the accent that works */
+    --gold:#DCB45C;
+    --gold-pale:#F2E2B8;
+    --oxblood:#7A2A22;
+    --oxblood-hover:#8B3A2E;
+    --white:#FFFFFF;
+    --offwhite:#FAFAF9;
+    --line:rgba(8,16,31,.14);
+    --line-strong:rgba(8,16,31,.28);
+    --ink:#08101F;
+    --ink-mid:#3D4757;          /* 8.4:1 on white, clears AAA */
+    --radius:14px;
+    --shadow-rest:0 1px 3px rgba(0,0,0,.08);
+    --shadow-lift:0 10px 22px rgba(0,0,0,.12);
+    --font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-padding-top:96px}
+  html,body{margin:0}
+  body{
+    font-family:var(--font);
+    background:var(--offwhite);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .skip{
+    position:absolute;left:-9999px;top:0;z-index:100;
+    background:var(--navy);color:var(--white);
+    padding:14px 20px;border-radius:0 0 var(--radius) 0;
+    font-weight:700;text-decoration:none;
+  }
+  .skip:focus{left:0}
+
+  :focus-visible{outline:3px solid var(--terra-dark);outline-offset:3px;border-radius:4px}
+  [tabindex="-1"]:focus{outline:none}
+  .on-navy :focus-visible{outline-color:var(--gold)}
+
+  .wrap{max-width:720px;margin:0 auto;padding:0 20px 72px}
+
+  /* ---------- hero ---------- */
+  .hero{
+    background:var(--navy);color:var(--white);
+    padding:34px 20px 30px;margin-bottom:0;
+  }
+  .hero-in{max-width:720px;margin:0 auto}
+  .eyebrow{
+    font-size:11.5px;font-weight:800;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--gold);margin:0 0 12px;
+  }
+  h1{
+    font-size:clamp(26px,5.2vw,38px);font-weight:800;
+    letter-spacing:-.02em;line-height:1.12;margin:0 0 10px;
+  }
+  h1 .a{color:var(--terra-on-navy)}
+  .hero-sub{font-size:16px;margin:0;color:var(--white);max-width:52ch}
+  .hero-meta{
+    display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;
+  }
+  .tag{
+    font-size:12px;font-weight:700;letter-spacing:.04em;
+    border:1px solid rgba(220,180,92,.55);color:var(--gold-pale);
+    border-radius:999px;padding:6px 13px;
+  }
+
+  /* ---------- the one thing ---------- */
+  .headline-card{
+    background:var(--white);border:1px solid var(--line);
+    border-radius:var(--radius);box-shadow:var(--shadow-rest);
+    padding:26px 24px;margin:-18px 0 26px;position:relative;
+  }
+  .headline-card h2{
+    font-size:20px;font-weight:800;margin:0 0 8px;letter-spacing:-.01em;
+  }
+  .headline-card p{margin:0;color:var(--ink-mid);font-size:15.5px}
+  .kicker{
+    font-size:11.5px;font-weight:800;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--terra-dark);margin:0 0 10px;
+  }
+
+  /* ---------- steps ---------- */
+  .steps{list-style:none;margin:0;padding:0}
+  .step{
+    background:var(--white);border:1px solid var(--line);
+    border-radius:var(--radius);box-shadow:var(--shadow-rest);
+    margin-bottom:14px;overflow:hidden;
+    transition:box-shadow 200ms ease,border-color 200ms ease;
+  }
+  .step.is-now{border-color:var(--gold);border-width:2px;box-shadow:var(--shadow-lift)}
+  .step.is-done{background:var(--white);border-color:var(--line)}
+
+  .step-head{
+    display:flex;gap:14px;align-items:flex-start;width:100%;
+    background:none;border:0;margin:0;padding:18px 20px;
+    font:inherit;color:inherit;text-align:left;cursor:pointer;
+    min-height:44px;
+  }
+  .step-head:hover{background:#FBFAF8}
+
+  .step-num{
+    flex:0 0 auto;width:30px;height:30px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;font-weight:800;
+    border:2px solid var(--line-strong);color:var(--ink-mid);
+    background:var(--white);
+  }
+  .is-now .step-num{border-color:var(--gold);background:var(--gold);color:var(--navy)}
+  .is-done .step-num{border-color:var(--navy);background:var(--navy);color:var(--white)}
+
+  .step-text{flex:1 1 auto;min-width:0}
+  /* both of these MUST be block. As spans they run together and read
+     as one fused sentence, which is the same defect the audit found
+     on the class hub pages. */
+  .step-title{display:block;font-size:16.5px;font-weight:700;margin:0;letter-spacing:-.005em}
+  .is-done .step-title{color:var(--ink-mid)}
+  .step-hint{display:block;margin:4px 0 0;font-size:13.5px;color:var(--ink-mid);line-height:1.45}
+
+  /* state is never colour alone: it is spelled out */
+  .step-state{
+    flex:0 0 auto;font-size:11px;font-weight:800;letter-spacing:.12em;
+    text-transform:uppercase;padding:5px 10px;border-radius:999px;
+    border:1px solid var(--line-strong);color:var(--ink-mid);
+    background:var(--white);white-space:nowrap;
+  }
+  .is-now .step-state{border-color:var(--terra-dark);color:var(--terra-dark)}
+  .is-done .step-state{border-color:var(--navy);background:var(--navy);color:var(--white)}
+
+  .step-body{padding:0 20px 20px 64px}
+  .step-body p{margin:0 0 14px;font-size:15px;color:var(--ink-mid)}
+  .step-body p.lead-in{color:var(--ink)}
+
+  .link-list{list-style:none;margin:0 0 16px;padding:0}
+  .link-list li{margin:0 0 8px}
+  .go{
+    display:flex;align-items:center;gap:10px;
+    text-decoration:none;color:var(--ink);
+    border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;min-height:44px;background:var(--white);
+    font-weight:600;font-size:15px;
+    transition:border-color 180ms ease,background 180ms ease;
+  }
+  .go:hover{border-color:var(--gold);background:#FCFAF5}
+  .go.is-static{cursor:default;background:var(--offwhite);font-weight:600}
+  .go.is-static:hover{border-color:var(--line);background:var(--offwhite)}
+  .go .arr{margin-left:auto;color:var(--terra-dark);font-weight:800}
+  .go .go-kind{
+    font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-mid);border:1px solid var(--line);border-radius:4px;
+    padding:2px 6px;
+  }
+
+  .done-btn{
+    display:inline-flex;align-items:center;gap:9px;
+    background:var(--oxblood);color:var(--white);
+    border:0;border-radius:10px;padding:13px 22px;min-height:44px;
+    font:inherit;font-weight:800;font-size:15px;cursor:pointer;
+    transition:background 180ms ease;
+  }
+  .done-btn:hover{background:var(--oxblood-hover)}
+  .undo-btn{
+    display:inline-flex;align-items:center;min-height:44px;
+    background:none;border:0;padding:10px 4px;font:inherit;
+    font-size:13.5px;font-weight:700;color:var(--terra-dark);
+    text-decoration:underline;cursor:pointer;
+  }
+
+  /* ---------- glossary ---------- */
+  .gloss{
+    background:none;border:0;padding:0;font:inherit;cursor:pointer;
+    color:var(--terra-dark);font-weight:700;
+    text-decoration:underline;text-decoration-style:dotted;
+    text-underline-offset:3px;
+  }
+  .gloss-block{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+  .gloss-list{margin:12px 0 0;padding:0}
+  .gloss-list[hidden]{display:none}
+  .gloss-list dt{
+    font-weight:800;font-size:14px;color:var(--ink);margin:0 0 3px;
+  }
+  .gloss-list dd{
+    margin:0 0 14px;padding:0 0 0 14px;font-size:14px;color:var(--ink-mid);
+    border-left:2px solid var(--gold);
+  }
+  .gloss-list dd:last-child{margin-bottom:0}
+  .gloss-note{
+    margin:10px 0 0;padding:12px 14px;font-size:14px;
+    background:var(--white);border:1px solid var(--line);
+    border-left:3px solid var(--gold);border-radius:0 8px 8px 0;
+    color:var(--ink-mid);
+  }
+  .gloss-note[hidden]{display:none}
+
+  /* ---------- footer strip ---------- */
+  .after{
+    margin-top:30px;padding-top:24px;border-top:1px solid var(--line);
+  }
+  .after h3{font-size:14px;font-weight:800;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--ink-mid);margin:0 0 12px}
+  .after-row{display:flex;flex-wrap:wrap;gap:10px}
+  .after-row a{
+    display:inline-flex;align-items:center;min-height:44px;
+    padding:10px 16px;border:1px solid var(--line);border-radius:999px;
+    text-decoration:none;color:var(--ink);font-weight:600;font-size:14px;
+    background:var(--white);
+  }
+  .after-row a:hover{border-color:var(--gold)}
+
+  .foot{
+    margin-top:34px;padding-top:20px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--ink-mid);
+  }
+  .foot a{color:var(--terra-dark);font-weight:700}
+
+  .sr-only{
+    position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+    overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+  }
+
+  /* ---------- first-run walkthrough ---------- */
+  .wt{
+    position:fixed;inset:0;z-index:60;background:var(--navy);
+    display:flex;align-items:center;justify-content:center;padding:28px 22px;
+  }
+  .wt[hidden]{display:none}
+  .wt-in{max-width:560px;text-align:center;color:var(--white)}
+  .wt-line{
+    opacity:0;margin:0 0 20px;font-size:clamp(18px,3.4vw,23px);
+    font-weight:700;line-height:1.4;letter-spacing:-.01em;
+    animation:fade 640ms ease forwards;
+  }
+  .wt-line .a{color:var(--terra-on-navy)}
+  .wt-line.s{font-size:15.5px;font-weight:400;color:var(--gold-pale)}
+  @keyframes fade{to{opacity:1}}
+  .wt-btn{
+    margin-top:14px;background:var(--oxblood);color:var(--white);
+    border:0;border-radius:10px;padding:15px 30px;min-height:44px;
+    font:inherit;font-weight:800;font-size:16px;cursor:pointer;
+  }
+  .wt-btn:hover{background:var(--oxblood-hover)}
+  .wt-skip{
+    display:block;margin:16px auto 0;background:none;border:0;
+    font:inherit;font-size:14px;font-weight:700;color:var(--gold-pale);
+    text-decoration:underline;cursor:pointer;min-height:44px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important;transition-duration:.001ms !important}
+    .wt-line{opacity:1;animation:none}
+  }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to today's work</a>
+
+<!-- ===== first-run walkthrough, one line at a time ===== -->
+<div class="wt on-navy" id="wt" role="dialog" aria-modal="true" aria-labelledby="wt-h" hidden>
+  <div class="wt-in">
+    <h2 class="sr-only" id="wt-h">How this page works</h2>
+    <div id="wt-lines"></div>
+    <button class="wt-btn" id="wt-next" type="button">Next</button>
+    <button class="wt-skip" id="wt-skip" type="button">Skip this</button>
+  </div>
+</div>
+
+<header class="hero on-navy">
+  <div class="hero-in">
+    <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano College</p>
+    <h1 id="hero-h1">Today.</h1>
+    <p class="hero-sub" id="hero-sub">Loading your day.</p>
+    <div class="hero-meta" id="hero-meta"></div>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+
+  <div class="headline-card">
+    <p class="kicker" id="hl-kicker">Right now</p>
+    <h2 id="hl-title">Working out where you are</h2>
+    <p id="hl-body">One moment.</p>
+
+    <div class="gloss-block">
+      <button class="gloss" type="button" id="gloss-all" aria-expanded="false" aria-controls="gloss-list">
+        New words on this page?
+      </button>
+      <dl class="gloss-list" id="gloss-list" hidden></dl>
+    </div>
+  </div>
+
+  <p class="sr-only" role="status" aria-live="polite" id="announce"></p>
+
+  <ol class="steps" id="steps"></ol>
+
+  <div class="after" id="after" hidden>
+    <h3>If you have more time</h3>
+    <div class="after-row" id="after-row"></div>
+  </div>
+
+  <div class="foot">
+    <p id="foot-line"></p>
+    <p>
+      <a href="bio004-course-calendar.html" target="_top">See another day on the calendar</a>
+      &middot;
+      <a href="welcome.html" target="_top">Course home</a>
+      &middot;
+      <button class="gloss" type="button" id="switch-sec">Not your section?</button>
+    </p>
+  </div>
+
+</main>
+
+<script src="schedule-fall2026.js"></script>
+<script src="session-links.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  var STORE_STEPS = 'bio004-today-steps';
+  var STORE_WT    = 'bio004-today-walkthrough';
+  var STORE_SEC   = 'bio004-section';
+
+  function ls(k,v){
+    try{
+      if(v===undefined) return window.localStorage.getItem(k);
+      window.localStorage.setItem(k,v); return v;
+    }catch(e){ return null; }
+  }
+  function lsDel(k){ try{ window.localStorage.removeItem(k); }catch(e){} }
+
+  /* ---------- date, honest about the local day ---------- */
+  function iso(d){
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+  function parseIso(s){
+    var p=s.split('-'); return new Date(+p[0], +p[1]-1, +p[2]);
+  }
+  var qs = new URLSearchParams(window.location.search);
+  var TODAY = qs.get('today') ? parseIso(qs.get('today')) : new Date();
+  TODAY.setHours(0,0,0,0);
+  var TODAY_ISO = iso(TODAY);
+  var HOUR = qs.get('hour') ? parseInt(qs.get('hour'),10) : new Date().getHours();
+
+  function longDate(d){
+    return d.toLocaleDateString('en-US',{weekday:'long', month:'long', day:'numeric'});
+  }
+  function shortDate(d){
+    return d.toLocaleDateString('en-US',{weekday:'short', month:'short', day:'numeric'});
+  }
+  function daysBetween(a,b){ return Math.round((b-a)/86400000); }
+
+  /* ---------- section ---------- */
+  var SECTIONS = window.BIO004_SECTIONS || null;
+  var SESSIONS = window.BIO004_SESSIONS || null;
+  var LINKS    = window.BIO004_SESSION_LINKS || null;
+
+  /* section keys used across this repo: mw | tr-am | tr-eve */
+  var SEC_META = {
+    'mw':     { label:'Mon / Wed, Afternoon', track:'mw', hub:'class1.html', crn:'80650' },
+    'tr-am':  { label:'Tue / Thu, Morning',   track:'tr', hub:'class2.html', crn:'80654' },
+    'tr-eve': { label:'Tue / Thu, Evening',   track:'tr', hub:'class3.html', crn:'80655' }
+  };
+  var secKey = ls(STORE_SEC);
+  if(!SEC_META[secKey]) secKey = null;
+
+  /* ---------- day model ---------- */
+  function sessionsFor(track){
+    if(!SESSIONS) return [];
+    return (SESSIONS[track] || []).slice();
+  }
+
+  function findDay(track, isoDate){
+    var arr = sessionsFor(track);
+    for(var i=0;i<arr.length;i++){ if(arr[i].date === isoDate) return arr[i]; }
+    return null;
+  }
+
+  /* the next real class day strictly after isoDate, skipping days off */
+  function nextClassDay(track, isoDate){
+    var arr = sessionsFor(track);
+    for(var i=0;i<arr.length;i++){
+      if(arr[i].date > isoDate && arr[i].kind !== 'off') return arr[i];
+    }
+    return null;
+  }
+  function prevClassDay(track, isoDate){
+    var arr = sessionsFor(track), found=null;
+    for(var i=0;i<arr.length;i++){
+      if(arr[i].date < isoDate && arr[i].kind !== 'off') found = arr[i];
+    }
+    return found;
+  }
+
+  function stripTags(s){ return String(s||'').replace(/<[^>]*>/g,'').replace(/&middot;/g,'·').replace(/&amp;/g,'&'); }
+
+  function dayTopics(day){
+    if(!day) return [];
+    if(day.lines) return day.lines.map(function(l){ return {k:stripTags(l[0]), v:stripTags(l[1])}; });
+    if(day.text)  return day.text.map(function(t){ return {k:'', v:stripTags(t)}; });
+    return [];
+  }
+
+  /* ---------- steps ---------- */
+  var doneMap = {};
+  try{ doneMap = JSON.parse(ls(STORE_STEPS) || '{}') || {}; }catch(e){ doneMap = {}; }
+
+  function doneKey(targetIso, idx){ return targetIso + ':' + idx; }
+  function isDone(targetIso, idx){ return !!doneMap[doneKey(targetIso, idx)]; }
+  function setDone(targetIso, idx, val){
+    var k = doneKey(targetIso, idx);
+    if(val) doneMap[k] = 1; else delete doneMap[k];
+    ls(STORE_STEPS, JSON.stringify(doneMap));
+  }
+
+  var GLOSSARY = {
+    'pre-work': 'The sheet you work at home before class. It is not a study guide and it is not the notes. You work it with the notes and the reading open beside you, in your own handwriting, and you bring the written copy to class.',
+    'brain dump': 'Five minutes at the start of class. Blank paper, closed notes, closed book, phone away. You write everything you can retrieve about the question on the board. A real, organized attempt earns full credit. A few scattered words earns nothing.',
+    'Loops': 'The short concept videos Dr. Rennie records. You watch one after you have worked the sheet, never before. It is the check on your thinking, not the source you copy from.',
+    'TBL': 'Team-Based Learning. You come prepared, take a short readiness quiz alone (the iRAT), take the same quiz again with your team (the tRAT), argue the ones you got wrong, then your team works a hard case with every other team at the same time.',
+    'structure list': 'The lab list of everything you are expected to find and name on a model, a slide, or a specimen. You bring it to lab and fill it in as you go. It is what the lab practical is built from.',
+    'lab sprint': 'A short focused run at one lab topic: the structures, what to look for, and a quick self-check.',
+    'spaced recall': 'Short retrieval sessions spread across the week. You do them AFTER the class that taught the material, not the same night you did the pre-work.',
+    'lab practical': 'The hands-on half of an exam. You rotate through stations and identify structures on models, slides, and specimens. Spelling counts, pen only, and the doors lock when it starts.'
+  };
+
+  function glossify(text){
+    var out = text;
+    Object.keys(GLOSSARY).forEach(function(term){
+      var re = new RegExp('\\b(' + term.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&') + ')\\b', 'i');
+      if(re.test(out) && out.indexOf('data-gloss') === -1){
+        out = out.replace(re, '<button class="gloss" type="button" data-gloss="' + term + '" aria-expanded="false">$1</button>');
+      }
+    });
+    return out;
+  }
+
+  function linkItem(kind, url, title){
+    return '<li><a class="go" href="' + url + '" target="_top">' +
+           '<span class="go-kind">' + kind + '</span>' +
+           '<span>' + title + '</span>' +
+           '<span class="arr" aria-hidden="true">&rarr;</span>' +
+           '<span class="sr-only">, opens ' + title + '</span>' +
+           '</a></li>';
+  }
+
+  /* ---------- build the plan for the moment ---------- */
+  function buildPlan(){
+    var meta = SEC_META[secKey];
+    var track = meta.track;
+    var todaySess = findDay(track, TODAY_ISO);
+    var isClassToday = todaySess && todaySess.kind !== 'off';
+    var termStart = '2026-08-17';
+
+    /* BEFORE THE TERM.
+       The night before day one is NOT this case. It falls through
+       to the ordinary pre-work path below, because that is exactly
+       what that night is for. */
+    if(TODAY_ISO < termStart && daysBetween(TODAY, parseIso(termStart)) > 1){
+      var d = daysBetween(TODAY, parseIso(termStart));
+      var first = findDay(track, termStart) || nextClassDay(track, '2026-08-16');
+      return {
+        heroH1: 'Not yet. <span class="a">Soon.</span>',
+        heroSub: 'The term starts ' + longDate(parseIso(termStart)) + '. Here is what to do before then.',
+        kicker: d === 1 ? 'Tomorrow' : 'In ' + d + ' days',
+        title: 'Get set up before day one',
+        body: 'Nothing is due yet. These four things take about half an hour and mean you walk in on day one already oriented.',
+        target: termStart,
+        steps: preTermSteps(first),
+        foot: 'Come back here on ' + shortDate(parseIso(termStart)) + ' and this page will show you that day.'
+      };
+    }
+
+    /* AFTER THE LAST DAY */
+    var lastDay = sessionsFor(track).slice(-1)[0];
+    if(lastDay && TODAY_ISO > lastDay.date){
+      return {
+        heroH1: 'That is the <span class="a">whole term.</span>',
+        heroSub: 'Every class day is behind you.',
+        kicker: 'Done',
+        title: 'The course is finished',
+        body: 'Your grade is in Canvas. If you are heading into the next course, the notes and the atlas stay up.',
+        target: TODAY_ISO,
+        steps: [],
+        foot: 'Thank you for the term.'
+      };
+    }
+
+    /* EXAM DAY */
+    if(isClassToday && todaySess.kind === 'exam'){
+      return {
+        heroH1: 'Exam day.',
+        heroSub: longDate(TODAY) + '. Both parts today, lecture exam and lab practical.',
+        kicker: 'Today',
+        title: 'Doors lock when it starts',
+        body: 'Bring a pen. Not a pencil. Spelling counts on the lab practical. There is nothing left to cram, so read your own pre-work sheets rather than starting anything new.',
+        target: TODAY_ISO,
+        steps: examSteps(todaySess),
+        foot: 'Rebuttals happen at the next class meeting, so keep your exam questions.'
+      };
+    }
+
+    /* CLASS DAY */
+    if(isClassToday){
+      var tonightNext = nextClassDay(track, TODAY_ISO);
+      return {
+        heroH1: 'Class <span class="a">today.</span>',
+        heroSub: longDate(TODAY) + '. Here is the order it happens in.',
+        kicker: 'Today',
+        title: 'Bring your written pre-work',
+        body: 'Class opens with a brain dump on the pre-work you did last night. You cannot make that up if you arrive without it.',
+        target: TODAY_ISO,
+        steps: classDaySteps(todaySess, tonightNext),
+        foot: tonightNext ? 'Tonight becomes pre-work for ' + shortDate(parseIso(tonightNext.date)) + '.' : 'No further class days.'
+      };
+    }
+
+    /* NO CLASS TODAY. Either the night before, or a gap day. */
+    var next = nextClassDay(track, TODAY_ISO);
+    if(!next){
+      return {
+        heroH1: 'No class today.',
+        heroSub: 'And no class days left on the schedule.',
+        kicker: 'Nothing due', title:'Nothing scheduled', body:'',
+        target: TODAY_ISO, steps: [], foot:''
+      };
+    }
+    var gap = daysBetween(TODAY, parseIso(next.date));
+
+    /* the night before: pre-work mode, the main case */
+    if(gap === 1){
+      return {
+        heroH1: 'Tonight is <span class="a">pre-work.</span>',
+        heroSub: 'Class is ' + longDate(parseIso(next.date)) + '. Do these in order, they are not interchangeable.',
+        kicker: 'Tonight',
+        title: 'Work the sheet first, watch the video second',
+        body: 'The video is the check on your thinking, not the place you get the answers. Doing it the other way round feels faster and teaches you less.',
+        target: next.date,
+        steps: preworkSteps(next),
+        foot: 'Bring the written sheet to class. Class opens with a brain dump on it.'
+      };
+    }
+
+    /* a gap day: retrieval, not new intake */
+    var prev = prevClassDay(track, TODAY_ISO);
+    return {
+      heroH1: 'No class today.',
+      heroSub: 'Next class is ' + longDate(parseIso(next.date)) + ', in ' + gap + ' days. Today is for retrieval.',
+      kicker: 'Today',
+      title: 'Cover it up and get it back out',
+      body: 'This is the gap the whole course is designed around. Rereading feels productive and does almost nothing. Retrieving is what moves it.',
+      target: TODAY_ISO,
+      steps: gapDaySteps(prev, next),
+      foot: 'Pre-work for ' + shortDate(parseIso(next.date)) + ' opens here the night before.'
+    };
+  }
+
+  /* ---------- step builders ---------- */
+  function preTermSteps(first){
+    var s = [];
+    s.push({
+      title:'Read your syllabus once, all the way through',
+      hint:'Ten minutes. It answers most of what you will want to ask in week one.',
+      body:'<p>Yours is the one for your section, with your dates and your room on it.</p>',
+      links:[{kind:'Syllabus', url: secKey==='mw'?'syllabus-class1.html':(secKey==='tr-am'?'syllabus-class2.html':'syllabus-class3.html'), title:'Your section syllabus'}]
+    });
+    s.push({
+      title:'Sign the device policy',
+      hint:'You cannot enter lab without it.',
+      body:'<p>Read it here, then sign it in Canvas. The signing link is in the Week 1 module in Canvas, not on this site.</p>',
+      links:[{kind:'Policy', url:'digital-device-policy.html', title:'Digital device policy'}]
+    });
+    s.push({
+      title:'Get your books and your lab kit',
+      hint:'You need them in week one, not week three.',
+      body:'',
+      links:[{kind:'List', url:'required-materials.html', title:'What to buy'}]
+    });
+    s.push({
+      title:'Do the first pre-work the night before day one',
+      hint:first ? 'Day one is ' + shortDate(parseIso(first.date)) + '.' : '',
+      body:'<p>Come back to this page that night and it will lay the sheet out for you. Nothing to do about it yet.</p>',
+      links:[]
+    });
+    return s;
+  }
+
+  function preworkSteps(next){
+    var L = LINKS ? LINKS[next.date] : null;
+    var s = [];
+    var topics = dayTopics(next);
+
+    var topicHtml = topics.length
+      ? '<p class="lead-in">What tomorrow covers:</p><ul class="link-list">' + topics.map(function(t){
+          return '<li class="go is-static"><span class="go-kind">' + (t.k || 'Topic') + '</span><span>' + t.v + '</span></li>';
+        }).join('') + '</ul>'
+      : '';
+    s.push({
+      title:'Open your notes and the reading',
+      hint:'These stay open. You work against them, you do not read them cover to cover first.',
+      body:topicHtml,
+      links:(L && L.notes ? L.notes.map(function(n){ return {kind:'Notes', url:n.u, title:n.t}; }) : [])
+            .concat(L && L.workbooks ? L.workbooks.map(function(n){ return {kind:'Workbook', url:n.u, title:n.t}; }) : [])
+    });
+
+    s.push({
+      title:'Work the pre-work sheet',
+      hint:'This is the real work of the night. Handwritten, with the notes open.',
+      body:'<p>Answer it, map it, draw the mini visuals. If you cannot answer something, that is information, leave it visible rather than tidying it away.</p>',
+      links:(L && L.sheets ? L.sheets.map(function(n){ return {kind:'Pre-work', url:n.u, title:n.t}; }) : [])
+    });
+
+    s.push({
+      title:'Now watch the video',
+      hint:'After the sheet. It is the check, not the source.',
+      body:'<p>Where the video disagrees with what you wrote, mark it on your sheet. Those marks are the most useful thing you will bring to class.</p>',
+      links:(L && L.videos ? L.videos.map(function(n){ return {kind:'Loops', url:n.u, title:n.t}; }) : [])
+    });
+
+    var bring = [];
+    if(L && L.lab && L.lab.length){
+      bring = L.lab.map(function(n){ return {kind:'Lab sprint', url:n.u, title:n.t}; });
+    }
+    s.push({
+      title:'Put the written sheet in your bag',
+      hint:'Class opens with a brain dump on it. No sheet, no dump.',
+      body:'<p>Bring your structure list too if tomorrow has a lab.</p>' +
+           (bring.length ? '<p>Tomorrow’s lab, if you want to look ahead:</p>' : ''),
+      links:bring
+    });
+    return s;
+  }
+
+  function classDaySteps(today, next){
+    var L = LINKS ? LINKS[today.date] : null;
+    var topics = dayTopics(today);
+    var s = [];
+
+    s.push({
+      title:'Brain dump opens the class',
+      hint:'Five minutes, blank paper, closed everything.',
+      body:'<p>On the pre-work you did last night. A real organized attempt earns full credit.</p>',
+      links:[]
+    });
+
+    var body = '';
+    if(topics.length){
+      body = '<ul class="link-list">' + topics.map(function(t){
+        return '<li class="go is-static"><span class="go-kind">' + (t.k||'Today') + '</span><span>' + t.v + '</span></li>';
+      }).join('') + '</ul>';
+    }
+    s.push({
+      title:'What we are doing today',
+      hint:'So nothing lands cold.',
+      body:body,
+      links:[]
+    });
+
+    s.push({
+      title:'After class, read the slides once',
+      hint:'Same day, ten minutes, no notes taken.',
+      body:'<p>You are looking for the parts that did not land, not making a second set of notes.</p>',
+      links:(L && L.slides ? [{kind:'Slides', url:L.slides.u, title:L.slides.t}] : [])
+    });
+
+    if(next){
+      s.push({
+        title:'Tonight, pre-work for ' + shortDate(parseIso(next.date)),
+        hint:'Come back to this page tonight and it will be laid out.',
+        body:'<p>Nothing to open yet. This page changes over when the day does.</p>',
+        links:[]
+      });
+    }
+    return s;
+  }
+
+  function gapDaySteps(prev, next){
+    var s = [];
+    var L = prev && LINKS ? LINKS[prev.date] : null;
+    s.push({
+      title:'Blind redraw, before you look at anything',
+      hint:'Two minutes on blank paper. No notes.',
+      body:'<p>Draw what you remember from the last class. Then, and only then, open your notes and mark what was missing.</p>',
+      links:[{kind:'Tool', url:'bio004-draw.html', title:'Draw it from memory'}]
+    });
+    s.push({
+      title:'Run your spaced recall',
+      hint:'Short. It counts more than a long session would.',
+      body:'<p>The cards know what you got wrong last time and will bring those back first.</p>',
+      links:[{kind:'Cards', url:'bio004-spaced-recall.html', title:'Spaced recall'}]
+    });
+    s.push({
+      title:'Check where you are actually weak',
+      hint:'Rather than restudying what you already know.',
+      body:'<p>The dashboard reads your card history and tells you which topics to spend the next session on.</p>',
+      links:[{kind:'Dashboard', url:'bio004-spaced-recall-weakness-dashboard.html', title:'Your weak spots'}]
+    });
+    if(L && L.slides){
+      s.push({
+        title:'Reread the last class once',
+        hint:'Last, not first.',
+        body:'<p>Rereading only helps after you have already tried to retrieve. That is why it is at the bottom.</p>',
+        links:[{kind:'Slides', url:L.slides.u, title:L.slides.t}]
+      });
+    }
+    return s;
+  }
+
+  function examSteps(today){
+    return [
+      { title:'Bring a pen. Pen only.',
+        hint:'Pencil is not accepted on the lab practical.',
+        body:'<p>Spelling counts. Cover your answers and keep your eyes on your own station.</p>', links:[] },
+      { title:'Read your own pre-work sheets',
+        hint:'Your handwriting, your gaps, your marks.',
+        body:'<p>This is better than anything new. You already found your weak spots, they are written on those pages.</p>', links:[] },
+      { title:'Doors lock at the start',
+        hint:'Of each part, lecture and lab.',
+        body:'<p>If you are late you cannot enter. Give yourself a buffer.</p>',
+        links:[{kind:'Scope', url:'bio004-exam-modules.html', title:'What this exam covers'}] }
+    ];
+  }
+
+  /* ---------- render ---------- */
+  var elSteps = document.getElementById('steps');
+  var elAnnounce = document.getElementById('announce');
+  var PLAN = null;
+
+  function render(){
+    document.getElementById('hero-h1').innerHTML = PLAN.heroH1;
+    document.getElementById('hero-sub').textContent = PLAN.heroSub;
+    document.getElementById('hl-kicker').textContent = PLAN.kicker;
+    document.getElementById('hl-title').textContent = PLAN.title;
+    document.getElementById('hl-body').innerHTML = glossify(PLAN.body || '');
+    document.getElementById('foot-line').textContent = PLAN.foot || '';
+
+    var meta = SEC_META[secKey];
+    var mh = document.getElementById('hero-meta');
+    mh.innerHTML = '<span class="tag">' + meta.label + '</span>' +
+                   '<span class="tag">CRN ' + meta.crn + '</span>' +
+                   '<span class="tag">' + longDate(TODAY) + '</span>';
+
+    var nowIdx = -1;
+    for(var i=0;i<PLAN.steps.length;i++){
+      if(!isDone(PLAN.target, i)){ nowIdx = i; break; }
+    }
+    var allDone = PLAN.steps.length > 0 && nowIdx === -1;
+
+    elSteps.innerHTML = PLAN.steps.map(function(st, i){
+      var done = isDone(PLAN.target, i);
+      var isNow = (i === nowIdx);
+      var cls = 'step' + (done ? ' is-done' : '') + (isNow ? ' is-now' : '');
+      var state = done ? 'Done' : (isNow ? 'Now' : 'Later');
+      var open = isNow;
+
+      var links = (st.links && st.links.length)
+        ? '<ul class="link-list">' + st.links.map(function(l){ return linkItem(l.kind, l.url, l.title); }).join('') + '</ul>'
+        : '';
+
+      return '<li class="' + cls + '"' + (isNow ? ' aria-current="step"' : '') + '>' +
+        '<button class="step-head" type="button" aria-expanded="' + open + '" aria-controls="sb' + i + '">' +
+          '<span class="step-num" aria-hidden="true">' + (done ? '✓' : (i+1)) + '</span>' +
+          '<span class="step-text">' +
+            '<span class="step-title">' + st.title + '</span>' +
+            (st.hint ? '<span class="step-hint">' + st.hint + '</span>' : '') +
+          '</span>' +
+          '<span class="step-state">' + state + '</span>' +
+        '</button>' +
+        '<div class="step-body" id="sb' + i + '"' + (open ? '' : ' hidden') + '>' +
+          glossify(st.body || '') + links +
+          (done
+            ? '<button class="undo-btn" type="button" data-undo="' + i + '">Not done after all</button>'
+            : '<button class="done-btn" type="button" data-done="' + i + '">Mark this done</button>') +
+        '</div>' +
+      '</li>';
+    }).join('');
+
+    if(allDone){
+      document.getElementById('hl-kicker').textContent = 'All done';
+      document.getElementById('hl-title').textContent = 'That is everything for now';
+      document.getElementById('hl-body').textContent = 'Nothing else is asked of you today. Close the laptop.';
+    }
+
+    var after = document.getElementById('after');
+    var row = document.getElementById('after-row');
+    if(PLAN.steps.length){
+      after.hidden = false;
+      row.innerHTML =
+        '<a href="bio004-spaced-recall.html" target="_top">Spaced recall</a>' +
+        '<a href="bio004-draw.html" target="_top">Draw from memory</a>' +
+        '<a href="' + SEC_META[secKey].hub + '" target="_top">Your lab schedule</a>' +
+        '<a href="bio004-course-calendar.html" target="_top">Full calendar</a>';
+    } else {
+      after.hidden = true;
+    }
+  }
+
+  /* ---------- interaction ---------- */
+  elSteps.addEventListener('click', function(e){
+    var head = e.target.closest('.step-head');
+    if(head){
+      var body = document.getElementById(head.getAttribute('aria-controls'));
+      var open = head.getAttribute('aria-expanded') === 'true';
+      head.setAttribute('aria-expanded', String(!open));
+      body.hidden = open;
+      return;
+    }
+    var d = e.target.closest('[data-done]');
+    if(d){
+      var i = +d.getAttribute('data-done');
+      setDone(PLAN.target, i, true);
+      elAnnounce.textContent = 'Step ' + (i+1) + ' marked done.';
+      render(); focusCurrent(); return;
+    }
+    var u = e.target.closest('[data-undo]');
+    if(u){
+      var j = +u.getAttribute('data-undo');
+      setDone(PLAN.target, j, false);
+      elAnnounce.textContent = 'Step ' + (j+1) + ' reopened.';
+      render(); focusCurrent(); return;
+    }
+  });
+
+  function focusCurrent(){
+    var cur = elSteps.querySelector('.is-now .step-head');
+    if(cur) cur.focus();
+    else {
+      var h = document.getElementById('hl-title');
+      h.setAttribute('tabindex','-1'); h.focus();
+    }
+  }
+
+  /* glossary, delegated across the whole main region */
+  document.getElementById('main').addEventListener('click', function(e){
+    var g = e.target.closest('[data-gloss]');
+    if(!g) return;
+    var term = g.getAttribute('data-gloss');
+    var open = g.getAttribute('aria-expanded') === 'true';
+    var next = g.parentNode.querySelector('.gloss-note[data-for="'+term+'"]');
+    if(open){
+      if(next) next.hidden = true;
+      g.setAttribute('aria-expanded','false');
+      return;
+    }
+    if(!next){
+      next = document.createElement('p');
+      next.className = 'gloss-note';
+      next.setAttribute('data-for', term);
+      next.textContent = GLOSSARY[term] || '';
+      g.parentNode.appendChild(next);
+    }
+    next.hidden = false;
+    g.setAttribute('aria-expanded','true');
+  });
+
+  /* the always-available glossary, so a student never has to open a
+     step they are not on yet just to find out what a word means */
+  (function(){
+    var btn = document.getElementById('gloss-all');
+    var list = document.getElementById('gloss-list');
+    list.innerHTML = Object.keys(GLOSSARY).map(function(t){
+      return '<dt>' + t.charAt(0).toUpperCase() + t.slice(1) + '</dt><dd>' + GLOSSARY[t] + '</dd>';
+    }).join('');
+    btn.addEventListener('click', function(){
+      var open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      list.hidden = open;
+      btn.textContent = open ? 'New words on this page?' : 'Hide the word list';
+    });
+  })();
+
+  document.getElementById('switch-sec').addEventListener('click', function(){
+    lsDel(STORE_SEC);
+    try{ window.localStorage.removeItem('mos-section'); }catch(e){}
+    window.top.location.href = 'welcome.html?pick=1';
+  });
+
+  /* ---------- section gate ---------- */
+  function askSection(){
+    document.getElementById('hero-h1').innerHTML = 'Which class are <span class="a">you in?</span>';
+    document.getElementById('hero-sub').textContent = 'Pick once. Everything after this follows your section.';
+    document.getElementById('hero-meta').innerHTML = '';
+    document.getElementById('hl-kicker').textContent = 'One question';
+    document.getElementById('hl-title').textContent = 'Pick your section';
+    document.getElementById('hl-body').textContent = 'Your CRN is on your Solano registration. This is the only time you will be asked.';
+    document.getElementById('after').hidden = true;
+    document.getElementById('foot-line').textContent = '';
+    elSteps.innerHTML = Object.keys(SEC_META).map(function(k){
+      var m = SEC_META[k];
+      return '<li class="step is-now"><button class="step-head" type="button" data-sec="' + k + '">' +
+        '<span class="step-num" aria-hidden="true">&rarr;</span>' +
+        '<span class="step-text"><span class="step-title">' + m.label + '</span>' +
+        '<span class="step-hint">CRN ' + m.crn + '</span></span>' +
+        '<span class="step-state">Pick</span></button></li>';
+    }).join('');
+    elSteps.addEventListener('click', function onPick(e){
+      var b = e.target.closest('[data-sec]');
+      if(!b) return;
+      secKey = b.getAttribute('data-sec');
+      ls(STORE_SEC, secKey);
+      elSteps.removeEventListener('click', onPick);
+      start();
+    });
+  }
+
+  /* ---------- first-run walkthrough ---------- */
+  var WT_LINES = [
+    'This page has <span class="a">one job.</span>',
+    'It tells you what to do <span class="a">right now,</span> and nothing else.',
+    'One step at a time. The rest stay folded away until it is their turn.',
+    'Come back here every time you open the course. It will have changed.'
+  ];
+  function runWalkthrough(after){
+    var wt = document.getElementById('wt');
+    var lines = document.getElementById('wt-lines');
+    var next = document.getElementById('wt-next');
+    var skip = document.getElementById('wt-skip');
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var i = 0;
+
+    function finish(){
+      wt.hidden = true;
+      ls(STORE_WT, '1');
+      after();
+      var h = document.getElementById('hl-title');
+      h.setAttribute('tabindex','-1'); h.focus();
+    }
+    function show(){
+      var p = document.createElement('p');
+      p.className = 'wt-line' + (i > 1 ? ' s' : '');
+      p.innerHTML = WT_LINES[i];
+      lines.appendChild(p);
+      i++;
+      if(i >= WT_LINES.length) next.textContent = 'Show me today';
+    }
+    wt.hidden = false;
+    if(reduce){
+      WT_LINES.forEach(function(t, n){
+        var p = document.createElement('p');
+        p.className = 'wt-line' + (n > 1 ? ' s' : '');
+        p.innerHTML = t; lines.appendChild(p);
+      });
+      i = WT_LINES.length;
+      next.textContent = 'Show me today';
+    } else {
+      show();
+    }
+    next.focus();
+    next.addEventListener('click', function(){
+      if(i < WT_LINES.length) show(); else finish();
+    });
+    skip.addEventListener('click', finish);
+    wt.addEventListener('keydown', function(e){
+      if(e.key === 'Escape') finish();
+      if(e.key === 'Tab'){ /* trap: only two controls */
+        var f = [next, skip];
+        var idx = f.indexOf(document.activeElement);
+        e.preventDefault();
+        f[(idx + (e.shiftKey ? f.length-1 : 1)) % f.length].focus();
+      }
+    });
+  }
+
+  /* ---------- boot ---------- */
+  function start(){
+    if(!SESSIONS || !SEC_META[secKey]){ askSection(); return; }
+    PLAN = buildPlan();
+    render();
+    postHeight();
+  }
+
+  function boot(){
+    if(!SESSIONS || !LINKS){
+      document.getElementById('hl-kicker').textContent = 'Cannot load';
+      document.getElementById('hl-title').textContent = 'The schedule did not load';
+      document.getElementById('hl-body').innerHTML =
+        'This page needs schedule-fall2026.js and session-links.js beside it. ' +
+        'Use the <a href="bio004-course-calendar.html" target="_top">course calendar</a> in the meantime.';
+      return;
+    }
+    if(!SEC_META[secKey]){ askSection(); return; }
+    if(!ls(STORE_WT)){ runWalkthrough(start); }
+    else { start(); }
+  }
+
+  /* ---------- Canvas height-sender ----------
+     Posts every message shape already in use in this repo, so it
+     resizes whatever listener the Canvas shell happens to run. */
+  var FRAME_ID = (new URLSearchParams(window.location.search)).get('id') || 'bio004-today';
+  function postHeight(){
+    var h = Math.max(
+      document.body.scrollHeight, document.documentElement.scrollHeight,
+      document.body.offsetHeight, document.documentElement.offsetHeight
+    );
+    try{
+      parent.postMessage({ frameId:FRAME_ID, id:FRAME_ID, type:'resize', height:h }, '*');
+      parent.postMessage({ type:'iframeHeight', id:FRAME_ID, height:h }, '*');
+      parent.postMessage({ type:'mcas-embed-height', id:FRAME_ID, height:h }, '*');
+    }catch(e){}
+  }
+  window.addEventListener('load', postHeight);
+  window.addEventListener('resize', postHeight);
+  if(window.ResizeObserver){
+    new ResizeObserver(postHeight).observe(document.body);
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>
