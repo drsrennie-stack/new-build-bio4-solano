@@ -1,15 +1,14 @@
 /*
- * slide-modal.js — Cowork / MedMasters lecture page integration
+ * slide-modal.js. Cowork / MedMasters lecture page integration
  * Dr. Sharilyn Rennie
  *
  * Drop in any lecture page. Looks for buttons / links with a data-slide attribute,
- * opens that slide deck in a centered, floating white panel. NO dark backdrop —
- * the rest of the lecture page stays visible behind a transparent layer so the
+ * opens that slide deck in a centered, floating white panel. NO dark backdrop, * the rest of the lecture page stays visible behind a transparent layer so the
  * student keeps their reading context.
  *
  * Usage in a lecture page:
  *   <script src="slide-modal.js" defer></script>
- *   <button data-slide="slides-tubular-function.html">Draw the nephron</button>
+ *   <button data-slide="slides-kidney-anatomy-gfr.html">Draw the nephron</button>
  *   <a href="#" data-slide="slides-burns.html#slide-3">Draw the rule of nines</a>
  *
  * Anchors are supported: data-slide="path.html#slide-3" loads the deck and
@@ -110,7 +109,7 @@
     }
   });
 
-  // Focus trap — keep Tab inside the panel
+  // Focus trap, keep Tab inside the panel
   panel.addEventListener('keydown', function (e) {
     if (e.key !== 'Tab') return;
     var focusables = [openTabBtn, closeBtn, frame].filter(Boolean);

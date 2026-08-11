@@ -56,7 +56,7 @@
   .btn-primary:hover,.btn-primary:focus-visible{background:var(--terra-dark);transform:translateY(-2px);box-shadow:var(--shadow-h);outline:none;}
   .btn-ghost{background:var(--slate);color:#fff;}
   .btn-ghost:hover,.btn-ghost:focus-visible{background:#2f3f68;transform:translateY(-2px);box-shadow:var(--shadow-h);outline:none;}
-  .btn:focus-visible{outline:3px solid #6B1616;outline-offset:2px;box-shadow:0 0 0 5px rgba(255,255,255,.92);}
+  .btn:focus-visible{outline:3px solid var(--gold);outline-offset:3px;}
   .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px;}
 
   table{width:100%;border-collapse:collapse;margin-top:4px;}
@@ -128,7 +128,7 @@
 <main id="main" class="wrap">
   <p class="eyebrow">BIO 004 &middot; Study With Me</p>
   <h1>My Study With Me <span class="a">Hours</span></h1>
-  <p class="lead">Log every session you host or attend, plus open lab and other activities. It <b>saves in your browser</b>, so add to it each week. At the end of the semester, <b>Print to PDF and upload it to Canvas.</b> A session only counts if it was on the schedule, your professor checks.</p>
+  <p class="lead">Scholar Points hours come from three kinds of work: <b>Study With Me</b> (hosting or attending, they count the same), <b>tutoring</b>, and <b>open lab</b>. Log each session as you do it, it <b>saves in your browser</b>. At the <b>end of every module</b>, click Save as PDF and upload it to the Canvas assignment. Do not save it all up for December. A Study With Me session only counts if it was on the schedule, I check.</p>
 
   <!-- YOUR INFO -->
   <section class="card no-print" aria-labelledby="infoH">
@@ -154,10 +154,11 @@
       <div class="field">
         <label for="e-type">Type <span class="req">*</span></label>
         <select id="e-type">
-          <option value="host">Hosted a session</option>
-          <option value="attend" selected>Attended a session</option>
+          <option value="host">Study With Me, hosted</option>
+          <option value="attend" selected>Study With Me, attended</option>
+          <option value="tutor">Tutoring, given or received</option>
           <option value="lab">Open lab</option>
-          <option value="other">Other activity</option>
+          <option value="other">Something else (logged, does not count)</option>
         </select>
       </div>
       <div class="field"><label for="e-date">Date <span class="req">*</span></label><input id="e-date" type="date"></div>
@@ -195,7 +196,7 @@
     <p class="sub" id="wkSub">Hours per week.</p>
     <div style="overflow-x:auto;">
       <table>
-        <thead><tr><th>Week of</th><th>Hosted</th><th>Attended</th><th>Open lab</th><th>Other</th><th>Logged</th><th>Banked</th></tr></thead>
+        <thead><tr><th>Week of</th><th>Study With Me</th><th>Tutoring</th><th>Open lab</th><th>Not counted</th><th>Logged</th><th>Banked</th></tr></thead>
         <tbody id="wkBody"></tbody>
       </table>
     </div>
@@ -205,11 +206,11 @@
   <section class="card totals" aria-labelledby="totH">
     <h2 id="totH">My totals</h2>
     <div class="tot-grid">
-      <div class="tot"><div class="lbl">Hosted</div><div class="big" id="t-host-h">0.00</div><div class="pts" id="t-host-p">0 pts</div></div>
-      <div class="tot"><div class="lbl">Attended</div><div class="big" id="t-att-h">0.00</div><div class="pts" id="t-att-p">0 pts</div></div>
-      <div class="tot"><div class="lbl">Open lab</div><div class="big" id="t-lab-h">0.00</div><div class="pts" id="t-lab-p">0 pts</div></div>
-      <div class="tot"><div class="lbl">Other</div><div class="big" id="t-other-h">0.00</div><div class="pts" id="t-other-p">0 pts</div></div>
-      <div class="tot grand"><div class="lbl">Total</div><div class="big" id="t-all-h">0.00</div><div class="pts" id="t-all-p">0 pts</div></div>
+      <div class="tot"><div class="lbl">Study With Me</div><div class="big" id="t-swm-h">0.00</div><div class="pts" id="t-swm-p">0 banked</div></div>
+      <div class="tot"><div class="lbl">Tutoring</div><div class="big" id="t-tutor-h">0.00</div><div class="pts" id="t-tutor-p">0 banked</div></div>
+      <div class="tot"><div class="lbl">Open lab</div><div class="big" id="t-lab-h">0.00</div><div class="pts" id="t-lab-p">0 banked</div></div>
+      <div class="tot"><div class="lbl">Not counted</div><div class="big" id="t-other-h">0.00</div><div class="pts" id="t-other-p">0 banked</div></div>
+      <div class="tot grand"><div class="lbl">Banked total</div><div class="big" id="t-all-h">0.00</div><div class="pts" id="t-all-p">of 36</div></div>
     </div>
     <p class="rubric" id="rubricLine"></p>
   </section>
@@ -226,10 +227,11 @@
     <strong>How to turn this in</strong>
     <ul>
       <li>Add entries as you go, they save in this browser automatically.</li>
-      <li>At the end of the semester, click <strong>Save as PDF</strong> below and upload the PDF to the Canvas assignment.</li>
-      <li>Open lab: sign in when you arrive, that is how those hours are verified.</li>
-      <li>Other activities: name what you did (for example, AI tutor session or lab clean up) so it can be verified.</li>
-      <li>Only sessions that were on the Study With Me schedule count. Your professor compares your links to the schedule.</li>
+      <li>At the <strong>end of every module</strong>, click <strong>Save as PDF</strong> below and upload the PDF to that module's Canvas assignment. Five submissions across the term, not one in December.</li>
+      <li>Open lab is verified by your sign-in when you arrive, so no link is needed.</li>
+      <li>Tutoring counts whether you gave it or received it, at the ASTC or peer to peer. Name who it was with.</li>
+      <li>A Study With Me session only counts if it was on the schedule. I compare your links against it.</li>
+      <li>Anything logged as "something else" stays in your record but does not bank toward the 36.</li>
     </ul>
   </div>
 
@@ -243,22 +245,34 @@
 
 <script>
 /* ============ RULES, Dr. Rennie can change these ============
-   weeklyCap  = most hours that BANK toward the requirement per week
-                (they can log more, it is encouraged, but only this counts)
-   required   = total banked hours needed for the term
-   maxHostPerWeek = how many hosted sessions count toward the bank each week
+   Scholar Points hours come from THREE kinds of work. Hosting and
+   attending a Study With Me session are the same kind.
+
+     swm    Study With Me, hosted or attended
+     tutor  Tutoring, given or received
+     lab    Open lab
+
+   weeklyCapPerKind  most hours of ANY ONE KIND that bank in a week
+   termCapPerKind    most hours of ANY ONE KIND that bank all term
+   required          total banked hours needed
+
+   Students are welcome to keep going past a cap, it just stops
+   adding to the total. 'other' is logged for their own record and
+   banks nothing.
 ============================================================= */
 const TERMS = {
-  summer: { label: "Summer (8 weeks)",        weeks: 8,  weeklyCap: 9, required: 36 },
-  full:   { label: "Full semester (16 weeks)", weeks: 16, weeklyCap: 3, required: 36 }
+  summer: { label: "Summer (8 weeks)",         weeks: 8,  weeklyCapPerKind: 9, termCapPerKind: 20, required: 36 },
+  full:   { label: "Full semester (17 weeks)", weeks: 17, weeklyCapPerKind: 3, termCapPerKind: 20, required: 36 }
 };
-const MAX_HOST_PER_WEEK = 2;
-const RATE = { host: 2, attend: 1, lab: 1, other: 1 };   // points per hour (optional)
+/* Which of the three kinds each entry type belongs to. */
+const KIND = { host:"swm", attend:"swm", tutor:"tutor", lab:"lab", other:null };
+const KIND_LABEL = { swm:"Study With Me", tutor:"Tutoring", lab:"Open lab" };
+const KINDS = ["swm","tutor","lab"];
 /* ============================================================ */
 
 const $ = s => document.querySelector(s);
 const KEY = "swm_hours_v1";
-const TYPES = { host:"Hosted", attend:"Attended", lab:"Open lab", other:"Other" };
+const TYPES = { host:"SWM hosted", attend:"SWM attended", tutor:"Tutoring", lab:"Open lab", other:"Not counted" };
 let state = { name:"", email:"", term:"", entries:[] };
 
 function load(){ try{ const s = JSON.parse(localStorage.getItem(KEY)); if(s) state = Object.assign(state, s); }catch(e){} }
@@ -332,9 +346,9 @@ function render(){
         const p=[];
         if(e.link) p.push('<a href="'+esc(e.link)+'" target="_blank" rel="noopener">recording</a>');
         if(e.link2) p.push('<a href="'+esc(e.link2)+'" target="_blank" rel="noopener">attendance</a>');
-        linkCell = p.length ? p.join(' &middot; ') : '<span style="color:var(--soft)">&mdash;</span>';
+        linkCell = p.length ? p.join(' &middot; ') : '<span style="color:var(--soft)">, </span>';
       } else {
-        linkCell = e.link ? '<a href="'+esc(e.link)+'" target="_blank" rel="noopener">open link</a>' : '<span style="color:var(--soft)">&mdash;</span>';
+        linkCell = e.link ? '<a href="'+esc(e.link)+'" target="_blank" rel="noopener">open link</a>' : '<span style="color:var(--soft)">, </span>';
       }
       return '<tr>'+
         '<td><span class="tp '+e.type+'">'+TYPES[e.type]+'</span></td>'+
@@ -348,60 +362,81 @@ function render(){
     }).join("");
     body.querySelectorAll("[data-rm]").forEach(b=> b.addEventListener("click", ()=>removeEntry(b.getAttribute("data-rm"))));
   }
-  // weekly summary with weekly bank cap + host-twice rule
-  const term = TERMS[state.term] || TERMS.summer;
-  const cap = term.weeklyCap;
+  // Weekly summary. Two caps, both PER KIND, applied in order:
+  //   1. no more than weeklyCapPerKind hours of one kind bank in a week
+  //   2. no more than termCapPerKind hours of one kind bank all term
+  const term = TERMS[state.term] || TERMS.full;
+  const wcap = term.weeklyCapPerKind, tcap = term.termCapPerKind;
   const weeks = {};
   state.entries.forEach(e=>{ const wk=weekStartYmd(e.date); (weeks[wk]=weeks[wk]||[]).push(e); });
   const wkKeys = Object.keys(weeks).sort();
-  let bankedTotal = 0, loggedTotal = 0;
+
+  const termBanked = { swm:0, tutor:0, lab:0 };   // running per-kind bank
+  let bankedTotal = 0, loggedTotal = 0, weeklyClipped = false, termClipped = false;
+
   const rows = wkKeys.map(k=>{
     const list = weeks[k].slice().sort((a,b)=> a.from.localeCompare(b.from));
-    let host=0, attend=0, lab=0, other=0, hostSeen=0, hostCounted=0;
-    list.forEach(e=>{ const h=hoursBetween(e.from,e.to);
-      if(e.type==="host"){ host+=h; hostSeen++; if(hostSeen<=MAX_HOST_PER_WEEK) hostCounted+=h; }
-      else if(e.type==="attend"){ attend+=h; }
-      else if(e.type==="lab"){ lab+=h; }
-      else { other+=h; }
+    const raw = { swm:0, tutor:0, lab:0 };
+    let other = 0;
+    list.forEach(e=>{ const h=hoursBetween(e.from,e.to); const kind=KIND[e.type];
+      if(kind) raw[kind]+=h; else other+=h;
     });
-    const logged = host+attend+lab+other;
-    const counted = attend + lab + other + hostCounted;
-    const banked = Math.min(counted, cap);
-    bankedTotal += banked; loggedTotal += logged;
-    const capped = banked < logged - 0.001;
+    const logged = raw.swm + raw.tutor + raw.lab + other;
+    let weekBanked = 0;
+    KINDS.forEach(kd=>{
+      const afterWeekly = Math.min(raw[kd], wcap);
+      if(afterWeekly < raw[kd] - 0.001) weeklyClipped = true;
+      const room = Math.max(0, tcap - termBanked[kd]);
+      const b = Math.min(afterWeekly, room);
+      if(b < afterWeekly - 0.001) termClipped = true;
+      termBanked[kd] += b; weekBanked += b;
+    });
+    bankedTotal += weekBanked; loggedTotal += logged;
+    const capped = weekBanked < logged - 0.001;
     return '<tr><td><b>'+esc(fmtDate(k))+'</b></td>'+
-      '<td>'+host.toFixed(2)+'</td><td>'+attend.toFixed(2)+'</td><td>'+lab.toFixed(2)+'</td><td>'+other.toFixed(2)+'</td>'+
+      '<td>'+raw.swm.toFixed(2)+'</td><td>'+raw.tutor.toFixed(2)+'</td><td>'+raw.lab.toFixed(2)+'</td>'+
+      '<td>'+other.toFixed(2)+'</td>'+
       '<td>'+logged.toFixed(2)+'</td>'+
-      '<td class="hrs'+(capped?' capped':'')+'">'+banked.toFixed(2)+(capped?' <span class="capnote">cap '+cap+'</span>':'')+'</td></tr>';
+      '<td class="hrs'+(capped?' capped':'')+'">'+weekBanked.toFixed(2)+
+      (capped?' <span class="capnote">cap '+wcap+'/kind</span>':'')+'</td></tr>';
   });
   const wkBody=$("#wkBody");
   wkBody.innerHTML = wkKeys.length ? rows.join("") : '<tr><td colspan="7" class="empty">No entries yet.</td></tr>';
-  $("#wkSub").textContent = "Only up to " + cap + " hours a week bank toward your requirement (log more if you like, extra is encouraged bonus). Up to " + MAX_HOST_PER_WEEK + " hosted sessions a week count.";
+  $("#wkSub").textContent = "Up to " + wcap + " hours a week bank from each kind, and up to " + tcap +
+    " hours all term from each kind. Log more if you like, and please do. Past a cap it just stops adding to the 36.";
 
   // requirement progress
   const required = term.required;
   const prog = Math.min(bankedTotal, required);
   const pct = required>0 ? Math.round((prog/required)*100) : 0;
   $("#reqBar").style.width = Math.min(100,pct) + "%";
-  $("#reqSub").textContent = term.label + " · " + required + " banked hours required (" + term.weeks + " weeks, up to " + cap + "/week).";
+  $("#reqSub").textContent = term.label + ", " + required + " banked hours for the full +2%. Up to " + wcap +
+    " hours a week and " + tcap + " hours all term from any one kind. 25 of the 36 also unlocks the +1% if your exam average is above 80%.";
   const remaining = Math.max(0, Math.round((required - bankedTotal)*100)/100);
+  const parts = [];
+  KINDS.forEach(kd=>{ parts.push(KIND_LABEL[kd] + " " + termBanked[kd].toFixed(2) + "/" + tcap); });
   $("#reqLine").innerHTML = "<b>" + bankedTotal.toFixed(2) + " of " + required + " hours banked</b> (" + pct + "%). " +
-    (remaining>0 ? (remaining.toFixed(2) + " to go.") : "Requirement met, great work.") +
-    (loggedTotal > bankedTotal + 0.001 ? (" You have logged " + loggedTotal.toFixed(2) + " total; hours over the weekly cap are bonus, they do not add to the requirement.") : "");
+    (remaining>0 ? (remaining.toFixed(2) + " to go. ") : "That is the full +2%, nice work. ") +
+    (bankedTotal >= 25 ? "You have also passed 25 hours, so the +1% is open to you if your exam average finishes above 80%. " : "") +
+    "By kind: " + parts.join(", ") + "." +
+    (weeklyClipped || termClipped
+      ? (" You have logged " + loggedTotal.toFixed(2) + " hours in total. Anything over a cap stays on your record and is worth doing, it just does not add to the 36.")
+      : "");
 
   // totals
-  const sum = { host:0, attend:0, lab:0, other:0 };
-  state.entries.forEach(e=> sum[e.type] += hoursBetween(e.from,e.to));
-  const set=(h,p,hrs,rate)=>{ $(h).textContent=hrs.toFixed(2); $(p).textContent=Math.round(hrs*rate*100)/100+" pts"; };
-  set("#t-host-h","#t-host-p",sum.host,RATE.host);
-  set("#t-att-h","#t-att-p",sum.attend,RATE.attend);
-  set("#t-lab-h","#t-lab-p",sum.lab,RATE.lab);
-  set("#t-other-h","#t-other-p",sum.other,RATE.other);
-  const allH = sum.host+sum.attend+sum.lab+sum.other;
-  const allP = sum.host*RATE.host + sum.attend*RATE.attend + sum.lab*RATE.lab + sum.other*RATE.other;
-  $("#t-all-h").textContent = allH.toFixed(2);
-  $("#t-all-p").textContent = (Math.round(allP*100)/100) + " pts";
-  $("#rubricLine").textContent = "Estimated points shown. Hosting "+RATE.host+" pts/hour, attending "+RATE.attend+" pt/hour, open lab "+RATE.lab+" pt/hour, other "+RATE.other+" pt/hour. Your professor sets the official credit.";
+  const sum = { swm:0, tutor:0, lab:0, other:0 };
+  state.entries.forEach(e=>{ const kd=KIND[e.type]; sum[kd || "other"] += hoursBetween(e.from,e.to); });
+  const set=(h,p,logged,banked)=>{ $(h).textContent=logged.toFixed(2); $(p).textContent=banked.toFixed(2)+" banked"; };
+  set("#t-swm-h","#t-swm-p",sum.swm,termBanked.swm);
+  set("#t-tutor-h","#t-tutor-p",sum.tutor,termBanked.tutor);
+  set("#t-lab-h","#t-lab-p",sum.lab,termBanked.lab);
+  $("#t-other-h").textContent = sum.other.toFixed(2);
+  $("#t-other-p").textContent = "not counted";
+  $("#t-all-h").textContent = bankedTotal.toFixed(2);
+  $("#t-all-p").textContent = "of " + required;
+  $("#rubricLine").textContent = "Every hour counts the same, whether you hosted it, attended it, gave the tutoring or "
+    + "received it. The big number on each tile is what you logged; the line under it is what has banked after the caps. "
+    + "Anything past a cap is still worth doing, it just stops adding to the 36.";
 }
 
 /* ---- buttons ---- */

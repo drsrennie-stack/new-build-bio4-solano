@@ -1,7 +1,7 @@
 # BIO 004 Pre-Work Content
 
 Material pulled from the concept pages, to be built into the pre-work. The
-drawing-based synthesis exercises ("Given, not Googled") live here, not on the
+drawing-based synthesis exercises live here, not on the
 reference pages. Append a section here each time a concept page is built.
 
 ---

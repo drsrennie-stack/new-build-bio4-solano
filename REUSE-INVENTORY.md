@@ -20,7 +20,7 @@ A gold bubble by the launcher that retires the moment Hootie opens. This is the 
 Verified: **"I am struggling, who do I email"** reaches `contact`, not `struggle`, because someone asking for an address needs the address rather than a pep talk.
 
 ### 4. The `struggle` intent, which mine did not have
-This was the worst thing about the version I shipped. A student typing **"I am drowning and so far behind"** got a refusal about anatomy content. They now get the Gap Finder, a 3-Day Cram, Study With Me, and the Success Sprint after Exam 1.
+This was the worst thing about the version I shipped. A student typing **"I am drowning and so far behind"** got a refusal about anatomy content. They now get the Gap Finder, a 3-Day Cram, Study With Me, office hours and ASTC tutoring.
 
 ### 5. Your answer bank, merged with my dates
 Yours knew grading weights, TBL mechanics, contact routes, the ASC accommodations path and ASTC tutoring. Mine knew the schedule. Neither could do the other's job.
