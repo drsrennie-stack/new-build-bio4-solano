@@ -176,6 +176,26 @@
   .mat .stephead:first-child{margin-top:0;}
   .mat a{display:flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;color:var(--navy);text-decoration:none;background:#fff;border:1px solid var(--navy-tint);border-radius:7px;padding:8px 11px;transition:var(--t);}
   .mat a:hover{border-color:var(--terra-dark);transform:translateY(-1px);box-shadow:var(--shadow-rest);}
+  /* Tile treatment, ported from the week pages so it lives in one place. */
+  /* The detail panel is a narrow column, never wide enough for two tiles.
+     One per row, tick inline on the right, so nothing wraps to three words. */
+  .prework-grid{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+  .lk-wrap{display:flex;align-items:stretch;gap:6px;}
+  .lk-wrap > .lk{flex:1 1 auto;min-width:0;}
+  .lk{display:flex;align-items:center;gap:11px;text-decoration:none;background:#fff;
+    border:1px solid var(--navy-tint);border-radius:12px;padding:13px 14px;transition:var(--t);}
+  .lk:hover{border-color:var(--terra-dark);transform:translateY(-1px);box-shadow:var(--shadow-rest);}
+  .lk .lk-ic{width:36px;height:36px;flex:none;border-radius:10px;background:var(--navy);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:1rem;}
+  .lk .lk-w{display:flex;flex-direction:column;min-width:0;}
+  .lk .lk-t{display:flex;align-items:baseline;gap:8px;font-weight:700;color:var(--navy);font-size:.88rem;line-height:1.3;}
+  .lk .lk-num{display:inline-flex;align-items:center;justify-content:center;flex:none;width:19px;height:19px;
+    border-radius:50%;background:#7A2A22;color:#fff;font-size:.62rem;font-weight:800;}
+  .lk .lk-s{font-size:.75rem;color:var(--navy);opacity:.7;margin-top:2px;}
+  .lk-wrap.is-done .lk{opacity:.6;}
+  .lk-wrap .tick{flex:0 0 auto;width:118px;justify-content:center;}
+  .pw-note{margin:14px 0 0;font-size:.84rem;line-height:1.5;color:#F4EFE8;
+    background:rgba(0,0,0,.2);border:1px solid rgba(244,239,232,.35);padding:12px 14px;border-radius:12px;}
   .matrow{display:flex;align-items:stretch;gap:6px;}
   .matrow > a{flex:1 1 auto;min-width:0;}
   .tick{display:flex;align-items:center;gap:6px;flex:0 0 auto;min-height:44px;padding:0 11px;
@@ -487,13 +507,21 @@ const SECTIONS = {
     /* Each item gets its own tick. The store is keyed date|url, and
        today.html writes the same keys when a step is marked done, so a
        student who works from either surface sees the same ticks. */
-    function matLink(o,icon,kind,dayKey){
+    /* The tile treatment from the week pages, brought here so the design
+       lives in ONE place. Icon square, numbered step chip, title, the
+       one-line why, and its own tick. */
+    function matLink(o,icon,kind,dayKey,num,sub){
       if(!o) return '';
       var k = (dayKey || s.d) + '|' + o.u;
       var on = isDoneItem(k);
-      return '<div class="matrow'+(on?' is-done':'')+'">' +
-        '<a href="'+o.u+'" target="_top"><span class="mi" aria-hidden="true">'+icon+'</span>'+
-        '<span>'+o.t+'</span><span class="mk">'+kind+'</span></a>' +
+      return '<div class="lk-wrap'+(on?' is-done':'')+'">' +
+        '<a class="lk" href="'+o.u+'" target="_top">' +
+          '<span class="lk-ic" aria-hidden="true">'+icon+'</span>' +
+          '<span class="lk-w">' +
+            '<span class="lk-t">'+(num?'<span class="lk-num">'+num+'</span>':'')+o.t+'</span>' +
+            '<span class="lk-s">'+(sub||kind)+'</span>' +
+          '</span>' +
+        '</a>' +
         '<button type="button" class="tick" data-k="'+k+'" aria-pressed="'+(on?'true':'false')+'">' +
           '<span class="tick-box" aria-hidden="true">'+(on?'&#10003;':'')+'</span>' +
           '<span class="tick-t">'+(on?'Done':'Mark done')+'</span>' +
@@ -515,22 +543,19 @@ const SECTIONS = {
        morning is retrieval rather than a surprise. */
     function preworkBlocks(P, headline, whenLine, dayKey){
       var pmod = P.wk ? moduleForWeek(P.wk) : null;
-      var s1 = many(P.sheets,'&#9998;','Worksheet',dayKey);
-      var s2 = many(P.videos,'&#9658;','Video',dayKey);
-      var s3 = (pmod ? matLink({u:'module-'+pmod+'-structure-list.html', t:'Module '+pmod+' lab structure list'},'&#9636;','Structures',dayKey) : '')
-             + matLink({u:'atlas-coloring-book.html', t:'The atlas'},'&#9673;','Atlas',dayKey);
-      var s4 = matLink({u:'mastery-os-fall-2026.html', t:"Mastery OS, on tonight's topics"},'&#9678;','Recall',dayKey);
+      var s1 = (P.sheets||[]).map(function(o,i){ return matLink(o,'&#9998;','Worksheet',dayKey, i===0?1:null, 'Notes and the reading open beside you'); }).join('');
+      var s2 = (P.videos||[]).map(function(o,i){ return matLink(o,'&#9658;','Video',dayKey, i===0?2:null, 'After the sheet, not before'); }).join('');
+      var s3 = (pmod ? matLink({u:'module-'+pmod+'-structure-list.html', t:'Module '+pmod+' lab structure list'},'&#9636;','Structures',dayKey,3,'So lab is recognition, not first contact') : '')
+             + matLink({u:'atlas-coloring-book.html', t:'The atlas'},'&#9673;','Atlas',dayKey,null,'Put your eyes on them');
+      var s4 = matLink({u:'mastery-os-fall-2026.html', t:'Mastery OS, on tonight\'s topics'},'&#9678;','Recall',dayKey,4,'So the brain dump is not a surprise');
 
       var red = '';
       if(s1 || s2){
         red += '<div class="d-card prework"><div class="dc-k">Do tonight<span class="dc-when">'+whenLine+'</span></div>';
         if(headline) red += '<div class="dc-t">'+headline+'</div>';
-        var body = '';
-        if(s1) body += '<div class="stephead"><span class="step-n">1</span>Work the pre-work sheet</div>'+s1;
-        if(s2) body += '<div class="stephead"><span class="step-n">2</span>Then the video, and add to your notes</div>'+s2;
-        body += '<div class="stephead"><span class="step-n">3</span>Then pre-study the lab structures</div>'+s3;
-        body += '<div class="stephead"><span class="step-n">4</span>Then Mastery OS, so the brain dump is not a surprise</div>'+s4;
-        red += '<div class="mat">'+body+'</div></div>';
+        red += '<div class="prework-grid">' + s1 + s2 + s3 + s4 + '</div>' +
+               '<p class="pw-note"><strong>Order matters more than speed.</strong> The sheet comes first, with your notes and the reading open. The video is the check, not the source. The structures make lab familiar, and the recall at the end is what makes the brain dump something you can do.</p>' +
+               '</div>';
       }
 
       var refs = many(P.notes,'&#9776;','Notes',dayKey) + many(P.workbooks,'&#9636;','Workbook',dayKey);

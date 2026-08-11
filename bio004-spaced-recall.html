@@ -179,21 +179,36 @@
   @media(min-width:640px){ .mode-opts{flex-direction:row;} .mode-opt{flex:1;} }
   .mode-pill{display:inline-block; font-size:13.4px; font-weight:700; color:var(--navy); background:var(--navy-tint); border:1px solid var(--navy); border-radius:999px; padding:3px 10px; margin-bottom:8px;}
   .recall-input{width:100%; box-sizing:border-box; min-height:74px; font:inherit; font-size:17.9px; line-height:1.5; color:var(--navy); border:1px solid var(--gray-line); border-radius:10px; padding:10px 12px; margin:4px 0 10px; resize:vertical;}
-  .entry-card{max-width:520px;text-align:center;}
-  .entry-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0 6px;}
+  /* A film over the page, not a blackout. The page stays legible behind it,
+     so the pop-up reads as something laid on top rather than a new screen. */
+  #entry{background:rgba(11,21,48,.34); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);}
+  .entry-card{
+    max-width:540px;text-align:center;
+    border:0;                                  /* no outline, it floats */
+    box-shadow:0 26px 60px -20px rgba(11,21,48,.45), 0 4px 14px rgba(11,21,48,.10);
+  }
+  .entry-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0 6px;}
   @media (max-width:520px){ .entry-grid{grid-template-columns:1fr;} }
+
+  /* No border and no ring. The shadow does the lifting. */
   .entry-btn{
     display:flex;flex-direction:column;align-items:center;gap:6px;
-    padding:26px 18px;min-height:44px;cursor:pointer;
-    background:#fff;color:var(--navy);border:1.5px solid var(--navy-tint);
-    border-radius:14px;font:inherit;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+    padding:28px 18px;min-height:44px;cursor:pointer;
+    border:0;border-radius:16px;font:inherit;color:#fff;
+    box-shadow:0 10px 24px -10px rgba(11,21,48,.55);
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
   }
-  .entry-btn:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(0,0,0,.12);border-color:var(--terra-dark);}
-  .entry-btn.primary{background:var(--navy);border-color:var(--navy);color:#fff;}
+  .entry-btn:hover{transform:translateY(-3px);box-shadow:0 20px 38px -14px rgba(11,21,48,.55);}
+  .entry-btn:active{transform:translateY(-1px);}
+  .entry-btn.primary{background:var(--navy);}          /* navy */
   .entry-btn.primary:hover{background:#101B33;}
-  .entry-t{font-family:var(--font);font-weight:800;font-size:1.15rem;letter-spacing:-.01em;}
-  .entry-d{font-size:.85rem;opacity:.8;}
-  .entry-skip{margin-top:14px;}
+  .entry-btn.second{background:#7A2A22;}               /* red */
+  .entry-btn.second:hover{background:#8B3A2E;}
+  /* Focus has to stay visible on both fills, so the ring goes outside them. */
+  .entry-btn:focus-visible{outline:3px solid var(--gold); outline-offset:3px;}
+  .entry-t{font-family:var(--font);font-weight:800;font-size:1.18rem;letter-spacing:-.01em;}
+  .entry-d{font-size:.86rem;opacity:.9;}
+  .entry-skip{margin-top:16px;}
   .today-box{margin:22px 0 30px}
   .btn.big{font-size:1.05rem;padding:16px 30px;min-height:52px}
   .today-note{margin:12px 0 0;font-size:.88rem;color:var(--navy);opacity:.72;max-width:52ch}
@@ -635,7 +650,7 @@
      any studying happened. This asks the one question that matters and
      drops the student straight into the answer. -->
 <div class="wt-overlay" id="entry" hidden role="dialog" aria-modal="true" aria-labelledby="entry-title">
-  <div class="wt-card entry-card">
+  <div class="wt-card entry-card" id="entry-card" tabindex="-1">
     <p class="eyebrow" style="text-align:center;">Recall Rx</p>
     <h2 class="wiz-h" style="text-align:center;" id="entry-title">What are you here for?</h2>
     <p class="wiz-lead" style="text-align:center;" id="entry-sub"></p>
@@ -644,7 +659,7 @@
         <span class="entry-t">Study cards</span>
         <span class="entry-d" id="entry-study-d">Today's review</span>
       </button>
-      <button type="button" class="entry-btn" id="entry-make">
+      <button type="button" class="entry-btn second" id="entry-make">
         <span class="entry-t">Make cards</span>
         <span class="entry-d">Write your own</span>
       </button>
@@ -1996,7 +2011,7 @@
           : (activeTopicIds().length ? "Study ahead on any topic" : "Turn on your topics first");
         last = document.activeElement;
         box.hidden = false;
-        study.focus();
+        document.getElementById("entry-card").focus();
       };
       function closeEntry(go){
         box.hidden = true;
@@ -2014,6 +2029,7 @@
           var f = [study, make, skip];
           var i = f.indexOf(document.activeElement);
           e.preventDefault();
+          if (i === -1){ f[e.shiftKey ? f.length - 1 : 0].focus(); return; }
           f[(i + (e.shiftKey ? f.length - 1 : 1)) % f.length].focus();
         }
       });
