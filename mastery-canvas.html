@@ -60,7 +60,8 @@ input[type=color]{width:36px;height:36px;border:1.5px solid var(--line);border-r
   <span class="grow"></span>
   <button class="tbtn" id="undo" aria-label="Undo last action"><span aria-hidden="true">&#8630;</span> Undo</button>
   <button class="tbtn" id="clear" aria-label="Clear the canvas">Clear</button>
-  <button class="tbtn gold" id="savePdf" aria-label="Save as PDF">Save PDF</button>
+  <button class="tbtn gold" id="checkBtn" aria-label="Check my work against the checklist" hidden>Check my work</button>
+  <button class="tbtn" id="savePdf" aria-label="Save as PDF">Save PDF</button>
   <button class="tbtn" id="printBtn" aria-label="Print">Print</button>
 </header>
 <nav class="toolbar" aria-label="Drawing tools">
@@ -93,11 +94,13 @@ input[type=color]{width:36px;height:36px;border:1.5px solid var(--line);border-r
     <input type="color" id="customColor" value="#1E3D4C" title="Custom color">
   </div>
 </nav>
+<script src="draw-checklists.js"></script>
 <main class="stage">
   <div class="canvas-wrap">
     <canvas id="pad"></canvas>
     <span class="hint" id="hint">Draw from memory. Pen, shapes, arrows, and text. Save to PDF when you are done.</span>
   </div>
+  <aside class="checkpanel" id="checkPanel" hidden aria-label="Self-check and scoring"></aside>
 </main>
 <script>
 "use strict";
@@ -229,72 +232,199 @@ input[type=color]{width:36px;height:36px;border:1.5px solid var(--line);border-r
 
 <script src="bio004-dock.js"></script>
 
+
+
+
+<style>
+/* ---- Split screen self-check, added 2026-08-11 ----
+   The checklist, the confidence rating and the score all live beside the
+   drawing, so nothing has to be memorised on a round trip to another screen. */
+.checkpanel{width:min(430px,42vw);flex:0 0 auto;margin-left:14px;background:var(--white);
+  border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.08);
+  padding:18px 20px;overflow-y:auto;max-height:100%;font-family:var(--disp)}
+.checkpanel[hidden]{display:none}
+.cp-eyebrow{font-family:'DM Sans',var(--disp);font-size:11px;font-weight:700;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--terra-dark);margin:0 0 6px}
+.cp-h{font-size:18px;font-weight:700;color:var(--navy);margin:0 0 4px;line-height:1.25}
+.cp-sub{font-size:14px;color:var(--ink-soft);margin:0 0 16px}
+.cp-count{font-size:13px;font-weight:700;color:var(--navy);background:var(--navy-tint);
+  border:1px solid var(--line);border-radius:999px;padding:4px 12px;display:inline-block;margin-bottom:12px}
+.cp-list{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:7px}
+.cp-item{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:var(--white);
+  border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer;font:inherit;
+  font-size:14px;color:var(--navy);line-height:1.4;min-height:44px}
+.cp-item:hover{border-color:var(--navy)}
+.cp-item[aria-pressed="true"]{background:var(--navy-tint);border-color:var(--navy)}
+.cp-box{flex:0 0 auto;width:18px;height:18px;border:1.5px solid var(--navy);border-radius:4px;margin-top:1px;position:relative}
+.cp-item[aria-pressed="true"] .cp-box::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;
+  border:solid var(--navy);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.cp-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.cp-b{font-family:var(--disp);font-size:14px;font-weight:700;color:var(--navy);background:var(--white);
+  border:1px solid var(--navy);border-radius:999px;padding:10px 18px;cursor:pointer;min-height:44px;
+  transition:background 200ms ease,color 200ms ease}
+.cp-b:hover:not(:disabled){background:var(--navy);color:var(--white)}
+.cp-b.gold{border-color:var(--gold)}
+.cp-b.gold:hover:not(:disabled){background:var(--gold);color:var(--navy)}
+.cp-b:focus-visible,.cp-item:focus-visible,#checkBtn:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.cp-b:disabled{opacity:.45;cursor:default}
+.cp-msg{margin:14px 0 0;font-size:14px;font-weight:600;color:var(--ok,#1E4C33);min-height:1.2em}
+.cp-note{margin:14px 0 0;font-size:13px;color:var(--ink-soft);line-height:1.5}
+.cp-hr{border:0;border-top:1px solid var(--line);margin:18px 0}
+@media (max-width:900px){
+  .stage{flex-direction:column}
+  .checkpanel{width:auto;margin:14px 0 0;max-height:none}
+}
+@media (prefers-reduced-motion: reduce){.cp-b,.cp-item{transition:none}}
+@media print{.bar,.toolbar,.checkpanel,.hint{display:none!important}
+  .stage{padding:0}.canvas-wrap{border:0;box-shadow:none}}
+</style>
 <script>
 /* ============================================================
-   Drawing evidence, added 2026-08-11.
+   Split-screen self-check, confidence, scoring and print.
+   Added 2026-08-11.
 
-   This page previously had no storage call of any kind, so a student could
-   draw here and Mastery OS would still show no drawing evidence for that
-   competency. Mastery OS now opens the canvas with ?comp=<competencyId>, and
-   the buttons below log one evidence row in exactly the shape
-   mastery-evidence.js uses:  { comp, source:'draw', got, of, at }
+   Before this, the canvas had no storage call of any kind, so a drawing
+   made here produced no evidence at all, and the checklist lived on a
+   different screen entirely. A student had to hold 17 items in their head
+   while switching back and forth.
 
-   Self-rated, three levels, same wording as the Draw it to Know it exercise.
-   No competency id in the URL means no bar is shown and nothing is written.
+   Now: canvas on the left, checklist on the right, tick as you compare,
+   score without leaving the page. Confidence is asked BEFORE the checklist
+   is revealed, because a rating taken after seeing the answers is not a
+   confidence rating, it is a memory of the answers. If Mastery OS already
+   collected it (?conf=), it carries through and is not asked twice.
+
+   Writes one row to bio004-evidence-v1 in the shape mastery-evidence.js
+   reads, plus the confidence pairing:
+       { comp, source:'draw', got, of, conf, at }
    ============================================================ */
 (function(){
   var EV_KEY='bio004-evidence-v1';
-  var p=new URLSearchParams(location.search);
+  var p; try{p=new URLSearchParams(location.search);}catch(e){return;}
   var comp=p.get('comp')||'';
-  if(!comp)return;
-  var name=p.get('title')||'this structure';
+  if(!comp)return;                       /* plain scratch pad, panel stays off */
+  var name=(p.get('title')||'this structure').replace(/[<>&]/g,'');
+  var conf=p.get('conf')||'';
+
+  var panel=document.getElementById('checkPanel');
+  var btn=document.getElementById('checkBtn');
+  if(!panel||!btn)return;
+  btn.hidden=false;
+
+  /* her worksheet checklist for this competency */
+  var items=[],code='',dname='';
+  var D=window.BIO004_DRAW||[];
+  for(var i=0;i<D.length;i++){
+    if((D[i].comps||[]).indexOf(comp)>=0&&D[i].items&&D[i].items.length){
+      items=D[i].items;code=D[i].code||'';dname=D[i].name||'';break;
+    }
+  }
+
+  var ticked={},scored=false;
+  function esc(t){return String(t).replace(/[<>&]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;'}[c];});}
+
+  function open(){
+    panel.hidden=false;btn.textContent='Hide checklist';
+    window.dispatchEvent(new Event('resize'));
+    if(!conf)askConf(); else showList();
+    var f=panel.querySelector('button');if(f)f.focus();
+  }
+  function close(){panel.hidden=true;btn.textContent='Check my work';window.dispatchEvent(new Event('resize'));}
+  btn.addEventListener('click',function(){panel.hidden?open():close();});
+
+  function askConf(){
+    panel.innerHTML=
+      '<p class="cp-eyebrow">Before you look</p>'+
+      '<h2 class="cp-h">How well do you think you did?</h2>'+
+      '<p class="cp-sub">Answer before the checklist appears. Being sure and being right are different things, and the gap between them is the useful part.</p>'+
+      '<div class="cp-btns">'+
+        '<button type="button" class="cp-b" data-c="low">Shaky</button>'+
+        '<button type="button" class="cp-b" data-c="med">Fairly sure</button>'+
+        '<button type="button" class="cp-b gold" data-c="high">Confident</button>'+
+      '</div>';
+    panel.querySelectorAll('[data-c]').forEach(function(b){
+      b.addEventListener('click',function(){conf=b.getAttribute('data-c');showList();});
+    });
+  }
+
+  function confLabel(){return {low:'Shaky',med:'Fairly sure',high:'Confident'}[conf]||'not recorded';}
+
+  function showList(){
+    var head=
+      '<p class="cp-eyebrow">Compare against your drawing</p>'+
+      '<h2 class="cp-h">'+(code?esc(code)+', ':'')+esc(dname||name)+'</h2>'+
+      '<p class="cp-sub">Tick every item you actually drew. Be honest, this is your score. You went in: <strong>'+confLabel()+'</strong>.</p>';
+    if(!items.length){
+      panel.innerHTML=head+
+        '<p class="cp-note">There is no checklist for this competency yet. Compare your drawing against your notes, the structure list, or the atlas, then score yourself.</p>'+
+        gradeBlock();
+      wireGrade();return;
+    }
+    panel.innerHTML=head+
+      '<span class="cp-count" id="cpCount">0 of '+items.length+'</span>'+
+      '<ul class="cp-list">'+items.map(function(x,n){
+        return '<li><button type="button" class="cp-item" data-i="'+n+'" aria-pressed="false"><span class="cp-box" aria-hidden="true"></span><span>'+esc(x)+'</span></button></li>';
+      }).join('')+'</ul>'+gradeBlock();
+    panel.querySelectorAll('.cp-item').forEach(function(b){
+      b.addEventListener('click',function(){
+        var n=b.getAttribute('data-i');ticked[n]=!ticked[n];
+        b.setAttribute('aria-pressed',ticked[n]?'true':'false');
+        var got=Object.keys(ticked).filter(function(k){return ticked[k];}).length;
+        var el=document.getElementById('cpCount');if(el)el.textContent=got+' of '+items.length;
+      });
+    });
+    wireGrade();
+  }
+
+  function gradeBlock(){
+    return '<hr class="cp-hr">'+
+      '<p class="cp-eyebrow">Score it</p>'+
+      '<h2 class="cp-h" style="font-size:16px">How complete were you?</h2>'+
+      '<div class="cp-btns">'+
+        '<button type="button" class="cp-b" data-got="2">Patchy</button>'+
+        '<button type="button" class="cp-b" data-got="4">Solid</button>'+
+        '<button type="button" class="cp-b gold" data-got="6">Thorough</button>'+
+      '</div>'+
+      '<p class="cp-msg" role="status" aria-live="polite"></p>'+
+      '<hr class="cp-hr">'+
+      '<p class="cp-eyebrow">Keep it</p>'+
+      '<p class="cp-note">Happy with this one? <strong>Save PDF</strong> keeps a copy you can revise from, and <strong>Print</strong> gives you a paper version. Both are in the top bar, and neither includes this panel.</p>'+
+      '<div class="cp-btns" style="margin-top:10px">'+
+        '<button type="button" class="cp-b" id="cpPdf">Save PDF</button>'+
+        '<button type="button" class="cp-b" id="cpPrint">Print drawing</button>'+
+      '</div>';
+  }
+
+  function wireGrade(){
+    panel.querySelectorAll('[data-got]').forEach(function(b){
+      b.addEventListener('click',function(){record(parseInt(b.getAttribute('data-got'),10));});
+    });
+    var pdf=panel.querySelector('#cpPdf'),pr=panel.querySelector('#cpPrint');
+    if(pdf)pdf.addEventListener('click',function(){var t=document.getElementById('savePdf');if(t)t.click();});
+    if(pr)pr.addEventListener('click',function(){window.print();});
+  }
 
   function record(got){
+    if(scored)return;
     var log=[];
     try{log=JSON.parse(localStorage.getItem(EV_KEY)||'[]');if(!Array.isArray(log))log=[];}catch(e){log=[];}
-    log.push({comp:comp,source:'draw',got:got,of:6,at:new Date().toISOString()});
-    try{localStorage.setItem(EV_KEY,JSON.stringify(log));}catch(e){
-      say('Could not save. Your browser is blocking site storage for this page.');return;
+    log.push({comp:comp,source:'draw',got:got,of:6,conf:conf||null,at:new Date().toISOString()});
+    var msg=panel.querySelector('.cp-msg');
+    try{localStorage.setItem(EV_KEY,JSON.stringify(log));}
+    catch(e){if(msg){msg.style.color='var(--bad,#7A2E2E)';msg.textContent='Could not save. Your browser is blocking site storage for this page.';}return;}
+    scored=true;
+    panel.querySelectorAll('[data-got]').forEach(function(b){b.disabled=true;});
+    if(!msg)return;
+    if(conf==='high'&&got<=2){
+      msg.textContent='Saved. You went in confident and came out patchy. That is the most useful thing you could have found today, and it puts this near the top of your weak spot board.';
+    }else if(conf==='low'&&got>=6){
+      msg.textContent='Saved. You knew that better than you thought. Trust yourself more on this one.';
+    }else{
+      msg.textContent='Saved. Mastery OS will show this the next time you open it.';
     }
-    say('Saved. Mastery OS will show this the next time you open it.');
-    bar.querySelectorAll('button').forEach(function(b){b.disabled=true;});
   }
-  function say(t){msg.textContent=t;}
-
-  var bar=document.createElement('div');
-  bar.className='evbar';
-  bar.innerHTML=
-    '<p class="evq">Finished drawing <strong>'+name.replace(/[<>&]/g,'')+'</strong>? Score yourself so it counts toward your mastery.</p>'+
-    '<div class="evbtns" role="group" aria-label="Score your drawing">'+
-      '<button type="button" class="evb" data-got="2">Patchy</button>'+
-      '<button type="button" class="evb" data-got="4">Solid</button>'+
-      '<button type="button" class="evb evb-gold" data-got="6">Thorough</button>'+
-    '</div>'+
-    '<p class="evmsg" role="status" aria-live="polite"></p>';
-  document.body.appendChild(bar);
-  var msg=bar.querySelector('.evmsg');
-  bar.addEventListener('click',function(e){
-    var b=e.target.closest('[data-got]');
-    if(b)record(parseInt(b.getAttribute('data-got'),10));
-  });
 })();
 </script>
-<style>
-.evbar{max-width:1100px;margin:22px auto 40px;padding:18px 20px;background:var(--white);
-  border:1px solid var(--line);border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.evq{margin:0 0 12px;color:var(--navy);font-family:var(--disp);font-size:15px}
-.evbtns{display:flex;gap:10px;flex-wrap:wrap}
-.evb{font-family:var(--disp);font-size:14px;font-weight:700;color:var(--navy);background:var(--white);
-  border:1px solid var(--navy);border-radius:999px;padding:9px 18px;cursor:pointer;min-height:44px;
-  transition:background 200ms ease,color 200ms ease}
-.evb:hover:not(:disabled){background:var(--navy);color:var(--white)}
-.evb-gold{border-color:var(--gold)}
-.evb-gold:hover:not(:disabled){background:var(--gold);color:var(--navy)}
-.evb:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-.evb:disabled{opacity:.45;cursor:default}
-.evmsg{margin:12px 0 0;color:var(--ok,#1E4C33);font-family:var(--disp);font-size:14px;font-weight:600;min-height:1.2em}
-@media (prefers-reduced-motion: reduce){.evb{transition:none}}
-</style>
 
 </body>
 </html>
