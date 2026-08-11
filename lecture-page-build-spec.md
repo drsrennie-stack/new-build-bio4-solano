@@ -216,7 +216,7 @@ that changes page to page:
 ```js
 var TOPIC_ID = 't-anatomical-terminology';      // unique topic id, or '' for supplementary
 var GATE_KEYWORDS = ["anatomical position", "sagittal", "transverse", "superior"];
-var PREWORK_TARGET = "spaced-recall.html#topic=t-anatomical-terminology";
+var PREWORK_TARGET = "bio004-spaced-recall.html#topic=t-anatomical-terminology";
 ```
 
 ---
@@ -241,8 +241,10 @@ controls. Keep the reference content clean, no shadows, readable on paper.
 
 ## 6. Content-writing approach
 
-- **"Given not Googled."** Write content the student is meant to learn and
-  retrieve, not look up. The fill-in columns and the gate enforce retrieval.
+- **Write for retrieval, not lookup.** The content on the page is what the
+  student is meant to learn and then produce from memory. The fill-in columns
+  and the gate are what enforce that. Never put this idea on a student-facing
+  page as a slogan; describe what the student actually does instead.
 - For an **anatomy-only course**: keep content at the structural level. Name
   structures, locations, spatial relationships, regional terms. Do **not** drift
   into physiology (function, mechanism, "what it does"). If a structure's

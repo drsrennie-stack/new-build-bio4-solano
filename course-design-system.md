@@ -76,4 +76,4 @@ Each page is a single self-contained file with inline CSS and JS, no external bu
 
 ## 7. Writing and voice
 
-No em dashes anywhere; use commas, periods, parentheses, or rewrite the sentence. The student-facing byline and signature is "Dr. Sharilyn Rennie" with no credential suffix. Language is plain and direct, no filler. Pedagogy runs on "Given not Googled": drawing-based synthesis as an integrity mechanism, with clinical context threaded through the anatomy.
+No em dashes anywhere; use commas, periods, parentheses, or rewrite the sentence. The student-facing byline and signature is "Dr. Sharilyn Rennie" with no credential suffix. Language is plain and direct, no filler. Pedagogy runs on drawing-based synthesis as an integrity mechanism, with clinical context threaded through the anatomy. Students produce the structure from memory and then check it, rather than looking it up. Never put the slogan form of this idea in a deliverable; describe what the student actually does.

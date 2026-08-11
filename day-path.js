@@ -1,4 +1,4 @@
-/* day-path.js — daily connection path + week-level Blue Lab Card, from COURSE_MAP.
+/* day-path.js, daily connection path + week-level Blue Lab Card, from COURSE_MAP.
    <ol data-daypath="integumentary"></ol>  Notes -> Concept Videos -> Slides(PPT/HTML) -> Recall Rx
    <nav data-weeklab="1"></nav>             Lab Sprint, Atlas Canvas, Digital Atlas */
 (function () {
@@ -87,7 +87,7 @@
       { it: sprint,     bg: "#C9A14A", fg: "#0B1530" },
       { it: wl.canvas,  bg: "#C2734D", fg: "#0B1530" },
       { it: wl.digital, bg: "#FFFFFF", fg: "#0B1530" },
-      { it: { label: "Loops", url: "https://www.medmasterscollaborative.com/anatomy-loops", external: true }, bg: "#8B3A2E", fg: "#FFFFFF" }
+      { it: { label: "Loops", url: "https://drsrennie-stack.github.io/loops/", external: true }, bg: "#8B3A2E", fg: "#FFFFFF" }
     ];
     items.forEach(function (row, i) {
       var li = document.createElement("li");

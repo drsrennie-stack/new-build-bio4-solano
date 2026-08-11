@@ -32,7 +32,7 @@ h1,h2,h3,h4{letter-spacing:-0.02em;color:var(--navy);line-height:1.15;margin:0}
 p{margin:0}
 button{font-family:inherit;cursor:pointer}
 .eyebrow{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--terra-dark)}
-:focus-visible{outline:3px solid #6B1616;outline-offset:2px;box-shadow:0 0 0 5px rgba(255,255,255,.92);border-radius:var(--r-sm)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:var(--r-sm)}
 
 /* header */
 .site-header{position:sticky;top:0;z-index:30;background:rgba(250,250,249,.88);backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line-soft)}
@@ -142,7 +142,7 @@ button{font-family:inherit;cursor:pointer}
 .do-line .em{color:var(--rust)}
 .uselegend{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--terra-dark);background:var(--cream);border:1px solid var(--line);padding:5px 11px;border-radius:999px;margin-bottom:16px}
 
-/* ask / direct question — lifted card, no side accent */
+/* ask / direct question, lifted card, no side accent */
 .ask{background:var(--white);border:1px solid var(--line-soft);border-radius:var(--r);padding:16px 18px;margin:2px 0 16px;box-shadow:0 12px 26px -12px rgba(11,21,48,.30),0 2px 5px rgba(11,21,48,.08)}
 .ask .ask-t{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-dark);margin-bottom:8px;display:flex;align-items:center;gap:7px}
 .ask p{font-size:16px;line-height:1.6;color:var(--ink);font-weight:500}
@@ -160,7 +160,7 @@ button{font-family:inherit;cursor:pointer}
 .reveal-body b{color:var(--navy)}
 .reveal-body .pill{display:inline-block;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:#e3edea;color:var(--ok);margin-right:5px}
 
-/* checkpoint step — dark terra-cotta card */
+/* checkpoint step, dark terra-cotta card */
 .cp-box{background:linear-gradient(135deg,#9a3f30,#7c3127);border:none;border-radius:var(--r);padding:18px 20px;box-shadow:0 20px 42px -16px rgba(139,58,46,.5),0 4px 12px -6px rgba(11,21,48,.2)}
 .cp-box .cp-t{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#f6ddd4;margin-bottom:8px}
 .cp-box p{font-size:15.5px;line-height:1.6;color:#fff}
@@ -216,7 +216,7 @@ button{font-family:inherit;cursor:pointer}
   <div class="plan">
     <div class="pgrow">
       <p class="peyebrow">Guided Construction · Majors A&amp;P</p>
-      <h1>Build the GI Tract — one focused step at a time</h1>
+      <h1>Build the GI Tract, one focused step at a time</h1>
       <p class="psub">You draw the map by hand. The lab reveals a single instruction at a time so you can focus, answer, then check yourself.</p>
       <div class="otrack"><span id="overallFill"></span></div>
       <div class="modes" id="modeToggle" role="group" aria-label="Content mode">
@@ -224,7 +224,7 @@ button{font-family:inherit;cursor:pointer}
         <button data-m="both" aria-pressed="false">Combined</button>
         <button data-m="phys" aria-pressed="false">Physiology</button>
       </div>
-      <div class="physnote" id="physNote" hidden>You can't map physiology without the anatomy — hormones and feedback loops sit on top of the structures. If you haven't already built this as an anatomy map, switch to <b>Combined</b> first. (Already did the anatomy version? Physiology mode adds just the feedback-map layer to your saved map.)</div>
+      <div class="physnote" id="physNote" hidden>You can't map physiology without the anatomy, hormones and feedback loops sit on top of the structures. If you haven't already built this as an anatomy map, switch to <b>Combined</b> first. (Already did the anatomy version? Physiology mode adds just the feedback-map layer to your saved map.)</div>
       <div class="modenote" id="modeNote"></div>
     </div>
     <div class="plan-metric">
@@ -238,7 +238,7 @@ button{font-family:inherit;cursor:pointer}
     <main class="stage" id="stage"></main>
   </div>
 
-  <p class="foot-note">A construction activity — you build the map; the lab coaches. Physiology (hormone feedback loops &amp; secretion control) layers onto this same map in a later unit.</p>
+  <p class="foot-note">A construction activity, you build the map; the lab coaches. Physiology (hormone feedback loops &amp; secretion control) layers onto this same map in a later unit.</p>
 </div>
 
 <div id="toast"></div>
@@ -255,7 +255,7 @@ function fillQR(){
 </script>
 <script>
 /* =========================================================================
-   GI MAP LAB — micro-step curriculum
+   GI MAP LAB, micro-step curriculum
    step kinds: draw | label | cell | function | checkpoint
    fields: k, do, ask (direct question to answer & label), reveal, use (legend hint)
    ========================================================================= */
@@ -265,26 +265,26 @@ const PARTS = [
   { title:"Set Up · Do This First", stations:[
     {
       id:"legend", name:"Set Up Your Map & Legend", region:"Set up · build your key first",
-      intro:"Before a single organ, build a legend. A consistent color + symbol key is what turns scattered labels into a readable map — and it's what lets you review fast later. Everything you invent here you reuse on every station.",
+      intro:"Before a single organ, build a legend. A consistent color + symbol key is what turns scattered labels into a readable map, and it's what lets you review fast later. Everything you invent here you reuse on every station.",
       steps:[
         { k:"draw", do:"In a top corner of your sheet or whiteboard, draw a boxed area titled <span class='em'>LEGEND</span> with room for about 8 entries. Leave the rest of the surface open for your map." },
         { k:"draw", do:"Pick how you'll lay out the map.",
           ask:"Will you draw one continuous GI tract, or a sequence of connected boxes (one structure per box, with a gross view + a zoom-in)? Sketch a light plan of your layout before you start.",
-          reveal:"Either works — just keep the structures in the correct <b>sequence</b>. Option A: one connected tract with zoom-in bubbles for histology. Option B: a flow of boxes, each holding the macro view + a micro/histology zoom, linked by arrows. Be creative; it doesn't have to look like a textbook." },
-        { k:"label", do:"<b>Layers — keep them black or brown.</b> Draw the four wall layers (tunics) in <b>black or brown</b> and tell them apart with a <b>pattern or a clear label</b> (solid, dots, diagonal lines, dashed): Mucosa, Submucosa, Muscularis externa, Serosa/Adventitia.",
-          reveal:"Save your colors for what students most often confuse — vessels, nerves, and secretory cells. Black/brown layers with patterns give you four clear layers without four extra colors." },
-        { k:"cell", do:"<b>Secretory cells — green.</b> Add to your legend: <b>green = a cell that makes a secretion</b> (parietal, chief, mucous, goblet, Paneth, acinar, islet…). Also draw a <b>★</b> for a named special cell and write its product beside it.",
-          reveal:"Coloring only the secreting cells green makes &lsquo;who secretes what&rsquo; jump off the map — and it stays consistent with your other maps (renal, etc.)." },
+          reveal:"Either works, just keep the structures in the correct <b>sequence</b>. Option A: one connected tract with zoom-in bubbles for histology. Option B: a flow of boxes, each holding the macro view + a micro/histology zoom, linked by arrows. Be creative; it doesn't have to look like a textbook." },
+        { k:"label", do:"<b>Layers, keep them black or brown.</b> Draw the four wall layers (tunics) in <b>black or brown</b> and tell them apart with a <b>pattern or a clear label</b> (solid, dots, diagonal lines, dashed): Mucosa, Submucosa, Muscularis externa, Serosa/Adventitia.",
+          reveal:"Save your colors for what students most often confuse, vessels, nerves, and secretory cells. Black/brown layers with patterns give you four clear layers without four extra colors." },
+        { k:"cell", do:"<b>Secretory cells, green.</b> Add to your legend: <b>green = a cell that makes a secretion</b> (parietal, chief, mucous, goblet, Paneth, acinar, islet…). Also draw a <b>★</b> for a named special cell and write its product beside it.",
+          reveal:"Coloring only the secreting cells green makes &lsquo;who secretes what&rsquo; jump off the map, and it stays consistent with your other maps (renal, etc.)." },
         { k:"label", do:"<b>Secretes.</b> Add this line (in black): <b>&rarr; = &lsquo;secretes&rsquo;</b>.",
           reveal:"Example: a green parietal cell &rarr; HCl. The arrow plus the green cell tells the whole secretion story at a glance." },
         { k:"label", do:"<b>Sphincters.</b> Add this line (in black): <b>✕ = sphincter</b> (a small gate symbol works too).",
           reveal:"You'll place these at the lower esophageal sphincter, pylorus, sphincter of Oddi, ileocecal valve, and anus." },
         { k:"label", do:"<b>Exceptions.</b> Add this line (in black): <b>▲ = exception to the four-tunic wall plan</b>.",
           reveal:"You'll flag the esophagus's adventitia, the stomach's third muscle layer, the teniae coli, and more in Part 2." },
-        { k:"label", do:"<b>Vessels &amp; nerves — the three standard colors.</b> Use ONLY these three for tubes, and add them to your legend: <b>red = arteries (oxygen-rich blood)</b>, <b>blue = veins (oxygen-poor blood)</b>, <b>yellow = nerves</b>.",
-          reveal:"This is the classic atlas convention students already expect, and using only three keeps arteries, veins, and nerves from blurring together. For the hepatic portal vein (a special case) keep it blue but add a label or a dotted pattern — not a new color." },
-        { k:"label", do:"<b>Ducts &amp; lymph — no new colors.</b> Bile ducts and lymph/lacteals aren't blood or nerves, so draw them in <b>black/brown with a pattern or label</b> (bile = labeled duct; lacteal = dashed channel).",
-          reveal:"Now the whole map runs on just four meaningful colors — <b>red, blue, yellow, green</b> — plus black/brown patterns, so nothing competes or gets confused." },
+        { k:"label", do:"<b>Vessels &amp; nerves, the three standard colors.</b> Use ONLY these three for tubes, and add them to your legend: <b>red = arteries (oxygen-rich blood)</b>, <b>blue = veins (oxygen-poor blood)</b>, <b>yellow = nerves</b>.",
+          reveal:"This is the classic atlas convention students already expect, and using only three keeps arteries, veins, and nerves from blurring together. For the hepatic portal vein (a special case) keep it blue but add a label or a dotted pattern, not a new color." },
+        { k:"label", do:"<b>Ducts &amp; lymph, no new colors.</b> Bile ducts and lymph/lacteals aren't blood or nerves, so draw them in <b>black/brown with a pattern or label</b> (bile = labeled duct; lacteal = dashed channel).",
+          reveal:"Now the whole map runs on just four meaningful colors, <b>red, blue, yellow, green</b>, plus black/brown patterns, so nothing competes or gets confused." },
         { k:"checkpoint", do:"Legend check.",
           reveal:"Your legend should now hold: <b>black/brown + patterns = layers &amp; structures</b> · ★ = special cell · &rarr; = secretes · ✕ = sphincter · ▲ = exception · <b>red = arteries</b> · <b>blue = veins</b> · <b>yellow = nerves</b> · <b>green = secretory cells</b>. Keep these SAME meanings on every map you build." },
         { k:"physio", layer:"P", do:"<b>Physiology symbols.</b> Add these three (in black) for the feedback maps: <b>dashed arrow = hormone (travels in blood)</b>, <b>⊕ = stimulates</b>, <b>⊖ = inhibits</b>.",
@@ -301,7 +301,7 @@ const PARTS = [
         { k:"draw", do:"Draw the oral cavity: the <span class='em'>hard palate</span> (roof, front), the <span class='em'>soft palate + uvula</span> (back), and the <span class='em'>vestibule</span> (space between lips/cheeks and teeth)." },
         { k:"draw", do:"Add the <span class='em'>tongue</span> on the floor of the mouth and anchor it with the <span class='em'>lingual frenulum</span> below." },
         { k:"label", use:"Layer: black or brown + a pattern", do:"Label the lining epithelium.",
-          ask:"What type of epithelium lines the mouth — and where is it keratinized versus non-keratinized? Label it on your map.",
+          ask:"What type of epithelium lines the mouth, and where is it keratinized versus non-keratinized? Label it on your map.",
           reveal:"<b>Stratified squamous</b>; <b>keratinized</b> on the gingiva &amp; hard palate for abrasion protection, non-keratinized elsewhere (flexible &amp; moist)." },
         { k:"draw", do:"Draw an arch of teeth. On one tooth, label crown, neck, root, enamel, dentin, and pulp cavity.",
           ask:"On your tooth, which structure is the hardest outer layer, which forms the bulk, and which holds the nerves and vessels? Label enamel, dentin, and pulp.",
@@ -311,32 +311,32 @@ const PARTS = [
           reveal:"<span class='pill'>Tongue</span> <b>Filiform</b> = no taste buds. Taste buds sit in <b>fungiform, circumvallate, and foliate</b> papillae. A taste bud = gustatory (receptor) cells + supporting cells + basal (stem) cells. <b>Taste travels on CN VII</b> (anterior ⅔) and <b>CN IX</b> (posterior ⅓)." },
         { k:"function", do:"Note what digestion happens here.",
           ask:"What is the term for chewing, and which salivary enzyme starts which type of digestion? Note both by the mouth.",
-          reveal:"Chewing = <b>mastication</b> (mechanical &mdash; increases surface area). <b>Salivary amylase</b> begins starch digestion and lingual lipase begins fat; lysozyme &amp; IgA protect. <span class='pill'>Cranial nerves</span> the muscles of mastication are driven by <b>CN V₃ (trigeminal)</b>, and the tongue that positions food is <b>CN XII (hypoglossal)</b>." },
+          reveal:"Chewing = <b>mastication</b> (mechanical, increases surface area). <b>Salivary amylase</b> begins starch digestion and lingual lipase begins fat; lysozyme &amp; IgA protect. <span class='pill'>Cranial nerves</span> the muscles of mastication are driven by <b>CN V₃ (trigeminal)</b>, and the tongue that positions food is <b>CN XII (hypoglossal)</b>." },
         { k:"checkpoint", do:"Map checkpoint.",
-          reveal:"Find the boundary where keratinized meets non-keratinized stratified squamous. Arrow-label each side — this &lsquo;tough vs. flexible&rsquo; logic returns at the anal canal." }
+          reveal:"Find the boundary where keratinized meets non-keratinized stratified squamous. Arrow-label each side, this &lsquo;tough vs. flexible&rsquo; logic returns at the anal canal." }
       ]
     },
     {
       id:"pharynx", name:"Pharynx", region:"Foregut · shared air/food path",
-      intro:"The muscular funnel shared by air and food — the last stop under voluntary control.",
+      intro:"The muscular funnel shared by air and food, the last stop under voluntary control.",
       steps:[
         { k:"draw", do:"Draw the pharynx as a funnel behind the mouth. Stack its three regions top&rarr;bottom: <span class='em'>nasopharynx, oropharynx, laryngopharynx</span>." },
         { k:"draw", do:"Show the bolus path (oropharynx &rarr; laryngopharynx &rarr; esophagus) and draw the <span class='em'>epiglottis</span> flipping down over the larynx during a swallow." },
         { k:"label", use:"Layer: black or brown + a pattern", do:"Label the epithelium of the food regions.",
           ask:"What epithelium lines the oropharynx and laryngopharynx, and how does the nasopharynx differ? Label each region.",
-          reveal:"Oropharynx/laryngopharynx = <b>non-keratinized stratified squamous</b> (food abrasion); nasopharynx = <b>pseudostratified ciliated columnar</b> (respiratory &mdash; air only)." },
+          reveal:"Oropharynx/laryngopharynx = <b>non-keratinized stratified squamous</b> (food abrasion); nasopharynx = <b>pseudostratified ciliated columnar</b> (respiratory, air only)." },
         { k:"label", use:"Layer: black or brown + a pattern", do:"Label the muscle layer.",
           ask:"What muscle type builds the pharynx wall, and is swallowing here voluntary or involuntary? Label it.",
           reveal:"<b>Skeletal muscle</b> (pharyngeal constrictors); swallowing = <b>deglutition</b>, voluntary/reflexive here. Motor drive is the <b>pharyngeal plexus (CN IX &amp; X)</b>; the <b>gag reflex</b> = CN IX (sensory) + CN X (motor)." },
         { k:"cell", do:"Mark the tonsils (palatine, pharyngeal/adenoid, lingual).",
-          reveal:"<b>Lymphoid tissue</b> guarding the entrance &mdash; immune surveillance." },
+          reveal:"<b>Lymphoid tissue</b> guarding the entrance, immune surveillance." },
         { k:"checkpoint", do:"Map checkpoint.",
-          reveal:"Circle the exact point where respiratory epithelium (nasopharynx) hands off to protective squamous (oropharynx) &mdash; the &lsquo;air &rarr; food&rsquo; switch." }
+          reveal:"Circle the exact point where respiratory epithelium (nasopharynx) hands off to protective squamous (oropharynx), the &lsquo;air &rarr; food&rsquo; switch." }
       ]
     },
     {
       id:"esophagus", name:"Esophagus", region:"Foregut · transport only",
-      intro:"A collapsible muscular tube — pure transport, and the first big exception to the wall plan.",
+      intro:"A collapsible muscular tube, pure transport, and the first big exception to the wall plan.",
       steps:[
         { k:"draw", do:"Draw the esophagus from the laryngopharynx, through the diaphragm, to the stomach. Mark the <span class='em'>upper esophageal sphincter</span> (top) and <span class='em'>lower esophageal (cardiac) sphincter</span> at the stomach.", use:"Use your ✕ sphincter symbol" },
         { k:"label", use:"Layer: black or brown + a pattern", do:"Label the lining.",
@@ -345,13 +345,13 @@ const PARTS = [
         { k:"label", use:"Layer: black or brown + a pattern", do:"Add glands in the submucosa.",
           reveal:"<b>Esophageal glands proper</b> secrete mucus to lubricate the bolus." },
         { k:"label", use:"Layer: black or brown + a pattern", do:"Divide the tube into thirds and label each third's muscle type.",
-          ask:"What muscle type is found in each third of the esophagus — upper, middle, and lower? Label all three.",
+          ask:"What muscle type is found in each third of the esophagus, upper, middle, and lower? Label all three.",
           reveal:"<b>Skeletal (upper 1/3) &rarr; mixed (middle) &rarr; smooth (lower 1/3)</b>. Voluntary at the top, involuntary below." },
-        { k:"label", use:"Flag it ▲", do:"Label the outer coat — and flag the exception.",
+        { k:"label", use:"Flag it ▲", do:"Label the outer coat, and flag the exception.",
           ask:"What is the esophagus's outer coat called, and why isn't it a serosa? Label and flag it.",
-          reveal:"▲ <b>Adventitia</b> (fibrous CT anchoring it) &mdash; because most of the esophagus lies above the diaphragm/in the thorax. This is the first big exception to the four-tunic rule." },
+          reveal:"▲ <b>Adventitia</b> (fibrous CT anchoring it), because most of the esophagus lies above the diaphragm/in the thorax. This is the first big exception to the four-tunic rule." },
         { k:"function", do:"Note its job.",
-          ask:"The esophagus does no digestion — what is its single job, and by what mechanism? Note it.",
+          ask:"The esophagus does no digestion, what is its single job, and by what mechanism? Note it.",
           reveal:"It <b>transports</b> the bolus via <b>peristalsis</b>; the sphincters block acid reflux and air entry." },
         { k:"checkpoint", do:"Map checkpoint.",
           reveal:"Star the outer layer and label it &lsquo;adventitia (no serosa here).&rsquo; You'll formalize this exception in Part 2." },
@@ -362,7 +362,7 @@ const PARTS = [
     },
     {
       id:"stomach", name:"Stomach", region:"Foregut · mixing & acid",
-      intro:"The muscular mixing bag — the richest station for special cells. Take your time in the gastric gland.",
+      intro:"The muscular mixing bag, the richest station for special cells. Take your time in the gastric gland.",
       steps:[
         { k:"draw", do:"Draw the J-shaped stomach. Label its four regions: <span class='em'>cardia, fundus, body, pylorus</span>, and the <span class='em'>pyloric sphincter</span> at the exit.", use:"Use your ✕ sphincter symbol" },
         { k:"draw", do:"Draw the internal <span class='em'>rugae</span> (folds). Then zoom in: a <span class='em'>gastric pit</span> leading into a <span class='em'>gastric gland</span>, with room to label the cells." },
@@ -370,13 +370,13 @@ const PARTS = [
           ask:"What epithelium lines the stomach, and which cells cover its entire surface? Label them.",
           reveal:"<b>Simple columnar</b>; <b>surface mucous cells</b> coat it entirely with an alkaline mucus + bicarbonate barrier so the stomach doesn't digest itself." },
         { k:"cell", use:"★ + secretes arrow", do:"Label the acid-making cell.",
-          ask:"Which cell secretes HCl and intrinsic factor? Label it — and its two products — on your gland.",
+          ask:"Which cell secretes HCl and intrinsic factor? Label it, and its two products, on your gland.",
           reveal:"<span class='pill'>Gastric gland</span> <b>Parietal (oxyntic) cell &rarr; HCl</b> (activates pepsin, kills microbes) <b>+ intrinsic factor</b> (required for vitamin B12 absorption in the ileum)." },
         { k:"cell", use:"★ + secretes arrow", do:"Label the enzyme-making cell.",
           ask:"Which cell secretes pepsinogen and gastric lipase? Label it and its products.",
           reveal:"<b>Chief (zymogenic) cell &rarr; pepsinogen</b> (&rarr; pepsin in acid) <b>+ gastric lipase</b>." },
         { k:"cell", use:"★ + secretes arrow", do:"Label the hormone cells.",
-          ask:"Which hormone does each enteroendocrine cell release — the G cell, the ECL cell, and the D cell? Label them on your gland.",
+          ask:"Which hormone does each enteroendocrine cell release, the G cell, the ECL cell, and the D cell? Label them on your gland.",
           reveal:"<b>G cell &rarr; gastrin</b> (&uarr;acid), <b>ECL &rarr; histamine</b> (&uarr;acid), <b>D cell &rarr; somatostatin</b> (brakes acid). These are your feedback hooks for the physiology unit." },
         { k:"label", use:"Layer: black/brown + pattern · Flag ▲", do:"Label the muscle layers.",
           ask:"How many muscle layers does the stomach's muscularis externa have, what extra layer does it add, and why? Label the layers and flag the exception.",
@@ -385,9 +385,9 @@ const PARTS = [
           ask:"What does the stomach turn food into, and which type of digestion begins here? Note both.",
           reveal:"It churns food + gastric juice into <b>chyme</b> and begins <b>protein</b> digestion (pepsin). Very little absorption (some water, alcohol, aspirin); it meters release through the pyloric sphincter." },
         { k:"checkpoint", do:"Map checkpoint.",
-          reveal:"Draw a leader line from your parietal cell to a note: &lsquo;intrinsic factor &rarr; B12 absorbed in ileum.&rsquo; Leave the arrow pointing toward the ileum &mdash; you'll finish it there." },
+          reveal:"Draw a leader line from your parietal cell to a note: &lsquo;intrinsic factor &rarr; B12 absorbed in ileum.&rsquo; Leave the arrow pointing toward the ileum, you'll finish it there." },
         { k:"physio", layer:"P", do:"Map the three phases of gastric secretion as a timeline.",
-          ask:"What triggers the cephalic, gastric, and intestinal phases — and which phase drives the most secretion?",
+          ask:"What triggers the cephalic, gastric, and intestinal phases, and which phase drives the most secretion?",
           reveal:"<b>Cephalic:</b> sight/smell/thought of food &rarr; vagus &rarr; ⊕ secretion. <b>Gastric:</b> stomach stretch + peptides + rising pH &rarr; gastrin &rarr; the MOST secretion. <b>Intestinal:</b> chyme entering the duodenum briefly ⊕, then ⊖ to protect the duodenum." },
         { k:"physio", layer:"P", do:"Draw a feedback map for stomach acid (parietal cell).",
           ask:"Which three signals turn the parietal cell ON, what is the effect, and what turns it OFF?",
@@ -408,7 +408,7 @@ const PARTS = [
           reveal:"<b>Simple columnar</b>; <b>enterocytes</b> carry brush-border enzymes (lactase, maltase, sucrase, peptidases); <b>goblet cells</b> add mucus (increasing toward the ileum)." },
         { k:"cell", use:"★ special cells", do:"Label the crypt-base cells.",
           ask:"Which crypt-base cell is antimicrobial, and which one renews the lining? Label both.",
-          reveal:"<b>Paneth cells</b> (secrete lysozyme &amp; defensins &mdash; protect the crypt) and <b>intestinal stem cells</b> (renew the epithelium every 3&ndash;6 days)." },
+          reveal:"<b>Paneth cells</b> (secrete lysozyme &amp; defensins, protect the crypt) and <b>intestinal stem cells</b> (renew the epithelium every 3&ndash;6 days)." },
         { k:"label", do:"Add each region's signature feature.",
           ask:"What unique structure marks the duodenum, and what marks the ileum? Label each region's signature feature.",
           reveal:"<span class='pill'>Duodenum</span> <b>Brunner's glands</b> (submucosa) &rarr; alkaline mucus. <span class='pill'>Ileum</span> <b>Peyer's patches</b> (MALT) with M cells." },
@@ -435,7 +435,7 @@ const PARTS = [
         { k:"draw", do:"Draw the three <span class='em'>teniae coli</span> (longitudinal muscle bands) puckering the wall into <span class='em'>haustra</span>; add <span class='em'>epiploic appendages</span> (fat tags).", use:"Flag teniae coli ▲" },
         { k:"label", use:"Layer: black or brown + a pattern", do:"Label the epithelium and its switch at the exit.",
           ask:"What epithelium lines most of the large intestine, what does it switch to at the anal canal, and why? Label both.",
-          reveal:"<b>Simple columnar</b> for most of it; then <b>stratified squamous</b> at the anal canal (abrasion at the exit &mdash; just like the mouth)." },
+          reveal:"<b>Simple columnar</b> for most of it; then <b>stratified squamous</b> at the anal canal (abrasion at the exit, just like the mouth)." },
         { k:"label", do:"Note the key absences and the dominant cell.",
           ask:"Which two absorptive structures (present in the small intestine) are ABSENT here, and which cell type is abundant instead? Note all three.",
           reveal:"No <b>villi</b>, no <b>circular folds</b>; abundant <b>goblet cells</b> (mucus eases the drying feces). Absorptive cells here = <b>colonocytes</b>." },
@@ -443,20 +443,20 @@ const PARTS = [
           ask:"What are the two anal sphincters, and which is voluntary versus involuntary? Label both.",
           reveal:"<b>Internal anal sphincter</b> = smooth muscle (involuntary); <b>external anal sphincter</b> = skeletal muscle (voluntary)." },
         { k:"cell", do:"Mark abundant lymphoid tissue in the cecum/appendix.",
-          reveal:"<b>MALT</b> &mdash; immune surveillance of the gut microbiome." },
+          reveal:"<b>MALT</b>, immune surveillance of the gut microbiome." },
         { k:"function", do:"Note its jobs.",
           ask:"What does the large intestine absorb, what does it house, and what does it form and eliminate? Note its jobs.",
           reveal:"Absorbs <b>water &amp; electrolytes</b>; houses <b>gut microbiota</b> (make vitamin K &amp; some B vitamins); forms and eliminates <b>feces</b> (defecation reflex)." },
         { k:"checkpoint", do:"Map checkpoint.",
-          reveal:"Label the anal-canal epithelial switch on both sides, then bracket it back to your mouth/esophagus note &mdash; the tube starts AND ends with abrasion-resistant squamous." },
+          reveal:"Label the anal-canal epithelial switch on both sides, then bracket it back to your mouth/esophagus note, the tube starts AND ends with abrasion-resistant squamous." },
         { k:"physio", layer:"P", do:"Map the gastrocolic &amp; defecation reflexes.",
           ask:"What triggers mass movements after a meal, and how does the defecation reflex work (voluntary vs. involuntary)?",
-          reveal:"<b>Gastrocolic reflex:</b> stomach filling &rarr; mass movements push feces into the rectum. <b>Defecation reflex:</b> rectal stretch &rarr; parasympathetic contraction + the <b>internal sphincter relaxes</b> (involuntary); the <b>external sphincter</b> is skeletal/voluntary — you choose the moment." }
+          reveal:"<b>Gastrocolic reflex:</b> stomach filling &rarr; mass movements push feces into the rectum. <b>Defecation reflex:</b> rectal stretch &rarr; parasympathetic contraction + the <b>internal sphincter relaxes</b> (involuntary); the <b>external sphincter</b> is skeletal/voluntary, you choose the moment." }
       ]
     }
   ]},
 
-  { title:"Part 2 · The Wall — Four Tunics", stations:[
+  { title:"Part 2 · The Wall. Four Tunics", stations:[
     {
       id:"tunics", name:"The Master Wall Template: 4 Tunics", region:"Applies to the whole canal",
       intro:"Now zoom into the wall itself. Every organ you drew is a variation on this ONE four-layer plan. Draw it once, master it, then flag the exceptions.",
@@ -476,22 +476,22 @@ const PARTS = [
           reveal:"<b>Inner circular + outer longitudinal</b> (smooth muscle); the <b>myenteric (Auerbach) plexus</b> between them drives <b>peristalsis &amp; segmentation</b>." },
         { k:"label", use:"Layer: black or brown + a pattern", do:"Label the outer coat and its two forms.",
           ask:"What is the outer coat called when the organ is intraperitoneal versus retroperitoneal/thoracic? Label it.",
-          reveal:"<b>Serosa</b> (visceral peritoneum, mesothelium) vs. <b>adventitia</b> (fibrous CT). Peritoneal extensions off the serosa: <b>mesentery, greater &amp; lesser omentum, mesocolon</b> — they carry vessels &amp; nerves." },
+          reveal:"<b>Serosa</b> (visceral peritoneum, mesothelium) vs. <b>adventitia</b> (fibrous CT). Peritoneal extensions off the serosa: <b>mesentery, greater &amp; lesser omentum, mesocolon</b>, they carry vessels &amp; nerves." },
         { k:"label", do:"Bracket the two nerve plexuses together.",
           ask:"What do the submucosal and myenteric plexuses form together, and what does it do? Bracket and label them.",
-          reveal:"Together they form the <b>enteric nervous system</b> (the &lsquo;gut brain&rsquo;) — it runs gut reflexes semi-independently, the hook for autonomic/hormonal control later." },
+          reveal:"Together they form the <b>enteric nervous system</b> (the &lsquo;gut brain&rsquo;), it runs gut reflexes semi-independently, the hook for autonomic/hormonal control later." },
         { k:"checkpoint", do:"Map checkpoint.",
-          reveal:"Write the four tunic names as a numbered key (1&ndash;4) in the margin &mdash; you'll tag every organ's exceptions with these numbers next." },
+          reveal:"Write the four tunic names as a numbered key (1&ndash;4) in the margin, you'll tag every organ's exceptions with these numbers next." },
         { k:"physio", layer:"P", do:"Map how the gut wall controls itself: short vs. long reflexes.",
           ask:"What is the difference between a short (local) reflex and a long (CNS) reflex, and which ANS branch speeds the gut up vs. slows it down?",
-          reveal:"<b>Short reflex:</b> stays entirely within the enteric NS (myenteric &amp; submucosal plexuses) — local motility &amp; secretion. <b>Long reflex:</b> involves the CNS/ANS. <b>Parasympathetic (vagus) ⊕</b> digestion; <b>sympathetic ⊖</b> it." }
+          reveal:"<b>Short reflex:</b> stays entirely within the enteric NS (myenteric &amp; submucosal plexuses), local motility &amp; secretion. <b>Long reflex:</b> involves the CNS/ANS. <b>Parasympathetic (vagus) ⊕</b> digestion; <b>sympathetic ⊖</b> it." }
       ]
     },
     {
       id:"mods", name:"How Each Organ Bends the Template", region:"Exceptions & specializations",
-      intro:"Same four tunics everywhere — but each organ modifies them for its job. Add exception flags onto the organs you already drew.",
+      intro:"Same four tunics everywhere, but each organ modifies them for its job. Add exception flags onto the organs you already drew.",
       steps:[
-        { k:"draw", do:"No new drawing here — return to your Part 1 organs and add exception flags. Use your <span class='em'>▲</span> symbol so they stand out for review." },
+        { k:"draw", do:"No new drawing here, return to your Part 1 organs and add exception flags. Use your <span class='em'>▲</span> symbol so they stand out for review." },
         { k:"label", do:"Flag the epithelium swaps (tunic 1).",
           ask:"Which epithelium type protects the mouth, pharynx, esophagus, and anal canal, and which type lines the stomach and intestines? Flag each organ.",
           reveal:"<b>Stratified squamous</b> (abrasion) vs. <b>simple columnar</b> (secretion/absorption). Flag each organ's lining with its type." },
@@ -524,7 +524,7 @@ const PARTS = [
           ask:"Which acinar cell makes amylase, which makes mucin, and which squeezes saliva into the duct? Label all three.",
           reveal:"<b>Serous cells &rarr; salivary amylase</b>; <b>mucous cells &rarr; mucin</b>; <b>myoepithelial cells</b> contract to expel saliva." },
         { k:"label", do:"Note each gland's composition.",
-          ask:"Is each gland mostly serous, mostly mucous, or mixed — parotid, sublingual, submandibular? Note each.",
+          ask:"Is each gland mostly serous, mostly mucous, or mixed, parotid, sublingual, submandibular? Note each.",
           reveal:"Parotid = <b>serous</b>; sublingual = <b>mucous</b>; submandibular = <b>mixed</b> (serous-dominant)." },
         { k:"function", do:"Note saliva's job.",
           ask:"Which type of digestion does saliva begin, and what else does saliva provide? Note saliva's roles.",
@@ -533,12 +533,12 @@ const PARTS = [
           reveal:"Connect each salivary duct to the salivary opening you drew at the Oral Cavity station; label the parotid duct &lsquo;serous &rarr; amylase&rsquo; so the enzyme's origin is traceable on the map." },
         { k:"physio", layer:"P", do:"Draw a mini feedback map for salivation.",
           ask:"What turns salivation ON (and through which nerves), what is the target tissue, the effect, and what turns it OFF?",
-          reveal:"<b>ON (⊕):</b> sight/smell/taste/thought of food &rarr; <b>parasympathetic</b> input from the salivatory nuclei — <b>CN VII</b> to the submandibular &amp; sublingual glands, <b>CN IX</b> to the parotid. <b>Target:</b> the salivary glands. <b>Effect:</b> ↑ watery, enzyme-rich saliva. <b>OFF (⊖):</b> sympathetic activation &amp; dehydration &rarr; scant, thick saliva." }
+          reveal:"<b>ON (⊕):</b> sight/smell/taste/thought of food &rarr; <b>parasympathetic</b> input from the salivatory nuclei, <b>CN VII</b> to the submandibular &amp; sublingual glands, <b>CN IX</b> to the parotid. <b>Target:</b> the salivary glands. <b>Effect:</b> ↑ watery, enzyme-rich saliva. <b>OFF (⊖):</b> sympathetic activation &amp; dehydration &rarr; scant, thick saliva." }
       ]
     },
     {
       id:"liver", name:"Liver", region:"Accessory · bile + metabolism",
-      intro:"The body's biggest gland and metabolic hub. Focus on the repeating lobule — the key histology unit.",
+      intro:"The body's biggest gland and metabolic hub. Focus on the repeating lobule, the key histology unit.",
       steps:[
         { k:"draw", do:"Draw the liver under the diaphragm with its lobes; tuck the <span class='em'>gallbladder</span> underneath (detailed next)." },
         { k:"draw", do:"Zoom into one hexagonal <span class='em'>lobule</span>.",
@@ -547,25 +547,25 @@ const PARTS = [
         { k:"label", do:"At the hexagon corners, draw the portal triads.",
           ask:"What three vessels make up a portal triad? Label them at a hexagon corner.",
           reveal:"<b>Hepatic artery + hepatic portal vein + bile duct.</b>" },
-        { k:"label", use:"Red = artery · blue = vein · bile = labeled duct", do:"Draw sinusoids and bile canaliculi — and their opposite flows.",
+        { k:"label", use:"Red = artery · blue = vein · bile = labeled duct", do:"Draw sinusoids and bile canaliculi, and their opposite flows.",
           ask:"Which direction does blood flow, and which direction does bile flow? Draw and label both arrows pointing opposite ways.",
-          reveal:"<b>Blood &rarr; central vein</b> (through sinusoids); <b>bile &rarr; bile duct</b> (through canaliculi). Opposite directions &mdash; the classic exam point." },
+          reveal:"<b>Blood &rarr; central vein</b> (through sinusoids); <b>bile &rarr; bile duct</b> (through canaliculi). Opposite directions, the classic exam point." },
         { k:"cell", use:"★ special cells", do:"Add the sinusoid macrophages.",
           ask:"What are the resident macrophages lining the liver sinusoids called? Label them.",
-          reveal:"<b>Kupffer cells</b> &mdash; phagocytose debris and aged red blood cells." },
+          reveal:"<b>Kupffer cells</b>, phagocytose debris and aged red blood cells." },
         { k:"function", do:"Note the liver's outputs.",
           ask:"What does the liver produce for digestion, which vein delivers nutrients to it, and what plasma proteins does it make? Note its outputs.",
           reveal:"Makes <b>bile</b> (emulsifies fat); processes nutrients from the <b>hepatic portal vein</b>; synthesizes <b>plasma proteins</b> (albumin, clotting factors); plus detox and glycogen/vitamin storage." },
         { k:"checkpoint", do:"Map checkpoint.",
-          reveal:"On your lobule, draw and clearly label the two opposing flows (blood IN to the central vein, bile OUT to the bile duct). This is the #1 tested liver-histology idea &mdash; make it unmistakable." },
+          reveal:"On your lobule, draw and clearly label the two opposing flows (blood IN to the central vein, bile OUT to the bile duct). This is the #1 tested liver-histology idea, make it unmistakable." },
         { k:"physio", layer:"P", do:"Map the liver's role in blood glucose (fed vs. fasting).",
-          ask:"After a meal vs. between meals, what does the liver do to blood glucose — and which hormone drives each?",
+          ask:"After a meal vs. between meals, what does the liver do to blood glucose, and which hormone drives each?",
           reveal:"<b>Fed (insulin ⊕):</b> the liver takes up glucose and stores it as <b>glycogen</b> &rarr; blood glucose falls. <b>Fasting (glucagon ⊕):</b> the liver breaks glycogen down and makes new glucose &rarr; releases it &rarr; blood glucose rises. Negative feedback keeps glucose steady." }
       ]
     },
     {
       id:"gallbladder", name:"Gallbladder", region:"Accessory · bile storage",
-      intro:"A small storage sac for bile — simple, with one notable wall exception.",
+      intro:"A small storage sac for bile, simple, with one notable wall exception.",
       steps:[
         { k:"draw", do:"Draw the pear-shaped gallbladder on the liver's underside. Draw the <span class='em'>cystic duct</span> joining the common hepatic duct &rarr; <span class='em'>common bile duct</span> &rarr; duodenum.", use:"Bile = labeled duct (black/brown)" },
         { k:"label", use:"Layer: black or brown + a pattern", do:"Label the lining and what it does.",
@@ -573,10 +573,10 @@ const PARTS = [
           reveal:"<b>Simple columnar</b>; absorbs <b>water</b> to <b>concentrate</b> the bile (up to ~10&times;)." },
         { k:"label", use:"Flag it ▲", do:"Flag the wall exception.",
           ask:"Which two wall layers are missing from the gallbladder? Flag the exception.",
-          reveal:"▲ No <b>muscularis mucosae</b> and no <b>submucosa</b> &mdash; the mucosa sits directly on the muscular coat." },
-        { k:"function", do:"Note its role — and what it does NOT do.",
-          ask:"If it doesn't make bile, what two things does the gallbladder do to it — and what triggers release? Note its role.",
-          reveal:"It <b>stores</b> and <b>concentrates</b> bile; releases it into the duodenum when <b>fatty chyme</b> arrives (via CCK &mdash; physiology unit)." },
+          reveal:"▲ No <b>muscularis mucosae</b> and no <b>submucosa</b>, the mucosa sits directly on the muscular coat." },
+        { k:"function", do:"Note its role, and what it does NOT do.",
+          ask:"If it doesn't make bile, what two things does the gallbladder do to it, and what triggers release? Note its role.",
+          reveal:"It <b>stores</b> and <b>concentrates</b> bile; releases it into the duodenum when <b>fatty chyme</b> arrives (via CCK, physiology unit)." },
         { k:"checkpoint", do:"Map checkpoint.",
           reveal:"Highlight the whole bile path: liver &rarr; hepatic ducts &rarr; (store in gallbladder via cystic duct) &rarr; common bile duct &rarr; duodenum. Label the gallbladder &lsquo;store + concentrate,&rsquo; not &lsquo;produce.&rsquo;" },
         { k:"physio", layer:"P", do:"Draw a feedback map for gallbladder emptying.",
@@ -586,17 +586,17 @@ const PARTS = [
     },
     {
       id:"pancreas", name:"Pancreas", region:"Accessory · dual gland",
-      intro:"The finale — a dual-function gland. The exocrine part finishes digestion; the endocrine part previews your physiology unit.",
+      intro:"The finale, a dual-function gland. The exocrine part finishes digestion; the endocrine part previews your physiology unit.",
       steps:[
         { k:"draw", do:"Draw the pancreas behind the stomach, its head nestled in the duodenum's C. Draw the <span class='em'>pancreatic duct</span> joining the common bile duct into the duodenum." },
         { k:"draw", do:"Zoom in: draw dark clusters of <span class='em'>acini</span> next to a pale <span class='em'>islet</span>.",
           ask:"Which tissue is the exocrine part of the pancreas, and which is the endocrine part? Label both.",
-          reveal:"<b>Acini</b> = exocrine (~99%); <b>islets of Langerhans</b> = endocrine (~1%) &mdash; two glands in one organ." },
+          reveal:"<b>Acini</b> = exocrine (~99%); <b>islets of Langerhans</b> = endocrine (~1%), two glands in one organ." },
         { k:"cell", use:"★ + secretes arrow", do:"Label the exocrine secretions.",
-          ask:"Which enzymes do the acinar cells make for carbs, for fat, and for protein — and why are the proteases released inactive? Label them.",
+          ask:"Which enzymes do the acinar cells make for carbs, for fat, and for protein, and why are the proteases released inactive? Label them.",
           reveal:"<b>Amylase</b> (carbs), <b>lipase</b> (fat), and proteases like <b>trypsinogen/chymotrypsinogen</b> (+ nucleases). Proteases are released inactive so they don't digest the gland. Duct cells add <b>bicarbonate</b> to neutralize chyme." },
         { k:"cell", use:"★ + secretes arrow (into BLOOD)", do:"Label the endocrine cells.",
-          ask:"Which hormone does each islet cell secrete into the blood — alpha, beta, and delta? Label them.",
+          ask:"Which hormone does each islet cell secrete into the blood, alpha, beta, and delta? Label them.",
           reveal:"<b>Alpha &rarr; glucagon, beta &rarr; insulin, delta &rarr; somatostatin</b> (+ PP cells &rarr; pancreatic polypeptide)." },
         { k:"function", use:"Duct route (enzymes) vs. blood route (hormones)", do:"Contrast the two output routes.",
           ask:"Where do the pancreatic enzymes and bicarbonate go, and where do insulin and glucagon go? Draw both routes.",
@@ -613,22 +613,22 @@ const PARTS = [
     },
     {
       id:"capstone", name:"Capstone: The One-Map Review", region:"Integrate · make it whole",
-      intro:"Your organs are drawn and labeled. This last station adds the integrative threads lectures always test — the ideas that live BETWEEN organs — so everything sits on one map.",
+      intro:"Your organs are drawn and labeled. This last station adds the integrative threads lectures always test, the ideas that live BETWEEN organs, so everything sits on one map.",
       steps:[
         { k:"draw", do:"Add a legend box for the <span class='em'>6 digestive processes</span>: ingestion, propulsion, mechanical digestion, chemical digestion, absorption, defecation." },
         { k:"label", use:"Use your ✕ sphincter symbol", do:"Draw one flow line mouth&rarr;anus and mark every sphincter in order.",
           ask:"Name all seven sphincters in order from mouth to anus, and mark each one on your flow line.",
           reveal:"Upper esophageal &rarr; lower esophageal (cardiac) &rarr; pyloric &rarr; hepatopancreatic (sphincter of Oddi) &rarr; ileocecal &rarr; internal &amp; external anal." },
         { k:"label", do:"Add a compact enzyme table (enzyme &rarr; substrate &rarr; product).",
-          ask:"For carbohydrates, protein, and fat — what finishes each one's digestion? Fill in your enzyme table.",
+          ask:"For carbohydrates, protein, and fat, what finishes each one's digestion? Fill in your enzyme table.",
           reveal:"Carbs: amylase &rarr; brush-border <b>maltase/sucrase/lactase</b> &rarr; monosaccharides. Protein: pepsin/trypsin &rarr; <b>peptidases</b> &rarr; amino acids. Fat: bile + <b>pancreatic lipase</b> &rarr; fatty acids + monoglycerides (&rarr; lacteals). Nucleic acids: nucleases &rarr; nucleotides." },
         { k:"label", use:"Red = artery · blue = vein · lymph = dashed", do:"Draw a small blood-flow inset.",
           ask:"Where do absorbed nutrients travel first, and how do fats bypass that route? Draw the blood-flow inset.",
           reveal:"Nutrients &rarr; <b>hepatic portal vein &rarr; liver first</b> (processed before reaching the body); fats travel via <b>lacteals/lymph</b>. This is the &lsquo;liver-first&rsquo; rule." },
         { k:"checkpoint", do:"Final self-quiz &amp; submit.",
-          reveal:"Cover your labels and self-quiz: point to any organ and say its epithelium, its special cells + what each secretes, its wall exceptions, and its function. Fix any gap with that station's reveal. When you can narrate the whole tube mouth&rarr;anus, your map is complete &mdash; <b>take a photo of your finished map (or team whiteboard) and submit it to Canvas</b>." },
+          reveal:"Cover your labels and self-quiz: point to any organ and say its epithelium, its special cells + what each secretes, its wall exceptions, and its function. Fix any gap with that station's reveal. When you can narrate the whole tube mouth&rarr;anus, your map is complete, <b>take a photo of your finished map (or team whiteboard) and submit it to Canvas</b>." },
         { k:"physio", layer:"P", do:"Build a master GI-hormone feedback summary box.",
-          ask:"For gastrin, secretin, CCK, and somatostatin — what turns each ON, its target, and its effect? Draw the four mini-loops together.",
+          ask:"For gastrin, secretin, CCK, and somatostatin, what turns each ON, its target, and its effect? Draw the four mini-loops together.",
           reveal:"<b>Gastrin</b> (peptides/stretch → stomach) → ↑ acid &amp; motility. <b>Secretin</b> (acid → duodenum) → ↑ bicarbonate, ⊖ acid. <b>CCK</b> (fat/protein → duodenum) → gallbladder + pancreatic enzymes, slows emptying. <b>Somatostatin</b> (low pH) → ⊖ the whole system (global brake). Incretins (GIP) also ⊕ insulin." }
       ]
     }
@@ -694,24 +694,24 @@ function updateProgress(){
   document.getElementById('pctText').textContent=pct+'%';
   document.getElementById('countText').textContent=dc+' / '+total+' stations';
   const mn=document.getElementById('modeNote');
-  if(allDone()){ mn.className='modenote review'; mn.textContent='🔓 Review mode — revisit any station & reveal freely'; }
-  else { mn.className='modenote'; mn.textContent='🔒 Guided walkthrough — the next station unlocks when you finish this one'; }
+  if(allDone()){ mn.className='modenote review'; mn.textContent='🔓 Review mode, revisit any station & reveal freely'; }
+  else { mn.className='modenote'; mn.textContent='🔒 Guided walkthrough, the next station unlocks when you finish this one'; }
 }
 
 function renderIntro(){
   return `<div class="card">
     <div class="card-head">
       <p class="chd-eye">Start Here</p>
-      <h2>Build the GI tract — one focused step at a time</h2>
+      <h2>Build the GI tract, one focused step at a time</h2>
       <span class="region">Majors A&amp;P · construction lab</span>
-      <p class="chd-intro">You are the cartographer. This lab reveals a single instruction at a time so you can draw it, answer the question on your own map, then reveal the answer to self-check. You build the map by hand — nothing here is auto-graded. The goal is one complete map you can explain.</p>
+      <p class="chd-intro">You are the cartographer. This lab reveals a single instruction at a time so you can draw it, answer the question on your own map, then reveal the answer to self-check. You build the map by hand, nothing here is auto-graded. The goal is one complete map you can explain.</p>
     </div>
     <div class="welcome-body">
       <h3>What you'll need</h3>
       <div class="kit">
-        <div class="k"><b>Paper or a whiteboard</b> Ledger/A3, taped pages, or a big team whiteboard — you're mapping the whole tract plus accessory organs.</div>
+        <div class="k"><b>Paper or a whiteboard</b> Ledger/A3, taped pages, or a big team whiteboard, you're mapping the whole tract plus accessory organs.</div>
         <div class="k"><b>Colored markers or pencils</b> You'll set a color per layer in the first station and reuse it everywhere.</div>
-        <div class="k"><b>Your resources</b> Textbook, lecture notes, histology atlas. Look things up — that's the point.</div>
+        <div class="k"><b>Your resources</b> Textbook, lecture notes, histology atlas. Look things up, that's the point.</div>
         <div class="k"><b>Room to annotate</b> Leave margins; several checkpoints link distant organs with arrows.</div>
       </div>
 
@@ -720,28 +720,28 @@ function renderIntro(){
         <div class="k"><b>✏️ Solo</b> Build your own map on paper and self-check with the reveals as you go.</div>
         <div class="k"><b>👥 Team whiteboard</b> Gather your team at a whiteboard, grab the colored markers, and build one big map together. When you finish, <b>submit a photo of your whiteboard to Canvas</b>.</div>
       </div>
-      <div class="howrow" style="margin-top:10px"><span class="hi">🤝</span><div><b>Everyone builds the whole map — don't split it up.</b> At each structure, the micro and macro leads bring their view to the SAME organ, so you draw it zoomed in and zoomed out together. Rotate roles every station so nobody gets stuck on just one part.</div></div>
+      <div class="howrow" style="margin-top:10px"><span class="hi">🤝</span><div><b>Everyone builds the whole map, don't split it up.</b> At each structure, the micro and macro leads bring their view to the SAME organ, so you draw it zoomed in and zoomed out together. Rotate roles every station so nobody gets stuck on just one part.</div></div>
 
-      <h3>Team roles — rotate at each station</h3>
+      <h3>Team roles, rotate at each station</h3>
       <div class="kit">
-        <div class="k"><b>🔬 Micro lead</b> Histology, epithelium, and special cells + their secretions — the zoom-in view.</div>
-        <div class="k"><b>🫁 Macro lead</b> Gross anatomy — regions, shape, layers, and sphincters — the zoom-out view.</div>
+        <div class="k"><b>🔬 Micro lead</b> Histology, epithelium, and special cells + their secretions, the zoom-in view.</div>
+        <div class="k"><b>🫁 Macro lead</b> Gross anatomy, regions, shape, layers, and sphincters, the zoom-out view.</div>
         <div class="k"><b>🖊️ Cartographer</b> Draws on the whiteboard as the team decides together.</div>
         <div class="k"><b>🎙️ Guide &amp; checker</b> Drives the lab, reads each step aloud, and opens the reveal to check the team's work.</div>
       </div>
-      <h3>How to lay out your map — your choice</h3>
+      <h3>How to lay out your map, your choice</h3>
       <div class="kit">
         <div class="k"><b>Option A · One continuous tract</b> Sketch the whole GI tract mouth→anus as one connected drawing, then add zoom-in bubbles for the histology/cells.</div>
-        <div class="k"><b>Option B · A sequence of boxes</b> Draw a row/flow of connected boxes — one per structure — each holding its gross (macro) view and a zoom-in (micro/histology) view. Arrows link box to box in order.</div>
+        <div class="k"><b>Option B · A sequence of boxes</b> Draw a row/flow of connected boxes, one per structure, each holding its gross (macro) view and a zoom-in (micro/histology) view. Arrows link box to box in order.</div>
       </div>
-      <p class="routewrap" style="margin-top:10px">It doesn't have to look like a textbook. Be creative — zoom in, zoom out, use color. What matters is that structures follow the right <b>sequence</b> and every label is correct. Pick whichever layout is easiest for you to follow.</p>
+      <p class="routewrap" style="margin-top:10px">It doesn't have to look like a textbook. Be creative, zoom in, zoom out, use color. What matters is that structures follow the right <b>sequence</b> and every label is correct. Pick whichever layout is easiest for you to follow.</p>
 
       <h3>How each station works</h3>
       <div class="howlist">
-        <div class="howrow"><span class="hi">1️⃣</span><div>One <b>step</b> shows at a time — a drawing action or a direct question. Draw and answer it on your map first.</div></div>
-        <div class="howrow"><span class="hi">👁️</span><div><b>Answers stay locked while you build</b> — use your notes, lectures, textbook &amp; research. When every station is complete, <b>reveals unlock</b> so you can double-check your map and use it for recall.</div></div>
+        <div class="howrow"><span class="hi">1️⃣</span><div>One <b>step</b> shows at a time, a drawing action or a direct question. Draw and answer it on your map first.</div></div>
+        <div class="howrow"><span class="hi">👁️</span><div><b>Answers stay locked while you build</b>, use your notes, lectures, textbook &amp; research. When every station is complete, <b>reveals unlock</b> so you can double-check your map and use it for recall.</div></div>
         <div class="howrow"><span class="hi">➡️</span><div><b>Next step</b> advances; the dots at the top track your place inside the station.</div></div>
-        <div class="howrow"><span class="hi">✅</span><div><b>Mark station complete</b> on the last step — the sidebar shows how far you've come.</div></div>
+        <div class="howrow"><span class="hi">✅</span><div><b>Mark station complete</b> on the last step, the sidebar shows how far you've come.</div></div>
       </div>
       <h3>The route</h3>
       <p class="routewrap">First you'll <b>build your legend</b> (color + symbol key). Then Part 1 walks the alimentary canal organ by organ (mouth → anus), Part 2 zooms into the four-tunic wall they all share and flags each organ's exceptions, and Part 3 covers the accessory organs. Use the <b>mode toggle</b> up top to choose Anatomy &amp; Histology, Combined, or Physiology.</p>
@@ -764,14 +764,14 @@ function renderStation(s,idx){
   let i=state.step[s.id]||0; if(i>=n) i=n-1; if(i<0) i=0;
   const st=steps[i]; const km=KIND[st.k]||KIND.draw;
   const rkey=s.id+':'+i; const isRev=!!state.revealed[rkey];
-  const dots=steps.map((_,j)=>`<i class="${j<i?'done':(j===i?'on':'')}"></i>`).join('');
+  const dots=steps.map((_,j)=>``).join('');
   const useChip=st.use?`<div class="uselegend">🎨 ${st.use}</div>`:'';
   const askBlock=st.ask?`<div class="ask"><div class="ask-t">❓ Answer on your map, then label it</div><p>${st.ask}</p></div>`:'';
   const revealsUnlocked=allDone();
   const revealBtn=st.reveal?(revealsUnlocked
       ? `<button class="reveal-btn" onclick="toggleReveal('${rkey}')">${isRev?'👁️ Hide answer':'👁️ Reveal answer'}</button>`
-      : `<div class="reveal-locked">🔒 <span>Answers unlock once your <b>whole map is complete</b>. For now, build it from your notes, lectures, textbook &amp; research — then reveal to double-check your work and for recall.</span></div>`):'';
-  const revealBody=(st.reveal&&revealsUnlocked)?`<div class="reveal-body ${isRev?'open':''}"><div class="rv-t">Expert answer — check &amp; fix your map</div><p>${st.reveal}</p></div>`:'';
+      : `<div class="reveal-locked">🔒 <span>Answers unlock once your <b>whole map is complete</b>. For now, build it from your notes, lectures, textbook &amp; research, then reveal to double-check your work and for recall.</span></div>`):'';
+  const revealBody=(st.reveal&&revealsUnlocked)?`<div class="reveal-body ${isRev?'open':''}"><div class="rv-t">Expert answer, check &amp; fix your map</div><p>${st.reveal}</p></div>`:'';
 
   const body = st.k==='checkpoint'
     ? `<div class="kind-eye"><span class="ke-ic ${km.cls}">${km.ic}</span><span class="ke-t">${km.t}</span><span class="ke-c">Step ${i+1} of ${n}</span></div>
@@ -822,12 +822,12 @@ function stepMove(d){
 }
 function startFirst(){ const list=visStations(); if(list.length) jump(list[0]); }
 function toggleReveal(key){ state.revealed[key]=!state.revealed[key]; render(); }
-function toggleDone(id,v){ state.done[id]=v; if(v){ toast(allDone()?'🔓 Map complete — review mode unlocked!':'Station complete ✓'); } render(); }
+function toggleDone(id,v){ state.done[id]=v; if(v){ toast(allDone()?'🔓 Map complete, review mode unlocked!':'Station complete ✓'); } render(); }
 function jump(idx){ if(!isUnlocked(idx)){ toast('Finish your current station to unlock the next one 🔒'); return; } state.cur=idx; render(); }
 function finish(){
   const total=totalStations();
   const dc=visStations().filter(i=>state.done[SCREENS[i].id]).length;
-  toast(dc===total?('Map complete — all '+total+' stations! 🎉'):('Nice work — '+dc+'/'+total+' stations done'));
+  toast(dc===total?('Map complete, all '+total+' stations! 🎉'):('Nice work, '+dc+'/'+total+' stations done'));
 }
 function setMode(m){
   MODE=m;

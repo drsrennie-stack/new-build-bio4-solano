@@ -54,7 +54,7 @@ A shared week appears on **both** tabs: "Exam 1" in the module it closes, "Start
 
 ## Hootie, merged
 
-One weighted intent matcher over one answer bank: your matcher and copy, with live dates folded in. The gain is the `struggle` intent, "I am drowning and so far behind" now gets the Gap Finder, a 3-Day Cram, Study With Me and the Success Sprint, ending with their real next exam date.
+One weighted intent matcher over one answer bank: your matcher and copy, with live dates folded in. The gain is the `struggle` intent, "I am drowning and so far behind" now gets the Gap Finder, a 3-Day Cram, Study With Me, office hours and ASTC tutoring, ending with their real next exam date.
 
 ## Mastery OS was running on zero competencies
 

@@ -320,7 +320,7 @@
           + '1. Open the ' + a('masteryOS', 'Mastery OS') + ' Gap Finder to see exactly what is weak.'
           + '<br>2. Run a 3-Day Cram before your next exam.'
           + '<br>3. Join a ' + a('study') + ' session.'
-          + '<br><br>After Exam 1 the free Success Sprint opens as a guided catch-up, with steps posted in Canvas.'
+          + '<br>4. Come to office hours, 30 minutes before every class, or book free tutoring through the ' + a('astc') + '.'
           + '<br><br>Reach out early. Do not wait for the next exam, and do not wait until you feel you have earned the right to ask.'
           + (ctx.nextExam ? '<br><br>' + examLine(ctx, ctx.nextExam) : '');
 

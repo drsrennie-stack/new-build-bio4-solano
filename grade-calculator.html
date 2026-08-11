@@ -27,7 +27,9 @@
   Scholar Points, up to +3% on top:
     +2%  36 banked hours, from Study With Me, tutoring and open
          lab. No more than 20 of the 36 from any one kind.
-    +1%  25 banked hours AND an exam average above 80%.
+    +1%  25 banked hours AND an average above 80% across all ten
+         exams, the five lecture exams and the five practicals
+         together. Confirmed by Dr. Rennie, Aug 11 2026.
   Students enter each score as it arrives; blank groups drop out
   and the remaining weights renormalise.
   ============================================================
@@ -923,7 +925,7 @@ summary:focus-visible {
           earning <strong id="bonus-total">+0.00%</strong>
         </div>
       </div>
-      <p class="score-group-hint">Enter your hours from each of the three kinds. No more than 20 of the 36 count from any one kind, so each box stops banking at 20. The +2% pro-rates with your banked hours. The +1% needs 25 banked hours and an exam average above 80%.</p>
+      <p class="score-group-hint">Enter your hours from each of the three kinds. No more than 20 of the 36 count from any one kind, so each box stops banking at 20. The +2% pro-rates with your banked hours. The +1% needs 25 banked hours and an average above 80% across all ten exams, lecture and practical together.</p>
       <div class="scholar-fields">
         <div class="single-field">
           <label for="swm-hours">Study With Me hours</label>
@@ -951,7 +953,7 @@ summary:focus-visible {
         </div>
         <div class="perf-check">
           <span class="perf-check-icon is-unmet" id="perf-icon">&times;</span>
-          <span id="perf-text">+1.0% performance boost: needs 25 banked hours AND an exam average above 80%.</span>
+          <span id="perf-text">+1.0% performance boost: needs 25 banked hours AND an average above 80% across all ten exams, lecture and practical together.</span>
         </div>
       </div>
     </div>
@@ -1225,7 +1227,9 @@ summary:focus-visible {
     var h = bankedHours();
     var pathBonus = Math.min(PATH_BONUS_CAP, (h.banked / HOURS_REQUIRED) * PATH_BONUS_CAP);
 
-    // "Above 80% on average of all their exams": lecture and practical together.
+    // "Above 80% on average of all their exams" means all ten:
+    // the five lecture exams and the five lab practicals together.
+    // Confirmed by Dr. Rennie, Aug 11 2026.
     var allExams = lecScores.concat(labScores);
     var examAvg = avg(allExams);
     var perfQualifies = examAvg !== null && examAvg > PERF_THRESHOLD;
@@ -1242,16 +1246,18 @@ summary:focus-visible {
       els.perfIcon.className = 'perf-check-icon is-met';
       els.perfIcon.innerHTML = '&#10003;';
       els.perfText.innerHTML = '<strong>+1.0% performance boost unlocked.</strong> '
-        + fmtHours(h.banked) + ' banked hours and an exam average of ' + examAvg.toFixed(1) + '%.';
+        + fmtHours(h.banked) + ' banked hours, and an average of ' + examAvg.toFixed(1)
+        + '% across your ' + allExams.length + ' entered exams.';
     } else {
       els.perfIcon.className = 'perf-check-icon is-unmet';
       els.perfIcon.innerHTML = '&times;';
       var blockers = [];
       if (!hoursQualifies) blockers.push(fmtHours(PERF_HOURS - h.banked) + ' more banked hours needed');
       if (examAvg === null) blockers.push('no exam scores entered yet');
-      else if (!perfQualifies) blockers.push('exam average is ' + examAvg.toFixed(1) + '%, it needs to be above 80%');
+      else if (!perfQualifies) blockers.push('your average across ' + allExams.length
+        + ' entered exams is ' + examAvg.toFixed(1) + '%, it needs to be above 80%');
       els.perfText.innerHTML = '+1.0% performance boost: '
-        + (blockers.length ? blockers.join('; ') + '.' : 'needs 25 banked hours AND an exam average above 80%.');
+        + (blockers.length ? blockers.join('; ') + '.' : 'needs 25 banked hours AND an average above 80% across all ten exams.');
     }
 
     if (h.clipped) {

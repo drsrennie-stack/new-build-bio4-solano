@@ -39,14 +39,14 @@ window.BIO004_LINKS = {
   /* ---------- on this site ---------- */
   calendar:  { url: 'bio004-course-calendar.html',      internal: true,  label: 'course calendar' },
   masteryOS: { url: 'mastery-os-fall-2026.html',        internal: true,  label: 'Mastery OS' },
-  homeLegacy:{ url: 'canvas-home.html',                 internal: true,  label: 'course home (redirect)' },
+  homeLegacy:{ url: 'welcome.html',                 internal: true,  label: 'course home (redirect)' },
   syllabusGeneric: { url: 'fall-2026-syllabus.html',    internal: true,  label: 'syllabus' },
 
   /* ---------- elsewhere ---------- */
   atlas: { url: 'https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02',
            internal: false, label: 'Digital Atlas' },
 
-  loops: { url: 'https://medmasterscollaborative.com/anatomy-loops',
+  loops: { url: 'https://drsrennie-stack.github.io/loops/',
            internal: false, label: 'Loops' },
 
   study: { url: 'https://drsrennie-stack.github.io/new-build-bio4-solano/study-session-signup.html',

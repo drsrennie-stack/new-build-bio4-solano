@@ -27386,7 +27386,7 @@ window.BIO004_COURSE_CONTENT = {
      "id": "t-cns-brain-spinal-cord",
      "title": "CNS: The Brain and Spinal Cord",
      "summary": "The regions of the brain and the structure of the spinal cord.",
-     "lecturePageUrl": "cns-brain-spinal-cord.html",
+     "lecturePageUrl": "cns-brain.html",
      "cards": [
       {
        "id": "c1",
