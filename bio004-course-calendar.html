@@ -547,8 +547,28 @@ const SECTIONS = {
     window.location.href='welcome.html';
   });
 
+  /* Week 1 starts Monday August 17, so the week number is arithmetic from the
+     date and no extra field is needed on the session records. */
+  const TERM_START = parse('2026-08-17');
+  function weekOf(dstr){
+    const days = Math.floor((midnight(parse(dstr)) - midnight(TERM_START)) / 86400000);
+    return Math.floor(days / 7) + 1;
+  }
+  function paramWk(){
+    try{ var m=location.search.match(/[?&]wk=(\d+)/); if(m) return parseInt(m[1],10); }catch(e){}
+    return null;
+  }
+
   function pickDefault(){
     const sess=SECTIONS[section].sess;
+    /* A student who clicked "Week 3" wants Week 3, not today. Honour ?wk=
+       first and open on that week's first class day. Falls through to the
+       normal behaviour if the week has no sessions or no week was asked for. */
+    const wantWk = paramWk();
+    if (wantWk){
+      const hit = sess.find(s => weekOf(s.d) === wantWk);
+      if (hit){ selected = hit.d; monthPtr = parse(hit.d).getMonth(); return; }
+    }
     const up=sess.find(s=>parse(s.d).getTime()>=today.getTime())||sess[0];
     selected=up.d;
     monthPtr=parse(up.d).getMonth();
@@ -601,5 +621,6 @@ const SECTIONS = {
 </script>
 
 <script src="bio004-dock.js"></script>
+<script src="dock-coachmark.js"></script>
 </body>
 </html>
