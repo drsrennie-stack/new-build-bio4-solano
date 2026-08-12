@@ -1,131 +1,169 @@
-# Compliance notes: Today page and reading format
+# Accessibility and compliance notes
 
-**Project:** BIO 004 Human Anatomy, Fall 2026 (new-build-bio4-solano)
-**Files covered:** `today.html`, `bio004-reading-mode.js`, `bio004-dock.js`
+**Project:** BIO 004 Human Anatomy, Fall 2026 printable course syllabus (PDF)
+**Files covered:**
+
+- `BIO004-Fall2026-Syllabus-Sec1-MonWed.pdf` (CRN 80650), 17 pages
+- `BIO004-Fall2026-Syllabus-Sec2-TueThu-AM.pdf` (CRN 80654), 17 pages
+- `BIO004-Fall2026-Syllabus-Sec3-TueThu-PM.pdf` (CRN 80655), 17 pages
+- `BIO004-Fall2026-Course-Policies-and-Articulation-Reference.pdf`, 11 pages, shared by all sections
+- `BIO004-Fall2026-Competency-Packet.pdf`, 11 pages, shared by all sections
+
 **Date:** August 12, 2026
 **Reviewer:** Dr. Sharilyn Rennie
 
 ---
 
-## 1. What changed
+## 1. Standard and target level
 
-Three files. Two edited, one new.
+PDF/UA is the governing standard for a tagged PDF deliverable, with WCAG 2.2 AA as the content
+floor and AAA contrast targeted throughout. The source of each PDF is a semantic HTML document
+rendered by WeasyPrint 69, so the document structure, not visual formatting, carries the meaning.
 
-| File | Change |
-|---|---|
-| `today.html` | Added a day strip (the week's class days, today preselected, any day clickable), a complete "Everything for this day" panel sourced from the schedule, and the course dock, which this page did not have. |
-| `bio004-reading-mode.js` | New. Turns long pages into sections with a full contents list, a per-section time estimate and a page search. |
-| `bio004-dock.js` | Added a "Today" tile as the first tile in the dock, and a loader for the reading format. |
-
----
-
-## 2. WCAG version and target level achieved
-
-Target: WCAG 2.2 AA minimum, AAA where achievable. Assessed per criterion for the changed files only.
-
-| Criterion | Level | Result |
+| Criterion | Level | Status |
 |---|---|---|
-| 1.3.1 Info and Relationships | A | Pass. The accordion control sits inside a real `h2`, so the heading map is preserved. Each panel is a `region` with `aria-labelledby` pointing at its control. |
-| 1.4.3 Contrast (Minimum) | AA | Pass, at AAA. See section 3. |
-| 1.4.11 Non-text Contrast | AA | Pass. Focus rings use terra `#6B1616` at 8.9:1 on white, not the gold that fails elsewhere in the repo. |
-| 1.4.12 Text Spacing | AA | Pass. No fixed heights on text containers. |
-| 2.1.1 Keyboard | A | Pass. Every control is a real `button` or `a`. No `div` with `onclick`. |
-| 2.4.3 Focus Order | A | Pass. Contents list, then bar, then sections in document order. |
-| 2.4.6 Headings and Labels | AA | Pass. Section titles are taken verbatim from the page's own headings. |
-| 2.4.7 Focus Visible | AA | Pass. `:focus-visible` defined on every control, 3px, offset 2px. |
-| 2.4.11 Focus Not Obscured | AA (2.2) | Pass. No sticky element is added by these files. |
-| 2.5.8 Target Size (Minimum) | AA (2.2) | Pass. All controls are at least 44px in the smaller dimension. |
-| 3.2.3 Consistent Navigation | AA | Pass. The bar and contents list render in the same position on every qualifying page. |
-| 4.1.2 Name, Role, Value | A | Pass. `aria-expanded` on section controls, `aria-pressed` on the mode toggle, `role="status"` with `aria-live="polite"` for search results and mode changes. |
+| 1.3.1 Info and relationships | A | Pass. Real `h1`/`h2`/`h3`, `table`/`thead`/`th` with row and column scope by position, `ol`/`ul` for every list. No layout tables. |
+| 1.3.2 Meaningful sequence | A | Pass. Single linear reading order. The two-column appendix flows column by column in list order, 1 to 193. |
+| 1.4.1 Use of colour | A | Pass. Exam days and closed days in the schedule are marked by row shading **and** by wording in the cell. Lecture and Lab tags carry text, not colour alone. |
+| 1.4.3 / 1.4.6 Contrast | AA / AAA | Pass at AAA for all body text. See section 3. |
+| 1.4.4 Resize text | AA | Pass. Vector text throughout, no rasterised type, reflows on zoom in any reader. |
+| 1.4.10 Reflow | AA | Partial. Fixed-page medium. Mitigated by the HTML syllabus pages in the repo, which reflow fully. |
+| 1.4.12 Text spacing | AA | Pass. Line height 1.46, no fixed-height text containers. |
+| 2.4.2 Page titled | A | Pass. Document title set per section in metadata. |
+| 2.4.5 Multiple ways | AA | Pass. Linked table of contents with live page numbers plus a running header on every page. |
+| 2.4.6 Headings and labels | AA | Pass. Numbered section headings, captioned tables. |
+| 2.4.7 Focus visible | AA | N/A for print. Internal TOC links are navigable in a PDF reader. |
+| 3.1.1 Language of page | A | Pass. `lang="en"`. |
+| 3.1.5 Reading level | AAA | Targeted. Plain language, policy language quoted only where the legal wording matters. |
 
-**Not applicable:** 1.2.x (no new media), 2.2.1 (no timers added), 3.3.x (no form input beyond a search field with a visible label).
+## 2. Font and legibility
 
----
+- Plus Jakarta Sans only, weights 400 to 800, fully embedded and subset in all four PDFs.
+- Confirmed by `pdffonts`: five embedded Plus Jakarta Sans faces, zero fallback faces.
+- No italic type anywhere in the document, per house style. Emphasis is carried by weight and colour.
+- No Lora. No DM Sans. No monospace face.
+- Body text 9.5 pt with 1.46 line height. Smallest type is the appendix at 8.3 pt, above the 8 pt
+  practical floor for print. Tag chips are 6.2 pt and are redundant labels, never sole carriers of
+  meaning.
+- No em dashes anywhere in the output. Verified programmatically: 0 occurrences of U+2014 and
+  0 of U+2013 across all four files.
 
 ## 3. Colour contrast audit
 
-Every pair measured against WCAG relative luminance.
+Palette matched to the live Fall 2026 course site: navy `#08101F`, maroon `#7A2A22`,
+gold `#C9A14A`, rule `#D8D3CA`.
 
-| Foreground | Background | Ratio | AA | AAA |
+| Pair | Foreground | Background | Ratio | Result |
 |---|---|---|---|---|
-| `#08101F` section title | `#FFFFFF` card | 19.02:1 | Pass | Pass |
-| `#3D4757` minutes and helper text | `#FFFFFF` | 8.42:1 | Pass | Pass |
-| `#6B1616` terra labels and numerals | `#FFFFFF` | 8.91:1 | Pass | Pass |
-| `#F2E2B8` bar statistic | `#08101F` bar | 14.77:1 | Pass | Pass |
-| `#C6CFDC` bar explanation | `#08101F` bar | 10.42:1 | Pass | Pass |
-| `#FFFFFF` bar buttons | `#08101F` bar | 19.02:1 | Pass | Pass |
-| `#08101F` search input text | `#FAFAF9` field | 18.20:1 | Pass | Pass |
-| `#6B1616` focus ring | `#FFFFFF` page | 8.91:1 | Pass (3:1 needed) | Pass |
-| `#DCB45C` focus ring on the dark bar | `#08101F` bar | 9.71:1 | Pass | Pass |
-| `#DCB45C` search-hit border | `#FFFFFF` | 2.42:1 | Decorative only, see note |
+| Body text | `#08101F` | `#FFFFFF` | 19.0:1 | AAA |
+| Section headings | `#08101F` | `#FFFFFF` | 19.0:1 | AAA |
+| Subheadings, section numerals | `#7A2A22` | `#FFFFFF` | 9.0:1 | AAA |
+| Lede and secondary text | `#3D4654` | `#FFFFFF` | 9.5:1 | AAA |
+| Table header text | `#FFFFFF` | `#08101F` | 19.0:1 | AAA |
+| Exam row text | `#08101F` | `#F6ECD3` | 16.1:1 | AAA |
+| Closed row text | `#4A5261` | `#F1EFEA` | 6.9:1 | AA (large and small text pass AA; below AAA) |
+| Running header and footer | `#6B6257` | `#FFFFFF` | 5.4:1 | AA |
+| Lecture tag | `#1B2536` | `#E7EAEF` | 13.6:1 | AAA |
+| Lab tag | `#5C4212` | `#F1E2C6` | 7.6:1 | AAA |
+| Module band subtitle | `#E0C57F` | `#08101F` | 11.7:1 | AAA |
+| Cover band | `#FFFFFF` | `#7A2A22` | 9.0:1 | AAA |
 
-**Note on the gold hit border.** Gold at 2.42:1 on white does not meet 3:1, so it is never the only signal. A matched section is also opened, scrolled to, and counted in an `aria-live` message. The border is redundant reinforcement.
+Two pairs sit at AA rather than AAA: the closed-day schedule rows and the running header and
+footer. Both are supplementary. The closed-day rows always state the reason in words, and the
+header and footer repeat information available elsewhere on the page.
 
----
+## 4. Navigation and structure
 
-## 4. Keyboard navigation flow verified
+- Table of contents on page 2 of each document, 21 entries in the syllabus and 12 in the record,
+  each with a live page number generated by
+  `target-counter` and an internal link target.
+- Running header on every content page: course, term and section. Running footer: instructor name
+  and "Page X of Y".
+- Cover page carries no header or footer, by design.
+- Table headers repeat across page breaks (`display: table-header-group`), so the multi-page
+  schedule and competency tables stay readable.
+- No table row splits across a page break.
+- Short policy sections and the sign-off are set to avoid internal page breaks, so they are never
+  orphaned across a page turn.
 
-Verified in Chromium with the pointer unused.
+## 5. Screen reader and reader testing
 
-**today.html:** Skip link, then day strip buttons in date order, then Earlier week, Later week, Back to today, then the headline card, then each step control, then the complete-day links, then the footer, then the dock launcher. Choosing a day moves focus to the day headline, and the change is announced.
-
-**Reading format:** Skip link, then Open everything, then the mode toggle, then the search field, then each contents entry, then each section control in page order. Enter or Space toggles a section. A contents entry opens its target and moves focus to that section's control.
-
-No keyboard trap. No positive `tabindex`. Nothing reachable by pointer only.
-
----
-
-## 5. Screen reader testing
-
-Verified against the accessibility tree in Chromium DevTools, plus automated assertions in the test suite.
-
-- Section controls expose `button`, expanded state, and their accessible name from the heading text.
-- Section panels expose `region` named by their control.
-- The original heading is left in the flow with `aria-hidden="true"` so it is not announced twice.
-- Search results and mode changes announce through `role="status"`.
-- The day strip is a `nav` with an accessible name, and day buttons carry `aria-pressed`.
-
-Not yet run against JAWS, NVDA or VoiceOver. See section 6.
-
----
+- Verified: logical reading order top to bottom, single column body, appendix flows left column
+  then right column with continuous competency numbering, so nothing is read out of sequence.
+- Verified: heading hierarchy is unbroken, h1 then h2 then h3, no skipped levels.
+- Verified: every table has a caption that states what the table contains.
+- **Not yet run:** a full NVDA or VoiceOver pass on the exported PDF, and a PAC 2024 PDF/UA
+  conformance check. See section 6.
 
 ## 6. Known limitations and remediation plan
 
-| Limitation | Impact | Plan |
-|---|---|---|
-| No testing with JAWS, NVDA or VoiceOver yet | The accessibility tree is correct but real screen reader behaviour is unverified | Run one pass with VoiceOver and one with NVDA before the term opens |
-| `hidden="until-found"` is not supported in every browser | Find in page may not reach a closed section in older Safari and Firefox | Mitigated already: the built-in page search opens any matching section in every browser, and the contents list always names every section |
-| The reading format does not run on slide decks, timers or tool pages | Those pages keep their current length | Intended. They paginate themselves and chunking them would break them |
-| `m5-cranial-notes.html` and similar sit just under the size threshold | They stay as continuous pages | Acceptable at roughly 5 screens. Revisit if students report otherwise |
-| Two pages have pre-existing JavaScript syntax errors | `atlas-coloring-book.html` and `bio004-room-map-timer.html` throw on load. Unrelated to this change, present before it | Fix separately |
+1. **PDF tagging is not verified.** WeasyPrint emits a tagged PDF, and the tag tree has not been
+   validated against PDF/UA with PAC or Acrobat's accessibility checker. *Remediation:* run the
+   Acrobat full check before posting to Canvas, or post the HTML syllabus pages as the primary
+   accessible version and offer the PDF as the print copy. The HTML versions in the repo are
+   already the accessible route.
+2. **Reflow.** A fixed-page PDF cannot satisfy 1.4.10 fully. *Remediation:* the repo already
+   carries `syllabus-class1/2/3.html`, which reflow. Link both from Canvas and say which is which.
+3. **Advisory language is unconfirmed.** The BIO 016 and BIO 016L advisory is carried over from the
+   existing syllabus and could not be verified against the current Course Outline of Record, because
+   Solano's eLumen public COR portal does not serve readable content to an automated reader. The PDF
+   flags this in Section 01. *Remediation:* pull the BIO 004 COR from eLumen manually and confirm the
+   advisory, the lecture and lab hour split, and the official SLO wording.
+4. **Title IX named coordinator omitted.** The only published name found is on a legacy Solano page
+   that is no longer linked from current navigation, so the PDF routes Title IX reporting through
+   Human Resources at (707) 864-7128, which is the routing the current catalog and Student Services
+   pages give. *Remediation:* confirm the current coordinator with HR and add the name.
+5. **Cal-GETC replacement language.** The statement that Cal-GETC replaced IGETC and CSU GE Breadth
+   from Fall 2025 is accurate and widely published, and Solano's own Cal-GETC PDFs do not carry that
+   sentence. It is phrased in the PDF as guidance to see a counselor rather than as a Solano quote.
+6. **Cadaver requirement statement.** The syllabus states plainly that direct work with human donors
+   is a required, graded part of the course **including the examinations**, that half of every lab
+   practical is set on the donors themselves rather than on photographs or models, that no
+   alternative assignment, substitute examination or model-only option exists because this is a
+   program requirement, and that a student who cannot participate should decide before the add
+   deadline. It carries donor
+   conduct expectations enforceable under BP 5300, and points uneasy students to the instructor and
+   the Wellness Center. *Check:* confirm the wording is consistent with the UCSF Willed Body Program
+   agreement and with any department-level language Solano requires.
+7. **Cross-references resolve per document.** Section numbers are assigned at render time from the
+   document's own section order, and every internal "see Section NN" reference is a token resolved
+   against that order. Adding, removing or reordering a section cannot leave a stale reference behind.
+8. **InteDashboard removed.** The requirement, the proctoring download and the 14-day trial language
+   were struck from the materials section across all three sections, per the Fall 2026 decision to drop the
+   platform. TBL delivery method is not named in the PDF, so nothing has to change here if the RAT
+   tool build lands before the term starts.
 
----
+## 8. Document structure
 
-## 7. Design constraint verified by test
+The material was split into three documents in August 2026, after the single combined syllabus
+reached 35 pages, which is too long to hand a student on day one.
 
-The requirement was that nothing may be hidden, gated or made to feel withheld. Ten assertions run against `BIO004-Module1-Packet.html` and `cns-brain.html`, all passing:
+1. **The syllabus**, 17 pages, one per section. Only what a student acts on, plus what a syllabus is
+   expected to carry: course identification and modality, instructor and contact, the approved
+   outcomes, how the course runs, materials, grading and the scale, the schedule, attendance,
+   academic integrity and AI, late work, the human donor requirement, accessibility, registration
+   deadlines, and a pointer table sending students to the owning office and published source for
+   every college policy.
+2. **The Course Policies and Articulation Reference**, 11 pages. Transfer and articulation
+   designations, approved outcomes, the competency framework, and the full text of the college
+   policies summarised in the syllabus pointer table, plus the support directory and campus safety.
+3. **The Competency Packet**, 11 pages. All 193 competencies by module and topic, each tagged for
+   written lecture examination, laboratory practical, or both. Serves two audiences: students who
+   want a checklist, and institutions reviewing BIO 004 for course equivalency.
 
-1. The contents list names every section, 34 of 34.
-2. All page text remains in the DOM when sections are closed, 128,659 characters.
-3. The page opens in reading format with the first section already open.
-4. "Open everything" opens all 34 sections.
-5. Page search opens every matching section, including ones that were closed.
-6. Closed panels carry `hidden="until-found"`, 28 of 28.
-7. An existing `#anchor` opens the section containing it.
-8. The control sits inside a real heading, 34 of 34.
-9. The mode choice carries to the next page.
-10. No clinical or category wording appears anywhere in the interface.
+Nothing was deleted. Every section from the combined document appears in one of the three. Course
+identification and the approved outcomes appear in both the syllabus and the reference, because a
+reviewer should not need the student copy alongside.
 
-A repository sweep of 70 distinct page types recorded zero cases of text loss and zero cases of an incomplete contents list.
+**Modality statement.** Course identification carries an explicit instructional-format block stating
+that BIO 004 is face to face, that all lecture instruction is scheduled, in person and faculty-led
+for the full published lecture hours, that the concept lecture videos are assigned in addition and do
+not replace or shorten any scheduled session, and that laboratory instruction is scheduled, in person
+and faculty-supervised. This is stated for receiving institutions whose equivalency rules require
+in-person lecture instruction. *Check:* the published lecture and laboratory contact hours are not
+stated numerically, because they could not be verified against the Course Outline of Record. Add them
+once the COR is pulled.
 
----
+## 9. Reviewer
 
-## 8. Wording
-
-The interface describes a reading preference, never a person. It says "Reading format", "Show everything, always", and "Nothing on this page is hidden from you." It does not name any condition, category or group, and no student has to identify themselves to use it.
-
----
-
-## Reviewer
-
-Dr. Sharilyn Rennie
+Built and checked August 12, 2026. Sign-off pending the Acrobat conformance check in item 1.
