@@ -388,12 +388,8 @@
   .fd-title{display:block;font-size:22px;font-weight:800;color:#fff;margin-bottom:5px;}
   .fd-sub{display:block;font-size:14px;color:var(--offwhite-text);opacity:.92;max-width:560px;}
   .fd-arrow{font-size:30px;color:var(--gold);flex:0 0 auto;line-height:1;}
+  .build-stamp{display:block;margin-top:6px;font-size:11px;letter-spacing:.04em;opacity:.5;}
   .tools-point{max-width:60ch;margin:26px auto 12px;text-align:center;line-height:1.6;color:var(--navy);}
-  .tools-cta{display:flex;justify-content:center;margin:0 0 8px;}
-  .tools-open{font:inherit;font-weight:700;padding:13px 26px;min-height:44px;border-radius:999px;
-    background:var(--navy);color:#F4EFE8;border:1px solid var(--navy);cursor:pointer;}
-  .tools-open:hover{background:#0d1830;}
-  .tools-open:focus-visible{outline:3px solid var(--maroon);outline-offset:3px;}
   .chips-eyebrow{font-family:'DM Sans',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:700;color:var(--maroon);text-align:center;margin:26px 0 0;}
   .chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:14px 0 4px;}
   a.chip,button.chip{
@@ -743,11 +739,11 @@
   <div class="tour-wrap">
     <div class="tour-head">
       <p class="eyebrow">Guided tour</p>
-      <h2 id="tour-h2">The 7 things that carry you through this course</h2>
-      <p>Tap any card to preview it right here. Explore what you like, then head to your dashboard whenever you are ready.</p>
+      <h2 id="tour-h2">Where everything lives, and the eight things that carry you through this course</h2>
+      <p>Tap any card to see it right here. Start with the first one, because it is the button that opens all the others. Explore as much as you like, then head to your dashboard whenever you are ready. You can replay this any time from the bottom of the home page.</p>
     </div>
     <div class="tour-bar">
-      <span class="tour-progress" id="tourProgress" aria-live="polite">0 of 7 explored</span>
+      <span class="tour-progress" id="tourProgress" aria-live="polite">0 of 8 explored</span>
       <button type="button" class="btn btn-primary tour-finish" id="finishTour">Go to my dashboard &#8594;</button>
     </div>
     <div class="tour-grid" id="tourGrid" role="list"><!-- resource cards injected --></div>
@@ -799,13 +795,11 @@
          that stopped working the moment a student navigated anywhere else.
          One pointer to the dock instead, which is on every page. -->
     <p class="tools-point">
-      Everything else lives in <strong>Course tools</strong>, at the bottom of
-      every page. Your pre-work, Mastery OS, lab sprints, Loops, the atlas,
-      study sessions and your syllabus are all in there, from wherever you are.
+      Everything else lives in <strong>Course tools</strong>, the button in the
+      bottom left corner of every page. Your pre-work, Mastery OS, lab sprints,
+      Loops, the atlas, study sessions and your syllabus are all in there, from
+      wherever you happen to be.
     </p>
-    <div class="tools-cta">
-      <button type="button" class="tools-open" id="openToolsBtn">Open Course tools</button>
-    </div>
 
     <div class="manage">
       <button type="button" id="changeSecBtn">Change my section</button>
@@ -816,7 +810,7 @@
 
   <footer>
     <p><strong>BIO 004 Human Anatomy</strong> · Fall 2026 · Solano Community College, Vacaville Center</p>
-    <p>Dr. Sharilyn Rennie</p>
+    <p>Dr. Sharilyn Rennie</span><span class="build-stamp" data-build-stamp title="Which copy of this page you are looking at">build 2026-08-12 55787e2</p>
   </footer>
 </section>
 
@@ -863,6 +857,9 @@
   function buildResources(secKey){
     var s = SECTIONS[secKey];
     return [
+      {key:'tools', name:'Course tools', icon:iconTools, internal:true, frame:false, url:'',
+       desc:'The button at the bottom of every page. Everything else is inside it.',
+       say:'Start here, because this one opens all the others. Look at the bottom left corner of any page in this course and you will see a button marked Course tools. Everything lives in there: this week, your pre-work, Mastery OS, lab sprints, Loops, the atlas, study sessions, your syllabus. You do not need to remember where anything is. You only need to remember that button.'},
       {key:'syllabus', name:'Syllabus', icon:iconDoc, internal:true, frame:true, url:s.syllabus,
        desc:'How the course works, the grade model, and every important date.',
        say:'Start with the syllabus. It lays out how the course works, the grade model, and every important date for your section.'},
@@ -888,6 +885,7 @@
   }
 
   // ---------- Icons (inline SVG strings) ----------
+  var iconTools='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>';
   var iconDoc='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>';
   var iconBrain='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-1 5 3 3 0 0 0 2 5 3 3 0 0 0 4 1V4z"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 1 5 3 3 0 0 1-2 5 3 3 0 0 1-4 1"/></svg>';
   var iconLoop='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>';
@@ -1010,11 +1008,32 @@
     lastFocus = document.activeElement;
     document.getElementById('tmTitle').textContent = res.name;
     document.getElementById('tmNewTab').href = res.url;
+    document.getElementById('tmNewTab').hidden = false;
     var voiceBtn = document.getElementById('tmVoice');
     voiceBtn.hidden = false; voiceBtn.setAttribute('aria-pressed','false'); voiceBtn.innerHTML = '&#9654; Listen';
     voiceOn = false; stopNarration();
     var body = document.getElementById('tmBody');
-    if(res.frame){
+    /* Course tools is not a page, it is the button that opens the rest, so it
+       gets shown rather than described. The student presses it here, in the
+       tour, which is the only way the habit actually takes. */
+    if(res.key === 'tools'){
+      document.getElementById('tmNewTab').hidden = true;
+      body.innerHTML =
+        '<div class="tmodal-fallback">' +
+        '<strong>Look at the bottom left corner of this page</strong>' +
+        '<span>There is a button marked <b>Course tools</b>. It is on every page in this course, ' +
+        'and everything is inside it: this week, your pre-work, Mastery OS, lab sprints, Loops, ' +
+        'the Digital Atlas, study sessions and your syllabus.</span>' +
+        '<span>You do not have to remember where anything lives. You only have to remember that button. ' +
+        'Try it now, then come back and carry on with the tour.</span>' +
+        '<button type="button" class="btn btn-primary" id="tmOpenDock">Open Course tools</button>' +
+        '</div>';
+      var od = document.getElementById('tmOpenDock');
+      if(od) od.addEventListener('click', function(){
+        var d = document.querySelector('.bd-launch');
+        if(d){ d.click(); d.focus(); }
+      });
+    } else if(res.frame){
       body.innerHTML = '<iframe class="tmodal-frame" title="Preview of ' + res.name + '"></iframe>';
       body.querySelector('iframe').src = res.url;
     } else {
@@ -1087,14 +1106,8 @@
 
     renderHubGate(s);
 
-    /* No chip rows any more. The one button opens the dock, which carries
-       every one of those destinations and is present on every page. */
-    var ot = document.getElementById('openToolsBtn');
-    if (ot) ot.addEventListener('click', function () {
-      var d = document.querySelector('.bd-launch')
-           || document.querySelector('[data-dock-launch]');
-      if (d) { d.click(); d.focus(); }
-    });
+    /* No chip rows and no button. One entry point, the corner one, and
+       dock-coachmark.js points a student at it for their first few visits. */
     postHeight();
   }
 
@@ -1160,7 +1173,7 @@
         var isNow = (wk===cur.week && mod===cur.module);
         var a = document.createElement('a');
         a.className = 'wkpill' + (isNow ? ' current' : '');
-        a.href = 'week-' + wk + '.html';
+        a.href = 'bio004-course-calendar.html?wk=' + wk + (section ? '&sec=' + encodeURIComponent(section) : '');
         a.target = '_top';
         a.innerHTML = (isNow ? '<span class="hg-arrow" aria-hidden="true"><span>&#8595;</span></span>' : '') +
           '<span class="wkmain">Week ' + wk + '</span>' +
@@ -1521,5 +1534,6 @@
 </script>
 
 <script src="bio004-dock.js"></script>
+<script src="dock-coachmark.js"></script>
 </body>
 </html>
