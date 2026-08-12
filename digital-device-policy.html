@@ -124,7 +124,10 @@ a:focus-visible, button:focus-visible, summary:focus-visible, [tabindex]:focus-v
 .band--dark .callout { background: #1C2E4F; border: 1px solid rgba(245, 241, 232, 0.16); border-left: 4px solid #C9A14A; }
 .band--dark .callout strong { color: #C9A14A; }
 .callout-gold.band--light, .band--light .callout.callout-gold { border-left-color: #C9A14A; }
-.band--light .callout.callout-gold strong { color: #C9A14A; }
+/* Was #C9A14A, 2.15:1 on white at 17.9px bold, a plain 1.4.3 failure.
+   Terra is 7.65:1, past AAA. */
+.band--light .callout.callout-gold strong { color: #8B3A2E; }
+
 /* CLOSING CTA */
 .cta-section { background: #060A18; padding-top: 72px; padding-bottom: 72px; text-align: center; }
 .cta-eyebrow { font-size: 12.3px; font-weight: 700; color: #C9A14A; letter-spacing: 0.28em; text-transform: uppercase; margin-bottom: 20px; }
@@ -133,6 +136,17 @@ a:focus-visible, button:focus-visible, summary:focus-visible, [tabindex]:focus-v
 .cta-subhead { font-size: 17.9px; color: #FFFFFF; opacity: 0.82; line-height: 1.65; margin: 0 auto 32px; max-width: 540px; }
 .cta-button { background: #8B3A2E; color: #FFFFFF; padding: 15px 30px; border-radius: 4px; font-size: 12.3px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; display: inline-block; transition: background 0.2s ease; }
 .cta-button:hover { background: #A0452F; }
+/* Three-step CTA. The order is the whole point, so the steps are numbered
+   and only step one carries the filled button. Ghost buttons sit at 19:1
+   white on #060A18, and the gold numerals at 9.7:1, both past AAA. */
+.cta-steps { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; align-items: stretch; margin: 0 auto; max-width: 860px; list-style: none; padding: 0; }
+.cta-steps li { display: flex; flex-direction: column; align-items: center; gap: 10px; flex: 1 1 240px; max-width: 280px; }
+.cta-step-n { font-size: 11.2px; font-weight: 700; color: #C9A14A; letter-spacing: 0.24em; text-transform: uppercase; }
+.cta-button--ghost { background: transparent; border: 1px solid rgba(255,255,255,0.5); color: #FFFFFF; }
+.cta-button--ghost:hover { background: rgba(255,255,255,0.12); border-color: #C9A14A; }
+.cta-button { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; text-align: center; line-height: 1.35; }
+.cta-note { font-size: 14.2px; color: #FFFFFF; opacity: 0.72; line-height: 1.6; margin: 26px auto 0; max-width: 560px; }
+@media (max-width: 640px) { .cta-steps li { flex: 1 1 100%; max-width: 100%; } }
 /* FOOTER */
 .footer-section { background: #060A18; padding-top: 56px; padding-bottom: 32px; }
 .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 36px; border-bottom: 1px solid rgba(245, 241, 232, 0.16); margin-bottom: 22px; }
@@ -165,6 +179,10 @@ a:focus-visible, button:focus-visible, summary:focus-visible, [tabindex]:focus-v
 }
 html { scroll-behavior: smooth; }
 
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* #C9A14A on white is 2.15:1 and this is 17.9px bold, which is not large
+   text, so it failed 1.4.3 outright. Terra #8B3A2E on white is 7.65:1,
+   past AAA, and stays in the palette. */
 </style>
 </head>
 <body>
@@ -258,8 +276,22 @@ html { scroll-behavior: smooth; }
 <div class="cta-section">
   <div class="cta-eyebrow">Next step</div>
   <h2 class="cta-headline">Sign the agreement <span class="accent">in Canvas</span>.</h2>
-  <p class="cta-subhead">Open the Week 1 module and complete the Digital Device Policy and Student Agreement before your first lab session.</p>
-  <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/fall-2026-syllabus.html" class="cta-button" target="_top">Back to syllabus</a>
+  <p class="cta-subhead">Three steps, in this order. All of it has to be done before your first lab session.</p>
+  <ol class="cta-steps">
+    <li>
+      <span class="cta-step-n">Step 1</span>
+      <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/digital-device-policy-agreement.html" class="cta-button" target="_top">Read and complete the agreement</a>
+    </li>
+    <li>
+      <span class="cta-step-n">Step 2</span>
+      <a href="https://solano.instructure.com/" class="cta-button cta-button--ghost" target="_blank" rel="noopener">Submit it in Canvas<span class="sr-only"> (opens in a new tab)</span></a>
+    </li>
+    <li>
+      <span class="cta-step-n">Step 3</span>
+      <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/today.html" class="cta-button cta-button--ghost" target="_top">Back to Today</a>
+    </li>
+  </ol>
+  <p class="cta-note">Step 1 opens the agreement itself, where you fill it in and save or print it. Step 2 is the Week 1 module in Canvas, where the saved copy gets submitted. You are not permitted in lab until it is on file.</p>
 </div>
 
 </main>

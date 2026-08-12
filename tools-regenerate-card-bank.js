@@ -40,6 +40,20 @@ const DECKS = [
 ];
 const PASSES = ['dok3-explain-why.js', 'gap-cards.js'];
 
+/* OUT OF SCOPE FOR BIO 004, AUGUST 2026
+   Pregnancy and birth, and embryology, are not taught in this course. The
+   one exception is fetal circulation and its shunts, which is cardiovascular
+   and stays. The source decks are left untouched, so putting a topic back is
+   deleting a line here and running this again. */
+const EXCLUDE_TOPICS = new Set([
+  't-pregnancy-and-birth',
+  't-w6-fertilization-implant',
+  't-w6-placenta-membranes',
+  't-w6-gravid-labor',
+  't-w7-brain-development',
+]);
+let excluded = 0;
+
 /* course-content.js numbers its modules differently for the same five
    blocks. Fold them together so a student sees five modules, not ten. */
 const MODULE_ALIAS = {
@@ -65,6 +79,7 @@ function merge(cc, src) {
   (cc && cc.modules || []).forEach(m => {
     const mid = MODULE_ALIAS[m.id] || m.id;
     (m.topics || []).forEach(t => {
+      if (EXCLUDE_TOPICS.has(t.id)) { excluded += (t.cards || []).length; return; }
       /* A topic id is globally unique in this course, so the first module
          to claim it owns it and later decks merge into that same topic.
          Without this, t-muscle-types sat under two modules and 621
@@ -104,6 +119,10 @@ const count = () => { let n = 0; bank.modules.forEach(m => m.topics.forEach(t =>
 
 /* The injection passes run against the merged bank, so their topic-id
    lookups see every topic rather than one file's worth. */
+/* The injection passes address topics by id too, so an excluded topic can be
+   recreated by one of them if it is not blocked here as well. */
+bank.modules.forEach(m => { m.topics = m.topics.filter(t => !EXCLUDE_TOPICS.has(t.id)); });
+
 for (const f of PASSES) {
   const before = count();
   const c = sandbox(); c.window.BIO004_COURSE_CONTENT = bank;
@@ -158,6 +177,9 @@ if (!window.BIO004_COURSE_CONTENT) {
 `;
 fs.writeFileSync('bio004-card-bank.js', header + JSON.stringify(bank) + footer);
 console.log('wrote bio004-card-bank.js');
-console.log('cards:', total, '| modules:', bank.modules.length, '| topics:', topics,
+bank.modules.forEach(m => { m.topics = m.topics.filter(t => !EXCLUDE_TOPICS.has(t.id)); });
+bank.modules = bank.modules.filter(m => m.topics.length);
+console.log('excluded as out of scope:', excluded);
+console.log('cards:', count(), '| modules:', bank.modules.length, '| topics:', topics,
             '| duplicate injections dropped:', dropped);
 console.log('size: %sMB', (fs.statSync('bio004-card-bank.js').size / 1048576).toFixed(1));

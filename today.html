@@ -503,6 +503,7 @@
 
 <script src="schedule-fall2026.js"></script>
 <script src="session-links.js"></script>
+<script src="bio004-day-card.js"></script>
 <script>
 (function(){
   'use strict';
@@ -562,7 +563,13 @@
     'tr-eve': { label:'Tue / Thu, Evening',   track:'tr', hub:'class3.html', crn:'80655',
                 id:'class3', lec:'5:30 to 6:45 pm, VC 118',    lab:'7:00 to 9:50 pm, VC 1137',  endHour:22, lecMin:75, labMin:170 }
   };
-  var secKey = ls(STORE_SEC);
+  /* ?sec= wins over the stored choice, which is the rule the dock, the
+     calendar and section-sync.js already follow. Without this, the dock's
+     own Today tile (it appends ?sec=) and any link a student is sent drop
+     a first-time browser onto the section picker instead of the day. */
+  var secKey = qs.get('sec');
+  if(SEC_META[secKey]) ls(STORE_SEC, secKey);
+  else secKey = ls(STORE_SEC);
   if(!SEC_META[secKey]) secKey = null;
 
   /* ---------- day model ---------- */
@@ -1603,6 +1610,20 @@
     sub.textContent = 'Straight from the schedule for ' + longDate(parseIso(date)) +
                       '. This is the complete list, nothing is held back.';
 
+    /* The card is drawn by bio004-day-card.js, the same renderer the course
+       calendar uses, so the two pages cannot describe one day differently.
+       The date and the room times are suppressed because this page already
+       carries both in its header. If the file is ever absent the older list
+       below still renders, so the page degrades rather than empties. */
+    if(window.BIO004_DAY_CARD){
+      var card = window.BIO004_DAY_CARD.render(date, secKey, {heading:false});
+      if(card){
+        window.BIO004_DAY_CARD.styles();
+        body.innerHTML = card;
+        return;
+      }
+    }
+
     var out = '';
 
     var topics = dayTopics(day);
@@ -1691,5 +1712,6 @@
 <!-- The dock. This page had no way out of it before: a student who landed
      here could reach the day's material but not the rest of the course. -->
 <script src="bio004-dock.js"></script>
+<script src="dock-coachmark.js"></script>
 </body>
 </html>
