@@ -243,7 +243,11 @@
     {id:'howstudy', kw:['how do i study','how should i study','memor','forget','remember','stick','retain','draw','retrieval','revise','review']},
     {id:'week',     kw:['this week','today','due','coming up','next class','whats due','what is due','what is on','schedule']},
     {id:'module',   kw:['module','unit','where are we','what are we on','what are we doing']},
-    {id:'room',     kw:['room','where is','what time','when does','which section','my section','crn','building']},
+    {id:'find',     kw:['where are','where do i find','where can i find','how do i find','cant find','can not find',
+                     'cannot find','where is the','looking for','how do i get to','how do i open','where would i',
+                     'lecture video','concept video','the videos','worksheet','my notes','the notes','lab sprint',
+                     'find the','navigate','get around','lost']},
+    {id:'room',     kw:['room','what time','when does','which section','my section','crn','building','which room','what room']},
     {id:'start',    kw:['start','begin','where do i','first','brand new','beginning','what do i do','orientation','new here','getting started','get started']}
   ];
 
@@ -383,6 +387,39 @@
         }).join('<br><br>');
       }
 
+      /* Before this existed, 'where are the lecture videos' matched the room
+         intent on the words 'where is' and answered with a room number and a
+         CRN. A confidently wrong answer to the most common question a new
+         student asks. */
+      case 'find': {
+        var fq = (ctx && ctx.q) ? String(ctx.q).toLowerCase() : '';
+        var specific = '';
+        if (/video|lecture/.test(fq))
+          specific = 'Your concept lectures sit on the ' + a('calendar') + ', on the day they are due, which is the night before class.';
+        else if (/worksheet|pre-?work|packet|sheet/.test(fq))
+          specific = 'The guided worksheet for each day is on the ' + a('calendar') + ', beside that day\'s video.';
+        else if (/note/.test(fq))
+          specific = 'Your notes pages are listed with each class day on the ' + a('calendar') + '.';
+        else if (/lab|sprint|bench|practical/.test(fq))
+          specific = 'Lab sprints are on your section hub, and there is a Lab sprints tile in Course tools.';
+        else if (/card|recall|flashcard|quiz/.test(fq))
+          specific = 'The cards are inside ' + a('masteryOS', 'Mastery OS') + ', under Recall. Every card in the course is in there.';
+        else if (/atlas|3d|model/.test(fq))
+          specific = 'The ' + a('atlas', 'Digital Atlas') + ' is in Course tools, under Reference.';
+        else if (/syllabus|policy|grade/.test(fq))
+          specific = 'Your syllabus is in Course tools, under Course.';
+
+        return '<p>Everything is behind one button, so there is only one thing to remember.</p>'
+          + '<b>Look at the bottom left corner of any page.</b> There is a button marked '
+          + '<b>Course tools</b>. It is on every page in this course, and it holds this week, '
+          + 'your pre-work, Mastery OS, lab sprints, Loops, the Digital Atlas, study sessions '
+          + 'and your syllabus.'
+          + (specific ? '<br><br>' + specific : '')
+          + '<br><br>If you would rather be walked through it, open the course home page and press '
+          + '<b>Replay the walkthrough</b> at the bottom. It takes a couple of minutes and it starts '
+          + 'with that button.';
+      }
+
       case 'room': {
         var sn = ctx.sectionName;
         if (!sn) return 'Pick your section on the ' + a('home', 'course home page') + ' and I can tell you your room and times.';
@@ -421,6 +458,7 @@
 
     var id = matchIntent(q);
     if (id) {
+      ctx.q = q;
       var html = answerFor(id, ctx);
       if (html) return { html: html, intent: id };
     }
