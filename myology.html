@@ -2388,10 +2388,10 @@ function wireDetailHandlers() {
    ════════════════════════════════════════════════════ */
 const qt = document.getElementById('qt');
 qt.checked = state.quizMode;
-document.body.classList.toggle('study'!state.quizMode);
+document.body.classList.toggle('study', !state.quizMode);
 qt.addEventListener('change', function() {
   state.quizMode = this.checked;
-  document.body.classList.toggle('study'!state.quizMode);
+  document.body.classList.toggle('study', !state.quizMode);
   if (!state.quizMode) {
     // Reveal all in current category for study mode display
     Object.keys(state.reveals[state.cur]).forEach(k => ['o','i','a','v'].forEach(c => state.reveals[state.cur][k][c] = true));
@@ -2486,7 +2486,7 @@ const searchEl = document.getElementById('search');
 const searchClear = document.getElementById('search-clear');
 searchEl.addEventListener('input', function() {
   state.search = this.value;
-  searchClear.classList.toggle('visible'!!this.value);
+  searchClear.classList.toggle('visible', !!this.value);
   renderTable();
 });
 searchClear.addEventListener('click', () => {
