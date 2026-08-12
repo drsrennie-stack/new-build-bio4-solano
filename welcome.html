@@ -388,6 +388,12 @@
   .fd-title{display:block;font-size:22px;font-weight:800;color:#fff;margin-bottom:5px;}
   .fd-sub{display:block;font-size:14px;color:var(--offwhite-text);opacity:.92;max-width:560px;}
   .fd-arrow{font-size:30px;color:var(--gold);flex:0 0 auto;line-height:1;}
+  .tools-point{max-width:60ch;margin:26px auto 12px;text-align:center;line-height:1.6;color:var(--navy);}
+  .tools-cta{display:flex;justify-content:center;margin:0 0 8px;}
+  .tools-open{font:inherit;font-weight:700;padding:13px 26px;min-height:44px;border-radius:999px;
+    background:var(--navy);color:#F4EFE8;border:1px solid var(--navy);cursor:pointer;}
+  .tools-open:hover{background:#0d1830;}
+  .tools-open:focus-visible{outline:3px solid var(--maroon);outline-offset:3px;}
   .chips-eyebrow{font-family:'DM Sans',sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:700;color:var(--maroon);text-align:center;margin:26px 0 0;}
   .chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:14px 0 4px;}
   a.chip,button.chip{
@@ -788,11 +794,18 @@
       <div class="hg-weeks" id="hgWeeks"></div>
     </section>
 
-    <p class="chips-eyebrow chips-eyebrow--course">Course material</p>
-    <nav class="chips chips--course" id="chipCourse" aria-label="Course material"></nav>
-
-    <p class="chips-eyebrow">Course admin</p>
-    <nav class="chips chips--admin" id="chipAdmin" aria-label="Course admin and support"></nav>
+    <!-- The six course-material pills used to live here. They duplicated the
+         dock, and because they existed only on this page they taught a habit
+         that stopped working the moment a student navigated anywhere else.
+         One pointer to the dock instead, which is on every page. -->
+    <p class="tools-point">
+      Everything else lives in <strong>Course tools</strong>, at the bottom of
+      every page. Your pre-work, Mastery OS, lab sprints, Loops, the atlas,
+      study sessions and your syllabus are all in there, from wherever you are.
+    </p>
+    <div class="tools-cta">
+      <button type="button" class="tools-open" id="openToolsBtn">Open Course tools</button>
+    </div>
 
     <div class="manage">
       <button type="button" id="changeSecBtn">Change my section</button>
@@ -1074,35 +1087,15 @@
 
     renderHubGate(s);
 
-    var STUDY = 'https://drsrennie-stack.github.io/new-build-bio4-solano/study-session-signup.html';
-    // Course material (prominent pills)
-    fillChips(document.getElementById('chipCourse'), [
-      {label:"This week's pre-work", internal:true,  url:'bio004-course-calendar.html'},
-      {label:'Mastery OS',           internal:true,  url:'mastery-os-fall-2026.html'},
-      {label:'Lab Sprints',          internal:true,  url:s.hub},
-      {label:'Loops',                internal:false, url:'https://drsrennie-stack.github.io/loops/'},
-      {label:'Digital Atlas',        internal:false, url:'https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02'},
-      {label:'Study With Me',        internal:false, url:STUDY}
-    ]);
-    // Course admin and support (muted pills)
-    fillChips(document.getElementById('chipAdmin'), [
-      {label:'Syllabus', internal:true, url:s.syllabus}
-    ]);
-    postHeight();
-  }
-
-  function fillChips(container, items){
-    if(!container) return;
-    container.innerHTML = '';
-    items.forEach(function(c){
-      var a = document.createElement('a');
-      a.className = 'chip';
-      a.href = c.url;
-      a.textContent = c.label;
-      if(c.internal){ a.target = '_top'; }
-      else { a.target = '_blank'; a.rel = 'noopener'; }
-      container.appendChild(a);
+    /* No chip rows any more. The one button opens the dock, which carries
+       every one of those destinations and is present on every page. */
+    var ot = document.getElementById('openToolsBtn');
+    if (ot) ot.addEventListener('click', function () {
+      var d = document.querySelector('.bd-launch')
+           || document.querySelector('[data-dock-launch]');
+      if (d) { d.click(); d.focus(); }
     });
+    postHeight();
   }
 
   // Which week/module is "now" (from the term calendar). Term starts Aug 17, 2026.
