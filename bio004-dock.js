@@ -131,16 +131,18 @@
     t.push({ g: 'This week', name: 'Course calendar', sub: 'Every class day and what to prepare for it',
              url: BASE + 'bio004-course-calendar.html' + q, icon: 'cal', tone: 'navy', qr: 'calendar', kw: 'calendar schedule dates' });
 
-    t.push({ g: 'Study tools', name: 'Mastery OS', sub: 'Find your weak spots and plan around them',
-             url: BASE + 'mastery-os-fall-2026.html' + q, icon: 'brain', tone: 'gold', qr: 'mastery', kw: 'mastery os plan cram competency' });
-    t.push({ g: 'Study tools', name: 'Recall Rx', sub: 'Question cards that come back until they stick',
-             url: BASE + 'bio004-spaced-recall.html', icon: 'cards', tone: 'green', qr: 'recall', kw: 'recall cards flashcards spaced' });
+    t.push({ g: 'Study tools', name: 'Mastery OS', sub: 'Your cards, your weak spots, and a plan around them',
+             url: BASE + 'mastery-os-fall-2026.html' + q, icon: 'brain', tone: 'gold', qr: 'mastery',
+             kw: 'mastery os plan cram competency recall cards flashcards spaced question rx study' });
+    t.push({ g: 'Study tools', name: 'Recall cards', sub: 'Straight into the cards that are due today',
+             url: BASE + 'mastery-os-fall-2026.html#s-recall' + '', icon: 'cards', tone: 'green', qr: 'recall',
+             kw: 'recall cards flashcards spaced due today question' });
     t.push({ g: 'Study tools', name: 'Loops', sub: 'Thirty-nine image loops for fast visual practice',
              url: 'https://drsrennie-stack.github.io/loops/', icon: 'loop', tone: 'terra', qr: 'loops', ext: true, kw: 'loops images practice lab' });
     t.push({ g: 'Study tools', name: 'Weak spot board', sub: 'The topics your own answers say are weakest',
-             url: BASE + 'bio004-spaced-recall-weakness-dashboard.html', icon: 'target', tone: 'terra', qr: 'weak', kw: 'weakness weak spot dashboard' });
+             url: BASE + 'mastery-os-fall-2026.html#s-weak', icon: 'target', tone: 'terra', qr: 'weak', kw: 'weakness weak spot dashboard' });
     t.push({ g: 'Study tools', name: 'Draw it from memory', sub: 'Draw the structure first, then check it against the list',
-             url: BASE + 'bio004-draw.html', icon: 'pencil', tone: 'gold', qr: 'canvas', kw: 'draw drawing canvas memory checklist' });
+             url: BASE + 'mastery-canvas.html', icon: 'pencil', tone: 'gold', qr: 'canvas', kw: 'draw drawing canvas memory checklist' });
     t.push({ g: 'Study tools', name: 'What I got done today', sub: 'And what you meant to do and did not',
              url: BASE + 'bio004-day-review.html', icon: 'target', tone: 'terra', qr: 'today', kw: 'today review day summary time missed' });
 
