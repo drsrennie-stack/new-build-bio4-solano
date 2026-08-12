@@ -155,14 +155,27 @@
 
   /* ---------- steps ---------- */
   .steps{list-style:none;margin:0;padding:0}
+
+  /* THREE STATES, AND THE COLOUR IS THE STATE
+     Pending  terra border, this is still owed
+     Now      gold, 2px, lifted, do this one
+     Done     navy border on navy tint, and it stays visible rather than
+              disappearing, because a finished list is the reward
+     Resources are white. White means read me, it is not a task. */
+  .step-row{display:flex;align-items:flex-start;gap:0}
+  .step-check{position:absolute;width:1px;height:1px;opacity:0;margin:0;pointer-events:none}
+  .step-num{flex:0 0 auto;cursor:pointer;-webkit-user-select:none;user-select:none}
+  .step-check:focus-visible + .step-num{outline:3px solid var(--terra-dark);outline-offset:2px}
+  .step-num.as-arrow{cursor:default}
   .step{
     background:var(--white);border:1px solid var(--line);
     border-radius:var(--radius);box-shadow:var(--shadow-rest);
     margin-bottom:14px;overflow:hidden;
     transition:box-shadow 200ms ease,border-color 200ms ease;
   }
+  .step{border-color:var(--terra-dark);}          /* pending is red */
   .step.is-now{border-color:var(--gold);border-width:2px;box-shadow:var(--shadow-lift)}
-  .step.is-done{background:var(--white);border-color:var(--line)}
+  .step.is-done{background:var(--navy-tint,#EDF1F3);border-color:var(--navy);border-width:1px;box-shadow:none}
 
   .step-head{
     display:flex;gap:14px;align-items:flex-start;width:100%;
@@ -210,7 +223,10 @@
   .is-now .step-state{border-color:var(--terra-dark);color:var(--terra-dark)}
   .is-done .step-state{border-color:var(--navy);background:var(--navy);color:var(--white)}
 
-  .step-body{padding:0 20px 20px 64px}
+  .step-body{padding:0 20px 20px 64px;background:var(--white)}
+  /* Reference rows are white on the tinted card, so "read this" and
+     "do this" never look like the same instruction. */
+  .step-body .go, .step-body .link-list li{background:var(--white)}
   .step-body p{margin:0 0 14px;font-size:15px;color:var(--ink-mid)}
   .step-foot{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
   .step-body p.lead-in{color:var(--ink)}
@@ -1228,9 +1244,17 @@
         }
       }
 
+      /* The tick is a real checkbox, not a styled span, so it is reachable by
+         keyboard, announced as a checkbox, and has a state a screen reader can
+         read. It sits BESIDE the head button rather than inside it, because a
+         checkbox nested in a button is invalid and browsers swallow the click. */
       return '<li class="' + cls + '"' + (isNow ? ' aria-current="step"' : '') + '>' +
+        '<div class="step-row">' +
+        '<input type="checkbox" class="step-check" id="sc' + i + '" data-check="' + i + '"' +
+          (done ? ' checked' : '') + ' aria-label="Mark step ' + (i+1) + ', ' +
+          String(st.title).replace(/"/g, '&quot;') + ', as done">' +
+        '<label class="step-num" for="sc' + i + '"><span aria-hidden="true">' + (done ? '\u2713' : (i+1)) + '</span></label>' +
         '<button class="step-head" type="button" aria-expanded="' + open + '" aria-controls="sb' + i + '">' +
-          '<span class="step-num" aria-hidden="true">' + (done ? '✓' : (i+1)) + '</span>' +
           '<span class="step-text">' +
             '<span class="step-title">' + st.title + '</span>' +
             (st.hint ? '<span class="step-hint">' + st.hint + '</span>' : '') +
@@ -1240,6 +1264,7 @@
             '<span class="step-state">' + state + '</span>' +
           '</span>' +
         '</button>' +
+        '</div>' +
         '<div class="step-body" id="sb' + i + '"' + (open ? '' : ' hidden') + '>' +
           glossify(st.body || '') + links +
           '<div class="step-foot">' + (done
@@ -1279,6 +1304,8 @@
 
   /* ---------- interaction ---------- */
   elSteps.addEventListener('click', function(e){
+    var chk = e.target.closest('.step-check');
+    if(chk){ /* the change handler below owns this, do not also toggle open */ return; }
     var head = e.target.closest('.step-head');
     if(head){
       var body = document.getElementById(head.getAttribute('aria-controls'));
@@ -1301,6 +1328,19 @@
       elAnnounce.textContent = 'Step ' + (j+1) + ' reopened.';
       render(); focusCurrent(); return;
     }
+  });
+
+  /* The tick box does the same thing the Done button does, so a student can
+     mark a step off without opening it. change, not click, so the space bar
+     works. Re-render after, exactly like the button, or the card keeps the
+     old colour and the tick lies about the state. */
+  elSteps.addEventListener('change', function (e) {
+    var c = e.target.closest('.step-check');
+    if (!c) return;
+    var i = +c.getAttribute('data-check');
+    setDone(PLAN.target, i, c.checked);
+    elAnnounce.textContent = 'Step ' + (i+1) + (c.checked ? ' marked done.' : ' reopened.');
+    render();
   });
 
   function focusCurrent(){
@@ -1368,11 +1408,11 @@
     document.getElementById('foot-line').textContent = '';
     elSteps.innerHTML = Object.keys(SEC_META).map(function(k){
       var m = SEC_META[k];
-      return '<li class="step is-now"><button class="step-head" type="button" data-sec="' + k + '">' +
-        '<span class="step-num" aria-hidden="true">&rarr;</span>' +
+      return '<li class="step is-now"><div class="step-row"><button class="step-head" type="button" data-sec="' + k + '">' +
+        '<span class="step-num as-arrow" aria-hidden="true">&rarr;</span>' +
         '<span class="step-text"><span class="step-title">' + m.label + '</span>' +
         '<span class="step-hint">CRN ' + m.crn + '</span></span>' +
-        '<span class="step-state">Pick</span></button></li>';
+        '<span class="step-state">Pick</span></button></div></li>';
     }).join('');
     elSteps.addEventListener('click', function onPick(e){
       var b = e.target.closest('[data-sec]');
@@ -1616,6 +1656,18 @@
        The date and the room times are suppressed because this page already
        carries both in its header. If the file is ever absent the older list
        below still renders, so the page degrades rather than empties. */
+    /* If the guided steps are on screen they already carry every resource for
+       the night, sequenced, with the reference material tucked under the one
+       action it belongs to. Drawing the day card underneath repeats all of it
+       and makes the page look twice as long as the work actually is. So the
+       card only appears when there are no steps, which is when a student is
+       looking at a day rather than working one. */
+    var hasSteps = document.querySelectorAll('#steps .step').length > 0;
+    if(hasSteps){
+      host.hidden = true;
+      return;
+    }
+
     if(window.BIO004_DAY_CARD){
       var card = window.BIO004_DAY_CARD.render(date, secKey, {heading:false});
       if(card){
