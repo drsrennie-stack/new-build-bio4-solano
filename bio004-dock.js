@@ -137,6 +137,9 @@
     t.push({ g: 'Study tools', name: 'Recall cards', sub: 'Straight into the cards that are due today',
              url: BASE + 'mastery-os-fall-2026.html#s-recall' + '', icon: 'cards', tone: 'green', qr: 'recall',
              kw: 'recall cards flashcards spaced due today question' });
+    t.push({ g: 'Study tools', name: 'Lab sprints', sub: 'Every structure you are responsible for at the bench',
+             url: BASE + (SECTIONS[sec] ? SECTIONS[sec].hub : 'welcome.html') + q, icon: 'flask', tone: 'navy',
+             qr: 'labs', kw: 'lab sprints bench structures practical stations section hub' });
     t.push({ g: 'Study tools', name: 'Loops', sub: 'Thirty-nine image loops for fast visual practice',
              url: 'https://drsrennie-stack.github.io/loops/', icon: 'loop', tone: 'terra', qr: 'loops', ext: true, kw: 'loops images practice lab' });
     t.push({ g: 'Study tools', name: 'Weak spot board', sub: 'The topics your own answers say are weakest',
