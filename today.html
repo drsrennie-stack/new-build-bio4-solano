@@ -290,6 +290,78 @@
   }
   .gloss-note[hidden]{display:none}
 
+  /* ---------- DAY STRIP ----------
+     The class days of one week, today already selected. A student is never
+     locked to today: Wednesday is one click away if they want to work ahead,
+     and Monday is one click back if they are catching up. */
+  .daystrip{
+    margin:0 0 22px;padding:14px 16px;background:var(--white);
+    border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-rest);
+  }
+  .ds-top{display:flex;align-items:center;gap:10px;margin:0 0 12px}
+  .ds-lab{
+    font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--terra-dark);margin:0;
+  }
+  .ds-wk{margin-left:auto;font-size:13px;color:var(--ink-mid);font-weight:600}
+  .ds-days{display:flex;flex-wrap:wrap;gap:8px}
+  .ds-day{
+    font-family:var(--font);cursor:pointer;flex:1 1 auto;min-width:104px;
+    display:flex;flex-direction:column;gap:3px;align-items:flex-start;
+    padding:10px 13px;min-height:44px;border-radius:10px;border:1px solid var(--line);
+    background:var(--offwhite);color:var(--ink);text-align:left;
+    transition:border-color 160ms ease, background 160ms ease;
+  }
+  .ds-day:hover{border-color:var(--gold);background:#FCFAF5}
+  .ds-day .dsd-d{font-size:14px;font-weight:700;letter-spacing:-.005em}
+  .ds-day .dsd-n{font-size:11.5px;color:var(--ink-mid);line-height:1.35}
+  .ds-day[aria-pressed="true"]{
+    background:var(--navy);border-color:var(--navy);color:var(--white);
+    box-shadow:var(--shadow-rest);
+  }
+  .ds-day[aria-pressed="true"] .dsd-n{color:var(--gold-pale)}
+  .ds-day.is-today .dsd-d::after{
+    content:'Today';margin-left:7px;font-size:10px;font-weight:800;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--terra-dark);
+  }
+  .ds-day.is-today[aria-pressed="true"] .dsd-d::after{color:var(--gold)}
+  .ds-day.is-off{opacity:.72}
+  .ds-nav{display:flex;gap:8px;margin:12px 0 0;align-items:center}
+  .ds-btn{
+    font-family:var(--font);cursor:pointer;font-size:13px;font-weight:700;
+    padding:8px 13px;min-height:40px;border-radius:999px;border:1px solid var(--line);
+    background:var(--white);color:var(--ink-mid);
+  }
+  .ds-btn:hover{border-color:var(--line-strong);color:var(--ink)}
+  .ds-btn[disabled]{opacity:.4;cursor:default}
+  .ds-btn.ds-back{margin-left:auto;color:var(--terra-dark)}
+
+  /* Viewing a day that is not today gets an honest banner, never a lockout. */
+  .ds-note{
+    margin:12px 0 0;padding:10px 13px;border-radius:10px;
+    background:#FBF6EC;border:1px solid #E3CDA4;
+    font-size:13.5px;color:var(--ink-mid);
+  }
+  .ds-note[hidden]{display:none}
+  .ds-note b{color:var(--ink)}
+
+  /* ---------- EVERYTHING FOR THIS DAY ----------
+     Always present. The guided steps say what to do first. This says what
+     exists. A student who cannot settle until they have seen the whole shelf
+     can see it without asking anyone and without changing any setting. */
+  .allday{
+    margin:26px 0 0;padding:20px 20px 4px;background:var(--white);
+    border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-rest);
+  }
+  .allday h2{font-size:16px;font-weight:800;margin:0 0 5px;letter-spacing:-.01em}
+  .ad-sub{font-size:13.5px;color:var(--ink-mid);margin:0 0 16px;max-width:56ch}
+  .ad-group{margin:0 0 18px}
+  .ad-k{
+    font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--terra-dark);margin:0 0 8px;
+  }
+  .ad-none{font-size:14px;color:var(--ink-mid);margin:0 0 18px}
+
   /* ---------- an optional offer, never a demand ---------- */
   .optional{
     background:var(--white);border:1px dashed var(--line-strong);
@@ -375,6 +447,20 @@
 
 <main class="wrap" id="main">
 
+  <nav class="daystrip" id="daystrip" aria-labelledby="ds-lab" hidden>
+    <div class="ds-top">
+      <p class="ds-lab" id="ds-lab">Your class days</p>
+      <span class="ds-wk" id="ds-wk"></span>
+    </div>
+    <div class="ds-days" id="ds-days"></div>
+    <div class="ds-nav">
+      <button class="ds-btn" type="button" id="ds-prev">Earlier week</button>
+      <button class="ds-btn" type="button" id="ds-next">Later week</button>
+      <button class="ds-btn ds-back" type="button" id="ds-today" hidden>Back to today</button>
+    </div>
+    <p class="ds-note" id="ds-note" hidden></p>
+  </nav>
+
   <div class="headline-card">
     <p class="kicker" id="hl-kicker">Right now</p>
     <h2 id="hl-title">Working out where you are</h2>
@@ -395,6 +481,12 @@
   <ol class="steps" id="steps"></ol>
 
   <div class="optional" id="optional" hidden></div>
+
+  <section class="allday" id="allday" aria-labelledby="ad-h" hidden>
+    <h2 id="ad-h">Everything for this day</h2>
+    <p class="ad-sub" id="ad-sub"></p>
+    <div id="ad-body"></div>
+  </section>
 
   <div class="foot">
     <p id="foot-line"></p>
@@ -439,6 +531,14 @@
   TODAY.setHours(0,0,0,0);
   var TODAY_ISO = iso(TODAY);
   var HOUR = qs.get('hour') ? parseInt(qs.get('hour'),10) : new Date().getHours();
+
+  /* ---------- WHICH DAY IS ON SCREEN ----------
+     The page opens on today, every time, with no choice to make. VIEW_DATE
+     only moves when the student deliberately picks another class day off the
+     strip, and "Back to today" always returns them. A day the student chose
+     is remembered in the URL so the page can be linked or reloaded, and never
+     in localStorage, so tomorrow still opens on tomorrow. */
+  var VIEW_DATE = qs.get('day') || null;   /* null means "follow today" */
 
   function longDate(d){
     return d.toLocaleDateString('en-US',{weekday:'long', month:'long', day:'numeric'});
@@ -1156,6 +1256,11 @@
 
     if(PLAN.steps.some(function(st){ return st.title === 'Run a Gap Finder'; })) markGapFinderShown();
 
+    /* The strip and the full day shelf redraw with every plan change, so
+       moving to Wednesday moves all three together. */
+    renderDayStrip();
+    renderAllDay();
+
     if(allDone){
       document.getElementById('hl-kicker').textContent = 'All done';
       document.getElementById('hl-title').textContent = 'That is everything for now';
@@ -1329,10 +1434,217 @@
     });
   }
 
+  /* ================================================================
+     THE DAY STRIP
+
+     Every class day this week, today already chosen. Nothing here gates
+     anything: picking Wednesday shows Wednesday's pre-work laid out the
+     same way, and "Back to today" is always one click. A student who wants
+     to work three days ahead can, and a student who only ever wants today
+     never has to notice the strip exists.
+     ================================================================ */
+
+  function allDays(){ return sessionsFor(SEC_META[secKey].track); }
+
+  /* The week a date sits in, using her own wk numbers rather than a
+     calendar week, so the strip matches the schedule page exactly. */
+  function weekOf(isoDate){
+    var arr = allDays(), i;
+    for(i=0;i<arr.length;i++){ if(arr[i].date === isoDate) return arr[i].wk; }
+    /* not a class day: the week of the next class day, else the last one */
+    for(i=0;i<arr.length;i++){ if(arr[i].date > isoDate) return arr[i].wk; }
+    return arr.length ? arr[arr.length-1].wk : 1;
+  }
+  function daysInWeek(wk){
+    return allDays().filter(function(d){ return d.wk === wk; });
+  }
+  function weekRange(){
+    var ws = allDays().map(function(d){ return d.wk; });
+    return { min: Math.min.apply(null, ws), max: Math.max.apply(null, ws) };
+  }
+
+  /* Which day the page is currently showing, and which week the strip shows. */
+  function activeDate(){ return VIEW_DATE || (PLAN && PLAN.target) || TODAY_ISO; }
+  var STRIP_WK = null;
+
+  function dayLabel(d){
+    var dt = parseIso(d.date);
+    return dt.toLocaleDateString('en-US',{weekday:'short', month:'short', day:'numeric'});
+  }
+  function dayNote(d){
+    if(d.kind === 'off')  return (d.tag || 'No class');
+    if(d.kind === 'exam') return 'Exam';
+    if(isTBLDay(d))       return tblName(d).replace(/·.*$/,'').trim() || 'TBL';
+    var t = dayTopics(d).filter(function(x){ return /class|lecture/i.test(x.k); })[0];
+    return t ? t.v : 'Class';
+  }
+
+  function renderDayStrip(){
+    var strip = document.getElementById('daystrip');
+    if(!SESSIONS || !SEC_META[secKey]){ strip.hidden = true; return; }
+    strip.hidden = false;
+
+    var act = activeDate();
+    if(STRIP_WK === null) STRIP_WK = weekOf(act);
+    var rng = weekRange();
+    var days = daysInWeek(STRIP_WK);
+
+    document.getElementById('ds-wk').textContent =
+      'Week ' + STRIP_WK + (moduleForWeek(STRIP_WK) ? ' · Module ' + moduleForWeek(STRIP_WK) : '');
+
+    document.getElementById('ds-days').innerHTML = days.map(function(d){
+      var on = (d.date === act);
+      var cls = 'ds-day' + (d.date === TODAY_ISO ? ' is-today' : '') + (d.kind === 'off' ? ' is-off' : '');
+      return '<button class="' + cls + '" type="button" data-day="' + d.date + '" aria-pressed="' + on + '">' +
+               '<span class="dsd-d">' + dayLabel(d) + '</span>' +
+               '<span class="dsd-n">' + dayNote(d) + '</span>' +
+             '</button>';
+    }).join('') || '<p class="ad-none">No class days in this week.</p>';
+
+    document.getElementById('ds-prev').disabled = (STRIP_WK <= rng.min);
+    document.getElementById('ds-next').disabled = (STRIP_WK >= rng.max);
+
+    /* "Back to today" only appears once there is something to go back from. */
+    var offToday = (VIEW_DATE && VIEW_DATE !== TODAY_ISO) || (STRIP_WK !== weekOf(TODAY_ISO));
+    document.getElementById('ds-today').hidden = !offToday;
+
+    var note = document.getElementById('ds-note');
+    if(VIEW_DATE && VIEW_DATE !== TODAY_ISO){
+      var ahead = daysBetween(TODAY, parseIso(VIEW_DATE));
+      note.hidden = false;
+      note.innerHTML = ahead > 0
+        ? '<b>You are looking ahead.</b> This is ' + longDate(parseIso(VIEW_DATE)) +
+          ', ' + ahead + (ahead === 1 ? ' day' : ' days') + ' from today. Nothing here is due yet.'
+        : '<b>You are looking back.</b> This is ' + longDate(parseIso(VIEW_DATE)) +
+          '. Everything for that day is still open, nothing closes.';
+    } else { note.hidden = true; }
+  }
+
+  function goToDay(dateIso){
+    VIEW_DATE = (dateIso === TODAY_ISO) ? null : dateIso;
+    STRIP_WK  = weekOf(dateIso);
+    PLAN = (dateIso === TODAY_ISO) ? buildPlan() : buildPreworkPlan(dateIso);
+    /* keep the address bar honest so the day can be linked or reloaded */
+    try{
+      var u = new URL(window.location.href);
+      if(VIEW_DATE) u.searchParams.set('day', VIEW_DATE); else u.searchParams.delete('day');
+      window.history.replaceState({}, '', u);
+    }catch(e){}
+    render();
+    elAnnounce.textContent = 'Showing ' + longDate(parseIso(dateIso)) + '.';
+    var h = document.getElementById('hl-title');
+    h.setAttribute('tabindex','-1'); h.focus();
+  }
+
+  document.getElementById('ds-days').addEventListener('click', function(e){
+    var b = e.target.closest('[data-day]');
+    if(b) goToDay(b.getAttribute('data-day'));
+  });
+  document.getElementById('ds-prev').addEventListener('click', function(){
+    var rng = weekRange();
+    if(STRIP_WK > rng.min){ STRIP_WK--; renderDayStrip(); postHeight(); }
+  });
+  document.getElementById('ds-next').addEventListener('click', function(){
+    var rng = weekRange();
+    if(STRIP_WK < rng.max){ STRIP_WK++; renderDayStrip(); postHeight(); }
+  });
+  document.getElementById('ds-today').addEventListener('click', function(){
+    goToDay(TODAY_ISO);
+  });
+
+  /* ================================================================
+     EVERYTHING FOR THIS DAY
+
+     The guided steps above say what to do and in what order. This says
+     what EXISTS, in full, straight off the schedule. It is never collapsed
+     and never behind a setting, because a student who cannot start until
+     they have seen the whole shelf should not have to go looking for it or
+     ask for permission to see it.
+
+     Everything in here comes from session-links.js, keyed by date, which is
+     the same source the schedule page reads. If a page is not on the
+     schedule for this day it does not appear here.
+     ================================================================ */
+
+  function adList(items, kind){
+    return '<ul class="link-list">' + items.map(function(it){
+      var ext = !!it.ext;
+      var a = ext ? ' target="_blank" rel="noopener"' : ' target="_top"';
+      return '<li><a class="go" href="' + it.u + '"' + a + '>' +
+               '<span class="go-kind">' + kind + '</span>' +
+               '<span>' + it.t + '</span>' +
+               '<span class="arr" aria-hidden="true">&rarr;</span>' +
+             '</a></li>';
+    }).join('') + '</ul>';
+  }
+
+  function renderAllDay(){
+    var host = document.getElementById('allday');
+    var body = document.getElementById('ad-body');
+    var sub  = document.getElementById('ad-sub');
+    var date = activeDate();
+    var day  = findDay(SEC_META[secKey].track, date);
+    var L    = LINKS ? LINKS[date] : null;
+
+    /* A non-class day has no schedule entry of its own. Rather than showing
+       an empty shelf, point at the day the material actually belongs to. */
+    if(!day || day.kind === 'off' || !L){
+      host.hidden = false;
+      sub.textContent = day && day.kind === 'off'
+        ? 'No class on this day, so there is no material attached to it.'
+        : 'Nothing is scheduled on this date.';
+      body.innerHTML = '<p class="ad-none">' +
+        'The schedule page has every other day of the term. ' +
+        '<a href="bio004-course-calendar.html" target="_top">Open the schedule</a>.</p>';
+      return;
+    }
+
+    host.hidden = false;
+    sub.textContent = 'Straight from the schedule for ' + longDate(parseIso(date)) +
+                      '. This is the complete list, nothing is held back.';
+
+    var out = '';
+
+    var topics = dayTopics(day);
+    if(topics.length){
+      out += '<div class="ad-group"><p class="ad-k">What happens in class</p><ul class="link-list">' +
+        topics.map(function(t){
+          return '<li class="go is-static"><span class="go-kind">' + (t.k || 'In class') + '</span>' +
+                 '<span>' + t.v + '</span></li>';
+        }).join('') + '</ul></div>';
+    }
+
+    var groups = [
+      ['Pre-work sheet', L.sheets,    'Sheet'],
+      ['Notes',          L.notes,     'Notes'],
+      ['Workbooks',      L.workbooks, 'Workbook'],
+      ['Concept videos', L.videos,    'Video'],
+      ['Lab sprints',    L.lab,       'Lab']
+    ];
+    groups.forEach(function(g){
+      if(g[1] && g[1].length){
+        out += '<div class="ad-group"><p class="ad-k">' + g[0] + '</p>' + adList(g[1], g[2]) + '</div>';
+      }
+    });
+    if(L.slides){
+      out += '<div class="ad-group"><p class="ad-k">Lecture slides</p>' + adList([L.slides], 'Slides') + '</div>';
+    }
+
+    body.innerHTML = out || '<p class="ad-none">No material is attached to this day yet.</p>';
+  }
+
   /* ---------- boot ---------- */
   function start(){
     if(!SESSIONS || !SEC_META[secKey]){ askSection(); return; }
-    PLAN = buildPlan();
+    /* A ?day= in the address opens on that day. Anything else opens on today. */
+    if(VIEW_DATE && findDay(SEC_META[secKey].track, VIEW_DATE) && VIEW_DATE !== TODAY_ISO){
+      STRIP_WK = weekOf(VIEW_DATE);
+      PLAN = buildPreworkPlan(VIEW_DATE);
+    } else {
+      VIEW_DATE = null;
+      PLAN = buildPlan();
+      STRIP_WK = weekOf(PLAN.target || TODAY_ISO);
+    }
     render();
     postHeight();
   }
@@ -1375,5 +1687,9 @@
   boot();
 })();
 </script>
+
+<!-- The dock. This page had no way out of it before: a student who landed
+     here could reach the day's material but not the rest of the course. -->
+<script src="bio004-dock.js"></script>
 </body>
 </html>

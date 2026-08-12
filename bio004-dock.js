@@ -124,6 +124,12 @@
     var q = sec ? ('?sec=' + sec) : '';
     var t = [];
 
+    /* First tile in the dock, on purpose. It is the only one that answers
+       "what do I do right now" without the student choosing anything, and
+       it was previously reachable from nowhere at all. */
+    t.push({ g: 'This week', name: 'Today', sub: 'The one thing to do now, and your other class days',
+             url: BASE + 'today.html' + q, icon: 'play', tone: 'gold', qr: 'today', key: 'today',
+             kw: 'today now next what do i do day daily plan tonight prework ahead' });
     t.push({ g: 'This week', name: 'Week ' + cw.wk, sub: cw.pre ? 'Term starts Aug 17' : 'Pre-work, your class days, and lab',
              url: BASE + 'week-' + cw.wk + '.html' + q, icon: 'home', tone: 'navy', key: 'week', kw: 'week hub current detail prework' });
     t.push({ g: 'This week', name: 'Study With Me', sub: 'Join a session this week or start one yourself',
@@ -432,4 +438,32 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build);
   else build();
+
+  /* ============================================================
+     THE READING FORMAT
+
+     bio004-reading-mode.js turns a long page into its own sections
+     with a complete contents list on top. It is loaded from here for
+     one reason: the dock is already on every page, and there is no
+     shared stylesheet in this repo to hang it off instead. One line
+     here reaches the whole course.
+
+     It decides for itself whether a page qualifies, and leaves slide
+     decks, timers and tools alone. Nothing it does removes content:
+     every section stays listed, searchable and one click from open.
+
+     To take it off the whole course, delete this block.
+     ============================================================ */
+  (function loadReadingMode() {
+    if (window.__BIO004_READING__) return;
+    var here = document.querySelector('script[src*="bio004-dock.js"]');
+    var src  = here
+      ? here.getAttribute('src').replace('bio004-dock.js', 'bio004-reading-mode.js')
+      : 'bio004-reading-mode.js';
+    var el = document.createElement('script');
+    el.src = src;
+    el.async = false;
+    el.onerror = function () {};   /* absent file, page carries on unchanged */
+    document.head.appendChild(el);
+  })();
 })();
