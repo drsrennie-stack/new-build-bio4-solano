@@ -963,7 +963,7 @@ function ingestRecall(){
 
 /* evidence method metadata */
 var EVIDENCE=[
-  {k:'retrieval',name:'Retrieval practice',icon:I.recall,desc:'Answer questions from memory across DOK levels.',cta:'Open Spaced Recall',href:'bio004-spaced-recall.html'}, {k:'draw',name:'Draw from memory',icon:I.draw,desc:'Reconstruct the structure with nothing in front of you.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'label',name:'Label diagrams',icon:I.label,desc:'Place every marker on a blank figure.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'cadaver',name:'Cadaver identification',icon:I.eye,desc:'Name the structure on the specimen, not the textbook.',cta:'Mark it done',href:null}, {k:'histo',name:'Histology identification',icon:I.micro,desc:'Identify the tissue at the microscope level.',cta:'Mark it done',href:null}, {k:'explain',name:'Explain aloud',icon:I.speak,desc:'Say it out loud in plain language, no notes.',cta:'Start explaining',href:null}, {k:'teachai',name:'Teach it to an AI',icon:I.teach,desc:'Explain it out loud to a free AI tutor, like teaching a 5-year-old, and let it quiz you back.',cta:'Open AI tutor',href:null}, {k:'teach',name:'Teach another learner',icon:I.teach,desc:'The real test: can someone else follow you?',cta:'Start teaching',href:null}, {k:'clinical',name:'Clinical case',icon:I.clinical,desc:'Apply the structure to a patient scenario.',cta:'Mark it done',href:null}, {k:'questions',name:'Create practice questions',icon:I.build,desc:'Write items that would trip up a classmate.',cta:'Mark it done',href:null}
+  {k:'retrieval',name:'Retrieval practice',icon:I.recall,desc:'Answer questions from memory across DOK levels.',cta:'Open Spaced Recall',href:'#s-recall'}, {k:'draw',name:'Draw from memory',icon:I.draw,desc:'Reconstruct the structure with nothing in front of you.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'label',name:'Label diagrams',icon:I.label,desc:'Place every marker on a blank figure.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'cadaver',name:'Cadaver identification',icon:I.eye,desc:'Name the structure on the specimen, not the textbook.',cta:'Mark it done',href:null}, {k:'histo',name:'Histology identification',icon:I.micro,desc:'Identify the tissue at the microscope level.',cta:'Mark it done',href:null}, {k:'explain',name:'Explain aloud',icon:I.speak,desc:'Say it out loud in plain language, no notes.',cta:'Start explaining',href:null}, {k:'teachai',name:'Teach it to an AI',icon:I.teach,desc:'Explain it out loud to a free AI tutor, like teaching a 5-year-old, and let it quiz you back.',cta:'Open AI tutor',href:null}, {k:'teach',name:'Teach another learner',icon:I.teach,desc:'The real test: can someone else follow you?',cta:'Start teaching',href:null}, {k:'clinical',name:'Clinical case',icon:I.clinical,desc:'Apply the structure to a patient scenario.',cta:'Mark it done',href:null}, {k:'questions',name:'Create practice questions',icon:I.build,desc:'Write items that would trip up a classmate.',cta:'Mark it done',href:null}
 ];
 var EVMAP={};EVIDENCE.forEach(function(e){EVMAP[e.k]=e;});
 
@@ -1245,7 +1245,7 @@ function coachRespond(id,rawText){
       actions=[{label:'Start Today\'s Session',kind:'gold',attr:'data-session="today"'}];break;
     case 'twenty':
       reply='Twenty minutes is enough for a focused repair. I would spend it on your two weakest: <b>'+(w[0]?esc(w[0].c.name):'')+'</b> and <b>'+(w[1]?esc(w[1].c.name):'')+'</b>. Retrieve, then draw from memory. No rereading. Even simpler: go into your weakness cards and clear a few.';
-      actions=[{label:'Run 20-min micro-session',kind:'gold',attr:'data-session="micro"'},{label:'Work weakness cards',attr:'data-toolblank="bio004-spaced-recall.html"'}];break;
+      actions=[{label:'Run 20-min micro-session',kind:'gold',attr:'data-session="micro"'},{label:'Work weakness cards',attr:'data-toolblank="mastery-os-fall-2026.html#s-recall"'}];break;
     case 'prep-lab':
       reply='Lab today is <b>'+nm(lab)+'</b>. Lab is identification under pressure, so practice naming on blank figures and specimens, not reading. Cadaver and histology are your lowest dimensions right now.';
       actions=[{label:'Open Anatomy Canvas',kind:'',attr:'data-tool="mastery-canvas.html"'},{label:'Run lab prep',kind:'primary',attr:'data-session="lab"'}];break;
@@ -1254,7 +1254,7 @@ function coachRespond(id,rawText){
       actions=[{label:'Repair My Weaknesses',kind:'rust',attr:'data-session="repair"'}];break;
     case 'forget':
       reply='Forgetting is the signal, not the failure. The fix is spacing: pull it from memory today, again in two days, then further apart each time it sticks. Rereading feels productive but does not build durable memory. Retrieval does.';
-      actions=[{label:'Open Spaced Recall',kind:'',attr:'data-tool="bio004-spaced-recall.html"'},{label:'Schedule this repair',kind:'primary',attr:'data-session="repair"'}];break;
+      actions=[{label:'Open Spaced Recall',kind:'',attr:'data-tool="mastery-os-fall-2026.html#s-recall"'},{label:'Schedule this repair',kind:'primary',attr:'data-session="repair"'}];break;
     case 'ready':
       reply='You are <b>'+rd+'%</b> ready with <b>'+(exam>0?exam:0)+'</b> days to the practical. '+readinessLine(rd)+' Your lowest dimensions are '+lowDims(3)+'.';
       actions=[{label:'See dashboard',kind:'',attr:'data-scroll="#s-dash"'},{label:'Close the gap',kind:'gold',attr:'data-session="today"'}];break;
@@ -1334,10 +1334,10 @@ function stageStep(st,ctx){
   }else if(st.k==='retrieve'){
     picks.forEach(function(c){items.push('Recall <b>'+esc(c.name)+'</b> cold, no notes');});
     if(ctx.due&&ctx.due.length)items.push(ctx.due.length+' scheduled recall items are due today');
-    actions=[{label:'Open Reps',kind:'primary',attr:'data-tool="bio004-spaced-recall.html"'},{label:'Spaced Recall',attr:'data-tool="bio004-spaced-recall.html"'}];
+    actions=[{label:'Open Reps',kind:'primary',attr:'data-tool="mastery-os-fall-2026.html#s-recall"'},{label:'Spaced Recall',attr:'data-tool="mastery-os-fall-2026.html#s-recall"'}];
   }else if(st.k==='apply'){
     picks.forEach(function(c){items.push('Use <b>'+esc(c.name)+'</b> in a case or on an image');});
-    actions=[{label:'Open Gauntlet',kind:'primary',attr:'data-tool="bio004-spaced-recall.html"'}];
+    actions=[{label:'Open Gauntlet',kind:'primary',attr:'data-tool="mastery-os-fall-2026.html#s-recall"'}];
   }else if(st.k==='teach'){
     picks.forEach(function(c){items.push('Explain <b>'+esc(c.name)+'</b> out loud in plain language');});
     actions=[{label:'Mark taught',kind:'gold',attr:'data-logev="teach:'+(picks[0]?picks[0].id:'')+'"'}];
@@ -1448,7 +1448,7 @@ function proveDo(c,k){
     logEvidence(k,c.id);proveComplete(c,k);
     return;
   }
-  gBody('<div class="g-center"><div class="g-emoji">🎯</div><h3>'+esc(e.name)+'</h3><p>'+esc(PROVE_HOW[k]||e.desc)+'</p><p style="font-size:13px;color:var(--ink-soft)">When you are done, mark it and your mastery moves. Then run spaced recall to keep it.</p><div class="g-actions"><button class="btn gold" id="proveDone">I did it, mark done</button><button class="btn" data-toolblank="bio004-spaced-recall.html#comp='+encodeURIComponent(c.id)+'">Spaced recall</button><button class="btn" id="proveBack">Back</button></div></div>');
+  gBody('<div class="g-center"><div class="g-emoji">🎯</div><h3>'+esc(e.name)+'</h3><p>'+esc(PROVE_HOW[k]||e.desc)+'</p><p style="font-size:13px;color:var(--ink-soft)">When you are done, mark it and your mastery moves. Then run spaced recall to keep it.</p><div class="g-actions"><button class="btn gold" id="proveDone">I did it, mark done</button><button class="btn" data-toolblank="#s-recall?comp='+encodeURIComponent(c.id)+'">Spaced recall</button><button class="btn" id="proveBack">Back</button></div></div>');
   $('#proveDone').onclick=function(){logEvidence(k,c.id);proveComplete(c,k);};
   $('#proveBack').onclick=function(){openProve(c.id);};
 }
@@ -1847,7 +1847,7 @@ function resourceBtns(comp){
     if(r.notes)out+='<button class="btn" data-toolblank="'+r.notes+'">Notes</button>';
     if(out)return out;
   }
-  return '<button class="btn" data-toolblank="bio004-spaced-recall.html">Retrieve in recall</button><button class="btn" data-toolblank="mastery-canvas.html">Draw from memory</button><button class="btn" data-toolblank="bio004-spaced-recall.html">Spaced recall</button>';
+  return '<button class="btn" data-toolblank="mastery-os-fall-2026.html#s-recall">Retrieve in recall</button><button class="btn" data-toolblank="mastery-canvas.html">Draw from memory</button><button class="btn" data-toolblank="mastery-os-fall-2026.html#s-recall">Spaced recall</button>';
 }
 var FOCUS_VALS=[15,20,25,30,35,40,45,50,55,60,75,90];
 function pbField(label,id,vals,cur,labelFn){
@@ -1927,8 +1927,8 @@ function pwMenu(){
 }
 function pwProceed(key,isStudy){
   if(isStudy){pwTiming(key);return;}
-  if(key==='gap'){closeGame();openTool('card-gap-finder.html');return;}
-  if(key==='review'){closeGame();openTool('card-gap-finder.html#review');return;}
+  if(key==='gap'){closeGame();openTool('#s-weak');return;}
+  if(key==='review'){closeGame();openTool('#s-weak#review');return;}
   if(key==='mid'){openMidCram();return;}
   if(key==='cram'){openCram();return;}
 }
@@ -2219,7 +2219,7 @@ function renderCramPlan(fromGap){
     card('Day 3 · Simulate','Everything, under pressure','Rapid retrieval of all of it, then a practice test and a lab race, then re-check the gaps you flagged.','<button class="btn primary" data-cramday="3">Start Day 3</button>')+
     '<div class="g-actions"><button class="btn" data-gameclose>Close</button></div>');
 }
-function cramDay3(){gBody('<div class="g-center"><div class="g-emoji">🏁</div><h3>Day 3: Simulate</h3><p>Rapid active review of everything, then test under pressure, then re-check the gaps you flagged.</p><div class="g-actions"><button class="btn primary" data-cramallpomo>Rapid retrieval</button><button class="btn" data-game="quiz">Practice games</button></div><div class="g-actions"><button class="btn rust" data-cramretest>Re-check my gaps</button><button class="btn" data-toolblank="bio004-spaced-recall.html">Spaced recall</button><button class="btn" data-gameclose>Close</button></div></div>');}
+function cramDay3(){gBody('<div class="g-center"><div class="g-emoji">🏁</div><h3>Day 3: Simulate</h3><p>Rapid active review of everything, then test under pressure, then re-check the gaps you flagged.</p><div class="g-actions"><button class="btn primary" data-cramallpomo>Rapid retrieval</button><button class="btn" data-game="quiz">Practice games</button></div><div class="g-actions"><button class="btn rust" data-cramretest>Re-check my gaps</button><button class="btn" data-toolblank="mastery-os-fall-2026.html#s-recall">Spaced recall</button><button class="btn" data-gameclose>Close</button></div></div>');}
 
 /* ---- Mid-Module Gap Check (shares the 2-per-module cram cap) ---- */
 function moduleKey(){return nextExam().name;}
@@ -2348,8 +2348,8 @@ document.addEventListener('click',function(e){
   if(t.hasAttribute('data-exercise')){openGame(t.getAttribute('data-exercise'));return;}
   if(t.hasAttribute('data-toolblank')){window.open(t.getAttribute('data-toolblank'),'_blank','noopener');return;}
   if(t.hasAttribute('data-cram')){openCram();return;}
-  if(t.hasAttribute('data-gaptopic')){openTool('card-gap-finder.html');return;}
-  if(t.hasAttribute('data-topicreview')){openTool('card-gap-finder.html#review');return;}
+  if(t.hasAttribute('data-gaptopic')){openTool('#s-weak');return;}
+  if(t.hasAttribute('data-topicreview')){openTool('#s-weak#review');return;}
   if(t.hasAttribute('data-setdays')){if(CRAM){CRAM.nDays=+t.getAttribute('data-setdays');renderCramPlan(CRAM.fromGap);}return;}
   if(t.hasAttribute('data-midcram')){openMidCram();return;}
   if(t.hasAttribute('data-pomosetup')){openSessionChooser('today');return;}

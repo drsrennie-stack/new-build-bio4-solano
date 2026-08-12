@@ -104,7 +104,7 @@ section.block:first-of-type{border-top:none}
 .g3{grid-template-columns:repeat(3,1fr)}
 .g4{grid-template-columns:repeat(4,1fr)}
 @media(max-width:860px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.g2.g3.g4{grid-template-columns:1fr}}
+@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}}
 
 /* ---------- Section 1: Today's plan ---------- */
 .plan{background:var(--navy);background:radial-gradient(140% 135% at 12% 0%,#12203f 0%,var(--navy) 48%,var(--near-black) 100%);color:var(--offwhite);border-radius:var(--r-lg);padding:28px;box-shadow:var(--lift)}
@@ -273,7 +273,7 @@ section.block:first-of-type{border-top:none}
 /* instructor config fields */
 .field{margin-bottom:16px}
 .field label{display:block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px}
-.field input.field textarea{width:100%;font-family:inherit;font-size:15px;padding:11px 13px;border:1.5px solid var(--line);border-radius:var(--r);background:var(--offwhite)}
+.field input,.field textarea{width:100%;font-family:inherit;font-size:15px;padding:11px 13px;border:1.5px solid var(--line);border-radius:var(--r);background:var(--offwhite)}
 .field input:focus.field textarea:focus{border-color:var(--gold);outline:none;background:#fff}
 .field .hint{font-size:12px;color:var(--ink-faint);margin-top:5px;font-family:var(--serif);font-style:normal}
 .note{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;font-size:13px;color:var(--ink-soft);line-height:1.5;margin-bottom:18px}
@@ -527,6 +527,7 @@ section.block:first-of-type{border-top:none}
     <li><a href="#s-dash">Dashboard</a></li>
     <li><a href="#s-map">Competencies</a></li>
     <li><a href="#s-weak">Weaknesses</a></li>
+    <li><a href="#s-recall">Recall</a></li>
     <li><a href="#s-flow">Self-Tutoring</a></li>
     <li><a href="#s-evidence">Evidence</a></li>
     <li><a href="#s-skills">Learning Skills</a></li>
@@ -569,6 +570,17 @@ section.block:first-of-type{border-top:none}
         <div><p class="eyebrow">Section 4</p><h2 id="h-weak">Weakness Dashboard</h2><p class="lead">Automatically collected from misses, low confidence, and overdue recall.</p></div>
       </div>
       <div id="weakWrap"><!-- JS --></div>
+    </div>
+  </section>
+
+  <!-- SPACED RECALL, in the app rather than beside it -->
+  <section class="block" id="s-recall" aria-labelledby="h-recall" tabindex="-1">
+    <div class="wrap">
+      <h2 id="h-recall">Recall</h2>
+      <p class="note">Every card in the course is here, and the schedule decides which ones you
+        see. Answer how sure you are before you look, because being sure and being wrong is the
+        gap that costs you marks, and it is the one you cannot feel from the inside.</p>
+      <div id="recallMount"></div>
     </div>
   </section>
 
@@ -1108,7 +1120,7 @@ function ingestRecall(){
 
 /* evidence method metadata */
 var EVIDENCE=[
-  {k:'retrieval',name:'Retrieval practice',icon:I.recall,desc:'Answer questions from memory across DOK levels.',cta:'Open Spaced Recall',href:'bio004-spaced-recall.html'}, {k:'weakness',name:'Weak spot dashboard',icon:I.recall,desc:'See which competencies your card answers say are weakest, ranked.',cta:'Open the weak spot board',href:'bio004-spaced-recall-weakness-dashboard.html'}, {k:'draw',name:'Draw from memory',icon:I.draw,desc:'Reconstruct the structure with nothing in front of you.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'label',name:'Label diagrams',icon:I.label,desc:'Place every marker on a blank figure.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'cadaver',name:'Cadaver identification',icon:I.eye,desc:'Name the structure on the specimen, not the textbook.',cta:'Mark it done',href:null}, {k:'histo',name:'Histology identification',icon:I.micro,desc:'Identify the tissue at the microscope level.',cta:'Mark it done',href:null}, {k:'explain',name:'Explain aloud',icon:I.speak,desc:'Say it out loud in plain language, no notes.',cta:'Start explaining',href:null}, {k:'teachai',name:'Teach it to an AI',icon:I.teach,desc:'Explain it out loud to a free AI tutor, like teaching a 5-year-old, and let it quiz you back.',cta:'Open AI tutor',href:null}, {k:'teach',name:'Teach another learner',icon:I.teach,desc:'The real test: can someone else follow you?',cta:'Start teaching',href:null}, {k:'clinical',name:'Clinical case',icon:I.clinical,desc:'Apply the structure to a patient scenario.',cta:'Mark it done',href:null}, {k:'questions',name:'Create practice questions',icon:I.build,desc:'Write items that would trip up a classmate.',cta:'Mark it done',href:null}
+  {k:'retrieval',name:'Retrieval practice',icon:I.recall,desc:'Answer questions from memory across DOK levels.',cta:'Open Spaced Recall',href:'#s-recall'}, {k:'weakness',name:'Weak spot dashboard',icon:I.recall,desc:'See which competencies your card answers say are weakest, ranked.',cta:'Open the weak spot board',href:'#s-weak'}, {k:'draw',name:'Draw from memory',icon:I.draw,desc:'Reconstruct the structure with nothing in front of you.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'label',name:'Label diagrams',icon:I.label,desc:'Place every marker on a blank figure.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'cadaver',name:'Cadaver identification',icon:I.eye,desc:'Name the structure on the specimen, not the textbook.',cta:'Mark it done',href:null}, {k:'histo',name:'Histology identification',icon:I.micro,desc:'Identify the tissue at the microscope level.',cta:'Mark it done',href:null}, {k:'explain',name:'Explain aloud',icon:I.speak,desc:'Say it out loud in plain language, no notes.',cta:'Start explaining',href:null}, {k:'teachai',name:'Teach it to an AI',icon:I.teach,desc:'Explain it out loud to a free AI tutor, like teaching a 5-year-old, and let it quiz you back.',cta:'Open AI tutor',href:null}, {k:'teach',name:'Teach another learner',icon:I.teach,desc:'The real test: can someone else follow you?',cta:'Start teaching',href:null}, {k:'clinical',name:'Clinical case',icon:I.clinical,desc:'Apply the structure to a patient scenario.',cta:'Mark it done',href:null}, {k:'questions',name:'Create practice questions',icon:I.build,desc:'Write items that would trip up a classmate.',cta:'Mark it done',href:null}
 ];
 var EVMAP={};EVIDENCE.forEach(function(e){EVMAP[e.k]=e;});
 
@@ -1531,7 +1543,7 @@ function coachRespond(id,rawText){
       actions=[{label:'Start Today\'s Session',kind:'gold',attr:'data-session="today"'}];break;
     case 'twenty':
       reply='Twenty minutes is enough for a focused repair. I would spend it on your two weakest: <b>'+(w[0]?esc(w[0].c.name):'')+'</b> and <b>'+(w[1]?esc(w[1].c.name):'')+'</b>. Retrieve, then draw from memory. No rereading. Even simpler: go into your weakness cards and clear a few.';
-      actions=[{label:'Run 20-min micro-session',kind:'gold',attr:'data-session="micro"'},{label:'Work weakness cards',attr:'data-toolblank="bio004-spaced-recall.html"'}];break;
+      actions=[{label:'Run 20-min micro-session',kind:'gold',attr:'data-session="micro"'},{label:'Work weakness cards',attr:'data-toolblank="#s-recall"'}];break;
     case 'prep-lab':
       reply='Lab today is <b>'+nm(lab)+'</b>. Lab is identification under pressure, so practice naming on blank figures and specimens, not reading. Cadaver and histology are your lowest dimensions right now.';
       actions=[{label:'Open Anatomy Canvas',kind:'',attr:'data-tool="mastery-canvas.html"'},{label:'Run lab prep',kind:'primary',attr:'data-session="lab"'}];break;
@@ -1540,7 +1552,7 @@ function coachRespond(id,rawText){
       actions=[{label:'Repair My Weaknesses',kind:'rust',attr:'data-session="repair"'}];break;
     case 'forget':
       reply='Forgetting is the signal, not the failure. The fix is spacing: pull it from memory today, again in two days, then further apart each time it sticks. Rereading feels productive but does not build durable memory. Retrieval does.';
-      actions=[{label:'Open Spaced Recall',kind:'',attr:'data-tool="bio004-spaced-recall.html"'},{label:'Schedule this repair',kind:'primary',attr:'data-session="repair"'}];break;
+      actions=[{label:'Open Spaced Recall',kind:'',attr:'data-tool="#s-recall"'},{label:'Schedule this repair',kind:'primary',attr:'data-session="repair"'}];break;
     case 'ready':
       reply='You are <b>'+rd+'%</b> ready with <b>'+(exam>0?exam:0)+'</b> days to the practical. '+readinessLine(rd)+' Your lowest dimensions are '+lowDims(3)+'.';
       actions=[{label:'See dashboard',kind:'',attr:'data-scroll="#s-dash"'},{label:'Close the gap',kind:'gold',attr:'data-session="today"'}];break;
@@ -1620,10 +1632,10 @@ function stageStep(st,ctx){
   }else if(st.k==='retrieve'){
     picks.forEach(function(c){items.push('Recall <b>'+esc(c.name)+'</b> cold, no notes');});
     if(ctx.due&&ctx.due.length)items.push(ctx.due.length+' scheduled recall items are due today');
-    actions=[{label:'Open Reps',kind:'primary',attr:'data-tool="bio004-spaced-recall.html"'},{label:'Spaced Recall',attr:'data-tool="bio004-spaced-recall.html"'}];
+    actions=[{label:'Open Reps',kind:'primary',attr:'data-tool="#s-recall"'},{label:'Spaced Recall',attr:'data-tool="#s-recall"'}];
   }else if(st.k==='apply'){
     picks.forEach(function(c){items.push('Use <b>'+esc(c.name)+'</b> in a case or on an image');});
-    actions=[{label:'Open Gauntlet',kind:'primary',attr:'data-tool="bio004-spaced-recall.html"'}];
+    actions=[{label:'Open Gauntlet',kind:'primary',attr:'data-tool="#s-recall"'}];
   }else if(st.k==='teach'){
     picks.forEach(function(c){items.push('Explain <b>'+esc(c.name)+'</b> out loud in plain language');});
     actions=[{label:'Mark taught',kind:'gold',attr:'data-logev="teach:'+(picks[0]?picks[0].id:'')+'"'}];
@@ -1734,7 +1746,7 @@ function proveDo(c,k){
     logEvidence(k,c.id);proveComplete(c,k);
     return;
   }
-  gBody('<div class="g-center"><div class="g-emoji">🎯</div><h3>'+esc(e.name)+'</h3><p>'+esc(PROVE_HOW[k]||e.desc)+'</p><p style="font-size:13px;color:var(--ink-soft)">When you are done, mark it and your mastery moves. Then run spaced recall to keep it.</p><div class="g-actions"><button class="btn gold" id="proveDone">I did it, mark done</button><button class="btn" data-toolblank="bio004-spaced-recall.html#comp='+encodeURIComponent(c.id)+'">Spaced recall</button><button class="btn" id="proveBack">Back</button></div></div>');
+  gBody('<div class="g-center"><div class="g-emoji">🎯</div><h3>'+esc(e.name)+'</h3><p>'+esc(PROVE_HOW[k]||e.desc)+'</p><p style="font-size:13px;color:var(--ink-soft)">When you are done, mark it and your mastery moves. Then run spaced recall to keep it.</p><div class="g-actions"><button class="btn gold" id="proveDone">I did it, mark done</button><button class="btn" data-toolblank="#s-recall?comp='+encodeURIComponent(c.id)+'">Spaced recall</button><button class="btn" id="proveBack">Back</button></div></div>');
   $('#proveDone').onclick=function(){logEvidence(k,c.id);proveComplete(c,k);};
   $('#proveBack').onclick=function(){openProve(c.id);};
 }
@@ -2074,7 +2086,11 @@ function drawGuess(){
 /* ---- Signature solo exercises ---- */
 function mindMap(){
   gSet('Mind-Map then Recall','Signature exercise');
-  var w=weaknesses();var c=(w[0]&&w[0].c)||allComps()[0].c;CUR_EX=c;var step=0;
+  var w=weaknesses();var c=(w[0]&&w[0].c)||allComps()[0].c;CUR_EX=c;CUR_CONF=null;
+  confGate(c,function(){mmTask(c);});
+}
+function mmTask(c){
+  var step=0;
   var steps=[
     {emoji:'🗺️',h:'Map it from your notes',p:'Open your notes for '+c.name+'. On paper or a whiteboard, build a mind-map: put '+c.name+' in the centre and branch out every related structure, term, and connection you can find. Take about five minutes.',cta:'I have mapped it'}, {emoji:'🧠',h:'Now rebuild it from memory',p:'Close your notes. On a fresh page, redraw the whole mind-map from memory, no peeking. This retrieval is what builds durable memory.',cta:'I have rebuilt it'}, {emoji:'🔍',h:'Compare and score',p:'Put the two side by side. What did you miss? Those gaps are your next repair targets for '+c.name+'. How much came back?',cta:null}
   ];
@@ -2090,7 +2106,10 @@ function exerciseComp(){
 }
 function brainDump(){
   gSet('Blank-Page Brain Dump','Signature exercise');
-  var c=exerciseComp();CUR_EX=c;
+  var c=exerciseComp();CUR_EX=c;CUR_CONF=null;
+  confGate(c,function(){bdTask(c);});
+}
+function bdTask(c){
   gBody('<div class="g-qmeta"><span>Everything you know about</span><span>'+esc(c.name)+'</span></div><p class="g-q">Write everything you can recall about '+esc(c.name)+'. No notes. Keep going until you run dry.</p><textarea id="bdBox" style="width:100%;min-height:170px;font-family:inherit;font-size:15px;padding:13px;border:1.5px solid var(--line);border-radius:var(--r);background:var(--offwhite)" placeholder="Start writing..."></textarea><div class="g-actions"><button class="btn gold" id="bdDone">I am done, check myself</button></div>');
   var box=$('#bdBox');if(box)box.focus();
   $('#bdDone').onclick=function(){bdCheck(c,($('#bdBox').value.trim().match(/\S+/g)||[]).length);};
@@ -2152,7 +2171,7 @@ function resourceBtns(comp){
     if(r.notes)out+='<button class="btn" data-toolblank="'+r.notes+'">Notes</button>';
     if(out)return out;
   }
-  return '<button class="btn" data-toolblank="bio004-spaced-recall.html">Retrieve in recall</button><button class="btn" data-toolblank="mastery-canvas.html">Draw from memory</button><button class="btn" data-toolblank="bio004-spaced-recall.html">Spaced recall</button>';
+  return '<button class="btn" data-toolblank="#s-recall">Retrieve in recall</button><button class="btn" data-toolblank="mastery-canvas.html">Draw from memory</button><button class="btn" data-toolblank="#s-recall">Spaced recall</button>';
 }
 var FOCUS_VALS=[15,20,25,30,35,40,45,50,55,60,75,90];
 function pbField(label,id,vals,cur,labelFn){
@@ -2232,8 +2251,8 @@ function pwMenu(){
 }
 function pwProceed(key,isStudy){
   if(isStudy){pwTiming(key);return;}
-  if(key==='gap'){closeGame();openTool('card-gap-finder.html');return;}
-  if(key==='review'){closeGame();openTool('card-gap-finder.html#review');return;}
+  if(key==='gap'){closeGame();openTool('#s-weak');return;}
+  if(key==='review'){closeGame();openTool('#s-weak#review');return;}
   if(key==='mid'){openMidCram();return;}
   if(key==='cram'){openCram();return;}
 }
@@ -2577,7 +2596,7 @@ function renderCramPlan(fromGap){
     card('Day 3 · Simulate','Everything, under pressure','Rapid retrieval of all of it, then a practice test and a lab race, then re-check the gaps you flagged.','<button class="btn primary" data-cramday="3">Start Day 3</button>')+
     '<div class="g-actions"><button class="btn" data-gameclose>Close</button></div>');
 }
-function cramDay3(){gBody('<div class="g-center"><div class="g-emoji">🏁</div><h3>Day 3: Simulate</h3><p>Rapid active review of everything, then test under pressure, then re-check the gaps you flagged.</p><div class="g-actions"><button class="btn primary" data-cramallpomo>Rapid retrieval</button><button class="btn" data-game="quiz">Practice games</button></div><div class="g-actions"><button class="btn rust" data-cramretest>Re-check my gaps</button><button class="btn" data-toolblank="bio004-spaced-recall.html">Spaced recall</button><button class="btn" data-gameclose>Close</button></div></div>');}
+function cramDay3(){gBody('<div class="g-center"><div class="g-emoji">🏁</div><h3>Day 3: Simulate</h3><p>Rapid active review of everything, then test under pressure, then re-check the gaps you flagged.</p><div class="g-actions"><button class="btn primary" data-cramallpomo>Rapid retrieval</button><button class="btn" data-game="quiz">Practice games</button></div><div class="g-actions"><button class="btn rust" data-cramretest>Re-check my gaps</button><button class="btn" data-toolblank="#s-recall">Spaced recall</button><button class="btn" data-gameclose>Close</button></div></div>');}
 
 /* ---- Mid-Module Gap Check (shares the 2-per-module cram cap) ---- */
 function moduleKey(){return nextExam().name;}
@@ -2647,41 +2666,154 @@ function renderGrades(){
   $('#grCoach').onclick=function(){closeGame();var el=$('#s-coach');if(el)el.scrollIntoView({behavior:'smooth'});coachSay('you','How are my grades trending?');coachRespond('grades','');};
 }
 
-function drawKnow(){
-  gSet('Draw it to Know it','Given, not Googled');
-  var c=exerciseComp();CUR_EX=c;
-  var rub=rubricFor(c)||[];var shown=0;
-  function render(){
-    var revealed=rub.slice(0,shown);
-    var b='<div class="g-qmeta"><span>Draw or mind-map from memory</span><span>'+esc(c.name)+'</span></div>';
-    b+='<p class="g-q">On paper or the drawing canvas, draw <b>'+esc(c.name)+'</b> from memory, or build a mini mind-map of it. No notes. Put it in the centre and branch out every part and connection you can.</p>';
-    /* If this competency has a written checklist, send them to the
-       scored flow: big topic, confidence BEFORE the attempt, then the
-       list to tick. That is the version whose result reaches the weak
-       spot board. The blank canvas stays for everything else. */
-    /* The drawing bank is keyed by HER worksheet assignments now, not by
-       competency, so the lookup goes through comps. A competency can be
-       covered by more than one drawing; take the first. */
-    var dw=null;
-    (window.BIO004_DRAW||[]).forEach(function(d){
-      if(!dw && (d.comps||[]).indexOf(c.id)>=0) dw=d;
-    });
-    b+='<div class="g-actions" style="margin-bottom:12px">';
-    if(dw){b+='<button class="btn primary" data-toolblank="bio004-draw.html?id='+encodeURIComponent(c.id)+
-      '">Score drawing '+esc(dw.code)+', '+esc(dw.name)+'</button>';}
-    b+='<button class="btn" data-toolblank="mastery-canvas.html?comp='+encodeURIComponent(c.id)+'&title='+encodeURIComponent(c.name)+'">Draw on canvas (iPad friendly)</button></div>';
-    if(rub.length){
-      b+='<div class="reference-box"><h4>Self-check, should include ('+revealed.length+' of '+rub.length+')</h4><ul>'+(revealed.length?revealed.map(function(x){return '<li>'+esc(x)+'</li>';}).join(''):'<li style="list-style:none;color:var(--ink-faint)">Hidden. Draw or map it first, then reveal to grade yourself.</li>')+'</ul></div>';
-      b+='<div class="g-actions">'+(shown<rub.length?'<button class="btn" id="dkHint">Reveal one</button><button class="btn" id="dkAll">Show full checklist</button>':'<span style="color:var(--ok);font-weight:700;align-self:center">Full checklist shown, grade yourself.</span>')+'</div>';
-    }else{
-      b+='<p style="color:var(--ink-soft)">Check your work against your notes, the atlas, and the structure list.</p>';
-    }
-    b+='<div class="g-actions"><span style="align-self:center;font-weight:700;margin-right:4px">How complete were you?</span><button class="btn" data-mmscore="2">Patchy</button><button class="btn" data-mmscore="4">Solid</button><button class="btn gold" data-mmscore="6">Thorough</button></div>';
-    gBody(b);
-    var h=$('#dkHint');if(h)h.onclick=function(){shown=Math.min(rub.length,shown+1);render();};
-    var a=$('#dkAll');if(a)a.onclick=function(){shown=rub.length;render();};
+
+/* ============================================================
+   TASK MODE, added 2026-08-11.
+
+   Every exercise used to say the same thing: "draw it from memory, or
+   build a mini mind-map of it." That is wrong for a good third of the
+   map. You cannot draw "Match GERD, hiatal hernia and appendicitis to
+   the structure affected", and asking a student to mind-map the
+   anatomical position is busywork.
+
+   So the ask is now chosen from the competency itself, in this order:
+
+     1. If one of HER 69 worksheet drawings covers it, it is DRAW, and
+        the ask uses HER drawing name and HER instruction paragraph
+        verbatim. 115 of 196 competencies land here.
+     2. Otherwise the can-do statement decides:
+          disorder / match / sort lists      -> MAP
+          "Trace ..." / pathway / in order   -> TRACE, an ordered flow
+          "Compare ..." / "Distinguish ..."  -> COMPARE, two columns
+     3. Otherwise the facets decide. Anything with a cadaver, label,
+        histology, imaging or draw facet is a real structure, so DRAW.
+        Lecture-only concepts fall to MAP.
+   ============================================================ */
+var CUR_CONF=null;
+
+function drawingForComp(comp){
+  var D=window.BIO004_DRAW||[];
+  if(!comp)return null;
+  for(var i=0;i<D.length;i++){
+    if((D[i].comps||[]).indexOf(comp.id)>=0 && D[i].items && D[i].items.length) return D[i];
   }
-  render();
+  return null;
+}
+function taskModeFor(comp){
+  if(!comp)return 'MAP';
+  if(drawingForComp(comp))return 'DRAW';
+  var can=(comp.can||'').toLowerCase(), nm=(comp.name||'').toLowerCase(), f=comp.facets||[];
+  var visual=f.indexOf('cadaver')>-1||f.indexOf('label')>-1||f.indexOf('histology')>-1||f.indexOf('imaging')>-1||f.indexOf('draw')>-1;
+  if(/disorder/.test(can+' '+nm))return 'MAP';
+  if(/^trace|\bpathway\b|\bin order\b/.test(can))return 'TRACE';
+  if(/^compare|^distinguish/.test(can))return visual?'DRAW':'COMPARE';
+  if(/^classify|^sort|^match|^name common|^define/.test(can))return visual?'DRAW':'MAP';
+  return visual?'DRAW':'MAP';
+}
+function taskCopy(comp){
+  var mode=taskModeFor(comp), d=drawingForComp(comp), n=esc(comp.name);
+  if(mode==='DRAW'){
+    return {mode:mode,eyebrow:'Draw it from memory, then check',
+      title:d?('Draw '+esc(d.name)):('Draw '+n),
+      prompt:d
+        ? esc(d.standard||('Draw '+d.name+' from memory. No notes.'))
+        : ('Draw <b>'+n+'</b> from memory. No notes. Get the parts down first, then label them.'),
+      canvas:'Draw on canvas (iPad friendly)'};
+  }
+  if(mode==='TRACE'){
+    return {mode:mode,eyebrow:'Trace it from memory, then check',
+      title:'Trace '+n,
+      prompt:'Trace <b>'+n+'</b> from memory as a flow, in order, start to finish. Boxes and arrows, not a picture. Getting the order right is the whole point.',
+      canvas:'Build the flow on canvas'};
+  }
+  if(mode==='COMPARE'){
+    return {mode:mode,eyebrow:'Build it from memory, then check',
+      title:'Compare, side by side: '+n,
+      prompt:'Two columns from memory, one for each thing being compared, one row per feature. <b>'+n+'</b>. A table beats a drawing here, because the whole competency is the difference between them.',
+      canvas:'Build the table on canvas'};
+  }
+  return {mode:'MAP',eyebrow:'Map it from memory, then check',
+    title:'Mind-map '+n,
+    prompt:'<b>'+n+'</b> is a set of relationships, not a picture, so map it instead of drawing it. Put it in the centre and branch out every term, category and connection you can. No notes.',
+    canvas:'Map it on canvas'};
+}
+
+/* ------------------------------------------------------------
+   CONFIDENCE BEFORE THE ATTEMPT.
+
+   Rated first, deliberately, because a high-confidence wrong answer is
+   the single most useful thing this app can find. A student who knows
+   they are shaky will study. A student who is certain and wrong will
+   not, until something shows them. Confidence rated afterwards is
+   contaminated by having just seen the checklist.
+   ------------------------------------------------------------ */
+function confGate(comp,next){
+  var t=taskCopy(comp);
+  gBody('<div class="g-qmeta"><span>Before you start</span><span>'+esc(comp.name)+'</span></div>'+
+    '<p class="g-q">How well do you think you know <b>'+esc(comp.name)+'</b> right now?</p>'+
+    '<p style="color:var(--ink-soft);margin:-6px 0 16px;font-size:14.5px">Answer before you attempt it. Being sure and being right are two different things, and the gap between them is what this is looking for.</p>'+
+    '<div class="g-actions">'+
+      '<button class="btn" data-precf="low">Shaky</button>'+
+      '<button class="btn" data-precf="med">Fairly sure</button>'+
+      '<button class="btn gold" data-precf="high">Confident</button>'+
+    '</div>');
+  $$('#gameBody [data-precf]').forEach(function(b){
+    b.onclick=function(){CUR_CONF=b.getAttribute('data-precf');next();};
+  });
+}
+function confChip(){
+  if(!CUR_CONF)return '';
+  var L={low:'Shaky',med:'Fairly sure',high:'Confident'};
+  return '<span class="proto-badge" style="color:var(--ink-soft);background:var(--navy-tint);border-color:var(--line)">Went in: '+L[CUR_CONF]+'</span>';
+}
+/* Log the calibration pair so a high-confidence miss is recoverable later. */
+function logCalibration(comp,score){
+  if(!comp)return;
+  try{
+    var K='bio004-evidence-v1',log=JSON.parse(localStorage.getItem(K)||'[]');
+    if(!Array.isArray(log))log=[];
+    log.push({comp:comp.id,source:'draw',got:score,of:6,conf:CUR_CONF||null,mode:taskModeFor(comp),at:new Date().toISOString()});
+    localStorage.setItem(K,JSON.stringify(log));
+  }catch(e){}
+}
+function calibrationToast(score){
+  if(CUR_CONF==='high'&&score<=2)return 'Logged. You went in confident and came out patchy, which is exactly the gap worth chasing. This one is now near the top of your weak spot board.';
+  if(CUR_CONF==='low'&&score>=6)return 'Logged. You knew that better than you thought. Trust yourself a little more on this one.';
+  return 'Exercise logged. Mastery updated.';
+}
+
+function drawKnow(){
+  var c=exerciseComp();CUR_EX=c;CUR_CONF=null;
+  var t=taskCopy(c);
+  gSet(t.title,t.eyebrow);
+  confGate(c,function(){ task(); });
+
+  function task(){
+    var d=drawingForComp(c);
+    var rub=rubricFor(c)||[];var shown=0;
+    function render(){
+      var revealed=rub.slice(0,shown);
+      var b='<div class="g-qmeta"><span>'+esc(t.eyebrow)+'</span><span>'+esc(c.name)+'</span></div>';
+      b+='<p class="g-q">'+t.prompt+'</p>';
+      if(confChip())b+='<div style="margin:-4px 0 12px">'+confChip()+'</div>';
+      b+='<div class="g-actions" style="margin-bottom:12px">';
+      if(d){
+        b+='<button class="btn primary" data-toolblank="mastery-canvas.html?id='+encodeURIComponent(c.id)+'">Score drawing '+esc(d.code)+'</button>';
+      }
+      b+='<button class="btn" data-toolblank="mastery-canvas.html?comp='+encodeURIComponent(c.id)+'&title='+encodeURIComponent(c.name)+'&conf='+encodeURIComponent(CUR_CONF||'')+'">'+esc(t.canvas)+'</button></div>';
+      if(rub.length){
+        b+='<div class="reference-box"><h4>Self-check, should include ('+revealed.length+' of '+rub.length+')</h4><ul>'+(revealed.length?revealed.map(function(x){return '<li>'+esc(x)+'</li>';}).join(''):'<li style="list-style:none;color:var(--ink-faint)">Hidden. Do it first, then reveal to grade yourself.</li>')+'</ul></div>';
+        b+='<div class="g-actions">'+(shown<rub.length?'<button class="btn" id="dkHint">Reveal one</button><button class="btn" id="dkAll">Show full checklist</button>':'<span style="color:var(--ok);font-weight:700;align-self:center">Full checklist shown, grade yourself.</span>')+'</div>';
+      }else{
+        b+='<p style="color:var(--ink-soft)">Check your work against your notes, the atlas, and the structure list.</p>';
+      }
+      b+='<div class="g-actions"><span style="align-self:center;font-weight:700;margin-right:4px">How complete were you?</span><button class="btn" data-mmscore="2">Patchy</button><button class="btn" data-mmscore="4">Solid</button><button class="btn gold" data-mmscore="6">Thorough</button></div>';
+      gBody(b);
+      var h=$('#dkHint');if(h)h.onclick=function(){shown=Math.min(rub.length,shown+1);render();};
+      var a=$('#dkAll');if(a)a.onclick=function(){shown=rub.length;render();};
+    }
+    render();
+  }
 }
 var EXERCISES=[
   {k:'drawknow',name:'Draw it to Know it',icon:I.draw,tag:'From memory',desc:'Draw a structure or build a mini mind-map from memory, then reveal a self-check list to grade your own coverage.'}, {k:'mindmap',name:'Mind-Map then Recall',icon:I.draw,tag:'Notes to memory',desc:'Map a section from your notes, then rebuild the mind-map from memory. The gap is your repair list.'}, {k:'braindump',name:'Blank-Page Brain Dump',icon:I.recall,tag:'Free recall',desc:'Write everything you know about a competency cold, then check what you missed.'}
@@ -2730,8 +2862,8 @@ document.addEventListener('click',function(e){
   if(t.hasAttribute('data-exercise')){openGame(t.getAttribute('data-exercise'));return;}
   if(t.hasAttribute('data-toolblank')){window.open(t.getAttribute('data-toolblank'),'_blank','noopener');return;}
   if(t.hasAttribute('data-cram')){openCram();return;}
-  if(t.hasAttribute('data-gaptopic')){openTool('card-gap-finder.html');return;}
-  if(t.hasAttribute('data-topicreview')){openTool('card-gap-finder.html#review');return;}
+  if(t.hasAttribute('data-gaptopic')){openTool('#s-weak');return;}
+  if(t.hasAttribute('data-topicreview')){openTool('#s-weak#review');return;}
   if(t.hasAttribute('data-setdays')){if(CRAM){CRAM.nDays=+t.getAttribute('data-setdays');renderCramPlan(CRAM.fromGap);}return;}
   if(t.hasAttribute('data-midcram')){openMidCram();return;}
   if(t.hasAttribute('data-pomosetup')){openSessionChooser('today');return;}
@@ -2748,7 +2880,7 @@ document.addEventListener('click',function(e){
   if(t.hasAttribute('data-gradedel')){S.grades.splice(+t.getAttribute('data-gradedel'),1);save();renderGrades();return;}
   if(t.hasAttribute('data-gameclose')){closeGame();return;}
   if(t.hasAttribute('data-drawscore')){bumpDim('draw',+t.getAttribute('data-drawscore'));bumpSkill('Retrieval',2);save();renderAll();closeGame();toast('Drawing logged. Draw-to-Know-It updated.');return;}
-  if(t.hasAttribute('data-mmscore')){if(CUR_EX){bumpComp(CUR_EX,+t.getAttribute('data-mmscore'));bumpSkill('Retrieval',3);bumpSkill('Gap Identification',2);}save();renderAll();closeGame();toast('Exercise logged. Mastery updated.');return;}
+  if(t.hasAttribute('data-mmscore')){var sc=+t.getAttribute('data-mmscore');var msg='Exercise logged. Mastery updated.';if(CUR_EX){bumpComp(CUR_EX,sc);bumpSkill('Retrieval',3);bumpSkill('Gap Identification',2);logCalibration(CUR_EX,sc);msg=calibrationToast(sc);}CUR_CONF=null;save();renderAll();closeGame();toast(msg);return;}
   if(t.hasAttribute('data-session')){var k=t.getAttribute('data-session');if(k==='stage')return;if(k==='today'||k==='repair')openSessionChooser(k);else openSession(k);}
   else if(t.hasAttribute('data-prove')){openProve(t.getAttribute('data-prove'));}
   else if(t.hasAttribute('data-tool')){
@@ -2904,6 +3036,8 @@ else{renderAll();}
 })();
 </script>
 
+<script src="bio004-card-bank.js"></script>
+<script src="recall-view.js"></script>
 <script src="bio004-dock.js"></script>
 </body>
 </html>
