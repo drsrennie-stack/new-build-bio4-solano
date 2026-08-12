@@ -4,7 +4,7 @@
    falling back to the cached copy when they are offline. */
 const CACHE = "recall-rx-v1";
 const CORE = [
-  "./bio004-spaced-recall.html",
+  "./mastery-os-fall-2026.html",
   "./course-content.js",
   "./manifest.webmanifest",
   "./recall-rx-192.png",
@@ -38,7 +38,7 @@ self.addEventListener("fetch", function (e) {
       caches.open(CACHE).then(function (c) { c.put(req, copy); });
       return res;
     }).catch(function () {
-      return caches.match(req).then(function (r) { return r || caches.match("./bio004-spaced-recall.html"); });
+      return caches.match(req).then(function (r) { return r || caches.match("./mastery-os-fall-2026.html"); });
     })
   );
 });
