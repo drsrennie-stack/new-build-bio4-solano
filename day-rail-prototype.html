@@ -1,20 +1,28 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mastery OS day rail, working prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#08101F;--tile:#0B1530;--tint:#EDF1F3;--gold:#C9A14A;--gold-pale:#EBCE86;
- --terra:#C2734D;--terra-deep:#8B3A2E;--white:#fff;--off:#FAFAF9;--line:rgba(8,16,31,.14);
+:root{--navy:#08101F;--tile:#0B1530;--tint:#EDF1F3;--gold:#B8924A;--gold-pale:#EBCE86;--gold-icon:#C9A14A;
+ --terra:#C2734D;--terra-dark:#A0522D;--terra-deep:#8B3A2E;--white:#fff;--off:#FAFAF9;--line:rgba(8,16,31,.14);
  --ink:#08101F;--ink-soft:#2A3949;
- --disp:'Plus Jakarta Sans',system-ui,-apple-system,Segoe UI,sans-serif;--mono:ui-monospace,Menlo,monospace}
+ --disp:'Plus Jakarta Sans',system-ui,-apple-system,Segoe UI,sans-serif;
+ /* DM Sans for eyebrows, per palettes.md. There is no monospace in the
+    brand: mastery-os aliases --mono to Plus Jakarta Sans, so the mock's
+    Menlo fallback was the reason every small label looked wrong. */
+ --eyebrow:'DM Sans','Plus Jakarta Sans',system-ui,sans-serif;
+ --mono:'Plus Jakarta Sans',system-ui,sans-serif}
 *{box-sizing:border-box}
 body{margin:0;background:var(--off);font-family:var(--disp);color:var(--ink);line-height:1.5}
 .wrap{max-width:960px;margin:0 auto;padding:26px 20px 80px}
-.eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--terra-deep);margin:0 0 6px}
+.eyebrow{font-family:var(--eyebrow);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--terra-dark);margin:0 0 6px}
 .railhead{background:var(--navy);color:#fff;border-radius:18px;padding:22px 24px;margin:0 0 18px}
 .railhead .eyebrow{color:var(--gold-pale)}
-.railhead h1{font-size:25px;font-weight:800;margin:0 0 6px;color:#fff}
+.railhead h1{font-family:var(--disp);font-size:26px;font-weight:800;letter-spacing:-.015em;margin:0 0 6px;color:#fff}
 .railhead p{margin:0;font-size:14px;color:#E7EAEE;max-width:64ch}
-.meter{display:flex;align-items:center;gap:12px;margin-top:16px;font-family:var(--mono);font-size:11.5px;color:var(--gold-pale)}
+.meter{display:flex;align-items:center;gap:12px;margin-top:16px;font-family:var(--eyebrow);font-size:11.5px;color:var(--gold-pale)}
 .meter .bar{flex:1;height:7px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden}
 .meter .bar>span{display:block;height:100%;width:0;background:var(--gold);transition:width .5s ease}
 
@@ -22,14 +30,14 @@ body{margin:0;background:var(--off);font-family:var(--disp);color:var(--ink);lin
 .mbtn{font:inherit;font-size:12.5px;font-weight:700;padding:7px 13px;border-radius:99px;cursor:pointer;
   border:1.5px solid rgba(8,16,31,.28);background:#fff;color:var(--ink)}
 .mbtn.on{background:var(--navy);border-color:var(--navy);color:#fff}
-.pill-catch{position:absolute;top:10px;left:10px;font-family:var(--mono);font-size:9.5px;font-weight:800;
+.pill-catch{position:absolute;top:10px;left:10px;font-family:var(--eyebrow);font-size:9.5px;font-weight:800;
   letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:99px;background:#8B3A2E;color:#fff}
 .tile.catch{outline:1.5px dashed rgba(240,196,172,.55);outline-offset:-6px}
 .expire{background:#fff;border:1px solid var(--line);border-left:4px solid var(--terra-deep);
   border-radius:0 12px 12px 0;padding:13px 16px;margin:0 0 14px;font-size:13.5px;color:#2A3949}
 .expire b{color:var(--ink)}
 .reset{background:var(--navy);color:#fff;border-radius:18px;padding:20px 24px;margin:0 0 16px}
-.reset h3{margin:0 0 6px;font-size:19px;color:#fff}
+.reset h3{font-family:var(--disp);font-weight:700;margin:0 0 6px;font-size:19px;color:#fff}
 .reset p{margin:0 0 12px;font-size:14px;color:#E7EAEE;max-width:62ch}
 .reset .eyebrow{color:var(--gold-pale)}
 /* narrow and tall, like the Study Tools cards, rather than wide slabs */
@@ -38,44 +46,50 @@ body{margin:0;background:var(--off);font-family:var(--disp);color:var(--ink);lin
 @media(max-width:820px){.steps{grid-template-columns:repeat(2,minmax(0,178px))}}
 @media(max-width:480px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .slot{position:relative}
+/* the hit target is a real button laid over the card, so the card itself is
+   a div and the Done / Not now buttons inside it are legal and clickable */
+.tile-hit{position:absolute;inset:0;width:100%;height:100%;border:0;background:transparent;
+  cursor:pointer;border-radius:18px;z-index:2;font:inherit;color:transparent}
+.tile-hit:focus-visible{outline:3px solid var(--gold-pale);outline-offset:4px}
+.slot.open .tile-hit{display:none}
+.open-body,.open-acts{position:relative;z-index:3}
 .tile{position:relative;width:100%;display:flex;flex-direction:column;align-items:center;text-align:center;gap:7px;
   background:var(--tile);border:0;border-radius:18px;padding:20px 12px 16px;min-height:212px;justify-content:flex-start;color:#fff;font:inherit;cursor:pointer;
   /* every tile sits off the page a little */
   transform:translateY(-4px);
   box-shadow:0 14px 30px -16px rgba(11,21,48,.45),0 3px 8px -4px rgba(11,21,48,.22);
   transition:transform .34s cubic-bezier(.2,.8,.25,1),box-shadow .34s ease,opacity .3s ease}
-.tile:hover{transform:translateY(-9px);box-shadow:0 24px 46px -18px rgba(11,21,48,.55)}
-.tile:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.slot[data-state="now"]:hover .tile{transform:translateY(-21px) scale(1.07)}
 .icon{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;flex:none;
-  background:linear-gradient(145deg,#C9A14A,#A87F2E);box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
+  background:linear-gradient(145deg,var(--gold-icon),#A87F2E);box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
 .icon svg{width:26px;height:26px;stroke:#0B1530;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
 .t-loops .icon{background:linear-gradient(145deg,#C2734D,#8B3A2E)}
 .t-recall .icon{background:linear-gradient(145deg,#5C7FA8,#2F4C7D)}
-.step-n{font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-pale);margin:0}
+.step-n{font-family:var(--eyebrow);font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-pale);margin:0}
 /* the tool's real name, the one Scrubs says out loud in class. No invented
    codes: a name that needs explaining has already failed. */
-.code{font-family:var(--disp);font-size:16.5px;font-weight:800;letter-spacing:-.01em;color:var(--gold-pale);margin:2px 0 0;line-height:1.15}
+.code{font-family:var(--disp);font-size:16.5px;font-weight:700;letter-spacing:-.012em;color:var(--gold-pale);margin:2px 0 0;line-height:1.18}
 .t-loops .code{color:#F0C4AC}.t-recall .code{color:#BBD2EE}
 .tile.none .code{color:#6F3A2E;font-size:15px}
-.name{font-weight:500;font-size:11.5px;margin:0;color:#D7DEE8;font-style:normal}
+.name{font-family:var(--disp);font-weight:500;font-size:11.5px;margin:0;color:#D7DEE8}
 .why{font-size:11px;line-height:1.42;color:#E9EDF3;opacity:1;margin:0}
 .why b{opacity:1;color:var(--gold-pale)}
-.mins{font-family:var(--mono);font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#E8C97E;margin:2px 0 0}
-.badge{position:absolute;top:10px;right:10px;font-family:var(--mono);font-size:9.5px;font-weight:800;
+.mins{font-family:var(--eyebrow);font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#E8C97E;margin:2px 0 0}
+.badge{position:absolute;top:10px;right:10px;font-family:var(--eyebrow);font-size:9.5px;font-weight:800;
   letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:99px;opacity:0;transition:opacity .3s}
 .b-now{background:var(--gold);color:#0B1530}
 .b-done{background:#2E4A3A;color:#CFE6D8}
-.slot[data-state="now"] .tile{outline:3px solid var(--gold);outline-offset:3px;
-  transform:translateY(-14px) scale(1.05);
-  box-shadow:0 40px 70px -26px rgba(11,21,48,.62),0 10px 22px -10px rgba(11,21,48,.3)}
-.slot[data-state="now"] .tile:hover{transform:translateY(-18px) scale(1.06)}
+/* The live one is told apart by how far off the page it sits, nothing else.
+   No ring: a gold outline reads as a form error and fights the icon. */
+.slot[data-state="now"] .tile{transform:translateY(-16px) scale(1.06);
+  box-shadow:0 44px 76px -24px rgba(8,16,31,.66),0 12px 26px -10px rgba(8,16,31,.34)}
 /* Opened in place. It lifts OUT of the grid rather than resizing a cell, so
    nothing reflows and the row never jumps under the cursor. It floats over
    the tile beside it, which is the point: depth, not a takeover. */
 .slot{position:relative}
 .slot.open{z-index:30}
 .slot.open .tile{position:absolute;top:0;width:372px;max-width:calc(100vw - 44px);
-  transform:translateY(-22px) scale(1.02);min-height:280px;cursor:default;
+  transform:translateY(-26px) scale(1.02);min-height:280px;cursor:default;
   box-shadow:0 60px 100px -30px rgba(11,21,48,.7),0 16px 30px -12px rgba(11,21,48,.36)}
 .slot.open.left .tile{left:0}
 .slot.open.right .tile{right:0}
@@ -134,7 +148,7 @@ body{margin:0;background:var(--off);font-family:var(--disp);color:var(--ink);lin
 .nudge.on{display:flex;animation:slidein .5s ease}
 @keyframes slidein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .nudge .txt{flex:1;min-width:200px}
-.nudge h3{margin:0 0 3px;font-size:17px}
+.nudge h3{font-family:var(--disp);font-weight:600;color:var(--terra-dark);margin:0 0 3px;font-size:17px}
 .nudge p{margin:0;font-size:13.5px;color:#2A3949}
 .arrow{flex:none;width:96px;height:44px;color:var(--terra-deep)}
 .arrow svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
@@ -143,7 +157,7 @@ body{margin:0;background:var(--off);font-family:var(--disp);color:var(--ink);lin
 
 .fork{margin-top:26px;border:1.5px dashed var(--terra-deep);border-radius:18px;padding:18px 20px;background:#FDF8F5;display:none}
 .fork.on{display:block;animation:slidein .5s ease}
-.fork h3{margin:0 0 4px;font-size:18px}
+.fork h3{font-family:var(--disp);font-weight:600;color:var(--terra-dark);margin:0 0 4px;font-size:18px}
 .fork .lead{margin:0 0 14px;font-size:14px;color:#2A3949;max-width:62ch}
 .tile.none{background:var(--tint);color:var(--ink);box-shadow:none;border:1.5px dashed rgba(8,16,31,.28)}
 .tile.none .icon{background:linear-gradient(145deg,#C9CFD6,#9AA5B1)}
@@ -252,14 +266,16 @@ var cur=0, done=0, spent=0, TOTAL=55, nudgeShown=false;
 var elSteps=document.getElementById('steps'), scrim=document.getElementById('scrim');
 
 function tileHTML(s,i,state){
-  return '<button class="tile '+(s.cls||'')+(s.catch?' catch':'')+'" data-i="'+(i==null?'':i)+'"'+(state==='later'?' tabindex="-1"':'')+'>'
+  var open = state==='now';
+  return '<div class="tile '+(s.cls||'')+(s.catch?' catch':'')+'">'
+    +(open?'<button class="tile-hit" data-i="'+i+'" aria-label="Open '+s.code+', '+s.topic+'"></button>':'')
     +'<span class="badge b-now">Now</span><span class="badge b-done">Done</span>'
     +(s.catch?'<span class="pill-catch">'+s.catch+'</span>':'')
     +'<span class="icon">'+ICONS[s.ic]+'</span>'
     +'<p class="code">'+s.code+'</p>'
     +'<p class="name">'+s.full+'</p>'
     +'<p class="why">'+s.why+'</p>'
-    +'<p class="mins">'+s.tool+' &middot; '+s.mins+' min</p></button>';
+    +'<p class="mins">'+s.tool+' &middot; '+s.mins+' min</p></div>';
 }
 function render(){
   elSteps.innerHTML=STEPS.map(function(s,i){
@@ -300,7 +316,7 @@ function closeTile(complete){
     render();
     if(cur>=STEPS.length){ finish(); }
     else if(done===2 && !nudgeShown){ nudgeShown=true; document.getElementById('nudge').classList.add('on'); }
-    var nowT=elSteps.querySelector('.slot[data-state="now"] .tile'); if(nowT)nowT.focus();
+    var nowT=elSteps.querySelector('.tile-hit'); if(nowT)nowT.focus();
   },340);
 }
 function finish(){
@@ -312,7 +328,7 @@ function finish(){
   f.scrollIntoView({behavior:'smooth',block:'center'});
 }
 elSteps.addEventListener('click',function(e){
-  var b=e.target.closest('.tile'); if(!b) return;
+  var b=e.target.closest('.tile-hit'); if(!b) return;
   openTile(+b.getAttribute('data-i'));
 });
 scrim.addEventListener('click',function(){ if(document.querySelector('.slot.open')) closeTile(false); });
