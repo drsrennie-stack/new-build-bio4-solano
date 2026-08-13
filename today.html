@@ -169,26 +169,40 @@
   /* ---------- steps ---------- */
   .steps{list-style:none;margin:0;padding:0}
 
-  /* THREE STATES, AND THE COLOUR IS THE STATE
+  /* THREE STATES, AND THE BORDER IS THE STATE
      Pending  terra border, this is still owed
-     Now      gold, 2px, lifted, do this one
-     Done     navy border on navy tint, and it stays visible rather than
+     Now      gold, 2px, lifted highest, do this one
+     Done     quiet grey border, and it stays visible rather than
               disappearing, because a finished list is the reward
-     Resources are white. White means read me, it is not a task. */
+
+     Every card is WHITE on the off-white page, and every card sits on a
+     shadow. A finished step used to be a flat panel filled navy-tint,
+     which put a shaded card in a system that does not have them: white
+     on off-white only, depth from shadow rather than from fill. The gold
+     tick and the greyed title carry "finished" on their own. */
+  /* THE NUMBER IS A LABEL, NOT A CONTROL.
+     It used to be a checkbox label, so a finished step showed a tick and
+     clicking that tick took the step back to a number. A student reading
+     the row saw a tick, pressed it to confirm, and undid their own work.
+     The number now only reports: 1, 2, 3, 4 while the step is open, and a
+     gold tick once it is finished. The only thing that changes the state
+     is the Done button on the right, and that button goes away when there
+     is nothing left to press. */
   .step-row{display:flex;align-items:flex-start;gap:0}
-  .step-check{position:absolute;width:1px;height:1px;opacity:0;margin:0;pointer-events:none}
-  .step-num{flex:0 0 auto;cursor:pointer;-webkit-user-select:none;user-select:none}
-  .step-check:focus-visible + .step-num{outline:3px solid var(--terra-dark);outline-offset:2px}
-  .step-num.as-arrow{cursor:default}
+  .step-num{flex:0 0 auto;cursor:default;-webkit-user-select:none;user-select:none}
   .step{
     background:var(--white);border:1px solid var(--line);
     border-radius:var(--radius);box-shadow:var(--shadow-rest);
     margin-bottom:14px;overflow:hidden;
-    transition:box-shadow 200ms ease,border-color 200ms ease;
+    transition:box-shadow 200ms ease,border-color 200ms ease,transform 200ms ease;
   }
   .step{border-color:var(--terra-dark);}          /* pending is red */
   .step.is-now{border-color:var(--gold);border-width:2px;box-shadow:var(--shadow-lift)}
-  .step.is-done{background:var(--navy-tint,#EDF1F3);border-color:var(--navy);border-width:1px;box-shadow:none}
+  .step.is-done{background:var(--white);border-color:var(--line);border-width:1px;box-shadow:var(--shadow-rest);}
+  /* A finished card lifts on hover like every other card in the course.
+     It is still reachable, it is just no longer asking for anything. */
+  .step.is-done:hover{box-shadow:0 8px 16px rgba(0,0,0,.10);transform:translateY(-2px);}
+  @media (prefers-reduced-motion:reduce){.step.is-done:hover{transform:none}}
 
   .step-head{
     display:flex;gap:14px;align-items:flex-start;width:100%;
@@ -205,8 +219,11 @@
     border:2px solid var(--line-strong);color:var(--ink-mid);
     background:var(--white);
   }
-  .is-now .step-num{border-color:var(--gold);background:var(--gold);color:var(--navy)}
-  .is-done .step-num{border-color:var(--navy);background:var(--navy);color:var(--white)}
+  /* Now is a ring, done is a fill. If both were filled gold the only
+     difference between "you are here" and "you finished" would be the
+     glyph inside a 30px circle. */
+  .is-now .step-num{border-color:var(--gold);background:var(--white);color:var(--navy)}
+  .is-done .step-num{border-color:var(--gold);background:var(--gold);color:var(--navy);font-size:16px}
 
   .step-text{flex:1 1 auto;min-width:0}
   /* both of these MUST be block. As spans they run together and read
@@ -234,11 +251,44 @@
     background:var(--white);white-space:nowrap;
   }
   .is-now .step-state{border-color:var(--terra-dark);color:var(--terra-dark)}
-  .is-done .step-state{border-color:var(--navy);background:var(--navy);color:var(--white)}
+
+  /* THE ONLY CONTROL THAT CHANGES A STEP.
+     Gold, because gold is the unlocked state everywhere else in the
+     course, and because it has to read as the thing you press rather
+     than as another label. It is removed from the row entirely once the
+     step is done, so a finished list has nothing left to press. */
+  .done-pill{
+    flex:0 0 auto;align-self:center;margin:0 18px 0 0;
+    font:inherit;font-size:11px;font-weight:800;letter-spacing:.12em;
+    text-transform:uppercase;padding:9px 17px;border-radius:999px;
+    background:var(--gold);border:2px solid var(--gold);color:var(--navy);
+    cursor:pointer;white-space:nowrap;min-height:34px;
+    transition:background 160ms ease,border-color 160ms ease,transform 160ms ease;
+  }
+  .done-pill:hover{background:#C9A24A;border-color:#C9A24A;transform:translateY(-1px)}
+  .done-pill:active{transform:translateY(0)}
+  .done-pill:focus-visible{outline:3px solid var(--terra-dark);outline-offset:3px}
+  /* A step that is not the current one still gets a real button, just a
+     quieter one: a student who did step 3 out of order should not have
+     to open it to say so. */
+  .step:not(.is-now) .done-pill{background:var(--white);color:var(--ink-mid);border-color:var(--line-strong)}
+  .step:not(.is-now) .done-pill:hover{background:var(--gold-pale);border-color:var(--gold);color:var(--navy)}
+  /* On a phone the button, the minutes and the state chip left the title
+     about 110px, so "Work the pre-work sheet" came out three words tall.
+     The button drops to its own line under the row instead, indented to
+     the text so it still belongs to that step. */
+  @media(max-width:560px){
+    .step-row{flex-wrap:wrap}
+    .step-head{flex:1 1 0;min-width:0;padding:16px 14px}
+    .done-pill{
+      flex:1 1 100%;order:3;display:flex;justify-content:center;
+      margin:0 14px 16px 58px;padding:11px 14px;letter-spacing:.08em;
+    }
+  }
 
   .step-body{padding:0 20px 20px 64px;background:var(--white)}
-  /* Reference rows are white on the tinted card, so "read this" and
-     "do this" never look like the same instruction. */
+  /* These were white against a tinted card. The card is white now, so
+     they are told apart by their border rather than by their fill. */
   .step-body .go, .step-body .link-list li{background:var(--white)}
   .step-body p{margin:0 0 14px;font-size:15px;color:var(--ink-mid)}
   .step-foot{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
@@ -292,6 +342,15 @@
     font-size:13.5px;font-weight:700;color:var(--terra-dark);
     text-decoration:underline;cursor:pointer;
   }
+  /* Clears the whole day. Quiet on purpose: it is the way out of a
+     mistake, not something to invite. */
+  .reopen-all{
+    display:inline-flex;align-items:center;min-height:44px;margin-top:6px;
+    background:none;border:0;padding:10px 0;font:inherit;
+    font-size:13.5px;font-weight:700;color:var(--terra-dark);
+    text-decoration:underline;text-underline-offset:3px;cursor:pointer;
+  }
+  .reopen-all:hover{color:var(--navy)}
 
   /* ---------- glossary ---------- */
   .gloss{
@@ -1293,16 +1352,25 @@
         }
       }
 
-      /* The tick is a real checkbox, not a styled span, so it is reachable by
-         keyboard, announced as a checkbox, and has a state a screen reader can
-         read. It sits BESIDE the head button rather than inside it, because a
-         checkbox nested in a button is invalid and browsers swallow the click. */
+      /* The Done button sits BESIDE the head button, never inside it: a
+         button nested in a button is invalid and browsers swallow the
+         inner click. The number beside it is a plain span now, because
+         anything clickable there is a second, quieter way to change the
+         same state, and a student who taps it has no idea they did. */
+      var mark = done
+        ? '<span class="step-num"><span aria-hidden="true">&#10003;</span>'
+          + '<span class="sr-only">Step ' + (i+1) + ' is done</span></span>'
+        : '<span class="step-num" aria-hidden="true">' + (i+1) + '</span>';
+
+      var action = done
+        ? ''
+        : '<button class="done-pill" type="button" data-done="' + i + '">Done'
+          + '<span class="sr-only"> with step ' + (i+1) + ', '
+          + String(st.title).replace(/"/g, '&quot;') + '</span></button>';
+
       return '<li class="' + cls + '"' + (isNow ? ' aria-current="step"' : '') + '>' +
         '<div class="step-row">' +
-        '<input type="checkbox" class="step-check" id="sc' + i + '" data-check="' + i + '"' +
-          (done ? ' checked' : '') + ' aria-label="Mark step ' + (i+1) + ', ' +
-          String(st.title).replace(/"/g, '&quot;') + ', as done">' +
-        '<label class="step-num" for="sc' + i + '"><span aria-hidden="true">' + (done ? '\u2713' : (i+1)) + '</span></label>' +
+        mark +
         '<button class="step-head" type="button" aria-expanded="' + open + '" aria-controls="sb' + i + '">' +
           '<span class="step-text">' +
             '<span class="step-title">' + st.title + '</span>' +
@@ -1310,15 +1378,25 @@
           '</span>' +
           '<span class="step-meta">' +
             (st.mins ? '<span class="step-mins">' + mins(st.mins) + '</span>' : '') +
-            '<span class="step-state">' + state + '</span>' +
+            /* Now and Later are spelled out, never colour alone. Done is
+               NOT, because a navy "DONE" pill sitting where the Done
+               button was is indistinguishable from the button: it reads
+               as something still to press. The gold tick carries it, and
+               a screen reader gets it off the tick. */
+            (done ? '' : '<span class="step-state">' + state + '</span>') +
           '</span>' +
         '</button>' +
+        action +
         '</div>' +
         '<div class="step-body" id="sb' + i + '"' + (open ? '' : ' hidden') + '>' +
           glossify(st.body || '') + links +
-          '<div class="step-foot">' + (done
-            ? '<button class="undo-btn" type="button" data-undo="' + i + '">Not done after all</button>'
-            : '<button class="done-btn" type="button" data-done="' + i + '">Done, next step</button>') + '</div>' +
+          /* Only the undo lives down here now. A second Done button at the
+             foot of the body was a second place to finish the same step,
+             and the one in the row is the one a student can see without
+             opening anything. */
+          (done
+            ? '<div class="step-foot"><button class="undo-btn" type="button" data-undo="' + i + '">Not done after all</button></div>'
+            : '') +
         '</div>' +
       '</li>';
     }).join('');
@@ -1347,15 +1425,29 @@
       document.getElementById('headline-card').hidden = false;
       document.getElementById('hl-kicker').textContent = 'All done';
       document.getElementById('hl-title').textContent = 'That is everything for now';
-      document.getElementById('hl-body').textContent = 'Nothing else is asked of you today. Close the laptop.';
+      /* A list that says done when the student knows it is not needs a way
+         out that does not involve opening four steps one at a time. */
+      document.getElementById('hl-body').innerHTML =
+        'Nothing else is asked of you today. Close the laptop.'
+        + '<br><button class="reopen-all" type="button" data-reopen-day>'
+        + 'Not done? Clear these four and start over</button>';
+      var ra = document.querySelector('[data-reopen-day]');
+      if(ra) ra.textContent = 'Not done? Clear these ' + PLAN.steps.length + ' and start over';
     }
 
   }
 
   /* ---------- interaction ---------- */
   elSteps.addEventListener('click', function(e){
-    var chk = e.target.closest('.step-check');
-    if(chk){ /* the change handler below owns this, do not also toggle open */ return; }
+    /* Done is checked before the head, because the button sits inside the
+       same row and closest() would otherwise never reach it. */
+    var d0 = e.target.closest('[data-done]');
+    if(d0){
+      var i0 = +d0.getAttribute('data-done');
+      setDone(PLAN.target, i0, true);
+      elAnnounce.textContent = 'Step ' + (i0+1) + ' marked done.';
+      render(); focusCurrent(); return;
+    }
     var head = e.target.closest('.step-head');
     if(head){
       var body = document.getElementById(head.getAttribute('aria-controls'));
@@ -1380,17 +1472,19 @@
     }
   });
 
-  /* The tick box does the same thing the Done button does, so a student can
-     mark a step off without opening it. change, not click, so the space bar
-     works. Re-render after, exactly like the button, or the card keeps the
-     old colour and the tick lies about the state. */
-  elSteps.addEventListener('change', function (e) {
-    var c = e.target.closest('.step-check');
-    if (!c) return;
-    var i = +c.getAttribute('data-check');
-    setDone(PLAN.target, i, c.checked);
-    elAnnounce.textContent = 'Step ' + (i+1) + (c.checked ? ' marked done.' : ' reopened.');
-    render();
+  /* The checkbox that used to sit under the number is gone. It marked a
+     step done on a single tap, with no label saying so, which is how a
+     day nobody had started came up showing four ticks.
+
+     The way back out is wired here rather than inside render(), because
+     the headline card is in the page from the start and rewiring it on
+     every draw would stack a listener per render. */
+  document.getElementById('headline-card').addEventListener('click', function(e){
+    if(!e.target.closest('[data-reopen-day]')) return;
+    if(!PLAN || !PLAN.steps) return;
+    for(var q=0; q<PLAN.steps.length; q++) setDone(PLAN.target, q, false);
+    elAnnounce.textContent = 'All steps reopened.';
+    render(); focusCurrent();
   });
 
   function focusCurrent(){
