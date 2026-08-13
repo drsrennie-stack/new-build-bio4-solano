@@ -220,6 +220,34 @@
     *{transition:none !important;scroll-behavior:auto !important;}
     .card:hover,.btn:hover{transform:none;}
   }
+
+/* HOST FORM, the role-dependent bits */
+.checkline{display:flex;align-items:flex-start;gap:10px;font-weight:600;cursor:pointer;line-height:1.45}
+.checkline input{margin-top:3px;width:18px;height:18px;flex:0 0 auto;accent-color:#7A2A22}
+.grouplabel{display:block;font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#7A2A22;margin:0 0 8px}
+.radio-row{display:flex;gap:10px;flex-wrap:wrap}
+.radio{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;min-height:44px;border:1px solid rgba(11,21,48,.22);
+  border-radius:999px;cursor:pointer;font-weight:700;background:#fff}
+.radio input{width:17px;height:17px;accent-color:#7A2A22}
+.radio:has(input:checked){border-color:#7A2A22;background:#FBF6F5}
+.radio:focus-within{outline:3px solid #7A2A22;outline-offset:2px}
+.money{display:flex;align-items:center;gap:0}
+.money-sign{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:46px;
+  border:1px solid rgba(11,21,48,.22);border-right:0;border-radius:8px 0 0 8px;background:#F4F5F7;
+  font-weight:800;color:#08101F}
+.money input{border-radius:0 8px 8px 0 !important;flex:1 1 auto}
+
+/* CARD BADGES
+   A dollar sign because money must never be a surprise, and a scalpel
+   because a lab session means come to the bench, not to a Zoom. Both
+   carry a word as well as a glyph: colour and shape alone is 1.4.1. */
+.pill.cost{background:#1F5F3F;color:#fff}
+.pill.free{background:#EDF1F3;color:#08101F}
+.pill.lab{background:#7A2A22;color:#fff}
+.pill.lab svg{width:13px;height:13px;vertical-align:-2px;margin-right:4px}
+.pill.act{background:#08101F;color:#fff}
+.csplit{font-size:.86rem;line-height:1.5;color:var(--csoft,#3D4757);margin:6px 0 0}
+.csplit b{color:inherit}
 </style>
 </head>
 <body>
@@ -338,7 +366,7 @@
 
     <div class="field">
       <label for="h-topic" id="h-topic-label">What are you studying? <span class="req" aria-hidden="true">*</span></label>
-      <input id="h-topic" name="topic" type="text" required maxlength="60" placeholder="e.g. Appendicular skeleton review">
+      <input id="h-topic" name="topic" type="text" required maxlength="60" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="e.g. Appendicular skeleton review">
     </div>
     <div class="field-row">
       <div class="field">
@@ -365,10 +393,51 @@
       <select id="h-role" name="role" required>
         <option value="Student" selected>Student</option>
         <option value="Tutor">Tutor</option>
-        <option value="Faculty">Faculty</option>
+        <option value="Faculty">Instructor</option>
       </select>
     </div>
-    <div class="field">
+    <div class="field" id="wrap-activity" hidden>
+                <label for="h-act">What will you run <span class="req" aria-hidden="true">*</span></label>
+                <select id="h-act" name="activity">
+                  <option value="" selected>Pick one</option>
+                  <option>Games</option>
+                  <option>Kahoot</option>
+                  <option>Strategy session</option>
+                  <option>Teach each other</option>
+                  <option>Drawing and labelling</option>
+                  <option>Quiz each other</option>
+                  <option>Work the sheet together</option>
+                  <option>Other</option>
+                </select>
+                <p class="hint">Say what the hour will actually be, then put the topic in the box above. People pick a session on both.</p>
+              </div>
+
+              <div class="field" id="wrap-lab" hidden>
+                <label class="checkline" for="h-lab">
+                  <input type="checkbox" id="h-lab" name="isLab">
+                  <span>This is a lab session, at the bench or on the models</span>
+                </label>
+                <p class="hint">Lab sessions carry a scalpel on the card so students know to come to the lab, not a Zoom.</p>
+              </div>
+
+              <div class="field" id="wrap-pay" hidden>
+                <span class="grouplabel" id="paylabel">Cost</span>
+                <div class="radio-row" role="radiogroup" aria-labelledby="paylabel">
+                  <label class="radio"><input type="radio" name="payKind" value="free" checked> <span>Free</span></label>
+                  <label class="radio"><input type="radio" name="payKind" value="paid"> <span>Paid</span></label>
+                </div>
+              </div>
+
+              <div class="field" id="wrap-rate" hidden>
+                <label for="h-rate">Your hourly rate</label>
+                <div class="money">
+                  <span class="money-sign" aria-hidden="true">$</span>
+                  <input id="h-rate" name="rate" type="number" min="1" max="400" step="1" placeholder="40">
+                </div>
+                <p class="hint" id="rateHint">The rate is split between everyone who turns up. At $40 an hour, one student pays $40, four students pay $10 each. Students see the current split on your card, so it pays them to bring people.</p>
+              </div>
+
+              <div class="field">
       <label for="h-zoom">Online meeting link</label>
       <input id="h-zoom" name="zoomLink" type="url" maxlength="400" placeholder="https://zoom.us/j/...">
       <span class="hint">Required for online sessions.</span>
@@ -587,20 +656,32 @@ function recLink(s){
 const LOC_DELIM = " ::@:: ";
 const PASS_DELIM = " ::#:: ";
 const ROLE_DELIM = " ::r:: ";
+/* The backend stores one topic string, so everything else rides inside it
+   behind a delimiter. Same trick the role, room and passcode already use. */
+const ACT_DELIM  = " ::a:: ";
+const LAB_DELIM  = " ::l:: ";
+const RATE_DELIM = " ::$:: ";
 function normRole(r){
   r = String(r || "").trim().toLowerCase();
   return (r === "tutor" || r === "faculty") ? r : "student";
 }
 function splitExtras(t){
   let raw = String(t || "");
-  let passcode = "", location = "", role = "";
+  let passcode = "", location = "", role = "", activity = "", isLab = false, rate = 0;
+  let r = raw.indexOf(RATE_DELIM);
+  if(r >= 0){ rate = parseFloat(raw.slice(r + RATE_DELIM.length)) || 0; raw = raw.slice(0, r); }
+  let l = raw.indexOf(LAB_DELIM);
+  if(l >= 0){ isLab = true; raw = raw.slice(0, l); }
+  let a = raw.indexOf(ACT_DELIM);
+  if(a >= 0){ activity = raw.slice(a + ACT_DELIM.length); raw = raw.slice(0, a); }
   let i = raw.indexOf(PASS_DELIM);
   if(i >= 0){ passcode = raw.slice(i + PASS_DELIM.length); raw = raw.slice(0, i); }
   let j = raw.indexOf(LOC_DELIM);
   if(j >= 0){ location = raw.slice(j + LOC_DELIM.length); raw = raw.slice(0, j); }
   let k = raw.indexOf(ROLE_DELIM);
   if(k >= 0){ role = raw.slice(k + ROLE_DELIM.length); raw = raw.slice(0, k); }
-  return { topic: raw, location: location, passcode: passcode, role: normRole(role) };
+  return { topic: raw, location: location, passcode: passcode, role: normRole(role),
+           activity: activity, isLab: isLab, rate: rate };
 }
 function saveIdentity(name, email){
   try{ localStorage.setItem("ssg_identity_v1", JSON.stringify({name:name, email:email})); }catch(e){}
@@ -679,7 +760,8 @@ async function load(){
 
 function render(sessions){
   loadingEl.style.display = "none";
-  (sessions || []).forEach(s => { const p = splitExtras(s.topic); s.topic = p.topic; s.location = p.location; s.passcode = p.passcode; s.role = p.role; });
+  (sessions || []).forEach(s => { const p = splitExtras(s.topic); s.topic = p.topic; s.location = p.location;
+    s.passcode = p.passcode; s.role = p.role; s.activity = p.activity; s.isLab = p.isLab; s.rate = p.rate; });
   rawSessions = (sessions || []).slice().sort((a,b) => (a.date+a.time).localeCompare(b.date+b.time));
   const todayStr = ymd(new Date());
   allSessions = rawSessions.filter(s => s.date >= todayStr);
@@ -754,7 +836,9 @@ function weekChip(s){
   const live = liveState(s).live;
   const seats = cap > 0 ? (att.length + "/" + cap) : (att.length + " in");
   const role = s.role || "student";
-  const roleLabel = role.charAt(0).toUpperCase() + role.slice(1);
+  /* The stored value is still "faculty" so old sessions keep working. Only
+     the word a student reads changed. */
+  const roleLabel = role === "faculty" ? "Instructor" : (role.charAt(0).toUpperCase() + role.slice(1));
   const inner =
     '<span class="chip-time">' + esc(fmtTime(s.time)) + (live ? ' <span class="chip-live-tag">&bull; Live</span>' : '') + '</span>' +
     '<span class="chip-topic">' + esc(s.topic) + '</span>' +
@@ -782,6 +866,39 @@ $("#weekViewBtn").addEventListener("click", () => setView("week"));
 $("#prevWeek").addEventListener("click", () => { weekStart.setDate(weekStart.getDate()-7); renderWeek(); });
 $("#nextWeek").addEventListener("click", () => { weekStart.setDate(weekStart.getDate()+7); renderWeek(); });
 $("#thisWeek").addEventListener("click", () => { weekStart = startOfWeek(new Date()); renderWeek(); });
+
+/* A scalpel, because a lab session means come to the bench and not to a
+   Zoom, and that is the single most expensive thing to get wrong. The word
+   Lab rides with it: a glyph on its own is not an accessible label. */
+var SCALPEL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+  'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+  '<path d="M4 20l6.5-6.5"/><path d="M11 13l7.5-7.5a2 2 0 0 1 3 3L14 16z"/></svg>';
+
+function money(n){
+  return '$' + (Math.round(n * 100) / 100).toFixed(2).replace(/\.00$/, '');
+}
+/* The rate is per hour for the session, split between everyone who turns up.
+   One student pays all of it, four pay a quarter each. Showing the next
+   step down is the whole point: it is why a student messages a classmate. */
+function perHead(rate, n){ return rate / Math.max(1, n); }
+
+function costPill(s, n){
+  var rate = Number(s.rate) || 0;
+  if(rate <= 0) return (s.role === 'tutor') ? '<span class="pill free">Free</span>' : '';
+  return '<span class="pill cost">' + money(perHead(rate, n)) +
+         (n > 0 ? ' each' : ' to start') + '</span>';
+}
+function splitLine(s, n){
+  var rate = Number(s.rate) || 0;
+  if(rate <= 0) return '';
+  var now  = perHead(rate, n);
+  var next = perHead(rate, n + 1);
+  return '<p class="csplit">' + money(rate) + ' an hour, split between everyone who comes. ' +
+    (n === 0
+      ? 'Right now that is <b>' + money(rate) + '</b> for the first person, and <b>' + money(perHead(rate,2)) + ' each</b> once a second joins.'
+      : '<b>' + money(now) + ' each</b> at ' + n + ', <b>' + money(next) + ' each</b> if one more joins.') +
+    '</p>';
+}
 
 function card(s){
   const att = Array.isArray(s.attendees) ? s.attendees : [];
@@ -812,10 +929,13 @@ function card(s){
   }
 
   const role = s.role || "student";
-  const roleLabel = role.charAt(0).toUpperCase() + role.slice(1);
+  const roleLabel = role === "faculty" ? "Instructor" : (role.charAt(0).toUpperCase() + role.slice(1));
   return '<article class="card role-' + role + (full ? ' full' : '') + (js.kind === "live" ? ' live' : '') + '">' +
     '<div class="pill-row">' +
       '<span class="pill role">' + esc(roleLabel) + '</span>' +
+      costPill(s, att.length) +
+      (s.isLab ? '<span class="pill lab">' + SCALPEL + 'Lab</span>' : '') +
+      (s.activity ? '<span class="pill act">' + esc(s.activity) + '</span>' : '') +
       (full ? '<span class="pill full">Full</span>' : '') +
       (js.kind === "live" ? '<span class="pill live">Live now</span>' : '') +
       (inPerson ? '<span class="pill inperson">In person</span>' : '') +
@@ -823,6 +943,7 @@ function card(s){
     '</div>' +
     '<div class="ctime">' + esc(fmtTime(s.time)) + '</div>' +
     '<div class="ctopic">' + esc(s.topic) + '</div>' +
+    splitLine(s, att.length) +
     '<div class="chost">Host: ' + esc(s.hostName || "TBD") + '</div>' +
     (loc ? '<div class="cloc"><span>In person:</span> ' + esc(loc) + '</div>' : '') +
     (s.passcode ? '<div class="cpass"><span>Passcode:</span> ' + esc(s.passcode) + '</div>' : '') +
@@ -876,6 +997,14 @@ $("#hostForm").addEventListener("submit", async (e) => {
   if(normRole(role) !== "student") topicPayload += ROLE_DELIM + role;
   if(loc) topicPayload += LOC_DELIM + loc;
   if(pass) topicPayload += PASS_DELIM + pass;
+  /* Order matters: splitExtras peels these off from the end backwards. */
+  var actVal  = (document.getElementById("h-act")  || {}).value || "";
+  var labVal  = !!((document.getElementById("h-lab") || {}).checked);
+  var payKind = (document.querySelector('input[name="payKind"]:checked') || {}).value || "free";
+  var rateVal = payKind === "paid" ? (parseFloat((document.getElementById("h-rate") || {}).value) || 0) : 0;
+  if(normRole(role) === "student" && actVal) topicPayload += ACT_DELIM + actVal;
+  if(labVal) topicPayload += LAB_DELIM;
+  if(rateVal > 0) topicPayload += RATE_DELIM + rateVal;
   const payload = {
     action: "create",
     hostName: el("hostName").value.trim(),
@@ -1128,5 +1257,47 @@ document.addEventListener("visibilitychange", () => { if(!document.hidden) load(
 
 <script src="bio004-dock.js"></script>
 <script src="dock-coachmark.js"></script>
+<script>
+/* WHICH FIELDS BELONG TO WHICH ROLE
+   A student hosting says what they will run. A tutor sets a price and can
+   flag a lab. An instructor can flag a lab but never charges. Fields that
+   do not apply are hidden AND disabled, so a hidden control cannot be
+   focused by keyboard or submitted by accident. */
+(function () {
+  var role = document.getElementById('h-role');
+  if (!role) return;
+  var wraps = {
+    activity: document.getElementById('wrap-activity'),
+    lab:      document.getElementById('wrap-lab'),
+    pay:      document.getElementById('wrap-pay'),
+    rate:     document.getElementById('wrap-rate')
+  };
+  function setShown(el, on) {
+    if (!el) return;
+    el.hidden = !on;
+    el.querySelectorAll('input,select,textarea').forEach(function (c) { c.disabled = !on; });
+  }
+  function paid() {
+    var p = document.querySelector('input[name="payKind"]:checked');
+    return p && p.value === 'paid';
+  }
+  function apply() {
+    var r = (role.value || '').toLowerCase();
+    setShown(wraps.activity, r === 'student');
+    setShown(wraps.lab,      r === 'tutor' || r === 'faculty');
+    setShown(wraps.pay,      r === 'tutor');
+    setShown(wraps.rate,     r === 'tutor' && paid());
+    if (r !== 'tutor') {
+      var f = document.querySelector('input[name="payKind"][value="free"]');
+      if (f) f.checked = true;
+    }
+  }
+  role.addEventListener('change', apply);
+  document.addEventListener('change', function (e) {
+    if (e.target && e.target.name === 'payKind') apply();
+  });
+  apply();
+})();
+</script>
 </body>
 </html>
