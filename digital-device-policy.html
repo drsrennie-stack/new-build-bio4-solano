@@ -208,6 +208,23 @@ html { scroll-behavior: smooth; }
 .ddp-embedonly { display: none; }
 .is-embed .ddp-embedonly { display: block; }
 .is-embed .ddp-standalone-note { display: none; }
+
+/* ---- section-aware submit block, filled by device-policy-submit.js ---- */
+/* This block sits inside .cta-section, which is #060A18. color:inherit
+   picked up the dark body colour and rendered near-invisible, so these
+   are explicit. #FFFFFF on #060A18 is 19.9:1, #E7EAEE is 17.1:1. */
+/* display:contents lets the generated links become direct children of
+   .cta-actions, so they lay out in the same flex row as the buttons
+   beside them instead of forming an inline island. */
+[data-ddp-submit]{display:contents}
+.ddp-ask{flex:1 0 100%;font-weight:700;font-size:15px;margin:0;color:#FFFFFF}
+.ddp-nolink{flex:1 0 100%;max-width:52ch;margin:0 auto;font-size:14.5px;line-height:1.55;color:#E7EAEE}
+.ddp-nolink strong{color:#FFFFFF}
+.ddp-switch{font:inherit;font-size:13.5px;font-weight:600;background:none;border:0;padding:8px 4px;
+  min-height:34px;cursor:pointer;text-decoration:underline;color:#E7EAEE}
+.ddp-switch:hover{color:#FFFFFF}
+.ddp-switch:focus-visible{outline:3px solid #B8924A;outline-offset:2px;border-radius:3px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 </style>
 </head>
 <body>
@@ -309,7 +326,9 @@ html { scroll-behavior: smooth; }
     </li>
     <li class="ddp-standalone">
       <span class="cta-step-n">Step 2</span>
-      <a href="https://solano.instructure.com/courses/1395734/assignments/6734628" class="cta-button cta-button--ghost" target="_blank" rel="noopener">Submit it in Canvas<span class="sr-only"> (opens in a new tab)</span></a>
+      <!-- One Canvas course per section, so this is filled in by
+           device-policy-submit.js rather than hard-coded. -->
+      <span data-ddp-submit data-ddp-class="cta-button cta-button--ghost"></span>
     </li>
     <li class="ddp-standalone">
       <span class="cta-step-n">Step 3</span>
@@ -394,6 +413,7 @@ html { scroll-behavior: smooth; }
 </script>
 
 
+<script src="device-policy-submit.js"></script>
 <script src="bio004-dock.js"></script>
 <script src="dock-coachmark.js"></script>
 <script>

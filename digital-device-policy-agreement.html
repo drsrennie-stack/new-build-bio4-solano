@@ -535,11 +535,53 @@ html { scroll-behavior: smooth; }
   .footer-top { grid-template-columns: 1fr; gap: 14px; }
   .footer-section svg { display: none; }
   a[href]::after { content: none !important; }
+
+  /* BELT AND BRACES FOR THE PRINTED COPY.
+     This document is evidence. Anything that could hide part of it when
+     it prints is forced open or removed here, so a defect in another
+     script can never quietly produce a PDF that is missing the rules,
+     the acknowledgments or the signature. */
+  .rm-bar, .rm-toc, .rm-hd, .rm-chev, .rm-mins { display: none !important; }
+  .rm-head { display: none !important; }
+  .rm-body, .rm-sec, .expand-content, details > * { display: block !important;
+    height: auto !important; max-height: none !important; overflow: visible !important;
+    visibility: visible !important; opacity: 1 !important; }
+  .rm-orig { display: revert !important; }
+  details { display: block !important; }
+  [hidden] .initial-zone, [hidden] .ack-item, [hidden] .sig-block { display: block !important; }
+
+  /* The dock and its coachmark are navigation. They were printing into
+     the middle of the signed copy. */
+  .bd-launch, .bd-panel, .bd-scrim, .dcm, .dcm-arrow, #dockCoachmark { display: none !important; }
+
+  /* The checked state of an acknowledgment is the whole point of the
+     acknowledgment, and browsers drop background colour in print unless
+     told not to. */
+  .ack-item, .ack-item.checked, .initial-zone, .initial-zone.completed {
+    -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .ack-item.checked { border: 2px solid #0B1530 !important; }
 }
 .cta-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 0; }
 .cta-button--ghost { background: transparent; border: 1px solid rgba(255,255,255,0.5); color: #FFFFFF; }
 .cta-button--ghost:hover { background: rgba(255,255,255,0.12); border-color: #C9A14A; }
 .ag-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---- section-aware submit block, filled by device-policy-submit.js ---- */
+/* This block sits inside .cta-section, which is #060A18. color:inherit
+   picked up the dark body colour and rendered near-invisible, so these
+   are explicit. #FFFFFF on #060A18 is 19.9:1, #E7EAEE is 17.1:1. */
+/* display:contents lets the generated links become direct children of
+   .cta-actions, so they lay out in the same flex row as the buttons
+   beside them instead of forming an inline island. */
+[data-ddp-submit]{display:contents}
+.ddp-ask{flex:1 0 100%;font-weight:700;font-size:15px;margin:0;color:#FFFFFF}
+.ddp-nolink{flex:1 0 100%;max-width:52ch;margin:0 auto;font-size:14.5px;line-height:1.55;color:#E7EAEE}
+.ddp-nolink strong{color:#FFFFFF}
+.ddp-switch{font:inherit;font-size:13.5px;font-weight:600;background:none;border:0;padding:8px 4px;
+  min-height:34px;cursor:pointer;text-decoration:underline;color:#E7EAEE}
+.ddp-switch:hover{color:#FFFFFF}
+.ddp-switch:focus-visible{outline:3px solid #B8924A;outline-offset:2px;border-radius:3px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 </style>
 </head>
 <body>
@@ -851,7 +893,11 @@ html { scroll-behavior: smooth; }
   <h2 class="cta-headline">Submit the signed PDF <span class="accent">in Canvas</span>.</h2>
   <p class="cta-subhead">Save this completed page as a PDF and upload it to the Week 1 Digital Device Policy Agreement assignment in Canvas <strong>before your first lab session</strong>, which is your first class meeting in week one. You will not be permitted in lab until it is on file.</p>
   <p class="cta-actions">
-    <a href="https://solano.instructure.com/courses/1395734/assignments/6734628" class="cta-button" target="_blank" rel="noopener">Submit it in Canvas<span class="ag-sr"> (opens in a new tab)</span></a>
+    <!-- The submit link is different for every section, because every
+         section is its own Canvas course. device-policy-submit.js fills
+         this in from ?sec= or the saved section, and offers all three
+         when it does not know. -->
+    <span data-ddp-submit data-ddp-class="cta-button"></span>
     <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/today.html" class="cta-button cta-button--ghost" target="_top">Back to Today</a>
     <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/digital-device-policy.html" class="cta-button cta-button--ghost" target="_top">Back to policy overview</a>
   </p>
@@ -882,7 +928,7 @@ html { scroll-behavior: smooth; }
           <span class="logo-sub">BIO 004 &middot; Solano Community College</span>
         </span>
       </a>
-      <p class="footer-tagline">Your home base for Human Anatomy this summer. Start with the syllabus, then take it one week at a time.</p>
+      <p class="footer-tagline">Your home base for Human Anatomy this fall. Start with the syllabus, then take it one week at a time.</p>
     </div>
     <div>
       <div class="footer-col-header">Start here</div>
@@ -1227,6 +1273,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 
+<script src="device-policy-submit.js"></script>
 <script src="bio004-dock.js"></script>
 <script src="dock-coachmark.js"></script>
 </body>

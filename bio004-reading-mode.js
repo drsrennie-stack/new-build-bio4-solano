@@ -88,7 +88,14 @@
       'today.html', 'welcome.html', 'index.html', 'canvas-enter.html', 'canvas-home.html',
       'bio004-spaced-recall.html', 'card-gap-finder.html', 'bio004-room-map-timer.html',
       'bio004-braindump-selector-fall2026.html', 'atlas-coloring-book.html', 'bio004-draw.html',
-      'grade-calculator.html'
+      'grade-calculator.html',
+      /* A SIGNED FORM MUST NEVER BE COLLAPSED.
+         The device policy agreement is filled in and then saved as a PDF.
+         Collapsed sections do not print, so a student who completed all 11
+         initials, all 4 acknowledgments and the signature got a 3-page PDF
+         containing the hero, one initial and the footer, and no way to tell
+         it was wrong. Both pages are excluded outright. */
+      'digital-device-policy-agreement.html', 'digital-device-policy.html'
     ];
     if (deny.indexOf(f) !== -1) return true;
     if (/^mastery-os|^histology-escape-room|^slides-|-concept-videos\.html$/.test(f)) return true;
