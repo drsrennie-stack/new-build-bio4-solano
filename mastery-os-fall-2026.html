@@ -7,7 +7,7 @@
 <meta name="description" content="A personal learning operating system: diagnose weaknesses, repair gaps, build durable memory, and prove mastery.">
 <!-- Installable app (Add to Home Screen) -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1E3D4C">
+<meta name="theme-color" content="#08101F">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -22,12 +22,12 @@
   /* PRIMARY teaching palette. See palettes.md. Sage and cream are NOT in this
      palette. Repainted 2026-08-11 from the off-spec values (08101F navy,
      8B1D1D terra, F5F1E8 cream) that had drifted into this build. */
-  --navy:#1E3D4C; --navy-deep:#142a36; --navy-tint:#EDF1F3;
-  --card-navy:#1E3D4C; --near-black:#142a36;
+  --navy:#08101F; --navy-deep:#050A14; --navy-tint:#EDF1F3;
+  --card-navy:#08101F; --near-black:#05080F;
   --rust:#A0522D; --rust-hover:#8A4526; --terra:#C2734D; --terra-dark:#A0522D; --clay:#C2734D;
   --gold:#B8924A; --gold-light:#CFA95F; --gold-text:#6F5316;   /* 7.18:1 on white, AAA */
   --white:#FFFFFF; --offwhite:#FAFAF9; --slate:#5B7480;
-  --ink:#1E3D4C; --ink-soft:#3D5966; --ink-faint:rgba(30,61,76,0.78);
+  --ink:#08101F; --ink-soft:#2A3949; --ink-faint:rgba(8,16,31,0.72);
   --line:rgba(30,61,76,0.16); --line-soft:rgba(30,61,76,0.08);
   --ok:#1E4C33; --warn:#8A5A1E; --bad:#7A2E2E;
   --shadow:0 1px 3px rgba(0,0,0,0.08);
@@ -109,7 +109,7 @@ section.block:first-of-type{border-top:none}
 @media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}}
 
 /* ---------- Section 1: Today's plan ---------- */
-.plan{background:var(--navy);background:radial-gradient(140% 135% at 12% 0%,#12203f 0%,var(--navy) 48%,var(--near-black) 100%);color:var(--offwhite);border-radius:var(--r-lg);padding:28px;box-shadow:var(--lift)}
+.plan{background:var(--navy);background:radial-gradient(140% 135% at 12% 0%,#101B33 0%,var(--navy) 48%,var(--near-black) 100%);color:var(--offwhite);border-radius:var(--r-lg);padding:28px;box-shadow:var(--lift)}
 .plan .peyebrow{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-light);margin:0 0 6px}
 .plan h1{color:#fff;font-size:clamp(24px,4vw,32px);font-weight:800;margin:0 0 6px}
 .plan .psub{font-family:var(--serif);font-style:normal;color:var(--offwhite);opacity:.86;margin:0 0 22px;max-width:60ch}
@@ -153,7 +153,7 @@ section.block:first-of-type{border-top:none}
 .ring text{font-family:var(--disp)}
 .ring-card h3{font-size:14px;font-weight:700;color:var(--navy)}
 .ring-card .rsub{font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin-top:2px}
-.readiness{grid-column:1/-1;display:flex;align-items:center;gap:26px;padding:22px 26px;background:var(--navy);background:linear-gradient(120deg,#17284a,var(--navy));color:#fff;flex-wrap:wrap}
+.readiness{grid-column:1/-1;display:flex;align-items:center;gap:26px;padding:22px 26px;background:var(--navy);background:linear-gradient(120deg,#101B33,var(--navy));color:#fff;flex-wrap:wrap}
 .readiness .ring text{fill:#fff}
 .readiness .rtext h3{color:#fff;font-size:20px}
 .readiness .rtext p{color:var(--offwhite);opacity:.85;font-family:var(--serif);font-style:normal;margin-top:4px;max-width:52ch}
@@ -247,8 +247,11 @@ section.block:first-of-type{border-top:none}
 .coach-input input:focus{border-color:var(--gold);outline:none;background:#fff}
 
 /* ---------- overlays (session, instructor, onboarding) ---------- */
-.overlay{position:fixed;inset:0;z-index:60;background:rgba(6,10,24,.55);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s}
-.overlay.open{opacity:1;pointer-events:auto}
+/* visibility:hidden, not just opacity:0. A closed dialog at opacity 0 is
+   invisible but still focusable, so tabbing walked a keyboard user into
+   three dialogs that were not on screen. */
+.overlay{position:fixed;inset:0;z-index:60;background:rgba(6,10,24,.55);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s,visibility 0s linear .25s}
+.overlay.open{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .25s}
 .sheet{background:var(--white);border-radius:var(--r-lg);max-width:640px;width:100%;max-height:90vh;overflow:auto;box-shadow:var(--lift);animation:pop .28s var(--ease)}
 @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
 .sheet-head{display:flex;align-items:center;gap:12px;padding:20px 24px;border-bottom:1px solid var(--line-soft);position:sticky;top:0;background:var(--white);z-index:2}
@@ -281,7 +284,7 @@ section.block:first-of-type{border-top:none}
 .note{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;font-size:13px;color:var(--ink-soft);line-height:1.5;margin-bottom:18px}
 
 /* ---------- onboarding ---------- */
-#onboard{position:fixed;inset:0;z-index:80;background:radial-gradient(120% 120% at 50% 0%,#12203f 0%,var(--navy) 46%,var(--near-black) 100%);color:var(--offwhite);display:flex;flex-direction:column}
+#onboard{position:fixed;inset:0;z-index:80;background:radial-gradient(120% 120% at 50% 0%,#101B33 0%,var(--navy) 46%,var(--near-black) 100%);color:var(--offwhite);display:flex;flex-direction:column}
 #onboard[hidden]{display:none}
 .ob-stage{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 24px;overflow:auto}
 .ob-panel{width:100%;max-width:540px;text-align:center}
@@ -328,7 +331,7 @@ section.block:first-of-type{border-top:none}
 .mode-top{padding:18px 18px 14px;color:#fff;background:var(--navy);position:relative}
 .mode-top.quiz{background:linear-gradient(130deg,#6d2f8f,#3b1a52)}
 .mode-top.race{background:linear-gradient(130deg,#A0522D,#5c241c)}
-.mode-top.tbl{background:linear-gradient(130deg,#1E3D4C,#1E3D4C)}
+.mode-top.tbl{background:linear-gradient(130deg,#08101F,#101B33)}
 .mode-top.escape{background:linear-gradient(130deg,#B8924A,#7a5f28)}
 .mode-top.draw{background:linear-gradient(130deg,#2b6b57,#163b30)}
 .mode-top .mtag{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.9}
@@ -367,7 +370,7 @@ section.block:first-of-type{border-top:none}
 .g-tile:hover{transform:translateY(-2px);filter:brightness(1.06)}
 .g-tile:disabled{cursor:default}
 .g-tile .sym{width:26px;height:26px;flex:none;display:grid;place-items:center;background:rgba(255,255,255,.25);border-radius:6px;font-weight:800}
-.g-tile.t0{background:#A0522D}.g-tile.t1{background:#1E6091}.g-tile.t2{background:#B8924A;color:#1E3D4C}.g-tile.t3{background:#2b6b57}
+.g-tile.t0{background:#A0522D}.g-tile.t1{background:#1E6091}.g-tile.t2{background:#B8924A;color:#08101F}.g-tile.t3{background:#2b6b57}
 .g-tile.correct{outline:4px solid #2b6b57;box-shadow:0 0 0 4px rgba(43,107,87,.3)}
 .g-tile.wrong{opacity:.4}
 .g-feedback{text-align:center;font-weight:800;font-size:17px;margin:16px 0 0}
@@ -426,8 +429,22 @@ section.block:first-of-type{border-top:none}
 .wk-pick[aria-pressed="true"] .lbl{text-decoration:none;opacity:1;color:var(--navy)}
 .wk-pick .lbl b{font-weight:800}
 /* floating pomodoro (dark, solid) */
-.pomo-float{position:fixed;right:20px;bottom:20px;width:322px;max-width:calc(100vw - 32px);background:#1E3D4C;background:linear-gradient(158deg,#17284a 0%,#1E3D4C 55%,#1E3D4C 100%);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-lg);box-shadow:0 22px 48px -16px rgba(0,0,0,.62);color:var(--offwhite);z-index:75;overflow:hidden}
-.pomo-float[hidden]{display:none}
+/* 847px tall on a 900px screen, which is why it was 'in the way': it was
+   not a widget, it was a second column, and it sat on top of eight
+   buttons including Start the session. Capped to the viewport, and the
+   sound panel below is folded away by default. */
+.pomo-float{position:fixed;right:20px;bottom:20px;width:322px;max-width:calc(100vw - 32px);max-height:calc(100vh - 32px);display:flex;flex-direction:column;background:#08101F;background:linear-gradient(158deg,#101B33 0%,#08101F 55%,#08101F 100%);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-lg);box-shadow:0 22px 48px -16px rgba(0,0,0,.62);color:var(--offwhite);z-index:75;overflow:hidden}
+.pomo-float[hidden]{display:none!important}
+/* The task list is the only part that grows without limit, and it was
+   what made the widget 716px of column. It scrolls now, so the whole
+   thing stays about the size of a phone notification. */
+.pf-body{overflow:auto;min-height:0;max-height:190px}
+/* the drag handle should look like one */
+.pf-head{cursor:grab;touch-action:none}
+.pf-head:active{cursor:grabbing}
+.pf-grip::before{content:'\2b0d\00a0';font-size:12px;opacity:.8}
+/* focus sound: five buttons, a link box, three save chips and a slider,
+   which together were over half the height of the panel */
 .pf-head{display:flex;align-items:center;gap:8px;padding:9px 12px;background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.10);cursor:grab;user-select:none;touch-action:none}
 .pf-head:active{cursor:grabbing}
 .pf-grip{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-light);margin-right:auto}
@@ -455,20 +472,9 @@ section.block:first-of-type{border-top:none}
 .pf-body .btn{font-size:12.5px;padding:7px 11px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.22);color:#fff}
 .pf-body .btn:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.4);box-shadow:none}
 .pf-body .btn.primary.pf-body .btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy)}
-.pf-sound{border-top:1px solid rgba(255,255,255,.10);padding:10px 12px;display:grid;gap:8px}
-.pf-slabel{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,241,232,.55)}
-.pf-sbtns{display:flex;gap:6px;flex-wrap:wrap}
-.pf-s{font-size:12px;font-weight:700;color:var(--offwhite);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:5px 11px;cursor:pointer}
-.pf-s[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--navy)}
-.pf-link{display:flex;gap:6px}
 .pf-link input,#pfSaved{flex:1;min-width:0;font-family:inherit;font-size:12px;padding:6px 8px;border:1.5px solid rgba(255,255,255,.18);border-radius:8px;background:rgba(255,255,255,.06);color:#fff}
 .pf-link input::placeholder{color:rgba(245,241,232,.45)}
 .pf-link .btn{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.22);color:#fff}
-.pf-assign{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.pf-asg{font-size:12px;padding:5px 10px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.22);color:#fff}
-.pf-s[data-set="1"]::after{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-left:6px;vertical-align:middle}
-.pf-s[data-set="1"][aria-pressed="true"]::after{background:var(--navy)}
-.pf-sound input[type=range]{width:100%;accent-color:var(--gold)}
 .pomo-float.mini{width:150px;border-radius:50%;overflow:visible}
 .pomo-float.mini .pf-head{position:absolute;top:-8px;right:-8px;left:auto;padding:0;background:transparent;border:0;z-index:3}
 .pomo-float.mini .pf-grip{display:none}
@@ -476,7 +482,6 @@ section.block:first-of-type{border-top:none}
 .pomo-float.mini #pfMin{width:30px;height:30px;border-radius:50%;background:var(--navy);border:1.5px solid rgba(255,255,255,.35);box-shadow:0 4px 10px rgba(0,0,0,.4)}
 .pomo-float.mini .pf-ring{width:130px;height:130px;margin:10px}
 .pomo-float.mini .pf-clock{font-size:28px}
-.pomo-float.mini .pf-body.pomo-float.mini .pf-sound{display:none}
 
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
@@ -544,7 +549,7 @@ section.block:first-of-type{border-top:none}
       <svg viewBox="40 10 125 148" aria-hidden="true"><g transform="translate(0,18)">
         <g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#C2734D"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C2734D"/></g>
         <g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#A0522D"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#A0522D"/></g>
-        <g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#1E3D4C"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#1E3D4C"/></g>
+        <g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#FAFAF9"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#FAFAF9"/></g>
       </g></svg>
       <span><span class="lt">Mastery <span class="ac">OS</span></span><span class="ls">Human Anatomy</span></span>
     </span>
@@ -628,6 +633,7 @@ section.block:first-of-type{border-top:none}
         <div><p class="eyebrow">Section 4</p><h2 id="h-weak">Weakness Dashboard</h2><p class="lead">Automatically collected from misses, low confidence, and overdue recall.</p></div>
       </div>
       <div id="weakWrap"><!-- JS --></div>
+      <div id="loopWeak"><!-- JS --></div>
     </div>
   </section>
 
@@ -647,11 +653,11 @@ section.block:first-of-type{border-top:none}
     <div class="wrap">
       <div class="sec-head">
         <div><p class="eyebrow">Section 5</p><h2 id="h-flow">Self-Tutoring Workflow</h2><p class="lead">The same six-step cycle every session, so learning becomes a habit, not a guess.</p></div>
-        <button class="btn primary" data-session="today">Run the full cycle</button>
+        <button class="btn primary" data-session="today">Start today's session</button>
       </div>
       <div class="flow" id="flowWrap"><!-- JS --></div>
       <h3 style="margin:30px 0 4px;font-size:17px">Signature exercises</h3>
-      <p style="font-size:14px;color:var(--ink-soft);margin:0 0 12px">Two deep-practice moves you can run on any competency. Given, not Googled.</p>
+      <p style="font-size:14px;color:var(--ink-soft);margin:0 0 12px">Two deep-practice moves you can run on any competency, on paper, from memory.</p>
       <div class="tip-note" style="display:flex;gap:10px;align-items:flex-start;background:var(--white);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:var(--r);padding:11px 14px;margin:0 0 16px;font-size:13.5px;color:var(--navy)"><span aria-hidden="true">📓</span><span>Keep one dedicated notebook for these written exercises: your drawings, mind-maps, and brain dumps. Date each page and label it with the competency. It becomes your own recall log to review before exams, and the act of writing by hand is part of what makes it stick.</span></div>
       <div class="grid g3" id="exGrid"><!-- JS --></div>
     </div>
@@ -780,21 +786,12 @@ section.block:first-of-type{border-top:none}
     <div class="pf-ring-c"><span class="pf-clock" id="pfClock">25:00</span><span class="pf-ring-lbl" id="pfTitle">Focus</span></div>
   </div>
   <div class="pf-body" id="pfBody"></div>
-  <div class="pf-sound">
-    <span class="pf-slabel">Focus sound</span>
-    <div class="pf-sbtns">
-      <button class="pf-s" data-psound="off" aria-pressed="true">Off</button>
-      <button class="pf-s" data-psound="lofi">Lo-fi</button>
-      <button class="pf-s" data-psound="classical">Classical</button>
-      <button class="pf-s" data-psound="jazz">Jazz</button>
-      <button class="pf-s" data-psound="green">Green noise</button>
-    </div>
-    <div class="pf-link"><input id="pfLink" type="text" placeholder="Paste a YouTube link" autocomplete="off"><button class="btn" id="pfLinkGo" style="font-size:12px;padding:6px 12px">Play</button></div>
-    <div class="pf-assign"><span class="pf-slabel" style="align-self:center;margin:0">Save link as</span><button class="btn pf-asg" data-slot="lofi">Lo-fi</button><button class="btn pf-asg" data-slot="classical">Classical</button><button class="btn pf-asg" data-slot="jazz">Jazz</button></div>
-    <label class="visually-hidden" for="pfVol">Volume</label>
-    <input id="pfVol" type="range" min="0" max="100" value="55">
-    <div id="pfYT" style="position:fixed;left:-9999px;bottom:0;width:220px;height:150px;opacity:.01;pointer-events:none" aria-hidden="true"></div>
-  </div>
+  <!-- The focus-sound panel lived here: five preset buttons, a YouTube
+       link box, three save-as chips, a volume slider and a hidden YT iframe.
+       Removed. Browser autoplay policy blocked the player often enough that it
+       was indistinguishable from broken, and it was over half the height of the
+       widget. Students have Spotify. -->
+
 </div>
 
 <div id="toast" role="status" aria-live="polite"></div>
@@ -810,6 +807,7 @@ section.block:first-of-type{border-top:none}
 <script src="rubrics.js"></script>
 <script src="draw-checklists.js"></script>
 <script src="loops-index.js"></script>
+<script src="loops-stations.js"></script>
 <script src="section-sync.js"></script>
 <script>
 "use strict";
@@ -834,7 +832,7 @@ var TODAY=(function(){
    ICONS
 ========================================================= */
 var I={
-  target:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>', flask:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 18l-5-9V3"/><path d="M7 15h10"/></svg>', recall:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4M9 4h6"/><rect x="5" y="8" width="14" height="12" rx="2"/><path d="M9 13h6M9 16h4"/></svg>', weak:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>', bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>', clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>', diagnose:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>', repair:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2-2z"/></svg>', retrieve:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v6h6"/><path d="M4 10a8 8 0 1 1 2 5"/></svg>', apply:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 7v6c0 5 3.4 7.7 8 9 4.6-1.3 8-4 8-9V7z"/></svg>', teach:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11h-6M19 8v6"/></svg>', reflect:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-4 10.5V17h8v-3.5A6 6 0 0 0 12 3z"/><path d="M9 21h6"/></svg>', draw:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18z"/></svg>', label:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 12 22l-9-9V3h10z"/><circle cx="7.5" cy="7.5" r="1.5" fill="currentColor"/></svg>', eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>', micro:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 19v3"/></svg>', speak:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>', clinical:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M12 9v6M9 12h6"/></svg>', build:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/><circle cx="12" cy="12" r="3"/></svg>', check:'<svg viewBox="0 0 24 24" fill="none" stroke="#1E3D4C" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>', chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>'
+  target:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>', flask:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 18l-5-9V3"/><path d="M7 15h10"/></svg>', recall:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4M9 4h6"/><rect x="5" y="8" width="14" height="12" rx="2"/><path d="M9 13h6M9 16h4"/></svg>', weak:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>', bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>', clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>', diagnose:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>', repair:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2-2z"/></svg>', retrieve:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v6h6"/><path d="M4 10a8 8 0 1 1 2 5"/></svg>', apply:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 7v6c0 5 3.4 7.7 8 9 4.6-1.3 8-4 8-9V7z"/></svg>', teach:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11h-6M19 8v6"/></svg>', reflect:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-4 10.5V17h8v-3.5A6 6 0 0 0 12 3z"/><path d="M9 21h6"/></svg>', draw:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18z"/></svg>', label:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 12 22l-9-9V3h10z"/><circle cx="7.5" cy="7.5" r="1.5" fill="currentColor"/></svg>', eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>', micro:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 19v3"/></svg>', speak:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>', clinical:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M12 9v6M9 12h6"/></svg>', build:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/><circle cx="12" cy="12" r="3"/></svg>', check:'<svg viewBox="0 0 24 24" fill="none" stroke="#08101F" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>', chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>'
 };
 
 /* =========================================================
@@ -1071,10 +1069,95 @@ function mergeAgg(into, from){
    Watch mode writes nothing, which is correct. Mixed reviews are
    stored under ids that carry no record of which loops went into
    them, so they are skipped rather than guessed at. */
+/* WHICH STATIONS ARE YOU ACTUALLY MISSING.
+
+   loopsEngine_v1 holds one record per station. Its own weakness score is a
+   recency-weighted miss rate over the last ten attempts, and 0.4 or worse is
+   what the Loops app itself calls weak. The same rule is used here so the two
+   apps never disagree about what a weak station is.
+
+   "over" is the interesting one: answered with high confidence and still
+   wrong. That is the miss a lab practical punishes hardest, because the
+   student does not know to go back to it. */
+function loopStationStore(){
+  try{ return JSON.parse(localStorage.getItem('loopsEngine_v1')||'null'); }catch(e){ return null; }
+}
+function loopStationMiss(r){
+  if(!r || !r.seen) return null;
+  if(r.recent && r.recent.length){
+    var w=0, m=0;
+    for(var j=0;j<r.recent.length;j++){
+      var g=j+1, o=r.recent[j];
+      w += g;
+      m += g * ((o==='e'||o==='g') ? 0 : (o==='h' ? 0.5 : 1));
+    }
+    return w ? m/w : null;
+  }
+  return ((r.again||0) + 0.5*(r.hard||0)) / r.seen;
+}
+/* every weak station, newest engine data, with the structure name attached */
+function loopWeakStations(){
+  var store = loopStationStore(); if(!store) return [];
+  var NAMES = window.BIO004_LOOP_STATIONS || {};
+  var L = window.BIO004_LOOPS || [];
+  var titleFor = {}; L.forEach(function(x){ titleFor[x.id] = x.title; });
+  var out = [];
+  Object.keys(store).forEach(function(k){
+    var bits = k.split('#'); if(bits.length !== 2) return;
+    var loopId = bits[0], idx = parseInt(bits[1], 10);
+    var r = store[k]; var miss = loopStationMiss(r);
+    if(miss === null || miss < 0.4) return;
+    var meta = NAMES[loopId];
+    var name = (meta && meta.st && meta.st[idx]) ? meta.st[idx] : (loopId + ' station ' + (idx+1));
+    out.push({loopId:loopId, idx:idx, name:name,
+              loopTitle:(meta && meta.title) || titleFor[loopId] || loopId,
+              unit:(meta && meta.unit) || '',
+              miss:miss, seen:r.seen||0, over:r.over||0, spell:r.spell||0});
+  });
+  out.sort(function(a,b){ return (b.over - a.over) || (b.miss - a.miss) || (b.seen - a.seen); });
+  return out;
+}
+/* roll the station records up to the competencies each loop covers */
+function loopStationAgg(){
+  var store = loopStationStore(); var agg = {};
+  if(!store) return agg;
+  var L = window.BIO004_LOOPS || []; var byId = {};
+  L.forEach(function(x){ byId[x.id] = x.comps || []; });
+  var per = {};
+  Object.keys(store).forEach(function(k){
+    var bits = k.split('#'); if(bits.length !== 2) return;
+    var r = store[k]; if(!r || !r.seen) return;
+    var g = per[bits[0]] || (per[bits[0]] = {a:0, c:0});
+    g.a += r.seen;
+    g.c += (r.easy||0) + (r.good||0) + 0.5*(r.hard||0);
+  });
+  Object.keys(per).forEach(function(loopId){
+    var comps = byId[loopId]; if(!comps || !comps.length) return;
+    comps.forEach(function(id){
+      var x = agg[id] || (agg[id] = {a:0, c:0, seen:''});
+      x.a += per[loopId].a; x.c += per[loopId].c;
+    });
+  });
+  return agg;
+}
 function loopAgg(){
   var agg = {};
   var LOOPS = window.BIO004_LOOPS; if(!LOOPS) return agg;
-  var st; try{ st = JSON.parse(localStorage.getItem('loopScores_v1')||'null'); }catch(e){ return agg; }
+  var st; try{ st = JSON.parse(localStorage.getItem('loopScores_v1')||'null'); }catch(e){ st = null; }
+  /* THE PIPE WAS NEVER CONNECTED.
+
+     This read loopScores_v1. The Loops app has never written that key. What
+     it actually writes is loopsEngine_v1, one record per STATION, keyed
+     "<loopId>#<index>":
+       {seen, again, hard, good, easy, recent:[], spell, lastConf, over}
+     So loopAgg() has always found nothing, returned {}, and contributed
+     nothing to mastery, which is why Loops work never showed up here however
+     much of it a student did.
+
+     Both are read now. The station store is the real one and is folded in
+     first; loopScores_v1 stays supported in case anything ever writes it. */
+  var agg2 = loopStationAgg();
+  Object.keys(agg2).forEach(function(id){ agg[id] = agg2[id]; });
   if(!st) return agg;
   var byId = {}; LOOPS.forEach(function(l){ byId[l.id] = l.comps || []; });
   Object.keys(st).forEach(function(loopId){
@@ -1275,10 +1358,20 @@ function untouched(){
 /* Anything last touched before the fall term began is left over from
    another term. It is not evidence about this student in this course,
    and it should not put a competency on the repair list. */
+/* WORK DONE BEFORE DAY ONE IS STILL YOUR WORK.
+
+   This used to treat anything dated before the first day of term as left over
+   from a previous term. Students who open the app in the week before class
+   starts, which is exactly when it gets handed out, had every exercise they
+   did silently dropped from the weakness engine. The board sat at zero no
+   matter what they reported, and told them "No weaknesses flagged. Strong
+   work." A real previous term ends months earlier, so a 30 day grace window
+   keeps the original intent and stops throwing away this week. */
+var STALE_GRACE_MS = 30 * 24 * 3600 * 1000;
 function staleFromLastTerm(c){
   if(!c.last) return false;
   var t = Date.parse(c.last);
-  return !isNaN(t) && t < TERM_START.getTime();
+  return !isNaN(t) && t < (TERM_START.getTime() - STALE_GRACE_MS);
 }
 
 /* One wrong answer once is a bad guess, not a weakness. Under three
@@ -1290,8 +1383,21 @@ function attemptsFor(id){
   try { var g = E.summary()[id]; return g ? g.of : 0; } catch(e){ return null; }
 }
 function thinEvidence(c){
+  /* The under-three-attempts rule exists because one wrong multiple-choice
+     answer is a bad guess rather than a weakness. A DELIBERATE self-score is
+     different: a student who drew it, revealed the checklist and pressed
+     "Patchy" has told us something, and suppressing that produced the worst
+     screen in the app, "No weaknesses flagged. Strong work." shown to someone
+     who had just reported they could barely do it. */
+  if(c && c.selfMiss) return false;
   var n = attemptsFor(c.id);
   return (n !== null) && n > 0 && n < 3;
+}
+/* 2 of 6 or worse on a self-scored exercise is a real signal, not noise. */
+function selfScored(c,score){
+  if(!c) return;
+  if(score <= 3) c.selfMiss = true;
+  else if(score >= 5) delete c.selfMiss;
 }
 
 function weaknesses(){
@@ -1376,7 +1482,7 @@ function renderPlan(){
     '</div>'+
   '</div>'+
   '<div class="plan-cta">'+
-    '<button class="btn gold big" data-planwizard>'+I.bolt+'Start today</button>'+
+    '<button class="btn gold big" data-planwizard>'+I.bolt+'Plan my week</button>'+
   '</div>'+
   '<p style="font-size:12.5px;color:var(--gold-light);margin-top:10px;opacity:.85">One step at a time. We\'ll recommend what to do first, you stay in control.</p>'+
   cramMeter();
@@ -1424,7 +1530,7 @@ function renderDailyBuild(){
   var fwd=nc?('Keeps you moving forward toward '+esc(nc.label)+' on '+esc(nc.dayName)+'. '):'';
   var note=fwd+'Ordered to your gaps: highest-yield work for Week '+p.week.n+' first, your weakest within that, and competencies you have proven drop out to spaced review. Includes pre-exposure to new material plus due reviews from earlier weeks.'+(nc&&nc.exam&&nc.days<=3?' Weighted toward review with the exam coming up.':'');
   var trim=p.trimmed?'<p class="build-trim">'+p.trimmed+' more competenc'+(p.trimmed===1?'y':'ies')+' did not fit today’s '+fmtHM(p.budget)+'. Add a study day or more hours to reach them, or they roll to tomorrow.</p>':'';
-  el.innerHTML='<div class="card build-card"><div class="build-head"><div><p class="eyebrow">'+eyebrow+'</p><h3>'+fmtHM(doneMins)+' of '+fmtHM(p.budget)+' done</h3></div><button class="btn primary" data-session="today">Start the session</button></div><div class="build-bar" role="img" aria-label="'+pct+' percent of today complete"><span style="width:'+pct+'%"></span></div><p style="font-size:12px;color:var(--ink-faint);margin:0 0 10px">'+note+'</p>'+(rows||'<p style="color:var(--ink-faint);padding:8px 0">Nothing scheduled. Enjoy the breather.</p>')+trim+'</div>';
+  el.innerHTML='<div class="card build-card"><div class="build-head"><div><p class="eyebrow">'+eyebrow+'</p><h3>'+fmtHM(doneMins)+' of '+fmtHM(p.budget)+' done</h3></div><button class="btn primary" data-session="today">Start today&#39;s session</button></div><div class="build-bar" role="img" aria-label="'+pct+' percent of today complete"><span style="width:'+pct+'%"></span></div><p style="font-size:12px;color:var(--ink-faint);margin:0 0 10px">'+note+'</p>'+(rows||'<p style="color:var(--ink-faint);padding:8px 0">Nothing scheduled. Enjoy the breather.</p>')+trim+'</div>';
 }
 
 /* =========================================================
@@ -1441,7 +1547,7 @@ function ring(pct,color,big){
 function ringColor(v){return v>=70?'#3F7A5B':v>=50?'#B8924A':'#A0522D';}
 function renderDashboard(){
   var rd=readiness();
-  var top='<div class="card readiness">'+ring(rd,'#B8924A',true)+'<div class="rtext"><p class="eyebrow" style="color:var(--gold)">Practice Readiness</p><h3>Practice readiness: '+rd+'%</h3><p>'+readinessLine(rd)+'</p><p style="font-size:12px;opacity:.72;margin-top:8px">This reflects only what you have practiced here, not everything your exam may cover. Always cross-check the structure list and syllabus.</p></div><div style="flex:1"></div><button class="btn gold" data-session="today">Close the gap</button></div>';
+  var top='<div class="card readiness">'+ring(rd,'#B8924A',true)+'<div class="rtext"><p class="eyebrow" style="color:var(--gold)">Practice Readiness</p><h3>Practice readiness: '+rd+'%</h3><p>'+readinessLine(rd)+'</p><p style="font-size:12px;opacity:.72;margin-top:8px">This reflects only what you have practiced here, not everything your exam may cover. Always cross-check the structure list and syllabus.</p></div><div style="flex:1"></div><button class="btn gold" data-session="today">Start today&#39;s session</button></div>';
   var cards=S.dims.map(function(d){
     return '<div class="card hover ring-card"><div class="ring-wrap">'+ring(d.val,ringColor(d.val))+'</div><h3>'+esc(d.name)+'</h3><p class="rsub">'+bandWord(d.val)+'</p></div>';
   }).join('');
@@ -1517,6 +1623,69 @@ function loopFor(compId){
   return hits[0];
 }
 
+/* THE LOOPS BOARD.
+
+   Separate from the competency weakness board on purpose. That one answers
+   "what can you not do yet". This one answers "which exact structures do you
+   keep getting wrong on the practical", which is a different and much more
+   specific question, and it is the question a lab exam actually asks.
+
+   Loops stays a separate app that students open in its own tab. This board
+   only reads what that app has already recorded, so nothing here can break
+   Loops and Loops needs no changes to feed it. */
+function renderLoopWeak(){
+  var el = $('#loopWeak'); if(!el) return;
+  var weak = loopWeakStations();
+  var store = loopStationStore();
+
+  if(!store){
+    el.innerHTML = '<div class="card" style="margin-top:16px;padding:18px 20px">'
+      + '<p class="eyebrow" style="color:var(--terra-dark)">Lab ID practice</p>'
+      + '<h3 style="font-size:16px;margin:2px 0 6px">Nothing from Loops yet</h3>'
+      + '<p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 12px;max-width:60ch">'
+      + 'Loops is the only place the cadaver and specimen structures can be practised outside the lab. '
+      + 'Run one and the structures you miss will show up here by name, so you know exactly what to '
+      + 'go back to.</p>'
+      + '<a class="btn primary" href="' + esc(LOOPS_BASE) + '" target="_blank" rel="noopener">Open Loops</a></div>';
+    return;
+  }
+
+  var total = Object.keys(store).length;
+  if(!weak.length){
+    el.innerHTML = '<div class="card" style="margin-top:16px;padding:18px 20px">'
+      + '<p class="eyebrow" style="color:var(--terra-dark)">Lab ID practice</p>'
+      + '<h3 style="font-size:16px;margin:2px 0 6px">No weak stations, from ' + total + ' practised</h3>'
+      + '<p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 12px">Nothing you have run is coming back wrong. Add more stations rather than redoing these.</p>'
+      + '<a class="btn" href="' + esc(LOOPS_BASE) + '" target="_blank" rel="noopener">Open Loops</a></div>';
+    return;
+  }
+
+  var over = weak.filter(function(x){ return x.over > 0; }).length;
+  var rows = weak.slice(0, 12).map(function(x){
+    var pct = Math.round(x.miss * 100);
+    var flags = '';
+    if(x.over) flags += '<span class="tag tag-conf">Sure and wrong &times;' + x.over + '</span>';
+    if(x.spell) flags += '<span class="tag tag-missed">Spelling &times;' + x.spell + '</span>';
+    return '<div class="weak-item">' + flags
+      + '<span class="wn">' + esc(x.name) + '</span>'
+      + '<span class="wu">' + esc(x.loopTitle) + (x.unit ? ' &middot; ' + esc(x.unit) : '') + '</span>'
+      + '<span class="wu" style="min-width:74px;text-align:right">' + pct + '% missed</span>'
+      + '<a class="btn" href="' + esc(LOOPS_BASE) + '" target="_blank" rel="noopener" '
+      + 'style="padding:7px 12px;font-size:12.5px" title="Opens the Loops hub. Choose ' + esc(x.loopTitle) + '">Run it</a>'
+      + '</div>';
+  }).join('');
+
+  var more = weak.length > 12 ? '<p style="font-size:12.5px;color:var(--ink-faint);padding:10px 14px;margin:0">'
+      + (weak.length - 12) + ' more below these.</p>' : '';
+
+  el.innerHTML = '<div class="weak-head" style="margin-top:18px">'
+    + '<div><div class="wc">' + weak.length + '</div><div class="wl">lab structures coming back wrong</div></div>'
+    + '<p class="serif" style="flex:1;min-width:200px">Straight from your Loops runs, by name. '
+    + (over ? '<b>' + over + '</b> of these you answered confidently and still got wrong, which is the miss a practical punishes hardest, so those are first. ' : '')
+    + 'Out of ' + total + ' stations you have practised.</p>'
+    + '<a class="btn rust big" href="' + esc(LOOPS_BASE) + '" target="_blank" rel="noopener">Open Loops</a></div>'
+    + '<div class="card">' + rows + more + '</div>';
+}
 function renderWeakness(){
   var w=weaknesses();
   var tagMap={missed:['tag-missed','Frequently missed'],conf:['tag-conf','Low confidence'],overdue:['tag-overdue','Overdue recall']};
@@ -1695,22 +1864,22 @@ function coachRespond(id,rawText){
   switch(id){
     case 'study-today':
       reply='Start your full cycle. Today\'s lecture is <b>'+nm(lec)+'</b> and lab is <b>'+nm(lab)+'</b>. You also have <b>'+due.length+'</b> recall items due and <b>'+w.length+'</b> weak spots. The single highest-value move is one guided session that hits all of it.';
-      actions=[{label:'Start Today\'s Session',kind:'gold',attr:'data-session="today"'}];break;
+      actions=[{label:'Start today\'s session',kind:'gold',attr:'data-session="today"'}];break;
     case 'twenty':
       reply='Twenty minutes is enough for a focused repair. I would spend it on your two weakest: <b>'+(w[0]?esc(w[0].c.name):'')+'</b> and <b>'+(w[1]?esc(w[1].c.name):'')+'</b>. Retrieve, then draw from memory. No rereading. Even simpler: go into your weakness cards and clear a few.';
-      actions=[{label:'Run 20-min micro-session',kind:'gold',attr:'data-session="micro"'},{label:'Work weakness cards',attr:'data-toolblank="#s-recall"'}];break;
+      actions=[{label:'Start today\'s session',kind:'gold',attr:'data-session="today"'},{label:'Work weakness cards',attr:'data-toolblank="#s-recall"'}];break;
     case 'prep-lab':
       reply='Lab today is <b>'+nm(lab)+'</b>. Lab is identification under pressure, so practice naming on blank figures and specimens, not reading. Cadaver and histology are your lowest dimensions right now.';
-      actions=[{label:'Open Anatomy Canvas',kind:'',attr:'data-tool="mastery-canvas.html"'},{label:'Run lab prep',kind:'primary',attr:'data-session="lab"'}];break;
+      actions=[{label:'Open Anatomy Canvas',kind:'',attr:'data-tool="mastery-canvas.html"'},{label:'Start today\'s session',kind:'primary',attr:'data-session="today"'}];break;
     case 'test-weak':
       reply='You have <b>'+w.length+'</b> flagged competencies. I will build a session from only those, hardest first, starting with <b>'+(w[0]?esc(w[0].c.name):'')+'</b>.';
       actions=[{label:'Repair My Weaknesses',kind:'rust',attr:'data-session="repair"'}];break;
     case 'forget':
       reply='Forgetting is the signal, not the failure. The fix is spacing: pull it from memory today, again in two days, then further apart each time it sticks. Rereading feels productive but does not build durable memory. Retrieval does.';
-      actions=[{label:'Open Spaced Recall',kind:'',attr:'data-tool="#s-recall"'},{label:'Schedule this repair',kind:'primary',attr:'data-session="repair"'}];break;
+      actions=[{label:'Open Spaced Recall',kind:'',attr:'data-tool="#s-recall"'},{label:'Repair my weak spots',kind:'primary',attr:'data-session="repair"'}];break;
     case 'ready':
       reply='You are <b>'+rd+'%</b> ready with <b>'+(exam>0?exam:0)+'</b> days to the practical. '+readinessLine(rd)+' Your lowest dimensions are '+lowDims(3)+'.';
-      actions=[{label:'See dashboard',kind:'',attr:'data-scroll="#s-dash"'},{label:'Close the gap',kind:'gold',attr:'data-session="today"'}];break;
+      actions=[{label:'See dashboard',kind:'',attr:'data-scroll="#s-dash"'},{label:'Start today\'s session',kind:'gold',attr:'data-session="today"'}];break;
     case 'another':
       reply='Tell me the competency and I will reframe it three ways: a plain-language version, a picture to draw, and a clinical example. Which one is fighting you? A good place to start is your weakest, <b>'+(w[0]?esc(w[0].c.name):'')+'</b>.';
       actions=[{label:'Prove '+(w[0]?esc(w[0].c.name):'it'),kind:'primary',attr:w[0]?('data-prove="'+w[0].c.id+'"'):'data-session="repair"'}];break;
@@ -1721,7 +1890,7 @@ function coachRespond(id,rawText){
       actions=[{label:'Repair my weak spots',kind:'rust',attr:'data-session="repair"'},{label:'Update grades',attr:'data-opengrades'}];break;
     case 'durable':
       reply='Durable memory is built four ways, in this order: retrieve it cold, draw it from memory, explain it aloud, then space the return. Consuming content again does almost nothing. Your Spaced Recall Consistency is '+dimVal('recall')+'% and Teaching Ability is '+dimSkill('Teaching Ability')+'%, so teaching is your biggest untapped lever.';
-      actions=[{label:'Run the full cycle',kind:'gold',attr:'data-session="today"'}];break;
+      actions=[{label:'Start today\'s session',kind:'gold',attr:'data-session="today"'}];break;
     default:
       reply=coachFreeText(rawText||'');
       actions=coachFreeActions(rawText||'');
@@ -1744,7 +1913,7 @@ function coachFreeActions(t){
   t=t.toLowerCase();
   if(/weak|gap|struggl/.test(t))return [{label:'Repair My Weaknesses',kind:'rust',attr:'data-session="repair"'}];
   if(/lab|cadaver/.test(t))return [{label:'Open Anatomy Canvas',kind:'',attr:'data-tool="mastery-canvas.html"'}];
-  return [{label:'Start Today\'s Session',kind:'gold',attr:'data-session="today"'}];
+  return [{label:'Start today\'s session',kind:'gold',attr:'data-session="today"'}];
 }
 
 /* =========================================================
@@ -2118,6 +2287,9 @@ var DRAW_BANK=[
 var FAKE=['Maya','Devon','Priya','Marcus','Sofia','Jamal','Lena','Theo'];
 var QUIZ_TITLE='Anatomy Blitz';
 var CUR_EX=null;
+/* which of the three signature exercises produced the score, so the right
+   dashboard dimension and the right evidence method get credited */
+var CUR_EX_KIND=null;
 function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 
 var GTIMERS=[];
@@ -2244,7 +2416,7 @@ function drawGuess(){
   gSet('Draw & Guess','Draw from memory');
   var item=DRAW_BANK[Math.floor(Math.random()*DRAW_BANK.length)];var DUR=60;
   gBody('<div class="draw-wrap"><div class="g-qmeta"><span>Draw from memory</span><span id="dtime">'+DUR+'s</span></div><p class="g-q">Draw: '+esc(item.name)+'</p><canvas id="drawCanvas" width="640" height="300"></canvas><div class="draw-tools"><button class="btn" id="dClear">Clear</button><button class="btn gold" id="dReveal">I am done, reveal</button></div></div>');
-  var cv=$('#drawCanvas');if(!cv)return;var ctx=cv.getContext('2d');ctx.lineWidth=2.4;ctx.lineCap='round';ctx.strokeStyle='#1E3D4C';var drawing=false;
+  var cv=$('#drawCanvas');if(!cv)return;var ctx=cv.getContext('2d');ctx.lineWidth=2.4;ctx.lineCap='round';ctx.strokeStyle='#08101F';var drawing=false;
   function pos(e){var r=cv.getBoundingClientRect();var sx=cv.width/r.width,sy=cv.height/r.height;var cx=((e.touches?e.touches[0].clientX:e.clientX)-r.left)*sx;var cy=((e.touches?e.touches[0].clientY:e.clientY)-r.top)*sy;return {x:cx,y:cy};}
   function down(e){drawing=true;var p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);if(e.cancelable)e.preventDefault();}
   function move(e){if(!drawing)return;var p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();if(e.cancelable)e.preventDefault();}
@@ -2265,6 +2437,7 @@ function drawGuess(){
 
 /* ---- Signature solo exercises ---- */
 function mindMap(){
+  CUR_EX_KIND='mindmap';
   gSet('Mind-Map then Recall','Signature exercise');
   var w=weaknesses();var c=runComp()||(w[0]&&w[0].c)||allComps()[0].c;CUR_EX=c;CUR_CONF=null;
   confGate(c,function(){mmTask(c);});
@@ -2584,6 +2757,7 @@ function exerciseComp(){
   return (withRub[0]||pool[0]).c;
 }
 function brainDump(){
+  CUR_EX_KIND='braindump';
   gSet('Blank-Page Brain Dump','Signature exercise');
   var c=exerciseComp();CUR_EX=c;CUR_CONF=null;
   confGate(c,function(){bdTask(c);});
@@ -2609,7 +2783,13 @@ function bdCheck(c,words){
   $('#bdScore').onclick=function(){var g=0;for(var k in checked)if(checked[k])g++;bdResult(c,rub.length,g);};
 }
 function bdResult(c,total,got){
-  var pct=total?Math.round(got/total*100):0;var bump=Math.max(1,Math.round((got/(total||1))*6));bumpComp(c,bump);bumpSkill('Retrieval',2);bumpSkill('Gap Identification',1);save();renderAll();
+  var pct=total?Math.round(got/total*100):0;var bump=Math.max(1,Math.round((got/(total||1))*6));bumpComp(c,bump);bumpSkill('Retrieval',2);bumpSkill('Gap Identification',1);
+  /* the dump scores itself against a rubric, so it never reached the
+     data-mmscore path where the dashboards get fed */
+  bumpDim('recall',Math.max(2,bump));
+  if(c.ev.indexOf('retrieval')<0)c.ev.push('retrieval');
+  selfScored(c,bump);
+  save();renderAll();
   var emoji=pct>=80?'✅':pct>=50?'📈':'🔁';var msg=pct>=80?'Strong recall.':pct>=50?'Solid, with gaps to close.':'Thin, worth another pass.';
   gBody('<div class="g-center"><div class="g-emoji">'+emoji+'</div><h3>'+pct+'%, '+got+' of '+total+'</h3><p>'+msg+' The items you left unticked are your repair targets for '+esc(c.name)+'. Mastery updated.</p><div class="g-actions"><button class="btn gold" id="bdAgain">Practice again</button><button class="btn" data-gameclose>Done</button></div></div>');
   $('#bdAgain').onclick=function(){brainDump();};
@@ -2781,7 +2961,7 @@ function openSessionChooser(kind){
       pbField('Long break after','pbEvery',[0,2,3,4],pm.longEvery,function(v){return v===0?'never':('every '+v);})+
     '</div>'+
     '<div id="pbSummary" style="background:var(--white);border:1px solid var(--line-soft);border-radius:var(--r);padding:11px 14px;font-size:13px;color:var(--navy);margin-bottom:16px"></div>'+
-    '<div class="g-actions"><button class="btn gold big" id="pbStart">Start session</button><button class="btn big" id="pbBaseline">Find my focus baseline</button></div>'+
+    '<div class="g-actions"><button class="btn gold big" id="pbStart">Start the timer</button><button class="btn big" id="pbBaseline">Find my focus baseline</button></div>'+
     '<div class="g-actions"><button class="btn" id="pmFocused">Focused run, no timer</button></div>');
   function refresh(){$('#pbSummary').textContent=pbSummaryText(pbRead());}
   ['pbBlocks','pbFocus','pbShort','pbLong','pbEvery'].forEach(function(id){var el=$('#'+id);if(el)el.onchange=refresh;});
@@ -2819,97 +2999,11 @@ function blFinish(){
 /* ---- Focus sound (background audio behind the floating timer) ---- */
 /* Lo-fi, Classical, Jazz are user-assigned slots: paste a link, Save link as, then the button plays it. */
 var SLOT_LABEL={lofi:'Lo-fi',classical:'Classical',jazz:'Jazz'};
-var AUDIO={cur:'off',yt:null,ytReady:false,booting:false,pending:null,blocked:false,ctx:null,noise:null,vol:55};
-function soundSlots(){if(!S.profile.soundSlots)S.profile.soundSlots={lofi:'',classical:'',jazz:''};return S.profile.soundSlots;}
-function ensureYT(cb){
-  /* Boot the player ONCE, early, and keep it. The old version built the player
-     on the first click, so playVideo() ran long after the user gesture had
-     expired and the browser silently blocked it. Every error was swallowed by
-     an empty catch, so a blocked or embed-disabled track looked identical to
-     nothing happening. */
-  if(AUDIO.ytReady&&AUDIO.yt){ if(cb)cb(); return; }
-  if(cb)AUDIO.pending=cb;
-  if(AUDIO.booting)return;
-  AUDIO.booting=true;
-  function build(){
-    if(AUDIO.yt)return;
-    try{
-      AUDIO.yt=new YT.Player('pfYT',{
-        height:'150',width:'220',
-        playerVars:{controls:0,disablekb:1,rel:0,playsinline:1,origin:location.origin},
-        events:{
-          onReady:function(){AUDIO.ytReady=true;var f=AUDIO.pending;AUDIO.pending=null;if(f)f();},
-          onError:function(e){ytError(e&&e.data);},
-          onStateChange:function(e){if(e&&e.data===1)AUDIO.blocked=false;}
-        }
-      });
-    }catch(err){AUDIO.booting=false;}
-  }
-  if(window.YT&&window.YT.Player){build();return;}
-  window.onYouTubeIframeAPIReady=build;
-  if(!document.getElementById('ytapi')){
-    var t=document.createElement('script');t.id='ytapi';t.src='https://www.youtube.com/iframe_api';
-    t.onerror=function(){AUDIO.booting=false;toast('YouTube could not load. A browser setting, extension, or campus network may be blocking youtube.com. Green noise still works.');};
-    document.head.appendChild(t);
-  }
-  var tries=0,iv=setInterval(function(){
-    tries++;
-    if(window.YT&&window.YT.Player){clearInterval(iv);build();}
-    else if(tries>60){clearInterval(iv);AUDIO.booting=false;toast('YouTube did not load. Check that youtube.com is not blocked, then try again. Green noise always works.');}
-  },150);
-}
-function ytError(code){
-  var msg='That link would not play.';
-  if(code===2)msg='That is not a valid YouTube video or playlist link.';
-  else if(code===5)msg='That video cannot play in an embedded player. Pick a different track.';
-  else if(code===100)msg='That video is private, deleted, or unavailable.';
-  else if(code===101||code===150)msg='The owner of that video blocked embedding, which is common on music channels. Pick a different track, or use Green noise.';
-  toast(msg);AUDIO.cur='off';setSoundPressed('off');
-}
-function startNoise(){
-  try{var Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return;if(!AUDIO.ctx)AUDIO.ctx=new Ctx();if(AUDIO.ctx.resume)AUDIO.ctx.resume();
-    var ctx=AUDIO.ctx,sr=ctx.sampleRate,buf=ctx.createBuffer(1,Math.floor(sr*2),sr),d=buf.getChannelData(0);
-    for(var i=0;i<d.length;i++)d[i]=Math.random()*2-1;
-    var src=ctx.createBufferSource();src.buffer=buf;src.loop=true;
-    var bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=500;bp.Q.value=0.6;
-    var g=ctx.createGain();g.gain.value=(AUDIO.vol/100)*0.5;
-    src.connect(bp);bp.connect(g);g.connect(ctx.destination);src.start();
-    AUDIO.noise={src:src,gain:g};
-  }catch(e){}
-}
-function stopNoise(){if(AUDIO.noise){try{AUDIO.noise.src.stop();}catch(e){}AUDIO.noise=null;}}
-function audioStopAll(){stopNoise();if(AUDIO.yt&&AUDIO.yt.stopVideo){try{AUDIO.yt.stopVideo();}catch(e){}}}
-function setSoundPressed(kind){$$('#pomoFloat .pf-s').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-psound')===kind?'true':'false');});}
-function refreshSlotChips(){var s=soundSlots();['lofi','classical','jazz'].forEach(function(k){var b=$('#pomoFloat .pf-s[data-psound="'+k+'"]');if(b)b.setAttribute('data-set',s[k]?'1':'0');});}
-function playUrl(url){
-  var list=ytList(url),id=ytId(url);
-  if(!list&&!id){toast('Paste a YouTube video or playlist link.');return;}
-  ensureYT(function(){
-    try{
-      if(list)AUDIO.yt.loadPlaylist({list:list,listType:'playlist'});
-      else AUDIO.yt.loadVideoById(id);
-      if(AUDIO.yt.unMute)AUDIO.yt.unMute();
-      AUDIO.yt.setVolume(AUDIO.vol);
-      AUDIO.yt.playVideo();
-      setTimeout(function(){
-        try{
-          if(AUDIO.yt.getPlayerState&&AUDIO.yt.getPlayerState()!==1&&AUDIO.cur!=='off'){
-            toast('Your browser blocked autoplay. Tap the sound chip once more and it will start.');
-          }
-        }catch(e){}
-      },2000);
-    }catch(e){toast('Could not start that link.');}
-  });
-}
-function assignSlot(kind){var url=String(($('#pfLink')||{}).value||'').trim();if(!ytId(url)&&!ytList(url)){toast('Paste a YouTube link first, then Save link as '+(SLOT_LABEL[kind]||kind)+'.');return;}soundSlots()[kind]=url;save();refreshSlotChips();toast('Saved as '+(SLOT_LABEL[kind]||kind)+'.');audioSet(kind);}
-function audioVol(v){AUDIO.vol=v;if(AUDIO.noise&&AUDIO.noise.gain)AUDIO.noise.gain.gain.value=(v/100)*0.5;if(AUDIO.yt&&AUDIO.yt.setVolume){try{AUDIO.yt.setVolume(v);}catch(e){}}}
-function ytId(s){s=String(s||'');var m=s.match(/[?&]v=([\w-]{11})/)||s.match(/youtu\.be\/([\w-]{11})/)||s.match(/\/embed\/([\w-]{11})/)||s.match(/^([\w-]{11})$/);return m?m[1]:'';}
-function ytList(s){var m=String(s||'').match(/[?&]list=([\w-]+)/);return m?m[1]:'';}
-function audioCustom(url){
-  url=String(url||'').trim();var list=ytList(url),id=ytId(url);if(!list&&!id){toast('Paste a YouTube video or playlist link.');return;}
-  audioStopAll();AUDIO.cur='custom';setSoundPressed(null);
-  playUrl(url);toast('Playing your link. Save it as Lo-fi, Classical, or Jazz to keep it.');
-}
+/* The focus-sound engine lived here: a YouTube player, a green-noise
+   generator, saved sound slots and a volume control. Removed with the
+   panel above. It was blocked by autoplay policy often enough to be
+   indistinguishable from broken, and it was the one piece of this
+   widget that could not be lifted onto other pages cleanly. */
 
 /* ---- Floating Pomodoro (hovers, draggable, minimizable) ---- */
 var PF=null;
@@ -2922,10 +3016,7 @@ function openPomodoro(kind,picksArg){
   var blocks=(kind==='cram')?picks.length:(pm.blocks||picks.length||1);if(blocks<1)blocks=1;
   PF={picks:picks,blocks:blocks,i:0,mode:'focus',focus:pm.focus*60,shortBrk:pm.shortBrk*60,longBrk:(pm.longBrk||0)*60,longEvery:pm.longEvery||0,breakKind:null,remaining:pm.focus*60,paused:false,timer:null};
   var el=$('#pomoFloat');el.hidden=false;el.classList.remove('mini');
-  refreshSlotChips();setSoundPressed(AUDIO.cur||'off');
-  /* Warm the YouTube player now, so the first chip tap plays inside the click
-     gesture instead of minutes later when the browser has stopped trusting it. */
-  try{ensureYT();}catch(e){}
+  if(window.pfRestorePos)window.pfRestorePos();
   pfRender();
   PF.timer=setInterval(pfTick,250);
 }
@@ -2959,8 +3050,8 @@ function pfRender(){
 function pfTogglePause(){if(!PF)return;PF.paused=!PF.paused;var b=$('#pfPause');if(b)b.textContent=PF.paused?'Resume':'Pause';}
 function pfFinishFocus(){var c=PF.picks[PF.i%PF.picks.length];bumpComp(c,5);bumpSkill('Retrieval',1);save();renderAll();if(PF.i>=PF.blocks-1)return pfDone();var isLong=PF.longEvery>0&&PF.longBrk>0&&((PF.i+1)%PF.longEvery===0);PF.breakKind=isLong?'long':'short';PF.mode='break';PF.remaining=pfBreakTotal();PF.paused=false;pfRender();}
 function pfNext(){PF.i++;if(PF.i>=PF.blocks)return pfDone();PF.mode='focus';PF.breakKind=null;PF.remaining=PF.focus;PF.paused=false;pfRender();}
-function pfDone(){if(PF&&PF.timer)clearInterval(PF.timer);$('#pomoFloat').hidden=true;audioStopAll();AUDIO.cur='off';$$('#pomoFloat .pf-s').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-psound')==='off'?'true':'false');});renderAll();toast('Pomodoro session complete.');PF=null;}
-function pfCloseWidget(){if(PF&&PF.timer)clearInterval(PF.timer);$('#pomoFloat').hidden=true;audioStopAll();PF=null;}
+function pfDone(){if(PF&&PF.timer)clearInterval(PF.timer);$('#pomoFloat').hidden=true;renderAll();toast('Pomodoro session complete.');PF=null;}
+function pfCloseWidget(){if(PF&&PF.timer)clearInterval(PF.timer);$('#pomoFloat').hidden=true;PF=null;}
 
 /* ---- 3-Day Exam Cram ---- */
 var CRAM=null;
@@ -2987,7 +3078,7 @@ function openGapByTopic(){
   var weeks=Object.keys(byWeek).map(Number).sort(function(a,b){return a-b;});
   gSet('Gap Check by Topic','Check the topics your exam covers');
   function chk(c,on,w){return '<label style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;cursor:pointer;font-size:13.5px"><input type="checkbox" class="topic-chk" data-cid="'+esc(c.id)+'" data-wk="'+w+'"'+(on?' checked':'')+' style="margin-top:3px"><span>'+esc(c.name)+'</span></label>';}
-  var groups=weeks.map(function(w){var on=cover.indexOf(w)>-1;var items=byWeek[w].map(function(c){return chk(c,on,w);}).join('');return '<details'+(on?' open':'')+' style="border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0"><summary style="font-weight:700;cursor:pointer">Week '+w+' <span style="color:var(--ink-soft);font-weight:400">('+byWeek[w].length+')</span></summary><div style="margin:6px 0 2px"><button type="button" class="btn" data-weekall="'+w+'" style="padding:5px 11px;font-size:12.5px;margin:0 6px 6px 0">Select all in Week '+w+'</button><button type="button" class="btn" data-weekclear="'+w+'" style="padding:5px 11px;font-size:12.5px;background:#fff;color:#1E3D4C;margin:0 0 6px">Clear week</button></div>'+items+'</details>';}).join('');
+  var groups=weeks.map(function(w){var on=cover.indexOf(w)>-1;var items=byWeek[w].map(function(c){return chk(c,on,w);}).join('');return '<details'+(on?' open':'')+' style="border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:8px 0"><summary style="font-weight:700;cursor:pointer">Week '+w+' <span style="color:var(--ink-soft);font-weight:400">('+byWeek[w].length+')</span></summary><div style="margin:6px 0 2px"><button type="button" class="btn" data-weekall="'+w+'" style="padding:5px 11px;font-size:12.5px;margin:0 6px 6px 0">Select all in Week '+w+'</button><button type="button" class="btn" data-weekclear="'+w+'" style="padding:5px 11px;font-size:12.5px;background:#fff;color:#08101F;margin:0 0 6px">Clear week</button></div>'+items+'</details>';}).join('');
   gBody('<p style="font-size:13px;color:var(--ink-soft);margin:0 0 10px">Pick the topics on your exam, then run the gap finder. This is by topic, not by week, so it works no matter how your term is laid out.</p>'+
     '<div class="g-actions" style="margin-bottom:8px"><button class="btn" id="tgMid">Midterm (Weeks 1 to 4)</button><button class="btn" id="tgAll">Select all</button><button class="btn" id="tgNone">Clear</button></div>'+
     groups+
@@ -3262,6 +3353,7 @@ function calibrationToast(score){
 }
 
 function drawKnow(){
+  CUR_EX_KIND='drawknow';
   var c=exerciseComp();CUR_EX=c;CUR_CONF=null;
   var t=taskCopy(c);
   gSet(t.title,t.eyebrow);
@@ -3326,7 +3418,7 @@ function renderTogether(){var el=$('#togetherGrid');if(!el)return;el.innerHTML=M
 ========================================================= */
 function renderAll(){
   $('#greetBadge').textContent=S.profile.name?('Hi, '+S.profile.name):'Welcome';
-  renderPlan();renderDailyBuild();renderDashboard();renderMap();renderWeakness();renderFlow();renderEvidence();renderSkills();renderExercises();renderTogether();runBandSync();
+  renderPlan();renderDailyBuild();renderDashboard();renderMap();renderWeakness();renderLoopWeak();renderFlow();renderEvidence();renderSkills();renderExercises();renderTogether();runBandSync();
 }
 
 /* =========================================================
@@ -3358,11 +3450,22 @@ document.addEventListener('click',function(e){
   if(t.hasAttribute('data-opengrades')){openGrades();return;}
   if(t.hasAttribute('data-gradedel')){S.grades.splice(+t.getAttribute('data-gradedel'),1);save();renderGrades();return;}
   if(t.hasAttribute('data-gameclose')){if(RUN)RUN=null;closeGame();return;}
-  if(t.hasAttribute('data-drawscore')){bumpDim('draw',+t.getAttribute('data-drawscore'));bumpSkill('Retrieval',2);save();renderAll();if(RUN&&RUN.active){runAdvance(RUN.current);return;}closeGame();toast('Drawing logged. Draw-to-Know-It updated.');return;}
+  if(t.hasAttribute('data-drawscore')){var dsc=+t.getAttribute('data-drawscore');bumpDim('draw',dsc);bumpSkill('Retrieval',2);if(CUR_EX){bumpComp(CUR_EX,dsc);if(CUR_EX.ev.indexOf('draw')<0)CUR_EX.ev.push('draw');selfScored(CUR_EX,dsc);}save();renderAll();if(RUN&&RUN.active){runAdvance(RUN.current);return;}closeGame();toast('Drawing logged. Draw-to-Know-It updated.');return;}
   /* Every self-scored exercise ends here. Inside a run it hands back to the
      run instead of closing, which is the whole point: no decision between
      one activity and the next. */
-  if(t.hasAttribute('data-mmscore')){var sc=+t.getAttribute('data-mmscore');var msg='Exercise logged. Mastery updated.';if(CUR_EX){bumpComp(CUR_EX,sc);bumpSkill('Retrieval',3);bumpSkill('Gap Identification',2);logCalibration(CUR_EX,sc);msg=calibrationToast(sc);}CUR_CONF=null;save();renderAll();if(RUN&&RUN.active){toast(msg);runAdvance(RUN.current);return;}closeGame();toast(msg);return;}
+  /* A scored exercise used to move the competency and two skills, and
+     nothing else. The eight dashboard dimensions stayed on zero however many
+     drawings you did, and c.ev stayed empty, so Evidence of Mastery never
+     recorded that you had drawn the thing. Both are fed now, keyed to the
+     exercise that was actually running. */
+  if(t.hasAttribute('data-mmscore')){var sc=+t.getAttribute('data-mmscore');var msg='Exercise logged. Mastery updated.';if(CUR_EX){bumpComp(CUR_EX,sc);bumpSkill('Retrieval',3);bumpSkill('Gap Identification',2);logCalibration(CUR_EX,sc);msg=calibrationToast(sc);
+    var exDim={drawknow:'draw',mindmap:'draw',braindump:'recall'}[CUR_EX_KIND]||'draw';
+    bumpDim(exDim,Math.max(2,sc));
+    var exEv={drawknow:'draw',mindmap:'draw',braindump:'retrieval'}[CUR_EX_KIND]||'draw';
+    if(CUR_EX.ev.indexOf(exEv)<0)CUR_EX.ev.push(exEv);
+    selfScored(CUR_EX,sc);
+  }CUR_CONF=null;save();renderAll();if(RUN&&RUN.active){toast(msg);runAdvance(RUN.current);return;}closeGame();toast(msg);return;}
   if(t.hasAttribute('data-session')){var k=t.getAttribute('data-session');if(k==='stage')return;if(k==='today'||k==='repair')openSessionChooser(k);else openSession(k);}
   else if(t.hasAttribute('data-prove')){openProve(t.getAttribute('data-prove'));}
   else if(t.hasAttribute('data-tool')){
@@ -3423,18 +3526,50 @@ $('#gameOverlay').addEventListener('click',function(e){if(e.target===this)closeG
 (function(){
   var f=$('#pomoFloat'),h=$('#pfHead');if(!f)return;
   window.pfSetMini=function(on){f.classList.toggle('mini',!!on);var mb=$('#pfMin');if(mb){mb.innerHTML=on?'&#9633;':'&#8211;';mb.setAttribute('aria-label',on?'Open timer':'Fold timer');}};
-  $('#pfMin').addEventListener('click',function(){window.pfSetMini(!f.classList.contains('mini'));});
+  $('#pfMin').addEventListener('click',function(){window.pfSetMini(!f.classList.contains('mini'));pfSavePos();});
   $('#pfCloseBtn').addEventListener('click',pfCloseWidget);
-  $('#pfVol').addEventListener('input',function(){audioVol(+this.value);});
-  f.addEventListener('click',function(e){var s=e.target.closest('.pf-s');if(s){audioSet(s.getAttribute('data-psound'));return;}var a=e.target.closest('.pf-asg');if(a){assignSlot(a.getAttribute('data-slot'));return;}});
-  $('#pfLinkGo').addEventListener('click',function(){audioCustom($('#pfLink').value);});
-  $('#pfLink').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();audioCustom(this.value);}});
-  refreshSlotChips();
+  /* WHERE YOU PUT IT IS WHERE IT STAYS.
+     Dragging already worked, but the position was thrown away every time the
+     widget closed, and lost entirely on reload, so a student who moved it out
+     of the way had to move it again on the next session. Position and folded
+     state are remembered now, and both are clamped back on screen at open and
+     on resize, so a window that shrinks can never strand it off the edge. */
+  var PFPOS='mos-pomo-pos';
+  function pfSavePos(){
+    try{ var r=f.getBoundingClientRect();
+      localStorage.setItem(PFPOS, JSON.stringify({x:r.left,y:r.top,mini:f.classList.contains('mini')}));
+    }catch(e){}
+  }
+  function pfClamp(){
+    var r=f.getBoundingClientRect();
+    var x=Math.max(4,Math.min(window.innerWidth-Math.min(r.width,120)-4, r.left));
+    var y=Math.max(4,Math.min(window.innerHeight-40, r.top));
+    f.style.left=x+'px'; f.style.top=y+'px'; f.style.right='auto'; f.style.bottom='auto';
+  }
+  window.pfRestorePos=function(){
+    var v=null; try{ v=JSON.parse(localStorage.getItem(PFPOS)||'null'); }catch(e){}
+    if(!v) return;
+    f.style.right='auto'; f.style.bottom='auto';
+    f.style.left=v.x+'px'; f.style.top=v.y+'px';
+    if(v.mini) window.pfSetMini(true);
+    pfClamp();
+  };
+  window.addEventListener('resize',function(){ if(!f.hidden) pfClamp(); });
+
   var dragging=false,ox=0,oy=0,sx=0,sy=0,moved=0,fromRing=false;
-  function startDrag(e){if(e.target.closest('.pf-btn'))return;dragging=true;moved=0;sx=e.clientX;sy=e.clientY;fromRing=!!e.target.closest('#pfRing');var r=f.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top;f.style.right='auto';f.style.bottom='auto';f.style.left=r.left+'px';f.style.top=r.top+'px';try{e.currentTarget.setPointerCapture(e.pointerId);}catch(err){}}
+  function startDrag(e){
+    /* anything you can press is not a drag handle */
+    if(e.target.closest('button,input,a,summary,select,textarea'))return;
+    dragging=true;moved=0;sx=e.clientX;sy=e.clientY;fromRing=!!e.target.closest('#pfRing');
+    var r=f.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top;
+    f.style.right='auto';f.style.bottom='auto';f.style.left=r.left+'px';f.style.top=r.top+'px';
+    try{e.currentTarget.setPointerCapture(e.pointerId);}catch(err){}
+  }
   function moveDrag(e){if(!dragging)return;moved=Math.max(moved,Math.abs(e.clientX-sx)+Math.abs(e.clientY-sy));var x=Math.max(4,Math.min(window.innerWidth-44,e.clientX-ox));var y=Math.max(4,Math.min(window.innerHeight-40,e.clientY-oy));f.style.left=x+'px';f.style.top=y+'px';}
-  function endDrag(){if(!dragging)return;dragging=false;if(moved<6&&fromRing&&f.classList.contains('mini'))window.pfSetMini(false);}
-  [h,$('#pfRing')].forEach(function(el){if(!el)return;el.addEventListener('pointerdown',startDrag);el.addEventListener('pointermove',moveDrag);el.addEventListener('pointerup',endDrag);});
+  function endDrag(){if(!dragging)return;dragging=false;if(moved<6&&fromRing&&f.classList.contains('mini'))window.pfSetMini(false);pfSavePos();}
+  /* the whole panel is a handle, minus the controls on it, because the header
+     strip is 30px of an 800px box and nobody finds it */
+  [h,$('#pfRing'),f].forEach(function(el){if(!el)return;el.addEventListener('pointerdown',startDrag);el.addEventListener('pointermove',moveDrag);el.addEventListener('pointerup',endDrag);});
 })();
 
 /* reset */
