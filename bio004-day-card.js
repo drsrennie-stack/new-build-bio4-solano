@@ -309,8 +309,29 @@
     (document.head || document.documentElement).appendChild(st);
   }
 
+  /* How many tickable things a day holds, and how many are ticked.
+     The calendar shows a term at a glance and needs this for 34 days at
+     once, which is far too many cards to put on a page. Rendering into a
+     detached node means the count comes from the same renderer the card
+     uses, so the grid and the card can never disagree, and nothing lands
+     in the document for sweep() to find.
+
+     Returns {total, done}. total is 0 for a day with no material and for
+     a date that is not a class day in that section. */
+  function counts(iso, key){
+    var out = { total:0, done:0 };
+    var html = render(iso, key);
+    if(!html) return out;
+    var box = document.createElement('div');
+    box.innerHTML = html;
+    out.total = box.querySelectorAll('.mchk').length;
+    out.done  = box.querySelectorAll('.mchk:checked').length;
+    return out;
+  }
+
   window.BIO004_DAY_CARD = {
     render: render,
+    counts: counts,
     /* call this if you inject the card yourself and want the counts filled
        in without waiting a tick */
     hydrate: sweep,
