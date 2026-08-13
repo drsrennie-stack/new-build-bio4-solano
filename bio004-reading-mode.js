@@ -460,8 +460,18 @@
       '.rm-body{padding:0 18px 18px}',
       '.rm-orig{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important;margin:0!important;padding:0!important;border:0!important}',
       '@media (prefers-reduced-motion:reduce){.rm-chev{transition:none}}',
-      '@media print{.rm-bar,.rm-toc{display:none}.rm-body{display:block!important}',
-      '.rm-body[hidden]{display:block!important}.rm-sec{border:0;box-shadow:none;break-inside:auto}',
+      /* PRINT MUST NOT LOSE THE PAGE.
+         display:block was not enough. hidden="until-found" sets
+         content-visibility:hidden-matchable, which display cannot undo, so a
+         collapsed section printed as nothing. A syllabus printed 5 pages and
+         821 words where the open page is 31 pages and 5,920 words: 86 per
+         cent of it missing, with no sign on the paper that anything was. */
+      '@media print{.rm-bar,.rm-toc{display:none!important}',
+      '.rm-body,.rm-body[hidden],.rm-body[hidden="until-found"]{display:block!important;',
+      'content-visibility:visible!important;visibility:visible!important;height:auto!important;',
+      'max-height:none!important;overflow:visible!important}',
+      '.rm-sec{border:0;box-shadow:none;break-inside:auto}',
+      '.rm-chev{display:none}',
       '.rm-head{padding:10px 0}}'
     ].join('');
     var st = document.createElement('style');
