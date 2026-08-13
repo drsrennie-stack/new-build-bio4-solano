@@ -495,6 +495,103 @@ section.block:first-of-type{border-top:none}
 .ev-swap:focus-visible{outline:3px solid #8B3A2E;outline-offset:2px;border-radius:3px}
 .ev-task.ev-soon{border-left-color:#5A6570;color:#3A424B;font-size:13.5px}
 
+
+/* ================= THE DAY RAIL =================
+   Cards are METHODS, not topics: Recall Rx, Draw to Know It, Loops. Clicking
+   one fills it with tonight's material. Same card in week 1 and week 12, which
+   is how a student learns six moves instead of a hundred task titles.
+
+   Depth carries the state. Everything floats a little, the live one floats a
+   lot, the open one floats furthest and lifts out of the grid so nothing
+   reflows. No ring: a gold outline reads as a form error.
+   ================================================ */
+.dr-head{background:var(--navy);color:#fff;border-radius:var(--r-lg);padding:22px 24px;margin:0 0 4px}
+.dr-head .eyebrow{color:#EBCE86;margin:0 0 6px}
+.dr-head h2{font-size:26px;font-weight:800;letter-spacing:-.015em;margin:0 0 6px;color:#fff}
+.dr-head p{margin:0;font-size:14px;color:#E7EAEE;max-width:64ch}
+.dr-meter{display:flex;align-items:center;gap:12px;margin-top:16px;font-family:var(--disp);
+  font-size:11.5px;font-weight:700;letter-spacing:.06em;color:#EBCE86}
+.dr-meter .bar{flex:1;height:7px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden}
+.dr-meter .bar>span{display:block;height:100%;background:var(--gold);transition:width .5s ease}
+.dr-note{background:var(--white);border:1px solid var(--line);border-left:4px solid #8B3A2E;
+  border-radius:0 var(--r) var(--r) 0;padding:13px 16px;margin:14px 0 0;font-size:13.5px;color:#2A3949}
+.dr-note b{color:var(--navy)}
+
+.dr-steps{display:grid;grid-template-columns:repeat(4,minmax(0,178px));gap:14px;justify-content:start;
+  align-items:start;padding:16px 0 26px;min-height:300px}
+@media(max-width:820px){.dr-steps{grid-template-columns:repeat(2,minmax(0,178px))}}
+@media(max-width:480px){.dr-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.dr-slot{position:relative}
+.dr-tile{position:relative;width:100%;display:flex;flex-direction:column;align-items:center;text-align:center;
+  gap:7px;background:#0B1530;border-radius:18px;padding:20px 12px 16px;min-height:212px;color:#fff;
+  transform:translateY(-2px);box-shadow:0 8px 18px -12px rgba(8,16,31,.4);
+  transition:transform .34s cubic-bezier(.2,.8,.25,1),box-shadow .34s ease}
+.dr-hit{position:absolute;inset:0;width:100%;height:100%;border:0;background:transparent;cursor:pointer;
+  border-radius:18px;z-index:2;font:inherit;color:transparent}
+.dr-hit:focus-visible{outline:3px solid #EBCE86;outline-offset:4px}
+.dr-slot.open .dr-hit{display:none}
+.dr-ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;flex:none;
+  background:linear-gradient(145deg,#C9A14A,#A87F2E);box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
+.dr-ic svg{width:26px;height:26px;stroke:#0B1530;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+.dr-tile.tool-loops .dr-ic{background:linear-gradient(145deg,#C2734D,#8B3A2E)}
+.dr-tile.tool-recall .dr-ic{background:linear-gradient(145deg,#5C7FA8,#2F4C7D)}
+.dr-name{font-family:var(--disp);font-size:16.5px;font-weight:700;letter-spacing:-.012em;color:#EBCE86;margin:2px 0 0;line-height:1.18}
+.dr-tile.tool-loops .dr-name{color:#F0C4AC}
+.dr-tile.tool-recall .dr-name{color:#BBD2EE}
+.dr-sub{font-family:var(--disp);font-weight:500;font-size:11.5px;margin:0;color:#D7DEE8}
+.dr-why{font-size:11px;line-height:1.42;color:#E9EDF3;margin:0}
+.dr-why b{color:#EBCE86}
+.dr-mins{font-family:var(--eyebrow-f,var(--disp));font-size:10px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase;color:#E8C97E;margin:2px 0 0}
+.dr-pill{position:absolute;top:10px;right:10px;font-size:9.5px;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;padding:3px 7px;border-radius:99px}
+.dr-pill.now{background:var(--gold);color:#0B1530}
+.dr-pill.done{background:#2E4A3A;color:#CFE6D8}
+.dr-catch{position:absolute;top:10px;left:10px;font-size:9.5px;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;padding:3px 7px;border-radius:99px;background:#8B3A2E;color:#fff}
+.dr-slot[data-state="now"] .dr-tile{transform:translateY(-16px) scale(1.06);
+  box-shadow:0 44px 76px -24px rgba(8,16,31,.66),0 12px 26px -10px rgba(8,16,31,.34)}
+.dr-slot[data-state="now"]:hover .dr-tile{transform:translateY(-21px) scale(1.07)}
+.dr-slot[data-state="done"] .dr-tile{background:#16203A}
+.dr-slot[data-state="done"] .dr-ic{background:linear-gradient(145deg,#4E5F73,#2B384C)}
+.dr-slot[data-state="done"] .dr-name,.dr-slot[data-state="done"] .dr-sub{opacity:.72}
+.dr-slot.open{z-index:30}
+.dr-slot.open .dr-tile{position:absolute;top:0;width:372px;max-width:calc(100vw - 44px);
+  transform:translateY(-26px) scale(1.02);min-height:280px;
+  box-shadow:0 60px 100px -30px rgba(8,16,31,.7),0 16px 30px -12px rgba(8,16,31,.36)}
+.dr-slot.open.left .dr-tile{left:0}
+.dr-slot.open.right .dr-tile{right:0}
+.dr-slot.open .dr-why,.dr-slot.open .dr-pill{display:none}
+.dr-body{position:relative;z-index:3;width:100%;text-align:left;background:rgba(255,255,255,.08);
+  border-radius:12px;padding:13px 15px;font-size:12.8px;line-height:1.5;color:#E9EDF3;margin-top:4px}
+.dr-body b{color:#EBCE86}
+.dr-acts{position:relative;z-index:3;display:flex;gap:8px;flex-wrap:wrap;width:100%;margin-top:auto}
+.dr-acts .btn{flex:1;font-size:13px;padding:9px 10px;border-color:rgba(255,255,255,.75);color:#fff;background:transparent}
+.dr-acts .btn.gold{background:var(--gold);border-color:var(--gold);color:#08101F}
+.dr-slot:not(.open) .dr-body,.dr-slot:not(.open) .dr-acts{display:none}
+@media(max-width:560px){.dr-slot.open .dr-tile{position:static;width:100%;transform:translateY(-14px)}}
+#dr-scrim{position:fixed;inset:0;background:rgba(8,16,31,.10);opacity:0;pointer-events:none;
+  transition:opacity .32s ease;z-index:10}
+#dr-scrim.on{opacity:1;pointer-events:auto}
+.dr-stop{background:var(--navy);color:#fff;border-radius:var(--r-lg);padding:20px 24px;
+  display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-top:4px}
+.dr-stop .ic{width:52px;height:52px;border-radius:14px;flex:none;display:grid;place-items:center;
+  background:linear-gradient(145deg,#C2734D,#8B3A2E)}
+.dr-stop .ic svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round}
+.dr-stop h3{margin:0 0 4px;font-size:18px;color:#fff}
+.dr-stop p{margin:0;font-size:14px;color:#E7EAEE;max-width:60ch}
+.dr-stop .eyebrow{color:#EBCE86}
+.dr-fork{margin-top:6px;border:1.5px dashed #8B3A2E;border-radius:var(--r-lg);padding:18px 20px;background:#FDF8F5}
+.dr-fork h3{font-weight:600;color:var(--terra-dark);margin:0 0 4px;font-size:18px}
+.dr-fork .lead{margin:0 0 4px;font-size:14px;color:#2A3949;max-width:62ch}
+.dr-tile.none{background:var(--navy-tint);color:var(--navy);box-shadow:none;border:1.5px dashed rgba(8,16,31,.28)}
+.dr-tile.none .dr-ic{background:linear-gradient(145deg,#C9CFD6,#9AA5B1)}
+.dr-tile.none .dr-ic svg{stroke:#08101F}
+.dr-tile.none .dr-name{color:#6F3A2E;font-size:15px}
+.dr-tile.none .dr-sub,.dr-tile.none .dr-why{color:#2A3949}
+.dr-tile.none .dr-mins{color:#6F3A2E}
+@media(prefers-reduced-motion:reduce){.dr-tile{transition:none}}
+
 /* ---------- Study Run ---------- */
 .runband{background:var(--navy);color:#fff;border-radius:var(--r);padding:22px 24px;margin:0 0 20px;
   display:flex;gap:22px;flex-wrap:wrap;align-items:center;justify-content:space-between}
@@ -587,20 +684,12 @@ section.block:first-of-type{border-top:none}
   <!-- 1 TODAY'S PLAN -->
   <section class="block" id="s-plan" aria-labelledby="h-plan" tabindex="-1">
     <div class="wrap">
-      <!-- STUDY RUN: one topic, one activity at a time, no decisions -->
-      <div class="runband" id="runBand">
-        <div class="runband-t">
-          <p class="eyebrow">Do not decide, just start</p>
-          <h2>Study Run</h2>
-          <p>One topic. We pick the activity, you do it, we hand you the next one. Draw it,
-            map it, get carded on it, watch its Loop, teach it out loud. Runs for the time
-            you set in your plan, then tells you to stop.</p>
-        </div>
-        <div class="runband-a">
-          <button class="btn gold big" id="runStart">Start a Study Run</button>
-          <button class="btn ghost" id="runPick">I want a specific topic</button>
-        </div>
-      </div>
+      <!-- THE DAY RAIL.
+           One row of cards, each one a named method with today's material in
+           it and the reason it is there written on it. Built from the real
+           schedule, the real due dates and the real weak spots. -->
+      <div id="dayRail"></div>
+
       <div class="plan" id="planCard"><!-- JS --></div><div id="dailyBuild"></div>
     </div>
   </section>
@@ -609,7 +698,7 @@ section.block:first-of-type{border-top:none}
   <section class="block" id="s-dash" aria-labelledby="h-dash">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Section 2</p><h2 id="h-dash">Mastery Dashboard</h2><p class="lead">Where you are strong and where you are exposed, at a glance.</p></div>
+        <div><p class="eyebrow">Section 2</p><h2 id="h-dash">Mastery Dashboard</h2><p class="lead">Where you are strong, and where you are exposed.</p></div>
       </div>
       <div class="grid g4" id="dashGrid"><!-- JS --></div>
     </div>
@@ -619,7 +708,7 @@ section.block:first-of-type{border-top:none}
   <section class="block" id="s-map" aria-labelledby="h-map">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Section 3</p><h2 id="h-map">Competency Map</h2><p class="lead">Not chapters. Measurable competencies you can prove, one at a time.</p></div>
+        <div><p class="eyebrow">Section 3</p><h2 id="h-map">Competency Map</h2><p class="lead">Every competency in the course, and what you have proved on each.</p></div>
       </div>
       <p style="background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;font-size:13px;color:var(--ink-soft);line-height:1.6;margin-bottom:18px">These competencies are the majority of what the course covers, and working through them honestly and consistently is very likely to be effective. No tool can promise a grade, though. Your result also depends on how much time you put in, how honest you are in your own self-assessment, exam-day factors like anxiety, and other things beyond this app. Use it alongside class, the structure list, and the syllabus.</p>
       <div id="mapWrap"><!-- JS --></div>
@@ -630,7 +719,7 @@ section.block:first-of-type{border-top:none}
   <section class="block" id="s-weak" aria-labelledby="h-weak">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Section 4</p><h2 id="h-weak">Weakness Dashboard</h2><p class="lead">Automatically collected from misses, low confidence, and overdue recall.</p></div>
+        <div><p class="eyebrow">Section 4</p><h2 id="h-weak">Weakness Dashboard</h2><p class="lead">Collected from your misses, your low-confidence answers, and recall you have let slip.</p></div>
       </div>
       <div id="weakWrap"><!-- JS --></div>
       <div id="loopWeak"><!-- JS --></div>
@@ -652,7 +741,7 @@ section.block:first-of-type{border-top:none}
   <section class="block" id="s-flow" aria-labelledby="h-flow">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Section 5</p><h2 id="h-flow">Self-Tutoring Workflow</h2><p class="lead">The same six-step cycle every session, so learning becomes a habit, not a guess.</p></div>
+        <div><p class="eyebrow">Section 5</p><h2 id="h-flow">Self-Tutoring Workflow</h2><p class="lead">The same six steps every session, until running them is a habit.</p></div>
         <button class="btn primary" data-session="today">Start today's session</button>
       </div>
       <div class="flow" id="flowWrap"><!-- JS --></div>
@@ -794,6 +883,7 @@ section.block:first-of-type{border-top:none}
 
 </div>
 
+<div id="dr-scrim"></div>
 <div id="toast" role="status" aria-live="polite"></div>
 
 <!-- Live data sources. In production these sit alongside the page; if absent, the app falls back to schedule-derived topics. -->
@@ -1462,7 +1552,7 @@ function renderPlan(){
   var html=''+
   '<p class="peyebrow">Section 1 · Today\'s Mastery Plan</p>'+
   '<h1 id="h-plan">Here is your highest-value work'+name+'.</h1>'+
-  '<p class="psub">One session. Diagnose, repair, retrieve, apply, teach, reflect. Everything below was chosen for you from where you are exposed right now.</p>'+
+  '<p class="psub">Diagnose, repair, retrieve, apply, teach, reflect. Chosen from where you are exposed right now.</p>'+
   '<div class="plan-grid">'+
     '<div class="plan-list">'+
       plItem(I.target,'Today\'s lecture competencies',names(lec))+
@@ -2450,6 +2540,177 @@ function mmTask(c){
   function render(){var s=steps[step];var b='<div class="g-center"><div class="g-emoji">'+s.emoji+'</div><h3>'+esc(s.h)+'</h3><p>'+esc(s.p)+'</p>';if(step<2)b+='<div class="g-actions"><button class="btn gold" id="mmNext">'+esc(s.cta)+'</button></div>';else b+='<div class="g-actions"><button class="btn" data-mmscore="2">Under half</button><button class="btn" data-mmscore="4">Most of it</button><button class="btn gold" data-mmscore="6">Almost all</button></div>';b+='</div>';gBody(b);if(step<2){var n=$('#mmNext');if(n)n.onclick=function(){step++;render();};}}
   render();
 }
+
+/* =========================================================
+   THE DAY RAIL
+
+   Built from the real schedule, the real due dates, the real weak spots and
+   the real Loops station records. Every card is a METHOD with tonight's
+   material in it, and every card says why it is there.
+========================================================= */
+var DR_IC={
+ card:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg>',
+ draw:'<svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>',
+ loop:'<svg viewBox="0 0 24 24"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>',
+ mic:'<svg viewBox="0 0 24 24"><path d="M12 19a7 7 0 100-14 7 7 0 000 14z"/><path d="M12 19v3M8 22h8"/></svg>',
+ stop:'<svg viewBox="0 0 24 24"><path d="M18 12H6"/></svg>'};
+
+var DR={i:0,done:0,spent:0,steps:[],headline:'',note:'',budget:60};
+
+function drBudget(){
+  var p=S.profile||{};
+  var m=p.minutes||(p.hoursPerDay?Math.round(p.hoursPerDay*60):0);
+  return Math.max(20,Math.min(180,m||45));
+}
+/* Which loop should tonight point at, and why */
+function drLoopPick(){
+  var w=(typeof loopWeakStations==='function')?loopWeakStations():[];
+  if(w.length) return {title:w[0].loopTitle,name:w[0].name,miss:Math.round(w[0].miss*100),weak:true};
+  var lab=todayLab();
+  if(lab.length){ var lp=loopFor(lab[0].c.id); if(lp) return {title:lp.title,name:lab[0].c.name,weak:false}; }
+  var L=window.BIO004_LOOPS||[];
+  return L.length?{title:L[0].title,name:'',weak:false}:null;
+}
+/* THE HEADLINE POINTS. It never counts the cards, because the meter under it
+   already does, and a headline that repeats the line below it is wasted. */
+function drHeadline(due,lec,lab,over){
+  var exam=daysToExam();
+  if(over>0) return {h:'You are '+over+' day'+(over>1?'s':'')+' behind. This clears it.',
+    p:'Your cards have already absorbed most of it. One missed exercise is folded in below, in third place, so tonight still starts on today.'};
+  if(exam>0&&exam<=6) return {h:esc(S.course.examName||'The exam')+' is in '+exam+' day'+(exam>1?'s':'')+'. This is the run-in.',
+    p:'Weak spots first, then recall. Nothing new is being started this close in.'};
+  if(lab.length){
+    var ln=lab[0].c.name;
+    return {h: ln.length<=34 ? ('Tonight sets up '+esc(ln)+' in lab.') : 'Tonight sets up tomorrow’s lab.',
+    p:'Each card says why it is here. Work left to right. When you reach the line you are finished.'};
+  }
+  if(lec.length) return {h:'Tonight is '+esc(drShort(lec[0].c.name,46))+'.',
+    p:'Each card says why it is here. Work left to right. When you reach the line you are finished.'};
+  if(due.length) return {h:'Nothing new tonight. Keep what you have.',
+    p:'No class material is due, so tonight is recall and repair only.'};
+  return {h:'Nothing is due. This is getting ahead.',
+    p:'You are clear. Anything below is optional and none of it is owed.'};
+}
+function drBuild(){
+  var due=dueToday(), lec=todayLecture(), lab=todayLab(), weak=weaknesses();
+  var over=allComps().filter(function(x){return x.c.last&&isOverdue(x.c.next);}).length?1:0;
+  var budget=drBudget(), steps=[];
+
+  if(due.length){
+    steps.push({tool:'recall',ic:'card',name:'Recall Rx',sub:'Spaced cards',mins:Math.min(12,Math.max(5,due.length)),
+      why:'<b>'+due.length+'</b> competenc'+(due.length===1?'y':'ies')+' up for recall.',
+      body:'Answer from memory and rate how sure you are <b>before</b> you look. Being sure and being wrong is the gap that costs marks, and it is the one you cannot feel from the inside.',
+      go:function(){ if(window.BIO004_RECALL_OPEN)window.BIO004_RECALL_OPEN(null); location.hash='s-recall'; }});
+  }
+  var target=(lec[0]||lab[0]||weak[0]||allComps()[0]);
+  if(target){
+    steps.push({tool:'',ic:'draw',name:'Draw to Know It',sub:'From memory, then check',mins:20,topic:target.c.name,
+      why:lec.length?'Today’s lecture competency.':'Your weakest competency in play.',
+      body:'<b>'+esc(target.c.name)+'.</b> Blank paper, nothing in front of you. Then reveal the checklist and mark yourself honestly. The gaps are the point.',
+      go:function(){ CUR_EX=target.c; openGame('drawknow'); }});
+  }
+  var lp=drLoopPick();
+  if(lp){
+    steps.push({tool:'loops',ic:'loop',name:'Loops',sub:'Name it before the label',mins:15,topic:lp.title,
+      catch:over?'Catch up':null,
+      why:lp.weak?('You keep missing <b>'+esc(lp.name)+'</b>.'):(lab.length?'Because tomorrow is a lab day.':'Lab ID practice.'),
+      body:'Take the tile called <b>'+esc(lp.title)+'</b>. Say each structure out loud before the label appears. Beating the label is the exercise; watching it is not.',
+      go:function(){ window.open(LOOPS_BASE,'_blank','noopener'); }});
+  }
+  if(weak.length){
+    steps.push({tool:'',ic:'mic',name:'Teach It',sub:'Out loud, no notes',mins:8,topic:weak[0].c.name,
+      why:'Fastest way to find what is still missing.',
+      body:'<b>'+esc(weak[0].c.name)+'.</b> Say it out loud to an empty room, in plain language, no notes. Where you stall is the gap. That is the bit to go back to, not the bit that came out fluently.',
+      go:function(){ openProve(weak[0].c.id); }});
+  }
+  /* never blow the plan: trim from the end until it fits */
+  var tot=0,keep=[];
+  for(var i=0;i<steps.length;i++){ if(tot+steps[i].mins>budget && keep.length>=2) break; tot+=steps[i].mins; keep.push(steps[i]); }
+  DR.steps=keep; DR.budget=tot||budget; DR.i=0; DR.done=0; DR.spent=0;
+  var head=drHeadline(due,lec,lab,over);
+  DR.headline=head; DR.over=over;
+}
+function drTile(s,i,state){
+  var open=(state==='now');
+  return '<div class="dr-slot" data-state="'+state+'" data-i="'+i+'">'
+   +'<div class="dr-tile '+(s.tool?'tool-'+s.tool:'')+(s.none?' none':'')+'">'
+   +(open?'<button class="dr-hit" data-dri="'+i+'" aria-label="Open '+esc(s.name)+(s.topic?', '+esc(s.topic):'')+'"></button>':'')
+   +(state==='now'?'<span class="dr-pill now">Now</span>':'')
+   +(state==='done'?'<span class="dr-pill done">Done</span>':'')
+   +(s.catch?'<span class="dr-catch">'+esc(s.catch)+'</span>':'')
+   +'<span class="dr-ic">'+DR_IC[s.ic]+'</span>'
+   +'<p class="dr-name">'+esc(s.name)+'</p>'
+   +'<p class="dr-sub">'+esc(s.sub)+'</p>'
+   +'<p class="dr-why">'+s.why+'</p>'
+   +'<p class="dr-mins">'+s.mins+' min</p>'
+   +'<div class="dr-body">'+s.body+'</div>'
+   +'<div class="dr-acts"><button class="btn gold" data-drgo="'+i+'">Open it</button>'
+   +'<button class="btn" data-drdone="'+i+'">Done</button></div>'
+   +'</div></div>';
+}
+function renderDayRail(){
+  var el=$('#dayRail'); if(!el) return;
+  if(!DR.steps.length) drBuild();
+  var pct=DR.budget?Math.round(DR.spent/DR.budget*100):0;
+  var h='<div class="dr-head"><p class="eyebrow">Your track for today &middot; '+longToday()+'</p>'
+   +'<h2>'+DR.headline.h+'</h2><p>'+DR.headline.p+'</p>'
+   +'<div class="dr-meter"><span>'+DR.spent+' of '+DR.budget+' min</span>'
+   +'<span class="bar"><span style="width:'+pct+'%"></span></span>'
+   +'<span>'+DR.done+' of '+DR.steps.length+' done</span></div></div>';
+  h+='<div class="dr-steps">'+DR.steps.map(function(s,i){
+       return drTile(s,i, i<DR.i?'done':(i===DR.i?'now':'later'));}).join('')+'</div>';
+  if(DR.i>=DR.steps.length){
+    h+='<div class="dr-fork"><p class="eyebrow">Your call</p>'
+     +'<h3>That is everything. The rest is yours.</h3>'
+     +'<p class="lead">Nothing below is owed. The last one is the right answer more often than you think.</p>'
+     +'<div class="dr-steps">'
+     +drTile({tool:'',ic:'draw',name:'Brain Dump',sub:'Blank page, cold',mins:15,why:'Everything you know, then check.',body:'',topic:''},-1,'later')
+     +drTile({tool:'',ic:'draw',name:'Map It',sub:'Notes, then from memory',mins:12,why:'Good when a topic will not join up.',body:'',topic:''},-2,'later')
+     +drTile({tool:'loops',ic:'loop',name:'Loops',sub:'A new one',mins:10,why:'Breadth, when nothing feels urgent.',body:'',topic:''},-3,'later')
+     +drTile({none:true,ic:'stop',name:'Stop',sub:'Nothing. You are done.',mins:0,why:'Sleep is part of the method, not a reward.',body:'',topic:''},-4,'later')
+     +'</div></div>';
+    h+='<div class="dr-stop"><span class="ic"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></span>'
+     +'<div><p class="eyebrow">The stopping point</p><h3>Past this line, nothing counts.</h3>'
+     +'<p>Everything due is cleared and today’s work is proved. Nothing else will be suggested until your next class day.</p></div></div>';
+  }
+  el.innerHTML=h;
+}
+function longToday(){
+  var d=dparse(TODAY), M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var W=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  return W[d.getDay()]+' '+d.getDate()+' '+M[d.getMonth()]+' &middot; Week '+scheduleCurrentWeek().n;
+}
+/* Session titles run long. A headline is a headline. */
+function drShort(s,n){ s=String(s||''); return s.length>(n||42)?s.slice(0,(n||42)-1).replace(/[,;:\s]+$/,'')+'…':s; }
+function drOpen(i){
+  if(i!==DR.i) return;
+  var slot=$('#dayRail').querySelectorAll('.dr-slot')[i]; if(!slot) return;
+  slot.classList.add('open', i < DR.steps.length/2 ? 'left':'right');
+  $('#dr-scrim').classList.add('on');
+  var b=slot.querySelector('[data-drgo]'); if(b)b.focus();
+}
+function drClose(complete){
+  var i=DR.i, s=DR.steps[i];
+  var slot=$('#dayRail').querySelector('.dr-slot.open');
+  if(slot) slot.classList.remove('open','left','right');
+  $('#dr-scrim').classList.remove('on');
+  setTimeout(function(){
+    if(complete && s){ DR.done++; DR.spent+=s.mins; DR.i++; }
+    renderDayRail();
+    var n=$('#dayRail').querySelector('.dr-hit'); if(n)n.focus();
+  },320);
+}
+document.addEventListener('click',function(e){
+  var hit=e.target.closest('[data-dri]'); if(hit){ drOpen(+hit.getAttribute('data-dri')); return; }
+  var go=e.target.closest('[data-drgo]');
+  if(go){ var s=DR.steps[+go.getAttribute('data-drgo')]; if(s&&s.go)s.go(); return; }
+  var dn=e.target.closest('[data-drdone]'); if(dn){ drClose(true); return; }
+  if(e.target.id==='dr-scrim') drClose(false);
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape' && $('#dayRail') && $('#dayRail').querySelector('.dr-slot.open')) drClose(false);
+});
+
 /* =========================================================
    STUDY RUN
 
@@ -2554,6 +2815,9 @@ function runAutoComp(){
    band on Today becomes the door back into the run. Without this the run is
    effectively abandoned the moment they do cards, which is one of the seven. */
 function runBandSync(){
+  /* The Study Run band was replaced by the day rail. The run engine itself is
+     still used, reached from the rail's "something specific" option, so this
+     just becomes a no-op when the band is absent. */
   var s=$('#runStart'), pk=$('#runPick'), band=$('#runBand');
   if(!s||!band)return;
   var paused=RUN&&RUN.active&&!$('#gameOverlay').classList.contains('open');
@@ -3418,7 +3682,7 @@ function renderTogether(){var el=$('#togetherGrid');if(!el)return;el.innerHTML=M
 ========================================================= */
 function renderAll(){
   $('#greetBadge').textContent=S.profile.name?('Hi, '+S.profile.name):'Welcome';
-  renderPlan();renderDailyBuild();renderDashboard();renderMap();renderWeakness();renderLoopWeak();renderFlow();renderEvidence();renderSkills();renderExercises();renderTogether();runBandSync();
+  renderDayRail();renderPlan();renderDailyBuild();renderDashboard();renderMap();renderWeakness();renderLoopWeak();renderFlow();renderEvidence();renderSkills();renderExercises();renderTogether();runBandSync();
 }
 
 /* =========================================================
@@ -3511,7 +3775,6 @@ $('#instrReload').addEventListener('click',function(){applySchedule(true);render
     if(RUN&&RUN.active){runEnd('Stopped there');return;}
     runPicker(false);
   });
-  runBandSync();
 })();
 $('#cfgImport').addEventListener('click',importSchedule);
 $('#cfgFile').addEventListener('change',function(e){var f=e.target.files&&e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){$('#cfgPaste').value=r.result;};r.readAsText(f);});
