@@ -66,17 +66,139 @@
     return null;
   }
 
-  function matLink(o, icon, kind){
-    if(!o) return '';
-    return '<a href="'+esc(o.u)+'" target="_top"><span class="mi" aria-hidden="true">'+icon+'</span>'+
-           '<span>'+esc(o.t)+'</span><span class="mk">'+kind+'</span></a>';
+  /* ----------------------------------------------------------
+     TICKING THINGS OFF
+
+     Every row on a day is a task, and until now none of them could be
+     marked done. A student working through Tuesday's pre-work over two
+     evenings had no way to see, on Wednesday, which of the four items
+     they had already finished, so the honest options were to redo it or
+     to guess.
+
+     Each row now carries a real checkbox, as a SIBLING of the link
+     rather than inside it. Nested inside, the browser swallows the tick
+     and follows the link instead, which is the failure mode this file
+     is careful to avoid. Side by side, ticking and opening are two
+     separate targets and both work from the keyboard.
+
+     State is keyed by date and URL, not by position, so it survives the
+     calendar re-rendering, a change of section, and material being
+     added to a day later in the term.
+  ---------------------------------------------------------- */
+
+  /* ----------------------------------------------------------
+     The checkbox styling injects itself rather than living in styles().
+
+     Not every host calls styles(): the course calendar carries its own
+     copy of the card CSS inline, so anything added to the styles() string
+     alone is simply never applied there. The checkbox arrived that way and
+     rendered as a bare 0px-wide label, present in the markup and
+     impossible to click. These rules are small, scoped to classes only
+     this file emits, and safe to add on any page.
+  ---------------------------------------------------------- */
+  var CHECK_CSS = "\n  .mrow{display:flex;align-items:center;gap:9px;}\n  .mrow > a{flex:1 1 auto;min-width:0;}\n  .mchk{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none;}\n  .mchk-l{flex:0 0 auto;width:26px;height:26px;border-radius:7px;border:2px solid var(--navy-tint, #ECEFF4);background:#fff;cursor:pointer;display:inline-block;position:relative;transition:var(--t, background 160ms ease, border-color 160ms ease);}\n  .mchk-l::after{content:'';position:absolute;left:8px;top:3px;width:6px;height:12px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) scale(0);transition:transform 160ms ease;}\n  .mchk:checked + .mchk-l{background:var(--navy, #08101F);border-color:var(--navy, #08101F);}\n  .mchk:checked + .mchk-l::after{transform:rotate(45deg) scale(1);}\n  .mchk:focus-visible + .mchk-l{outline:3px solid var(--gold, #B8924A);outline-offset:2px;}\n  .mrow.is-done > a{opacity:.58;}\n  .d-card.prework .mchk-l{background:rgba(0,0,0,.18);border-color:rgba(244,239,232,.55);}\n  .d-card.prework .mchk:checked + .mchk-l{background:#F2E2B8;border-color:#F2E2B8;}\n  .d-card.prework .mchk:checked + .mchk-l::after{border-color:#7A2A22;}\n  .pw-prog{margin:9px 0 0;font-family:var(--font-eyebrow, 'Plus Jakarta Sans',-apple-system,sans-serif);font-weight:700;font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;color:var(--terra-dark, #6B1616);}\n  .d-card.prework .pw-prog{color:#F2E2B8;}\n  .d-card.all-done .pw-prog::after{content:'  \\2713  all done';}\n  @media (prefers-reduced-motion:reduce){.mchk-l,.mchk-l::after{transition:none;}}";
+  function ensureCheckCss(){
+    if(document.getElementById('bio004-daycard-check-css')) return;
+    var el = document.createElement('style');
+    el.id = 'bio004-daycard-check-css';
+    el.textContent = CHECK_CSS;
+    (document.head || document.documentElement).appendChild(el);
   }
-  function many(list, icon, kind){
-    return (list||[]).map(function(o){ return matLink(o, icon, kind); }).join('');
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', ensureCheckCss);
+  } else { ensureCheckCss(); }
+
+  /* THE SAME KEY THE REST OF THE COURSE ALREADY USES.
+
+     today.html has always written localStorage['bio004-done'], keyed
+     "YYYY-MM-DD|file.html", and marking a step done there ticks every material
+     that step linked to. The first cut of these checkboxes invented
+     'bio004-day-done-v1' instead, so the calendar and Today each kept their own
+     private list and neither could see the other's. Tick the worksheet on
+     Today, open the calendar, and it was still blank.
+
+     Same key, same key format, so a tick anywhere is a tick everywhere. */
+  var DKEY = 'bio004-done';
+  function doneMap(){
+    try { return JSON.parse(localStorage.getItem(DKEY) || '{}'); } catch(e){ return {}; }
+  }
+  function doneSet(k, on){
+    var m = doneMap();
+    if(on) m[k] = 1; else delete m[k];
+    try { localStorage.setItem(DKEY, JSON.stringify(m)); } catch(e){}
+  }
+  var ROWN = 0;
+  function row(href, icon, title, kind, iso, blank){
+    if(!href) return '';
+    var key = iso + '|' + href;
+    var id  = 'dcx-' + iso.replace(/-/g,'') + '-' + (++ROWN);
+    var on  = !!doneMap()[key];
+    var tgt = blank ? ' target="_blank" rel="noopener"' : ' target="_top"';
+    return '<div class="mrow' + (on ? ' is-done' : '') + '">' +
+      /* the name is on the input as aria-label rather than as clipped text in
+         the label: clipped text is still rendered text, and a contrast check
+         has no way to know nobody can see it */
+      '<input type="checkbox" class="mchk" id="' + id + '" data-dc-check="' + esc(key) + '"' +
+        ' aria-label="Mark done: ' + esc(title).replace(/"/g,'&quot;') + '"' +
+        (on ? ' checked' : '') + '>' +
+      '<label class="mchk-l" for="' + id + '"></label>' +
+      '<a href="' + esc(href) + '"' + tgt + '><span class="mi" aria-hidden="true">' + icon + '</span>' +
+      '<span>' + esc(title) + '</span><span class="mk">' + kind + '</span></a></div>';
+  }
+  function matLink(o, icon, kind, iso){
+    if(!o) return '';
+    return row(o.u, icon, o.t, kind, iso);
+  }
+  function many(list, icon, kind, iso){
+    return (list||[]).map(function(o){ return matLink(o, icon, kind, iso); }).join('');
   }
 
+  /* One delegated listener for the whole document, wired once, so it
+     keeps working after any caller replaces the card's HTML. */
+  function progress(scope){
+    var boxes = scope.querySelectorAll('.mchk');
+    var done = scope.querySelectorAll('.mchk:checked').length;
+    var out = scope.querySelector('[data-dc-prog]');
+    if(out) out.textContent = boxes.length ? (done + ' of ' + boxes.length + ' done') : '';
+    scope.classList.toggle('all-done', boxes.length > 0 && done === boxes.length);
+  }
+  if(!window.__bio004DayCardWired){
+    window.__bio004DayCardWired = true;
+    /* another tab, or Today in the same tab, changing the shared store */
+    window.addEventListener('storage', function(e){
+      if(e.key && e.key !== DKEY) return;
+      var m = doneMap();
+      var boxes = document.querySelectorAll('[data-dc-check]');
+      for(var i=0;i<boxes.length;i++){
+        var on = !!m[boxes[i].getAttribute('data-dc-check')];
+        boxes[i].checked = on;
+        var r = boxes[i].closest ? boxes[i].closest('.mrow') : null;
+        if(r) r.classList.toggle('is-done', on);
+      }
+      sweep();
+    });
+    document.addEventListener('change', function(e){
+      var b = e.target;
+      if(!b || !b.getAttribute || !b.getAttribute('data-dc-check')) return;
+      doneSet(b.getAttribute('data-dc-check'), b.checked);
+      var r = b.closest ? b.closest('.mrow') : null;
+      if(r) r.classList.toggle('is-done', b.checked);
+      var card = b.closest ? b.closest('.d-card') : null;
+      if(card) progress(card);
+    });
+  }
+
+  /* render() returns a string, so the counts cannot be filled in until the
+     caller has put that string in the document. Rather than making every
+     caller remember a second call, this sweeps once on the next tick. */
+  function sweep(){
+    var cards = document.querySelectorAll('.d-card');
+    for(var i=0;i<cards.length;i++) progress(cards[i]);
+  }
   function render(iso, key, opts){
     opts = opts || {};
+    ROWN = 0;
+    setTimeout(sweep, 0);
     var s = sessionFor(iso, key);
     if(!s) return '';
     var sec = SECTIONS[ALIAS[key]];
@@ -111,20 +233,18 @@
     if(s.pw){
       html += '<div class="d-card prework"><div class="dc-k">Pre-work<span class="dc-when">by '+nbLabel+' night</span></div>';
       html += '<div class="dc-t">'+esc(s.pw.t)+'</div>';
-      /* WORKBOOKS ARE DELIBERATELY NOT RENDERED. session-links.js carries
-         M.workbooks and this card does not read it: the pre-work sheet is
-         what students work, and the workbook layer stays unlinked on
-         purpose. This exclusion has been reverted once by accident on the
-         Today page, so leave the array unread here too. */
-      var step1 = many(M.sheets,'&#9998;','Pre-work') + many(M.notes,'&#9776;','Notes');
-      var step2 = many(M.videos,'&#9658;','Video');
+      var step1 = many(M.sheets,'&#9998;','Pre-work',s.d) + many(M.notes,'&#9776;','Notes',s.d) + many(M.workbooks,'&#9636;','Workbook',s.d);
+      var step2 = many(M.videos,'&#9658;','Video',s.d);
       var pw = '';
-      if(step1) pw += '<div class="stephead"><span class="step-n">1</span>Work the sheet with these notes and the reading open</div>'+step1;
-      if(step2) pw += '<div class="stephead"><span class="step-n">2</span>Then watch the video</div>'+step2;
+      /* Two minutes closed book first, then the reading. And the video is
+         named as the answer key rather than as a second thing to watch,
+         because a pretest whose feedback waits until class is the weakest
+         version of this. */
+      if(step1) pw += '<div class="stephead"><span class="step-n">1</span>Two minutes closed book, then work the sheet with these open</div>'+step1;
+      if(step2) pw += '<div class="stephead"><span class="step-n">2</span>Then mark your own sheet against the video</div>'+step2;
       if(step1||step2) pw += '<div class="stephead"><span class="step-n">3</span>Then spaced retrieval, later in the week</div>'+
-        '<a href="mastery-os-fall-2026.html#s-recall" target="_top"><span class="mi" aria-hidden="true">&#9673;</span>'+
-        '<span>Mastery OS, spaced recall for this topic</span><span class="mk">Recall</span></a>';
-      if(pw){ html += '<div class="mat">'+pw+'</div>'; }
+        row('mastery-os-fall-2026.html#s-recall','&#9673;','Mastery OS, spaced recall for this topic','Recall',s.d);
+      if(pw){ html += '<div class="mat">'+pw+'</div><p class="pw-prog" data-dc-prog aria-live="polite"></p>'; }
       else if(s.pw.l){ html += '<a class="pw-link" href="'+esc(s.pw.l)+'" target="_blank" rel="noopener">Open pre-work &#8599;</a>'; }
       /* The only days that reach here are the exam-prep days, whose pre-work
          is "Study for Exam N". There is no new material to link, so promising
@@ -132,10 +252,10 @@
          actually the right answer for that night instead. */
       else if(/^Study for Exam/i.test(s.pw.t||'')){
         html += '<div class="mat">'+
-          '<a href="bio004-exam-modules.html" target="_top"><span class="mi" aria-hidden="true">&#9636;</span><span>What this exam covers</span><span class="mk">Scope</span></a>'+
-          '<a href="mastery-os-fall-2026.html#s-recall" target="_top"><span class="mi" aria-hidden="true">&#9673;</span><span>Mastery OS, spaced recall</span><span class="mk">Recall</span></a>'+
-          '<a href="mastery-os-fall-2026.html#s-weak" target="_top"><span class="mi" aria-hidden="true">&#9678;</span><span>Your weakest topics first</span><span class="mk">Weak spots</span></a>'+
-          '</div>';
+          row('bio004-exam-modules.html','&#9636;','What this exam covers','Scope',s.d)+
+          row('mastery-os-fall-2026.html#s-recall','&#9673;','Mastery OS, spaced recall','Recall',s.d)+
+          row('mastery-os-fall-2026.html#s-weak','&#9678;','Your weakest topics first','Weak spots',s.d)+
+          '</div><p class="pw-prog" data-dc-prog aria-live="polite"></p>';
       }
       else{ html += '<span class="pw-link pending">Link coming soon</span>'; }
       html += '</div>';
@@ -156,14 +276,14 @@
     html += '<div class="d-card lecture"><div class="dc-k">Lecture<span class="dc-when">'+sec.lecT.split(' \u00b7 ')[0]+'</span></div>';
     html += '<div class="dc-t">'+esc(s.lec)+'</div>';
     if(badge[1]) html += '<span class="checkbadge '+badge[0]+'">'+badge[1]+'</span>';
-    var lec = matLink(M.slides,'&#9635;','Slides');
+    var lec = matLink(M.slides,'&#9635;','Slides',s.d);
     if(lec) html += '<div class="mat">'+lec+'</div>';
     html += '</div>';
 
     if(s.lab){
       html += '<div class="d-card lab"><div class="dc-k">Lab<span class="dc-when">'+sec.labT.split(' \u00b7 ')[0]+'</span></div>';
       html += '<div class="dc-t">'+esc(s.lab)+'</div>';
-      var labs = many(M.lab,'&#9679;','Lab sprint');
+      var labs = many(M.lab,'&#9679;','Lab sprint',s.d);
       if(labs) html += '<div class="mat">'+labs+'</div>';
       html += '</div>';
     }
@@ -191,6 +311,9 @@
 
   window.BIO004_DAY_CARD = {
     render: render,
+    /* call this if you inject the card yourself and want the counts filled
+       in without waiting a tick */
+    hydrate: sweep,
     styles: styles,
     sessionFor: sessionFor,
     sessions: function(key){ var s = SECTIONS[ALIAS[key]]; return s ? s.sess.slice() : []; },
