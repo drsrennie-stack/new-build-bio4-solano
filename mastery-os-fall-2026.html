@@ -25,9 +25,9 @@
   --navy:#1E3D4C; --navy-deep:#142a36; --navy-tint:#EDF1F3;
   --card-navy:#1E3D4C; --near-black:#142a36;
   --rust:#A0522D; --rust-hover:#8A4526; --terra:#C2734D; --terra-dark:#A0522D; --clay:#C2734D;
-  --gold:#B8924A; --gold-light:#CFA95F;
+  --gold:#B8924A; --gold-light:#CFA95F; --gold-text:#6F5316;   /* 7.18:1 on white, AAA */
   --white:#FFFFFF; --offwhite:#FAFAF9; --slate:#5B7480;
-  --ink:#1E3D4C; --ink-soft:#3D5966; --ink-faint:rgba(30,61,76,0.62);
+  --ink:#1E3D4C; --ink-soft:#3D5966; --ink-faint:rgba(30,61,76,0.78);
   --line:rgba(30,61,76,0.16); --line-soft:rgba(30,61,76,0.08);
   --ok:#1E4C33; --warn:#8A5A1E; --bad:#7A2E2E;
   --shadow:0 1px 3px rgba(0,0,0,0.08);
@@ -59,7 +59,9 @@ a{color:var(--rust)}
 .btn:hover{transform:translateY(-1px);box-shadow:var(--lift);border-color:var(--navy)}
 .btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
 .btn.primary:hover{background:var(--near-black);border-color:var(--near-black)}
-.btn.gold{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+/* navy on gold is 3.97:1, under the AA floor. Near-black on the same gold
+   is 6.56:1 and reads identically at a glance. */
+.btn.gold{background:var(--gold);color:var(--near-black);border-color:var(--gold)}
 .btn.gold:hover{background:var(--gold-light);border-color:var(--gold-light)}
 .btn.rust{background:var(--rust);color:#fff;border-color:var(--rust)}
 .btn.rust:hover{background:var(--rust-hover);border-color:var(--rust-hover)}
@@ -199,7 +201,7 @@ section.block:first-of-type{border-top:none}
 @media(max-width:900px){.flow{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:560px){.flow{grid-template-columns:repeat(2,1fr)}}
 .stage{padding:18px 16px;text-align:left;display:flex;flex-direction:column;gap:8px;cursor:pointer;background:var(--white)}
-.stage .sn{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--gold);letter-spacing:.1em}
+.stage .sn{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--gold-text);letter-spacing:.1em}
 .stage .si{width:38px;height:38px;border-radius:10px;background:var(--white);color:var(--navy);display:grid;place-items:center}
 .stage .si svg{width:20px;height:20px}
 .stage h3{font-size:15px;font-weight:700}
@@ -251,7 +253,7 @@ section.block:first-of-type{border-top:none}
 @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
 .sheet-head{display:flex;align-items:center;gap:12px;padding:20px 24px;border-bottom:1px solid var(--line-soft);position:sticky;top:0;background:var(--white);z-index:2}
 .sheet-head h2{font-size:19px;font-weight:800;flex:1}
-.sheet-head .ssub{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--terra)}
+.sheet-head .ssub{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-dark)}
 .sheet-body{padding:24px}
 .dots{display:flex;gap:6px;margin-bottom:18px}
 .dots span{flex:1;height:5px;border-radius:99px;background:var(--line-soft)}
@@ -260,7 +262,7 @@ section.block:first-of-type{border-top:none}
 .step-icon{width:52px;height:52px;border-radius:13px;background:var(--white);color:var(--navy);display:grid;place-items:center;margin-bottom:14px}
 .step-icon svg{width:26px;height:26px}
 .step h3{font-size:20px;font-weight:800;margin-bottom:6px}
-.step .sn{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.step .sn{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-text);margin-bottom:8px}
 .step .prompt{font-family:var(--serif);font-style:normal;color:var(--ink-soft);font-size:15px;margin-bottom:16px}
 .step ul.items{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:8px}
 .step ul.items li{background:var(--offwhite);border:1px solid var(--line-soft);border-radius:var(--r);padding:11px 14px;font-size:14px;display:flex;gap:10px;align-items:center}
@@ -479,6 +481,46 @@ section.block:first-of-type{border-top:none}
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
 }
+.ev-task{margin:0 0 12px;padding:10px 12px;background:#F4F5F7;border-left:3px solid #8B3A2E;
+  border-radius:0 7px 7px 0;font-size:14.5px;line-height:1.5;color:#08101F}
+.ev-task span{display:block;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#8B3A2E;margin-bottom:3px}
+.ev-swap{font:inherit;font-size:12.5px;font-weight:700;color:#8B3A2E;background:none;border:0;
+  padding:6px 2px;min-height:32px;cursor:pointer;text-decoration:underline}
+.ev-swap:hover{color:#08101F}
+.ev-swap:focus-visible{outline:3px solid #8B3A2E;outline-offset:2px;border-radius:3px}
+.ev-task.ev-soon{border-left-color:#5A6570;color:#3A424B;font-size:13.5px}
+
+/* ---------- Study Run ---------- */
+.runband{background:var(--navy);color:#fff;border-radius:var(--r);padding:22px 24px;margin:0 0 20px;
+  display:flex;gap:22px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.runband-t{flex:1;min-width:260px}
+.runband .eyebrow{color:#EBCE86;margin:0 0 4px}   /* 7.5:1 on the navy band, AAA */
+.runband h2{color:#fff;font-size:23px;font-weight:800;margin:0 0 6px}
+.runband p{color:#E7EAEE;font-size:13.5px;line-height:1.55;margin:0;max-width:62ch}
+.runband-a{display:flex;flex-direction:column;gap:9px;min-width:210px}
+.runband-a .btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.5)}
+.runband-a .btn.ghost:hover{background:rgba(255,255,255,.1)}
+.run-meter{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:12.5px;color:var(--ink-soft)}
+.run-meter .rm-bar{flex:1;height:8px;border-radius:999px;background:#E3E7EB;overflow:hidden}
+.run-meter .rm-bar>span{display:block;height:100%;background:var(--gold)}
+.run-topic{background:var(--offwhite);border:1px solid var(--line);border-left:3px solid #8B3A2E;
+  border-radius:0 var(--r) var(--r) 0;padding:11px 14px;margin:0 0 16px;text-align:left}
+.run-topic b{display:block;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+  color:#8B3A2E;margin-bottom:2px}
+.run-topic span{font-size:16px;font-weight:700;color:var(--navy)}
+.run-topic em{display:block;font-style:normal;font-size:12.5px;color:var(--ink-soft);margin-top:2px}
+.run-next{display:grid;gap:10px;margin:0 0 14px}
+.run-opt{font:inherit;text-align:left;background:var(--white);border:1.5px solid var(--line);
+  border-radius:var(--r);padding:13px 15px;cursor:pointer;color:var(--ink);display:flex;gap:12px;align-items:flex-start}
+.run-opt:hover{border-color:var(--navy);transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,0,0,.10)}
+.run-opt.primary{border-color:var(--gold);border-width:2px;background:#FFFCF5}
+.run-opt strong{display:block;font-size:15.5px;font-weight:700;color:var(--navy)}
+.run-opt small{display:block;font-size:12.5px;color:var(--ink-soft);line-height:1.45;margin-top:2px}
+.run-opt .ro-min{margin-left:auto;flex:none;font-size:12px;font-weight:800;color:#8B3A2E;white-space:nowrap}
+.run-opt:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.run-done{font-size:12.5px;color:var(--ink-soft);margin:0 0 6px}
+.run-done b{color:var(--navy)}
+@media (prefers-reduced-motion: reduce){.run-opt:hover{transform:none}}
 </style>
 </head>
 <body>
@@ -539,7 +581,23 @@ section.block:first-of-type{border-top:none}
 <main id="main">
   <!-- 1 TODAY'S PLAN -->
   <section class="block" id="s-plan" aria-labelledby="h-plan" tabindex="-1">
-    <div class="wrap"><div class="plan" id="planCard"><!-- JS --></div><div id="dailyBuild"></div></div>
+    <div class="wrap">
+      <!-- STUDY RUN: one topic, one activity at a time, no decisions -->
+      <div class="runband" id="runBand">
+        <div class="runband-t">
+          <p class="eyebrow">Do not decide, just start</p>
+          <h2>Study Run</h2>
+          <p>One topic. We pick the activity, you do it, we hand you the next one. Draw it,
+            map it, get carded on it, watch its Loop, teach it out loud. Runs for the time
+            you set in your plan, then tells you to stop.</p>
+        </div>
+        <div class="runband-a">
+          <button class="btn gold big" id="runStart">Start a Study Run</button>
+          <button class="btn ghost" id="runPick">I want a specific topic</button>
+        </div>
+      </div>
+      <div class="plan" id="planCard"><!-- JS --></div><div id="dailyBuild"></div>
+    </div>
   </section>
 
   <!-- 2 DASHBOARD -->
@@ -1120,7 +1178,7 @@ function ingestRecall(){
 
 /* evidence method metadata */
 var EVIDENCE=[
-  {k:'retrieval',name:'Retrieval practice',icon:I.recall,desc:'Answer questions from memory across DOK levels.',cta:'Open Spaced Recall',href:'#s-recall'}, {k:'weakness',name:'Weak spot dashboard',icon:I.recall,desc:'See which competencies your card answers say are weakest, ranked.',cta:'Open the weak spot board',href:'#s-weak'}, {k:'draw',name:'Draw from memory',icon:I.draw,desc:'Reconstruct the structure with nothing in front of you.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'label',name:'Label diagrams',icon:I.label,desc:'Place every marker on a blank figure.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'cadaver',name:'Cadaver identification',icon:I.eye,desc:'Name the structure on the specimen, not the textbook.',cta:'Mark it done',href:null}, {k:'histo',name:'Histology identification',icon:I.micro,desc:'Identify the tissue at the microscope level.',cta:'Mark it done',href:null}, {k:'explain',name:'Explain aloud',icon:I.speak,desc:'Say it out loud in plain language, no notes.',cta:'Start explaining',href:null}, {k:'teachai',name:'Teach it to an AI',icon:I.teach,desc:'Explain it out loud to a free AI tutor, like teaching a 5-year-old, and let it quiz you back.',cta:'Open AI tutor',href:null}, {k:'teach',name:'Teach another learner',icon:I.teach,desc:'The real test: can someone else follow you?',cta:'Start teaching',href:null}, {k:'clinical',name:'Clinical case',icon:I.clinical,desc:'Apply the structure to a patient scenario.',cta:'Mark it done',href:null}, {k:'questions',name:'Create practice questions',icon:I.build,desc:'Write items that would trip up a classmate.',cta:'Mark it done',href:null}
+  {k:'retrieval',name:'Retrieval practice',icon:I.recall,desc:'Answer questions from memory across DOK levels.',cta:'Open Spaced Recall',href:'#s-recall'}, {k:'weakness',name:'Weak spot dashboard',icon:I.recall,desc:'See which competencies your card answers say are weakest, ranked.',cta:'Open the weak spot board',href:'#s-weak'}, {k:'draw',name:'Draw from memory',icon:I.draw,desc:'Reconstruct the structure with nothing in front of you.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'label',name:'Label diagrams',icon:I.label,desc:'Place every marker on a blank figure.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'loop',name:'Run its Loop',icon:I.retrieve,desc:'Name every structure out loud before the label appears. For cadaver and specimen work this is the only place it can be practised outside the lab.',cta:'Open Loops',href:null}, {k:'cadaver',name:'Cadaver identification',icon:I.eye,desc:'Name the structure on the specimen, not the textbook.',cta:'Mark it done',href:null}, {k:'histo',name:'Histology identification',icon:I.micro,desc:'Identify the tissue at the microscope level.',cta:'Mark it done',href:null}, {k:'explain',name:'Explain aloud',icon:I.speak,desc:'Say it out loud in plain language, no notes.',cta:'Start explaining',href:null}, {k:'teachai',name:'Teach it to an AI',icon:I.teach,desc:'Explain it out loud to a free AI tutor, like teaching a 5-year-old, and let it quiz you back.',cta:'Open AI tutor',href:null}, {k:'teach',name:'Teach another learner',icon:I.teach,desc:'The real test: can someone else follow you?',cta:'Start teaching',href:null}, {k:'clinical',name:'Clinical case',icon:I.clinical,desc:'Apply the structure to a patient scenario.',cta:'Mark it done',href:null}, {k:'questions',name:'Create practice questions',icon:I.build,desc:'Write items that would trip up a classmate.',cta:'Mark it done',href:null}
 ];
 var EVMAP={};EVIDENCE.forEach(function(e){EVMAP[e.k]=e;});
 
@@ -1500,10 +1558,107 @@ function renderFlow(){
 ========================================================= */
 function renderEvidence(){
   $('#evGrid').innerHTML=EVIDENCE.map(function(e){
-    var link=e.href?('data-tool="'+e.href+'"'):'data-selfev="'+e.k+'"';
-    return '<div class="card hover ev-card"><span class="ei">'+e.icon+'</span><h3>'+esc(e.name)+'</h3><p>'+esc(e.desc)+'</p><button class="btn" '+link+'>'+esc(e.cta)+'</button></div>';
+    var head='<div class="card hover ev-card" data-evk="'+esc(e.k)+'"><span class="ei">'+e.icon+'</span><h3>'+esc(e.name)+'</h3><p>'+esc(e.desc)+'</p>';
+    if(e.href) return head
+      + '<button class="btn" data-tool="'+e.href+'">'+esc(e.cta)+'</button></div>';
+    var task=evTask(e.k);
+    /* nothing taught yet that this method can be used on: say so, and do not
+       offer a tick box for work that cannot be done */
+    if(!task){
+      var opens=evOpensWeek(e.k);
+      return head
+        + '<p class="ev-task ev-soon">'+esc(opens?('Opens in week '+opens+', when we reach the material this method needs.')
+                                                :'Nothing to use this on yet.')+'</p>'
+        + '<button class="btn" disabled aria-disabled="true">Not yet</button></div>';
+    }
+    /* the card names a competency, so ticking it has to credit THAT
+       competency. data-selfev on its own logged against null. */
+    var ec=evComp(e.k);
+    return head + task
+      + '<button class="btn" data-selfev="'+esc(e.k)+'"'+(ec?' data-selfcomp="'+esc(ec.id)+'"':'')+'>I did this one</button></div>';
   }).join('');
 }
+
+/* ---------------------------------------------------------
+   A METHOD WITH NO TASK IS A BUTTON THAT MEANS NOTHING
+
+   Seven of the eleven evidence methods have no tool to open, so they
+   rendered as a description and a "Mark it done" button. A student
+   could tick "Cadaver identification" without ever being told which
+   structure. That is self-report with nothing underneath it.
+
+   Each of those now names a real thing to do, drawn from the
+   competencies for the weeks that have actually been taught and
+   matched to the method by facet. Say the thing, then tick it.
+--------------------------------------------------------- */
+var EV_FACET={cadaver:'cadaver',histo:'histology',clinical:'clinical',
+              explain:null,teachai:null,teach:null,questions:null,loop:null};
+var EV_VERB={cadaver:'Find and name on the specimen',
+             histo:'Identify down the microscope',
+             clinical:'Talk through the clinical angle on',
+             explain:'Explain aloud, no notes',
+             teachai:'Teach an AI, then correct what it gets wrong',
+             teach:'Teach a classmate',
+             questions:'Write three questions on',
+             loop:'Run the Loop for'};
+var EV_SEED={explain:0,teachai:1,teach:2,questions:3,loop:0};
+var EV_TERM_START=new Date(2026,7,17);
+function evWeek(){var w=Math.floor((new Date()-EV_TERM_START)/604800000)+1;return w<1?1:(w>17?17:w);}
+function evPool(k){
+  var comps=window.BIO004_COMPETENCIES||[]; var wk=evWeek(); var f=EV_FACET[k];
+  var pool=comps.filter(function(c){
+    if(!c.week||c.week>wk) return false;
+    /* the Loop card has no facet of its own: what qualifies a competency is
+       whether one of the 39 Loops covers it */
+    if(k==='loop') return !!loopFor(c.id);
+    return f?(c.facets||[]).indexOf(f)!==-1:true;
+  });
+  /* this week first, so the prompt matches the lecture they just watched */
+  pool.sort(function(a,b){return b.week-a.week;});
+  return pool;
+}
+/* the first week this method has anything to be used on, so a card that is
+   not open yet can say when it will be instead of saying nothing */
+function evOpensWeek(k){
+  var f=EV_FACET[k]; if(!f&&k!=='loop') return 0;
+  var comps=window.BIO004_COMPETENCIES||[]; var first=0;
+  comps.forEach(function(c){
+    if(!c.week) return;
+    if(k==='loop'){ if(!loopFor(c.id)) return; }
+    else if((c.facets||[]).indexOf(f)===-1) return;
+    if(!first||c.week<first) first=c.week;
+  });
+  return first;
+}
+function evComp(k){
+  var pool=evPool(k); if(!pool.length) return null;
+  var i=0; try{i=parseInt(localStorage.getItem('bio004-ev-'+k),10)||0;}catch(e){}
+  /* four of these methods draw from the same unfiltered pool, so without an
+     offset all four cards name the same competency on one screen */
+  return pool[(i+(EV_SEED[k]||0))%pool.length];
+}
+function evTask(k){
+  var c=evComp(k); if(!c) return '';
+  /* Loops has no URL routing, so naming the tile is the difference between
+     an instruction and a scavenger hunt through 39 of them */
+  var extra='';
+  if(k==='loop'){ var lp=loopFor(c.id); if(lp) extra=' <em style="font-style:normal;color:#5c6970">Loop tile: '+esc(lp.title)+'</em>'; }
+  return '<p class="ev-task" data-evcomp="'+esc(c.id)+'"><span>'+esc(EV_VERB[k]||'Do this with')+'</span> '+esc(c.name)+extra
+       /* six of these buttons sit on one screen, so "Another one" on its own
+          is six identical announcements to a screen reader */
+       + ' <button type="button" class="ev-swap" data-evswap="'+esc(k)+'"'
+       + ' aria-label="Another one for '+esc((EVMAP[k]&&EVMAP[k].name)||k)+'">Another one</button></p>';
+}
+document.addEventListener('click',function(ev){
+  var b=ev.target.closest('[data-evswap]'); if(!b) return;
+  var k=b.getAttribute('data-evswap'); var pool=evPool(k); if(!pool.length) return;
+  var i=0; try{i=(parseInt(localStorage.getItem('bio004-ev-'+k),10)||0)+1;
+               localStorage.setItem('bio004-ev-'+k,String(i%pool.length));}catch(e){}
+  var card=b.closest('.ev-card'); var p=card&&card.querySelector('.ev-task');
+  if(p) p.outerHTML=evTask(k);
+  var btn=card&&card.querySelector('[data-selfev]'); var nc=evComp(k);
+  if(btn&&nc) btn.setAttribute('data-selfcomp',nc.id);
+});
 
 /* =========================================================
    RENDER: SECTION 7 - SKILLS
@@ -1716,7 +1871,7 @@ function logEvidence(k,compId){
 /* =========================================================
    PROVE-IT (competency evidence picker)
 ========================================================= */
-var PROVE_READY=['retrieval','draw','explain','teach','teachai'];
+var PROVE_READY=['retrieval','draw','loop','explain','teach','teachai'];
 var PROVE_HOW={
   explain:'Say it out loud in plain language, no notes, as if teaching a friend. Where you get stuck is your gap.', teach:'Explain it to another person until they can say it back. Their questions show you what you missed.'
 };
@@ -1738,6 +1893,7 @@ function openProve(id){
 function proveDo(c,k){
   var e=EVMAP[k];if(!e)return;
   if(k==='teachai'){aiTutorScreen(c);return;}
+  if(k==='loop'){loopProveScreen(c);return;}
   if(e.href){
     var url=e.href;
     if(k==='draw'||k==='label')url+='?title='+encodeURIComponent(c.name);
@@ -1751,6 +1907,10 @@ function proveDo(c,k){
   $('#proveBack').onclick=function(){openProve(c.id);};
 }
 function proveComplete(c,lastMethod){
+  /* teach-it-to-an-AI and explain-aloud both land here. Inside a run there is
+     no "prove it another way" question to ask, because that is exactly what
+     the run is already doing. */
+  if(RUN&&RUN.active){runAdvance(RUN.current);return;}
   clearG();var ov=$('#gameOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');
   gSet('Proved: '+c.name,(EVMAP[lastMethod]?EVMAP[lastMethod].name:'Done')+' logged');
   var doneWays=c.ev.map(function(k){return EVMAP[k]?EVMAP[k].name:k;}).join(' · ');
@@ -1772,6 +1932,26 @@ function proveComplete(c,lastMethod){
   if(n)n.onclick=function(){openProve(c.id);};
   if(t)t.onclick=function(){c.next=addDays(TODAY,1);c.varyNext=true;save();renderAll();closeGame();toast('Queued for tomorrow, a fresh way to prove '+c.name);};
   if(x)x.onclick=function(){c.varyNext=true;save();closeGame();toast('Next time it comes up, try a new way.');};
+}
+/* Loops is a separate app on the same origin with no URL routing, so the
+   only useful thing this can do is NAME the right Loop before sending
+   them to a hub of 39 tiles. */
+function loopProveScreen(c){
+  var lp=loopFor(c.id);
+  gSet('Loop: '+(lp?loopShort(lp.title):c.name),'Name it before the label');
+  gBody('<div class="g-center"><div class="g-emoji">\u{1F504}</div><h3>'+esc(lp?lp.title:'No Loop covers this one')+'</h3>'+
+    (lp
+      ? '<p>Loops opens on its hub. Take the tile named <b>'+esc(lp.title)+'</b>. Say each structure out loud '+
+        '<b>before</b> the label appears. Watching it is not the exercise, beating the label is.</p>'+
+        '<div class="g-actions"><button class="btn gold" id="lpGo">Open Loops</button>'+
+        '<button class="btn" id="proveDone">I did the Loop</button>'+
+        '<button class="btn ghost" id="proveBack">Back</button></div>'
+      : '<p>None of the 39 Loops covers '+esc(c.name)+'. Prove it another way.</p>'+
+        '<div class="g-actions"><button class="btn" id="proveBack">Back</button></div>')+
+    '</div>');
+  var g=$('#lpGo');if(g)g.onclick=function(){window.open(LOOPS_BASE,'_blank','noopener');};
+  var d=$('#proveDone');if(d)d.onclick=function(){bumpDim('cadaver',3);logEvidence('loop',c.id);proveComplete(c,'loop');};
+  var bk=$('#proveBack');if(bk)bk.onclick=function(){openProve(c.id);};
 }
 function aiTutorScreen(c){
   var prompt='I am studying anatomy and want to prove I understand "'+c.name+'".\n'+
@@ -1962,7 +2142,7 @@ function openGame(mode){
   else if(mode==='braindump')brainDump();
   else if(mode==='drawknow')drawKnow();
 }
-function closeGame(){clearG();var ov=$('#gameOverlay');ov.classList.remove('open');ov.setAttribute('aria-hidden','true');if(lastFocus)lastFocus.focus();}
+function closeGame(){clearG();var ov=$('#gameOverlay');ov.classList.remove('open');ov.setAttribute('aria-hidden','true');if(typeof runBandSync==='function')runBandSync();if(lastFocus)lastFocus.focus();}
 
 /* ---- Live Quiz ---- */
 function quizGame(){
@@ -2086,7 +2266,7 @@ function drawGuess(){
 /* ---- Signature solo exercises ---- */
 function mindMap(){
   gSet('Mind-Map then Recall','Signature exercise');
-  var w=weaknesses();var c=(w[0]&&w[0].c)||allComps()[0].c;CUR_EX=c;CUR_CONF=null;
+  var w=weaknesses();var c=runComp()||(w[0]&&w[0].c)||allComps()[0].c;CUR_EX=c;CUR_CONF=null;
   confGate(c,function(){mmTask(c);});
 }
 function mmTask(c){
@@ -2097,7 +2277,306 @@ function mmTask(c){
   function render(){var s=steps[step];var b='<div class="g-center"><div class="g-emoji">'+s.emoji+'</div><h3>'+esc(s.h)+'</h3><p>'+esc(s.p)+'</p>';if(step<2)b+='<div class="g-actions"><button class="btn gold" id="mmNext">'+esc(s.cta)+'</button></div>';else b+='<div class="g-actions"><button class="btn" data-mmscore="2">Under half</button><button class="btn" data-mmscore="4">Most of it</button><button class="btn gold" data-mmscore="6">Almost all</button></div>';b+='</div>';gBody(b);if(step<2){var n=$('#mmNext');if(n)n.onclick=function(){step++;render();};}}
   render();
 }
+/* =========================================================
+   STUDY RUN
+
+   The complaint this answers: a student who opens Mastery OS has to
+   decide what to study, then decide how to study it, then decide when
+   to stop. Three decisions before any work happens, every single time,
+   and the tools that need the most effort lose every one of them.
+
+   A run removes all three. It picks one competency, then hands over one
+   activity at a time on that same competency, in a random order, until
+   the minutes they set in their plan are spent. Same topic, seven
+   different ways at it, which is the whole point: rereading it seven
+   times is not the same as drawing it, mapping it, being carded on it,
+   watching it move, and saying it out loud.
+
+   "I want a specific topic" is always there, so this never traps
+   anyone who came in knowing what they needed.
+========================================================= */
+var RUN=null;
+function runComp(){ return (RUN&&RUN.active&&RUN.comp)?RUN.comp:null; }
+
+/* Each activity says how long it takes so the meter is honest, and
+   whether it can run at all for this competency. An activity with
+   nothing behind it for this topic is never offered. */
+var RUN_ACTS=[
+  {k:'drawknow',name:'Draw it to know it',min:12,
+   blurb:'Draw it from memory with nothing in front of you, then reveal the checklist and grade yourself.',
+   ok:function(){return true;}, go:function(){drawKnow();}},
+  {k:'mindmap',name:'Mind map, then rebuild it',min:12,
+   blurb:'Map it from your notes, close them, rebuild the map from memory, compare the two.',
+   ok:function(){return true;}, go:function(){mindMap();}},
+  {k:'cards',name:'Spaced recall cards',min:10,
+   blurb:'Answer cards on this topic from memory, rating how sure you are before you look.',
+   ok:function(c){return runCardCount(c)>0;}, go:function(c){runCards(c);}},
+  {k:'loop',name:'Watch its Loop',min:8,
+   blurb:'Run the Loop for this topic and name the structures as they come up.',
+   ok:function(c){return !!loopFor(c.id);}, go:function(c){runLoop(c);}},
+  {k:'teachai',name:'Teach it to an AI',min:10,
+   blurb:'Explain it out loud to a free AI tutor like you are teaching a five-year-old, and let it quiz you back.',
+   ok:function(){return true;}, go:function(c){CUR_EX=c;aiTutorScreen(c);}},
+  {k:'explain',name:'Explain it aloud, no notes',min:5,
+   blurb:'Say it out loud in plain language to an empty room. Where you stall is the gap.',
+   ok:function(){return true;}, go:function(c){runExplain(c);}},
+  {k:'labsprint',name:'Lab sprint checklist',min:10,
+   blurb:'Work the structure checklist for this lab and find every one of them on the specimen.',
+   ok:function(c){return !!labSprintFor(c);}, go:function(c){runSprint(c);}}
+];
+var RUN_ACTMAP={};RUN_ACTS.forEach(function(a){RUN_ACTMAP[a.k]=a;});
+
+/* how many cards the bank holds for this competency, so the card
+   activity is not offered on a topic that has none */
+function runCardCount(c){
+  var map=window.BIO004_CARD_COMPETENCY_MAP||window.CARD_COMPETENCY_MAP||{};
+  var n=0;
+  for(var id in map){ if(!map.hasOwnProperty(id))continue;
+    var comps=(map[id]&&map[id].comps)||map[id]||[];
+    if(comps&&comps.indexOf&&comps.indexOf(c.id)>-1)n++;
+  }
+  return n;
+}
+
+/* Lab sprint pages are named by topic, not by competency, so this maps
+   a competency onto one by unit name. Only the Module 1 pages that are
+   actually in the repo are listed; an unmapped unit simply does not
+   offer the activity rather than linking to a 404. */
+var RUN_SPRINTS=[
+  {file:'body-cavities-lab-sprint.html', name:'Body cavities and terminology', match:/cavit|terminolog|anatomical position|plane|directional|regional term|quadrant|serous|periton|mediastin/i},
+  {file:'tissues-lab-sprint.html', name:'Tissues and histology', match:/tissue|epitheli|connective|histolog|microscop|cell|nucle|organell|membrane|cartilage|blood|vessel wall|germ layer/i},
+  {file:'integumentary-lab-sprint.html', name:'Integumentary system', match:/skin|epiderm|dermis|integument|hair|nail|sweat|sebace/i}
+];
+function labSprintFor(c){
+  var hay=(c.name||'')+' '+(c.can||'');
+  for(var i=0;i<RUN_SPRINTS.length;i++){ if(RUN_SPRINTS[i].match.test(hay)) return RUN_SPRINTS[i]; }
+  return null;
+}
+
+/* minutes for a run, taken from their own plan rather than a number
+   picked here */
+function runBudgetMin(){
+  var p=S.profile||{};
+  var m=p.minutes||(p.hoursPerDay?Math.round(p.hoursPerDay*60):0);
+  if(!m||m<10)m=45;
+  return Math.min(180,m);
+}
+function runSpentMin(){ if(!RUN)return 0; return Math.round((Date.now()-RUN.started)/60000); }
+
+/* WHICH TOPIC.
+   The weakest thing that has actually been taught, because that is the
+   one carrying the most to gain. Failing that, the oldest thing in this
+   week. Never something not yet covered. */
+function runAutoComp(){
+  var w=weaknesses();
+  if(w.length)return w[0].c;
+  var wk=scheduleCurrentWeek().n;
+  var pool=allComps().filter(function(x){return x.u&&x.u.week&&x.u.week<=wk;});
+  if(!pool.length)pool=allComps();
+  pool.sort(function(a,b){return a.c.mastery-b.c.mastery;});
+  return pool[0].c;
+}
+
+/* Opening the cards puts the student on the page behind the overlay, so the
+   band on Today becomes the door back into the run. Without this the run is
+   effectively abandoned the moment they do cards, which is one of the seven. */
+function runBandSync(){
+  var s=$('#runStart'), pk=$('#runPick'), band=$('#runBand');
+  if(!s||!band)return;
+  var paused=RUN&&RUN.active&&!$('#gameOverlay').classList.contains('open');
+  s.textContent=paused?('Back to your run: '+RUN.comp.name):'Start a Study Run';
+  if(pk)pk.textContent=paused?'Stop the run':'I want a specific topic';
+  band.setAttribute('data-runstate',paused?'paused':'idle');
+}
+function runOpenOverlay(){
+  clearG();var ov=$('#gameOverlay');ov.classList.add('open');ov.setAttribute('aria-hidden','false');
+  lastFocus=lastFocus||document.activeElement;
+}
+function runStart(comp){
+  var c=comp||runAutoComp();
+  if(!c){toast('Nothing has been taught yet to run on.');return;}
+  RUN={active:true,comp:c,done:[],started:Date.now(),budget:runBudgetMin()};
+  runOpenOverlay();
+  runNext(true);
+}
+function runEnd(msg){
+  var n=RUN?RUN.done.length:0, mins=runSpentMin();
+  var name=RUN&&RUN.comp?RUN.comp.name:'';
+  RUN=null;save();renderAll();
+  runOpenOverlay();
+  gSet('Run finished','Study Run');
+  gBody('<div class="g-center"><div class="g-emoji">✅</div><h3>'+esc(msg||'That is the run')+'</h3>'+
+    '<p>'+n+' activit'+(n===1?'y':'ies')+' on <b>'+esc(name)+'</b>, '+mins+' minute'+(mins===1?'':'s')+'. '+
+    'Coming at one thing that many different ways is what makes it stick. It comes back on your recall schedule.</p>'+
+    '<div class="g-actions"><button class="btn gold" id="runAgain">Run another topic</button>'+
+    '<button class="btn" data-gameclose>Done for today</button></div></div>');
+  var a=$('#runAgain');if(a)a.onclick=function(){runStart(null);};
+}
+/* called by every activity when it finishes */
+function runAdvance(k){
+  if(!RUN||!RUN.active)return false;
+  if(k&&RUN.done.indexOf(k)<0)RUN.done.push(k);
+  save();renderAll();
+  runOpenOverlay();
+  runNext(false);
+  return true;
+}
+function runNext(first){
+  if(!RUN||!RUN.active)return;
+  var c=RUN.comp;
+  var pool=RUN_ACTS.filter(function(a){return RUN.done.indexOf(a.k)<0&&a.ok(c);});
+  var spent=runSpentMin(), left=RUN.budget-spent;
+  if(!pool.length) return runEnd('You have done every way there is on this one');
+  if(!first&&left<=0) return runEnd('Your '+RUN.budget+' minutes are up');
+
+  /* random order, and the shortest thing that still fits when time is
+     short, so the run does not end on a half-finished activity */
+  var pick=shuffle(pool.slice())[0];
+  var fits=pool.filter(function(a){return a.min<=left;});
+  if(fits.length&&pick.min>left)pick=shuffle(fits)[0];
+  var others=pool.filter(function(a){return a.k!==pick.k;}).slice(0,3);
+
+  gSet(first?'Study Run':'Next up','One topic, every way at it');
+  var pct=Math.max(0,Math.min(100,Math.round(spent/RUN.budget*100)));
+  var b='<div style="text-align:left">';
+  b+='<div class="run-meter"><span>'+spent+' of '+RUN.budget+' min</span>'
+   + '<span class="rm-bar"><span style="width:'+pct+'%"></span></span>'
+   + '<span>'+RUN.done.length+' done</span></div>';
+  b+='<div class="run-topic"><b>Your topic for this run</b><span>'+esc(c.name)+'</span>'
+   + (c.can?'<em>'+esc(c.can)+'</em>':'')+'</div>';
+  if(RUN.done.length){
+    b+='<p class="run-done">Already done this run: <b>'
+     + esc(RUN.done.map(function(k){return RUN_ACTMAP[k]?RUN_ACTMAP[k].name:k;}).join(', '))+'</b></p>';
+  }
+  b+='<div class="run-next">';
+  b+='<button type="button" class="run-opt primary" data-rungo="'+esc(pick.k)+'">'
+   + '<span><strong>'+esc(pick.name)+'</strong><small>'+esc(pick.blurb)+'</small></span>'
+   + '<span class="ro-min">'+pick.min+' min</span></button>';
+  others.forEach(function(a){
+    b+='<button type="button" class="run-opt" data-rungo="'+esc(a.k)+'">'
+     + '<span><strong>'+esc(a.name)+'</strong><small>'+esc(a.blurb)+'</small></span>'
+     + '<span class="ro-min">'+a.min+' min</span></button>';
+  });
+  b+='</div>';
+  b+='<div class="g-actions"><button class="btn" id="runSwapTopic">Different topic</button>'
+   + '<button class="btn ghost" id="runQuit">Stop the run</button></div>';
+  b+='<p style="font-size:12px;color:var(--ink-soft);margin-top:10px">The gold one is the one we picked. '
+   + 'The rest are there only if you want something specific.</p></div>';
+  gBody(b);
+  $$('#gameBody [data-rungo]').forEach(function(btn){
+    btn.onclick=function(){ runGo(btn.getAttribute('data-rungo')); };
+  });
+  var st=$('#runSwapTopic');if(st)st.onclick=function(){runPicker(true);};
+  var q=$('#runQuit');if(q)q.onclick=function(){runEnd('Stopped there');};
+}
+function runGo(k){
+  var a=RUN_ACTMAP[k];if(!a||!RUN)return;
+  RUN.current=k;
+  a.go(RUN.comp);
+}
+
+/* ---- the three activities that had no runner of their own ---- */
+function runCards(c){
+  gSet('Cards: '+c.name,'Spaced recall');
+  gBody('<div class="g-center"><div class="g-emoji">\u{1F5C2}️</div><h3>Cards on '+esc(c.name)+'</h3>'+
+    '<p>'+runCardCount(c)+' cards in the bank for this one. Answer them from memory and rate how sure '+
+    'you are <b>before</b> you look. Being sure and being wrong is the gap that costs you marks.</p>'+
+    '<div class="g-actions"><button class="btn gold" id="rcGo">Open the cards</button>'+
+    '<button class="btn" id="rcDone">I did the cards</button></div>'+
+    '<p style="font-size:12px;color:var(--ink-faint);margin-top:10px">The cards open behind this box. '+
+    'Come back here when you are done and the run picks up where it left off.</p></div>');
+  $('#rcGo').onclick=function(){
+    if(window.BIO004_RECALL_OPEN)window.BIO004_RECALL_OPEN(c.id);
+    else location.hash='s-recall?comp='+encodeURIComponent(c.id);
+    var ov=$('#gameOverlay');ov.classList.remove('open');ov.setAttribute('aria-hidden','true');
+    runBandSync();
+    toast('Cards loaded. When you are done, Today has a button back into the run.');
+  };
+  $('#rcDone').onclick=function(){logEvidence('retrieval',c.id);runAdvance('cards');};
+}
+function runLoop(c){
+  var lp=loopFor(c.id);
+  gSet('Loop: '+(lp?loopShort(lp.title):c.name),'Loops');
+  gBody('<div class="g-center"><div class="g-emoji">\u{1F504}</div><h3>'+esc(lp?lp.title:'Loop')+'</h3>'+
+    '<p>Loops opens on its hub with 39 tiles, so take the one named above: <b>'+esc(lp?lp.title:'')+'</b>. '+
+    'Name each structure out loud <b>before</b> the label appears. Watching it is not the exercise, '+
+    'beating the label is.</p>'+
+    '<div class="g-actions"><button class="btn gold" id="rlGo">Open Loops</button>'+
+    '<button class="btn" id="rlDone">I did the Loop</button></div></div>');
+  $('#rlGo').onclick=function(){window.open(LOOPS_BASE,'_blank','noopener');};
+  $('#rlDone').onclick=function(){bumpComp(c,4);bumpDim('cadaver',2);runAdvance('loop');};
+}
+function runExplain(c){
+  gSet('Explain aloud: '+c.name,'No notes');
+  gBody('<div class="g-center"><div class="g-emoji">\u{1F5E3}️</div><h3>Say it out loud</h3>'+
+    '<p>Explain <b>'+esc(c.name)+'</b> out loud in plain language, no notes, as if to a friend who '+
+    'has never taken the course. '+esc(c.can||'')+'</p>'+
+    '<p style="font-size:13px;color:var(--ink-soft)">Where you stall, hedge, or go quiet is the gap. '+
+    'That is the bit to go back to, not the bit that came out fluently.</p>'+
+    '<div class="g-actions"><button class="btn gold" id="reDone">I explained it</button>'+
+    '<button class="btn" id="reSkip">Skip this one</button></div></div>');
+  $('#reDone').onclick=function(){logEvidence('explain',c.id);runAdvance('explain');};
+  $('#reSkip').onclick=function(){runAdvance('explain');};
+}
+function runSprint(c){
+  var sp=labSprintFor(c);
+  gSet('Lab sprint: '+(sp?sp.name:c.name),'Structure checklist');
+  gBody('<div class="g-center"><div class="g-emoji">\u{1F52C}</div><h3>'+esc(sp?sp.name:'Lab sprint')+'</h3>'+
+    '<p>Work the checklist on the models or the dissection, not on the page. Say the name first, '+
+    'then tick it. Anything you tick without finding it is a mark you will lose in the lab exam.</p>'+
+    '<div class="g-actions"><button class="btn gold" id="rsGo">Open the sprint</button>'+
+    '<button class="btn" id="rsDone">I did the sprint</button></div></div>');
+  $('#rsGo').onclick=function(){window.open(sp.file,'_blank','noopener');};
+  $('#rsDone').onclick=function(){bumpComp(c,4);bumpDim('lab',2);runAdvance('labsprint');};
+}
+
+/* ---- pick a topic yourself: module, then chapter, then competency ---- */
+function runPicker(midRun){
+  runOpenOverlay();
+  gSet('Pick your topic','Study Run');
+  var units=S.units.filter(function(u){return u.comps&&u.comps.length;});
+  var wk=scheduleCurrentWeek().n;
+  var taught=units.filter(function(u){return !u.week||u.week<=wk;});
+  if(taught.length)units=taught;
+  var uSel=(RUN&&RUN.comp)?(findComp(RUN.comp.id)||{}).u:null;
+  var u0=uSel&&units.indexOf(uSel)>-1?uSel:units[0];
+  function render(u){
+    var b='<div style="text-align:left">';
+    b+='<p style="color:var(--ink-soft);margin:0 0 12px;font-size:14px">Chapter first, then the one thing '+
+       'you want to work. Everything in the run stays on whatever you pick here.</p>';
+    b+='<label class="visually-hidden" for="rpUnit">Chapter</label>';
+    b+='<select id="rpUnit" style="width:100%;font:inherit;font-size:15px;padding:11px 13px;border:1.5px solid var(--line);border-radius:var(--r);background:var(--white);margin:0 0 12px">'
+     + units.map(function(x){return '<option value="'+esc(x.name)+'"'+(x===u?' selected':'')+'>'+esc(x.name)+'</option>';}).join('')
+     + '</select>';
+    b+='<div class="run-next">'+u.comps.map(function(c){
+        return '<button type="button" class="run-opt" data-rpcomp="'+esc(c.id)+'">'
+             + '<span><strong>'+esc(c.name)+'</strong>'+(c.can?'<small>'+esc(c.can)+'</small>':'')+'</span>'
+             + '<span class="ro-min">'+c.mastery+'%</span></button>';
+      }).join('')+'</div>';
+    b+='<div class="g-actions"><button class="btn" id="rpBack">'+(midRun?'Back to the run':'Cancel')+'</button></div></div>';
+    gBody(b);
+    $('#rpUnit').onchange=function(){
+      var nx=units.filter(function(x){return x.name===$('#rpUnit').value;})[0];
+      if(nx)render(nx);
+    };
+    $$('#gameBody [data-rpcomp]').forEach(function(btn){
+      btn.onclick=function(){
+        var f=findComp(btn.getAttribute('data-rpcomp'));if(!f)return;
+        if(midRun&&RUN&&RUN.active){RUN.comp=f.c;RUN.done=[];runNext(false);}
+        else runStart(f.c);
+      };
+    });
+    $('#rpBack').onclick=function(){
+      if(midRun&&RUN&&RUN.active)runNext(false); else closeGame();
+    };
+  }
+  render(u0);
+}
+
 function exerciseComp(){
+  /* a Study Run holds every activity on one topic, so it wins over the
+     exercise's own pick */
+  var forced=runComp(); if(forced) return forced;
   var wk=scheduleCurrentWeek().n;
   var pool=allComps().filter(function(x){return x.u&&x.u.week===wk;});
   if(!pool.length)pool=allComps();
@@ -2847,7 +3326,7 @@ function renderTogether(){var el=$('#togetherGrid');if(!el)return;el.innerHTML=M
 ========================================================= */
 function renderAll(){
   $('#greetBadge').textContent=S.profile.name?('Hi, '+S.profile.name):'Welcome';
-  renderPlan();renderDailyBuild();renderDashboard();renderMap();renderWeakness();renderFlow();renderEvidence();renderSkills();renderExercises();renderTogether();
+  renderPlan();renderDailyBuild();renderDashboard();renderMap();renderWeakness();renderFlow();renderEvidence();renderSkills();renderExercises();renderTogether();runBandSync();
 }
 
 /* =========================================================
@@ -2878,9 +3357,12 @@ document.addEventListener('click',function(e){
   if(t.hasAttribute('data-daydone')){var did=t.getAttribute('data-daydone');var dd=dayDone();dd[did]=!dd[did];save();renderDailyBuild();return;}
   if(t.hasAttribute('data-opengrades')){openGrades();return;}
   if(t.hasAttribute('data-gradedel')){S.grades.splice(+t.getAttribute('data-gradedel'),1);save();renderGrades();return;}
-  if(t.hasAttribute('data-gameclose')){closeGame();return;}
-  if(t.hasAttribute('data-drawscore')){bumpDim('draw',+t.getAttribute('data-drawscore'));bumpSkill('Retrieval',2);save();renderAll();closeGame();toast('Drawing logged. Draw-to-Know-It updated.');return;}
-  if(t.hasAttribute('data-mmscore')){var sc=+t.getAttribute('data-mmscore');var msg='Exercise logged. Mastery updated.';if(CUR_EX){bumpComp(CUR_EX,sc);bumpSkill('Retrieval',3);bumpSkill('Gap Identification',2);logCalibration(CUR_EX,sc);msg=calibrationToast(sc);}CUR_CONF=null;save();renderAll();closeGame();toast(msg);return;}
+  if(t.hasAttribute('data-gameclose')){if(RUN)RUN=null;closeGame();return;}
+  if(t.hasAttribute('data-drawscore')){bumpDim('draw',+t.getAttribute('data-drawscore'));bumpSkill('Retrieval',2);save();renderAll();if(RUN&&RUN.active){runAdvance(RUN.current);return;}closeGame();toast('Drawing logged. Draw-to-Know-It updated.');return;}
+  /* Every self-scored exercise ends here. Inside a run it hands back to the
+     run instead of closing, which is the whole point: no decision between
+     one activity and the next. */
+  if(t.hasAttribute('data-mmscore')){var sc=+t.getAttribute('data-mmscore');var msg='Exercise logged. Mastery updated.';if(CUR_EX){bumpComp(CUR_EX,sc);bumpSkill('Retrieval',3);bumpSkill('Gap Identification',2);logCalibration(CUR_EX,sc);msg=calibrationToast(sc);}CUR_CONF=null;save();renderAll();if(RUN&&RUN.active){toast(msg);runAdvance(RUN.current);return;}closeGame();toast(msg);return;}
   if(t.hasAttribute('data-session')){var k=t.getAttribute('data-session');if(k==='stage')return;if(k==='today'||k==='repair')openSessionChooser(k);else openSession(k);}
   else if(t.hasAttribute('data-prove')){openProve(t.getAttribute('data-prove'));}
   else if(t.hasAttribute('data-tool')){
@@ -2888,7 +3370,7 @@ document.addEventListener('click',function(e){
     if(t.hasAttribute('data-sclose'))closeSession();
     openTool(t.getAttribute('data-tool'),la);
   }
-  else if(t.hasAttribute('data-selfev')){logEvidence(t.getAttribute('data-selfev'),null);}
+  else if(t.hasAttribute('data-selfev')){logEvidence(t.getAttribute('data-selfev'),t.getAttribute('data-selfcomp')||null);}
   else if(t.hasAttribute('data-logev')){var pv=t.getAttribute('data-logev').split(':');logEvidence(pv[0],pv[1]);closeSession();}
   else if(t.hasAttribute('data-stage')){SESS={_stageK:t.getAttribute('data-stage')};openSession('stage');}
   else if(t.hasAttribute('data-unit')){toggleUnit(t.getAttribute('data-unit'));}
@@ -2913,6 +3395,21 @@ $('#instrClose').addEventListener('click',closeInstructor);
 $('#instrCancel').addEventListener('click',closeInstructor);
 $('#instrSave').addEventListener('click',saveInstructor);
 $('#instrReload').addEventListener('click',function(){applySchedule(true);renderAll();closeInstructor();toast('Plan rebuilt from the schedule.');});
+
+/* Study Run entry */
+(function(){
+  var s=$('#runStart');
+  if(s)s.addEventListener('click',function(){
+    if(RUN&&RUN.active){runOpenOverlay();runNext(false);runBandSync();return;}
+    runStart(null);
+  });
+  var p=$('#runPick');
+  if(p)p.addEventListener('click',function(){
+    if(RUN&&RUN.active){runEnd('Stopped there');return;}
+    runPicker(false);
+  });
+  runBandSync();
+})();
 $('#cfgImport').addEventListener('click',importSchedule);
 $('#cfgFile').addEventListener('change',function(e){var f=e.target.files&&e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){$('#cfgPaste').value=r.result;};r.readAsText(f);});
 $('#cfgStart').addEventListener('change',function(){if(this.value){SCHEDULE.start=this.value;store.set('mos-schedule',SCHEDULE);}});

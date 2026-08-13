@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Digital Device Policy &middot; BIO 004 Human Anatomy &middot; Summer 2026</title>
+<title>Digital Device Policy &middot; BIO 004 Human Anatomy &middot; Fall 2026</title>
 <meta name="description" content="Digital device policy for the anatomy laboratory and the required student agreement for BIO 004 Human Anatomy.">
 <style>
 @import url('https://cdn.jsdelivr.net/npm/@fontsource-variable/plus-jakarta-sans/index.css');
@@ -183,6 +183,31 @@ html { scroll-behavior: smooth; }
 /* #C9A14A on white is 2.15:1 and this is 17.9px bold, which is not large
    text, so it failed 1.4.3 outright. Terra #8B3A2E on white is 7.65:1,
    past AAA, and stays in the palette. */
+
+/* ============================================================
+   EMBED MODE, ?embed=1
+
+   This same file is the standalone page AND the block inside the
+   Canvas assignment. In embed mode it loses everything that would
+   send a student away from the assignment they are standing on:
+   the dock, the footer link columns, the hero buttons back to the
+   syllabus and course home, and step 2 and step 3 of the CTA,
+   which point at this very assignment and at Today.
+
+   What survives is why the policy exists, the rules, and step 1,
+   the agreement itself, which has to open in its own tab because
+   it is filled in and saved as a PDF and that cannot be done
+   sensibly inside a frame.
+   ============================================================ */
+.is-embed .bd-launch, .is-embed .bd-panel, .is-embed .bd-scrim, .is-embed .dcm { display: none !important; }
+.is-embed .hero-ctas { display: none; }
+.is-embed .footer-top { display: none; }
+.is-embed .footer-section { padding-top: 24px; }
+.is-embed .site-header { padding-top: 18px; padding-bottom: 18px; }
+.is-embed .cta-steps > li.ddp-standalone { display: none; }
+.ddp-embedonly { display: none; }
+.is-embed .ddp-embedonly { display: block; }
+.is-embed .ddp-standalone-note { display: none; }
 </style>
 </head>
 <body>
@@ -280,18 +305,19 @@ html { scroll-behavior: smooth; }
   <ol class="cta-steps">
     <li>
       <span class="cta-step-n">Step 1</span>
-      <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/digital-device-policy-agreement.html" class="cta-button" target="_top">Read and complete the agreement</a>
+      <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/digital-device-policy-agreement.html" class="cta-button" id="ddpAgreementLink" target="_top">Read and complete the agreement</a>
     </li>
-    <li>
+    <li class="ddp-standalone">
       <span class="cta-step-n">Step 2</span>
       <a href="https://solano.instructure.com/courses/1395734/assignments/6734628" class="cta-button cta-button--ghost" target="_blank" rel="noopener">Submit it in Canvas<span class="sr-only"> (opens in a new tab)</span></a>
     </li>
-    <li>
+    <li class="ddp-standalone">
       <span class="cta-step-n">Step 3</span>
       <a href="https://drsrennie-stack.github.io/new-build-bio4-solano/today.html" class="cta-button cta-button--ghost" target="_top">Back to Today</a>
     </li>
   </ol>
-  <p class="cta-note">Step 1 opens the agreement itself, where you fill it in and save or print it. Step 2 opens the Canvas assignment directly, where the saved copy gets submitted. You are not permitted in lab until it is on file.</p>
+  <p class="cta-note ddp-embedonly">The button above opens the agreement in a new tab. Fill it in there, save it as a PDF, then come back to this page and upload the PDF to the submission box below. You are not permitted in lab until it is on file.</p>
+  <p class="cta-note ddp-standalone-note">Step 1 opens the agreement itself, where you fill it in and save or print it. Step 2 opens the Canvas assignment directly, where the saved copy gets submitted. You are not permitted in lab until it is on file.</p>
 </div>
 
 </main>
@@ -321,7 +347,7 @@ html { scroll-behavior: smooth; }
           <span class="logo-sub">BIO 004 &middot; Solano Community College</span>
         </span>
       </a>
-      <p class="footer-tagline">Your home base for Human Anatomy this summer. Start with the syllabus, then take it one week at a time.</p>
+      <p class="footer-tagline">Your home base for Human Anatomy this fall. Start with the syllabus, then take it one week at a time.</p>
     </div>
     <div>
       <div class="footer-col-header">Start here</div>
@@ -344,7 +370,7 @@ html { scroll-behavior: smooth; }
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-copyright">BIO 004 Human Anatomy &middot; Solano Community College &middot; Summer 2026</div>
+    <div class="footer-copyright">BIO 004 Human Anatomy &middot; Solano Community College &middot; Fall 2026</div>
     <div class="footer-byline">Dr. Sharilyn Rennie</div>
   </div>
 </footer>
@@ -370,5 +396,21 @@ html { scroll-behavior: smooth; }
 
 <script src="bio004-dock.js"></script>
 <script src="dock-coachmark.js"></script>
+<script>
+/* ?embed=1 marks this as the copy living inside the Canvas assignment.
+   Also fires when the page finds itself in a frame at all, so an embed
+   that loses the parameter still behaves. */
+(function () {
+  var embed = /[?&]embed=1\b/.test(location.search);
+  try { if (window.top !== window.self) embed = true; } catch (e) { embed = true; }
+  if (!embed) return;
+  document.documentElement.classList.add('is-embed');
+  if (document.body) document.body.classList.add('is-embed');
+  /* target=_top breaks Canvas out of its own frame, which is right on the
+     standalone page and wrong here */
+  var a = document.getElementById('ddpAgreementLink');
+  if (a) { a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener'); }
+})();
+</script>
 </body>
 </html>

@@ -124,7 +124,45 @@
   var progress = load();
   var queue = [], pos = 0, revealed = false, confidence = null, shown = null;
   var runLog = [];   // {topicId, topicTitle, moduleTitle, right} for the run in progress
-  var filter = { module: 'all', topic: 'all', comp: null, mode: 'due' };
+  /* SCOPE, AND WHY IT DEFAULTS TO THE COURSE SO FAR
+     A student who has just watched the week 1 video and comes here for
+     spaced retrieval should not be asked about the fibrous pericardium.
+     The bank holds the whole term; the student has been taught one week
+     of it. So the default scope is everything taught up to today, newest
+     material first, and the pool is ordered rather than shuffled across
+     the whole course. "Every module" is still there for anyone who wants
+     to range wider. */
+  var filter = { scope: 'sofar', module: 'all', topic: 'all', comp: null, mode: 'due' };
+
+  var TERM_START = new Date(2026, 7, 17);            /* Monday 17 August 2026 */
+  function currentWeek() {
+    var wk = Math.floor((new Date() - TERM_START) / 604800000) + 1;
+    return wk < 1 ? 1 : (wk > 17 ? 17 : wk);
+  }
+
+  /* topic -> the earliest week it is taught, via the competency map and the
+     competency list. Topics the map does not cover return 0, which means
+     "no week known" and they only appear under Every module. */
+  var TOPIC_WEEK = null;
+  function topicWeek(topicId) {
+    if (!TOPIC_WEEK) {
+      TOPIC_WEEK = {};
+      var map = window.BIO004_CARD_COMPETENCY_MAP || window.CARD_COMPETENCY_MAP || {};
+      var comps = window.BIO004_COMPETENCIES || [];
+      var byId = {};
+      comps.forEach(function (c) { byId[c.id] = c; });
+      Object.keys(map).forEach(function (tid) {
+        var list = (map[tid] && map[tid].comps) || [];
+        var best = 0;
+        list.forEach(function (cid) {
+          var c = byId[cid];
+          if (c && c.week && (!best || c.week < best)) best = c.week;
+        });
+        if (best) TOPIC_WEEK[tid] = best;
+      });
+    }
+    return TOPIC_WEEK[topicId] || 0;
+  }
 
   function flatten() {
     var bank = window.BIO004_CARD_BANK || window.BIO004_COURSE_CONTENT;
@@ -160,7 +198,11 @@
   }
 
   function build() {
+    var wkNow = currentWeek();
     var pool = ALL.filter(function (e) {
+      var w = topicWeek(e.topicId);
+      if (filter.scope === 'week'  && w !== wkNow) return false;
+      if (filter.scope === 'sofar' && (w === 0 || w > wkNow)) return false;
       if (filter.module !== 'all' && e.moduleId !== filter.module) return false;
       if (filter.topic !== 'all' && e.topicId !== filter.topic) return false;
       if (filter.comp && compOf(e) !== filter.comp) return false;
@@ -172,6 +214,13 @@
     });
     if (filter.mode === 'gaps') pool = sampleAcross(pool, GAP_PER_TOPIC);
     shuffle(pool);
+    /* Shuffle first so order inside a week is random, then bring this week's
+       material to the front. Newest first is what a student needs after a
+       lecture; older weeks still come round, which is the whole point of
+       spacing. */
+    if (filter.scope === 'sofar') {
+      pool.sort(function (a, b) { return topicWeek(b.topicId) - topicWeek(a.topicId); });
+    }
     return pool;
   }
 
@@ -266,6 +315,27 @@
     var mods = {};
     ALL.forEach(function (e) { mods[e.moduleId] = e.moduleTitle || e.moduleId; });
     var opts = '<option value="all">Every module</option>';
+    /* Topics are the chapters inside a module. filter.topic already worked;
+       it simply had no control, so a student could reach a module but not the
+       chapter they had just been taught. The list follows the module choice,
+       and it respects the scope, so it never offers a chapter from a week
+       that has not happened. */
+    var wkNowT = currentWeek();
+    var tops = {};
+    ALL.forEach(function (e) {
+      if (filter.module !== 'all' && e.moduleId !== filter.module) return;
+      var w = topicWeek(e.topicId);
+      if (filter.scope === 'week'  && w !== wkNowT) return;
+      if (filter.scope === 'sofar' && (w === 0 || w > wkNowT)) return;
+      tops[e.topicId] = e.topicTitle || e.topicId;
+    });
+    var topOpts = '<option value="all">Every chapter</option>';
+    Object.keys(tops).sort(function (a, b) {
+      return (topicWeek(a) - topicWeek(b)) || String(tops[a]).localeCompare(String(tops[b]));
+    }).forEach(function (k) {
+      topOpts += '<option value="' + esc(k) + '"' + (filter.topic === k ? ' selected' : '') + '>'
+               + esc(tops[k]) + '</option>';
+    });
     Object.keys(mods).forEach(function (k) {
       opts += '<option value="' + esc(k) + '"' + (filter.module === k ? ' selected' : '') + '>'
             + esc(mods[k]) + '</option>';
@@ -283,8 +353,16 @@
             + 'because you would not have studied them.</p>'
           : '')
       + '<div class="rv-controls">'
+      +   '<span class="rv-field"><label for="rv-scope">Material</label>'
+      +     '<select id="rv-scope">'
+      +       '<option value="sofar"' + (filter.scope === 'sofar' ? ' selected' : '') + '>Everything taught so far</option>'
+      +       '<option value="week"'  + (filter.scope === 'week'  ? ' selected' : '') + '>This week only</option>'
+      +       '<option value="all"'   + (filter.scope === 'all'   ? ' selected' : '') + '>The whole course</option>'
+      +     '</select></span>'
       +   '<span class="rv-field"><label for="rv-mod">Module</label>'
       +     '<select id="rv-mod">' + opts + '</select></span>'
+      +   '<span class="rv-field"><label for="rv-topic">Chapter</label>'
+      +     '<select id="rv-topic">' + topOpts + '</select></span>'
       +   '<span class="rv-field"><label for="rv-mode">Show me</label>'
       +     '<select id="rv-mode">'
       +       '<option value="due"' + (filter.mode === 'due' ? ' selected' : '') + '>Cards due today</option>'
@@ -469,7 +547,9 @@
   }
 
   function onChange(ev) {
-    if (ev.target.id === 'rv-mod')  { filter.module = ev.target.value; }
+    if (ev.target.id === 'rv-scope') { filter.scope = ev.target.value; filter.topic = 'all'; }
+    else if (ev.target.id === 'rv-topic') { filter.topic = ev.target.value; }
+    else if (ev.target.id === 'rv-mod')  { filter.module = ev.target.value; filter.topic = 'all'; }
     else if (ev.target.id === 'rv-mode') { filter.mode = ev.target.value; }
     else return;
     queue = build(); pos = 0; revealed = false; confidence = null; shown = null; runLog = []; render();
@@ -544,6 +624,20 @@
     render();
     document.addEventListener('click', onClick);
     document.addEventListener('change', onChange);
+
+    /* A Study Run in Mastery OS needs to hand a student a run of cards on
+       one competency without a page load, because a page load would drop
+       the run. Nothing else in here is public; this is the one door. */
+    window.BIO004_RECALL_OPEN = function (compId) {
+      filter.comp = compId || null;
+      filter.mode = 'all';
+      queue = build();
+      if (!queue.length) { filter.comp = null; queue = build(); }
+      render();
+      var sec = document.getElementById('s-recall') || $(MOUNT);
+      if (sec && sec.scrollIntoView) sec.scrollIntoView({ block: 'start' });
+      return queue.length;
+    };
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
