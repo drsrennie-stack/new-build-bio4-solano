@@ -400,7 +400,7 @@
           specific = 'The guided worksheet for each day is on the ' + a('calendar') + ', beside that day\'s video.';
         else if (/note/.test(fq))
           specific = 'Your notes pages are listed with each class day on the ' + a('calendar') + '.';
-        else if (/lab|sprint|bench|practical/.test(fq))
+        else if (/lab|sprint|bench|models|dissection|practical/.test(fq))
           specific = 'Lab sprints are on your section hub, and there is a Lab sprints tile in Course tools.';
         else if (/card|recall|flashcard|quiz/.test(fq))
           specific = 'The cards are inside ' + a('masteryOS', 'Mastery OS') + ', under Recall. Every card in the course is in there.';

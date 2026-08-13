@@ -239,13 +239,16 @@
 
 /* CARD BADGES
    A dollar sign because money must never be a surprise, and a scalpel
-   because a lab session means come to the bench, not to a Zoom. Both
+   because a lab session means come to the models, not to a Zoom. Both
    carry a word as well as a glyph: colour and shape alone is 1.4.1. */
 .pill.cost{background:#1F5F3F;color:#fff}
 .pill.free{background:#EDF1F3;color:#08101F}
 .pill.lab{background:#7A2A22;color:#fff}
 .pill.lab svg{width:13px;height:13px;vertical-align:-2px;margin-right:4px}
 .pill.act{background:#08101F;color:#fff}
+/* Nearly gone. Terra rather than the full-house grey, because this one is
+   still actionable, and the number rides in the text so it is not colour alone. */
+.pill.last{background:#7A2A22;color:#fff}
 .csplit{font-size:.86rem;line-height:1.5;color:var(--csoft,#3D4757);margin:6px 0 0}
 .csplit b{color:inherit}
 </style>
@@ -415,7 +418,7 @@
               <div class="field" id="wrap-lab" hidden>
                 <label class="checkline" for="h-lab">
                   <input type="checkbox" id="h-lab" name="isLab">
-                  <span>This is a lab session, at the bench or on the models</span>
+                  <span>This is a lab session, on the models or in dissection</span>
                 </label>
                 <p class="hint">Lab sessions carry a scalpel on the card so students know to come to the lab, not a Zoom.</p>
               </div>
@@ -434,7 +437,7 @@
                   <span class="money-sign" aria-hidden="true">$</span>
                   <input id="h-rate" name="rate" type="number" min="1" max="400" step="1" placeholder="40">
                 </div>
-                <p class="hint" id="rateHint">The rate is split between everyone who turns up. At $40 an hour, one student pays $40, four students pay $10 each. Students see the current split on your card, so it pays them to bring people.</p>
+                <p class="hint" id="rateHint">Your rate, your call. Whatever you charge per hour is split between everyone who turns up.</p>
               </div>
 
               <div class="field">
@@ -462,6 +465,7 @@
       <div class="field">
         <label for="h-cap">Seats</label>
         <input id="h-cap" name="capacity" type="number" min="1" max="100" placeholder="No limit">
+        <p class="hint">Leave it blank for no limit. Cap it and students see how many seats are left, which moves them.</p>
       </div>
       <div class="field">
         <label for="h-dur">Length (min)</label>
@@ -867,7 +871,7 @@ $("#prevWeek").addEventListener("click", () => { weekStart.setDate(weekStart.get
 $("#nextWeek").addEventListener("click", () => { weekStart.setDate(weekStart.getDate()+7); renderWeek(); });
 $("#thisWeek").addEventListener("click", () => { weekStart = startOfWeek(new Date()); renderWeek(); });
 
-/* A scalpel, because a lab session means come to the bench and not to a
+/* A scalpel, because a lab session means come to the models and not to a
    Zoom, and that is the single most expensive thing to get wrong. The word
    Lab rides with it: a glyph on its own is not an accessible label. */
 var SCALPEL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
@@ -890,13 +894,21 @@ function costPill(s, n){
 }
 function splitLine(s, n){
   var rate = Number(s.rate) || 0;
+  var cap = Number(s.capacity) || 0;
   if(rate <= 0) return '';
   var now  = perHead(rate, n);
   var next = perHead(rate, n + 1);
-  return '<p class="csplit">' + money(rate) + ' an hour, split between everyone who comes. ' +
+  /* Written to the student, not about the feature. They are the ones deciding
+     whether to come and whether to bring someone. */
+  return '<p class="csplit">' +
     (n === 0
-      ? 'Right now that is <b>' + money(rate) + '</b> for the first person, and <b>' + money(perHead(rate,2)) + ' each</b> once a second joins.'
-      : '<b>' + money(now) + ' each</b> at ' + n + ', <b>' + money(next) + ' each</b> if one more joins.') +
+      ? 'You would pay <b>' + money(rate) + '</b> on your own. Bring one person and it is <b>' +
+        money(perHead(rate,2)) + ' each</b>. The host charges ' + money(rate) +
+        ' an hour and it splits between everyone who comes.'
+      : 'You would pay <b>' + money(next) + '</b>, because the ' + money(rate) +
+        ' an hour splits between everyone who comes. It is ' + money(now) + ' each for the ' +
+        n + ' already in. Bring someone and it drops again.') +
+    (cap > 0 ? ' At the ' + cap + '-seat cap it is <b>' + money(perHead(rate, cap)) + ' each</b>, and that is as low as it goes.' : '') +
     '</p>';
 }
 
@@ -904,7 +916,13 @@ function card(s){
   const att = Array.isArray(s.attendees) ? s.attendees : [];
   const cap = Number(s.capacity) || 0;
   const full = cap > 0 && att.length >= cap;
-  const seats = cap > 0 ? (att.length + " / " + cap + " seats") : (att.length + " signed up");
+  /* "3 of 8 seats" makes a student do arithmetic. "5 seats left" is the number
+     they are actually deciding on, and it counts down, which the other does not. */
+  const left = cap > 0 ? Math.max(0, cap - att.length) : 0;
+  const seats = cap > 0
+    ? (left === 0 ? "Full, " + cap + " seats taken"
+                  : left + (left === 1 ? " seat left of " : " seats left of ") + cap)
+    : (att.length + " signed up");
   const roster = att.map(a => '<li>' + esc((a.name||"").split(" ")[0] || "Student") + '</li>').join("");
   const js = joinState(s);
   const rec = recLink(s);
@@ -937,6 +955,8 @@ function card(s){
       (s.isLab ? '<span class="pill lab">' + SCALPEL + 'Lab</span>' : '') +
       (s.activity ? '<span class="pill act">' + esc(s.activity) + '</span>' : '') +
       (full ? '<span class="pill full">Full</span>' : '') +
+      (!full && cap > 0 && (cap - att.length) <= 3
+        ? '<span class="pill last">' + (cap - att.length) + ' left</span>' : '') +
       (js.kind === "live" ? '<span class="pill live">Live now</span>' : '') +
       (inPerson ? '<span class="pill inperson">In person</span>' : '') +
       (reportIn ? '<span class="pill done">Attendance in</span>' : '') +

@@ -99,7 +99,7 @@
 
     host.innerHTML = '';
     host.appendChild(el('h2', null,
-      '<span class="n">In lab this week</span>What you will be tested on at the bench'));
+      '<span class="n">In lab this week</span>What you will be tested on at the models'));
 
     host.appendChild(el('p', 'note',
       'Each lab sprint lists every structure you are responsible for at that station, along with '

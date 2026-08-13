@@ -103,7 +103,28 @@
   td.vs-intro{font-size:.93rem;color:var(--gray)}
   .vs-h{display:block;font-family:var(--font-display);font-weight:800;font-size:1.2rem;
     color:var(--navy);margin:0 0 3px;letter-spacing:-.01em;text-transform:none}
-  table.vsheet td{width:50%;vertical-align:top;padding:0;background:none;border:0}
+  table.vsheet td{width:50%;vertical-align:top;padding:0 10px;background:none;border:0}
+table.vsheet td:first-child{padding-left:0}
+table.vsheet td:last-child{padding-right:0}
+/* THE MINI VISUAL SHEET, REBUILT AS EQUAL SQUARES
+   The frames used to be sized by shape, a tall box for a ladder and a
+   short one for a split. Two problems. The cells had no gutter, so the
+   shape label, which is pushed right, landed on top of the next frame
+   title the moment a title wrapped. And unequal boxes do not print or
+   photocopy into anything a student can rule up in a journal.
+   So: equal squares, a gutter, the shape name kept as a word under the
+   title rather than jammed beside it, and every frame carries its own
+   code so a drawing in a journal can be labelled and found again. */
+.vf-cap{flex-wrap:wrap;align-items:flex-start;row-gap:3px}
+.vf-t{min-width:0;flex:1 1 100%;order:2}
+.vf-n{width:auto;min-width:17px;padding:0 7px;border-radius:9px;order:1;flex:0 0 auto}
+.vf-n::before{content:"M2-"}
+.vf-s{margin-left:0;order:3;flex:0 0 auto}
+.vbox{height:auto !important;aspect-ratio:1/1;min-height:0}
+@media (max-width:560px){
+  table.vsheet,table.vsheet tbody,table.vsheet tr,table.vsheet td{display:block;width:100%}
+  table.vsheet td{padding:0 0 16px}
+}
   table.vsheet tr:nth-child(even) td{background:none}
   .vf-cap{display:flex;align-items:baseline;gap:8px;margin:0 0 5px}
   .vf-n{flex:0 0 auto;width:17px;height:17px;border-radius:50%;background:var(--navy);color:#fff;

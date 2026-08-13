@@ -74,15 +74,6 @@
     return SECTIONS[s] ? s : null;
   }
 
-  /* Term starts Monday August 17, 2026. Same arithmetic the welcome
-     hub uses, so the dock cannot disagree with it. */
-  function currentWeek() {
-    var start = new Date(2026, 7, 17), now = new Date();
-    var wk = Math.floor((now - start) / (7 * 24 * 3600 * 1000)) + 1;
-    if (wk < 1) return { wk: 1, pre: true };
-    return { wk: Math.min(17, wk), pre: false };
-  }
-
   /* QR codes, inline SVG, generated at build time. */
   var QR = {
     mastery: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 39 39\" class=\"segno\"><path class=\"qrline\" stroke=\"#0b1530\" d=\"M1 1.5h7m1 0h1m1 0h4m1 0h1m2 0h1m1 0h3m7 0h7m-37 1h1m5 0h1m2 0h2m6 0h2m2 0h2m1 0h1m3 0h1m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m1 0h2m1 0h2m2 0h1m1 0h1m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m2 0h2m1 0h2m1 0h1m1 0h2m2 0h3m1 0h2m3 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m4 0h2m3 0h1m1 0h1m1 0h3m2 0h2m3 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m1 0h1m1 0h9m1 0h3m2 0h1m4 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-27 1h4m2 0h1m2 0h2m2 0h2m1 0h3m-29 1h1m1 0h1m3 0h2m3 0h5m8 0h1m3 0h1m2 0h1m2 0h1m1 0h1m-37 1h1m2 0h2m4 0h1m2 0h1m4 0h1m1 0h1m1 0h1m1 0h1m2 0h3m1 0h2m3 0h2m-37 1h2m1 0h1m1 0h3m2 0h1m1 0h4m3 0h5m1 0h1m1 0h1m2 0h1m2 0h1m2 0h1m-37 1h1m2 0h3m2 0h1m2 0h2m6 0h1m2 0h2m2 0h1m1 0h1m2 0h3m-34 1h1m2 0h2m1 0h2m1 0h1m2 0h5m2 0h2m2 0h2m1 0h1m1 0h1m1 0h2m1 0h1m2 0h1m-37 1h3m2 0h1m2 0h2m1 0h3m1 0h3m1 0h2m1 0h2m3 0h5m1 0h1m2 0h1m-35 1h2m1 0h3m1 0h2m1 0h4m1 0h3m1 0h3m1 0h1m1 0h2m4 0h2m1 0h1m-37 1h2m3 0h1m3 0h1m2 0h3m7 0h2m3 0h2m2 0h3m1 0h1m-36 1h2m2 0h1m1 0h1m4 0h2m1 0h1m1 0h1m11 0h1m1 0h2m-31 1h1m7 0h1m3 0h2m1 0h1m1 0h2m3 0h3m1 0h2m1 0h2m2 0h3m-37 1h4m1 0h2m2 0h1m6 0h2m1 0h3m1 0h1m1 0h1m1 0h1m1 0h2m3 0h1m1 0h1m-37 1h2m1 0h3m3 0h3m1 0h1m1 0h2m1 0h1m4 0h2m1 0h3m1 0h1m2 0h1m-34 1h1m1 0h1m3 0h3m4 0h2m1 0h1m2 0h2m3 0h1m3 0h1m1 0h2m1 0h1m1 0h1m-34 1h3m4 0h2m1 0h1m2 0h2m1 0h4m1 0h2m1 0h5m5 0h1m-37 1h1m3 0h3m1 0h1m2 0h1m3 0h1m1 0h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h2m2 0h4m-36 1h2m1 0h2m5 0h2m3 0h1m2 0h2m2 0h1m2 0h1m1 0h2m1 0h3m-32 1h1m1 0h1m1 0h1m8 0h2m6 0h2m2 0h2m1 0h1m5 0h1m-35 1h1m4 0h6m1 0h1m4 0h1m1 0h1m1 0h2m1 0h2m2 0h2m1 0h2m1 0h1m-37 1h2m1 0h7m2 0h2m1 0h2m2 0h5m2 0h2m1 0h2m1 0h1m3 0h1m-34 1h1m3 0h4m3 0h1m3 0h2m4 0h1m1 0h7m2 0h1m-36 1h4m2 0h5m1 0h1m1 0h2m2 0h3m3 0h1m3 0h5m2 0h2m-29 1h2m1 0h2m2 0h3m1 0h1m1 0h4m1 0h1m1 0h1m3 0h1m3 0h1m-37 1h7m1 0h1m4 0h1m1 0h3m1 0h3m1 0h1m2 0h1m1 0h1m1 0h1m1 0h1m3 0h1m-37 1h1m5 0h1m4 0h3m1 0h1m2 0h2m7 0h2m3 0h1m-33 1h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h4m2 0h1m2 0h3m2 0h6m-33 1h1m1 0h3m1 0h1m5 0h1m4 0h1m1 0h1m3 0h1m2 0h1m1 0h2m2 0h2m1 0h1m-36 1h1m1 0h3m1 0h1m1 0h2m3 0h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m1 0h2m2 0h4m1 0h1m-37 1h1m5 0h1m3 0h1m3 0h1m1 0h1m1 0h1m1 0h1m1 0h1m5 0h3m1 0h1m-33 1h7m1 0h2m1 0h2m3 0h1m3 0h1m3 0h1m3 0h2m1 0h1m1 0h1m2 0h1\"/></svg>",
@@ -120,7 +111,6 @@
   /* One definition per tool. tone drives the icon gradient. */
   function tools() {
     var sec = section(), S = sec ? SECTIONS[sec] : null;
-    var cw = currentWeek();
     var q = sec ? ('?sec=' + sec) : '';
     var t = [];
 
@@ -130,8 +120,10 @@
     t.push({ g: 'This week', name: 'Today', sub: 'The one thing to do now, and your other class days',
              url: BASE + 'today.html' + q, icon: 'play', tone: 'gold', qr: 'today', key: 'today',
              kw: 'today now next what do i do day daily plan tonight prework ahead' });
-    t.push({ g: 'This week', name: 'Week ' + cw.wk, sub: cw.pre ? 'Term starts Aug 17' : 'Pre-work, your class days, and lab',
-             url: BASE + 'week-' + cw.wk + '.html' + q, icon: 'home', tone: 'navy', key: 'week', kw: 'week hub current detail prework' });
+    /* The Week N tile is gone. Today already opens on the right day and
+       carries Earlier week and Later week, and the course calendar tile
+       below covers browsing the whole term. Three doors onto the same
+       week was two too many. */
     t.push({ g: 'This week', name: 'Study With Me', sub: 'Join a session this week or start one yourself',
              url: BASE + 'study-session-signup.html' + q, icon: 'people', tone: 'terra', qr: 'study', kw: 'study with me sessions group hours host' });
     t.push({ g: 'This week', name: 'Course calendar', sub: 'Every class day and what to prepare for it',
@@ -143,9 +135,9 @@
     t.push({ g: 'Study tools', name: 'Recall cards', sub: 'Straight into the cards that are due today',
              url: BASE + 'mastery-os-fall-2026.html#s-recall' + '', icon: 'cards', tone: 'green', qr: 'recall',
              kw: 'recall cards flashcards spaced due today question' });
-    t.push({ g: 'Study tools', name: 'Lab sprints', sub: 'Every structure you are responsible for at the bench',
+    t.push({ g: 'Study tools', name: 'Lab sprints', sub: 'Every structure you are responsible for on the models',
              url: BASE + (SECTIONS[sec] ? SECTIONS[sec].hub : 'welcome.html') + q, icon: 'flask', tone: 'navy',
-             qr: 'labs', kw: 'lab sprints bench structures practical stations section hub' });
+             qr: 'labs', kw: 'lab sprints models dissection structures practical stations section hub' });
     t.push({ g: 'Study tools', name: 'Loops', sub: 'Thirty-nine image loops for fast visual practice',
              url: 'https://drsrennie-stack.github.io/loops/', icon: 'loop', tone: 'terra', qr: 'loops', ext: true, kw: 'loops images practice lab' });
     t.push({ g: 'Study tools', name: 'Weak spot board', sub: 'The topics your own answers say are weakest',
@@ -171,6 +163,11 @@
       t.push({ g: 'Course', name: 'Course home', sub: S ? S.label : 'Pick your section',
                url: BASE + 'welcome.html' + q, icon: 'home', tone: 'gold', qr: 'home', kw: 'home welcome start' });
     }
+    /* First in Course, because the question a student cannot answer is the
+       thing most likely to stop them, and the board is faster than my inbox. */
+    t.push({ g: 'Course', name: 'Virtual Office', sub: 'Ask a question where the whole class sees the answer',
+             url: BASE + 'virtual-office.html' + q, icon: 'people', tone: 'terra',
+             kw: 'virtual office question board discussion ask help stuck forum post canvas' });
     t.push({ g: 'Course', name: 'Start here', sub: 'Everything to set up in week one',
              url: BASE + 'start-here.html' + q, icon: 'play', tone: 'navy', kw: 'start here checklist orientation' });
     t.push({ g: 'Course', name: 'How this course works', sub: 'Why the week is built the way it is',
