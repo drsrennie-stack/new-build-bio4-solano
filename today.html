@@ -1001,7 +1001,11 @@
       title:'Work the pre-work sheet',
       mins:EST.worksheet,
       hint:'Handwritten. This is the one thing that has to happen tonight.',
-      body:'<p class="lead-in">This is the real work of the night. Where you cannot answer something, leave the gap visible rather than tidying it away. That gap is the point.</p>',
+      /* Two minutes closed book turns the first pass into a pretest rather
+         than a search. Guessing and being wrong before you are told the
+         answer beats reading the answer first, and it costs two minutes. */
+      body:'<p class="lead-in"><b>First two minutes, notes shut.</b> Read down the sheet and put something in every blank you can, even a guess. Being wrong now is what makes the right answer stick later.</p>'
+          +'<p class="lead-in">Then open your notes and the reading and work it properly. Where you still cannot answer something, leave the gap visible rather than tidying it away. That gap is the point.</p>',
       /* Notes and workbooks are NOT tasks. They are what the sheet is
          worked against. They ride under the one action rather than
          becoming three more things that look due. */
@@ -1011,11 +1015,19 @@
             .concat(L && L.workbooks ? L.workbooks.map(function(n){ return {kind:'Workbook', url:n.u, title:n.t}; }) : [])
     });
 
+    /* This is the answer key for the sheet, and the evidence on pretesting is
+       clear that the benefit shrinks hard when the feedback is delayed. A
+       student who works the sheet and stops has run a pretest whose answers
+       do not arrive until class the next day, which is the weakest version of
+       the thing this whole night is built on. So it does not get to look like
+       an optional fourth of a to-do list. */
     s.push({
-      title:'Watch the videos and add to your notes',
+      title:'Mark your own sheet against the video',
       mins:EST.videos,
-      hint:'After the worksheet. The video is the check, not the source.',
-      body:'<p>Write straight onto your notes as you watch. Anything the video says that you did not have, add it. Anything you had wrong, correct it in a different colour so you can find it later.</p>',
+      stateLabel:'Answer key',
+      hint:'Not extra. This is where you find out what you got wrong, while it is still fixable.',
+      body:'<p>Watch with the sheet in front of you and mark it as you go. Anything the video says that you did not have, add it. Anything you had wrong, correct it in a different colour so you can find it later.</p>'
+          +'<p class="lead-in"><b>Skipping this is the one thing that breaks the night.</b> The sheet without the video is a test nobody grades.</p>',
       also:'Also this week',
       links:(L && L.videos ? L.videos.map(function(n,ix){ return {kind:'Video', url:n.u, title:n.t, cta: ix===0 ? 'Watch the video' : null}; }) : [])
     });
@@ -1249,7 +1261,7 @@
       var done = isDone(PLAN.target, i);
       var isNow = (i === nowIdx);
       var cls = 'step' + (done ? ' is-done' : '') + (isNow ? ' is-now' : '');
-      var state = done ? 'Done' : (isNow ? 'Now' : 'Later');
+      var state = done ? 'Done' : (isNow ? 'Now' : (st.stateLabel || 'Later'));
       var open = isNow;
 
       /* ONE thing to click. The step's first link is the action. Anything
