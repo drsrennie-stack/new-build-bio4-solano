@@ -29,7 +29,7 @@
    script keep working untouched. The picker still toggles
    [data-track] the same way it always did.
 
-   FAILURE BEHAVIOUR
+   FAILURE BEHAVIOR
    -----------------
    If the schedule file is missing or the week has no sessions,
    this leaves whatever static markup is already inside the

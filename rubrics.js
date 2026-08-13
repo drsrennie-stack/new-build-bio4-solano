@@ -21,7 +21,7 @@
    - Blank-Page Brain Dump. With a rubric, the student ticks off
      each item they actually recalled and gets a score out of the
      list. Without one, they fall back to rating their own dump as
-     patchy, solid or thorough, which is the current behaviour.
+     patchy, solid or thorough, which is the current behavior.
 
    - Draw it to Know it. With a rubric, the self-check box reveals
      the expected items one at a time after the drawing is done.

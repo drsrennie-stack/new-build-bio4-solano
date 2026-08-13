@@ -50,7 +50,7 @@
 
    STYLING
    -------
-   The stylesheet is injected once, and every colour comes from the
+   The stylesheet is injected once, and every color comes from the
    CSS custom properties the pages already define (--navy, --terra,
    --terra-dark, --gold, --offwhite, --line). Nothing is hardcoded,
    so this inherits whatever palette the host page is using and

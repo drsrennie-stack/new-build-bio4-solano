@@ -11,7 +11,7 @@
    411 pages, so the corner button is the thing worth teaching, and the
    way to teach a location is to point at it, not to duplicate it.
 
-   Behaviour
+   Behavior
      - Shows on the first few page loads, then stops on its own.
      - Stops immediately and permanently once the student opens the
        dock, because at that point they have learned it.

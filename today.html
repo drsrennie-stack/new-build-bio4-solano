@@ -52,7 +52,7 @@
      aria-expanded on every disclosure, aria-current on the live
      step, a polite live region for step changes, focus ring
      #6B1616 at 11.5:1 on light and #DCB45C at 8.9:1 on navy, no
-     state carried by colour alone (every step also says Done,
+     state carried by color alone (every step also says Done,
      Now, or Later in text), no timers, 44px targets, and a
      prefers-reduced-motion guard on the one animation.
 
@@ -243,7 +243,7 @@
   }
   .hl-time[hidden]{display:none}
 
-  /* state is never colour alone: it is spelled out */
+  /* state is never color alone: it is spelled out */
   .step-state{
     flex:0 0 auto;font-size:11px;font-weight:800;letter-spacing:.12em;
     text-transform:uppercase;padding:5px 10px;border-radius:999px;
@@ -1064,7 +1064,8 @@
          than a search. Guessing and being wrong before you are told the
          answer beats reading the answer first, and it costs two minutes. */
       body:'<p class="lead-in"><b>First two minutes, notes shut.</b> Read down the sheet and put something in every blank you can, even a guess. Being wrong now is what makes the right answer stick later.</p>'
-          +'<p class="lead-in">Then open your notes and the reading and work it properly. Where you still cannot answer something, leave the gap visible rather than tidying it away. That gap is the point.</p>',
+          +'<p class="lead-in">Then open your notes and the reading and work it properly. Where you still cannot answer something, leave the gap visible rather than tidying it away. That gap is the point.</p>'
+          +'<p class="lead-in"><b>Print the sheet and print the notes.</b> Work on paper, with the notes on paper beside you. Reading a screen while you write on the same screen is how the sheet turns into copying. Bring both to class.</p>',
       /* Notes and workbooks are NOT tasks. They are what the sheet is
          worked against. They ride under the one action rather than
          becoming three more things that look due. */
@@ -1085,7 +1086,7 @@
       mins:EST.videos,
       stateLabel:'Answer key',
       hint:'Not extra. This is where you find out what you got wrong, while it is still fixable.',
-      body:'<p>Watch with the sheet in front of you and mark it as you go. Anything the video says that you did not have, add it. Anything you had wrong, correct it in a different colour so you can find it later.</p>'
+      body:'<p>Watch with the sheet in front of you and mark it as you go. Anything the video says that you did not have, add it. Anything you had wrong, correct it in a different color so you can find it later.</p>'
           +'<p class="lead-in"><b>Skipping this is the one thing that breaks the night.</b> The sheet without the video is a test nobody grades.</p>',
       also:'Also this week',
       links:(L && L.videos ? L.videos.map(function(n,ix){ return {kind:'Video', url:n.u, title:n.t, cta: ix===0 ? 'Watch the video' : null}; }) : [])
@@ -1102,7 +1103,7 @@
       title:'Pre-study the lab structures',
       mins:EST.structures,
       hint:'So lab is recognition, not first contact.',
-      body:'<p>Read through the structures you will be handed tomorrow, then put your eyes on them in the atlas. You are not memorising here, you are making tomorrow familiar. Bring the list with you, you fill it in as you go.</p>',
+      body:'<p>Read through the structures you will be handed tomorrow, then put your eyes on them in the atlas. You are not memorizing here, you are making tomorrow familiar. Bring the list with you, you fill it in as you go.</p>',
       also:'Then put your eyes on them in',
       links:lab
     });
@@ -1140,7 +1141,7 @@
     return [
       { title:'Brain dump', mins:EST.braindump,
         hint:'Lecture block, ' + meta.lec + '. First thing, five minutes.',
-        body:'<p>Blank paper, closed notes, closed book, phone away. On the pre-work you did last night. A real organised attempt earns full credit, a few scattered words earns nothing.</p>',
+        body:'<p>Blank paper, closed notes, closed book, phone away. On the pre-work you did last night. A real organized attempt earns full credit, a few scattered words earns nothing.</p>',
         links:[] },
       { title:'Active learning and success', mins:meta.lecMin - EST.braindump,
         hint:'Lecture block. The rest of the lecture hour.',
@@ -1329,11 +1330,27 @@
       var links = '';
       if(st.links && st.links.length){
         var first = st.links[0];
-        var attr  = first.ext ? ' target="_blank" rel="noopener"' : ' target="_top"';
+        /* TODAY IS THE CONSOLE. NOTHING NAVIGATES AWAY FROM IT.
+           These links used to be target="_top", so opening the sheet
+           replaced the step list and a student lost their place in the
+           evening. Every step link opens in a tab beside Today now.
+
+           The targets are NAMED rather than _blank, so the tabs do not
+           multiply: the thing being worked always reuses one tab, and
+           the reference pages always reuse a second. Three tabs at most,
+           however many times a student clicks. */
+        /* No rel="noopener" on the named same-origin targets. noopener
+           makes the browser ignore the window name and open a fresh
+           tab every time, which is how two clicks on two reference
+           links produced two tabs instead of reusing one. It stays on
+           external links, where it is what it is for. */
+        var attr  = first.ext
+          ? ' target="_blank" rel="noopener"'
+          : ' target="bio004-work"';
         links = '<a class="primary" href="' + first.url + '"' + attr + '>' +
                   '<span>' + (first.cta || 'Open ' + first.title) + '</span>' +
                   '<span class="arr" aria-hidden="true">&rarr;</span>' +
-                  (first.ext ? '<span class="sr-only"> (opens in a new tab)</span>' : '') +
+                  '<span class="sr-only"> (opens in a tab beside this one)</span>' +
                 '</a>';
         var rest = st.links.slice(1);
         if(rest.length){
@@ -1345,7 +1362,11 @@
           rest.forEach(function(l){ seen[l.title] = (seen[l.title]||0) + 1; });
           links += '<p class="also">' + (st.also || 'Open beside it') + ': ' +
             rest.map(function(l){
-              var a = l.ext ? ' target="_blank" rel="noopener"' : ' target="_top"';
+              /* Reference pages share one tab, so a student can flip
+                 between notes and workbook without collecting eight. */
+              var a = l.ext
+                ? ' target="_blank" rel="noopener"'
+                : ' target="bio004-ref"';
               var label = (seen[l.title] > 1 && l.kind) ? (l.title + ' ' + l.kind.toLowerCase()) : l.title;
               return '<a href="' + l.url + '"' + a + '>' + label + '</a>';
             }).join(', ') + '</p>';
@@ -1378,7 +1399,7 @@
           '</span>' +
           '<span class="step-meta">' +
             (st.mins ? '<span class="step-mins">' + mins(st.mins) + '</span>' : '') +
-            /* Now and Later are spelled out, never colour alone. Done is
+            /* Now and Later are spelled out, never color alone. Done is
                NOT, because a navy "DONE" pill sitting where the Done
                button was is indistinguishable from the button: it reads
                as something still to press. The gold tick carries it, and

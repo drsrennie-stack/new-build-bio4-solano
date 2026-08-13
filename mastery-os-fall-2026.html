@@ -1044,6 +1044,11 @@ var SCHEDULE=mosResolveSchedule()||{
   ]
 };
 function scheduleCurrentWeek(){var cw=SCHEDULE.weeks[0];SCHEDULE.weeks.forEach(function(w){if(dayDiff(w.start,TODAY)<=0)cw=w;});return cw;}
+/* scheduleCurrentWeek() falls back to weeks[0], so every day before the
+   term opens reported itself as Week 1, and recall dates written during
+   setup read as work already missed. Nothing is owed before class one. */
+function termNotStarted(){ var w=SCHEDULE.weeks[0]; return !!(w&&w.start&&dayDiff(w.start,TODAY)>0); }
+function daysToTerm(){ var w=SCHEDULE.weeks[0]; return w&&w.start?dayDiff(w.start,TODAY):0; }
 var WD=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 /* Next dated milestone from the real schedule (TBL and lab exams fall on Mondays together). */
 function nextKeyEvent(){
@@ -1351,7 +1356,7 @@ function ingestRecall(){
 
 /* evidence method metadata */
 var EVIDENCE=[
-  {k:'retrieval',name:'Retrieval practice',icon:I.recall,desc:'Answer questions from memory across DOK levels.',cta:'Open Spaced Recall',href:'#s-recall'}, {k:'weakness',name:'Weak spot dashboard',icon:I.recall,desc:'See which competencies your card answers say are weakest, ranked.',cta:'Open the weak spot board',href:'#s-weak'}, {k:'draw',name:'Draw from memory',icon:I.draw,desc:'Reconstruct the structure with nothing in front of you.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'label',name:'Label diagrams',icon:I.label,desc:'Place every marker on a blank figure.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'loop',name:'Run its Loop',icon:I.retrieve,desc:'Name every structure out loud before the label appears. For cadaver and specimen work this is the only place it can be practised outside the lab.',cta:'Open Loops',href:null}, {k:'cadaver',name:'Cadaver identification',icon:I.eye,desc:'Name the structure on the specimen, not the textbook.',cta:'Mark it done',href:null}, {k:'histo',name:'Histology identification',icon:I.micro,desc:'Identify the tissue at the microscope level.',cta:'Mark it done',href:null}, {k:'explain',name:'Explain aloud',icon:I.speak,desc:'Say it out loud in plain language, no notes.',cta:'Start explaining',href:null}, {k:'teachai',name:'Teach it to an AI',icon:I.teach,desc:'Explain it out loud to a free AI tutor, like teaching a 5-year-old, and let it quiz you back.',cta:'Open AI tutor',href:null}, {k:'teach',name:'Teach another learner',icon:I.teach,desc:'The real test: can someone else follow you?',cta:'Start teaching',href:null}, {k:'clinical',name:'Clinical case',icon:I.clinical,desc:'Apply the structure to a patient scenario.',cta:'Mark it done',href:null}, {k:'questions',name:'Create practice questions',icon:I.build,desc:'Write items that would trip up a classmate.',cta:'Mark it done',href:null}
+  {k:'retrieval',name:'Retrieval practice',icon:I.recall,desc:'Answer questions from memory across DOK levels.',cta:'Open Spaced Recall',href:'#s-recall'}, {k:'weakness',name:'Weak spot dashboard',icon:I.recall,desc:'See which competencies your card answers say are weakest, ranked.',cta:'Open the weak spot board',href:'#s-weak'}, {k:'draw',name:'Draw from memory',icon:I.draw,desc:'Reconstruct the structure with nothing in front of you.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'label',name:'Label diagrams',icon:I.label,desc:'Place every marker on a blank figure.',cta:'Open drawing canvas',href:'mastery-canvas.html'}, {k:'loop',name:'Run its Loop',icon:I.retrieve,desc:'Name every structure out loud before the label appears. For cadaver and specimen work this is the only place it can be practiced outside the lab.',cta:'Open Loops',href:null}, {k:'cadaver',name:'Cadaver identification',icon:I.eye,desc:'Name the structure on the specimen, not the textbook.',cta:'Mark it done',href:null}, {k:'histo',name:'Histology identification',icon:I.micro,desc:'Identify the tissue at the microscope level.',cta:'Mark it done',href:null}, {k:'explain',name:'Explain aloud',icon:I.speak,desc:'Say it out loud in plain language, no notes.',cta:'Start explaining',href:null}, {k:'teachai',name:'Teach it to an AI',icon:I.teach,desc:'Explain it out loud to a free AI tutor, like teaching a 5-year-old, and let it quiz you back.',cta:'Open AI tutor',href:null}, {k:'teach',name:'Teach another learner',icon:I.teach,desc:'The real test: can someone else follow you?',cta:'Start teaching',href:null}, {k:'clinical',name:'Clinical case',icon:I.clinical,desc:'Apply the structure to a patient scenario.',cta:'Mark it done',href:null}, {k:'questions',name:'Create practice questions',icon:I.build,desc:'Write items that would trip up a classmate.',cta:'Mark it done',href:null}
 ];
 var EVMAP={};EVIDENCE.forEach(function(e){EVMAP[e.k]=e;});
 
@@ -1733,7 +1738,7 @@ function renderLoopWeak(){
       + '<p class="eyebrow" style="color:var(--terra-dark)">Lab ID practice</p>'
       + '<h3 style="font-size:16px;margin:2px 0 6px">Nothing from Loops yet</h3>'
       + '<p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 12px;max-width:60ch">'
-      + 'Loops is the only place the cadaver and specimen structures can be practised outside the lab. '
+      + 'Loops is the only place the cadaver and specimen structures can be practiced outside the lab. '
       + 'Run one and the structures you miss will show up here by name, so you know exactly what to '
       + 'go back to.</p>'
       + '<a class="btn primary" href="' + esc(LOOPS_BASE) + '" target="_blank" rel="noopener">Open Loops</a></div>';
@@ -1744,7 +1749,7 @@ function renderLoopWeak(){
   if(!weak.length){
     el.innerHTML = '<div class="card" style="margin-top:16px;padding:18px 20px">'
       + '<p class="eyebrow" style="color:var(--terra-dark)">Lab ID practice</p>'
-      + '<h3 style="font-size:16px;margin:2px 0 6px">No weak stations, from ' + total + ' practised</h3>'
+      + '<h3 style="font-size:16px;margin:2px 0 6px">No weak stations, from ' + total + ' practiced</h3>'
       + '<p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 12px">Nothing you have run is coming back wrong. Add more stations rather than redoing these.</p>'
       + '<a class="btn" href="' + esc(LOOPS_BASE) + '" target="_blank" rel="noopener">Open Loops</a></div>';
     return;
@@ -1772,7 +1777,7 @@ function renderLoopWeak(){
     + '<div><div class="wc">' + weak.length + '</div><div class="wl">lab structures coming back wrong</div></div>'
     + '<p class="serif" style="flex:1;min-width:200px">Straight from your Loops runs, by name. '
     + (over ? '<b>' + over + '</b> of these you answered confidently and still got wrong, which is the miss a practical punishes hardest, so those are first. ' : '')
-    + 'Out of ' + total + ' stations you have practised.</p>'
+    + 'Out of ' + total + ' stations you have practiced.</p>'
     + '<a class="btn rust big" href="' + esc(LOOPS_BASE) + '" target="_blank" rel="noopener">Open Loops</a></div>'
     + '<div class="card">' + rows + more + '</div>';
 }
@@ -2575,6 +2580,11 @@ function drLoopPick(){
    already does, and a headline that repeats the line below it is wasted. */
 function drHeadline(due,lec,lab,over){
   var exam=daysToExam();
+  if(termNotStarted()){
+    var d=daysToTerm();
+    return {h:'The term starts '+(d===1?'tomorrow':'in '+d+' days')+'. Anything now is ahead.',
+      p:'Nothing is owed yet. Everything below is optional, and all of it counts as a head start.'};
+  }
   if(over>0) return {h:'You are '+over+' day'+(over>1?'s':'')+' behind. This clears it.',
     p:'Your cards have already absorbed most of it. One missed exercise is folded in below, in third place, so tonight still starts on today.'};
   if(exam>0&&exam<=6) return {h:esc(S.course.examName||'The exam')+' is in '+exam+' day'+(exam>1?'s':'')+'. This is the run-in.',
@@ -2593,7 +2603,9 @@ function drHeadline(due,lec,lab,over){
 }
 function drBuild(){
   var due=dueToday(), lec=todayLecture(), lab=todayLab(), weak=weaknesses();
-  var over=allComps().filter(function(x){return x.c.last&&isOverdue(x.c.next);}).length?1:0;
+  /* Recall dates are seeded when a student sets the course up, which can
+     be days before the first class. Those are not missed work. */
+  var over=termNotStarted()?0:(allComps().filter(function(x){return x.c.last&&isOverdue(x.c.next);}).length?1:0);
   var budget=drBudget(), steps=[];
 
   if(due.length){
@@ -2678,7 +2690,9 @@ function renderDayRail(){
 function longToday(){
   var d=dparse(TODAY), M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var W=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  return W[d.getDay()]+' '+d.getDate()+' '+M[d.getMonth()]+' &middot; Week '+scheduleCurrentWeek().n;
+  var stem=W[d.getDay()]+' '+d.getDate()+' '+M[d.getMonth()];
+  return termNotStarted() ? (stem+' &middot; Before week 1')
+                          : (stem+' &middot; Week '+scheduleCurrentWeek().n);
 }
 /* Session titles run long. A headline is a headline. */
 function drShort(s,n){ s=String(s||''); return s.length>(n||42)?s.slice(0,(n||42)-1).replace(/[,;:\s]+$/,'')+'…':s; }

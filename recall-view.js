@@ -516,7 +516,7 @@
         if (i === rightAt) opts[i].className = 'rv-opt is-right';
         else if (i === pick) opts[i].className = 'rv-opt is-wrong';
       }
-      /* The verdict is words, not just colour, so it survives colour
+      /* The verdict is words, not just color, so it survives color
          blindness and reaches a screen reader through the live region. */
       var verdict = right ? 'Correct. ' : 'Not this time. The answer is: ' + strip(shown[rightAt].text) + '. ';
       if (!right && confidence === 'sure') verdict += 'You were sure on that one, so it is worth a second look. ';

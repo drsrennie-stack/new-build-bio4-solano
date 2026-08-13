@@ -14,7 +14,7 @@
    four decisions to reach one tool, repeated all term.
 
    This is one launcher, bottom left, on every page. Same place,
-   same contents, same behaviour, whatever page they are on.
+   same contents, same behavior, whatever page they are on.
 
    WHY BOTTOM LEFT
    ---------------
@@ -43,7 +43,7 @@
    open and returns to the launcher on close, Tab is trapped while
    open, Escape closes, arrow keys walk the tiles, aria-expanded on
    the launcher, a live region announces the filtered count, and
-   every colour pair in here was measured at 7:1 or better.
+   every color pair in here was measured at 7:1 or better.
    prefers-reduced-motion removes the transitions.
 
    DEPENDENCIES

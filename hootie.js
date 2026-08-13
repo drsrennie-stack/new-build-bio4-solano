@@ -52,7 +52,7 @@
    with aria-expanded. The transcript is an aria-live polite log
    so replies are announced. Focus moves into the input on open
    and back to the launcher on close. Escape closes. Nothing here
-   depends on colour alone.
+   depends on color alone.
    ============================================================ */
 
 (function () {
@@ -281,7 +281,7 @@
   function prework(ctx, wk) {
     var res = weekResources(ctx, wk);
     return '<b>The order matters more than the pre-work itself.</b> Do it in this order:'
-      + '<br>1. Organise the reading and lecture material into your notes.'
+      + '<br>1. Organize the reading and lecture material into your notes.'
       + '<br>2. Study those notes.'
       + '<br>3. Answer the pre-work questions with your notes and book open.'
       + '<br>4. Then watch the video.'
@@ -314,7 +314,7 @@
         if (ctx.todayRow) parts.push('<b>Today.</b> ' + esc(describeDay(ctx.todayRow)));
         else if (ctx.next) parts.push('<b>Next class.</b> ' + esc(describeDay(ctx.next)));
         parts.push(weekLine(ctx, wk, ctx.todayRow ? ctx.todayRow.date : null));
-        parts.push('Your lab work is on your ' + ilink(s.hub, 'section hub') + ', and the whole term is on the ' + a('calendar') + '.');
+        parts.push('The whole term, every class day, is on your ' + ilink(s.hub, 'course calendar') + '.');
         return parts.filter(Boolean).join('<br><br>');
       }
 
@@ -401,7 +401,7 @@
         else if (/note/.test(fq))
           specific = 'Your notes pages are listed with each class day on the ' + a('calendar') + '.';
         else if (/lab|sprint|bench|models|dissection|practical/.test(fq))
-          specific = 'Lab sprints are on your section hub, and there is a Lab sprints tile in Course tools.';
+          specific = 'Lab sprints have a tile in Course tools, down in the corner of every page.';
         else if (/card|recall|flashcard|quiz/.test(fq))
           specific = 'The cards are inside ' + a('masteryOS', 'Mastery OS') + ', under Recall. Every card in the course is in there.';
         else if (/atlas|3d|model/.test(fq))

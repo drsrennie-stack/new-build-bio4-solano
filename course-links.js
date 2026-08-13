@@ -55,11 +55,19 @@ window.BIO004_LINKS = {
   astc:  { url: 'https://welcome.solano.edu/astc-homepage',
            internal: false, label: 'ASTC homepage' },
 
-  /* ---------- per section ---------- */
+  /* ---------- per section ----------
+
+     `hub` used to be class1 / class2 / class3.html, a per-section lab
+     schedule with its own next-exam countdown, its own week list and
+     its own filters. The course calendar now answers all of that, for
+     the right section, and it is the page students are pointed at from
+     everywhere else. Two pages answering "what is coming" meant Hootie
+     could send a student asking where to start to the one nobody else
+     links to. The hub is the calendar. */
   sections: {
-    'mw':     { syllabus: 'syllabus-class1.html', hub: 'class1.html' },
-    'tr-am':  { syllabus: 'syllabus-class2.html', hub: 'class2.html' },
-    'tr-eve': { syllabus: 'syllabus-class3.html', hub: 'class3.html' }
+    'mw':     { syllabus: 'syllabus-class1.html', hub: 'bio004-course-calendar.html?sec=mw' },
+    'tr-am':  { syllabus: 'syllabus-class2.html', hub: 'bio004-course-calendar.html?sec=tr-am' },
+    'tr-eve': { syllabus: 'syllabus-class3.html', hub: 'bio004-course-calendar.html?sec=tr-eve' }
   },
 
   /* ---------- contact ---------- */

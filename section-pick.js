@@ -52,7 +52,7 @@
    browser starts unloading the page. No preventDefault, no delay,
    no interception of the navigation. If storage is blocked the
    click still navigates, it just does not remember, which is the
-   behaviour we already had.
+   behavior we already had.
    ============================================================ */
 
 (function () {
