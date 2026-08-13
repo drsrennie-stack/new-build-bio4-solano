@@ -1,81 +1,41 @@
-# What changed, and what to check before you push
+# Major adjustments batch, August 13
 
-Three files. Drop them into new-build-bio4-solano, overwriting in place.
+68 files. Every one is an edit to the file already in new-build-bio4-solano, so drop them at the repo root and overwrite in place. Nothing was added or removed from the repo.
 
-- `today.html`          replaces the existing file
-- `bio004-dock.js`      replaces the existing file
-- `bio004-reading-mode.js`  new file, must sit beside the dock
+## 1. The workbook leak is closed, in all three places
 
-Nothing else in the repo is touched. No content was edited, moved or deleted.
+Your evolved today.html was built from my first version, from before we decided workbooks stay unreachable, so the exclusion came back out. It was showing workbooks in the pre-work step, in the Everything panel, and in the new shared day card, which also put them on the course calendar.
 
----
+All three now skip the workbooks array, and each spot carries a comment saying the exclusion has already been reverted once by accident, so it does not happen a third time. Verified in a browser: zero workbook links on today.html with every step expanded, zero on the calendar.
 
-## 1. today.html now opens on today, and lets students move
+Files: today.html, bio004-day-card.js
 
-- A day strip sits at the top showing your class days for that week, with today already selected. No choice to make on arrival.
-- Clicking Wednesday shows Wednesday laid out the same way, framed as getting ahead rather than as work that is due. "Back to today" is always one click.
-- Earlier week and Later week browse the strip without changing the day being shown, so a student can look without losing their place.
-- The day is written into the address as `?day=2026-08-19`, so a day can be linked or reloaded. It is never stored, so tomorrow still opens on tomorrow.
+## 2. The legacy cluster is fixed, one pass
 
-## 2. Everything for this day
+The 31 pages where keyboard focus was invisible (the "the-" deep dives, guided maps, and friends) each gained one appended style block: a visible terra focus ring at 8.9:1 contrast. Nothing in their existing CSS was rewritten, the block just wins. The 3 pages with real animation and no reduced-motion guard (myology, guided GI map, guided renal map) gained the guard.
 
-A panel underneath the guided steps lists the complete material for whichever day is showing: what happens in class, the pre-work sheet, notes, workbooks, concept videos, lab sprints and slides.
+One correction to my earlier audit: it claimed 115 pages had weak reduced-motion guards. Rechecked against the actual media blocks, those guards were fine. Only these 3 needed it.
 
-It comes straight from `session-links.js`, keyed by date, which is the same source the schedule page reads. If a page is not on the schedule for that day it does not appear.
+Files: 34 pages, each with a small appended style block
 
-**Worth confirming:** you said today.html was pulling in pages that should not have been there. I read that as the day's material needing to come from the schedule, so that is what this panel does. The guided steps above it still offer the structure list, the atlas and Mastery OS, because those are your own day-type sequence rather than day-specific material. If those were the pages you meant, say so and I will move them out of the steps into a separate tools row.
+## 3. Skip links now come from the dock
 
-## 3. today.html now has the dock
+About 70 pages had no skip link. Instead of editing 70 files, bio004-dock.js now prepends one on any page that lacks its own, pointing at the page's main content. Pages that already have a skip link are left alone, and any page you build in the future gets one for free.
 
-It did not before. A student who landed there could reach the day's material but could not get back to anything else.
+File: bio004-dock.js
 
-## 4. Today is now the first tile in the dock
+## 4. Lab sprint breadcrumbs now tell the truth
 
-Reachable from 460 pages. It was previously linked from nowhere in the repo.
+28 of 31 sprints carried summer 8-week numbers while the Fall schedule runs 17 weeks, so "back to my week" landed students on the wrong week. Each sprint's real Fall week was derived from session-links.js, the same source the calendar reads, and the title, description, breadcrumb and back link all now agree. The old "Week N Lab Sprints" hub crumbs pointed at pages that only exist for weeks 1 to 8, so those now point at the real week page instead.
 
-## 5. The reading format, on by default
+Cranial nerves, for example: was Week 8 everywhere, is now Week 16 everywhere, matching when you actually teach it.
 
-Long pages now open as sections rather than one continuous document, with a contents list, a per-section time estimate and a page search.
+Files: 31 lab sprints
 
-Measured, on the real pages:
+## Verified
 
-| Page | Before | After |
-|---|---|---|
-| Module 4 packet | 111,241px | 8,075px |
-| Module 5 packet | 108,999px | 7,955px |
-| Module 1 packet | 80,114px | 6,302px |
-| Your syllabus | 22,259px | 5,786px |
-| Week 1 notes | 20,161px | 4,517px |
-| Module 4 structure list | 16,253px | 4,010px |
+16 browser checks pass: workbooks unreachable across day types, day strip and steps working, skip link injected and resolving, focus visible on first Tab, keyframes stopped under reduced motion, corrected breadcrumbs resolving, reading format still active on the packets. A 13-page regression sample shows zero JavaScript errors.
 
-It runs on long content pages and leaves slide decks, timers, drawing tools, Mastery OS, the escape room and today.html alone.
+## Not touched, on purpose
 
-### Nothing is hidden. This was the design constraint, and it is tested.
-
-- The contents list names **every** section, open or closed, with the time each one takes.
-- "Open everything" is always visible, and the choice sticks on every page from then on.
-- A page search opens every section that matches, so a closed section can never keep a student from finding something.
-- Find in page still reaches closed sections in browsers that support `hidden="until-found"`.
-- Any existing `#anchor` opens the section it points at, so your packet contents lists still work.
-- Printing opens everything automatically.
-
-The wording never names a condition or a category. It says "Reading format" and "Show everything, always", and the contents list says in plain text: "Every section on the page is listed here, open or not. Nothing on this page is hidden from you."
-
----
-
-## Two pre-existing bugs, unrelated to this change
-
-Both were already broken before I touched anything:
-
-- `atlas-coloring-book.html` throws `SyntaxError: missing ) after argument list` on load
-- `bio004-room-map-timer.html` throws the same
-
-Their JavaScript does not run at all. Worth fixing before the term starts.
-
----
-
-## To take the reading format back off
-
-Delete the `loadReadingMode` block at the bottom of `bio004-dock.js`. The course returns to exactly what it was.
-
-To exclude one page, add `data-no-reading-mode` to its `<body>` tag.
+The 72 pages still saying "Summer 2026" need your eye before a sweep, because some may genuinely be summer material. The coloring book and room timer stay as they are, per your call. Workbook files themselves are untouched and still unreachable.

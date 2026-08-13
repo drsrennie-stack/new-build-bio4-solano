@@ -979,13 +979,18 @@
       mins:EST.worksheet,
       hint:'Handwritten. This is the one thing that has to happen tonight.',
       body:'<p class="lead-in">This is the real work of the night. Where you cannot answer something, leave the gap visible rather than tidying it away. That gap is the point.</p>',
-      /* Notes and workbooks are NOT tasks. They are what the sheet is
-         worked against. They ride under the one action rather than
-         becoming three more things that look due. */
-      also:'Open these beside it, they are reference and not tasks',
+      /* The notes are NOT a task. They are what the sheet is worked
+         against, so they ride under the one action rather than becoming
+         another thing that looks due.
+
+         WORKBOOKS ARE DELIBERATELY ABSENT, here and everywhere else on
+         this page. The pre-work sheet is what students work, and the
+         workbook layer stays unlinked on purpose. Do not add L.workbooks
+         back in because it happens to exist in session-links.js. This
+         exclusion has already been reverted once by accident. */
+      also:'Open this beside it, it is reference and not a task',
       links:(L && L.sheets ? L.sheets.map(function(n){ return {kind:'Worksheet', url:n.u, title:n.t, cta:'Open the pre-work sheet'}; }) : [])
             .concat(L && L.notes ? L.notes.map(function(n){ return {kind:'Notes', url:n.u, title:n.t}; }) : [])
-            .concat(L && L.workbooks ? L.workbooks.map(function(n){ return {kind:'Workbook', url:n.u, title:n.t}; }) : [])
     });
 
     s.push({
@@ -1688,12 +1693,19 @@
         }).join('') + '</ul></div>';
     }
 
+    /* WORKBOOKS ARE NOT LISTED ON PURPOSE.
+
+       session-links.js carries an L.workbooks array for most days, and it
+       is deliberately not read here. The pre-work sheet is what students
+       are meant to work; the workbook layer stays unlinked. This panel
+       means everything a student is meant to use that day, not every file
+       that exists in the repo. This exclusion has already been reverted
+       once by accident, so leave the array unread. */
     var groups = [
-      ['Pre-work sheet', L.sheets,    'Sheet'],
-      ['Notes',          L.notes,     'Notes'],
-      ['Workbooks',      L.workbooks, 'Workbook'],
-      ['Concept videos', L.videos,    'Video'],
-      ['Lab sprints',    L.lab,       'Lab']
+      ['Pre-work sheet', L.sheets, 'Sheet'],
+      ['Notes',          L.notes,  'Notes'],
+      ['Concept videos', L.videos, 'Video'],
+      ['Lab sprints',    L.lab,    'Lab']
     ];
     groups.forEach(function(g){
       if(g[1] && g[1].length){

@@ -269,6 +269,31 @@
     st.textContent = CSS;
     document.head.appendChild(st);
 
+    /* ---------- skip link, for the pages that never had one ----------
+       About 70 pages in this repo carry no skip link, and they are the
+       older ones least likely to be rebuilt. The dock is already on every
+       page, so it fills the gap: if the page has no skip link of its own,
+       one is prepended that jumps keyboard users past the header to the
+       main content. Pages that already have one are left alone. */
+    (function ensureSkipLink() {
+      if (document.querySelector('.skip, .skip-link, a[href="#main"], a[href="#content"]')) return;
+      var target = document.querySelector('main') ||
+                   document.getElementById('main') ||
+                   document.querySelector('h1');
+      if (!target) return;
+      if (!target.id) target.id = 'bio004-skip-target';
+      target.setAttribute('tabindex', '-1');
+      var a = document.createElement('a');
+      a.href = '#' + target.id;
+      a.className = 'bd-skip';
+      a.textContent = 'Skip to content';
+      a.addEventListener('click', function () { target.focus(); });
+      st.textContent += '.bd-skip{position:absolute;left:-9999px;top:0;z-index:2147483001;' +
+        'background:#08101F;color:#fff;padding:12px 18px;font-weight:700;text-decoration:none;' +
+        'border-radius:0 0 8px 0}.bd-skip:focus{left:0;outline:3px solid #DCB45C;outline-offset:2px}';
+      document.body.insertBefore(a, document.body.firstChild);
+    })();
+
     launcher = document.createElement('button');
     launcher.type = 'button';
     launcher.className = 'bd-launch';

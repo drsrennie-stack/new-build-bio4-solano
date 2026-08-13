@@ -111,7 +111,12 @@
     if(s.pw){
       html += '<div class="d-card prework"><div class="dc-k">Pre-work<span class="dc-when">by '+nbLabel+' night</span></div>';
       html += '<div class="dc-t">'+esc(s.pw.t)+'</div>';
-      var step1 = many(M.sheets,'&#9998;','Pre-work') + many(M.notes,'&#9776;','Notes') + many(M.workbooks,'&#9636;','Workbook');
+      /* WORKBOOKS ARE DELIBERATELY NOT RENDERED. session-links.js carries
+         M.workbooks and this card does not read it: the pre-work sheet is
+         what students work, and the workbook layer stays unlinked on
+         purpose. This exclusion has been reverted once by accident on the
+         Today page, so leave the array unread here too. */
+      var step1 = many(M.sheets,'&#9998;','Pre-work') + many(M.notes,'&#9776;','Notes');
       var step2 = many(M.videos,'&#9658;','Video');
       var pw = '';
       if(step1) pw += '<div class="stephead"><span class="step-n">1</span>Work the sheet with these notes and the reading open</div>'+step1;
