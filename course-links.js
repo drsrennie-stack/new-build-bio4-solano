@@ -13,7 +13,7 @@
    moves, and two of them will be missed.
 
    Anything that needs to point a student at the Atlas, the Loops,
-   the study session signup or the calendar reads it from here.
+   Study With Me or the calendar reads it from here.
 
    ADDING A LINK
    -------------
