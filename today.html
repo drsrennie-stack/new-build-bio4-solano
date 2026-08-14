@@ -190,19 +190,33 @@
      is nothing left to press. */
   .step-row{display:flex;align-items:flex-start;gap:0}
   .step-num{flex:0 0 auto;cursor:default;-webkit-user-select:none;user-select:none}
+  /* NO BORDERS. HEIGHT IS THE STATE.
+     These cards carried a coloured outline each: terra for owed, gold
+     for current, grey for finished. Three ring colours competing with
+     the numbered circle, the state word and the button, all saying the
+     same thing four times, on a system whose whole rule is white cards
+     lifted off an off-white page with a shadow and nothing else.
+
+     The rings are gone. What tells them apart now is how far off the
+     page each one sits: the step you are on floats highest, the ones
+     waiting sit at rest, and a finished one settles almost flat. The
+     circle, the word and the button still say it in text and in shape,
+     so none of this is carried by colour alone. */
   .step{
-    background:var(--white);border:1px solid var(--line);
+    background:var(--white);border:0;
     border-radius:var(--radius);box-shadow:var(--shadow-rest);
     margin-bottom:14px;overflow:hidden;
-    transition:box-shadow 200ms ease,border-color 200ms ease,transform 200ms ease;
+    transition:box-shadow 200ms ease,transform 200ms ease;
   }
-  .step{border-color:var(--terra-dark);}          /* pending is red */
-  .step.is-now{border-color:var(--gold);border-width:2px;box-shadow:var(--shadow-lift)}
-  .step.is-done{background:var(--white);border-color:var(--line);border-width:1px;box-shadow:var(--shadow-rest);}
-  /* A finished card lifts on hover like every other card in the course.
-     It is still reachable, it is just no longer asking for anything. */
-  .step.is-done:hover{box-shadow:0 8px 16px rgba(0,0,0,.10);transform:translateY(-2px);}
-  @media (prefers-reduced-motion:reduce){.step.is-done:hover{transform:none}}
+  .step.is-now{box-shadow:0 18px 34px -10px rgba(8,16,31,.26), 0 2px 5px rgba(8,16,31,.07);
+    transform:translateY(-3px)}
+  .step.is-done{background:var(--white);box-shadow:0 1px 2px rgba(8,16,31,.07);}
+  .step:hover{box-shadow:0 10px 20px rgba(0,0,0,.10);transform:translateY(-2px);}
+  .step.is-now:hover{box-shadow:0 22px 40px -10px rgba(8,16,31,.30), 0 2px 5px rgba(8,16,31,.07);
+    transform:translateY(-4px);}
+  @media (prefers-reduced-motion:reduce){
+    .step,.step.is-now,.step:hover,.step.is-now:hover{transform:none}
+  }
 
   .step-head{
     display:flex;gap:14px;align-items:flex-start;width:100%;

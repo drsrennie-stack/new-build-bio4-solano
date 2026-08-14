@@ -906,8 +906,36 @@ section.block:first-of-type{border-top:none}
    STORAGE
 ========================================================= */
 var mem={};
+/* A FAILED WRITE USED TO BE SILENT.
+   set() caught the exception, dropped the value into a plain object in
+   memory, and returned as if it had saved. That object dies with the
+   tab. A student in private browsing, or one whose storage is full,
+   would work all evening, close the laptop, and find nothing there the
+   next day, having been told nothing at either end.
+
+   It still falls back to memory, because half a session is better than
+   none, but it now says so once, out loud. */
+var STORAGE_OK = true;
+function storageBroke(){
+  if(!STORAGE_OK) return;
+  STORAGE_OK = false;
+  try{
+    var d=document.createElement('div');
+    d.setAttribute('role','alert');
+    d.style.cssText='position:fixed;left:0;right:0;bottom:0;z-index:99999;background:#6B1616;color:#fff;'
+      +'padding:14px 18px;font:600 14px/1.5 "Plus Jakarta Sans",system-ui,sans-serif;text-align:center';
+    d.innerHTML='This browser is not saving your progress. Work in this tab will be lost when you close it. '
+      +'Private or incognito browsing is the usual cause, so open the course in a normal window. '
+      +'<button type="button" style="margin-left:12px;background:#fff;color:#6B1616;border:0;border-radius:8px;'
+      +'padding:7px 13px;font:inherit;cursor:pointer">Dismiss</button>';
+    d.querySelector('button').addEventListener('click',function(){ d.remove(); });
+    (document.body||document.documentElement).appendChild(d);
+  }catch(e){}
+}
 var store={
-  get:function(k){try{var v=localStorage.getItem(k);return v==null?(mem[k]||null):JSON.parse(v);}catch(e){return mem[k]||null;}}, set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}mem[k]=v;}, del:function(k){try{localStorage.removeItem(k);}catch(e){}delete mem[k];}
+  get:function(k){try{var v=localStorage.getItem(k);return v==null?(mem[k]||null):JSON.parse(v);}catch(e){return mem[k]||null;}},
+  set:function(k,v){var ok=true;try{localStorage.setItem(k,JSON.stringify(v));}catch(e){ok=false;}mem[k]=v;if(!ok)storageBroke();return ok;},
+  del:function(k){try{localStorage.removeItem(k);}catch(e){}delete mem[k];}
 };
 var KEY='mastery-os-redesign';
 /* TODAY is the real current date so the app tracks any term automatically.
@@ -1370,8 +1398,64 @@ var STAGES=[
 ========================================================= */
 var DATA_V=4;
 function clone(o){return JSON.parse(JSON.stringify(o));}
+
+/* MIGRATE, NEVER WIPE.
+   This used to read: if(S.__dataV!==DATA_V){S=clone(SEED);}
+   which means the day anyone bumps DATA_V because a competency was
+   added or a unit renamed, every student on the course silently loses
+   the whole term: every recall date, every mastery score, every
+   evidence log. They open Mastery OS one evening in week nine and it
+   is a fresh install, with no warning and no way back.
+
+   The seed is now merged into whatever the student already has. Keys
+   they are missing get filled in, units and competencies that are new
+   get added, and anything they have done is left exactly alone. */
+function migrateState(old, seed){
+  if(!old || typeof old!=='object' || Array.isArray(old)) return seed;
+
+  /* any top-level key the seed knows about and the student does not */
+  Object.keys(seed).forEach(function(k){
+    if(old[k] === undefined) old[k] = clone(seed[k]);
+  });
+
+  /* units and competencies are the part with real work in them */
+  if(Array.isArray(seed.units)){
+    if(!Array.isArray(old.units)) old.units = clone(seed.units);
+    else{
+      var byId = {};
+      old.units.forEach(function(u){ if(u && u.id) byId[u.id] = u; });
+      seed.units.forEach(function(su){
+        var ou = su && su.id ? byId[su.id] : null;
+        if(!ou){ old.units.push(clone(su)); return; }
+        /* keep the student's titles and progress, add competencies that
+           did not exist when they started */
+        if(su.week != null) ou.week = su.week;
+        if(!Array.isArray(ou.comps)) ou.comps = clone(su.comps || []);
+        else{
+          var have = {};
+          ou.comps.forEach(function(c){ if(c && c.id) have[c.id] = 1; });
+          (su.comps || []).forEach(function(sc){
+            if(sc && sc.id && !have[sc.id]) ou.comps.push(clone(sc));
+          });
+        }
+      });
+    }
+  }
+
+  /* dims are a fixed list; add any that are new, keep every value */
+  if(Array.isArray(seed.dims)){
+    if(!Array.isArray(old.dims)) old.dims = clone(seed.dims);
+    else{
+      var dk = {};
+      old.dims.forEach(function(d){ if(d && d.k) dk[d.k] = 1; });
+      seed.dims.forEach(function(sd){ if(sd && sd.k && !dk[sd.k]) old.dims.push(clone(sd)); });
+    }
+  }
+  return old;
+}
+
 var S=store.get(KEY)||clone(SEED);
-if(S.__dataV!==DATA_V){S=clone(SEED);}
+if(S.__dataV!==DATA_V){ S=migrateState(S, clone(SEED)); }
 S.__dataV=DATA_V;
 function save(){store.set(KEY,S);}
 var $=function(s,r){return (r||document).querySelector(s);};
@@ -2043,8 +2127,26 @@ function stageStep(st,ctx){
   var items=[],actions=[];
   var picks=ctx.picks||[];
   if(st.k==='diagnose'){
-    (ctx.weak||weaknesses()).slice(0,4).forEach(function(x){items.push('<b>'+esc(x.c.name)+'</b>, '+x.c.mastery+'%, confidence '+x.c.conf);});
-    actions=[{label:'See full weakness list',attr:'data-scroll="#s-weak" data-sclose'}];
+    /* DAY ONE HAS NOTHING TO DIAGNOSE.
+       Asking a student who has not had a class to "name what you cannot
+       yet do" asks the one question a novice cannot answer: they do not
+       know what they do not know. The weakness list read 0 flagged and
+       the step looked broken. Until there is evidence on the board, this
+       step is a scored placement check instead. */
+    var noEvidence = allComps().every(function(x){ return !x.c.last; })
+                     && (ctx.weak||weaknesses()).length===0;
+    var canPre = !!(window.BIO004_PRETEST && window.BIO004_PRETEST.available());
+    if(noEvidence && canPre){
+      st = {k:'diagnose', n:st.n, t:'Diagnose', icon:st.icon,
+            p:'Nothing has been taught yet, so there is nothing to look up. Find out what you already have.'};
+      items.push('Ten questions, then it asks whether you want to keep going. It stops at fifty.');
+      items.push('<b>It is OK to miss most of them.</b> You are learning, you do not know everything right away, and you will learn as you miss them.');
+      items.push('Nothing here is graded. What you miss lands on your weak spot board.');
+      actions=[{label:'Start the placement check',kind:'gold',attr:'data-pretest'}];
+    } else {
+      (ctx.weak||weaknesses()).slice(0,4).forEach(function(x){items.push('<b>'+esc(x.c.name)+'</b>, '+x.c.mastery+'%, confidence '+x.c.conf);});
+      actions=[{label:'See full weakness list',attr:'data-scroll="#s-weak" data-sclose'}];
+    }
   }else if(st.k==='repair'){
     picks.forEach(function(c){items.push('Reread and redraw <b>'+esc(c.name)+'</b>, then close the book');});
     actions=[{label:'Draw from memory',attr:'data-tool="mastery-canvas.html"'},{label:'Label a blank figure',attr:'data-tool="mastery-canvas.html"'}];
@@ -2121,6 +2223,41 @@ function addDays(d,n){var x=dparse(d);x.setDate(x.getDate()+n);return x.getFullY
 function pad(n){return n<10?'0'+n:''+n;}
 function bumpSkill(name,amt){var s=S.skills.filter(function(x){return x.name===name;})[0];if(s)s.val=Math.min(100,s.val+amt);}
 function bumpDim(k,amt){var d=S.dims.filter(function(x){return x.k===k;})[0];if(d)d.val=Math.min(100,d.val+amt);}
+
+/* PLACEMENT CHECK RESULTS -> THE WEAK SPOT BOARD.
+   A pretest that does not change what the student is shown next is just
+   a quiz. Each topic they were asked about is matched to a competency by
+   name; the ones they got wrong are marked as seen-and-missed so they
+   surface on the board, and the ones they got right are recorded as
+   already held so nobody spends an evening on what they walked in with.
+   Nothing here stores a name or an identifier, only tallies. */
+function applyPretest(res){
+  if(!res||!res.byTopic) return;
+  function norm(x){ return String(x||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim(); }
+  var comps=allComps();
+  Object.keys(res.byTopic).forEach(function(k){
+    var t=res.byTopic[k];
+    if(!t||!t.n) return;
+    var want=norm(t.name);
+    if(!want) return;
+    var hit=comps.filter(function(x){
+      var n=norm(x.c.name);
+      return n===want || n.indexOf(want)>-1 || want.indexOf(n)>-1;
+    })[0];
+    if(!hit) return;
+    var pct=Math.round(t.ok/t.n*100);
+    var c=hit.c;
+    c.last=TODAY;
+    c.pretest={n:t.n, ok:t.ok, pct:pct};
+    if(pct<50){ c.selfMiss=true; c.conf='low'; }
+    else if(pct<80){ c.conf='med'; }
+    else { c.conf=c.conf==='low'?'med':c.conf; }
+  });
+  var overall=res.answered?Math.round(res.correct/res.answered*100):0;
+  S.pretest={answered:res.answered, correct:res.correct, pct:overall, on:TODAY};
+  save();
+  try{ renderAll(); }catch(e){}
+}
 function logEvidence(k,compId){
   var c=compId?(findComp(compId)||{}).c:null;
   if(c){if(c.ev.indexOf(k)<0)c.ev.push(k);bumpComp(c,5);}
@@ -3704,8 +3841,16 @@ function renderAll(){
 ========================================================= */
 var lastFocus=null;
 document.addEventListener('click',function(e){
-  var t=e.target.closest('[data-planwizard],[data-session],[data-prove],[data-tool],[data-toolblank],[data-selfev],[data-logev],[data-logafter],[data-stage],[data-unit],[data-prompt],[data-scroll],[data-sclose],[data-game],[data-exercise],[data-gameclose],[data-drawscore],[data-mmscore],[data-opengrades],[data-gradedel],[data-cram],[data-gaptopic],[data-topicreview],[data-midcram],[data-midstart],[data-weakjump],[data-pomosetup],[data-baseline],[data-cramday],[data-setdays],[data-cramallpomo],[data-gapstart],[data-cramskip],[data-cramretest],[data-daydone]');
+  var t=e.target.closest('[data-planwizard],[data-session],[data-prove],[data-tool],[data-toolblank],[data-selfev],[data-logev],[data-logafter],[data-stage],[data-unit],[data-prompt],[data-scroll],[data-sclose],[data-game],[data-exercise],[data-gameclose],[data-drawscore],[data-mmscore],[data-opengrades],[data-gradedel],[data-cram],[data-gaptopic],[data-topicreview],[data-midcram],[data-midstart],[data-weakjump],[data-pomosetup],[data-baseline],[data-cramday],[data-setdays],[data-cramallpomo],[data-gapstart],[data-cramskip],[data-cramretest],[data-daydone],[data-pretest]');
   if(!t)return;
+  /* The placement check owns its own overlay, so the session modal steps
+     out of the way while it runs and the results land on the board. */
+  if(t.hasAttribute('data-pretest')){
+    if(window.BIO004_PRETEST){
+      window.BIO004_PRETEST.open({ onFinish: function(res){ applyPretest(res); } });
+    }
+    return;
+  }
   if(t.hasAttribute('data-planwizard')){openPlanWizard();return;}
   if(t.hasAttribute('data-game')){openGame(t.getAttribute('data-game'));return;}
   if(t.hasAttribute('data-exercise')){openGame(t.getAttribute('data-exercise'));return;}
@@ -3947,6 +4092,9 @@ else{renderAll();}
 
 <script src="bio004-card-bank.js"></script>
 <script src="recall-view.js"></script>
+<!-- The day-one placement check. Loads after the card bank and after
+     loops-stations.js, because it builds its pool from both. -->
+<script src="bio004-pretest.js"></script>
 <script src="bio004-dock.js"></script>
 <script src="dock-coachmark.js"></script>
 </body>

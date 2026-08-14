@@ -74,27 +74,49 @@
   .cover-sec .cs-k{font-family:var(--font-eyebrow);font-weight:700;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft);}
   .cover-sec .cs-v{font-family:var(--font-display);font-weight:700;font-size:.9rem;color:#fff;}
 
-  /* exam strip. Five dates and a countdown to the next one, which is
-     the question week one asks most and the old page made a student
-     click twenty-two squares to answer. */
-  .terms{margin-top:20px;}
-  .terms h2{font-family:var(--font-eyebrow);font-weight:700;font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--terra-dark);margin:0 0 9px;}
-  .exrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;list-style:none;margin:0;padding:0;}
-  .exrow a{display:flex;flex-direction:column;gap:2px;text-decoration:none;background:#fff;border:1px solid var(--navy-tint);border-left:3px solid var(--terra-dark);border-radius:var(--radius);padding:10px 13px;box-shadow:var(--shadow-rest);transition:var(--t);}
-  .exrow a:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);border-color:var(--terra-dark);}
-  .exrow .ex-n{font-family:var(--font-display);font-weight:800;font-size:.98rem;color:var(--navy);}
-  .exrow .ex-d{font-family:var(--font-eyebrow);font-weight:700;font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--terra-dark);}
-  .exrow .ex-in{font-size:.76rem;color:var(--gray);}
-  .exrow a.next{background:var(--navy);border-color:var(--navy);border-left-color:var(--gold);}
-  .exrow a.next .ex-n{color:#fff;}
-  .exrow a.next .ex-d{color:var(--gold-soft);}
-  .exrow a.next .ex-in{color:#E7EAF0;}
-  /* An exam already behind them recedes with real colors rather than
-     opacity: .55 alpha put the countdown line at 2.7:1, which is a
-     failure on text that still has to be legible. */
-  .exrow a.past{background:#F4F6F8;border-left-color:var(--gray-light);box-shadow:none;}
-  .exrow a.past .ex-n{color:#3A4450;}
-  .exrow a.past .ex-d,.exrow a.past .ex-in{color:var(--gray);}
+  /* WHAT EACH EXAM COVERS.
+     This was five cards carrying a date and a countdown, and clicking
+     one went to that exam day, which is the one day of the five weeks
+     that has nothing to study on it. A countdown a student cannot act
+     on is a dead end, and it was a fourth way into the same material.
+
+     The panels carry scope instead: every lab and every lecture between
+     the last exam and this one, read straight off the schedule so it
+     cannot drift. They are not links. Material is reached through the
+     calendar underneath, which is the one way in.
+
+     No borders. White cards, soft shadow, lifted off the page. */
+  .terms{margin-top:22px;}
+  .terms h2{font-family:var(--font-eyebrow);font-weight:700;font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--terra-dark);margin:0 0 10px;}
+  .exscope{display:flex;flex-direction:column;gap:10px;}
+  .exs{background:#fff;border:0;border-radius:var(--radius);box-shadow:var(--shadow-rest);overflow:hidden;transition:var(--t);}
+  .exs:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,0,0,.10);}
+  @media (prefers-reduced-motion:reduce){.exs:hover{transform:none;}}
+  .exs > summary{list-style:none;cursor:pointer;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding:15px 18px;}
+  .exs > summary::-webkit-details-marker{display:none;}
+  .exs > summary:focus-visible{outline:3px solid var(--terra-dark);outline-offset:-3px;border-radius:var(--radius);}
+  .exs .ex-n{font-family:var(--font-display);font-weight:800;font-size:1.05rem;color:var(--navy);}
+  .exs .ex-d{font-family:var(--font-eyebrow);font-weight:700;font-size:.68rem;letter-spacing:.07em;text-transform:uppercase;color:var(--terra-dark);}
+  .exs .ex-in{font-size:.78rem;color:var(--gray);}
+  .exs .ex-chev{margin-left:auto;color:var(--terra-dark);font-size:.8rem;transition:transform 200ms ease;}
+  .exs[open] .ex-chev{transform:rotate(90deg);}
+  .exs.next{background:var(--navy);}
+  .exs.next .ex-n{color:#fff;}
+  .exs.next .ex-d{color:var(--gold-soft);}
+  .exs.next .ex-in{color:#E7EAF0;}
+  .exs.next .ex-chev{color:var(--gold-soft);}
+  .exs.next .exs-body{background:#fff;}
+  .exs.past .ex-n{color:#3A4450;}
+  .exs.past .ex-d,.exs.past .ex-in{color:var(--gray);}
+
+  .exs-body{padding:2px 18px 18px;display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media(max-width:660px){.exs-body{grid-template-columns:1fr;gap:16px;}}
+  .exs-col h3{font-family:var(--font-eyebrow);font-weight:700;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--terra-dark);margin:0 0 7px;}
+  .exs-col ol{margin:0;padding:0 0 0 1.2em;font-size:.88rem;line-height:1.5;color:var(--navy);}
+  .exs-col li{margin:0 0 5px;}
+  .exs-col li:last-child{margin-bottom:0;}
+  .exs-col li::marker{color:var(--gray);font-weight:700;}
+  .exs-none{font-size:.86rem;color:var(--gray);margin:0;}
 
   /* month jump. Replaces the modules-and-weeks strip, which was a
      second way to move through the same five months. */
@@ -104,7 +126,7 @@
   .mjump button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff;}
 
   /* calendar, full width now that nothing sits beside it */
-  .cal{background:#fff;border:1px solid var(--navy-tint);border-radius:var(--radius);box-shadow:var(--shadow-rest);padding:16px 16px 18px;}
+  .cal{background:#fff;border:0;border-radius:var(--radius);box-shadow:var(--shadow-rest);padding:18px 18px 20px;}
   .cal-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;}
   .cal-nav h2{font-family:var(--font-display);font-weight:800;font-size:1.25rem;margin:0;color:var(--navy);}
   .navbtn{background:#fff;border:1.5px solid var(--navy-tint);border-radius:8px;width:38px;height:38px;cursor:pointer;font-size:1.1rem;color:var(--navy);transition:var(--t);display:flex;align-items:center;justify-content:center;}
@@ -188,7 +210,7 @@
   }
 
   /* legend */
-  .legend{display:flex;flex-wrap:wrap;gap:9px 16px;margin-top:16px;padding:14px 16px;background:#fff;border:1px solid var(--navy-tint);border-radius:var(--radius);box-shadow:var(--shadow-rest);}
+  .legend{display:flex;flex-wrap:wrap;gap:9px 16px;margin-top:16px;padding:14px 16px;background:#fff;border:0;border-radius:var(--radius);box-shadow:var(--shadow-rest);}
   .legend .lg{display:inline-flex;align-items:center;gap:7px;font-size:.82rem;font-weight:600;color:var(--navy);}
   .legend .sw{width:14px;height:14px;border-radius:4px;flex:0 0 auto;}
   .sw.exam{background:var(--navy);}
@@ -238,8 +260,8 @@
     </section>
 
     <section class="terms" aria-labelledby="exHead">
-      <h2 id="exHead">Your five exams</h2>
-      <div class="exrow" id="exRow"></div>
+      <h2 id="exHead">What each exam covers</h2>
+      <div class="exscope" id="exRow"></div>
     </section>
 
     <div class="mjump" role="group" aria-label="Jump to a month" id="mjump"></div>
@@ -347,30 +369,54 @@
   function daysTo(dstr){
     return Math.round((parse(dstr).getTime() - today.getTime()) / 86400000);
   }
+  /* Scope is derived, never typed: everything between the previous exam
+     and this one, off the same session list the grid draws from. A
+     hand-written "covers" string is a second copy of the schedule and
+     it goes stale the first time a lab moves. */
+  function examScope(){
+    var out = [], prev = -1;
+    SESS.forEach(function(s, i){
+      if(s.lm !== 'exam') return;
+      var win = SESS.slice(prev + 1, i);
+      var labs = [], lecs = [], seenL = {}, seenC = {};
+      win.forEach(function(d){
+        if(d.lm === 'holiday') return;
+        if(d.lab && !seenL[d.lab]){ seenL[d.lab] = 1; labs.push(d.lab); }
+        if(d.lec && !seenC[d.lec]){ seenC[d.lec] = 1; lecs.push(d.lec); }
+      });
+      out.push({ d: s.d, n: out.length + 1, labs: labs, lecs: lecs });
+      prev = i;
+    });
+    return out;
+  }
+
   function renderExams(){
-    var exams = SESS.filter(function(s){ return s.lm==='exam'; });
+    var exams = examScope();
     var nextIso = null;
-    for(var i=0;i<exams.length;i++){
+    for(var i = 0; i < exams.length; i++){
       if(daysTo(exams[i].d) >= 0){ nextIso = exams[i].d; break; }
     }
-    var html = exams.map(function(s,i){
-      var dt = parse(s.d);
-      var n  = daysTo(s.d);
-      var cls = s.d===nextIso ? ' next' : (n<0 ? ' past' : '');
-      var when;
-      /* "Done" would read as "you have finished it", which is not what
-         a past date means. "Past" is only about the calendar. */
-      if(n < 0)      when = 'Past';
-      else if(n===0) when = 'Today';
-      else if(n===1) when = 'Tomorrow';
-      else           when = 'in ' + n + ' days';
-      return '<a href="today.html?day='+esc(s.d)+'" target="_top" class="'+cls.trim()+'" '
-        + 'data-jump="'+esc(s.d)+'">'
-        + '<span class="ex-n">Exam '+(i+1)+'</span>'
-        + '<span class="ex-d">'+DOWL[dt.getDay()].slice(0,3)+' '+MON3[dt.getMonth()]+' '+dt.getDate()+'</span>'
-        + '<span class="ex-in">'+when+'</span></a>';
+    document.getElementById('exRow').innerHTML = exams.map(function(x){
+      var dt = parse(x.d), n = daysTo(x.d);
+      var when = n < 0 ? 'Past' : n === 0 ? 'Today' : n === 1 ? 'Tomorrow' : 'in ' + n + ' days';
+      var cls = x.d === nextIso ? ' next' : (n < 0 ? ' past' : '');
+      function col(title, list){
+        return '<div class="exs-col"><h3>' + title + '</h3>' +
+          (list.length
+            ? '<ol>' + list.map(function(t){ return '<li>' + esc(t) + '</li>'; }).join('') + '</ol>'
+            : '<p class="exs-none">Nothing listed.</p>') +
+        '</div>';
+      }
+      return '<details class="exs' + cls + '"' + (x.d === nextIso ? ' open' : '') + '>' +
+        '<summary>' +
+          '<span class="ex-n">Exam ' + x.n + '</span>' +
+          '<span class="ex-d">' + DOWL[dt.getDay()].slice(0,3) + ' ' + MON3[dt.getMonth()] + ' ' + dt.getDate() + '</span>' +
+          '<span class="ex-in">' + when + '</span>' +
+          '<span class="ex-chev" aria-hidden="true">&#9656;</span>' +
+        '</summary>' +
+        '<div class="exs-body">' + col('Lab', x.labs) + col('Lecture', x.lecs) + '</div>' +
+      '</details>';
     }).join('');
-    document.getElementById('exRow').innerHTML = html;
   }
 
   /* ---------- month jump ---------- */

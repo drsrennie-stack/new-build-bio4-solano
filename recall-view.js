@@ -398,15 +398,29 @@
            +   '<button type="button" class="btn" data-self="0">I did not</button>'
            + '</div></div>';
     }
+    /* IT SHOULD LOOK LIKE A CARD, NOT LIKE THE PAGE.
+       This was a flat panel the same width and colour as everything
+       around it, so the one thing a student is meant to be looking at
+       read as another block of the form above it. It is a card now:
+       narrower than the column, lifted well off the page on a real
+       shadow, with a coloured tile in the corner the same way the
+       method cards on Today carry one. The tile colour is the DOK
+       level, so the depth of the question is visible before it is
+       read. No bar across the top: bars are out of the system. */
+    var dok = c.dok ? Math.max(1, Math.min(4, +c.dok)) : 1;
+    var DOKN = { 1:'Recall', 2:'Apply', 3:'Reason', 4:'Extend' };
     return ''
-      + '<article class="rv-card">'
-      +   '<p class="rv-crumb">' + esc(e.moduleTitle || '') + ' &middot; ' + esc(e.topicTitle || '')
-      +     ' &middot; card ' + (pos + 1) + ' of ' + queue.length
-      +     (c.dok ? ' &middot; DOK ' + esc(c.dok) : '') + '</p>'
+      + '<div class="rv-stage">'
+      + '<article class="rv-card rv-d' + dok + '">'
+      +   '<p class="rv-badge" aria-hidden="true">' + dok + '</p>'
+      +   '<p class="rv-level">' + esc(DOKN[dok]) + '</p>'
+      +   '<p class="rv-crumb">' + esc(e.topicTitle || '')
+      +     ' &middot; card ' + (pos + 1) + ' of ' + queue.length + '</p>'
       +   '<h3 class="rv-q">' + c.q + '</h3>'
       +   body
       +   '<p class="rv-live" id="rv-live" role="status" aria-live="polite"></p>'
-      + '</article>';
+      + '</article>'
+      + '</div>';
   }
   function btn(k, label) {
     return '<button type="button" class="btn' + (k === 'sure' ? ' gold' : '') + '" data-conf="' + k + '">'
@@ -567,9 +581,30 @@
   + '#' + MOUNT + ' .rv-field{display:flex;flex-direction:column;gap:4px}'
   + '#' + MOUNT + ' .rv-field label{font-size:.78rem;font-weight:600;opacity:.8}'
   + '#' + MOUNT + ' .rv-field select{padding:8px 10px;border:1px solid rgba(11,21,48,.28);border-radius:8px;background:#fff;font:inherit;min-height:44px}'
-  + '#' + MOUNT + ' .rv-card{padding:18px 20px;border:1px solid rgba(11,21,48,.16);border-radius:12px;background:#fff}'
-  + '#' + MOUNT + ' .rv-crumb{margin:0 0 8px;font-size:.76rem;letter-spacing:.02em;text-transform:uppercase;opacity:.72}'
-  + '#' + MOUNT + ' .rv-q{margin:0 0 16px;font-size:1.16rem;line-height:1.45}'
+  + '#' + MOUNT + ' .rv-stage{display:flex;justify-content:center;padding:26px 0 10px}'
+  + '#' + MOUNT + ' .rv-card{position:relative;width:100%;max-width:620px;padding:26px 30px 26px;'
+  +   'border:1px solid rgba(8,16,31,.09);border-radius:18px;background:#fff;'
+  +   'box-shadow:0 26px 50px -14px rgba(8,16,31,.30), 0 2px 6px rgba(8,16,31,.07);'
+  +   'transition:transform 220ms ease, box-shadow 220ms ease}'
+  + '#' + MOUNT + ' .rv-card:hover{transform:translateY(-3px);'
+  +   'box-shadow:0 34px 62px -16px rgba(8,16,31,.34), 0 2px 6px rgba(8,16,31,.07)}'
+  + '@media (prefers-reduced-motion:reduce){#' + MOUNT + ' .rv-card:hover{transform:none}}'
+  + '#' + MOUNT + ' .rv-badge{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;'
+  +   'justify-content:center;font-family:var(--font-display,inherit);font-weight:800;font-size:17px;'
+  +   'margin:0 0 12px;color:#fff}'
+  + '#' + MOUNT + ' .rv-d1 .rv-badge{background:#7C93A8}'
+  + '#' + MOUNT + ' .rv-d2 .rv-badge{background:#DCB45C;color:#08101F}'
+  + '#' + MOUNT + ' .rv-d3 .rv-badge{background:#C2734D}'
+  + '#' + MOUNT + ' .rv-d4 .rv-badge{background:#6B1616}'
+  + '#' + MOUNT + ' .rv-level{margin:0;font-family:var(--font-eyebrow,inherit);font-weight:700;'
+  +   'font-size:.64rem;letter-spacing:.16em;text-transform:uppercase}'
+  + '#' + MOUNT + ' .rv-d1 .rv-level{color:#4A5C6B}'
+  + '#' + MOUNT + ' .rv-d2 .rv-level{color:#6F5316}'
+  + '#' + MOUNT + ' .rv-d3 .rv-level{color:#A0522D}'
+  + '#' + MOUNT + ' .rv-d4 .rv-level{color:#6B1616}'
+  + '#' + MOUNT + ' .rv-crumb{margin:3px 0 14px;font-size:.72rem;letter-spacing:.02em;'
+  +   'text-transform:uppercase;opacity:.62}'
+  + '#' + MOUNT + ' .rv-q{margin:0 0 18px;font-size:1.28rem;line-height:1.4;font-weight:700}'
   + '#' + MOUNT + ' .rv-conf-h{margin:0 0 8px;font-weight:600}'
   + '#' + MOUNT + ' .rv-conf-row{display:flex;flex-wrap:wrap;gap:8px}'
   + '#' + MOUNT + ' .rv-opts{list-style:none;margin:0;padding:0;display:grid;gap:8px}'
