@@ -380,9 +380,11 @@
     <p class="src" id="pSrc"></p>
     <div class="row">
       <button type="button" class="big" id="startBtn">Start the clock</button>
-      <button type="button" class="ghost" id="noClock">Do it without a clock</button>
+      <button type="button" class="ghost" id="doneBtn">I have finished, check my answer</button>
       <button type="button" class="ghost" id="reSpin">Spin for a different one</button>
     </div>
+    <p class="hint" style="margin:12px 0 0">Not using the clock is fine. Write it, then press
+       <b>I have finished</b> and the key points come up.</p>
   </section>
 
   <!-- ---------- 5. confidence, asked before the answer ---------- -->
@@ -1027,9 +1029,22 @@ window.BIO004_DUMP_REFERENCE = {
   });
   $('stopBtn').addEventListener('click', function(){ stopClock(); toConfidence(); });
   $('startBtn').addEventListener('click', startClock);
-  $('noClock').addEventListener('click', function(){
+
+  /* THERE WAS NO WAY TO SAY "I AM DONE".
+
+     The only route from the prompt to the answer was a button
+     labelled "Do it without a clock", which reads as a setting you
+     choose before you start rather than the thing you press when
+     your pen goes down. Anyone who started the clock, wrote their
+     answer and then looked at the page for a way to check it found
+     nothing there. The clock has a Done button, but the clock is in
+     the corner and the prompt is what you are looking at.
+
+     One button, on the card, that means what it says. It works
+     whether or not the clock was ever started. */
+  $('doneBtn').addEventListener('click', function(){
     stopClock(true);
-    $('clockSay').textContent = 'No clock. Come back when you have finished writing.';
+    $('clockSay').textContent = 'Pen down. Rate how it went, then check it.';
     toConfidence();
   });
 
