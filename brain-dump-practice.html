@@ -116,10 +116,17 @@
   .wheel-wrap{display:grid;grid-template-columns:minmax(0,320px) 1fr;gap:26px;align-items:center}
   @media (max-width:720px){.wheel-wrap{grid-template-columns:1fr}}
   .wheel-stage{position:relative;width:100%;max-width:320px;margin:0 auto;aspect-ratio:1}
-  .wheel-stage svg{width:100%;height:100%;display:block;
+  /* SCOPED TO THE WHEEL, NOT TO EVERY SVG IN THE STAGE.
+
+     This used to be ".wheel-stage svg", which also caught the little
+     pointer triangle sitting on top of the wheel and stretched it to
+     the full width and height of the stage. The wheel was still
+     there, underneath a gold triangle the size of the whole box. */
+  #wheelSvg{width:100%;height:100%;display:block;
     filter:drop-shadow(0 22px 34px rgba(0,0,0,.6))}
   #wheelRot{transform-origin:160px 160px;transition:transform 4.6s cubic-bezier(.13,.86,.13,1)}
-  .ptr{position:absolute;top:-6px;left:50%;transform:translateX(-50%);z-index:2;
+  .ptr{position:absolute;top:-7px;left:50%;transform:translateX(-50%);z-index:2;
+       width:30px;height:26px;
        filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))}
   .wseg-t{font:700 10.5px 'Plus Jakarta Sans',sans-serif}
   .big{background:var(--gold);color:#08101F;font-family:var(--font);font-weight:800;font-size:17px;
@@ -570,7 +577,7 @@
 
   function shortT(s){
     s = String(s||'');
-    return s.length > 24 ? s.slice(0,23).replace(/[ ,]+$/,'')+'…' : s;
+    return s.length > 18 ? s.slice(0,17).replace(/[ ,]+$/,'')+'…' : s;
   }
 
   function drawWheel(list){
@@ -582,18 +589,47 @@
       var R=152, cx=160, cy=160;
       var x0=cx+R*Math.cos(a0), y0=cy+R*Math.sin(a0);
       var x1=cx+R*Math.cos(a1), y1=cy+R*Math.sin(a1);
-      h += '<path d="M'+cx+' '+cy+' L'+x0.toFixed(2)+' '+y0.toFixed(2)
+      h += '<path data-seg="'+i+'" d="M'+cx+' '+cy+' L'+x0.toFixed(2)+' '+y0.toFixed(2)
          + ' A'+R+' '+R+' 0 0 1 '+x1.toFixed(2)+' '+y1.toFixed(2)+' Z" fill="'+COLORS[i%COLORS.length]+'"></path>';
+      /* LABELS THAT READ THE RIGHT WAY UP.
+
+         Rotating every label by its own segment angle puts the ones
+         on the left half of the wheel upside down. Anything past the
+         vertical gets turned a further 180 degrees and anchored from
+         the other end, which lands the text in exactly the same
+         place but reading outward from the hub. */
       var mid = (i*step + step/2 - 90);
-      h += '<text class="wseg-t" fill="#EEF1F6" x="'+(cx+92)+'" y="'+(cy+3.5)+'" text-anchor="middle"'
-         + ' transform="rotate('+mid.toFixed(2)+' '+cx+' '+cy+')">'+esc(shortT(it.t))+'</text>';
+      var a = ((mid % 360) + 360) % 360;
+      var flip = a > 90 && a < 270;
+      h += '<text class="wseg-t" data-seglbl="'+i+'" fill="#EEF1F6" y="'+(cy+3.5)+'"'
+         + ' x="' + (flip ? (cx - 34) : (cx + 34)) + '"'
+         + ' text-anchor="' + (flip ? 'end' : 'start') + '"'
+         + ' transform="rotate('+(flip ? mid + 180 : mid).toFixed(2)+' '+cx+' '+cy+')">'
+         + esc(shortT(it.t)) + '</text>';
     });
     g.innerHTML = h;
     onWheel = list;
   }
 
+  /* The wheel stops with the winning wedge under the pointer, which is
+     true and easy to miss on a ten segment wheel where the wedges are
+     36 degrees wide. Filling it gold says which one it was without
+     making anyone measure. */
+  function highlight(idx){
+    var g = $('wheelRot');
+    g.querySelectorAll('[data-seg]').forEach(function(el){
+      var win = +el.getAttribute('data-seg') === idx;
+      el.setAttribute('fill', win ? '#DCB45C' : COLORS[(+el.getAttribute('data-seg'))%COLORS.length]);
+    });
+    g.querySelectorAll('[data-seglbl]').forEach(function(el){
+      var win = +el.getAttribute('data-seglbl') === idx;
+      el.setAttribute('fill', win ? '#08101F' : '#EEF1F6');
+    });
+  }
+
   function land(idx){
     current = onWheel[idx];
+    highlight(idx);
     showPrompt();
   }
 
@@ -629,10 +665,29 @@
   }
 
   $('spinBtn').addEventListener('click', spin);
+
+  /* "Just give me one" skips the four second animation, not the wheel.
+     It still puts the prompt on the wheel and still parks it under the
+     pointer, so the page never shows a prompt the wheel disagrees
+     with. Useful on a phone, and the only route that works for anyone
+     who does not want to sit through a spin every time. */
   $('justGive').addEventListener('click', function(){
-    var one = pick(1)[0]; if(!one) return;
-    drawWheel(pick(SEGN));
-    current = one; showPrompt();
+    var list = pick(SEGN);
+    if(!list.length) return;
+    drawWheel(list);
+    var idx = Math.floor(Math.random()*list.length);
+    var step = 360/list.length;
+    var target = 360 - (idx*step + step/2);
+    var g = $('wheelRot');
+    var keep = g.style.transition;
+    g.style.transition = 'none';
+    g.style.transform = 'rotate('+(turns*360 + target)+'deg)';
+    /* Read back a layout value so the browser applies the jump before
+       the transition goes back on, otherwise the next spin animates
+       from the old angle. */
+    void g.getBoundingClientRect();
+    g.style.transition = keep;
+    land(idx);
   });
   $('reSpin').addEventListener('click', function(){ resetRound(); spin(); });
   $('againBtn').addEventListener('click', function(){ resetRound(); spin(); });
