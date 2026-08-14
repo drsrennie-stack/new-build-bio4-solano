@@ -57,27 +57,59 @@ input[type=color]{width:36px;height:36px;border:1.5px solid var(--line);border-r
    code and their tickable list. The canvas opened blank and showed none of
    them, so a student arrived at a drawing tool with nothing to draw.
    Scoped to what has been taught, and they come one after another. */
-.dp{margin:0 0 16px;padding:18px 20px;background:#fff;border:1px solid rgba(11,21,48,.16);
-  border-left:4px solid #8B3A2E;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.dp-eyebrow{margin:0 0 4px;font-size:11.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#8B3A2E}
+/* THE PROMPT CARD.
+   This carried a 1px border and a 4px terra bar down its left edge, and
+   the control row under it was three different shapes: an outlined
+   circle, a navy pill, a browser-default select with its own grey
+   border, and another outlined pill. Four borders, three heights, two
+   idioms.
+
+   The rule this course runs on is white cards on an off-white page,
+   depth from shadow, no borders and no bars. So: one card on a shadow,
+   and one row of controls that are all the same height, the same
+   radius, the same white, all lifting on the same shadow. Only the
+   thing you press next is gold. */
+.dp{margin:0 0 16px;padding:20px 22px;background:#fff;border:0;border-radius:14px;
+  box-shadow:0 2px 6px rgba(8,16,31,.08), 0 12px 26px -14px rgba(8,16,31,.22)}
+.dp-eyebrow{margin:0 0 4px;font-size:11.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#6B1616}
 .dp-name{margin:0 0 8px;font-size:20px;font-weight:800;color:#08101F;letter-spacing:-.01em}
-.dp-brief{margin:0 0 14px;font-size:15.5px;line-height:1.6;color:#3D4757;max-width:70ch}
+.dp-brief{margin:0 0 16px;font-size:15.5px;line-height:1.6;color:#3D4757;max-width:70ch}
+
 .dp-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.dp-btn{font:inherit;font-size:13.5px;font-weight:700;min-height:44px;padding:10px 18px;cursor:pointer;
-  border-radius:999px;border:1px solid rgba(11,21,48,.28);background:#fff;color:#08101F}
-.dp-btn:hover{border-color:#8B3A2E}
-.dp-btn:focus-visible{outline:3px solid #8B3A2E;outline-offset:2px}
-.dp-primary{background:#08101F;color:#fff;border-color:#08101F}
-.dp-primary:hover{background:#8B3A2E;border-color:#8B3A2E}
+.dp-btn{font:inherit;font-size:13.5px;font-weight:700;height:46px;padding:0 20px;cursor:pointer;
+  border-radius:999px;border:0;background:#fff;color:#08101F;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 1px 3px rgba(8,16,31,.10);
+  transition:transform 160ms ease, box-shadow 160ms ease, background 160ms ease}
+.dp-btn:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(8,16,31,.14)}
+.dp-btn:active{transform:translateY(0)}
+.dp-btn:focus-visible{outline:3px solid #6B1616;outline-offset:3px}
+.dp-primary{background:#DCB45C;color:#05080F}
+.dp-primary:hover{background:#C9A24A}
+
 .dp-nav{display:flex;gap:8px;align-items:center}
-.dp-arrow{min-width:52px;padding:10px 14px;font-size:16px;line-height:1}
-.dp-pick{display:inline-flex;align-items:center;gap:8px}
-.dp-pick-k{font-family:'DM Sans',var(--disp);font-size:11px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:#6B1616}
-.dp-pick select{font:inherit;font-size:13.5px;font-weight:600;min-height:44px;padding:8px 12px;
-  border:1px solid rgba(11,21,48,.22);border-radius:10px;background:#fff;color:#0B1530;
-  max-width:min(340px,42vw);cursor:pointer}
-.dp-pick select:focus-visible{outline:3px solid #8B3A2E;outline-offset:2px}
+/* a round button, the same height as everything beside it */
+.dp-arrow{width:46px;height:46px;padding:0;border-radius:50%;font-size:17px;line-height:1}
+
+/* The select keeps its native behaviour, which is what makes it work on
+   a phone and with a keyboard, and loses its native chrome. */
+.dp-pick{position:relative;display:inline-flex;align-items:center}
+.dp-pick select{font:inherit;font-size:13.5px;font-weight:700;height:46px;
+  padding:0 40px 0 20px;border:0;border-radius:999px;background:#fff;color:#08101F;
+  box-shadow:0 1px 3px rgba(8,16,31,.10);cursor:pointer;
+  max-width:min(360px,40vw);text-overflow:ellipsis;
+  -webkit-appearance:none;appearance:none;
+  transition:transform 160ms ease, box-shadow 160ms ease}
+.dp-pick:hover select{transform:translateY(-2px);box-shadow:0 8px 16px rgba(8,16,31,.14)}
+.dp-pick select:focus-visible{outline:3px solid #6B1616;outline-offset:3px}
+.dp-pick::after{content:'';position:absolute;right:17px;top:50%;width:8px;height:8px;
+  margin-top:-5px;border-right:2px solid #6B1616;border-bottom:2px solid #6B1616;
+  transform:rotate(45deg);pointer-events:none}
+.dp-count{font-size:12.5px;font-weight:600;color:#4A5C6B;margin-left:auto}
+@media (prefers-reduced-motion:reduce){
+  .dp-btn,.dp-pick select{transition:none}
+  .dp-btn:hover,.dp-pick:hover select{transform:none}
+}
 .dp-count{font-size:13px;color:#3D4757;margin-left:auto}
 .dp-listwrap{margin-top:14px;padding-top:14px;border-top:1px solid rgba(11,21,48,.14)}
 .dp-standard{margin:0 0 10px;font-size:14px;color:#08101F;font-weight:700}
@@ -148,10 +180,9 @@ input[type=color]{width:36px;height:36px;border:1.5px solid var(--line);border-r
         <span aria-hidden="true">&larr;</span></button>
       <button type="button" class="dp-btn dp-primary" id="dp-next">Next prompt <span aria-hidden="true">&rarr;</span></button>
     </div>
-    <label class="dp-pick">
-      <span class="dp-pick-k">Jump to</span>
+    <span class="dp-pick">
       <select id="dp-jump" aria-label="Jump to a drawing prompt"></select>
-    </label>
+    </span>
     <button type="button" class="dp-btn" id="dp-check" aria-expanded="false" aria-controls="dp-list">Show the self-check list</button>
     <span class="dp-count" id="dp-count" role="status" aria-live="polite"></span>
   </div>
@@ -383,7 +414,7 @@ input[type=color]{width:36px;height:36px;border:1.5px solid var(--line);border-r
    The checklist, the confidence rating and the score all live beside the
    drawing, so nothing has to be memorized on a round trip to another screen. */
 .checkpanel{width:min(430px,42vw);flex:0 0 auto;margin-left:14px;background:var(--white);
-  border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.08);
+  border:0;border-radius:14px;box-shadow:0 2px 6px rgba(8,16,31,.08), 0 12px 26px -14px rgba(8,16,31,.22);
   padding:18px 20px;overflow-y:auto;max-height:100%;font-family:var(--disp)}
 .checkpanel[hidden]{display:none}
 .cp-eyebrow{font-family:'DM Sans',var(--disp);font-size:11px;font-weight:700;letter-spacing:.13em;
