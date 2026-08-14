@@ -37,187 +37,224 @@
      ============================================================ -->
 
 <style>
+  /* ============================================================
+     WHITE CARDS ON A NAVY PAGE.
+
+     This was navy cards on a navy page, every panel a slightly
+     different blue, and it read as one big blue wash with no edges
+     between the steps. The page stays navy, because a brain dump
+     tool that glows white at you while you are meant to be writing
+     on paper is the wrong thing to be looking at. Everything you
+     actually work in is white and lifted, which is how the rest of
+     the course reads: white cards, soft shadow, no borders.
+
+     Sub-surfaces inside a card are off-white rather than another
+     shade of blue, so a card never contains a second colour system.
+     ============================================================ */
   :root{
     --navy:#08101F; --navy-2:#0E1A2E; --navy-3:#16243B; --navy-4:#1E3049;
-    --gold:#DCB45C; --gold-lt:#EFD9A4;
-    --terra-lt:#E09A8C;
-    --good:#8FD3A8; --warn:#F0C97A; --bad:#F09A8C;
-    --ink:#EEF1F6; --muted:#B6C0D0; --muted-2:#9AA7BC;
-    --white:#FFFFFF;
+    --gold:#DCB45C; --gold-lt:#EFD9A4; --gold-text:#6F5316;
+    --terra-dark:#6B1616; --terra-lt:#E09A8C;
+    --white:#FFFFFF; --offwhite:#FAFAF9; --sub:#F1F4F7;
+    --ink:#08101F; --ink-2:#3D4757; --ink-3:#4A5763;
+    --on-dark:#EEF1F6; --muted:#B6C0D0; --muted-2:#9AA7BC;
     --radius:14px;
-    --shadow:0 18px 40px -14px rgba(0,0,0,.65);
-    --shadow-lift:0 26px 54px -14px rgba(0,0,0,.72);
+    --lift:0 1px 3px rgba(0,0,0,.10);
+    --lift-2:0 10px 22px rgba(0,0,0,.14);
+    --card-shadow:0 22px 44px -16px rgba(0,0,0,.55);
     --t:transform 200ms ease, box-shadow 200ms ease, background 200ms ease, color 200ms ease;
     --font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{margin:0;background:var(--navy);color:var(--ink);font-family:var(--font);
+  body{margin:0;background:var(--navy);color:var(--on-dark);font-family:var(--font);
        font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;}
   .wrap{max-width:940px;margin:0 auto;padding:30px 20px 140px;position:relative;z-index:1}
-  a{color:var(--gold-lt)}
   :focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:8px}
+  .card :focus-visible{outline-color:var(--terra-dark)}
   .skip{position:absolute;left:-9999px;background:var(--gold);color:#08101F;padding:10px 16px;
         border-radius:8px;font-weight:800;z-index:80}
   .skip:focus{left:16px;top:16px}
   .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
       clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  .hidden{display:none !important}
 
-  /* faint grid, the same one the projector selector uses */
   body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
     background-image:linear-gradient(rgba(220,180,92,.035) 1px,transparent 1px),
                      linear-gradient(90deg,rgba(220,180,92,.035) 1px,transparent 1px);
     background-size:64px 64px}
 
+  /* ---------- masthead, the only thing that sits on the navy ---------- */
   .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;
            color:var(--gold);margin:0 0 10px}
-  h1{font-size:clamp(30px,6vw,50px);font-weight:800;letter-spacing:-.03em;line-height:1.02;margin:0 0 12px}
+  h1{font-size:clamp(30px,6vw,50px);font-weight:800;letter-spacing:-.03em;line-height:1.02;
+     margin:0 0 12px;color:var(--white)}
   h1 span{color:var(--gold)}
   .lede{font-size:18px;color:var(--muted);margin:0 0 6px;max-width:62ch}
-  h2{font-size:clamp(19px,3vw,24px);font-weight:800;letter-spacing:-.02em;margin:0 0 6px}
-  h3{font-size:16px;font-weight:800;margin:0 0 8px}
+  .runline{font-size:14px;color:var(--muted);margin-top:10px}
 
-  .card{background:var(--navy-3);border-radius:var(--radius);padding:24px;margin:22px 0;
-        box-shadow:var(--shadow)}
+  /* ---------- the cards ---------- */
+  .card{background:var(--white);color:var(--ink);border-radius:var(--radius);padding:26px;
+        margin:22px 0;box-shadow:var(--card-shadow)}
   .card-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px}
-  .step-k{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--gold)}
-  .hint{color:var(--muted);font-size:14.5px;margin:0 0 14px}
+  .step-k{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
+          color:var(--terra-dark)}
+  h2{font-size:clamp(19px,3vw,24px);font-weight:800;letter-spacing:-.02em;margin:0 0 6px;color:var(--ink)}
+  h3{font-size:16px;font-weight:800;margin:0 0 8px;color:var(--ink)}
+  .hint{color:var(--ink-3);font-size:14.5px;margin:0 0 14px}
+  .hint b{color:var(--terra-dark)}
+  .card a{color:var(--terra-dark)}
 
   /* ---------- chips ---------- */
   .chips{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0 6px}
-  .chip{background:var(--navy-2);color:var(--ink);font-family:var(--font);font-weight:700;
+  .chip{background:var(--sub);color:var(--ink);font-family:var(--font);font-weight:700;
         font-size:14px;padding:10px 15px;border:0;border-radius:999px;cursor:pointer;
-        transition:var(--t);box-shadow:0 2px 6px rgba(0,0,0,.4)}
-  .chip:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(0,0,0,.5)}
-  .chip[aria-pressed="true"]{background:var(--gold);color:#08101F;box-shadow:0 12px 24px rgba(220,180,92,.28)}
-  .chip .n{opacity:1;font-weight:600;color:var(--muted)}
-  .chip[aria-pressed="true"] .n{color:#2A2007}
-  .mini{background:none;border:0;color:var(--gold-lt);font-weight:700;font-size:14px;
+        transition:var(--t);box-shadow:var(--lift)}
+  .chip:hover{transform:translateY(-2px);box-shadow:var(--lift-2)}
+  .chip[aria-pressed="true"]{background:var(--ink);color:var(--white);
+    box-shadow:0 12px 24px -6px rgba(8,16,31,.42)}
+  .chip .n{font-weight:600;color:var(--ink-3)}
+  .chip[aria-pressed="true"] .n{color:#C6CEDA}
+  .mini{background:none;border:0;color:var(--terra-dark);font-weight:700;font-size:14px;
         cursor:pointer;text-decoration:underline;padding:8px 4px}
 
   /* ---------- timer options ---------- */
   .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px;margin-top:12px}
-  .opt{background:var(--navy-2);border:0;border-radius:12px;padding:15px 16px;text-align:left;
+  .opt{background:var(--sub);border:0;border-radius:12px;padding:15px 16px;text-align:left;
        cursor:pointer;color:var(--ink);font-family:var(--font);transition:var(--t);
-       box-shadow:0 2px 8px rgba(0,0,0,.4);display:block;width:100%}
-  .opt:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(0,0,0,.5)}
-  .opt[aria-pressed="true"]{background:var(--gold);color:#08101F;box-shadow:0 14px 28px rgba(220,180,92,.28)}
+       box-shadow:var(--lift);display:block;width:100%}
+  .opt:hover{transform:translateY(-2px);box-shadow:var(--lift-2)}
+  .opt[aria-pressed="true"]{background:var(--ink);color:var(--white);
+    box-shadow:0 14px 28px -8px rgba(8,16,31,.42)}
   .opt b{display:block;font-size:20px;font-weight:800;letter-spacing:-.02em}
-  .opt i{display:block;font-style:normal;font-size:13.5px;color:var(--muted);margin-top:3px;font-weight:600}
-  .opt[aria-pressed="true"] i{color:#3A2C08}
+  .opt i{display:block;font-style:normal;font-size:13.5px;color:var(--ink-3);margin-top:3px;font-weight:600}
+  .opt[aria-pressed="true"] i{color:#C6CEDA}
   .custom{display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap}
-  .custom label{font-size:14.5px;color:var(--muted);font-weight:700}
-  .custom input{width:88px;background:var(--navy-2);color:var(--ink);border:0;border-radius:9px;
+  .custom label{font-size:14.5px;color:var(--ink-3);font-weight:700}
+  .custom input{width:88px;background:var(--white);color:var(--ink);border:0;border-radius:9px;
     padding:11px 13px;font-family:var(--font);font-size:16px;font-weight:700;
-    box-shadow:inset 0 0 0 2px rgba(182,192,208,.35)}
-  .custom input:focus{box-shadow:inset 0 0 0 2px var(--gold)}
+    box-shadow:inset 0 0 0 2px #98A3B4}
+  .custom input:focus{box-shadow:inset 0 0 0 2px var(--terra-dark)}
 
   /* ---------- the wheel ---------- */
   .wheel-wrap{display:grid;grid-template-columns:minmax(0,320px) 1fr;gap:26px;align-items:center}
   @media (max-width:720px){.wheel-wrap{grid-template-columns:1fr}}
   .wheel-stage{position:relative;width:100%;max-width:320px;margin:0 auto;aspect-ratio:1}
   /* SCOPED TO THE WHEEL, NOT TO EVERY SVG IN THE STAGE.
-
-     This used to be ".wheel-stage svg", which also caught the little
-     pointer triangle sitting on top of the wheel and stretched it to
-     the full width and height of the stage. The wheel was still
-     there, underneath a gold triangle the size of the whole box. */
+     ".wheel-stage svg" also caught the pointer triangle and stretched
+     it to the full box, hiding the wheel underneath it. */
   #wheelSvg{width:100%;height:100%;display:block;
-    filter:drop-shadow(0 22px 34px rgba(0,0,0,.6))}
-  #wheelRot{transform-origin:160px 160px;transition:transform 4.6s cubic-bezier(.13,.86,.13,1)}
+    filter:drop-shadow(0 14px 26px rgba(8,16,31,.32))}
+  /* No CSS transform and no transform-origin on the SVG group: the
+     rotation is set on the transform ATTRIBUTE, rotate(a 160 160),
+     and animated in JS, so nothing depends on how a browser resolves
+     an origin box for an SVG <g>. */
   .ptr{position:absolute;top:-7px;left:50%;transform:translateX(-50%);z-index:2;
-       width:30px;height:26px;
-       filter:drop-shadow(0 4px 8px rgba(0,0,0,.6))}
+       width:30px;height:26px;filter:drop-shadow(0 4px 8px rgba(8,16,31,.4))}
   .wseg-t{font:700 10.5px 'Plus Jakarta Sans',sans-serif}
+
+  /* ---------- buttons ---------- */
   .big{background:var(--gold);color:#08101F;font-family:var(--font);font-weight:800;font-size:17px;
        padding:15px 26px;border:0;border-radius:11px;cursor:pointer;transition:var(--t);
-       box-shadow:0 14px 30px -8px rgba(220,180,92,.5)}
-  .big:hover{transform:translateY(-2px);box-shadow:0 20px 38px -8px rgba(220,180,92,.6)}
-  .big:disabled{opacity:1;background:#4A536B;color:#E6EAF2;cursor:default;transform:none;
-    box-shadow:0 2px 6px rgba(0,0,0,.4)}
-  .ghost{background:var(--navy-2);color:var(--ink);font-family:var(--font);font-weight:800;
+       box-shadow:0 10px 22px -8px rgba(184,146,74,.65)}
+  .big:hover{transform:translateY(-2px);box-shadow:0 16px 30px -8px rgba(184,146,74,.75)}
+  .big:disabled{background:#DDE2E9;color:#4A5763;cursor:default;transform:none;box-shadow:var(--lift)}
+  .ghost{background:var(--white);color:var(--ink);font-family:var(--font);font-weight:800;
     font-size:15px;padding:13px 20px;border:0;border-radius:11px;cursor:pointer;transition:var(--t);
-    box-shadow:0 2px 8px rgba(0,0,0,.4)}
-  .ghost:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(0,0,0,.5)}
+    box-shadow:var(--lift);text-decoration:none;display:inline-block}
+  .ghost:hover{transform:translateY(-2px);box-shadow:var(--lift-2)}
+  .ghost:disabled{color:#7A8494;cursor:default;transform:none}
   .row{display:flex;flex-wrap:wrap;gap:11px;align-items:center;margin-top:14px}
+
+  /* ---------- toggles ---------- */
+  .toggles{margin-top:18px}
+  .tg{display:flex;gap:12px;align-items:flex-start;background:var(--sub);border-radius:11px;
+      padding:13px 15px;cursor:pointer;margin-bottom:9px;transition:var(--t);box-shadow:var(--lift)}
+  .tg:hover{transform:translateY(-2px);box-shadow:var(--lift-2)}
+  .tg input{width:21px;height:21px;flex:none;margin:1px 0 0;accent-color:#6B1616;cursor:pointer}
+  .tg b{display:block;font-size:14.5px;font-weight:800;color:var(--ink)}
+  .tg i{display:block;font-style:normal;font-size:13px;color:var(--ink-3);margin-top:2px}
 
   /* ---------- the prompt ---------- */
   .prompt-t{font-size:clamp(21px,3.6vw,29px);font-weight:800;letter-spacing:-.02em;
-            color:var(--gold);margin:0 0 12px;line-height:1.15}
-  .prompt-p{font-size:clamp(17px,2.4vw,20px);margin:0 0 16px;max-width:64ch}
-  .paper{background:var(--navy-2);border-radius:12px;padding:15px 17px;font-size:14.5px;
-         color:var(--muted);margin:16px 0 0;box-shadow:inset 0 0 0 2px rgba(220,180,92,.22)}
-  .paper b{color:var(--gold-lt)}
-  .src{font-size:13px;color:var(--muted-2);margin:14px 0 0}
-
-  /* ---------- floating clock ---------- */
-  .float{position:fixed;right:20px;bottom:20px;z-index:60;display:none;
-    background:var(--navy-3);border-radius:16px;padding:13px 17px;
-    box-shadow:0 22px 44px -10px rgba(0,0,0,.75);align-items:center;gap:13px}
-  .float.on{display:flex}
-  .float .ring{position:relative;width:46px;height:46px;flex:none}
-  .float .ring svg{width:46px;height:46px;transform:rotate(-90deg)}
-  .float .ring .bg{stroke:#2C3D59;fill:none;stroke-width:5}
-  .float .ring .fg{stroke:var(--gold);fill:none;stroke-width:5;stroke-linecap:round;
-    transition:stroke-dashoffset 500ms linear}
-  .float .ring .ic{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--gold)}
-  .float .ring .ic svg{width:19px;height:19px;transform:none}
-  .float .tt{font-variant-numeric:tabular-nums;font-weight:800;font-size:24px;letter-spacing:-.02em;line-height:1}
-  .float .tl{font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);font-weight:800;margin-top:3px}
-  .float.up .tt{color:var(--gold)}
-  .float.up .fg{stroke:var(--terra-lt)}
-  .float button{background:var(--navy-2);color:var(--ink);border:0;border-radius:9px;
-    font-family:var(--font);font-weight:800;font-size:13px;padding:9px 12px;cursor:pointer;transition:var(--t)}
-  .float button:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,0,0,.5)}
-  @media (max-width:520px){.float{right:12px;bottom:12px;padding:11px 13px;gap:10px}
-    .float .tt{font-size:20px}}
+            color:var(--terra-dark);margin:0 0 12px;line-height:1.15}
+  .prompt-p{font-size:clamp(17px,2.4vw,20px);margin:0 0 16px;max-width:64ch;color:var(--ink)}
+  .paper{background:var(--sub);border-radius:12px;padding:15px 17px;font-size:14.5px;
+         color:var(--ink-2);margin:16px 0 0;box-shadow:inset 0 0 0 2px rgba(184,146,74,.45)}
+  .paper b{color:var(--gold-text)}
+  .src{font-size:13px;color:var(--ink-3);margin:14px 0 0}
 
   /* ---------- confidence ---------- */
   .conf{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin-top:12px}
-  .cf{background:var(--navy-2);border:0;border-radius:12px;padding:15px;cursor:pointer;
-    color:var(--ink);font-family:var(--font);text-align:left;transition:var(--t);
-    box-shadow:0 2px 8px rgba(0,0,0,.4)}
-  .cf:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(0,0,0,.5)}
+  .cf{background:var(--sub);border:0;border-radius:12px;padding:15px;cursor:pointer;
+    color:var(--ink);font-family:var(--font);text-align:left;transition:var(--t);box-shadow:var(--lift)}
+  .cf:hover{transform:translateY(-2px);box-shadow:var(--lift-2)}
   .cf b{display:block;font-size:16px;font-weight:800}
-  .cf i{display:block;font-style:normal;font-size:13px;color:var(--muted);margin-top:3px}
-  .cf[aria-pressed="true"]{background:var(--gold);color:#08101F}
-  .cf[aria-pressed="true"] i{color:#3A2C08}
+  .cf i{display:block;font-style:normal;font-size:13px;color:var(--ink-3);margin-top:3px}
+  .cf[aria-pressed="true"]{background:var(--ink);color:var(--white);
+    box-shadow:0 12px 24px -6px rgba(8,16,31,.42)}
+  .cf[aria-pressed="true"] i{color:#C6CEDA}
 
   /* ---------- key points ---------- */
   .kp{list-style:none;margin:14px 0 0;padding:0}
   .kp li{margin:0 0 9px}
-  .kp label{display:flex;gap:13px;align-items:flex-start;background:var(--navy-2);border-radius:11px;
-    padding:14px 16px;cursor:pointer;transition:var(--t);box-shadow:0 2px 6px rgba(0,0,0,.35)}
-  .kp label:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(0,0,0,.45)}
-  .kp input{width:22px;height:22px;flex:none;margin:1px 0 0;accent-color:#DCB45C;cursor:pointer}
-  .kp .txt{font-size:15.5px}
-  .kp input:checked ~ .txt{color:var(--gold-lt)}
-  .tally{font-size:15px;font-weight:800;color:var(--gold);margin:16px 0 0}
+  .kp label{display:flex;gap:13px;align-items:flex-start;background:var(--sub);border-radius:11px;
+    padding:14px 16px;cursor:pointer;transition:var(--t);box-shadow:var(--lift)}
+  .kp label:hover{transform:translateY(-2px);box-shadow:var(--lift-2)}
+  .kp input{width:22px;height:22px;flex:none;margin:1px 0 0;accent-color:#6B1616;cursor:pointer}
+  .kp .txt{font-size:15.5px;color:var(--ink)}
+  .kp input:checked ~ .txt{color:var(--terra-dark);font-weight:700}
+  .tally{font-size:15px;font-weight:800;color:var(--terra-dark);margin:16px 0 0}
 
   /* ---------- result ---------- */
-  .res{background:var(--navy-2);border-radius:12px;padding:18px 20px;margin-top:16px;
-       box-shadow:inset 0 0 0 2px rgba(220,180,92,.28)}
-  .res .sc{font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1}
+  .res{background:var(--sub);border-radius:12px;padding:18px 20px;margin-top:16px;
+       box-shadow:inset 0 0 0 2px rgba(184,146,74,.45)}
+  .res .sc{font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--ink);margin:0}
   .res .msg{margin:9px 0 0;font-size:15.5px;color:var(--ink)}
-  .res .whr{margin:11px 0 0;font-size:14px;color:var(--muted)}
-  .fail{color:var(--terra-lt);font-weight:700}
+  .res .whr{margin:11px 0 0;font-size:14px;color:var(--ink-3)}
+  .fail{color:#8A1010;font-weight:700}
 
-  .runline{font-size:14px;color:var(--muted);margin-top:6px}
-  .hidden{display:none !important}
+  /* ---------- floating clock ---------- */
+  .float{position:fixed;right:20px;bottom:20px;z-index:60;display:none;
+    background:var(--white);border-radius:16px;padding:13px 17px;
+    box-shadow:0 24px 46px -12px rgba(0,0,0,.6);align-items:center;gap:13px;color:var(--ink)}
+  .float.on{display:flex}
+  .float .ring{position:relative;width:46px;height:46px;flex:none}
+  .float .ring svg{width:46px;height:46px;transform:rotate(-90deg)}
+  .float .ring .bg{stroke:#E2E7ED;fill:none;stroke-width:5}
+  .float .ring .fg{stroke:#B8924A;fill:none;stroke-width:5;stroke-linecap:round;
+    transition:stroke-dashoffset 500ms linear}
+  .float .ring .ic{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:var(--gold-text)}
+  .float .ring .ic svg{width:19px;height:19px;transform:none}
+  .float .tt{font-variant-numeric:tabular-nums;font-weight:800;font-size:24px;letter-spacing:-.02em;
+    line-height:1;color:var(--ink)}
+  .float .tl{font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);
+    font-weight:800;margin-top:3px}
+  .float.up .tt{color:#8A1010}
+  .float.up .fg{stroke:#8A1010}
+  .float button{background:var(--sub);color:var(--ink);border:0;border-radius:9px;
+    font-family:var(--font);font-weight:800;font-size:13px;padding:9px 12px;cursor:pointer;
+    transition:var(--t);box-shadow:var(--lift)}
+  .float button:hover{transform:translateY(-2px);box-shadow:var(--lift-2)}
+  @media (max-width:520px){.float{right:12px;bottom:12px;padding:11px 13px;gap:10px}
+    .float .tt{font-size:20px}}
 
   footer{margin-top:44px;padding-top:22px;color:var(--muted-2);font-size:14px;
-    box-shadow:inset 0 1px 0 rgba(182,192,208,.18)}
+    box-shadow:inset 0 1px 0 rgba(182,192,208,.22)}
+  footer a{color:var(--gold-lt)}
 
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
-    #wheelRot{transition:none !important}
-    .chip,.opt,.big,.ghost,.cf,.kp label,.float button{transition:none}
-    .chip:hover,.opt:hover,.big:hover,.ghost:hover,.cf:hover,.kp label:hover,.float button:hover{transform:none}
+    .chip,.opt,.big,.ghost,.cf,.kp label,.tg,.float button{transition:none}
+    .chip:hover,.opt:hover,.big:hover,.ghost:hover,.cf:hover,.kp label:hover,.tg:hover,
+    .float button:hover{transform:none}
   }
   @media print{
     body{background:#fff;color:#08101F}
-    body::before,.float,.chips,.opts,.row,.custom,#s-setup,#s-wheel,footer{display:none !important}
-    .card{box-shadow:none;background:#fff}
+    body::before,.float,.chips,.opts,.row,.custom,.toggles,#s-setup,#s-wheel,footer{display:none !important}
+    .card{box-shadow:none}
+    h1,.lede,.runline{color:#08101F}
     .prompt-t{color:#6B1616}
   }
 </style>
@@ -288,6 +325,26 @@
           <button type="button" class="big" id="spinBtn">Spin the wheel</button>
           <button type="button" class="ghost" id="justGive">Just give me one</button>
         </div>
+
+        <div class="toggles">
+          <label class="tg">
+            <input type="checkbox" id="noRepeat">
+            <span>
+              <b>Do not repeat prompts I have already scored</b>
+              <i id="freshCount"></i>
+            </span>
+          </label>
+          <label class="tg">
+            <input type="checkbox" id="shortSpin">
+            <span>
+              <b>Skip the long spin</b>
+              <i>Lands in under a second instead of four.</i>
+            </span>
+          </label>
+          <p class="hint" id="repeatNote" style="margin:4px 0 0"></p>
+          <button type="button" class="mini hidden" id="clearSeen">Clear my history and put every prompt back on the wheel</button>
+        </div>
+
         <p class="sr" id="spinSay" role="status" aria-live="polite"></p>
       </div>
     </div>
@@ -323,7 +380,8 @@
       <button type="button" class="cf" data-conf="low" aria-pressed="false">
         <b>Thin</b><i>I could barely start</i></button>
     </div>
-    <div class="row"><button type="button" class="big" id="checkBtn" disabled>Check my answer</button></div>
+    <div class="row"><button type="button" class="big" id="checkBtn" aria-describedby="confWhy">Check my answer</button></div>
+    <p class="hint fail hidden" id="confWhy" role="status" style="margin:10px 0 0"></p>
   </section>
 
   <!-- ---------- 6. check ---------- -->
@@ -478,8 +536,48 @@
     }
   })();
   function saveChosen(){ lsSet(K_MODS, JSON.stringify(Object.keys(chosen))); }
-  function eligible(){
+
+  /* ---------- prompts already scored ----------
+     Marked when a score is SAVED, not when a prompt lands. Spinning
+     past one you did not fancy should not burn it: you never worked
+     it, so it is not done.
+
+     The list is prompt keys, "14:3", nothing about the student and
+     nothing about how they did. That lives in the evidence store. */
+  var K_SEEN = 'bio004-dump-seen';
+  var K_NOREP = 'bio004-dump-norepeat';
+  var seen = {};
+  (function(){
+    try{
+      var v = JSON.parse(lsGet(K_SEEN)||'[]');
+      if(Array.isArray(v)) v.forEach(function(k){ seen[k]=1; });
+    }catch(e){}
+  })();
+  function markSeen(key){
+    if(!key || seen[key]) return;
+    seen[key] = 1;
+    lsSet(K_SEEN, JSON.stringify(Object.keys(seen)));
+  }
+  /* Default ON. A student who wants to grind one prompt can turn it
+     off, but the useful default for retrieval practice is breadth. */
+  var noRepeat = lsGet(K_NOREP) !== '0';
+
+  function inScope(){
     return ITEMS.filter(function(it){ return chosen[it.group]; });
+  }
+  function eligible(){
+    var all = inScope();
+    if(!noRepeat) return all;
+    var fresh = all.filter(function(it){ return !seen[it.key]; });
+    /* Running out is not an error state. If every prompt in the
+       chosen modules has been scored, the wheel goes back to all of
+       them rather than going blank, and the line underneath says so. */
+    return fresh.length ? fresh : all;
+  }
+  function exhausted(){
+    if(!noRepeat) return false;
+    var all = inScope();
+    return all.length > 0 && all.every(function(it){ return seen[it.key]; });
   }
 
   function renderChips(){
@@ -496,12 +594,39 @@
     countUp();
   }
   function countUp(){
+    var all = inScope().length;
+    var done = inScope().filter(function(it){ return seen[it.key]; }).length;
     var n = eligible().length;
-    $('poolCount').textContent = n
-      ? n + ' prompt' + (n===1?'':'s') + ' in your pool.'
+
+    $('poolCount').textContent = all
+      ? all + ' prompt' + (all===1?'':'s') + ' in your pool'
+        + (done ? ', ' + done + ' already scored.' : '.')
       : 'Nothing picked yet, so there is nothing to spin for. Choose at least one.';
-    $('spinBtn').disabled = !n;
-    $('justGive').disabled = !n;
+
+    var fc = $('freshCount');
+    if(fc){
+      fc.textContent = all
+        ? (all - done) + ' of ' + all + ' still to do.'
+        : 'Pick some modules first.';
+    }
+
+    var note = $('repeatNote'), clr = $('clearSeen');
+    if(note && clr){
+      if(exhausted()){
+        note.textContent = 'You have scored every prompt in the modules you picked, so the wheel is '
+          + 'putting all of them back. Repeating one you did weeks ago is real practice, not a fault.';
+        clr.classList.remove('hidden');
+      } else if(done){
+        note.textContent = '';
+        clr.classList.remove('hidden');
+      } else {
+        note.textContent = '';
+        clr.classList.add('hidden');
+      }
+    }
+
+    $('spinBtn').disabled = !n || spinning;
+    $('justGive').disabled = !n || spinning;
   }
 
   $('modChips').addEventListener('click', function(e){
@@ -563,7 +688,6 @@
   var COLORS = ['#16243B','#1E3049','#16243B','#1E3049','#16243B','#1E3049','#16243B','#1E3049','#16243B','#1E3049'];
   var onWheel = [];
   var spinning = false;
-  var turns = 0;
   var current = null;
 
   function pick(n){
@@ -637,6 +761,44 @@
     try{ return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; }
   }
 
+  /* One place that moves the wheel, so nothing can disagree about
+     where it is. rotate(angle cx cy) carries its own centre. */
+  var angle = 0;
+  function setAngle(a){
+    angle = a;
+    $('wheelRot').setAttribute('transform', 'rotate(' + a.toFixed(3) + ' 160 160)');
+  }
+
+  /* Slows the way a real wheel slows: fast at first, then a long
+     crawl into the last few degrees. */
+  function easeOut(t){ return 1 - Math.pow(1 - t, 4); }
+
+  var SPIN_MS = 4200;
+
+  /* Three ways this ends up short: the browser was told to reduce
+     motion, or the student ticked the box, or they untick it and
+     override the browser. An explicit choice beats an inherited one. */
+  var K_ANIM = 'bio004-dump-anim';
+  function animOff(){
+    var v = lsGet(K_ANIM);
+    if(v === 'short') return true;
+    if(v === 'full') return false;
+    return reduceMotion();
+  }
+
+  function spinTo(a1, done){
+    var a0 = angle;
+    var t0 = null;
+    function frame(now){
+      if(t0 === null) t0 = now;
+      var t = Math.min(1, (now - t0) / SPIN_MS);
+      setAngle(a0 + (a1 - a0) * easeOut(t));
+      if(t < 1){ window.requestAnimationFrame(frame); }
+      else { setAngle(a1); done(); }
+    }
+    window.requestAnimationFrame(frame);
+  }
+
   function spin(){
     if(spinning) return;
     var list = pick(SEGN);
@@ -649,19 +811,38 @@
     var target = 360 - (idx*step + step/2);
     $('spinSay').textContent = 'Spinning.';
 
-    if(reduceMotion()){
-      $('wheelRot').style.transform = 'rotate('+target+'deg)';
-      land(idx); return;
+    /* Whole turns are counted from where the wheel already is, so a
+       second spin never jumps backwards before it starts. */
+    var landing = target + 360 * (Math.floor(angle/360) + 5);
+
+    if(!window.requestAnimationFrame){
+      setAngle(landing);
+      land(idx);
+      return;
     }
+
+    /* REDUCED MOTION USED TO MEAN NO SPIN AT ALL.
+
+       Anyone with reduce motion switched on in Windows or macOS,
+       which Chrome honours, pressed Spin and the wheel teleported.
+       The prompt appeared, so nothing was broken, but the button
+       looked dead. Reduce motion is a request to cut large sweeping
+       movement, not to remove the feedback that a control worked, so
+       it now turns a fraction of a turn over under a second instead
+       of five turns over four. The toggle underneath overrides it
+       either way. */
+    var quick = animOff();
+    SPIN_MS = quick ? 700 : 4200;
+    if(quick) landing = target + 360 * Math.floor(angle/360) + (angle % 360 > target ? 360 : 0);
+
     spinning = true;
     $('spinBtn').disabled = true;
-    turns += 5;
-    $('wheelRot').style.transform = 'rotate('+(turns*360 + target)+'deg)';
-    window.setTimeout(function(){
+    spinTo(landing, function(){
       spinning = false;
+      SPIN_MS = 4200;
       $('spinBtn').disabled = !eligible().length;
       land(idx);
-    }, 4700);
+    });
   }
 
   $('spinBtn').addEventListener('click', spin);
@@ -672,23 +853,19 @@
      with. Useful on a phone, and the only route that works for anyone
      who does not want to sit through a spin every time. */
   $('justGive').addEventListener('click', function(){
+    if(spinning) return;
     var list = pick(SEGN);
     if(!list.length) return;
     drawWheel(list);
     var idx = Math.floor(Math.random()*list.length);
     var step = 360/list.length;
-    var target = 360 - (idx*step + step/2);
-    var g = $('wheelRot');
-    var keep = g.style.transition;
-    g.style.transition = 'none';
-    g.style.transform = 'rotate('+(turns*360 + target)+'deg)';
-    /* Read back a layout value so the browser applies the jump before
-       the transition goes back on, otherwise the next spin animates
-       from the old angle. */
-    void g.getBoundingClientRect();
-    g.style.transition = keep;
+    setAngle(target360(idx, list.length));
     land(idx);
   });
+  function target360(idx, n){
+    var step = 360/n;
+    return (360 - (idx*step + step/2)) + 360 * Math.floor(angle/360);
+  }
   $('reSpin').addEventListener('click', function(){ resetRound(); spin(); });
   $('againBtn').addEventListener('click', function(){ resetRound(); spin(); });
 
@@ -718,7 +895,7 @@
     $('s-check').classList.add('hidden');
     $('againRow').classList.add('hidden');
     $('resWrap').innerHTML = '';
-    $('checkBtn').disabled = true;
+    $('confWhy').classList.add('hidden');
     $('confBtns').querySelectorAll('.cf').forEach(function(b){ b.setAttribute('aria-pressed','false'); });
   }
 
@@ -791,12 +968,30 @@
     this.querySelectorAll('.cf').forEach(function(x){
       x.setAttribute('aria-pressed', x===b ? 'true' : 'false');
     });
-    $('checkBtn').disabled = false;
+    $('confWhy').classList.add('hidden');
   });
 
   /* ---------- check ---------- */
   $('checkBtn').addEventListener('click', function(){
     if(!current) return;
+
+    /* A DISABLED BUTTON THAT WILL NOT SAY WHY IS A DEAD BUTTON.
+
+       This was disabled until a confidence rating was picked, with
+       nothing on screen explaining the connection. Pressing it did
+       nothing and looked broken, which is a good way to never find
+       out the answer checklist exists at all. It is live now and
+       tells you what it wants. */
+    if(!conf){
+      var why = $('confWhy');
+      why.textContent = 'Pick one of the three above first. It has to be answered before you see the '
+                      + 'key points, or it is a rating of the answer rather than of your memory.';
+      why.classList.remove('hidden');
+      var first = $('confBtns').querySelector('.cf');
+      if(first) first.focus();
+      return;
+    }
+    $('confWhy').classList.add('hidden');
     var h='';
     current.l.forEach(function(pt,i){
       h += '<li><label><input type="checkbox" data-k="'+i+'">'
@@ -850,6 +1045,8 @@
     saved = true;
     this.disabled = true;
     this.textContent = 'Saved';
+    markSeen(current.key);
+    countUp();
     bumpRun(pct);
 
     var msg;
@@ -900,6 +1097,26 @@
     $('runline').textContent = r.n + ' brain dump' + (r.n===1?'':'s') + ' practiced, averaging '
       + Math.round(r.sum/r.n) + ' percent of the key points.';
   }
+
+  /* ---------- toggles ---------- */
+  $('noRepeat').checked = noRepeat;
+  $('noRepeat').addEventListener('change', function(){
+    noRepeat = this.checked;
+    lsSet(K_NOREP, noRepeat ? '1' : '0');
+    countUp();
+  });
+
+  $('shortSpin').checked = animOff();
+  $('shortSpin').addEventListener('change', function(){
+    lsSet(K_ANIM, this.checked ? 'short' : 'full');
+  });
+
+  $('clearSeen').addEventListener('click', function(){
+    seen = {};
+    lsSet(K_SEEN, '[]');
+    countUp();
+    $('spinSay').textContent = 'History cleared. Every prompt is back on the wheel.';
+  });
 
   /* ---------- go ---------- */
   renderChips();
