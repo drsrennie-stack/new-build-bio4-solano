@@ -45,7 +45,10 @@
   .cover{background:var(--navy-darkest);border-radius:var(--radius);padding:clamp(24px,4.5vw,42px);color:#fff;border-top:3px solid #1E2A47;}
   .cover-eyebrow{font-family:var(--font-eyebrow);font-size:.78rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-soft);margin:0 0 12px;}
   .cover-title{font-family:var(--font-display);font-weight:800;font-size:clamp(28px,5vw,42px);line-height:1.05;letter-spacing:-.02em;color:#fff;margin:0;}
-  .cover-title span{color:var(--terra);}
+  /* Maroon on this navy is 2.07:1 and fails even the 3:1 large-text
+     floor, at 42px bold. Gold is 9.71:1 on the same navy. Same change
+     already made on the calendar cover and the Today headline. */
+  .cover-title span{color:var(--gold);}
   .cover-section{font-family:var(--font-display);font-weight:700;font-size:clamp(1.05rem,2.4vw,1.35rem);color:var(--gold-soft);margin:10px 0 0;letter-spacing:.01em;}
   .cover-meta{display:flex;flex-wrap:wrap;gap:10px 12px;margin:18px 0 0;}
   .chipm{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:7px 14px;font-family:var(--font-display);font-weight:600;font-size:.86rem;color:#fff;}
@@ -108,7 +111,13 @@
   .tag.open{background:var(--navy);color:#fff;border-color:var(--navy);}
   .tag.today{background:var(--gold);color:#08101F;border-color:var(--gold);}
   .caret{flex:0 0 auto;color:var(--terra-dark);transition:transform 200ms ease;font-size:1.1rem;}
-  .sess[aria-expanded-row="true"] .caret{transform:rotate(90deg);}
+  /* Was aria-expanded-row, an attribute that does not exist. ARIA
+     ignores anything it does not recognise, so this was only ever a
+     CSS hook wearing an ARIA costume, and every validator flagged it.
+     The real state is already on the button as aria-expanded, which
+     is where a screen reader looks, so this is a rename and nothing
+     about the behaviour changes. */
+  .sess[data-open="true"] .caret{transform:rotate(90deg);}
   .sess.noexp .caret{visibility:hidden;}
 
   /* today / this-week accents */
@@ -123,7 +132,7 @@
 
   /* ---------- DETAIL PANEL ---------- */
   .detail{background:var(--offwhite);border-top:1px dashed var(--navy-tint);padding:0 16px;max-height:0;overflow:hidden;transition:max-height 260ms ease;}
-  .sess[aria-expanded-row="true"] .detail{max-height:640px;}
+  .sess[data-open="true"] .detail{max-height:640px;}
   .detail-inner{padding:16px 0 20px 70px;}
   .detail-block{margin:0 0 14px;}
   .detail-block:last-child{margin-bottom:0;}
@@ -349,7 +358,7 @@ const SCHEDULE = [
       if(!canExp)cls+=' noexp';
       if(isToday)cls+=' is-today'; else if(isWeek)cls+=' is-week';
       const rowId='w'+wk+'s'+i;
-      html+='<div class="'+cls+'" data-type="'+s.type+'" aria-expanded-row="false">';
+      html+='<div class="'+cls+'" data-type="'+s.type+'" data-open="false">';
       html+='<button class="sess-btn" type="button" '+(canExp?'aria-expanded="false" aria-controls="'+rowId+'"':'aria-disabled="true"')+'>';
       html+='<span class="date-badge"><span class="dow">'+s.day+'</span><span class="dnum">'+s.dt.getDate()+'</span><span class="mon">'+MONTHS[s.dt.getMonth()]+'</span></span>';
       html+='<span class="sess-main"><span class="sess-topic">'+escapeHTML(s.topic)+'</span><span class="sess-tags">';
@@ -372,8 +381,8 @@ const SCHEDULE = [
     if(!btn)return;
     const row=btn.closest('.sess');
     if(row.classList.contains('noexp'))return;
-    const open=row.getAttribute('aria-expanded-row')==='true';
-    row.setAttribute('aria-expanded-row',open?'false':'true');
+    const open=row.getAttribute('data-open')==='true';
+    row.setAttribute('data-open',open?'false':'true');
     btn.setAttribute('aria-expanded',open?'false':'true');
   });
 

@@ -70,7 +70,10 @@
   .p-loop{background:#8B3A2E;color:#fff}
   .p-over{background:#DCB45C;color:#0B1530}
   .p-thin{background:#fff;color:#3A4249;box-shadow:inset 0 0 0 1px #6A737B}
-  .pct{font-weight:800;font-size:15px;min-width:52px;text-align:right}
+  .pct{font-weight:800;font-size:15px;min-width:62px;text-align:right;display:inline-block}
+  .pctk{display:block;font-family:'DM Sans',sans-serif;font-size:9.5px;font-weight:700;
+    letter-spacing:.1em;text-transform:uppercase;color:#4A5C6B;margin-top:1px}
+  .colkey{margin:0 0 10px;font-size:13px;color:#3D4757}
   .empty{padding:20px 16px;opacity:.8;font-size:14.5px}
   .missed .row{background:#FEFCF7}
   .note{font-size:13.5px;opacity:.82;margin:10px 2px 0}
@@ -100,6 +103,7 @@
 
   <section class="sec" aria-labelledby="h-missed">
     <h2 class="sh" id="h-missed">In play this week, not touched today</h2>
+    <p class="colkey">The number on the right is your best score on that competency, not how much is left.</p>
     <div class="card missed" id="missed" role="list" aria-labelledby="h-missed"></div>
     <p class="note" id="missednote"></p>
   </section>
@@ -274,11 +278,27 @@
   var box = document.getElementById('missed');
   fill(box, missed.slice(0, 40).map(function (c) {
     var s = sum[c.id];
-    var tag = !s ? '<span class="pill p-thin">Never attempted</span>'
-                 : '<span class="pct">' + (s.pct === null ? 'Not scored' : s.pct + '%') + '</span>';
+    /* A BARE PERCENTAGE IN THIS LIST READ TWO WAYS.
+       Under a heading that says "not touched today", 91% with no label
+       could as easily mean 91% still to do. It is the opposite: it is
+       the share of items answered correctly, the best score so far.
+       It says so now.
+
+       It also ignored the thin rule the rest of the board runs on. A
+       competency answered once, correctly, printed 100%, which is not
+       a score, it is one lucky question. Under three attempts this
+       says how many attempts there are instead of inventing a
+       percentage, exactly like the finished-today list above it. */
+    var tag;
+    if (!s)                       tag = '<span class="pill p-thin">Never attempted</span>';
+    else if (s.pct === null)      tag = '<span class="pill p-thin">Not scored</span>';
+    else if (s.thin)              tag = '<span class="pill p-thin">' + s.of + (s.of === 1 ? ' try' : ' tries') + ', too few to score</span>';
+    else                          tag = '<span class="pct">' + s.pct + '%<span class="pctk">scored</span></span>';
     var label = c.name + ', week ' + c.week + ', ' + (c.system || '') + ', ' +
                 (!s ? 'never attempted'
-                    : 'best so far ' + (s.pct === null ? 'not scored' : s.pct + ' percent'));
+                    : s.pct === null ? 'not scored'
+                    : s.thin ? (s.of + ' attempts so far, too few to score')
+                    : 'best score so far ' + s.pct + ' percent');
     return '<div class="row" role="listitem" aria-label="' + esc(label) + '">' +
            '<span class="n" aria-hidden="true">' + esc(c.name) +
            '<br><span class="sysn">Week ' + c.week + ' · ' + esc(c.system || '') + '</span></span>' +
