@@ -408,8 +408,11 @@
      it. Lab sprints are split out of the lab list because they are the
      thing students are told to drill, not another page to read. */
   function materials(ex){
-    var g = { sheet:[], video:[], lab:[], sprint:[], read:[] };
+    var g = { list:[], sheet:[], video:[], lab:[], sprint:[], read:[] };
     var seen = {};
+    /* exam 1 covers module 1, and so on down */
+    g.list.push({ u:'module-' + ex.n + '-structure-list.html',
+                  t:'Every structure you are responsible for, Module ' + ex.n });
     function add(bucket, o){
       if(!o || !o.u || seen[o.u]) return;
       seen[o.u] = 1;
@@ -454,7 +457,12 @@
     var g = materials(x);
     var dt = parse(x.d);
 
+    /* Modules 2, 4 and 5 had a 200KB lab structure list each and nothing
+       in the course linked to them: three of the five were unreachable
+       except by typing the URL. Exam N covers module N, so this is where
+       they belong. */
     var GROUPS = [
+      ['list',   'Lab structure list'],
       ['sheet',  'Pre-work sheets'],
       ['video',  'Concept videos'],
       ['read',   'Notes and workbooks'],
