@@ -1305,6 +1305,45 @@ function loopAgg(){
   return agg;
 }
 
+/* SELF-SCORED WORK, FROM THE EVIDENCE LOG.
+
+   Cards and Loops are folded in from their own native stores above.
+   Everything else writes one shape into bio004-evidence-v1:
+     { comp, source, got, of, conf, at }
+   and until now nothing read it. The drawing canvas has written
+   there since it was built, and brain dump practice writes there
+   too. Both were landing in a store the weak spot board never
+   opened, so a student could draw a structure from memory, score
+   themselves patchy, and watch the board keep saying "no
+   weaknesses flagged".
+
+   Card and loop entries are SKIPPED here on purpose. They are
+   already counted from bio004-recall-v2 and loopsEngine_v1, and
+   counting them twice would weight a card answer double.
+
+   A self-score is deliberate evidence, so its confidence rating is
+   allowed to pull the competency down even when the raw percentage
+   looks acceptable: someone who ticked most of the key points but
+   said they could barely start is telling you something the
+   percentage is hiding. */
+function selfScoredAgg(){
+  var agg = {};
+  var E = window.BIO004_EVIDENCE;
+  if(!E || !E.all) return agg;
+  var log = [];
+  try{ log = E.all() || []; }catch(e){ return agg; }
+  log.forEach(function(e){
+    if(!e || !e.comp || !e.of) return;
+    if(e.source === 'card' || e.source === 'loop') return;
+    var g = agg[e.comp] || (agg[e.comp] = {a:0, c:0, seen:'', lowConf:false});
+    g.a += e.of;
+    g.c += Math.max(0, Math.min(e.of, e.got || 0));
+    if(e.at && e.at > g.seen) g.seen = e.at;
+    if(e.conf === 'low' && (e.got || 0) < e.of) g.lowConf = true;
+  });
+  return agg;
+}
+
 function ingestRecallCards(){
   var MAP = window.BIO004_CARD_COMPETENCY_MAP;
   var agg = {};   /* competency id -> {a: attempts, c: correct, seen: latest ISO} */
@@ -1349,6 +1388,8 @@ function ingestRecallCards(){
 
   /* Loops folds in here, summed with cards rather than replacing them. */
   mergeAgg(agg, loopAgg());
+  /* Drawing and brain dump self-scores fold in the same way. */
+  mergeAgg(agg, selfScoredAgg());
 
   var changed = false;
   allComps().forEach(function(x){
@@ -1356,6 +1397,11 @@ function ingestRecallCards(){
     var m = Math.round(g.c / g.a * 100);
     x.c.mastery = m;
     x.c.conf = m >= 75 ? 'high' : m >= 50 ? 'med' : 'low';
+    /* A student who ticked most of the key points but told us before
+       the reveal that they could barely start has said something the
+       percentage is hiding. The rating wins. */
+    if(g.lowConf && x.c.conf === 'high') x.c.conf = 'med';
+    else if(g.lowConf) x.c.conf = 'low';
     if(g.seen) x.c.last = g.seen;
     changed = true;
   });
@@ -4045,7 +4091,7 @@ document.addEventListener('keydown',function(e){
 });
 
 /* live sync from the spaced-recall engine (other tab writes the shared store) */
-window.addEventListener('storage',function(e){if(e.key===RECALL_KEY){if(ingestRecall())renderAll();}});
+window.addEventListener('storage',function(e){if(e.key===RECALL_KEY||e.key==='bio004-evidence-v1'||e.key==='bio004-recall-v2'||e.key==='loopsEngine_v1'){if(ingestRecall())renderAll();}});
 window.addEventListener('focus',function(){if(ingestRecall())renderAll();});
 
 /* section nav active state */

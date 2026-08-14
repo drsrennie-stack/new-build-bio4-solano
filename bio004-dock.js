@@ -146,11 +146,17 @@
              url: BASE + 'mastery-canvas.html', icon: 'pencil', tone: 'gold', qr: 'canvas', kw: 'draw drawing canvas memory checklist' });
     t.push({ g: 'Study tools', name: 'What I got done today', sub: 'And what you meant to do and did not',
              url: BASE + 'bio004-day-review.html', icon: 'target', tone: 'terra', qr: 'today', kw: 'today review day summary time missed' });
-    /* Both of these existed and nothing in the course linked to them. The
-       brain dump bank is the prompt set the in-class brain dumps run off,
-       so it belongs beside the other study tools rather than nowhere. */
-    t.push({ g: 'Study tools', name: 'Brain dump bank', sub: 'Every brain dump prompt, to practise before you meet one in class',
-             url: BASE + 'bio004-braindump-bank-fall2026.html', icon: 'pencil', tone: 'navy', kw: 'brain dump bank prompts practice blank page' });
+    /* THE BANK IS NOT THE STUDENT TOOL.
+
+       This used to point at bio004-braindump-bank-fall2026.html, which is
+       the printable list of every prompt with its answer key beside it,
+       built to run the class from. Handing a student the answer key and
+       calling it practice is the one thing a brain dump cannot survive.
+       The practice tool spins for one prompt, times it, and keeps the key
+       hidden until they say they are done. */
+    t.push({ g: 'Study tools', name: 'Brain dump practice', sub: 'Spin for a prompt, set your clock, write it on paper, then check yourself',
+             url: BASE + 'brain-dump-practice.html', icon: 'pencil', tone: 'navy', qr: 'braindump',
+             kw: 'brain dump practice prompt wheel spin timer paper retrieval blank page' });
     /* soon:true pulls a tile out of its group and drops it into Coming
        soon at the very bottom, dimmed and not clickable. Set it on
        anything that exists but is not finished, rather than hiding it,
