@@ -195,6 +195,24 @@
     box-shadow:0 12px 24px -6px rgba(8,16,31,.42)}
   .cf[aria-pressed="true"] i{color:#C6CEDA}
 
+  /* ---------- check it against the course material ---------- */
+  .ref{background:var(--sub);border-radius:12px;padding:17px 19px;margin:0 0 18px;
+       box-shadow:inset 0 0 0 2px rgba(184,146,74,.45)}
+  .ref h3{margin:0 0 4px;font-size:15.5px}
+  .ref p.rl{margin:0 0 12px;font-size:14px;color:var(--ink-3)}
+  .ref-links{display:flex;flex-wrap:wrap;gap:9px}
+  .ref-a{display:inline-flex;flex-direction:column;gap:2px;background:var(--white);color:var(--ink);
+    text-decoration:none;font-size:13.5px;padding:11px 15px;border-radius:9px;
+    box-shadow:var(--lift);transition:var(--t);max-width:100%}
+  .ref-a:hover{transform:translateY(-2px);box-shadow:var(--lift-2)}
+  .ref-a b{font-weight:800;font-size:14.5px;color:var(--ink)}
+  .ref-a span{color:var(--ink-3)}
+  .figs{margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+  .figs figure{margin:0;background:var(--white);border-radius:10px;padding:10px;box-shadow:var(--lift)}
+  .figs img{width:100%;height:auto;display:block;border-radius:6px}
+  .figs figcaption{font-size:12.5px;color:var(--ink-3);margin-top:8px;line-height:1.4}
+  .figs a.zoom{display:inline-block;margin-top:6px;font-size:12.5px;font-weight:700;color:var(--terra-dark)}
+
   /* ---------- key points ---------- */
   .kp{list-style:none;margin:14px 0 0;padding:0}
   .kp li{margin:0 0 9px}
@@ -387,6 +405,7 @@
   <!-- ---------- 6. check ---------- -->
   <section class="card hidden" id="s-check" aria-labelledby="h-check" tabindex="-1">
     <div class="card-head"><span class="step-k">Step 5</span><h2 id="h-check">What the answer should have had</h2></div>
+    <div id="refWrap"></div>
     <p class="hint">Tick every point you actually got down on paper. Be honest with yourself here, a generous
        tick only hides the gap from you.</p>
     <ul class="kp" id="kpList"></ul>
@@ -438,6 +457,7 @@
 <script src="mastery-evidence.js"></script>
 <script src="bio004-braindump-data.js"></script>
 <script src="braindump-competency-map.js"></script>
+<script src="braindump-reference-map.js"></script>
 
 <script>
 (function(){
@@ -446,6 +466,7 @@
   var B = window.BRAINDUMP_BANK || {pools:{}};
   var MAP = window.BIO004_DUMP_COMPETENCY_MAP || {};
   var COMPS = window.BIO004_COMPETENCIES || [];
+  var REF = window.BIO004_DUMP_REFERENCE || {notes:{}, figs:{}};
   var COMP_NAME = {};
   COMPS.forEach(function(c){ COMP_NAME[c.id] = c.name; });
 
@@ -472,6 +493,8 @@
       ITEMS.push({
         key: k+':'+i,
         t: it.t, p: it.p, l: it.l||[],
+        notes: (REF.notes && REF.notes[k+':'+i]) || [],
+        figs:  (REF.figs  && REF.figs[k+':'+i])  || [],
         group: p.kind === 'team' ? 'team' : (p.module || 'Other'),
         label: p.label || '', week: p.week || null,
         comps: MAP[k+':'+i] || []
@@ -895,6 +918,7 @@
     $('s-check').classList.add('hidden');
     $('againRow').classList.add('hidden');
     $('resWrap').innerHTML = '';
+    $('refWrap').innerHTML = '';
     $('confWhy').classList.add('hidden');
     $('confBtns').querySelectorAll('.cf').forEach(function(b){ b.setAttribute('aria-pressed','false'); });
   }
@@ -1003,6 +1027,7 @@
         + '</label></li>';
     }
     $('kpList').innerHTML = h;
+    renderRef();
     saved = false;
     $('saveBtn').disabled = false;
     $('saveBtn').textContent = 'Save this to my weak spot board';
@@ -1012,6 +1037,51 @@
     $('s-check').focus();
     try{ $('s-check').scrollIntoView({block:'start'}); }catch(e){}
   });
+
+  /* THE CHECKLIST IS NOT THE WHOLE CHECK.
+
+     It can tell you whether you wrote the word "metaphysis". It
+     cannot tell you whether you put it in the right place on the
+     bone. So the section of the notes the prompt came from opens
+     beside this, deep linked to its own heading, and where the
+     prompt asked for something visual the figure comes with it.
+
+     Both are the course's own material. Nothing here is a rewrite
+     of the notes, because a rewrite is a second version to keep in
+     step with the first. */
+  function renderRef(){
+    var wrap = $('refWrap');
+    if(!current || (!current.notes.length && !current.figs.length)){ wrap.innerHTML = ''; return; }
+
+    var h = '<div class="ref">';
+    h += '<h3>Check it against the notes</h3>';
+    h += '<p class="rl">Your own notes for this, opened at the right section. Look after you have '
+       + 'ticked, not before, or you are marking the notes rather than your memory.</p>';
+
+    if(current.notes.length){
+      h += '<div class="ref-links">';
+      current.notes.forEach(function(n){
+        h += '<a class="ref-a" href="' + esc(n.f) + '#' + esc(n.id) + '" target="bio004-ref">'
+           + '<b>' + esc(n.t) + '</b><span>' + esc(n.p) + '</span>'
+           + '<span class="sr">, opens beside this page</span></a>';
+      });
+      h += '</div>';
+    }
+
+    if(current.figs.length){
+      h += '<div class="figs">';
+      current.figs.forEach(function(f){
+        h += '<figure><img src="' + esc(f.u) + '" alt="' + esc(f.a) + '" loading="lazy">'
+           + '<figcaption>' + esc(f.a) + '</figcaption>'
+           + '<a class="zoom" href="' + esc(f.u) + '" target="bio004-ref">See it full size'
+           + '<span class="sr">, opens beside this page</span></a></figure>';
+      });
+      h += '</div>';
+    }
+
+    h += '</div>';
+    wrap.innerHTML = h;
+  }
 
   function gotOf(){
     var boxes = $('kpList').querySelectorAll('input[type=checkbox]');
