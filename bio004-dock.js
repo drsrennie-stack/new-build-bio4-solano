@@ -151,8 +151,13 @@
        so it belongs beside the other study tools rather than nowhere. */
     t.push({ g: 'Study tools', name: 'Brain dump bank', sub: 'Every brain dump prompt, to practise before you meet one in class',
              url: BASE + 'bio004-braindump-bank-fall2026.html', icon: 'pencil', tone: 'navy', kw: 'brain dump bank prompts practice blank page' });
-    t.push({ g: 'Study tools', name: 'Repair Round', sub: 'The in-class repair activity, and the capture sheet that goes with it',
-             url: BASE + 'repair-round-activity.html', icon: 'target', tone: 'gold', kw: 'repair round activity capture sheet pairs in class' });
+    /* soon:true pulls a tile out of its group and drops it into Coming
+       soon at the very bottom, dimmed and not clickable. Set it on
+       anything that exists but is not finished, rather than hiding it,
+       so students can see what is on the way. */
+    t.push({ g: 'Study tools', name: 'Repair Round', sub: 'The in-class repair activity, still being built',
+             url: BASE + 'repair-round-activity.html', icon: 'target', tone: 'gold', soon: true,
+             kw: 'repair round activity capture sheet pairs in class' });
 
     t.push({ g: 'Reference', name: 'Digital Atlas', sub: 'Turn the structures around and look at them',
              url: 'https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02', icon: 'globe', tone: 'gold', qr: 'atlas', ext: true, kw: 'atlas 3d explore' });
@@ -244,6 +249,19 @@
 '.bd-n{display:block;font-weight:800;font-size:14px;color:#fff;letter-spacing:-.01em}',
 '.bd-s{display:block;font-size:11.5px;line-height:1.35;color:#fff;opacity:.86;margin-top:2px}',
 '.bd-ext{font-size:10px;color:#F2E2B8;margin-left:5px}',
+'/* COMING SOON.',
+'   Dimmed with solid colours rather than opacity: an opacity on the tile',
+'   would drag the name and the note down with it, and that is the exact',
+'   contrast bug being swept out of this codebase. #C3CAD6 is 8.9:1 on the',
+'   dock navy and #98A3B4 is 5.6:1, so both still clear AA while plainly',
+'   reading as not-yet. */',
+'.bd-tile.soon{background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.09);cursor:default}',
+'.bd-tile.soon:hover{transform:none;background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.09)}',
+'.bd-tile.soon .bd-n{color:#C3CAD6}',
+'.bd-tile.soon .bd-s{color:#98A3B4;opacity:1}',
+'.bd-tile.soon .bd-ic{filter:grayscale(.75)}',
+'.bd-soon{display:inline-block;margin-left:7px;font-size:9.5px;font-weight:800;letter-spacing:.12em;',
+'  text-transform:uppercase;color:#0B1530;background:#C3CAD6;border-radius:999px;padding:2px 7px;vertical-align:1px}',
 
 '.bd-qrb{position:absolute;z-index:2;top:8px;right:8px;width:26px;height:26px;border-radius:8px;border:0;cursor:pointer;',
 '  background:rgba(255,255,255,.14);color:#fff;display:flex;align-items:center;justify-content:center;padding:0}',
@@ -345,6 +363,15 @@
       return;
     }
 
+    /* Anything flagged soon leaves its own group and collects at the end
+       under one heading, so the tools that work are not interleaved with
+       the ones that do not. */
+    var SOON_G = 'Coming soon';
+    var ready = list.filter(function (t) { return !t.soon; });
+    var soon  = list.filter(function (t) { return t.soon; });
+    soon.forEach(function (t) { t.g = SOON_G; });
+    list = ready.concat(soon);
+
     var groups = [], seen = {};
     list.forEach(function (t) { if (!seen[t.g]) { seen[t.g] = []; groups.push(t.g); } seen[t.g].push(t); });
 
@@ -352,6 +379,17 @@
     groups.forEach(function (g) {
       html += '<p class="bd-g">' + esc(g) + '</p><div class="bd-grid">';
       seen[g].forEach(function (t) {
+        /* Not a link. A tile that goes somewhere unfinished is worse than
+           one that plainly says it is not ready yet. */
+        if (t.soon) {
+          html += '<div class="bd-cell"><div class="bd-tile soon">' +
+            '<span class="bd-ic ' + t.tone + '">' + icon(t.icon) + '</span>' +
+            '<span class="bd-tx"><span class="bd-n">' + esc(t.name) +
+              '<span class="bd-soon">Soon</span></span>' +
+            '<span class="bd-s">' + esc(t.sub) + '</span></span>' +
+          '</div></div>';
+          return;
+        }
         var target = t.ext ? ' target="_blank" rel="noopener"' : ' target="_top"';
         html += '<div class="bd-cell">' +
           '<a class="bd-tile" href="' + esc(t.url) + '"' + target + '>' +
