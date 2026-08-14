@@ -98,6 +98,14 @@
       'digital-device-policy-agreement.html', 'digital-device-policy.html'
     ];
     if (deny.indexOf(f) !== -1) return true;
+    /* A STUDY GUIDE IS A CHECKLIST, NOT AN ARTICLE.
+       Whether one got collapsed depended only on its length: four of the
+       sixteen cross the 1,200-word line and turned into accordions while
+       the other twelve did not, so the same kind of page behaved two
+       different ways for no reason a student could see. Collapsed
+       sections also do not print, and these are printed. All sixteen are
+       left open. */
+    if (/-study-guide\.html$/.test(f)) return true;
     if (/^mastery-os|^histology-escape-room|^slides-|-concept-videos\.html$/.test(f)) return true;
     return false;
   }

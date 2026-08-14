@@ -74,43 +74,43 @@ var M1LIST = C + 'module-1-structure-list.html';
 var introPages = {
   notes:        C + 'm1-intro-notes.html',
   worksheet:    C + 'm1-intro-worksheet.html',
-  labSprint:    C + 'week-1-lab-sprints.html',
+  labSprint:    C + 'bio004-course-calendar.html',
   structureList:M1LIST, recall:RECALL, loops:LOOPS
 };
 var cavityPages = {
   notes:        C + 'm1-cavities-notes.html',
   worksheet:    C + 'm1-intro-worksheet.html',   /* no separate cavities worksheet */
-  labSprint:    C + 'week-1-lab-sprints.html',
+  labSprint:    C + 'bio004-course-calendar.html',
   structureList:M1LIST, recall:RECALL, loops:LOOPS
 };
 var cellPages = {
   notes:        C + 'm1-cell-notes.html',
   worksheet:    C + 'm1-cell-worksheet.html',
-  labSprint:    C + 'week-1-lab-sprints.html',
+  labSprint:    C + 'bio004-course-calendar.html',
   structureList:M1LIST, recall:RECALL, loops:LOOPS
 };
 var tissuePagesW1 = {
   notes:        C + 'm1-tissues-notes.html',
   worksheet:    C + 'm1-tissues-worksheet.html',
-  labSprint:    C + 'week-1-lab-sprints.html',
+  labSprint:    C + 'bio004-course-calendar.html',
   structureList:M1LIST, recall:RECALL, loops:LOOPS
 };
 var tissuePagesW2 = {
   notes:        C + 'm1-tissues-notes.html',
   worksheet:    C + 'm1-tissues-worksheet.html',
-  labSprint:    C + 'week-2-lab-sprints.html',
+  labSprint:    C + 'bio004-course-calendar.html',
   structureList:M1LIST, recall:RECALL, loops:LOOPS
 };
 var tissuePagesW3 = {
   notes:        C + 'm1-tissues-notes.html',
   worksheet:    C + 'm1-tissues-worksheet.html',
-  labSprint:    C + 'week-3-lab-sprints.html',
+  labSprint:    C + 'bio004-course-calendar.html',
   structureList:M1LIST, recall:RECALL, loops:LOOPS
 };
 var skinPages = {
   notes:        C + 'm1-integumentary-notes.html',
   worksheet:    C + 'm1-integumentary-worksheet.html',
-  labSprint:    C + 'week-3-lab-sprints.html',
+  labSprint:    C + 'bio004-course-calendar.html',
   structureList:M1LIST, recall:RECALL, loops:LOOPS
 };
 

@@ -392,6 +392,39 @@
      hand-written "covers" string is a second copy of the schedule and it
      goes stale the first time a lab moves. */
   var LINKS = window.BIO004_SESSION_LINKS || {};
+
+  /* THE STUDY-QUESTION GUIDES, BY EXAM.
+     Sixteen of these exist. Nine were reachable only by typing the URL,
+     because nothing in the course pointed at them. They are the one set
+     of material that has no natural home on a class day: a guide is
+     what a student opens while revising, not on the night the topic is
+     taught, so the exam it belongs to is the right place for it.
+
+     Assigned by hand rather than matched on words, because a wrong
+     guess here sends someone revising for the wrong exam. Correct any
+     line and the sidebar follows. */
+  var GUIDES = {
+    1: [ ['muscle-tissue-study-guide.html',            'Muscle Tissue and Microanatomy'],
+         ['nervous-tissue-study-guide.html',           'Nervous Tissue'] ],
+    2: [ ['skeletal-study-guide.html',                 'Axial and Appendicular Skeleton'] ],
+    3: [ ['heart-study-guide.html',                    'Heart Anatomy'],
+         ['cardiac-electrophysiology-study-guide.html','Cardiac Conduction'],
+         ['blood-vessels-study-guide.html',            'Blood Vessels'],
+         ['muscular-system-study-guide.html',          'The Muscular System'] ],
+    4: [ ['respiratory-study-guide.html',              'Respiratory Anatomy'],
+         ['gi-anatomy-study-guide.html',               'Digestive Anatomy'],
+         ['lymphatic-system-study-guide.html',         'The Lymphatic System'] ],
+    5: [ ['renal-anatomy-study-guide.html',            'Renal Anatomy'],
+         ['reproductive-anatomy-study-guide.html',     'Reproductive Anatomy'],
+         ['brain-meninges-study-guide.html',           'Brain, CSF and Meninges'],
+         ['spinal-cord-study-guide.html',              'Spinal Cord, Nerves and PNS'],
+         ['cranial-nerves-study-guide.html',           'Cranial Nerves'],
+         ['ans-study-guide.html',                      'Autonomic Nervous System'],
+         ['neuro-exam-study-guide.html',               'Neuro Exam Study Guide'] ]
+  };
+  Object.keys(GUIDES).forEach(function(k){
+    GUIDES[k] = GUIDES[k].map(function(p){ return { u:p[0], t:p[1] }; });
+  });
   var EXAMS = [];
   var EX_SEL = 0;
 
@@ -408,11 +441,12 @@
      it. Lab sprints are split out of the lab list because they are the
      thing students are told to drill, not another page to read. */
   function materials(ex){
-    var g = { list:[], sheet:[], video:[], lab:[], sprint:[], read:[] };
+    var g = { list:[], guide:[], sheet:[], video:[], lab:[], sprint:[], read:[] };
     var seen = {};
     /* exam 1 covers module 1, and so on down */
     g.list.push({ u:'module-' + ex.n + '-structure-list.html',
                   t:'Every structure you are responsible for, Module ' + ex.n });
+    (GUIDES[ex.n] || []).forEach(function(o){ g.guide.push(o); });
     function add(bucket, o){
       if(!o || !o.u || seen[o.u]) return;
       seen[o.u] = 1;
@@ -463,6 +497,7 @@
        they belong. */
     var GROUPS = [
       ['list',   'Lab structure list'],
+      ['guide',  'Study-question guides'],
       ['sheet',  'Pre-work sheets'],
       ['video',  'Concept videos'],
       ['read',   'Notes and workbooks'],

@@ -983,7 +983,7 @@ var SEED={
 };
 
 /* =========================================================
-   REAL COURSE SCHEDULE (BIO 004 Summer 2026)
+   REAL COURSE SCHEDULE (BIO 004 Fall 2026)
    Embedded for the self-contained prototype. In production this
    can be loaded from schedule.js (window.BIO004_SCHEDULE).
    Instructor adjustments applied: TBL on Mondays with lab exams, no TBL Week 4, Week 4 lecture midterm Mon Jul 13, Week 8
@@ -1066,11 +1066,13 @@ function mosResolveSchedule(){
   }
   return null;
 }
-var SCHEDULE=mosResolveSchedule()||{
-  course:'BIO 004 Human Anatomy',term:'Summer 2026',start:'2026-06-15',end:'2026-08-06', highyield:'Tissue types, heart blood flow, brachial plexus, skin layers, cranial nerves', weeks:[
-    {n:1,start:'2026-06-15',title:'Foundations and Integumentary System',lecture:['Foundations','Integumentary'],lab:['Foundations','Tissues','Integumentary'],labExam:{name:'Lab Exam 1',date:'2026-06-22'},tbl:'2026-06-22'}, {n:2,start:'2026-06-22',title:'Skeletal, Axial and Appendicular Skeleton, and Joints',lecture:['Axial Skeleton','Appendicular Skeleton','Joints'],lab:['Bone Microanatomy','Axial Skeleton','Appendicular Skeleton','Joints'],labExam:{name:'Lab Exam 2',date:'2026-06-29'},tbl:'2026-06-29'}, {n:3,start:'2026-06-29',title:'Cardiovascular, Respiratory, and Regional BV/N 1',lecture:['Cardiovascular','Respiratory','Regional BV/N 1'],lab:['Cardiovascular','Respiratory','Regional BV/N 1'],labExam:{name:'Lab Exam 3',date:'2026-07-06'},tbl:'2026-07-06'}, {n:4,start:'2026-07-06',title:'Muscle Microanatomy, Upper Extremity and Thoracic Muscles, Lymphatic, and Blood',lecture:['Muscle Microanatomy','Upper Extremity and Thoracic Muscles','Lymphatic and Immune','Blood'],lab:['Muscle Microanatomy','Thoracic and Back Muscles','Upper Extremity Muscles','Lymphatic and Immune','Blood','Regional BV/N 2'],labExam:{name:'Lab Exam 4',date:'2026-07-13'},tbl:null,lectureMidterm:{name:'Lecture Midterm',date:'2026-07-13',covers:'Weeks 1 to 4'}}, {n:5,start:'2026-07-13',title:'Digestive System, Abdominal and Pelvic Regional Anatomy, and Regional BV/N 3',lecture:['Digestive System','Abdominal and Pelvic Anatomy','Regional BV/N 3'],lab:['Digestive System','Abdominal and Pelvic Wall','Lower Extremity Muscles','Regional BV/N 3'],labExam:{name:'Lab Exam 5',date:'2026-07-20'},tbl:'2026-07-20'}, {n:6,start:'2026-07-20',title:'Urinary, Reproductive, and Endocrine Systems',lecture:['Urinary','Reproductive','Endocrine'],lab:['Urinary','Reproductive','Endocrine'],labExam:{name:'Lab Exam 6',date:'2026-07-27'},tbl:'2026-07-27'}, {n:7,start:'2026-07-27',title:'Nervous, Head and Neck Muscles, CNS Brain, CSF, and Meninges',lecture:['Head and Neck Muscles','CNS Brain','Ventricles, CSF, Meninges'],lab:['CNS Brain','Ventricles, CSF, Meninges','Head and Neck Muscles'],labExam:{name:'Lab Exam 7',date:'2026-08-03'},tbl:'2026-08-03'}, {n:8,start:'2026-08-03',title:'Nervous, Spinal Cord, Peripheral and Cranial Nerves, Plexuses, and Integration',lecture:['Spinal Cord','Peripheral Nerves and Plexuses','Cranial Nerves','Autonomic Nervous System','Integration'],lab:null,labExam:null,tbl:null,cumulative:{lab:'2026-08-06',lecture:'2026-08-06'}}
-  ]
-};
+/* The fallback used to be the whole SUMMER 2026 schedule, June 15 to
+   August 6. If section resolution ever returned nothing, a student saw
+   June dates for a course that runs August to December, with no error
+   and no way to tell it was wrong. The fallback is the Mon/Wed fall
+   schedule now, which is at worst the wrong section rather than the
+   wrong term. */
+var SCHEDULE=mosResolveSchedule()||FALL_MW;
 function scheduleCurrentWeek(){var cw=SCHEDULE.weeks[0];SCHEDULE.weeks.forEach(function(w){if(dayDiff(w.start,TODAY)<=0)cw=w;});return cw;}
 /* scheduleCurrentWeek() falls back to weeks[0], so every day before the
    term opens reported itself as Week 1, and recall dates written during

@@ -146,6 +146,13 @@
              url: BASE + 'mastery-canvas.html', icon: 'pencil', tone: 'gold', qr: 'canvas', kw: 'draw drawing canvas memory checklist' });
     t.push({ g: 'Study tools', name: 'What I got done today', sub: 'And what you meant to do and did not',
              url: BASE + 'bio004-day-review.html', icon: 'target', tone: 'terra', qr: 'today', kw: 'today review day summary time missed' });
+    /* Both of these existed and nothing in the course linked to them. The
+       brain dump bank is the prompt set the in-class brain dumps run off,
+       so it belongs beside the other study tools rather than nowhere. */
+    t.push({ g: 'Study tools', name: 'Brain dump bank', sub: 'Every brain dump prompt, to practise before you meet one in class',
+             url: BASE + 'bio004-braindump-bank-fall2026.html', icon: 'pencil', tone: 'navy', kw: 'brain dump bank prompts practice blank page' });
+    t.push({ g: 'Study tools', name: 'Repair Round', sub: 'The in-class repair activity, and the capture sheet that goes with it',
+             url: BASE + 'repair-round-activity.html', icon: 'target', tone: 'gold', kw: 'repair round activity capture sheet pairs in class' });
 
     t.push({ g: 'Reference', name: 'Digital Atlas', sub: 'Turn the structures around and look at them',
              url: 'https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02', icon: 'globe', tone: 'gold', qr: 'atlas', ext: true, kw: 'atlas 3d explore' });
