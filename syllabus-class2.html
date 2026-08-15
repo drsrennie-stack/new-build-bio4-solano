@@ -951,6 +951,21 @@ html { scroll-behavior: smooth; }
   p, li { orphans: 2; widows: 2; }
   a { color: #08101F; }
 }
+
+/* ===== INSTRUCTOR PHOTO =====
+   The photo sits beside the name on a wide screen and above it on a
+   narrow one. width and height are on the img so the text does not
+   jump when it loads. It is decorative in the sense that nothing in
+   the syllabus depends on it, but a photo of a person gets a real
+   alt rather than an empty one: a screen reader user is entitled to
+   know whose course this is. */
+.instr{display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap;margin:0 0 4px}
+.instr-photo{width:150px;height:auto;border-radius:12px;display:block;flex:none;
+             box-shadow:0 8px 20px -6px rgba(11,21,48,.35)}
+.instr-txt{flex:1;min-width:230px}
+.instr-txt p{margin-top:0}
+@media (max-width:520px){ .instr-photo{width:120px} }
+@media print{ .instr-photo{width:110px;box-shadow:none} }
 </style>
 </head>
 
@@ -1052,14 +1067,24 @@ html { scroll-behavior: smooth; }
   <div class="section-eyebrow">Section 1</div>
   <h2 class="section-headline">Instructor and <span class="accent">contact</span></h2>
   <div class="body">
-    <p><strong>Dr. Sharilyn Rennie</strong> &middot; Professor of Biology, Solano Community College.</p>
-    <dl class="def-list">
+    <div class="instr">
+      <img class="instr-photo" src="dr-rennie.jpg" width="750" height="1000"
+           alt="Dr. Sharilyn Rennie." loading="lazy">
+      <div class="instr-txt">
+        <p><strong>Dr. Sharilyn Rennie</strong> &middot; Professor of Biology, Solano Community College.</p>
+        <!-- The contact list sits inside the flex column with the name.
+             Beside the photo it fills the space the photo's height
+             creates; with only the one line there, the block left a
+             tall gap to the right of the picture. -->
+        <dl class="def-list">
       <dt>Email</dt><dd>srennie@solano.edu</dd>
       <dt>Best channel</dt><dd>Canvas Inbox, keeps all course messages in one place.</dd>
       <dt>Reply time</dt><dd>48 to 72 hours on weekdays. Do not expect a same-day reply the night before a deadline.</dd>
       <dt>Virtual office</dt><dd>Post to the "Virtual Office" board in Canvas. If you have a question, a classmate probably does too.</dd>
       <dt>Office hours</dt><dd>30 minutes before each class, in our room. By appointment otherwise.</dd>
-    </dl>
+        </dl>
+      </div>
+    </div>
     <div class="callout is-rust">
       <p>Anatomy builds on itself, so a small gap in September is a large one by October. Come and talk to me <strong>before</strong> you fall behind rather than after. That conversation is much easier for both of us while the gap is still small.</p>
     </div>

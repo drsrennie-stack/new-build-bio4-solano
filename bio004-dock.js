@@ -101,8 +101,7 @@
     pencil:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
     target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4"/>',
     flask:'<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/><path d="M6.5 15h11"/>',
-    play:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/>',
-    muscle:'<path d="M6.5 6.5v11M17.5 6.5v11"/><rect x="2" y="9" width="4.5" height="6" rx="1"/><rect x="17.5" y="9" width="4.5" height="6" rx="1"/><path d="M6.5 12h11"/>'
+    play:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/>'
   };
   function icon(k) {
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
@@ -170,11 +169,15 @@
     t.push({ g: 'Study tools', name: 'Recall cards', sub: 'Straight into the cards that are due today',
              url: BASE + 'mastery-os-fall-2026.html#s-recall' + '', icon: 'cards', tone: 'green', qr: 'recall',
              kw: 'recall cards flashcards spaced due today question' });
+    /* Lives on the MedMasters site, not in this repo, and it was only
+       reachable from the Loops upload kit. It is a drill tool, so it
+       belongs beside the other drill tools. */
+    t.push({ g: 'Study tools', name: 'Muscle charts, I O A', sub: 'Origins, insertions, actions and innervation, drilled interactively',
+             url: 'https://www.medmasterscollaborative.com/muscle-charts-i-o-a-inn', icon: 'cards', tone: 'terra',
+             ext: true, qr: 'muscles',
+             kw: 'muscle charts origin insertion action innervation ioa oia drill table muscles' });
     t.push({ g: 'Study tools', name: 'Loops', sub: 'Thirty-nine image loops for fast visual practice',
              url: 'https://drsrennie-stack.github.io/loops/', icon: 'loop', tone: 'terra', qr: 'loops', ext: true, kw: 'loops images practice lab' });
-    t.push({ g: 'Study tools', name: 'Muscle charts I, O, A', sub: 'Origins, insertions, actions and innervation, drilled interactively',
-             url: 'https://www.medmasterscollaborative.com/muscle-charts-i-o-a-inn', icon: 'muscle', tone: 'gold', ext: true,
-             kw: 'muscle charts origins insertions actions innervation io a ioa drill' });
     t.push({ g: 'Study tools', name: 'Weak spot board', sub: 'The topics your own answers say are weakest',
              url: BASE + 'mastery-os-fall-2026.html#s-weak', icon: 'target', tone: 'terra', qr: 'weak', kw: 'weakness weak spot dashboard' });
     t.push({ g: 'Study tools', name: 'Draw it from memory', sub: 'Draw the structure first, then check it against the list',
@@ -189,6 +192,12 @@
        calling it practice is the one thing a brain dump cannot survive.
        The practice tool spins for one prompt, times it, and keeps the key
        hidden until they say they are done. */
+    /* The three Summer midterm practice exams are still in the repo
+       but they are a fixed paper for a term that no longer exists.
+       This draws a fresh one per exam from the live question bank. */
+    t.push({ g: 'Study tools', name: 'Practice exam', sub: 'A fresh 100 point paper in the real format, scored, with the reasoning',
+             url: BASE + 'practice-lecture-exam.html', icon: 'doc', tone: 'terra', qr: 'pexam',
+             kw: 'practice exam lecture test mock paper multiple choice quiz midterm final revision' });
     t.push({ g: 'Study tools', name: 'Brain dump practice', sub: 'Spin for a prompt, set your clock, write it on paper, then check yourself',
              url: BASE + 'brain-dump-practice.html', icon: 'pencil', tone: 'navy', qr: 'braindump',
              kw: 'brain dump practice prompt wheel spin timer paper retrieval blank page' });

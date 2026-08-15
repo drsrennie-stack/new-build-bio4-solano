@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Practice Exam &middot; BIO 004 Human Anatomy &middot; Fall 2026</title>
+<meta name="description" content="Generate a practice lecture exam in the real BIO 004 format: true or false with a correction, confidence-based multiple choice, matching, and a brain dump. A different paper every time.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- ============================================================
+     PRACTICE EXAM, IN THE REAL FORMAT
+
+     The four parts, the point split and the scoring rules are
+     copied from BIO004-Midterm-Practice-Exam-1/2/3, which is how
+     Dr. Rennie's lecture exams actually run:
+
+       Part 1  True or false, 20 pts. One point for the call. If it
+               is false, the bolded term is the only wrong word, and
+               naming the word that fixes it earns +0.25.
+       Part 2  Multiple choice, confidence based, 40 pts. Four
+               confidence points per question, spread across the
+               four options however you like. Score is the points
+               you placed on the correct option x 0.25.
+       Part 3  Matching, 24 pts. Every bank carries one or two extra
+               options that match nothing.
+       Part 4  Brain dump, 16 pts. Pick one prompt of three, write
+               it, then self-score against the rubric.
+
+     WHERE THE ITEMS COME FROM
+
+     True/false and matching are hand written and cannot be
+     synthesised honestly, so those come from the pool of items in
+     the three summer papers (practice-exam-bank.js).
+
+     Multiple choice comes from that pool first and then from the
+     card bank, scoped to the chosen exam by the same chain the lab
+     sprint and materials indexes use: topic -> competency -> week
+     -> module -> exam.
+
+     Brain dumps come from bio004-braindump-data.js, whose prompts
+     already carry the key points, which is exactly the rubric this
+     part needs.
+
+     THE SUMMER PAPERS RAN MIDTERM ONWARD, so the authored pool is
+     rich for exam 3, thin for exams 2 and 4, and all but empty for
+     exams 1 and 5. Multiple choice, matching and the brain dump all
+     have card-bank fallbacks and are never short. True or false has
+     none, because a false item needs a statement that is true except
+     for one word plus the word that fixes it, and only a person who
+     knows the subject can write that.
+
+     So: every paper is worth 100. If fewer than 8 true or false
+     items exist for the exam, Part 1 is left off and its 20 points
+     move to Part 2, and the setup screen says so in plain words.
+     Write more true/false items into practice-exam-bank.js and
+     Part 1 reappears on its own, no code change needed.
+
+     A finished paper writes one entry per competency into
+     bio004-evidence-v1 as source 'exam', so it moves the weak spot
+     board. Only competency ids and scores are stored.
+     ============================================================ -->
+
+<style>
+  :root{
+    --navy:#08101F; --navy-tint:#ECEFF4;
+    --terra-dark:#6B1616; --terra:#8B1D1D;
+    --gold:#DCB45C; --gold-text:#6F5316;
+    --white:#FFFFFF; --offwhite:#FAFAF9; --sub:#F1F4F7;
+    --ink-2:#3D4757; --ink-3:#4A5763;
+    --ok:#1F6B3A; --bad:#8A1010;
+    --rest:0 1px 3px rgba(0,0,0,0.08);
+    --hover:0 10px 22px rgba(0,0,0,0.12);
+    --t:transform 180ms ease, box-shadow 180ms ease;
+    --font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font);color:var(--navy);background:var(--offwhite);
+       line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:28px 20px 110px}
+  .skip{position:absolute;left:-9999px;background:var(--terra-dark);color:#fff;padding:10px 16px;
+        border-radius:8px;font-weight:700;z-index:60}
+  .skip:focus{left:16px;top:16px}
+  :focus-visible{outline:3px solid var(--terra-dark);outline-offset:2px;border-radius:6px}
+  .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+      clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  .hidden{display:none !important}
+
+  .cover{padding:6px 0 18px}
+  .cover-eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
+                 color:var(--terra-dark);margin:0 0 10px}
+  h1{font-weight:800;font-size:clamp(26px,4.6vw,40px);line-height:1.04;letter-spacing:-.02em;margin:0 0 12px}
+  h1 span{color:var(--gold-text)}
+  .lede{font-size:17px;color:var(--ink-3);margin:0 0 6px;max-width:66ch}
+
+  .card{background:#fff;border-radius:12px;padding:24px;margin:18px 0;box-shadow:var(--rest)}
+  .card h2{font-size:clamp(18px,3vw,22px);font-weight:800;letter-spacing:-.02em;margin:0 0 4px}
+  .step-k{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
+          color:var(--terra-dark);display:block;margin-bottom:4px}
+  .hint{color:var(--ink-3);font-size:14.5px;margin:0 0 14px}
+  .hint b{color:var(--navy)}
+
+  .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0 0}
+  .opt{background:var(--sub);border:0;border-radius:11px;padding:14px 15px;cursor:pointer;text-align:left;
+       color:var(--navy);font-family:var(--font);transition:var(--t);box-shadow:var(--rest);width:100%}
+  .opt:hover{transform:translateY(-2px);box-shadow:var(--hover)}
+  .opt[aria-pressed="true"]{background:var(--navy);color:#fff}
+  .opt b{display:block;font-size:16px;font-weight:800}
+  .opt i{display:block;font-style:normal;font-size:13px;color:var(--ink-3);margin-top:3px}
+  .opt[aria-pressed="true"] i{color:#C6CEDA}
+
+  .big{background:var(--gold);color:#08101F;font-family:var(--font);font-weight:800;font-size:17px;
+       padding:15px 26px;border:0;border-radius:11px;cursor:pointer;transition:var(--t);
+       box-shadow:0 10px 22px -8px rgba(184,146,74,.65)}
+  .big:hover{transform:translateY(-2px);box-shadow:0 16px 30px -8px rgba(184,146,74,.75)}
+  .big:disabled{background:#DDE2E9;color:#4A5763;cursor:default;transform:none;box-shadow:var(--rest)}
+  .ghost{background:#fff;color:var(--navy);font-family:var(--font);font-weight:800;font-size:15px;
+         padding:13px 20px;border:0;border-radius:11px;cursor:pointer;transition:var(--t);
+         box-shadow:var(--rest);text-decoration:none;display:inline-block}
+  .ghost:hover{transform:translateY(-2px);box-shadow:var(--hover)}
+  .row{display:flex;flex-wrap:wrap;gap:11px;align-items:center;margin-top:16px}
+
+  .blueprint{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px}
+  .blueprint li{display:flex;justify-content:space-between;gap:12px;background:var(--sub);
+                border-radius:9px;padding:11px 14px;font-size:14.5px}
+  .blueprint b{font-weight:800}
+  .blueprint .warn{color:var(--bad);font-weight:700}
+
+  /* ---------- parts ---------- */
+  .part{margin:26px 0 0}
+  .part-h{background:var(--navy);color:#fff;border-radius:12px;padding:18px 22px;margin:0 0 14px}
+  .part-h .pk{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
+              color:var(--gold);display:block;margin-bottom:4px}
+  .part-h h2{font-size:20px;font-weight:800;margin:0 0 6px;letter-spacing:-.02em}
+  .part-h p{margin:0;font-size:14.5px;color:#C6CEDA;max-width:70ch}
+
+  .q{background:#fff;border-radius:12px;padding:20px 22px;margin:0 0 12px;box-shadow:var(--rest)}
+  .q fieldset{border:0;margin:0;padding:0}
+  .q legend{padding:0;font-weight:800;font-size:16.5px;line-height:1.45}
+  .qn{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;
+      color:var(--terra-dark);display:block;margin-bottom:6px}
+  .q legend b{color:var(--terra-dark)}
+
+  .tfrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  .tfrow label{display:flex;gap:9px;align-items:center;background:var(--sub);border-radius:10px;
+               padding:11px 18px;cursor:pointer;font-weight:800;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+  .tfrow input{width:19px;height:19px;accent-color:#6B1616;cursor:pointer}
+  .fixwrap{margin-top:12px}
+  .fixwrap label{display:block;font-size:14px;color:var(--ink-3);font-weight:700;margin-bottom:6px}
+  .fixwrap input{width:min(320px,100%);background:#fff;border:0;border-radius:9px;padding:11px 14px;
+                 font-family:var(--font);font-size:15.5px;box-shadow:inset 0 0 0 2px #98A3B4}
+  .fixwrap input:focus{box-shadow:inset 0 0 0 2px var(--terra-dark)}
+
+  .conf{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px}
+  .conf li{display:flex;gap:12px;align-items:center;background:var(--sub);border-radius:10px;
+           padding:11px 14px}
+  .conf .ct{flex:1;font-size:15.5px}
+  .conf input{width:66px;background:#fff;border:0;border-radius:8px;padding:9px 10px;text-align:center;
+              font-family:var(--font);font-weight:800;font-size:16px;box-shadow:inset 0 0 0 2px #98A3B4}
+  .conf input:focus{box-shadow:inset 0 0 0 2px var(--terra-dark)}
+  .ctally{font-size:13.5px;font-weight:800;margin-top:10px;color:var(--ink-3)}
+  .ctally.over{color:var(--bad)}
+  .ctally.ok{color:var(--ok)}
+
+  .mtable{width:100%;border-collapse:collapse;margin-top:12px}
+  .mtable th{text-align:left;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+             color:var(--terra-dark);padding:0 0 8px}
+  .mtable td{padding:6px 10px 6px 0;vertical-align:top;font-size:15.5px}
+  .mtable select{width:100%;max-width:340px;background:#fff;border:0;border-radius:9px;padding:10px 12px;
+                 font-family:var(--font);font-size:15px;box-shadow:inset 0 0 0 2px #98A3B4}
+  .mtable select:focus{box-shadow:inset 0 0 0 2px var(--terra-dark)}
+  .bank{background:var(--sub);border-radius:10px;padding:13px 15px;margin-top:12px;font-size:14.5px;
+        color:var(--ink-2)}
+  .bank b{color:var(--navy)}
+
+  .dumppick{display:grid;gap:10px;margin-top:12px}
+  .dumppick label{display:flex;gap:12px;align-items:flex-start;background:var(--sub);border-radius:10px;
+                  padding:14px 16px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+  .dumppick input{width:20px;height:20px;flex:none;margin:2px 0 0;accent-color:#6B1616;cursor:pointer}
+  .dumppick .dt{font-size:15.5px}
+  .dumppick .dt b{display:block;margin-bottom:3px}
+  .q textarea{width:100%;min-height:190px;margin-top:14px;background:#fff;border:0;border-radius:10px;
+              padding:14px;font-family:var(--font);font-size:15.5px;line-height:1.6;
+              box-shadow:inset 0 0 0 2px #98A3B4;resize:vertical}
+  .q textarea:focus{box-shadow:inset 0 0 0 2px var(--terra-dark)}
+
+  /* ---------- marked ---------- */
+  .q.right{box-shadow:inset 0 0 0 2px rgba(31,107,58,.55), var(--rest)}
+  .q.wrong{box-shadow:inset 0 0 0 2px rgba(138,16,16,.5), var(--rest)}
+  .q.part-credit{box-shadow:inset 0 0 0 2px rgba(184,146,74,.7), var(--rest)}
+  .verdict{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+           padding:4px 10px;border-radius:999px;margin-top:12px}
+  .verdict.ok{background:#E4F1E8;color:var(--ok)}
+  .verdict.no{background:#F7E4E4;color:var(--bad)}
+  .verdict.part{background:#F6EEDC;color:var(--gold-text)}
+  .why{background:var(--sub);border-radius:10px;padding:13px 15px;margin-top:12px;font-size:14.5px;
+       color:var(--ink-2)}
+  .why b{color:var(--navy)}
+  .rubric{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:7px}
+  .rubric label{display:flex;gap:11px;align-items:flex-start;background:var(--sub);border-radius:9px;
+                padding:11px 13px;cursor:pointer;font-size:14.5px}
+  .rubric input{width:19px;height:19px;flex:none;margin:1px 0 0;accent-color:#6B1616;cursor:pointer}
+
+  .result{background:#fff;border-radius:12px;padding:24px;margin:18px 0;box-shadow:var(--hover)}
+  .score{font-size:44px;font-weight:800;letter-spacing:-.03em;line-height:1;margin:0}
+  .score small{font-size:18px;font-weight:700;color:var(--ink-3);letter-spacing:0}
+  .bar{height:10px;border-radius:99px;background:var(--navy-tint);margin:14px 0 6px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--gold);border-radius:99px}
+  .partscores{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px}
+  .partscores li{display:flex;justify-content:space-between;gap:12px;background:var(--sub);
+                 border-radius:9px;padding:11px 14px;font-size:14.5px}
+
+  .float{position:fixed;right:20px;bottom:20px;z-index:60;display:none;background:#fff;border-radius:16px;
+         padding:12px 16px;box-shadow:0 24px 46px -12px rgba(0,0,0,.35);align-items:center;gap:13px}
+  .float.on{display:flex}
+  .float .tt{font-variant-numeric:tabular-nums;font-weight:800;font-size:23px;letter-spacing:-.02em;line-height:1}
+  .float .tl{font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);font-weight:800;margin-top:3px}
+  .float.up .tt{color:var(--bad)}
+  .float button{background:var(--sub);color:var(--navy);border:0;border-radius:9px;font-family:var(--font);
+                font-weight:800;font-size:13px;padding:9px 12px;cursor:pointer}
+
+  footer{margin-top:34px;padding-top:20px;color:var(--ink-3);font-size:14px;
+         box-shadow:inset 0 1px 0 rgba(8,16,31,.10)}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .opt,.big,.ghost{transition:none}
+    .opt:hover,.big:hover,.ghost:hover{transform:none}
+  }
+  @media print{
+    .float,.row,#setup,.ghost{display:none !important}
+    .q,.card,.result,.part-h{box-shadow:none}
+    .part-h{background:#fff;color:var(--navy)}
+    .part-h .pk{color:var(--terra-dark)} .part-h p{color:var(--ink-3)}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the exam</a>
+
+<div class="wrap">
+<main id="main">
+  <section class="cover">
+    <p class="cover-eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
+    <h1>Practice <span>exam</span></h1>
+    <p class="lede">The real format: true or false with a correction, confidence-based multiple choice,
+       matching, and a brain dump. 100 points. Generate one whenever you want and you get a different
+       paper every time.</p>
+    <p class="lede" id="lastLine"></p>
+  </section>
+
+  <section class="card" id="setup" aria-labelledby="h-setup">
+    <span class="step-k">Set it up</span>
+    <h2 id="h-setup">Which exam are you practicing for?</h2>
+    <p class="hint">Questions are drawn from the items written for that exam plus your card bank.</p>
+    <div class="opts" id="examPick" role="group" aria-label="Choose which exam to practice"></div>
+
+    <span class="step-k" style="margin-top:22px">Clock</span>
+    <h2>Timed?</h2>
+    <p class="hint">Your lecture exams run to the class period. Untimed is fine while the material is new.</p>
+    <div class="opts" id="timePick" role="group" aria-label="Choose whether the exam is timed"></div>
+
+    <h2 style="margin-top:22px">What this paper will hold</h2>
+    <ul class="blueprint" id="blueprint"></ul>
+
+    <div class="row">
+      <button type="button" class="big" id="startBtn">Generate my exam</button>
+      <a class="ghost" href="bio004-course-calendar.html" target="_top">Back to the calendar</a>
+    </div>
+  </section>
+
+  <section id="paper" class="hidden">
+    <div class="card">
+      <span class="step-k">In progress</span>
+      <h2 id="paperTitle"></h2>
+      <p class="hint" id="paperMeta"></p>
+      <p class="hint" style="margin:0"><b>Answer every part like the real thing, then submit at the bottom.</b>
+         Nothing is revealed until you do, so treat it closed book.</p>
+    </div>
+    <form id="parts"></form>
+    <div class="row">
+      <button type="button" class="big" id="submitBtn">Submit exam</button>
+      <button type="button" class="ghost" id="abandonBtn">Start over</button>
+    </div>
+    <p class="hint" id="unanswered" role="status" style="margin-top:12px"></p>
+  </section>
+
+  <section id="out" class="hidden" tabindex="-1">
+    <h2 class="sr">Your result</h2>
+    <div id="resultWrap"></div>
+  </section>
+
+  <footer>
+    <p>Written items come from Dr. Rennie's own practice papers; multiple choice is topped up from the
+       course card bank. Nothing you answer leaves this browser. Your score goes to your weak spot board.</p>
+    <p>Dr. Sharilyn Rennie &middot; BIO 004 Human Anatomy &middot; Solano Community College</p>
+  </footer>
+</main>
+</div>
+
+<div class="float" id="clock" role="group" aria-label="Exam clock">
+  <div><div class="tt" id="clockTime">00:00</div><div class="tl" id="clockLbl">remaining</div></div>
+  <button type="button" id="stopClock">Submit now</button>
+  <p class="sr" id="clockSay" role="status" aria-live="polite"></p>
+</div>
+
+<script src="competenciesfall2026.js"></script>
+<script src="card-competency-map.js"></script>
+<script src="schedule-fall2026.js"></script>
+<script src="loops-index.js"></script>
+<script src="mastery-evidence.js"></script>
+<script src="bio004-card-bank.js"></script>
+<script src="bio004-braindump-data.js"></script>
+<script src="practice-exam-bank.js"></script>
+
+<script>
+(function(){
+  'use strict';
+
+  var BANK   = window.BIO004_CARD_BANK || {modules:[]};
+  var CMAP   = window.BIO004_CARD_COMPETENCY_MAP || {};
+  var COMPS  = window.BIO004_COMPETENCIES || [];
+  var MODS   = window.BIO004_MODULES || [];
+  var AUTH   = window.BIO004_EXAM_BANK || {tf:[],mc:[],match:[],fr:[]};
+  var DUMPS  = window.BRAINDUMP_BANK || {pools:{}};
+
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  /* Her items mark the key term with **double asterisks**. */
+  function bold(s){ return esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>'); }
+  function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+  function lsSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } }
+  function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
+  function take(pool,n){ var p=pool.slice(), out=[]; while(out.length<n && p.length) out.push(p.splice(Math.floor(Math.random()*p.length),1)[0]); return out; }
+
+  var WEEK_OF={}, NAME_OF={};
+  COMPS.forEach(function(c){ WEEK_OF[c.id]=c.week; NAME_OF[c.id]=c.name; });
+  function moduleForWeek(wk){ var f=null; MODS.forEach(function(m){ if(m.weeks&&m.weeks.indexOf(wk)!==-1) f=m; }); return f; }
+
+  /* ---------- card-bank multiple choice, scoped by exam ---------- */
+  var CARDS={1:[],2:[],3:[],4:[],5:[]};
+  BANK.modules.forEach(function(blk){
+    (blk.topics||[]).forEach(function(t){
+      var e=CMAP[t.id]; var comps=e?(e.comps||e):null; if(!comps) return;
+      comps=Array.isArray(comps)?comps:[comps];
+      var weeks=comps.map(function(id){return WEEK_OF[id];}).filter(Boolean); if(!weeks.length) return;
+      var mod=moduleForWeek(Math.min.apply(null,weeks)); if(!mod||!mod.exam) return;
+      (t.cards||[]).forEach(function(c){
+        if(!c||!c.q||!c.options||c.correctIndex==null) return;
+        CARDS[mod.exam].push({stem:c.q, options:c.options, correctIndex:c.correctIndex,
+                              rationale:c.explanation||'', topic:t.title||'', comps:comps});
+      });
+    });
+  });
+
+  /* ---------- brain dump prompts, scoped by exam ---------- */
+  var DUMPPOOL={1:[],2:[],3:[],4:[],5:[]};
+  Object.keys(DUMPS.pools||{}).forEach(function(k){
+    var p=DUMPS.pools[k]; if(!p||p.kind==='team') return;
+    var mod=p.week?moduleForWeek(p.week):null; if(!mod||!mod.exam) return;
+    (p.items||[]).forEach(function(it){
+      if(!it||!it.p) return;
+      DUMPPOOL[mod.exam].push({prompt:it.p, title:it.t||'', rubric:(it.l||[]).slice()});
+    });
+  });
+  /* Her own free-response prompts sit alongside them. */
+  (AUTH.fr||[]).forEach(function(x){
+    if(!x.exam||!x.prompt) return;
+    DUMPPOOL[x.exam].push({prompt:x.prompt, title:x.topic||'', rubric:(x.rubric||x.points||[]).slice()});
+  });
+
+  /* ---------- her written items, mapped to competencies ----------
+
+     Card-derived questions already carry competencies, because the
+     card bank is tagged. Her own written items carry a topic string
+     instead ("Coronary Circulation", "Bone Microanatomy"). Without a
+     bridge, a paper made mostly of her items scores fine and then
+     sends nothing at all to the weak spot board, which is the whole
+     point of taking it. This table is that bridge: exam bank topic
+     to card bank topic id, whose competencies are already correct.
+     Written out by hand rather than string-matched, because "Bone"
+     and "Bone Microanatomy" are two different competency sets. */
+  var TOPIC_TO_CARD_TOPIC = {
+    "Appendicular Skeleton": ["t-appendicular-skeleton-upper","t-appendicular-skeleton-lower"],
+    "Axial Skeleton": ["t-axial-skeleton-skull","t-axial-skeleton-spine"],
+    "Blood": ["t-blood-plasma","t-blood-erythrocytes","t-blood-leukocytes"],
+    "Blood Cells and Blood Facts": ["t-blood-erythrocytes","t-blood-leukocytes"],
+    "Blood Cells and Their Facts": ["t-blood-erythrocytes","t-blood-leukocytes"],
+    "Blood Vessels": ["t-blood-vessels"],
+    "Body Regions and Layman's Terms": ["t-anatomical-terminology"],
+    "Bone": ["t-bone-histology"],
+    "Bone Microanatomy": ["t-bone-histology"],
+    "Bone and Skeletal Landmarks": ["t-bone-histology","t-axial-skeleton-skull"],
+    "Bones and Bone Details": ["t-bone-histology"],
+    "Conduction System": ["t-cardiac-conduction"],
+    "Coronary Circulation": ["t-heart","t-blood-vessels"],
+    "Fascicle & Levers": ["t-muscle-naming-mechanics"],
+    "Fetal Circulation": ["t-blood-vessel-disorders"],
+    "Great Vessels": ["t-heart","t-blood-vessels"],
+    "Heart": ["t-heart"],
+    "Heart Anatomy and Great Vessels": ["t-heart"],
+    "Integumentary": ["t-integumentary"],
+    "Joints": ["t-articulations"],
+    "Joints and Skull Landmarks": ["t-articulations","t-axial-skeleton-skull"],
+    "Lymphatic": ["t-lymph-overview-vessels","t-lymph-nodes-spleen","t-lymph-trunks-ducts"],
+    "Muscle Microanatomy": ["t-muscle-microanatomy","t-muscle-sarcomere"],
+    "Neck & Upper Limb Vessels": ["t-blood-vessels"],
+    "Neck Vessels": ["t-blood-vessels"],
+    "Respiratory": ["t-respiratory"],
+    "Respiratory Passage and Membranes": ["t-respiratory"],
+    "Upper Extremity Vessels": ["t-blood-vessels"],
+    "Vessel Disorders": ["t-blood-vessel-disorders"],
+    "Vessel Histology": ["t-blood-vessels"],
+    "Vessels of the Upper Limb and Neck": ["t-blood-vessels"]
+  };
+
+  function compsForTopic(topic){
+    var ids = TOPIC_TO_CARD_TOPIC[topic];
+    if(!ids) return null;
+    var out = [];
+    ids.forEach(function(id){
+      var e = CMAP[id]; if(!e) return;
+      var cs = e.comps || e;
+      (Array.isArray(cs) ? cs : [cs]).forEach(function(c){ if(out.indexOf(c)===-1) out.push(c); });
+    });
+    return out.length ? out : null;
+  }
+
+  function authFor(kind, exam){ return (AUTH[kind]||[]).filter(function(x){ return x.exam===exam; }); }
+
+  /* ---------- the blueprint, per exam ---------- */
+  var PLAN = { tf:20, mc:40, match:24, dump:16 };
+
+  /* Every paper is worth 100, whatever the pools hold.
+
+     True or false is the one part that cannot be generated. A false
+     item needs a statement that is true except for one word, plus
+     the word that fixes it, and only a person who knows the subject
+     can write that. Her three summer papers were midterm onward, so
+     exams 1 and 5 have almost none written yet.
+
+     Rather than hand a student a one point Part 1, a part with
+     fewer than TF_FLOOR items is left off the paper and its points
+     move to multiple choice, which has hundreds of cards behind it
+     for every exam. The paper still totals 100 and the setup screen
+     says which part is missing and why. */
+  var TF_FLOOR = 8;
+
+  function planFor(exam){
+    var tfHave = authFor('tf', exam).length;
+    var tf = tfHave >= TF_FLOOR ? Math.min(PLAN.tf, tfHave) : 0;
+
+    /* Whatever Part 1 cannot carry becomes extra Part 2 questions. */
+    var mcWant = PLAN.mc + (PLAN.tf - tf);
+    var mcPool = authFor('mc', exam).length + CARDS[exam].length;
+    var mc = Math.min(mcWant, mcPool);
+
+    /* Matching is 24 points in sets of eight. Where she has not
+       written enough sets, sets are generated from the card bank so
+       the part is never simply absent. */
+    var mFromAuth = 0;
+    authFor('match', exam).forEach(function(s){ mFromAuth += (s.columnA||[]).length; });
+    var matchTotal = Math.min(PLAN.match, mFromAuth + Math.floor(CARDS[exam].length/2));
+
+    var dump = DUMPPOOL[exam].length ? PLAN.dump : 0;
+
+    return {tf:tf, mc:mc, match:matchTotal, dump:dump,
+            total: tf + mc + matchTotal + dump,
+            tfHave: tfHave, tfDropped: tf === 0,
+            tfShort: tf > 0 && tf < PLAN.tf,
+            mcOver: mc > PLAN.mc,
+            mcShort: mc < mcWant,
+            matchShort: matchTotal < PLAN.match, dumpShort: dump < PLAN.dump};
+  }
+
+  var K_EXAM='bio004-pexam-exam', K_TIME='bio004-pexam-time', K_LAST='bio004-pexam-last';
+  var exam=parseInt(lsGet(K_EXAM),10); if(!(exam>=1&&exam<=5)) exam=1;
+  var mins=parseInt(lsGet(K_TIME),10); if(isNaN(mins)) mins=0;
+  var TIME=[{m:0,b:'No clock',i:'Take as long as you need'},
+            {m:50,b:'50 minutes',i:'A class period'},
+            {m:75,b:'75 minutes',i:'The long block'}];
+
+  function examTitle(n){ var m=MODS.filter(function(x){return x.exam===n;})[0]; return m?m.title:''; }
+
+  function renderSetup(){
+    var h='';
+    for(var n=1;n<=5;n++){
+      h+='<button type="button" class="opt" data-exam="'+n+'" aria-pressed="'+(exam===n?'true':'false')+'">'
+        +'<b>Exam '+n+'</b><i>'+esc(examTitle(n).slice(0,44))+'</i></button>';
+    }
+    $('examPick').innerHTML=h;
+
+    h='';
+    TIME.forEach(function(T){
+      h+='<button type="button" class="opt" data-min="'+T.m+'" aria-pressed="'+(mins===T.m?'true':'false')+'">'
+        +'<b>'+T.b+'</b><i>'+T.i+'</i></button>';
+    });
+    $('timePick').innerHTML=h;
+
+    var p=planFor(exam);
+    var rows=[
+      ['Part 1 &middot; True or false',
+       p.tf ? p.tf+' points' : 'not on this paper', p.tfDropped || p.tfShort],
+      ['Part 2 &middot; Multiple choice, confidence based',
+       p.mc+' points', p.mcShort],
+      ['Part 3 &middot; Matching', p.match+' points', p.matchShort],
+      ['Part 4 &middot; Brain dump', p.dump+' points', p.dumpShort]
+    ];
+    var bh='';
+    rows.forEach(function(r){
+      bh+='<li><span>'+r[0]+'</span><b class="'+(r[2]?'warn':'')+'">'+r[1]+'</b></li>';
+    });
+    bh+='<li><span><b>This paper</b></span><b>'+p.total+' points</b></li>';
+    $('blueprint').innerHTML=bh;
+
+    var say;
+    if(p.tfDropped){
+      say = 'Part 1 is not on this paper. True or false items have to be written by hand, and exam '
+          + exam + ' has ' + (p.tfHave ? 'only ' + p.tfHave + ' so far' : 'none yet')
+          + '. Those 20 points move to multiple choice, so the paper is still out of ' + p.total + '.';
+    } else if(p.tfShort){
+      say = 'Part 1 runs ' + p.tf + ' items rather than 20, because that is what is written for exam '
+          + exam + '. The rest of the 20 points move to multiple choice, so the paper is still out of '
+          + p.total + '.';
+    } else {
+      say = 'Questions are drawn from the items written for that exam plus your card bank. '
+          + 'A different paper every time.';
+    }
+    if(p.total < 100) say += ' This one comes to ' + p.total + ' points.';
+    $('setup').querySelector('.hint').textContent = say;
+
+    $('startBtn').disabled = p.total < 10;
+  }
+
+  $('examPick').addEventListener('click',function(e){
+    var b=e.target.closest('.opt'); if(!b) return;
+    exam=parseInt(b.getAttribute('data-exam'),10); lsSet(K_EXAM,String(exam)); renderSetup(); paintLast();
+  });
+  $('timePick').addEventListener('click',function(e){
+    var b=e.target.closest('.opt'); if(!b) return;
+    mins=parseInt(b.getAttribute('data-min'),10); lsSet(K_TIME,String(mins)); renderSetup();
+  });
+
+  /* ---------- deal a paper ---------- */
+  var paper=null, marked=false, armed=false;
+
+  function dealMatchSets(exam, want){
+    var sets=[], used=0;
+    authFor('match',exam).forEach(function(s){
+      if(used>=want) return;
+      var n=Math.min((s.columnA||[]).length, want-used);
+      if(!n) return;
+      var sc=compsForTopic(s.topic), rowComps=[];
+      for(var r=0;r<n;r++) rowComps.push(sc);
+      sets.push({termsCol:s.columnA.slice(0,n), bank:s.columnB.slice(), answers:s.answers.slice(0,n),
+                 authored:true, comps:rowComps});
+      used+=n;
+    });
+    /* Top up from cards: the stem is the clue, its answer is the
+       match, and two answers from other cards join the bank as the
+       extras that match nothing, which is how her banks work. */
+    while(used<want){
+      var n=Math.min(8, want-used);
+      var picks=take(CARDS[exam], n+2);
+      if(picks.length<n+1) break;
+      var items=picks.slice(0,n);
+      var terms=items.map(function(c){ return c.stem; });
+      var right=items.map(function(c){ return c.options[c.correctIndex]; });
+      var extras=picks.slice(n).map(function(c){ return c.options[c.correctIndex]; });
+      var bank=shuffle(right.concat(extras));
+      sets.push({termsCol:terms, bank:bank, answers:right.map(function(a){ return bank.indexOf(a); }),
+                 authored:false, comps:items.map(function(c){ return c.comps; })});
+      used+=n;
+    }
+    return sets;
+  }
+
+  function deal(){
+    var p=planFor(exam);
+    var tf=take(authFor('tf',exam), p.tf);
+
+    var mcAuth=take(authFor('mc',exam), Math.min(p.mc, authFor('mc',exam).length));
+    var mcCards=take(CARDS[exam], p.mc-mcAuth.length);
+    var mc=shuffle(mcAuth.map(function(x){
+        return {stem:x.stem, options:x.options.slice(), correctIndex:x.correctIndex,
+                rationale:x.rationale||'', comps:compsForTopic(x.topic)};
+      }).concat(mcCards.map(function(c){
+        return {stem:c.stem, options:c.options.slice(), correctIndex:c.correctIndex,
+                rationale:c.rationale||'', comps:c.comps};
+      })));
+    /* Shuffle each question's options so a bank answer that is
+       always C is not a pattern to spot. */
+    mc=mc.map(function(q){
+      var idx=q.options.map(function(_,i){return i;});
+      shuffle(idx);
+      return {stem:q.stem, rationale:q.rationale, comps:q.comps,
+              options:idx.map(function(i){return q.options[i];}),
+              correctIndex:idx.indexOf(q.correctIndex)};
+    });
+
+    var sets=dealMatchSets(exam, p.match);
+    var dumps=take(DUMPPOOL[exam], Math.min(3, DUMPPOOL[exam].length));
+
+    return {plan:p, tf:tf, mc:mc, sets:sets, dumps:dumps};
+  }
+
+  /* ---------- render ---------- */
+  function renderPaper(){
+    var h='';
+
+    if(paper.tf.length){
+      h+='<section class="part"><div class="part-h"><span class="pk">Part 1 &middot; '+paper.tf.length+' points</span>'
+        +'<h2>True or false</h2><p>Decide if each statement is true or false. If it is false, the bold term is '
+        +'the only wrong word: mark False and type the one word that makes it true. One point for the call, '
+        +'plus a quarter point if your fix is right.</p></div>';
+      paper.tf.forEach(function(it,i){
+        h+='<div class="q" id="tf'+i+'"><fieldset><legend><span class="qn">Question '+(i+1)+'</span>'
+          + bold(it.statement)+'</legend>'
+          +'<div class="tfrow">'
+          +'<label><input type="radio" name="tf'+i+'" value="T"> True</label>'
+          +'<label><input type="radio" name="tf'+i+'" value="F"> False</label>'
+          +'</div>'
+          +'<div class="fixwrap"><label for="fix'+i+'">If false, the word that fixes it</label>'
+          +'<input type="text" id="fix'+i+'" autocomplete="off" spellcheck="false"></div>'
+          +'</fieldset></div>';
+      });
+      h+='</section>';
+    }
+
+    if(paper.mc.length){
+      h+='<section class="part"><div class="part-h"><span class="pk">Part 2 &middot; '+paper.mc.length+' points</span>'
+        +'<h2>Multiple choice, confidence based</h2><p>Each question gives you four confidence points to spread '
+        +'across the four options. All four on one answer if you are sure, or split them if you are torn. Your '
+        +'score is the points you placed on the correct answer times 0.25.</p></div>';
+      paper.mc.forEach(function(q,i){
+        h+='<div class="q" id="mc'+i+'"><fieldset><legend><span class="qn">Question '+(i+1)+'</span>'
+          + esc(q.stem)+'</legend><ul class="conf">';
+        q.options.forEach(function(o,j){
+          h+='<li><span class="ct">'+esc(o)+'</span>'
+            +'<input type="number" min="0" max="4" step="1" value="0" data-mc="'+i+'" data-opt="'+j+'" '
+            +'aria-label="Confidence points for option '+(j+1)+', '+esc(o).replace(/"/g,'')+'"></li>';
+        });
+        h+='</ul><p class="ctally" id="ct'+i+'">0 of 4 placed</p></fieldset></div>';
+      });
+      h+='</section>';
+    }
+
+    if(paper.sets.length){
+      var mTotal=0; paper.sets.forEach(function(s){ mTotal+=s.termsCol.length; });
+      h+='<section class="part"><div class="part-h"><span class="pk">Part 3 &middot; '+mTotal+' points</span>'
+        +'<h2>Matching</h2><p>Choose the best match for each item. Every bank holds one or two extra options '
+        +'that match nothing.</p></div>';
+      paper.sets.forEach(function(s,si){
+        h+='<div class="q" id="ms'+si+'"><fieldset><legend><span class="qn">Set '+(si+1)+'</span>'
+          +'Match each item to the best option in the bank.</legend>'
+          +'<table class="mtable"><thead><tr><th scope="col">Item</th><th scope="col">Your match</th></tr></thead><tbody>';
+        s.termsCol.forEach(function(t,ti){
+          h+='<tr><td>'+esc(t)+'</td><td><select data-set="'+si+'" data-row="'+ti+'" '
+            +'aria-label="Match for '+esc(String(t)).replace(/"/g,'').slice(0,60)+'">'
+            +'<option value="-1">Choose one</option>';
+          s.bank.forEach(function(b,bi){ h+='<option value="'+bi+'">'+esc(b)+'</option>'; });
+          h+='</select></td></tr>';
+        });
+        h+='</tbody></table><p class="bank"><b>Bank:</b> '+s.bank.map(esc).join(' &middot; ')+'</p>'
+          +'</fieldset></div>';
+      });
+      h+='</section>';
+    }
+
+    if(paper.dumps.length){
+      h+='<section class="part"><div class="part-h"><span class="pk">Part 4 &middot; 16 points</span>'
+        +'<h2>Brain dump, choose one</h2><p>Pick one prompt, write your response, and after you submit use the '
+        +'rubric to award yourself partial credit for each element you included. Only the one you pick is scored.</p></div>';
+      h+='<div class="q" id="dumpq"><fieldset><legend><span class="qn">Choose your prompt</span>Which one are you answering?</legend>'
+        +'<div class="dumppick">';
+      paper.dumps.forEach(function(d,i){
+        h+='<label><input type="radio" name="dumppick" value="'+i+'">'
+          +'<span class="dt">'+(d.title?'<b>'+esc(d.title)+'</b>':'')+esc(d.prompt)+'</span></label>';
+      });
+      h+='</div><label class="sr" for="dumptext">Your response</label>'
+        +'<textarea id="dumptext" placeholder="Write your brain dump here. On the real exam this is on paper."></textarea>'
+        +'</fieldset></div></section>';
+    }
+
+    $('parts').innerHTML=h;
+    $('paperTitle').textContent='Exam '+exam+' practice paper';
+    $('paperMeta').innerHTML='Worth <b>'+paper.plan.total+' points</b>'
+      + (mins? ' &middot; '+mins+' minutes' : ' &middot; no clock')
+      + ' &middot; '+esc(examTitle(exam));
+  }
+
+  /* confidence tally */
+  $('parts').addEventListener('input', function(e){
+    var t=e.target;
+    if(t && t.hasAttribute && t.hasAttribute('data-mc')){
+      var i=t.getAttribute('data-mc');
+      var ins=$('parts').querySelectorAll('[data-mc="'+i+'"]');
+      var sum=0; ins.forEach(function(x){ sum += Math.max(0, Math.min(4, parseInt(x.value,10)||0)); });
+      var el=$('ct'+i);
+      el.textContent = sum+' of 4 placed'+(sum>4?', that is too many':'');
+      el.className = 'ctally'+(sum===4?' ok':(sum>4?' over':''));
+    }
+  });
+
+  $('startBtn').addEventListener('click', function(){
+    paper=deal(); marked=false; armed=false;
+    $('submitBtn').disabled=false; $('submitBtn').textContent='Submit exam';
+    $('unanswered').textContent='';
+    $('setup').classList.add('hidden'); $('out').classList.add('hidden');
+    $('paper').classList.remove('hidden');
+    $('resultWrap').innerHTML='';
+    renderPaper();
+    if(mins) startClock(); else stopClock(true);
+    try{ $('paper').scrollIntoView({block:'start'}); }catch(e){}
+  });
+  $('abandonBtn').addEventListener('click', function(){
+    stopClock(true); $('paper').classList.add('hidden'); $('setup').classList.remove('hidden');
+    try{ $('setup').scrollIntoView({block:'start'}); }catch(e){}
+  });
+
+  /* ---------- clock ---------- */
+  var tick=null,left=0;
+  function fmt(s){ s=Math.max(0,s); var m=Math.floor(s/60),r=s%60; return (m<10?'0':'')+m+':'+(r<10?'0':'')+r; }
+  function startClock(){
+    left=mins*60; $('clock').classList.add('on'); $('clock').classList.remove('up');
+    $('clockLbl').textContent='remaining'; $('clockTime').textContent=fmt(left);
+    $('clockSay').textContent=mins+' minutes on the clock.';
+    window.clearInterval(tick);
+    tick=window.setInterval(function(){
+      left--; $('clockTime').textContent=fmt(left);
+      if(left===300) $('clockSay').textContent='Five minutes left.';
+      if(left<=0){ window.clearInterval(tick); tick=null; $('clock').classList.add('up');
+        $('clockLbl').textContent='time up'; $('clockSay').textContent='Time is up. Marked as it stands.'; mark(); }
+    },1000);
+  }
+  function stopClock(silent){ window.clearInterval(tick); tick=null; $('clock').classList.remove('on','up');
+    if(!silent) $('clockSay').textContent='Clock stopped.'; }
+  $('stopClock').addEventListener('click', function(){ mark(); });
+
+  /* ---------- submit ---------- */
+  function countBlank(){
+    var blank=0;
+    paper.tf.forEach(function(_,i){ if(!$('parts').querySelector('[name="tf'+i+'"]:checked')) blank++; });
+    paper.mc.forEach(function(_,i){
+      var sum=0; $('parts').querySelectorAll('[data-mc="'+i+'"]').forEach(function(x){ sum+=parseInt(x.value,10)||0; });
+      if(sum===0) blank++;
+    });
+    paper.sets.forEach(function(s,si){
+      s.termsCol.forEach(function(_,ti){
+        var sel=$('parts').querySelector('[data-set="'+si+'"][data-row="'+ti+'"]');
+        if(!sel || sel.value==='-1') blank++;
+      });
+    });
+    if(paper.dumps.length && !$('parts').querySelector('[name="dumppick"]:checked')) blank++;
+    return blank;
+  }
+
+  $('submitBtn').addEventListener('click', function(){
+    var blank=countBlank();
+    if(blank>0 && !armed){
+      armed=true;
+      $('unanswered').innerHTML='<b>'+blank+' still blank.</b> They score zero. Press submit again to mark '
+        +'the paper as it stands, or go back and fill them in.';
+      this.textContent='Submit anyway';
+      return;
+    }
+    mark();
+  });
+
+  function mark(){
+    if(marked) return;
+    marked=true; stopClock(true); $('unanswered').textContent='';
+
+    var got={tf:0,mc:0,match:0,dump:0,bonus:0};
+    var byComp={};
+    function credit(comps, gotN, ofN){
+      (comps||[]).forEach(function(c){
+        var g=byComp[c]||(byComp[c]={got:0,of:0}); g.got+=gotN; g.of+=ofN;
+      });
+    }
+
+    /* Part 1 */
+    paper.tf.forEach(function(it,i){
+      var row=$('tf'+i);
+      var picked=$('parts').querySelector('[name="tf'+i+'"]:checked');
+      var call=picked?picked.value:null;
+      var right=call===it.answer;
+      var fix=($('fix'+i)||{}).value||'';
+      var accepts=(it.accept||[]).concat(it.correction?[it.correction]:[])
+                    .map(function(s){ return String(s).trim().toLowerCase(); });
+      var fixRight = it.answer==='F' && accepts.length &&
+                     accepts.indexOf(fix.trim().toLowerCase())>-1;
+      /* The call is the point. The fix word is her quarter point of
+         extra credit, so it is banked apart from the part total
+         rather than pushing Part 1 past 20 of 20. */
+      var pts=(right?1:0);
+      var bonus=(right&&fixRight)?0.25:0;
+      got.tf+=pts; got.bonus+=bonus;
+      /* The call is what the board hears about: the quarter point
+         fix is a bonus and would push the ratio past 1 of 1. */
+      credit(compsForTopic(it.topic), right?1:0, 1);
+
+      row.querySelectorAll('input').forEach(function(x){ x.disabled=true; });
+      row.classList.add(right ? (fixRight||it.answer==='T' ? 'right':'part-credit') : 'wrong');
+      var v=document.createElement('p');
+      v.className='verdict '+(right?(fixRight||it.answer==='T'?'ok':'part'):'no');
+      v.textContent = right ? (it.answer==='F' ? (fixRight?'Correct, plus the fix':'Correct call, fix not matched') : 'Correct') : 'Not right';
+      row.appendChild(v);
+      if(!right || (it.answer==='F' && !fixRight)){
+        var w=document.createElement('div'); w.className='why';
+        w.innerHTML='<b>Answer:</b> '+(it.answer==='T'?'True':'False')
+          + (it.correction? '. The word that fixes it is <b>'+esc(it.correction)+'</b>.' : '.');
+        row.appendChild(w);
+      }
+    });
+
+    /* Part 2 */
+    paper.mc.forEach(function(q,i){
+      var row=$('mc'+i);
+      var ins=$('parts').querySelectorAll('[data-mc="'+i+'"]');
+      var vals=[]; ins.forEach(function(x){ vals.push(Math.max(0,Math.min(4,parseInt(x.value,10)||0))); x.disabled=true; });
+      var sum=vals.reduce(function(a,b){return a+b;},0);
+      /* Over-allocating cannot buy points: the four are scaled back. */
+      var onRight=vals[q.correctIndex]||0;
+      if(sum>4) onRight=onRight*4/sum;
+      var pts=onRight*0.25;
+      got.mc+=pts;
+      credit(q.comps, pts, 1);
+
+      row.classList.add(pts>=1?'right':(pts>0?'part-credit':'wrong'));
+      var v=document.createElement('p');
+      v.className='verdict '+(pts>=1?'ok':(pts>0?'part':'no'));
+      v.textContent=(Math.round(pts*100)/100)+' of 1 point';
+      row.appendChild(v);
+      var w=document.createElement('div'); w.className='why';
+      w.innerHTML='<b>Correct:</b> '+esc(q.options[q.correctIndex])
+        + (q.rationale? '. '+esc(q.rationale) : '.');
+      row.appendChild(w);
+    });
+
+    /* Part 3 */
+    paper.sets.forEach(function(s,si){
+      var row=$('ms'+si), right=0;
+      s.termsCol.forEach(function(_,ti){
+        var sel=$('parts').querySelector('[data-set="'+si+'"][data-row="'+ti+'"]');
+        var v=sel?parseInt(sel.value,10):-1;
+        if(sel) sel.disabled=true;
+        var ok = v===s.answers[ti];
+        if(ok) right++;
+        /* Credit the row that was actually answered, not the set. */
+        if(s.comps && s.comps[ti]) credit(s.comps[ti], ok?1:0, 1);
+      });
+      got.match+=right;
+      row.classList.add(right===s.termsCol.length?'right':(right?'part-credit':'wrong'));
+      var v=document.createElement('p');
+      v.className='verdict '+(right===s.termsCol.length?'ok':(right?'part':'no'));
+      v.textContent=right+' of '+s.termsCol.length+' matched';
+      row.appendChild(v);
+      var w=document.createElement('div'); w.className='why';
+      w.innerHTML='<b>Key:</b> '+s.termsCol.map(function(t,ti){
+        return esc(String(t).slice(0,40))+' &rarr; '+esc(s.bank[s.answers[ti]]);
+      }).join('<br>');
+      row.appendChild(w);
+    });
+
+    /* Part 4: self-scored against the rubric */
+    var dumpMax=0;
+    if(paper.dumps.length){
+      var pickEl=$('parts').querySelector('[name="dumppick"]:checked');
+      var row=$('dumpq');
+      row.querySelectorAll('input,textarea').forEach(function(x){ x.disabled=true; });
+      if(pickEl){
+        var d=paper.dumps[parseInt(pickEl.value,10)];
+        dumpMax=16;
+        var w=document.createElement('div'); w.className='why';
+        w.innerHTML='<b>Tick every element you actually included.</b> Each is worth an equal share of 16 points.';
+        row.appendChild(w);
+        var ul=document.createElement('ul'); ul.className='rubric';
+        var pts=d.rubric.length?d.rubric:['A real attempt: organized, labeled, and it answers what was asked.'];
+        pts.forEach(function(pt,pi){
+          var li=document.createElement('li');
+          li.innerHTML='<label><input type="checkbox" data-rub="'+pi+'"><span>'+esc(pt)+'</span></label>';
+          ul.appendChild(li);
+        });
+        row.appendChild(ul);
+        var say=document.createElement('p'); say.className='verdict part'; say.id='dumpScore';
+        say.textContent='0 of 16 points';
+        row.appendChild(say);
+        row.addEventListener('change', function(){
+          var boxes=row.querySelectorAll('[data-rub]');
+          var on=0; boxes.forEach(function(b){ if(b.checked) on++; });
+          var s=boxes.length? Math.round(on/boxes.length*16*100)/100 : 0;
+          got.dump=s;
+          $('dumpScore').textContent=s+' of 16 points';
+          paint();
+        });
+      } else {
+        var v=document.createElement('p'); v.className='verdict no'; v.textContent='No prompt chosen';
+        row.appendChild(v);
+      }
+    }
+
+    var maxTotal=paper.plan.total;
+    function paint(){
+      var total=got.tf+got.bonus+got.mc+got.match+got.dump;
+      var pct=maxTotal? Math.round(total/maxTotal*100) : 0;
+      var msg = pct>=85 ? 'That is exam ready. Leave it a few days rather than sitting another now.'
+              : pct>=70 ? 'Solid, with gaps. The parts below show where they are.'
+              : pct>=50 ? 'Half of it is there. Work the weakest part against your notes, then deal a fresh paper.'
+              : 'A long way from ready, and better found now than in the room. Take the weakest part first.';
+      var h='<div class="result">'
+        +'<p class="score">'+pct+'%<small> &middot; '+(Math.round(total*100)/100)+' of '+maxTotal+' points</small></p>'
+        +'<div class="bar"><i style="width:'+Math.min(100,pct)+'%"></i></div>'
+        +'<p class="hint" style="margin:12px 0 0">'+msg+'</p>'
+        +'<ul class="partscores">'
+        +(paper.tf.length?'<li><span>Part 1, true or false</span><b>'+(Math.round(got.tf*100)/100)+' of '+paper.tf.length
+            + (got.bonus?', plus '+(Math.round(got.bonus*100)/100)+' bonus':'')+'</b></li>':'')
+        +(paper.mc.length?'<li><span>Part 2, multiple choice</span><b>'+(Math.round(got.mc*100)/100)+' of '+paper.mc.length+'</b></li>':'')
+        +(paper.sets.length?'<li><span>Part 3, matching</span><b>'+got.match+' of '+paper.plan.match+'</b></li>':'')
+        +(dumpMax?'<li><span>Part 4, brain dump</span><b>'+(Math.round(got.dump*100)/100)+' of 16</b></li>':'')
+        +'</ul>'
+        +'<div class="row">'
+        +'<button type="button" class="big" id="againBtn">Generate another</button>'
+        +'<a class="ghost" href="mastery-os-fall-2026.html#s-weak" target="_top">Open my weak spot board</a>'
+        +'<a class="ghost" href="course-materials.html" target="_top">Go to the notes</a>'
+        +'</div></div>';
+      $('resultWrap').innerHTML=h;
+      $('againBtn').addEventListener('click', function(){
+        marked=false; armed=false;
+        $('submitBtn').disabled=false; $('submitBtn').textContent='Submit exam';
+        $('out').classList.add('hidden'); $('paper').classList.add('hidden'); $('setup').classList.remove('hidden');
+        try{ $('setup').scrollIntoView({block:'start'}); }catch(e){}
+      });
+      lsSet(K_LAST, JSON.stringify({exam:exam, pct:pct, of:maxTotal}));
+      paintLast();
+    }
+
+    if(window.BIO004_EVIDENCE && window.BIO004_EVIDENCE.record){
+      Object.keys(byComp).forEach(function(c){
+        var g=byComp[c];
+        window.BIO004_EVIDENCE.record([c],'exam', Math.round(g.got*100)/100, g.of, null);
+      });
+    }
+
+    paint();
+    $('submitBtn').disabled=true;
+    $('out').classList.remove('hidden');
+    $('out').focus();
+    try{ $('out').scrollIntoView({block:'start'}); }catch(e){}
+  }
+
+  function paintLast(){
+    var v=null; try{ v=JSON.parse(lsGet(K_LAST)||'null'); }catch(e){}
+    $('lastLine').textContent = (v && v.exam===exam)
+      ? 'Last time on exam '+v.exam+' you scored '+v.pct+' percent.' : '';
+  }
+
+  renderSetup();
+  paintLast();
+})();
+</script>
+
+<!-- iframe height sender -->
+<script>
+(function(){
+  'use strict';
+  var frameId=null;
+  try{ var m=location.search.match(/[?&]frameId=([^&#]+)/); if(m) frameId=decodeURIComponent(m[1]); }catch(e){}
+  var last=0;
+  function postHeight(){
+    var h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);
+    if(Math.abs(h-last)<2) return;
+    last=h;
+    try{ parent.postMessage({frameId:frameId,type:'resize',height:h},'*'); }catch(e){}
+  }
+  window.addEventListener('load',postHeight);
+  window.addEventListener('resize',postHeight);
+  if(window.ResizeObserver){ try{ new ResizeObserver(postHeight).observe(document.body); }catch(e){} }
+  document.addEventListener('click',function(){ window.setTimeout(postHeight,60); });
+  postHeight();
+})();
+</script>
+
+<script src="bio004-dock.js"></script>
+<script src="dock-coachmark.js"></script>
+</body>
+</html>
