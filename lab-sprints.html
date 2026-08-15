@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab Sprints &middot; BIO 004 Human Anatomy &middot; Fall 2026</title>
+<meta name="description" content="Every lab sprint in BIO 004, grouped by module and lab exam, with the week each one runs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- ============================================================
+     WHY THIS PAGE EXISTS
+
+     Course tools had a tile called "Lab sprints" and it went to
+     class1.html, the section hub, which links to no lab sprint at
+     all. The 31 sprints were reachable, but only through the
+     calendar: open a day, and that day's sprints are on its card.
+
+     That is the right place for "what do I do tonight". It is the
+     wrong place for "I have a lab practical on Friday, show me
+     everything I am responsible for", because that means opening
+     eleven days one at a time and remembering what was on each.
+
+     NOTHING HERE IS TYPED
+
+     The list is built at load from session-links.js, the same file
+     the calendar and the day cards read, grouped into modules by
+     schedule-fall2026.js. A sprint that moves to a different week
+     moves on this page, and a sprint that is added appears here,
+     without anyone editing this file. A hand-typed list is a second
+     copy of the schedule and it is wrong the first time a lab moves.
+     ============================================================ -->
+
+<style>
+  :root{
+    --navy:#08101F; --navy-tint:#ECEFF4;
+    --terra:#8B1D1D; --terra-dark:#6B1616;
+    --gold:#DCB45C; --gold-text:#6F5316;
+    --white:#FFFFFF; --offwhite:#FAFAF9;
+    --ink-2:#3D4757; --ink-3:#4A5763;
+    --radius:8px;
+    --rest:0 1px 3px rgba(0,0,0,0.08);
+    --hover:0 10px 22px rgba(0,0,0,0.12);
+    --t:transform 180ms ease, box-shadow 180ms ease;
+    --font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font);color:var(--navy);background:var(--offwhite);
+       line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:28px 20px 90px}
+  .skip{position:absolute;left:-9999px;background:var(--terra-dark);color:#fff;padding:10px 16px;
+        border-radius:8px;font-weight:700;z-index:50}
+  .skip:focus{left:16px;top:16px}
+  :focus-visible{outline:3px solid var(--terra-dark);outline-offset:2px;border-radius:6px}
+  .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+      clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+  .cover{padding:6px 0 22px}
+  .cover-eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
+                 color:var(--terra-dark);margin:0 0 10px}
+  h1{font-family:var(--font);font-weight:800;font-size:clamp(26px,4.6vw,40px);line-height:1.04;
+     letter-spacing:-.02em;margin:0 0 12px}
+  h1 span{color:var(--gold-text)}
+  .lede{font-size:17px;color:var(--ink-3);margin:0 0 6px;max-width:66ch}
+
+  .jump{display:flex;flex-wrap:wrap;gap:9px;margin:20px 0 4px}
+  .jump a{background:#fff;color:var(--navy);text-decoration:none;font-weight:700;font-size:13.5px;
+          padding:10px 15px;border-radius:999px;box-shadow:var(--rest);transition:var(--t)}
+  .jump a:hover{transform:translateY(-2px);box-shadow:var(--hover)}
+
+  .mod{background:#fff;border-radius:var(--radius);padding:24px;margin:20px 0;box-shadow:var(--rest)}
+  .mod-k{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;
+         color:var(--terra-dark);margin:0 0 4px}
+  .mod h2{font-size:clamp(19px,3vw,23px);font-weight:800;letter-spacing:-.02em;margin:0 0 4px}
+  .mod .sub{font-size:14.5px;color:var(--ink-3);margin:0 0 16px}
+
+  .sprints{list-style:none;margin:0;padding:0;display:grid;
+           grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:11px}
+  .sprints li{margin:0}
+  .sprints a{display:flex;flex-direction:column;gap:3px;background:var(--offwhite);
+             color:var(--navy);text-decoration:none;padding:14px 16px;border-radius:10px;
+             box-shadow:var(--rest);transition:var(--t);height:100%}
+  .sprints a:hover{transform:translateY(-2px);box-shadow:var(--hover)}
+  .sprints b{font-weight:800;font-size:15px;letter-spacing:-.01em}
+  .sprints .wk{font-size:12.5px;color:var(--ink-3);font-weight:600}
+
+  .listlink{display:flex;flex-direction:column;gap:3px;margin-top:14px;background:var(--navy);
+            color:#fff;text-decoration:none;padding:15px 17px;border-radius:10px;
+            box-shadow:var(--rest);transition:var(--t)}
+  .listlink:hover{transform:translateY(-2px);box-shadow:var(--hover)}
+  .listlink b{font-weight:800;font-size:15px}
+  .listlink span{font-size:13px;color:#C6CEDA}
+
+  .foot-note{background:#fff;border-radius:var(--radius);padding:18px 20px;margin-top:24px;
+             box-shadow:var(--rest);font-size:14.5px;color:var(--ink-3)}
+  .foot-note b{color:var(--navy)}
+  .back{display:inline-flex;gap:8px;align-items:center;background:var(--navy);color:#fff;
+        text-decoration:none;font-weight:800;font-size:14.5px;padding:12px 20px;border-radius:9px;
+        box-shadow:var(--rest);transition:var(--t);margin-top:18px}
+  .back:hover{transform:translateY(-2px);box-shadow:var(--hover)}
+  footer{margin-top:34px;padding-top:20px;color:var(--ink-3);font-size:14px;
+         box-shadow:inset 0 1px 0 rgba(8,16,31,.10)}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .jump a,.sprints a,.back{transition:none}
+    .jump a:hover,.sprints a:hover,.back:hover{transform:none}
+  }
+  @media print{
+    .jump,.back{display:none}
+    .mod,.sprints a{box-shadow:none}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the sprints</a>
+
+<div class="wrap">
+<main id="main">
+  <section class="cover">
+    <p class="cover-eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
+    <h1>Every <span>lab sprint</span></h1>
+    <p class="lede">Every structure you are responsible for on the models, grouped by module and by the
+       lab exam it belongs to. Use this when you are revising for a practical. For what to do on a
+       given night, use the calendar instead.</p>
+    <p class="lede">Not everything you are tested on has a station on the models. Joint classification is
+       the clearest example. Each module below ends with a link to its full structure list, which is where
+       those live.</p>
+  </section>
+
+  <nav class="jump" id="jump" aria-label="Jump to a module"></nav>
+
+  <div id="out"></div>
+
+  <div class="foot-note" id="note"></div>
+
+  <a class="back" href="bio004-course-calendar.html">Back to the calendar</a>
+
+  <footer>
+    <p>Dr. Sharilyn Rennie &middot; BIO 004 Human Anatomy &middot; Solano Community College</p>
+  </footer>
+</main>
+</div>
+
+<script src="schedule-fall2026.js"></script>
+<script src="session-links.js"></script>
+
+<script>
+(function(){
+  'use strict';
+
+  var LINKS   = window.BIO004_SESSION_LINKS || {};
+  var MODULES = window.BIO004_MODULES || [];
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  /* ---------- collect every sprint, once ----------
+     A sprint runs on more than one day across the three sections and
+     sometimes across two weeks. It should appear once, filed under
+     the earliest week it is taught, which is the week it is first
+     your responsibility. */
+  var byUrl = {};
+  Object.keys(LINKS).forEach(function(date){
+    var d = LINKS[date];
+    var wk = d.wk || null;
+    (d.lab || []).forEach(function(o){
+      if(!o || !o.u || !/-lab-sprint\.html$/.test(o.u)) return;
+      var e = byUrl[o.u];
+      if(!e){ byUrl[o.u] = { u:o.u, t:o.t || o.u, wk:wk }; return; }
+      if(wk && (!e.wk || wk < e.wk)) e.wk = wk;
+      if(o.t && o.t.length > String(e.t).length) e.t = o.t;
+    });
+  });
+
+  /* MODULES SHARE THEIR BOUNDARY WEEKS.
+
+     Module 1 is weeks 1 to 4 and module 2 is weeks 4 to 7, so week 4
+     belongs to both, and so do weeks 7 and 14. Taking the first
+     match filed bone microanatomy under foundations and put the
+     heart, the vessels and cardiac conduction under the skeleton.
+
+     On a shared week the later module is the right one every time
+     here: week 4 is where bone starts, week 7 is where the heart
+     starts, week 14 is where urinary starts. The overlap week is the
+     handover, and a sprint taught in it is the new module opening,
+     not the old one closing. */
+  function moduleForWeek(wk){
+    var found = null;
+    MODULES.forEach(function(m){
+      if(m.weeks && m.weeks.indexOf(wk) !== -1) found = m;
+    });
+    return found;
+  }
+
+  /* ---------- group into modules ---------- */
+  var groups = {}, ungrouped = [];
+  Object.keys(byUrl).forEach(function(u){
+    var s = byUrl[u];
+    var m = s.wk ? moduleForWeek(s.wk) : null;
+    if(!m){ ungrouped.push(s); return; }
+    (groups[m.n] = groups[m.n] || { m:m, items:[] }).items.push(s);
+  });
+
+  var order = Object.keys(groups).map(Number).sort(function(a,b){ return a-b; });
+
+  var jump = '', out = '', total = 0;
+  order.forEach(function(n){
+    var g = groups[n];
+    g.items.sort(function(a,b){ return (a.wk||0)-(b.wk||0) || String(a.t).localeCompare(String(b.t)); });
+    total += g.items.length;
+
+    jump += '<a href="#mod-'+n+'">Module '+n+'</a>';
+
+    out += '<section class="mod" id="mod-'+n+'" aria-labelledby="h-mod-'+n+'">';
+    out += '<p class="mod-k">Module '+n+(g.m.exam ? ' &middot; Lab exam '+g.m.exam : '')+'</p>';
+    out += '<h2 id="h-mod-'+n+'">'+esc(g.m.title||('Module '+n))+'</h2>';
+    out += '<p class="sub">'+g.items.length+' sprint'+(g.items.length===1?'':'s')
+         + (g.m.weeks && g.m.weeks.length
+             ? ' &middot; weeks '+g.m.weeks[0]+' to '+g.m.weeks[g.m.weeks.length-1]
+             : '')+'</p>';
+    out += '<ul class="sprints">';
+    g.items.forEach(function(s){
+      out += '<li><a href="'+esc(s.u)+'"><b>'+esc(s.t)+'</b>'
+           + '<span class="wk">'+(s.wk ? 'First taught in week '+s.wk : 'Week not set')+'</span></a></li>';
+    });
+    /* THE SPRINTS ARE NOT THE WHOLE PRACTICAL.
+
+       Joints have no lab sprint, because there is no joint station
+       on the models, but joint classification and the named joints
+       are on the exam and they live in the module structure list.
+       A page headed "every structure you are responsible for" that
+       silently drops them is worse than no page. Same for lymphatic
+       and endocrine in module four. The structure list is the full
+       answer and every module has one, so every module links to it. */
+    out += '</ul>';
+    out += '<a class="listlink" href="module-'+n+'-structure-list.html">'
+         + '<b>Everything on lab exam '+(g.m.exam||n)+', in full</b>'
+         + '<span>The structure list for module '+n+'. Some of what you are tested on has no station '
+         + 'on the models, joint classification most of all, and it is only in here.</span></a>';
+    out += '</section>';
+  });
+
+  if(ungrouped.length){
+    /* Not hidden. A sprint on a day with no week number is a data
+       problem worth seeing, not one to quietly drop off the page. */
+    total += ungrouped.length;
+    jump += '<a href="#mod-other">Not yet scheduled</a>';
+    out += '<section class="mod" id="mod-other" aria-labelledby="h-mod-other">';
+    out += '<p class="mod-k">Not yet placed in a module</p>';
+    out += '<h2 id="h-mod-other">Scheduled, but with no week</h2>';
+    out += '<p class="sub">These exist and are linked from a class day that carries no week number.</p>';
+    out += '<ul class="sprints">';
+    ungrouped.forEach(function(s){
+      out += '<li><a href="'+esc(s.u)+'"><b>'+esc(s.t)+'</b>'
+           + '<span class="wk">Week not set</span></a></li>';
+    });
+    out += '</ul></section>';
+  }
+
+  document.getElementById('jump').innerHTML = jump;
+  document.getElementById('out').innerHTML  = out
+    || '<section class="mod"><h2>Nothing to show</h2><p class="sub">The schedule did not load, '
+     + 'so there is nothing to list. Open the calendar and use the day you need.</p></section>';
+
+  document.getElementById('note').innerHTML =
+    '<b>' + total + ' lab sprints.</b> This list is built from the course schedule every time the page '
+    + 'opens, so it cannot fall out of step with the calendar. If a sprint moves to a different week it '
+    + 'moves here too, and nobody has to remember to update a second list.';
+})();
+</script>
+
+<!-- iframe height sender -->
+<script>
+(function(){
+  'use strict';
+  var frameId=null;
+  try{ var m=location.search.match(/[?&]frameId=([^&#]+)/); if(m) frameId=decodeURIComponent(m[1]); }catch(e){}
+  var last=0;
+  function postHeight(){
+    var h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);
+    if(Math.abs(h-last)<2) return;
+    last=h;
+    try{ parent.postMessage({frameId:frameId,type:'resize',height:h},'*'); }catch(e){}
+  }
+  window.addEventListener('load',postHeight);
+  window.addEventListener('resize',postHeight);
+  if(window.ResizeObserver){ try{ new ResizeObserver(postHeight).observe(document.body); }catch(e){} }
+  document.addEventListener('click',function(){ window.setTimeout(postHeight,60); });
+  postHeight();
+})();
+</script>
+
+<script src="bio004-dock.js"></script>
+<script src="dock-coachmark.js"></script>
+</body>
+</html>

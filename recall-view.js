@@ -133,6 +133,8 @@
      the whole course. "Every module" is still there for anyone who wants
      to range wider. */
   var filter = { scope: 'sofar', module: 'all', topic: 'all', comp: null, mode: 'due' };
+  /* set when a competency was asked for and had no cards of its own */
+  var NO_CARDS_FOR = null;
 
   var TERM_START = new Date(2026, 7, 17);            /* Monday 17 August 2026 */
   function currentWeek() {
@@ -184,11 +186,31 @@
     return out;
   }
 
+  /* THE MAP IS KEYED topicId -> { title, comps: [...] }.
+     This read map[entry.topicId] and returned that whole object, so the
+     filter below was comparing an object with a competency id string and
+     never matching. Every competency that has no competencyId stamped on
+     its cards, which is 56 of 192 including all seventeen of week 1,
+     therefore resolved to no cards at all. topicWeek() and
+     mastery-evidence.js both read .comps correctly; only this one did
+     not.
+
+     It returns an array when the route is the map, because one topic
+     covers several competencies. */
   function compOf(entry) {
     var map = window.CARD_COMPETENCY_MAP || window.BIO004_CARD_COMPETENCY_MAP;
     if (entry.card.competencyId) return entry.card.competencyId;
-    if (map) return map[entry.key] || map[entry.card.id] || map[entry.topicId] || null;
+    if (map) {
+      var e = map[entry.key] || map[entry.card.id] || map[entry.topicId];
+      if (e) return (e && e.comps) ? e.comps : e;
+    }
     return null;
+  }
+  /* compOf can be a string or a list, so never compare it directly. */
+  function isComp(entry, want) {
+    var c = compOf(entry);
+    if (!c) return false;
+    return Array.isArray(c) ? c.indexOf(want) > -1 : c === want;
   }
 
   function due(entry) {
@@ -205,7 +227,7 @@
       if (filter.scope === 'sofar' && (w === 0 || w > wkNow)) return false;
       if (filter.module !== 'all' && e.moduleId !== filter.module) return false;
       if (filter.topic !== 'all' && e.topicId !== filter.topic) return false;
-      if (filter.comp && compOf(e) !== filter.comp) return false;
+      if (filter.comp && !isComp(e, filter.comp)) return false;
       return true;
     });
     if (filter.mode === 'due') pool = pool.filter(due);
@@ -399,12 +421,12 @@
            + '</div></div>';
     }
     /* IT SHOULD LOOK LIKE A CARD, NOT LIKE THE PAGE.
-       This was a flat panel the same width and colour as everything
+       This was a flat panel the same width and color as everything
        around it, so the one thing a student is meant to be looking at
        read as another block of the form above it. It is a card now:
        narrower than the column, lifted well off the page on a real
-       shadow, with a coloured tile in the corner the same way the
-       method cards on Today carry one. The tile colour is the DOK
+       shadow, with a colored tile in the corner the same way the
+       method cards on Today carry one. The tile color is the DOK
        level, so the depth of the question is visible before it is
        read. No bar across the top: bars are out of the system. */
     var dok = c.dok ? Math.max(1, Math.min(4, +c.dok)) : 1;
@@ -436,6 +458,16 @@
       return;
     }
     var inner = head();
+    if (NO_CARDS_FOR) {
+      var cs = window.BIO004_COMPETENCIES || [];
+      var hit = null;
+      for (var ci = 0; ci < cs.length; ci++) { if (cs[ci].id === NO_CARDS_FOR) { hit = cs[ci]; break; } }
+      inner += '<div class="rv-card rv-note"><h3>' + esc(hit ? hit.name : 'That one') +
+               ' is not a card topic</h3>' +
+               '<p>It is a specimen identification, so it is proved at the cadaver or the ' +
+               'microscope rather than by multiple choice. Showing you everything else that is ' +
+               'queued instead.</p></div>';
+    }
     if (!queue.length) {
       inner += '<div class="rv-card rv-done"><h3>Nothing due right now</h3>'
              + '<p>That is the system working, not a gap. Cards come back on a schedule so you '
@@ -581,6 +613,9 @@
   + '#' + MOUNT + ' .rv-field{display:flex;flex-direction:column;gap:4px}'
   + '#' + MOUNT + ' .rv-field label{font-size:.78rem;font-weight:600;opacity:.8}'
   + '#' + MOUNT + ' .rv-field select{padding:8px 10px;border:1px solid rgba(11,21,48,.28);border-radius:8px;background:#fff;font:inherit;min-height:44px}'
+  + '#' + MOUNT + ' .rv-note{border-left:0;background:#FFF;box-shadow:0 1px 3px rgba(8,16,31,.10);border-radius:12px;padding:16px 18px;margin:0 0 14px}'
+  + '#' + MOUNT + ' .rv-note h3{margin:0 0 6px;font-size:16px}'
+  + '#' + MOUNT + ' .rv-note p{margin:0;font-size:14px;color:#3D4757}'
   + '#' + MOUNT + ' .rv-stage{display:flex;justify-content:center;padding:26px 0 10px}'
   + '#' + MOUNT + ' .rv-card{position:relative;width:100%;max-width:620px;padding:26px 30px 26px;'
   +   'border:1px solid rgba(8,16,31,.09);border-radius:18px;background:#fff;'
@@ -667,7 +702,20 @@
       filter.comp = compId || null;
       filter.mode = 'all';
       queue = build();
-      if (!queue.length) { filter.comp = null; queue = build(); }
+      /* Ten competencies have no cards on purpose: the cadaver and
+         specimen identifications, which are evidenced at the bench, not
+         by multiple choice. Dropping the filter used to hand a student
+         the entire 2,986-card deck without a word, which reads as a
+         glitch rather than as an answer. Say what happened instead. */
+      NO_CARDS_FOR = null;
+      if (!queue.length && compId) {
+        NO_CARDS_FOR = compId;
+        filter.comp = null;
+        queue = build();
+      } else if (!queue.length) {
+        filter.comp = null;
+        queue = build();
+      }
       render();
       var sec = document.getElementById('s-recall') || $(MOUNT);
       if (sec && sec.scrollIntoView) sec.scrollIntoView({ block: 'start' });

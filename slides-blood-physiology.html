@@ -120,11 +120,19 @@ body.present .lvlbar{display:none}
 
 .casc{border:1px solid rgba(11,21,48,.16);border-radius:12px;padding:14px 16px;background:#fff;width:100%}
 .casc .steps{list-style:none;margin:0;padding:0;counter-reset:cs}
-.casc .steps li{position:relative;padding:10px 12px 10px 44px;border-radius:8px;margin:0 0 8px;background:#FAFAF9;border:1px solid rgba(11,21,48,.12);opacity:.38;transition:opacity .25s,background .25s,border-color .25s}
+/* An unrevealed step was the whole row at opacity .38, which put its
+   heading at 2.39:1 and its detail at 1.94:1. That is the worst of
+   both: too faint to pass, still legible enough to give the step away
+   before it is revealed. Muted with solid colors instead, and the
+   revealed state below still lifts it to full ink. */
+.casc .steps li{position:relative;padding:10px 12px 10px 44px;border-radius:8px;margin:0 0 8px;background:#F4F5F7;border:1px solid rgba(11,21,48,.12);color:#5E6576;transition:color .25s,background .25s,border-color .25s}
+.casc .steps li b{color:#5E6576}
+.casc .steps li span{color:#5E6576}
 .casc .steps li::before{counter-increment:cs;content:counter(cs);position:absolute;left:10px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:#8C90A0;color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
 .casc .steps li b{display:block;font-size:15px;color:#0B1530}
 .casc .steps li span{display:block;font-size:12.5px;color:#3a4658}
-.casc .steps li.on{opacity:1;background:#EDF1F3;border-color:#0B1530}
+.casc .steps li.on{background:#EDF1F3;border-color:#0B1530;color:#0B1530}
+.casc .steps li.on b,.casc .steps li.on span{color:#0B1530}
 .casc .steps li.on::before{background:#8B3A2E}
 .casc .steps li.cur{border-color:#8B3A2E;box-shadow:0 0 0 2px rgba(139,58,46,.18)}
 .cascbtns{display:flex;gap:8px;margin:8px 0 4px}

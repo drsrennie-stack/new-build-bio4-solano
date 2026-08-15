@@ -129,15 +129,46 @@
     t.push({ g: 'This week', name: 'Course calendar', sub: 'Every class day and what to prepare for it',
              url: BASE + 'bio004-course-calendar.html' + q, icon: 'cal', tone: 'navy', qr: 'calendar', kw: 'calendar schedule dates' });
 
+    /* ---------- COURSE MATERIALS ----------
+
+       This group did not exist. Nine unrelated things sat under
+       "Study tools": the notes a student reads and the engine that
+       decides what to test them on, side by side, with nothing to
+       tell them apart. Material you study is not the same kind of
+       thing as machinery that studies you, and one heading over
+       both makes the list something to scan rather than use.
+
+       Still ONE dock. Two headings inside it, not two buttons. A
+       second floating button is another entryway to the same files
+       ordered a third way, and too many entryways is the problem
+       this course already had. */
+    t.push({ g: 'Course materials', name: 'All course materials', sub: 'Every sheet, note, video, workbook and deck, by module',
+             url: BASE + 'course-materials.html', icon: 'doc', tone: 'navy', qr: 'materials',
+             kw: 'materials notes prework videos workbooks slides index everything reading' });
+    t.push({ g: 'Course materials', name: 'Notes', sub: 'The reading for this course, by module',
+             url: BASE + 'course-materials.html?show=notes', icon: 'doc', tone: 'terra',
+             kw: 'notes reading module chapter' });
+    t.push({ g: 'Course materials', name: 'Pre-work sheets', sub: 'The sheet you work by hand the night before class',
+             url: BASE + 'course-materials.html?show=sheets', icon: 'pencil', tone: 'gold',
+             kw: 'prework pre-work worksheet sheet night before homework' });
+    t.push({ g: 'Course materials', name: 'Concept videos', sub: 'Short walkthroughs, watch with your notes open',
+             url: BASE + 'course-materials.html?show=videos', icon: 'play', tone: 'green',
+             kw: 'videos concept watch lecture walkthrough' });
+    t.push({ g: 'Course materials', name: 'Lab sprints', sub: 'Every structure you are responsible for on the models',
+             url: BASE + 'lab-sprints.html', icon: 'flask', tone: 'navy',
+             qr: 'labs', kw: 'lab sprints models dissection structures practical stations' });
+    t.push({ g: 'Course materials', name: 'Digital Atlas', sub: 'Turn the structures around and look at them',
+             url: 'https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02', icon: 'globe', tone: 'gold', qr: 'atlas', ext: true, kw: 'atlas 3d explore' });
+    t.push({ g: 'Course materials', name: 'Exam modules', sub: 'Exactly what each exam covers',
+             url: BASE + 'bio004-exam-modules.html' + q, icon: 'flask', tone: 'navy', qr: 'exams', kw: 'exam modules covers scope' });
+    t.push({ g: 'Course materials', name: 'Case deep dives', sub: 'One clinical case per topic, with the PDF',
+             url: BASE + 'course-index.html' + q, icon: 'flask', tone: 'terra', kw: 'deep dive cases clinical index topics' });
     t.push({ g: 'Study tools', name: 'Mastery OS', sub: 'Your cards, your weak spots, and a plan around them',
              url: BASE + 'mastery-os-fall-2026.html' + q, icon: 'brain', tone: 'gold', qr: 'mastery',
              kw: 'mastery os plan cram competency recall cards flashcards spaced question rx study' });
     t.push({ g: 'Study tools', name: 'Recall cards', sub: 'Straight into the cards that are due today',
              url: BASE + 'mastery-os-fall-2026.html#s-recall' + '', icon: 'cards', tone: 'green', qr: 'recall',
              kw: 'recall cards flashcards spaced due today question' });
-    t.push({ g: 'Study tools', name: 'Lab sprints', sub: 'Every structure you are responsible for on the models',
-             url: BASE + (SECTIONS[sec] ? SECTIONS[sec].hub : 'welcome.html') + q, icon: 'flask', tone: 'navy',
-             qr: 'labs', kw: 'lab sprints models dissection structures practical stations section hub' });
     t.push({ g: 'Study tools', name: 'Loops', sub: 'Thirty-nine image loops for fast visual practice',
              url: 'https://drsrennie-stack.github.io/loops/', icon: 'loop', tone: 'terra', qr: 'loops', ext: true, kw: 'loops images practice lab' });
     t.push({ g: 'Study tools', name: 'Weak spot board', sub: 'The topics your own answers say are weakest',
@@ -165,13 +196,7 @@
              url: BASE + 'repair-round-activity.html', icon: 'target', tone: 'gold', soon: true,
              kw: 'repair round activity capture sheet pairs in class' });
 
-    t.push({ g: 'Reference', name: 'Digital Atlas', sub: 'Turn the structures around and look at them',
-             url: 'https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02', icon: 'globe', tone: 'gold', qr: 'atlas', ext: true, kw: 'atlas 3d explore' });
-    t.push({ g: 'Reference', name: 'Exam modules', sub: 'Exactly what each exam covers',
-             url: BASE + 'bio004-exam-modules.html' + q, icon: 'flask', tone: 'navy', qr: 'exams', kw: 'exam modules covers scope' });
-    t.push({ g: 'Reference', name: 'Case deep dives', sub: 'One clinical case per topic, with the PDF',
-             url: BASE + 'course-index.html' + q, icon: 'flask', tone: 'terra', kw: 'deep dive cases clinical index topics' });
-    t.push({ g: 'Reference', name: 'Syllabus', sub: S ? S.label : 'Pick your section first',
+    t.push({ g: 'Course', name: 'Syllabus', sub: S ? S.label : 'Pick your section first',
              url: BASE + (S ? S.syllabus : 'fall-2026-syllabus.html'), icon: 'doc', tone: 'navy', kw: 'syllabus grading policy' });
 
     /* welcome.html IS the course home. Offering a "Course home" tile
@@ -256,7 +281,7 @@
 '.bd-s{display:block;font-size:11.5px;line-height:1.35;color:#fff;opacity:.86;margin-top:2px}',
 '.bd-ext{font-size:10px;color:#F2E2B8;margin-left:5px}',
 '/* COMING SOON.',
-'   Dimmed with solid colours rather than opacity: an opacity on the tile',
+'   Dimmed with solid colors rather than opacity: an opacity on the tile',
 '   would drag the name and the note down with it, and that is the exact',
 '   contrast bug being swept out of this codebase. #C3CAD6 is 8.9:1 on the',
 '   dock navy and #98A3B4 is 5.6:1, so both still clear AA while plainly',

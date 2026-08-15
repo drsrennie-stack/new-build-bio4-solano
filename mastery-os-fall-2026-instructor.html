@@ -23,7 +23,9 @@
   --rust:#6B1616; --rust-hover:#A0452F; --terra:#8B1D1D; --terra-dark:#A0522D; --clay:#CE8166;
   --gold:#C9A14A; --gold-light:#D9B065; --cream:#F5F1E8;
   --white:#FFFFFF; --offwhite:#FAFAF9; --slate:#8C90A0;
-  --ink:#08101F; --ink-soft:rgba(8,16,31,0.74); --ink-faint:rgba(8,16,31,0.52);
+  /* --ink-faint at 0.52 flattens to 3.79:1. 0.62 is the first alpha
+     that clears 4.5:1 against every background this page uses. */
+  --ink:#08101F; --ink-soft:rgba(8,16,31,0.74); --ink-faint:rgba(8,16,31,0.62);
   --line:rgba(8,16,31,0.12); --line-soft:rgba(8,16,31,0.07);
   --ok:#3F7A5B; --warn:#B4772E; --bad:#6B1616;
   --shadow:0 1px 3px rgba(8,16,31,0.08);
@@ -1790,7 +1792,7 @@ function mindMap(){
   gSet('Mind-Map then Recall','Signature exercise');
   var w=weaknesses();var c=(w[0]&&w[0].c)||allComps()[0].c;CUR_EX=c;var step=0;
   var steps=[
-    {emoji:'🗺️',h:'Map it from your notes',p:'Open your notes for '+c.name+'. On paper or a whiteboard, build a mind-map: put '+c.name+' in the centre and branch out every related structure, term, and connection you can find. Take about five minutes.',cta:'I have mapped it'}, {emoji:'🧠',h:'Now rebuild it from memory',p:'Close your notes. On a fresh page, redraw the whole mind-map from memory, no peeking. This retrieval is what builds durable memory.',cta:'I have rebuilt it'}, {emoji:'🔍',h:'Compare and score',p:'Put the two side by side. What did you miss? Those gaps are your next repair targets for '+c.name+'. How much came back?',cta:null}
+    {emoji:'🗺️',h:'Map it from your notes',p:'Open your notes for '+c.name+'. On paper or a whiteboard, build a mind-map: put '+c.name+' in the center and branch out every related structure, term, and connection you can find. Take about five minutes.',cta:'I have mapped it'}, {emoji:'🧠',h:'Now rebuild it from memory',p:'Close your notes. On a fresh page, redraw the whole mind-map from memory, no peeking. This retrieval is what builds durable memory.',cta:'I have rebuilt it'}, {emoji:'🔍',h:'Compare and score',p:'Put the two side by side. What did you miss? Those gaps are your next repair targets for '+c.name+'. How much came back?',cta:null}
   ];
   function render(){var s=steps[step];var b='<div class="g-center"><div class="g-emoji">'+s.emoji+'</div><h3>'+esc(s.h)+'</h3><p>'+esc(s.p)+'</p>';if(step<2)b+='<div class="g-actions"><button class="btn gold" id="mmNext">'+esc(s.cta)+'</button></div>';else b+='<div class="g-actions"><button class="btn" data-mmscore="2">Under half</button><button class="btn" data-mmscore="4">Most of it</button><button class="btn gold" data-mmscore="6">Almost all</button></div>';b+='</div>';gBody(b);if(step<2){var n=$('#mmNext');if(n)n.onclick=function(){step++;render();};}}
   render();
@@ -2296,7 +2298,7 @@ function drawKnow(){
   function render(){
     var revealed=rub.slice(0,shown);
     var b='<div class="g-qmeta"><span>Draw or mind-map from memory</span><span>'+esc(c.name)+'</span></div>';
-    b+='<p class="g-q">On paper or the drawing canvas, draw <b>'+esc(c.name)+'</b> from memory, or build a mini mind-map of it. No notes. Put it in the centre and branch out every part and connection you can.</p>';
+    b+='<p class="g-q">On paper or the drawing canvas, draw <b>'+esc(c.name)+'</b> from memory, or build a mini mind-map of it. No notes. Put it in the center and branch out every part and connection you can.</p>';
     b+='<div class="g-actions" style="margin-bottom:12px"><button class="btn" data-toolblank="mastery-canvas.html?title='+encodeURIComponent(c.name)+'">Draw on canvas (iPad friendly)</button></div>';
     if(rub.length){
       b+='<div class="reference-box"><h4>Self-check, should include ('+revealed.length+' of '+rub.length+')</h4><ul>'+(revealed.length?revealed.map(function(x){return '<li>'+esc(x)+'</li>';}).join(''):'<li style="list-style:none;color:var(--ink-faint)">Hidden. Draw or map it first, then reveal to grade yourself.</li>')+'</ul></div>';
