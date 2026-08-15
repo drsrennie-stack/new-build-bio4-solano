@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Practice Exam &middot; BIO 004 Human Anatomy &middot; Fall 2026</title>
-<meta name="description" content="Generate a practice lecture exam in the real BIO 004 format: true or false with a correction, confidence-based multiple choice, matching, and a brain dump. A different paper every time.">
+<meta name="description" content="Generate a practice lecture exam in the real BIO 004 format: true or false with the fix word, confidence-based multiple choice, matching, and a free response. No repeats inside a paper, and a different paper every time.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -12,50 +12,42 @@
 <!-- ============================================================
      PRACTICE EXAM, IN THE REAL FORMAT
 
-     The four parts, the point split and the scoring rules are
-     copied from BIO004-Midterm-Practice-Exam-1/2/3, which is how
-     Dr. Rennie's lecture exams actually run:
+     The four parts, the point split and the scoring rules are her
+     Fall module exams (bio004-module-1..5-exam.html), which is how
+     BIO 004 lecture exams actually run:
 
        Part 1  True or false, 20 pts. One point for the call. If it
                is false, the bolded term is the only wrong word, and
-               naming the word that fixes it earns +0.25.
+               naming the word that fixes it earns +0.25 of extra
+               credit, banked apart from the part total.
        Part 2  Multiple choice, confidence based, 40 pts. Four
                confidence points per question, spread across the
                four options however you like. Score is the points
-               you placed on the correct option x 0.25.
-       Part 3  Matching, 24 pts. Every bank carries one or two extra
+               you placed on the correct option x 0.25. Placing
+               more than four scales the whole question back.
+       Part 3  Matching, 10 items at 2 pts. The bank carries extra
                options that match nothing.
-       Part 4  Brain dump, 16 pts. Pick one prompt of three, write
-               it, then self-score against the rubric.
+       Part 4  Free response, 20 pts. Pick one prompt of three,
+               write it, then self-score against her rubric with
+               the model answer in front of you.
 
      WHERE THE ITEMS COME FROM
 
-     True/false and matching are hand written and cannot be
-     synthesised honestly, so those come from the pool of items in
-     the three summer papers (practice-exam-bank.js).
+     practice-exam-bank.js pools every item she has written: the
+     five module exams plus the three Summer midterm papers, minus
+     duplicates. Multiple choice is topped up from the card bank,
+     scoped to the chosen exam by the same chain the lab sprint and
+     materials indexes use: topic -> competency -> week -> module
+     -> exam.
 
-     Multiple choice comes from that pool first and then from the
-     card bank, scoped to the chosen exam by the same chain the lab
-     sprint and materials indexes use: topic -> competency -> week
-     -> module -> exam.
+     NO REPEATS, AND BREADTH
 
-     Brain dumps come from bio004-braindump-data.js, whose prompts
-     already carry the key points, which is exactly the rubric this
-     part needs.
-
-     THE SUMMER PAPERS RAN MIDTERM ONWARD, so the authored pool is
-     rich for exam 3, thin for exams 2 and 4, and all but empty for
-     exams 1 and 5. Multiple choice, matching and the brain dump all
-     have card-bank fallbacks and are never short. True or false has
-     none, because a false item needs a statement that is true except
-     for one word plus the word that fixes it, and only a person who
-     knows the subject can write that.
-
-     So: every paper is worth 100. If fewer than 8 true or false
-     items exist for the exam, Part 1 is left off and its 20 points
-     move to Part 2, and the setup screen says so in plain words.
-     Write more true/false items into practice-exam-bank.js and
-     Part 1 reappears on its own, no code change needed.
+     A paper is dealt through one shared ledger, so a question
+     cannot appear twice in any part, and the draw is greedy for
+     coverage: an item touching an untouched topic outranks a
+     fifth question on the topic already asked. The paper header
+     reports how many topics and competencies it reached, so a
+     narrow paper is visible rather than assumed.
 
      A finished paper writes one entry per competency into
      bio004-evidence-v1 as source 'exam', so it moves the weak spot
@@ -244,9 +236,9 @@
   <section class="cover">
     <p class="cover-eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
     <h1>Practice <span>exam</span></h1>
-    <p class="lede">The real format: true or false with a correction, confidence-based multiple choice,
-       matching, and a brain dump. 100 points. Generate one whenever you want and you get a different
-       paper every time.</p>
+    <p class="lede">Your real exam format: true or false with the fix word, confidence-based multiple
+       choice, matching, and a free response. 100 points. Generate one whenever you want, and no two
+       papers are the same.</p>
     <p class="lede" id="lastLine"></p>
   </section>
 
@@ -292,8 +284,9 @@
   </section>
 
   <footer>
-    <p>Written items come from Dr. Rennie's own practice papers; multiple choice is topped up from the
-       course card bank. Nothing you answer leaves this browser. Your score goes to your weak spot board.</p>
+    <p>Every question is one Dr. Rennie wrote for a BIO 004 exam, with multiple choice topped up from the
+       course card bank. Nothing repeats inside a paper. Nothing you answer leaves this browser. Your
+       score goes to your weak spot board.</p>
     <p>Dr. Sharilyn Rennie &middot; BIO 004 Human Anatomy &middot; Solano Community College</p>
   </footer>
 </main>
@@ -323,6 +316,7 @@
   var COMPS  = window.BIO004_COMPETENCIES || [];
   var MODS   = window.BIO004_MODULES || [];
   var AUTH   = window.BIO004_EXAM_BANK || {tf:[],mc:[],match:[],fr:[]};
+  var TCOMP  = window.BIO004_EXAM_TOPIC_COMPS || {};
   var DUMPS  = window.BRAINDUMP_BANK || {pools:{}};
 
   function $(id){ return document.getElementById(id); }
@@ -333,11 +327,92 @@
   function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
   function lsSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } }
   function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
-  function take(pool,n){ var p=pool.slice(), out=[]; while(out.length<n && p.length) out.push(p.splice(Math.floor(Math.random()*p.length),1)[0]); return out; }
 
-  var WEEK_OF={}, NAME_OF={};
-  COMPS.forEach(function(c){ WEEK_OF[c.id]=c.week; NAME_OF[c.id]=c.name; });
+  var WEEK_OF={};
+  COMPS.forEach(function(c){ WEEK_OF[c.id]=c.week; });
   function moduleForWeek(wk){ var f=null; MODS.forEach(function(m){ if(m.weeks&&m.weeks.indexOf(wk)!==-1) f=m; }); return f; }
+  function examTitle(n){ var m=MODS.filter(function(x){return x.exam===n;})[0]; return m?m.title:''; }
+
+  /* ============================================================
+     ONE PAPER, NO REPEATS, SPREAD ACROSS THE MATERIAL
+
+     Two things go wrong when you deal 80 items at random from a
+     pool of hundreds. The same question can turn up twice, once in
+     Part 2 and again as a matching clue. And the draw clumps: nine
+     heart-valve questions and nothing on the conduction system is
+     a perfectly random paper and a useless one.
+
+     So a paper is dealt through one shared ledger.
+
+       LEDGER.text   every question already on this paper, keyed on
+                     its normalized text. Nothing goes on twice, in
+                     any part.
+       LEDGER.topic  how many items each topic has contributed.
+       LEDGER.comp   how many items each competency has contributed.
+
+     Every draw is greedy: score the candidates, take the best one,
+     write it into the ledger, score again. A candidate scores high
+     for touching a topic and competencies nothing has touched yet,
+     and is penalized by how loaded its topic and competencies
+     already are. The pool is shuffled first so ties break
+     differently every time and two papers are never the same.
+     ============================================================ */
+
+  function normText(s){
+    return String(s==null?'':s).toLowerCase().replace(/\*\*/g,'')
+      .replace(/[^a-z0-9]+/g,' ').trim();
+  }
+  function newLedger(){ return {text:{}, topic:{}, comp:{}}; }
+
+  function compsOfTopic(t){ return TCOMP[t] || null; }
+
+  function scoreOf(item, L){
+    var topic = item.topic || '';
+    var cs = item.comps || compsOfTopic(topic) || [];
+    var s = 0;
+    /* An untouched topic is the strongest signal of breadth. */
+    var tSeen = L.topic[topic] || 0;
+    s += tSeen === 0 ? 600 : -120 * tSeen;
+    /* Then competencies: fresh ones lift, loaded ones drag. */
+    for(var i=0;i<cs.length;i++){
+      var n = L.comp[cs[i]] || 0;
+      s += n === 0 ? 90 : -30 * n;
+    }
+    /* An item with no competencies is not disqualified, it just
+       does not earn the freshness bonus, so mapped items go first
+       and unmapped ones still fill a thin pool. */
+    return s;
+  }
+
+  function ledgerWrite(item, L){
+    L.text[normText(item.stem || item.statement || item.prompt || item.key)] = 1;
+    var topic = item.topic || '';
+    L.topic[topic] = (L.topic[topic] || 0) + 1;
+    var cs = item.comps || compsOfTopic(topic) || [];
+    cs.forEach(function(c){ L.comp[c] = (L.comp[c] || 0) + 1; });
+  }
+
+  /* Draw `want` items from `pool`, best breadth first, never
+     repeating anything already in the ledger. */
+  function drawSpread(pool, want, L){
+    if(want <= 0) return [];
+    var p = shuffle(pool.slice()), out = [];
+    /* Drop anything already on the paper before scoring starts. */
+    p = p.filter(function(it){
+      return !L.text[normText(it.stem || it.statement || it.prompt || it.key)];
+    });
+    while(out.length < want && p.length){
+      var bi = 0, bs = scoreOf(p[0], L);
+      for(var i=1;i<p.length;i++){
+        var s = scoreOf(p[i], L);
+        if(s > bs){ bs = s; bi = i; }
+      }
+      var pick = p.splice(bi,1)[0];
+      ledgerWrite(pick, L);
+      out.push(pick);
+    }
+    return out;
+  }
 
   /* ---------- card-bank multiple choice, scoped by exam ---------- */
   var CARDS={1:[],2:[],3:[],4:[],5:[]};
@@ -355,124 +430,58 @@
     });
   });
 
-  /* ---------- brain dump prompts, scoped by exam ---------- */
+  /* ---------- brain dump prompts, the fallback for Part 4 ---------- */
   var DUMPPOOL={1:[],2:[],3:[],4:[],5:[]};
   Object.keys(DUMPS.pools||{}).forEach(function(k){
     var p=DUMPS.pools[k]; if(!p||p.kind==='team') return;
     var mod=p.week?moduleForWeek(p.week):null; if(!mod||!mod.exam) return;
     (p.items||[]).forEach(function(it){
       if(!it||!it.p) return;
-      DUMPPOOL[mod.exam].push({prompt:it.p, title:it.t||'', rubric:(it.l||[]).slice()});
+      DUMPPOOL[mod.exam].push({prompt:it.p, topic:it.t||'', rubric:(it.l||[]).slice(), lines:10, src:'dump'});
     });
   });
-  /* Her own free-response prompts sit alongside them. */
-  (AUTH.fr||[]).forEach(function(x){
-    if(!x.exam||!x.prompt) return;
-    DUMPPOOL[x.exam].push({prompt:x.prompt, title:x.topic||'', rubric:(x.rubric||x.points||[]).slice()});
-  });
-
-  /* ---------- her written items, mapped to competencies ----------
-
-     Card-derived questions already carry competencies, because the
-     card bank is tagged. Her own written items carry a topic string
-     instead ("Coronary Circulation", "Bone Microanatomy"). Without a
-     bridge, a paper made mostly of her items scores fine and then
-     sends nothing at all to the weak spot board, which is the whole
-     point of taking it. This table is that bridge: exam bank topic
-     to card bank topic id, whose competencies are already correct.
-     Written out by hand rather than string-matched, because "Bone"
-     and "Bone Microanatomy" are two different competency sets. */
-  var TOPIC_TO_CARD_TOPIC = {
-    "Appendicular Skeleton": ["t-appendicular-skeleton-upper","t-appendicular-skeleton-lower"],
-    "Axial Skeleton": ["t-axial-skeleton-skull","t-axial-skeleton-spine"],
-    "Blood": ["t-blood-plasma","t-blood-erythrocytes","t-blood-leukocytes"],
-    "Blood Cells and Blood Facts": ["t-blood-erythrocytes","t-blood-leukocytes"],
-    "Blood Cells and Their Facts": ["t-blood-erythrocytes","t-blood-leukocytes"],
-    "Blood Vessels": ["t-blood-vessels"],
-    "Body Regions and Layman's Terms": ["t-anatomical-terminology"],
-    "Bone": ["t-bone-histology"],
-    "Bone Microanatomy": ["t-bone-histology"],
-    "Bone and Skeletal Landmarks": ["t-bone-histology","t-axial-skeleton-skull"],
-    "Bones and Bone Details": ["t-bone-histology"],
-    "Conduction System": ["t-cardiac-conduction"],
-    "Coronary Circulation": ["t-heart","t-blood-vessels"],
-    "Fascicle & Levers": ["t-muscle-naming-mechanics"],
-    "Fetal Circulation": ["t-blood-vessel-disorders"],
-    "Great Vessels": ["t-heart","t-blood-vessels"],
-    "Heart": ["t-heart"],
-    "Heart Anatomy and Great Vessels": ["t-heart"],
-    "Integumentary": ["t-integumentary"],
-    "Joints": ["t-articulations"],
-    "Joints and Skull Landmarks": ["t-articulations","t-axial-skeleton-skull"],
-    "Lymphatic": ["t-lymph-overview-vessels","t-lymph-nodes-spleen","t-lymph-trunks-ducts"],
-    "Muscle Microanatomy": ["t-muscle-microanatomy","t-muscle-sarcomere"],
-    "Neck & Upper Limb Vessels": ["t-blood-vessels"],
-    "Neck Vessels": ["t-blood-vessels"],
-    "Respiratory": ["t-respiratory"],
-    "Respiratory Passage and Membranes": ["t-respiratory"],
-    "Upper Extremity Vessels": ["t-blood-vessels"],
-    "Vessel Disorders": ["t-blood-vessel-disorders"],
-    "Vessel Histology": ["t-blood-vessels"],
-    "Vessels of the Upper Limb and Neck": ["t-blood-vessels"]
-  };
-
-  function compsForTopic(topic){
-    var ids = TOPIC_TO_CARD_TOPIC[topic];
-    if(!ids) return null;
-    var out = [];
-    ids.forEach(function(id){
-      var e = CMAP[id]; if(!e) return;
-      var cs = e.comps || e;
-      (Array.isArray(cs) ? cs : [cs]).forEach(function(c){ if(out.indexOf(c)===-1) out.push(c); });
-    });
-    return out.length ? out : null;
-  }
 
   function authFor(kind, exam){ return (AUTH[kind]||[]).filter(function(x){ return x.exam===exam; }); }
 
-  /* ---------- the blueprint, per exam ---------- */
-  var PLAN = { tf:20, mc:40, match:24, dump:16 };
+  /* ============================================================
+     THE BLUEPRINT
 
-  /* Every paper is worth 100, whatever the pools hold.
+     Taken from her five Fall module exams, not the Summer practice
+     papers. Both come to 100, but the split is different and the
+     module papers are the ones the class will actually sit:
 
-     True or false is the one part that cannot be generated. A false
-     item needs a statement that is true except for one word, plus
-     the word that fixes it, and only a person who knows the subject
-     can write that. Her three summer papers were midterm onward, so
-     exams 1 and 5 have almost none written yet.
+       Part 1  True or false ......... 20 items, 1 pt each
+       Part 2  Multiple choice ....... 40 items, confidence based
+       Part 3  Matching .............. 10 items at 2 pts
+       Part 4  Free response ......... 20 pts, choose one
 
-     Rather than hand a student a one point Part 1, a part with
-     fewer than TF_FLOOR items is left off the paper and its points
-     move to multiple choice, which has hundreds of cards behind it
-     for every exam. The paper still totals 100 and the setup screen
-     says which part is missing and why. */
-  var TF_FLOOR = 8;
+     Every part now has enough written behind it for all five
+     exams, so no part is ever dropped and the paper is always 100.
+     Matching still tops up from the card bank when a module has
+     only the one written set and a student deals several papers.
+     ============================================================ */
+  var PLAN = { tf:20, mc:40, matchRows:10, matchPts:20, fr:20 };
 
   function planFor(exam){
-    var tfHave = authFor('tf', exam).length;
-    var tf = tfHave >= TF_FLOOR ? Math.min(PLAN.tf, tfHave) : 0;
+    var tfHave    = authFor('tf', exam).length;
+    var mcHave    = authFor('mc', exam).length + CARDS[exam].length;
+    var matchRows = PLAN.matchRows;
+    var frHave    = authFor('fr', exam).length + DUMPPOOL[exam].length;
 
-    /* Whatever Part 1 cannot carry becomes extra Part 2 questions. */
-    var mcWant = PLAN.mc + (PLAN.tf - tf);
-    var mcPool = authFor('mc', exam).length + CARDS[exam].length;
-    var mc = Math.min(mcWant, mcPool);
+    var tf = Math.min(PLAN.tf, tfHave);
+    var mc = Math.min(PLAN.mc + (PLAN.tf - tf), mcHave);
+    var match = (CARDS[exam].length >= 13 || authFor('match',exam).length) ? matchRows : 0;
+    var fr = frHave ? PLAN.fr : 0;
 
-    /* Matching is 24 points in sets of eight. Where she has not
-       written enough sets, sets are generated from the card bank so
-       the part is never simply absent. */
-    var mFromAuth = 0;
-    authFor('match', exam).forEach(function(s){ mFromAuth += (s.columnA||[]).length; });
-    var matchTotal = Math.min(PLAN.match, mFromAuth + Math.floor(CARDS[exam].length/2));
-
-    var dump = DUMPPOOL[exam].length ? PLAN.dump : 0;
-
-    return {tf:tf, mc:mc, match:matchTotal, dump:dump,
-            total: tf + mc + matchTotal + dump,
-            tfHave: tfHave, tfDropped: tf === 0,
-            tfShort: tf > 0 && tf < PLAN.tf,
-            mcOver: mc > PLAN.mc,
-            mcShort: mc < mcWant,
-            matchShort: matchTotal < PLAN.match, dumpShort: dump < PLAN.dump};
+    /* Part 3 is worth 20 whatever the set holds. Her module sets
+       run ten items at two points; a Summer set runs eight, so
+       those rows are worth 2.5 each and the part still comes to
+       20. Better than dropping nine written sets to keep a round
+       number on the row. */
+    var matchPts = match ? PLAN.matchPts : 0;
+    return {tf:tf, mc:mc, match:match, matchPts:matchPts, fr:fr,
+            total: tf + mc + matchPts + fr,
+            tfShort: tf < PLAN.tf, frShort: !fr};
   }
 
   var K_EXAM='bio004-pexam-exam', K_TIME='bio004-pexam-time', K_LAST='bio004-pexam-last';
@@ -481,8 +490,6 @@
   var TIME=[{m:0,b:'No clock',i:'Take as long as you need'},
             {m:50,b:'50 minutes',i:'A class period'},
             {m:75,b:'75 minutes',i:'The long block'}];
-
-  function examTitle(n){ var m=MODS.filter(function(x){return x.exam===n;})[0]; return m?m.title:''; }
 
   function renderSetup(){
     var h='';
@@ -501,12 +508,10 @@
 
     var p=planFor(exam);
     var rows=[
-      ['Part 1 &middot; True or false',
-       p.tf ? p.tf+' points' : 'not on this paper', p.tfDropped || p.tfShort],
-      ['Part 2 &middot; Multiple choice, confidence based',
-       p.mc+' points', p.mcShort],
-      ['Part 3 &middot; Matching', p.match+' points', p.matchShort],
-      ['Part 4 &middot; Brain dump', p.dump+' points', p.dumpShort]
+      ['Part 1 &middot; True or false', p.tf+' points', p.tfShort],
+      ['Part 2 &middot; Multiple choice, confidence based', p.mc+' points', false],
+      ['Part 3 &middot; Matching', p.matchPts+' points', !p.match],
+      ['Part 4 &middot; Free response, choose one', p.fr+' points', p.frShort]
     ];
     var bh='';
     rows.forEach(function(r){
@@ -515,20 +520,10 @@
     bh+='<li><span><b>This paper</b></span><b>'+p.total+' points</b></li>';
     $('blueprint').innerHTML=bh;
 
-    var say;
-    if(p.tfDropped){
-      say = 'Part 1 is not on this paper. True or false items have to be written by hand, and exam '
-          + exam + ' has ' + (p.tfHave ? 'only ' + p.tfHave + ' so far' : 'none yet')
-          + '. Those 20 points move to multiple choice, so the paper is still out of ' + p.total + '.';
-    } else if(p.tfShort){
-      say = 'Part 1 runs ' + p.tf + ' items rather than 20, because that is what is written for exam '
-          + exam + '. The rest of the 20 points move to multiple choice, so the paper is still out of '
-          + p.total + '.';
-    } else {
-      say = 'Questions are drawn from the items written for that exam plus your card bank. '
-          + 'A different paper every time.';
-    }
-    if(p.total < 100) say += ' This one comes to ' + p.total + ' points.';
+    var say='Your exam '+exam+' format, dealt fresh: no question repeats inside a paper, and the draw '
+          + 'spreads across the topics and competencies rather than clumping on one.';
+    if(p.tfShort) say += ' Part 1 runs '+p.tf+' items this time; the rest of its points move to Part 2.';
+    if(p.total !== 100) say += ' This one comes to '+p.total+' points.';
     $('setup').querySelector('.hint').textContent = say;
 
     $('startBtn').disabled = p.total < 10;
@@ -546,64 +541,82 @@
   /* ---------- deal a paper ---------- */
   var paper=null, marked=false, armed=false;
 
-  function dealMatchSets(exam, want){
-    var sets=[], used=0;
-    authFor('match',exam).forEach(function(s){
-      if(used>=want) return;
-      var n=Math.min((s.columnA||[]).length, want-used);
-      if(!n) return;
-      var sc=compsForTopic(s.topic), rowComps=[];
-      for(var r=0;r<n;r++) rowComps.push(sc);
-      sets.push({termsCol:s.columnA.slice(0,n), bank:s.columnB.slice(), answers:s.answers.slice(0,n),
-                 authored:true, comps:rowComps});
-      used+=n;
-    });
-    /* Top up from cards: the stem is the clue, its answer is the
-       match, and two answers from other cards join the bank as the
-       extras that match nothing, which is how her banks work. */
-    while(used<want){
-      var n=Math.min(8, want-used);
-      var picks=take(CARDS[exam], n+2);
-      if(picks.length<n+1) break;
-      var items=picks.slice(0,n);
-      var terms=items.map(function(c){ return c.stem; });
-      var right=items.map(function(c){ return c.options[c.correctIndex]; });
-      var extras=picks.slice(n).map(function(c){ return c.options[c.correctIndex]; });
-      var bank=shuffle(right.concat(extras));
-      sets.push({termsCol:terms, bank:bank, answers:right.map(function(a){ return bank.indexOf(a); }),
-                 authored:false, comps:items.map(function(c){ return c.comps; })});
-      used+=n;
+  /* Matching: her written set if there is one, otherwise a set
+     built from cards where the stem is the clue and the answer is
+     the match. Either way the bank carries three options that
+     match nothing, which is how her banks work. */
+  function dealMatch(exam, rows, L){
+    if(rows <= 0) return null;
+
+    var written = drawSpread(authFor('match',exam).map(function(s){
+      return {key:'match:'+s.topic, topic:s.topic, set:s};
+    }), 1, L);
+
+    if(written.length){
+      var s = written[0].set;
+      var n = Math.min(rows, s.columnA.length);
+      var rowComps = [];
+      for(var i=0;i<n;i++) rowComps.push(compsOfTopic(s.topic));
+      return {termsCol:s.columnA.slice(0,n), bank:s.columnB.slice(),
+              answers:s.answers.slice(0,n), comps:rowComps, written:true};
     }
-    return sets;
+
+    var picks = drawSpread(CARDS[exam], rows, L);
+    if(picks.length < 2) return null;
+    /* Three extra answers that belong to nobody on the list. */
+    var spare = CARDS[exam].filter(function(c){
+      return picks.indexOf(c) === -1;
+    });
+    shuffle(spare);
+    var right  = picks.map(function(c){ return c.options[c.correctIndex]; });
+    var extras = [];
+    for(var k=0;k<spare.length && extras.length<3;k++){
+      var a = spare[k].options[spare[k].correctIndex];
+      if(right.indexOf(a) === -1 && extras.indexOf(a) === -1) extras.push(a);
+    }
+    var bank = shuffle(right.concat(extras));
+    return {termsCol:picks.map(function(c){ return c.stem; }), bank:bank,
+            answers:right.map(function(a){ return bank.indexOf(a); }),
+            comps:picks.map(function(c){ return c.comps; }), written:false};
   }
 
   function deal(){
-    var p=planFor(exam);
-    var tf=take(authFor('tf',exam), p.tf);
+    var p = planFor(exam);
+    var L = newLedger();
 
-    var mcAuth=take(authFor('mc',exam), Math.min(p.mc, authFor('mc',exam).length));
-    var mcCards=take(CARDS[exam], p.mc-mcAuth.length);
-    var mc=shuffle(mcAuth.map(function(x){
+    /* Order matters. The tightest pool draws first so it is not
+       left choosing from what the wide pools have already spent,
+       and multiple choice, the widest pool by far, draws last and
+       fills whatever breadth is still missing. */
+    var tf = drawSpread(authFor('tf',exam), p.tf, L);
+
+    var frPool = authFor('fr',exam).concat(DUMPPOOL[exam]);
+    var frs = drawSpread(frPool, Math.min(3, frPool.length), L);
+
+    var set = dealMatch(exam, p.match, L);
+    if(set) set.perRow = p.matchPts / set.termsCol.length;
+
+    var mcPool = authFor('mc',exam).map(function(x){
         return {stem:x.stem, options:x.options.slice(), correctIndex:x.correctIndex,
-                rationale:x.rationale||'', comps:compsForTopic(x.topic)};
-      }).concat(mcCards.map(function(c){
+                rationale:x.rationale||'', topic:x.topic, comps:compsOfTopic(x.topic)};
+      }).concat(CARDS[exam].map(function(c){
         return {stem:c.stem, options:c.options.slice(), correctIndex:c.correctIndex,
-                rationale:c.rationale||'', comps:c.comps};
-      })));
+                rationale:c.rationale||'', topic:c.topic, comps:c.comps};
+      }));
+    var mc = drawSpread(mcPool, p.mc, L);
+
     /* Shuffle each question's options so a bank answer that is
        always C is not a pattern to spot. */
-    mc=mc.map(function(q){
+    mc = shuffle(mc).map(function(q){
       var idx=q.options.map(function(_,i){return i;});
       shuffle(idx);
-      return {stem:q.stem, rationale:q.rationale, comps:q.comps,
+      return {stem:q.stem, rationale:q.rationale, comps:q.comps, topic:q.topic,
               options:idx.map(function(i){return q.options[i];}),
               correctIndex:idx.indexOf(q.correctIndex)};
     });
 
-    var sets=dealMatchSets(exam, p.match);
-    var dumps=take(DUMPPOOL[exam], Math.min(3, DUMPPOOL[exam].length));
-
-    return {plan:p, tf:tf, mc:mc, sets:sets, dumps:dumps};
+    var spread = {topics:Object.keys(L.topic).length, comps:Object.keys(L.comp).length};
+    return {plan:p, tf:tf, mc:mc, set:set, frs:frs, spread:spread};
   }
 
   /* ---------- render ---------- */
@@ -614,7 +627,7 @@
       h+='<section class="part"><div class="part-h"><span class="pk">Part 1 &middot; '+paper.tf.length+' points</span>'
         +'<h2>True or false</h2><p>Decide if each statement is true or false. If it is false, the bold term is '
         +'the only wrong word: mark False and type the one word that makes it true. One point for the call, '
-        +'plus a quarter point if your fix is right.</p></div>';
+        +'plus a quarter point of extra credit if your fix is right.</p></div>';
       paper.tf.forEach(function(it,i){
         h+='<div class="q" id="tf'+i+'"><fieldset><legend><span class="qn">Question '+(i+1)+'</span>'
           + bold(it.statement)+'</legend>'
@@ -647,40 +660,39 @@
       h+='</section>';
     }
 
-    if(paper.sets.length){
-      var mTotal=0; paper.sets.forEach(function(s){ mTotal+=s.termsCol.length; });
-      h+='<section class="part"><div class="part-h"><span class="pk">Part 3 &middot; '+mTotal+' points</span>'
-        +'<h2>Matching</h2><p>Choose the best match for each item. Every bank holds one or two extra options '
-        +'that match nothing.</p></div>';
-      paper.sets.forEach(function(s,si){
-        h+='<div class="q" id="ms'+si+'"><fieldset><legend><span class="qn">Set '+(si+1)+'</span>'
-          +'Match each item to the best option in the bank.</legend>'
-          +'<table class="mtable"><thead><tr><th scope="col">Item</th><th scope="col">Your match</th></tr></thead><tbody>';
-        s.termsCol.forEach(function(t,ti){
-          h+='<tr><td>'+esc(t)+'</td><td><select data-set="'+si+'" data-row="'+ti+'" '
-            +'aria-label="Match for '+esc(String(t)).replace(/"/g,'').slice(0,60)+'">'
-            +'<option value="-1">Choose one</option>';
-          s.bank.forEach(function(b,bi){ h+='<option value="'+bi+'">'+esc(b)+'</option>'; });
-          h+='</select></td></tr>';
-        });
-        h+='</tbody></table><p class="bank"><b>Bank:</b> '+s.bank.map(esc).join(' &middot; ')+'</p>'
-          +'</fieldset></div>';
+    if(paper.set){
+      var s=paper.set, pts=paper.plan.matchPts, per=Math.round(s.perRow*100)/100;
+      h+='<section class="part"><div class="part-h"><span class="pk">Part 3 &middot; '+pts+' points</span>'
+        +'<h2>Matching</h2><p>Choose the best match for each item, '+per+' points each. '
+        +'The bank holds extra options that match nothing.</p></div>';
+      h+='<div class="q" id="ms0"><fieldset><legend><span class="qn">Matching</span>'
+        +'Match each item to the best option in the bank.</legend>'
+        +'<table class="mtable"><thead><tr><th scope="col">Item</th><th scope="col">Your match</th></tr></thead><tbody>';
+      s.termsCol.forEach(function(t,ti){
+        h+='<tr><td>'+esc(t)+'</td><td><select data-row="'+ti+'" '
+          +'aria-label="Match for '+esc(String(t)).replace(/"/g,'').slice(0,60)+'">'
+          +'<option value="-1">Choose one</option>';
+        s.bank.forEach(function(b,bi){ h+='<option value="'+bi+'">'+esc(b)+'</option>'; });
+        h+='</select></td></tr>';
       });
-      h+='</section>';
+      h+='</tbody></table><p class="bank"><b>Bank:</b> '+s.bank.map(esc).join(' &middot; ')+'</p>'
+        +'</fieldset></div></section>';
     }
 
-    if(paper.dumps.length){
-      h+='<section class="part"><div class="part-h"><span class="pk">Part 4 &middot; 16 points</span>'
-        +'<h2>Brain dump, choose one</h2><p>Pick one prompt, write your response, and after you submit use the '
-        +'rubric to award yourself partial credit for each element you included. Only the one you pick is scored.</p></div>';
-      h+='<div class="q" id="dumpq"><fieldset><legend><span class="qn">Choose your prompt</span>Which one are you answering?</legend>'
+    if(paper.frs.length){
+      h+='<section class="part"><div class="part-h"><span class="pk">Part 4 &middot; '+paper.plan.fr+' points</span>'
+        +'<h2>Free response, choose one</h2><p>Pick one prompt and write it out. After you submit you get the '
+        +'model answer and a checklist: tick every element you actually included and the points follow. Only '
+        +'the prompt you pick is scored.</p></div>';
+      h+='<div class="q" id="frq"><fieldset><legend><span class="qn">Choose your prompt</span>Which one are you answering?</legend>'
         +'<div class="dumppick">';
-      paper.dumps.forEach(function(d,i){
-        h+='<label><input type="radio" name="dumppick" value="'+i+'">'
-          +'<span class="dt">'+(d.title?'<b>'+esc(d.title)+'</b>':'')+esc(d.prompt)+'</span></label>';
+      paper.frs.forEach(function(d,i){
+        h+='<label><input type="radio" name="frpick" value="'+i+'">'
+          +'<span class="dt">'+(d.topic?'<b>'+esc(d.topic)+'</b>':'')+esc(d.prompt)
+          +(d.type==='chart'?' <i>(a chart or table is fine here)</i>':'')+'</span></label>';
       });
-      h+='</div><label class="sr" for="dumptext">Your response</label>'
-        +'<textarea id="dumptext" placeholder="Write your brain dump here. On the real exam this is on paper."></textarea>'
+      h+='</div><label class="sr" for="frtext">Your response</label>'
+        +'<textarea id="frtext" placeholder="Write your answer here. On the real exam this is on paper."></textarea>'
         +'</fieldset></div></section>';
     }
 
@@ -688,7 +700,8 @@
     $('paperTitle').textContent='Exam '+exam+' practice paper';
     $('paperMeta').innerHTML='Worth <b>'+paper.plan.total+' points</b>'
       + (mins? ' &middot; '+mins+' minutes' : ' &middot; no clock')
-      + ' &middot; '+esc(examTitle(exam));
+      + ' &middot; '+esc(examTitle(exam))
+      + ' &middot; ' + paper.spread.topics + ' topics, ' + paper.spread.comps + ' competencies';
   }
 
   /* confidence tally */
@@ -747,13 +760,13 @@
       var sum=0; $('parts').querySelectorAll('[data-mc="'+i+'"]').forEach(function(x){ sum+=parseInt(x.value,10)||0; });
       if(sum===0) blank++;
     });
-    paper.sets.forEach(function(s,si){
-      s.termsCol.forEach(function(_,ti){
-        var sel=$('parts').querySelector('[data-set="'+si+'"][data-row="'+ti+'"]');
+    if(paper.set){
+      paper.set.termsCol.forEach(function(_,ti){
+        var sel=$('parts').querySelector('[data-row="'+ti+'"]');
         if(!sel || sel.value==='-1') blank++;
       });
-    });
-    if(paper.dumps.length && !$('parts').querySelector('[name="dumppick"]:checked')) blank++;
+    }
+    if(paper.frs.length && !$('parts').querySelector('[name="frpick"]:checked')) blank++;
     return blank;
   }
 
@@ -773,7 +786,7 @@
     if(marked) return;
     marked=true; stopClock(true); $('unanswered').textContent='';
 
-    var got={tf:0,mc:0,match:0,dump:0,bonus:0};
+    var got={tf:0,mc:0,match:0,fr:0,bonus:0};
     var byComp={};
     function credit(comps, gotN, ofN){
       (comps||[]).forEach(function(c){
@@ -793,14 +806,10 @@
       var fixRight = it.answer==='F' && accepts.length &&
                      accepts.indexOf(fix.trim().toLowerCase())>-1;
       /* The call is the point. The fix word is her quarter point of
-         extra credit, so it is banked apart from the part total
-         rather than pushing Part 1 past 20 of 20. */
-      var pts=(right?1:0);
-      var bonus=(right&&fixRight)?0.25:0;
-      got.tf+=pts; got.bonus+=bonus;
-      /* The call is what the board hears about: the quarter point
-         fix is a bonus and would push the ratio past 1 of 1. */
-      credit(compsForTopic(it.topic), right?1:0, 1);
+         extra credit, banked apart so Part 1 cannot read 22.5 of 20. */
+      got.tf += right?1:0;
+      got.bonus += (right&&fixRight)?0.25:0;
+      credit(compsOfTopic(it.topic), right?1:0, 1);
 
       row.querySelectorAll('input').forEach(function(x){ x.disabled=true; });
       row.classList.add(right ? (fixRight||it.answer==='T' ? 'right':'part-credit') : 'wrong');
@@ -808,10 +817,11 @@
       v.className='verdict '+(right?(fixRight||it.answer==='T'?'ok':'part'):'no');
       v.textContent = right ? (it.answer==='F' ? (fixRight?'Correct, plus the fix':'Correct call, fix not matched') : 'Correct') : 'Not right';
       row.appendChild(v);
-      if(!right || (it.answer==='F' && !fixRight)){
+      if(!right || (it.answer==='F' && !fixRight) || it.why){
         var w=document.createElement('div'); w.className='why';
         w.innerHTML='<b>Answer:</b> '+(it.answer==='T'?'True':'False')
-          + (it.correction? '. The word that fixes it is <b>'+esc(it.correction)+'</b>.' : '.');
+          + (it.correction? '. The word that fixes it is <b>'+esc(it.correction)+'</b>.' : '.')
+          + (it.why? ' '+esc(it.why) : '');
         row.appendChild(w);
       }
     });
@@ -827,7 +837,7 @@
       if(sum>4) onRight=onRight*4/sum;
       var pts=onRight*0.25;
       got.mc+=pts;
-      credit(q.comps, pts, 1);
+      credit(q.comps || compsOfTopic(q.topic), pts, 1);
 
       row.classList.add(pts>=1?'right':(pts>0?'part-credit':'wrong'));
       var v=document.createElement('p');
@@ -841,70 +851,76 @@
     });
 
     /* Part 3 */
-    paper.sets.forEach(function(s,si){
-      var row=$('ms'+si), right=0;
+    if(paper.set){
+      var s=paper.set, row=$('ms0'), right=0;
       s.termsCol.forEach(function(_,ti){
-        var sel=$('parts').querySelector('[data-set="'+si+'"][data-row="'+ti+'"]');
+        var sel=$('parts').querySelector('[data-row="'+ti+'"]');
         var v=sel?parseInt(sel.value,10):-1;
         if(sel) sel.disabled=true;
         var ok = v===s.answers[ti];
         if(ok) right++;
-        /* Credit the row that was actually answered, not the set. */
+        /* Credit the row that was answered, not the whole set. */
         if(s.comps && s.comps[ti]) credit(s.comps[ti], ok?1:0, 1);
       });
-      got.match+=right;
+      got.match = Math.round(right*s.perRow*100)/100;
       row.classList.add(right===s.termsCol.length?'right':(right?'part-credit':'wrong'));
-      var v=document.createElement('p');
-      v.className='verdict '+(right===s.termsCol.length?'ok':(right?'part':'no'));
-      v.textContent=right+' of '+s.termsCol.length+' matched';
-      row.appendChild(v);
-      var w=document.createElement('div'); w.className='why';
-      w.innerHTML='<b>Key:</b> '+s.termsCol.map(function(t,ti){
-        return esc(String(t).slice(0,40))+' &rarr; '+esc(s.bank[s.answers[ti]]);
+      var mv=document.createElement('p');
+      mv.className='verdict '+(right===s.termsCol.length?'ok':(right?'part':'no'));
+      mv.textContent=right+' of '+s.termsCol.length+' matched, '+got.match+' of '+paper.plan.matchPts+' points';
+      row.appendChild(mv);
+      var mw=document.createElement('div'); mw.className='why';
+      mw.innerHTML='<b>Key:</b> '+s.termsCol.map(function(t,ti){
+        return esc(String(t).slice(0,60))+' &rarr; '+esc(s.bank[s.answers[ti]]);
       }).join('<br>');
-      row.appendChild(w);
-    });
+      row.appendChild(mw);
+    }
 
-    /* Part 4: self-scored against the rubric */
-    var dumpMax=0;
-    if(paper.dumps.length){
-      var pickEl=$('parts').querySelector('[name="dumppick"]:checked');
-      var row=$('dumpq');
-      row.querySelectorAll('input,textarea').forEach(function(x){ x.disabled=true; });
+    /* Part 4: self-scored against her rubric, with the model answer */
+    var frMax=0;
+    if(paper.frs.length){
+      var pickEl=$('parts').querySelector('[name="frpick"]:checked');
+      var frow=$('frq');
+      frow.querySelectorAll('input,textarea').forEach(function(x){ x.disabled=true; });
       if(pickEl){
-        var d=paper.dumps[parseInt(pickEl.value,10)];
-        dumpMax=16;
-        var w=document.createElement('div'); w.className='why';
-        w.innerHTML='<b>Tick every element you actually included.</b> Each is worth an equal share of 16 points.';
-        row.appendChild(w);
+        var d=paper.frs[parseInt(pickEl.value,10)];
+        frMax=paper.plan.fr;
+        if(d.model){
+          var mm=document.createElement('div'); mm.className='why';
+          mm.innerHTML='<b>Model answer.</b> '+esc(d.model);
+          frow.appendChild(mm);
+        }
+        var w2=document.createElement('div'); w2.className='why';
+        w2.innerHTML='<b>Tick every element you actually included.</b> Each is worth an equal share of '
+                    + frMax + ' points.';
+        frow.appendChild(w2);
         var ul=document.createElement('ul'); ul.className='rubric';
-        var pts=d.rubric.length?d.rubric:['A real attempt: organized, labeled, and it answers what was asked.'];
+        var pts=(d.rubric&&d.rubric.length)?d.rubric:['A real attempt: organized, labeled, and it answers what was asked.'];
         pts.forEach(function(pt,pi){
           var li=document.createElement('li');
           li.innerHTML='<label><input type="checkbox" data-rub="'+pi+'"><span>'+esc(pt)+'</span></label>';
           ul.appendChild(li);
         });
-        row.appendChild(ul);
-        var say=document.createElement('p'); say.className='verdict part'; say.id='dumpScore';
-        say.textContent='0 of 16 points';
-        row.appendChild(say);
-        row.addEventListener('change', function(){
-          var boxes=row.querySelectorAll('[data-rub]');
+        frow.appendChild(ul);
+        var say=document.createElement('p'); say.className='verdict part'; say.id='frScore';
+        say.textContent='0 of '+frMax+' points';
+        frow.appendChild(say);
+        frow.addEventListener('change', function(){
+          var boxes=frow.querySelectorAll('[data-rub]');
           var on=0; boxes.forEach(function(b){ if(b.checked) on++; });
-          var s=boxes.length? Math.round(on/boxes.length*16*100)/100 : 0;
-          got.dump=s;
-          $('dumpScore').textContent=s+' of 16 points';
+          var sc=boxes.length? Math.round(on/boxes.length*frMax*100)/100 : 0;
+          got.fr=sc;
+          $('frScore').textContent=sc+' of '+frMax+' points';
           paint();
         });
       } else {
-        var v=document.createElement('p'); v.className='verdict no'; v.textContent='No prompt chosen';
-        row.appendChild(v);
+        var nv=document.createElement('p'); nv.className='verdict no'; nv.textContent='No prompt chosen';
+        frow.appendChild(nv);
       }
     }
 
     var maxTotal=paper.plan.total;
     function paint(){
-      var total=got.tf+got.bonus+got.mc+got.match+got.dump;
+      var total=got.tf+got.bonus+got.mc+got.match+got.fr;
       var pct=maxTotal? Math.round(total/maxTotal*100) : 0;
       var msg = pct>=85 ? 'That is exam ready. Leave it a few days rather than sitting another now.'
               : pct>=70 ? 'Solid, with gaps. The parts below show where they are.'
@@ -916,10 +932,10 @@
         +'<p class="hint" style="margin:12px 0 0">'+msg+'</p>'
         +'<ul class="partscores">'
         +(paper.tf.length?'<li><span>Part 1, true or false</span><b>'+(Math.round(got.tf*100)/100)+' of '+paper.tf.length
-            + (got.bonus?', plus '+(Math.round(got.bonus*100)/100)+' bonus':'')+'</b></li>':'')
+            +(got.bonus?', plus '+(Math.round(got.bonus*100)/100)+' bonus':'')+'</b></li>':'')
         +(paper.mc.length?'<li><span>Part 2, multiple choice</span><b>'+(Math.round(got.mc*100)/100)+' of '+paper.mc.length+'</b></li>':'')
-        +(paper.sets.length?'<li><span>Part 3, matching</span><b>'+got.match+' of '+paper.plan.match+'</b></li>':'')
-        +(dumpMax?'<li><span>Part 4, brain dump</span><b>'+(Math.round(got.dump*100)/100)+' of 16</b></li>':'')
+        +(paper.set?'<li><span>Part 3, matching</span><b>'+got.match+' of '+paper.plan.matchPts+'</b></li>':'')
+        +(frMax?'<li><span>Part 4, free response</span><b>'+(Math.round(got.fr*100)/100)+' of '+frMax+'</b></li>':'')
         +'</ul>'
         +'<div class="row">'
         +'<button type="button" class="big" id="againBtn">Generate another</button>'
