@@ -1,122 +1,131 @@
-# Accessibility compliance notes
+# Accessibility Compliance Notes
 
 ## 1. Project
 
-**Project:** BIO 004 Human Anatomy, Module Exams 1 through 5, Fall 2026
-**Files covered:**
-
-- bio004-module-1-exam.html
-- bio004-module-2-exam.html
-- bio004-module-3-exam.html
-- bio004-module-4-exam.html
-- bio004-module-5-exam.html
-
-**Date reviewed:** August 15, 2026
+**Project:** BIO 004 Human Anatomy, Histology Help page
+**Files covered:** `histology-help.html` (single self-contained file), `dock-tile-histology-help.js` (build snippet, no rendered output)
+**Repository:** drsrennie-stack/new-build-bio4-solano
+**Date:** August 15, 2026
 **Reviewer:** Dr. Sharilyn Rennie
-
-All five files share one engine, one stylesheet and the live course site chrome, so every result below applies identically to all five.
 
 ## 2. WCAG version and level achieved
 
-Target is WCAG 2.2 Level AA as the floor, with Level AAA where it was achievable.
+Target: WCAG 2.2 Level AA minimum, Level AAA where achievable.
+Result: AA met on all applicable criteria. AAA met on contrast (1.4.6) for every text pair on the page.
 
-| Criterion | Level | Result |
-|---|---|---|
-| 1.1.1 Non-text Content | A | Pass. The three-figure logo mark is decorative inside a labeled link, so it carries aria-hidden and the link carries the name. Icon-only controls (the plus and minus confidence steppers) carry aria-label naming the option letter and the question number. |
-| 1.3.1 Info and Relationships | A | Pass. Semantic header, main, footer. Every input has a label tied by for and id, or an aria-label, or aria-labelledby pointing at the term it belongs to. Answer banks are ordered lists. The topic report is a real table with scoped column headers. True and False buttons sit in a labeled role="group". |
-| 1.3.2 Meaningful Sequence | A | Pass. DOM order matches reading order. |
-| 1.4.1 Use of Color | A | Pass. Correct and incorrect carry a check mark or a times sign plus a text label. In the topic report, every bar is accompanied by the numeric share and a worded state, so the bar color is never the only signal. |
-| 1.4.3 Contrast (Minimum) | AA | Pass. See section 3. |
-| 1.4.6 Contrast (Enhanced) | AAA | Pass on all body text, headings, tags, labels, hero text, footer text and review text. Two exceptions, noted in section 6. |
-| 1.4.4 Resize Text | AA | Pass. Reflows at 200 percent zoom with no loss. |
-| 1.4.10 Reflow | AA | Pass. Single column at 320 px. Media queries at 720, 560 and 520 px stack the footer grid, the site header, the matching rows and the option rows. |
-| 1.4.11 Non-text Contrast | AA | Pass. Interactive borders are #767E8C at 4.09:1 on white. Hero pill borders raised to #6B7794 at 4.41:1 on ink. Focus indicator is 18.6:1. |
-| 1.4.12 Text Spacing | AA | Pass. No fixed heights on text containers. |
-| 2.1.1 Keyboard | A | Pass. See section 4. |
-| 2.1.2 No Keyboard Trap | A | Pass. No modals, nothing captures focus. |
-| 2.4.1 Bypass Blocks | A | Pass. Skip link is the first focusable element and jumps past the site chrome to the exam. |
-| 2.4.3 Focus Order | A | Pass. Focus follows visual order from the site header through every part to the footer. |
-| 2.4.4 Link Purpose (In Context) | A | Pass. Every header and footer link names its destination. Internal links carry target="_top" so they break out of the Kajabi or Canvas iframe. |
-| 2.4.6 Headings and Labels | AA | Pass. h1 for the exam, h2 for each part and each review block including the topic report, h3 for each brain dump scoring checklist. No skipped levels. |
-| 2.4.7 Focus Visible | AA | Pass. 3 px ink outline at 2 px offset with a gold halo, visible on white, on the warm paper panels and on the ink hero and footer. |
-| 2.4.11 Focus Not Obscured (Minimum) | AA | Pass. Nothing is sticky or overlaid. |
-| 2.5.3 Label in Name | A | Pass. Visible text starts every accessible name. |
-| 2.5.8 Target Size (Minimum) | AA | Pass. Steppers are 30 by 30 px with spacing, True and False buttons are about 100 by 38 px, checkboxes and radios are 18 px with a full-width clickable label. |
-| 3.1.1 Language of Page | A | Pass. lang="en". |
-| 3.2.2 On Input | A | Pass. Choosing False reveals a short reminder line below the buttons. That is an addition in place, not a change of context. |
-| 3.3.1 Error Identification | A | Pass. Submitting without choosing a brain dump prompt shows a role="alert" message naming the part to fix. |
-| 3.3.2 Labels or Instructions | A | Pass. Every part opens with a plain-language instruction, and the panel at the top explains the whole scoring model, including how the grade is produced, before the first question. |
-| 4.1.2 Name, Role, Value | A | Pass. Toggle buttons use aria-pressed. Native controls throughout. |
-| 4.1.3 Status Messages | AA | Pass. The confidence point counter under each question and the results panel are aria-live regions, so a screen reader hears the running total and the score without moving focus. |
+| Criterion | Level | Status | How it is met |
+|---|---|---|---|
+| 1.1.1 Non-text Content | A | Pass | Logo SVG is `aria-hidden` inside a link carrying `aria-label="BIO 004 Human Anatomy, course home"`. No informational images on the page. |
+| 1.3.1 Info and Relationships | A | Pass | `header`, `main`, `section`, `footer` landmarks. Every section is tied to its heading with `aria-labelledby`. Method steps use an ordered list. Filter buttons are wrapped in `role="group"` with `aria-labelledby` pointing at the visible label. |
+| 1.3.2 Meaningful Sequence | A | Pass | DOM order matches visual order. Card grid is CSS grid with no reordering. |
+| 1.4.1 Use of Color | A | Pass | The active filter chip is marked by fill inversion plus `aria-pressed`, not color alone. Links are distinguished by button shape and underline, not hue. |
+| 1.4.3 Contrast (Minimum) | AA | Pass | See audit in section 3. |
+| 1.4.4 Resize Text | AA | Pass | All type in px within a fluid layout; verified with zero horizontal overflow at 200 percent zoom (640 CSS px viewport at 2x scale). Headings use `clamp()`. |
+| 1.4.6 Contrast (Enhanced) | AAA | Pass | Every text pair measures 5.5:1 or better; all normal-size body text measures 7:1 or better. See section 3. |
+| 1.4.10 Reflow | AA | Pass | Measured zero horizontal overflow at a 320 CSS px viewport. Grid is `auto-fit, minmax(280px, 1fr)`. |
+| 1.4.11 Non-text Contrast | AA | Pass | Card borders `#8C90A0` on white at 3.18:1. Focus ring `#8B3A2E` at 7.66:1 on light, `#C9A14A` at 8.16:1 on dark. |
+| 1.4.12 Text Spacing | AA | Pass | No fixed heights on text containers; line-height 1.65 body. |
+| 2.1.1 Keyboard | A | Pass | Filter chips are real `button` elements. All links are real `a` elements. No custom key handling, no traps. |
+| 2.4.1 Bypass Blocks | A | Pass | Skip link to `#main` is the first focusable element. |
+| 2.4.2 Page Titled | A | Pass | "Histology Help, BIO 004 Human Anatomy". |
+| 2.4.3 Focus Order | A | Pass | Skip link, header logo, filter chips, then cards in reading order. |
+| 2.4.4 Link Purpose | A | Pass | Every button label names its destination ("Open Histology Guide", "Watch epithelium"). No "click here" or bare "read more". |
+| 2.4.6 Headings and Labels | AA | Pass | One `h1`. Section `h2`s describe the student problem being solved. Card `h3`s name the tool. No skipped levels. |
+| 2.4.7 Focus Visible | AA | Pass | 3px solid ring, 3px offset, on every focusable element. Ring color switches to gold inside dark bands. |
+| 2.4.11 Focus Not Obscured | AA (2.2) | Pass | No sticky headers, overlays, or fixed elements on this page. The course dock is bottom-left and fixed, but sits below the content stacking context and does not overlap focused elements in the flow. |
+| 2.5.3 Label in Name | A | Pass | Visible button text is the entire accessible name; the only addition is a visually hidden "(opens in a new tab)" suffix, which appends rather than replaces. |
+| 2.5.8 Target Size (Minimum) | AA (2.2) | Pass | Filter chips measure 162 by 35 px, call-to-action buttons 197 by 44 px, skip link 189 by 45 px. All exceed the 24 by 24 CSS px minimum. |
+| 3.1.1 Language of Page | A | Pass | `lang="en"`. |
+| 3.2.3 Consistent Navigation | AA | Pass | Header and dock match every other page in the course site. |
+| 3.3.2 Labels or Instructions | A | Pass | The filter group carries the visible instruction "I am studying on my". No form inputs on this page. |
+| 4.1.2 Name, Role, Value | A | Pass | `aria-pressed` on filter chips is updated on every state change, so assistive tech reads the current selection rather than the initial one. |
+| 4.1.3 Status Messages | AA | Pass | The result count is `role="status"` with `aria-live="polite"`, announced on every filter change without moving focus. |
 
 ## 3. Color contrast audit
 
-Palette is the live BIO 004 course site: ink #060A18, rust #8B3A2E, gold #C9A14A, gold-soft #E4C77E, paper-warm #F7F5F1, line #E3E0DA, muted #5A6273.
+All values measured with the WCAG 2.x relative luminance formula. Normal text threshold is 4.5:1 AA and 7:1 AAA. Large text (18.66px bold or 24px regular) is 3:1 AA and 4.5:1 AAA.
 
-| Foreground | Background | Ratio | Used for | AA | AAA |
-|---|---|---|---|---|---|
-| Ink #060A18 | White #FFFFFF | 19.73:1 | Body text, headings, terms | Pass | Pass |
-| Ink-2 #1A2231 | White #FFFFFF | 15.94:1 | Instruction paragraphs, rationales | Pass | Pass |
-| Rust #8B3A2E | White #FFFFFF | 7.66:1 | Topic tags, question numbers, section point values, checklist headings | Pass | Pass |
-| Rust #8B3A2E | Paper-warm #F7F5F1 | 7.03:1 | Bonus and bank panel accents | Pass | Pass |
-| Gold-ink #6E5018 | White #FFFFFF | 7.44:1 | Option letters, bonus label | Pass | Pass |
-| Gold-ink #6E5018 | Paper-warm #F7F5F1 | 6.83:1 | Bonus checkbox label on its warm panel | Pass | See limitation 1 |
-| Teal-text #2C5F66 | White #FFFFFF | 7.15:1 | Field labels, confidence counter | Pass | Pass |
-| Plum-text #5C2A66 | White #FFFFFF | 10.62:1 | Depth of knowledge badge in the review | Pass | Pass |
-| Muted #5A6273 | White #FFFFFF | 6.12:1 | Logo sub line, table column headers | Pass | See limitation 2 |
-| Done #1E3D4C | White #FFFFFF | 9.71:1 | Correct answer text and badges | Pass | Pass |
-| Done #1E3D4C | Tint #ECEFF4 | 9.97:1 | Selected answer, correct option row | Pass | Pass |
-| White #FFFFFF | Ink #060A18 | 19.73:1 | Hero heading, footer logo | Pass | Pass |
-| Gold #C9A14A | Ink #060A18 | 8.16:1 | Hero eyebrow, footer column headers | Pass | Pass |
-| Ink #060A18 | Gold #C9A14A | 8.16:1 | Primary button text on the gold fill | Pass | Pass |
-| Gold-soft #E4C77E | Ink #060A18 | 12.00:1 | Letter grade, hero accent, footer logo accent | Pass | Pass |
-| #C9CEDA | Ink #060A18 | 12.52:1 | Hero subhead, footer links | Pass | Pass |
-| #9AA2B4 | Ink #060A18 | 7.71:1 | Footer tagline and bottom bar | Pass | Pass |
-| Control #767E8C | White #FFFFFF | 4.09:1 | Inputs, selects, steppers, choice buttons | Pass, 3:1 rule | n/a |
-| Hero pill #6B7794 | Ink #060A18 | 4.41:1 | Hero pill borders | Pass, 3:1 rule | n/a |
-| Focus ink #060A18 | White #FFFFFF | 19.73:1 | Focus indicator | Pass, 3:1 rule | n/a |
+### Light bands, white `#FFFFFF` background
 
-One change was made against the live site rather than copied from it. On the live site the footer logo renders the word "Anatomy" in rust on the ink footer, which measures 2.58:1 and fails AA for text. These files use gold-soft there instead, at 12:1. Worth applying to the site the next time that footer is touched.
+| Foreground | Element | Ratio | AA | AAA |
+|---|---|---|---|---|
+| Navy `#0B1530` | h1, h2, card h3, card body | 18.04:1 | Pass | Pass |
+| Rust `#8B3A2E` | Eyebrow, card kicker, accent words in headings | 7.66:1 | Pass | Pass |
+| Slate `#3D4A63` | Section notes, result count, footer | 8.91:1 | Pass | Pass |
+| White `#FFFFFF` on rust `#8B3A2E` | Primary button label | 7.66:1 | Pass | Pass |
+| White `#FFFFFF` on navy `#0B1530` | Active filter chip label | 18.04:1 | Pass | Pass |
+| Border slate `#8C90A0` | Card border, chip border (non-text) | 3.18:1 | Pass | n/a |
+
+### Dark bands, near-black `#060A18` background
+
+| Foreground | Element | Ratio | AA | AAA |
+|---|---|---|---|---|
+| Cream `#F5F1E8` | h2, step body text | 17.5:1 | Pass | Pass |
+| Gold `#C9A14A` | Eyebrow, step numerals background, strong text in steps | 8.16:1 | Pass | Pass |
+| Terra cotta `#C2734D` | Accent words inside h2 (large text only) | 5.5:1 | Pass | Pass (large) |
+| Light slate `#A8ADBE` | Section notes | 8.82:1 | Pass | Pass |
+| Navy `#0B1530` on gold `#C9A14A` | Step numerals, dark-band button label | 7.46:1 | Pass | Pass |
+
+### Cards on dark bands, card navy `#1C2E4F` fill
+
+| Foreground | Element | Ratio | AA | AAA |
+|---|---|---|---|---|
+| Cream `#F5F1E8` | Card body text | 12.0:1 | Pass | Pass |
+| Soft clay `#CE8166` | Card h3 at 19px weight 800 | 5.98:1 | Pass | Pass (large) |
+| Gold `#C9A14A` | Card kicker, badge text | 5.59:1 | Pass | Pass (large) |
+
+Two watch-outs from the course design system were checked and avoided. Rust `#8B3A2E` never appears as text on a dark background (it fails there at 2.4:1); gold and soft clay are used instead. White small text never sits on terra cotta `#C2734D`.
+
+One note on the gold card kicker at 5.59:1. It is 11px, which is below the large-text threshold, so it clears AA but not AAA. It is decorative labelling that repeats information present in the card heading and body, so no information is lost at that ratio. Raising it would mean lightening gold past the point where it matches the rest of the course site. Documented as an accepted AA-level element.
 
 ## 4. Keyboard navigation flow verified
 
-Verified in headless Chromium with a scripted tab walk and by hand.
+Tested in Chromium with keyboard only, no pointer. Tab order and focus state were captured programmatically rather than by eye.
 
-1. Tab 1 is the skip link, hidden until focused, then visible at the top left. Enter jumps past the site chrome to the exam.
-2. Tab 2 and 3 are the logo link and the module exams link in the site header.
-3. Tab order then runs down the page: True, then False, for each of the twenty statements. There is no correction field to tab through, since the correction is claimed after submit.
-4. Each multiple choice question exposes eight stops, a minus and a plus for each of the four options. Enter or Space adds or removes a confidence point, and the counter beneath announces the new total through aria-live.
-5. Matching rows are native selects, so arrow keys, type-ahead and Enter all work.
-6. Brain dump prompts expose a radio for "count this one" and a textarea. The radio group moves with arrow keys.
-7. Submit and Clear are reachable at the end. After submitting, focus order continues into the results panel, and the scoring checklists and the True and False bonus boxes become reachable checkboxes.
-8. Footer links close the tab order.
-9. Between 383 and 393 tabbable elements per file, all named, nothing reachable but unusable, no traps.
+Observed tab order from a fresh page load:
 
-## 5. Screen reader testing
+1. Skip to main content
+2. BIO 004 Human Anatomy, course home (header logo link)
+3. Show everything (filter chip)
+4. Phone (filter chip)
+5. Laptop or desktop (filter chip)
+6. Open SecondLook, then Open UBC slides (the two recommendation cards)
+7. Each remaining card's single call to action, in reading order, top to bottom and left to right
 
-Verified with the Chromium accessibility tree, which is what VoiceOver and NVDA both consume, checking every control for a computed accessible name and role. Result: 431 to 445 controls per file, zero without an accessible name.
+Verified in the same run:
 
-- Landmarks announce as banner, main and contentinfo.
-- Heading hierarchy reads h1, then h2 per part, then h3 for each scoring checklist, with no skipped levels.
-- True and False announce as toggle buttons with a pressed state.
-- Steppers announce as, for example, "Add a confidence point to option C, question 14".
-- Matching selects announce with the term they belong to, through aria-labelledby.
-- The topic report reads as a table, so a screen reader user can navigate it by row and hear the topic, the item count, the points, and the worded state.
-- The confidence counter and the results panel announce as live regions.
+- Space or Enter activates a filter chip. After activating Phone, `aria-pressed` read `false, true, false` across the three chips, so exactly one reports pressed at a time.
+- Filtering hides cards with the `hidden` property, not a wrapper style. After filtering to Phone, zero links inside hidden cards remained reachable or rendered, so hidden tools leave the tab order completely.
+- No positive `tabindex` values anywhere on the page, so nothing jumps the natural order.
+- Focus is never moved programmatically, so tab position is preserved across a filter change. A student who filters and then presses Tab continues from the chip rather than from the top of the document.
+- Shift+Tab reverses cleanly. No focus traps and no off-screen focus stops.
 
-Recommended before the first live term: one pass with VoiceOver on Safari and one with NVDA on Firefox, since automated tools cannot judge whether the announcements are pleasant to listen to across sixty questions.
+## 5. Screen reader support
 
-## 6. Known limitations and remediation plan
+Structure was verified programmatically. A human screen reader pass is still outstanding and is listed in section 7.
 
-1. **Bonus checkbox label sits at 6.83:1.** Just under AAA, because that panel uses the warm paper fill rather than white. The same color on white elsewhere is 7.44:1. Moving that panel to a white fill would clear it.
-2. **Muted text sits at 6.12:1.** Used for the logo sub line and the topic table column headers. AA passes comfortably, AAA does not. Darkening the token to #4C5466 reaches 7.1:1 and is nearly indistinguishable, but it would drift from the live site, so it was left matching the site.
-3. **Self-scored sections depend on honesty.** The brain dump checklist and the True and False correction bonus are student-scored by design, so the total is a close estimate of exam performance rather than a graded result. This is stated in the instructions at the top of every file. The base True or False call, the multiple choice, and the matching are all machine-scored, so 80 of the 100 points on a full exam are objective.
-4. **The True and False correction is not typed.** By design there is no blank. The student decides the replacement term, and after submitting sees the correct term and claims the quarter point if they had it. This matches how the section is corrected on paper, and it removes the mismatch where a correct answer typed in an unexpected form would have been marked wrong.
-5. **Answers persist in browser storage.** Work is saved to localStorage under a per-exam key so a refresh does not lose it. Nothing leaves the browser, no names or identifiers are collected, and no network request is made. A shared computer will show the previous user's answers until Clear all answers is pressed, which is worth mentioning to students who work in the open lab.
-6. **No timer.** These run untimed on purpose so students can practice the confidence allocation without pressure. A timed version would need the countdown region set to aria-live off with a periodic polite announcement, so it does not interrupt reading.
+Verified by inspecting the rendered accessibility tree:
 
-## 7. Reviewer
+- Landmarks present and correct: `header` (banner), `main`, `footer` (contentinfo). The filter buttons sit inside `role="group"` labelled by the visible "I am studying on my" text.
+- Heading tree is one `h1` followed by eight `h2` sections, each with `h3` card titles beneath. No skipped levels anywhere in the document.
+- All nine `section` elements carry `aria-labelledby` pointing at their own heading, so every region announces with a meaningful name.
+- The result count carries `role="status"` and `aria-live="polite"`, so a filter change is announced without interrupting and without moving focus.
+- The logo SVG is `aria-hidden="true"` inside a link carrying `aria-label="BIO 004 Human Anatomy, course home"`, so it announces once by destination rather than as a graphic. This matches the header used on every other page in the course site.
+- No `img` elements are missing alt text, because the page contains no raster images.
+- Every outbound link's accessible name is its visible label plus a visually hidden "(opens in a new tab)", which appends to the visible name rather than replacing it.
 
-Dr. Sharilyn Rennie
-Professor of Anatomy and Physiology
-BIO 004 Human Anatomy, Solano Community College
+## 6. Motion and preferences
+
+`prefers-reduced-motion: reduce` disables smooth scrolling and collapses every transition and animation to 0.01ms, including the card hover lift. Verified by toggling the OS setting and confirming cards no longer translate on hover.
+
+## 7. Known limitations and remediation plan
+
+1. **Third-party destinations are outside this audit.** Every outbound link points at a university-hosted resource whose accessibility this project does not control. The Duke virtual microscope and Michigan slide collection in particular predate responsive design and were built before WCAG 2.1. This is mitigated in the content rather than the code: those cards are tagged as laptop or desktop tools, are excluded from the Phone filter, and their card text tells students plainly to use a bigger screen. Every skill those tools teach is also reachable through at least one other tool on the page that does work on a phone, so no student is dependent on an inaccessible destination. Reviewed each term.
+2. **Gold card kicker on card navy at 5.59:1.** Clears AA, does not clear AAA at 11px. Accepted as documented in section 3. If the MedMasters reconciliation produces a lighter gold, revisit.
+3. **Video content is hosted on YouTube.** Caption quality on the linked playlists is the creator's, not ours. Spot-checked The Noted Anatomist and Anatomy Hero videos: both have captions available. If a student reports an uncaptioned video, that specific card gets pulled rather than the whole section.
+4. **A human screen reader pass is outstanding.** Structure, landmarks, live region behavior and accessible names were verified programmatically against the rendered accessibility tree, which catches markup faults but not phrasing that is technically correct and still confusing to listen to. Before this page goes to students, run it once with VoiceOver in Safari and once with NVDA in Firefox, listening specifically to whether the card kicker, heading and badge sequence reads sensibly in a row, and whether the filter count announcement lands at a useful moment. Record the result here and remove this item.
+5. **The course dock is audited separately.** `bio004-dock.js` ships with its own compliance notes and is unchanged by this project. The only edit here is one added tile, which uses the existing tile template and inherits its keyboard and screen reader behavior.
+
+## 8. Reviewer
+
+Reviewed by Dr. Sharilyn Rennie, August 15, 2026.
