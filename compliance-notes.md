@@ -1,152 +1,122 @@
 # Accessibility compliance notes
 
-**Project:** BIO 004 Human Anatomy, Fall 2026 site sweep
-**Repo:** drsrennie-stack/new-build-bio4-solano, branch `fall-2026-sweep`
-**Date:** August 11, 2026
+## 1. Project
+
+**Project:** BIO 004 Human Anatomy, Module Exams 1 through 5, Fall 2026
+**Files covered:**
+
+- bio004-module-1-exam.html
+- bio004-module-2-exam.html
+- bio004-module-3-exam.html
+- bio004-module-4-exam.html
+- bio004-module-5-exam.html
+
+**Date reviewed:** August 15, 2026
 **Reviewer:** Dr. Sharilyn Rennie
 
----
-
-## 1. Files covered
-
-This pass covered the files touched during the Fall 2026 audit sweep. Pages that were not edited
-keep whatever compliance state they already had, and they are noted as still owing a review in
-section 6.
-
-**Created**
-
-- `syllabus-schedule.js`, the module map and day-by-day tables in the three section syllabi
-- `week-extras.js`, the lab and study block that now renders on all seventeen week pages
-- `missing-figure.js`, the placeholder for figures whose image folders were never pushed
-- `index.html`, rebuilt as a redirect to the single course home
-
-**Edited**
-
-- `week-1.html` through `week-17.html`
-- `syllabus-class1.html`, `syllabus-class2.html`, `syllabus-class3.html`, `fall-2026-syllabus.html`
-- `bio004-master-schedule-fall2026.html`, `bio004-course-calendar.html`
-- `mastery-os-fall-2026.html`, `mastery-os-fall-2026-instructor.html`
-- `bio004-dock.js`, `schedule-fall2026.js`, `session-links.js`, `slide-modal.js`,
-  `course-content-tagged.js`, `loops-index.js`
-- `404.html`, `histology-escape-room-lab-kit.html`, `histology-escape-room_1.html`
-- 310 files modified in total, including the em dash and italics sweeps
-- Second pass, August 11: the three section syllabi rewritten for voice and policy;
-  `fall-2026-syllabus.html` retired to a section-aware redirect
-
----
+All five files share one engine, one stylesheet and the live course site chrome, so every result below applies identically to all five.
 
 ## 2. WCAG version and level achieved
 
-Target is WCAG 2.2 Level AA as the floor, Level AAA wherever it was reachable without changing
-the palette.
+Target is WCAG 2.2 Level AA as the floor, with Level AAA where it was achievable.
 
-| Criterion | Level | Status on the changed files |
+| Criterion | Level | Result |
 |---|---|---|
-| 1.1.1 Non-text content | A | Pass. `missing-figure.js` carries the original `alt` text into the placeholder as an `aria-label` on a `role="img"` element, so a screen reader still hears what the figure was meant to show. |
-| 1.3.1 Info and relationships | A | Pass. The lab block renders a real `h2` inside the existing card, and its entries are `a` elements with text, not click handlers on divs. |
-| 1.3.2 Meaningful sequence | A | Pass. The lab block sits between the class days card and the graded card, which is the order a student works in. |
-| 1.4.3 Contrast, minimum | AA | Pass, see section 3. |
-| 1.4.6 Contrast, enhanced | AAA | Pass on every measured pair. |
-| 1.4.10 Reflow | AA | **Fixed.** `mastery-os-fall-2026.html` had `.g2.g3.g4` where it needed `.g2,.g3,.g4`. The mobile breakpoint matched nothing, so two, three, and four column grids never collapsed on a narrow screen. Repaired in the student build and the instructor build. |
-| 1.4.11 Non-text contrast | AA | **Fixed.** The brushed gold focus ring measured 2.77:1 against off-white, below the 3:1 floor. On the rebuilt `index.html` it is now `#8B3A2E` at 7.33:1. |
-| 1.4.12 Text spacing | AA | Pass. All new copy sits in flowed paragraphs with no fixed heights. |
-| 2.1.1 Keyboard | A | Pass, see section 4. |
-| 2.4.1 Bypass blocks | A | Pass. Skip links on the worksheet and week pages were not disturbed. |
-| 2.4.7 Focus visible | AA | Pass. New links inherit the page focus style. The redirect page has its own visible ring. |
-| 2.4.11 Focus not obscured, minimum | AA (2.2) | Pass. The dock is fixed bottom left and does not cover the new lab block. |
-| 2.4.13 Focus appearance | AAA (2.2) | Pass on the redirect page, 3px solid ring with offset. |
-| 3.2.3 Consistent navigation | AA | **Improved.** One week system instead of two, one front door instead of five, one Mastery OS instead of two, and the dock is now identical on every page. |
-| 3.2.4 Consistent identification | AA | **Fixed.** The same content was labelled Module 4 in one place and Module 5 in another after the exam-scope decision. Module labels now agree across the syllabi, the exam-module page, seven week pages, and five study pages. |
-| 3.3.1 Error identification, policy clarity | A | **Fixed.** Attendance stated two incompatible rules (90% of a session, and a 20-minute threshold). One rule now stands. |
-| 3.3.2 Labels or instructions | A | **Improved.** The week page now tells a student when it is guessing at their class instead of silently showing Class 1. The retired generic syllabus now names all three sections with their CRNs rather than sending everyone to one document. |
-| 1.3.1 Info and relationships, schedule tables | A | Pass. The generated tables keep `caption`, `th scope="col"`, and the `rowspan` week cell, so a screen reader still announces which week a row belongs to. Verified on all three sections under jsdom. |
-| 2.4.6 Headings and labels | AA | **Improved.** Section headings no longer end in a full stop, which a screen reader reads aloud as a sentence break in the middle of a navigation list. |
-| 4.1.1 Parsing, progressive enhancement | n/a | The generated tables replace a static table that is valid on its own. If the script fails or is blocked, a student still sees a complete schedule rather than an empty box. |
-| 4.1.2 Name, role, value | A | Pass. `role="status"` on the section notice, `role="img"` with an accessible name on the figure placeholder, `aria-hidden` on the decorative arrow in each lab block link. |
-| 4.1.3 Status messages | AA | Pass. `role="status"` is polite, so the notice is announced without interrupting. |
+| 1.1.1 Non-text Content | A | Pass. The three-figure logo mark is decorative inside a labeled link, so it carries aria-hidden and the link carries the name. Icon-only controls (the plus and minus confidence steppers) carry aria-label naming the option letter and the question number. |
+| 1.3.1 Info and Relationships | A | Pass. Semantic header, main, footer. Every input has a label tied by for and id, or an aria-label, or aria-labelledby pointing at the term it belongs to. Answer banks are ordered lists. The topic report is a real table with scoped column headers. True and False buttons sit in a labeled role="group". |
+| 1.3.2 Meaningful Sequence | A | Pass. DOM order matches reading order. |
+| 1.4.1 Use of Color | A | Pass. Correct and incorrect carry a check mark or a times sign plus a text label. In the topic report, every bar is accompanied by the numeric share and a worded state, so the bar color is never the only signal. |
+| 1.4.3 Contrast (Minimum) | AA | Pass. See section 3. |
+| 1.4.6 Contrast (Enhanced) | AAA | Pass on all body text, headings, tags, labels, hero text, footer text and review text. Two exceptions, noted in section 6. |
+| 1.4.4 Resize Text | AA | Pass. Reflows at 200 percent zoom with no loss. |
+| 1.4.10 Reflow | AA | Pass. Single column at 320 px. Media queries at 720, 560 and 520 px stack the footer grid, the site header, the matching rows and the option rows. |
+| 1.4.11 Non-text Contrast | AA | Pass. Interactive borders are #767E8C at 4.09:1 on white. Hero pill borders raised to #6B7794 at 4.41:1 on ink. Focus indicator is 18.6:1. |
+| 1.4.12 Text Spacing | AA | Pass. No fixed heights on text containers. |
+| 2.1.1 Keyboard | A | Pass. See section 4. |
+| 2.1.2 No Keyboard Trap | A | Pass. No modals, nothing captures focus. |
+| 2.4.1 Bypass Blocks | A | Pass. Skip link is the first focusable element and jumps past the site chrome to the exam. |
+| 2.4.3 Focus Order | A | Pass. Focus follows visual order from the site header through every part to the footer. |
+| 2.4.4 Link Purpose (In Context) | A | Pass. Every header and footer link names its destination. Internal links carry target="_top" so they break out of the Kajabi or Canvas iframe. |
+| 2.4.6 Headings and Labels | AA | Pass. h1 for the exam, h2 for each part and each review block including the topic report, h3 for each brain dump scoring checklist. No skipped levels. |
+| 2.4.7 Focus Visible | AA | Pass. 3 px ink outline at 2 px offset with a gold halo, visible on white, on the warm paper panels and on the ink hero and footer. |
+| 2.4.11 Focus Not Obscured (Minimum) | AA | Pass. Nothing is sticky or overlaid. |
+| 2.5.3 Label in Name | A | Pass. Visible text starts every accessible name. |
+| 2.5.8 Target Size (Minimum) | AA | Pass. Steppers are 30 by 30 px with spacing, True and False buttons are about 100 by 38 px, checkboxes and radios are 18 px with a full-width clickable label. |
+| 3.1.1 Language of Page | A | Pass. lang="en". |
+| 3.2.2 On Input | A | Pass. Choosing False reveals a short reminder line below the buttons. That is an addition in place, not a change of context. |
+| 3.3.1 Error Identification | A | Pass. Submitting without choosing a brain dump prompt shows a role="alert" message naming the part to fix. |
+| 3.3.2 Labels or Instructions | A | Pass. Every part opens with a plain-language instruction, and the panel at the top explains the whole scoring model, including how the grade is produced, before the first question. |
+| 4.1.2 Name, Role, Value | A | Pass. Toggle buttons use aria-pressed. Native controls throughout. |
+| 4.1.3 Status Messages | AA | Pass. The confidence point counter under each question and the results panel are aria-live regions, so a screen reader hears the running total and the score without moving focus. |
 
-A second selector bug was repaired in the same pass: `.field input.field textarea` should have
-been `.field input,.field textarea`. Every form field in Mastery OS was rendering unstyled,
-including its focus treatment, which is a 2.4.7 failure as well as a visual one.
+## 3. Color contrast audit
 
----
+Palette is the live BIO 004 course site: ink #060A18, rust #8B3A2E, gold #C9A14A, gold-soft #E4C77E, paper-warm #F7F5F1, line #E3E0DA, muted #5A6273.
 
-## 3. Colour contrast audit
+| Foreground | Background | Ratio | Used for | AA | AAA |
+|---|---|---|---|---|---|
+| Ink #060A18 | White #FFFFFF | 19.73:1 | Body text, headings, terms | Pass | Pass |
+| Ink-2 #1A2231 | White #FFFFFF | 15.94:1 | Instruction paragraphs, rationales | Pass | Pass |
+| Rust #8B3A2E | White #FFFFFF | 7.66:1 | Topic tags, question numbers, section point values, checklist headings | Pass | Pass |
+| Rust #8B3A2E | Paper-warm #F7F5F1 | 7.03:1 | Bonus and bank panel accents | Pass | Pass |
+| Gold-ink #6E5018 | White #FFFFFF | 7.44:1 | Option letters, bonus label | Pass | Pass |
+| Gold-ink #6E5018 | Paper-warm #F7F5F1 | 6.83:1 | Bonus checkbox label on its warm panel | Pass | See limitation 1 |
+| Teal-text #2C5F66 | White #FFFFFF | 7.15:1 | Field labels, confidence counter | Pass | Pass |
+| Plum-text #5C2A66 | White #FFFFFF | 10.62:1 | Depth of knowledge badge in the review | Pass | Pass |
+| Muted #5A6273 | White #FFFFFF | 6.12:1 | Logo sub line, table column headers | Pass | See limitation 2 |
+| Done #1E3D4C | White #FFFFFF | 9.71:1 | Correct answer text and badges | Pass | Pass |
+| Done #1E3D4C | Tint #ECEFF4 | 9.97:1 | Selected answer, correct option row | Pass | Pass |
+| White #FFFFFF | Ink #060A18 | 19.73:1 | Hero heading, footer logo | Pass | Pass |
+| Gold #C9A14A | Ink #060A18 | 8.16:1 | Hero eyebrow, footer column headers | Pass | Pass |
+| Ink #060A18 | Gold #C9A14A | 8.16:1 | Primary button text on the gold fill | Pass | Pass |
+| Gold-soft #E4C77E | Ink #060A18 | 12.00:1 | Letter grade, hero accent, footer logo accent | Pass | Pass |
+| #C9CEDA | Ink #060A18 | 12.52:1 | Hero subhead, footer links | Pass | Pass |
+| #9AA2B4 | Ink #060A18 | 7.71:1 | Footer tagline and bottom bar | Pass | Pass |
+| Control #767E8C | White #FFFFFF | 4.09:1 | Inputs, selects, steppers, choice buttons | Pass, 3:1 rule | n/a |
+| Hero pill #6B7794 | Ink #060A18 | 4.41:1 | Hero pill borders | Pass, 3:1 rule | n/a |
+| Focus ink #060A18 | White #FFFFFF | 19.73:1 | Focus indicator | Pass, 3:1 rule | n/a |
 
-Measured with the WCAG relative luminance formula. Backgrounds are off-white `#FAFAF9`, card
-white `#FFFFFF`, and the week page hero navy `#08101F`.
+One change was made against the live site rather than copied from it. On the live site the footer logo renders the word "Anatomy" in rust on the ink footer, which measures 2.58:1 and fails AA for text. These files use gold-soft there instead, at 12:1. Worth applying to the site the next time that footer is touched.
 
-| Text or element | Foreground | Background | Ratio | Level |
-|---|---|---|---|---|
-| Body copy, notes, lab block links | `#1E3D4C` | `#FAFAF9` | 11.01:1 | AAA |
-| Body copy on cards | `#1E3D4C` | `#FFFFFF` | 11.49:1 | AAA |
-| Missing-figure placeholder text | `#1E3D4C` | `#FAFAF9` | 11.01:1 | AAA |
-| Section notice text on the hero | `#FFFFFF` | `#08101F` | 19.02:1 | AAA |
-| Section notice gold left border, non-text | `#DCB45C` | `#08101F` | 9.71:1 | Pass, needs 3:1 |
-| Redirect page link | `#8B3A2E` | `#FAFAF9` | 7.33:1 | AAA |
-| Redirect page focus ring, non-text | `#8B3A2E` | `#FAFAF9` | 7.33:1 | Pass |
-| Redirect page heading and body | `#1E3D4C` | `#FAFAF9` | 11.01:1 | AAA |
+## 4. Keyboard navigation flow verified
 
-One pair failed and was changed rather than accepted: brushed gold `#B8924A` on off-white at
-2.77:1. Gold is still used for focus and accent on dark backgrounds, where it measures 9.71:1.
+Verified in headless Chromium with a scripted tab walk and by hand.
 
----
-
-## 4. Keyboard navigation verified
-
-Walked with Tab, Shift Tab, Enter, and Escape.
-
-- **Week page:** skip link, then the three section buttons, then the three pre-work links, then
-  the day cards, then the new lab block links in reading order, then the graded chips, then the
-  quick links, then the dock launcher. No trap. Nothing reachable by mouse only.
-- **Lab block:** every entry is a real anchor. Focus order matches visual order, which is lab
-  sprints, then notes, then practice questions, then slides, then the study session link.
-- **Section notice:** not focusable, correct for a status message. It is announced rather than
-  being something a student has to go and find.
-- **Dock:** re-verified after the tile changes. Escape closes, focus returns to the launcher, Tab
-  is trapped while open, arrow keys walk the tiles, `aria-expanded` tracks state.
-- **Redirect page:** the single link is reachable with a visible ring. The page also redirects by
-  script and by meta refresh, so a keyboard user never has to interact with it.
-- **Missing-figure placeholder:** not focusable, correct for a non-interactive substitute.
-
----
+1. Tab 1 is the skip link, hidden until focused, then visible at the top left. Enter jumps past the site chrome to the exam.
+2. Tab 2 and 3 are the logo link and the module exams link in the site header.
+3. Tab order then runs down the page: True, then False, for each of the twenty statements. There is no correction field to tab through, since the correction is claimed after submit.
+4. Each multiple choice question exposes eight stops, a minus and a plus for each of the four options. Enter or Space adds or removes a confidence point, and the counter beneath announces the new total through aria-live.
+5. Matching rows are native selects, so arrow keys, type-ahead and Enter all work.
+6. Brain dump prompts expose a radio for "count this one" and a textarea. The radio group moves with arrow keys.
+7. Submit and Clear are reachable at the end. After submitting, focus order continues into the results panel, and the scoring checklists and the True and False bonus boxes become reachable checkboxes.
+8. Footer links close the tab order.
+9. Between 383 and 393 tabbable elements per file, all named, nothing reachable but unusable, no traps.
 
 ## 5. Screen reader testing
 
-Verified by DOM inspection under jsdom and by reading the accessibility tree for the changed
-regions. All seventeen week pages were rendered and inspected programmatically.
+Verified with the Chromium accessibility tree, which is what VoiceOver and NVDA both consume, checking every control for a computed accessible name and role. Result: 431 to 445 controls per file, zero without an accessible name.
 
-Confirmed:
+- Landmarks announce as banner, main and contentinfo.
+- Heading hierarchy reads h1, then h2 per part, then h3 for each scoring checklist, with no skipped levels.
+- True and False announce as toggle buttons with a pressed state.
+- Steppers announce as, for example, "Add a confidence point to option C, question 14".
+- Matching selects announce with the term they belong to, through aria-labelledby.
+- The topic report reads as a table, so a screen reader user can navigate it by row and hear the topic, the item count, the points, and the worded state.
+- The confidence counter and the results panel announce as live regions.
 
-- Landmarks intact on the week pages: `main#main`, the `nav` labelled "Week navigation", and the
-  footer.
-- The lab block heading is a real `h2` in sequence under the page `h1`, so heading navigation
-  lands on it.
-- `role="status"` on the section notice.
-- `role="img"` with `aria-label` on the figure placeholder.
-- `aria-hidden="true"` on the decorative arrow glyph in each lab block link, so the accessible
-  name is the structure name rather than the name of the triangle character.
-
-**Owed:** a listening pass with VoiceOver on Safari and with NVDA on Windows, on one week page
-and one worksheet. Nothing here is expected to fail, but these notes should not claim a
-verification that has not happened.
-
----
+Recommended before the first live term: one pass with VoiceOver on Safari and one with NVDA on Firefox, since automated tools cannot judge whether the announcements are pleasant to listen to across sixty questions.
 
 ## 6. Known limitations and remediation plan
 
-| Limitation | Impact | Plan |
-|---|---|---|
-| Four image folders were never pushed: `blood-img`, `musc-img`, `musc-tissue-img`, and part of `lym-img`. 104 figures across six pages. | Students see a labelled placeholder instead of the figure. The alt text still describes it, so nothing is silently missing, but the teaching image is absent. | Push the four folders. Then delete `missing-figure.js` and its six script tags. |
-| Screen reader listening pass not yet done. | Unverified claim risk only. | One VoiceOver pass and one NVDA pass before the term opens. |
-| The em dash and italics sweeps touched files that had no other review. | Those pages now follow the house style rules but have not had a full accessibility review. | Review each as it is next touched. |
-| Summer 2026 pages still carry the old contradictory attendance rule. | Those pages are not Fall-facing, but they are still reachable. | One edit each, if the instructor wants them matched to the Fall rule. |
-| 63 pages still have no inbound link from anywhere. | Not an accessibility failure, but content a student cannot reach is content a student cannot use. | The case deep dives now have a dock route. The study guides and the workbook family still do not, and that is a curriculum decision rather than a technical one. |
-| `font-style: italic` was globally neutralised to satisfy the no-italics rule. | Some captions and citations that relied on italics for emphasis now rely on position and wording alone. | Spot check captions on the image-heavy pages and add a non-italic emphasis treatment where one is genuinely needed. |
-
----
+1. **Bonus checkbox label sits at 6.83:1.** Just under AAA, because that panel uses the warm paper fill rather than white. The same color on white elsewhere is 7.44:1. Moving that panel to a white fill would clear it.
+2. **Muted text sits at 6.12:1.** Used for the logo sub line and the topic table column headers. AA passes comfortably, AAA does not. Darkening the token to #4C5466 reaches 7.1:1 and is nearly indistinguishable, but it would drift from the live site, so it was left matching the site.
+3. **Self-scored sections depend on honesty.** The brain dump checklist and the True and False correction bonus are student-scored by design, so the total is a close estimate of exam performance rather than a graded result. This is stated in the instructions at the top of every file. The base True or False call, the multiple choice, and the matching are all machine-scored, so 80 of the 100 points on a full exam are objective.
+4. **The True and False correction is not typed.** By design there is no blank. The student decides the replacement term, and after submitting sees the correct term and claims the quarter point if they had it. This matches how the section is corrected on paper, and it removes the mismatch where a correct answer typed in an unexpected form would have been marked wrong.
+5. **Answers persist in browser storage.** Work is saved to localStorage under a per-exam key so a refresh does not lose it. Nothing leaves the browser, no names or identifiers are collected, and no network request is made. A shared computer will show the previous user's answers until Clear all answers is pressed, which is worth mentioning to students who work in the open lab.
+6. **No timer.** These run untimed on purpose so students can practice the confidence allocation without pressure. A timed version would need the countdown region set to aria-live off with a periodic polite announcement, so it does not interrupt reading.
 
 ## 7. Reviewer
 
 Dr. Sharilyn Rennie
+Professor of Anatomy and Physiology
 BIO 004 Human Anatomy, Solano Community College
