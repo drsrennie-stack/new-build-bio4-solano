@@ -22,6 +22,19 @@ h1{font-size:clamp(24px,3.4vw,34px);font-weight:800;letter-spacing:-.02em;margin
 h2{font-size:18px;font-weight:800;color:#8B3A2E;margin:26px 0 10px}
 .vid{position:relative;aspect-ratio:16/9;background:#0B1530;border-radius:12px;overflow:hidden}
 .vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.chapters{margin:18px 0 0}
+.ch-h{font-size:15px;font-weight:800;margin:0 0 2px;letter-spacing:.02em}
+.ch-hint{font-size:13.5px;color:#4A5763;margin:0 0 10px}
+.chaplist{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:9px}
+.chap .jump{display:flex;gap:12px;align-items:baseline;width:100%;text-align:left;background:#FAFAF9;
+  color:#0B1530;border:0;border-radius:10px;padding:13px 15px;cursor:pointer;font-family:inherit;
+  box-shadow:0 1px 3px rgba(0,0,0,.08);transition:transform 180ms ease,box-shadow 180ms ease}
+.chap .jump:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(0,0,0,.12)}
+.chap .t{font-variant-numeric:tabular-nums;font-weight:800;font-size:13px;color:#8B3A2E;flex:none}
+.chap .l{font-weight:700;font-size:14.5px}
+.chap[aria-current="true"] .jump{background:#0B1530;color:#fff}
+.chap[aria-current="true"] .t{color:#DCB45C}
+@media (prefers-reduced-motion:reduce){.chap .jump{transition:none}.chap .jump:hover{transform:none}}
 .vid-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-align:center;gap:6px;border:2px dashed rgba(255,255,255,.28);border-radius:12px}
 .vid-ph p{margin:0} .vid-ph .big{font-size:19px;font-weight:800} .vid-ph .sub{opacity:.75;font-size:13px}
 .dlrow{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 2px}
@@ -48,9 +61,25 @@ h2{font-size:18px;font-weight:800;color:#8B3A2E;margin:26px 0 10px}
   <p class="eyebrow">BIO 004 &middot; Concept Video</p>
   <h1>Cardiac Conduction</h1>
 
-  <div id="video" class="vid" data-yt="">
-    <div class="vid-ph"><p class="big">Video coming soon</p><p class="sub">The recording link will appear here.</p></div>
+  <div id="video" class="vid">
+    <iframe id="lecvid" src="https://www.loom.com/embed/6bc1b9a4d36a41bb9ebd748086759010"
+            title="Cardiac Conduction System and Natural Pacemakers, full lecture by Dr. Sharilyn Rennie"
+            frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen
+            style="position:absolute;inset:0;width:100%;height:100%;border:0"></iframe>
   </div>
+
+  <nav class="chapters" aria-label="Video chapters">
+    <h2 class="ch-h">Chapters</h2>
+    <p class="ch-hint">Watch straight through, or jump to a concept. Four minutes end to end.</p>
+    <div class="chaplist" role="list">
+      <div class="chap" role="listitem" data-t="0" aria-current="true">
+        <button class="jump" type="button"><span class="t">0:00</span><span class="l">Introduction</span></button>
+      </div>
+      <div class="chap" role="listitem" data-t="94">
+        <button class="jump" type="button"><span class="t">1:34</span><span class="l">Pacemakers of the heart</span></button>
+      </div>
+    </div>
+  </nav>
 
   <div class="dlrow">
     <a class="btn terra" href="https://drsrennie-stack.github.io/new-build-bio4-solano/m3-conduction-notes.html" target="_top"><span aria-hidden="true">&#128196;</span> Notes: Cardiac Conduction</a>
@@ -94,7 +123,7 @@ window.addEventListener('load',s);window.addEventListener('resize',s);if(window.
 .rs-chev{margin-left:auto;color:#8B3A2E;font-weight:800;transition:transform .2s ease}
 .rs-slides details[open] .rs-chev{transform:rotate(90deg)}
 .rs-slides summary:focus-visible{outline:3px solid #C9A14A;outline-offset:3px;border-radius:8px}
-.rs-note{font-size:13px;color:#0B1530;opacity:.78;margin:8px 0 0}
+.rs-note{font-size:13px;color:#3D4757;margin:8px 0 0}
 .rs-decks{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
 .rs-deck{display:inline-flex;align-items:center;gap:8px;text-decoration:none;background:#0B1530;color:#fff;
   font-size:13.5px;font-weight:800;border-radius:10px;padding:9px 14px}
@@ -137,6 +166,27 @@ window.addEventListener('load',s);window.addEventListener('resize',s);if(window.
     <div class="rs-tools"><a class="rs-tile t-mastery" href="https://drsrennie-stack.github.io/new-build-bio4-solano/mastery-os-fall-2026.html" target="_top"><span class="rs-icon" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0B1530" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-1 5 3 3 0 0 0 2 5 3 3 0 0 0 4 1V4z"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 1 5 3 3 0 0 1-2 5 3 3 0 0 1-4 1"/></svg></span><span class="rs-name">Mastery OS</span><span class="rs-desc">Weak spots, today&#x27;s plan, exam cram.</span><span class="rs-qr"><svg role="img" aria-label="QR code to open Mastery OS" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39 39" class="segno"><path class="qrline" stroke="#0b1530" d="M1 1.5h7m1 0h1m1 0h4m1 0h1m2 0h1m1 0h3m7 0h7m-37 1h1m5 0h1m2 0h2m6 0h2m2 0h2m1 0h1m3 0h1m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m1 0h2m1 0h2m2 0h1m1 0h1m3 0h1m1 0h1m1 0h1m1 0h2m1 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m2 0h2m1 0h2m1 0h1m1 0h2m2 0h3m1 0h2m3 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m4 0h2m3 0h1m1 0h1m1 0h3m2 0h2m3 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m1 0h1m1 0h9m1 0h3m2 0h1m4 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-27 1h4m2 0h1m2 0h2m2 0h2m1 0h3m-29 1h1m1 0h1m3 0h2m3 0h5m8 0h1m3 0h1m2 0h1m2 0h1m1 0h1m-37 1h1m2 0h2m4 0h1m2 0h1m4 0h1m1 0h1m1 0h1m1 0h1m2 0h3m1 0h2m3 0h2m-37 1h2m1 0h1m1 0h3m2 0h1m1 0h4m3 0h5m1 0h1m1 0h1m2 0h1m2 0h1m2 0h1m-37 1h1m2 0h3m2 0h1m2 0h2m6 0h1m2 0h2m2 0h1m1 0h1m2 0h3m-34 1h1m2 0h2m1 0h2m1 0h1m2 0h5m2 0h2m2 0h2m1 0h1m1 0h1m1 0h2m1 0h1m2 0h1m-37 1h3m2 0h1m2 0h2m1 0h3m1 0h3m1 0h2m1 0h2m3 0h5m1 0h1m2 0h1m-35 1h2m1 0h3m1 0h2m1 0h4m1 0h3m1 0h3m1 0h1m1 0h2m4 0h2m1 0h1m-37 1h2m3 0h1m3 0h1m2 0h3m7 0h2m3 0h2m2 0h3m1 0h1m-36 1h2m2 0h1m1 0h1m4 0h2m1 0h1m1 0h1m11 0h1m1 0h2m-31 1h1m7 0h1m3 0h2m1 0h1m1 0h2m3 0h3m1 0h2m1 0h2m2 0h3m-37 1h4m1 0h2m2 0h1m6 0h2m1 0h3m1 0h1m1 0h1m1 0h1m1 0h2m3 0h1m1 0h1m-37 1h2m1 0h3m3 0h3m1 0h1m1 0h2m1 0h1m4 0h2m1 0h3m1 0h1m2 0h1m-34 1h1m1 0h1m3 0h3m4 0h2m1 0h1m2 0h2m3 0h1m3 0h1m1 0h2m1 0h1m1 0h1m-34 1h3m4 0h2m1 0h1m2 0h2m1 0h4m1 0h2m1 0h5m5 0h1m-37 1h1m3 0h3m1 0h1m2 0h1m3 0h1m1 0h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h2m2 0h4m-36 1h2m1 0h2m5 0h2m3 0h1m2 0h2m2 0h1m2 0h1m1 0h2m1 0h3m-32 1h1m1 0h1m1 0h1m8 0h2m6 0h2m2 0h2m1 0h1m5 0h1m-35 1h1m4 0h6m1 0h1m4 0h1m1 0h1m1 0h2m1 0h2m2 0h2m1 0h2m1 0h1m-37 1h2m1 0h7m2 0h2m1 0h2m2 0h5m2 0h2m1 0h2m1 0h1m3 0h1m-34 1h1m3 0h4m3 0h1m3 0h2m4 0h1m1 0h7m2 0h1m-36 1h4m2 0h5m1 0h1m1 0h2m2 0h3m3 0h1m3 0h5m2 0h2m-29 1h2m1 0h2m2 0h3m1 0h1m1 0h4m1 0h1m1 0h1m3 0h1m3 0h1m-37 1h7m1 0h1m4 0h1m1 0h3m1 0h3m1 0h1m2 0h1m1 0h1m1 0h1m1 0h1m3 0h1m-37 1h1m5 0h1m4 0h3m1 0h1m2 0h2m7 0h2m3 0h1m-33 1h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h4m2 0h1m2 0h3m2 0h6m-33 1h1m1 0h3m1 0h1m5 0h1m4 0h1m1 0h1m3 0h1m2 0h1m1 0h2m2 0h2m1 0h1m-36 1h1m1 0h3m1 0h1m1 0h2m3 0h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m1 0h2m2 0h4m1 0h1m-37 1h1m5 0h1m3 0h1m3 0h1m1 0h1m1 0h1m1 0h1m1 0h1m5 0h3m1 0h1m-33 1h7m1 0h2m1 0h2m3 0h1m3 0h1m3 0h1m3 0h2m1 0h1m1 0h1m2 0h1"/></svg></span><span class="rs-open">Open &rarr;</span></a><a class="rs-tile t-loops" href="https://drsrennie-stack.github.io/loops/" target="_top"><span class="rs-icon" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg></span><span class="rs-name">Loops</span><span class="rs-desc">Fast visual practice. 39 loops.</span><span class="rs-qr"><svg role="img" aria-label="QR code to open Loops" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 31 31" class="segno"><path class="qrline" stroke="#0b1530" d="M1 1.5h7m1 0h1m1 0h3m1 0h1m3 0h1m3 0h7m-29 1h1m5 0h1m2 0h3m1 0h2m1 0h2m2 0h1m1 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h2m1 0h3m3 0h1m2 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h1m3 0h3m1 0h1m4 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h1m2 0h2m4 0h1m3 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m1 0h1m1 0h2m5 0h2m1 0h1m1 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-20 1h4m3 0h1m-17 1h1m1 0h1m3 0h2m1 0h1m1 0h2m3 0h1m2 0h2m2 0h1m2 0h1m1 0h1m-27 1h1m1 0h1m3 0h1m1 0h2m2 0h3m2 0h2m1 0h2m3 0h2m-29 1h2m2 0h3m1 0h1m2 0h1m2 0h2m3 0h2m1 0h2m1 0h2m1 0h1m-29 1h2m2 0h1m5 0h1m3 0h3m1 0h1m1 0h2m3 0h1m-25 1h2m3 0h1m1 0h3m3 0h1m1 0h1m2 0h1m2 0h1m5 0h1m-29 1h2m1 0h3m2 0h1m2 0h3m1 0h1m1 0h1m1 0h2m1 0h2m3 0h2m-27 1h2m2 0h1m1 0h1m1 0h1m4 0h1m1 0h3m8 0h1m-29 1h1m1 0h1m1 0h2m2 0h1m2 0h2m1 0h3m1 0h2m2 0h1m-23 1h1m1 0h1m2 0h4m4 0h2m1 0h1m2 0h1m2 0h1m5 0h1m-28 1h5m1 0h4m1 0h1m2 0h2m1 0h3m1 0h2m2 0h3m-29 1h3m3 0h1m1 0h4m1 0h3m1 0h1m1 0h1m3 0h1m1 0h1m2 0h1m-27 1h1m1 0h1m2 0h1m1 0h1m1 0h1m8 0h1m1 0h1m-23 1h3m1 0h1m1 0h1m3 0h1m1 0h3m1 0h1m3 0h6m1 0h1m-20 1h4m1 0h1m1 0h3m2 0h1m3 0h3m1 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m2 0h4m1 0h1m1 0h1m1 0h1m3 0h1m-29 1h1m5 0h1m2 0h2m1 0h2m1 0h2m3 0h1m3 0h1m-25 1h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h1m2 0h1m2 0h7m1 0h1m-28 1h1m1 0h3m1 0h1m3 0h2m3 0h1m2 0h2m1 0h1m1 0h4m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m3 0h2m1 0h3m2 0h2m2 0h1m2 0h2m-29 1h1m5 0h1m2 0h1m1 0h1m1 0h3m2 0h1m1 0h1m1 0h1m2 0h1m-26 1h7m1 0h1m1 0h7m3 0h1m1 0h1m1 0h2m2 0h1"/></svg></span><span class="rs-open">Open &rarr;</span></a><a class="rs-tile t-recall" href="https://drsrennie-stack.github.io/new-build-bio4-solano/mastery-os-fall-2026.html#s-recall" target="_top"><span class="rs-icon" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0B1530" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="14" height="14" rx="2"/><path d="M7 9h6M7 13h4"/><path d="M21 8v9a2 2 0 0 1-2 2"/></svg></span><span class="rs-name">Recall Rx</span><span class="rs-desc">Spaced recall. My deck or yours.</span><span class="rs-qr"><svg role="img" aria-label="QR code to open Recall Rx" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39 39" class="segno"><path class="qrline" stroke="#0b1530" d="M1 1.5h7m1 0h2m2 0h7m1 0h1m2 0h1m2 0h3m1 0h7m-37 1h1m5 0h1m2 0h3m1 0h2m1 0h2m1 0h4m2 0h2m1 0h1m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m2 0h1m3 0h2m2 0h2m1 0h2m4 0h3m1 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h1m2 0h3m1 0h2m1 0h2m3 0h1m1 0h2m1 0h1m1 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h3m1 0h1m2 0h1m1 0h2m1 0h1m2 0h1m2 0h3m1 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m1 0h4m2 0h4m1 0h1m2 0h1m1 0h1m5 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-29 1h3m1 0h1m2 0h1m1 0h1m1 0h3m2 0h1m1 0h1m-27 1h1m3 0h1m1 0h5m1 0h2m2 0h2m2 0h5m1 0h2m1 0h5m2 0h1m-35 1h1m1 0h2m3 0h1m1 0h1m1 0h2m2 0h2m2 0h1m1 0h1m1 0h1m1 0h2m3 0h1m2 0h1m-34 1h2m1 0h4m1 0h1m1 0h1m2 0h1m2 0h1m2 0h4m1 0h3m2 0h3m-34 1h1m2 0h1m4 0h5m2 0h3m2 0h2m1 0h1m2 0h1m1 0h2m1 0h2m1 0h2m-36 1h1m1 0h1m2 0h3m2 0h5m2 0h1m2 0h3m1 0h1m1 0h1m2 0h3m2 0h3m-33 1h2m1 0h1m1 0h1m1 0h1m1 0h6m3 0h8m2 0h2m-34 1h2m1 0h1m1 0h2m1 0h1m1 0h1m4 0h1m1 0h1m2 0h2m1 0h2m2 0h2m1 0h5m-34 1h1m1 0h1m5 0h1m1 0h2m2 0h3m3 0h2m6 0h1m1 0h2m1 0h1m-32 1h1m2 0h1m5 0h1m1 0h2m1 0h1m2 0h2m1 0h2m1 0h2m1 0h3m1 0h3m-36 1h1m1 0h1m5 0h3m3 0h1m1 0h1m6 0h1m3 0h2m3 0h1m1 0h2m-34 1h1m2 0h2m2 0h1m1 0h1m1 0h2m1 0h3m1 0h2m1 0h1m2 0h2m1 0h1m1 0h2m1 0h1m-35 1h2m5 0h1m3 0h3m3 0h2m2 0h3m2 0h1m2 0h2m3 0h2m-36 1h1m1 0h9m2 0h3m1 0h1m1 0h4m1 0h1m2 0h1m1 0h3m2 0h1m-35 1h2m1 0h2m2 0h2m1 0h1m2 0h4m4 0h1m1 0h1m1 0h1m1 0h3m1 0h2m-33 1h3m2 0h3m1 0h1m1 0h2m2 0h1m1 0h2m2 0h1m1 0h2m2 0h1m1 0h1m1 0h5m-36 1h5m5 0h1m1 0h2m1 0h1m1 0h1m1 0h3m5 0h1m3 0h2m1 0h2m-35 1h2m3 0h1m4 0h2m1 0h1m2 0h1m2 0h3m3 0h1m2 0h2m2 0h4m-37 1h3m6 0h2m2 0h2m3 0h1m2 0h3m1 0h1m1 0h1m4 0h3m-33 1h5m1 0h2m1 0h2m1 0h3m1 0h1m1 0h6m1 0h1m1 0h1m1 0h1m-30 1h1m1 0h2m1 0h1m3 0h2m1 0h6m1 0h2m3 0h1m3 0h5m-35 1h2m2 0h5m3 0h1m1 0h1m1 0h7m1 0h1m2 0h8m1 0h1m-29 1h2m1 0h1m2 0h5m1 0h1m1 0h2m1 0h1m2 0h1m3 0h1m-33 1h7m1 0h1m1 0h1m1 0h2m1 0h4m3 0h3m1 0h1m1 0h1m1 0h1m1 0h1m-33 1h1m5 0h1m2 0h2m1 0h1m3 0h4m1 0h3m4 0h1m3 0h4m-36 1h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h2m3 0h1m1 0h4m3 0h1m1 0h8m-36 1h1m1 0h3m1 0h1m4 0h1m1 0h2m2 0h2m4 0h1m1 0h2m1 0h4m1 0h1m1 0h2m-37 1h1m1 0h3m1 0h1m2 0h1m4 0h5m1 0h2m1 0h2m1 0h3m1 0h1m2 0h2m-35 1h1m5 0h1m2 0h1m4 0h2m1 0h2m1 0h2m1 0h2m2 0h1m2 0h1m1 0h4m-36 1h7m1 0h1m1 0h3m2 0h1m1 0h1m1 0h6m2 0h1m3 0h1m2 0h3"/></svg></span><span class="rs-open">Open &rarr;</span></a></div>
   </div>
 </section>
+
+<script>
+/* Chapter seeking, the same mechanism the neuro concept video pages
+   use: reset the Loom embed src with ?t=NNs. Loom has no JS seek API
+   on a plain embed, so reloading the frame at a timestamp is the
+   only way to jump, and it is what every other lecture page here
+   already does. */
+(function(){
+  var f=document.getElementById('lecvid'); if(!f) return;
+  var base=f.src.split('?')[0];
+  var rows=[].slice.call(document.querySelectorAll('.chap'));
+  rows.forEach(function(r){
+    var t=r.getAttribute('data-t');
+    var btn=r.querySelector('.jump'); if(!btn) return;
+    btn.addEventListener('click',function(){
+      f.src=base+'?t='+t+'s&autoplay=1';
+      rows.forEach(function(x){ x.setAttribute('aria-current', x===r ? 'true':'false'); });
+    });
+  });
+})();
+</script>
 
 <script src="bio004-dock.js"></script>
 <script src="dock-coachmark.js"></script>
