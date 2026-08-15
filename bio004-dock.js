@@ -142,7 +142,7 @@
        second floating button is another entryway to the same files
        ordered a third way, and too many entryways is the problem
        this course already had. */
-    t.push({ g: 'Course materials', name: 'All course materials', sub: 'Every sheet, note, video, workbook and deck, by module',
+    t.push({ g: 'Course materials', name: 'All course materials', sub: 'Sheets, notes, videos and decks, by module',
              url: BASE + 'course-materials.html', icon: 'doc', tone: 'navy', qr: 'materials',
              kw: 'materials notes prework videos workbooks slides index everything reading' });
     t.push({ g: 'Course materials', name: 'Notes', sub: 'The reading for this course, by module',
@@ -260,7 +260,14 @@
 '.bd-body{overflow:auto;padding:6px 16px 18px;scrollbar-width:thin}',
 '.bd-g{font-size:10.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#F2E2B8;',
 '  margin:14px 2px 9px}',
-'.bd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}',
+"/* THE RAGGED GAP UNDER SHORT TILES.\n"+
+"   Cells were not stretching, so a tile whose text wrapped to four\n"+
+"   lines left a hole beside every shorter one in its row. Stretch\n"+
+"   the row and let each tile fill its cell: the row is as tall as\n"+
+"   its tallest tile and nothing is left hanging. */",
+'.bd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;align-items:stretch}',
+'.bd-cell{height:100%}',
+'.bd-tile{height:100%}',
 
 '.bd-tile{position:relative;display:flex;align-items:flex-start;gap:11px;text-decoration:none;',
 '  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:16px;padding:12px;',

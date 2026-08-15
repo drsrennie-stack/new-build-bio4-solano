@@ -81,18 +81,50 @@
         padding:11px 16px;font-family:var(--font);font-size:14.5px;box-shadow:var(--rest)}
   .find:focus{box-shadow:inset 0 0 0 2px var(--terra-dark)}
 
-  .mod{background:#fff;border-radius:var(--radius);padding:24px;margin:20px 0;box-shadow:var(--rest)}
-  .mod-k{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;
-         color:var(--terra-dark);margin:0 0 4px}
-  .mod h2{font-size:clamp(19px,3vw,23px);font-weight:800;letter-spacing:-.02em;margin:0 0 4px}
-  .mod .sub{font-size:14.5px;color:var(--ink-3);margin:0 0 16px}
+  /* MODULES AS COLLAPSIBLE CARDS, IN COLUMNS.
 
-  .kind{margin:0 0 18px}
+     Five modules laid out as full-width open panels was a very long
+     page of mostly white, and no way to tell at a glance which one
+     you were in. They are cards now, in as many columns as the
+     window allows, closed until you open one. align-items:start
+     keeps each card its own height so an open one does not stretch
+     its neighbour.
+
+     The open card goes navy, header and all, so the one you are
+     reading is obvious from across the page. */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));
+        gap:16px;align-items:start;margin-top:20px}
+  .mod{background:#fff;border-radius:12px;box-shadow:var(--rest);overflow:hidden;
+       transition:box-shadow 180ms ease}
+  .mod.open{box-shadow:0 16px 34px -12px rgba(8,16,31,.35)}
+
+  .mod-h{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;
+         background:none;border:0;padding:20px 22px;cursor:pointer;font-family:var(--font);
+         color:var(--navy);transition:background 180ms ease,color 180ms ease}
+  .mod.open .mod-h{background:var(--navy);color:#fff}
+  .mod-h:hover{background:#F1F4F7}
+  .mod.open .mod-h:hover{background:#0E1A2E}
+  .mod-h .txt{flex:1;min-width:0}
+  .mod-k{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;
+         color:var(--terra-dark);margin:0 0 4px;display:block}
+  .mod.open .mod-k{color:var(--gold)}
+  .mod-h h2{font-size:18px;font-weight:800;letter-spacing:-.02em;margin:0 0 4px;line-height:1.2}
+  .mod .sub{font-size:13.5px;color:var(--ink-3);margin:0}
+  .mod.open .sub{color:#C6CEDA}
+  .chev{flex:none;width:26px;height:26px;margin-top:2px;display:flex;align-items:center;
+        justify-content:center;transition:transform 200ms ease}
+  .mod.open .chev{transform:rotate(180deg)}
+  .chev svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.4;
+            stroke-linecap:round;stroke-linejoin:round}
+  .mod-b{padding:4px 22px 22px}
+  .mod:not(.open) .mod-b{display:none}
+
+  .kind{margin:14px 0 0}
   .kind:last-child{margin-bottom:0}
   .kind h3{font-size:15px;font-weight:800;margin:0 0 4px}
   .kind .kd{font-size:13.5px;color:var(--ink-3);margin:0 0 10px}
   .items{list-style:none;margin:0;padding:0;display:grid;
-         grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+         grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:9px}
   .items a{display:block;background:var(--offwhite);color:var(--navy);text-decoration:none;
            padding:13px 15px;border-radius:10px;box-shadow:var(--rest);transition:var(--t);
            font-weight:700;font-size:14.5px;height:100%}
@@ -110,10 +142,17 @@
          box-shadow:inset 0 1px 0 rgba(8,16,31,.10)}
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
-    .pill,.items a,.back{transition:none}
+    .pill,.items a,.back,.mod,.mod-h,.chev{transition:none}
     .pill:hover,.items a:hover,.back:hover{transform:none}
   }
-  @media print{ .controls,.back{display:none} .mod,.items a{box-shadow:none} }
+  @media print{
+    .controls,.back,.chev{display:none}
+    .mod,.items a{box-shadow:none}
+    .mod-b{display:block !important}
+    .mod.open .mod-h{background:none;color:var(--navy)}
+    .mod.open .mod-k{color:var(--terra-dark)}
+    .mod.open .sub{color:var(--ink-3)}
+  }
 </style>
 </head>
 <body>
@@ -137,7 +176,7 @@
   </div>
   <p class="lede" id="count" role="status" style="font-size:14px;margin:10px 0 0"></p>
 
-  <div id="out"></div>
+  <div class="grid" id="out"></div>
 
   <div class="foot-note" id="note"></div>
 
@@ -227,6 +266,9 @@
      an everything page and asking them to filter it themselves. */
   var active = {}; KINDS.forEach(function(K){ active[K.k] = true; });
   var query = '';
+  /* Which module cards are open. The first one starts open so the
+     page does not land as five closed boxes with nothing to read. */
+  var open = { 1:true };
   (function(){
     var m = null;
     try { m = location.search.match(/[?&]show=([a-z,]+)/i); } catch(e){}
@@ -278,15 +320,30 @@
 
       var title = g.m ? g.m.title : 'Not placed in a module';
       var kick  = g.m ? ('Module '+g.n+(g.m.exam ? ' &middot; Exam '+g.m.exam : '')) : 'No week set';
-      out += '<section class="mod" id="mod-'+g.n+'" aria-labelledby="h-mod-'+g.n+'">';
-      out += '<p class="mod-k">'+kick+'</p>';
-      out += '<h2 id="h-mod-'+g.n+'">'+esc(title)+'</h2>';
-      if(g.m && g.m.weeks && g.m.weeks.length){
-        out += '<p class="sub">Weeks '+g.m.weeks[0]+' to '+g.m.weeks[g.m.weeks.length-1]+'</p>';
-      } else {
-        out += '<p class="sub">These are linked from a class day that carries no week number.</p>';
-      }
-      out += body + '</section>';
+      var weeks = (g.m && g.m.weeks && g.m.weeks.length)
+        ? 'Weeks '+g.m.weeks[0]+' to '+g.m.weeks[g.m.weeks.length-1]
+        : 'Linked from a class day with no week number';
+      /* A search forces every card with a hit open, because a closed
+         card that contains the thing you searched for is a result you
+         cannot see. */
+      var isOpen = query ? true : !!open[g.n];
+
+      out += '<section class="mod' + (isOpen ? ' open' : '') + '" id="mod-'+g.n+'">';
+      out += '<h2 style="margin:0">'
+           +   '<button type="button" class="mod-h" data-mod="'+g.n+'" aria-expanded="'
+           +   (isOpen?'true':'false') + '" aria-controls="body-'+g.n+'">'
+           +     '<span class="txt">'
+           +       '<span class="mod-k">'+kick+'</span>'
+           +       '<span style="display:block;font-size:18px;font-weight:800;letter-spacing:-.02em;'
+           +           'line-height:1.2;margin-bottom:4px">'+esc(title)+'</span>'
+           +       '<span class="sub">'+weeks+' &middot; '+any+' item'+(any===1?'':'s')+'</span>'
+           +     '</span>'
+           +     '<span class="chev" aria-hidden="true">'
+           +       '<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span>'
+           +   '</button>'
+           + '</h2>';
+      out += '<div class="mod-b" id="body-'+g.n+'">' + body + '</div>';
+      out += '</section>';
     });
 
     document.getElementById('out').innerHTML = out
@@ -316,6 +373,17 @@
       if(KINDS.every(function(K){ return !active[K.k]; })) KINDS.forEach(function(K){ active[K.k] = true; });
     }
     chips(); render();
+  });
+
+  document.getElementById('out').addEventListener('click', function(e){
+    var b = e.target.closest('.mod-h'); if(!b) return;
+    var n = b.getAttribute('data-mod');
+    open[n] = !open[n];
+    render();
+    /* Focus follows the card that was just toggled, otherwise a
+       keyboard user is dropped at the top of a redrawn list. */
+    var again = document.querySelector('.mod-h[data-mod="'+n+'"]');
+    if(again) again.focus();
   });
 
   var t = null;
