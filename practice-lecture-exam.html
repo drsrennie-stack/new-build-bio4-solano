@@ -296,8 +296,8 @@
 <div class="wrap">
 <main id="main">
   <h1>Practice <span>exam</span></h1>
-  <p class="lede">Your real exam format: true or false with the fix word, confidence-based multiple
-     choice, matching, and a free response. 100 points, and no two papers are the same.</p>
+  <p class="lede">Built like the real thing: true or false with the fix word, confidence-based multiple
+     choice, matching, and a free response. 100 points, and you get a different paper every time.</p>
   <p class="lede" id="lastLine"></p>
 
   <section id="setup">
@@ -315,7 +315,7 @@
       <div>
         <div class="mod">
           <div class="mod-h">
-            <h2 class="title" id="h-setup">What this paper will hold</h2>
+            <h2 class="title" id="h-setup">What you get</h2>
             <span class="count" id="planTotal"></span>
           </div>
           <p class="mod-sub" id="planSub"></p>
@@ -323,10 +323,10 @@
         </div>
 
         <div class="start-card">
-          <span class="what">Generate a fresh paper
-            <span class="note">Dealt when you press it. Nothing repeats inside one paper, and the
-              draw spreads across the topics rather than clumping on one.</span></span>
-          <button type="button" class="big" id="startBtn">Generate my exam</button>
+          <span class="what">Ready when you are
+            <span class="note">Press it and you get a brand new paper. No question shows up twice on
+              it, and it spreads across the whole module instead of hammering one topic.</span></span>
+          <button type="button" class="big" id="startBtn">Make my exam</button>
         </div>
 
         <div class="btnrow">
@@ -342,8 +342,8 @@
       <span class="step-k">In progress</span>
       <h2 id="paperTitle"></h2>
       <p class="hint" id="paperMeta"></p>
-      <p class="hint" style="margin:0"><b>Answer every part like the real thing, then submit at the bottom.</b>
-         Nothing is revealed until you do, so treat it closed book.</p>
+      <p class="hint" style="margin:0"><b>Do the whole thing like it is the real exam, then hit submit at the bottom.</b>
+         You will not see a single answer until you do, so keep your notes shut.</p>
     </div>
     <form id="parts"></form>
     <div class="row">
@@ -600,13 +600,13 @@
     var p=planFor(exam);
     var rows=[
       ['PART 1','True or false',                        p.tf+' points',    p.tfShort,
-       'One point for the call. Name the word that fixes a false one for a quarter point of extra credit.'],
+       'One point for getting true or false right. If it is false, name the word that fixes it and get a quarter point on top.'],
       ['PART 2','Multiple choice, confidence based',    p.mc+' points',    false,
-       'Four confidence points per question, spread them however you like.'],
+       'You get four points per question to spread across the four answers, however sure you are.'],
       ['PART 3','Matching',                             p.matchPts+' points', !p.match,
-       'The bank carries extra options that match nothing.'],
+       'Watch out: the bank has extra options that do not match anything.'],
       ['PART 4','Free response, choose one',            p.fr+' points',    p.frShort,
-       'Write it, then self-score against the rubric with the model answer in front of you.']
+       'Write one out, then mark your own with the model answer in front of you.']
     ];
     var bh='';
     rows.forEach(function(r){
@@ -624,10 +624,10 @@
     else sub += ' &middot; no clock';
     $('planSub').innerHTML = sub;
 
-    var say='No question repeats inside a paper, and the draw spreads across the topics and '
-          + 'competencies rather than clumping on one.';
-    if(p.tfShort) say += ' Part 1 runs '+p.tf+' items this time; the rest of its points move to Part 2.';
-    if(p.total !== 100) say += ' This one comes to '+p.total+' points.';
+    var say='Every paper is different. Nothing shows up twice on the same one, and it covers the '
+          + 'whole module instead of hammering one topic.';
+    if(p.tfShort) say += ' Part 1 only has '+p.tf+' questions this time, so its spare points go to Part 2.';
+    if(p.total !== 100) say += ' This one adds up to '+p.total+' points.';
     $('setupNote').textContent = say;
 
     $('startBtn').disabled = p.total < 10;
@@ -729,9 +729,9 @@
 
     if(paper.tf.length){
       h+='<section class="part"><div class="part-h"><span class="pk">Part 1 &middot; '+paper.tf.length+' points</span>'
-        +'<h2>True or false</h2><p>Decide if each statement is true or false. If it is false, the bold term is '
-        +'the only wrong word: mark False and type the one word that makes it true. One point for the call, '
-        +'plus a quarter point of extra credit if your fix is right.</p></div>';
+        +'<h2>True or false</h2><p>Is it true or false? If it is false, the bold word is the only thing '
+        +'wrong with it, so mark False and type the word that would fix it. A point for the true or false, '
+        +'and a quarter point on top if you fix it.</p></div>';
       paper.tf.forEach(function(it,i){
         h+='<div class="q" id="tf'+i+'"><fieldset><legend><span class="qn">Question '+(i+1)+'</span>'
           + bold(it.statement)+'</legend>'
@@ -748,9 +748,9 @@
 
     if(paper.mc.length){
       h+='<section class="part"><div class="part-h"><span class="pk">Part 2 &middot; '+paper.mc.length+' points</span>'
-        +'<h2>Multiple choice, confidence based</h2><p>Each question gives you four confidence points to spread '
-        +'across the four options. All four on one answer if you are sure, or split them if you are torn. Your '
-        +'score is the points you placed on the correct answer times 0.25.</p></div>';
+        +'<h2>Multiple choice, confidence based</h2><p>You get four points per question. Put all four on one '
+        +'answer if you are sure, or split them if you are torn between two. You score a quarter point for '
+        +'every point you put on the right answer, so spreading is safer than guessing wrong.</p></div>';
       paper.mc.forEach(function(q,i){
         h+='<div class="q" id="mc'+i+'"><fieldset><legend><span class="qn">Question '+(i+1)+'</span>'
           + esc(q.stem)+'</legend><ul class="conf">';
@@ -767,8 +767,8 @@
     if(paper.set){
       var s=paper.set, pts=paper.plan.matchPts, per=Math.round(s.perRow*100)/100;
       h+='<section class="part"><div class="part-h"><span class="pk">Part 3 &middot; '+pts+' points</span>'
-        +'<h2>Matching</h2><p>Choose the best match for each item, '+per+' points each. '
-        +'The bank holds extra options that match nothing.</p></div>';
+        +'<h2>Matching</h2><p>Pick the best match for each one, '+per+' points each. '
+        +'Careful: the bank has extra options that do not match anything.</p></div>';
       h+='<div class="q" id="ms0"><fieldset><legend><span class="qn">Matching</span>'
         +'Match each item to the best option in the bank.</legend>'
         +'<table class="mtable"><thead><tr><th scope="col">Item</th><th scope="col">Your match</th></tr></thead><tbody>';
@@ -785,9 +785,8 @@
 
     if(paper.frs.length){
       h+='<section class="part"><div class="part-h"><span class="pk">Part 4 &middot; '+paper.plan.fr+' points</span>'
-        +'<h2>Free response, choose one</h2><p>Pick one prompt and write it out. After you submit you get the '
-        +'model answer and a checklist: tick every element you actually included and the points follow. Only '
-        +'the prompt you pick is scored.</p></div>';
+        +'<h2>Free response, pick one</h2><p>Choose one and write it out. Once you submit you get the model '
+        +'answer and a checklist, and you tick off what you actually had. Only the one you pick counts.</p></div>';
       h+='<div class="q" id="frq"><fieldset><legend><span class="qn">Choose your prompt</span>Which one are you answering?</legend>'
         +'<div class="dumppick">';
       paper.frs.forEach(function(d,i){
@@ -878,8 +877,8 @@
     var blank=countBlank();
     if(blank>0 && !armed){
       armed=true;
-      $('unanswered').innerHTML='<b>'+blank+' still blank.</b> They score zero. Press submit again to mark '
-        +'the paper as it stands, or go back and fill them in.';
+      $('unanswered').innerHTML='<b>You have left '+blank+' blank.</b> Those score zero. Press submit again '
+        +'to mark it as it is, or go back and fill them in.';
       this.textContent='Submit anyway';
       return;
     }
@@ -994,8 +993,8 @@
           frow.appendChild(mm);
         }
         var w2=document.createElement('div'); w2.className='why';
-        w2.innerHTML='<b>Tick every element you actually included.</b> Each is worth an equal share of '
-                    + frMax + ' points.';
+        w2.innerHTML='<b>Tick everything you actually wrote down.</b> Be honest with yourself. Each one is '
+                    + 'worth the same share of ' + frMax + ' points.';
         frow.appendChild(w2);
         var ul=document.createElement('ul'); ul.className='rubric';
         var pts=(d.rubric&&d.rubric.length)?d.rubric:['A real attempt: organized, labeled, and it answers what was asked.'];
@@ -1026,10 +1025,10 @@
     function paint(){
       var total=got.tf+got.bonus+got.mc+got.match+got.fr;
       var pct=maxTotal? Math.round(total/maxTotal*100) : 0;
-      var msg = pct>=85 ? 'That is exam ready. Leave it a few days rather than sitting another now.'
-              : pct>=70 ? 'Solid, with gaps. The parts below show where they are.'
-              : pct>=50 ? 'Half of it is there. Work the weakest part against your notes, then deal a fresh paper.'
-              : 'A long way from ready, and better found now than in the room. Take the weakest part first.';
+      var msg = pct>=85 ? 'That is exam ready. Leave it a few days before you sit another one.'
+              : pct>=70 ? 'Solid, with some gaps. The parts below show you where.'
+              : pct>=50 ? 'About half of it is there. Take your weakest part back to your notes, then make a new paper.'
+              : 'Not ready yet, and far better to find that out here than in the room. Start with your weakest part.';
       var h='<div class="result">'
         +'<p class="score">'+pct+'%<small> &middot; '+(Math.round(total*100)/100)+' of '+maxTotal+' points</small></p>'
         +'<div class="bar"><i style="width:'+Math.min(100,pct)+'%"></i></div>'
