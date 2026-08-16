@@ -1,131 +1,152 @@
-# Accessibility Compliance Notes
+# Accessibility compliance notes
 
-## 1. Project
-
-**Project:** BIO 004 Human Anatomy, Histology Help page
-**Files covered:** `histology-help.html` (single self-contained file), `dock-tile-histology-help.js` (build snippet, no rendered output)
-**Repository:** drsrennie-stack/new-build-bio4-solano
-**Date:** August 15, 2026
+**Project:** BIO 004 Human Anatomy, Fall 2026 site sweep
+**Repo:** drsrennie-stack/new-build-bio4-solano, branch `fall-2026-sweep`
+**Date:** August 11, 2026
 **Reviewer:** Dr. Sharilyn Rennie
+
+---
+
+## 1. Files covered
+
+This pass covered the files touched during the Fall 2026 audit sweep. Pages that were not edited
+keep whatever compliance state they already had, and they are noted as still owing a review in
+section 6.
+
+**Created**
+
+- `syllabus-schedule.js`, the module map and day-by-day tables in the three section syllabi
+- `week-extras.js`, the lab and study block that now renders on all seventeen week pages
+- `missing-figure.js`, the placeholder for figures whose image folders were never pushed
+- `index.html`, rebuilt as a redirect to the single course home
+
+**Edited**
+
+- `week-1.html` through `week-17.html`
+- `syllabus-class1.html`, `syllabus-class2.html`, `syllabus-class3.html`, `fall-2026-syllabus.html`
+- `bio004-master-schedule-fall2026.html`, `bio004-course-calendar.html`
+- `mastery-os-fall-2026.html`, `mastery-os-fall-2026-instructor.html`
+- `bio004-dock.js`, `schedule-fall2026.js`, `session-links.js`, `slide-modal.js`,
+  `course-content-tagged.js`, `loops-index.js`
+- `404.html`, `histology-escape-room-lab-kit.html`, `histology-escape-room_1.html`
+- 310 files modified in total, including the em dash and italics sweeps
+- Second pass, August 11: the three section syllabi rewritten for voice and policy;
+  `fall-2026-syllabus.html` retired to a section-aware redirect
+
+---
 
 ## 2. WCAG version and level achieved
 
-Target: WCAG 2.2 Level AA minimum, Level AAA where achievable.
-Result: AA met on all applicable criteria. AAA met on contrast (1.4.6) for every text pair on the page.
+Target is WCAG 2.2 Level AA as the floor, Level AAA wherever it was reachable without changing
+the palette.
 
-| Criterion | Level | Status | How it is met |
-|---|---|---|---|
-| 1.1.1 Non-text Content | A | Pass | Logo SVG is `aria-hidden` inside a link carrying `aria-label="BIO 004 Human Anatomy, course home"`. No informational images on the page. |
-| 1.3.1 Info and Relationships | A | Pass | `header`, `main`, `section`, `footer` landmarks. Every section is tied to its heading with `aria-labelledby`. Method steps use an ordered list. Filter buttons are wrapped in `role="group"` with `aria-labelledby` pointing at the visible label. |
-| 1.3.2 Meaningful Sequence | A | Pass | DOM order matches visual order. Card grid is CSS grid with no reordering. |
-| 1.4.1 Use of Color | A | Pass | The active filter chip is marked by fill inversion plus `aria-pressed`, not color alone. Links are distinguished by button shape and underline, not hue. |
-| 1.4.3 Contrast (Minimum) | AA | Pass | See audit in section 3. |
-| 1.4.4 Resize Text | AA | Pass | All type in px within a fluid layout; verified with zero horizontal overflow at 200 percent zoom (640 CSS px viewport at 2x scale). Headings use `clamp()`. |
-| 1.4.6 Contrast (Enhanced) | AAA | Pass | Every text pair measures 5.5:1 or better; all normal-size body text measures 7:1 or better. See section 3. |
-| 1.4.10 Reflow | AA | Pass | Measured zero horizontal overflow at a 320 CSS px viewport. Grid is `auto-fit, minmax(280px, 1fr)`. |
-| 1.4.11 Non-text Contrast | AA | Pass | Card borders `#8C90A0` on white at 3.18:1. Focus ring `#8B3A2E` at 7.66:1 on light, `#C9A14A` at 8.16:1 on dark. |
-| 1.4.12 Text Spacing | AA | Pass | No fixed heights on text containers; line-height 1.65 body. |
-| 2.1.1 Keyboard | A | Pass | Filter chips are real `button` elements. All links are real `a` elements. No custom key handling, no traps. |
-| 2.4.1 Bypass Blocks | A | Pass | Skip link to `#main` is the first focusable element. |
-| 2.4.2 Page Titled | A | Pass | "Histology Help, BIO 004 Human Anatomy". |
-| 2.4.3 Focus Order | A | Pass | Skip link, header logo, filter chips, then cards in reading order. |
-| 2.4.4 Link Purpose | A | Pass | Every button label names its destination ("Open Histology Guide", "Watch epithelium"). No "click here" or bare "read more". |
-| 2.4.6 Headings and Labels | AA | Pass | One `h1`. Section `h2`s describe the student problem being solved. Card `h3`s name the tool. No skipped levels. |
-| 2.4.7 Focus Visible | AA | Pass | 3px solid ring, 3px offset, on every focusable element. Ring color switches to gold inside dark bands. |
-| 2.4.11 Focus Not Obscured | AA (2.2) | Pass | No sticky headers, overlays, or fixed elements on this page. The course dock is bottom-left and fixed, but sits below the content stacking context and does not overlap focused elements in the flow. |
-| 2.5.3 Label in Name | A | Pass | Visible button text is the entire accessible name; the only addition is a visually hidden "(opens in a new tab)" suffix, which appends rather than replaces. |
-| 2.5.8 Target Size (Minimum) | AA (2.2) | Pass | Filter chips measure 162 by 35 px, call-to-action buttons 197 by 44 px, skip link 189 by 45 px. All exceed the 24 by 24 CSS px minimum. |
-| 3.1.1 Language of Page | A | Pass | `lang="en"`. |
-| 3.2.3 Consistent Navigation | AA | Pass | Header and dock match every other page in the course site. |
-| 3.3.2 Labels or Instructions | A | Pass | The filter group carries the visible instruction "I am studying on my". No form inputs on this page. |
-| 4.1.2 Name, Role, Value | A | Pass | `aria-pressed` on filter chips is updated on every state change, so assistive tech reads the current selection rather than the initial one. |
-| 4.1.3 Status Messages | AA | Pass | The result count is `role="status"` with `aria-live="polite"`, announced on every filter change without moving focus. |
+| Criterion | Level | Status on the changed files |
+|---|---|---|
+| 1.1.1 Non-text content | A | Pass. `missing-figure.js` carries the original `alt` text into the placeholder as an `aria-label` on a `role="img"` element, so a screen reader still hears what the figure was meant to show. |
+| 1.3.1 Info and relationships | A | Pass. The lab block renders a real `h2` inside the existing card, and its entries are `a` elements with text, not click handlers on divs. |
+| 1.3.2 Meaningful sequence | A | Pass. The lab block sits between the class days card and the graded card, which is the order a student works in. |
+| 1.4.3 Contrast, minimum | AA | Pass, see section 3. |
+| 1.4.6 Contrast, enhanced | AAA | Pass on every measured pair. |
+| 1.4.10 Reflow | AA | **Fixed.** `mastery-os-fall-2026.html` had `.g2.g3.g4` where it needed `.g2,.g3,.g4`. The mobile breakpoint matched nothing, so two, three, and four column grids never collapsed on a narrow screen. Repaired in the student build and the instructor build. |
+| 1.4.11 Non-text contrast | AA | **Fixed.** The brushed gold focus ring measured 2.77:1 against off-white, below the 3:1 floor. On the rebuilt `index.html` it is now `#8B3A2E` at 7.33:1. |
+| 1.4.12 Text spacing | AA | Pass. All new copy sits in flowed paragraphs with no fixed heights. |
+| 2.1.1 Keyboard | A | Pass, see section 4. |
+| 2.4.1 Bypass blocks | A | Pass. Skip links on the worksheet and week pages were not disturbed. |
+| 2.4.7 Focus visible | AA | Pass. New links inherit the page focus style. The redirect page has its own visible ring. |
+| 2.4.11 Focus not obscured, minimum | AA (2.2) | Pass. The dock is fixed bottom left and does not cover the new lab block. |
+| 2.4.13 Focus appearance | AAA (2.2) | Pass on the redirect page, 3px solid ring with offset. |
+| 3.2.3 Consistent navigation | AA | **Improved.** One week system instead of two, one front door instead of five, one Mastery OS instead of two, and the dock is now identical on every page. |
+| 3.2.4 Consistent identification | AA | **Fixed.** The same content was labelled Module 4 in one place and Module 5 in another after the exam-scope decision. Module labels now agree across the syllabi, the exam-module page, seven week pages, and five study pages. |
+| 3.3.1 Error identification, policy clarity | A | **Fixed.** Attendance stated two incompatible rules (90% of a session, and a 20-minute threshold). One rule now stands. |
+| 3.3.2 Labels or instructions | A | **Improved.** The week page now tells a student when it is guessing at their class instead of silently showing Class 1. The retired generic syllabus now names all three sections with their CRNs rather than sending everyone to one document. |
+| 1.3.1 Info and relationships, schedule tables | A | Pass. The generated tables keep `caption`, `th scope="col"`, and the `rowspan` week cell, so a screen reader still announces which week a row belongs to. Verified on all three sections under jsdom. |
+| 2.4.6 Headings and labels | AA | **Improved.** Section headings no longer end in a full stop, which a screen reader reads aloud as a sentence break in the middle of a navigation list. |
+| 4.1.1 Parsing, progressive enhancement | n/a | The generated tables replace a static table that is valid on its own. If the script fails or is blocked, a student still sees a complete schedule rather than an empty box. |
+| 4.1.2 Name, role, value | A | Pass. `role="status"` on the section notice, `role="img"` with an accessible name on the figure placeholder, `aria-hidden` on the decorative arrow in each lab block link. |
+| 4.1.3 Status messages | AA | Pass. `role="status"` is polite, so the notice is announced without interrupting. |
 
-## 3. Color contrast audit
+A second selector bug was repaired in the same pass: `.field input.field textarea` should have
+been `.field input,.field textarea`. Every form field in Mastery OS was rendering unstyled,
+including its focus treatment, which is a 2.4.7 failure as well as a visual one.
 
-All values measured with the WCAG 2.x relative luminance formula. Normal text threshold is 4.5:1 AA and 7:1 AAA. Large text (18.66px bold or 24px regular) is 3:1 AA and 4.5:1 AAA.
+---
 
-### Light bands, white `#FFFFFF` background
+## 3. Colour contrast audit
 
-| Foreground | Element | Ratio | AA | AAA |
+Measured with the WCAG relative luminance formula. Backgrounds are off-white `#FAFAF9`, card
+white `#FFFFFF`, and the week page hero navy `#08101F`.
+
+| Text or element | Foreground | Background | Ratio | Level |
 |---|---|---|---|---|
-| Navy `#0B1530` | h1, h2, card h3, card body | 18.04:1 | Pass | Pass |
-| Rust `#8B3A2E` | Eyebrow, card kicker, accent words in headings | 7.66:1 | Pass | Pass |
-| Slate `#3D4A63` | Section notes, result count, footer | 8.91:1 | Pass | Pass |
-| White `#FFFFFF` on rust `#8B3A2E` | Primary button label | 7.66:1 | Pass | Pass |
-| White `#FFFFFF` on navy `#0B1530` | Active filter chip label | 18.04:1 | Pass | Pass |
-| Border slate `#8C90A0` | Card border, chip border (non-text) | 3.18:1 | Pass | n/a |
+| Body copy, notes, lab block links | `#1E3D4C` | `#FAFAF9` | 11.01:1 | AAA |
+| Body copy on cards | `#1E3D4C` | `#FFFFFF` | 11.49:1 | AAA |
+| Missing-figure placeholder text | `#1E3D4C` | `#FAFAF9` | 11.01:1 | AAA |
+| Section notice text on the hero | `#FFFFFF` | `#08101F` | 19.02:1 | AAA |
+| Section notice gold left border, non-text | `#DCB45C` | `#08101F` | 9.71:1 | Pass, needs 3:1 |
+| Redirect page link | `#8B3A2E` | `#FAFAF9` | 7.33:1 | AAA |
+| Redirect page focus ring, non-text | `#8B3A2E` | `#FAFAF9` | 7.33:1 | Pass |
+| Redirect page heading and body | `#1E3D4C` | `#FAFAF9` | 11.01:1 | AAA |
 
-### Dark bands, near-black `#060A18` background
+One pair failed and was changed rather than accepted: brushed gold `#B8924A` on off-white at
+2.77:1. Gold is still used for focus and accent on dark backgrounds, where it measures 9.71:1.
 
-| Foreground | Element | Ratio | AA | AAA |
-|---|---|---|---|---|
-| Cream `#F5F1E8` | h2, step body text | 17.5:1 | Pass | Pass |
-| Gold `#C9A14A` | Eyebrow, step numerals background, strong text in steps | 8.16:1 | Pass | Pass |
-| Terra cotta `#C2734D` | Accent words inside h2 (large text only) | 5.5:1 | Pass | Pass (large) |
-| Light slate `#A8ADBE` | Section notes | 8.82:1 | Pass | Pass |
-| Navy `#0B1530` on gold `#C9A14A` | Step numerals, dark-band button label | 7.46:1 | Pass | Pass |
+---
 
-### Cards on dark bands, card navy `#1C2E4F` fill
+## 4. Keyboard navigation verified
 
-| Foreground | Element | Ratio | AA | AAA |
-|---|---|---|---|---|
-| Cream `#F5F1E8` | Card body text | 12.0:1 | Pass | Pass |
-| Soft clay `#CE8166` | Card h3 at 19px weight 800 | 5.98:1 | Pass | Pass (large) |
-| Gold `#C9A14A` | Card kicker, badge text | 5.59:1 | Pass | Pass (large) |
+Walked with Tab, Shift Tab, Enter, and Escape.
 
-Two watch-outs from the course design system were checked and avoided. Rust `#8B3A2E` never appears as text on a dark background (it fails there at 2.4:1); gold and soft clay are used instead. White small text never sits on terra cotta `#C2734D`.
+- **Week page:** skip link, then the three section buttons, then the three pre-work links, then
+  the day cards, then the new lab block links in reading order, then the graded chips, then the
+  quick links, then the dock launcher. No trap. Nothing reachable by mouse only.
+- **Lab block:** every entry is a real anchor. Focus order matches visual order, which is lab
+  sprints, then notes, then practice questions, then slides, then the study session link.
+- **Section notice:** not focusable, correct for a status message. It is announced rather than
+  being something a student has to go and find.
+- **Dock:** re-verified after the tile changes. Escape closes, focus returns to the launcher, Tab
+  is trapped while open, arrow keys walk the tiles, `aria-expanded` tracks state.
+- **Redirect page:** the single link is reachable with a visible ring. The page also redirects by
+  script and by meta refresh, so a keyboard user never has to interact with it.
+- **Missing-figure placeholder:** not focusable, correct for a non-interactive substitute.
 
-One note on the gold card kicker at 5.59:1. It is 11px, which is below the large-text threshold, so it clears AA but not AAA. It is decorative labelling that repeats information present in the card heading and body, so no information is lost at that ratio. Raising it would mean lightening gold past the point where it matches the rest of the course site. Documented as an accepted AA-level element.
+---
 
-## 4. Keyboard navigation flow verified
+## 5. Screen reader testing
 
-Tested in Chromium with keyboard only, no pointer. Tab order and focus state were captured programmatically rather than by eye.
+Verified by DOM inspection under jsdom and by reading the accessibility tree for the changed
+regions. All seventeen week pages were rendered and inspected programmatically.
 
-Observed tab order from a fresh page load:
+Confirmed:
 
-1. Skip to main content
-2. BIO 004 Human Anatomy, course home (header logo link)
-3. Show everything (filter chip)
-4. Phone (filter chip)
-5. Laptop or desktop (filter chip)
-6. Open SecondLook, then Open UBC slides (the two recommendation cards)
-7. Each remaining card's single call to action, in reading order, top to bottom and left to right
+- Landmarks intact on the week pages: `main#main`, the `nav` labelled "Week navigation", and the
+  footer.
+- The lab block heading is a real `h2` in sequence under the page `h1`, so heading navigation
+  lands on it.
+- `role="status"` on the section notice.
+- `role="img"` with `aria-label` on the figure placeholder.
+- `aria-hidden="true"` on the decorative arrow glyph in each lab block link, so the accessible
+  name is the structure name rather than the name of the triangle character.
 
-Verified in the same run:
+**Owed:** a listening pass with VoiceOver on Safari and with NVDA on Windows, on one week page
+and one worksheet. Nothing here is expected to fail, but these notes should not claim a
+verification that has not happened.
 
-- Space or Enter activates a filter chip. After activating Phone, `aria-pressed` read `false, true, false` across the three chips, so exactly one reports pressed at a time.
-- Filtering hides cards with the `hidden` property, not a wrapper style. After filtering to Phone, zero links inside hidden cards remained reachable or rendered, so hidden tools leave the tab order completely.
-- No positive `tabindex` values anywhere on the page, so nothing jumps the natural order.
-- Focus is never moved programmatically, so tab position is preserved across a filter change. A student who filters and then presses Tab continues from the chip rather than from the top of the document.
-- Shift+Tab reverses cleanly. No focus traps and no off-screen focus stops.
+---
 
-## 5. Screen reader support
+## 6. Known limitations and remediation plan
 
-Structure was verified programmatically. A human screen reader pass is still outstanding and is listed in section 7.
+| Limitation | Impact | Plan |
+|---|---|---|
+| Four image folders were never pushed: `blood-img`, `musc-img`, `musc-tissue-img`, and part of `lym-img`. 104 figures across six pages. | Students see a labelled placeholder instead of the figure. The alt text still describes it, so nothing is silently missing, but the teaching image is absent. | Push the four folders. Then delete `missing-figure.js` and its six script tags. |
+| Screen reader listening pass not yet done. | Unverified claim risk only. | One VoiceOver pass and one NVDA pass before the term opens. |
+| The em dash and italics sweeps touched files that had no other review. | Those pages now follow the house style rules but have not had a full accessibility review. | Review each as it is next touched. |
+| Summer 2026 pages still carry the old contradictory attendance rule. | Those pages are not Fall-facing, but they are still reachable. | One edit each, if the instructor wants them matched to the Fall rule. |
+| 63 pages still have no inbound link from anywhere. | Not an accessibility failure, but content a student cannot reach is content a student cannot use. | The case deep dives now have a dock route. The study guides and the workbook family still do not, and that is a curriculum decision rather than a technical one. |
+| `font-style: italic` was globally neutralised to satisfy the no-italics rule. | Some captions and citations that relied on italics for emphasis now rely on position and wording alone. | Spot check captions on the image-heavy pages and add a non-italic emphasis treatment where one is genuinely needed. |
 
-Verified by inspecting the rendered accessibility tree:
+---
 
-- Landmarks present and correct: `header` (banner), `main`, `footer` (contentinfo). The filter buttons sit inside `role="group"` labelled by the visible "I am studying on my" text.
-- Heading tree is one `h1` followed by eight `h2` sections, each with `h3` card titles beneath. No skipped levels anywhere in the document.
-- All nine `section` elements carry `aria-labelledby` pointing at their own heading, so every region announces with a meaningful name.
-- The result count carries `role="status"` and `aria-live="polite"`, so a filter change is announced without interrupting and without moving focus.
-- The logo SVG is `aria-hidden="true"` inside a link carrying `aria-label="BIO 004 Human Anatomy, course home"`, so it announces once by destination rather than as a graphic. This matches the header used on every other page in the course site.
-- No `img` elements are missing alt text, because the page contains no raster images.
-- Every outbound link's accessible name is its visible label plus a visually hidden "(opens in a new tab)", which appends to the visible name rather than replacing it.
+## 7. Reviewer
 
-## 6. Motion and preferences
-
-`prefers-reduced-motion: reduce` disables smooth scrolling and collapses every transition and animation to 0.01ms, including the card hover lift. Verified by toggling the OS setting and confirming cards no longer translate on hover.
-
-## 7. Known limitations and remediation plan
-
-1. **Third-party destinations are outside this audit.** Every outbound link points at a university-hosted resource whose accessibility this project does not control. The Duke virtual microscope and Michigan slide collection in particular predate responsive design and were built before WCAG 2.1. This is mitigated in the content rather than the code: those cards are tagged as laptop or desktop tools, are excluded from the Phone filter, and their card text tells students plainly to use a bigger screen. Every skill those tools teach is also reachable through at least one other tool on the page that does work on a phone, so no student is dependent on an inaccessible destination. Reviewed each term.
-2. **Gold card kicker on card navy at 5.59:1.** Clears AA, does not clear AAA at 11px. Accepted as documented in section 3. If the MedMasters reconciliation produces a lighter gold, revisit.
-3. **Video content is hosted on YouTube.** Caption quality on the linked playlists is the creator's, not ours. Spot-checked The Noted Anatomist and Anatomy Hero videos: both have captions available. If a student reports an uncaptioned video, that specific card gets pulled rather than the whole section.
-4. **A human screen reader pass is outstanding.** Structure, landmarks, live region behavior and accessible names were verified programmatically against the rendered accessibility tree, which catches markup faults but not phrasing that is technically correct and still confusing to listen to. Before this page goes to students, run it once with VoiceOver in Safari and once with NVDA in Firefox, listening specifically to whether the card kicker, heading and badge sequence reads sensibly in a row, and whether the filter count announcement lands at a useful moment. Record the result here and remove this item.
-5. **The course dock is audited separately.** `bio004-dock.js` ships with its own compliance notes and is unchanged by this project. The only edit here is one added tile, which uses the existing tile template and inherits its keyboard and screen reader behavior.
-
-## 8. Reviewer
-
-Reviewed by Dr. Sharilyn Rennie, August 15, 2026.
+Dr. Sharilyn Rennie
+BIO 004 Human Anatomy, Solano Community College
