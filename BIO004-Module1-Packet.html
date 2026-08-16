@@ -414,6 +414,18 @@
   /* Instructions on each drawing frame, and the sheet's own heading.
      Kept in step with the worksheet pages these sections come from. */
   .vf-do{font-size:.82rem;line-height:1.5;color:#2C3A45;margin:0 0 7px;max-width:62ch}
+  /* Drawing pages: the empty rectangles from Panel 2, moved to the end of
+     each pre-work so they get the width of the page instead of a third of
+     a column. Panel 2 keeps all of its words. */
+  .draw-pages{margin:26px 0 8px;padding-top:18px;border-top:1px solid #E6E4DF}
+  .dp-h{font-family:var(--font-display);font-weight:800;font-size:1.2rem;color:var(--navy);margin:0 0 4px}
+  .dp-intro{font-size:.86rem;color:#2C3A45;margin:0 0 16px;max-width:62ch}
+  .dpage{margin:0 0 16px}
+  .dp-label{font-family:var(--font-eyebrow);font-size:.6rem;font-weight:800;letter-spacing:.14em;
+    text-transform:uppercase;color:#7A2A22;margin:0 0 2px}
+  .dp-title{font-size:.98rem;font-weight:800;color:var(--navy);margin:0 0 7px}
+  .box-ref{font-size:.8rem;font-style:italic;color:#4A5763;margin:8px 0 10px}
+
   h2.vs-h{display:block;font-family:var(--font-display);font-weight:800;font-size:1.2rem;
     color:var(--navy);margin:0 0 3px;letter-spacing:-.01em;text-transform:none;
     line-height:1.15;padding:0;border:0;background:none}
@@ -577,42 +589,52 @@ table.vsheet td:last-child{padding-right:0}
 
     /* a CSS grid fragments badly across sheets and leaves blank pages.
        A table fragments column by column, which is what these panels need. */
-    /* Was a three-column table, which squeezed the Draw it boxes into a
-       third of a column. Each panel prints full width now and Draw it
-       starts its own sheet, matching the standalone pre-work pages. */
-    .panels{display:block;width:100%}
-    .panel{display:block;width:100%;border:0;border-radius:0;box-shadow:none;
-           overflow:visible;padding:0;margin:0 0 14pt;break-inside:auto}
-    .panel:nth-child(2){break-before:page;break-after:page;margin-bottom:0}
-    .panel:nth-child(2) h3{margin:7pt 0 2pt;font-size:8.8pt}
-    .panel:nth-child(2) h4{margin:5pt 0 2pt;font-size:8.2pt}
-    .panel:nth-child(2) p{font-size:7.9pt;margin-bottom:3pt}
-    .panel:nth-child(2) .dump{padding:4pt 6pt;margin-bottom:4pt}
-    .panel:nth-child(2) .dump p{font-size:7.5pt;margin:0}
-    .panel:nth-child(2) .check{padding:4pt 6pt;font-size:7.4pt;margin-top:3pt}
-    .vf-do{font-size:7.4pt;margin:0 0 4pt;line-height:1.4}
-    .panel-head{background:#fff;color:var(--navy);padding:0 0 5pt;margin-bottom:7pt;
-                border-bottom:1.2px solid var(--navy);break-after:avoid}
-    .panel-head h2{color:var(--navy);font-size:11.6pt}
-    .panel-head p{color:var(--navy);opacity:1;font-size:7.8pt;margin-top:2pt}
-    .panel-num{color:var(--maroon);font-size:6.2pt;margin-bottom:2pt}
-    .panel-body{padding:0}
-    .panel h3{font-size:9.2pt;margin:10pt 0 4pt;break-after:avoid}
-    .panel h4{font-size:8.6pt;margin:8pt 0 3pt;break-after:avoid}
-    .panel p{font-size:8.5pt;margin-bottom:5pt}
-    .panel ul,.panel ol{font-size:8.5pt;margin-bottom:6pt;padding-left:12pt}
-    .panel li{margin-bottom:2.4pt}
-
-    table.work{font-size:7.8pt;margin-bottom:7pt}
-    table.work caption{font-size:6.2pt;padding-bottom:3pt}
-    table.work th{font-size:6.2pt;padding:2pt 3pt}
-    table.work td{padding:2pt 3pt;height:22pt}
-    table.work tr{break-inside:avoid}
-
-    /* full sheet width now, so the box gets real height */
-    .box{height:300pt;margin:6pt 0 5pt;border-radius:4pt}
-    .box.tall{height:300pt}
-    .box.short{height:255pt}
+    /* Part B prints compact again: three columns of text, the way the
+       packet always did, because a module packet is printed whole. The
+       drawing rectangles are no longer in those columns, they are full
+       width pages at the end of each pre-work, two to a sheet. A student
+       who wants one drawing per whole sheet prints the standalone
+       drawing sheet instead. */
+    .panels{display:table;width:100%;table-layout:fixed;border-collapse:collapse}
+    .panel{display:table-cell;width:33.33%;vertical-align:top;
+           border:0;border-right:1px solid var(--navy);border-radius:0;box-shadow:none;
+           overflow:visible;padding:0 11pt;break-inside:auto}
+    .panel:first-child{padding-left:0}
+    .panel:last-child{border-right:0;padding-right:0}
+    .box-ref{font-size:7.6pt;margin:4pt 0 5pt}
+    .draw-pages{break-before:page;margin:0;padding-top:0;border-top:0}
+    .dp-h{font-size:12.6pt;margin:0 0 2pt}
+    .dp-intro{font-size:8.2pt;margin:0 0 8pt}
+    .dpage{break-inside:avoid;margin:0 0 11pt}
+    .dp-label{font-size:6.2pt;margin:0 0 1pt}
+    .dp-title{font-size:9.6pt;margin:0 0 4pt}
+    /* The visual sheet is compact in the packet and generous on the
+       standalone drawing sheet. At full page width its frames were
+       taking seven sheets per pre-work, twenty eight for the module.
+       Inline heights on each frame, so these have to win. */
+    table.vsheet td{padding:0 7pt}
+    /* aspect-ratio:1/1 is set on .vbox for the screen. Giving it a fixed
+       height while that is still live makes the browser compute the width
+       from the height, so the frame shrank to a small square and left the
+       rest of the cell empty. Turn the ratio off and take the full cell
+       width. */
+    .vsheet .vbox{aspect-ratio:auto !important;width:100% !important;
+                  height:118pt !important;margin:0 0 3pt}
+    .vf-cap{margin:0 0 2pt;gap:4pt}
+    .vf-do{font-size:6.9pt;line-height:1.34;margin:0 0 3pt}
+    td.vs-intro{font-size:7.6pt}
+    h2.vs-h{font-size:11.4pt;margin:0 0 2pt}
+    /* three drawings to a sheet. Full page width, about six and a half
+       inches by two and three quarters, which is a real drawing space
+       and still fits the module packet inside its old length. A
+       student who wants one drawing per whole sheet prints the
+       standalone drawing sheet. */
+    .dpage{break-inside:avoid;margin:0 0 7pt}
+    .dp-label{font-size:6pt;margin:0}
+    .dp-title{font-size:9pt;margin:0 0 3pt}
+    .box{height:196pt;margin:0;border-radius:4pt}
+    .box.tall{height:196pt}
+    .box.short{height:196pt}
     .task,.dump,.check,.worked{border-radius:4pt;break-inside:avoid}
     .task{padding:7pt 8pt;margin-bottom:8pt}
     .dump{padding:6pt 7pt;margin-bottom:7pt}
@@ -751,7 +773,12 @@ table.vsheet td:last-child{padding-right:0}
   .landscape{max-width:1240px;margin:0 auto}
 </style>
 </head>
-<body>
+<body data-no-reading-mode>
+<!-- Reading mode is off here on purpose. It wraps each panel in its own
+     collapsible section, which turns the three-column Part B into three
+     stacked full-width columns and roughly doubles the printed length.
+     A module packet is a compiled document meant to be read or printed
+     whole, so it does not want progressive disclosure. -->
 <a class="skip" href="#packet">Skip to the packet</a>
 
 <header class="site-header">
@@ -2164,7 +2191,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Anatomical position and every plane you can name, with what each one separates.</p>
         </div>
         <p class="hint">Draw a full figure in anatomical position. Mark the five features that define it: feet flat, arms at the sides, palms forward, head and eyes forward, body erect. Then cut the same figure with the sagittal, frontal, and transverse planes. Label each, and write the two portions each one creates.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M1-1 Anatomical position, with the planes on it</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2180,7 +2207,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Every cavity, what is in it, and what separates it from the one next door.</p>
         </div>
         <p class="hint">Draw the body in profile. Outline the dorsal cavity and the ventral cavity, then subdivide each. Shade the thoracic and abdominopelvic cavities differently and draw the diaphragm between them. Put the mediastinum in, and shade the retroperitoneal space behind the peritoneum.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M1-2 The cavities, lateral view</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2196,7 +2223,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>One minute. Parietal, visceral, cavity, fluid. What each one touches.</p>
         </div>
         <p class="hint">Push a fist into a partly inflated balloon and draw that. The layer against your fist is visceral, the outer layer is parietal, the space between holds the fluid. Label all four. Then draw what happens to the space when it fills with air, and when it fills with fluid.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M1-3 Serous membrane, the fist and the balloon</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2313,6 +2340,26 @@ table.vsheet td:last-child{padding-right:0}
   </div>
 
 </div>
+
+    <div class="draw-pages">
+      <h2 class="dp-h">Drawing pages</h2>
+      <p class="dp-intro">The drawings from Panel 2, with room to draw them. Brain dump first with everything closed, then draw, then correct yourself in a second color.</p>
+      <div class="dpage">
+        <p class="dp-label">Drawing 1</p>
+        <h3 class="dp-title">Anatomical position, with the planes on it</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 2</p>
+        <h3 class="dp-title">The cavities, lateral view</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 3</p>
+        <h3 class="dp-title">Serous membrane, the fist and the balloon</h3>
+        <div class="box tall"></div>
+      </div>
+    </div>
 </section>
 
 <section id="pw-cell" class="pw-packet" aria-labelledby="pwh2">
@@ -2439,7 +2486,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Every organelle you can name and one job for each.</p>
         </div>
         <p class="hint">Draw one cell large enough to label. Include the plasma membrane, nucleus with nucleolus, rough and smooth ER, Golgi, mitochondria, lysosomes, peroxisomes, ribosomes, cytoskeleton, centrioles. Label every one. Do not draw a diagram you have seen, draw the one you remember.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M1-4 The generalized cell, labelled</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2455,7 +2502,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>One minute. Every component of the membrane and where it sits.</p>
         </div>
         <p class="hint">Draw a section of bilayer wide enough to show detail. Mark the hydrophilic heads and hydrophobic tails and which way each faces. Add an integral protein spanning the layer, a peripheral protein on the surface, cholesterol between the tails, and a glycoprotein with its sugar chain facing out. Label which side is extracellular.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M1-5 The plasma membrane, close up</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2471,7 +2518,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>One minute. The route a secreted protein takes, in order.</p>
         </div>
         <p class="hint">Go back to your first drawing. In a second color, draw the route a secreted protein takes from the gene to the outside of the cell. Number each step. Mark where the protein is made, where it is modified, and how it moves between stations.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M1-6 Trace the pathway on your cell</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2587,6 +2634,26 @@ table.vsheet td:last-child{padding-right:0}
   </div>
 
 </div>
+
+    <div class="draw-pages">
+      <h2 class="dp-h">Drawing pages</h2>
+      <p class="dp-intro">The drawings from Panel 2, with room to draw them. Brain dump first with everything closed, then draw, then correct yourself in a second color.</p>
+      <div class="dpage">
+        <p class="dp-label">Drawing 1</p>
+        <h3 class="dp-title">The generalized cell, labelled</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 2</p>
+        <h3 class="dp-title">The plasma membrane, close up</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 3</p>
+        <h3 class="dp-title">Trace the pathway on your cell</h3>
+        <div class="box tall"></div>
+      </div>
+    </div>
 </section>
 
 <section id="pw-tissues" class="pw-packet" aria-labelledby="pwh3">
@@ -2713,7 +2780,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Every epithelium you can name, with its shape.</p>
         </div>
         <p class="hint">Divide the box into eight small frames. Sketch each epithelium as it looks on a slide: the basement membrane as a line, the cells above it in the right shape and number of layers. Add cilia, microvilli, goblet cells, and keratin where they belong. Label each and write one location under it. Small and fast, not beautiful.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M1-7 The eight epithelia, thumbnails</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2729,7 +2796,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>One minute. The five junctions and what each one attaches to.</p>
         </div>
         <p class="hint">Draw two adjacent cells sitting on a basement membrane. Put all five junctions on them in the right places: tight junction near the apex, adherens belt below it, desmosomes between the cells, hemidesmosomes at the basement membrane, gap junctions as channels. Label the protein at each.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M1-8 The five junctions on two cells</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2745,7 +2812,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>One minute. Every fiber and every cell type you can name.</p>
         </div>
         <p class="hint">Draw a field of loose areolar tissue. Show collagen fibers as thick wavy bundles, elastic fibers as thin branching threads, and ground substance as the space between. Add a fibroblast, a macrophage, a mast cell, an adipocyte, and a plasma cell, and label each. Then in a second color, redraw the same field as dense regular tissue and say what changed.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M1-9 A connective tissue field</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2860,6 +2927,26 @@ table.vsheet td:last-child{padding-right:0}
   </div>
 
 </div>
+
+    <div class="draw-pages">
+      <h2 class="dp-h">Drawing pages</h2>
+      <p class="dp-intro">The drawings from Panel 2, with room to draw them. Brain dump first with everything closed, then draw, then correct yourself in a second color.</p>
+      <div class="dpage">
+        <p class="dp-label">Drawing 1</p>
+        <h3 class="dp-title">The eight epithelia, thumbnails</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 2</p>
+        <h3 class="dp-title">The five junctions on two cells</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 3</p>
+        <h3 class="dp-title">A connective tissue field</h3>
+        <div class="box tall"></div>
+      </div>
+    </div>
 </section>
 
 <section id="pw-integ" class="pw-packet" aria-labelledby="pwh4">
@@ -2980,7 +3067,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Every layer and every structure in the skin.</p>
         </div>
         <p class="hint">Draw the full thickness: epidermis, dermis with papillary and reticular regions, and hypodermis. Add a hair follicle running down, a sebaceous gland on it, an arrector pili muscle, an eccrine gland with its duct reaching the surface, dermal papillae with capillary loops and Meissner corpuscles, and a lamellated corpuscle in the hypodermis. Label everything.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M1-10 The skin in cross section</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2996,7 +3083,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>One minute. The strata in order and what changes between them.</p>
         </div>
         <p class="hint">Zoom in on the epidermis alone. Draw the five strata stacked, with the cells changing shape as they rise: cuboidal and dividing at the base, spiny in the middle, granular above, clear, then flat dead squames at the top. Mark where the nucleus disappears and where lamellar granules release their sealant. Mark which layer is missing in thin skin.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M1-11 The five strata, cell by cell</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3012,7 +3099,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>One minute. The parts of a hair and everything attached to the follicle.</p>
         </div>
         <p class="hint">Draw one follicle from the surface down to the bulb. Show the shaft above the skin and the root below, the three concentric layers, the external and internal root sheaths, the dermal root sheath, and at the base the bulb with the papilla and the matrix. Attach the sebaceous gland, the arrector pili, and the hair root plexus.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M1-12 Hair follicle and bulb</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3122,6 +3209,26 @@ table.vsheet td:last-child{padding-right:0}
   </div>
 
 </div>
+
+    <div class="draw-pages">
+      <h2 class="dp-h">Drawing pages</h2>
+      <p class="dp-intro">The drawings from Panel 2, with room to draw them. Brain dump first with everything closed, then draw, then correct yourself in a second color.</p>
+      <div class="dpage">
+        <p class="dp-label">Drawing 1</p>
+        <h3 class="dp-title">The skin in cross section</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 2</p>
+        <h3 class="dp-title">The five strata, cell by cell</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 3</p>
+        <h3 class="dp-title">Hair follicle and bulb</h3>
+        <div class="box tall"></div>
+      </div>
+    </div>
 </section>
 
     </div>

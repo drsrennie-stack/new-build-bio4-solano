@@ -414,6 +414,18 @@
   /* Instructions on each drawing frame, and the sheet's own heading.
      Kept in step with the worksheet pages these sections come from. */
   .vf-do{font-size:.82rem;line-height:1.5;color:#2C3A45;margin:0 0 7px;max-width:62ch}
+  /* Drawing pages: the empty rectangles from Panel 2, moved to the end of
+     each pre-work so they get the width of the page instead of a third of
+     a column. Panel 2 keeps all of its words. */
+  .draw-pages{margin:26px 0 8px;padding-top:18px;border-top:1px solid #E6E4DF}
+  .dp-h{font-family:var(--font-display);font-weight:800;font-size:1.2rem;color:var(--navy);margin:0 0 4px}
+  .dp-intro{font-size:.86rem;color:#2C3A45;margin:0 0 16px;max-width:62ch}
+  .dpage{margin:0 0 16px}
+  .dp-label{font-family:var(--font-eyebrow);font-size:.6rem;font-weight:800;letter-spacing:.14em;
+    text-transform:uppercase;color:#7A2A22;margin:0 0 2px}
+  .dp-title{font-size:.98rem;font-weight:800;color:var(--navy);margin:0 0 7px}
+  .box-ref{font-size:.8rem;font-style:italic;color:#4A5763;margin:8px 0 10px}
+
   h2.vs-h{display:block;font-family:var(--font-display);font-weight:800;font-size:1.2rem;
     color:var(--navy);margin:0 0 3px;letter-spacing:-.01em;text-transform:none;
     line-height:1.15;padding:0;border:0;background:none}
@@ -577,42 +589,52 @@ table.vsheet td:last-child{padding-right:0}
 
     /* a CSS grid fragments badly across sheets and leaves blank pages.
        A table fragments column by column, which is what these panels need. */
-    /* Was a three-column table, which squeezed the Draw it boxes into a
-       third of a column. Each panel prints full width now and Draw it
-       starts its own sheet, matching the standalone pre-work pages. */
-    .panels{display:block;width:100%}
-    .panel{display:block;width:100%;border:0;border-radius:0;box-shadow:none;
-           overflow:visible;padding:0;margin:0 0 14pt;break-inside:auto}
-    .panel:nth-child(2){break-before:page;break-after:page;margin-bottom:0}
-    .panel:nth-child(2) h3{margin:7pt 0 2pt;font-size:8.8pt}
-    .panel:nth-child(2) h4{margin:5pt 0 2pt;font-size:8.2pt}
-    .panel:nth-child(2) p{font-size:7.9pt;margin-bottom:3pt}
-    .panel:nth-child(2) .dump{padding:4pt 6pt;margin-bottom:4pt}
-    .panel:nth-child(2) .dump p{font-size:7.5pt;margin:0}
-    .panel:nth-child(2) .check{padding:4pt 6pt;font-size:7.4pt;margin-top:3pt}
-    .vf-do{font-size:7.4pt;margin:0 0 4pt;line-height:1.4}
-    .panel-head{background:#fff;color:var(--navy);padding:0 0 5pt;margin-bottom:7pt;
-                border-bottom:1.2px solid var(--navy);break-after:avoid}
-    .panel-head h2{color:var(--navy);font-size:11.6pt}
-    .panel-head p{color:var(--navy);opacity:1;font-size:7.8pt;margin-top:2pt}
-    .panel-num{color:var(--maroon);font-size:6.2pt;margin-bottom:2pt}
-    .panel-body{padding:0}
-    .panel h3{font-size:9.2pt;margin:10pt 0 4pt;break-after:avoid}
-    .panel h4{font-size:8.6pt;margin:8pt 0 3pt;break-after:avoid}
-    .panel p{font-size:8.5pt;margin-bottom:5pt}
-    .panel ul,.panel ol{font-size:8.5pt;margin-bottom:6pt;padding-left:12pt}
-    .panel li{margin-bottom:2.4pt}
-
-    table.work{font-size:7.8pt;margin-bottom:7pt}
-    table.work caption{font-size:6.2pt;padding-bottom:3pt}
-    table.work th{font-size:6.2pt;padding:2pt 3pt}
-    table.work td{padding:2pt 3pt;height:22pt}
-    table.work tr{break-inside:avoid}
-
-    /* full sheet width now, so the box gets real height */
-    .box{height:300pt;margin:6pt 0 5pt;border-radius:4pt}
-    .box.tall{height:300pt}
-    .box.short{height:255pt}
+    /* Part B prints compact again: three columns of text, the way the
+       packet always did, because a module packet is printed whole. The
+       drawing rectangles are no longer in those columns, they are full
+       width pages at the end of each pre-work, two to a sheet. A student
+       who wants one drawing per whole sheet prints the standalone
+       drawing sheet instead. */
+    .panels{display:table;width:100%;table-layout:fixed;border-collapse:collapse}
+    .panel{display:table-cell;width:33.33%;vertical-align:top;
+           border:0;border-right:1px solid var(--navy);border-radius:0;box-shadow:none;
+           overflow:visible;padding:0 11pt;break-inside:auto}
+    .panel:first-child{padding-left:0}
+    .panel:last-child{border-right:0;padding-right:0}
+    .box-ref{font-size:7.6pt;margin:4pt 0 5pt}
+    .draw-pages{break-before:page;margin:0;padding-top:0;border-top:0}
+    .dp-h{font-size:12.6pt;margin:0 0 2pt}
+    .dp-intro{font-size:8.2pt;margin:0 0 8pt}
+    .dpage{break-inside:avoid;margin:0 0 11pt}
+    .dp-label{font-size:6.2pt;margin:0 0 1pt}
+    .dp-title{font-size:9.6pt;margin:0 0 4pt}
+    /* The visual sheet is compact in the packet and generous on the
+       standalone drawing sheet. At full page width its frames were
+       taking seven sheets per pre-work, twenty eight for the module.
+       Inline heights on each frame, so these have to win. */
+    table.vsheet td{padding:0 7pt}
+    /* aspect-ratio:1/1 is set on .vbox for the screen. Giving it a fixed
+       height while that is still live makes the browser compute the width
+       from the height, so the frame shrank to a small square and left the
+       rest of the cell empty. Turn the ratio off and take the full cell
+       width. */
+    .vsheet .vbox{aspect-ratio:auto !important;width:100% !important;
+                  height:118pt !important;margin:0 0 3pt}
+    .vf-cap{margin:0 0 2pt;gap:4pt}
+    .vf-do{font-size:6.9pt;line-height:1.34;margin:0 0 3pt}
+    td.vs-intro{font-size:7.6pt}
+    h2.vs-h{font-size:11.4pt;margin:0 0 2pt}
+    /* three drawings to a sheet. Full page width, about six and a half
+       inches by two and three quarters, which is a real drawing space
+       and still fits the module packet inside its old length. A
+       student who wants one drawing per whole sheet prints the
+       standalone drawing sheet. */
+    .dpage{break-inside:avoid;margin:0 0 7pt}
+    .dp-label{font-size:6pt;margin:0}
+    .dp-title{font-size:9pt;margin:0 0 3pt}
+    .box{height:196pt;margin:0;border-radius:4pt}
+    .box.tall{height:196pt}
+    .box.short{height:196pt}
     .task,.dump,.check,.worked{border-radius:4pt;break-inside:avoid}
     .task{padding:7pt 8pt;margin-bottom:8pt}
     .dump{padding:6pt 7pt;margin-bottom:7pt}
@@ -751,7 +773,12 @@ table.vsheet td:last-child{padding-right:0}
   .landscape{max-width:1240px;margin:0 auto}
 </style>
 </head>
-<body>
+<body data-no-reading-mode>
+<!-- Reading mode is off here on purpose. It wraps each panel in its own
+     collapsible section, which turns the three-column Part B into three
+     stacked full-width columns and roughly doubles the printed length.
+     A module packet is a compiled document meant to be read or printed
+     whole, so it does not want progressive disclosure. -->
 <a class="skip" href="#packet">Skip to the packet</a>
 
 <header class="site-header">
@@ -2831,7 +2858,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Every part of the cell, and the direction a signal moves through it.</p>
         </div>
         <p class="hint">Draw one large multipolar neuron. Give it many branched dendrites, one cell body with the nucleus and Nissl bodies inside, a clear axon hillock, and one long axon ending in branched terminals with synaptic end bulbs. Wrap the axon in a myelin sheath with nodes of Ranvier between the segments. Now enlarge one end bulb in a bubble and draw the synaptic vesicles, the cleft, and the next cell's membrane.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M5-4 A multipolar neuron, fully labelled</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2847,7 +2874,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>One minute. Which cell wraps each one, and what is left behind on the outside.</p>
         </div>
         <p class="hint">Draw two axons beside each other. On the left, wrap the PNS axon with Schwann cells, one per segment, and draw the neurolemma as the outer layer of each Schwann cell. On the right, draw one oligodendrocyte with several arms, each arm wrapping a segment of a different CNS axon, and leave the outer surface bare. Mark the nodes of Ranvier on both and draw the impulse jumping node to node.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M5-5 A myelinated axon in the PNS and in the CNS, side by side</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2863,7 +2890,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. All five components in each, and the difference in the middle.</p>
         </div>
         <p class="hint">Draw a spinal cord cross-section twice. On the first, draw the patellar reflex: the muscle spindle receptor, the sensory neuron entering the posterior root, one synapse in the cord, the motor neuron leaving the anterior root, and the quadriceps as the effector. On the second, draw the withdrawal reflex with an interneuron added between the sensory and motor neurons. Label all five components on both and mark the posterior root ganglion.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M5-6 Two reflexes drawn as arcs</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2978,6 +3005,26 @@ table.vsheet td:last-child{padding-right:0}
   </div>
 
 </div>
+
+    <div class="draw-pages">
+      <h2 class="dp-h">Drawing pages</h2>
+      <p class="dp-intro">The drawings from Panel 2, with room to draw them. Brain dump first with everything closed, then draw, then correct yourself in a second color.</p>
+      <div class="dpage">
+        <p class="dp-label">Drawing 1</p>
+        <h3 class="dp-title">A multipolar neuron, fully labelled</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 2</p>
+        <h3 class="dp-title">A myelinated axon in the PNS and in the CNS, side by side</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 3</p>
+        <h3 class="dp-title">Two reflexes drawn as arcs</h3>
+        <div class="box tall"></div>
+      </div>
+    </div>
 </section>
 
 <section id="pw5-brain" class="pw-packet" aria-labelledby="pwh2">
@@ -3104,7 +3151,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Five lobes, the sulci that bound them, and the named areas in position.</p>
         </div>
         <p class="hint">Draw one hemisphere from the side, gyri and sulci included. Draw the central sulcus, the lateral sulcus, and the parieto-occipital sulcus, then outline and label all five lobes, showing the insula peeled open inside the lateral sulcus. Now mark the primary motor cortex on the precentral gyrus, the primary somatosensory cortex on the postcentral gyrus, the primary visual, auditory, and gustatory areas, Broca's area, Wernicke's area, and the prefrontal cortex.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M5-7 The lateral surface of the cerebrum, with the functional map on it</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3120,7 +3167,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. All three regions and every surface feature on each.</p>
         </div>
         <p class="hint">Draw the brainstem twice, once from the front and once from behind with the cerebellum removed. On the front view show the cerebral peduncles of the midbrain, the bulge of the pons, and the pyramids of the medulla with the decussation at the bottom. On the back view show the four colliculi of the tectum, the fourth ventricle, and the three pairs of cerebellar peduncles. Then write the cranial nerve nuclei held by each region beside it.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M5-8 The brainstem, front and back</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3136,7 +3183,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Every region on the cut midline, cerebrum down to medulla.</p>
         </div>
         <p class="hint">Draw the brain sliced down the midline. Lay in the corpus callosum as the arch across the middle and the cingulate gyrus curving above it. Below the corpus callosum draw the thalamus, the hypothalamus, and the pineal gland of the epithalamus around the third ventricle. Continue down through the midbrain, pons, and medulla, and add the cerebellum behind them with the arbor vitae drawn inside it.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M5-9 The brain in midsagittal section</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3252,6 +3299,26 @@ table.vsheet td:last-child{padding-right:0}
   </div>
 
 </div>
+
+    <div class="draw-pages">
+      <h2 class="dp-h">Drawing pages</h2>
+      <p class="dp-intro">The drawings from Panel 2, with room to draw them. Brain dump first with everything closed, then draw, then correct yourself in a second color.</p>
+      <div class="dpage">
+        <p class="dp-label">Drawing 1</p>
+        <h3 class="dp-title">The lateral surface of the cerebrum, with the functional map on it</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 2</p>
+        <h3 class="dp-title">The brainstem, front and back</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 3</p>
+        <h3 class="dp-title">The brain in midsagittal section</h3>
+        <div class="box tall"></div>
+      </div>
+    </div>
 </section>
 
 <section id="pw5-cord" class="pw-packet" aria-labelledby="pwh3">
@@ -3378,7 +3445,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Every layer from bone to brain, and every space between them.</p>
         </div>
         <p class="hint">Draw a wedge of skull with the brain beneath it, cut across the midline. Lay in the periosteal dura against the bone and the meningeal dura beneath it, and show the two layers parting at the midline to enclose the superior sagittal sinus. Draw the falx cerebri dipping down into the longitudinal fissure between the hemispheres. Add the arachnoid mater with arachnoid granulations poking up into the sinus, the subarachnoid space filled with CSF, and the pia mater following every gyrus and sulcus.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M5-1 The meninges over the top of the brain, in coronal section</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3394,7 +3461,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Four spaces, three narrow points, and where the fluid leaves the system.</p>
         </div>
         <p class="hint">Draw the brain in outline from the side and put the ventricles inside it: a lateral ventricle curving through the hemisphere, the third ventricle in the diencephalon, the cerebral aqueduct through the midbrain, and the fourth ventricle between the brainstem and the cerebellum, continuing into the central canal. Mark the choroid plexus in each ventricle that has it. Then arrow the fluid out through the apertures into the subarachnoid space, over the surface, and into the superior sagittal sinus at the arachnoid granulations.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M5-2 The ventricles and the whole path of the CSF</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3410,7 +3477,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. The outside of the cord, where it ends, and what a slice through it shows.</p>
         </div>
         <p class="hint">Draw the whole cord from the medulla down, inside the vertebral canal. Mark the cervical enlargement and the lumbar enlargement, taper the cord into the conus medullaris at the L1 to L2 disc, run the filum terminale down to the coccyx, and hang the cauda equina around it. Then draw one cross-section beside it: anterior median fissure, posterior median sulcus, gray horns, white columns, central canal, both roots, and the posterior root ganglion.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M5-3 The spinal cord, whole and in cross section</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3526,6 +3593,26 @@ table.vsheet td:last-child{padding-right:0}
   </div>
 
 </div>
+
+    <div class="draw-pages">
+      <h2 class="dp-h">Drawing pages</h2>
+      <p class="dp-intro">The drawings from Panel 2, with room to draw them. Brain dump first with everything closed, then draw, then correct yourself in a second color.</p>
+      <div class="dpage">
+        <p class="dp-label">Drawing 1</p>
+        <h3 class="dp-title">The meninges over the top of the brain, in coronal section</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 2</p>
+        <h3 class="dp-title">The ventricles and the whole path of the CSF</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 3</p>
+        <h3 class="dp-title">The spinal cord, whole and in cross section</h3>
+        <div class="box tall"></div>
+      </div>
+    </div>
 </section>
 
 <section id="pw5-pns" class="pw-packet" aria-labelledby="pwh4">
@@ -3652,7 +3739,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Both roots, the ganglion, the mixed nerve, and every branch off it.</p>
         </div>
         <p class="hint">Draw a cord cross-section inside a vertebra. Bring rootlets off the posterior and anterior surfaces, gather them into the two roots, put the posterior root ganglion on the sensory root, and join the roots into the mixed spinal nerve at the intervertebral foramen. Then split the nerve into the posterior ramus going to the back, the anterior ramus going around the trunk, the meningeal branch turning back into the canal, and the rami communicantes running to a sympathetic trunk ganglion. Color sensory and motor axons differently the whole way.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M5-10 A spinal nerve, from the cord to its rami</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3668,7 +3755,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. All twelve, in order, attached where they belong.</p>
         </div>
         <p class="hint">Draw the inferior surface of the brain: frontal lobes at the front, temporal lobes to the sides, the three brainstem regions down the middle, and the cerebellum behind. Attach all twelve nerves in order and number them, with I and II reaching the cerebrum and diencephalon and III through XII on the brainstem. Then write out the two memory sentences from Part A, one for the names and one for the sensory, motor, or mixed pattern. Now build your own for each, using words that mean something to you, and write both under your drawing.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M5-11 The twelve cranial nerves on the base of the brain, and your own mnemonic</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3684,7 +3771,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Where each one leaves the CNS, where its ganglia sit, and how far each neuron runs.</p>
         </div>
         <p class="hint">Draw the brain and spinal cord twice, side by side. On the sympathetic side mark the T1 to L2 lateral horns as the origin, draw the sympathetic trunk as a chain of ganglia beside the vertebral column, add the prevertebral ganglia near the abdominal arteries, and run a short preganglionic and a long postganglionic axon out to an organ. On the parasympathetic side mark the nuclei of CN III, VII, IX, and X and the S2 to S4 segments, and run a long preganglionic axon to a terminal ganglion at the organ with a short postganglionic axon beyond it.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M5-12 The two autonomic divisions, side by side</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3801,6 +3888,26 @@ table.vsheet td:last-child{padding-right:0}
   </div>
 
 </div>
+
+    <div class="draw-pages">
+      <h2 class="dp-h">Drawing pages</h2>
+      <p class="dp-intro">The drawings from Panel 2, with room to draw them. Brain dump first with everything closed, then draw, then correct yourself in a second color.</p>
+      <div class="dpage">
+        <p class="dp-label">Drawing 1</p>
+        <h3 class="dp-title">A spinal nerve, from the cord to its rami</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 2</p>
+        <h3 class="dp-title">The twelve cranial nerves on the base of the brain, and your own mnemonic</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 3</p>
+        <h3 class="dp-title">The two autonomic divisions, side by side</h3>
+        <div class="box tall"></div>
+      </div>
+    </div>
 </section>
 
 <section id="pw5-review" class="pw-packet" aria-labelledby="pwh5">
@@ -3927,7 +4034,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Three minutes. Every region of the brain and brainstem, and the fluid spaces inside them.</p>
         </div>
         <p class="hint">Draw the brain in midsagittal section from memory alone. Put in the cerebrum with the corpus callosum and the cingulate gyrus, the thalamus, hypothalamus, and pineal gland around the third ventricle, the midbrain with its colliculi and aqueduct, the pons, the medulla, and the cerebellum with the arbor vitae and the fourth ventricle in front of it. Then add the falx cerebri and the tentorium cerebelli in position and mark the superior sagittal sinus.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M5-13 The brain, from memory, nothing open</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3943,7 +4050,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Cord, coverings, roots, nerve, and the autonomic chain beside it.</p>
         </div>
         <p class="hint">Draw one cord segment in cross-section inside a vertebra. Add the gray horns and white columns, then wrap it in pia, arachnoid with the subarachnoid space, and dura, with the epidural space outside that. Bring out the rootlets, both roots, the posterior root ganglion, and the mixed spinal nerve, then split it into all four branches. Finally put a sympathetic trunk ganglion beside the vertebral body and connect it with the rami communicantes.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M5-14 A spinal cord segment with everything attached to it</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3959,7 +4066,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Both routes drawn from the CNS to the effector, with every difference visible.</p>
         </div>
         <p class="hint">Draw the cord twice. On the left run the somatic pathway: one motor neuron from the anterior horn, out the anterior root, along the spinal nerve, to a skeletal muscle. On the right run the autonomic pathway: a preganglionic neuron from the lateral horn out to a ganglion, a synapse, then a postganglionic neuron to smooth muscle, cardiac muscle, or a gland. Mark which axons are myelinated, and label the effect each pathway can have on its effector.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M5-15 The somatic and autonomic motor pathways, side by side</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -4076,6 +4183,26 @@ table.vsheet td:last-child{padding-right:0}
   </div>
 
 </div>
+
+    <div class="draw-pages">
+      <h2 class="dp-h">Drawing pages</h2>
+      <p class="dp-intro">The drawings from Panel 2, with room to draw them. Brain dump first with everything closed, then draw, then correct yourself in a second color.</p>
+      <div class="dpage">
+        <p class="dp-label">Drawing 1</p>
+        <h3 class="dp-title">The brain, from memory, nothing open</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 2</p>
+        <h3 class="dp-title">A spinal cord segment with everything attached to it</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 3</p>
+        <h3 class="dp-title">The somatic and autonomic motor pathways, side by side</h3>
+        <div class="box tall"></div>
+      </div>
+    </div>
 </section>
 
     </div>

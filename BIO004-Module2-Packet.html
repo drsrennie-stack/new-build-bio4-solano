@@ -414,6 +414,18 @@
   /* Instructions on each drawing frame, and the sheet's own heading.
      Kept in step with the worksheet pages these sections come from. */
   .vf-do{font-size:.82rem;line-height:1.5;color:#2C3A45;margin:0 0 7px;max-width:62ch}
+  /* Drawing pages: the empty rectangles from Panel 2, moved to the end of
+     each pre-work so they get the width of the page instead of a third of
+     a column. Panel 2 keeps all of its words. */
+  .draw-pages{margin:26px 0 8px;padding-top:18px;border-top:1px solid #E6E4DF}
+  .dp-h{font-family:var(--font-display);font-weight:800;font-size:1.2rem;color:var(--navy);margin:0 0 4px}
+  .dp-intro{font-size:.86rem;color:#2C3A45;margin:0 0 16px;max-width:62ch}
+  .dpage{margin:0 0 16px}
+  .dp-label{font-family:var(--font-eyebrow);font-size:.6rem;font-weight:800;letter-spacing:.14em;
+    text-transform:uppercase;color:#7A2A22;margin:0 0 2px}
+  .dp-title{font-size:.98rem;font-weight:800;color:var(--navy);margin:0 0 7px}
+  .box-ref{font-size:.8rem;font-style:italic;color:#4A5763;margin:8px 0 10px}
+
   h2.vs-h{display:block;font-family:var(--font-display);font-weight:800;font-size:1.2rem;
     color:var(--navy);margin:0 0 3px;letter-spacing:-.01em;text-transform:none;
     line-height:1.15;padding:0;border:0;background:none}
@@ -577,42 +589,52 @@ table.vsheet td:last-child{padding-right:0}
 
     /* a CSS grid fragments badly across sheets and leaves blank pages.
        A table fragments column by column, which is what these panels need. */
-    /* Was a three-column table, which squeezed the Draw it boxes into a
-       third of a column. Each panel prints full width now and Draw it
-       starts its own sheet, matching the standalone pre-work pages. */
-    .panels{display:block;width:100%}
-    .panel{display:block;width:100%;border:0;border-radius:0;box-shadow:none;
-           overflow:visible;padding:0;margin:0 0 14pt;break-inside:auto}
-    .panel:nth-child(2){break-before:page;break-after:page;margin-bottom:0}
-    .panel:nth-child(2) h3{margin:7pt 0 2pt;font-size:8.8pt}
-    .panel:nth-child(2) h4{margin:5pt 0 2pt;font-size:8.2pt}
-    .panel:nth-child(2) p{font-size:7.9pt;margin-bottom:3pt}
-    .panel:nth-child(2) .dump{padding:4pt 6pt;margin-bottom:4pt}
-    .panel:nth-child(2) .dump p{font-size:7.5pt;margin:0}
-    .panel:nth-child(2) .check{padding:4pt 6pt;font-size:7.4pt;margin-top:3pt}
-    .vf-do{font-size:7.4pt;margin:0 0 4pt;line-height:1.4}
-    .panel-head{background:#fff;color:var(--navy);padding:0 0 5pt;margin-bottom:7pt;
-                border-bottom:1.2px solid var(--navy);break-after:avoid}
-    .panel-head h2{color:var(--navy);font-size:11.6pt}
-    .panel-head p{color:var(--navy);opacity:1;font-size:7.8pt;margin-top:2pt}
-    .panel-num{color:var(--maroon);font-size:6.2pt;margin-bottom:2pt}
-    .panel-body{padding:0}
-    .panel h3{font-size:9.2pt;margin:10pt 0 4pt;break-after:avoid}
-    .panel h4{font-size:8.6pt;margin:8pt 0 3pt;break-after:avoid}
-    .panel p{font-size:8.5pt;margin-bottom:5pt}
-    .panel ul,.panel ol{font-size:8.5pt;margin-bottom:6pt;padding-left:12pt}
-    .panel li{margin-bottom:2.4pt}
-
-    table.work{font-size:7.8pt;margin-bottom:7pt}
-    table.work caption{font-size:6.2pt;padding-bottom:3pt}
-    table.work th{font-size:6.2pt;padding:2pt 3pt}
-    table.work td{padding:2pt 3pt;height:22pt}
-    table.work tr{break-inside:avoid}
-
-    /* full sheet width now, so the box gets real height */
-    .box{height:300pt;margin:6pt 0 5pt;border-radius:4pt}
-    .box.tall{height:300pt}
-    .box.short{height:255pt}
+    /* Part B prints compact again: three columns of text, the way the
+       packet always did, because a module packet is printed whole. The
+       drawing rectangles are no longer in those columns, they are full
+       width pages at the end of each pre-work, two to a sheet. A student
+       who wants one drawing per whole sheet prints the standalone
+       drawing sheet instead. */
+    .panels{display:table;width:100%;table-layout:fixed;border-collapse:collapse}
+    .panel{display:table-cell;width:33.33%;vertical-align:top;
+           border:0;border-right:1px solid var(--navy);border-radius:0;box-shadow:none;
+           overflow:visible;padding:0 11pt;break-inside:auto}
+    .panel:first-child{padding-left:0}
+    .panel:last-child{border-right:0;padding-right:0}
+    .box-ref{font-size:7.6pt;margin:4pt 0 5pt}
+    .draw-pages{break-before:page;margin:0;padding-top:0;border-top:0}
+    .dp-h{font-size:12.6pt;margin:0 0 2pt}
+    .dp-intro{font-size:8.2pt;margin:0 0 8pt}
+    .dpage{break-inside:avoid;margin:0 0 11pt}
+    .dp-label{font-size:6.2pt;margin:0 0 1pt}
+    .dp-title{font-size:9.6pt;margin:0 0 4pt}
+    /* The visual sheet is compact in the packet and generous on the
+       standalone drawing sheet. At full page width its frames were
+       taking seven sheets per pre-work, twenty eight for the module.
+       Inline heights on each frame, so these have to win. */
+    table.vsheet td{padding:0 7pt}
+    /* aspect-ratio:1/1 is set on .vbox for the screen. Giving it a fixed
+       height while that is still live makes the browser compute the width
+       from the height, so the frame shrank to a small square and left the
+       rest of the cell empty. Turn the ratio off and take the full cell
+       width. */
+    .vsheet .vbox{aspect-ratio:auto !important;width:100% !important;
+                  height:118pt !important;margin:0 0 3pt}
+    .vf-cap{margin:0 0 2pt;gap:4pt}
+    .vf-do{font-size:6.9pt;line-height:1.34;margin:0 0 3pt}
+    td.vs-intro{font-size:7.6pt}
+    h2.vs-h{font-size:11.4pt;margin:0 0 2pt}
+    /* three drawings to a sheet. Full page width, about six and a half
+       inches by two and three quarters, which is a real drawing space
+       and still fits the module packet inside its old length. A
+       student who wants one drawing per whole sheet prints the
+       standalone drawing sheet. */
+    .dpage{break-inside:avoid;margin:0 0 7pt}
+    .dp-label{font-size:6pt;margin:0}
+    .dp-title{font-size:9pt;margin:0 0 3pt}
+    .box{height:196pt;margin:0;border-radius:4pt}
+    .box.tall{height:196pt}
+    .box.short{height:196pt}
     .task,.dump,.check,.worked{border-radius:4pt;break-inside:avoid}
     .task{padding:7pt 8pt;margin-bottom:8pt}
     .dump{padding:6pt 7pt;margin-bottom:7pt}
@@ -751,7 +773,12 @@ table.vsheet td:last-child{padding-right:0}
   .landscape{max-width:1240px;margin:0 auto}
 </style>
 </head>
-<body>
+<body data-no-reading-mode>
+<!-- Reading mode is off here on purpose. It wraps each panel in its own
+     collapsible section, which turns the three-column Part B into three
+     stacked full-width columns and roughly doubles the printed length.
+     A module packet is a compiled document meant to be read or printed
+     whole, so it does not want progressive disclosure. -->
 <a class="skip" href="#packet">Skip to the packet</a>
 
 <header class="site-header">
@@ -2450,7 +2477,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Every part of a long bone, and which kind of bone tissue is where.</p>
         </div>
         <p class="hint">Draw a long bone cut down its length so the inside shows. Mark diaphysis, both epiphyses, metaphysis, medullary cavity, and where compact and spongy bone each sit. Add periosteum, endosteum, articular cartilage, the epiphyseal line, and label red and yellow marrow where each belongs.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M2-1 A long bone, sectioned</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2466,7 +2493,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>One minute. Every structure in compact bone and how a deep osteocyte gets fed.</p>
         </div>
         <p class="hint">Draw one osteon large. Central canal in the middle, concentric lamellae as rings, lacunae between the rings with an osteocyte in each, and canaliculi as fine lines linking them. Add a perforating canal crossing to a neighbouring osteon, and squeeze interstitial lamellae into the gaps between osteons.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M2-2 The osteon, in cross section</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2482,7 +2509,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>One minute. The five zones in order and what happens in each.</p>
         </div>
         <p class="hint">Draw a strip of growth plate with the epiphysis at the top and the diaphysis at the bottom. Divide it into five bands. Draw the chondrocytes changing as they descend: resting, then stacked in columns, then swollen, then a calcifying matrix, then bone. Label each zone.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M2-3 The growth plate, zone by zone</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2591,6 +2618,26 @@ table.vsheet td:last-child{padding-right:0}
   </div>
 
 </div>
+
+    <div class="draw-pages">
+      <h2 class="dp-h">Drawing pages</h2>
+      <p class="dp-intro">The drawings from Panel 2, with room to draw them. Brain dump first with everything closed, then draw, then correct yourself in a second color.</p>
+      <div class="dpage">
+        <p class="dp-label">Drawing 1</p>
+        <h3 class="dp-title">A long bone, sectioned</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 2</p>
+        <h3 class="dp-title">The osteon, in cross section</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 3</p>
+        <h3 class="dp-title">The growth plate, zone by zone</h3>
+        <div class="box tall"></div>
+      </div>
+    </div>
 </section>
 
 <section id="pw2-axial" class="pw-packet" aria-labelledby="pwh2">
@@ -2717,7 +2764,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Every bone you can name on the side of the skull, and the sutures between them.</p>
         </div>
         <p class="hint">Draw the skull in profile large enough to label. Outline each bone visible from the side and shade them differently: frontal, parietal, temporal, occipital, sphenoid, zygomatic, maxilla, nasal, lacrimal, mandible. Draw the four major sutures. Mark the pterion where four bones meet, the mastoid and styloid processes, the external acoustic meatus, and the zygomatic arch.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M2-4 The skull, lateral view</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2733,7 +2780,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>One minute. Every part of a vertebra, and which region it belongs to.</p>
         </div>
         <p class="hint">Draw one vertebra looking down on it. Body at the front, then the pedicles, laminae, and the arch closing behind, with the vertebral foramen in the middle. Add the spinous process pointing back and the transverse processes to the sides, then the superior articular processes. Now redraw it twice more in a second color, once as cervical with transverse foramina and once as thoracic with costal facets.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M2-5 A typical vertebra, from above</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2749,7 +2796,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>One minute. The ribs, how they attach, and the parts of the sternum.</p>
         </div>
         <p class="hint">Draw the cage from the front. Sternum in three parts with the jugular notch, sternal angle, and xiphoid process labelled. Draw the twelve rib pairs and their costal cartilages, then bracket them: true, false, and floating. Mark the sternal angle at the level of the second rib.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M2-6 The thoracic cage</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2864,6 +2911,26 @@ table.vsheet td:last-child{padding-right:0}
   </div>
 
 </div>
+
+    <div class="draw-pages">
+      <h2 class="dp-h">Drawing pages</h2>
+      <p class="dp-intro">The drawings from Panel 2, with room to draw them. Brain dump first with everything closed, then draw, then correct yourself in a second color.</p>
+      <div class="dpage">
+        <p class="dp-label">Drawing 1</p>
+        <h3 class="dp-title">The skull, lateral view</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 2</p>
+        <h3 class="dp-title">A typical vertebra, from above</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 3</p>
+        <h3 class="dp-title">The thoracic cage</h3>
+        <div class="box tall"></div>
+      </div>
+    </div>
 </section>
 
 <section id="pw2-append" class="pw-packet" aria-labelledby="pwh3">
@@ -2990,7 +3057,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Every marking on the humerus, proximal and distal.</p>
         </div>
         <p class="hint">Draw the humerus twice, anterior and posterior. On the anterior view mark head, anatomical and surgical necks, greater and lesser tubercles, intertubercular sulcus, deltoid tuberosity, capitulum, trochlea, and both epicondyles. On the posterior view add the olecranon fossa and the radial groove, and mark where the radial nerve runs.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M2-7 The humerus, both views</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3006,7 +3073,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>One minute. Radius and ulna, which is which, and what moves.</p>
         </div>
         <p class="hint">Draw the two bones side by side in supination, palm forward, and label radius lateral and ulna medial. Then draw them again in pronation with the radius crossed over the ulna. Mark the proximal and distal radioulnar joints and the interosseous membrane in both.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M2-8 The forearm in supination and pronation</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3022,7 +3089,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>One minute. The three fused bones, then the ligaments of the knee.</p>
         </div>
         <p class="hint">Draw the coxal bone from the side, shading ilium, ischium, and pubis differently, and mark the acetabulum where all three meet plus the obturator foramen. Then draw the knee from the front with the patella removed: femoral condyles, tibial plateau, both menisci, both cruciate ligaments crossing, and both collateral ligaments.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M2-9 The coxal bone and the knee</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3137,6 +3204,26 @@ table.vsheet td:last-child{padding-right:0}
   </div>
 
 </div>
+
+    <div class="draw-pages">
+      <h2 class="dp-h">Drawing pages</h2>
+      <p class="dp-intro">The drawings from Panel 2, with room to draw them. Brain dump first with everything closed, then draw, then correct yourself in a second color.</p>
+      <div class="dpage">
+        <p class="dp-label">Drawing 1</p>
+        <h3 class="dp-title">The humerus, both views</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 2</p>
+        <h3 class="dp-title">The forearm in supination and pronation</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 3</p>
+        <h3 class="dp-title">The coxal bone and the knee</h3>
+        <div class="box tall"></div>
+      </div>
+    </div>
 </section>
 
 <section id="pw2-joints" class="pw-packet" aria-labelledby="pwh4">
@@ -3257,7 +3344,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Every structure inside a synovial joint and what each one does.</p>
         </div>
         <p class="hint">Draw two bone ends meeting, with a gap between them. Cap each with articular cartilage. Draw the capsule wrapping the joint, with the fibrous membrane outside and the synovial membrane inside, and fill the cavity with synovial fluid. Add a meniscus between the surfaces, a fat pad, and a bursa outside the capsule. Label all of it.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M2-10 A synovial joint, sectioned</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3273,7 +3360,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Every ligament and both menisci.</p>
         </div>
         <p class="hint">Draw the knee from the front with the patella lifted away: femoral condyles, tibial plateau, both collateral ligaments outside, both cruciates crossing inside. Then draw the tibial plateau from above and put the C-shaped medial meniscus and the O-shaped lateral meniscus in place. Mark the three structures of the unhappy triad.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M2-11 The knee, anterior and from above</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3289,7 +3376,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>One minute. The glenohumeral joint and what actually holds it together.</p>
         </div>
         <p class="hint">Draw the humeral head against the glenoid cavity and mark how much larger the head is than the socket. Add the glenoid labrum deepening the rim, the loose capsule, and the coracohumeral and glenohumeral ligaments. Then draw the four rotator cuff muscles gripping the head, and label them.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M2-12 The shoulder, and why it dislocates</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3400,6 +3487,26 @@ table.vsheet td:last-child{padding-right:0}
   </div>
 
 </div>
+
+    <div class="draw-pages">
+      <h2 class="dp-h">Drawing pages</h2>
+      <p class="dp-intro">The drawings from Panel 2, with room to draw them. Brain dump first with everything closed, then draw, then correct yourself in a second color.</p>
+      <div class="dpage">
+        <p class="dp-label">Drawing 1</p>
+        <h3 class="dp-title">A synovial joint, sectioned</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 2</p>
+        <h3 class="dp-title">The knee, anterior and from above</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 3</p>
+        <h3 class="dp-title">The shoulder, and why it dislocates</h3>
+        <div class="box tall"></div>
+      </div>
+    </div>
 </section>
 
     </div>

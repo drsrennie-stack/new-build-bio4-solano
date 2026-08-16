@@ -391,8 +391,8 @@
     btn.setAttribute('aria-pressed', String(everything));
     btn.textContent = everything ? 'Use the reading format' : 'Show everything, always';
     ex.textContent = everything
-      ? 'You are seeing the whole page at once, on this page and every other one. Switch back whenever you like.'
-      : 'This page opens one section at a time. If you would rather see the whole thing laid out, use the reading format button and it will stay that way everywhere.';
+      ? 'You are seeing the whole page at once, here and on every other page. Press Use the reading format to go back to one section at a time.'
+      : 'This page opens one section at a time. To see the whole page at once instead, press Show everything, always. It will stay that way on every page until you switch it back.';
   }
 
   function apply(mode) {

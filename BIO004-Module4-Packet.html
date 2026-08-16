@@ -414,6 +414,18 @@
   /* Instructions on each drawing frame, and the sheet's own heading.
      Kept in step with the worksheet pages these sections come from. */
   .vf-do{font-size:.82rem;line-height:1.5;color:#2C3A45;margin:0 0 7px;max-width:62ch}
+  /* Drawing pages: the empty rectangles from Panel 2, moved to the end of
+     each pre-work so they get the width of the page instead of a third of
+     a column. Panel 2 keeps all of its words. */
+  .draw-pages{margin:26px 0 8px;padding-top:18px;border-top:1px solid #E6E4DF}
+  .dp-h{font-family:var(--font-display);font-weight:800;font-size:1.2rem;color:var(--navy);margin:0 0 4px}
+  .dp-intro{font-size:.86rem;color:#2C3A45;margin:0 0 16px;max-width:62ch}
+  .dpage{margin:0 0 16px}
+  .dp-label{font-family:var(--font-eyebrow);font-size:.6rem;font-weight:800;letter-spacing:.14em;
+    text-transform:uppercase;color:#7A2A22;margin:0 0 2px}
+  .dp-title{font-size:.98rem;font-weight:800;color:var(--navy);margin:0 0 7px}
+  .box-ref{font-size:.8rem;font-style:italic;color:#4A5763;margin:8px 0 10px}
+
   h2.vs-h{display:block;font-family:var(--font-display);font-weight:800;font-size:1.2rem;
     color:var(--navy);margin:0 0 3px;letter-spacing:-.01em;text-transform:none;
     line-height:1.15;padding:0;border:0;background:none}
@@ -577,42 +589,52 @@ table.vsheet td:last-child{padding-right:0}
 
     /* a CSS grid fragments badly across sheets and leaves blank pages.
        A table fragments column by column, which is what these panels need. */
-    /* Was a three-column table, which squeezed the Draw it boxes into a
-       third of a column. Each panel prints full width now and Draw it
-       starts its own sheet, matching the standalone pre-work pages. */
-    .panels{display:block;width:100%}
-    .panel{display:block;width:100%;border:0;border-radius:0;box-shadow:none;
-           overflow:visible;padding:0;margin:0 0 14pt;break-inside:auto}
-    .panel:nth-child(2){break-before:page;break-after:page;margin-bottom:0}
-    .panel:nth-child(2) h3{margin:7pt 0 2pt;font-size:8.8pt}
-    .panel:nth-child(2) h4{margin:5pt 0 2pt;font-size:8.2pt}
-    .panel:nth-child(2) p{font-size:7.9pt;margin-bottom:3pt}
-    .panel:nth-child(2) .dump{padding:4pt 6pt;margin-bottom:4pt}
-    .panel:nth-child(2) .dump p{font-size:7.5pt;margin:0}
-    .panel:nth-child(2) .check{padding:4pt 6pt;font-size:7.4pt;margin-top:3pt}
-    .vf-do{font-size:7.4pt;margin:0 0 4pt;line-height:1.4}
-    .panel-head{background:#fff;color:var(--navy);padding:0 0 5pt;margin-bottom:7pt;
-                border-bottom:1.2px solid var(--navy);break-after:avoid}
-    .panel-head h2{color:var(--navy);font-size:11.6pt}
-    .panel-head p{color:var(--navy);opacity:1;font-size:7.8pt;margin-top:2pt}
-    .panel-num{color:var(--maroon);font-size:6.2pt;margin-bottom:2pt}
-    .panel-body{padding:0}
-    .panel h3{font-size:9.2pt;margin:10pt 0 4pt;break-after:avoid}
-    .panel h4{font-size:8.6pt;margin:8pt 0 3pt;break-after:avoid}
-    .panel p{font-size:8.5pt;margin-bottom:5pt}
-    .panel ul,.panel ol{font-size:8.5pt;margin-bottom:6pt;padding-left:12pt}
-    .panel li{margin-bottom:2.4pt}
-
-    table.work{font-size:7.8pt;margin-bottom:7pt}
-    table.work caption{font-size:6.2pt;padding-bottom:3pt}
-    table.work th{font-size:6.2pt;padding:2pt 3pt}
-    table.work td{padding:2pt 3pt;height:22pt}
-    table.work tr{break-inside:avoid}
-
-    /* full sheet width now, so the box gets real height */
-    .box{height:300pt;margin:6pt 0 5pt;border-radius:4pt}
-    .box.tall{height:300pt}
-    .box.short{height:255pt}
+    /* Part B prints compact again: three columns of text, the way the
+       packet always did, because a module packet is printed whole. The
+       drawing rectangles are no longer in those columns, they are full
+       width pages at the end of each pre-work, two to a sheet. A student
+       who wants one drawing per whole sheet prints the standalone
+       drawing sheet instead. */
+    .panels{display:table;width:100%;table-layout:fixed;border-collapse:collapse}
+    .panel{display:table-cell;width:33.33%;vertical-align:top;
+           border:0;border-right:1px solid var(--navy);border-radius:0;box-shadow:none;
+           overflow:visible;padding:0 11pt;break-inside:auto}
+    .panel:first-child{padding-left:0}
+    .panel:last-child{border-right:0;padding-right:0}
+    .box-ref{font-size:7.6pt;margin:4pt 0 5pt}
+    .draw-pages{break-before:page;margin:0;padding-top:0;border-top:0}
+    .dp-h{font-size:12.6pt;margin:0 0 2pt}
+    .dp-intro{font-size:8.2pt;margin:0 0 8pt}
+    .dpage{break-inside:avoid;margin:0 0 11pt}
+    .dp-label{font-size:6.2pt;margin:0 0 1pt}
+    .dp-title{font-size:9.6pt;margin:0 0 4pt}
+    /* The visual sheet is compact in the packet and generous on the
+       standalone drawing sheet. At full page width its frames were
+       taking seven sheets per pre-work, twenty eight for the module.
+       Inline heights on each frame, so these have to win. */
+    table.vsheet td{padding:0 7pt}
+    /* aspect-ratio:1/1 is set on .vbox for the screen. Giving it a fixed
+       height while that is still live makes the browser compute the width
+       from the height, so the frame shrank to a small square and left the
+       rest of the cell empty. Turn the ratio off and take the full cell
+       width. */
+    .vsheet .vbox{aspect-ratio:auto !important;width:100% !important;
+                  height:118pt !important;margin:0 0 3pt}
+    .vf-cap{margin:0 0 2pt;gap:4pt}
+    .vf-do{font-size:6.9pt;line-height:1.34;margin:0 0 3pt}
+    td.vs-intro{font-size:7.6pt}
+    h2.vs-h{font-size:11.4pt;margin:0 0 2pt}
+    /* three drawings to a sheet. Full page width, about six and a half
+       inches by two and three quarters, which is a real drawing space
+       and still fits the module packet inside its old length. A
+       student who wants one drawing per whole sheet prints the
+       standalone drawing sheet. */
+    .dpage{break-inside:avoid;margin:0 0 7pt}
+    .dp-label{font-size:6pt;margin:0}
+    .dp-title{font-size:9pt;margin:0 0 3pt}
+    .box{height:196pt;margin:0;border-radius:4pt}
+    .box.tall{height:196pt}
+    .box.short{height:196pt}
     .task,.dump,.check,.worked{border-radius:4pt;break-inside:avoid}
     .task{padding:7pt 8pt;margin-bottom:8pt}
     .dump{padding:6pt 7pt;margin-bottom:7pt}
@@ -751,7 +773,12 @@ table.vsheet td:last-child{padding-right:0}
   .landscape{max-width:1240px;margin:0 auto}
 </style>
 </head>
-<body>
+<body data-no-reading-mode>
+<!-- Reading mode is off here on purpose. It wraps each panel in its own
+     collapsible section, which turns the three-column Part B into three
+     stacked full-width columns and roughly doubles the printed length.
+     A module packet is a compiled document meant to be read or printed
+     whole, so it does not want progressive disclosure. -->
 <a class="skip" href="#packet">Skip to the packet</a>
 
 <header class="site-header">
@@ -2690,7 +2717,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Both lungs with every lobe and fissure, the tree inside them, and the membranes around them.</p>
         </div>
         <p class="hint">Draw the trachea with its C-shaped cartilage rings and the carina below. Branch into both main bronchi and make the right one visibly wider and more vertical, then continue into lobar and segmental bronchi. Outline both lungs around the tree: three lobes and two fissures on the right, two lobes, one fissure, a cardiac notch, and the lingula on the left. Mark the apex, base, and hilum on each, then draw the parietal pleura against the chest wall, the visceral pleura on the lung surface, and the pleural cavity between them.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M4-1 The lungs, the pleurae, and the bronchial tree</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2706,7 +2733,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>One minute. Every cell of the alveolar wall and the three layers a gas crosses.</p>
         </div>
         <p class="hint">Draw one alveolar sac with several alveoli opening into it, at large scale. Line the wall with flat type I cells, add a few cuboidal type II cells, and put an alveolar macrophage on the surface. Wrap a pulmonary capillary against the outside, then enlarge the point where the two touch and label the alveolar epithelium, the fused basement membranes, and the capillary endothelium.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M4-2 An alveolus and the respiratory membrane</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2722,7 +2749,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Where the lymph goes, which duct drains what, and what happens inside a node.</p>
         </div>
         <p class="hint">Draw a body outline. Shade the upper right quadrant one way and the rest of the body another, then draw the right lymphatic duct draining the shaded quadrant and the thoracic duct draining everything else, both emptying where the subclavian and internal jugular veins meet. Add the cisterna chyli at the start of the thoracic duct and mark the cervical, axillary, and inguinal clusters. Beside the outline draw one node cut open, with its capsule, cortex, medulla, several afferent vessels, and one efferent vessel at the hilum.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M4-3 The lymphatic system, and a node in section</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2839,6 +2866,26 @@ table.vsheet td:last-child{padding-right:0}
   </div>
 
 </div>
+
+    <div class="draw-pages">
+      <h2 class="dp-h">Drawing pages</h2>
+      <p class="dp-intro">The drawings from Panel 2, with room to draw them. Brain dump first with everything closed, then draw, then correct yourself in a second color.</p>
+      <div class="dpage">
+        <p class="dp-label">Drawing 1</p>
+        <h3 class="dp-title">The lungs, the pleurae, and the bronchial tree</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 2</p>
+        <h3 class="dp-title">An alveolus and the respiratory membrane</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 3</p>
+        <h3 class="dp-title">The lymphatic system, and a node in section</h3>
+        <div class="box tall"></div>
+      </div>
+    </div>
 </section>
 
 <section id="pw4-digest" class="pw-packet" aria-labelledby="pwh2">
@@ -2965,7 +3012,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. The tube in place, the membranes that hold it, and which organs sit behind them.</p>
         </div>
         <p class="hint">Draw the abdomen in sagittal section with the diaphragm across the top. Lay in the stomach, the small intestine, and the colon, then draw the parietal peritoneum along the wall and the visceral peritoneum over the organs, with the peritoneal cavity between them. Add the greater omentum hanging as an apron from the greater curvature, the lesser omentum between the stomach and the liver, the falciform ligament running to the anterior wall, the mesentery holding the jejunum and ileum, and the mesocolon. Then shade the retroperitoneal organs behind the parietal layer and label each one.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M4-7 The abdominal organs and the folds of peritoneum</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2981,7 +3028,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>One minute. Every named region and border, and the wall in cross section.</p>
         </div>
         <p class="hint">Draw the stomach J-shaped with the anterior wall cut away. Mark the cardia at the esophagus, the fundus bulging above and to the left, the body, and the pyloric part with its antrum, canal, and pylorus. Label the lesser curvature along the concave border and the greater curvature along the convex one, and put the lower esophageal sphincter and the pyloric sphincter at the two ends. Draw the rugae running through the empty stomach, then take a small square of the wall and enlarge it to show the four layers with three muscle layers instead of two, and a gastric pit leading down into a gastric gland.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M4-8 The stomach, cut open</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -2997,7 +3044,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Three organs and every duct that joins them to the duodenum.</p>
         </div>
         <p class="hint">Draw the liver with its right and left lobes and the falciform ligament between them, the gallbladder tucked under the right lobe, the duodenum curving below, and the pancreas behind, with its head in that curve and then its body and tail. Now draw the ducts: the right and left hepatic ducts joining as the common hepatic duct, the cystic duct running out to the gallbladder, those two forming the common bile duct, the pancreatic duct joining it at the hepatopancreatic ampulla, and the accessory duct entering the duodenum on its own. Mark the major duodenal papilla and the sphincter of Oddi.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M4-9 The liver, gallbladder, pancreas, and the duct tree</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3112,6 +3159,26 @@ table.vsheet td:last-child{padding-right:0}
   </div>
 
 </div>
+
+    <div class="draw-pages">
+      <h2 class="dp-h">Drawing pages</h2>
+      <p class="dp-intro">The drawings from Panel 2, with room to draw them. Brain dump first with everything closed, then draw, then correct yourself in a second color.</p>
+      <div class="dpage">
+        <p class="dp-label">Drawing 1</p>
+        <h3 class="dp-title">The abdominal organs and the folds of peritoneum</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 2</p>
+        <h3 class="dp-title">The stomach, cut open</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 3</p>
+        <h3 class="dp-title">The liver, gallbladder, pancreas, and the duct tree</h3>
+        <div class="box tall"></div>
+      </div>
+    </div>
 </section>
 
 <section id="pw4-urinary" class="pw-packet" aria-labelledby="pwh3">
@@ -3238,7 +3305,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Every region, every collecting space, and the arterial chain running through them.</p>
         </div>
         <p class="hint">Draw a kidney cut front to back, hilum on the medial side. Lay in the cortex, the medulla with several pyramids, the renal columns between them, and the papilla at the tip of each pyramid. Draw the minor calyces cupping the papillae, the major calyces, the renal pelvis, and the ureter leaving at the hilum. Then draw the arterial chain over the top of it: renal artery at the hilum, segmental and interlobar arteries running in the columns, arcuate arteries arching along the bases of the pyramids, and interlobular arteries branching up into the cortex.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M4-4 The kidney in frontal section, with its vessels</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3254,7 +3321,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Every segment in order, and which region of the kidney each one sits in.</p>
         </div>
         <p class="hint">Draw a wedge of kidney with the cortex above and the medulla below, and the line between them marked. Put a renal corpuscle in the cortex and run the tubule out of it: proximal convoluted tubule coiled in the cortex, nephron loop diving into the medulla and turning back, distal convoluted tubule coiled in the cortex again, then a collecting duct running down the pyramid to the papilla. Wrap peritubular capillaries around the cortical tubules and the vasa recta around the loop. Then draw a second nephron beside the first with a long loop reaching deep, and label which type each one is.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M4-5 One nephron, drawn in place</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3270,7 +3337,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Every gland, where it sits, and what the two-part glands are built from.</p>
         </div>
         <p class="hint">Draw a body outline from head to pelvis. Mark the hypothalamus and the pituitary hanging beneath it in the sella turcica, the pineal gland at the back of the third ventricle, the thyroid across the trachea with its isthmus and the four parathyroids behind it, the thymus behind the sternum, an adrenal gland capping each kidney, the pancreas behind the stomach, and the ovaries or the testes. Then enlarge two glands in the margin: the pituitary with its anterior and posterior lobes and the infundibulum joining it to the hypothalamus, and the adrenal with its three cortical zones in order and the medulla inside them.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M4-6 The endocrine glands on a body outline</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3385,6 +3452,26 @@ table.vsheet td:last-child{padding-right:0}
   </div>
 
 </div>
+
+    <div class="draw-pages">
+      <h2 class="dp-h">Drawing pages</h2>
+      <p class="dp-intro">The drawings from Panel 2, with room to draw them. Brain dump first with everything closed, then draw, then correct yourself in a second color.</p>
+      <div class="dpage">
+        <p class="dp-label">Drawing 1</p>
+        <h3 class="dp-title">The kidney in frontal section, with its vessels</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 2</p>
+        <h3 class="dp-title">One nephron, drawn in place</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 3</p>
+        <h3 class="dp-title">The endocrine glands on a body outline</h3>
+        <div class="box tall"></div>
+      </div>
+    </div>
 </section>
 
 <section id="pw4-repro" class="pw-packet" aria-labelledby="pwh4">
@@ -3511,7 +3598,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Every duct and every gland in order, from the testis to the outside.</p>
         </div>
         <p class="hint">Draw the male pelvis cut down the midline, with the bladder, the pubic symphysis, and the rectum in place. Add the testis in the scrotum, the epididymis on its posterior surface, and the ductus deferens running up in the spermatic cord and down behind the bladder. Draw the seminal vesicle joining it to form the ejaculatory duct, the prostate wrapped around the urethra below the bladder, and the bulbourethral glands beneath that. Follow the urethra through its prostatic, membranous, and spongy parts, then draw the penis in cross section with the two corpora cavernosa and the single corpus spongiosum around the urethra.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M4-10 The male tract in sagittal section</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3527,7 +3614,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Both tubes with every region, the uterus with every region, and the wall in layers.</p>
         </div>
         <p class="hint">Draw the uterus pear-shaped and cut open on one side. Mark the fundus, body, cervix, uterine cavity, and cervical canal with its internal and external os, and label the three wall layers along the cut edge. Draw both uterine tubes running out from the top and mark the isthmus, ampulla, infundibulum, and fimbriae on each, with the fimbriae reaching over the ovary rather than sealing onto it. Add an ovary at each end and draw the ovarian, suspensory, broad, round, cardinal, and uterosacral ligaments where each one attaches.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M4-11 The uterus, tubes, and ovaries, in frontal view</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3543,7 +3630,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. The fetus in position, every temporary structure, and the order of birth.</p>
         </div>
         <p class="hint">Draw the gravid uterus in sagittal section, reaching up toward the rib cage, with the fetus in the vertex position, head down at the cervix. Draw the placenta on the uterine wall, the umbilical cord with its two arteries and one vein, the amnion holding the amniotic fluid around the fetus, and the chorion outside that. Then draw three small panels beside it, one for each stage of labor: the cervix thinning and dilating, the fetus being pushed through the cervix and vagina, and the placenta delivered as the afterbirth.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M4-12 The uterus at full term, and the three stages of labor</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3660,6 +3747,26 @@ table.vsheet td:last-child{padding-right:0}
   </div>
 
 </div>
+
+    <div class="draw-pages">
+      <h2 class="dp-h">Drawing pages</h2>
+      <p class="dp-intro">The drawings from Panel 2, with room to draw them. Brain dump first with everything closed, then draw, then correct yourself in a second color.</p>
+      <div class="dpage">
+        <p class="dp-label">Drawing 1</p>
+        <h3 class="dp-title">The male tract in sagittal section</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 2</p>
+        <h3 class="dp-title">The uterus, tubes, and ovaries, in frontal view</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 3</p>
+        <h3 class="dp-title">The uterus at full term, and the three stages of labor</h3>
+        <div class="box tall"></div>
+      </div>
+    </div>
 </section>
 
 <section id="pw4-review" class="pw-packet" aria-labelledby="pwh5">
@@ -3786,7 +3893,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Three minutes. Every tube of Module 4 in one body, in the right order front to back.</p>
         </div>
         <p class="hint">Draw the trunk cut down the midline, from the nasal cavity to the pelvic floor, with the diaphragm across the middle. Lay in the airway in front and the alimentary canal behind it, and mark the one region where the two share a passage. Carry the canal on through the stomach, the intestines, and the rectum. Behind all of that draw one kidney, its ureter, the bladder, and the urethra. Then add the pelvic reproductive organs for one sex and mark the point where their duct joins or crosses the urinary tract.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M4-13 The trunk in one sagittal section, four systems at once</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3802,7 +3909,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Four sections side by side, and what fills each region of each one.</p>
         </div>
         <p class="hint">Draw four small sections in a row: a kidney, an adrenal gland, an ovary, and a lymph node. Label the capsule, the cortex, and the medulla on each. Then fill each region with what belongs in it: renal corpuscles and convoluted tubules in the renal cortex and pyramids in the renal medulla, three zones in the adrenal cortex and modified nervous tissue in its medulla, follicles in the ovarian cortex and vessels in its medulla, and clustered lymphocytes in the cortex of the node with its hilum on the medullary side.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M4-14 Four organs with a cortex and a medulla</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3818,7 +3925,7 @@ table.vsheet td:last-child{padding-right:0}
           <p>Two minutes. Three barriers drawn at the same scale, with every layer named.</p>
         </div>
         <p class="hint">Draw three enlarged details in a row. First an alveolus against a pulmonary capillary, with the alveolar epithelium, the fused basement membranes, and the capillary endothelium of the respiratory membrane. Second one intestinal villus, with its absorptive cells and their microvilli, the capillary bed inside it, and the lacteal down the middle. Third a renal corpuscle, with the fenestrated endothelium, the basement membrane, and the filtration slits between the podocyte processes. Under each one write what crosses and what is held back.</p>
-        <div class="box tall"></div>
+        <p class="box-ref">Room to draw this is on the drawing pages at the end of this pre-work.</p>
         <p class="jrnl">In your notebook, head the page <b>M4-15 Three exchange surfaces, side by side</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
@@ -3934,6 +4041,26 @@ table.vsheet td:last-child{padding-right:0}
   </div>
 
 </div>
+
+    <div class="draw-pages">
+      <h2 class="dp-h">Drawing pages</h2>
+      <p class="dp-intro">The drawings from Panel 2, with room to draw them. Brain dump first with everything closed, then draw, then correct yourself in a second color.</p>
+      <div class="dpage">
+        <p class="dp-label">Drawing 1</p>
+        <h3 class="dp-title">The trunk in one sagittal section, four systems at once</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 2</p>
+        <h3 class="dp-title">Four organs with a cortex and a medulla</h3>
+        <div class="box tall"></div>
+      </div>
+      <div class="dpage">
+        <p class="dp-label">Drawing 3</p>
+        <h3 class="dp-title">Three exchange surfaces, side by side</h3>
+        <div class="box tall"></div>
+      </div>
+    </div>
 </section>
 
     </div>
