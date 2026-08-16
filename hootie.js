@@ -525,7 +525,9 @@
     '.hoo-btn:focus-visible,.hoo-x:focus-visible,.hoo-chip:focus-visible,.hoo-in:focus-visible,.hoo-send:focus-visible{',
     '  outline:3px solid var(--gold,#DCB45C);outline-offset:2px}',
     '@media (prefers-reduced-motion:reduce){.hoo-btn{transition:none}.hoo-btn:hover{transform:none}}',
-    '@media print{.hoo-btn,.hoo-panel{display:none !important}}'
+    /* Every fixed element Hootie owns. The nudge was missing from this
+       list and printed as a gold pill across the foot of the page. */
+    '@media print{.hoo-btn,.hoo-panel,.hoo-nudge{display:none !important}}'
   ].join('');
 
   /* Six of these are welcome.html's, kept because they are framed
