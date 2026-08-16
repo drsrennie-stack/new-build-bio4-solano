@@ -93,7 +93,12 @@
       return SEC_LABEL[v] ? v : null;
     } catch (e) { return null; }
   }
-  var section = paramSec() || (SEC_LABEL[lsGet(KEY_SECTION)] ? lsGet(KEY_SECTION) : null) || 'mw';
+  /* A section on the address means the student arrived from their own
+     Canvas course, which is the authority on which section they are in.
+     BIO 004 runs as three separate Canvas courses, so there is nothing
+     for them to choose and asking looks like the site does not know. */
+  var SEC_FROM_LINK = paramSec();
+  var section = SEC_FROM_LINK || (SEC_LABEL[lsGet(KEY_SECTION)] ? lsGet(KEY_SECTION) : null) || 'mw';
   function setSection(sec) {
     if (!SEC_LABEL[sec]) return;
     section = sec;
@@ -119,10 +124,14 @@
     return [
       {
         id: 'section',
-        title: 'Check you are in the right section',
-        hint: 'Everything under this depends on it, including which Canvas course you submit to.',
-        body: '<p>BIO 004 runs as three separate sections with three separate Canvas courses. Pick yours once and the whole site follows it.</p>',
-        picker: true,
+        title: SEC_FROM_LINK ? 'Your section' : 'Check you are in the right section',
+        hint: SEC_FROM_LINK
+          ? 'Set by the Canvas course you came from, so there is nothing to pick.'
+          : 'Everything under this depends on it, including which Canvas course you submit to.',
+        body: SEC_FROM_LINK
+          ? '<p>You are in <b>' + esc(SEC_LABEL[SEC_FROM_LINK]) + '</b>. BIO 004 runs as three separate sections with three separate Canvas courses, and this link came from yours, so the whole site is already following it.</p>'
+          : '<p>BIO 004 runs as three separate sections with three separate Canvas courses. Pick yours once and the whole site follows it.</p>',
+        picker: !SEC_FROM_LINK,
         links: []
       },
       {
@@ -173,6 +182,14 @@
         links: [{ url: function () { return 'today.html'; }, cta: 'Open today' }]
       }
     ];
+  }
+
+  /* The course already answered step one, so tick it and remember the
+     section. Without this the checklist stayed incomplete and the panel
+     opened on every page asking a question with one possible answer. */
+  if (SEC_FROM_LINK) {
+    setSection(SEC_FROM_LINK);
+    if (!ticks.section) { ticks.section = true; writeTicks(ticks); }
   }
 
   var STEPS = steps();
