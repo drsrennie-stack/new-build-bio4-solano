@@ -411,6 +411,14 @@
 
   /* ---------- PANELS ---------- */
   .panels{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start}
+  /* Instructions on each drawing frame, and the sheet's own heading.
+     Kept in step with the worksheet pages these sections come from. */
+  .vf-do{font-size:.82rem;line-height:1.5;color:#2C3A45;margin:0 0 7px;max-width:62ch}
+  h2.vs-h{display:block;font-family:var(--font-display);font-weight:800;font-size:1.2rem;
+    color:var(--navy);margin:0 0 3px;letter-spacing:-.01em;text-transform:none;
+    line-height:1.15;padding:0;border:0;background:none}
+  .panels > .rm-sec:nth-child(n+4){grid-column:1 / -1}
+
   @media(max-width:1000px){.panels{grid-template-columns:1fr}ol.steps{grid-template-columns:1fr}}
   .panel{background:#fff;border:1px solid var(--rule);border-radius:var(--radius-card);
          overflow:hidden;box-shadow:var(--shadow-rest)}
@@ -569,12 +577,20 @@ table.vsheet td:last-child{padding-right:0}
 
     /* a CSS grid fragments badly across sheets and leaves blank pages.
        A table fragments column by column, which is what these panels need. */
-    .panels{display:table;width:100%;table-layout:fixed;border-collapse:collapse}
-    .panel{display:table-cell;width:33.33%;vertical-align:top;
-           border:0;border-right:1px solid var(--navy);border-radius:0;box-shadow:none;
-           overflow:visible;padding:0 11pt;break-inside:auto}
-    .panel:first-child{padding-left:0}
-    .panel:last-child{border-right:0;padding-right:0}
+    /* Was a three-column table, which squeezed the Draw it boxes into a
+       third of a column. Each panel prints full width now and Draw it
+       starts its own sheet, matching the standalone pre-work pages. */
+    .panels{display:block;width:100%}
+    .panel{display:block;width:100%;border:0;border-radius:0;box-shadow:none;
+           overflow:visible;padding:0;margin:0 0 14pt;break-inside:auto}
+    .panel:nth-child(2){break-before:page;break-after:page;margin-bottom:0}
+    .panel:nth-child(2) h3{margin:7pt 0 2pt;font-size:8.8pt}
+    .panel:nth-child(2) h4{margin:5pt 0 2pt;font-size:8.2pt}
+    .panel:nth-child(2) p{font-size:7.9pt;margin-bottom:3pt}
+    .panel:nth-child(2) .dump{padding:4pt 6pt;margin-bottom:4pt}
+    .panel:nth-child(2) .dump p{font-size:7.5pt;margin:0}
+    .panel:nth-child(2) .check{padding:4pt 6pt;font-size:7.4pt;margin-top:3pt}
+    .vf-do{font-size:7.4pt;margin:0 0 4pt;line-height:1.4}
     .panel-head{background:#fff;color:var(--navy);padding:0 0 5pt;margin-bottom:7pt;
                 border-bottom:1.2px solid var(--navy);break-after:avoid}
     .panel-head h2{color:var(--navy);font-size:11.6pt}
@@ -593,9 +609,10 @@ table.vsheet td:last-child{padding-right:0}
     table.work td{padding:2pt 3pt;height:22pt}
     table.work tr{break-inside:avoid}
 
-    .box{height:100pt;margin:6pt 0 5pt;border-radius:4pt}
-    .box.tall{height:150pt}
-    .box.short{height:62pt}
+    /* full sheet width now, so the box gets real height */
+    .box{height:300pt;margin:6pt 0 5pt;border-radius:4pt}
+    .box.tall{height:300pt}
+    .box.short{height:255pt}
     .task,.dump,.check,.worked{border-radius:4pt;break-inside:avoid}
     .task{padding:7pt 8pt;margin-bottom:8pt}
     .dump{padding:6pt 7pt;margin-bottom:7pt}
@@ -2550,12 +2567,11 @@ table.vsheet td:last-child{padding-right:0}
     <div class="landscape">
 
 <section id="pw4-resp" class="pw-packet" aria-labelledby="pwh1">
-
 <header class="band">
   <div class="band-inner">
     <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano Community College</p>
     <h1>Pre-work <span class="accent">&middot; The Respiratory and Lymphatic Systems</span></h1>
-    <p class="sub">The Respiratory System and The Lymphatic System. Read both Part A chapters first. The respiratory chapter carries over from the Module 3 packet, so treat it as a rebuild rather than a first read and give the new lymphatic material the longer half of your time. Both systems are pathway systems, so the order of the parts is the content.</p>
+    <p class="sub">The Respiratory System and The Lymphatic System. Read both Part A chapters first. The respiratory chapter carries over from the Module 3 packet, so read it as a refresher rather than a first pass, and give the new lymphatic material the longer half of your time. Both systems are pathway systems, so the order of the parts is the content.</p>
     <div class="meta">
       <span>Module 4 &middot; 1 of 5</span>
       <span>Bring this to class</span>
@@ -2766,48 +2782,56 @@ table.vsheet td:last-child{padding-right:0}
 
   <div class="sheet vsheet-wrap">
     <table class="vsheet">
-    <tr><td colspan="2" class="vs-intro"><span class="vs-h">Mini visual sheet</span>One frame per chunk, shaped for what goes in it. Tall frames are ladders, wide strips are chains, squares are hubs. Draw straight onto this sheet. If a frame is too small for your handwriting, redraw that one in your notes and put the page number on the line.</td></tr>
+    <tr><td colspan="2" class="vs-intro"><h2 class="vs-h">Mini visual sheet</h2>Each frame tells you what to draw in it and what to label. Do them with your notes closed, then open your notes and correct yourself in a second color. Draw straight onto this sheet. If a frame is too small for your handwriting, draw that one in your notebook instead and write the frame number at the top of the page so you can find it again.</td></tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">1</span><span class="vf-t">Two ways of grouping the parts</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">2</span><span class="vf-t">The three regions of the pharynx</span><span class="vf-s">Ladder</span></p>
+        <p class="vf-do">Draw the levels in order down the frame, the first one at the top. Label each level and write one line saying how it differs from the level above it.</p>
         <div class="vbox" style="height:2.7in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">3</span><span class="vf-t">The larynx</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
     </tr>
     <tr>
       <td colspan="2">
         <p class="vf-cap"><span class="vf-n">4</span><span class="vf-t">The airway, trachea to alveolus</span><span class="vf-s">Chain</span></p>
+        <p class="vf-do">Draw the steps left to right with an arrow between each one. Label every step, and on each arrow write what happens to get to the next.</p>
         <div class="vbox" style="height:1.15in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">5</span><span class="vf-t">Right lung against left lung</span><span class="vf-s">Split</span></p>
+        <p class="vf-do">Draw a line down the middle of the frame. Put one on the left and the other on the right. Draw and label both, then underneath write the one difference that tells them apart.</p>
         <div class="vbox" style="height:1.8in"></div>
       </td>
     </tr>
     <tr>
       <td colspan="2">
         <p class="vf-cap"><span class="vf-n">6</span><span class="vf-t">The pathway of lymph, tissue space to bloodstream</span><span class="vf-s">Chain</span></p>
+        <p class="vf-do">Draw the steps left to right with an arrow between each one. Label every step, and on each arrow write what happens to get to the next.</p>
         <div class="vbox" style="height:1.15in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">7</span><span class="vf-t">A lymph node</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">8</span><span class="vf-t">Primary against secondary lymphatic organs</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
     </tr>
@@ -2818,7 +2842,6 @@ table.vsheet td:last-child{padding-right:0}
 </section>
 
 <section id="pw4-digest" class="pw-packet" aria-labelledby="pwh2">
-
 <header class="band">
   <div class="band-inner">
     <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano Community College</p>
@@ -2943,7 +2966,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw the abdomen in sagittal section with the diaphragm across the top. Lay in the stomach, the small intestine, and the colon, then draw the parietal peritoneum along the wall and the visceral peritoneum over the organs, with the peritoneal cavity between them. Add the greater omentum hanging as an apron from the greater curvature, the lesser omentum between the stomach and the liver, the falciform ligament running to the anterior wall, the mesentery holding the jejunum and ileum, and the mesocolon. Then shade the retroperitoneal organs behind the parietal layer and label each one.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M4-1 The abdominal organs and the folds of peritoneum</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M4-7 The abdominal organs and the folds of peritoneum</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can say for any abdominal organ whether it lies inside the peritoneal cavity or behind it, and name the fold that anchors it.
@@ -2959,7 +2982,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw the stomach J-shaped with the anterior wall cut away. Mark the cardia at the esophagus, the fundus bulging above and to the left, the body, and the pyloric part with its antrum, canal, and pylorus. Label the lesser curvature along the concave border and the greater curvature along the convex one, and put the lower esophageal sphincter and the pyloric sphincter at the two ends. Draw the rugae running through the empty stomach, then take a small square of the wall and enlarge it to show the four layers with three muscle layers instead of two, and a gastric pit leading down into a gastric gland.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M4-2 The stomach, cut open</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M4-8 The stomach, cut open</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can explain from your own drawing why the stomach carries a third muscle layer that the rest of the tube does not.
@@ -2975,7 +2998,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw the liver with its right and left lobes and the falciform ligament between them, the gallbladder tucked under the right lobe, the duodenum curving below, and the pancreas behind, with its head in that curve and then its body and tail. Now draw the ducts: the right and left hepatic ducts joining as the common hepatic duct, the cystic duct running out to the gallbladder, those two forming the common bile duct, the pancreatic duct joining it at the hepatopancreatic ampulla, and the accessory duct entering the duodenum on its own. Mark the major duodenal papilla and the sphincter of Oddi.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M4-3 The liver, gallbladder, pancreas, and the duct tree</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M4-9 The liver, gallbladder, pancreas, and the duct tree</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can put one gallstone anywhere on your duct tree and say exactly what backs up behind it.
@@ -3034,46 +3057,54 @@ table.vsheet td:last-child{padding-right:0}
 
   <div class="sheet vsheet-wrap">
     <table class="vsheet">
-    <tr><td colspan="2" class="vs-intro"><span class="vs-h">Mini visual sheet</span>One frame per chunk, shaped for what goes in it. Tall frames are ladders, wide strips are chains, squares are hubs. Draw straight onto this sheet. If a frame is too small for your handwriting, redraw that one in your notes and put the page number on the line.</td></tr>
+    <tr><td colspan="2" class="vs-intro"><h2 class="vs-h">Mini visual sheet</h2>Each frame tells you what to draw in it and what to label. Do them with your notes closed, then open your notes and correct yourself in a second color. Draw straight onto this sheet. If a frame is too small for your handwriting, draw that one in your notebook instead and write the frame number at the top of the page so you can find it again.</td></tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">1</span><span class="vf-t">The canal against the accessory organs</span><span class="vf-s">Split</span></p>
+        <p class="vf-do">Draw a line down the middle of the frame. Put one on the left and the other on the right. Draw and label both, then underneath write the one difference that tells them apart.</p>
         <div class="vbox" style="height:1.8in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">2</span><span class="vf-t">The four layers of the wall</span><span class="vf-s">Ladder</span></p>
+        <p class="vf-do">Draw the levels in order down the frame, the first one at the top. Label each level and write one line saying how it differs from the level above it.</p>
         <div class="vbox" style="height:2.7in"></div>
       </td>
     </tr>
     <tr>
       <td colspan="2">
         <p class="vf-cap"><span class="vf-n">3</span><span class="vf-t">The pathway of food, mouth to anus</span><span class="vf-s">Chain</span></p>
+        <p class="vf-do">Draw the steps left to right with an arrow between each one. Label every step, and on each arrow write what happens to get to the next.</p>
         <div class="vbox" style="height:1.15in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">4</span><span class="vf-t">The stomach</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">5</span><span class="vf-t">Three levels of surface amplification</span><span class="vf-s">Ladder</span></p>
+        <p class="vf-do">Draw the levels in order down the frame, the first one at the top. Label each level and write one line saying how it differs from the level above it.</p>
         <div class="vbox" style="height:2.7in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">6</span><span class="vf-t">The large intestine</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">7</span><span class="vf-t">The liver, from lobe to lobule</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
     </tr>
     <tr>
       <td colspan="2">
         <p class="vf-cap"><span class="vf-n">8</span><span class="vf-t">The path of bile, canaliculus to duodenum</span><span class="vf-s">Chain</span></p>
+        <p class="vf-do">Draw the steps left to right with an arrow between each one. Label every step, and on each arrow write what happens to get to the next.</p>
         <div class="vbox" style="height:1.15in"></div>
       </td>
     </tr>
@@ -3084,7 +3115,6 @@ table.vsheet td:last-child{padding-right:0}
 </section>
 
 <section id="pw4-urinary" class="pw-packet" aria-labelledby="pwh3">
-
 <header class="band">
   <div class="band-inner">
     <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano Community College</p>
@@ -3209,7 +3239,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw a kidney cut front to back, hilum on the medial side. Lay in the cortex, the medulla with several pyramids, the renal columns between them, and the papilla at the tip of each pyramid. Draw the minor calyces cupping the papillae, the major calyces, the renal pelvis, and the ureter leaving at the hilum. Then draw the arterial chain over the top of it: renal artery at the hilum, segmental and interlobar arteries running in the columns, arcuate arteries arching along the bases of the pyramids, and interlobular arteries branching up into the cortex.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M4-1 The kidney in frontal section, with its vessels</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M4-4 The kidney in frontal section, with its vessels</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can put a finger anywhere in your kidney and say whether the fluid there is still inside a tubule or already in a collecting space.
@@ -3225,7 +3255,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw a wedge of kidney with the cortex above and the medulla below, and the line between them marked. Put a renal corpuscle in the cortex and run the tubule out of it: proximal convoluted tubule coiled in the cortex, nephron loop diving into the medulla and turning back, distal convoluted tubule coiled in the cortex again, then a collecting duct running down the pyramid to the papilla. Wrap peritubular capillaries around the cortical tubules and the vasa recta around the loop. Then draw a second nephron beside the first with a long loop reaching deep, and label which type each one is.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M4-2 One nephron, drawn in place</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M4-5 One nephron, drawn in place</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can say for every segment of your nephron whether it lies in the cortex or the medulla, and which of the two nephron types concentrates the urine.
@@ -3241,7 +3271,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw a body outline from head to pelvis. Mark the hypothalamus and the pituitary hanging beneath it in the sella turcica, the pineal gland at the back of the third ventricle, the thyroid across the trachea with its isthmus and the four parathyroids behind it, the thymus behind the sternum, an adrenal gland capping each kidney, the pancreas behind the stomach, and the ovaries or the testes. Then enlarge two glands in the margin: the pituitary with its anterior and posterior lobes and the infundibulum joining it to the hypothalamus, and the adrenal with its three cortical zones in order and the medulla inside them.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M4-3 The endocrine glands on a body outline</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M4-6 The endocrine glands on a body outline</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can name every gland on the outline with the labels covered, and say for the pituitary and the adrenal which part is nervous tissue and which is glandular.
@@ -3300,46 +3330,54 @@ table.vsheet td:last-child{padding-right:0}
 
   <div class="sheet vsheet-wrap">
     <table class="vsheet">
-    <tr><td colspan="2" class="vs-intro"><span class="vs-h">Mini visual sheet</span>One frame per chunk, shaped for what goes in it. Tall frames are ladders, wide strips are chains, squares are hubs. Draw straight onto this sheet. If a frame is too small for your handwriting, redraw that one in your notes and put the page number on the line.</td></tr>
+    <tr><td colspan="2" class="vs-intro"><h2 class="vs-h">Mini visual sheet</h2>Each frame tells you what to draw in it and what to label. Do them with your notes closed, then open your notes and correct yourself in a second color. Draw straight onto this sheet. If a frame is too small for your handwriting, draw that one in your notebook instead and write the frame number at the top of the page so you can find it again.</td></tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">1</span><span class="vf-t">The kidney from the outside in</span><span class="vf-s">Ladder</span></p>
+        <p class="vf-do">Draw the levels in order down the frame, the first one at the top. Label each level and write one line saying how it differs from the level above it.</p>
         <div class="vbox" style="height:2.7in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">2</span><span class="vf-t">The kidney in frontal section</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
     </tr>
     <tr>
       <td colspan="2">
         <p class="vf-cap"><span class="vf-n">3</span><span class="vf-t">The blood supply, aorta to renal vein</span><span class="vf-s">Chain</span></p>
+        <p class="vf-do">Draw the steps left to right with an arrow between each one. Label every step, and on each arrow write what happens to get to the next.</p>
         <div class="vbox" style="height:1.15in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">4</span><span class="vf-t">The renal corpuscle and the juxtaglomerular apparatus</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">5</span><span class="vf-t">The three layers of the filtration membrane</span><span class="vf-s">Ladder</span></p>
+        <p class="vf-do">Draw the levels in order down the frame, the first one at the top. Label each level and write one line saying how it differs from the level above it.</p>
         <div class="vbox" style="height:2.7in"></div>
       </td>
     </tr>
     <tr>
       <td colspan="2">
         <p class="vf-cap"><span class="vf-n">6</span><span class="vf-t">From capsular space to the outside</span><span class="vf-s">Chain</span></p>
+        <p class="vf-do">Draw the steps left to right with an arrow between each one. Label every step, and on each arrow write what happens to get to the next.</p>
         <div class="vbox" style="height:1.15in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">7</span><span class="vf-t">Where every endocrine gland sits</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">8</span><span class="vf-t">The two lobes of the pituitary</span><span class="vf-s">Split</span></p>
+        <p class="vf-do">Draw a line down the middle of the frame. Put one on the left and the other on the right. Draw and label both, then underneath write the one difference that tells them apart.</p>
         <div class="vbox" style="height:1.8in"></div>
       </td>
     </tr>
@@ -3350,7 +3388,6 @@ table.vsheet td:last-child{padding-right:0}
 </section>
 
 <section id="pw4-repro" class="pw-packet" aria-labelledby="pwh4">
-
 <header class="band">
   <div class="band-inner">
     <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano Community College</p>
@@ -3475,7 +3512,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw the male pelvis cut down the midline, with the bladder, the pubic symphysis, and the rectum in place. Add the testis in the scrotum, the epididymis on its posterior surface, and the ductus deferens running up in the spermatic cord and down behind the bladder. Draw the seminal vesicle joining it to form the ejaculatory duct, the prostate wrapped around the urethra below the bladder, and the bulbourethral glands beneath that. Follow the urethra through its prostatic, membranous, and spongy parts, then draw the penis in cross section with the two corpora cavernosa and the single corpus spongiosum around the urethra.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M4-1 The male tract in sagittal section</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M4-10 The male tract in sagittal section</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can trace the whole route with a finger and say at every junction what has just been added to the sperm.
@@ -3491,7 +3528,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw the uterus pear-shaped and cut open on one side. Mark the fundus, body, cervix, uterine cavity, and cervical canal with its internal and external os, and label the three wall layers along the cut edge. Draw both uterine tubes running out from the top and mark the isthmus, ampulla, infundibulum, and fimbriae on each, with the fimbriae reaching over the ovary rather than sealing onto it. Add an ovary at each end and draw the ovarian, suspensory, broad, round, cardinal, and uterosacral ligaments where each one attaches.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M4-2 The uterus, tubes, and ovaries, in frontal view</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M4-11 The uterus, tubes, and ovaries, in frontal view</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can explain from your own drawing how an infection reaches the pelvic cavity from the vagina, and why that open route exists at all.
@@ -3507,7 +3544,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw the gravid uterus in sagittal section, reaching up toward the rib cage, with the fetus in the vertex position, head down at the cervix. Draw the placenta on the uterine wall, the umbilical cord with its two arteries and one vein, the amnion holding the amniotic fluid around the fetus, and the chorion outside that. Then draw three small panels beside it, one for each stage of labor: the cervix thinning and dilating, the fetus being pushed through the cervix and vagina, and the placenta delivered as the afterbirth.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M4-3 The uterus at full term, and the three stages of labor</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M4-12 The uterus at full term, and the three stages of labor</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can name every structure that leaves the body at birth and say which of them was built for this pregnancy alone.
@@ -3566,48 +3603,56 @@ table.vsheet td:last-child{padding-right:0}
 
   <div class="sheet vsheet-wrap">
     <table class="vsheet">
-    <tr><td colspan="2" class="vs-intro"><span class="vs-h">Mini visual sheet</span>One frame per chunk, shaped for what goes in it. Tall frames are ladders, wide strips are chains, squares are hubs. Draw straight onto this sheet. If a frame is too small for your handwriting, redraw that one in your notes and put the page number on the line.</td></tr>
+    <tr><td colspan="2" class="vs-intro"><h2 class="vs-h">Mini visual sheet</h2>Each frame tells you what to draw in it and what to label. Do them with your notes closed, then open your notes and correct yourself in a second color. Draw straight onto this sheet. If a frame is too small for your handwriting, draw that one in your notebook instead and write the frame number at the top of the page so you can find it again.</td></tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">1</span><span class="vf-t">The testis, from tunic to tubule</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
     </tr>
     <tr>
       <td colspan="2">
         <p class="vf-cap"><span class="vf-n">2</span><span class="vf-t">The path of sperm, tubule to the outside</span><span class="vf-s">Chain</span></p>
+        <p class="vf-do">Draw the steps left to right with an arrow between each one. Label every step, and on each arrow write what happens to get to the next.</p>
         <div class="vbox" style="height:1.15in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">3</span><span class="vf-t">A sperm cell</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">4</span><span class="vf-t">The three accessory glands</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">5</span><span class="vf-t">The ovary in section</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
     </tr>
     <tr>
       <td colspan="2">
         <p class="vf-cap"><span class="vf-n">6</span><span class="vf-t">From ovulation to implantation</span><span class="vf-s">Chain</span></p>
+        <p class="vf-do">Draw the steps left to right with an arrow between each one. Label every step, and on each arrow write what happens to get to the next.</p>
         <div class="vbox" style="height:1.15in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">7</span><span class="vf-t">The three layers of the uterine wall</span><span class="vf-s">Ladder</span></p>
+        <p class="vf-do">Draw the levels in order down the frame, the first one at the top. Label each level and write one line saying how it differs from the level above it.</p>
         <div class="vbox" style="height:2.7in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">8</span><span class="vf-t">The temporary structures of pregnancy</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
     </tr>
@@ -3618,7 +3663,6 @@ table.vsheet td:last-child{padding-right:0}
 </section>
 
 <section id="pw4-review" class="pw-packet" aria-labelledby="pwh5">
-
 <header class="band">
   <div class="band-inner">
     <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano Community College</p>
@@ -3743,7 +3787,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw the trunk cut down the midline, from the nasal cavity to the pelvic floor, with the diaphragm across the middle. Lay in the airway in front and the alimentary canal behind it, and mark the one region where the two share a passage. Carry the canal on through the stomach, the intestines, and the rectum. Behind all of that draw one kidney, its ureter, the bladder, and the urethra. Then add the pelvic reproductive organs for one sex and mark the point where their duct joins or crosses the urinary tract.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M4-1 The trunk in one sagittal section, four systems at once</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M4-13 The trunk in one sagittal section, four systems at once</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can point at any level of your section and name every tube crossing it, front to back, without a label.
@@ -3759,7 +3803,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw four small sections in a row: a kidney, an adrenal gland, an ovary, and a lymph node. Label the capsule, the cortex, and the medulla on each. Then fill each region with what belongs in it: renal corpuscles and convoluted tubules in the renal cortex and pyramids in the renal medulla, three zones in the adrenal cortex and modified nervous tissue in its medulla, follicles in the ovarian cortex and vessels in its medulla, and clustered lymphocytes in the cortex of the node with its hilum on the medullary side.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M4-2 Four organs with a cortex and a medulla</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M4-14 Four organs with a cortex and a medulla</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can be shown any one of the four in section and name the organ from the contents of its cortex alone.
@@ -3775,7 +3819,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw three enlarged details in a row. First an alveolus against a pulmonary capillary, with the alveolar epithelium, the fused basement membranes, and the capillary endothelium of the respiratory membrane. Second one intestinal villus, with its absorptive cells and their microvilli, the capillary bed inside it, and the lacteal down the middle. Third a renal corpuscle, with the fenestrated endothelium, the basement membrane, and the filtration slits between the podocyte processes. Under each one write what crosses and what is held back.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M4-3 Three exchange surfaces, side by side</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M4-15 Three exchange surfaces, side by side</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can say for each of the three what stays behind, and why a different barrier is built at each site.
@@ -3834,46 +3878,54 @@ table.vsheet td:last-child{padding-right:0}
 
   <div class="sheet vsheet-wrap">
     <table class="vsheet">
-    <tr><td colspan="2" class="vs-intro"><span class="vs-h">Mini visual sheet</span>One frame per chunk, shaped for what goes in it. Tall frames are ladders, wide strips are chains, squares are hubs. Draw straight onto this sheet. If a frame is too small for your handwriting, redraw that one in your notes and put the page number on the line.</td></tr>
+    <tr><td colspan="2" class="vs-intro"><h2 class="vs-h">Mini visual sheet</h2>Each frame tells you what to draw in it and what to label. Do them with your notes closed, then open your notes and correct yourself in a second color. Draw straight onto this sheet. If a frame is too small for your handwriting, draw that one in your notebook instead and write the frame number at the top of the page so you can find it again.</td></tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">1</span><span class="vf-t">Cortex against medulla, four organs</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">2</span><span class="vf-t">The four tubes of the trunk</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
     </tr>
     <tr>
       <td colspan="2">
         <p class="vf-cap"><span class="vf-n">3</span><span class="vf-t">One drop of dietary fat, villus to bloodstream</span><span class="vf-s">Chain</span></p>
+        <p class="vf-do">Draw the steps left to right with an arrow between each one. Label every step, and on each arrow write what happens to get to the next.</p>
         <div class="vbox" style="height:1.15in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">4</span><span class="vf-t">Organs with two jobs</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">5</span><span class="vf-t">The shelf behind the peritoneum</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">6</span><span class="vf-t">Exocrine against endocrine</span><span class="vf-s">Split</span></p>
+        <p class="vf-do">Draw a line down the middle of the frame. Put one on the left and the other on the right. Draw and label both, then underneath write the one difference that tells them apart.</p>
         <div class="vbox" style="height:1.8in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">7</span><span class="vf-t">The same trick in four places, surface area</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">8</span><span class="vf-t">Every sphincter and valve, in order</span><span class="vf-s">Ladder</span></p>
+        <p class="vf-do">Draw the levels in order down the frame, the first one at the top. Label each level and write one line saying how it differs from the level above it.</p>
         <div class="vbox" style="height:2.7in"></div>
       </td>
       <td></td>

@@ -400,6 +400,9 @@
   }
 
   var CSS = [
+/* Never print: the launcher, the panel and the scrim are fixed overlays,
+   so on any page saved or printed to PDF they land on top of the content. */
+'@media print{.bd-launch,.bd-panel,.bd-scrim{display:none !important}}',
 '.bd-launch{position:fixed;left:18px;bottom:18px;z-index:2147483000;display:inline-flex;align-items:center;gap:9px;',
 '  background:#0B1530;color:#fff;border:0;border-radius:999px;padding:12px 18px 12px 14px;cursor:pointer;',
 '  font:800 14px/1 "Plus Jakarta Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;letter-spacing:-.01em;',

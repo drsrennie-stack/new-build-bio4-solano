@@ -46,6 +46,10 @@
   }
 
   var CSS = ''
+  /* Never print. This is a fixed overlay, so on any page saved or printed
+     to PDF it lands on top of the content. It was printing across a
+     drawing frame in the module packets. */
+  + '@media print{.dcm{display:none !important;}}'
   + '.dcm{position:fixed;left:14px;bottom:74px;z-index:2147482000;max-width:min(330px,calc(100vw - 28px));'
   +   'display:flex;flex-direction:column;align-items:flex-start;gap:6px;}'
   + '.dcm-bubble{background:#08101F;color:#F4EFE8;border:1px solid #C9A14A;border-radius:12px;'

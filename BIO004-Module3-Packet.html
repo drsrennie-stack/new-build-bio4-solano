@@ -411,6 +411,14 @@
 
   /* ---------- PANELS ---------- */
   .panels{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start}
+  /* Instructions on each drawing frame, and the sheet's own heading.
+     Kept in step with the worksheet pages these sections come from. */
+  .vf-do{font-size:.82rem;line-height:1.5;color:#2C3A45;margin:0 0 7px;max-width:62ch}
+  h2.vs-h{display:block;font-family:var(--font-display);font-weight:800;font-size:1.2rem;
+    color:var(--navy);margin:0 0 3px;letter-spacing:-.01em;text-transform:none;
+    line-height:1.15;padding:0;border:0;background:none}
+  .panels > .rm-sec:nth-child(n+4){grid-column:1 / -1}
+
   @media(max-width:1000px){.panels{grid-template-columns:1fr}ol.steps{grid-template-columns:1fr}}
   .panel{background:#fff;border:1px solid var(--rule);border-radius:var(--radius-card);
          overflow:hidden;box-shadow:var(--shadow-rest)}
@@ -569,12 +577,20 @@ table.vsheet td:last-child{padding-right:0}
 
     /* a CSS grid fragments badly across sheets and leaves blank pages.
        A table fragments column by column, which is what these panels need. */
-    .panels{display:table;width:100%;table-layout:fixed;border-collapse:collapse}
-    .panel{display:table-cell;width:33.33%;vertical-align:top;
-           border:0;border-right:1px solid var(--navy);border-radius:0;box-shadow:none;
-           overflow:visible;padding:0 11pt;break-inside:auto}
-    .panel:first-child{padding-left:0}
-    .panel:last-child{border-right:0;padding-right:0}
+    /* Was a three-column table, which squeezed the Draw it boxes into a
+       third of a column. Each panel prints full width now and Draw it
+       starts its own sheet, matching the standalone pre-work pages. */
+    .panels{display:block;width:100%}
+    .panel{display:block;width:100%;border:0;border-radius:0;box-shadow:none;
+           overflow:visible;padding:0;margin:0 0 14pt;break-inside:auto}
+    .panel:nth-child(2){break-before:page;break-after:page;margin-bottom:0}
+    .panel:nth-child(2) h3{margin:7pt 0 2pt;font-size:8.8pt}
+    .panel:nth-child(2) h4{margin:5pt 0 2pt;font-size:8.2pt}
+    .panel:nth-child(2) p{font-size:7.9pt;margin-bottom:3pt}
+    .panel:nth-child(2) .dump{padding:4pt 6pt;margin-bottom:4pt}
+    .panel:nth-child(2) .dump p{font-size:7.5pt;margin:0}
+    .panel:nth-child(2) .check{padding:4pt 6pt;font-size:7.4pt;margin-top:3pt}
+    .vf-do{font-size:7.4pt;margin:0 0 4pt;line-height:1.4}
     .panel-head{background:#fff;color:var(--navy);padding:0 0 5pt;margin-bottom:7pt;
                 border-bottom:1.2px solid var(--navy);break-after:avoid}
     .panel-head h2{color:var(--navy);font-size:11.6pt}
@@ -593,9 +609,10 @@ table.vsheet td:last-child{padding-right:0}
     table.work td{padding:2pt 3pt;height:22pt}
     table.work tr{break-inside:avoid}
 
-    .box{height:100pt;margin:6pt 0 5pt;border-radius:4pt}
-    .box.tall{height:150pt}
-    .box.short{height:62pt}
+    /* full sheet width now, so the box gets real height */
+    .box{height:300pt;margin:6pt 0 5pt;border-radius:4pt}
+    .box.tall{height:300pt}
+    .box.short{height:255pt}
     .task,.dump,.check,.worked{border-radius:4pt;break-inside:avoid}
     .task{padding:7pt 8pt;margin-bottom:8pt}
     .dump{padding:6pt 7pt;margin-bottom:7pt}
@@ -2150,7 +2167,6 @@ table.vsheet td:last-child{padding-right:0}
     <div class="landscape">
 
 <section id="pw3-muscle" class="pw-packet" aria-labelledby="pwh1">
-
 <header class="band">
   <div class="band-inner">
     <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano Community College</p>
@@ -2275,7 +2291,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw one sarcomere large, Z disc to Z disc. Lay in the thick filaments anchored at the M line and the thin filaments anchored at both Z discs. Now shade and label the A band, both I bands, the H zone, the M line, and the zone of overlap. Add titin running Z disc to M line.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M3-1 A sarcomere, fully labelled</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M3-4 A sarcomere, fully labelled</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can say which regions narrow when the muscle shortens, and which one never changes, and point to why on your own drawing.
@@ -2291,7 +2307,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw a muscle cut across. Outline the whole muscle with the epimysium, divide the inside into fascicles each ringed by perimysium, and draw a handful of fibers inside one fascicle each ringed by endomysium. Then draw the muscle from the side and show all three sheaths merging into the tendon at the end.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M3-2 A muscle in cross section, from sheath to fiber</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M3-5 A muscle in cross section, from sheath to fiber</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can trace a line with your finger from inside one fiber all the way to the bone without lifting it off the page.
@@ -2307,7 +2323,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw the back of the trunk and scapula. Lay in trapezius and latissimus dorsi as the superficial layer on the left half. On the right half draw them peeled away to show levator scapulae, both rhomboids, and the rotator cuff on the scapula. Mark the origin and insertion of each with a dot and a line.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M3-3 The posterior shoulder and back, in layers, lab prep</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M3-6 The posterior shoulder and back, in layers, lab prep</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can name what happens to the scapula when each muscle you drew contracts, without reading the label.
@@ -2366,44 +2382,52 @@ table.vsheet td:last-child{padding-right:0}
 
   <div class="sheet vsheet-wrap">
     <table class="vsheet">
-    <tr><td colspan="2" class="vs-intro"><span class="vs-h">Mini visual sheet</span>One frame per chunk, shaped for what goes in it. Tall frames are ladders, wide strips are chains, squares are hubs. Draw straight onto this sheet. If a frame is too small for your handwriting, redraw that one in your notes and put the page number on the line.</td></tr>
+    <tr><td colspan="2" class="vs-intro"><h2 class="vs-h">Mini visual sheet</h2>Each frame tells you what to draw in it and what to label. Do them with your notes closed, then open your notes and correct yourself in a second color. Draw straight onto this sheet. If a frame is too small for your handwriting, draw that one in your notebook instead and write the frame number at the top of the page so you can find it again.</td></tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">1</span><span class="vf-t">Levels of muscle organization</span><span class="vf-s">Ladder</span></p>
+        <p class="vf-do">Draw the levels in order down the frame, the first one at the top. Label each level and write one line saying how it differs from the level above it.</p>
         <div class="vbox" style="height:2.7in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">2</span><span class="vf-t">The sarcomere</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">3</span><span class="vf-t">Thick against thin filament</span><span class="vf-s">Split</span></p>
+        <p class="vf-do">Draw a line down the middle of the frame. Put one on the left and the other on the right. Draw and label both, then underneath write the one difference that tells them apart.</p>
         <div class="vbox" style="height:1.8in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">4</span><span class="vf-t">The three muscle tissues</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">5</span><span class="vf-t">Fascicle arrangement</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">6</span><span class="vf-t">The three lever classes</span><span class="vf-s">Ladder</span></p>
+        <p class="vf-do">Draw the levels in order down the frame, the first one at the top. Label each level and write one line saying how it differs from the level above it.</p>
         <div class="vbox" style="height:2.7in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">7</span><span class="vf-t">Superficial back and anterior thorax, lab prep</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">8</span><span class="vf-t">The rotator cuff and the shoulder, lab prep</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
     </tr>
@@ -2414,7 +2438,6 @@ table.vsheet td:last-child{padding-right:0}
 </section>
 
 <section id="pw3-heart" class="pw-packet" aria-labelledby="pwh2">
-
 <header class="band">
   <div class="band-inner">
     <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano Community College</p>
@@ -2618,38 +2641,44 @@ table.vsheet td:last-child{padding-right:0}
 
   <div class="sheet vsheet-wrap">
     <table class="vsheet">
-    <tr><td colspan="2" class="vs-intro"><span class="vs-h">Mini visual sheet</span>One frame per chunk, shaped for what goes in it. Tall frames are ladders, wide strips are chains, squares are hubs. Draw straight onto this sheet. If a frame is too small for your handwriting, redraw that one in your notes and put the page number on the line.</td></tr>
+    <tr><td colspan="2" class="vs-intro"><h2 class="vs-h">Mini visual sheet</h2>Each frame tells you what to draw in it and what to label. Do them with your notes closed, then open your notes and correct yourself in a second color. Draw straight onto this sheet. If a frame is too small for your handwriting, draw that one in your notebook instead and write the frame number at the top of the page so you can find it again.</td></tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">1</span><span class="vf-t">The heart wall and pericardium</span><span class="vf-s">Ladder</span></p>
+        <p class="vf-do">Draw the levels in order down the frame, the first one at the top. Label each level and write one line saying how it differs from the level above it.</p>
         <div class="vbox" style="height:2.7in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">2</span><span class="vf-t">The four chambers</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">3</span><span class="vf-t">The four valves</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
     </tr>
     <tr>
       <td colspan="2">
         <p class="vf-cap"><span class="vf-n">4</span><span class="vf-t">The pathway of blood, nine steps</span><span class="vf-s">Chain</span></p>
+        <p class="vf-do">Draw the steps left to right with an arrow between each one. Label every step, and on each arrow write what happens to get to the next.</p>
         <div class="vbox" style="height:1.15in"></div>
       </td>
     </tr>
     <tr>
       <td colspan="2">
         <p class="vf-cap"><span class="vf-n">5</span><span class="vf-t">The conduction pathway, six steps</span><span class="vf-s">Chain</span></p>
+        <p class="vf-do">Draw the steps left to right with an arrow between each one. Label every step, and on each arrow write what happens to get to the next.</p>
         <div class="vbox" style="height:1.15in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">6</span><span class="vf-t">Coronary circulation</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
       <td></td>
@@ -2661,7 +2690,6 @@ table.vsheet td:last-child{padding-right:0}
 </section>
 
 <section id="pw3-vessels" class="pw-packet" aria-labelledby="pwh3">
-
 <header class="band">
   <div class="band-inner">
     <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano Community College</p>
@@ -2786,7 +2814,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw the two vessels beside each other, cut across. Label all three tunics in each, and draw the internal and external elastic laminae where they belong. Make the artery wall thick with a round lumen and the vein wall thin with a wide, collapsed lumen. Add a valve to the vein and vasa vasorum to the externa of both.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M3-1 An artery and a vein, side by side in cross section</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M3-7 An artery and a vein, side by side in cross section</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           Someone shows you an unlabelled slide and you name the vessel in under five seconds, and can say which feature decided it.
@@ -2802,7 +2830,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw a simple fetus with the heart, liver, and lungs marked, and the placenta beside it. Draw the umbilical vein in, the ductus venosus past the liver, the foramen ovale between the atria, the ductus arteriosus between the pulmonary trunk and the aorta, and the two umbilical arteries out. Arrow the whole route. Then in a second color write the adult remnant beside each shunt.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M3-2 The fetal circulation, with the three shunts</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M3-8 The fetal circulation, with the three shunts</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can explain why each shunt exists by pointing at the organ it bypasses and saying what that organ is not yet doing.
@@ -2818,7 +2846,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw a field of a blood smear. Fill most of it with biconcave erythrocytes, showing the pale center. Add one of each leukocyte, drawn by its nucleus: multi-lobed neutrophil, bilobed eosinophil, granule-obscured basophil, round-nucleus lymphocyte, kidney-shaped monocyte. Scatter platelets between them. Label each and note its relative number.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M3-3 A blood smear</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M3-9 A blood smear</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can identify each cell from the nucleus alone, with the labels covered.
@@ -2877,46 +2905,54 @@ table.vsheet td:last-child{padding-right:0}
 
   <div class="sheet vsheet-wrap">
     <table class="vsheet">
-    <tr><td colspan="2" class="vs-intro"><span class="vs-h">Mini visual sheet</span>One frame per chunk, shaped for what goes in it. Tall frames are ladders, wide strips are chains, squares are hubs. Draw straight onto this sheet. If a frame is too small for your handwriting, redraw that one in your notes and put the page number on the line.</td></tr>
+    <tr><td colspan="2" class="vs-intro"><h2 class="vs-h">Mini visual sheet</h2>Each frame tells you what to draw in it and what to label. Do them with your notes closed, then open your notes and correct yourself in a second color. Draw straight onto this sheet. If a frame is too small for your handwriting, draw that one in your notebook instead and write the frame number at the top of the page so you can find it again.</td></tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">1</span><span class="vf-t">The three tunics</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">2</span><span class="vf-t">The five vessel types</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">3</span><span class="vf-t">Artery against vein, on a slide</span><span class="vf-s">Split</span></p>
+        <p class="vf-do">Draw a line down the middle of the frame. Put one on the left and the other on the right. Draw and label both, then underneath write the one difference that tells them apart.</p>
         <div class="vbox" style="height:1.8in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">4</span><span class="vf-t">The three capillary types</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
     </tr>
     <tr>
       <td colspan="2">
         <p class="vf-cap"><span class="vf-n">5</span><span class="vf-t">Fetal circulation, placenta to placenta</span><span class="vf-s">Chain</span></p>
+        <p class="vf-do">Draw the steps left to right with an arrow between each one. Label every step, and on each arrow write what happens to get to the next.</p>
         <div class="vbox" style="height:1.15in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">6</span><span class="vf-t">Fetal shunt to adult remnant</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">7</span><span class="vf-t">Blood, composition</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">8</span><span class="vf-t">The five leukocytes</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
       <td></td>
@@ -2928,7 +2964,6 @@ table.vsheet td:last-child{padding-right:0}
 </section>
 
 <section id="pw3-uevn" class="pw-packet" aria-labelledby="pwh4">
-
 <header class="band">
   <div class="band-inner">
     <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano Community College</p>
@@ -3041,7 +3076,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw the trunk outline and one arm. Start at the aortic arch and draw all three branches, correctly asymmetrical. Follow the right side out: subclavian, axillary, brachial, then radial and ulnar, then both palmar arches. Mark the first rib, the lower border of teres major, and the cubital fossa as the three landmarks where names change. Add the deep brachial artery in the radial groove.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M3-1 The arterial tree of the upper limb</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M3-10 The arterial tree of the upper limb</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can name any artery on your drawing and say what it was called one segment earlier and what landmark changed it.
@@ -3057,7 +3092,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw C5 through T1 as five lines on the left. Merge them into three trunks, split each trunk into two divisions, gather the divisions into three cords, and bring the cords to the five terminal nerves. Label every level. Then draw the axillary artery through the middle and show why the cords are named lateral, posterior, and medial.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M3-2 The brachial plexus, roots to branches</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M3-11 The brachial plexus, roots to branches</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can cover your labels and rebuild the whole plexus from the counts alone: five, three, six, three, five.
@@ -3073,7 +3108,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw the arm cut across at mid-shaft. Put the humerus in the middle and divide the surrounding tissue into anterior and posterior compartments with the intermuscular septa. Fill in the muscles of each. Then place the brachial artery and median nerve in the anterior compartment and the radial nerve with the deep brachial artery in the radial groove against the bone.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M3-3 A cross section of the arm</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M3-12 A cross section of the arm</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can explain from your section why a mid-shaft humeral fracture produces wrist drop and not weak elbow flexion.
@@ -3132,36 +3167,42 @@ table.vsheet td:last-child{padding-right:0}
 
   <div class="sheet vsheet-wrap">
     <table class="vsheet">
-    <tr><td colspan="2" class="vs-intro"><span class="vs-h">Mini visual sheet</span>One frame per chunk, shaped for what goes in it. Tall frames are ladders, wide strips are chains, squares are hubs. Draw straight onto this sheet. If a frame is too small for your handwriting, redraw that one in your notes and put the page number on the line.</td></tr>
+    <tr><td colspan="2" class="vs-intro"><h2 class="vs-h">Mini visual sheet</h2>Each frame tells you what to draw in it and what to label. Do them with your notes closed, then open your notes and correct yourself in a second color. Draw straight onto this sheet. If a frame is too small for your handwriting, draw that one in your notebook instead and write the frame number at the top of the page so you can find it again.</td></tr>
     <tr>
       <td colspan="2">
         <p class="vf-cap"><span class="vf-n">1</span><span class="vf-t">Aortic arch to the hand</span><span class="vf-s">Chain</span></p>
+        <p class="vf-do">Draw the steps left to right with an arrow between each one. Label every step, and on each arrow write what happens to get to the next.</p>
         <div class="vbox" style="height:1.15in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">2</span><span class="vf-t">Right side against left side, off the arch</span><span class="vf-s">Split</span></p>
+        <p class="vf-do">Draw a line down the middle of the frame. Put one on the left and the other on the right. Draw and label both, then underneath write the one difference that tells them apart.</p>
         <div class="vbox" style="height:1.8in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">3</span><span class="vf-t">Superficial against deep veins</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">4</span><span class="vf-t">The brachial plexus, five levels</span><span class="vf-s">Ladder</span></p>
+        <p class="vf-do">Draw the levels in order down the frame, the first one at the top. Label each level and write one line saying how it differs from the level above it.</p>
         <div class="vbox" style="height:2.7in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">5</span><span class="vf-t">The five terminal nerves</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">6</span><span class="vf-t">The humerus and the nerves that hug it</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
       <td></td>

@@ -411,6 +411,14 @@
 
   /* ---------- PANELS ---------- */
   .panels{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start}
+  /* Instructions on each drawing frame, and the sheet's own heading.
+     Kept in step with the worksheet pages these sections come from. */
+  .vf-do{font-size:.82rem;line-height:1.5;color:#2C3A45;margin:0 0 7px;max-width:62ch}
+  h2.vs-h{display:block;font-family:var(--font-display);font-weight:800;font-size:1.2rem;
+    color:var(--navy);margin:0 0 3px;letter-spacing:-.01em;text-transform:none;
+    line-height:1.15;padding:0;border:0;background:none}
+  .panels > .rm-sec:nth-child(n+4){grid-column:1 / -1}
+
   @media(max-width:1000px){.panels{grid-template-columns:1fr}ol.steps{grid-template-columns:1fr}}
   .panel{background:#fff;border:1px solid var(--rule);border-radius:var(--radius-card);
          overflow:hidden;box-shadow:var(--shadow-rest)}
@@ -569,12 +577,20 @@ table.vsheet td:last-child{padding-right:0}
 
     /* a CSS grid fragments badly across sheets and leaves blank pages.
        A table fragments column by column, which is what these panels need. */
-    .panels{display:table;width:100%;table-layout:fixed;border-collapse:collapse}
-    .panel{display:table-cell;width:33.33%;vertical-align:top;
-           border:0;border-right:1px solid var(--navy);border-radius:0;box-shadow:none;
-           overflow:visible;padding:0 11pt;break-inside:auto}
-    .panel:first-child{padding-left:0}
-    .panel:last-child{border-right:0;padding-right:0}
+    /* Was a three-column table, which squeezed the Draw it boxes into a
+       third of a column. Each panel prints full width now and Draw it
+       starts its own sheet, matching the standalone pre-work pages. */
+    .panels{display:block;width:100%}
+    .panel{display:block;width:100%;border:0;border-radius:0;box-shadow:none;
+           overflow:visible;padding:0;margin:0 0 14pt;break-inside:auto}
+    .panel:nth-child(2){break-before:page;break-after:page;margin-bottom:0}
+    .panel:nth-child(2) h3{margin:7pt 0 2pt;font-size:8.8pt}
+    .panel:nth-child(2) h4{margin:5pt 0 2pt;font-size:8.2pt}
+    .panel:nth-child(2) p{font-size:7.9pt;margin-bottom:3pt}
+    .panel:nth-child(2) .dump{padding:4pt 6pt;margin-bottom:4pt}
+    .panel:nth-child(2) .dump p{font-size:7.5pt;margin:0}
+    .panel:nth-child(2) .check{padding:4pt 6pt;font-size:7.4pt;margin-top:3pt}
+    .vf-do{font-size:7.4pt;margin:0 0 4pt;line-height:1.4}
     .panel-head{background:#fff;color:var(--navy);padding:0 0 5pt;margin-bottom:7pt;
                 border-bottom:1.2px solid var(--navy);break-after:avoid}
     .panel-head h2{color:var(--navy);font-size:11.6pt}
@@ -593,9 +609,10 @@ table.vsheet td:last-child{padding-right:0}
     table.work td{padding:2pt 3pt;height:22pt}
     table.work tr{break-inside:avoid}
 
-    .box{height:100pt;margin:6pt 0 5pt;border-radius:4pt}
-    .box.tall{height:150pt}
-    .box.short{height:62pt}
+    /* full sheet width now, so the box gets real height */
+    .box{height:300pt;margin:6pt 0 5pt;border-radius:4pt}
+    .box.tall{height:300pt}
+    .box.short{height:255pt}
     .task,.dump,.check,.worked{border-radius:4pt;break-inside:avoid}
     .task{padding:7pt 8pt;margin-bottom:8pt}
     .dump{padding:6pt 7pt;margin-bottom:7pt}
@@ -2316,7 +2333,6 @@ table.vsheet td:last-child{padding-right:0}
     <div class="landscape">
 
 <section id="pw2-bone" class="pw-packet" aria-labelledby="pwh1">
-
 <header class="band">
   <div class="band-inner">
     <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano Community College</p>
@@ -2526,40 +2542,47 @@ table.vsheet td:last-child{padding-right:0}
 
   <div class="sheet vsheet-wrap">
     <table class="vsheet">
-    <tr><td colspan="2" class="vs-intro"><span class="vs-h">Mini visual sheet</span>One frame per chunk, shaped for what goes in it. Tall frames are ladders, wide strips are chains, squares are hubs. Draw straight onto this sheet. If a frame is too small for your handwriting, redraw that one in your notes and put the page number on the line.</td></tr>
+    <tr><td colspan="2" class="vs-intro"><h2 class="vs-h">Mini visual sheet</h2>Each frame tells you what to draw in it and what to label. Do them with your notes closed, then open your notes and correct yourself in a second color. Draw straight onto this sheet. If a frame is too small for your handwriting, draw that one in your notebook instead and write the frame number at the top of the page so you can find it again.</td></tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">1</span><span class="vf-t">The three cartilages</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">2</span><span class="vf-t">Gross anatomy of a long bone</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">3</span><span class="vf-t">The osteon</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">4</span><span class="vf-t">Compact against spongy bone</span><span class="vf-s">Split</span></p>
+        <p class="vf-do">Draw a line down the middle of the frame. Put one on the left and the other on the right. Draw and label both, then underneath write the one difference that tells them apart.</p>
         <div class="vbox" style="height:1.8in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">5</span><span class="vf-t">The four bone cells</span><span class="vf-s">Ladder</span></p>
+        <p class="vf-do">Draw the levels in order down the frame, the first one at the top. Label each level and write one line saying how it differs from the level above it.</p>
         <div class="vbox" style="height:2.7in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">6</span><span class="vf-t">Intramembranous against endochondral ossification</span><span class="vf-s">Split</span></p>
+        <p class="vf-do">Draw a line down the middle of the frame. Put one on the left and the other on the right. Draw and label both, then underneath write the one difference that tells them apart.</p>
         <div class="vbox" style="height:1.8in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">7</span><span class="vf-t">The five zones of the growth plate</span><span class="vf-s">Ladder</span></p>
+        <p class="vf-do">Draw the levels in order down the frame, the first one at the top. Label each level and write one line saying how it differs from the level above it.</p>
         <div class="vbox" style="height:2.7in"></div>
       </td>
       <td></td>
@@ -2571,12 +2594,11 @@ table.vsheet td:last-child{padding-right:0}
 </section>
 
 <section id="pw2-axial" class="pw-packet" aria-labelledby="pwh2">
-
 <header class="band">
   <div class="band-inner">
     <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano Community College</p>
     <h1>Pre-work <span class="accent">&middot; Axial Skeleton</span></h1>
-    <p class="sub">Axial Skeleton, the skull and the spine. Read both Part A chapters first. This is the largest volume of naming in the course, so the organizing is what makes it survivable.</p>
+    <p class="sub">Axial Skeleton, the skull and the spine. Read both Part A chapters first. There are more names to learn here than anywhere else in the course. Organizing them is what makes it manageable.</p>
     <div class="meta">
       <span>Module 2 &middot; 2 of 4</span>
       <span>Bring this to class</span>
@@ -2696,7 +2718,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw the skull in profile large enough to label. Outline each bone visible from the side and shade them differently: frontal, parietal, temporal, occipital, sphenoid, zygomatic, maxilla, nasal, lacrimal, mandible. Draw the four major sutures. Mark the pterion where four bones meet, the mastoid and styloid processes, the external acoustic meatus, and the zygomatic arch.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M2-1 The skull, lateral view</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M2-4 The skull, lateral view</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can put your finger on the pterion and say which four bones meet there and what runs beneath it.
@@ -2712,7 +2734,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw one vertebra looking down on it. Body at the front, then the pedicles, laminae, and the arch closing behind, with the vertebral foramen in the middle. Add the spinous process pointing back and the transverse processes to the sides, then the superior articular processes. Now redraw it twice more in a second color, once as cervical with transverse foramina and once as thoracic with costal facets.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M2-2 A typical vertebra, from above</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M2-5 A typical vertebra, from above</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           Someone hands you a loose vertebra and you can name its region from one feature without hesitating.
@@ -2728,7 +2750,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw the cage from the front. Sternum in three parts with the jugular notch, sternal angle, and xiphoid process labelled. Draw the twelve rib pairs and their costal cartilages, then bracket them: true, false, and floating. Mark the sternal angle at the level of the second rib.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M2-3 The thoracic cage</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M2-6 The thoracic cage</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can count ribs from the sternal angle the way a clinician does, and say where you would stop for each group.
@@ -2787,46 +2809,54 @@ table.vsheet td:last-child{padding-right:0}
 
   <div class="sheet vsheet-wrap">
     <table class="vsheet">
-    <tr><td colspan="2" class="vs-intro"><span class="vs-h">Mini visual sheet</span>One frame per chunk, shaped for what goes in it. Tall frames are ladders, wide strips are chains, squares are hubs. Draw straight onto this sheet. If a frame is too small for your handwriting, redraw that one in your notes and put the page number on the line.</td></tr>
+    <tr><td colspan="2" class="vs-intro"><h2 class="vs-h">Mini visual sheet</h2>Each frame tells you what to draw in it and what to label. Do them with your notes closed, then open your notes and correct yourself in a second color. Draw straight onto this sheet. If a frame is too small for your handwriting, draw that one in your notebook instead and write the frame number at the top of the page so you can find it again.</td></tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">1</span><span class="vf-t">Cranial against facial bones</span><span class="vf-s">Split</span></p>
+        <p class="vf-do">Draw a line down the middle of the frame. Put one on the left and the other on the right. Draw and label both, then underneath write the one difference that tells them apart.</p>
         <div class="vbox" style="height:1.8in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">2</span><span class="vf-t">The four sutures</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">3</span><span class="vf-t">The major foramina</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">4</span><span class="vf-t">The sphenoid</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">5</span><span class="vf-t">The four fontanelles</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">6</span><span class="vf-t">The five regions of the spine</span><span class="vf-s">Ladder</span></p>
+        <p class="vf-do">Draw the levels in order down the frame, the first one at the top. Label each level and write one line saying how it differs from the level above it.</p>
         <div class="vbox" style="height:2.7in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">7</span><span class="vf-t">Cervical, thoracic, lumbar vertebrae</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
     </tr>
     <tr>
       <td colspan="2">
         <p class="vf-cap"><span class="vf-n">8</span><span class="vf-t">The four curvatures, in developmental order</span><span class="vf-s">Chain</span></p>
+        <p class="vf-do">Draw the steps left to right with an arrow between each one. Label every step, and on each arrow write what happens to get to the next.</p>
         <div class="vbox" style="height:1.15in"></div>
       </td>
     </tr>
@@ -2837,7 +2867,6 @@ table.vsheet td:last-child{padding-right:0}
 </section>
 
 <section id="pw2-append" class="pw-packet" aria-labelledby="pwh3">
-
 <header class="band">
   <div class="band-inner">
     <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano Community College</p>
@@ -2962,7 +2991,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw the humerus twice, anterior and posterior. On the anterior view mark head, anatomical and surgical necks, greater and lesser tubercles, intertubercular sulcus, deltoid tuberosity, capitulum, trochlea, and both epicondyles. On the posterior view add the olecranon fossa and the radial groove, and mark where the radial nerve runs.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M2-1 The humerus, both views</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M2-7 The humerus, both views</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can say which forearm bone meets the capitulum and which meets the trochlea without pausing.
@@ -2978,7 +3007,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw the two bones side by side in supination, palm forward, and label radius lateral and ulna medial. Then draw them again in pronation with the radius crossed over the ulna. Mark the proximal and distal radioulnar joints and the interosseous membrane in both.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M2-2 The forearm in supination and pronation</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M2-8 The forearm in supination and pronation</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can explain which bone moves and which stays put, and name the joints that allow it.
@@ -2994,7 +3023,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw the coxal bone from the side, shading ilium, ischium, and pubis differently, and mark the acetabulum where all three meet plus the obturator foramen. Then draw the knee from the front with the patella removed: femoral condyles, tibial plateau, both menisci, both cruciate ligaments crossing, and both collateral ligaments.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M2-3 The coxal bone and the knee</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M2-9 The coxal bone and the knee</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can name the three structures of the unhappy triad on your own knee drawing and say what force causes it.
@@ -3053,46 +3082,54 @@ table.vsheet td:last-child{padding-right:0}
 
   <div class="sheet vsheet-wrap">
     <table class="vsheet">
-    <tr><td colspan="2" class="vs-intro"><span class="vs-h">Mini visual sheet</span>One frame per chunk, shaped for what goes in it. Tall frames are ladders, wide strips are chains, squares are hubs. Draw straight onto this sheet. If a frame is too small for your handwriting, redraw that one in your notes and put the page number on the line.</td></tr>
+    <tr><td colspan="2" class="vs-intro"><h2 class="vs-h">Mini visual sheet</h2>Each frame tells you what to draw in it and what to label. Do them with your notes closed, then open your notes and correct yourself in a second color. Draw straight onto this sheet. If a frame is too small for your handwriting, draw that one in your notebook instead and write the frame number at the top of the page so you can find it again.</td></tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">1</span><span class="vf-t">Bone markings vocabulary</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
     </tr>
     <tr>
       <td colspan="2">
         <p class="vf-cap"><span class="vf-n">2</span><span class="vf-t">Upper limb, proximal to distal</span><span class="vf-s">Chain</span></p>
+        <p class="vf-do">Draw the steps left to right with an arrow between each one. Label every step, and on each arrow write what happens to get to the next.</p>
         <div class="vbox" style="height:1.15in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">3</span><span class="vf-t">The scapula</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">4</span><span class="vf-t">Radius against ulna</span><span class="vf-s">Split</span></p>
+        <p class="vf-do">Draw a line down the middle of the frame. Put one on the left and the other on the right. Draw and label both, then underneath write the one difference that tells them apart.</p>
         <div class="vbox" style="height:1.8in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">5</span><span class="vf-t">The humerus</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">6</span><span class="vf-t">The coxal bone</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">7</span><span class="vf-t">Tibia against fibula</span><span class="vf-s">Split</span></p>
+        <p class="vf-do">Draw a line down the middle of the frame. Put one on the left and the other on the right. Draw and label both, then underneath write the one difference that tells them apart.</p>
         <div class="vbox" style="height:1.8in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">8</span><span class="vf-t">Carpals and tarsals</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
     </tr>
@@ -3103,12 +3140,11 @@ table.vsheet td:last-child{padding-right:0}
 </section>
 
 <section id="pw2-joints" class="pw-packet" aria-labelledby="pwh4">
-
 <header class="band">
   <div class="band-inner">
     <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano Community College</p>
     <h1>Pre-work <span class="accent">&middot; Joints</span></h1>
-    <p class="sub">Articulations and Joints. Read the Part A chapter first. Every tagged joint can be asked four ways, so practice answering all four every time.</p>
+    <p class="sub">Articulations and Joints. Read the Part A chapter first. Every joint on your list can be asked about four ways, so practice answering all four every time.</p>
     <div class="meta">
       <span>Module 2 &middot; 4 of 4</span>
       <span>Bring this to class</span>
@@ -3222,7 +3258,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw two bone ends meeting, with a gap between them. Cap each with articular cartilage. Draw the capsule wrapping the joint, with the fibrous membrane outside and the synovial membrane inside, and fill the cavity with synovial fluid. Add a meniscus between the surfaces, a fat pad, and a bursa outside the capsule. Label all of it.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M2-1 A synovial joint, sectioned</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M2-10 A synovial joint, sectioned</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can name the four jobs of synovial fluid while pointing at where it sits.
@@ -3238,7 +3274,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw the knee from the front with the patella lifted away: femoral condyles, tibial plateau, both collateral ligaments outside, both cruciates crossing inside. Then draw the tibial plateau from above and put the C-shaped medial meniscus and the O-shaped lateral meniscus in place. Mark the three structures of the unhappy triad.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M2-2 The knee, anterior and from above</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M2-11 The knee, anterior and from above</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can explain what stops the tibia sliding forward, and what happens when it fails.
@@ -3254,7 +3290,7 @@ table.vsheet td:last-child{padding-right:0}
         </div>
         <p class="hint">Draw the humeral head against the glenoid cavity and mark how much larger the head is than the socket. Add the glenoid labrum deepening the rim, the loose capsule, and the coracohumeral and glenohumeral ligaments. Then draw the four rotator cuff muscles gripping the head, and label them.</p>
         <div class="box tall"></div>
-        <p class="jrnl">In your notebook, head the page <b>M2-3 The shoulder, and why it dislocates</b> so you can find it later. Correct it in a second color.</p>
+        <p class="jrnl">In your notebook, head the page <b>M2-12 The shoulder, and why it dislocates</b> so you can find it later. Correct it in a second color.</p>
         <div class="check">
           <b>You know it when</b>
           You can say why the ligaments are not what stabilizes this joint, and name the four muscles that are.
@@ -3315,40 +3351,47 @@ table.vsheet td:last-child{padding-right:0}
 
   <div class="sheet vsheet-wrap">
     <table class="vsheet">
-    <tr><td colspan="2" class="vs-intro"><span class="vs-h">Mini visual sheet</span>One frame per chunk, shaped for what goes in it. Tall frames are ladders, wide strips are chains, squares are hubs. Draw straight onto this sheet. If a frame is too small for your handwriting, redraw that one in your notes and put the page number on the line.</td></tr>
+    <tr><td colspan="2" class="vs-intro"><h2 class="vs-h">Mini visual sheet</h2>Each frame tells you what to draw in it and what to label. Do them with your notes closed, then open your notes and correct yourself in a second color. Draw straight onto this sheet. If a frame is too small for your handwriting, draw that one in your notebook instead and write the frame number at the top of the page so you can find it again.</td></tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">1</span><span class="vf-t">Structure crossed with function</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">2</span><span class="vf-t">Fibrous joints</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">3</span><span class="vf-t">Synchondrosis against symphysis</span><span class="vf-s">Split</span></p>
+        <p class="vf-do">Draw a line down the middle of the frame. Put one on the left and the other on the right. Draw and label both, then underneath write the one difference that tells them apart.</p>
         <div class="vbox" style="height:1.8in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">4</span><span class="vf-t">A synovial joint in section</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">5</span><span class="vf-t">The six synovial types</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">6</span><span class="vf-t">The movements</span><span class="vf-s">Grid</span></p>
+        <p class="vf-do">Draw a grid. List the things being compared down the left side, write the features you are comparing them on across the top, and fill in every box.</p>
         <div class="vbox" style="height:1.95in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">7</span><span class="vf-t">Osteoarthritis against rheumatoid arthritis</span><span class="vf-s">Split</span></p>
+        <p class="vf-do">Draw a line down the middle of the frame. Put one on the left and the other on the right. Draw and label both, then underneath write the one difference that tells them apart.</p>
         <div class="vbox" style="height:1.8in"></div>
       </td>
       <td></td>
