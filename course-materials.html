@@ -4,38 +4,36 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Course Materials &middot; BIO 004 Human Anatomy &middot; Fall 2026</title>
-<meta name="description" content="Every pre-work sheet, set of notes, workbook, concept video page and slide deck in BIO 004, grouped by module.">
+<meta name="description" content="Everything written for BIO 004, in one place, grouped by module: pre-work sheets, notes, concept videos, workbooks, slide decks and practice exams.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <!-- ============================================================
-     WHY THIS PAGE EXISTS
+     COURSE MATERIALS
 
-     The notes, the pre-work sheets, the workbooks, the concept
-     video pages and the slide decks all existed and all were
-     reachable, but only one class day at a time through the
-     calendar. That is right for "what do I do tonight" and useless
-     for "where is the bone tissue notes page", which is the
-     question a student actually asks in week nine.
+     The layout is Dr. Rennie's, from the Claude Design file
+     course-materials-redesign.html: top bar, module rail on the
+     left, and each module as a stack of category rows, where a row
+     is a tag, the titles in that category, and a count on the
+     right. The practice exam sits in a lifted card of its own.
 
-     It is deliberately NOT a second calendar. There are no dates
-     here and no sense of what is due. It answers one question:
-     where does a thing live. What is due is the calendar's job and
-     it stays the calendar's job.
+     WHAT IS DIFFERENT HERE
+     The design file carried five example links. This is the same
+     layout driven by the real schedule, so every one of the 148
+     pieces of material is reachable and every title in a row is
+     its own link rather than plain text.
 
-     NOTHING HERE IS TYPED
+     WHERE THE DATA COMES FROM
+     session-links.js, read fresh on every load, so a sheet added
+     to a class day appears here with no edit to this file. Items
+     are deduplicated on the page they point at and held at the
+     earliest week they appear, because something that comes back
+     for revision in week 9 was still first set in week 8.
 
-     Built at load from session-links.js, grouped into modules by
-     schedule-fall2026.js, exactly like lab-sprints.html. Add a
-     notes page to a class day and it appears here. A hand-typed
-     index is a second copy of the schedule and it is wrong the
-     first time anything moves.
-
-     BOUNDARY WEEKS
-     Modules share weeks 4, 7 and 14. On a shared week the later
-     module wins, because the overlap week is the handover and
-     material taught in it belongs to the module that is opening.
+     Boundary weeks 4, 7 and 14 belong to the LATER module: the
+     overlap week is the handover. Same rule as the calendar, the
+     lab sprint list and the exam modules page.
      ============================================================ -->
 
 <style>
@@ -43,7 +41,7 @@
     --navy:#08101F; --terra-dark:#6B1616;
     --gold:#DCB45C; --gold-text:#6F5316;
     --white:#FFFFFF; --offwhite:#FAFAF9;
-    --ink-3:#4A5763;
+    --ink-3:#4A5763; --line:#ECEAE6;
     --radius:8px;
     --rest:0 1px 3px rgba(0,0,0,0.08);
     --hover:0 10px 22px rgba(0,0,0,0.12);
@@ -54,139 +52,171 @@
   html{scroll-behavior:smooth}
   body{margin:0;font-family:var(--font);color:var(--navy);background:var(--offwhite);
        line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1000px;margin:0 auto;padding:28px 20px 90px}
   .skip{position:absolute;left:-9999px;background:var(--terra-dark);color:#fff;padding:10px 16px;
-        border-radius:8px;font-weight:700;z-index:50}
+        border-radius:8px;font-weight:700;z-index:60}
   .skip:focus{left:16px;top:16px}
   :focus-visible{outline:3px solid var(--terra-dark);outline-offset:2px;border-radius:6px}
   .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
       clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
-  .cover{padding:6px 0 18px}
-  .cover-eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
-                 color:var(--terra-dark);margin:0 0 10px}
-  h1{font-weight:800;font-size:clamp(26px,4.6vw,40px);line-height:1.04;letter-spacing:-.02em;margin:0 0 12px}
-  h1 span{color:var(--gold-text)}
-  .lede{font-size:17px;color:var(--ink-3);margin:0 0 6px;max-width:66ch}
+  .topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+          padding:16px 30px;background:var(--white);border-bottom:1px solid var(--line)}
+  .topbar .crumb{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
+                 color:var(--terra-dark)}
+  .topnav{display:flex;gap:20px;font-size:13px;font-weight:700}
+  .topnav a{color:var(--ink-3);text-decoration:none}
+  .topnav a:hover{color:var(--navy)}
+  .topnav a[aria-current="page"]{color:var(--navy);border-bottom:3px solid var(--gold);padding-bottom:3px}
 
-  .controls{display:flex;flex-wrap:wrap;gap:9px;margin:20px 0 6px;align-items:center}
+  .wrap{max-width:1100px;margin:0 auto;padding:26px 30px 90px}
+  h1{font-weight:800;font-size:clamp(26px,4.6vw,34px);line-height:1.04;letter-spacing:-.02em;margin:0 0 8px}
+  h1 span{color:var(--terra-dark)}
+  .lede{font-size:15px;color:var(--ink-3);margin:0;max-width:66ch}
+
+  .controls{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:18px 0 20px}
   .controls .lbl{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;
                  color:var(--terra-dark);margin-right:2px}
-  .pill{background:#fff;color:var(--navy);font-family:var(--font);font-weight:700;font-size:13.5px;
-        padding:10px 15px;border:0;border-radius:999px;box-shadow:var(--rest);cursor:pointer;
-        transition:var(--t)}
+  .pill{background:var(--white);color:var(--navy);font-family:var(--font);font-weight:700;
+        font-size:13.5px;padding:10px 15px;border:0;border-radius:999px;box-shadow:var(--rest);
+        cursor:pointer;transition:var(--t)}
   .pill:hover{transform:translateY(-2px);box-shadow:var(--hover)}
   .pill[aria-pressed="true"]{background:var(--navy);color:#fff}
-  .find{width:min(320px,100%);background:#fff;color:var(--navy);border:0;border-radius:999px;
-        padding:11px 16px;font-family:var(--font);font-size:14.5px;box-shadow:var(--rest)}
-  .find:focus{box-shadow:inset 0 0 0 2px var(--terra-dark)}
+  .pill.exam{color:var(--gold-text)}
+  .pill.exam[aria-pressed="true"]{color:#fff}
+  .find{width:min(280px,100%);margin-left:auto;background:var(--white);color:var(--navy);border:0;
+        border-radius:999px;padding:11px 16px;font-family:var(--font);font-size:14.5px;
+        box-shadow:var(--rest)}
+  .find:focus{outline:none;box-shadow:inset 0 0 0 2px var(--terra-dark)}
+  .count-line{font-size:13.5px;color:var(--ink-3);margin:0 0 16px}
 
-  /* MODULES AS COLLAPSIBLE CARDS, IN COLUMNS.
+  .layout{display:grid;grid-template-columns:250px 1fr;gap:20px;align-items:start}
+  @media (max-width:820px){ .layout{grid-template-columns:1fr} .modnav{position:static !important} }
 
-     Five modules laid out as full-width open panels was a very long
-     page of mostly white, and no way to tell at a glance which one
-     you were in. They are cards now, in as many columns as the
-     window allows, closed until you open one. align-items:start
-     keeps each card its own height so an open one does not stretch
-     its neighbour.
+  /* THE RAIL.
 
-     The open card goes navy, header and all, so the one you are
-     reading is obvious from across the page. */
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));
-        gap:16px;align-items:start;margin-top:20px}
-  .mod{background:#fff;border-radius:12px;box-shadow:var(--rest);overflow:hidden;
-       transition:box-shadow 180ms ease}
-  .mod.open{box-shadow:0 16px 34px -12px rgba(8,16,31,.35)}
+     The selected module lifts out of the list rather than just
+     changing color: it overhangs both edges by 8px and carries a
+     real shadow, so on a page that is otherwise flat white cards
+     the thing you are reading is the one object standing up. */
+  .modnav{background:var(--white);border-radius:var(--radius);box-shadow:var(--rest);
+          padding:16px 0;position:sticky;top:18px}
+  .modnav .lbl{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+               color:var(--terra-dark);padding:0 18px 10px;display:block}
+  .modnav a{display:block;padding:11px 18px;text-decoration:none;color:var(--navy)}
+  .modnav a:hover{background:#F6F5F2}
+  /* The design file had this at #9AA2AB, which is 2.58:1 on white
+     and fails AA. #5F6875 keeps the same quiet-grey role at 5.64:1,
+     which is the closest I can get to the intended weight without
+     dropping below the floor. */
+  .modnav a .k{display:block;font-size:11px;font-weight:800;color:#5F6875}
+  .modnav a .t{display:block;font-size:13px;font-weight:600;line-height:1.3;margin-top:3px}
+  .modnav a.active{background:var(--navy);color:#fff;border-radius:var(--radius);margin:0 -8px;
+                   padding:13px 18px;box-shadow:0 10px 24px rgba(8,16,31,.35),0 2px 6px rgba(0,0,0,.15);
+                   transform:translateY(-2px);position:relative;transition:var(--t)}
+  .modnav a.active:hover{background:var(--navy)}
+  .modnav a.active .k{color:var(--gold)}
+  .modnav a.active .t{font-weight:700}
 
-  .mod-h{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;
-         background:none;border:0;padding:20px 22px;cursor:pointer;font-family:var(--font);
-         color:var(--navy);transition:background 180ms ease,color 180ms ease}
-  .mod.open .mod-h{background:var(--navy);color:#fff}
-  .mod-h:hover{background:#F1F4F7}
-  .mod.open .mod-h:hover{background:#0E1A2E}
-  .mod-h .txt{flex:1;min-width:0}
-  .mod-k{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;
-         color:var(--terra-dark);margin:0 0 4px;display:block}
-  .mod.open .mod-k{color:var(--gold)}
-  .mod-h h2{font-size:18px;font-weight:800;letter-spacing:-.02em;margin:0 0 4px;line-height:1.2}
-  .mod .sub{font-size:13.5px;color:var(--ink-3);margin:0}
-  .mod.open .sub{color:#C6CEDA}
-  .chev{flex:none;width:26px;height:26px;margin-top:2px;display:flex;align-items:center;
-        justify-content:center;transition:transform 200ms ease}
-  .mod.open .chev{transform:rotate(180deg)}
-  .chev svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.4;
-            stroke-linecap:round;stroke-linejoin:round}
-  .mod-b{padding:4px 22px 22px}
+  .mods{display:flex;flex-direction:column;gap:12px}
+  .mod{background:var(--white);border-radius:var(--radius);box-shadow:var(--rest)}
+  .mod-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;width:100%;
+         background:none;border:0;font-family:var(--font);text-align:left;cursor:pointer;
+         padding:18px 22px 6px}
+  .mod:not(.open) .mod-h{padding:16px 22px}
+  .mod-h .title{font-size:19px;font-weight:800;letter-spacing:-.02em;color:var(--navy);margin:0}
+  .mod:not(.open) .mod-h .title{font-size:16px}
+  .mod-h .count{font-size:12px;font-weight:700;color:var(--gold-text);white-space:nowrap}
+  .mod:not(.open) .mod-h .count{color:var(--terra-dark);font-size:13px;font-weight:800}
+  .mod-sub{font-size:12.5px;color:var(--ink-3);margin:3px 0 12px;padding:0 22px}
+  .mod:not(.open) .mod-sub{padding:0 22px 16px;margin:0}
+  .mod-b{padding:0 22px 6px}
   .mod:not(.open) .mod-b{display:none}
 
-  .kind{margin:14px 0 0}
-  .kind:last-child{margin-bottom:0}
-  .kind h3{font-size:15px;font-weight:800;margin:0 0 4px}
-  .kind .kd{font-size:13.5px;color:var(--ink-3);margin:0 0 10px}
-  .items{list-style:none;margin:0;padding:0;display:grid;
-         grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:9px}
-  .items a{display:block;background:var(--offwhite);color:var(--navy);text-decoration:none;
-           padding:13px 15px;border-radius:10px;box-shadow:var(--rest);transition:var(--t);
-           font-weight:700;font-size:14.5px;height:100%}
-  .items a:hover{transform:translateY(-2px);box-shadow:var(--hover)}
-  .empty{font-size:14px;color:var(--ink-3);margin:0}
+  .row{display:grid;grid-template-columns:126px 1fr auto;align-items:center;gap:14px;
+       padding:11px 0;border-top:1px solid #F0EEE9}
+  .tag{font-size:10.5px;font-weight:800;letter-spacing:.06em;background:var(--navy);
+       color:var(--offwhite);border-radius:6px;padding:5px 0;text-align:center}
+  .tag.prework{background:var(--terra-dark)}
+  .row .what{font-size:14.5px;font-weight:700}
+  .row .what a{color:var(--navy);text-decoration:none}
+  .row .what a:hover{text-decoration:underline}
+  .row .what .sep{font-weight:500;color:var(--ink-3);padding:0 2px}
+  .row .what a.more{font-weight:500;color:var(--ink-3)}
+  .row .go{font-size:12.5px;font-weight:800;color:var(--terra-dark);white-space:nowrap;
+           background:none;border:0;font-family:var(--font);cursor:pointer;padding:4px 2px}
+  .row .go:hover{color:var(--navy)}
 
-  .foot-note{background:#fff;border-radius:var(--radius);padding:18px 20px;margin-top:24px;
-             box-shadow:var(--rest);font-size:14.5px;color:var(--ink-3)}
-  .foot-note b{color:var(--navy)}
-  .back{display:inline-flex;gap:8px;align-items:center;background:var(--navy);color:#fff;
-        text-decoration:none;font-weight:800;font-size:14.5px;padding:12px 20px;border-radius:9px;
-        box-shadow:var(--rest);transition:var(--t);margin-top:18px}
-  .back:hover{transform:translateY(-2px);box-shadow:var(--hover)}
-  footer{margin-top:34px;padding-top:20px;color:var(--ink-3);font-size:14px;
-         box-shadow:inset 0 1px 0 rgba(8,16,31,.10)}
+  /* The practice exam is the one thing on this page with a deadline
+     attached, so it is the one thing that leaves the flat stack. */
+  .exam-card{display:grid;grid-template-columns:126px 1fr auto;align-items:center;gap:14px;
+             padding:13px 14px;margin:8px -14px 14px;background:var(--white);border-radius:var(--radius);
+             box-shadow:0 10px 26px rgba(0,0,0,.18),0 2px 6px rgba(0,0,0,.10);
+             transform:translateY(-2px);transition:var(--t)}
+  .exam-card:hover{transform:translateY(-4px);
+             box-shadow:0 14px 30px rgba(0,0,0,.20),0 3px 8px rgba(0,0,0,.10)}
+  /* gold-text on gold is 3.67:1 in the design file, under the 4.5
+     floor. Navy on gold is 9.71:1 and reads as the same badge. */
+  .exam-card .tag{background:var(--gold);color:var(--navy)}
+  .exam-card .what{font-size:14.5px;font-weight:800}
+  .exam-card .note{display:block;font-size:12px;color:var(--gold-text);margin-top:1px;font-weight:500}
+  .exam-card .go{font-size:12.5px;font-weight:800;color:var(--gold-text);text-decoration:none;
+                 white-space:nowrap}
+  .exam-card .go:hover{color:var(--navy)}
+
+  .empty{font-size:14px;color:var(--ink-3);padding:14px 0 4px;margin:0}
+  footer{max-width:1100px;margin:0 auto;padding:0 30px 40px;color:var(--ink-3);font-size:13px}
+
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
-    .pill,.items a,.back,.mod,.mod-h,.chev{transition:none}
-    .pill:hover,.items a:hover,.back:hover{transform:none}
+    .pill,.modnav a.active,.exam-card{transition:none}
+    .pill:hover,.exam-card:hover{transform:translateY(-2px)}
   }
   @media print{
-    .controls,.back,.chev{display:none}
-    .mod,.items a{box-shadow:none}
-    .mod-b{display:block !important}
-    .mod.open .mod-h{background:none;color:var(--navy)}
-    .mod.open .mod-k{color:var(--terra-dark)}
-    .mod.open .sub{color:var(--ink-3)}
+    .topbar,.controls,.modnav{display:none !important}
+    .layout{grid-template-columns:1fr}
+    .mod,.exam-card{box-shadow:none;transform:none}
+    .mod:not(.open) .mod-b{display:block}
   }
 </style>
 </head>
 <body>
-<a class="skip" href="#main">Skip to the materials</a>
+<a class="skip" href="#mods">Skip to the materials</a>
+
+<div class="topbar">
+  <span class="crumb">BIO 004 &middot; Human Anatomy &middot; Fall 2026</span>
+  <nav class="topnav" aria-label="Course sections">
+    <a href="bio004-course-calendar.html" target="_top">Calendar</a>
+    <a href="course-materials.html" aria-current="page" target="_top">Materials</a>
+    <a href="welcome.html" target="_top">Welcome</a>
+  </nav>
+</div>
 
 <div class="wrap">
 <main id="main">
-  <section class="cover">
-    <p class="cover-eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
-    <h1>Course <span>materials</span></h1>
-    <p class="lede">Everything written for this course, in one place, grouped by module. Pre-work sheets,
-       notes, workbooks, concept videos and slide decks.</p>
-    <p class="lede">This page answers where something lives. For what is due and when, use the calendar.</p>
-  </section>
+  <h1>Course <span>materials</span></h1>
+  <p class="lede">Everything written for this course, in one place, grouped by module. This page
+     answers where something lives. For what is due, use the calendar.</p>
 
   <div class="controls">
-    <span class="lbl" id="filt-l">Show</span>
-    <div role="group" aria-labelledby="filt-l" id="kindFilter" style="display:contents"></div>
+    <span class="lbl">Show</span>
+    <div id="kindFilter" style="display:flex;flex-wrap:wrap;gap:9px" role="group" aria-label="Filter by type of material"></div>
     <label class="sr" for="find">Search the materials</label>
-    <input class="find" id="find" type="search" placeholder="Search titles, for example bone or skull">
+    <input class="find" id="find" type="search" placeholder="Search the materials" autocomplete="off">
   </div>
-  <p class="lede" id="count" role="status" style="font-size:14px;margin:10px 0 0"></p>
+  <p class="count-line" id="count" role="status"></p>
 
-  <div class="grid" id="out"></div>
-
-  <div class="foot-note" id="note"></div>
-
-  <a class="back" href="bio004-course-calendar.html">Back to the calendar</a>
-
-  <footer>
-    <p>Dr. Sharilyn Rennie &middot; BIO 004 Human Anatomy &middot; Solano Community College</p>
-  </footer>
+  <div class="layout">
+    <nav class="modnav" id="modnav" aria-label="Jump to a module">
+      <span class="lbl">Modules</span>
+    </nav>
+    <div class="mods" id="mods"></div>
+  </div>
 </main>
 </div>
+
+<footer>
+  <p>Dr. Sharilyn Rennie &middot; BIO 004 Human Anatomy &middot; Solano Community College</p>
+</footer>
 
 <script src="schedule-fall2026.js"></script>
 <script src="session-links.js"></script>
@@ -205,22 +235,16 @@
      sheet, read the notes, watch the videos, work the workbook. The
      slides come last because they are what happened in the room. */
   var KINDS = [
-    { k:'sheets',    id:'prework',   name:'Pre-work sheets',
-      desc:'Worked by hand the night before class. Class opens with a brain dump on it.' },
-    { k:'notes',     id:'notes',     name:'Notes',
-      desc:'The reading for this course. Written for it, not lifted from a textbook.' },
-    { k:'videos',    id:'videos',    name:'Concept videos',
-      desc:'Short walkthroughs. Watch with your notes open and add to them.' },
-    { k:'workbooks', id:'workbooks', name:'Workbooks',
-      desc:'Practice you work against the notes, not a second set of notes.' },
-    { k:'slides',    id:'slides',    name:'Slide decks',
-      desc:'What went up on the screen in class.' }
+    { k:'sheets',    id:'prework',   tag:'PRE-WORK',  name:'Pre-work sheets', unit:'sheet',  cls:'prework' },
+    { k:'notes',     id:'notes',     tag:'NOTES',     name:'Notes',           unit:'set',    cls:'' },
+    { k:'videos',    id:'videos',    tag:'VIDEOS',    name:'Concept videos',  unit:'video',  cls:'' },
+    { k:'workbooks', id:'workbooks', tag:'WORKBOOKS', name:'Workbooks',       unit:'book',   cls:'' },
+    { k:'slides',    id:'slides',    tag:'SLIDES',    name:'Slide decks',     unit:'deck',   cls:'' }
   ];
 
   /* ---------- collect, once each, at the earliest week ---------- */
   var seen = {};
   KINDS.forEach(function(K){ seen[K.k] = {}; });
-
   Object.keys(LINKS).forEach(function(date){
     var d = LINKS[date], wk = d.wk || null;
     KINDS.forEach(function(K){
@@ -235,14 +259,11 @@
     });
   });
 
-  /* Modules share their boundary weeks, 4, 7 and 14. The later
-     module wins: the overlap week is the handover, and what is
-     taught in it belongs to the module opening, not the one
-     closing. Same rule as lab-sprints.html on purpose. */
+  /* Boundary weeks belong to the later module. */
   function moduleForWeek(wk){
-    var found = null;
-    MODULES.forEach(function(m){ if(m.weeks && m.weeks.indexOf(wk) !== -1) found = m; });
-    return found;
+    var f = null;
+    MODULES.forEach(function(m){ if(m.weeks && m.weeks.indexOf(wk) !== -1) f = m; });
+    return f;
   }
 
   var groups = {};
@@ -255,38 +276,42 @@
       (g.kinds[K.k] = g.kinds[K.k] || []).push(it);
     });
   });
-
   var order = Object.keys(groups).map(Number).sort(function(a,b){
     if(a === 0) return 1; if(b === 0) return -1; return a-b;
   });
 
-  /* ---------- filters ----------
-     ?show=notes lands with only the notes showing, so a dock tile
-     can say "Notes" and mean it rather than dropping a student on
-     an everything page and asking them to filter it themselves. */
+  /* ---------- state ---------- */
   var active = {}; KINDS.forEach(function(K){ active[K.k] = true; });
+  var showExam = true;
   var query = '';
-  /* Which module cards are open. The first one starts open so the
-     page does not land as five closed boxes with nothing to read. */
-  var open = { 1:true };
+  var open = order.length ? order[0] : 1;
+
   (function(){
     var m = null;
     try { m = location.search.match(/[?&]show=([a-z,]+)/i); } catch(e){}
     if(!m) return;
     var want = m[1].toLowerCase().split(',');
     var hit = KINDS.filter(function(K){ return want.indexOf(K.k) > -1 || want.indexOf(K.id) > -1; });
+    if(want.indexOf('exams') > -1 || want.indexOf('exam') > -1){
+      KINDS.forEach(function(K){ active[K.k] = false; }); showExam = true; return;
+    }
     if(!hit.length) return;
     KINDS.forEach(function(K){ active[K.k] = false; });
     hit.forEach(function(K){ active[K.k] = true; });
+    showExam = false;
   })();
+
+  function allOn(){ return KINDS.every(function(K){ return active[K.k]; }) && showExam; }
 
   function chips(){
     var h = '<button type="button" class="pill" data-k="all" aria-pressed="'
-          + (KINDS.every(function(K){ return active[K.k]; }) ? 'true' : 'false') + '">Everything</button>';
+          + (allOn()?'true':'false') + '">Everything</button>';
     KINDS.forEach(function(K){
       h += '<button type="button" class="pill" data-k="'+K.k+'" aria-pressed="'
          + (active[K.k]?'true':'false') + '">' + esc(K.name) + '</button>';
     });
+    h += '<button type="button" class="pill exam" data-k="exam" aria-pressed="'
+       + (showExam?'true':'false') + '">Practice exams</button>';
     document.getElementById('kindFilter').innerHTML = h;
   }
 
@@ -296,11 +321,38 @@
         || String(it.u).toLowerCase().indexOf(query) > -1;
   }
 
+  function subLine(g){
+    var bits = [];
+    if(g.m && g.m.weeks && g.m.weeks.length){
+      bits.push('Weeks ' + g.m.weeks[0] + ' to ' + g.m.weeks[g.m.weeks.length-1]);
+    }
+    if(g.m && g.m.detail) bits.push(String(g.m.detail).replace(/\.\s*$/,'').replace(/\.\s+/g,' &middot; '));
+    if(g.m && g.m.exam) bits.push('closes with Exam ' + g.m.exam);
+    return bits.join(' &middot; ');
+  }
+
+  function renderNav(){
+    var h = '<span class="lbl">Modules</span>';
+    order.forEach(function(n){
+      var g = groups[n];
+      if(!g.m) return;
+      var wk = (g.m.weeks && g.m.weeks.length)
+        ? 'Weeks ' + g.m.weeks[0] + ' to ' + g.m.weeks[g.m.weeks.length-1] : '';
+      h += '<a href="#mod-'+n+'" data-mod="'+n+'" class="'+(open===n?'active':'')+'"'
+        +  (open===n ? ' aria-current="true"' : '') + '>'
+        +    '<span class="k">Module '+n+' &middot; '+wk+(g.m.exam?' &middot; Exam '+g.m.exam:'')+'</span>'
+        +    '<span class="t">'+esc(g.m.title)+'</span>'
+        +  '</a>';
+    });
+    document.getElementById('modnav').innerHTML = h;
+  }
+
   function render(){
     var out = '', shown = 0;
 
     order.forEach(function(n){
       var g = groups[n];
+      var isOpen = (query ? true : open === n);
       var body = '', any = 0;
 
       KINDS.forEach(function(K){
@@ -309,81 +361,99 @@
         if(!list.length) return;
         list.sort(function(a,b){ return (a.wk||0)-(b.wk||0) || String(a.t).localeCompare(String(b.t)); });
         any += list.length; shown += list.length;
-        body += '<div class="kind"><h3>'+esc(K.name)+'</h3><p class="kd">'+esc(K.desc)+'</p><ul class="items">';
-        list.forEach(function(it){
-          body += '<li><a href="'+esc(it.u)+'">'+esc(it.t)+'</a></li>';
-        });
-        body += '</ul></div>';
+
+        var titles = list.map(function(it, i){
+          return (i ? '<span class="sep">&middot;</span>' : '')
+               + '<a href="'+esc(it.u)+'" target="_top"'+(i?' class="more"':'')+'>'+esc(it.t)+'</a>';
+        }).join('');
+
+        body += '<div class="row">'
+             +    '<span class="tag '+K.cls+'">'+K.tag+'</span>'
+             +    '<span class="what">'+titles+'</span>'
+             +    '<button type="button" class="go" data-only="'+K.k+'">'
+             +      list.length+' '+K.unit+(list.length===1?'':'s')+' &rarr;</button>'
+             +  '</div>';
       });
+
+      /* One practice exam per module, and only when the module has
+         an exam to practice for. */
+      if(showExam && g.m && g.m.exam && (!query || 'practice exam'.indexOf(query) > -1
+          || String(g.m.title).toLowerCase().indexOf(query) > -1)){
+        any += 1; shown += 1;
+        body += '<div class="exam-card">'
+             +    '<span class="tag">PRACTICE EXAM</span>'
+             +    '<span class="what">Practice Exam '+g.m.exam+' &middot; '+esc(g.m.title)
+             +      '<span class="note">A fresh paper in the real format, generated when you want it. '
+             +      'Nothing repeats inside one paper.</span></span>'
+             +    '<a class="go" href="practice-lecture-exam.html?exam='+g.m.exam+'" target="_top">Start &rarr;</a>'
+             +  '</div>';
+      }
 
       if(!any) return;
 
-      var title = g.m ? g.m.title : 'Not placed in a module';
-      var kick  = g.m ? ('Module '+g.n+(g.m.exam ? ' &middot; Exam '+g.m.exam : '')) : 'No week set';
-      var weeks = (g.m && g.m.weeks && g.m.weeks.length)
-        ? 'Weeks '+g.m.weeks[0]+' to '+g.m.weeks[g.m.weeks.length-1]
-        : 'Linked from a class day with no week number';
-      /* A search forces every card with a hit open, because a closed
-         card that contains the thing you searched for is a result you
-         cannot see. */
-      var isOpen = query ? true : !!open[g.n];
-
-      out += '<section class="mod' + (isOpen ? ' open' : '') + '" id="mod-'+g.n+'">';
-      out += '<h2 style="margin:0">'
-           +   '<button type="button" class="mod-h" data-mod="'+g.n+'" aria-expanded="'
-           +   (isOpen?'true':'false') + '" aria-controls="body-'+g.n+'">'
-           +     '<span class="txt">'
-           +       '<span class="mod-k">'+kick+'</span>'
-           +       '<span style="display:block;font-size:18px;font-weight:800;letter-spacing:-.02em;'
-           +           'line-height:1.2;margin-bottom:4px">'+esc(title)+'</span>'
-           +       '<span class="sub">'+weeks+' &middot; '+any+' item'+(any===1?'':'s')+'</span>'
-           +     '</span>'
-           +     '<span class="chev" aria-hidden="true">'
-           +       '<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span>'
-           +   '</button>'
-           + '</h2>';
-      out += '<div class="mod-b" id="body-'+g.n+'">' + body + '</div>';
-      out += '</section>';
+      var title = g.m ? ('Module '+g.n+' &middot; '+esc(g.m.title)) : 'Not placed in a module';
+      out += '<section class="mod'+(isOpen?' open':'')+'" id="mod-'+n+'">'
+          +    '<h2 style="margin:0">'
+          +      '<button type="button" class="mod-h" data-mod="'+n+'" aria-expanded="'+(isOpen?'true':'false')
+          +      '" aria-controls="body-'+n+'">'
+          +        '<span class="title">'+title+'</span>'
+          +        '<span class="count">'+(isOpen ? any+' items' : 'Expand &#9662;')+'</span>'
+          +      '</button>'
+          +    '</h2>'
+          +    '<p class="mod-sub">'+subLine(g)+'</p>'
+          +    '<div class="mod-b" id="body-'+n+'">'+body+'</div>'
+          +  '</section>';
     });
 
-    document.getElementById('out').innerHTML = out
-      || '<section class="mod"><h2>Nothing matches</h2><p class="empty">No material matches that. '
-       + 'Clear the search, or switch a type back on.</p></section>';
+    document.getElementById('mods').innerHTML = out
+      || '<section class="mod open"><h2 class="mod-h"><span class="title">Nothing matches</span></h2>'
+       + '<p class="mod-sub">Clear the search, or switch a type back on.</p></section>';
 
     document.getElementById('count').textContent =
       shown + ' item' + (shown===1?'':'s') + ' showing'
       + (query ? ' for "' + query + '"' : '') + '.';
+    renderNav();
   }
 
+  /* ---------- events ---------- */
   document.getElementById('kindFilter').addEventListener('click', function(e){
     var b = e.target.closest('.pill'); if(!b) return;
     var k = b.getAttribute('data-k');
-    if(k === 'all'){ KINDS.forEach(function(K){ active[K.k] = true; }); }
-    else if(KINDS.every(function(K){ return active[K.k]; })){
-      /* Everything is on, so a click means "just this one". Treating
-         it as a toggle instead hides the one type they just asked
-         for and leaves the other four, which is the opposite of what
-         pressing "Notes" looks like it will do. */
+    if(k === 'all'){ KINDS.forEach(function(K){ active[K.k] = true; }); showExam = true; }
+    else if(allOn()){
+      /* Everything is on, so a click means "just this one". */
       KINDS.forEach(function(K){ active[K.k] = (K.k === k); });
-    }
-    else {
-      active[k] = !active[k];
-      /* Turning the last one off leaves a page with nothing on it and
-         no clue why. Switch everything back on instead. */
-      if(KINDS.every(function(K){ return !active[K.k]; })) KINDS.forEach(function(K){ active[K.k] = true; });
+      showExam = (k === 'exam');
+    } else {
+      if(k === 'exam') showExam = !showExam; else active[k] = !active[k];
+      if(KINDS.every(function(K){ return !active[K.k]; }) && !showExam){
+        KINDS.forEach(function(K){ active[K.k] = true; }); showExam = true;
+      }
     }
     chips(); render();
   });
 
-  document.getElementById('out').addEventListener('click', function(e){
+  document.getElementById('mods').addEventListener('click', function(e){
+    var only = e.target.closest('.go[data-only]');
+    if(only){
+      var k = only.getAttribute('data-only');
+      KINDS.forEach(function(K){ active[K.k] = (K.k === k); });
+      showExam = false; chips(); render();
+      try{ document.getElementById('find').focus(); }catch(err){}
+      return;
+    }
     var b = e.target.closest('.mod-h'); if(!b) return;
-    var n = b.getAttribute('data-mod');
-    open[n] = !open[n];
+    var n = parseInt(b.getAttribute('data-mod'),10);
+    open = (open === n) ? -1 : n;
     render();
-    /* Focus follows the card that was just toggled, otherwise a
-       keyboard user is dropped at the top of a redrawn list. */
     var again = document.querySelector('.mod-h[data-mod="'+n+'"]');
     if(again) again.focus();
+  });
+
+  document.getElementById('modnav').addEventListener('click', function(e){
+    var a = e.target.closest('a[data-mod]'); if(!a) return;
+    open = parseInt(a.getAttribute('data-mod'),10);
+    render();
   });
 
   var t = null;
@@ -393,15 +463,8 @@
     t = window.setTimeout(function(){ query = v; render(); }, 120);
   });
 
-  var total = 0;
-  KINDS.forEach(function(K){ total += Object.keys(seen[K.k]).length; });
-  document.getElementById('note').innerHTML =
-    '<b>' + total + ' pieces of material.</b> Built from the course schedule every time this page opens, '
-    + 'so it cannot fall out of step with the calendar. Anything added to a class day appears here on its own.';
-
-  chips();
-  render();
-})();
+  chips(); render();
+}());
 </script>
 
 <!-- iframe height sender -->
@@ -411,17 +474,10 @@
   var frameId=null;
   try{ var m=location.search.match(/[?&]frameId=([^&#]+)/); if(m) frameId=decodeURIComponent(m[1]); }catch(e){}
   var last=0;
-  /* Measure the BODY only, never documentElement.
-
-     documentElement.scrollHeight is max(content, viewport), and
-     inside an iframe the viewport IS the frame. So once the parent
-     grows the frame, html reports the frame's own height forever
-     and the page can never report a smaller number: the frame
-     ratchets up and never comes back down. Deal a 62 question exam
-     in an embedded practice paper, press Start over, and the
-     student is left staring at 20,000 pixels of white.
-
-     body does not stretch to the viewport, so it shrinks honestly. */
+  /* Measure the BODY only. documentElement.scrollHeight is
+     max(content, viewport), and inside an iframe the viewport IS the
+     frame, so measuring it means the page can never report a height
+     smaller than the frame already has and the frame ratchets up. */
   function postHeight(){
     var b=document.body; if(!b) return;
     var h=Math.max(b.scrollHeight, b.offsetHeight, Math.ceil(b.getBoundingClientRect().height));
