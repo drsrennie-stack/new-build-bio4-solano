@@ -60,8 +60,9 @@
     --terra-dark:#6B1616; --terra:#8B1D1D;
     --gold:#DCB45C; --gold-text:#6F5316;
     --white:#FFFFFF; --offwhite:#FAFAF9; --sub:#F1F4F7;
-    --ink-2:#3D4757; --ink-3:#4A5763;
+    --ink-3:#4A5763; --line:#ECEAE6;
     --ok:#1F6B3A; --bad:#8A1010;
+    --radius:8px;
     --rest:0 1px 3px rgba(0,0,0,0.08);
     --hover:0 10px 22px rgba(0,0,0,0.12);
     --t:transform 180ms ease, box-shadow 180ms ease;
@@ -71,7 +72,6 @@
   html{scroll-behavior:smooth}
   body{margin:0;font-family:var(--font);color:var(--navy);background:var(--offwhite);
        line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:940px;margin:0 auto;padding:28px 20px 110px}
   .skip{position:absolute;left:-9999px;background:var(--terra-dark);color:#fff;padding:10px 16px;
         border-radius:8px;font-weight:700;z-index:60}
   .skip:focus{left:16px;top:16px}
@@ -80,62 +80,115 @@
       clip:rect(0 0 0 0);white-space:nowrap;border:0}
   .hidden{display:none !important}
 
-  .cover{padding:6px 0 18px}
-  .cover-eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
-                 color:var(--terra-dark);margin:0 0 10px}
-  h1{font-weight:800;font-size:clamp(26px,4.6vw,40px);line-height:1.04;letter-spacing:-.02em;margin:0 0 12px}
-  h1 span{color:var(--gold-text)}
-  .lede{font-size:17px;color:var(--ink-3);margin:0 0 6px;max-width:66ch}
+  .topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+          padding:16px 30px;background:var(--white);border-bottom:1px solid var(--line)}
+  .topbar .crumb{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
+                 color:var(--terra-dark)}
+  .topnav{display:flex;gap:20px;font-size:13px;font-weight:700}
+  .topnav a{color:var(--ink-3);text-decoration:none}
+  .topnav a:hover{color:var(--navy)}
+  .topnav a[aria-current="page"]{color:var(--navy);border-bottom:3px solid var(--gold);padding-bottom:3px}
 
-  .card{background:#fff;border-radius:12px;padding:24px;margin:18px 0;box-shadow:var(--rest)}
-  .card h2{font-size:clamp(18px,3vw,22px);font-weight:800;letter-spacing:-.02em;margin:0 0 4px}
-  .step-k{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
-          color:var(--terra-dark);display:block;margin-bottom:4px}
-  .hint{color:var(--ink-3);font-size:14.5px;margin:0 0 14px}
-  .hint b{color:var(--navy)}
+  .wrap{max-width:1100px;margin:0 auto;padding:26px 30px 110px}
+  h1{font-weight:800;font-size:clamp(26px,4.6vw,34px);line-height:1.04;letter-spacing:-.02em;margin:0 0 8px}
+  /* Red, not gold. Gold is the accent the practice exam badge uses
+     over on the materials page, and two golds on one screen made
+     the title compete with the thing it is introducing. */
+  h1 span{color:var(--terra-dark)}
+  .lede{font-size:15px;color:var(--ink-3);margin:0;max-width:66ch}
+  .lede b{color:var(--navy)}
 
-  .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0 0}
-  .opt{background:var(--sub);border:0;border-radius:11px;padding:14px 15px;cursor:pointer;text-align:left;
-       color:var(--navy);font-family:var(--font);transition:var(--t);box-shadow:var(--rest);width:100%}
-  .opt:hover{transform:translateY(-2px);box-shadow:var(--hover)}
-  .opt[aria-pressed="true"]{background:var(--navy);color:#fff}
-  .opt b{display:block;font-size:16px;font-weight:800}
-  .opt i{display:block;font-style:normal;font-size:13px;color:var(--ink-3);margin-top:3px}
-  .opt[aria-pressed="true"] i{color:#C6CEDA}
+  .controls{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:18px 0 20px}
+  .controls .lbl{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;
+                 color:var(--terra-dark);margin-right:2px}
+  .pill{background:var(--white);color:var(--navy);font-family:var(--font);font-weight:700;
+        font-size:13.5px;padding:10px 15px;border:0;border-radius:999px;box-shadow:var(--rest);
+        cursor:pointer;transition:var(--t)}
+  .pill:hover{transform:translateY(-2px);box-shadow:var(--hover)}
+  .pill[aria-pressed="true"]{background:var(--navy);color:#fff}
+  .count-line{font-size:13.5px;color:var(--ink-3);margin:0 0 16px}
 
-  .big{background:var(--gold);color:#08101F;font-family:var(--font);font-weight:800;font-size:17px;
-       padding:15px 26px;border:0;border-radius:11px;cursor:pointer;transition:var(--t);
-       box-shadow:0 10px 22px -8px rgba(184,146,74,.65)}
+  .layout{display:grid;grid-template-columns:250px 1fr;gap:20px;align-items:start}
+  @media (max-width:820px){ .layout{grid-template-columns:1fr} .modnav{position:static !important} }
+
+  .modnav{background:var(--white);border-radius:var(--radius);box-shadow:var(--rest);
+          padding:16px 0;position:sticky;top:18px}
+  .modnav .lbl{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+               color:var(--terra-dark);padding:0 18px 10px;display:block}
+  .modnav button{display:block;width:100%;text-align:left;background:none;border:0;
+                 font-family:var(--font);cursor:pointer;padding:11px 18px;color:var(--navy)}
+  .modnav button:hover{background:#F6F5F2}
+  .modnav button .k{display:block;font-size:11px;font-weight:800;color:#5F6875}
+  .modnav button .t{display:block;font-size:13px;font-weight:600;line-height:1.3;margin-top:3px}
+  .modnav button[aria-pressed="true"]{background:var(--navy);color:#fff;border-radius:var(--radius);
+                 margin:0 -8px;padding:13px 18px;width:calc(100% + 16px);
+                 box-shadow:0 10px 24px rgba(8,16,31,.35),0 2px 6px rgba(0,0,0,.15);
+                 transform:translateY(-2px);position:relative;transition:var(--t)}
+  .modnav button[aria-pressed="true"]:hover{background:var(--navy)}
+  .modnav button[aria-pressed="true"] .k{color:var(--gold)}
+  .modnav button[aria-pressed="true"] .t{font-weight:700}
+
+  .mod{background:var(--white);border-radius:var(--radius);box-shadow:var(--rest)}
+  .mod-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+         padding:18px 22px 6px}
+  .mod-h .title{font-size:19px;font-weight:800;letter-spacing:-.02em;color:var(--navy);margin:0}
+  .mod-h .count{font-size:12px;font-weight:700;color:var(--gold-text);white-space:nowrap}
+  .mod-sub{font-size:12.5px;color:var(--ink-3);margin:3px 0 12px;padding:0 22px}
+  .mod-b{padding:0 22px 18px}
+
+  .row{display:grid;grid-template-columns:126px 1fr auto;align-items:center;gap:14px;
+       padding:11px 0;border-top:1px solid #F0EEE9}
+  .tag{font-size:10.5px;font-weight:800;letter-spacing:.06em;background:var(--navy);
+       color:var(--offwhite);border-radius:6px;padding:5px 0;text-align:center}
+  .tag.short{background:var(--terra-dark)}
+  .row .what{font-size:14.5px;font-weight:700}
+  .row .what .sub{display:block;font-weight:500;font-size:12.5px;color:var(--ink-3);margin-top:1px}
+  .row .go{font-size:12.5px;font-weight:800;color:var(--terra-dark);white-space:nowrap}
+  .row.total{border-top:2px solid var(--navy);padding-top:13px}
+  .row.total .what{font-weight:800}
+  .row.total .go{color:var(--navy);font-size:14px}
+
+  /* The one button that starts the thing, in the raised card the
+     design gives to whatever on a page has a deadline attached. */
+  .start-card{display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;
+              padding:16px 18px;margin:16px 0 0;background:var(--white);border-radius:var(--radius);
+              box-shadow:0 10px 26px rgba(0,0,0,.18),0 2px 6px rgba(0,0,0,.10);
+              transform:translateY(-2px)}
+  .start-card .what{font-size:14.5px;font-weight:800}
+  .start-card .note{display:block;font-size:12px;color:var(--ink-3);margin-top:2px;font-weight:500}
+  .big{background:var(--gold);color:#08101F;font-family:var(--font);font-weight:800;font-size:16px;
+       padding:13px 22px;border:0;border-radius:10px;cursor:pointer;transition:var(--t);
+       box-shadow:0 10px 22px -8px rgba(184,146,74,.65);white-space:nowrap}
   .big:hover{transform:translateY(-2px);box-shadow:0 16px 30px -8px rgba(184,146,74,.75)}
   .big:disabled{background:#DDE2E9;color:#4A5763;cursor:default;transform:none;box-shadow:var(--rest)}
-  .ghost{background:#fff;color:var(--navy);font-family:var(--font);font-weight:800;font-size:15px;
-         padding:13px 20px;border:0;border-radius:11px;cursor:pointer;transition:var(--t);
+  .ghost{background:#fff;color:var(--navy);font-family:var(--font);font-weight:800;font-size:14px;
+         padding:12px 18px;border:0;border-radius:10px;cursor:pointer;transition:var(--t);
          box-shadow:var(--rest);text-decoration:none;display:inline-block}
   .ghost:hover{transform:translateY(-2px);box-shadow:var(--hover)}
-  .row{display:flex;flex-wrap:wrap;gap:11px;align-items:center;margin-top:16px}
+  .btnrow{display:flex;flex-wrap:wrap;gap:11px;align-items:center;margin-top:18px}
 
-  .blueprint{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px}
-  .blueprint li{display:flex;justify-content:space-between;gap:12px;background:var(--sub);
-                border-radius:9px;padding:11px 14px;font-size:14.5px}
-  .blueprint b{font-weight:800}
-  .blueprint .warn{color:var(--bad);font-weight:700}
+  /* ---------- the paper ---------- */
+  .card{background:#fff;border-radius:var(--radius);padding:22px 24px;margin:0 0 16px;box-shadow:var(--rest)}
+  .card h2{font-size:19px;font-weight:800;letter-spacing:-.02em;margin:0 0 4px}
+  .step-k{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;
+          color:var(--terra-dark);display:block;margin-bottom:4px}
+  .hint{color:var(--ink-3);font-size:14px;margin:0 0 10px}
+  .hint b{color:var(--navy)}
 
-  /* ---------- parts ---------- */
-  .part{margin:26px 0 0}
-  .part-h{background:var(--navy);color:#fff;border-radius:12px;padding:18px 22px;margin:0 0 14px}
+  .part{margin:22px 0 0}
+  .part-h{background:var(--navy);color:#fff;border-radius:var(--radius);padding:18px 22px;margin:0 0 12px}
   .part-h .pk{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
               color:var(--gold);display:block;margin-bottom:4px}
-  .part-h h2{font-size:20px;font-weight:800;margin:0 0 6px;letter-spacing:-.02em}
-  .part-h p{margin:0;font-size:14.5px;color:#C6CEDA;max-width:70ch}
+  .part-h h2{font-size:19px;font-weight:800;margin:0 0 6px;letter-spacing:-.02em}
+  .part-h p{margin:0;font-size:14px;color:#C6CEDA;max-width:70ch}
 
-  .q{background:#fff;border-radius:12px;padding:20px 22px;margin:0 0 12px;box-shadow:var(--rest)}
+  .q{background:#fff;border-radius:var(--radius);padding:18px 20px;margin:0 0 10px;box-shadow:var(--rest)}
   .q fieldset{border:0;margin:0;padding:0}
-  .q legend{padding:0;font-weight:800;font-size:16.5px;line-height:1.45}
+  .q legend{padding:0;font-weight:800;font-size:16px;line-height:1.45}
   .qn{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;
       color:var(--terra-dark);display:block;margin-bottom:6px}
   .q legend b{color:var(--terra-dark)}
-
-  .tfrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.tfrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
   .tfrow label{display:flex;gap:9px;align-items:center;background:var(--sub);border-radius:10px;
                padding:11px 18px;cursor:pointer;font-weight:800;box-shadow:0 1px 2px rgba(0,0,0,.05)}
   .tfrow input{width:19px;height:19px;accent-color:#6B1616;cursor:pointer}
@@ -231,34 +284,56 @@
 <body>
 <a class="skip" href="#main">Skip to the exam</a>
 
+<div class="topbar">
+  <span class="crumb">BIO 004 &middot; Human Anatomy &middot; Fall 2026</span>
+  <nav class="topnav" aria-label="Course sections">
+    <a href="bio004-course-calendar.html" target="_top">Calendar</a>
+    <a href="course-materials.html" target="_top">Materials</a>
+    <a href="welcome.html" target="_top">Welcome</a>
+  </nav>
+</div>
+
 <div class="wrap">
 <main id="main">
-  <section class="cover">
-    <p class="cover-eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
-    <h1>Practice <span>exam</span></h1>
-    <p class="lede">Your real exam format: true or false with the fix word, confidence-based multiple
-       choice, matching, and a free response. 100 points. Generate one whenever you want, and no two
-       papers are the same.</p>
-    <p class="lede" id="lastLine"></p>
-  </section>
+  <h1>Practice <span>exam</span></h1>
+  <p class="lede">Your real exam format: true or false with the fix word, confidence-based multiple
+     choice, matching, and a free response. 100 points, and no two papers are the same.</p>
+  <p class="lede" id="lastLine"></p>
 
-  <section class="card" id="setup" aria-labelledby="h-setup">
-    <span class="step-k">Set it up</span>
-    <h2 id="h-setup">Which exam are you practicing for?</h2>
-    <p class="hint">Questions are drawn from the items written for that exam plus your card bank.</p>
-    <div class="opts" id="examPick" role="group" aria-label="Choose which exam to practice"></div>
+  <section id="setup">
+    <div class="controls">
+      <span class="lbl">Clock</span>
+      <div id="timePick" style="display:flex;flex-wrap:wrap;gap:9px" role="group" aria-label="Choose whether the exam is timed"></div>
+    </div>
+    <p class="count-line" id="setupNote" role="status"></p>
 
-    <span class="step-k" style="margin-top:22px">Clock</span>
-    <h2>Timed?</h2>
-    <p class="hint">Your lecture exams run to the class period. Untimed is fine while the material is new.</p>
-    <div class="opts" id="timePick" role="group" aria-label="Choose whether the exam is timed"></div>
+    <div class="layout">
+      <nav class="modnav" id="examPick" role="group" aria-label="Choose which exam to practice">
+        <span class="lbl">Exams</span>
+      </nav>
 
-    <h2 style="margin-top:22px">What this paper will hold</h2>
-    <ul class="blueprint" id="blueprint"></ul>
+      <div>
+        <div class="mod">
+          <div class="mod-h">
+            <h2 class="title" id="h-setup">What this paper will hold</h2>
+            <span class="count" id="planTotal"></span>
+          </div>
+          <p class="mod-sub" id="planSub"></p>
+          <div class="mod-b" id="blueprint"></div>
+        </div>
 
-    <div class="row">
-      <button type="button" class="big" id="startBtn">Generate my exam</button>
-      <a class="ghost" href="bio004-course-calendar.html" target="_top">Back to the calendar</a>
+        <div class="start-card">
+          <span class="what">Generate a fresh paper
+            <span class="note">Dealt when you press it. Nothing repeats inside one paper, and the
+              draw spreads across the topics rather than clumping on one.</span></span>
+          <button type="button" class="big" id="startBtn">Generate my exam</button>
+        </div>
+
+        <div class="btnrow">
+          <a class="ghost" href="bio004-course-calendar.html" target="_top">Back to the calendar</a>
+          <a class="ghost" href="course-materials.html" target="_top">Course materials</a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -485,56 +560,85 @@
   }
 
   var K_EXAM='bio004-pexam-exam', K_TIME='bio004-pexam-time', K_LAST='bio004-pexam-last';
-  var exam=parseInt(lsGet(K_EXAM),10); if(!(exam>=1&&exam<=5)) exam=1;
+  /* ?exam=3 lands straight on that paper, so the practice exam row
+     on the materials page can name a module and mean it. */
+  var exam=(function(){
+    var m=null; try{ m=location.search.match(/[?&]exam=([1-5])/); }catch(e){}
+    if(m) return parseInt(m[1],10);
+    var v=parseInt(lsGet(K_EXAM),10); return (v>=1&&v<=5)?v:1;
+  })();
   var mins=parseInt(lsGet(K_TIME),10); if(isNaN(mins)) mins=0;
   var TIME=[{m:0,b:'No clock',i:'Take as long as you need'},
             {m:50,b:'50 minutes',i:'A class period'},
             {m:75,b:'75 minutes',i:'The long block'}];
 
   function renderSetup(){
-    var h='';
+    /* THE EXAM PICKER IS THE RAIL.
+
+       Five exams is the same shape as five modules, so it gets the
+       same object: a list where the one you are on lifts out of the
+       card. The blueprint underneath is the same tagged row the
+       materials page uses, because a part of a paper and a category
+       of material are the same kind of thing on a page. */
+    var h = '<span class="lbl">Exams</span>';
     for(var n=1;n<=5;n++){
-      h+='<button type="button" class="opt" data-exam="'+n+'" aria-pressed="'+(exam===n?'true':'false')+'">'
-        +'<b>Exam '+n+'</b><i>'+esc(examTitle(n).slice(0,44))+'</i></button>';
+      var p = planFor(n);
+      h += '<button type="button" data-exam="'+n+'" aria-pressed="'+(exam===n?'true':'false')+'">'
+        +    '<span class="k">Exam '+n+' &middot; '+p.total+' points</span>'
+        +    '<span class="t">'+esc(examTitle(n))+'</span>'
+        +  '</button>';
     }
-    $('examPick').innerHTML=h;
+    $('examPick').innerHTML = h;
 
     h='';
     TIME.forEach(function(T){
-      h+='<button type="button" class="opt" data-min="'+T.m+'" aria-pressed="'+(mins===T.m?'true':'false')+'">'
-        +'<b>'+T.b+'</b><i>'+T.i+'</i></button>';
+      h+='<button type="button" class="pill" data-min="'+T.m+'" aria-pressed="'+(mins===T.m?'true':'false')+'">'
+        + esc(T.b) + '</button>';
     });
     $('timePick').innerHTML=h;
 
     var p=planFor(exam);
     var rows=[
-      ['Part 1 &middot; True or false', p.tf+' points', p.tfShort],
-      ['Part 2 &middot; Multiple choice, confidence based', p.mc+' points', false],
-      ['Part 3 &middot; Matching', p.matchPts+' points', !p.match],
-      ['Part 4 &middot; Free response, choose one', p.fr+' points', p.frShort]
+      ['PART 1','True or false',                        p.tf+' points',    p.tfShort,
+       'One point for the call. Name the word that fixes a false one for a quarter point of extra credit.'],
+      ['PART 2','Multiple choice, confidence based',    p.mc+' points',    false,
+       'Four confidence points per question, spread them however you like.'],
+      ['PART 3','Matching',                             p.matchPts+' points', !p.match,
+       'The bank carries extra options that match nothing.'],
+      ['PART 4','Free response, choose one',            p.fr+' points',    p.frShort,
+       'Write it, then self-score against the rubric with the model answer in front of you.']
     ];
     var bh='';
     rows.forEach(function(r){
-      bh+='<li><span>'+r[0]+'</span><b class="'+(r[2]?'warn':'')+'">'+r[1]+'</b></li>';
+      bh += '<div class="row">'
+         +    '<span class="tag'+(r[3]?' short':'')+'">'+r[0]+'</span>'
+         +    '<span class="what">'+r[1]+'<span class="sub">'+r[4]+'</span></span>'
+         +    '<span class="go">'+r[2]+'</span>'
+         +  '</div>';
     });
-    bh+='<li><span><b>This paper</b></span><b>'+p.total+' points</b></li>';
-    $('blueprint').innerHTML=bh;
+    $('blueprint').innerHTML = bh;
+    $('planTotal').textContent = p.total + ' points';
 
-    var say='Your exam '+exam+' format, dealt fresh: no question repeats inside a paper, and the draw '
-          + 'spreads across the topics and competencies rather than clumping on one.';
+    var sub = 'Exam ' + exam + ' &middot; ' + esc(examTitle(exam));
+    if(mins) sub += ' &middot; ' + mins + ' minutes on the clock';
+    else sub += ' &middot; no clock';
+    $('planSub').innerHTML = sub;
+
+    var say='No question repeats inside a paper, and the draw spreads across the topics and '
+          + 'competencies rather than clumping on one.';
     if(p.tfShort) say += ' Part 1 runs '+p.tf+' items this time; the rest of its points move to Part 2.';
     if(p.total !== 100) say += ' This one comes to '+p.total+' points.';
-    $('setup').querySelector('.hint').textContent = say;
+    $('setupNote').textContent = say;
 
     $('startBtn').disabled = p.total < 10;
   }
 
   $('examPick').addEventListener('click',function(e){
-    var b=e.target.closest('.opt'); if(!b) return;
+    var b=e.target.closest('button[data-exam]'); if(!b) return;
     exam=parseInt(b.getAttribute('data-exam'),10); lsSet(K_EXAM,String(exam)); renderSetup(); paintLast();
   });
   $('timePick').addEventListener('click',function(e){
-    var b=e.target.closest('.opt'); if(!b) return;
+    var b=e.target.closest('.pill'); if(!b) return;
     mins=parseInt(b.getAttribute('data-min'),10); lsSet(K_TIME,String(mins)); renderSetup();
   });
 
@@ -985,20 +1089,8 @@
   var frameId=null;
   try{ var m=location.search.match(/[?&]frameId=([^&#]+)/); if(m) frameId=decodeURIComponent(m[1]); }catch(e){}
   var last=0;
-  /* Measure the BODY only, never documentElement.
-
-     documentElement.scrollHeight is max(content, viewport), and
-     inside an iframe the viewport IS the frame. So once the parent
-     grows the frame, html reports the frame's own height forever
-     and the page can never report a smaller number: the frame
-     ratchets up and never comes back down. Deal a 62 question exam
-     in an embedded practice paper, press Start over, and the
-     student is left staring at 20,000 pixels of white.
-
-     body does not stretch to the viewport, so it shrinks honestly. */
   function postHeight(){
-    var b=document.body; if(!b) return;
-    var h=Math.max(b.scrollHeight, b.offsetHeight, Math.ceil(b.getBoundingClientRect().height));
+    var h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);
     if(Math.abs(h-last)<2) return;
     last=h;
     try{ parent.postMessage({frameId:frameId,type:'resize',height:h},'*'); }catch(e){}
