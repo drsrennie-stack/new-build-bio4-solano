@@ -520,7 +520,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline: 3px s
 })();
 (function(){
   var FRAME_ID = 'bio304-cns-organization-slides';
-  function sendHeight(){ var h = Math.max(document.documentElement.scrollHeight, document.body?document.body.scrollHeight:0); if (window.parent && window.parent!==window) parent.postMessage({type:'resize', id:FRAME_ID, height:h}, '*'); }
+  function sendHeight(){ var h = (document.body?Math.max(document.body.scrollHeight,document.body.offsetHeight):0); if (window.parent && window.parent!==window) parent.postMessage({type:'resize', id:FRAME_ID, height:h}, '*'); }
   window.addEventListener('load', sendHeight); window.addEventListener('resize', sendHeight);
   if (window.ResizeObserver) new ResizeObserver(sendHeight).observe(document.body);
   [200,600,1200,2400].forEach(function(t){ setTimeout(sendHeight, t); });

@@ -985,8 +985,20 @@
   var frameId=null;
   try{ var m=location.search.match(/[?&]frameId=([^&#]+)/); if(m) frameId=decodeURIComponent(m[1]); }catch(e){}
   var last=0;
+  /* Measure the BODY only, never documentElement.
+
+     documentElement.scrollHeight is max(content, viewport), and
+     inside an iframe the viewport IS the frame. So once the parent
+     grows the frame, html reports the frame's own height forever
+     and the page can never report a smaller number: the frame
+     ratchets up and never comes back down. Deal a 62 question exam
+     in an embedded practice paper, press Start over, and the
+     student is left staring at 20,000 pixels of white.
+
+     body does not stretch to the viewport, so it shrinks honestly. */
   function postHeight(){
-    var h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);
+    var b=document.body; if(!b) return;
+    var h=Math.max(b.scrollHeight, b.offsetHeight, Math.ceil(b.getBoundingClientRect().height));
     if(Math.abs(h-last)<2) return;
     last=h;
     try{ parent.postMessage({frameId:frameId,type:'resize',height:h},'*'); }catch(e){}
