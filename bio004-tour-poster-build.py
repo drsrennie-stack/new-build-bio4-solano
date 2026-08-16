@@ -26,7 +26,8 @@ TOURS = [
  dict(n='04', icon='iconBrain', name='Mastery OS',
       tag='Your study engine',
       desc='Spaced recall, weak spots, and a plan built around your exam dates.',
-      video=None, fallback=BASE+'mastery-os-fall-2026.html'),
+      video='https://www.loom.com/share/d2bd6408d0694e59a3bae02f360e37e0',
+      fallback=BASE+'mastery-os-fall-2026.html'),
  # One video covers the whole Lab materials group, so the group gets one card
  # instead of a card each for sprints, the Atlas and Loops.
  dict(n='05', icon='iconFlask', name='Lab materials',
@@ -37,7 +38,8 @@ TOURS = [
  dict(n='06', icon='iconDoc',   name='Practice exam',
       tag='A simulated exam',
       desc='A practice paper built to look like the real one, scored as soon as you finish, with the reasoning shown. None of it counts toward your grade.',
-      video=None, fallback=BASE+'practice-lecture-exam.html'),
+      video='https://www.loom.com/share/06f082a4d7114280a511ada0e85f6315',
+      fallback=BASE+'practice-lecture-exam.html'),
  dict(n='07', icon='iconPeople',name='Study With Me',
       tag='Study together',
       desc='Live co-study sessions, and verified engagement hours toward Scholar Points.',
@@ -52,12 +54,20 @@ def qr(url):
                   lambda m: '<svg viewBox="0 0 %s %s" preserveAspectRatio="xMidYMid meet" class="qr"'
                             % (m.group(1), m.group(1)), svg)
 
+# Badges only earn their space while some tours are still unrecorded. Once
+# every card has a video, seven identical "Video ready" pills say nothing, so
+# they come off. Add a card without a video and they come back on their own.
+ANY_PENDING = any(not t['video'] for t in TOURS)
+
 def card(t, i):
     live = bool(t['video'])
     url  = t['video'] or t['fallback']
     tone = TONES[i % len(TONES)]
-    badge = ('<span class="t-badge is-live">Video ready</span>' if live
-             else '<span class="t-badge">Video coming</span>')
+    if not ANY_PENDING:
+        badge = ''
+    else:
+        badge = ('<span class="t-badge is-live">Video ready</span>' if live
+                 else '<span class="t-badge">Video coming</span>')
     mins = ('<p class="t-mins">%s</p>' % html.escape(t['mins'])) if t.get('mins') else ''
     return f"""      <li class="t{' is-live' if live else ''}">
         <span class="t-ic tone-{tone}" aria-hidden="true">{ICONS[t['icon']]}</span>
