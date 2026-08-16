@@ -124,6 +124,7 @@
       '.lp-dot{width:clamp(10px,1vw,18px);height:clamp(10px,1vw,18px);border-radius:50%;background:#405672;',
       '  transition:background 260ms ease,transform 260ms ease}',
       '.lp-dot.on{background:var(--lp-gold);transform:scale(1.12)}',
+      '.lp-dot.on.five{background:#D9695A}',
       '.lp-results{display:flex;flex-direction:column;gap:clamp(7px,1vh,13px)}',
       '.lp-results.quiet .lp-num{opacity:0}',
       '.lp-res{position:relative;background:var(--lp-card);border-radius:12px;overflow:hidden;',
@@ -246,8 +247,12 @@
       ofEl.textContent = total > CLASS_SIZE
         ? ('answers in, more than the ' + CLASS_SIZE + ' expected')
         : 'answers in';
+      /* Every fifth filled dot is terra, so the row can be counted in fives
+         from the back of the room instead of estimated. */
       var d = dotsEl.children;
-      for(var i=0;i<d.length;i++) d[i].className = 'lp-dot' + (i < total ? ' on' : '');
+      for(var i=0;i<d.length;i++){
+        d[i].className = 'lp-dot' + (i < total ? ' on' : '') + (((i+1) % 5 === 0) ? ' five' : '');
+      }
     }
 
     function paintOptions(){
@@ -343,7 +348,7 @@
     try{
       if(window.QRCode){
         new window.QRCode(qr, { text:studentUrl(), width:120, height:120,
-          colorDark:'#08101F', colorLight:'#FFFFFF' });
+          colorDark:'#8B1D1D', colorLight:'#FFFFFF' });
         return;
       }
     }catch(e){}

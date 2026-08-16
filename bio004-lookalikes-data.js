@@ -42,7 +42,7 @@
     why:'Both look layered, because in both of them the nuclei sit at more than one level.',
     options:[
       { t:'Every cell reaches the basement membrane, even the ones whose nuclei sit high up.', ok:true,
-        note:'That is the definition of pseudostratified, and it is the only feature here that separates the two. In stratified columnar, only the deepest layer touches the basement membrane. Free tell for this course: pseudostratified almost always arrives with cilia and goblet cells, because you are looking at airway.' },
+        note:'That is the definition of pseudostratified, and it is the only feature here that separates the two. In stratified columnar, only the deepest layer touches the basement membrane. Free tell for this course: pseudostratified almost always arrives with cilia, because you are looking at airway. Do not lean on goblet cells for it. The gut is full of them and the gut is simple columnar.' },
       { t:'The nuclei sit at several different levels.', ok:false, fail:'shared',
         note:'True of both, and it is the exact reason students call pseudostratified layered when it is not. This is the confusion itself, so it can never be the way out of it.' },
       { t:'It lines a tube and has a free apical surface.', ok:false, fail:'broad',
@@ -462,7 +462,7 @@ var FIELDS = [
         group: r.group,
         pair: r.a + ' against ' + r.b,
         statement: self.label(o),
-        question: 'This is true. So why does it not decide the pair?',
+        question: 'True. So why does it not decide the pair?',
         options: REASONS.map(function(rr){
           return { t: rr.label, ok: rr.code === o.fail,
                    why: rr.code === 'shared' ? 'Ask whether it is the very thing making them look alike.'
