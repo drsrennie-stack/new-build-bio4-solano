@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quick Teams &middot; BIO 004</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#08101F; --chip:#1E2A47; --terra:#8B1D1D; --gold:#DCB45C; --gold-ink:#6B5214; --teal:#2C5F66;
+  --white:#FFFFFF; --offwhite:#FAFAF9; --muted:#3D4860; --rule:#DCE0E6; --light:#D9DEE8; --faint:#8A96AC;
+  --radius:8px; --font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{font-family:var(--font); background:var(--offwhite); color:var(--navy);}
+.wrap{max-width:1060px; margin:0 auto; padding:30px 22px 70px;}
+.eyebrow{font-size:11px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--terra); margin-bottom:6px;}
+h1{font-size:clamp(24px,4vw,32px); font-weight:800; margin-bottom:6px;}
+h1 .dot{color:var(--terra);}
+.sub{color:var(--muted); font-size:14.5px; line-height:1.6; max-width:70em; margin-bottom:22px;}
+.card{background:var(--white); border:1px solid var(--rule); border-radius:var(--radius); box-shadow:0 3px 10px rgba(8,16,31,0.08); padding:22px 24px; margin-bottom:18px;}
+.card h2{font-size:17px; font-weight:800; margin-bottom:6px;}
+.card p{font-size:13.5px; color:var(--muted); line-height:1.6;}
+.step{font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold-ink); margin-bottom:4px;}
+textarea{width:100%; min-height:220px; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13.5px; line-height:1.5; padding:12px 14px; border:1px solid var(--rule); border-radius:6px; resize:vertical; color:var(--navy);}
+textarea:focus{outline:2px solid var(--gold); outline-offset:1px;}
+.row{display:flex; flex-wrap:wrap; gap:14px; align-items:flex-end; margin-top:14px;}
+.field label{display:block; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:5px;}
+.field input,.field select{font-family:var(--font); font-size:14px; padding:9px 12px; border:1px solid var(--rule); border-radius:6px; background:var(--white); color:var(--navy);}
+.field input{width:90px;}
+.btn{font-family:var(--font); font-weight:800; font-size:14px; border:0; border-radius:999px; padding:11px 22px; cursor:pointer; background:var(--terra); color:var(--white); box-shadow:0 3px 10px rgba(139,29,29,0.25);}
+.btn.ghost{background:var(--white); color:var(--navy); border:1px solid var(--rule); box-shadow:none;}
+.btn:hover{filter:brightness(1.08);}
+.count{font-size:13px; color:var(--muted); margin-top:10px;}
+.count b{color:var(--navy);}
+.warn{font-size:13px; color:var(--terra); font-weight:700; margin-top:8px; display:none;}
+.teams{display:grid; gap:14px; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); margin-top:6px;}
+.team{background:var(--white); border:1px solid var(--rule); border-radius:var(--radius); box-shadow:0 3px 10px rgba(8,16,31,0.08); padding:16px 18px;}
+.team h3{font-size:16px; font-weight:800; margin-bottom:2px;}
+.team .tag{font-size:11px; color:var(--muted); margin-bottom:10px;}
+.team ol{padding-left:20px;}
+.team li{font-size:14px; line-height:1.55;}
+.team li.hc::after{content:' \2022 clinical'; color:var(--teal); font-size:11px; font-weight:700;}
+.tools{display:flex; flex-wrap:wrap; gap:10px; margin:14px 0 6px;}
+.note{font-size:12.5px; color:var(--muted); margin-top:10px;}
+
+/* projector mode */
+body.present{background:var(--navy);}
+body.present .wrap>*:not(#results){display:none;}
+body.present #results{display:block;}
+body.present #results .card{background:transparent; border:0; box-shadow:none; padding:10px 0;}
+body.present #results h2,body.present #results .step,body.present #results .tools,body.present #results .note{display:none;}
+body.present .teams{grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:18px;}
+body.present .team{background:var(--chip); border-color:#2C3A5C; color:var(--white);}
+body.present .team h3{color:var(--gold); font-size:22px;}
+body.present .team .tag{color:var(--faint);}
+body.present .team li{font-size:18px; color:var(--white);}
+body.present .team li.hc::after{content:none;}
+body.present .team .tag .hcn{display:none;}
+.pbar{display:none; position:fixed; bottom:18px; left:50%; transform:translateX(-50%); gap:10px;}
+body.present .pbar{display:flex;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">BIO 004 &middot; Faculty tool &middot; nothing is stored or uploaded</div>
+  <h1>Quick Teams<span class="dot">.</span></h1>
+  <p class="sub">Paste your roster, mark who has hands-on healthcare experience, and deal balanced random teams in one click. Clinical students are spread evenly first, then everyone else is shuffled in, so no team ends up stacked. Everything runs on this device and disappears when you close the tab.</p>
+
+  <div class="card">
+    <div class="step">Step 1</div>
+    <h2>Paste the roster</h2>
+    <p>One student per line. Put an asterisk after anyone with hands-on healthcare experience, like <b>Maria Lopez *</b>. That is the only mark the tool needs. Names never leave this page.</p>
+    <textarea id="roster" placeholder="Ava Thompson
+Liam Garcia *
+Sofia Nguyen
+Noah Patel *
+..."></textarea>
+    <div class="count" id="count">0 students &middot; 0 marked clinical</div>
+    <div class="row">
+      <div class="field"><label for="size">Team size</label><input id="size" type="number" min="3" max="9" value="6"></div>
+      <div class="field"><label for="names">Team names</label>
+        <select id="names">
+          <option value="parks">National parks</option>
+          <option value="bones">Bones</option>
+          <option value="numbers">Numbers</option>
+        </select>
+      </div>
+      <button type="button" class="btn" id="go">Deal the teams</button>
+      <button type="button" class="btn ghost" id="reroll">Re-deal</button>
+    </div>
+    <div class="warn" id="warn"></div>
+  </div>
+
+  <div id="results" style="display:none">
+    <div class="card">
+      <div class="step">Step 2</div>
+      <h2>Your teams</h2>
+      <div class="tools">
+        <button type="button" class="btn" id="present">Show on projector</button>
+        <button type="button" class="btn ghost" id="copy">Copy as text</button>
+        <button type="button" class="btn ghost" id="print">Print</button>
+      </div>
+      <div class="teams" id="teams"></div>
+      <p class="note">The clinical marks show only on your screen; projector mode hides them so nobody is singled out in front of the room. How it works: clinical students are shuffled and dealt one per team, round-robin, then everyone else is shuffled and dealt the same way. Leftover students fill the smallest teams, so sizes never differ by more than one. Re-deal any time you want a different arrangement.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="pbar"><button type="button" class="btn ghost" id="exit">Exit projector</button></div>
+
+<script>
+(function(){
+  var NAMES = {
+    parks: ['Yosemite','Zion','Sequoia','Redwood','Glacier','Denali','Acadia','Olympic','Arches','Joshua Tree','Yellowstone','Grand Canyon','Badlands','Everglades','Shenandoah','Rainier','Big Bend','Canyonlands'],
+    bones: ['Femur','Humerus','Scapula','Sternum','Patella','Radius','Ulna','Tibia','Fibula','Clavicle','Sacrum','Mandible','Maxilla','Talus','Hyoid','Sphenoid','Ethmoid','Vomer'],
+    numbers: []
+  };
+  var roster = document.getElementById('roster'), count = document.getElementById('count'), warn = document.getElementById('warn');
+  var teamsEl = document.getElementById('teams'), results = document.getElementById('results');
+  var last = null;
+
+  function parse(){
+    var lines = roster.value.split(/\r?\n/).map(function(s){ return s.trim(); }).filter(Boolean);
+    return lines.map(function(l){
+      var hc = /\*\s*$/.test(l) || /\s+(hc|y|yes)\s*$/i.test(l);
+      var name = l.replace(/\*\s*$/, '').replace(/\s+(hc|y|yes)\s*$/i, '').trim();
+      return { name: name, hc: hc };
+    });
+  }
+  function shuffle(a){ for (var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+
+  function deal(){
+    var people = parse();
+    warn.style.display = 'none';
+    if (people.length < 4){ warn.textContent = 'Paste at least a few names first.'; warn.style.display='block'; return null; }
+    var size = Math.max(3, Math.min(9, parseInt(document.getElementById('size').value,10) || 6));
+    var n = Math.max(1, Math.round(people.length / size));
+    var teams = []; for (var i=0;i<n;i++) teams.push([]);
+    var hc = shuffle(people.filter(function(p){ return p.hc; }));
+    var rest = shuffle(people.filter(function(p){ return !p.hc; }));
+    // start the round-robin at a random team so the same team is not always first
+    var k = Math.floor(Math.random()*n);
+    hc.forEach(function(p){ teams[k % n].push(p); k++; });
+    // everyone else: always drop into the currently smallest team (ties broken randomly)
+    rest.forEach(function(p){
+      var min = Math.min.apply(null, teams.map(function(t){ return t.length; }));
+      var cands = teams.filter(function(t){ return t.length === min; });
+      cands[Math.floor(Math.random()*cands.length)].push(p);
+    });
+    return teams;
+  }
+
+  function label(i){
+    var scheme = document.getElementById('names').value;
+    if (scheme === 'numbers' || !NAMES[scheme][i]) return 'Team ' + (i+1);
+    return NAMES[scheme][i];
+  }
+
+  function render(teams){
+    teamsEl.innerHTML = '';
+    teams.forEach(function(t, i){
+      var hcN = t.filter(function(p){ return p.hc; }).length;
+      var d = document.createElement('div'); d.className = 'team';
+      d.innerHTML = '<h3>' + label(i) + '</h3><div class="tag">' + t.length + ' members' + (hcN ? '<span class="hcn"> &middot; ' + hcN + ' clinical</span>' : '') + '</div><ol>' +
+        t.map(function(p){ return '<li' + (p.hc ? ' class="hc"' : '') + '>' + esc(p.name) + '</li>'; }).join('') + '</ol>';
+      teamsEl.appendChild(d);
+    });
+    results.style.display = 'block';
+    results.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  function esc(s){ return s.replace(/[&<>]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); }
+
+  roster.addEventListener('input', function(){
+    var p = parse(); count.innerHTML = '<b>' + p.length + '</b> students &middot; <b>' + p.filter(function(x){return x.hc;}).length + '</b> marked clinical';
+  });
+  document.getElementById('go').addEventListener('click', function(){ last = deal(); if (last) render(last); });
+  document.getElementById('reroll').addEventListener('click', function(){ last = deal(); if (last) render(last); });
+  document.getElementById('names').addEventListener('change', function(){ if (last) render(last); });
+
+  document.getElementById('copy').addEventListener('click', function(){
+    if (!last) return;
+    var txt = last.map(function(t,i){ return label(i) + '\n' + t.map(function(p){ return '  ' + p.name; }).join('\n'); }).join('\n\n');
+    navigator.clipboard.writeText(txt).then(function(){ document.getElementById('copy').textContent = 'Copied'; setTimeout(function(){ document.getElementById('copy').textContent = 'Copy as text'; }, 1500); });
+  });
+  document.getElementById('print').addEventListener('click', function(){ window.print(); });
+  document.getElementById('present').addEventListener('click', function(){ document.body.classList.add('present'); if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(function(){}); });
+  document.getElementById('exit').addEventListener('click', function(){ document.body.classList.remove('present'); if (document.fullscreenElement) document.exitFullscreen().catch(function(){}); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && document.body.classList.contains('present')) document.getElementById('exit').click(); });
+})();
+</script>
+</body>
+</html>
