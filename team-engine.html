@@ -109,6 +109,7 @@ body.present .panel>.card:not(.stage-on){display:none}
 body.present .stage-on{display:block}
 body.present .stage-on{background:transparent;border:0;box-shadow:none;padding:6px 0}
 body.present .stage-on .noprint{display:none!important}
+body.present #classList{display:none}
 body.present .stage-on .step-label,body.present .stage-on h2,body.present .stage-on .note,body.present .stage-on details,body.present .stage-on .summary-grid,body.present .stage-on #globalWarn,body.present .stage-on h3.sub{display:none}
 body.present .teams{grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
 body.present .team{background:var(--navy-chip);border-color:#2C3A5C;color:#fff}
@@ -132,14 +133,14 @@ body.present .pbar{display:flex}
   <header>
     <p class="eyebrow">BIO 004 &middot; Faculty tool &middot; Fall 2026 &middot; nothing is stored or uploaded</p>
     <h1>Team Formation Engine<span class="dot">.</span></h1>
-    <p class="lead">Two ways to build instructor-formed TBL teams, one place. <b>Quick Deal</b> takes a pasted roster and spreads clinical experience evenly in seconds, which is the day-one method. <b>Survey Balance</b> takes the Google Form CSV and balances background, leadership, tech comfort, work hours, social mix, and meeting windows, with a transparency report. Both name teams the same way and put the result on the projector. Everything runs on this device.</p>
+    <p class="lead">Two ways to build instructor-formed TBL teams, one place. <b>Quick Deal</b> takes a pasted roster and spreads clinical experience evenly in seconds, which is the day-one method. <b>Survey Balance</b> takes the Google Form CSV and balances background, leadership, tech comfort, work hours, social mix, and meeting windows, with a transparency report. Pick a naming theme per class (Space, Leaves, or Success), and both modes name teams the same way and put the result on the projector. Everything runs on this device.</p>
     <div class="row">
       <div class="tabs" role="tablist">
         <button type="button" role="tab" aria-selected="true" data-panel="quickPanel">Quick Deal</button>
         <button type="button" role="tab" aria-selected="false" data-panel="surveyPanel">Survey Balance</button>
       </div>
       <div class="field" style="margin-bottom:20px"><label for="nameScheme">Team names</label>
-        <select id="nameScheme"><option value="parks">National parks</option><option value="bones">Bones</option><option value="numbers">Numbers</option></select>
+        <select id="nameScheme"><option value="space">Space: Nebula, Pulsar, Quasar...</option><option value="leaves">Leaves: Ginkgo, Maple, Aspen...</option><option value="success">Success: Ambition, Momentum, Impact...</option><option value="numbers">Numbers</option></select>
       </div>
     </div>
   </header>
@@ -200,6 +201,7 @@ Noah Patel *"></textarea>
       <div class="map-grid" id="mapGrid"></div>
       <h3 style="margin-top:22px">Team settings</h3>
       <div class="row" style="margin-top:6px">
+        <div class="field"><label for="secFilter">Section</label><select id="secFilter"><option value="">All rows in the file</option><option value="Class 1">Class 1 · Mon/Wed</option><option value="Class 2">Class 2 · Tue/Thu morning</option><option value="Class 3">Class 3 · Tue/Thu evening</option></select><p class="hint">If the CSV has a Section column, build one class at a time.</p></div>
         <div class="field"><label for="teamSize">Target members per team</label><input type="number" id="teamSize" min="3" max="12" value="6"><p class="hint">TBL norm is 5 to 7.</p></div>
         <div class="field"><label for="teamCount">Number of teams</label><input type="number" id="teamCount" min="1" max="20" value="5"><p class="hint" id="sizeNote">Auto-set from headcount. Override if you like.</p></div>
         <div class="field"><label id="tierLbl">Tier order (who counts as strongest)</label>
@@ -229,6 +231,7 @@ Noah Patel *"></textarea>
       <div class="summary-grid" id="summary"></div>
       <div id="globalWarn"></div>
       <div class="teams" id="teams" style="margin-top:22px"></div>
+      <div id="classList" class="noprint-keep"></div>
       <details style="margin-top:24px">
         <summary>How the teams were built (transparency report)</summary>
         <p class="hint" style="margin-top:10px">Students are sorted by background strength and dealt across teams in a snake pattern so every team gets a comparable spread. The tool then swaps members to make sure each team has an organizer and a tech-comfortable member, to even out work-hours load, to mix introverts and extroverts, to share at least one meeting window, and to avoid leaving anyone as the lone member of a group.</p>
@@ -246,8 +249,9 @@ Noah Patel *"></textarea>
 
 /* ---------------- shared: team labels ---------------- */
 var NAME_SETS = {
-  parks: ['Yosemite','Zion','Sequoia','Redwood','Glacier','Denali','Acadia','Olympic','Arches','Joshua Tree','Yellowstone','Grand Canyon','Badlands','Everglades','Shenandoah','Rainier','Big Bend','Canyonlands','Bryce','Haleakala'],
-  bones: ['Femur','Humerus','Scapula','Sternum','Patella','Radius','Ulna','Tibia','Fibula','Clavicle','Sacrum','Mandible','Maxilla','Talus','Hyoid','Sphenoid','Ethmoid','Vomer','Ilium','Ischium'],
+  space:  ['Nebula','Pulsar','Quasar','Neptune','Orion','Romulan','Andromeda','Vega'],
+  leaves: ['Ginkgo','Maple','Aspen','Birch','Elm','Hickory','Willow','Cedar'],
+  success:['Ambition','Momentum','Impact','Discovery','Peak Performers','Collaborators','Resilience','Focus'],
   numbers: []
 };
 function nameScheme(){ var s=document.getElementById('nameScheme'); return s?s.value:'parks'; }
@@ -354,7 +358,9 @@ function parseCSV(text){
 
 /* ---------------- factor definitions ---------------- */
 const FACTORS=[
-  {key:'name',   label:'Full name',                  kw:['name']},
+  {key:'first',  label:'First name (if separate)',   kw:['first name','first']},
+  {key:'last',   label:'Last name (if separate)',    kw:['last name','last']},
+  {key:'name',   label:'Full name',                  kw:['full name','name','what would you like to be called']},
   {key:'degree', label:'Highest degree',             kw:['degree','education']},
   {key:'health', label:'Healthcare training',        kw:['healthcare','licens','clinical','patient care']},
   {key:'role',   label:'Leadership preference',      kw:['prefer to','on a team','lead','organize']},
@@ -362,11 +368,15 @@ const FACTORS=[
   {key:'social', label:'Introvert / extrovert',      kw:['more like you','introvert','extrovert','recharge']},
   {key:'avail',  label:'Availability to meet',       kw:['free to meet','outside of class','available','meet outside']},
   {key:'work',   label:'Work hours per week',        kw:['hours per week','work for pay','hours do you work']},
+  {key:'coursework', label:'Prior A&P coursework',    kw:['coursework','anatomy or physiology','physiology coursework']},
+  {key:'strengths',  label:'Strengths (check all)',    kw:['describe you','strengths']},
+  {key:'values',     label:'What matters most (rank)', kw:['matters most','matter most','rank']},
+  {key:'section',    label:'Section',                  kw:['section','which class']},
   {key:'gender', label:'Gender (optional)',          kw:['gender']},
   {key:'esl',    label:'English additional (optional)',kw:['english','additional language']}
 ];
 
-let RAW=null, HEADERS=[], MAP={}, STUDENTS=[], TEAMS=[], TIER='flip';
+let RAW=null, HEADERS=[], MAP={}, STUDENTS=[], TEAMS=[], TIER='flip', SEC_FILTER='';
 
 function guessMap(headers){
   const m={};const used=new Set();
@@ -458,7 +468,9 @@ function buildStudents(){
   for(let r=1;r<RAW.length;r++){
     const row=RAW[r];
     const get=k=>{const i=MAP[k];return i>=0&&i<row.length?row[i]:'';};
-    const name=(get('name')||('Student '+r)).trim();
+    var fn=(get('first')||'').trim(), ln=(get('last')||'').trim();
+    var name=(fn||ln)?(fn+' '+ln).trim():(get('name')||('Student '+r)).trim();
+    if(SEC_FILTER && MAP.section>=0){ var sv=(get('section')||'').toLowerCase(); if(!sv.includes(SEC_FILTER.toLowerCase())) continue; }
     if(!name)continue;
     const deg=classify(get('degree'),DEGREE_OPTS);
     const health=classify(get('health'),HEALTH_OPTS);
@@ -475,7 +487,7 @@ function buildStudents(){
     else if(genderRaw.includes('man')||genderRaw.includes('male'))gender='man';
     const eslRaw=(get('esl')||'').toLowerCase();
     const esl=eslRaw.startsWith('yes')||eslRaw.includes('yes');
-    STUDENTS.push({name,deg,health,role,tech,social,work,avail,gender,esl,
+    STUDENTS.push({name,deg,health,role,tech,social,work,avail,gender,esl,coursework:get('coursework'),strengths:get('strengths'),
       organizer:(role==='lead'||role==='plan'),
       techStrong:(tech==='high'),
       leader:(role==='lead')});
@@ -654,6 +666,11 @@ function render(){
   });
   rows+='</tbody></table>';
   document.getElementById('clTableWrap').innerHTML=rows;
+  /* alphabetical class list: who is on which team */
+  var flat=[]; TEAMS.forEach(function(t,i){ t.forEach(function(s){ flat.push({n:s.name,t:teamLabel(i)}); }); });
+  flat.sort(function(a,b){ return a.n.split(' ').slice(-1)[0].localeCompare(b.n.split(' ').slice(-1)[0]) || a.n.localeCompare(b.n); });
+  var lst='<h3 class="sub" style="margin-top:22px">Class list, alphabetical by last name</h3><table class="cl"><thead><tr><th>Student</th><th>Team</th></tr></thead><tbody>'+flat.map(function(x){return '<tr><td>'+esc(x.n)+'</td><td>'+esc(x.t)+'</td></tr>';}).join('')+'</tbody></table>';
+  var host=document.getElementById('classList'); if(host) host.innerHTML=lst;
 
   document.getElementById('resultsCard').classList.remove('hidden');
   document.getElementById('rerollBtn').classList.remove('hidden');
@@ -722,13 +739,14 @@ document.getElementById('tierMine').addEventListener('click',()=>setTier('mine')
 document.getElementById('tierFlip').addEventListener('click',()=>setTier('flip'));
 
 document.getElementById('printBtn').addEventListener('click',()=>window.print());
+document.getElementById('secFilter').addEventListener('change',e=>{SEC_FILTER=e.target.value;});
 
 document.getElementById('csvBtn').addEventListener('click',()=>{
-  let out='Team,Name,Degree,Healthcare,Leadership,Tech,Social,WorkHrsEst,Availability,Gender,ESL\n';
+  let out='Team,Name,Degree,Healthcare,Leadership,Tech,Social,WorkHrsEst,Availability,Gender,ESL,PriorCoursework,Strengths\n';
   TEAMS.forEach((t,i)=>{
     t.forEach(s=>{
       const av=AVAIL_BLOCKS.filter(b=>s.avail[b.key]).map(b=>b.key).join(' ');
-      const cells=[teamLabel(i),s.name,s.deg,s.health,s.role,s.tech,s.social,s.work,av,s.gender,s.esl?'yes':'no']
+      const cells=[teamLabel(i),s.name,s.deg,s.health,s.role,s.tech,s.social,s.work,av,s.gender,s.esl?'yes':'no',s.coursework||'',s.strengths||'']
         .map(c=>{c=String(c);return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c;});
       out+=cells.join(',')+'\n';
     });

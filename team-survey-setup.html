@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Survey Setup &middot; BIO 004</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{ --navy:#08101F; --terra:#8B1D1D; --gold-ink:#6B5214; --teal:#2C5F66; --muted:#3D4860; --rule:#DCE0E6; --offwhite:#FAFAF9; --font:'Plus Jakarta Sans',Arial,sans-serif; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--offwhite);color:var(--navy);padding:36px 22px 70px;max-width:940px;margin:0 auto}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--terra);margin-bottom:6px}
+h1{font-size:clamp(24px,4vw,32px);font-weight:800;margin-bottom:6px}
+h1 .dot{color:var(--terra)}
+.sub{color:var(--muted);font-size:14px;line-height:1.6;max-width:70em;margin-bottom:22px}
+.card{background:#fff;border:1px solid var(--rule);border-radius:8px;box-shadow:0 3px 10px rgba(8,16,31,.08);padding:20px 24px;margin-bottom:16px}
+.tag{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold-ink);margin-bottom:4px}
+.card h2{font-size:17px;font-weight:800;margin-bottom:8px}
+.card p{font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:8px}
+.card p b{color:var(--navy)}
+ol.steps{padding-left:22px}
+ol.steps li{font-size:13.5px;line-height:1.6;margin-bottom:7px}
+ol.steps li b{color:var(--terra)}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;background:#F0F2F5;padding:1px 6px;border-radius:4px}
+table{width:100%;border-collapse:collapse;margin-top:8px}
+th{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--terra);text-align:left;padding:6px 8px 6px 0;border-bottom:2px solid var(--navy)}
+td{font-size:13px;line-height:1.5;padding:7px 8px 7px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+td.n{width:28px;color:var(--terra);font-weight:800}
+td.t{width:110px;color:var(--muted);white-space:nowrap}
+td.k{width:110px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--muted)}
+/* paper survey */
+.paper{page-break-before:always}
+.paper h2{font-size:20px;font-weight:800;margin-bottom:2px}
+.paper .m{font-size:12px;color:var(--muted);margin-bottom:12px}
+.pq{margin-bottom:9px}
+.pq .qt{font-size:12.5px;font-weight:700;margin-bottom:3px}
+.pq .o{display:inline-block;font-size:11.5px;color:var(--navy);margin:2px 12px 2px 0}
+.pq .o::before{content:'';display:inline-block;width:11px;height:11px;border:1.5px solid var(--navy);border-radius:50%;vertical-align:middle;margin-right:5px}
+.pq.rank .o::before{content:none}
+.pq.rank .o{margin-right:18px}
+.pq.multi .o::before{border-radius:2px}
+.pq .line{display:inline-block;border-bottom:1px solid var(--navy);min-width:2.2in;height:14px;vertical-align:bottom;margin-left:6px}
+@media print{body{padding:14px;background:#fff}.card{box-shadow:none;page-break-inside:avoid}.noprint{display:none}}
+</style>
+</head>
+<body>
+
+<div class="eyebrow">BIO 004 &middot; Faculty &middot; Fall 2026</div>
+<h1>Team Survey Setup<span class="dot">.</span></h1>
+<p class="sub">How the pieces fit: students open <b>team-survey.html</b> from a QR code or the pop-up on their class page, answer twelve questions one at a time, and the page posts their answers into a Google Form you own, which lands in a Google Sheet. You download that Sheet as CSV, drop it into the <b>Team Formation Engine</b> (Survey Balance tab), pick the section, and get team cards, a class list, and a printable roster. Connecting it takes about ten minutes, once. Page two of this document is a paper copy of the survey for anyone without a phone.</p>
+
+<div class="card">
+  <div class="tag">Step 1 &middot; about 5 minutes</div>
+  <h2>Reuse your existing form</h2>
+  <p>You already have <b>TBL Team Survey</b> in Google Forms, and it matches what the engine expects. The survey page is already pointed at it (its FORM_ID is filled in). Open the form in the editor and make these small edits, then move to Step 2 for the entry IDs.</p>
+  <ol class="steps">
+    <li><b>Add one question at the top:</b> <b>Which class are you in?</b> Multiple choice: Class 1 · Mon/Wed / Class 2 · Tue/Thu morning / Class 3 · Tue/Thu evening. This is what lets one form serve all three classes; the engine filters by it. If you would rather keep three separate forms, make two copies and set a different FORM_ID per section instead.</li>
+    <li>On <b>On a team, I prefer to...</b> add a fourth choice: <b>Encourage people and keep the mood positive</b>. Everything else in that question stays.</li>
+    <li>In Settings, make sure <b>Collect email addresses</b> is off and <b>Limit to 1 response</b> is off, so students never have to sign in.</li>
+    <li>The <b>Gender</b> and <b>English</b> questions can stay or go; the survey page never sends them. Removing them keeps the promise on the page simple.</li>
+    <li><b>Optional, if you want the richer data:</b> add these four, in any order, all not required. <b>How much anatomy or physiology coursework have you had before this class?</b> (Multiple choice: None yet, this is my first / Some, in high school or a general biology class / I have completed an anatomy or physiology course before). <b>Which of these describe you?</b> (Checkboxes: I am reliable about showing up and following through / I ask good questions / I am comfortable speaking up in a group / I notice when someone is lost and help them catch up / I like explaining things to other people / I keep the group on task / I bring calm when things get stressful). <b>What matters most to you on a team?</b> (Short answer). <b>Anything you want me to know?</b> (Short answer). Skip any you do not want; the page only sends what has an entry ID.</li>
+    <li>If the form does not already have a linked Sheet: Responses tab, green Sheets icon, Create a new spreadsheet.</li>
+  </ol>
+</div>
+
+<div class="card">
+  <div class="tag">Step 2 &middot; about 3 minutes</div>
+  <h2>Get the entry IDs</h2>
+  <ol class="steps">
+    <li>In the form editor, click the <b>three-dot menu</b> (top right) and choose <b>Get pre-filled link</b>.</li>
+    <li>Type any answer into <b>every</b> question, including the checkbox ones, then click <b>Get link</b> and <b>Copy link</b>.</li>
+    <li>Paste the link into a text editor. It contains pieces like <code>entry.1234567890=...</code>, one per question, <b>in the same order as the form</b>. Those numbers are the entry IDs.</li>
+    <li>The <b>FORM_ID</b> is the long string in the form's own URL between <code>/d/e/</code> and <code>/viewform</code>.</li>
+  </ol>
+</div>
+
+<div class="card">
+  <div class="tag">Step 3 &middot; about 2 minutes</div>
+  <h2>Connect the survey page</h2>
+  <ol class="steps">
+    <li>Open <code>team-survey.html</code> in the repo. Near the top of the script the FORM_ID is already set to your form, and below it is an ENTRY block with one line per question, each with a comment naming the question it belongs to.</li>
+    <li>Paste each entry ID between the quotes on its line. Leave a line blank for any question you did not add to the form; the page skips blank ones.</li>
+    <li>Commit and push. Open the page on your phone, answer it once as a test, and confirm the row lands in the Sheet. Then delete that test row.</li>
+  </ol>
+  <p><b>Until FORM_ID is filled in</b>, the page still works: at the end it offers an "Email my answers" button that opens a message to your Solano address with the answers as one CSV line, so nothing a student does tonight is lost.</p>
+</div>
+
+<div class="card">
+  <div class="tag">Data retention</div>
+  <h2>What students are told, and what to do about it</h2>
+  <p>The survey page tells students their answers live in your course form, are used only to form teams, and that <b>the file is deleted once teams are final, at the close of add/drop</b>. That wording is on purpose: waiting until add/drop closes gives you the data if a late add or a run of drops means a team needs rebuilding in week two, and it still keeps a firm, dated promise. Deleting the moment teams are announced would leave you rebuilding blind.</p>
+  <ol class="steps">
+    <li>After the last team change of the add/drop window, open the linked Sheet and <b>File, Move to trash</b>, then empty the trash in Drive.</li>
+    <li>Open the form, Responses tab, three-dot menu, <b>Delete all responses</b>. Then either delete the form or keep the empty shell for next term.</li>
+    <li>Delete any downloaded CSVs from your laptop's Downloads folder. The Team Formation Engine keeps nothing once the tab closes.</li>
+    <li>Keep the final rosters in Canvas groups only. That is the system of record, and it is where a roster belongs.</li>
+  </ol>
+  <p>If you would rather promise same-day deletion, the only cost is that a week-two rebuild would need students to retake the survey. The retention wording lives in one sentence in <code>team-survey.html</code> and can be changed either way.</p>
+</div>
+
+<div class="card">
+  <div class="tag">On the day</div>
+  <h2>From Sheet to teams</h2>
+  <ol class="steps">
+    <li>In the linked Sheet: <b>File, Download, Comma-separated values</b>.</li>
+    <li>Open the <b>Team Formation Engine</b> from the faculty hub, Survey Balance tab, load the CSV. The column mapping fills itself from the question titles.</li>
+    <li>Choose the <b>Section</b>, set team size, Generate. Re-roll if you want a different arrangement.</li>
+    <li><b>Show on projector</b> for the announcement. <b>Print</b> for the roster and the alphabetical class list. <b>Download CSV</b> for the Canvas groups.</li>
+    <li>Anyone who took the paper survey: type their row into the Sheet before you download, or add them by hand to the smallest team afterward.</li>
+  </ol>
+</div>
+
+<div class="paper">
+  <div class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</div>
+  <h2>Team Survey</h2>
+  <p class="m">Paper version. Same questions as the phone survey. Circle one unless the question says check all that apply. Your answers are used only to form teams; the file is deleted once teams are final, at the close of add/drop.</p>
+  <div class="pq"><div class="qt">1. Which class are you in?</div><span class="o">Class 1 · Mon/Wed</span><span class="o">Class 2 · Tue/Thu morning</span><span class="o">Class 3 · Tue/Thu evening</span></div>
+  <div class="pq"><div class="qt">2. First name <span class="line"></span> &nbsp; 3. Last name <span class="line"></span></div></div>
+  <div class="pq"><div class="qt">4. Highest level of education completed so far</div><span class="o">High school or completing prerequisites</span><span class="o">Associate or some college</span><span class="o">Bachelor's or higher, non-STEM</span><span class="o">Bachelor's or higher, STEM</span></div>
+  <div class="pq"><div class="qt">5. Healthcare training or hands-on patient care experience</div><span class="o">None yet</span><span class="o">Entry-level patient care (CNA, PCT, MA, EMT-B, phlebotomy)</span><span class="o">Licensed allied health (RN, LVN, RT, paramedic, rad tech)</span></div>
+  <div class="pq"><div class="qt">6. Anatomy or physiology coursework before this class</div><span class="o">None yet</span><span class="o">Some, in high school or general biology</span><span class="o">Completed an A&amp;P course before</span></div>
+  <div class="pq"><div class="qt">7. On a team, I prefer to...</div><span class="o">Lead and organize</span><span class="o">Help plan and keep us organized</span><span class="o">Encourage and keep the mood positive</span><span class="o">Contribute steadily and follow the plan</span></div>
+  <div class="pq multi"><div class="qt">8. Which of these describe you? (check all that apply)</div><span class="o">Reliable about showing up</span><span class="o">Ask good questions</span><span class="o">Comfortable speaking up</span><span class="o">Notice when someone is lost</span><span class="o">Like explaining things</span><span class="o">Keep the group on task</span><span class="o">Bring calm under stress</span></div>
+  <div class="pq rank"><div class="qt">9. What matters most to you on a team? Number these 1 to 4, most important first.</div><span class="o">__ Everyone shows up prepared</span><span class="o">__ Clear, kind communication</span><span class="o">__ Getting the work done well</span><span class="o">__ Feeling comfortable asking questions</span></div>
+  <div class="pq"><div class="qt">10. Which sounds more like you?</div><span class="o">More extroverted</span><span class="o">Somewhere in between</span><span class="o">More introverted</span></div>
+  <div class="pq"><div class="qt">11. Comfort with technology and new apps</div><span class="o">Very comfortable</span><span class="o">Comfortable</span><span class="o">Neutral</span><span class="o">Not very comfortable</span></div>
+  <div class="pq multi"><div class="qt">12. Free to meet outside class (check all that apply)</div><span class="o">Weekday mornings</span><span class="o">Weekday afternoons</span><span class="o">Weekday evenings</span><span class="o">Weekends</span></div>
+  <div class="pq"><div class="qt">13. Hours per week working for pay</div><span class="o">None right now</span><span class="o">Under 10</span><span class="o">10 to 20</span><span class="o">20 to 30</span><span class="o">More than 30</span></div>
+  <div class="pq"><div class="qt">14. Anything you want me to know? (optional)</div><span class="line" style="min-width:6.5in"></span></div>
+</div>
+
+</body>
+</html>
