@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Poll &middot; BIO 004 Human Anatomy</title>
+<meta name="description" content="Live in-class polling for BIO 004. Presenter view for the projector, student view for phones, backed by a Google Sheet. No accounts, no names stored, no subscription.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#08101F;
+  --stage:#0E1929;
+  --card:#142235;
+  --navy-tint:#ECEFF4;
+  --gold:#DCB45C;
+  --gold-soft:#F2E2B8;
+  --terra:#8B1D1D;
+  --terra-deep:#6B1616;
+  --terra-light:#EDB19A;
+  --bar:#1C2A40;
+  --bar-correct:#38290C;
+  --offwhite:#FAFAF9;
+  --white:#FFFFFF;
+  --ink:#E7EAF0;
+  --muted:#A9B4C4;
+  --gray:#4B5260;
+  --gray-light:#D1D5DB;
+  --font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:var(--font);background:var(--offwhite);color:var(--navy);font-size:16px;line-height:1.55}
+.skip{position:absolute;left:-9999px;top:0;background:var(--navy);color:var(--white);padding:12px 18px;z-index:200;font-weight:600;border-radius:0 0 6px 0}
+.skip:focus{left:0}
+[hidden]{display:none !important}
+
+/* ==========================================================
+   PRESENTER STAGE
+   ========================================================== */
+body.presenting{background:var(--navy);color:var(--ink);overflow:hidden}
+.stage{
+  display:none;position:fixed;inset:0;background:var(--navy);color:var(--ink);
+  padding:clamp(20px,2.6vh,40px) clamp(24px,3vw,56px) 0;
+  grid-template-rows:auto 1fr auto;gap:clamp(12px,2vh,28px);
+}
+body.presenting .stage{display:grid}
+
+/* --- top row --- */
+.stage-top{display:flex;align-items:flex-start;justify-content:space-between;gap:32px}
+.stage-eyebrow{
+  font-size:clamp(11px,1vw,15px);letter-spacing:.16em;text-transform:uppercase;
+  font-weight:700;color:var(--gold);margin:0 0 8px
+}
+.stage-qmeta{font-size:clamp(13px,1.1vw,17px);color:var(--muted);margin:0;font-weight:600}
+
+/* --- join card --- */
+.join{
+  background:var(--card);border-radius:16px;padding:clamp(14px,1.6vh,22px) clamp(16px,1.4vw,26px);
+  box-shadow:0 10px 30px rgba(0,0,0,.35);display:flex;gap:clamp(14px,1.4vw,24px);align-items:center;
+  flex:0 0 auto
+}
+.join .qr{background:var(--white);border-radius:10px;padding:8px;line-height:0}
+.join .qr img,.join .qr canvas{display:block;width:clamp(88px,7.5vw,132px);height:auto}
+.join .jlabel{font-size:clamp(10px,.85vw,13px);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 2px}
+.join .jurl{font-size:clamp(11px,.92vw,15px);color:var(--ink);margin:0 0 10px;font-weight:500;overflow-wrap:anywhere;word-break:normal;max-width:26ch;line-height:1.35}
+.join .code{
+  font-size:clamp(30px,3.4vw,58px);font-weight:800;letter-spacing:.14em;color:var(--gold);
+  line-height:1;margin:0
+}
+
+/* --- question --- */
+.qtext{
+  font-size:clamp(24px,3.6vw,60px);font-weight:800;line-height:1.12;margin:0 0 clamp(18px,3vh,40px);
+  color:var(--white);max-width:20ch
+}
+.stage-mid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(24px,3.4vw,64px);align-items:center;min-height:0}
+
+/* --- waiting side: dot grid + counter --- */
+.waiting{display:flex;flex-direction:column;gap:clamp(12px,1.8vh,22px);min-width:0}
+.counter{display:flex;align-items:baseline;gap:14px}
+.counter .big{font-size:clamp(48px,7vw,116px);font-weight:800;color:var(--gold);line-height:.9;font-variant-numeric:tabular-nums}
+.counter .of{font-size:clamp(14px,1.4vw,24px);color:var(--muted);font-weight:600}
+.dots{display:flex;flex-wrap:wrap;gap:clamp(6px,.6vw,11px);max-width:100%}
+/* The dots are ornament. The number beside them is the real reading, which is
+   why they are aria-hidden and why their off state is allowed to sit quiet. */
+.dot{
+  width:clamp(12px,1.2vw,22px);height:clamp(12px,1.2vw,22px);border-radius:50%;
+  background:#405672;transition:background 260ms ease,transform 260ms ease
+}
+.dot.on{background:var(--gold);transform:scale(1.12)}
+
+/* --- results --- */
+.results{display:flex;flex-direction:column;gap:clamp(8px,1.2vh,16px);min-width:0}
+.results.quiet .num{opacity:0}
+.res{
+  position:relative;background:var(--card);border-radius:12px;overflow:hidden;
+  padding:clamp(11px,1.5vh,18px) clamp(14px,1.3vw,22px);
+  box-shadow:0 6px 18px rgba(0,0,0,.28)
+}
+.res .fill{
+  position:absolute;left:0;top:0;bottom:0;width:0;background:var(--bar);
+  transition:width 700ms cubic-bezier(.22,1,.36,1)
+}
+.res.correct .fill{background:var(--bar-correct)}
+.res .rowin{position:relative;display:flex;align-items:center;gap:clamp(10px,1vw,18px)}
+.res .letter{
+  flex:0 0 auto;width:clamp(30px,2.6vw,46px);height:clamp(30px,2.6vw,46px);border-radius:10px;
+  background:#20304A;color:var(--ink);font-weight:800;display:flex;align-items:center;justify-content:center;
+  font-size:clamp(14px,1.3vw,22px)
+}
+.res.correct .letter{background:var(--gold);color:var(--navy)}
+.res .otext{flex:1 1 auto;font-size:clamp(14px,1.35vw,23px);font-weight:600;color:var(--ink);line-height:1.3;min-width:0}
+.res .num{flex:0 0 auto;font-size:clamp(16px,1.7vw,30px);font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+.res.correct .otext,.res.correct .num{color:var(--gold-soft)}
+.res .verdictline{
+  position:relative;margin:8px 0 0;font-size:clamp(12px,1.05vw,17px);font-weight:600;
+  color:var(--terra-light);display:flex;align-items:center;gap:8px
+}
+.res.correct .verdictline{color:var(--gold)}
+.res .mark{font-weight:800}
+
+/* --- bottom controls --- */
+.stage-bottom{padding:0 0 clamp(14px,2vh,26px)}
+.controls{
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  opacity:0;transition:opacity 240ms ease
+}
+.controls.show,.controls:focus-within{opacity:1}
+.cbtn{
+  font-family:var(--font);font-size:clamp(12px,1vw,15px);font-weight:700;cursor:pointer;
+  background:var(--card);color:var(--ink);border:0;border-radius:10px;padding:11px 18px;
+  transition:background 160ms ease
+}
+.cbtn:hover{background:#1D2E45}
+.cbtn.primary{background:var(--gold);color:var(--navy)}
+.cbtn.primary:hover{background:var(--gold-soft)}
+.cbtn:focus-visible{outline:3px solid var(--gold-soft);outline-offset:3px}
+.cbtn[disabled]{opacity:.45;cursor:default}
+.chint{color:var(--muted);font-size:clamp(11px,.9vw,14px);margin-left:6px}
+
+/* ==========================================================
+   STUDENT VIEW
+   ========================================================== */
+.phone{max-width:640px;margin:0 auto;padding:0 18px 56px}
+.phead{background:var(--navy);color:var(--white);padding:22px 0 20px;margin-bottom:22px}
+.phead .wrap{max-width:640px;margin:0 auto;padding:0 18px}
+.phead .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--gold);margin:0 0 8px}
+.phead h1{font-size:22px;font-weight:800;margin:0 0 4px;line-height:1.2}
+.phead p{margin:0;color:#C7D0DC;font-size:14px}
+.pq{font-size:20px;font-weight:800;line-height:1.28;margin:0 0 18px}
+.pcard{background:var(--white);border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.08);margin:0 0 16px}
+.choices{display:flex;flex-direction:column;gap:10px}
+.choice{
+  display:flex;gap:14px;align-items:flex-start;text-align:left;width:100%;
+  font-family:var(--font);font-size:16px;line-height:1.4;font-weight:500;
+  background:var(--offwhite);color:var(--navy);border:0;border-radius:10px;
+  padding:16px 16px;cursor:pointer;min-height:56px;transition:background 160ms ease
+}
+.choice:hover{background:var(--navy-tint)}
+.choice:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+.choice .ltr{
+  flex:0 0 auto;width:28px;height:28px;border-radius:8px;background:var(--white);
+  color:var(--navy);font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px;
+  box-shadow:inset 0 0 0 1px var(--gray-light)
+}
+.choice[aria-pressed=true]{background:var(--navy);color:var(--white)}
+.choice[aria-pressed=true] .ltr{background:var(--gold);color:var(--navy);box-shadow:none}
+.pstat{margin:0;padding:13px 15px;border-radius:8px;background:var(--navy-tint);font-weight:600}
+.pmuted{color:var(--gray);margin:0}
+h2.ph{font-size:20px;font-weight:700;color:var(--terra);margin:32px 0 8px}
+
+/* ==========================================================
+   SETUP VIEW
+   ========================================================== */
+.setup{max-width:760px;margin:0 auto;padding:0 20px 64px}
+.setup h1{font-size:26px;font-weight:800;margin:0 0 8px}
+.setup h2{font-size:19px;font-weight:700;color:var(--terra);margin:28px 0 8px}
+.setup code{background:var(--navy-tint);padding:2px 6px;border-radius:5px;font-size:14px;font-weight:600}
+.setup ol{padding-left:22px}
+.setup li{margin:0 0 10px}
+.btn{
+  font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;background:var(--terra);
+  color:var(--white);border:0;border-radius:8px;padding:11px 20px
+}
+.btn:hover{background:var(--terra-deep)}
+.btn:focus-visible{outline:3px solid var(--navy);outline-offset:3px}
+label.fl{display:block;font-weight:700;margin:0 0 6px}
+input[type=text],input[type=password]{
+  font-family:var(--font);font-size:15px;padding:11px 12px;border-radius:8px;border:1px solid var(--gray);
+  width:100%;max-width:420px;color:var(--navy);background:var(--white)
+}
+input:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
+
+@media (max-width:900px){
+  .stage-mid{grid-template-columns:1fr}
+  .join{flex-direction:column;align-items:flex-start}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+  .dot.on{transform:none}
+}
+@media print{ .stage,.controls{display:none !important} }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to the content</a>
+
+<!-- ==========================================================
+     PRESENTER STAGE
+     ========================================================== -->
+<div class="stage" id="stage" role="region" aria-label="Live poll, presenter view">
+  <div class="stage-top">
+    <div>
+      <p class="stage-eyebrow" id="st-eyebrow">BIO 004 &middot; Human Anatomy</p>
+      <p class="stage-qmeta" id="st-meta">Question 1 of 5</p>
+    </div>
+    <div class="join">
+      <div class="qr" id="st-qr" aria-hidden="true"></div>
+      <div>
+        <p class="jlabel">Join at</p>
+        <p class="jurl" id="st-url">&nbsp;</p>
+        <p class="jlabel">Room code</p>
+        <p class="code" id="st-code">----</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage-mid" id="st-mid">
+    <div>
+      <h2 class="qtext" id="st-question">&nbsp;</h2>
+      <div class="waiting" id="st-waiting">
+        <div class="counter">
+          <span class="big" id="st-count">0</span>
+          <span class="of" id="st-of">answers in</span>
+        </div>
+        <div class="dots" id="st-dots" aria-hidden="true"></div>
+      </div>
+    </div>
+    <div>
+      <div class="results" id="st-results"></div>
+    </div>
+  </div>
+
+  <div class="stage-bottom">
+    <div class="controls" id="st-controls">
+      <button class="cbtn primary" id="c-lock" type="button">Lock and show results</button>
+      <button class="cbtn" id="c-reveal" type="button">Reveal the answer</button>
+      <button class="cbtn" id="c-next" type="button">Next question</button>
+      <button class="cbtn" id="c-clear" type="button">Clear this question</button>
+      <button class="cbtn" id="c-exit" type="button">Exit presenting</button>
+      <span class="chint">L lock &middot; R reveal &middot; N next &middot; Esc exit</span>
+    </div>
+    <p class="chint" id="st-status" role="status" aria-live="polite">&nbsp;</p>
+  </div>
+</div>
+
+<!-- ==========================================================
+     STUDENT AND SETUP
+     ========================================================== -->
+<div id="page">
+  <header class="phead" id="ph">
+    <div class="wrap">
+      <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano College</p>
+      <h1 id="ph-title">Live Poll</h1>
+      <p id="ph-sub">Answer on your phone. Nothing you send here has your name on it.</p>
+    </div>
+  </header>
+
+  <main id="main" class="phone" tabindex="-1"></main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* ============================================================
+   BIO 004 LIVE POLL
+   ------------------------------------------------------------
+   One page, three faces, chosen by the URL:
+
+     live-poll.html                 the student view
+     live-poll.html?room=BIO4       the student view, room prefilled
+     live-poll.html?present=1       the projector view
+
+   TWO THINGS TO SET
+   -----------------
+   1. ENDPOINT   the /exec URL of your deployed Apps Script web app.
+   2. QUESTIONS  what you are asking. Mark the right one with ok:true and
+      give every wrong one a why, which is what prints under its bar when
+      you hit Reveal. That labelled reveal is the part no polling service
+      can do for you, because only you know why each near-miss is a
+      near-miss.
+
+   Everything else is wiring. Setup steps are in live-poll-setup.md.
+   ============================================================ */
+
+var ENDPOINT = '';   /* paste your .../exec URL between the quotes */
+
+var ROOM_DEFAULT = 'BIO4';   /* or one per section, for example MW, TAM, TPM */
+var CLASS_SIZE   = 32;       /* only drives the dot grid on the projector */
+
+var QUESTIONS = [
+  { id:'la-pseudo',
+    q:'Pseudostratified ciliated columnar against stratified columnar. Which one feature decides it?',
+    options:[
+      { t:'The nuclei sit at several different levels.', why:'True of both, and it is the confusion itself.' },
+      { t:'Every cell reaches the basement membrane.', ok:true },
+      { t:'It sits on a basement membrane.', why:'True of all epithelium, so it decides nothing inside epithelium.' },
+      { t:'It lines a tube and has a free apical surface.', why:'True of both and of most epithelium you will meet.' }
+    ]},
+  { id:'la-smooth',
+    q:'Smooth muscle against dense regular connective tissue. Which one feature decides it?',
+    options:[
+      { t:'The nuclei are elongated and lie along the grain.', why:'True of both. It is why this pair is hard.' },
+      { t:'Everything runs the same direction across the field.', why:'True of both. Direction separates regular from irregular, not muscle from collagen.' },
+      { t:'The nucleus sits inside its own cell rather than between the bundles.', ok:true },
+      { t:'It stains pink in a routine stain.', why:'True of both and of a great deal else on the slide.' }
+    ]},
+  { id:'la-fibro',
+    q:'Fibrocartilage against dense regular connective tissue. Which one feature decides it?',
+    options:[
+      { t:'Thick collagen bundles run through the field.', why:'True of both. It is the shared feature that creates the problem.' },
+      { t:'The cells are arranged in rows.', why:'True of both, and the rows are why fibrocartilage gets called tendon.' },
+      { t:'It takes compression and tension together.', why:'True, and you cannot read load off a slide.' },
+      { t:'The cells sit in lacunae.', ok:true }
+    ]},
+  { id:'la-adipose',
+    q:'Simple squamous against adipose. Which one feature decides it?',
+    options:[
+      { t:'What is on the other side, one lining layer against a whole packed field.', ok:true },
+      { t:'The nuclei are flattened and pushed to one edge.', why:'True of both, and it is the reason for the confusion.' },
+      { t:'The cytoplasm looks thin and pale.', why:'True of both, for two completely different reasons.' },
+      { t:'It is found throughout the body.', why:'A fact about the body, not about the field in front of you.' }
+    ]},
+  { id:'la-cardiac',
+    q:'Cardiac muscle against smooth muscle. Which one feature decides it?',
+    options:[
+      { t:'The nucleus sits centrally in the cell.', why:'True of both. This is the trap, and it is what most people say first.' },
+      { t:'Neither is under conscious control.', why:'True, and control is not something a slide can show you.' },
+      { t:'Striations.', ok:true },
+      { t:'The cells are held together by connective tissue.', why:'True of both and of skeletal muscle too.' }
+    ]}
+];
+
+/* ============================================================
+   Nothing below here needs editing.
+   ============================================================ */
+(function(){
+  'use strict';
+
+  var LETTERS = ['A','B','C','D','E','F'];
+  var params  = new URLSearchParams(window.location.search);
+  var ROOM    = (params.get('room') || ROOM_DEFAULT).toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6);
+  var PRESENT = params.get('present') === '1';
+
+  var stage  = document.getElementById('stage');
+  var page   = document.getElementById('page');
+  var main   = document.getElementById('main');
+
+  function el(t,c,x){ var n=document.createElement(t); if(c)n.className=c; if(x!=null)n.textContent=x; return n; }
+  function byId(id){ return document.getElementById(id); }
+
+  /* ---------- transport ----------
+     Everything is a GET, because a JSON POST would trigger a CORS preflight
+     that an Apps Script web app cannot answer. Plain fetch is tried first,
+     and if the browser refuses we fall back to JSONP, which Apps Script has
+     always been able to serve. That fallback is why this keeps working on a
+     campus network that does something odd to CORS. */
+  var jsonpSeq = 0;
+  function call(args){
+    if(!ENDPOINT) return Promise.reject(new Error('no endpoint'));
+    var qs = Object.keys(args).map(function(k){
+      return encodeURIComponent(k) + '=' + encodeURIComponent(args[k]);
+    }).join('&');
+    var url = ENDPOINT + '?' + qs;
+
+    return fetch(url, { method:'GET' })
+      .then(function(r){ return r.json(); })
+      .catch(function(){ return jsonp(url); });
+  }
+  function jsonp(url){
+    return new Promise(function(resolve, reject){
+      var name = 'bio004cb' + (++jsonpSeq);
+      var s = document.createElement('script');
+      var done = false;
+      window[name] = function(data){ done = true; cleanup(); resolve(data); };
+      function cleanup(){
+        try{ delete window[name]; }catch(e){ window[name] = undefined; }
+        if(s.parentNode) s.parentNode.removeChild(s);
+      }
+      s.onerror = function(){ cleanup(); reject(new Error('network')); };
+      s.src = url + '&callback=' + name;
+      document.head.appendChild(s);
+      setTimeout(function(){ if(!done){ cleanup(); reject(new Error('timeout')); } }, 9000);
+    });
+  }
+
+  function baseUrl(){ return window.location.href.split('?')[0]; }
+  function studentUrl(){ return baseUrl() + '?room=' + ROOM; }
+  /* What gets printed on the join card. The QR carries the full address with
+     the room in it, so the typed line can stay short enough to read from the
+     back row. Anyone typing it lands on the code entry screen instead. */
+  function typedUrl(){
+    return baseUrl().replace(/^https?:\/\//,'').replace(/\/index\.html$/,'/');
+  }
+
+  /* ============================================================
+     SETUP FACE
+     ============================================================ */
+  function renderSetup(){
+    document.title = 'Set up the live poll · BIO 004';
+    byId('ph-title').textContent = 'The poll is not connected yet';
+    byId('ph-sub').textContent = 'This page needs the address of your Apps Script web app.';
+    page.hidden = false;
+    main.className = 'setup';
+    main.innerHTML = '';
+
+    main.appendChild(el('p', null,
+      'Nothing here is broken. The page just has nowhere to send answers to yet, because ENDPOINT at the top of its script is still empty.'));
+
+    main.appendChild(el('h2', null, 'What to do'));
+    var ol = document.createElement('ol');
+    [
+      'Open script.google.com and make a new project. Paste in bio004-live-poll.gs.',
+      'Change PRESENTER_KEY at the top to anything you like, then Save.',
+      'Run setup() once and approve the permission prompt. It logs a link to the new spreadsheet, which is where the answers land.',
+      'Deploy, New deployment, Web app. Execute as Me. Who has access, Anyone. Copy the /exec URL it gives you.',
+      'Paste that URL into ENDPOINT near the top of this page and push it.'
+    ].forEach(function(t){ var li=document.createElement('li'); li.textContent=t; ol.appendChild(li); });
+    main.appendChild(ol);
+
+    main.appendChild(el('h2', null, 'Test it without editing the file'));
+    main.appendChild(el('p', null,
+      'Paste the /exec URL below and this page will try it. This is only a test, it is not saved into the file for you.'));
+
+    var lab = el('label','fl','Your web app /exec URL');
+    lab.setAttribute('for','ep');
+    var inp = document.createElement('input');
+    inp.type='text'; inp.id='ep'; inp.placeholder='https://script.google.com/macros/s/..../exec';
+    var b = el('button','btn','Test the connection'); b.type='button';
+    var out = el('p','pstat','Not tested yet.');
+    out.setAttribute('role','status'); out.setAttribute('aria-live','polite');
+
+    b.addEventListener('click', function(){
+      var v = inp.value.trim();
+      if(!v){ out.textContent = 'Paste the URL first.'; return; }
+      ENDPOINT = v;
+      out.textContent = 'Trying...';
+      call({ action:'ping', room:ROOM }).then(function(r){
+        out.textContent = (r && r.ok)
+          ? 'It answered. Paste this URL into ENDPOINT and you are done.'
+          : 'It answered but reported a problem: ' + ((r && r.error) || 'unknown');
+      }).catch(function(){
+        out.textContent = 'No answer. Check that Who has access is set to Anyone, and that you copied the /exec URL rather than the /dev one.';
+      });
+    });
+
+    main.appendChild(lab); main.appendChild(inp);
+    var row = el('p'); row.style.marginTop = '14px'; row.appendChild(b);
+    main.appendChild(row);
+    main.appendChild(out);
+  }
+
+  /* ============================================================
+     STUDENT FACE
+     ============================================================ */
+  var myToken = (function(){
+    var k = 'bio004-poll-token';
+    try{
+      var t = window.localStorage.getItem(k);
+      if(!t){ t = Math.random().toString(36).slice(2,12) + Math.random().toString(36).slice(2,6); window.localStorage.setItem(k,t); }
+      return t;
+    }catch(e){
+      return 'x' + Math.random().toString(36).slice(2,14);
+    }
+  })();
+
+  var sCurrentId = null, sChoice = null, sLocked = false, sTimer = null;
+
+  function renderJoin(){
+    page.hidden = false;
+    main.className = 'phone';
+    byId('ph-title').textContent = 'Join the poll';
+    byId('ph-sub').textContent = 'Type the room code from the screen at the front.';
+    main.innerHTML = '';
+    var card = el('div','pcard');
+    var lab = el('label','fl','Room code');
+    lab.setAttribute('for','joincode');
+    var inp = document.createElement('input');
+    inp.type='text'; inp.id='joincode'; inp.value = ROOM_DEFAULT;
+    inp.setAttribute('autocomplete','off');
+    inp.setAttribute('autocapitalize','characters');
+    inp.setAttribute('maxlength','6');
+    var go = el('button','btn','Join'); go.type='button';
+    function join(){
+      var v = inp.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6);
+      if(!v){ inp.focus(); return; }
+      window.location.href = baseUrl() + '?room=' + v;
+    }
+    go.addEventListener('click', join);
+    inp.addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); join(); } });
+    card.appendChild(lab); card.appendChild(inp);
+    var row = el('p'); row.style.marginTop = '14px'; row.appendChild(go);
+    card.appendChild(row);
+    main.appendChild(card);
+    main.appendChild(el('p','pmuted','No names are stored. Only which option was tapped.'));
+    inp.focus(); inp.select();
+  }
+
+  function renderStudent(){
+    page.hidden = false;
+    main.className = 'phone';
+    byId('ph-sub').textContent = 'Room ' + ROOM + '. Nothing you send here has your name on it.';
+    pollStudent();
+    sTimer = setInterval(pollStudent, 2500);
+  }
+
+  function pollStudent(){
+    call({ action:'current', room:ROOM }).then(function(r){
+      if(!r || !r.ok) return drawStudentWaiting('Waiting for the room to open.');
+      var q = findQ(r.question);
+      if(!q) return drawStudentWaiting('Waiting for the next question.');
+      if(q.id !== sCurrentId){ sCurrentId = q.id; sChoice = null; }
+      sLocked = !r.open;
+      drawStudent(q, r);
+    }).catch(function(){
+      drawStudentWaiting('Cannot reach the poll right now. It will keep trying.');
+    });
+  }
+
+  function findQ(id){
+    for(var i=0;i<QUESTIONS.length;i++){ if(QUESTIONS[i].id === id) return QUESTIONS[i]; }
+    return null;
+  }
+
+  function drawStudentWaiting(msg){
+    main.innerHTML = '';
+    var card = el('div','pcard');
+    card.appendChild(el('h2','pq','Nothing to answer yet'));
+    var p = el('p','pstat', msg);
+    p.setAttribute('role','status'); p.setAttribute('aria-live','polite');
+    card.appendChild(p);
+    main.appendChild(card);
+  }
+
+  function drawStudent(q, st){
+    main.innerHTML = '';
+    var card = el('div','pcard');
+    card.appendChild(el('h2','pq', q.q));
+
+    if(sLocked){
+      var msg = el('p','pstat', sChoice == null
+        ? 'This one is closed. Nothing was recorded for you.'
+        : 'Closed. Your answer was ' + LETTERS[sChoice] + '. Look up at the screen.');
+      msg.setAttribute('role','status'); msg.setAttribute('aria-live','polite');
+      card.appendChild(msg);
+      main.appendChild(card);
+      return;
+    }
+
+    var wrap = el('div','choices');
+    q.options.forEach(function(o, j){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'choice';
+      b.setAttribute('aria-pressed', sChoice === j ? 'true' : 'false');
+      var l = el('span','ltr', LETTERS[j]);
+      l.setAttribute('aria-hidden','true');
+      b.appendChild(l);
+      b.appendChild(el('span', null, o.t));
+      b.addEventListener('click', function(){ sendVote(q, j); });
+      wrap.appendChild(b);
+    });
+    card.appendChild(wrap);
+
+    var stat = el('p','pstat', sChoice == null
+      ? 'Tap one. You can change it until the poll closes.'
+      : 'Sent. ' + LETTERS[sChoice] + ' is your answer. Tap another to change it.');
+    stat.setAttribute('role','status'); stat.setAttribute('aria-live','polite');
+    stat.style.marginTop = '16px';
+    card.appendChild(stat);
+
+    main.appendChild(card);
+    main.appendChild(el('p','pmuted','Room ' + ROOM + '. No names are stored, only which option was tapped.'));
+  }
+
+  function sendVote(q, j){
+    sChoice = j;
+    drawStudent(q, {});
+    call({ action:'vote', room:ROOM, question:q.id, option:j, token:myToken })
+      .then(function(r){
+        if(r && r.locked){ sLocked = true; drawStudent(q, {}); }
+      })
+      .catch(function(){});
+  }
+
+  /* ============================================================
+     PRESENTER FACE
+     ============================================================ */
+  var pIdx = 0, pOpen = false, pRevealed = false, pTimer = null, pCounts = [], pTotal = 0;
+  var pKey = '';
+
+  function presenterKey(){
+    if(pKey) return pKey;
+    try{ pKey = window.localStorage.getItem('bio004-poll-key') || ''; }catch(e){}
+    if(!pKey){
+      pKey = window.prompt('Presenter key (the PRESENTER_KEY you set in the Apps Script)') || '';
+      try{ window.localStorage.setItem('bio004-poll-key', pKey); }catch(e){}
+    }
+    return pKey;
+  }
+
+  function renderPresenter(){
+    document.body.classList.add('presenting');
+    page.hidden = true;
+    byId('st-code').textContent = ROOM;
+    byId('st-url').textContent = typedUrl();
+    buildQr();
+    buildDots();
+    showQuestion();
+    wireControls();
+    pTimer = setInterval(refreshTally, 2000);
+  }
+
+  function buildQr(){
+    var box = byId('st-qr');
+    box.innerHTML = '';
+    try{
+      if(window.QRCode){
+        new window.QRCode(box, { text:studentUrl(), width:132, height:132,
+          colorDark:'#08101F', colorLight:'#FFFFFF' });
+        return;
+      }
+    }catch(e){}
+    /* If the QR library did not load, the room code and the typed address on
+       the card are still enough to join, so nothing is lost. */
+    box.parentNode.removeChild(box);
+  }
+
+  function buildDots(){
+    var d = byId('st-dots');
+    d.innerHTML = '';
+    for(var i=0;i<CLASS_SIZE;i++) d.appendChild(el('span','dot'));
+  }
+
+  function showQuestion(){
+    var q = QUESTIONS[pIdx];
+    pOpen = true; pRevealed = false; pCounts = []; pTotal = 0;
+    byId('st-meta').textContent = 'Question ' + (pIdx+1) + ' of ' + QUESTIONS.length;
+    byId('st-question').textContent = q.q;
+    byId('st-count').textContent = '0';
+    byId('st-of').textContent = 'answers in';
+    buildDots();
+    paintResults();
+    setControls();
+    push({ open:'1', reveal:'0' });
+    say('Open. Students can answer.');
+  }
+
+  function push(extra){
+    var q = QUESTIONS[pIdx];
+    var args = { action:'set', room:ROOM, question:q.id, key:presenterKey() };
+    Object.keys(extra).forEach(function(k){ args[k] = extra[k]; });
+    return call(args).then(function(r){
+      if(r && r.ok === false && /key/i.test(r.error||'')){
+        try{ window.localStorage.removeItem('bio004-poll-key'); }catch(e){}
+        pKey = '';
+        say('That presenter key was refused. Reload and try again.');
+      }
+      return r;
+    }).catch(function(){ say('Could not reach the poll.'); });
+  }
+
+  function refreshTally(){
+    var q = QUESTIONS[pIdx];
+    call({ action:'tally', room:ROOM, question:q.id }).then(function(r){
+      if(!r || !r.ok) return;
+      pCounts = r.counts || [];
+      pTotal  = r.total || 0;
+      paint();
+    }).catch(function(){});
+  }
+
+  function paint(){
+    byId('st-count').textContent = String(pTotal);
+    var dots = byId('st-dots').children;
+    for(var i=0;i<dots.length;i++){
+      dots[i].className = 'dot' + (i < pTotal ? ' on' : '');
+    }
+    if(pTotal > CLASS_SIZE){
+      byId('st-of').textContent = 'answers in, more than the ' + CLASS_SIZE + ' expected';
+    }
+  }
+
+  /* The options are on screen from the moment the question opens, so the room
+     can read and argue about them. What is withheld until the lock is how many
+     people picked each one, because a bar growing in front of a class that has
+     not answered yet just tells the undecided which way to go. */
+  function paintResults(){
+    var q = QUESTIONS[pIdx];
+    var host = byId('st-results');
+    host.className = 'results' + (pOpen ? ' quiet' : '');
+    host.innerHTML = '';
+    var max = Math.max(1, pTotal);
+
+    q.options.forEach(function(o, j){
+      var n = pCounts[j] || 0;
+      var pct = pOpen ? 0 : Math.round((n / max) * 100);
+      var row = el('div','res' + (pRevealed && o.ok ? ' correct' : ''));
+
+      var fill = el('span','fill');
+      row.appendChild(fill);
+
+      var inner = el('div','rowin');
+      var ltr = el('span','letter', LETTERS[j]);
+      ltr.setAttribute('aria-hidden','true');
+      inner.appendChild(ltr);
+      inner.appendChild(el('span','otext', o.t));
+      inner.appendChild(el('span','num', pOpen ? '' : (n + '  ' + pct + '%')));
+      row.appendChild(inner);
+
+      if(pRevealed){
+        var line = el('p','verdictline');
+        var mark = el('span','mark', o.ok ? '✓' : '✕');
+        mark.setAttribute('aria-hidden','true');
+        line.appendChild(mark);
+        line.appendChild(el('span', null, o.ok
+          ? 'This is the deciding feature.'
+          : (o.why || 'True, but it does not decide it.')));
+        row.appendChild(line);
+      }
+      host.appendChild(row);
+      /* width is set after insertion so the bar animates rather than jumping */
+      window.setTimeout(function(){ fill.style.width = pct + '%'; }, 30);
+    });
+  }
+
+  function setControls(){
+    byId('c-lock').disabled   = !pOpen;
+    byId('c-reveal').disabled = pOpen || pRevealed;
+    byId('c-next').textContent = (pIdx < QUESTIONS.length - 1) ? 'Next question' : 'Back to the first';
+  }
+
+  function say(t){ byId('st-status').textContent = t; }
+
+  function doLock(){
+    if(!pOpen) return;
+    pOpen = false;
+    push({ open:'0', reveal:'0' });
+    refreshTally();
+    paintResults();
+    setControls();
+    say('Locked. ' + pTotal + ' answers counted.');
+  }
+  function doReveal(){
+    if(pOpen){ doLock(); }
+    pRevealed = true;
+    push({ open:'0', reveal:'1' });
+    paintResults();
+    setControls();
+    say('Revealed.');
+  }
+  function doNext(){
+    pIdx = (pIdx + 1) % QUESTIONS.length;
+    showQuestion();
+  }
+  function doClear(){
+    var q = QUESTIONS[pIdx];
+    call({ action:'clear', room:ROOM, question:q.id, key:presenterKey() }).then(function(){
+      showQuestion();
+      say('Cleared. This question is open again with no answers.');
+    }).catch(function(){ say('Could not clear it.'); });
+  }
+  function doExit(){
+    if(pTimer) clearInterval(pTimer);
+    window.location.href = window.location.href.split('?')[0] + '?room=' + ROOM;
+  }
+
+  var hideTimer = null;
+  function flashControls(){
+    var c = byId('st-controls');
+    c.classList.add('show');
+    if(hideTimer) clearTimeout(hideTimer);
+    hideTimer = setTimeout(function(){ c.classList.remove('show'); }, 3200);
+  }
+
+  function wireControls(){
+    byId('c-lock').addEventListener('click', doLock);
+    byId('c-reveal').addEventListener('click', doReveal);
+    byId('c-next').addEventListener('click', doNext);
+    byId('c-clear').addEventListener('click', doClear);
+    byId('c-exit').addEventListener('click', doExit);
+    document.addEventListener('mousemove', flashControls);
+    document.addEventListener('keydown', function(e){
+      if(e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+      var k = e.key.toLowerCase();
+      if(k === 'l'){ doLock(); flashControls(); }
+      else if(k === 'r'){ doReveal(); flashControls(); }
+      else if(k === 'n'){ doNext(); flashControls(); }
+      else if(e.key === 'Escape'){ doExit(); }
+      else { flashControls(); }
+    });
+    flashControls();
+  }
+
+  /* ============================================================
+     PICK A FACE
+     ============================================================ */
+  if(!ENDPOINT){ renderSetup(); }
+  else if(PRESENT){ renderPresenter(); }
+  else if(!params.get('room')){ renderJoin(); }
+  else { renderStudent(); }
+})();
+</script>
+</body>
+</html>
