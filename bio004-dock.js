@@ -864,4 +864,48 @@
     el.onerror = function () {};   /* absent file, page carries on unchanged */
     document.head.appendChild(el);
   })();
+
+  /* ============================================================
+     HOOTIE
+
+     Stuck? Ask Hootie was on 21 pages out of 514, so on all but a
+     handful of the course a student who got stuck had nowhere to ask.
+     Loaded from here for the same reason as the reading format: the
+     dock is already on every page and there is no shared stylesheet
+     to hang it off instead.
+
+     Guarded twice. window.BIO004_HOOTIE means it has already run, and
+     a script tag for it already in the page means the page loads its
+     own copy, so neither case loads it a second time.
+
+     To take it off the whole course, delete this block.
+     ============================================================ */
+  (function loadHootie() {
+    if (window.BIO004_HOOTIE) return;
+    if (document.querySelector('script[src*="hootie.js"]')) return;
+
+    var here = document.querySelector('script[src*="bio004-dock.js"]');
+    function sibling(name) {
+      return here ? here.getAttribute('src').replace('bio004-dock.js', name) : name;
+    }
+    function add(src) {
+      var el = document.createElement('script');
+      el.src = src;
+      el.async = false;              /* injected scripts still run in order */
+      el.onerror = function () {};   /* absent file, page carries on unchanged */
+      document.head.appendChild(el);
+    }
+
+    /* Hootie needs the schedule: buildContext returns null without
+       BIO004_SESSIONS and BIO004_MODULES, and a null context means it
+       mounts nothing at all. That is why it was on 21 pages, the 31 that
+       load the schedule, and nowhere else. Load the data first where a
+       page does not already have it, then Hootie. */
+    if (!window.BIO004_SESSIONS || !window.BIO004_MODULES) {
+      if (!document.querySelector('script[src*="schedule-fall2026.js"]')) {
+        add(sibling('schedule-fall2026.js'));
+      }
+    }
+    add(sibling('hootie.js'));
+  })();
 })();
