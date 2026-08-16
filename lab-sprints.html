@@ -4,41 +4,49 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lab Sprints &middot; BIO 004 Human Anatomy &middot; Fall 2026</title>
-<meta name="description" content="Every lab sprint in BIO 004, grouped by module and lab exam, with the week each one runs.">
+<meta name="description" content="Every BIO 004 lab sprint by module, with how many structures each one holds. Tick them off as you drill them.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <!-- ============================================================
-     WHY THIS PAGE EXISTS
+     LAB SPRINTS
 
-     Course tools had a tile called "Lab sprints" and it went to
-     class1.html, the section hub, which links to no lab sprint at
-     all. The 31 sprints were reachable, but only through the
-     calendar: open a day, and that day's sprints are on its card.
+     Same shape as course-materials.html: top bar, module rail on
+     the left, module cards on the right, one row per thing.
 
-     That is the right place for "what do I do tonight". It is the
-     wrong place for "I have a lab practical on Friday, show me
-     everything I am responsible for", because that means opening
-     eleven days one at a time and remembering what was on each.
+     WHAT IS NEW HERE
 
-     NOTHING HERE IS TYPED
+     1. A CHECKBOX ON EVERY ROW. A student drilling for a lab exam
+        works through the same list over several days and needs to
+        know where they stopped. Ticks are kept per student in the
+        browser under bio004-sprint-done, and each module header
+        counts them, so the page answers "how much is left" without
+        being asked.
 
-     The list is built at load from session-links.js, the same file
-     the calendar and the day cards read, grouped into modules by
-     schedule-fall2026.js. A sprint that moves to a different week
-     moves on this page, and a sprint that is added appears here,
-     without anyone editing this file. A hand-typed list is a second
-     copy of the schedule and it is wrong the first time a lab moves.
+     2. HOW BIG EACH SPRINT IS. An index that says only "Axial
+        Skeleton: The Skull" does not tell you whether that is
+        twenty minutes or two hours. The skull is 144 structures.
+        The abdominal wall is 12. That number changes how a week
+        gets planned, so it is on the row.
+
+     3. SPIRAL ROUNDS SAID OUT LOUD. Every sprint page has always
+        carried Spiral Rounds, the sets of about ten to twelve
+        structures taken through five escalating rounds. From the
+        index it was invisible, so students had no reason to think
+        the drill was in there. The page now says so.
+
+     Data is session-links.js for which sprint runs when, and
+     lab-sprint-counts.js for how big each one is.
      ============================================================ -->
 
 <style>
   :root{
-    --navy:#08101F; --navy-tint:#ECEFF4;
-    --terra:#8B1D1D; --terra-dark:#6B1616;
+    --navy:#08101F; --terra-dark:#6B1616;
     --gold:#DCB45C; --gold-text:#6F5316;
     --white:#FFFFFF; --offwhite:#FAFAF9;
-    --ink-2:#3D4757; --ink-3:#4A5763;
+    --ink-3:#4A5763; --line:#ECEAE6;
+    --ok:#1F6B3A;
     --radius:8px;
     --rest:0 1px 3px rgba(0,0,0,0.08);
     --hover:0 10px 22px rgba(0,0,0,0.12);
@@ -49,102 +57,176 @@
   html{scroll-behavior:smooth}
   body{margin:0;font-family:var(--font);color:var(--navy);background:var(--offwhite);
        line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1000px;margin:0 auto;padding:28px 20px 90px}
   .skip{position:absolute;left:-9999px;background:var(--terra-dark);color:#fff;padding:10px 16px;
-        border-radius:8px;font-weight:700;z-index:50}
+        border-radius:8px;font-weight:700;z-index:60}
   .skip:focus{left:16px;top:16px}
   :focus-visible{outline:3px solid var(--terra-dark);outline-offset:2px;border-radius:6px}
   .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
       clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
-  .cover{padding:6px 0 22px}
-  .cover-eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
-                 color:var(--terra-dark);margin:0 0 10px}
-  h1{font-family:var(--font);font-weight:800;font-size:clamp(26px,4.6vw,40px);line-height:1.04;
-     letter-spacing:-.02em;margin:0 0 12px}
-  h1 span{color:var(--gold-text)}
-  .lede{font-size:17px;color:var(--ink-3);margin:0 0 6px;max-width:66ch}
+  .topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+          padding:16px 30px;background:var(--white);border-bottom:1px solid var(--line)}
+  .topbar .crumb{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;
+                 color:var(--terra-dark)}
+  .topnav{display:flex;gap:20px;font-size:13px;font-weight:700}
+  .topnav a{color:var(--ink-3);text-decoration:none}
+  .topnav a:hover{color:var(--navy)}
+  .topnav a[aria-current="page"]{color:var(--navy);border-bottom:3px solid var(--gold);padding-bottom:3px}
 
-  .jump{display:flex;flex-wrap:wrap;gap:9px;margin:20px 0 4px}
-  .jump a{background:#fff;color:var(--navy);text-decoration:none;font-weight:700;font-size:13.5px;
-          padding:10px 15px;border-radius:999px;box-shadow:var(--rest);transition:var(--t)}
-  .jump a:hover{transform:translateY(-2px);box-shadow:var(--hover)}
+  .wrap{max-width:1100px;margin:0 auto;padding:26px 30px 90px}
+  h1{font-weight:800;font-size:clamp(26px,4.6vw,34px);line-height:1.04;letter-spacing:-.02em;margin:0 0 8px}
+  h1 span{color:var(--terra-dark)}
+  .lede{font-size:15px;color:var(--ink-3);margin:0 0 6px;max-width:70ch}
+  .lede b{color:var(--navy)}
 
-  .mod{background:#fff;border-radius:var(--radius);padding:24px;margin:20px 0;box-shadow:var(--rest)}
-  .mod-k{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;font-weight:800;
-         color:var(--terra-dark);margin:0 0 4px}
-  .mod h2{font-size:clamp(19px,3vw,23px);font-weight:800;letter-spacing:-.02em;margin:0 0 4px}
-  .mod .sub{font-size:14.5px;color:var(--ink-3);margin:0 0 16px}
+  .controls{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:18px 0 20px}
+  .controls .lbl{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;
+                 color:var(--terra-dark);margin-right:2px}
+  .pill{background:var(--white);color:var(--navy);font-family:var(--font);font-weight:700;
+        font-size:13.5px;padding:10px 15px;border:0;border-radius:999px;box-shadow:var(--rest);
+        cursor:pointer;transition:var(--t)}
+  .pill:hover{transform:translateY(-2px);box-shadow:var(--hover)}
+  .pill[aria-pressed="true"]{background:var(--navy);color:#fff}
+  .find{width:min(260px,100%);margin-left:auto;background:var(--white);color:var(--navy);border:0;
+        border-radius:999px;padding:11px 16px;font-family:var(--font);font-size:14.5px;
+        box-shadow:var(--rest)}
+  .find:focus{outline:none;box-shadow:inset 0 0 0 2px var(--terra-dark)}
+  .count-line{font-size:13.5px;color:var(--ink-3);margin:0 0 16px}
+  .count-line b{color:var(--navy)}
 
-  .sprints{list-style:none;margin:0;padding:0;display:grid;
-           grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:11px}
-  .sprints li{margin:0}
-  .sprints a{display:flex;flex-direction:column;gap:3px;background:var(--offwhite);
-             color:var(--navy);text-decoration:none;padding:14px 16px;border-radius:10px;
-             box-shadow:var(--rest);transition:var(--t);height:100%}
-  .sprints a:hover{transform:translateY(-2px);box-shadow:var(--hover)}
-  .sprints b{font-weight:800;font-size:15px;letter-spacing:-.01em}
-  .sprints .wk{font-size:12.5px;color:var(--ink-3);font-weight:600}
+  .layout{display:grid;grid-template-columns:250px 1fr;gap:20px;align-items:start}
+  @media (max-width:820px){ .layout{grid-template-columns:1fr} .modnav{position:static !important} }
 
-  .listlink{display:flex;flex-direction:column;gap:3px;margin-top:14px;background:var(--navy);
-            color:#fff;text-decoration:none;padding:15px 17px;border-radius:10px;
-            box-shadow:var(--rest);transition:var(--t)}
-  .listlink:hover{transform:translateY(-2px);box-shadow:var(--hover)}
-  .listlink b{font-weight:800;font-size:15px}
-  .listlink span{font-size:13px;color:#C6CEDA}
+  .modnav{background:var(--white);border-radius:var(--radius);box-shadow:var(--rest);
+          padding:16px 0;position:sticky;top:18px}
+  .modnav .lbl{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+               color:var(--terra-dark);padding:0 18px 10px;display:block}
+  .modnav button{display:block;width:100%;text-align:left;background:none;border:0;
+                 font-family:var(--font);cursor:pointer;padding:11px 18px;color:var(--navy)}
+  .modnav button:hover{background:#F6F5F2}
+  .modnav button .k{display:block;font-size:11px;font-weight:800;color:#5F6875}
+  .modnav button .t{display:block;font-size:13px;font-weight:600;line-height:1.3;margin-top:3px}
+  .modnav button[aria-pressed="true"]{background:var(--navy);color:#fff;border-radius:var(--radius);
+                 margin:0 -8px;padding:13px 18px;width:calc(100% + 16px);
+                 box-shadow:0 10px 24px rgba(8,16,31,.35),0 2px 6px rgba(0,0,0,.15);
+                 transform:translateY(-2px);position:relative;transition:var(--t)}
+  .modnav button[aria-pressed="true"]:hover{background:var(--navy)}
+  .modnav button[aria-pressed="true"] .k{color:var(--gold)}
+  .modnav button[aria-pressed="true"] .t{font-weight:700}
 
-  .foot-note{background:#fff;border-radius:var(--radius);padding:18px 20px;margin-top:24px;
-             box-shadow:var(--rest);font-size:14.5px;color:var(--ink-3)}
-  .foot-note b{color:var(--navy)}
-  .back{display:inline-flex;gap:8px;align-items:center;background:var(--navy);color:#fff;
-        text-decoration:none;font-weight:800;font-size:14.5px;padding:12px 20px;border-radius:9px;
-        box-shadow:var(--rest);transition:var(--t);margin-top:18px}
-  .back:hover{transform:translateY(-2px);box-shadow:var(--hover)}
-  footer{margin-top:34px;padding-top:20px;color:var(--ink-3);font-size:14px;
-         box-shadow:inset 0 1px 0 rgba(8,16,31,.10)}
+  .mods{display:flex;flex-direction:column;gap:12px}
+  .mod{background:var(--white);border-radius:var(--radius);box-shadow:var(--rest)}
+  .mod-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;width:100%;
+         background:none;border:0;font-family:var(--font);text-align:left;cursor:pointer;
+         padding:18px 22px 6px}
+  .mod:not(.open) .mod-h{padding:16px 22px}
+  .mod-h .title{font-size:19px;font-weight:800;letter-spacing:-.02em;color:var(--navy);margin:0}
+  .mod:not(.open) .mod-h .title{font-size:16px}
+  .mod-h .count{font-size:12px;font-weight:700;color:var(--gold-text);white-space:nowrap}
+  .mod:not(.open) .mod-h .count{color:var(--terra-dark);font-size:13px;font-weight:800}
+  .mod-h .count.done{color:var(--ok)}
+  .mod-sub{font-size:12.5px;color:var(--ink-3);margin:3px 0 12px;padding:0 22px}
+  .mod:not(.open) .mod-sub{padding:0 22px 16px;margin:0}
+  .mod-b{padding:0 22px 6px}
+  .mod:not(.open) .mod-b{display:none}
+
+  /* One row per sprint: tick, name and size, then the link. The
+     tick is first because it is the thing a student touches most. */
+  .row{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:14px;
+       padding:12px 0;border-top:1px solid #F0EEE9}
+  .row .tick{width:22px;height:22px;margin:0;accent-color:#6B1616;cursor:pointer}
+  .row .what{font-size:14.5px;font-weight:700}
+  .row .what a{color:var(--navy);text-decoration:none}
+  .row .what a:hover{text-decoration:underline}
+  .row .what .sub{display:block;font-weight:500;font-size:12.5px;color:var(--ink-3);margin-top:1px}
+  .row .go{font-size:12.5px;font-weight:800;color:var(--terra-dark);text-decoration:none;white-space:nowrap}
+  .row .go:hover{color:var(--navy)}
+  .row.is-done .what a{color:var(--ink-3)}
+  .row.is-done .what{text-decoration:line-through;text-decoration-color:#C3C8CF}
+
+  .full-card{display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;
+             padding:14px 16px;margin:10px -16px 14px;background:var(--navy);color:#fff;
+             border-radius:var(--radius)}
+  .full-card .what{font-size:14.5px;font-weight:800}
+  .full-card .note{display:block;font-size:12px;color:#C6CEDA;margin-top:2px;font-weight:500}
+  .full-card .go{font-size:12.5px;font-weight:800;color:var(--gold);text-decoration:none;white-space:nowrap}
+  .full-card .go:hover{color:#fff}
+
+  .spiral{background:#fff;border-radius:var(--radius);box-shadow:var(--rest);padding:20px 24px;margin:18px 0 0}
+  .spiral h2{font-size:17px;font-weight:800;letter-spacing:-.02em;margin:0 0 6px}
+  .spiral p{font-size:14px;color:var(--ink-3);margin:0 0 8px;max-width:74ch}
+  .spiral p:last-child{margin:0}
+  .spiral b{color:var(--navy)}
+
+  .empty{font-size:14px;color:var(--ink-3);padding:14px 0 4px;margin:0}
+  footer{max-width:1100px;margin:0 auto;padding:0 30px 40px;color:var(--ink-3);font-size:13px}
+
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
-    .jump a,.sprints a,.back{transition:none}
-    .jump a:hover,.sprints a:hover,.back:hover{transform:none}
+    .pill,.modnav button[aria-pressed="true"]{transition:none}
+    .pill:hover{transform:none}
   }
   @media print{
-    .jump,.back{display:none}
-    .mod,.sprints a{box-shadow:none}
+    .topbar,.controls,.modnav{display:none !important}
+    .layout{grid-template-columns:1fr}
+    .mod{box-shadow:none} .mod:not(.open) .mod-b{display:block}
   }
 </style>
 </head>
 <body>
-<a class="skip" href="#main">Skip to the sprints</a>
+<a class="skip" href="#mods">Skip to the sprints</a>
+
+<div class="topbar">
+  <span class="crumb">BIO 004 &middot; Human Anatomy &middot; Fall 2026</span>
+  <nav class="topnav" aria-label="Course sections">
+    <a href="bio004-course-calendar.html" target="_top">Calendar</a>
+    <a href="course-materials.html" target="_top">Materials</a>
+    <a href="welcome.html" target="_top">Welcome</a>
+  </nav>
+</div>
 
 <div class="wrap">
 <main id="main">
-  <section class="cover">
-    <p class="cover-eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
-    <h1>Every <span>lab sprint</span></h1>
-    <p class="lede">Every structure you are responsible for on the models, grouped by module and by the
-       lab exam it belongs to. Use this when you are revising for a practical. For what to do on a
-       given night, use the calendar instead.</p>
-    <p class="lede">Not everything you are tested on has a station on the models. Joint classification is
-       the clearest example. Each module below ends with a link to its full structure list, which is where
-       those live.</p>
+  <h1>Lab <span>sprints</span></h1>
+  <p class="lede">Every structure you have to find on the models, split into sprints. Open a sprint to
+     get its structure list and its Spiral Rounds drill. Tick one off once you can name everything on it
+     without looking.</p>
+
+  <div class="controls">
+    <span class="lbl">Show</span>
+    <div id="kindFilter" style="display:flex;flex-wrap:wrap;gap:9px" role="group" aria-label="Filter the sprints"></div>
+    <label class="sr" for="find">Search the sprints</label>
+    <input class="find" id="find" type="search" placeholder="Search, for example skull" autocomplete="off">
+  </div>
+  <p class="count-line" id="count" role="status"></p>
+
+  <div class="layout">
+    <nav class="modnav" id="modnav" aria-label="Jump to a module">
+      <span class="lbl">Modules</span>
+    </nav>
+    <div class="mods" id="mods"></div>
+  </div>
+
+  <section class="spiral" aria-labelledby="h-spiral">
+    <h2 id="h-spiral">What Spiral Rounds is, and where it went</h2>
+    <p>It did not go anywhere. <b>Every sprint page has it, near the bottom.</b> Each category is broken
+       into sets of about ten to twelve structures, and you take a set through five rounds that each ask
+       a bit more of you than the last: someone names them all out loud, then you name them, then you
+       name them without the labels, and so on.</p>
+    <p>That is the part that actually gets them into your head. Reading the list once does very little.
+       Do the rounds with your group, tick the sprint off here when you can name the whole thing cold,
+       and come back to it a few days later.</p>
   </section>
-
-  <nav class="jump" id="jump" aria-label="Jump to a module"></nav>
-
-  <div id="out"></div>
-
-  <div class="foot-note" id="note"></div>
-
-  <a class="back" href="bio004-course-calendar.html">Back to the calendar</a>
-
-  <footer>
-    <p>Dr. Sharilyn Rennie &middot; BIO 004 Human Anatomy &middot; Solano Community College</p>
-  </footer>
 </main>
 </div>
 
+<footer>
+  <p>Dr. Sharilyn Rennie &middot; BIO 004 Human Anatomy &middot; Solano Community College</p>
+</footer>
+
 <script src="schedule-fall2026.js"></script>
 <script src="session-links.js"></script>
+<script src="lab-sprint-counts.js"></script>
 
 <script>
 (function(){
@@ -152,123 +234,243 @@
 
   var LINKS   = window.BIO004_SESSION_LINKS || {};
   var MODULES = window.BIO004_MODULES || [];
+  var SIZE    = window.BIO004_SPRINT_SIZE || {};
 
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
     return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
 
-  /* ---------- collect every sprint, once ----------
-     A sprint runs on more than one day across the three sections and
-     sometimes across two weeks. It should appear once, filed under
-     the earliest week it is taught, which is the week it is first
-     your responsibility. */
-  var byUrl = {};
+  /* ---------- which sprints ran, once each, at the earliest week ---------- */
+  var seen = {};
   Object.keys(LINKS).forEach(function(date){
-    var d = LINKS[date];
-    var wk = d.wk || null;
-    (d.lab || []).forEach(function(o){
-      if(!o || !o.u || !/-lab-sprint\.html$/.test(o.u)) return;
-      var e = byUrl[o.u];
-      if(!e){ byUrl[o.u] = { u:o.u, t:o.t || o.u, wk:wk }; return; }
+    var d = LINKS[date], wk = d.wk || null, v = d.lab;
+    if(!v) return;
+    (Array.isArray(v) ? v : [v]).forEach(function(o){
+      if(!o || !o.u) return;
+      var e = seen[o.u];
+      if(!e){ seen[o.u] = { u:o.u, t:o.t || o.u, wk:wk }; return; }
       if(wk && (!e.wk || wk < e.wk)) e.wk = wk;
       if(o.t && o.t.length > String(e.t).length) e.t = o.t;
     });
   });
 
-  /* MODULES SHARE THEIR BOUNDARY WEEKS.
-
-     Module 1 is weeks 1 to 4 and module 2 is weeks 4 to 7, so week 4
-     belongs to both, and so do weeks 7 and 14. Taking the first
-     match filed bone microanatomy under foundations and put the
-     heart, the vessels and cardiac conduction under the skeleton.
-
-     On a shared week the later module is the right one every time
-     here: week 4 is where bone starts, week 7 is where the heart
-     starts, week 14 is where urinary starts. The overlap week is the
-     handover, and a sprint taught in it is the new module opening,
-     not the old one closing. */
+  /* Boundary weeks belong to the later module. */
   function moduleForWeek(wk){
-    var found = null;
-    MODULES.forEach(function(m){
-      if(m.weeks && m.weeks.indexOf(wk) !== -1) found = m;
-    });
-    return found;
+    var f = null;
+    MODULES.forEach(function(m){ if(m.weeks && m.weeks.indexOf(wk) !== -1) f = m; });
+    return f;
   }
 
-  /* ---------- group into modules ---------- */
-  var groups = {}, ungrouped = [];
-  Object.keys(byUrl).forEach(function(u){
-    var s = byUrl[u];
-    var m = s.wk ? moduleForWeek(s.wk) : null;
-    if(!m){ ungrouped.push(s); return; }
-    (groups[m.n] = groups[m.n] || { m:m, items:[] }).items.push(s);
+  var groups = {};
+  Object.keys(seen).forEach(function(u){
+    var it = seen[u];
+    var m = it.wk ? moduleForWeek(it.wk) : null;
+    var n = m ? m.n : 0;
+    var g = groups[n] = groups[n] || { m:m, n:n, list:[] };
+    g.list.push(it);
   });
-
-  var order = Object.keys(groups).map(Number).sort(function(a,b){ return a-b; });
-
-  var jump = '', out = '', total = 0;
+  var order = Object.keys(groups).map(Number).sort(function(a,b){
+    if(a === 0) return 1; if(b === 0) return -1; return a-b;
+  });
   order.forEach(function(n){
-    var g = groups[n];
-    g.items.sort(function(a,b){ return (a.wk||0)-(b.wk||0) || String(a.t).localeCompare(String(b.t)); });
-    total += g.items.length;
-
-    jump += '<a href="#mod-'+n+'">Module '+n+'</a>';
-
-    out += '<section class="mod" id="mod-'+n+'" aria-labelledby="h-mod-'+n+'">';
-    out += '<p class="mod-k">Module '+n+(g.m.exam ? ' &middot; Lab exam '+g.m.exam : '')+'</p>';
-    out += '<h2 id="h-mod-'+n+'">'+esc(g.m.title||('Module '+n))+'</h2>';
-    out += '<p class="sub">'+g.items.length+' sprint'+(g.items.length===1?'':'s')
-         + (g.m.weeks && g.m.weeks.length
-             ? ' &middot; weeks '+g.m.weeks[0]+' to '+g.m.weeks[g.m.weeks.length-1]
-             : '')+'</p>';
-    out += '<ul class="sprints">';
-    g.items.forEach(function(s){
-      out += '<li><a href="'+esc(s.u)+'"><b>'+esc(s.t)+'</b>'
-           + '<span class="wk">'+(s.wk ? 'First taught in week '+s.wk : 'Week not set')+'</span></a></li>';
-    });
-    /* THE SPRINTS ARE NOT THE WHOLE PRACTICAL.
-
-       Joints have no lab sprint, because there is no joint station
-       on the models, but joint classification and the named joints
-       are on the exam and they live in the module structure list.
-       A page headed "every structure you are responsible for" that
-       silently drops them is worse than no page. Same for lymphatic
-       and endocrine in module four. The structure list is the full
-       answer and every module has one, so every module links to it. */
-    out += '</ul>';
-    out += '<a class="listlink" href="module-'+n+'-structure-list.html">'
-         + '<b>Everything on lab exam '+(g.m.exam||n)+', in full</b>'
-         + '<span>The structure list for module '+n+'. Some of what you are tested on has no station '
-         + 'on the models, joint classification most of all, and it is only in here.</span></a>';
-    out += '</section>';
+    groups[n].list.sort(function(a,b){ return (a.wk||0)-(b.wk||0) || String(a.t).localeCompare(String(b.t)); });
   });
 
-  if(ungrouped.length){
-    /* Not hidden. A sprint on a day with no week number is a data
-       problem worth seeing, not one to quietly drop off the page. */
-    total += ungrouped.length;
-    jump += '<a href="#mod-other">Not yet scheduled</a>';
-    out += '<section class="mod" id="mod-other" aria-labelledby="h-mod-other">';
-    out += '<p class="mod-k">Not yet placed in a module</p>';
-    out += '<h2 id="h-mod-other">Scheduled, but with no week</h2>';
-    out += '<p class="sub">These exist and are linked from a class day that carries no week number.</p>';
-    out += '<ul class="sprints">';
-    ungrouped.forEach(function(s){
-      out += '<li><a href="'+esc(s.u)+'"><b>'+esc(s.t)+'</b>'
-           + '<span class="wk">Week not set</span></a></li>';
-    });
-    out += '</ul></section>';
+  /* ---------- what the student has ticked ---------- */
+  var K_DONE = 'bio004-sprint-done';
+  function readDone(){
+    try { return JSON.parse(localStorage.getItem(K_DONE) || '{}') || {}; }
+    catch(e){ return {}; }
+  }
+  var done = readDone();
+  function setDone(u, on){
+    done[u] = !!on;
+    if(!on) delete done[u];
+    try { localStorage.setItem(K_DONE, JSON.stringify(done)); } catch(e){}
   }
 
-  document.getElementById('jump').innerHTML = jump;
-  document.getElementById('out').innerHTML  = out
-    || '<section class="mod"><h2>Nothing to show</h2><p class="sub">The schedule did not load, '
-     + 'so there is nothing to list. Open the calendar and use the day you need.</p></section>';
+  /* ---------- state ---------- */
+  var show = 'all';           /* all | todo | done */
+  var query = '';
+  var open = order.length ? order[0] : 1;
 
-  document.getElementById('note').innerHTML =
-    '<b>' + total + ' lab sprints.</b> This list is built from the course schedule every time the page '
-    + 'opens, so it cannot fall out of step with the calendar. If a sprint moves to a different week it '
-    + 'moves here too, and nobody has to remember to update a second list.';
-})();
+  function chips(){
+    var opts = [['all','Everything'],['todo','Still to do'],['done','Done']];
+    var h = '';
+    opts.forEach(function(o){
+      h += '<button type="button" class="pill" data-k="'+o[0]+'" aria-pressed="'
+         + (show===o[0]?'true':'false') + '">' + o[1] + '</button>';
+    });
+    document.getElementById('kindFilter').innerHTML = h;
+  }
+
+  function keep(it){
+    if(query && String(it.t).toLowerCase().indexOf(query) === -1
+             && String(it.u).toLowerCase().indexOf(query) === -1) return false;
+    if(show === 'todo') return !done[it.u];
+    if(show === 'done') return !!done[it.u];
+    return true;
+  }
+
+  function sizeOf(u){ return SIZE[u] || null; }
+
+  function renderNav(){
+    var h = '<span class="lbl">Modules</span>';
+    order.forEach(function(n){
+      var g = groups[n]; if(!g.m) return;
+      var total = g.list.length;
+      var ticked = g.list.filter(function(it){ return done[it.u]; }).length;
+      var wk = (g.m.weeks && g.m.weeks.length)
+        ? 'Weeks ' + g.m.weeks[0] + ' to ' + g.m.weeks[g.m.weeks.length-1] : '';
+      h += '<button type="button" data-mod="'+n+'" aria-pressed="'+(open===n?'true':'false')+'">'
+        +    '<span class="k">Module '+n+' &middot; '+wk+' &middot; '+ticked+' of '+total+'</span>'
+        +    '<span class="t">'+esc(g.m.title)+'</span>'
+        +  '</button>';
+    });
+    document.getElementById('modnav').innerHTML = h;
+  }
+
+  function render(){
+    var out = '', shown = 0, totalAll = 0, doneAll = 0;
+
+    order.forEach(function(n){
+      var g = groups[n];
+      var isOpen = (query || show !== 'all') ? true : open === n;
+      var list = g.list.filter(keep);
+      var ticked = g.list.filter(function(it){ return done[it.u]; }).length;
+      totalAll += g.list.length; doneAll += ticked;
+      if(!list.length) return;
+      shown += list.length;
+
+      var body = '';
+      list.forEach(function(it){
+        var sz = sizeOf(it.u);
+        var bits = [];
+        if(it.wk) bits.push('Week ' + it.wk);
+        if(sz) bits.push(sz.n + ' structure' + (sz.n===1?'':'s') + ' in ' + sz.cats
+                         + ' categor' + (sz.cats===1?'y':'ies'));
+        body += '<div class="row'+(done[it.u]?' is-done':'')+'">'
+             +    '<input class="tick" type="checkbox" data-u="'+esc(it.u)+'"'
+             +      (done[it.u]?' checked':'')
+             +      ' aria-label="Mark '+esc(it.t).replace(/"/g,'')+' as drilled">'
+             +    '<span class="what"><a href="'+esc(it.u)+'" target="_top">'+esc(it.t)+'</a>'
+             +      '<span class="sub">'+bits.join(' &middot; ')+'</span></span>'
+             +    '<a class="go" href="'+esc(it.u)+'" target="_top">Open &rarr;</a>'
+             +  '</div>';
+      });
+
+      if(g.m && g.m.exam){
+        body += '<div class="full-card">'
+             +    '<span class="what">Everything on lab exam '+g.m.exam+', in one list'
+             +      '<span class="note">Including the few things with no station on the models, '
+             +      'like joint classification.</span></span>'
+             +    '<a class="go" href="module-'+g.n+'-structure-list.html" target="_top">Open &rarr;</a>'
+             +  '</div>';
+      }
+
+      var title = g.m ? ('Module '+g.n+' &middot; '+esc(g.m.title)) : 'Not placed in a module';
+      var wk = (g.m && g.m.weeks && g.m.weeks.length)
+        ? 'Weeks ' + g.m.weeks[0] + ' to ' + g.m.weeks[g.m.weeks.length-1] : '';
+      var countTxt = isOpen ? (ticked + ' of ' + g.list.length + ' done') : 'Expand &#9662;';
+
+      out += '<section class="mod'+(isOpen?' open':'')+'" id="mod-'+n+'">'
+          +    '<h2 style="margin:0">'
+          +      '<button type="button" class="mod-h" data-mod="'+n+'" aria-expanded="'+(isOpen?'true':'false')
+          +      '" aria-controls="body-'+n+'">'
+          +        '<span class="title">'+title+'</span>'
+          +        '<span class="count'+(ticked===g.list.length?' done':'')+'">'+countTxt+'</span>'
+          +      '</button>'
+          +    '</h2>'
+          +    '<p class="mod-sub">'+wk+' &middot; '+g.list.length+' sprint'
+          +      (g.list.length===1?'':'s')+(g.m && g.m.exam ? ' &middot; closes with lab exam '+g.m.exam : '')+'</p>'
+          +    '<div class="mod-b" id="body-'+n+'">'+body+'</div>'
+          +  '</section>';
+    });
+
+    document.getElementById('mods').innerHTML = out
+      || '<section class="mod open"><h2 class="mod-h"><span class="title">Nothing here</span></h2>'
+       + '<p class="mod-sub">'+(show==='done'?'You have not ticked any sprints off yet.'
+                                            :'Clear the search, or switch the filter back to Everything.')+'</p></section>';
+
+    document.getElementById('count').innerHTML =
+      esc(shown + ' sprint' + (shown===1?'':'s') + ' showing'
+          + (query ? ' for "' + query + '"' : '') + '.')
+      + ' <b>' + doneAll + ' of ' + totalAll + ' drilled.</b>';
+    renderNav();
+  }
+
+  /* ---------- events ---------- */
+  document.getElementById('kindFilter').addEventListener('click', function(e){
+    var b = e.target.closest('.pill'); if(!b) return;
+    show = b.getAttribute('data-k'); chips(); render();
+  });
+
+  /* Ticking updates in place rather than redrawing the list.
+
+     A full render on every tick throws away the checkbox the
+     student is standing on, which for a keyboard user means losing
+     their place in a list of eight every single time they mark one
+     off. So the row and the counters are updated by hand, and the
+     list is only redrawn when the filter would actually remove the
+     row from view. */
+  function paintCounts(){
+    var totalAll = 0, doneAll = 0;
+    order.forEach(function(n){
+      var g = groups[n];
+      var ticked = g.list.filter(function(it){ return done[it.u]; }).length;
+      totalAll += g.list.length; doneAll += ticked;
+      var head = document.querySelector('.mod[id="mod-'+n+'"] .count');
+      if(head && document.querySelector('.mod[id="mod-'+n+'"]').classList.contains('open')){
+        head.textContent = ticked + ' of ' + g.list.length + ' done';
+        head.className = 'count' + (ticked === g.list.length ? ' done' : '');
+      }
+    });
+    var shown = document.querySelectorAll('.mods .row').length;
+    document.getElementById('count').innerHTML =
+      esc(shown + ' sprint' + (shown===1?'':'s') + ' showing'
+          + (query ? ' for "' + query + '"' : '') + '.')
+      + ' <b>' + doneAll + ' of ' + totalAll + ' drilled.</b>';
+    renderNav();
+  }
+
+  document.getElementById('mods').addEventListener('change', function(e){
+    var t = e.target;
+    if(!t || !t.classList || !t.classList.contains('tick')) return;
+    setDone(t.getAttribute('data-u'), t.checked);
+    var row = t.closest('.row');
+    if(row) row.classList.toggle('is-done', t.checked);
+    if(show !== 'all'){ render(); return; }   /* the row is about to be filtered out */
+    paintCounts();
+  });
+
+  document.getElementById('mods').addEventListener('click', function(e){
+    var b = e.target.closest('.mod-h'); if(!b) return;
+    var n = parseInt(b.getAttribute('data-mod'),10);
+    open = (open === n) ? -1 : n;
+    render();
+    var again = document.querySelector('.mod-h[data-mod="'+n+'"]');
+    if(again) again.focus();
+  });
+
+  document.getElementById('modnav').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-mod]'); if(!b) return;
+    open = parseInt(b.getAttribute('data-mod'),10);
+    render();
+  });
+
+  var t = null;
+  document.getElementById('find').addEventListener('input', function(){
+    var v = this.value.trim().toLowerCase();
+    window.clearTimeout(t);
+    t = window.setTimeout(function(){ query = v; render(); }, 120);
+  });
+
+  /* A tick made in another tab is still this student's progress. */
+  window.addEventListener('storage', function(e){
+    if(e && e.key === K_DONE){ done = readDone(); render(); }
+  });
+
+  chips(); render();
+}());
 </script>
 
 <!-- iframe height sender -->
@@ -278,17 +480,9 @@
   var frameId=null;
   try{ var m=location.search.match(/[?&]frameId=([^&#]+)/); if(m) frameId=decodeURIComponent(m[1]); }catch(e){}
   var last=0;
-  /* Measure the BODY only, never documentElement.
-
-     documentElement.scrollHeight is max(content, viewport), and
-     inside an iframe the viewport IS the frame. So once the parent
-     grows the frame, html reports the frame's own height forever
-     and the page can never report a smaller number: the frame
-     ratchets up and never comes back down. Deal a 62 question exam
-     in an embedded practice paper, press Start over, and the
-     student is left staring at 20,000 pixels of white.
-
-     body does not stretch to the viewport, so it shrinks honestly. */
+  /* Body only. documentElement.scrollHeight is max(content, viewport)
+     and inside an iframe the viewport IS the frame, so measuring it
+     stops the frame ever shrinking again. */
   function postHeight(){
     var b=document.body; if(!b) return;
     var h=Math.max(b.scrollHeight, b.offsetHeight, Math.ceil(b.getBoundingClientRect().height));
