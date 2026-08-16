@@ -53,6 +53,122 @@
    resolve the student's section and this week. If they are absent
    it still works, it just shows the generic links.
    ============================================================ */
+/* ============================================================
+   SOLO FRAME MODE, so Kajabi needs ONE embed and not twenty-eight
+
+   THE PROBLEM
+   Every internal link on this site carries target="_top". That is
+   correct for Canvas, where a tool is embedded as one page and a
+   link should break out of the frame rather than nest a course
+   inside a course. It is exactly wrong for a single Kajabi embed:
+   the student clicks anything and the whole Kajabi page navigates
+   away to github.io. Which is why, without this, you would need a
+   separate embed for every page you wanted reachable.
+
+   THE FIX
+   Add ?embed=solo to the iframe's address. From then on this file
+   keeps navigation inside the frame: it intercepts clicks on
+   internal links, cancels the target="_top" jump, and navigates
+   the frame itself, carrying embed=solo forward so the mode
+   survives every hop. One embed, the whole site reachable inside
+   it, the Kajabi page never navigating away.
+
+   WHY INTERCEPT CLICKS RATHER THAN REWRITE THE LINKS
+   The dock builds its tiles after this runs, the coachmark adds
+   more later, and several pages render links from data. Rewriting
+   the DOM once would miss all of them and rewriting it repeatedly
+   is a MutationObserver nobody wants to maintain. One capture
+   phase listener on the document catches every link that will
+   ever exist on the page, including ones added a minute from now.
+
+   WHAT IT LEAVES ALONE
+   External hosts, target="_blank", mailto and tel, downloads,
+   same page #anchors, and any click with a modifier key so
+   "open in new tab" still works. Off this mode, which is the
+   default, nothing about the site changes.
+
+   SCROLL
+   Navigating inside a tall frame leaves the reader stranded in
+   the middle of the Kajabi page looking at the middle of a new
+   document. The frame asks the parent to scroll it back to the
+   top; the receiver in the embed block does it.
+   ============================================================ */
+(function () {
+  'use strict';
+  if (window.__BIO004_SOLO__) return;
+  window.__BIO004_SOLO__ = true;
+
+  var FLAG = 'embed', VALUE = 'solo', SKEY = 'bio004-embed-mode';
+
+  function framed() {
+    try { return window.self !== window.top; } catch (e) { return true; }
+  }
+
+  function wanted() {
+    var q = (location.search + '&' + location.hash.replace('#', '&'));
+    if (new RegExp('[?&]' + FLAG + '=' + VALUE + '\\b').test(q)) {
+      try { sessionStorage.setItem(SKEY, VALUE); } catch (e) {}
+      return true;
+    }
+    /* A link built elsewhere can lose the parameter. sessionStorage
+       is per tab and per origin, so it carries the mode across the
+       gap without leaking into a normal visit in another tab. It is
+       the backup, not the source of truth: some browsers partition
+       or block storage in a third party frame, which is why the
+       parameter is threaded through every link as well. */
+    try { return sessionStorage.getItem(SKEY) === VALUE; } catch (e) { return false; }
+  }
+
+  if (!framed() || !wanted()) return;
+
+  window.__BIO004_SOLO_ON__ = true;
+
+  function tellParent(type) {
+    try { parent.postMessage({ type: type, from: 'bio004' }, '*'); } catch (e) {}
+  }
+
+  function withFlag(href) {
+    var a = document.createElement('a');
+    a.href = href;                                  /* resolves relative URLs */
+    if (new RegExp('[?&]' + FLAG + '=' + VALUE + '\\b').test(a.search)) return a.href;
+    a.search = (a.search ? a.search + '&' : '?') + FLAG + '=' + VALUE;
+    return a.href;
+  }
+
+  document.addEventListener('click', function (e) {
+    if (e.defaultPrevented) return;
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a) return;
+    if (a.hasAttribute('download')) return;
+    if (a.target === '_blank') return;
+
+    var href = a.getAttribute('href') || '';
+    if (/^(mailto:|tel:|javascript:|data:)/i.test(href)) return;
+    if (href.charAt(0) === '#') return;             /* same page anchor */
+
+    /* Same origin only. An external tool opening inside the frame
+       would be a course nested in a course. */
+    if (a.protocol !== location.protocol || a.host !== location.host) return;
+
+    /* A hash link to this very page is an in page jump, not a nav. */
+    if (a.pathname === location.pathname && a.search === location.search && a.hash) return;
+
+    e.preventDefault();
+    tellParent('scrollTop');
+    location.href = withFlag(a.href);
+  }, true);
+
+  /* Landing on a new page inside the frame: bring the reader to the
+     top of it rather than wherever the Kajabi page was scrolled. */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { tellParent('scrollTop'); });
+  } else {
+    tellParent('scrollTop');
+  }
+}());
+
 (function () {
   'use strict';
   if (window.__BIO004_DOCK__) return;      /* never inject twice */
@@ -127,7 +243,14 @@
     t.push({ g: 'This week', name: 'Study With Me', sub: 'Join a session this week or start one yourself',
              url: BASE + 'study-session-signup.html' + q, icon: 'people', tone: 'terra', qr: 'study', kw: 'study with me sessions group hours host' });
     t.push({ g: 'This week', name: 'Course calendar', sub: 'Every class day and what to prepare for it',
-             url: BASE + 'bio004-course-calendar.html' + q, icon: 'cal', tone: 'navy', qr: 'calendar', kw: 'calendar schedule dates' });
+             url: BASE + 'bio004-course-calendar.html' + q, icon: 'cal', tone: 'navy', qr: 'calendar',
+             /* 'start here' and 'how this course works' land here on
+                purpose. Both had their own tiles and came out, and the
+                Start here walkthrough is a dialog on this page now, so
+                a student searching the old names arrives at the thing
+                itself rather than at an empty result. */
+             kw: 'calendar schedule dates start here checklist orientation walkthrough '
+               + 'how this course works pedagogy tbl why week one' });
 
     /* ---------- COURSE MATERIALS ----------
 
@@ -142,47 +265,82 @@
        second floating button is another entryway to the same files
        ordered a third way, and too many entryways is the problem
        this course already had. */
-    t.push({ g: 'Course materials', name: 'All course materials', sub: 'Sheets, notes, videos and decks, by module',
+    /* ONE DOOR TO THE MATERIALS.
+
+       Third pass on this, and the page changed under it, which is
+       what settles it. Notes, Pre-work sheets and Concept videos
+       were separate tiles because the materials page did not show
+       its own categories. The redesigned page does: Everything,
+       Pre-work sheets, Notes, Concept videos, Workbooks, Slide
+       decks and Practice exams are tabs across the top, visible the
+       moment it opens, with the modules underneath.
+
+       So the tiles were duplicating a control that is now the first
+       thing a student sees. One tile, and the page does the sorting
+       it was built to do. Their keywords stay here, so typing
+       prework or videos still lands in the right place. */
+    t.push({ g: 'Course materials', name: 'Course materials', sub: 'Notes, pre-work, videos, workbooks and decks, by module',
              url: BASE + 'course-materials.html', icon: 'doc', tone: 'navy', qr: 'materials',
-             kw: 'materials notes prework videos workbooks slides index everything reading' });
-    t.push({ g: 'Course materials', name: 'Notes', sub: 'The reading for this course, by module',
-             url: BASE + 'course-materials.html?show=notes', icon: 'doc', tone: 'terra',
-             kw: 'notes reading module chapter' });
-    t.push({ g: 'Course materials', name: 'Pre-work sheets', sub: 'The sheet you work by hand the night before class',
-             url: BASE + 'course-materials.html?show=sheets', icon: 'pencil', tone: 'gold',
-             kw: 'prework pre-work worksheet sheet night before homework' });
-    t.push({ g: 'Course materials', name: 'Concept videos', sub: 'Short walkthroughs, watch with your notes open',
-             url: BASE + 'course-materials.html?show=videos', icon: 'play', tone: 'green',
-             kw: 'videos concept watch lecture walkthrough' });
-    t.push({ g: 'Course materials', name: 'Lab sprints', sub: 'Every structure you are responsible for on the models',
+             kw: 'materials notes reading module chapter prework pre-work worksheet sheet night '
+               + 'before homework guided videos concept watch lecture walkthrough workbooks slides '
+               + 'decks practice exams index everything all' });
+    t.push({ g: 'Lab materials', name: 'Lab sprints', sub: 'Every structure you are responsible for on the models',
              url: BASE + 'lab-sprints.html', icon: 'flask', tone: 'navy',
-             qr: 'labs', kw: 'lab sprints models dissection structures practical stations' });
-    t.push({ g: 'Course materials', name: 'Digital Atlas', sub: 'Turn the structures around and look at them',
-             url: 'https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02', icon: 'globe', tone: 'gold', qr: 'atlas', ext: true, kw: 'atlas 3d explore' });
+             qr: 'labs', kw: 'lab sprints models dissection structures practical stations bench' });
+    t.push({ g: 'Lab materials', name: 'Digital Atlas', sub: 'Turn the structures around and look at them',
+             url: 'https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02', icon: 'globe', tone: 'gold',
+             qr: 'atlas', ext: true, kw: 'atlas 3d explore rotate structures lab' });
     t.push({ g: 'Course materials', name: 'Exam modules', sub: 'Exactly what each exam covers',
              url: BASE + 'bio004-exam-modules.html' + q, icon: 'flask', tone: 'navy', qr: 'exams', kw: 'exam modules covers scope' });
+    /* OPENSTAX, AS A REFERENCE, NOT AS A TEXT.
+
+       There is no book to buy in this course and the required
+       materials page says so plainly. This tile has to not undo
+       that, which is why it is named for what it is and the
+       subtitle says 'not required' before a student has to wonder.
+
+       The live edition is Anatomy and Physiology 2e, and the second
+       half of that title is the catch: BIO 004 is anatomy only. A
+       student who reads it cover to cover will study a lot of
+       physiology that is not on any exam here. It earns its place
+       as a second explanation and a second set of figures when the
+       notes have not landed, and that is the job the subtitle
+       gives it. */
+    t.push({ g: 'Course materials', name: 'OpenStax reference', sub: 'Free online book, for a second explanation or more figures. Not required',
+             url: 'https://openstax.org/details/books/anatomy-and-physiology-2e',
+             icon: 'globe', tone: 'terra', ext: true,
+             kw: 'openstax textbook book text reference free online chapter reading second '
+               + 'explanation figures diagrams anatomy physiology' });
+    /* soon:true pulls this out of its group and drops it at the end
+       under Coming soon, rendered as plain text rather than a link.
+       A tile that goes somewhere unfinished is worse than one that
+       says plainly it is not ready. */
     t.push({ g: 'Course materials', name: 'Case deep dives', sub: 'One clinical case per topic, with the PDF',
-             url: BASE + 'course-index.html' + q, icon: 'flask', tone: 'terra', kw: 'deep dive cases clinical index topics' });
-    t.push({ g: 'Study tools', name: 'Mastery OS', sub: 'Your cards, your weak spots, and a plan around them',
+             url: BASE + 'course-index.html' + q, icon: 'flask', tone: 'terra', soon: true,
+             kw: 'deep dive cases clinical index topics' });
+    t.push({ g: 'Practice and recall', name: 'Mastery OS', sub: 'Your cards, your weak spots, and a plan around them',
              url: BASE + 'mastery-os-fall-2026.html' + q, icon: 'brain', tone: 'gold', qr: 'mastery',
-             kw: 'mastery os plan cram competency recall cards flashcards spaced question rx study' });
-    t.push({ g: 'Study tools', name: 'Recall cards', sub: 'Straight into the cards that are due today',
+             kw: 'mastery os plan cram competency recall cards flashcards spaced question rx study '
+               + 'weakness weak spot board dashboard gaps' });
+    t.push({ g: 'Practice and recall', name: 'Recall cards', sub: 'Straight into the cards that are due today',
              url: BASE + 'mastery-os-fall-2026.html#s-recall' + '', icon: 'cards', tone: 'green', qr: 'recall',
              kw: 'recall cards flashcards spaced due today question' });
     /* Lives on the MedMasters site, not in this repo, and it was only
        reachable from the Loops upload kit. It is a drill tool, so it
        belongs beside the other drill tools. */
-    t.push({ g: 'Study tools', name: 'Muscle charts, I O A', sub: 'Origins, insertions, actions and innervation, drilled interactively',
+    t.push({ g: 'Practice and recall', name: 'Muscle charts, I O A', sub: 'Origins, insertions, actions and innervation, drilled interactively',
              url: 'https://www.medmasterscollaborative.com/muscle-charts-i-o-a-inn', icon: 'cards', tone: 'terra',
              ext: true, qr: 'muscles',
              kw: 'muscle charts origin insertion action innervation ioa oia drill table muscles' });
-    t.push({ g: 'Study tools', name: 'Loops', sub: 'Thirty-nine image loops for fast visual practice',
+    t.push({ g: 'Lab materials', name: 'Loops', sub: 'Thirty-nine image loops for fast visual practice',
              url: 'https://drsrennie-stack.github.io/loops/', icon: 'loop', tone: 'terra', qr: 'loops', ext: true, kw: 'loops images practice lab' });
-    t.push({ g: 'Study tools', name: 'Weak spot board', sub: 'The topics your own answers say are weakest',
-             url: BASE + 'mastery-os-fall-2026.html#s-weak', icon: 'target', tone: 'terra', qr: 'weak', kw: 'weakness weak spot dashboard' });
-    t.push({ g: 'Study tools', name: 'Draw it from memory', sub: 'Draw the structure first, then check it against the list',
+    /* The weak spot board was a tile here. It is the front panel of
+       Mastery OS, one tile up, and the practice exam links straight
+       into it when a paper is marked, which is the moment a student
+       actually wants it. Its keywords moved onto Mastery OS. */
+    t.push({ g: 'Practice and recall', name: 'Draw it from memory', sub: 'Draw the structure first, then check it against the list',
              url: BASE + 'mastery-canvas.html', icon: 'pencil', tone: 'gold', qr: 'canvas', kw: 'draw drawing canvas memory checklist' });
-    t.push({ g: 'Study tools', name: 'What I got done today', sub: 'And what you meant to do and did not',
+    t.push({ g: 'Practice and recall', name: 'What I got done today', sub: 'And what you meant to do and did not',
              url: BASE + 'bio004-day-review.html', icon: 'target', tone: 'terra', qr: 'today', kw: 'today review day summary time missed' });
     /* THE BANK IS NOT THE STUDENT TOOL.
 
@@ -195,39 +353,41 @@
     /* The three Summer midterm practice exams are still in the repo
        but they are a fixed paper for a term that no longer exists.
        This draws a fresh one per exam from the live question bank. */
-    t.push({ g: 'Study tools', name: 'Practice exam', sub: 'A fresh 100 point paper in the real format, scored, with the reasoning',
+    t.push({ g: 'Practice and recall', name: 'Practice exam', sub: 'A fresh 100 point paper in the real format, scored, with the reasoning',
              url: BASE + 'practice-lecture-exam.html', icon: 'doc', tone: 'terra', qr: 'pexam',
              kw: 'practice exam lecture test mock paper multiple choice quiz midterm final revision' });
-    t.push({ g: 'Study tools', name: 'Brain dump practice', sub: 'Spin for a prompt, set your clock, write it on paper, then check yourself',
+    t.push({ g: 'Practice and recall', name: 'Brain dump practice', sub: 'Spin for a prompt, set your clock, write it on paper, then check yourself',
              url: BASE + 'brain-dump-practice.html', icon: 'pencil', tone: 'navy', qr: 'braindump',
              kw: 'brain dump practice prompt wheel spin timer paper retrieval blank page' });
     /* soon:true pulls a tile out of its group and drops it into Coming
        soon at the very bottom, dimmed and not clickable. Set it on
        anything that exists but is not finished, rather than hiding it,
        so students can see what is on the way. */
-    t.push({ g: 'Study tools', name: 'Repair Round', sub: 'The in-class repair activity, still being built',
+    t.push({ g: 'Practice and recall', name: 'Repair Round', sub: 'The in-class repair activity, still being built',
              url: BASE + 'repair-round-activity.html', icon: 'target', tone: 'gold', soon: true,
              kw: 'repair round activity capture sheet pairs in class' });
 
-    t.push({ g: 'Course', name: 'Syllabus', sub: S ? S.label : 'Pick your section first',
+    t.push({ g: 'About the course', name: 'Syllabus', sub: S ? S.label : 'Pick your section first',
              url: BASE + (S ? S.syllabus : 'fall-2026-syllabus.html'), icon: 'doc', tone: 'navy', kw: 'syllabus grading policy' });
 
     /* welcome.html IS the course home. Offering a "Course home" tile
        while a student is standing on it is a dead click, so it is left
        out on that page. */
     if (!/\/welcome\.html$|\/$/.test(location.pathname)) {
-      t.push({ g: 'Course', name: 'Course home', sub: S ? S.label : 'Pick your section',
+      t.push({ g: 'About the course', name: 'Course home', sub: S ? S.label : 'Pick your section',
                url: BASE + 'welcome.html' + q, icon: 'home', tone: 'gold', qr: 'home', kw: 'home welcome start' });
     }
     /* First in Course, because the question a student cannot answer is the
        thing most likely to stop them, and the board is faster than my inbox. */
-    t.push({ g: 'Course', name: 'Virtual Office', sub: 'Ask a question where the whole class sees the answer',
+    t.push({ g: 'About the course', name: 'Virtual Office', sub: 'Ask a question where the whole class sees the answer',
              url: BASE + 'virtual-office.html' + q, icon: 'people', tone: 'terra',
              kw: 'virtual office question board discussion ask help stuck forum post canvas' });
-    t.push({ g: 'Course', name: 'Start here', sub: 'Everything to set up in week one',
-             url: BASE + 'start-here.html' + q, icon: 'play', tone: 'navy', kw: 'start here checklist orientation' });
-    t.push({ g: 'Course', name: 'How this course works', sub: 'Why the week is built the way it is',
-             url: BASE + 'how-this-course-works.html' + q, icon: 'doc', tone: 'terra', kw: 'how course works pedagogy tbl why' });
+    /* Start here and How this course works were tiles in this group.
+       Both are week-one orientation: read once, never opened again,
+       and occupying two of the dock's slots for the other sixteen
+       weeks. The pages stay where they are, linked from the calendar
+       walkthrough and the syllabus, which is where a student is when
+       the question comes up. */
     return t;
   }
 
@@ -273,6 +433,24 @@
 '.bd-body{overflow:auto;padding:6px 16px 18px;scrollbar-width:thin}',
 '.bd-g{font-size:10.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#F2E2B8;',
 '  margin:14px 2px 9px}',
+
+"/* COLLAPSIBLE GROUPS.\n"+
+"   Twenty-six tiles at once is twenty-six decisions before the\n"+
+"   student has done anything. The groups fold, This week is open\n"+
+"   and the rest are shut, so opening the dock asks one question\n"+
+"   instead of twenty-six. The count stays on every shut header so\n"+
+"   a closed group is never a mystery box, and typing in the search\n"+
+"   opens everything, because a filtered list you cannot see is\n"+
+"   worse than no filter at all. */",
+'.bd-gh{all:unset;box-sizing:border-box;display:flex;align-items:center;gap:9px;width:100%;',
+'  cursor:pointer;margin:14px 0 9px;padding:7px 8px;border-radius:9px;',
+'  font-size:10.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#F2E2B8}',
+'.bd-gh:hover{background:rgba(255,255,255,.07)}',
+'.bd-gh:focus-visible{outline:3px solid #F2E2B8;outline-offset:2px}',
+'.bd-gh .cv{flex:none;transition:transform 180ms ease}',
+'.bd-gh[aria-expanded="false"] .cv{transform:rotate(-90deg)}',
+'.bd-gh .ct{margin-left:auto;letter-spacing:.06em;color:rgba(255,255,255,.62);font-size:10.5px}',
+'.bd-grid[hidden]{display:none}',
 "/* THE RAGGED GAP UNDER SHORT TILES.\n"+
 "   Cells were not stretching, so a tile whose text wrapped to four\n"+
 "   lines left a hole beside every shorter one in its row. Stretch\n"+
@@ -327,7 +505,7 @@
 
 '.bd-none{color:#fff;opacity:.86;font-size:14px;padding:22px 2px}',
 '.bd-live{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}',
-'@media(prefers-reduced-motion:reduce){.bd-launch,.bd-panel,.bd-tile,.bd-scrim{transition:none}}'
+'@media(prefers-reduced-motion:reduce){.bd-launch,.bd-panel,.bd-tile,.bd-scrim,.bd-gh .cv{transition:none}}'
   ].join('');
 
   var SEARCH_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>';
@@ -401,6 +579,28 @@
     document.addEventListener('keydown', onKey, true);
   }
 
+  /* WHICH GROUPS START OPEN
+
+     The default is the first group only, which is This week. A
+     student opening the dock sees the two or three things that are
+     actually live today, and the rest as one-line headers with a
+     count. Whatever they fold or unfold is remembered, so a student
+     who wants everything open gets it back every time. */
+  var GKEY = 'bio004-dock-groups';
+
+  function groupState() {
+    try { return JSON.parse(localStorage.getItem(GKEY) || '{}') || {}; }
+    catch (e) { return {}; }
+  }
+  function groupOpen(g, i) {
+    var st = groupState();
+    return Object.prototype.hasOwnProperty.call(st, g) ? !!st[g] : (i === 0);
+  }
+  function setGroupOpen(g, on) {
+    var st = groupState(); st[g] = !!on;
+    try { localStorage.setItem(GKEY, JSON.stringify(st)); } catch (e) {}
+  }
+
   function render(q) {
     q = String(q || '').trim().toLowerCase();
     var list = tools().filter(function (t) {
@@ -426,9 +626,23 @@
     var groups = [], seen = {};
     list.forEach(function (t) { if (!seen[t.g]) { seen[t.g] = []; groups.push(t.g); } seen[t.g].push(t); });
 
+    /* Searching opens everything: a hit hidden inside a folded group
+       reads as no result. Browsing folds everything but This week. */
+    var searching = !!q;
+
     var html = '';
-    groups.forEach(function (g) {
-      html += '<p class="bd-g">' + esc(g) + '</p><div class="bd-grid">';
+    groups.forEach(function (g, gi) {
+      var open = searching || groupOpen(g, gi);
+      var gid  = 'bd-grp-' + gi;
+      html += '<button type="button" class="bd-gh" data-grp="' + esc(g) + '" '
+            +   'aria-expanded="' + (open ? 'true' : 'false') + '" aria-controls="' + gid + '">'
+            +   '<svg class="cv" width="11" height="11" viewBox="0 0 24 24" aria-hidden="true" '
+            +     'fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" '
+            +     'stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'
+            +   '<span>' + esc(g) + '</span>'
+            +   '<span class="ct">' + seen[g].length + '</span>'
+            + '</button>'
+            + '<div class="bd-grid" id="' + gid + '"' + (open ? '' : ' hidden') + '>';
       seen[g].forEach(function (t) {
         /* Not a link. A tile that goes somewhere unfinished is worse than
            one that plainly says it is not ready yet. */
@@ -458,6 +672,17 @@
       html += '</div>';
     });
     body.innerHTML = html;
+
+    body.querySelectorAll('.bd-gh').forEach(function (h) {
+      h.addEventListener('click', function () {
+        var panel = document.getElementById(h.getAttribute('aria-controls'));
+        var open  = h.getAttribute('aria-expanded') !== 'true';
+        h.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (panel) panel.hidden = !open;
+        setGroupOpen(h.getAttribute('data-grp'), open);
+        live.textContent = h.getAttribute('data-grp') + (open ? ' expanded' : ' collapsed');
+      });
+    });
 
     body.querySelectorAll('.bd-qrb').forEach(function (b) {
       b.addEventListener('click', function () {
