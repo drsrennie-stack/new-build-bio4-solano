@@ -185,7 +185,7 @@
 
   /* ===================== TOUR ===================== */
   #screen-tour{
-    position:relative;min-height:100vh;
+    position:relative;
     background:var(--navy);color:var(--offwhite-text);
     border-top:4px solid var(--border-blue);
     padding:44px 20px 64px;
@@ -332,6 +332,12 @@
   .dots i.on{background:var(--gold);}
 
   /* ===================== WELCOME BACK ===================== */
+  /* display:flex here would beat .screen{display:none}, because an id
+     outranks a class, so this screen rendered even when it was not the
+     active one: the intro and the welcome back screen stacked, 732px and
+     807px, with white between them. That is the long page. The column
+     layout belongs on the active state only. */
+  #screen-back.active{display:flex;flex-direction:column;}
   #screen-back{
     background:var(--page);color:var(--ink);
     border-top:4px solid var(--border-blue);
@@ -340,15 +346,20 @@
        footer ended partway down and the page background filled the rest,
        which reads as a page that failed to finish loading. Fill the
        viewport and push the footer to the bottom of it. */
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
   }
-  /* head at the top, footer at the bottom, and the body takes the space
-     between and centres itself in it. Pushing the footer down alone just
-     moved the empty band into the middle of the page. */
-  #screen-back > .back-body{flex:1 0 auto;display:flex;flex-direction:column;justify-content:center;}
-  #screen-back > footer{margin-top:auto;}
+  /* Only when this page IS the window. Inside a Kajabi frame 100vh means
+     the frame's own height, which the page then reports back as its
+     content height, so the frame can never shrink. The standalone class
+     is set below only when the page is not framed. */
+  html.standalone #screen-back{min-height:100vh;}
+  html.standalone #screen-tour{min-height:100vh;}
+  /* Content stacks at its natural height and the page ends where the
+     content ends. The stretch-and-centre version below is standalone
+     only: inside a Kajabi frame the frame's height is whatever the page
+     last reported, so stretching to fill it padded the page out with
+     white and pushed the footer far down. */
+  html.standalone #screen-back > .back-body{flex:1 0 auto;display:flex;flex-direction:column;justify-content:center;}
+  html.standalone #screen-back > footer{margin-top:auto;}
   .back-head{
     background:var(--navy);color:var(--offwhite-text);
     padding:40px 24px 34px;text-align:center;
@@ -651,6 +662,12 @@
   .back-head .logo-figures svg:first-child path{fill:var(--navy)}
 </style>
 </head>
+<script>
+/* Set before first paint: is this page the window, or is it inside a frame?
+   The welcome back screen fills the window in the first case and sizes to
+   its content in the second. */
+(function(){ try{ if(window.self===window.top) document.documentElement.className+=' standalone'; }catch(e){} })();
+</script>
 <body>
 <a class="skip" href="#main">Skip to main content</a>
 
@@ -1048,7 +1065,16 @@
       });
     } else if(res.frame){
       body.innerHTML = '<iframe class="tmodal-frame" title="Preview of ' + res.name + '"></iframe>';
-      body.querySelector('iframe').src = res.url;
+      /* Keep the tour intact. The preview shows a real course page, and
+         every internal link on it carries target="_top" by house rule, so
+         one click threw the whole window out of the tour and landed on
+         welcome.html with the section dropped: 49 such links on the
+         syllabus alone, and no way back. embed=solo tells the dock to
+         cancel target="_top" for same-origin links, so a click inside the
+         preview stays inside the preview. */
+      var u = res.url;
+      if (res.internal) { u += (u.indexOf('?') < 0 ? '?' : '&') + 'embed=solo'; }
+      body.querySelector('iframe').src = u;
     } else {
       body.innerHTML = '<div class="tmodal-fallback"><strong>' + res.name + ' opens in its own tab</strong>' +
         '<span>It is an interactive app that runs best full screen.</span>' +
@@ -1082,8 +1108,7 @@
     stopNarration();
     document.body.classList.remove('touring');
     setLS(LS_DONE, '1');
-    renderBack();
-    show('screen-back');
+    if (renderBack()) show('screen-back');
   }
 
   // ---------- Welcome back ----------
@@ -1101,6 +1126,13 @@
 
   function renderBack(){
     var s = SECTIONS[section];
+    /* No section means this screen cannot be drawn: SECTIONS[section] is
+       undefined and the first read of s.label throws, which left the
+       section pill and the weekly hubs card rendered but empty. That is
+       what a student saw after going Back inside a Kajabi frame, where
+       storage is blocked and the frame's first address carried no sec.
+       An unknown section is a question, so ask it. */
+    if (!s) { show('screen-intro'); return false; }
     document.getElementById('greetName').textContent = timeGreeting();
     document.getElementById('backDate').textContent = longDate();
     /* Two lines on purpose: the label reads as a heading for the
@@ -1118,6 +1150,7 @@
     chip.appendChild(det);
 
     renderHubGate(s);
+    return true;
 
     /* No chip rows and no button. One entry point, the corner one, and
        dock-coachmark.js points a student at it for their first few visits. */
@@ -1246,7 +1279,19 @@
   var frameId = (new URLSearchParams(window.location.search)).get('frameId') || 'bio004-welcome';
   function postHeight(){
     try{
-      var h = document.documentElement.scrollHeight;
+      /* Measure the CONTENT, not documentElement or body. Inside a frame
+         both report max(content, viewport) and the viewport IS the frame,
+         so the frame could grow but never shrink: it stayed at whatever
+         height it was first given and left a band of empty page under
+         the footer. */
+      var h = 0, kids = document.body.children;
+      for (var i = 0; i < kids.length; i++){
+        var el = kids[i], cs = getComputedStyle(el);
+        if (cs.position === 'fixed' || cs.display === 'none') continue;
+        var r = el.getBoundingClientRect();
+        if (r.height) h = Math.max(h, r.bottom + window.scrollY);
+      }
+      h = Math.ceil(h) || document.body.scrollHeight;
       window.parent.postMessage({frameId:frameId, height:h, type:'resize'}, '*');
     }catch(e){}
   }
@@ -1256,8 +1301,7 @@
     document.getElementById('startTourBtn').addEventListener('click', startTour);
     document.getElementById('skipTourBtn').addEventListener('click', function(){
       setLS(LS_DONE, '1');
-      renderBack();
-      show('screen-back');
+      if (renderBack()) show('screen-back');
     });
 
     document.getElementById('finishTour').addEventListener('click', finishTour);
@@ -1513,8 +1557,7 @@
 
     if(section && tourDone){
       // Returning visitor: straight to welcome back.
-      renderBack();
-      show('screen-back');
+      if (renderBack()) show('screen-back');
       return;
     }
 
