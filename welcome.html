@@ -335,7 +335,20 @@
   #screen-back{
     background:var(--page);color:var(--ink);
     border-top:4px solid var(--border-blue);
+    /* This screen is what a returning student sees every visit, and its
+       content is shorter than a tall window. Without a minimum height the
+       footer ended partway down and the page background filled the rest,
+       which reads as a page that failed to finish loading. Fill the
+       viewport and push the footer to the bottom of it. */
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
   }
+  /* head at the top, footer at the bottom, and the body takes the space
+     between and centres itself in it. Pushing the footer down alone just
+     moved the empty band into the middle of the page. */
+  #screen-back > .back-body{flex:1 0 auto;display:flex;flex-direction:column;justify-content:center;}
+  #screen-back > footer{margin-top:auto;}
   .back-head{
     background:var(--navy);color:var(--offwhite-text);
     padding:40px 24px 34px;text-align:center;

@@ -69,6 +69,14 @@
 
   /* ---------- PANELS ---------- */
   .panels{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start}
+  /* Reading mode groups a heading with everything that follows it, and
+     that grouping runs past the end of the panels and swallows the mini
+     visual sheet. The sheet then lands inside this grid as a fourth
+     item, one column wide, and its drawing frames come out about an
+     inch square. Anything reading mode drops in here spans all three
+     columns, so the drawing canvas keeps the full width it was drawn
+     for. */
+  .panels > .rm-sec:nth-child(n+4){grid-column:1 / -1}
   @media(max-width:1000px){.panels{grid-template-columns:1fr}ol.steps{grid-template-columns:1fr}}
   .panel{background:#fff;border:1px solid var(--rule);border-radius:var(--radius-card);
          overflow:hidden;box-shadow:var(--shadow-rest)}
@@ -101,8 +109,19 @@
   /* ---------- MINI VISUAL SHEET ---------- */
   table.vsheet{width:100%;border-collapse:separate;border-spacing:16px 16px;table-layout:fixed}
   td.vs-intro{font-size:.93rem;color:var(--gray)}
-  .vs-h{display:block;font-family:var(--font-display);font-weight:800;font-size:1.2rem;
-    color:var(--navy);margin:0 0 3px;letter-spacing:-.01em;text-transform:none}
+  /* A real h2, not a styled span. Reading mode groups a heading with
+     everything after it that has no heading of its own, so while this
+     sheet had only a span it was swept into Panel 3 and rendered
+     inside that column, about an inch of drawing space per frame. As
+     a heading it becomes its own section at full page width, and the
+     heading map is correct for screen readers too. */
+  h2.vs-h{display:block;font-family:var(--font-display);font-weight:800;font-size:1.2rem;
+    color:var(--navy);margin:0 0 3px;letter-spacing:-.01em;text-transform:none;
+    line-height:1.15;padding:0;border:0;background:none}
+  /* What to draw in the frame, in a full sentence. The shape tag on
+     its own (Hub, Grid, Chain) told a student nothing unless they
+     remembered the key at the top of the sheet. */
+  .vf-do{font-size:.82rem;line-height:1.5;color:#2C3A45;margin:0 0 7px;max-width:62ch}
   table.vsheet td{width:50%;vertical-align:top;padding:0 10px;background:none;border:0}
 table.vsheet td:first-child{padding-left:0}
 table.vsheet td:last-child{padding-right:0}
@@ -233,14 +252,37 @@ table.vsheet td:last-child{padding-right:0}
     .warnbox{padding:6pt 8pt;margin-top:7pt;border-radius:4pt}
     .warnbox p{font-size:7.8pt}
 
-    /* a CSS grid fragments badly across sheets and leaves blank pages.
-       A table fragments column by column, which is what these panels need. */
-    .panels{display:table;width:100%;table-layout:fixed;border-collapse:collapse}
-    .panel{display:table-cell;width:33.33%;vertical-align:top;
-           border:0;border-right:1px solid var(--navy);border-radius:0;box-shadow:none;
-           overflow:visible;padding:0 11pt;break-inside:auto}
-    .panel:first-child{padding-left:0}
-    .panel:last-child{border-right:0;padding-right:0}
+    /* THE DRAWING SHEET.
+       These panels used to print as a three-column table, which meant
+       the drawing boxes came out a third of a column wide. That is not
+       a drawing space, it is a margin note. Each panel prints full
+       width now, and Draw it starts its own sheet, so every drawing
+       gets a whole page with its brain dump and its check beside it.
+
+       Single column on purpose. A print table cannot move one of its
+       cells onto a different sheet, and a two-column grid fragments
+       across sheets in an order nobody can predict (tested: it put
+       Apply it before Draw it). Straight stacking comes out the same
+       every time. */
+    .panels{display:block;width:100%}
+    .panel{display:block;width:100%;border:0;border-radius:0;box-shadow:none;
+           overflow:visible;padding:0;margin:0 0 14pt;break-inside:auto}
+    .panel:nth-child(2){break-before:page;break-after:page;margin-bottom:0}
+    /* The download is landscape, so a full-width text line runs about
+       ten inches, which nobody reads comfortably. The two text panels
+       flow in two columns to keep the line length sane. The drawing
+       panel stays one column: it wants the width. */
+    .panel:nth-child(1) .panel-body,
+    .panel:nth-child(3) .panel-body{columns:2;column-gap:26pt}
+    .panel:nth-child(1) .panel-body > *,
+    .panel:nth-child(3) .panel-body > *{break-inside:avoid}
+    /* the drawing sheet runs tight so the box gets the room */
+    .panel:nth-child(2) h3{margin:7pt 0 2pt;font-size:8.8pt}
+    .panel:nth-child(2) h4{margin:5pt 0 2pt;font-size:8.2pt}
+    .panel:nth-child(2) p{font-size:7.9pt;margin-bottom:3pt}
+    .panel:nth-child(2) .dump{padding:4pt 6pt;margin-bottom:4pt}
+    .panel:nth-child(2) .dump p{font-size:7.5pt;margin:0}
+    .panel:nth-child(2) .check{padding:4pt 6pt;font-size:7.4pt;margin-top:3pt}
     .panel-head{background:#fff;color:var(--navy);padding:0 0 5pt;margin-bottom:7pt;
                 border-bottom:1.2px solid var(--navy);break-after:avoid}
     .panel-head h2{color:var(--navy);font-size:11.6pt}
@@ -259,9 +301,13 @@ table.vsheet td:last-child{padding-right:0}
     table.work td{padding:2pt 3pt;height:22pt}
     table.work tr{break-inside:avoid}
 
-    .box{height:100pt;margin:6pt 0 5pt;border-radius:4pt}
-    .box.tall{height:150pt}
-    .box.short{height:62pt}
+    /* One drawing per sheet, box sized to the largest that still keeps
+       the drawing, its instructions and its check together on one
+       page. About six and a half inches across by three and a half
+       deep, up from roughly two inches by one and a half. */
+    .box{height:260pt;margin:6pt 0 5pt;border-radius:4pt}
+    .box.tall{height:260pt}
+    .box.short{height:221pt}
     .task,.dump,.check,.worked{border-radius:4pt;break-inside:avoid}
     .task{padding:7pt 8pt;margin-bottom:8pt}
     .dump{padding:6pt 7pt;margin-bottom:7pt}
@@ -284,8 +330,9 @@ table.vsheet td:last-child{padding-right:0}
     .vb-shape{font-size:5.8pt}
     .vsheet-wrap > h2,.vsheet-wrap > .lede{break-after:avoid}
     table.vsheet{border-spacing:11pt 11pt}
-    .vs-h{font-size:12.6pt;margin:0 0 2pt}
+    h2.vs-h{font-size:12.6pt;margin:0 0 2pt}
     td.vs-intro{font-size:8.4pt}
+    .vf-do{font-size:7.4pt;margin:0 0 4pt;line-height:1.4}
     table.vsheet tr{break-inside:avoid}
     .vf-cap{margin:0 0 3pt;gap:5pt}
     .vf-n{width:11pt;height:11pt;font-size:5.8pt}
@@ -320,6 +367,7 @@ table.vsheet td:last-child{padding-right:0}
   <a href="m4-alimentary-notes.html" target="_top">Read the notes first</a>
   <a href="welcome.html" target="_top">Course home</a>
   <a class="solid" href="BIO004-M4-Digest-Worksheet.pdf" target="_top" download>Download the PDF</a>
+  <a href="m4-digest-drawing-sheet.html" target="_top">Drawing sheet on its own</a>
   <button id="printBtn" type="button">Print this worksheet</button>
 </div>
 
@@ -541,46 +589,54 @@ table.vsheet td:last-child{padding-right:0}
 
   <div class="sheet vsheet-wrap">
     <table class="vsheet">
-    <tr><td colspan="2" class="vs-intro"><span class="vs-h">Mini visual sheet</span>One frame per chunk, shaped for what goes in it. Tall frames are ladders, wide strips are chains, squares are hubs. Draw straight onto this sheet. If a frame is too small for your handwriting, redraw that one in your notes and put the page number on the line.</td></tr>
+    <tr><td colspan="2" class="vs-intro"><h2 class="vs-h">Mini visual sheet</h2>Each frame tells you what to draw in it and what to label. Do them with your notes closed, then open your notes and correct yourself in a second color. Draw straight onto this sheet. If a frame is too small for your handwriting, draw that one in your notebook instead and write the frame number at the top of the page so you can find it again.</td></tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">1</span><span class="vf-t">The canal against the accessory organs</span><span class="vf-s">Split</span></p>
+        <p class="vf-do">Draw a line down the middle of the frame. Put one on the left and the other on the right. Draw and label both, then underneath write the one difference that tells them apart.</p>
         <div class="vbox" style="height:1.8in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">2</span><span class="vf-t">The four layers of the wall</span><span class="vf-s">Ladder</span></p>
+        <p class="vf-do">Draw the levels in order down the frame, the first one at the top. Label each level and write one line saying how it differs from the level above it.</p>
         <div class="vbox" style="height:2.7in"></div>
       </td>
     </tr>
     <tr>
       <td colspan="2">
         <p class="vf-cap"><span class="vf-n">3</span><span class="vf-t">The pathway of food, mouth to anus</span><span class="vf-s">Chain</span></p>
+        <p class="vf-do">Draw the steps left to right with an arrow between each one. Label every step, and on each arrow write what happens to get to the next.</p>
         <div class="vbox" style="height:1.15in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">4</span><span class="vf-t">The stomach</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">5</span><span class="vf-t">Three levels of surface amplification</span><span class="vf-s">Ladder</span></p>
+        <p class="vf-do">Draw the levels in order down the frame, the first one at the top. Label each level and write one line saying how it differs from the level above it.</p>
         <div class="vbox" style="height:2.7in"></div>
       </td>
     </tr>
     <tr>
       <td>
         <p class="vf-cap"><span class="vf-n">6</span><span class="vf-t">The large intestine</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
       <td>
         <p class="vf-cap"><span class="vf-n">7</span><span class="vf-t">The liver, from lobe to lobule</span><span class="vf-s">Hub</span></p>
+        <p class="vf-do">Put the main structure in the middle of the frame. Draw everything that belongs to it around the outside, label each one, and run a line from each back to the middle.</p>
         <div class="vbox" style="height:2.3in"></div>
       </td>
     </tr>
     <tr>
       <td colspan="2">
         <p class="vf-cap"><span class="vf-n">8</span><span class="vf-t">The path of bile, canaliculus to duodenum</span><span class="vf-s">Chain</span></p>
+        <p class="vf-do">Draw the steps left to right with an arrow between each one. Label every step, and on each arrow write what happens to get to the next.</p>
         <div class="vbox" style="height:1.15in"></div>
       </td>
     </tr>

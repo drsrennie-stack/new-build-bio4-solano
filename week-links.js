@@ -5,10 +5,9 @@
    FILLED IN. This was a stub with 17 empty objects, which is why
    every week page showed "Coming soon" on both buttons.
 
-   worksheet  the pre-work sheet for that week. Where one of her
-              m1/m2/m3 pre-work pages exists it is used; the older
-              summer workbook is the fallback for topics that do
-              not have one yet (modules 4 and 5).
+   worksheet  the pre-work sheet for that week. Always one of the
+              three-panel m1 to m5 pre-work pages. Nothing here points
+              at a Summer 2026 page any more.
    lecture    the concept video, which is watched AFTER the sheet.
 
    Generated from session-links.js so the two cannot drift.
@@ -18,7 +17,11 @@ window.BIO004_WEEK_LINKS = {
    1: { worksheet:"m1-intro-worksheet.html", lecture:"week1-concept-videos.html" }, /* Intro to Anatomy, cells, histology */
    2: { worksheet:"m1-cell-worksheet.html", lecture:"cell-concept-videos.html" }, /* TBL 1 Cell Anatomy, connective tissue */
    3: { worksheet:"m1-tissues-worksheet.html", lecture:"tissues-concept-videos.html" }, /* TBL 2 Histology, integumentary */
-   4: { worksheet:"BIO004-Midterm-Practice-Exams.html", lecture:"tissues-concept-videos.html" }, /* Exam 1 week */
+   4: { worksheet:"m1-integumentary-worksheet.html", lecture:"integumentary-concept-videos.html" }, /* Exam 1 week.
+         Labor Day then Exam 1, so there is no new pre-work. This was pointing at
+         BIO004-Midterm-Practice-Exams.html, a fixed Summer 2026 paper. The
+         integumentary sheet is the last Module 1 material before the exam and it
+         is on Exam 1, so it is what a student should be reworking that week. */
    5: { worksheet:"m2-bone-worksheet.html", lecture:"bone-concept-videos.html" }, /* Bone tissue, skull */
    6: { worksheet:"m2-axial-worksheet.html", lecture:"axial-concept-videos.html" }, /* Spine, upper and lower extremity, TBL 3 */
    7: { worksheet:"m2-appendicular-worksheet.html", lecture:"appendicular-concept-videos.html" }, /* Exam 2 */
