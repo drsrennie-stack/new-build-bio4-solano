@@ -118,18 +118,53 @@
   .exside-t{font-family:var(--font-display);font-weight:800;font-size:1.14rem;color:var(--navy);margin:0;line-height:1.2;}
   .exside-sub{font-size:.78rem;color:var(--gray);margin:4px 0 0;}
   .exside-body{max-height:min(70vh,620px);overflow-y:auto;padding:0 18px 18px;}
-  .exgrp{margin-top:14px;}
-  .exgrp:first-child{margin-top:2px;}
-  .exgrp h3{font-family:var(--font-eyebrow);font-weight:700;font-size:.6rem;letter-spacing:.13em;
-    text-transform:uppercase;color:var(--terra-dark);margin:0 0 6px;
-    display:flex;align-items:baseline;gap:7px;}
-  .exgrp h3 span{font-family:var(--font-body);font-weight:600;font-size:.7rem;letter-spacing:0;
-    text-transform:none;color:var(--gray);margin-left:auto;}
-  .exgrp ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px;}
-  .exgrp a{display:block;font-size:.85rem;line-height:1.35;color:var(--navy);text-decoration:none;
-    background:#fff;border-radius:7px;padding:8px 10px;box-shadow:var(--shadow-rest);transition:var(--t);}
-  .exgrp a:hover{transform:translateY(-1px);box-shadow:0 6px 13px rgba(0,0,0,.10);color:var(--terra-dark);}
-  @media (prefers-reduced-motion:reduce){.exgrp a:hover{transform:none;}}
+  /* ON THIS EXAM, AS TAGGED ROWS.
+
+     This panel used to be seven stacked headings, each with a
+     bulleted list under it, and every bullet the same white card.
+     Nothing about it said which kind of thing you were looking at
+     without reading the heading above, and by the time you had
+     scrolled to Concept videos the heading was off screen.
+
+     Same rows as the materials page now: a coloured tag naming the
+     kind, the titles beside it, the count on the right. The colour
+     is the label, so it survives scrolling. Pre-work is terra
+     because it is the one with a deadline attached, the structure
+     list is gold because it is the single thing that holds
+     everything, and the rest are navy. */
+  /* .exline, not .exrow: .exrow is already the five-button chooser
+     strip above the calendar. Two rules with one name meant the
+     later one silently reflowed the buttons. */
+  /* Two columns, not three. This rail is about 420px wide, and a
+     third column for the count squeezed the titles until the count
+     itself was cut off mid-word. The count sits under its tag now,
+     where it has all the room it needs. */
+  .exline{display:grid;grid-template-columns:92px 1fr;align-items:start;gap:11px;
+    padding:10px 0;border-top:1px solid #F0EEE9;}
+  .exline:first-child{border-top:0;}
+  .extag{font-family:var(--font-eyebrow);font-size:.56rem;font-weight:800;letter-spacing:.06em;
+    text-transform:uppercase;background:var(--navy);color:#FAFAF9;border-radius:6px;
+    padding:5px 4px;text-align:center;line-height:1.15;}
+  .extag.prework{background:var(--terra-dark);}
+  .extag.full{background:var(--gold);color:#08101F;}
+  /* min-width:0 is load-bearing: without it a long title sets the
+     column's minimum and the row overflows the rail. */
+  .exwhat{font-size:.84rem;line-height:1.5;min-width:0;overflow-wrap:break-word;}
+  .exwhat a{color:var(--navy);text-decoration:none;font-weight:700;}
+  .exwhat a:hover{text-decoration:underline;}
+  .exwhat .sep{color:#4A5763;padding:0 3px;}
+  .excount{display:block;font-size:.62rem;font-weight:800;color:var(--terra-dark);
+    text-align:left;margin-top:4px;padding-left:1px;}
+
+  /* The practice paper is the one thing here with a date attached,
+     so it leaves the flat stack, same as on the materials page. */
+  .expractice{display:grid;grid-template-columns:92px 1fr auto;align-items:center;gap:11px;
+    padding:11px 12px;margin:12px 0 4px;background:#fff;border-radius:var(--radius);
+    box-shadow:0 10px 26px rgba(0,0,0,.18),0 2px 6px rgba(0,0,0,.10);}
+  .expractice .exwhat{font-weight:800;}
+  .expractice .note{display:block;font-size:.7rem;font-weight:500;color:var(--gold-text);margin-top:1px;}
+  .expractice a.go{font-size:.7rem;font-weight:800;color:var(--gold-text);text-decoration:none;white-space:nowrap;}
+  .expractice a.go:hover{color:var(--navy);}
   .exside-none{font-size:.85rem;color:var(--gray);padding:0 0 4px;margin:0;}
 
   /* month jump. Replaces the modules-and-weeks strip, which was a
@@ -441,24 +476,30 @@
      it. Lab sprints are split out of the lab list because they are the
      thing students are told to drill, not another page to read. */
   function materials(ex){
-    var g = { list:[], guide:[], sheet:[], video:[], lab:[], sprint:[], read:[] };
+    var g = { list:[], guide:[], sheet:[], video:[], lab:[], sprint:[], read:[], slide:[], book:[] };
     var seen = {};
     /* exam 1 covers module 1, and so on down */
     g.list.push({ u:'module-' + ex.n + '-structure-list.html',
                   t:'Every structure you are responsible for, Module ' + ex.n });
     (GUIDES[ex.n] || []).forEach(function(o){ g.guide.push(o); });
+    /* deduped twice: once by url across the whole exam, and again by
+       title inside a bucket, so the same topic name never appears
+       twice in one row */
     function add(bucket, o){
       if(!o || !o.u || seen[o.u]) return;
       seen[o.u] = 1;
-      g[bucket].push({ u:o.u, t:o.t || o.u });
+      var t = o.t || o.u, key = bucket + '|' + t.toLowerCase();
+      if(seen[key]) return;
+      seen[key] = 1;
+      g[bucket].push({ u:o.u, t:t });
     }
     ex.days.forEach(function(d){
       var L = LINKS[d.d]; if(!L) return;
       (L.sheets    || []).forEach(function(o){ add('sheet', o); });
       (L.videos    || []).forEach(function(o){ add('video', o); });
       (L.notes     || []).forEach(function(o){ add('read',  o); });
-      (L.workbooks || []).forEach(function(o){ add('read',  o); });
-      if(L.slides) add('read', L.slides);
+      (L.workbooks || []).forEach(function(o){ add('book',  o); });
+      if(L.slides) add('slide', L.slides);
       (L.lab || []).forEach(function(o){
         add(/-lab-sprint\.html/.test(o.u) ? 'sprint' : 'lab', o);
       });
@@ -495,26 +536,47 @@
        in the course linked to them: three of the five were unreachable
        except by typing the URL. Exam N covers module N, so this is where
        they belong. */
+    /* tag, plain-word label, unit, and the colour class.
+       Notes, slides and workbooks are separate rows because they
+       share their titles: the notes, the slide deck and the
+       workbook for a day are all called the same thing. Stacked in
+       one row they read as "Cell Anatomy, Cell Anatomy, Cell
+       Anatomy", which looks broken. The tag says which is which. */
     var GROUPS = [
-      ['list',   'Lab structure list'],
-      ['guide',  'Study-question guides'],
-      ['sheet',  'Pre-work sheets'],
-      ['video',  'Concept videos'],
-      ['read',   'Notes and workbooks'],
-      ['lab',    'Lab'],
-      ['sprint', 'Lab sprints']
+      ['list',   'FULL LIST',   'list',      'full'],
+      ['sheet',  'PRE-WORK',    'sheet',     'prework'],
+      ['read',   'NOTES',       'note set',  ''],
+      ['slide',  'SLIDES',      'slide deck',''],
+      ['book',   'WORKBOOKS',   'workbook',  ''],
+      ['video',  'VIDEOS',      'video',     ''],
+      ['lab',    'LAB',         'lab page',  ''],
+      ['sprint', 'SPRINTS',     'sprint',    ''],
+      ['guide',  'STUDY GUIDES','guide',     '']
     ];
-    var body = GROUPS.map(function(pair){
-      var list = g[pair[0]];
+    var body = GROUPS.map(function(row){
+      var list = g[row[0]];
       if(!list.length) return '';
-      return '<div class="exgrp"><h3>' + pair[1] + '<span>' + list.length + '</span></h3><ul>'
-        + list.map(function(o){
-            /* the same named tab the Today steps use, so reading one of
-               these never costs a student their place on the calendar */
-            return '<li><a href="' + esc(o.u) + '" target="bio004-ref">' + esc(o.t) + '</a></li>';
-          }).join('')
-        + '</ul></div>';
+      var titles = list.map(function(o, i){
+        /* the same named tab the Today steps use, so reading one of
+           these never costs a student their place on the calendar */
+        return (i ? '<span class="sep">&middot;</span>' : '')
+             + '<a href="' + esc(o.u) + '" target="bio004-ref">' + esc(o.t) + '</a>';
+      }).join('');
+      return '<div class="exline">'
+        +      '<span><span class="extag ' + row[3] + '">' + row[1] + '</span>'
+        +        '<span class="excount">' + list.length + ' ' + row[2] + (list.length===1?'':'s') + '</span></span>'
+        +      '<span class="exwhat">' + titles + '</span>'
+        +    '</div>';
     }).join('');
+
+    /* Every exam has a practice paper, whether or not the schedule
+       has any material hung on those particular days. */
+    body += '<div class="expractice">'
+         +    '<span class="extag full">PRACTICE</span>'
+         +    '<span class="exwhat">Practice exam ' + x.n
+         +      '<span class="note">A fresh paper in the real format, as many times as you want.</span></span>'
+         +    '<a class="go" href="practice-lecture-exam.html?exam=' + x.n + '" target="bio004-ref">Start &rarr;</a>'
+         +  '</div>';
 
     host.innerHTML =
       '<div class="exside-hd">'
@@ -522,7 +584,7 @@
       + '<h2 class="exside-t">Exam ' + x.n + ', ' + DOWL[dt.getDay()] + ' ' + MON3[dt.getMonth()] + ' ' + dt.getDate() + '</h2>'
       + '<p class="exside-sub">' + x.days.length + ' class days since the last one</p>'
       + '</div>'
-      + '<div class="exside-body">' + (body || '<p class="exside-none">No material is attached to these days yet.</p>') + '</div>';
+      + '<div class="exside-body">' + body + '</div>';
   }
 
   document.getElementById('exRow').addEventListener('click', function(e){
