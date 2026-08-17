@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab Quiz Answer Slips, 6 per page</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1E3D4C;
+    --navy-deep:#142a36;
+    --navy-tint:#EDF1F3;
+    --gold:#B8924A;
+    --terra:#C2734D;
+    --terra-dark:#A0522D;
+    --white:#FFFFFF;
+    --offwhite:#FAFAF9;
+    --cut:#7A8990;
+    --display:"Plus Jakarta Sans","Segoe UI",Helvetica,Arial,sans-serif;
+    --ui:"DM Sans","Segoe UI",Helvetica,Arial,sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+
+  body{
+    background:var(--offwhite);
+    color:var(--navy);
+    font-family:var(--ui);
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+
+  .skip-link{
+    position:absolute;left:-9999px;top:0;
+    background:var(--navy);color:#fff;
+    padding:10px 16px;border-radius:0 0 6px 0;
+    font-family:var(--display);font-weight:700;font-size:15px;
+    z-index:50;text-decoration:none;
+  }
+  .skip-link:focus{left:0;}
+
+  :focus-visible{
+    outline:3px solid var(--terra-dark);
+    outline-offset:2px;
+  }
+
+  /* ---------- screen toolbar (never prints) ---------- */
+  .toolbar{
+    max-width:8.5in;
+    margin:24px auto 8px;
+    padding:22px 26px 24px;
+    background:var(--white);
+    border-radius:10px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.08);
+  }
+  .toolbar h1{
+    font-family:var(--display);
+    font-weight:800;
+    font-size:25px;
+    letter-spacing:-0.015em;
+    line-height:1.2;
+    margin:0 0 5px;
+    color:var(--navy);
+  }
+  .toolbar .hint{
+    font-family:var(--ui);
+    font-size:14.5px;
+    line-height:1.55;
+    margin:0 0 20px;
+    color:var(--navy);
+    max-width:64ch;
+  }
+  .fields{
+    display:flex;
+    flex-wrap:wrap;
+    gap:16px;
+    align-items:flex-end;
+  }
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field label{
+    font-family:var(--ui);
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--terra-dark);
+  }
+  .field input{
+    font-family:var(--ui);
+    font-size:15px;
+    color:var(--navy);
+    padding:10px 12px;
+    min-width:210px;
+    background:var(--white);
+    border:1px solid var(--navy);
+    border-radius:6px;
+  }
+  .btn{
+    font-family:var(--display);
+    font-size:15px;
+    font-weight:700;
+    letter-spacing:-0.005em;
+    color:var(--white);
+    background:var(--navy);
+    border:1px solid var(--navy);
+    border-radius:6px;
+    padding:12px 24px;
+    cursor:pointer;
+    transition:background 200ms ease, transform 200ms ease;
+  }
+  .btn:hover{background:var(--navy-deep);transform:translateY(-2px);}
+  .status{
+    margin:15px 0 0;
+    font-family:var(--ui);
+    font-size:14px;
+    color:var(--navy);
+    min-height:1.2em;
+  }
+
+  /* ---------- the sheet ---------- */
+  .sheet{
+    width:8.5in;
+    margin:0 auto 40px;
+    padding:0.35in;
+    background:var(--white);
+    box-shadow:0 1px 3px rgba(0,0,0,0.08);
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:repeat(3,3.4in);
+    border:1px dashed var(--cut);
+  }
+  .slip{
+    border-right:1px dashed var(--cut);
+    border-bottom:1px dashed var(--cut);
+    padding:0.21in 0.23in 0.18in;
+    display:flex;
+    flex-direction:column;
+    background:var(--white);
+  }
+  .slip:nth-child(2n){border-right:0;}
+  .slip:nth-child(n+5){border-bottom:0;}
+
+  /* header */
+  .slip-head{margin:0 0 0.14in;}
+  .quiz-title{
+    font-family:var(--display);
+    font-weight:800;
+    font-size:15.5px;
+    letter-spacing:-0.018em;
+    line-height:1.1;
+    color:var(--navy);
+    margin:0 0 3px;
+  }
+  .course-line{
+    font-family:var(--ui);
+    font-weight:700;
+    font-size:8.6px;
+    letter-spacing:.135em;
+    text-transform:uppercase;
+    color:var(--terra-dark);
+    line-height:1.35;
+    margin:0;
+  }
+
+  /* meta row */
+  .meta{
+    display:flex;
+    gap:16px;
+    margin:0 0 0.13in;
+    min-height:0.24in;
+  }
+  .meta > div{display:flex;align-items:baseline;gap:7px;}
+  .meta .team{flex:1 1 auto;}
+  .meta .date{flex:0 0 1.3in;}
+  .meta .write{flex:1 1 auto;}
+
+  .lab{
+    font-family:var(--display);
+    font-size:10.5px;
+    font-weight:700;
+    letter-spacing:.01em;
+    color:var(--navy);
+    white-space:nowrap;
+  }
+  .val{
+    font-family:var(--ui);
+    font-size:10.5px;
+    font-weight:500;
+    color:var(--navy);
+    white-space:nowrap;
+  }
+
+  .present{margin:0 0 3px;}
+  .present-space{height:0.46in;}
+
+  .answer-lab{margin:0 0 3px;}
+  .answer-space{flex:1 1 auto;min-height:1.15in;}
+
+  .points{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:9px;
+    margin-top:5px;
+  }
+  .points-box{
+    width:0.6in;
+    height:0.29in;
+    border:1px solid var(--navy);
+    border-radius:3px;
+  }
+
+  .sr-only{
+    position:absolute;
+    width:1px;height:1px;
+    padding:0;margin:-1px;
+    overflow:hidden;
+    clip:rect(0 0 0 0);
+    white-space:nowrap;
+    border:0;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+    .btn:hover{transform:none;}
+  }
+
+  /* ---------- print ---------- */
+  @page{size:letter portrait;margin:0.35in;}
+
+  @media print{
+    body{background:var(--white);}
+    .toolbar,.skip-link{display:none !important;}
+    .sheet{width:auto;margin:0;padding:0;box-shadow:none;}
+    .grid{grid-template-rows:repeat(3,3.4in);}
+    .slip{break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#sheet">Skip to the answer slips</a>
+
+<div class="toolbar" role="region" aria-labelledby="tool-title">
+  <h1 id="tool-title">Lab Quiz Answer Slips</h1>
+  <p class="hint">Six slips per page, one question each. Edit the heading, term, and course below and all six slips update together. Print, then make one cut down the middle and two cuts across.</p>
+
+  <div class="fields">
+    <div class="field">
+      <label for="quiz-title">Heading</label>
+      <input type="text" id="quiz-title" name="quiz-title" value="Lab Quiz" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="term">Term</label>
+      <input type="text" id="term" name="term" value="Fall 2026" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="course">Course</label>
+      <input type="text" id="course" name="course" value="BIO 004 Human Anatomy" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="slip-date">Date, optional</label>
+      <input type="text" id="slip-date" name="slip-date" placeholder="Leave blank to write it in" autocomplete="off">
+    </div>
+    <button type="button" class="btn" id="print-btn">Print the page</button>
+  </div>
+
+  <p class="status" id="status" role="status" aria-live="polite"></p>
+</div>
+
+<main class="sheet" id="sheet">
+  <h2 class="sr-only">Printable sheet of six quiz answer slips</h2>
+  <div class="grid" id="grid"></div>
+</main>
+
+<template id="slip-template">
+  <article class="slip">
+    <h3 class="sr-only"></h3>
+    <div class="slip-head">
+      <p class="quiz-title" data-title></p>
+      <p class="course-line" data-course></p>
+    </div>
+    <div class="meta">
+      <div class="team"><span class="lab">Team</span><span class="write"></span></div>
+      <div class="date"><span class="lab">Date</span><span class="val write" data-date></span></div>
+    </div>
+    <p class="lab present">Students present at the time of the quiz</p>
+    <div class="present-space"></div>
+    <p class="lab answer-lab">Answer</p>
+    <div class="answer-space"></div>
+    <div class="points"><span class="lab">Points earned</span><span class="points-box"></span></div>
+  </article>
+</template>
+
+<script>
+(function(){
+  var grid       = document.getElementById('grid');
+  var tpl        = document.getElementById('slip-template');
+  var titleInput = document.getElementById('quiz-title');
+  var termInput  = document.getElementById('term');
+  var courseInput= document.getElementById('course');
+  var dateInput  = document.getElementById('slip-date');
+  var status     = document.getElementById('status');
+  var printBtn   = document.getElementById('print-btn');
+
+  var SLIPS = 6;
+  var first = true;
+
+  for (var i = 1; i <= SLIPS; i++){
+    var node = tpl.content.cloneNode(true);
+    node.querySelector('.sr-only').textContent = 'Quiz slip ' + i;
+    grid.appendChild(node);
+  }
+
+  function apply(){
+    var title  = titleInput.value.trim();
+    var term   = termInput.value.trim();
+    var course = courseInput.value.trim();
+    var date   = dateInput.value.trim();
+
+    var courseLine = [term, course].filter(function(v){ return v.length > 0; }).join('  ·  ');
+
+    set('[data-title]', title);
+    set('[data-course]', courseLine);
+    set('[data-date]', date);
+
+    if (first){ first = false; status.textContent = ''; return; }
+
+    var parts = [];
+    parts.push(title ? 'Heading reads ' + title + '.' : 'No heading.');
+    parts.push(courseLine ? 'Course line reads ' + courseLine.replace(/·/g, 'and') + '.' : 'No course line.');
+    parts.push(date ? 'Date printed as ' + date + '.' : 'Date left blank to write in.');
+    status.textContent = parts.join(' ');
+  }
+
+  function set(selector, text){
+    var nodes = document.querySelectorAll(selector);
+    for (var i = 0; i < nodes.length; i++){ nodes[i].textContent = text; }
+  }
+
+  titleInput.addEventListener('input', apply);
+  termInput.addEventListener('input', apply);
+  courseInput.addEventListener('input', apply);
+  dateInput.addEventListener('input', apply);
+  printBtn.addEventListener('click', function(){ window.print(); });
+
+  apply();
+})();
+</script>
+
+<script>
+(function(){
+  var frameId = (function(){
+    try{
+      var q = new URLSearchParams(window.location.search);
+      return q.get('id') || 'quiz-slip-6up';
+    }catch(e){ return 'quiz-slip-6up'; }
+  })();
+
+  function sendHeight(){
+    var h = Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight,
+      document.body.offsetHeight,
+      document.documentElement.offsetHeight
+    );
+    try{ window.parent.postMessage({ id: frameId, height: h }, '*'); }catch(e){}
+  }
+
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+  if (typeof ResizeObserver !== 'undefined'){ new ResizeObserver(sendHeight).observe(document.body); }
+  sendHeight();
+})();
+</script>
+
+</body>
+</html>
