@@ -834,8 +834,39 @@
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build);
-  else build();
+  /* ============================================================
+     PUBLIC VIEW: ?open=1
+
+     Some pages get handed to people who are not in the course. The
+     Study With Me poster on a wall, the three-app flyer, a link to a
+     colleague. Course tools opens every page on this site, so on a
+     public link it hands over the lectures and the notes too.
+
+     ?open=1 on the address means: this page, no dock. It is a flag on
+     the real page, not a second copy of it, so there is one URL, one
+     calendar, one thing to keep up to date.
+
+     The flag is remembered for the tab, so following a link off the
+     page does not put the dock back.
+     ============================================================ */
+  function isOpenView() {
+    try {
+      if (/[?&]open=1(&|$)/.test(window.location.search)) {
+        try { sessionStorage.setItem('bio004-open-view', '1'); } catch (e) {}
+        return true;
+      }
+      return sessionStorage.getItem('bio004-open-view') === '1';
+    } catch (e) {
+      return /[?&]open=1(&|$)/.test(window.location.search);
+    }
+  }
+
+  window.BIO004_OPEN_VIEW = isOpenView();
+
+  if (!window.BIO004_OPEN_VIEW) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', build);
+    else build();
+  }
 
   /* ============================================================
      THE READING FORMAT
@@ -881,6 +912,7 @@
      To take it off the whole course, delete this block.
      ============================================================ */
   (function loadHootie() {
+    if (window.BIO004_OPEN_VIEW) return;   /* public link, see ?open=1 above */
     if (window.BIO004_HOOTIE) return;
     if (document.querySelector('script[src*="hootie.js"]')) return;
 
