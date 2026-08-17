@@ -204,19 +204,18 @@ function submit(){
   var ENTRY = F.entry || {};
   var anyEntry = Object.keys(ENTRY).some(function(k){ return !!ENTRY[k]; });
   if (!F.id || !anyEntry){ return fallback(payload); }
-  var f = document.createElement('form'); f.method='POST'; f.target='gsink';
-  f.action = 'https://docs.google.com/forms/d/e/' + F.id + '/formResponse';
-  function add(n,v){ var inp=document.createElement('input'); inp.type='hidden'; inp.name=n; inp.value=v; f.appendChild(inp); }
+  /* Hand off to Google's own form page with every answer pre-filled. The student taps Submit there and
+     sees Google's "Your response has been recorded", so nothing is ever silently dropped. */
+  var q = ['usp=pp_url'];
   Object.keys(payload).forEach(function(k){
-    if (!ENTRY[k]) return; /* not in the form: skip */
-    var v = payload[k]; if (Array.isArray(v)) v.forEach(function(x){ add(ENTRY[k], x); }); else add(ENTRY[k], v);
+    if (!ENTRY[k]) return;
+    var v = payload[k];
+    (Array.isArray(v) ? v : [v]).forEach(function(x){ if (x !== undefined && x !== null && String(x) !== '') q.push(ENTRY[k] + '=' + encodeURIComponent(x)); });
   });
-  var fr = document.createElement('iframe'); fr.name='gsink'; fr.style.display='none'; document.body.appendChild(fr);
-  document.body.appendChild(f);
-  var doneShown=false;
-  fr.addEventListener('load', function(){ if(!doneShown){ doneShown=true; thanks(false); } });
-  f.submit();
-  setTimeout(function(){ if(!doneShown){ doneShown=true; thanks(false); } }, 2500);
+  var url = 'https://docs.google.com/forms/d/e/' + F.id + '/viewform?' + q.join('&');
+  try { localStorage.setItem('bio004-team-survey-done','1'); } catch(e){}
+  card.innerHTML = '<div class="done"><h2>Almost done, <b>'+esc(A.name.first)+'</b>.</h2><p>Your answers are filled in on the next screen. Scroll to the bottom and tap <b>Submit</b>, and Google will confirm it recorded them. That is the whole thing.</p><a class="btn" style="display:inline-block;text-decoration:none" href="'+url+'" id="goForm">Open and submit</a><p class="small">If the next screen does not open, copy this link into your browser:<br><span style="word-break:break-all">'+esc(url)+'</span></p></div>';
+  setTimeout(function(){ location.href = url; }, 900);
 }
 function fallback(payload){
   var row = [payload.section,payload.name,payload.degree,payload.health,payload.coursework,payload.role,payload.strengths.join(' | '),payload.values,payload.social,payload.tech,payload.avail.join(' | '),payload.work,payload.note]
