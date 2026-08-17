@@ -71,38 +71,38 @@ h1 .tc{color:var(--tc)}
 
 <script>
 /* ============================================================
-   SETUP (Dr. Rennie): this page posts into your existing form,
-   "TBL Team Survey". FORM_ID is already filled in below.
+   SETUP (Dr. Rennie): one Google Form per class, so each class
+   has its own Sheet and nothing reorganizes across sections.
 
-   What is left: the entry IDs. In the form editor: three-dot menu,
-   Get pre-filled link, answer every question, Get link, Copy link.
-   The link contains entry.NNNNNNNNNN for each question, in form
-   order. Paste each one below next to its key.
+   Class 1 uses your existing "TBL Team Survey" form (its FORM_ID is
+   filled in). Make a copy of it for Class 2 and another for Class 3,
+   rename each, and paste their FORM_IDs below. Then, for EACH form,
+   get the entry IDs (three-dot menu, Get pre-filled link, answer
+   every question, Get link, Copy link) and paste them into that
+   form's ENTRY block. Copies get their own entry IDs, so do all three.
 
-   Your form already has these questions (keys marked EXISTING).
-   Four are NEW: add them to the form if you want them collected,
-   otherwise leave their entry blank and the page simply skips them.
-   Suggested small edits to the form: add "Encourage people and keep
-   the mood positive" as a fourth choice on the team question, and
-   remove or leave the Gender and English questions (this page never
-   sends them).
+   Leave any entry blank for a question that form does not have; the
+   page simply skips it. If a class has no FORM_ID yet, the page falls
+   back to an email button so nothing is lost.
    ============================================================ */
-var FORM_ID = '1FAIpQLScIagrYxX7UT9ng36Oqhk1lCG-IbR39XO061wx3E4F_wPWSeg';
-var ENTRY = {
-  name:      '',   /* EXISTING  Your full name (first and last are joined into this one) */
-  degree:    '',   /* EXISTING  Highest degree you have completed */
-  health:    '',   /* EXISTING  Healthcare training or licensure */
-  role:      '',   /* EXISTING  On a team, I prefer to... */
-  tech:      '',   /* EXISTING  How comfortable are you with technology and learning new apps? */
-  social:    '',   /* EXISTING  Which sounds more like you? */
-  avail:     '',   /* EXISTING  When are you generally free to meet outside of class? (check all) */
-  work:      '',   /* EXISTING  About how many hours per week do you work for pay? */
-  section:   '',   /* NEW  Which class are you in?  (Multiple choice; strongly recommended so one form serves all three classes) */
-  coursework:'',   /* NEW  How much anatomy or physiology coursework have you had before this class? (Multiple choice) */
-  strengths: '',   /* NEW  Which of these describe you? (Checkboxes) */
-  values:    '',   /* NEW  What matters most to you on a team? (Short answer; sent as one ranked line) */
-  note:      ''    /* NEW  Anything you want me to know? (Short answer) */
+var FORMS = {
+  'mw': {   /* Class 1 · Mon/Wed */
+    id: '1FAIpQLSePMsgR-5ZcbOM8-GqlRqKtKEnHlFQZMPJj6874GMWowx_O0g',
+    entry: { name:'entry.2037208259', degree:'entry.1410081676', health:'entry.904454516', role:'entry.497308205', tech:'entry.772318065', social:'entry.745693523', avail:'entry.2041131065', work:'entry.24116393', coursework:'entry.1224407000', strengths:'entry.371279120', values:'entry.279132279', note:'' }
+  },
+  'tr-am': { /* Class 2 · Tue/Thu morning */
+    id: '1FAIpQLSfVTmtycErKvRpnbJGa0jkRAh6DFKBASMlDCVcyGlc4-cPmuA',
+    entry: { name:'entry.2037208259', degree:'entry.1410081676', health:'entry.904454516', role:'entry.497308205', tech:'entry.772318065', social:'entry.745693523', avail:'entry.2041131065', work:'entry.24116393', coursework:'entry.1224407000', strengths:'entry.371279120', values:'entry.279132279', note:'' }
+  },
+  'tr-eve': { /* Class 3 · Tue/Thu evening */
+    id: '1FAIpQLSdIL_BdxNB5DQWGcdNSf-MAwlNGWXutFcwcHZI8bj0FUn5gsw',
+    entry: { name:'entry.2037208259', degree:'entry.1410081676', health:'entry.904454516', role:'entry.497308205', tech:'entry.772318065', social:'entry.745693523', avail:'entry.2041131065', work:'entry.24116393', coursework:'entry.1224407000', strengths:'entry.371279120', values:'entry.279132279', note:'' }
+  }
 };
+/* keys: name = Your full name · degree = Highest degree · health = Healthcare training or licensure
+   role = On a team, I prefer to... · tech = technology comfort · social = Which sounds more like you?
+   avail = free to meet (check all) · work = hours per week for pay
+   coursework, strengths, values, note = the optional questions, only if you added them */
 var FALLBACK_EMAIL = 'srennie@solano.edu';
 
 var SECTIONS = { 'mw':'Class 1 · Mon/Wed', 'tr-am':'Class 2 · Tue/Thu morning', 'tr-eve':'Class 3 · Tue/Thu evening' };
@@ -119,7 +119,7 @@ var Q = [
   {key:'values', type:'rank', title:'What matters most to you on a team?', help:'Tap these in order, most important first. Tap again to undo.', opts:['Everyone shows up prepared','Clear, kind communication','Getting the work done well','Feeling comfortable asking questions']},
   {key:'social', type:'one', title:'Which sounds more like you?', opts:['More extroverted (I recharge around people and often prefer to talk)','Somewhere in between','More introverted (I recharge alone and often prefer to listen)']},
   {key:'tech', type:'one', title:'How comfortable are you with technology and learning new apps?', opts:['Very comfortable, I enjoy tech','Comfortable','Neutral','I prefer to avoid tech when I can']},
-  {key:'avail', type:'multi', title:'When are you generally free to meet outside of class?', help:'Check all that apply. This helps teams find a shared window.', opts:['Weekday mornings','Weekday afternoons','Weekday evenings','Weekends']},
+  {key:'avail', type:'multi', title:'When are you generally free to meet outside of class?', help:'Check all that apply. This helps teams find a shared window.', opts:['Weekday mornings','Weekday afternoons','Weekday Evenings','Weekends']},
   {key:'work', type:'one', title:'About how many hours a week do you work for pay?', opts:['I don\u2019t work for pay right now','Under 10 hours','10 to 20 hours','20 to 30 hours','More than 30 hours']},
   {key:'note', type:'text', title:'Anything you want me to know?', help:'Optional. A schedule wrinkle, something you are excited about, whatever helps.', optional:true}
 ];
@@ -196,10 +196,13 @@ function submit(){
     name:(A.name.first+' '+A.name.last).trim(), section:A.section, degree:A.degree, health:A.health, coursework:A.coursework,
     role:A.role, strengths:A.strengths||[], values:rankString(), social:A.social, tech:A.tech, avail:A.avail||[], work:A.work, note:A.note||''
   };
+  var secKey = Object.keys(SECTIONS).filter(function(k){ return SECTIONS[k]===A.section; })[0];
+  var F = FORMS[secKey] || {};
+  var ENTRY = F.entry || {};
   var anyEntry = Object.keys(ENTRY).some(function(k){ return !!ENTRY[k]; });
-  if (!FORM_ID || !anyEntry){ return fallback(payload); }
+  if (!F.id || !anyEntry){ return fallback(payload); }
   var f = document.createElement('form'); f.method='POST'; f.target='gsink';
-  f.action = 'https://docs.google.com/forms/d/e/' + FORM_ID + '/formResponse';
+  f.action = 'https://docs.google.com/forms/d/e/' + F.id + '/formResponse';
   function add(n,v){ var inp=document.createElement('input'); inp.type='hidden'; inp.name=n; inp.value=v; f.appendChild(inp); }
   Object.keys(payload).forEach(function(k){
     if (!ENTRY[k]) return; /* not in the form: skip */
