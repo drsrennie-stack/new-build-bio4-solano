@@ -106,6 +106,7 @@
   .dialog .actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;margin-top:6px;}
   .err{color:var(--terra-dark);font-size:12px;font-weight:700;}
   @media print{@page{size:landscape;margin:0.35in;}body{padding:0;background:#fff;}.tabs,.coursebar,.toolbar .btn,.toolbar .switch,.legend,.teambar .spacer,.actcell,a.skip{display:none!important;}.scroll{max-height:none;overflow:visible;border:none;}thead th{position:static;}.c0,.c1{position:static;}.chk{height:26px;}.overlay{display:none!important;}}
+.btn.danger{background:#fff;color:var(--terra);border:1px solid var(--terra);}
 </style>
 </head>
 <body>
@@ -146,6 +147,7 @@
   <p class="tally" aria-live="polite">Present: <span class="box p" id="tP">0</span> &nbsp; Absent: <span class="box a" id="tA">0</span> &nbsp; Unmarked: <span class="box u" id="tU">0</span></p>
   <label class="switch" title="Show or hide team features"><input type="checkbox" id="tblToggle"> Team-based (TBL)</label>
   <button type="button" class="btn primary" id="addBtn">+ Add student</button>
+      <button type="button" class="btn danger" id="clearRosterBtn" title="Remove every student from every tab">Clear roster</button>
   <button type="button" class="btn" id="resetBtn">Clear attendance</button>
   <button type="button" class="btn" onclick="window.print()">Print</button>
   <span class="legend">Cell: 1&times;=<b>&#10003; here</b>, 2&times;=<b>&#10005; absent</b>, 3&times;=blank</span>
@@ -250,7 +252,11 @@
         <div class="fld">
           <label for="fEnFile">Class list (enrolled)</label>
           <div class="filewrap"><input type="file" id="fEnFile" accept=".csv,.txt"> <span id="fEnMsg" class="parsemsg"></span></div>
-          <textarea id="fEnPaste" placeholder="...or paste names, one per line:&#10;Addison, Tobias&#10;Anderson, Sidney"></textarea>
+          <div style="display:flex;flex-wrap:wrap;gap:14px 22px;margin:0 0 8px">
+        <label style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:13.5px"><input type="checkbox" id="fReplace"> Replace the current roster with this upload (clears all names, attendance, and drops)</label>
+        <label style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:13.5px"><input type="checkbox" id="fFlipNames" checked> Names in the file are First Last (flip to Last, First)</label>
+      </div>
+      <textarea id="fEnPaste" placeholder="...or paste names, one per line:&#10;Addison, Tobias&#10;Anderson, Sidney"></textarea>
         </div>
         <div class="fld">
           <label for="fWlFile">Wait list (optional)</label>
@@ -258,7 +264,7 @@
           <textarea id="fWlPaste" placeholder="...or paste waitlist, one per line:&#10;Marin, Alexandra, 4MFFEV&#10;Patindol, Bianca, 4TJRF6"></textarea>
         </div>
       </div>
-      <p class="hint">CSV with headers is auto-detected (looks for <b>Name</b> or <b>Last Name</b>/<b>First Name</b>, plus optional <b>Add Code</b>, <b>Position</b>, <b>Confidential</b>). No headers? One per line as <b>Last, First</b> for the class list, or <b>Last, First, CODE</b> for wait-list rows (the add code as a third comma field). Mark a confidential student by adding <b>[C]</b> after the name.</p>
+      <p class="hint">The Team Formation Engine CSV works as is: its <b>Team</b> column fills the team dropdowns and names the six teams. Any CSV with headers is auto-detected (looks for <b>Name</b> or <b>Last Name</b>/<b>First Name</b>, plus optional <b>Add Code</b>, <b>Position</b>, <b>Confidential</b>). No headers? One per line as <b>Last, First</b> for the class list, or <b>Last, First, CODE</b> for wait-list rows (the add code as a third comma field). Mark a confidential student by adding <b>[C]</b> after the name.</p>
     </fieldset>
 
     <p class="err" id="setupErr" role="alert"></p>
@@ -337,6 +343,8 @@
     var ci=findCol(header,['add code','permission number','permission code','reg code','registration code','code']);
     var conf=findCol(header,['confidential','ferpa','directory hold','hold','restricted']);
     var pi=findCol(header,['position','waitlist position','wait list position','rank','pos','order']);
+    var ti=findCol(header,['team','team name']);
+    var flip=$('fFlipNames')&&$('fFlipNames').checked;
     var hasHeader=(ni>=0||(li>=0&&fi>=0));
     var data=hasHeader?rows.slice(1):rows;
     var out=[];
@@ -359,7 +367,9 @@
       if(hasHeader&&conf>=0&&truthy(r[conf]))cf=true;
       var pos=null;
       if(hasHeader&&pi>=0){var p=parseInt((r[pi]||'').trim(),10);if(!isNaN(p))pos=p;}
-      out.push({name:nm,conf:cf,code:code,pos:pos});
+      if(flip&&nm&&nm.indexOf(',')<0){var sp=nm.trim().split(/\s+/);if(sp.length>1){nm=sp.pop()+', '+sp.join(' ');}}
+      var team=(hasHeader&&ti>=0)?(r[ti]||'').trim():'';
+      out.push({team:team,name:nm,conf:cf,code:code,pos:pos});
     });
     return out;
   }
@@ -372,7 +382,17 @@
     wl.forEach(function(s,k){var p=(s.pos!=null)?s.pos:(k+1);if(p>pos)pos=p;arr.push(mkStudent({name:s.name,conf:s.conf,code:s.code,pos:p},'waitlist'));});
     return arr;
   }
-  function mkStudent(s,status){return {uid:uid(status[0]),name:s.name,conf:!!s.conf,code:s.code||'',pos:(s.pos||null),status:status,prev:null,team:null,att:{},dropped:null,reason:null,manual:false};}
+
+  // Map imported team names (from the Team Formation Engine CSV) onto the six team slots.
+  function applyImportedTeams(course){
+    var names=[];course.students.forEach(function(s){if(s.teamName&&names.indexOf(s.teamName)<0)names.push(s.teamName);});
+    if(!names.length)return false;
+    names.slice(0,course.teamNames.length).forEach(function(n,k){course.teamNames[k]=n;});
+    course.students.forEach(function(s){var k=names.indexOf(s.teamName);s.team=(k>=0&&k<course.teamNames.length)?k:null;});
+    course.tbl=true;
+    return true;
+  }
+  function mkStudent(s,status){return {uid:uid(status[0]),name:s.name,conf:!!s.conf,code:s.code||'',pos:(s.pos||null),status:status,prev:null,team:null,teamName:(s.team||''),att:{},dropped:null,reason:null,manual:false};}
 
   // ---------- DOM refs ----------
   var $=function(id){return document.getElementById(id);};
@@ -455,6 +475,12 @@
   function enroll(u){var st=getU(u);st.prev='waitlist';st.status='enrolled';persist();renderAll();selectTabById('tab-en');alert(st.name+' moved to Enrolled.'+(state.tbl?' Pick their team from the Team dropdown on their row.':''));}
   function restore(u){var st=getU(u);st.status=st.prev||'enrolled';st.dropped=null;st.reason=null;persist();renderAll();}
 
+
+  $('clearRosterBtn').addEventListener('click',function(){
+    if(!state){alert('Create a course first.');return;}
+    if(!confirm('Clear the whole roster?\n\nThis removes every student from Enrolled, Wait List, and Dropped, along with their attendance marks. Export CSV first if you want a copy. Then use Course setup to upload the new list.'))return;
+    state.students=[];persist();renderAll();
+  });
   $('addBtn').addEventListener('click',function(){
     if(!state){alert('Create a course first.');return;}
     var raw=prompt('Add a student. Type the name as  Last, First');
@@ -625,6 +651,13 @@
     if(editingId){
       // edit in place: keep students/teams/attendance
       state.meta=meta;state.schedule=schedule;state.days=d;state.tbl=$('fTbl').checked;
+      if($('fReplace').checked&&(enRoster.length||wlRoster.length)){
+        if(!confirm('Replace the whole roster?\n\nThis clears every student on every tab, including their attendance marks and drop records, and loads the names you just imported. Export CSV first if you want to keep what is here.')){return;}
+        state.students=studentsFromRoster(enRoster,wlRoster);
+        state.teamNames=DEFNAMES.slice();
+        applyImportedTeams(state);
+        if(!$('fTbl').checked&&state.tbl)$('fTbl').checked=true;
+      }
       persist();
       // update index label
       var idx=index().map(function(c){return c.id===state.id?{id:c.id,label:courseLabel(meta)}:c;});setIndex(idx);
@@ -633,6 +666,7 @@
       var id=uid('c');
       var students=studentsFromRoster(enRoster,wlRoster);
       var c={id:id,meta:meta,schedule:schedule,days:d,tbl:$('fTbl').checked,teamNames:DEFNAMES.slice(),students:students};
+      applyImportedTeams(c);
       saveCourse(c);
       var idx=index();idx.push({id:id,label:courseLabel(meta)});setIndex(idx);
       closeSetup();activate(id);
