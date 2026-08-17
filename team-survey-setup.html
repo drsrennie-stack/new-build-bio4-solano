@@ -53,22 +53,24 @@ td.k{width:110px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12p
 <p class="sub">How the pieces fit: students open <b>team-survey.html</b> from a QR code or the pop-up on their class page, answer twelve questions one at a time, and the page posts their answers into a Google Form you own, which lands in a Google Sheet. You download that Sheet as CSV, drop it into the <b>Team Formation Engine</b> (Survey Balance tab), pick the section, and get team cards, a class list, and a printable roster. Connecting it takes about ten minutes, once. Page two of this document is a paper copy of the survey for anyone without a phone.</p>
 
 <div class="card">
-  <div class="tag">Step 1 &middot; about 5 minutes</div>
-  <h2>Reuse your existing form</h2>
-  <p>You already have <b>TBL Team Survey</b> in Google Forms, and it matches what the engine expects. The survey page is already pointed at it (its FORM_ID is filled in). Open the form in the editor and make these small edits, then move to Step 2 for the entry IDs.</p>
+  <div class="tag">Step 1 &middot; about 8 minutes</div>
+  <h2>One form per class, starting from the one you have</h2>
+  <p>Each class gets its own Google Form and its own Sheet, so a class's data never mixes with another's and nothing reorganizes across sections. Your existing <b>TBL Team Survey</b> becomes the Class 1 form; two copies become Class 2 and Class 3.</p>
   <ol class="steps">
-    <li><b>Add one question at the top:</b> <b>Which class are you in?</b> Multiple choice: Class 1 · Mon/Wed / Class 2 · Tue/Thu morning / Class 3 · Tue/Thu evening. This is what lets one form serve all three classes; the engine filters by it. If you would rather keep three separate forms, make two copies and set a different FORM_ID per section instead.</li>
-    <li>On <b>On a team, I prefer to...</b> add a fourth choice: <b>Encourage people and keep the mood positive</b>. Everything else in that question stays.</li>
-    <li>In Settings, make sure <b>Collect email addresses</b> is off and <b>Limit to 1 response</b> is off, so students never have to sign in.</li>
-    <li>The <b>Gender</b> and <b>English</b> questions can stay or go; the survey page never sends them. Removing them keeps the promise on the page simple.</li>
-    <li><b>Optional, if you want the richer data:</b> add these four, in any order, all not required. <b>How much anatomy or physiology coursework have you had before this class?</b> (Multiple choice: None yet, this is my first / Some, in high school or a general biology class / I have completed an anatomy or physiology course before). <b>Which of these describe you?</b> (Checkboxes: I am reliable about showing up and following through / I ask good questions / I am comfortable speaking up in a group / I notice when someone is lost and help them catch up / I like explaining things to other people / I keep the group on task / I bring calm when things get stressful). <b>What matters most to you on a team?</b> (Short answer). <b>Anything you want me to know?</b> (Short answer). Skip any you do not want; the page only sends what has an entry ID.</li>
-    <li>If the form does not already have a linked Sheet: Responses tab, green Sheets icon, Create a new spreadsheet.</li>
+    <li>Open <b>TBL Team Survey</b> in the editor. On <b>On a team, I prefer to...</b> add a fourth option: <b>Encourage people and keep the mood positive</b>. Optionally add any of the four extra questions listed below. Delete Gender and English if you like; the page never sends them.</li>
+    <li>In Settings, confirm <b>Collect email addresses</b> is off and <b>Limit to 1 response</b> is off.</li>
+    <li>Rename the form <b>BIO 004 Team Survey · Class 1 Mon/Wed</b>. Responses tab, green Sheets icon, create its Sheet if it does not have one.</li>
+    <li>Three-dot menu, <b>Make a copy</b>. Name it <b>BIO 004 Team Survey · Class 2 Tue/Thu AM</b>. Open the copy, Responses tab, create its own Sheet.</li>
+    <li>Repeat for <b>Class 3 Tue/Thu Eve</b>.</li>
+    <li>You do <b>not</b> need a "Which class are you in?" question, because each class posts to its own form. The survey page still asks the class only when it cannot tell from the QR code or the class page, and it uses the answer to pick the right form.</li>
   </ol>
+  <p><b>Optional extra questions</b>, all not required, add to each form you want them in: <b>How much anatomy or physiology coursework have you had before this class?</b> (Multiple choice: None yet, this is my first / Some, in high school or a general biology class / I have completed an anatomy or physiology course before). <b>Which of these describe you?</b> (Checkboxes: I am reliable about showing up and following through / I ask good questions / I am comfortable speaking up in a group / I notice when someone is lost and help them catch up / I like explaining things to other people / I keep the group on task / I bring calm when things get stressful). <b>What matters most to you on a team?</b> (Short answer). <b>Anything you want me to know?</b> (Short answer).</p>
 </div>
 
 <div class="card">
   <div class="tag">Step 2 &middot; about 3 minutes</div>
   <h2>Get the entry IDs</h2>
+  <p>Do this once <b>for each of the three forms</b>; copies get their own entry IDs.</p>
   <ol class="steps">
     <li>In the form editor, click the <b>three-dot menu</b> (top right) and choose <b>Get pre-filled link</b>.</li>
     <li>Type any answer into <b>every</b> question, including the checkbox ones, then click <b>Get link</b> and <b>Copy link</b>.</li>
@@ -81,8 +83,8 @@ td.k{width:110px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12p
   <div class="tag">Step 3 &middot; about 2 minutes</div>
   <h2>Connect the survey page</h2>
   <ol class="steps">
-    <li>Open <code>team-survey.html</code> in the repo. Near the top of the script the FORM_ID is already set to your form, and below it is an ENTRY block with one line per question, each with a comment naming the question it belongs to.</li>
-    <li>Paste each entry ID between the quotes on its line. Leave a line blank for any question you did not add to the form; the page skips blank ones.</li>
+    <li>Open <code>team-survey.html</code> in the repo. Near the top of the script is a FORMS block with three entries: <code>'mw'</code> (Class 1, its id already filled in), <code>'tr-am'</code> (Class 2), and <code>'tr-eve'</code> (Class 3).</li>
+    <li>For Class 2 and Class 3, paste each copy's FORM_ID into its <code>id</code>. Then, for all three, paste the entry IDs into that form's <code>entry</code> list, matching the key comments (name, degree, health, role, tech, social, avail, work, and the optional ones). Leave blank anything that form does not have.</li>
     <li>Commit and push. Open the page on your phone, answer it once as a test, and confirm the row lands in the Sheet. Then delete that test row.</li>
   </ol>
   <p><b>Until FORM_ID is filled in</b>, the page still works: at the end it offers an "Email my answers" button that opens a message to your Solano address with the answers as one CSV line, so nothing a student does tonight is lost.</p>
@@ -107,7 +109,7 @@ td.k{width:110px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12p
   <ol class="steps">
     <li>In the linked Sheet: <b>File, Download, Comma-separated values</b>.</li>
     <li>Open the <b>Team Formation Engine</b> from the faculty hub, Survey Balance tab, load the CSV. The column mapping fills itself from the question titles.</li>
-    <li>Choose the <b>Section</b>, set team size, Generate. Re-roll if you want a different arrangement.</li>
+    <li>Leave Section on "All rows in the file" (each class has its own file), set team size, Generate. Re-roll if you want a different arrangement.</li>
     <li><b>Show on projector</b> for the announcement. <b>Print</b> for the roster and the alphabetical class list. <b>Download CSV</b> for the Canvas groups.</li>
     <li>Anyone who took the paper survey: type their row into the Sheet before you download, or add them by hand to the smallest team afterward.</li>
   </ol>

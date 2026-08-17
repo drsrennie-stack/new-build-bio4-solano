@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TBL Grade Engine &middot; Weighted Gradebook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  em,i,cite,dfn,var{font-style:normal;}
+  :root{--navy:#08101F;--navy-deep:#060A18;--navy-tint:#ECEFF4;--gold:#DCB45C;--gold-ink:#6B5214;--terra:#8B1D1D;--terra-dark:#6B1616;--white:#fff;--offwhite:#FAFAF9;--gray:#3D4860;}
+  *{box-sizing:border-box;}
+  body{font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--navy);background:var(--offwhite);margin:0;padding:20px;}
+  a.skip{position:absolute;left:-999px;} a.skip:focus{left:12px;top:12px;background:var(--navy);color:#fff;padding:8px 12px;border-radius:6px;z-index:50;}
+  .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-dark);font-weight:600;margin:0 0 4px;}
+  h1{font-size:23px;font-weight:800;margin:0;color:var(--navy);}
+  .sub{color:var(--terra-dark);font-weight:600;font-size:14px;margin:2px 0;}
+  .meta{font-size:12.5px;margin:2px 0 14px;}
+  .site-header{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:0 0 12px;padding-bottom:12px;border-bottom:1px solid rgba(8,16,31,.16);}
+  .site-header .logo{height:54px;width:auto;flex:0 0 auto;}
+  .site-header .idblock{min-width:240px;}
+  .site-header .idblock p,.site-header .idblock h1{margin-top:0;}
+  .site-header .idblock .meta{margin-bottom:0;}
+  .coursebar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 12px;}
+  .coursebar label{font-size:12px;font-weight:700;color:var(--terra-dark);text-transform:uppercase;letter-spacing:.05em;}
+  .courseSel{font:inherit;font-size:13px;font-weight:600;padding:6px 10px;border:1px solid var(--navy);border-radius:6px;background:var(--white);color:var(--navy);cursor:pointer;min-width:13em;}
+  .courseSel:focus-visible{outline:3px solid var(--terra);box-shadow:0 0 0 2px #fff;outline-offset:2px;}
+  .tabs{display:flex;gap:6px;border-bottom:2px solid var(--navy);flex-wrap:wrap;}
+  .tab{appearance:none;border:1px solid var(--navy);border-bottom:none;background:var(--white);color:var(--navy);font:inherit;font-weight:600;font-size:14px;padding:9px 16px;border-radius:8px 8px 0 0;cursor:pointer;position:relative;top:2px;}
+  .tab[aria-selected="true"]{background:var(--navy);color:#fff;}
+  .tab:focus-visible{outline:3px solid var(--terra);box-shadow:0 0 0 2px #fff;outline-offset:2px;}
+  .toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:14px 0 6px;}
+  .tally{font-size:13px;font-weight:600;margin:0;}
+  .btn{appearance:none;border:1px solid var(--navy);background:var(--white);color:var(--navy);font:inherit;font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:6px;cursor:pointer;}
+  .btn:hover{background:var(--navy-tint);} .btn:focus-visible{outline:3px solid var(--terra);box-shadow:0 0 0 2px #fff;outline-offset:2px;}
+  .btn.primary{background:var(--navy);color:#fff;} .btn.primary:hover{background:var(--navy-deep);}
+  .btn.ghost{border-color:var(--terra-dark);color:var(--terra-dark);} .btn.ghost:hover{background:#f6e9e2;}
+  .legend{font-size:11px;color:var(--gray);margin-left:auto;}
+  .switch{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--navy);cursor:pointer;}
+  .switch input{width:16px;height:16px;accent-color:var(--navy);cursor:pointer;}
+  .panel[hidden]{display:none;}
+  .scroll{max-height:72vh;overflow:auto;border:1px solid var(--navy);border-radius:8px;background:#fff;}
+  table{border-collapse:separate;border-spacing:0;width:100%;font-size:13px;min-width:760px;}
+  caption{text-align:left;font-size:12.5px;color:var(--terra-dark);font-weight:600;padding:8px 10px;}
+  th,td{border-right:1px solid var(--navy);border-bottom:1px solid var(--navy);padding:0;}
+  thead th{position:sticky;top:0;z-index:3;background:var(--navy);color:#fff;font-weight:600;font-size:11px;text-align:center;padding:6px 4px;border-top:1px solid var(--navy);}
+  thead tr.catrow th{background:var(--navy-deep);font-size:11px;letter-spacing:.03em;border-bottom:1px solid var(--gold);}
+  thead th.sessgrp{background:#1E2A47;font-weight:700;border-bottom:1px solid var(--gold);}
+  .addrat{appearance:none;margin-left:7px;font:inherit;font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;border:1px solid var(--gold);background:transparent;color:#f7efdc;cursor:pointer;vertical-align:middle;white-space:nowrap;}
+  .addrat:hover{background:var(--gold);color:var(--navy-deep);} .addrat:focus-visible{outline:3px solid #fff;outline-offset:1px;}
+  thead th .al{display:block;font-size:12px;font-weight:700;} thead th .am{display:block;font-size:10px;opacity:.85;font-weight:500;}
+  tbody th,tbody td{background:#fff;}
+  tbody tr:nth-child(even) th,tbody tr:nth-child(even) td{background:#fbfbfa;}
+  tfoot th,tfoot td{position:sticky;bottom:0;z-index:3;background:var(--navy-tint);color:var(--navy);font-weight:700;font-size:11.5px;text-align:center;padding:6px 4px;border-top:2px solid var(--navy);}
+  .c0{position:sticky;left:0;z-index:2;width:42px;min-width:42px;text-align:center;font-size:12px;font-weight:600;}
+  .c1{position:sticky;left:42px;z-index:2;min-width:178px;text-align:left;padding:6px 10px;white-space:nowrap;font-weight:500;}
+  thead .c0,thead .c1,tfoot .c0,tfoot .c1{z-index:4;}
+  .conf{font-size:9px;color:var(--terra-dark);font-weight:700;}
+  td.teamwrap{padding:2px 4px;min-width:112px;}
+  .teamsel{font:inherit;font-size:12px;font-weight:600;width:100%;min-width:100px;padding:5px 6px;border:1px solid var(--navy);border-radius:6px;background:var(--white);color:var(--navy);cursor:pointer;}
+  .teamsel:focus-visible{outline:3px solid var(--terra);box-shadow:0 0 0 2px #fff;outline-offset:1px;}
+  th.asmt{width:74px;min-width:74px;}
+  td.scorewrap{padding:0;}
+  .scorein{width:100%;min-width:64px;height:34px;border:none;background:transparent;text-align:center;font:inherit;font-size:13px;font-weight:600;color:var(--navy);padding:0 4px;}
+  .scorein:focus-visible{outline:3px solid var(--terra);box-shadow:0 0 0 2px #fff;outline-offset:-3px;}
+  .scorein.team{background:var(--navy-tint);}
+  .scorein.ovr{background:#f6e9e2;box-shadow:inset 3px 0 0 var(--terra-dark);}
+  td.tbltotal{min-width:62px;width:62px;text-align:center;font-weight:800;font-size:13px;color:var(--navy);background:#f7efdc!important;box-shadow:0 1px 3px rgba(8,16,31,.08);}
+  thead th.tbltot{background:#6B5214;border-bottom:1px solid var(--gold);} tfoot td.tbltot{background:#f7efdc;}
+  td.finalwrap,th.final{min-width:64px;width:64px;text-align:center;}
+  td.finalwrap{font-weight:800;font-size:13px;padding:6px 4px;}
+  td.letterwrap{min-width:50px;width:50px;text-align:center;font-weight:800;font-size:14px;padding:6px 4px;}
+  .lA{color:#08101F;} .lB{color:#08101F;} .lC{color:var(--terra-dark);} .lD{color:var(--terra-dark);} .lF{color:#8B1D1D;}
+  td.actcell{padding:3px 6px;white-space:nowrap;text-align:center;}
+  .mini{appearance:none;font:inherit;font-size:11px;font-weight:700;padding:4px 9px;border-radius:5px;cursor:pointer;border:1px solid var(--navy);background:#fff;color:var(--navy);}
+  .mini+.mini{margin-left:5px;}
+  .mini.drop{border-color:var(--terra-dark);color:var(--terra-dark);} .mini.drop:hover{background:#f6e9e2;}
+  .mini.restore{border-color:var(--navy);} .mini.restore:hover{background:var(--navy-tint);}
+  .mini:focus-visible{outline:3px solid var(--terra);box-shadow:0 0 0 2px #fff;outline-offset:1px;}
+  .empty{padding:18px;text-align:center;color:var(--gray);font-style:italic;}
+  .help{font-size:11.5px;color:var(--gray);margin-top:12px;line-height:1.5;max-width:80ch;} .help b{color:var(--terra-dark);}
+  body.no-teams .teamcol{display:none;}
+  body.no-weight .weightcol{display:none;}
+  @media (prefers-reduced-motion:no-preference){.scorein{transition:background 120ms ease;}}
+  /* ---- modal / wizard ---- */
+  .overlay{position:fixed;inset:0;background:rgba(20,42,54,.55);display:flex;align-items:flex-start;justify-content:center;padding:28px 16px;overflow:auto;z-index:100;}
+  .overlay[hidden]{display:none;}
+  .dialog{background:var(--white);border:1px solid var(--navy);border-radius:12px;max-width:820px;width:100%;padding:22px 24px 24px;box-shadow:0 12px 40px rgba(0,0,0,.25);}
+  .dialog h2{font-family:'Plus Jakarta Sans',sans-serif;font-size:19px;font-weight:800;color:var(--navy);margin:0 0 2px;border:none;padding:0;}
+  .dialog .lead{font-size:12.5px;color:var(--gray);margin:0 0 16px;}
+  fieldset{border:1px solid rgba(8,16,31,.25);border-radius:9px;margin:0 0 16px;padding:12px 14px;}
+  legend{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--terra-dark);padding:0 6px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px 14px;}
+  .fld{display:flex;flex-direction:column;gap:3px;}
+  .fld label{font-size:11.5px;font-weight:700;color:var(--navy);}
+  .fld input[type=text],.fld input[type=date],.fld input[type=number],.fld select,.dialog textarea{font:inherit;font-size:13px;padding:7px 8px;border:1px solid #b9c2c7;border-radius:6px;color:var(--navy);background:#fff;width:100%;}
+  .fld input:focus-visible,.dialog textarea:focus-visible,.fld select:focus-visible{outline:3px solid var(--terra);box-shadow:0 0 0 2px #fff;outline-offset:1px;border-color:var(--navy);}
+  .dialog input::placeholder,.dialog textarea::placeholder{color:#9aa6ab;font-style:italic;opacity:1;}
+  .dialog textarea{min-height:84px;resize:vertical;font-family:'Courier New',monospace;font-size:12px;}
+  .hint{font-size:11px;color:var(--gray);margin:4px 0 0;line-height:1.45;}
+  .parsemsg{font-size:11.5px;font-weight:700;color:var(--navy-deep);margin:5px 0 0;}
+  .dialog .actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;margin-top:6px;}
+  .err{color:var(--terra-dark);font-size:12px;font-weight:700;}
+  .filewrap{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:12px;}
+  /* category & assessment editor rows */
+  .catlist,.asmtlist{display:flex;flex-direction:column;gap:8px;}
+  .catrow-ed,.asmtrow-ed{display:grid;gap:8px;align-items:center;padding:8px;border:1px solid rgba(8,16,31,.2);border-radius:8px;background:var(--offwhite);}
+  .catrow-ed{grid-template-columns:1fr 150px 80px 96px 34px;}
+  .asmtrow-ed{grid-template-columns:150px 1fr 78px 130px 34px;}
+  .catrow-ed input,.catrow-ed select,.asmtrow-ed input,.asmtrow-ed select{font:inherit;font-size:12.5px;padding:6px 7px;border:1px solid #b9c2c7;border-radius:6px;width:100%;color:var(--navy);background:#fff;}
+  .catrow-ed input:focus-visible,.catrow-ed select:focus-visible,.asmtrow-ed input:focus-visible,.asmtrow-ed select:focus-visible{outline:3px solid var(--terra);box-shadow:0 0 0 2px #fff;outline-offset:1px;}
+  .rowlab{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--terra-dark);display:block;margin-bottom:2px;}
+  .teamflag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--navy);}
+  .tblnote{display:block;font-size:10.5px;font-weight:600;color:var(--terra-dark);line-height:1.35;}
+  .del{appearance:none;border:1px solid var(--terra-dark);color:var(--terra-dark);background:#fff;border-radius:6px;width:30px;height:30px;font-size:15px;font-weight:800;cursor:pointer;line-height:1;}
+  .del:hover{background:#f6e9e2;} .del:focus-visible{outline:3px solid var(--terra);box-shadow:0 0 0 2px #fff;outline-offset:1px;}
+  .wsum{font-size:12px;font-weight:700;margin:8px 0 0;} .wsum.ok{color:var(--navy);} .wsum.warn{color:var(--terra-dark);}
+  @media print{@page{size:landscape;margin:0.35in;}body{padding:0;background:#fff;}.tabs,.coursebar,.toolbar .btn,.toolbar .switch,.legend,.actcell,.addrat,a.skip{display:none!important;}.scroll{max-height:none;overflow:visible;border:none;}thead th,tfoot th,tfoot td{position:static;}.c0,.c1{position:static;}.scorein{color:var(--navy);}.overlay{display:none!important;}}
+</style>
+</head>
+<body>
+<a href="#main" class="skip">Skip to gradebook</a>
+<header class="site-header">
+  <svg class="logo" viewBox="0 0 60 60" role="img" aria-label="TBL Grade Engine mark" focusable="false">
+    <rect x="6" y="5" width="48" height="50" rx="6" fill="#fff" stroke="#08101F" stroke-width="2.5"/>
+    <rect x="6" y="5" width="48" height="12" rx="6" fill="#08101F"/>
+    <rect x="12" y="24" width="9" height="24" rx="2" fill="#8B1D1D"/>
+    <rect x="25" y="18" width="9" height="30" rx="2" fill="#DCB45C"/>
+    <rect x="38" y="30" width="9" height="18" rx="2" fill="#08101F"/>
+  </svg>
+  <div class="idblock">
+    <p class="eyebrow" id="hEyebrow">TBL Grade Engine</p>
+    <h1 id="hTitle">TBL Grade Engine</h1>
+    <p class="sub" id="hSub">Weighted gradebook for Team-Based Learning</p>
+    <p class="meta" id="hMeta">Set up a course to begin.</p>
+  </div>
+</header>
+
+<main id="main">
+  <div class="coursebar">
+    <label for="courseSel">Course</label>
+    <select id="courseSel" class="courseSel" aria-label="Select course"></select>
+    <button class="btn" id="btnSetup" type="button">Course setup</button>
+    <button class="btn ghost" id="btnNew" type="button">+ New course</button>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Roster status">
+    <button class="tab" id="tabActive" role="tab" aria-selected="true" aria-controls="panel" type="button">Active <span id="cActive">(0)</span></button>
+    <button class="tab" id="tabDropped" role="tab" aria-selected="false" aria-controls="panel" type="button">Dropped / Withdrawn <span id="cDropped">(0)</span></button>
+  </div>
+
+  <div class="toolbar">
+    <p class="tally" id="tally" aria-live="polite"></p>
+    <button class="btn" id="btnCats" type="button">Categories &amp; weights</button>
+    <button class="btn" id="btnAddAsmt" type="button">+ Add column</button>
+    <button class="btn" id="btnAddStudent" type="button">+ Add student</button>
+    <label class="switch"><input type="checkbox" id="weightToggle"> Compute weighted grade</label>
+    <button class="btn" id="btnExport" type="button">Export CSV</button>
+    <button class="btn" id="btnPrint" type="button">Print</button>
+    <span class="legend" id="legend"></span>
+  </div>
+
+  <div class="panel" id="panel" role="tabpanel" aria-labelledby="tabActive">
+    <div class="scroll">
+      <table id="grid" aria-describedby="gridcap">
+        <caption id="gridcap"></caption>
+        <thead id="thead"></thead>
+        <tbody id="tbody"></tbody>
+        <tfoot id="tfoot"></tfoot>
+      </table>
+    </div>
+  </div>
+
+  <p class="help" id="help">
+    <b>How to use.</b> Pick or set up a course, or build one from the Attendance Engine page you record on (upload it in Course setup). Add as many assessment columns as you need inside each category (labs, lecture exams, quizzes, TBLs) from <b>+ Add column</b>. Edit category names and weights under <b>Categories &amp; weights</b>. Type a raw score in each cell, up to that column's max points. Turn on <b>Compute weighted grade</b> to see each student's running weighted percent and letter.
+    <br><b>TBL totals for Canvas.</b> In a TBL category (the default <b>RAT (TBL)</b>), each column is one RAT session with separate <b>iRAT</b> and <b>tRAT</b> cells, an optional <b>bonus</b>, and an automatic gold <b>Total</b> column (iRAT + tRAT + bonus). That Total is the single number to record in Canvas. Bonus counts in the Total but is treated as extra credit in the weighted percent.
+    <br><b>Team grades.</b> tRAT and bonus cells are team-scored (light blue): type the score once in any member's cell and it fills the whole team. To adjust one student, for example a no-show who gets a <b>0</b>, edit that filled cell; it overrides just that student (shown with a terra edge) and the rest of the team is untouched. Double-click a cell to push its value to the entire team again. Everything saves in this browser only. Use <b>Export CSV</b> to keep your records.
+  </p>
+</main>
+
+<!-- ===================== SETUP WIZARD ===================== -->
+<div class="overlay" id="wizard" hidden role="dialog" aria-modal="true" aria-labelledby="wizTitle">
+  <form class="dialog" id="wizForm">
+    <h2 id="wizTitle">Course setup</h2>
+    <p class="lead">Set the course identity, weighting, grade scale, and roster. You can change all of it later.</p>
+
+    <fieldset>
+      <legend>Course identity</legend>
+      <div class="grid">
+        <div class="fld"><label for="fTitle">Course title</label><input type="text" id="fTitle" placeholder="Human Anatomy &amp; Physiology"></div>
+        <div class="fld"><label for="fInst">Institution</label><input type="text" id="fInst" placeholder="Solano Community College"></div>
+        <div class="fld"><label for="fCourse">Course &amp; section</label><input type="text" id="fCourse" placeholder="BIO 431 - 01"></div>
+        <div class="fld"><label for="fTerm">Term</label><input type="text" id="fTerm" placeholder="Fall 2026"></div>
+        <div class="fld"><label for="fCRN">CRN</label><input type="text" id="fCRN" placeholder="optional"></div>
+        <div class="fld"><label for="fInstr">Instructor</label><input type="text" id="fInstr" placeholder="Dr. Sharilyn Rennie"></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Options</legend>
+      <div class="grid">
+        <div class="fld"><label class="switch" style="margin-top:18px"><input type="checkbox" id="fTeams" checked> Team-based (TBL) course</label></div>
+        <div class="fld"><label class="switch" style="margin-top:18px"><input type="checkbox" id="fWeighted" checked> Show weighted final grade</label></div>
+      </div>
+      <p class="hint">Team-based shows a team column and lets a category fill scores across a whole team (for tRAT). Weighting can be toggled any time from the toolbar.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Categories &amp; weights</legend>
+      <div class="catlist" id="wizCatList"></div>
+      <p class="wsum" id="wizWsum"></p>
+      <button class="btn ghost" id="wizAddCat" type="button" style="margin-top:8px">+ Add category</button>
+      <p class="hint">Weights are used only when the weighted grade is on. They do not need to total 100; the running grade is computed only over categories that have at least one scored column, so partial-term grades stay fair.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Grade scale</legend>
+      <div class="grid" id="wizScale"></div>
+      <p class="hint">Lower bound of each letter, as a percent. Edit to match your syllabus.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Roster</legend>
+      <div class="fld" id="linkWrap" style="margin-bottom:10px">
+        <label for="fLink">Link roster from an Attendance Engine course</label>
+        <select id="fLink"></select>
+        <p class="hint" id="linkHint">If you built this class in the Attendance Engine on this same site, pick it here to pull the enrolled roster (names, teams, confidential flags). Available only when both tools share the same web address.</p>
+      </div>
+      <div class="fld">
+        <label for="fFile">Or upload your attendance HTML, a CSV, or paste names</label>
+        <div class="filewrap">
+          <input type="file" id="fFile" accept=".html,.htm,.csv,.txt,text/html,text/csv,text/plain">
+          <span class="hint">Upload the <b>Attendance Engine HTML page you record on</b> and the roster (names, teams, confidential flags) is read straight from it. A CSV (Name, optional Team, Confidential) or a saved attendance CSV also work.</span>
+        </div>
+        <p class="hint" style="margin:6px 0 4px">To export from the Attendance Engine: open your class, then in your browser choose File then Save Page As and pick &ldquo;Webpage, HTML Only&rdquo;. Upload that file here. Names and confidential flags import exactly; team names import when your browser saves the selected team.</p>
+        <textarea id="fRoster" placeholder="Or paste one per line:
+Rennie, Sharilyn
+Delgado, Maya
+Marsh, Eleanor [C]"></textarea>
+        <p class="parsemsg" id="parsemsg" aria-live="polite"></p>
+      </div>
+    </fieldset>
+
+    <p class="err" id="wizErr" role="alert"></p>
+    <div class="actions">
+      <button class="btn" id="wizCancel" type="button">Cancel</button>
+      <button class="btn primary" id="wizSave" type="submit">Save course</button>
+    </div>
+  </form>
+</div>
+
+<!-- ===================== CATEGORIES EDITOR ===================== -->
+<div class="overlay" id="catModal" hidden role="dialog" aria-modal="true" aria-labelledby="catTitle">
+  <form class="dialog" id="catForm">
+    <h2 id="catTitle">Categories &amp; weights</h2>
+    <p class="lead">Rename categories, set weights, and mark which ones are team-scored. Deleting a category also removes its columns.</p>
+    <div class="catlist" id="edCatList"></div>
+    <p class="wsum" id="edWsum"></p>
+    <button class="btn ghost" id="edAddCat" type="button" style="margin-top:8px">+ Add category</button>
+    <div class="actions">
+      <button class="btn" id="catCancel" type="button">Cancel</button>
+      <button class="btn primary" id="catSave" type="submit">Save categories</button>
+    </div>
+  </form>
+</div>
+
+<!-- ===================== ADD COLUMN ===================== -->
+<div class="overlay" id="asmtModal" hidden role="dialog" aria-modal="true" aria-labelledby="asmtTitle">
+  <form class="dialog" id="asmtForm" style="max-width:600px">
+    <h2 id="asmtTitle">Add column</h2>
+    <p class="lead">A column is one graded item: a lab, a lecture exam, a quiz, or (in a TBL category) one RAT session that totals iRAT + tRAT.</p>
+    <fieldset>
+      <legend>Column</legend>
+      <div class="grid">
+        <div class="fld"><label for="aCat">Category</label><select id="aCat"></select></div>
+        <div class="fld"><label for="aName" id="aNameLab">Name</label><input type="text" id="aName" placeholder="Lab Quiz 3"></div>
+        <div class="fld" id="aMaxWrap"><label for="aMax">Max points</label><input type="number" id="aMax" min="1" step="0.5" value="100"></div>
+        <div class="fld"><label for="aDate">Date (optional)</label><input type="date" id="aDate"></div>
+      </div>
+      <div class="grid" id="tblFields" hidden>
+        <div class="fld"><label for="aIMax">iRAT max points</label><input type="number" id="aIMax" min="1" step="0.5" value="30"></div>
+        <div class="fld"><label for="aTMax">tRAT max points</label><input type="number" id="aTMax" min="1" step="0.5" value="10"></div>
+        <div class="fld"><label class="switch" style="margin-top:18px"><input type="checkbox" id="aBonus"> Add a bonus point column</label></div>
+        <div class="fld" id="aBMaxWrap" hidden><label for="aBMax">Bonus max points</label><input type="number" id="aBMax" min="0" step="0.5" value="1"></div>
+      </div>
+      <p class="hint" id="tblHint" hidden>This adds one RAT session with separate iRAT and tRAT cells (tRAT fills the team) and an automatic <b>Total</b> column (iRAT + tRAT + bonus) for you to record in Canvas. Bonus is extra credit and is not counted in the category percent.</p>
+    </fieldset>
+    <p class="err" id="asmtErr" role="alert"></p>
+    <div class="actions">
+      <button class="btn" id="asmtCancel" type="button">Cancel</button>
+      <button class="btn primary" id="asmtSave" type="submit">Add column</button>
+    </div>
+  </form>
+</div>
+
+<script>
+"use strict";
+(function(){
+  var IDX="grade_engine_index_v1", CUR="grade_engine_current_v1", PFX="grade_engine_course_";
+  var ATTN_IDX="attn_engine_index_v1", ATTN_PFX="attn_engine_course_";
+  var TEAM_NAMES=["Team 1","Team 2","Team 3","Team 4","Team 5","Team 6"];
+  var DEFAULT_SCALE=[{letter:"A",min:90},{letter:"B",min:80},{letter:"C",min:70},{letter:"D",min:60},{letter:"F",min:0}];
+
+  function uid(){return Math.random().toString(36).slice(2,9);}
+  function read(k){try{var v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch(e){return null;}}
+  function write(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
+  function el(id){return document.getElementById(id);}
+  function num(v){var n=parseFloat(v);return isFinite(n)?n:null;}
+
+  var state={index:[],current:null,course:null,tab:"active"};
+
+  function defaultCategories(teams){
+    return [
+      {id:uid(),name:"TBL (RAT)",kind:"tbl",weight:45,teamScored:true},
+      {id:uid(),name:"Lab Quizzes",weight:10,teamScored:false},
+      {id:uid(),name:"Lab Practicals",weight:15,teamScored:false},
+      {id:uid(),name:"Lecture Exams",weight:15,teamScored:false},
+      {id:uid(),name:"Cumulative Final",weight:15,teamScored:false}
+    ];
+  }
+
+  /* ---------- roster parsing ---------- */
+  function truthyFlag(v){v=(v||"").trim().toLowerCase();return v==="y"||v==="yes"||v==="true"||v==="1"||v==="c"||v==="confidential"||v==="hold";}
+  function findCol(cols,names){for(var i=0;i<cols.length;i++){for(var j=0;j<names.length;j++){if(cols[i]===names[j])return i;}}return -1;}
+  function parseRoster(text){
+    var out=[];
+    text=String(text||"").replace(/^﻿/,""); /* strip BOM from exported CSVs */
+    var lines=text.split(/\r?\n/).map(function(l){return l.trim();}).filter(Boolean);
+    if(!lines.length) return out;
+    var hdr=splitCsv(lines[0]).map(function(c){return c.trim().toLowerCase();});
+    var iName=findCol(hdr,["name","student name","full name","student"]);
+    var iLast=findCol(hdr,["last name","last","surname","family name"]);
+    var iFirst=findCol(hdr,["first name","first","given name","given"]);
+    var iTeam=findCol(hdr,["team"]);
+    var iConf=findCol(hdr,["confidential","ferpa","directory hold","hold","restricted"]);
+    var iStatus=findCol(hdr,["status"]);
+    var hasHeader=(iName>=0)||(iLast>=0&&iFirst>=0);
+    if(hasHeader){
+      for(var r=1;r<lines.length;r++){
+        var f=splitCsv(lines[r]); if(!f.length) continue;
+        if(iStatus>=0){var st=(f[iStatus]||"").trim().toLowerCase();if(st==="dropped"||st==="noshow"||st==="no-show"||st==="drop")continue;}
+        var name="";
+        if(iName>=0) name=(f[iName]||"").trim();
+        else name=((f[iLast]||"")+", "+(f[iFirst]||"")).trim();
+        if(!name||name===",") continue;
+        var conf=iConf>=0?truthyFlag(f[iConf]):false;
+        if(/\[c\]\s*$/i.test(name)){conf=true;name=name.replace(/\[c\]\s*$/i,"").trim();}
+        out.push({name:name,team:iTeam>=0?(f[iTeam]||"").trim():"",conf:conf});
+      }
+    } else {
+      for(var i=0;i<lines.length;i++){
+        var raw=lines[i],conf=false;
+        if(/^(name|student name|status|last name)\b/i.test(raw)) continue; /* skip a stray header line */
+        if(/\[c\]\s*$/i.test(raw)){conf=true;raw=raw.replace(/\[c\]\s*$/i,"").trim();}
+        out.push({name:raw,team:"",conf:conf});
+      }
+    }
+    return out;
+  }
+  function splitCsv(line){
+    var res=[],cur="",q=false;
+    for(var i=0;i<line.length;i++){var ch=line[i];
+      if(ch==='"'){ if(q&&line[i+1]==='"'){cur+='"';i++;} else q=!q; }
+      else if(ch===','&&!q){res.push(cur);cur="";}
+      else cur+=ch;
+    }
+    res.push(cur); return res.map(function(s){return s.trim();});
+  }
+  function lastName(name){var p=String(name).split(",");return (p[0]||name).trim().toLowerCase();}
+  function sortStudents(arr){arr.sort(function(a,b){return lastName(a.name).localeCompare(lastName(b.name));});}
+
+  /* ---------- attendance link ---------- */
+  function attnCourses(){
+    var idx=read(ATTN_IDX); if(!Array.isArray(idx)) return [];
+    return idx.filter(function(c){return c&&c.id;});
+  }
+  function attnRoster(id){
+    var c=read(ATTN_PFX+id); if(!c||!Array.isArray(c.students)) return [];
+    var teams=c.teamNames||(c.teams&&c.teams.names)||[];
+    return c.students.filter(function(s){return s&&s.status!=="dropped"&&s.status!=="noshow";}).map(function(s){
+      var team="";
+      if(typeof s.team==="number"&&s.team!=null&&teams[s.team]!=null) team=teams[s.team];
+      else if(typeof s.team==="string") team=s.team;
+      return {name:s.name,team:team,conf:!!(s.conf||s.confidential)};
+    });
+  }
+
+  /* ---------- parse a saved Attendance Engine HTML page ---------- */
+  function parseAttendanceHtml(htmlText){
+    var out=[],doc;
+    try{doc=new DOMParser().parseFromString(htmlText,"text/html");}catch(e){return out;}
+    if(!doc) return out;
+    /* 1) preferred: an embedded data blob (future-proof if the page bakes its roster) */
+    var blob=doc.getElementById("attendance-data")||doc.querySelector('script[type="application/json"]');
+    if(blob&&blob.textContent.trim()){
+      try{
+        var data=JSON.parse(blob.textContent);
+        var students=data.students||(data.course&&data.course.students);
+        var teams=data.teamNames||(data.course&&data.course.teamNames)||[];
+        if(Array.isArray(students)){
+          students.filter(function(s){return s&&s.status!=="dropped";}).forEach(function(s){
+            var team=(typeof s.team==="number"&&teams[s.team]!=null)?teams[s.team]:(typeof s.team==="string"?s.team:"");
+            out.push({name:s.name,team:team,conf:!!s.conf});
+          });
+          if(out.length) return out;
+        }
+      }catch(e){}
+    }
+    /* 2) scrape the rendered roll tables (Enrolled + Wait List) */
+    var bodies=[];
+    ["enBody","wlBody"].forEach(function(idn){var b=doc.getElementById(idn);if(b)bodies.push(b);});
+    if(bodies.length){
+      bodies.forEach(function(tb){scrapeRows(tb.querySelectorAll("tr[data-uid], tr"),out);});
+      if(out.length) return out;
+    }
+    /* 3) generic fallback: any table, first data cell is the name */
+    var tables=doc.querySelectorAll("table");
+    for(var i=0;i<tables.length&&!out.length;i++){scrapeRows(tables[i].querySelectorAll("tr"),out);}
+    return out;
+  }
+  function scrapeRows(rows,out){
+    for(var i=0;i<rows.length;i++){
+      var r=rows[i];
+      var nameCell=r.querySelector("td.c1")||r.querySelector(".c1")||r.querySelector("td");
+      if(!nameCell) continue;
+      var conf=!!nameCell.querySelector(".conf")||/\[c\]/i.test(nameCell.textContent);
+      var name=nameCell.textContent.replace(/\[c\]/ig,"").replace(/\s+/g," ").trim();
+      if(!name||/^(#|pos|student name|name)$/i.test(name)) continue;
+      var team="";
+      var sel=r.querySelector("select.teamsel")||r.querySelector("select");
+      if(sel){
+        var opt=sel.querySelector("option[selected]");
+        if(!opt&&sel.selectedIndex>=0) opt=sel.options[sel.selectedIndex];
+        if(opt){var t=(opt.textContent||"").trim();if(t&&!/^\(?\s*no team\s*\)?$/i.test(t)&&t!=="—")team=t;}
+      } else {
+        var tc=r.querySelector("td.teamwrap, td.team");
+        if(tc){var tt=tc.textContent.trim();if(tt&&!/^\(?\s*no team\s*\)?$/i.test(tt))team=tt;}
+      }
+      out.push({name:name,team:team,conf:conf});
+    }
+  }
+
+  /* ---------- course CRUD ---------- */
+  function loadIndex(){state.index=read(IDX)||[];state.current=read(CUR);}
+  function saveIndex(){write(IDX,state.index);write(CUR,state.current);}
+  function loadCourse(id){state.course=read(PFX+id);state.current=id;write(CUR,id);}
+  function saveCourse(){if(state.course&&state.current)write(PFX+state.current,state.course);}
+
+  function newStudentsFrom(list){
+    var arr=list.map(function(r){return {id:uid(),status:"active",name:r.name,conf:!!r.conf,team:r.team||"",scores:{},dropReason:"",dropDate:""};});
+    sortStudents(arr); return arr;
+  }
+
+  /* ---------- computation ---------- */
+  function catAssessments(catId){return (state.course.assessments||[]).filter(function(a){return a.catId===catId;});}
+  /* a TBL unit total = iRAT + tRAT (+ bonus). Bonus is extra credit (not in the denominator). */
+  function unitParts(u){return [u.id+"_i",u.id+"_t"].concat(u.bonus?[u.id+"_b"]:[]);}
+  function unitHasScore(stu,u){return unitParts(u).some(function(k){var v=stu.scores[k];return v!=null&&v!=="";});}
+  function unitTotal(stu,u){
+    if(!unitHasScore(stu,u)) return null;
+    var i=num(stu.scores[u.id+"_i"])||0,t=num(stu.scores[u.id+"_t"])||0,b=u.bonus?(num(stu.scores[u.id+"_b"])||0):0;
+    return i+t+b;
+  }
+  function unitMax(u){return (num(u.iMax)||0)+(num(u.tMax)||0);} /* graded denominator excludes bonus */
+  function studentCatPct(stu,cat){
+    var as=catAssessments(cat.id),got=0,poss=0,any=false;
+    for(var i=0;i<as.length;i++){
+      var a=as[i];
+      if(a.kind==="tbl"){
+        var tot=unitTotal(stu,a);
+        if(tot!=null){got+=tot;poss+=unitMax(a);any=true;}
+      } else {
+        var v=stu.scores[a.id];
+        if(v!=null&&v!==""){var n=num(v);if(n!=null){got+=n;poss+=num(a.max)||0;any=true;}}
+      }
+    }
+    if(!any||poss<=0) return null;
+    return got/poss*100;
+  }
+  function studentFinal(stu){
+    var cats=state.course.categories||[],wSum=0,acc=0,any=false;
+    for(var i=0;i<cats.length;i++){var p=studentCatPct(stu,cats[i]);if(p!=null){var w=num(cats[i].weight)||0;acc+=p*w;wSum+=w;any=true;}}
+    if(!any||wSum<=0) return null;
+    return acc/wSum;
+  }
+  function letterFor(pct){
+    if(pct==null) return "";
+    var sc=(state.course.scale||DEFAULT_SCALE).slice().sort(function(a,b){return b.min-a.min;});
+    for(var i=0;i<sc.length;i++){if(pct>=sc[i].min) return sc[i].letter;}
+    return sc.length?sc[sc.length-1].letter:"";
+  }
+
+  /* ---------- render ---------- */
+  function activeStudents(){return (state.course?state.course.students:[]).filter(function(s){return s.status==="active";});}
+  function droppedStudents(){return (state.course?state.course.students:[]).filter(function(s){return s.status!=="active";});}
+
+  function teamOptions(sel){
+    var teams=(state.course.teamNames||TEAM_NAMES).slice();
+    if(sel&&teams.indexOf(sel)<0)teams.push(sel); /* never lose a student's existing team */
+    var h='<option value=""'+(!sel?" selected":"")+'>—</option>';
+    for(var i=0;i<teams.length;i++){h+='<option value="'+esc(teams[i])+'"'+(sel===teams[i]?" selected":"")+'>'+esc(teams[i])+'</option>';}
+    return h;
+  }
+
+  function render(){
+    document.body.classList.toggle("no-teams",!(state.course&&state.course.teams));
+    document.body.classList.toggle("no-weight",!(state.course&&state.course.weighted));
+    renderHeader();
+    renderCourseSel();
+    if(!state.course){renderEmpty();return;}
+    el("weightToggle").checked=!!state.course.weighted;
+    var list=state.tab==="active"?activeStudents():droppedStudents();
+    renderGrid(list);
+    el("cActive").textContent="("+activeStudents().length+")";
+    el("cDropped").textContent="("+droppedStudents().length+")";
+    renderTally(list);
+  }
+
+  function renderHeader(){
+    var c=state.course;
+    if(!c){el("hEyebrow").textContent="TBL Grade Engine";el("hTitle").textContent="TBL Grade Engine";
+      el("hSub").textContent="Weighted gradebook for Team-Based Learning";el("hMeta").textContent="Set up a course to begin.";return;}
+    var m=c.meta||{};
+    el("hEyebrow").textContent=((m.course||"")+(m.inst?" · "+m.inst:"")+"").replace(/^ · /,"");
+    el("hTitle").textContent=m.title||"Gradebook";
+    el("hSub").textContent=(m.course||"")+(c.teams?" · Team-Based":"");
+    var bits=[]; if(m.term)bits.push(m.term); if(m.crn)bits.push("CRN "+m.crn); if(m.instr)bits.push(m.instr);
+    el("hMeta").textContent=bits.join("  ·  ")||" ";
+  }
+
+  function renderCourseSel(){
+    var s=el("courseSel");
+    s.innerHTML=state.index.map(function(c){return '<option value="'+esc(c.id)+'"'+(c.id===state.current?" selected":"")+'>'+esc(c.label)+'</option>';}).join("")||'<option value="">No courses yet</option>';
+  }
+
+  function renderEmpty(){
+    el("thead").innerHTML="";el("tbody").innerHTML='<tr><td class="empty">No course loaded. Click <b>+ New course</b> to begin.</td></tr>';
+    el("tfoot").innerHTML="";el("gridcap").textContent="";el("tally").textContent="";el("legend").textContent="";
+    el("cActive").textContent="(0)";el("cDropped").textContent="(0)";
+  }
+
+  function renderTally(list){
+    var c=state.course;
+    var asmtN=(c.assessments||[]).length, catN=(c.categories||[]).length;
+    el("tally").textContent=list.length+" student"+(list.length===1?"":"s")+" · "+catN+" categories · "+asmtN+" columns";
+    el("legend").textContent=c.weighted?"Weighted grade on":"Raw scores";
+    el("gridcap").textContent=(c.meta&&c.meta.title?c.meta.title+" — ":"")+(state.tab==="active"?"Active roster":"Dropped / withdrawn");
+  }
+
+  /* one flat list of columns shared by header, body, footer, and export */
+  function buildColumns(){
+    var c=state.course, cats=c.categories||[], teams=c.teams, out=[];
+    cats.forEach(function(cat){
+      var as=catAssessments(cat.id),start=out.length;
+      if(!as.length){out.push({type:"empty",catId:cat.id,cat:cat});}
+      as.forEach(function(a){
+        if(a.kind==="tbl"){
+          var tFill=!!(teams&&cat.teamScored); /* only tRAT (and bonus) fill the team; iRAT is always individual */
+          out.push({type:"score",cat:cat,unit:a,key:a.id+"_i",label:a.name+" iRAT",max:num(a.iMax)||0,team:false});
+          out.push({type:"score",cat:cat,unit:a,key:a.id+"_t",label:a.name+" tRAT",max:num(a.tMax)||0,team:tFill});
+          if(a.bonus)out.push({type:"score",cat:cat,unit:a,key:a.id+"_b",label:a.name+" Bonus",max:num(a.bMax)||0,team:tFill});
+          out.push({type:"total",cat:cat,unit:a,label:a.name+" Total"});
+        } else {
+          out.push({type:"score",cat:cat,unit:null,key:a.id,label:a.name,max:num(a.max)||0,team:!!(teams&&cat.teamScored)});
+        }
+      });
+      out[start]&&(out[start].catStart=true);
+      out._spans=out._spans||{};
+    });
+    return out;
+  }
+  function catSpans(cols){var m={},order=[];cols.forEach(function(col){if(!(col.catId||col.cat.id in m)){}var id=col.cat.id;if(m[id]==null){m[id]=0;order.push(id);}m[id]++;});return {map:m,order:order};}
+
+  /* header builder. When TBL sessions exist, uses 3 tiers: category, session (groups iRAT/tRAT/Total), part. */
+  function buildHead(cols,sp,teams,weighted){
+    var hasSessions=cols.some(function(c){return c.unit;});
+    var rs=hasSessions?3:2;
+    var fixed="<th class='c0' rowspan='"+rs+"' scope='col'>#</th><th class='c1' rowspan='"+rs+"' scope='col'>Student</th>"+(teams?"<th class='teamcol' rowspan='"+rs+"' scope='col'>Team</th>":"");
+    var tail=(weighted?"<th class='weightcol' rowspan='"+rs+"' scope='col'>Final</th><th class='weightcol' rowspan='"+rs+"' scope='col'>Grade</th>":"")+"<th rowspan='"+rs+"' scope='col'>Actions</th>";
+    /* tier 1: categories */
+    var r1="<tr class='catrow'>"+fixed;
+    sp.order.forEach(function(id){
+      var cat=catById(id)||{};
+      var wlbl=weighted?" · "+(num(cat.weight)||0)+"%":"";
+      var addbtn=cat.kind==="tbl"?" <button type='button' class='addrat' data-addrat='"+id+"' title='Add a RAT session to "+esc(cat.name)+"' aria-label='Add a RAT session to "+esc(cat.name)+"'>+ session</button>":"";
+      r1+="<th colspan='"+sp.map[id]+"' scope='colgroup'>"+esc(cat.name)+wlbl+addbtn+"</th>";
+    });
+    r1+=tail+"</tr>";
+    if(!hasSessions){
+      var r2="<tr>";
+      cols.forEach(function(col){
+        if(col.type==="empty")r2+="<th class='asmt'><span class='am' style='font-style:italic'>add column</span></th>";
+        else r2+="<th class='asmt' scope='col'><span class='al'>"+esc(col.label)+"</span><span class='am'>/"+col.max+"</span></th>";
+      });
+      return r1+r2+"</tr>";
+    }
+    /* tier 2: session groups + simple columns; tier 3: parts */
+    var r2="<tr>",r3="<tr>";
+    for(var i=0;i<cols.length;i++){
+      var col=cols[i];
+      if(col.type==="empty"){r2+="<th class='asmt' rowspan='2'><span class='am' style='font-style:italic'>add column</span></th>";continue;}
+      if(col.unit){
+        var uid2=col.unit.id,parts=[],j=i;
+        while(j<cols.length&&cols[j].unit&&cols[j].unit.id===uid2){parts.push(cols[j]);j++;}
+        var maxTot=(num(col.unit.iMax)||0)+(num(col.unit.tMax)||0)+(col.unit.bonus?(num(col.unit.bMax)||0):0);
+        r2+="<th class='asmt sessgrp' colspan='"+parts.length+"' scope='colgroup'>"+esc(col.unit.name)+" <span class='am'>Total = "+maxTot+"</span></th>";
+        parts.forEach(function(p){
+          if(p.type==="total")r3+="<th class='asmt tbltot' scope='col' title='Record this in Canvas'><span class='al'>Total</span><span class='am'>Canvas</span></th>";
+          else {var short=p.label.indexOf(col.unit.name)===0?p.label.slice(col.unit.name.length).trim():p.label;
+            r3+="<th class='asmt' scope='col'><span class='al'>"+esc(short)+"</span><span class='am'>/"+p.max+"</span></th>";}
+        });
+        i=j-1;continue;
+      }
+      r2+="<th class='asmt' rowspan='2' scope='col'><span class='al'>"+esc(col.label)+"</span><span class='am'>/"+col.max+"</span></th>";
+    }
+    return r1+r2+"</tr>"+r3+"</tr>";
+  }
+
+  function renderGrid(list){
+    var c=state.course, teams=c.teams, weighted=c.weighted, cols=buildColumns();
+    var sp=catSpans(cols);
+    el("thead").innerHTML=buildHead(cols,sp,teams,weighted);
+
+    if(!list.length){el("tbody").innerHTML='<tr><td class="empty" colspan="60">No students on this tab.</td></tr>';el("tfoot").innerHTML="";return;}
+
+    var rows="";
+    for(var i=0;i<list.length;i++){
+      var s=list[i];
+      rows+="<tr data-sid='"+s.id+"'>";
+      rows+="<td class='c0'>"+(i+1)+"</td>";
+      rows+="<td class='c1'>"+esc(s.name)+(s.conf?" <span class='conf'>[C]</span>":"")+"</td>";
+      if(teams) rows+="<td class='teamwrap teamcol'><select class='teamsel' data-act='team' aria-label='Team for "+esc(s.name)+"'>"+teamOptions(s.team)+"</select></td>";
+      cols.forEach(function(col){
+        if(col.type==="empty"){rows+="<td class='scorewrap'></td>";}
+        else if(col.type==="total"){
+          var tot=unitTotal(s,col.unit);
+          rows+="<td class='tbltotal' data-total='"+col.unit.id+"' data-cat='"+col.cat.id+"'>"+(tot==null?"—":(Math.round(tot*100)/100))+"</td>";
+        } else {
+          var v=s.scores[col.key];
+          var isOvr=col.team&&s.ovr&&s.ovr[col.key];
+          var cls="scorein"+(col.team?" team":"")+(isOvr?" ovr":"");
+          var ttl=col.team?" title=\"Team-scored. Type once to fill the team; edit a filled cell to override one student (set 0 for an absence); double-click to push this value to the whole team.\"":"";
+          rows+="<td class='scorewrap'><input class='"+cls+"' type='number' inputmode='decimal' min='0' step='0.5' max='"+col.max+"' value='"+(v==null?"":esc(v))+"' data-act='score' data-aid='"+col.key+"' data-cat='"+col.cat.id+"' data-team='"+(col.team?"1":"0")+"'"+ttl+" aria-label='"+esc(s.name)+" "+esc(col.label)+", out of "+col.max+(isOvr?", individual override":"")+"'></td>";
+        }
+      });
+      if(weighted){
+        var fin=studentFinal(s), lt=letterFor(fin);
+        rows+="<td class='finalwrap weightcol'>"+(fin==null?"—":fin.toFixed(1)+"%")+"</td>";
+        rows+="<td class='letterwrap weightcol l"+(lt||"")+"'>"+(lt||"—")+"</td>";
+      }
+      rows+=state.tab==="active"
+        ? "<td class='actcell'><button class='mini drop' data-act='drop'>Drop</button></td>"
+        : "<td class='actcell'>"+(s.dropReason?"<span class='conf'>"+esc(s.dropReason)+"</span> ":"")+"<button class='mini restore' data-act='restore'>Restore</button></td>";
+      rows+="</tr>";
+    }
+    el("tbody").innerHTML=rows;
+
+    /* footer: per-column class average (active tab only) */
+    if(state.tab==="active"&&list.length){
+      var foot="<tr><th class='c0'></th><th class='c1'>Class average</th>";
+      if(teams) foot+="<td class='teamcol'></td>";
+      cols.forEach(function(col){
+        if(col.type==="empty"){foot+="<td></td>";return;}
+        var sum=0,n=0;
+        for(var k=0;k<list.length;k++){
+          var vv=col.type==="total"?unitTotal(list[k],col.unit):num(list[k].scores[col.key]);
+          if(vv!=null){sum+=vv;n++;}
+        }
+        foot+="<td class='"+(col.type==="total"?"tbltot":"")+"'>"+(n?(Math.round(sum/n*10)/10):"—")+"</td>";
+      });
+      if(weighted){
+        var fsum=0,fn=0;for(var m2=0;m2<list.length;m2++){var ff=studentFinal(list[m2]);if(ff!=null){fsum+=ff;fn++;}}
+        foot+="<td class='weightcol'>"+(fn?(fsum/fn).toFixed(1)+"%":"—")+"</td><td class='weightcol'></td>";
+      }
+      foot+="<td></td></tr>";
+      el("tfoot").innerHTML=foot;
+    } else { el("tfoot").innerHTML=""; }
+  }
+
+  /* ---------- grid interactions ---------- */
+  /* "+ session" button on a TBL category header adds a RAT session (iRAT 30 / tRAT 10) in one click */
+  el("thead").addEventListener("click",function(e){
+    var b=e.target.closest?e.target.closest("[data-addrat]"):null;if(!b)return;
+    var catId=b.getAttribute("data-addrat");
+    var n=catAssessments(catId).filter(function(a){return a.kind==="tbl";}).length+1;
+    state.course.assessments.push({id:uid(),catId:catId,name:"TBL "+n,kind:"tbl",iMax:30,tMax:10,bonus:false,bMax:0,date:""});
+    saveCourse();render();
+  });
+  function studentById(id){return state.course.students.filter(function(s){return s.id===id;})[0];}
+  function catById(id){return (state.course.categories||[]).filter(function(c){return c.id===id;})[0];}
+  function isTeamScored(catId){var c=catById(catId);return !!(state.course.teams&&c&&c.teamScored);}
+  function teammates(s){return state.course.students.filter(function(o){return o.id!==s.id&&o.team&&o.team===s.team;});}
+  function fillTeam(source,aid,val,force){
+    teammates(source).forEach(function(o){
+      if(force||!(o.ovr&&o.ovr[aid])){o.scores[aid]=val;if(force&&o.ovr)delete o.ovr[aid];}
+    });
+  }
+  /* record whether a team-scored cell was empty when editing began */
+  el("tbody").addEventListener("focusin",function(e){
+    var t=e.target;if(t.getAttribute&&t.getAttribute("data-act")==="score"){
+      var s=studentById(t.closest("tr").getAttribute("data-sid"));if(!s)return;
+      var v=s.scores[t.getAttribute("data-aid")];
+      t.dataset.startEmpty=(v===""||v==null)?"1":"0";
+    }
+  });
+  el("tbody").addEventListener("input",function(e){
+    var t=e.target;if(t.getAttribute("data-act")!=="score")return;
+    var s=studentById(t.closest("tr").getAttribute("data-sid"));if(!s)return;
+    var aid=t.getAttribute("data-aid");
+    var max=num(t.getAttribute("max"));var val=t.value===""?"":num(t.value);
+    if(val!==""&&val!=null){if(val<0)val=0;if(max!=null&&val>max){val=max;t.value=max;}}
+    s.scores[aid]=(val===""||val==null)?"":val;
+    saveCourse();
+    updateComputedCells(); /* keep focus; propagation happens on change */
+  });
+  el("tbody").addEventListener("change",function(e){
+    var t=e.target,act=t.getAttribute("data-act");
+    var tr=t.closest("tr");if(!tr)return;var s=studentById(tr.getAttribute("data-sid"));if(!s)return;
+    if(act==="team"){s.team=t.value;saveCourse();render();return;}
+    if(act==="score"&&t.dataset.team==="1"&&s.team){
+      var aid=t.getAttribute("data-aid"),val=s.scores[aid];
+      if(t.dataset.startEmpty==="1"){           /* first team entry: fill the team */
+        if(s.ovr)delete s.ovr[aid];
+        fillTeam(s,aid,val,false);
+      } else {                                   /* editing a filled cell: override this student only */
+        s.ovr=s.ovr||{};s.ovr[aid]=true;
+      }
+      saveCourse();render();
+    }
+  });
+  /* double-click a team-scored cell to push its value to the entire team, clearing overrides */
+  el("tbody").addEventListener("dblclick",function(e){
+    var t=e.target;if(t.getAttribute&&t.getAttribute("data-act")==="score"&&t.dataset.team==="1"){
+      var s=studentById(t.closest("tr").getAttribute("data-sid"));if(!s||!s.team)return;
+      var aid=t.getAttribute("data-aid");
+      if(s.ovr)delete s.ovr[aid];
+      fillTeam(s,aid,s.scores[aid],true);
+      saveCourse();render();
+    }
+  });
+  el("tbody").addEventListener("click",function(e){
+    var t=e.target;if(t.tagName!=="BUTTON")return;var act=t.getAttribute("data-act");
+    var tr=t.closest("tr");var s=studentById(tr.getAttribute("data-sid"));if(!s)return;
+    if(act==="drop"){
+      var why=prompt("Reason (Withdrew, No-show, etc.) for "+s.name+":","Withdrew");
+      if(why===null)return;
+      s.status="dropped";s.dropReason=why||"Dropped";s.dropDate=new Date().toISOString().slice(0,10);saveCourse();render();
+    } else if(act==="restore"){
+      s.status="active";s.dropReason="";s.dropDate="";saveCourse();render();
+    }
+  });
+  function updateComputedCells(){
+    var rows=el("tbody").querySelectorAll("tr[data-sid]");
+    /* TBL unit totals always refresh live */
+    rows.forEach(function(tr){
+      var s=studentById(tr.getAttribute("data-sid"));if(!s)return;
+      tr.querySelectorAll(".tbltotal[data-total]").forEach(function(cell){
+        var unit=(state.course.assessments||[]).filter(function(a){return a.id===cell.getAttribute("data-total");})[0];
+        if(!unit)return;var tot=unitTotal(s,unit);cell.textContent=tot==null?"—":(Math.round(tot*100)/100);
+      });
+    });
+    if(!state.course.weighted)return;
+    rows.forEach(function(tr){
+      var s=studentById(tr.getAttribute("data-sid"));if(!s)return;
+      var fin=studentFinal(s),lt=letterFor(fin);
+      var fc=tr.querySelector(".finalwrap"),lc=tr.querySelector(".letterwrap");
+      if(fc)fc.textContent=fin==null?"—":fin.toFixed(1)+"%";
+      if(lc){lc.textContent=lt||"—";lc.className="letterwrap weightcol l"+(lt||"");}
+    });
+    /* footer avg */
+    var list=activeStudents();var foot=el("tfoot");
+    if(foot&&foot.querySelector(".weightcol")){
+      var fsum=0,fn=0;list.forEach(function(s){var ff=studentFinal(s);if(ff!=null){fsum+=ff;fn++;}});
+      var cells=foot.querySelectorAll(".weightcol");if(cells[0])cells[0].textContent=fn?(fsum/fn).toFixed(1)+"%":"—";
+    }
+  }
+
+  /* ---------- tabs ---------- */
+  function setTab(t){
+    state.tab=t;
+    el("tabActive").setAttribute("aria-selected",t==="active");
+    el("tabDropped").setAttribute("aria-selected",t==="dropped");
+    el("panel").setAttribute("aria-labelledby",t==="active"?"tabActive":"tabDropped");
+    render();
+  }
+  el("tabActive").addEventListener("click",function(){setTab("active");});
+  el("tabDropped").addEventListener("click",function(){setTab("dropped");});
+
+  /* ---------- toolbar ---------- */
+  el("courseSel").addEventListener("change",function(){loadCourse(this.value);state.tab="active";render();});
+  el("weightToggle").addEventListener("change",function(){state.course.weighted=this.checked;saveCourse();render();});
+  el("btnPrint").addEventListener("click",function(){window.print();});
+  el("btnAddStudent").addEventListener("click",function(){
+    var name=prompt("Add a student as  Last, First :","");if(!name)return;
+    var conf=false;if(/\[c\]\s*$/i.test(name)){conf=true;name=name.replace(/\[c\]\s*$/i,"").trim();}
+    state.course.students.push({id:uid(),status:"active",name:name.trim(),conf:conf,team:"",scores:{},dropReason:"",dropDate:""});
+    sortStudents(state.course.students);saveCourse();render();
+  });
+  el("btnExport").addEventListener("click",exportCsv);
+
+  /* ---------- export ---------- */
+  function exportCsv(){
+    var c=state.course,cats=c.categories||[],cols=buildColumns().filter(function(col){return col.type!=="empty";});
+    var head=["Status","#","Name","Confidential"];
+    if(c.teams)head.push("Team");
+    cols.forEach(function(col){
+      if(col.type==="total")head.push(col.cat.name+" - "+col.label+" (Canvas)");
+      else head.push(col.cat.name+" - "+col.label+" (/"+col.max+")");
+    });
+    cats.forEach(function(cat){head.push(cat.name+" %");});
+    if(c.weighted){head.push("Final %");head.push("Letter");}
+    head.push("Drop reason");head.push("Drop date");
+    var lines=[head.map(csvCell).join(",")];
+    var all=(c.students||[]).slice();
+    all.forEach(function(s,i){
+      var row=[s.status==="active"?"Active":"Dropped",i+1,s.name,s.conf?"Y":""];
+      if(c.teams)row.push(s.team||"");
+      cols.forEach(function(col){
+        if(col.type==="total"){var tot=unitTotal(s,col.unit);row.push(tot==null?"":(Math.round(tot*100)/100));}
+        else {var v=s.scores[col.key];row.push(v==null||v===""?"":v);}
+      });
+      cats.forEach(function(cat){var p=studentCatPct(s,cat);row.push(p==null?"":p.toFixed(1));});
+      if(c.weighted){var f=studentFinal(s);row.push(f==null?"":f.toFixed(1));row.push(letterFor(f));}
+      row.push(s.dropReason||"");row.push(s.dropDate||"");
+      lines.push(row.map(csvCell).join(","));
+    });
+    var blob=new Blob([lines.join("\r\n")],{type:"text/csv"});
+    var a=document.createElement("a");a.href=URL.createObjectURL(blob);
+    a.download=((c.meta&&c.meta.course)||"course").replace(/[^\w-]+/g,"_")+"_grades.csv";
+    document.body.appendChild(a);a.click();a.remove();
+  }
+  function csvCell(v){v=String(v==null?"":v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+
+  /* ============ WIZARD ============ */
+  var wizCats=[],wizScale=[],wizMode="new",fileRoster=null;
+  function openWizard(mode){
+    wizMode=mode;
+    el("wizTitle").textContent=mode==="edit"?"Course setup":"New course";
+    var c=mode==="edit"?state.course:null;
+    el("fTitle").value=c?(c.meta.title||""):"";
+    el("fInst").value=c?(c.meta.inst||""):"";
+    el("fCourse").value=c?(c.meta.course||""):"";
+    el("fTerm").value=c?(c.meta.term||""):"";
+    el("fCRN").value=c?(c.meta.crn||""):"";
+    el("fInstr").value=c?(c.meta.instr||""):"";
+    el("fTeams").checked=c?!!c.teams:true;
+    el("fWeighted").checked=c?!!c.weighted:true;
+    wizCats=c?JSON.parse(JSON.stringify(c.categories)):defaultCategories(true);
+    wizScale=c?JSON.parse(JSON.stringify(c.scale||DEFAULT_SCALE)):JSON.parse(JSON.stringify(DEFAULT_SCALE));
+    el("fRoster").value="";el("parsemsg").textContent="";el("wizErr").textContent="";el("fFile").value="";fileRoster=null;
+    renderWizCats();renderWizScale();renderAttnLink();
+    el("wizard").hidden=false;el("fTitle").focus();
+  }
+  function renderAttnLink(){
+    var courses=attnCourses(),sel=el("fLink");
+    if(!courses.length||wizMode==="edit"){el("linkWrap").style.display="none";return;}
+    el("linkWrap").style.display="";
+    sel.innerHTML='<option value="">Do not link, I will paste below</option>'+courses.map(function(c){return '<option value="'+esc(c.id)+'">'+esc(c.label)+'</option>';}).join("");
+  }
+  function renderWizCats(){renderCatEditor("wizCatList",wizCats,"wizWsum");}
+  function renderWizScale(){
+    el("wizScale").innerHTML=wizScale.map(function(r,i){
+      return "<div class='fld'><label for='ws"+i+"'>"+esc(r.letter)+" &ge;</label><input type='number' id='ws"+i+"' min='0' max='100' step='0.5' value='"+r.min+"' data-i='"+i+"'></div>";
+    }).join("");
+    el("wizScale").querySelectorAll("input").forEach(function(inp){
+      inp.addEventListener("input",function(){wizScale[+this.getAttribute("data-i")].min=num(this.value)||0;});
+    });
+  }
+  /* shared category editor used by wizard and cat modal */
+  function renderCatEditor(listId,arr,sumId){
+    var host=el(listId);
+    host.innerHTML=arr.map(function(cat,i){
+      var isTbl=cat.kind==="tbl";
+      var teamCell=isTbl
+        ? "<div><span class='rowlab'>tRAT team fill</span><label class='teamflag'><input type='checkbox' "+(cat.teamScored?"checked":"")+" data-i='"+i+"' data-k='teamScored'> tRAT fills team</label><span class='tblnote'>iRAT stays individual</span></div>"
+        : "<div><span class='rowlab'>Team-scored</span><label class='teamflag'><input type='checkbox' "+(cat.teamScored?"checked":"")+" data-i='"+i+"' data-k='teamScored'> fills team</label></div>";
+      return "<div class='catrow-ed'>"+
+        "<div><span class='rowlab'>Category</span><input type='text' value='"+esc(cat.name)+"' data-i='"+i+"' data-k='name'></div>"+
+        "<div><span class='rowlab'>Type</span><select data-i='"+i+"' data-k='kind'><option value='simple'"+(isTbl?"":" selected")+">Simple columns</option><option value='tbl'"+(isTbl?" selected":"")+">TBL (iRAT+tRAT)</option></select></div>"+
+        "<div><span class='rowlab'>Weight %</span><input type='number' min='0' step='1' value='"+(num(cat.weight)||0)+"' data-i='"+i+"' data-k='weight'></div>"+
+        teamCell+
+        "<button type='button' class='del' data-i='"+i+"' aria-label='Delete category "+esc(cat.name)+"'>×</button>"+
+      "</div>";
+    }).join("");
+    host.querySelectorAll("input[data-k],select[data-k]").forEach(function(inp){
+      inp.addEventListener((inp.tagName==="SELECT"||inp.type==="checkbox")?"change":"input",function(){
+        var i=+this.getAttribute("data-i"),k=this.getAttribute("data-k");
+        if(k==="teamScored")arr[i][k]=this.checked;
+        else if(k==="weight")arr[i][k]=num(this.value)||0;
+        else if(k==="kind"){arr[i].kind=this.value==="tbl"?"tbl":undefined;renderCatEditor(listId,arr,sumId);return;}
+        else arr[i][k]=this.value;
+        updateWsum(arr,sumId);
+      });
+    });
+    host.querySelectorAll(".del").forEach(function(b){
+      b.addEventListener("click",function(){arr.splice(+this.getAttribute("data-i"),1);renderCatEditor(listId,arr,sumId);});
+    });
+    updateWsum(arr,sumId);
+  }
+  function updateWsum(arr,sumId){
+    var t=arr.reduce(function(a,c){return a+(num(c.weight)||0);},0);
+    var node=el(sumId);if(!node)return;
+    node.textContent="Weights total "+t+"%"+(t===100?"":"  (does not need to equal 100)");
+    node.className="wsum "+(t===100?"ok":"warn");
+  }
+  el("wizAddCat").addEventListener("click",function(){wizCats.push({id:uid(),name:"New category",weight:0,teamScored:false});renderWizCats();});
+  el("fFile").addEventListener("change",function(){
+    var f=this.files&&this.files[0];if(!f)return;
+    var isHtml=/\.html?$/i.test(f.name)||/html/i.test(f.type);
+    var rd=new FileReader();
+    rd.onload=function(){
+      var text=String(rd.result||"");
+      if(isHtml||/<\s*(html|table|tr|body)[\s>]/i.test(text.slice(0,4000))){
+        fileRoster=parseAttendanceHtml(text);
+        el("fRoster").value="";
+        var withTeam=fileRoster.filter(function(s){return s.team;}).length;
+        el("parsemsg").textContent=fileRoster.length
+          ? (fileRoster.length+" students read from your attendance page"+(withTeam?(", "+withTeam+" with a team assigned"):", no teams found in the saved file")+".")
+          : "No students found in that HTML. Try Save Page As “Webpage, HTML Only”, or paste names below.";
+      } else {
+        fileRoster=null;el("fRoster").value=text;previewParse();
+      }
+    };
+    rd.readAsText(f);
+  });
+  el("fRoster").addEventListener("input",function(){fileRoster=null;previewParse();});
+  el("fLink").addEventListener("change",function(){
+    if(this.value){fileRoster=null;var r=attnRoster(this.value);el("parsemsg").textContent="Linked roster: "+r.length+" students will be pulled from the Attendance Engine course.";}
+    else previewParse();
+  });
+  function previewParse(){
+    var r=parseRoster(el("fRoster").value);
+    el("parsemsg").textContent=r.length?(r.length+" students parsed."):"";
+  }
+  el("wizCancel").addEventListener("click",function(){el("wizard").hidden=true;});
+  el("wizForm").addEventListener("submit",function(e){
+    e.preventDefault();
+    var title=el("fTitle").value.trim();
+    if(!title){el("wizErr").textContent="Course title is required.";return;}
+    var meta={title:title,inst:el("fInst").value.trim()||"Solano Community College",course:el("fCourse").value.trim(),
+      term:el("fTerm").value.trim(),crn:el("fCRN").value.trim(),instr:el("fInstr").value.trim()||"Dr. Sharilyn Rennie"};
+    var teams=el("fTeams").checked,weighted=el("fWeighted").checked;
+    if(wizMode==="edit"){
+      var c=state.course;c.meta=meta;c.teams=teams;c.weighted=weighted;c.categories=wizCats;c.scale=wizScale;
+      // reconcile: drop assessments whose category was deleted
+      var ids={};wizCats.forEach(function(k){ids[k.id]=1;});
+      c.assessments=(c.assessments||[]).filter(function(a){return ids[a.catId];});
+      var label=(meta.course||meta.title);state.index.forEach(function(x){if(x.id===state.current)x.label=label;});
+      saveCourse();saveIndex();el("wizard").hidden=true;render();return;
+    }
+    /* new course: roster priority is same-origin link, then uploaded HTML/file, then pasted text */
+    var roster=[];
+    var link=el("fLink").value;
+    if(link)roster=attnRoster(link);
+    if(!roster.length&&fileRoster&&fileRoster.length)roster=fileRoster;
+    if(!roster.length)roster=parseRoster(el("fRoster").value);
+    var id=uid();
+    var rosterTeams=[];roster.forEach(function(r){if(r.team&&rosterTeams.indexOf(r.team)<0)rosterTeams.push(r.team);});
+    var teamNames=rosterTeams.length?rosterTeams:TEAM_NAMES.slice();
+    var course={meta:meta,teams:teams,weighted:weighted,
+      teamNames:teamNames,categories:wizCats,scale:wizScale,
+      assessments:[],students:newStudentsFrom(roster)};
+    /* seed each TBL category with a first RAT session so the iRAT / tRAT / Total columns show right away */
+    (course.categories||[]).forEach(function(cat){
+      if(cat.kind==="tbl"){course.assessments.push({id:uid(),catId:cat.id,name:"TBL 1",kind:"tbl",iMax:30,tMax:10,bonus:false,bMax:0,date:""});}
+    });
+    write(PFX+id,course);
+    state.index.push({id:id,label:(meta.course||meta.title)});
+    state.current=id;saveIndex();loadCourse(id);state.tab="active";
+    el("wizard").hidden=true;render();
+  });
+  el("btnNew").addEventListener("click",function(){openWizard("new");});
+  el("btnSetup").addEventListener("click",function(){if(!state.course){openWizard("new");return;}openWizard("edit");});
+
+  /* ============ CATEGORIES MODAL ============ */
+  var edCats=[];
+  el("btnCats").addEventListener("click",function(){
+    if(!state.course)return;
+    edCats=JSON.parse(JSON.stringify(state.course.categories));
+    renderCatEditor("edCatList",edCats,"edWsum");
+    el("catModal").hidden=false;el("edCatList").querySelector("input").focus();
+  });
+  el("edAddCat").addEventListener("click",function(){edCats.push({id:uid(),name:"New category",weight:0,teamScored:false});renderCatEditor("edCatList",edCats,"edWsum");});
+  el("catCancel").addEventListener("click",function(){el("catModal").hidden=true;});
+  el("catForm").addEventListener("submit",function(e){
+    e.preventDefault();
+    state.course.categories=edCats;
+    var ids={};edCats.forEach(function(k){ids[k.id]=1;});
+    state.course.assessments=(state.course.assessments||[]).filter(function(a){return ids[a.catId];});
+    saveCourse();el("catModal").hidden=true;render();
+  });
+
+  /* ============ ADD COLUMN MODAL ============ */
+  el("btnAddAsmt").addEventListener("click",function(){
+    if(!state.course)return;
+    var cats=state.course.categories||[];
+    if(!cats.length){alert("Add a category first under Categories & weights.");return;}
+    el("aCat").innerHTML=cats.map(function(c){return '<option value="'+esc(c.id)+'">'+esc(c.name)+(c.kind==="tbl"?" (TBL)":"")+'</option>';}).join("");
+    el("aName").value="";el("aMax").value="100";el("aDate").value="";el("asmtErr").textContent="";
+    el("aIMax").value="30";el("aTMax").value="10";el("aBonus").checked=false;el("aBMax").value="1";
+    syncAsmtFields();
+    el("asmtModal").hidden=false;el("aName").focus();
+  });
+  function syncAsmtFields(){
+    var cat=catById(el("aCat").value),isTbl=cat&&cat.kind==="tbl";
+    el("tblFields").hidden=!isTbl;el("tblHint").hidden=!isTbl;el("aMaxWrap").hidden=isTbl;
+    el("aNameLab").textContent=isTbl?"RAT session name":"Name";
+    el("aName").placeholder=isTbl?"TBL 1":"Lab Quiz 3";
+    el("aBMaxWrap").hidden=!(isTbl&&el("aBonus").checked);
+  }
+  el("aCat").addEventListener("change",syncAsmtFields);
+  el("aBonus").addEventListener("change",function(){el("aBMaxWrap").hidden=!this.checked;});
+  el("asmtCancel").addEventListener("click",function(){el("asmtModal").hidden=true;});
+  el("asmtForm").addEventListener("submit",function(e){
+    e.preventDefault();
+    var name=el("aName").value.trim();
+    if(!name){el("asmtErr").textContent="Name is required.";return;}
+    var cat=catById(el("aCat").value);
+    if(cat&&cat.kind==="tbl"){
+      var iMax=num(el("aIMax").value),tMax=num(el("aTMax").value),bonus=el("aBonus").checked,bMax=num(el("aBMax").value);
+      if(iMax==null||iMax<=0||tMax==null||tMax<=0){el("asmtErr").textContent="iRAT and tRAT max points must be greater than zero.";return;}
+      if(bonus&&(bMax==null||bMax<0)){el("asmtErr").textContent="Bonus max points must be zero or more.";return;}
+      state.course.assessments.push({id:uid(),catId:cat.id,name:name,kind:"tbl",iMax:iMax,tMax:tMax,bonus:bonus,bMax:bonus?bMax:0,date:el("aDate").value||""});
+    } else {
+      var max=num(el("aMax").value);
+      if(max==null||max<=0){el("asmtErr").textContent="Max points must be greater than zero.";return;}
+      state.course.assessments.push({id:uid(),catId:el("aCat").value,name:name,max:max,date:el("aDate").value||""});
+    }
+    saveCourse();el("asmtModal").hidden=true;render();
+  });
+
+  /* close overlays on Escape and backdrop */
+  document.querySelectorAll(".overlay").forEach(function(ov){
+    ov.addEventListener("mousedown",function(e){if(e.target===ov)ov.hidden=true;});
+  });
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Escape"){document.querySelectorAll(".overlay:not([hidden])").forEach(function(ov){ov.hidden=true;});}
+  });
+
+  /* ---------- boot ---------- */
+  loadIndex();
+  if(state.current&&read(PFX+state.current)){loadCourse(state.current);render();}
+  else if(state.index.length){loadCourse(state.index[0].id);render();}
+  else {render();openWizard("new");}
+
+  /* ---------- iframe height-sender (Kajabi / GitHub Pages) ---------- */
+  function postHeight(){
+    var h=document.documentElement.scrollHeight;
+    try{parent.postMessage({type:"grade-engine-height",id:"grade-engine",height:h},"*");}catch(e){}
+  }
+  window.addEventListener("load",postHeight);
+  window.addEventListener("resize",postHeight);
+  if(window.ResizeObserver){new ResizeObserver(postHeight).observe(document.body);}
+})();
+</script>
+</body>
+</html>
