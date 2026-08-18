@@ -172,10 +172,11 @@ Noah Patel *"></textarea>
           <button type="button" class="btn-primary" id="qpresent">Show on projector</button>
           <button type="button" class="btn-ghost" id="qcopy">Copy as text</button>
           <button type="button" class="btn-ghost" id="qprint">Print</button>
+          <button type="button" class="btn-gold" id="qatt" title="A CSV the Attendance Engine imports directly: Last, First and Team">Export for Attendance Engine</button>
         </div>
       </div>
       <div class="teams" id="qteams" style="margin-top:14px"></div>
-      <p class="note">Clinical students are shuffled and dealt one per team, round-robin, then everyone else is shuffled into the smallest teams so sizes never differ by more than one. The clinical marks show only on your screen; projector mode hides them.</p>
+      <p class="note"><b>Export for Attendance Engine</b> gives you a Name, Team CSV (Last, First) that the Attendance Engine imports in one step: Course setup, tick Replace roster, choose the file, Save. Clinical students are shuffled and dealt one per team, round-robin, then everyone else is shuffled into the smallest teams so sizes never differ by more than one. The clinical marks show only on your screen; projector mode hides them.</p>
     </section>
   </section>
 
@@ -224,6 +225,7 @@ Noah Patel *"></textarea>
         <div class="btn-row" style="margin-top:0">
           <button type="button" class="btn-primary" id="gpresent">Show on projector</button>
           <button type="button" class="btn-ghost" id="csvBtn">Download teams (CSV)</button>
+          <button type="button" class="btn-gold" id="attBtn" title="A CSV the Attendance Engine imports directly: Last, First and Team">Export for Attendance Engine</button>
           <button type="button" class="btn-ghost" id="printBtn">Print / save PDF</button>
         </div>
       </div>
@@ -329,6 +331,27 @@ function teamLabel(i){ var set=NAME_SETS[nameScheme()]||[]; return set[i] ? set[
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.body.classList.contains('present'))exit();});
 })();
 
+
+/* ---------------- export for the Attendance Engine ---------------- */
+function lastFirst(n){ n=(n||'').trim(); if(n.indexOf(',')>=0) return n; var p=n.split(/\s+/); if(p.length<2) return n; return p.pop()+', '+p.join(' '); }
+function downloadCsv(name, rows){
+  var csv = rows.map(function(r){ return r.map(function(c){ c=String(c==null?'':c); return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c; }).join(','); }).join('\n');
+  var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download=name; document.body.appendChild(a); a.click(); a.remove();
+}
+document.getElementById('attBtn').addEventListener('click', function(){
+  if (typeof TEAMS==='undefined' || !TEAMS || !TEAMS.length){ alert('Generate teams first.'); return; }
+  var rows=[['Name','Team','Confidential']];
+  TEAMS.forEach(function(t,i){ t.forEach(function(s){ rows.push([lastFirst(s.name), teamLabel(i), '']); }); });
+  rows.sort(function(a,b){ return a===rows[0]?-1:b===rows[0]?1:a[0].localeCompare(b[0]); });
+  downloadCsv('bio004-teams-for-attendance.csv', rows);
+});
+document.getElementById('qatt').addEventListener('click', function(){
+  var q = window.__quickTeams && window.__quickTeams(); if(!q){ alert('Deal the teams first.'); return; }
+  var rows=[['Name','Team','Confidential']];
+  q.forEach(function(t,i){ t.forEach(function(p){ rows.push([lastFirst(p.name), teamLabel(i), '']); }); });
+  rows.sort(function(a,b){ return a===rows[0]?-1:b===rows[0]?1:a[0].localeCompare(b[0]); });
+  downloadCsv('bio004-teams-for-attendance.csv', rows);
+});
 </script>
 <script>
 
