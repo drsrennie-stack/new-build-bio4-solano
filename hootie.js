@@ -18,8 +18,17 @@
      - what a given exam covers
      - the pre-work sequence and how to study for this course
 
+   It also carries a study-advice knowledge set. Every line of it
+   comes from Dr. Rennie's own STAT Success materials (the exam
+   wrapper, the error log, the final exam triage, the grade audit,
+   the failure diagnostic), rewritten for a BIO 004 student who
+   just asked a question. Hootie gives the advice; it never sends
+   a student off to enroll in or work through STAT itself.
+
    It does NOT know anatomy content, and it says so plainly rather
-   than guessing. A student asking "what is the difference between
+   than guessing. It also does not guess at policy. Late work,
+   make-ups, extensions and absences get one answer: the syllabus
+   first, then Dr. Rennie, never an invented rule. A student asking "what is the difference between
    compact and spongy bone" gets pointed at the notes packet, the
    week's Loops video and the Atlas. Guessing at anatomy would be
    worse than useless in a course where the answer gets examined.
@@ -230,6 +239,14 @@
 
   /* Order is the tie-break. Most urgent first. */
   var INTENTS = [
+    /* Policy questions outrank everything. A wrong guess about late
+       work costs a student points, so these words route to the one
+       safe answer: syllabus, then Dr. Rennie. */
+    {id:'policy',   kw:['late work','turn in late','late assignment','submit late','extension','extend the','make up','make-up','makeup','missed the exam','miss an exam','miss the exam','missed the quiz','miss a quiz','excused','absence policy','drop the class','withdraw','incomplete',' late ',' late?',' late.',' late,','deadline']},
+    {id:'badexam',  kw:['exam back','got my exam','test back','got my test','did poorly','did bad','bombed','failed the','went badly','did not go well','didnt go well','lost points','poor grade','bad grade','studied but','low score','worse than i']},
+    {id:'stillpass',kw:['still pass','can i pass','can i still','too late to','recover my grade','bring my grade','raise my grade','fix my grade','salvage','grade up','mathematically']},
+    {id:'catchup',  kw:['missed class','miss class','missed a class','was sick','was absent','was out','catch up','catching up','caught up','make up the class','missed monday','missed tuesday','missed wednesday','missed thursday','missed a day','missed last']},
+    {id:'time',     kw:['how long should i study','how many hours','hours should','study plan','study schedule','no time','not enough time','so busy','fit studying','fit it in','manage my time','time management','what should i focus','where do i focus','prioritize','priorit']},
     {id:'contact',  kw:['contact','email','e-mail','reach','who do i','who should i','talk to','office hour','professor','instructor','teacher','rennie','tutor','tutoring','accommodat','disab','dsp','tech ','technolog','login','log in','canvas help','password','it help']},
     {id:'struggle', kw:['struggl','behind','failing','fail ','so hard','too hard','confus','overwhelm','stress','anxious','burn','falling','fall behind','drowning','give up','quit','really hard','cant keep','can not keep','keep up','lost and','hate this','crying','panic']},
     {id:'grades',   kw:['grade','grading','points','percent','weight','how much is','worth','scholar point','extra credit','curve','my grade','pass the class','passing','gpa']},
@@ -240,7 +257,7 @@
     {id:'atlas',    kw:['atlas','3d','model','viewer','explore structure']},
     {id:'loops',    kw:['loop','practice question','practice q']},
     {id:'prework',  kw:['pre-work','prework','packet','before class','homework','tonight','what should i do','assignment']},
-    {id:'howstudy', kw:['how do i study','how should i study','memor','forget','remember','stick','retain','draw','retrieval','revise','review']},
+    {id:'howstudy', kw:['how do i study','how should i study','memor','forget','remember','stick','retain','draw','retrieval','revise','review','reread','re-read','rereading','take notes','notes better','better notes','study tips','study advice']},
     {id:'week',     kw:['this week','today','due','coming up','next class','whats due','what is due','what is on','schedule']},
     {id:'module',   kw:['module','unit','where are we','what are we on','what are we doing']},
     {id:'find',     kw:['where are','where do i find','where can i find','how do i find','cant find','can not find',
@@ -325,7 +342,7 @@
           + '<br>2. Run a 3-Day Cram before your next exam.'
           + '<br>3. Join a ' + a('study') + ' session.'
           + '<br>4. Come to office hours, 30 minutes before every class, or book free tutoring through the ' + a('astc') + '.'
-          + '<br><br>Reach out early. Do not wait for the next exam, and do not wait until you feel you have earned the right to ask.'
+          + '<br><br>Then write three specific commitments for the week, small and checkable, plus one thing you will do in the next 24 hours. Not "study more." Something like "20 minutes of recall on the tissues sheet after dinner."<br><br>Reach out early, and watch the right signals: focus, recall and energy improve before the gradebook does, so do not read a flat grade as no progress.'
           + (ctx.nextExam ? '<br><br>' + examLine(ctx, ctx.nextExam) : '');
 
       case 'grades':
@@ -368,6 +385,54 @@
           + '<p><b>Free tutoring.</b> In person at Fairfield, Vacaville and Vallejo, or online by Zoom. See the ' + a('astc') + '.</p>';
       }
 
+      /* ------------------------------------------------------
+         STUDY ADVICE KNOWLEDGE
+         Source: Dr. Rennie's STAT Success materials. The exam
+         wrapper gives the four error types and the prep honesty
+         questions. The error log gives the log-and-retry habit.
+         The final exam triage gives weight-times-confidence
+         prioritising and the honest-hours rule. The grade audit
+         gives the can-I-still-pass method. The decision plans
+         give specific commitments plus one 24-hour action.
+         Advice only. Never turned into a course requirement,
+         and never a referral into the STAT program itself.
+         ------------------------------------------------------ */
+
+      case 'badexam':
+        return '<p>Good, you asked. A graded exam is the best study guide you will get all module.</p>'
+          + 'Sit with it and sort every lost point into one of four piles: did not study it, studied it but never understood it, understood it but could not recall it cold, or knew it and lost it to misreading or panic. Those four need four different repairs, and most students find one pile holds most of their points.'
+          + '<br><br>Then start an error log. For each wrong answer write what you thought, what is correct, why you missed it, and what you will remember. Try the same question cold a week later, and only cross it off when you can get its whole type right without looking.'
+          + '<br><br>Two honest questions about how you prepared: how many days did you spread the studying across, and how much of it was retrieval instead of rereading? One day of cramming scores very differently from a week of spaced work, even at the same hour total.'
+          + '<br><br>Then bring the sorted exam to office hours, 30 minutes before class. That conversation gets you much further than "I studied but it did not work." '
+          + a('masteryOS', 'Mastery OS') + ' has a Gap Finder for rebuilding the weak spots you just found.';
+
+      case 'stillpass':
+        return '<p>Do the math before you decide anything. Feelings are terrible at this.</p>'
+          + '1. Open your ' + ilink(s.syllabus, 'syllabus') + ' and your Canvas gradebook side by side.'
+          + '<br>2. The syllabus gives each grade category and its weight. The gradebook gives your scores.'
+          + '<br>3. Work out what is already banked and what is still on the table. Exams run all the way to the end of this course, so more points are usually still available than the feeling suggests.'
+          + '<br><br>If the numbers look tight, message Dr. Rennie in the Canvas Inbox now, not at the end of the term. Early is when there are options.';
+
+      case 'policy':
+        return '<p>I do not want to guess about a deadline or a policy. A wrong answer here costs you points.</p>'
+          + 'Check your ' + ilink(s.syllabus, 'syllabus') + ' first. Late work, make-ups and absences are all covered in there.'
+          + '<br><br>If your situation is not covered, message Dr. Rennie in the Canvas Inbox with the assignment name and what happened. The earlier you ask, the more options there usually are.';
+
+      case 'catchup':
+        return '<p>Do not try to relive the class you missed. Rebuild it.</p>'
+          + '1. Open the ' + a('calendar', 'course calendar') + ' and find the day you missed. Its notes, video and worksheet are listed on it.'
+          + '<br>2. Work that day like pre-work, in order: organize the material into notes, study them, answer the questions, then watch the video.'
+          + '<br>3. Before your next class, test yourself on it cold, so the gap does not quietly turn into an exam question.'
+          + '<br><br>If you missed a TBL, a quiz or an exam, that part is a policy question, not a study question: check your ' + ilink(s.syllabus, 'syllabus') + ' and message Dr. Rennie.'
+          + (ctx.next ? '<br><br><b>Next class.</b> ' + esc(describeDay(ctx.next)) : '');
+
+      case 'time':
+        return '<p>Plan hours you will actually keep. An optimistic plan you cannot execute is the most expensive mistake of an exam week.</p>'
+          + 'Spread beats volume. The same six hours across five days will beat six hours the night before, every time, and short blocks of retrieval count double.'
+          + '<br><br>Pick what to study by weight times honesty. For each topic, rate yourself: could teach it, understand it, fuzzy, or missing. Big-on-the-exam topics you rated fuzzy or missing come first. Small topics you already know come last, even though they feel safer to study.'
+          + '<br><br>Then write the plan as things you can check off: specific, time-bound, measurable. Not "study more." More like "30 minutes of skull recall Tuesday before work." And pick one of them to do in the next 24 hours.'
+          + (ctx.nextExam ? '<br><br>' + examLine(ctx, ctx.nextExam) : '');
+
       case 'prework':
         return prework(ctx, wk);
 
@@ -376,7 +441,7 @@
           + '<br><br><b>Retrieve cold.</b> Blank paper, two minutes, write everything you know before you look at anything.'
           + '<br><b>Draw it.</b> If you cannot draw the structure from memory and label it, you do not know it yet.'
           + '<br><b>Space it.</b> Recall it today, again in two days, then further out.'
-          + '<br><br>When you get something wrong, name which kind of wrong it was: could not recall it, recalled it wrong, or knew it but could not apply it. Those three need different repairs.';
+          + '<br><br>When you get something wrong, name which kind of wrong it was: never studied it, studied it but never understood it, understood it but could not recall it, or knew it and lost it to misreading. Those four need different repairs. And rate yourself honestly per topic: could teach it, understand it, fuzzy, or missing. Study time belongs to fuzzy and missing.';
 
       case 'module': {
         var mods = ctx.moduleOf(wk);
@@ -541,6 +606,7 @@
     'When is my next exam?',
     'How does grading work?',
     'What should I do tonight?',
+    'I got my exam back',
     'Who do I contact?'
   ];
 
