@@ -510,6 +510,9 @@ html { scroll-behavior: smooth; }
   body { background: #FFFFFF; color: #0B1530; font-size: 12.3pt; line-height: 1.5; }
   .site-header, .hero-card, .band--light, .band--dark, .cta-section, .footer-section { padding-left: 24px; padding-right: 24px; }
   .progress-bar, .expand-btn, .reset-zone, .submit-zone, .skip-link, .hero-ctas, .cta-section { display: none !important; }
+  /* The site nav was printing on the back of a signed agreement. This is
+     a document a student submits, not a page they browse from. */
+  .footer-section { display: none !important; }
   .deadline-banner { background: #FFFFFF !important; color: #0B1530; border: 1.5px solid #8B3A2E; box-shadow: none; }
   .deadline-banner .deadline-label { color: #8B3A2E; }
   .deadline-banner .deadline-text { color: #0B1530; }
@@ -1251,10 +1254,7 @@ function setupReset() {
   var FRAME_ID = 'bio004-digital-device-policy-agreement';
   function sendHeight() {
     try {
-      var h = Math.max(
-        document.documentElement.scrollHeight,
-        document.body ? document.body.scrollHeight : 0
-      );
+      var h = (window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight);
       if (window.parent && window.parent !== window) {
         window.parent.postMessage({ type: 'resize', id: FRAME_ID, height: h }, '*');
       }
