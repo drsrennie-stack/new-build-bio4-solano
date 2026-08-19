@@ -352,7 +352,7 @@
           + '<br>3. Lab practical exams: 30% (5)'
           + '<br>4. Lab quizzes: 5%'
           + '<br>5. iChecks and tChecks: 5%'
-          + '<br><br>Up to 3% in Scholar Points for verified engagement hours plus a strong exam average. No exam counts above 102%. Full detail in your ' + ilink(s.syllabus, 'syllabus') + '.';
+          + '<br><br>Up to 3% in Scholar Points for verified engagement hours plus a strong exam average. No exam counts above 102%. Full detail in your ' + ilink(s.syllabus, 'syllabus') + '. To see where you stand from your own scores, use the ' + ilink('grade-calculator.html', 'grade calculator') + '.';
 
       case 'exams':
         return examLine(ctx, ctx.nextExam)
@@ -410,7 +410,7 @@
         return '<p>Do the math before you decide anything. Feelings are terrible at this.</p>'
           + '1. Open your ' + ilink(s.syllabus, 'syllabus') + ' and your Canvas gradebook side by side.'
           + '<br>2. The syllabus gives each grade category and its weight. The gradebook gives your scores.'
-          + '<br>3. Work out what is already banked and what is still on the table. Exams run all the way to the end of this course, so more points are usually still available than the feeling suggests.'
+          + '<br>3. Put your scores into the ' + ilink('grade-calculator.html', 'grade calculator') + '. It carries the real course weights, so it tells you what is banked, what is still on the table, and what you would need to average on the rest. Exams run all the way to the end of this course, so more points are usually still available than the feeling suggests.'
           + '<br><br>If the numbers look tight, message Dr. Rennie in the Canvas Inbox now, not at the end of the term. Early is when there are options.';
 
       case 'policy':
