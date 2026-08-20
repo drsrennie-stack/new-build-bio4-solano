@@ -1941,8 +1941,11 @@
       if(lines) lines.innerHTML = '';
       runWalkthrough(function(){});
     });
-    if(!ls(STORE_WT)){ runWalkthrough(start); }
-    else { start(); }
+    /* The day renders FIRST, the walkthrough sits over it. It used to
+       gate rendering, so a first-time student staring at "Loading your
+       day" was three Next clicks from the answer they came for. */
+    start();
+    if(!ls(STORE_WT)){ runWalkthrough(function(){}); }
   }
 
   /* ---------- Canvas height-sender ----------
@@ -1950,10 +1953,7 @@
      resizes whatever listener the Canvas shell happens to run. */
   var FRAME_ID = (new URLSearchParams(window.location.search)).get('id') || 'bio004-today';
   function postHeight(){
-    var h = Math.max(
-      document.body.scrollHeight, document.documentElement.scrollHeight,
-      document.body.offsetHeight, document.documentElement.offsetHeight
-    );
+    var h = (window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight);
     try{
       parent.postMessage({ frameId:FRAME_ID, id:FRAME_ID, type:'resize', height:h }, '*');
       parent.postMessage({ type:'iframeHeight', id:FRAME_ID, height:h }, '*');
