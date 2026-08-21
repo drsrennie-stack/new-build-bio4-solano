@@ -7,102 +7,88 @@
 <meta name="description" content="A simple list of BIO 004 course materials, week by week. Same materials as the main course site, plainer map.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=DM+Sans:wght@500;700&family=Lora:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
    QUICK ACCESS
-   One long, plain list of links. Deliberately simpler than the
-   main site: no tour, no coachmark, no cards that lift. For the
-   student who wants a table of contents, not an environment.
+   One long list of links in the course design system: navy and
+   terra on white cards over the off-white page, DM Sans eyebrow,
+   Plus Jakarta headings, Lora italic for instructions. Simpler
+   than the main site: no tour, no coachmark. For the student who
+   wants a table of contents, not an environment.
 
    NOTHING ON THIS PAGE IS TYPED IN BY HAND. The week sections
-   render at load time from session-links.js, the same file the
-   course calendar and the week pages read. Rename a file there
-   and this page updates with them. The calendar stays the only
-   source of dates and deadlines; this page names no dates.
+   render at load time from session-links.js and exam dates come
+   from schedule-fall2026.js, the same files the rest of the site
+   reads. Rename a file there and this page updates with it.
    ============================================================ */
   :root{
-    --navy:#0B1530; --ink:#1E3D4C; --line:#DDE2E6; --soft:#F4F6F7;
-    --paper:#FFFFFF; --accent:#7A2A22;
+    --qa-navy:#1E3D4C; --qa-navydeep:#142a36; --qa-tint:#EDF1F3;
+    --qa-gold:#B8924A; --qa-terra:#C2734D; --qa-terradark:#A0522D;
+    --qa-line:#DCE1E4; --qa-page:#FAFAF9; --qa-card:#FFFFFF;
     --f:'Plus Jakarta Sans',system-ui,sans-serif;
+    --fe:'DM Sans',system-ui,sans-serif;
+    --fl:'Lora',Georgia,serif;
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
   @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
   html,body{margin:0}
-  body{background:var(--paper);color:var(--navy);font-family:var(--f);line-height:1.6;font-size:16.5px}
+  body{background:var(--qa-page);color:var(--qa-navy);font-family:var(--f);line-height:1.6;font-size:16.5px}
   .skip{position:absolute;left:-9999px}
-  .skip:focus{left:12px;top:12px;background:#fff;padding:10px 14px;border-radius:6px;z-index:20;outline:3px solid var(--navy)}
+  .skip:focus{left:12px;top:12px;background:var(--qa-card);padding:10px 14px;border-radius:6px;z-index:20;outline:3px solid var(--qa-navy)}
   .wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px}
 
-  header.top h1{font-size:clamp(26px,5vw,36px);font-weight:800;letter-spacing:-.02em;margin:0;line-height:1.1}
-  .course-line{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--accent);margin:0 0 8px}
+  header.top h1{font-size:clamp(26px,5vw,36px);font-weight:800;letter-spacing:-.02em;
+    margin:0;line-height:1.1;color:var(--qa-navy)}
+  .course-line{font-family:var(--fe);font-size:12px;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--qa-terradark);margin:0 0 8px}
   .intro{margin:14px 0 0;max-width:62ch}
   .intro p{margin:0 0 10px}
+  .intro p:first-child{font-family:var(--fl);font-style:italic;font-size:17px}
 
-  .secline{font-size:14.5px;background:var(--soft);border:1px solid var(--line);
-    border-radius:10px;padding:10px 14px;margin:6px 0 0}
+  .secline{font-size:14.5px;background:var(--qa-card);border:1px solid var(--qa-line);
+    border-radius:10px;padding:10px 14px;margin:6px 0 0;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
   .secline b{font-weight:800}
   .secline button{font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;margin:2px 6px 2px 0;
-    padding:7px 12px;border-radius:8px;border:2px solid var(--line);background:#fff;color:var(--navy)}
-  .secline button:hover{border-color:var(--navy)}
-  .secline button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+    padding:7px 12px;border-radius:8px;border:1px solid var(--qa-navy);background:var(--qa-card);color:var(--qa-navy)}
+  .secline button:hover{border-color:var(--qa-gold);color:var(--qa-navydeep)}
+  .secline button:focus-visible{outline:3px solid var(--qa-gold);outline-offset:2px}
   .secline .chg{font-size:13px;margin-left:8px}
-  h2{font-size:20px;font-weight:800;letter-spacing:-.01em;margin:36px 0 12px}
+  h2{font-size:20px;font-weight:600;color:var(--qa-terradark);letter-spacing:-.01em;margin:36px 0 12px}
 
-  /* big obvious buttons */
-  .btns{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;padding:0;margin:0;list-style:none}
-  .btn{display:block;text-align:center;background:var(--navy);color:#fff;text-decoration:none;
-    font-weight:700;font-size:16px;padding:16px 14px;border-radius:12px;border:2px solid var(--navy)}
-  .btn:hover{background:#152647}
-  .btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
-  .btn small{display:block;font-weight:400;font-size:12.5px;opacity:.85;margin-top:2px}
-  .note-card{background:var(--soft);border:1px solid var(--line);border-radius:12px;
-    padding:14px 16px;font-size:14.5px;margin-top:12px}
-
-  /* if you feel lost */
-  .lost{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
-  .lost ol{margin:8px 0 0;padding-left:22px}
-  .lost li{margin:6px 0}
-  .lost a{color:var(--accent);font-weight:700}
-  .lost a:focus-visible{outline:3px solid var(--navy);outline-offset:2px}
-
-  /* jump to week */
-  .jump{display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:12px 0 0;list-style:none}
-  .jump a{display:block;min-width:52px;text-align:center;padding:10px 12px;border-radius:10px;
-    border:2px solid var(--line);color:var(--navy);text-decoration:none;font-weight:700;font-size:15px}
-  .jump a:hover{border-color:var(--navy)}
-  .jump a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-  .jump a.now{background:var(--navy);color:#fff;border-color:var(--navy)}
-
-  /* week sections */
-  .week{border-top:1px solid var(--line);padding:22px 0 6px;margin-top:26px}
-  .module-h{font-size:16px;font-weight:800;letter-spacing:.02em;color:var(--accent);
-    margin:40px 0 0;padding-top:24px;border-top:2px solid var(--navy)}
-  .module-h .module-t{font-weight:600;color:var(--ink)}
-  .week h4{font-size:19px;font-weight:800;margin:0}
-  .week .topic{font-size:15px;color:var(--ink);margin:4px 0 0}
-  .week .examnote{font-size:14.5px;font-weight:700;color:var(--accent);margin:8px 0 0}
+  /* module + week structure: white cards on the off-white page */
+  .module-h{font-size:17px;font-weight:600;letter-spacing:.02em;color:var(--qa-terradark);
+    margin:40px 0 0;padding-top:22px;border-top:1px solid var(--qa-terra)}
+  .module-h .module-t{font-weight:600;color:var(--qa-navy)}
+  .week{background:var(--qa-card);border:1px solid var(--qa-line);border-radius:14px;
+    padding:20px 22px 14px;margin-top:18px;box-shadow:0 1px 3px rgba(0,0,0,0.08);
+    transition:transform 200ms ease,box-shadow 200ms ease}
+  .week:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,0,0,0.10)}
+  @media (prefers-reduced-motion:reduce){ .week{transition:none} .week:hover{transform:none} }
+  .week h4{font-size:19px;font-weight:800;margin:0;color:var(--qa-navy)}
+  .week .topic{font-family:var(--fl);font-style:italic;font-size:15.5px;color:var(--qa-navy);margin:4px 0 0}
+  .week .examnote{font-size:14.5px;font-weight:700;color:var(--qa-terradark);margin:8px 0 0}
   .rows{list-style:none;margin:12px 0 0;padding:0}
   .rows li{display:grid;grid-template-columns:118px 1fr;gap:12px;align-items:center;
-    border-bottom:1px solid var(--line);padding:4px 0}
-  .rows li:first-child{border-top:1px solid var(--line)}
-  .rows .k{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
-    color:var(--ink)}
-  .rows a{display:block;padding:9px 6px;color:var(--navy);text-decoration:none;
-    font-weight:600;font-size:15.5px;border-radius:8px}
-  .rows a:hover{background:var(--soft)}
-  .rows a:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+    border-bottom:1px solid var(--qa-line);padding:4px 0}
+  .rows li:first-child{border-top:1px solid var(--qa-line)}
+  .rows li:last-child{border-bottom:0}
+  .rows .k{font-family:var(--fe);font-size:11.5px;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--qa-terradark)}
+  .rows a{display:block;padding:9px 6px;color:var(--qa-navy);text-decoration:none;
+    font-weight:600;font-size:15.5px;border-radius:8px;
+    border-left:2px solid transparent;transition:border-color 200ms ease}
+  .rows a:hover{color:var(--qa-navydeep);text-decoration:underline;border-left-color:var(--qa-gold)}
+  .rows a:focus-visible{outline:3px solid var(--qa-gold);outline-offset:1px}
   @media (max-width:520px){
     .rows li{grid-template-columns:1fr;gap:0;padding:8px 0}
     .rows a{padding:2px 0 4px}
   }
-  .totop{display:inline-block;margin:16px 0 4px;font-size:14px;color:var(--ink);font-weight:600}
-  .totop:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 
-  .fallback{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:20px}
-  footer.foot{border-top:1px solid var(--line);margin-top:40px;padding-top:16px;font-size:14px;color:var(--ink)}
+  .fallback{background:var(--qa-card);border:1px solid var(--qa-line);border-radius:12px;
+    padding:16px 18px;margin-top:20px;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+  footer.foot{border-top:1px solid var(--qa-line);margin-top:40px;padding-top:16px;font-size:14px;color:var(--qa-navy)}
 </style>
 </head>
 <body>
