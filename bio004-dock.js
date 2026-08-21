@@ -904,6 +904,82 @@
   }
 
   /* ============================================================
+     THE BACK BUTTON
+
+     Students land on a worksheet from the calendar, from Quick
+     Access, from a Hootie answer, and then have to retrace their
+     steps by hand. One floating Back pill on every page fixes it.
+
+     Rules:
+     - Not on welcome or index: that IS the starting point.
+     - Not inside an iframe (Canvas): back there would move the
+       page around the iframe, not the student.
+     - Fresh tab with no history (a scanned QR, an emailed link):
+       the button says Course home and goes to welcome instead,
+       because history.back() would do nothing.
+     - A page can opt out with data-no-back on <body>.
+     Sits above the Course tools launcher; without the dock (the
+     ?open=1 public view) it drops to the corner.
+     ============================================================ */
+  (function backButton() {
+    function inject() {
+      try {
+        if (window.parent && window.parent !== window) return;
+        if (document.body.hasAttribute('data-no-back')) return;
+        if (/(^|\/)(welcome\.html|index\.html)?$/.test(window.location.pathname)) return;
+        if (document.querySelector('.bd-back')) return;
+
+        var fresh = false;
+        try { fresh = window.history.length <= 1; } catch (e) {}
+
+        var st = document.createElement('style');
+        st.textContent =
+          '.bd-back{position:fixed;left:18px;bottom:' + (window.BIO004_OPEN_VIEW ? '18px' : '76px') + ';z-index:2147482999;' +
+          'display:inline-flex;align-items:center;gap:8px;background:#fff;color:#0B1530;' +
+          'border:2px solid #0B1530;border-radius:999px;padding:9px 16px 9px 12px;cursor:pointer;text-decoration:none;' +
+          'font:800 13.5px/1 "Plus Jakarta Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;' +
+          'box-shadow:0 3px 10px -4px rgba(11,21,48,.4);transition:transform .18s ease,box-shadow .18s ease}' +
+          '.bd-back:hover{transform:translateY(-2px);box-shadow:0 10px 24px -10px rgba(11,21,48,.6);border-color:#C9A14A}' +
+          '.bd-back:focus-visible{outline:3px solid #C9A14A;outline-offset:3px}' +
+          '.bd-back svg{width:15px;height:15px}' +
+          '@media(max-width:520px){.bd-back .bb-t{display:none}.bd-back{padding:11px}}' +
+          '@media(prefers-reduced-motion:reduce){.bd-back{transition:none}.bd-back:hover{transform:none}}' +
+          '@media print{.bd-back{display:none !important}}';
+        document.head.appendChild(st);
+
+        var arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>';
+        var el;
+        if (fresh) {
+          el = document.createElement('a');
+          el.href = 'welcome.html';
+          el.target = '_top';
+          el.innerHTML = arrow + '<span class="bb-t">Course home</span>';
+          el.setAttribute('aria-label', 'Go to the course home page');
+        } else {
+          el = document.createElement('button');
+          el.type = 'button';
+          el.innerHTML = arrow + '<span class="bb-t">Back</span>';
+          el.setAttribute('aria-label', 'Go back to the previous page');
+          /* history.length lies in some browsers. If back() moved
+             nothing after half a second, go to the course home so the
+             button is never dead. */
+          el.addEventListener('click', function () {
+            var before = window.location.href;
+            window.history.back();
+            setTimeout(function () {
+              if (window.location.href === before) window.location.href = 'welcome.html';
+            }, 500);
+          });
+        }
+        el.className = 'bd-back';
+        document.body.appendChild(el);
+      } catch (e) {}
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', inject);
+    else inject();
+  })();
+
+  /* ============================================================
      THE READING FORMAT
 
      bio004-reading-mode.js turns a long page into its own sections

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Course Competencies &middot; BIO 004 Human Anatomy &middot; Fall 2026</title>
+<meta name="description" content="Every competency BIO 004 assesses, as an online checklist. Same content as the Competency Packet PDF, rendered from the same data Mastery OS reads.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   COURSE COMPETENCIES, ONLINE
+   The Competency Packet PDF, readable in the browser. Renders
+   at load time from competenciesfall2026.js, the same file
+   Mastery OS reads, so this page and the exams can never drift
+   apart. Checkboxes persist in this browser only.
+   Site brand: navy #08101F, maroon #7A2A22, gold #DCB45C,
+   white cards on off-white. No serif, no italics.
+   ============================================================ */
+  :root{
+    --cp-ink:#08101F; --cp-maroon:#7A2A22; --cp-maroondark:#5E201A;
+    --cp-gold:#DCB45C; --cp-straw:#E8CE85;
+    --cp-line:#DCE1E4; --cp-page:#FAFAF9; --cp-card:#FFFFFF;
+    --f:'Plus Jakarta Sans',system-ui,sans-serif;
+    --fe:'DM Sans',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+  html,body{margin:0}
+  body{background:var(--cp-page);color:var(--cp-ink);font-family:var(--f);line-height:1.55;font-size:16.5px}
+  .skip{position:absolute;left:-9999px}
+  .skip:focus{left:12px;top:12px;background:var(--cp-card);padding:10px 14px;border-radius:6px;z-index:20;outline:3px solid var(--cp-ink)}
+  a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--cp-maroon);outline-offset:2px}
+  .wrap{max-width:860px;margin:0 auto;padding:28px 20px 80px}
+
+  .eyebrow{font-family:var(--fe);font-size:12px;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--cp-maroon);margin:0 0 8px}
+  h1{font-size:clamp(26px,5vw,38px);font-weight:800;letter-spacing:-.02em;margin:0;line-height:1.1}
+  .lede{max-width:66ch;margin:14px 0 0}
+  .lede b{font-weight:800}
+
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0 0}
+  .abtn{display:inline-block;text-decoration:none;font-weight:700;font-size:14.5px;
+    padding:10px 16px;border-radius:10px}
+  .abtn.primary{background:var(--cp-maroon);color:#fff}
+  .abtn.primary:hover{background:var(--cp-maroondark)}
+  .abtn.ghost{color:var(--cp-ink);background:var(--cp-card);border:2px solid var(--cp-gold)}
+  .abtn.ghost:hover{background:#F7EEDA}
+
+  .controls{background:var(--cp-card);border:1px solid var(--cp-line);border-radius:12px;
+    padding:12px 16px;margin:22px 0 0;box-shadow:0 1px 3px rgba(11,21,48,0.10)}
+  .controls .lbl{font-family:var(--fe);font-size:11.5px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--cp-maroon);margin:0 8px 0 0}
+  .controls button{font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;margin:3px 6px 3px 0;
+    padding:7px 12px;border-radius:8px;border:1px solid var(--cp-ink);background:var(--cp-card);color:var(--cp-ink)}
+  .controls button[aria-pressed="true"]{background:var(--cp-ink);color:#fff}
+  .controls button:hover{border-color:var(--cp-gold)}
+  .count{font-size:13.5px;margin:8px 0 0;color:var(--cp-ink)}
+
+  .module-h{font-size:18px;font-weight:800;color:var(--cp-maroon);
+    margin:38px 0 0;padding-top:22px;border-top:1px solid var(--cp-gold)}
+  .module-h .mt{font-weight:600;color:var(--cp-ink)}
+  h3.sys{font-family:var(--fe);font-size:12.5px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--cp-ink);margin:22px 0 0}
+
+  .comp{background:var(--cp-card);border:1px solid var(--cp-line);border-radius:12px;
+    padding:12px 14px;margin-top:10px;box-shadow:0 1px 3px rgba(11,21,48,0.10);
+    display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start}
+  .comp.done{border-color:var(--cp-gold);background:#FDFBF5}
+  .comp input[type="checkbox"]{width:22px;height:22px;margin:3px 0 0;accent-color:var(--cp-maroon);cursor:pointer}
+  .comp label{cursor:pointer}
+  .cname{font-weight:800;font-size:15.5px}
+  .ccan{font-size:14.5px;margin:3px 0 0}
+  .ctags{margin:7px 0 0;display:flex;flex-wrap:wrap;gap:6px}
+  .tag{font-family:var(--fe);font-size:10.5px;font-weight:700;letter-spacing:.06em;
+    text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid var(--cp-line);color:var(--cp-ink)}
+  .tag.core{border-color:var(--cp-maroon);color:var(--cp-maroon)}
+  .tag.high{border-color:var(--cp-gold);background:#F7EEDA;color:#5E4407}
+  .tag.support{color:#4A5560}
+
+  .protocol-band{margin:26px 0 0;background:var(--cp-ink);color:#F4EFE8;border-radius:12px;
+    padding:16px 18px;font-size:15px}
+  .protocol-band b{color:var(--cp-straw)}
+  .protocol-band a{color:#fff;font-weight:700}
+
+  .fallback{background:var(--cp-card);border:1px solid var(--cp-line);border-radius:12px;
+    padding:16px 18px;margin-top:20px;box-shadow:0 1px 3px rgba(11,21,48,0.10)}
+  footer.foot{border-top:1px solid var(--cp-line);margin-top:44px;padding-top:16px;font-size:14px}
+
+  @media print{
+    .controls,.actions,.protocol-band{display:none}
+    .comp{box-shadow:none;break-inside:avoid}
+    body{background:#fff}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#list">Skip to the competency list</a>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano Community College &middot; Fall 2026</p>
+    <h1>Course Competencies</h1>
+    <p class="lede">Everything this course asks you to be able to do, as one checklist.
+    <b>When you can do the thing without looking, that one is finished.</b> Tick it here and
+    this page remembers, on this device. These are what Mastery OS tracks and what the five
+    lecture exams and five lab practicals are written from. Nothing is assessed that is not
+    on this list.</p>
+    <div class="actions">
+      <a class="abtn primary" href="bio004-study-protocol.html" target="_top">How do I study these? Open the Study Protocol</a>
+      <a class="abtn ghost" href="BIO004-Fall2026-Competency-Packet.pdf" target="_blank" rel="noopener">Download the PDF version &#8599;</a>
+    </div>
+  </header>
+
+  <div class="controls" role="group" aria-label="Filter the list">
+    <span class="lbl">Show</span>
+    <button type="button" data-yf="all" aria-pressed="true">Everything</button>
+    <button type="button" data-yf="core" aria-pressed="false">Core only</button>
+    <button type="button" data-yf="high" aria-pressed="false">High yield only</button>
+    <button type="button" data-yf="support" aria-pressed="false">Support only</button>
+    <button type="button" id="hidedone" aria-pressed="false">Hide the ones I checked</button>
+    <p class="count" id="count" aria-live="polite"></p>
+  </div>
+
+  <div id="list">
+    <div class="fallback" id="fallback">
+      <b>The list is loading.</b> If it does not appear after a refresh, the
+      <a href="BIO004-Fall2026-Competency-Packet.pdf" target="_blank" rel="noopener">PDF version</a>
+      has the same content.
+    </div>
+  </div>
+
+  <div class="protocol-band">
+    <b>Checked some boxes and still not sure how to study the rest?</b> The
+    <a href="bio004-study-protocol.html" target="_top">Study Protocol</a> is a flow chart that turns
+    this list into a week of work: pick the high-yield items, build study boxes, recall them from
+    memory, then drill the cards. Start at the top and do one box at a time.
+  </div>
+
+  <footer class="foot">
+    <p>BIO 004 Human Anatomy &middot; Fall 2026 &middot; Solano Community College<br>
+    Dr. Sharilyn Rennie</p>
+  </footer>
+</div>
+
+<script src="schedule-fall2026.js"></script>
+<script src="competenciesfall2026.js"></script>
+<script>
+(function () {
+  'use strict';
+  var C = window.BIO004_COMPETENCIES;
+  var MODS = window.BIO004_MODULES || [];
+  if (!C || !C.length) return; /* fallback card stays */
+
+  var STORE = 'bio004-comp-checks';
+  function loadChecks() { try { return JSON.parse(localStorage.getItem(STORE)) || {}; } catch (e) { return {}; } }
+  function saveChecks(ch) { try { localStorage.setItem(STORE, JSON.stringify(ch)); } catch (e) {} }
+  var checks = loadChecks();
+
+  /* Boundary weeks belong to the LATER module, same rule as everywhere. */
+  var wkModule = {};
+  MODS.forEach(function (m) { (m.weeks || []).forEach(function (w) { wkModule[w] = m; }); });
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  var YIELD_TAG = { core: ['core','Core'], high: ['high','High yield'], support: ['support','Support'] };
+
+  /* Group: module -> system, in teaching (week, then file) order. */
+  var lastMod = null, lastSys = null, html = '', sysN = 0;
+  var sorted = C.slice().sort(function (a, b) { return a.week - b.week || C.indexOf(a) - C.indexOf(b); });
+  sorted.forEach(function (c) {
+    var m = wkModule[c.week];
+    if (m && m.n !== lastMod) {
+      lastMod = m.n; lastSys = null;
+      html += '<h2 class="module-h" id="module-' + m.n + '" data-mod="' + m.n + '">Module ' + m.n
+        + ' <span class="mt">&middot; ' + esc(m.title) + '</span></h2>';
+    }
+    if (c.system !== lastSys) {
+      lastSys = c.system; sysN++;
+      html += '<h3 class="sys" data-sys="' + sysN + '">' + esc(c.system) + '</h3>';
+    }
+    var yt = YIELD_TAG[c.yield] || ['support', c.yield];
+    var done = checks[c.id] ? ' done' : '';
+    html += '<div class="comp' + done + '" data-yield="' + esc(c.yield) + '" data-id="' + esc(c.id) + '"'
+      + ' data-mod="' + (m ? m.n : '') + '" data-sys="' + sysN + '">'
+      + '<input type="checkbox" id="ck-' + esc(c.id) + '"' + (checks[c.id] ? ' checked' : '')
+      + ' aria-describedby="cn-' + esc(c.id) + '">'
+      + '<label for="ck-' + esc(c.id) + '">'
+      + '<span class="cname" id="cn-' + esc(c.id) + '">' + esc(c.name) + '</span>'
+      + '<span class="ccan" style="display:block">' + esc(c.can) + '</span>'
+      + '<span class="ctags">'
+      + '<span class="tag ' + yt[0] + '">' + yt[1] + '</span>'
+      + '<span class="tag">DOK ' + c.dok + '</span>'
+      + (c.facets || []).map(function (f) { return '<span class="tag">' + esc(f) + '</span>'; }).join('')
+      + '</span></label></div>';
+  });
+  document.getElementById('list').innerHTML = html;
+
+  /* filters */
+  var yf = 'all', hideDone = false;
+  function apply() {
+    var shown = 0, doneN = 0;
+    document.querySelectorAll('.comp').forEach(function (el) {
+      var isDone = el.classList.contains('done');
+      if (isDone) doneN++;
+      var ok = (yf === 'all' || el.getAttribute('data-yield') === yf) && !(hideDone && isDone);
+      el.style.display = ok ? '' : 'none';
+      if (ok) shown++;
+    });
+    /* Hide headings whose whole group is hidden. Matched by data
+       attribute, not DOM position, because reading mode rewraps the
+       page into its own sections after load. */
+    document.querySelectorAll('h3.sys').forEach(function (h) {
+      var any = document.querySelector('.comp[data-sys="' + h.getAttribute('data-sys') + '"]:not([style*="none"])');
+      h.style.display = any ? '' : 'none';
+    });
+    document.querySelectorAll('h2.module-h').forEach(function (h) {
+      var any = document.querySelector('.comp[data-mod="' + h.getAttribute('data-mod') + '"]:not([style*="none"])');
+      h.style.display = any ? '' : 'none';
+    });
+    document.getElementById('count').textContent =
+      shown + ' of ' + C.length + ' competencies shown. ' + doneN + ' checked off.';
+  }
+  document.querySelectorAll('[data-yf]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      yf = b.getAttribute('data-yf');
+      document.querySelectorAll('[data-yf]').forEach(function (x) {
+        x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+      });
+      apply();
+    });
+  });
+  document.getElementById('hidedone').addEventListener('click', function () {
+    hideDone = !hideDone;
+    this.setAttribute('aria-pressed', hideDone ? 'true' : 'false');
+    apply();
+  });
+  document.getElementById('list').addEventListener('change', function (e) {
+    if (e.target.type !== 'checkbox') return;
+    var comp = e.target.closest('.comp');
+    var id = comp.getAttribute('data-id');
+    if (e.target.checked) { checks[id] = 1; comp.classList.add('done'); }
+    else { delete checks[id]; comp.classList.remove('done'); }
+    saveChecks(checks);
+    apply();
+  });
+  apply();
+
+  /* height sender for embeds */
+  var FRAME_ID = 'bio004-competency-packet';
+  function sendHeight() {
+    var h = (window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight);
+    if (window.parent && window.parent !== window) parent.postMessage({type: 'resize', id: FRAME_ID, height: h}, '*');
+  }
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+  if (window.ResizeObserver) new ResizeObserver(sendHeight).observe(document.body);
+  [200, 600, 1200].forEach(function (t) { setTimeout(sendHeight, t); });
+})();
+</script>
+<script src="bio004-dock.js"></script>
+</body>
+</html>

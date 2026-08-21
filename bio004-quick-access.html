@@ -262,10 +262,10 @@
      Workbooks come from session-links.js; the last three are the same
      tools each week, listed per week anyway so a student on week 9
      never has to scroll to find them. */
-  function weekRows(wd) {
+  function weekRows(wd, modN) {
     var rows = [];
-    rows.push({k:'Competencies', t:'Competency Packet · the full checklist (PDF)',
-               u:'BIO004-Fall2026-Competency-Packet.pdf', ext:true});
+    rows.push({k:'Competencies', t:'Course competencies · the full checklist',
+               u:'bio004-competency-packet.html' + (modN ? '#module-' + modN : '')});
     /* Every link names its material in full, so "Cell Anatomy notes" and
        "Cell Anatomy pre-work sheet" read apart even with the label ignored. */
     Object.keys(wd.notes).forEach(function (u) { rows.push({k:'Notes', t:wd.notes[u] + ' notes', u:u}); });
@@ -308,7 +308,7 @@
               : ' is this week. Pick your class above to see your date.') + '</p>';
     }
     out += '<ul class="rows">';
-    weekRows(wd).forEach(function (r) {
+    weekRows(wd, m ? m.n : null).forEach(function (r) {
       out += '<li><span class="k">' + esc(r.k) + '</span>'
         + '<a href="' + esc(r.u) + '"'
         + (r.ext ? ' target="_blank" rel="noopener"' : ' target="_top"')
