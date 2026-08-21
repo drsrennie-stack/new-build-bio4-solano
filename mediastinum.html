@@ -1901,10 +1901,7 @@ initCanvas('canvas4', 'zone4-wrap');
 (function () {
   var FRAME_ID = (document.body && document.body.dataset && document.body.dataset.frameId) || 'mediastinum-lecture';
   function sendHeight() {
-    var h = Math.max(
-      document.documentElement.scrollHeight,
-      document.body ? document.body.scrollHeight : 0
-    );
+    var h = (window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight);
     try { parent.postMessage({ type: 'resize', id: FRAME_ID, height: h }, '*'); } catch (_) {}
   }
   window.addEventListener('load', sendHeight);
