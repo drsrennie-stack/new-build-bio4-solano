@@ -605,10 +605,7 @@ function setupResetButton() {
 const FRAME_ID = 'bio004-how-clues-work';
 function sendHeight() {
   try {
-    const h = Math.max(
-      document.documentElement.scrollHeight,
-      document.body ? document.body.scrollHeight : 0
-    );
+    const h = (window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight);
     if (window.parent && window.parent !== window) {
       window.parent.postMessage({ type: 'resize', id: FRAME_ID, height: h }, '*');
     }

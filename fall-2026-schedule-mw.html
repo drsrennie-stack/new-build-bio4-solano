@@ -405,7 +405,7 @@ footer.site strong{color:var(--ink-soft)}
   document.querySelectorAll("[data-track]").forEach(function(b){b.addEventListener("click",function(){state.track=b.getAttribute("data-track");render();});});
 
   /* iframe height-sender */
-  function sendHeight(){var h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);try{window.parent.postMessage({id:"mastery-os-schedule",frameId:"mastery-os-schedule",type:"resize",height:h},"*");}catch(e){}}
+  function sendHeight(){var h=(window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight);try{window.parent.postMessage({id:"mastery-os-schedule",frameId:"mastery-os-schedule",type:"resize",height:h},"*");}catch(e){}}
   window.addEventListener("load",sendHeight);window.addEventListener("resize",sendHeight);
   if(window.ResizeObserver){try{new ResizeObserver(sendHeight).observe(document.body);}catch(e){}}
   window.setTimeout(sendHeight,500);

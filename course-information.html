@@ -423,10 +423,7 @@
   (function () {
     var FRAME_ID = 'bio004-course-information';
     function sendHeight() {
-      var h = Math.max(
-        document.documentElement.scrollHeight,
-        document.body ? document.body.scrollHeight : 0
-      );
+      var h = (window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight);
       parent.postMessage({ type: 'resize', id: FRAME_ID, height: h }, '*');
     }
     window.addEventListener('load', sendHeight);

@@ -120,8 +120,6 @@ var GROUPS = [
     { name: 'Team Formation Plan', sub: 'methods + survey', href: 'team-formation-plan.html', icon: 'sheet', color: 'teal' },
     { name: 'TBL Teams', sub: 'rosters &amp; parks', href: 'tbl-team.html', icon: 'flag', color: 'terra' },
     { name: 'Charter Worksheet', sub: 'print for day one', href: 'bio004-team-charter-worksheet.html', icon: 'sheet', color: 'gold' },
-    { name: 'Slide Deck Standards', sub: 'how to build a deck', href: 'slide-deck-standards.html', icon: 'sheet', color: 'gold' },
-    { name: 'Slide Template', sub: 'copy to start a deck', href: 'slides-template.html', icon: 'slides', color: 'teal' },
     { name: 'Section Chooser', sub: 'index.html', href: 'index.html', icon: 'switch', color: 'light' },
   ]},
 ];
@@ -158,7 +156,7 @@ function render(){
     var h = document.createElement('div'); h.className = 'gl'; h.innerHTML = g.label; d.appendChild(h);
     var grid = document.createElement('div'); grid.className = 'grid';
     g.apps.forEach(function(a){
-      var t = document.createElement('a'); t.className = 'tile'; t.target = '_top';
+      var t = document.createElement('a'); t.className = 'tile';
       t.href = (a.href === 'SECTION') ? SECTION_PAGE[sec.value] : a.href;
       t.innerHTML =
         '<span class="icon ic-' + a.color + '"><svg viewBox="0 0 32 32" stroke="currentColor">' + ICONS[a.icon] + '</svg></span>' +
@@ -180,15 +178,6 @@ var d = new Date();
 document.getElementById('today').textContent = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
 
 render();
-
-/* iframe height-sender, same protocol as the other course pages */
-(function(){
-  var frameId = (new URLSearchParams(window.location.search)).get('frameId') || 'bio004-faculty';
-  function postHeight(){ try{ window.parent.postMessage({frameId:frameId, height:document.documentElement.scrollHeight, type:'resize'}, '*'); }catch(e){} }
-  window.addEventListener('load', postHeight); window.addEventListener('resize', postHeight);
-  if (window.ResizeObserver) new ResizeObserver(postHeight).observe(document.body);
-  setTimeout(postHeight, 300);
-})();
 </script>
 </body>
 </html>
