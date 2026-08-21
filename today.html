@@ -154,6 +154,25 @@
   .ds-wrap[open] > summary::after{content:'\25B4'}
   .ds-wrap > summary:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
   .ds-wrap .daystrip{margin-top:6px}
+  .rhythm{display:flex;align-items:stretch;gap:8px;margin:18px 0 4px}
+  .rh-box{flex:1;display:flex;flex-direction:column;gap:2px;align-items:center;text-align:center;
+    border:2px solid var(--line);border-radius:13px;padding:10px 8px;background:#fff;color:#3F4C57}
+  .rh-box.now{opacity:1;border-color:var(--gold);background:var(--navy);color:#fff;
+    box-shadow:0 8px 18px -12px rgba(8,16,31,.4)}
+  .rh-n{font-family:var(--eb,inherit);font-size:10px;font-weight:800;letter-spacing:.1em;
+    color:var(--terra-dark);background:rgba(122,42,34,.08);border-radius:999px;padding:2px 9px}
+  .rh-box.now .rh-n{color:var(--navy);background:var(--gold)}
+  .rh-name{font-weight:800;font-size:14.5px;letter-spacing:-.01em}
+  .rh-when{font-size:11px;color:#535F6B;line-height:1.3}
+  .rh-box.now .rh-when{color:#CBD5DE}
+  .rh-arrow{align-self:center;color:var(--terra-dark);font-weight:800}
+  .rh-note{font-size:13px;color:var(--ink-mid);margin:6px 0 0}
+  .rh-note[hidden]{display:none}
+  @media (max-width:560px){
+    .rhythm{flex-direction:column;gap:6px}
+    .rh-arrow{transform:rotate(90deg)}
+    .rh-box{flex-direction:row;justify-content:flex-start;gap:10px;text-align:left;padding:9px 12px}
+  }
   .headline-card[hidden]{display:none}
   .headline-card{
     background:var(--white);border:1px solid var(--line);
@@ -567,6 +586,31 @@
 
   <p class="sr-only" role="status" aria-live="polite" id="announce"></p>
 
+  <!-- The rhythm bar. Every class day runs the same three-beat cycle, and
+       this page only ever showed one beat at a time, so students never saw
+       the pattern. The bar is always the same three boxes in the same
+       order; the lit one is where they are right now. -->
+  <div class="rhythm" id="rhythm" aria-label="The class rhythm: pre-work the night before, class, then after class">
+    <div class="rh-box" data-ph="pre">
+      <span class="rh-n">1</span>
+      <span class="rh-name">Pre-work</span>
+      <span class="rh-when" id="rh-when-pre">the night before class</span>
+    </div>
+    <span class="rh-arrow" aria-hidden="true">&rarr;</span>
+    <div class="rh-box" data-ph="class">
+      <span class="rh-n">2</span>
+      <span class="rh-name">Class</span>
+      <span class="rh-when" id="rh-when-class"></span>
+    </div>
+    <span class="rh-arrow" aria-hidden="true">&rarr;</span>
+    <div class="rh-box" data-ph="after">
+      <span class="rh-n">3</span>
+      <span class="rh-name">After class</span>
+      <span class="rh-when" id="rh-when-after">that evening, short</span>
+    </div>
+  </div>
+  <p class="rh-note" id="rh-note" hidden></p>
+
   <ol class="steps" id="steps"></ol>
 
   <div class="optional" id="optional" hidden></div>
@@ -770,7 +814,16 @@
   var doneMap = {};
   try{ doneMap = JSON.parse(ls(STORE_STEPS) || '{}') || {}; }catch(e){ doneMap = {}; }
 
-  function doneKey(targetIso, idx){ return targetIso + ':' + idx; }
+  /* The phase is part of the key. Without it, the class-day steps and the
+     after-class steps for the same date shared keys (2026-08-19:0 was both
+     "brain dump" and "Mastery OS cards"), so a student who ticked steps
+     during class opened the page that evening to a pre-ticked list and
+     "All done. Close the laptop." The night's work dismissed itself.
+     Old-format ticks from the first three days are dropped on purpose:
+     wrongly-ticked evenings are exactly what they contain. */
+  function doneKey(targetIso, idx){
+    return targetIso + ':' + (PLAN && PLAN.phase ? PLAN.phase : 'x') + ':' + idx;
+  }
   function isDone(targetIso, idx){ return !!doneMap[doneKey(targetIso, idx)]; }
   function setDone(targetIso, idx, val){
     var k = doneKey(targetIso, idx);
@@ -890,7 +943,7 @@
     if(TODAY_ISO < termStart && daysBetween(TODAY, parseIso(termStart)) > 1){
       var d = daysBetween(TODAY, parseIso(termStart));
       var first = findDay(track, termStart) || nextClassDay(track, '2026-08-16');
-      return { heroH1:'Not yet. <span class="a">Soon.</span>',
+      return { phase:'between', heroH1:'Not yet. <span class="a">Soon.</span>',
         heroSub:'The term starts ' + longDate(parseIso(termStart)) + '. Here is what to do before then.',
         kicker: d === 1 ? 'Tomorrow' : 'In ' + d + ' days',
         title:'Get set up before day one',
@@ -902,7 +955,7 @@
     /* AFTER THE LAST DAY */
     var lastDay = sessionsFor(track).slice(-1)[0];
     if(lastDay && TODAY_ISO > lastDay.date){
-      return { heroH1:'That is the <span class="a">whole term.</span>',
+      return { phase:'between', heroH1:'That is the <span class="a">whole term.</span>',
         heroSub:'Every class day is behind you.', kicker:'Done',
         title:'The course is finished',
         body:'Your grade is in Canvas. The notes and the atlas stay up if you are heading into the next course.',
@@ -913,7 +966,7 @@
     if(inClassNow){
       if(today.kind === 'exam'){
         var ex = nextExam();
-        return { heroH1:'Exam day.',
+        return { phase:'class', heroH1:'Exam day.',
           heroSub:longDate(TODAY) + '. Both parts today. Doors lock when each one starts.',
           kicker:'Today', title:'Lab practical, then the lecture exam',
           body:'Pen only, not pencil. Spelling counts on the practical. Nothing new goes in today, so read your own pre-work sheets rather than starting anything fresh.',
@@ -921,13 +974,13 @@
           foot:'Rebuttals happen at the next class meeting, so keep your questions.' };
       }
       if(isTBLDay(today)){
-        return { heroH1:'TBL <span class="a">today.</span>',
+        return { phase:'class', heroH1:'TBL <span class="a">today.</span>',
           heroSub:longDate(TODAY) + '. ' + (tblName(today) || 'Team-Based Learning') + '.',
           kicker:'Today', title:'Readiness first, then the application',
           body:'You take the readiness test alone, then again with your team, then the whole room works the same problem at the same time. Come with the pre-work done, there is no catching up inside a TBL.',
           target:TODAY_ISO, steps:tblDaySteps(today), timetabled:true, foot:eveningFoot(track) };
       }
-      return { heroH1:'Class <span class="a">today.</span>',
+      return { phase:'class', heroH1:'Class <span class="a">today.</span>',
         heroSub:longDate(TODAY) + '. Here is the order it runs in.',
         kicker:'Today', title:'Bring your written pre-work',
         body:'Class opens with a brain dump on the pre-work you did last night. That one cannot be made up if you arrive without it.',
@@ -945,7 +998,7 @@
     if(toExam === 3){
       var steps = examPlanSteps(ex3);
       if(preworkTonight) steps = steps.concat(preworkSteps(next));
-      return { heroH1:'Exam 4 <span class="a">in three days.</span>'.replace('4', ex3.n),
+      return { phase:'between', heroH1:'Exam 4 <span class="a">in three days.</span>'.replace('4', ex3.n),
         heroSub:'Exam ' + ex3.n + ' is ' + longDate(parseIso(ex3.date)) + '. Tonight you find the gaps and plan the three days.',
         kicker:'Three days out', title:'Find the gaps before you study anything',
         body:'Studying what you already know feels good and changes nothing. Run both gap finders first, then the plan writes itself around what they surface.',
@@ -960,7 +1013,7 @@
     if(isClassToday && today.kind === 'exam'){
       var sat = nextExamJustSat();
       if(!next){
-        return { heroH1:'That was the <span class="a">last one.</span>',
+        return { phase:'after', heroH1:'That was the <span class="a">last one.</span>',
           heroSub:(sat ? 'Exam ' + sat.n + ' is behind you, and so is the term.' : 'The term is behind you.'),
           kicker:'Tonight', title:'Nothing is due, tonight or after',
           body:'Close the laptop. The notes and the atlas stay up if you are heading into the next course.',
@@ -968,7 +1021,7 @@
       }
       var gapAfter = daysBetween(TODAY, parseIso(next.date));
       return {
-        heroH1:'You earned the <span class="a">night off.</span>',
+        phase:'after', heroH1:'You earned the <span class="a">night off.</span>',
         heroSub:(sat ? 'Exam ' + sat.n + ' is behind you. ' : '') +
                 'Next class is ' + longDate(parseIso(next.date)) +
                 (gapAfter > 1 ? ', ' + gapAfter + ' days away.' : '.'),
@@ -982,7 +1035,7 @@
     }
 
     if(!next && !(isClassToday && today.kind === 'exam')){
-      return { heroH1:'No class today.', heroSub:'And no class days left on the schedule.',
+      return { phase:'between', heroH1:'No class today.', heroSub:'And no class days left on the schedule.',
         kicker:'Nothing due', title:'Nothing scheduled', body:'',
         target:TODAY_ISO, steps:[], foot:'' };
     }
@@ -993,13 +1046,13 @@
         heroSub:'Class is ' + longDate(parseIso(next.date)) + '. Four things, in this order.',
         kicker:'Tonight', title:'Sheet, video, lab structures, then recall',
         body:'The order is the whole point. The sheet finds out what you do not know, the video fills it in, the structures get your eyes on lab before you walk in, and the recall makes tomorrow morning\'s brain dump something you can actually do.',
-        target:next.date, steps:preworkSteps(next),
+        target:next.date, steps:preworkSteps(next), phase:'pre',
         foot:'Bring the written sheet. Class opens with a brain dump on it.' };
     }
 
     /* AFTER A CLASS DAY. The evening of a day you were in class. */
     if(isClassToday){
-      return { heroH1:'After class.',
+      return { phase:'after', heroH1:'After class.',
         heroSub:'Next class is ' + longDate(parseIso(next.date)) + '. Tonight is consolidation, not new intake.',
         kicker:'Tonight', title:'Lock in what you sat through today',
         body:'Two passes, one for the lecture material and one for lab. Short beats long here.',
@@ -1008,7 +1061,7 @@
     }
 
     /* NON-CLASS DAY. */
-    return { heroH1:'No class today.',
+    return { phase:'between', heroH1:'No class today.',
       heroSub:'Next class is ' + longDate(parseIso(next.date)) + ', in ' + gap + ' days.',
       kicker:'Today', title:'Retrieval day',
       body:'This is the gap the course is designed around. Rereading feels productive and does almost nothing. Getting it back out is what moves it.',
@@ -1020,7 +1073,7 @@
   function buildPreworkPlan(dateIso){
     var track = SEC_META[secKey].track;
     var day = findDay(track, dateIso);
-    return { heroH1:'Getting <span class="a">ahead.</span>',
+    return { phase:'pre', heroH1:'Getting <span class="a">ahead.</span>',
       heroSub:'Pre-work for ' + longDate(parseIso(dateIso)) + '. Nothing here is due tonight.',
       kicker:'Optional', title:'Sheet, video, lab structures, then recall',
       body:'You do not have to do this tonight. If you would rather stop, stop. It will be here.',
@@ -1334,6 +1387,37 @@
     } else { totEl.hidden = true; }
     document.getElementById('hero-sub').textContent =
       PLAN.heroSub + (totLine ? '  ' + totLine : '');
+
+    /* Light the rhythm bar. 'between' lights nothing and explains itself. */
+    (function(){
+      var track2 = SEC_META[secKey].track;
+      var nx2 = nextClassDay(track2, TODAY_ISO);
+      document.querySelectorAll('.rh-box').forEach(function(b){
+        b.classList.toggle('now', b.getAttribute('data-ph') === PLAN.phase);
+      });
+      var onClassDay = PLAN.phase === 'class' || PLAN.phase === 'after';
+      document.getElementById('rh-when-class').textContent =
+        onClassDay ? 'today' : (nx2 ? shortDate(parseIso(nx2.date)) : '');
+      document.getElementById('rh-when-pre').textContent =
+        PLAN.phase === 'pre' ? 'tonight'
+        : onClassDay ? 'done last night'
+        : nx2 ? 'the night before ' + shortDate(parseIso(nx2.date)) : 'the night before class';
+      document.getElementById('rh-when-after').textContent =
+        PLAN.phase === 'after' ? 'tonight, short' : 'that evening, short';
+      var note = document.getElementById('rh-note');
+      if(PLAN.phase === 'between'){
+        note.hidden = false;
+        note.textContent = 'You are between classes. Today is retrieval; pre-work lights up the night before class.';
+      } else if(PLAN.phase === 'class'){
+        /* If none of last night's pre-work is ticked, say so gently.
+           Paper work that never got ticked also lands here, so it is an
+           invitation, not an accusation. */
+        var anyPre = false;
+        for (var pk in doneMap) { if (pk.indexOf(TODAY_ISO + ':pre:') === 0) { anyPre = true; break; } }
+        note.hidden = anyPre;
+        if(!anyPre) note.textContent = 'Pre-work not marked done? If it happened on paper, you are set. If it did not, ten minutes on the sheet before class beats zero.';
+      } else { note.hidden = true; }
+    })();
     document.getElementById('foot-line').textContent = PLAN.foot || '';
 
     var meta = SEC_META[secKey];
@@ -1477,6 +1561,11 @@
 
     if(allDone){
       document.getElementById('headline-card').hidden = false;
+      /* The time estimate is a promise about work ahead. Inside the done
+         card it read as work remaining, which contradicted "close the
+         laptop" one line above it. Done means past tense. */
+      var totDone = document.getElementById('hl-time');
+      if(totDone && !totDone.hidden) totDone.textContent = 'Tonight ran ' + totDone.textContent.replace('About ', 'about ').replace(' in total, and that is an estimate.', '.');
       document.getElementById('hl-kicker').textContent = 'All done';
       document.getElementById('hl-title').textContent = 'That is everything for now';
       /* A list that says done when the student knows it is not needs a way

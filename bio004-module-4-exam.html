@@ -1780,7 +1780,7 @@ if(state.submitted){ computeAndPaint(); document.getElementById("results").class
 
 /* iframe height sender for Kajabi and Canvas */
 (function(){
-  function sendHeight(){ var h=document.body.scrollHeight; try{ parent.postMessage({ id:"bio004-module-exam-"+(EXAM.meta.no||"x"), type:"resize", height:h }, "*"); }catch(e){} }
+  function sendHeight(){ var h=(window.BIO004_CONTENT_HEIGHT?window.BIO004_CONTENT_HEIGHT():document.body.scrollHeight); try{ parent.postMessage({ id:"bio004-module-exam-"+(EXAM.meta.no||"x"), type:"resize", height:h }, "*"); }catch(e){} }
   window.addEventListener("load", sendHeight); window.addEventListener("resize", sendHeight);
   if(window.ResizeObserver){ try{ new ResizeObserver(sendHeight).observe(document.body); }catch(e){} }
   setInterval(sendHeight, 1200);

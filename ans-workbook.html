@@ -304,7 +304,7 @@ document.getElementById('collapse-all').addEventListener('click', () => {
 (function () {
   var FRAME_ID = 'bio004-ans-workbook';
   function sendHeight() {
-    var h = (document.body ? Math.max(document.body.scrollHeight, document.body.offsetHeight) : 0);
+    var h = (document.body ? (window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight) : 0);
     parent.postMessage({ type: 'resize', id: FRAME_ID, height: h }, '*');
   }
   window.addEventListener('load', sendHeight);

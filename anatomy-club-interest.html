@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anatomy Club interest survey &middot; Solano Community College</title>
+<meta name="description" content="Would you join an Anatomy Club at Solano? Three buttons, sixty seconds.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/*
+  ============================================================
+  ANATOMY CLUB INTEREST SURVEY
+  Deliberately NOT in the BIO 004 course design. This reads as a
+  campus thing, not an instructor thing, so the palette, fonts
+  and voice are all different from the course site. No dock, no
+  Hootie, no course links.
+
+  WHERE ANSWERS GO
+  ----------------
+  Primary: a Google Form, posted to quietly in the background,
+  the same trick the TBL team survey uses. Make a Form with two
+  questions:
+    1. Multiple choice: Yes / No / Maybe
+    2. Paragraph: If maybe, what would it depend on?
+  Then Send > link icon > get a prefilled link to read the two
+  entry.NNNN ids, and paste the three values below.
+
+  Until that is pasted, the page still works TODAY: the submit
+  button opens the student's mail app with the answer prefilled
+  to the address below. Either way the answer is also kept in
+  the browser so a student can see what they said.
+  ============================================================
+*/
+</style>
+<script>
+var CLUB_CONFIG = {
+  FORM_ID:       'PASTE_FORM_ID',
+  ENTRY_VOTE:    'entry.PASTE',
+  ENTRY_COMMENT: 'entry.PASTE',
+  FALLBACK_EMAIL: 'srennie@solano.edu'
+};
+</script>
+<style>
+  :root{
+    --ink:#15262D; --teal:#0E5A63; --teal-deep:#0A434A; --pop:#E4572E;
+    --mint:#E9F3F1; --paper:#FBFBF8; --line:#D8DEDC;
+    --fh:'Archivo',system-ui,sans-serif; --fb:'Public Sans',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:var(--fb);line-height:1.55}
+  .skip{position:absolute;left:-9999px}
+  .skip:focus{left:12px;top:12px;background:#fff;padding:10px 14px;border-radius:6px;z-index:20}
+  .wrap{max-width:620px;margin:0 auto;padding:26px 20px 60px}
+
+  .badge{display:inline-block;font-family:var(--fh);font-weight:700;font-size:12px;
+    letter-spacing:.16em;text-transform:uppercase;color:#fff;background:var(--teal);
+    border-radius:999px;padding:6px 14px}
+  h1{font-family:var(--fh);font-weight:900;font-size:clamp(30px,7vw,44px);line-height:1.04;
+    letter-spacing:-.02em;margin:14px 0 0}
+  h1 .pop{color:var(--pop)}
+  .lede{font-size:17px;margin:12px 0 0;max-width:52ch}
+
+  .perks{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:8px}
+  .perks li{display:flex;gap:10px;align-items:baseline;background:var(--mint);
+    border-radius:10px;padding:10px 13px;font-size:14.5px}
+  .perks b{color:var(--teal-deep)}
+  .perks .dot{color:var(--pop);font-weight:900}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:22px 20px;margin-top:24px;box-shadow:0 10px 24px -18px rgba(21,38,45,.35)}
+  legend{font-family:var(--fh);font-weight:700;font-size:19px;padding:0;margin:0 0 4px}
+  fieldset{border:0;margin:0;padding:0}
+  .hint{font-size:13.5px;color:#51625F;margin:0 0 14px}
+
+  .opts{display:grid;gap:10px}
+  .opt{position:relative;display:flex;align-items:center;gap:12px;border:2px solid var(--line);
+    border-radius:12px;padding:14px 15px;cursor:pointer;background:#fff;font-size:16.5px;
+    font-weight:600;transition:border-color 120ms ease,background 120ms ease}
+  .opt:hover{border-color:var(--teal)}
+  .opt input{width:22px;height:22px;accent-color:var(--teal);flex:none}
+  .opt.picked{border-color:var(--teal);background:var(--mint)}
+  .opt .em{font-size:20px;flex:none}
+
+  .maybe{display:none;margin-top:14px}
+  .maybe.on{display:block}
+  .maybe label{display:block;font-weight:700;font-size:14.5px;margin-bottom:6px}
+  .maybe textarea{width:100%;min-height:92px;font:inherit;font-size:15px;padding:11px 12px;
+    border:2px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);resize:vertical}
+  .maybe textarea:focus-visible{outline:3px solid var(--teal);outline-offset:1px}
+
+  .send{margin-top:18px;width:100%;font-family:var(--fh);font-weight:700;font-size:17px;
+    cursor:pointer;padding:15px 18px;border-radius:12px;border:0;background:var(--pop);color:#fff;
+    transition:transform 120ms ease}
+  .send:hover{transform:translateY(-1px)}
+  .send:disabled{background:#B9C4C2;cursor:not-allowed;transform:none}
+  .opt input:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+  .send:focus-visible{outline:3px solid var(--teal-deep);outline-offset:3px}
+
+  .status{margin-top:12px;font-size:14.5px;min-height:1.4em}
+  .status.ok{color:var(--teal-deep);font-weight:700}
+
+  .done{display:none;text-align:center;padding:34px 10px 20px}
+  .done.on{display:block}
+  .done .big{font-size:52px;line-height:1}
+  .done h2{font-family:var(--fh);font-weight:900;font-size:26px;margin:10px 0 6px}
+  .done p{margin:0;color:#51625F}
+
+  .foot{margin-top:26px;font-size:12.5px;color:#51625F;text-align:center}
+  @media (prefers-reduced-motion:reduce){.send:hover{transform:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#q">Skip to the question</a>
+<div class="wrap">
+  <span class="badge">Solano Community College &middot; Student interest survey</span>
+  <h1>An Anatomy Club <span class="pop">is being considered.</span></h1>
+  <p class="lede">Not homework. Not a class. A club run by students who are into this stuff,
+  doing things a lecture never has time for:</p>
+
+  <ul class="perks" aria-label="What the club could do">
+    <li><span class="dot" aria-hidden="true">&#9679;</span><span><b>Career nights.</b> Surgeons, PAs, PTs, morticians, medical illustrators. People paid to know anatomy, telling you how they got there.</span></li>
+    <li><span class="dot" aria-hidden="true">&#9679;</span><span><b>Research and honors.</b> Real projects, and a line on your transfer application that stands out.</span></li>
+    <li><span class="dot" aria-hidden="true">&#9679;</span><span><b>Dissection experiences.</b> Beyond what the course can offer.</span></li>
+    <li><span class="dot" aria-hidden="true">&#9679;</span><span><b>Conferences.</b> Go where the anatomists go.</span></li>
+    <li><span class="dot" aria-hidden="true">&#9679;</span><span><b>Your people.</b> The ones who also think the brachial plexus is kind of beautiful.</span></li>
+  </ul>
+
+  <form class="card" id="q" novalidate>
+    <fieldset>
+      <legend>Would you join?</legend>
+      <p class="hint"><b>Answer even if it is a no.</b> We are counting everyone we reached, so a no is as useful as a yes. One tap, no sign-up, and it commits you to nothing.</p>
+      <div class="opts" role="radiogroup" aria-label="Would you join the Anatomy Club?">
+        <label class="opt"><input type="radio" name="vote" value="Yes"><span class="em" aria-hidden="true">&#128588;</span> Yes, count me in</label>
+        <label class="opt"><input type="radio" name="vote" value="Maybe"><span class="em" aria-hidden="true">&#129300;</span> Maybe, it depends</label>
+        <label class="opt"><input type="radio" name="vote" value="No"><span class="em" aria-hidden="true">&#128075;</span> No, not for me</label>
+      </div>
+      <div class="maybe" id="maybe">
+        <label for="depends">What would it depend on?</label>
+        <textarea id="depends" maxlength="500" placeholder="Meeting times, workload, cost, what the club actually does..."></textarea>
+      </div>
+      <button class="send" type="submit" disabled>Send my answer</button>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+    </fieldset>
+  </form>
+
+  <div class="done" id="done">
+    <div class="big" aria-hidden="true">&#127881;</div>
+    <h2>Got it. Thank you.</h2>
+    <p id="doneline">Every answer counts, including the no votes. If enough people say yes, the club happens. Watch for an announcement.</p>
+  </div>
+
+  <p class="foot">Anatomy Club interest survey &middot; Biology Department &middot; Solano Community College</p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var C = window.CLUB_CONFIG;
+  var form = document.getElementById('q');
+  var send = form.querySelector('.send');
+  var maybeBox = document.getElementById('maybe');
+  var status = document.getElementById('status');
+
+  function picked() {
+    var r = form.querySelector('input[name=vote]:checked');
+    return r ? r.value : null;
+  }
+
+  form.addEventListener('change', function () {
+    var v = picked();
+    send.disabled = !v;
+    maybeBox.className = 'maybe' + (v === 'Maybe' ? ' on' : '');
+    var opts = form.querySelectorAll('.opt');
+    for (var i = 0; i < opts.length; i++) {
+      opts[i].className = 'opt' + (opts[i].querySelector('input').checked ? ' picked' : '');
+    }
+  });
+
+  function configured() {
+    return C.FORM_ID.indexOf('PASTE') === -1 && C.ENTRY_VOTE.indexOf('PASTE') === -1;
+  }
+
+  /* The team-survey trick: post to the Form's formResponse endpoint
+     from a hidden form into a hidden frame. No cors, no reply, and
+     the answer lands in the Form's Responses tab. */
+  function postToForm(vote, comment) {
+    var f = document.createElement('form');
+    f.action = 'https://docs.google.com/forms/d/e/' + C.FORM_ID + '/formResponse';
+    f.method = 'POST';
+    f.target = 'club_sink';
+    function add(name, value) {
+      var i = document.createElement('input');
+      i.type = 'hidden'; i.name = name; i.value = value;
+      f.appendChild(i);
+    }
+    add(C.ENTRY_VOTE, vote);
+    if (C.ENTRY_COMMENT.indexOf('PASTE') === -1) add(C.ENTRY_COMMENT, comment);
+    var sink = document.createElement('iframe');
+    sink.name = 'club_sink';
+    sink.setAttribute('aria-hidden', 'true');
+    sink.style.display = 'none';
+    document.body.appendChild(sink);
+    document.body.appendChild(f);
+    f.submit();
+  }
+
+  function mailBody(vote, comment) {
+    return encodeURIComponent(
+      'Anatomy Club interest survey\n\nMy answer: ' + vote
+      + (comment ? '\nIt would depend on: ' + comment : '')
+      + '\n\n(Sent from the interest survey page.)');
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var vote = picked();
+    if (!vote) return;
+    var comment = vote === 'Maybe' ? document.getElementById('depends').value.trim() : '';
+
+    try { localStorage.setItem('anatomy-club-vote', JSON.stringify({vote: vote, comment: comment, at: new Date().toISOString()})); } catch (err) {}
+
+    if (configured()) {
+      postToForm(vote, comment);
+      finish();
+    } else {
+      /* No Form pasted yet. The mail app carries the answer instead,
+         so the survey still works the day it is handed out. */
+      var href = 'mailto:' + C.FALLBACK_EMAIL
+        + '?subject=' + encodeURIComponent('Anatomy Club interest: ' + vote)
+        + '&body=' + mailBody(vote, comment);
+      window.location.href = href;
+      status.textContent = 'Your mail app should open with your answer ready. Press send there. It sends from your email, so it is not anonymous, and it is used only for counting.';
+      status.className = 'status ok';
+      setTimeout(finish, 2500);
+    }
+  });
+
+  function finish() {
+    form.style.display = 'none';
+    document.querySelector('.perks').style.display = 'none';
+    document.getElementById('done').className = 'done on';
+    document.getElementById('done').focus && document.getElementById('done').setAttribute('tabindex', '-1');
+    document.getElementById('done').focus();
+  }
+})();
+</script>
+</body>
+</html>

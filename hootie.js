@@ -352,7 +352,8 @@
           + '<br>3. Lab practical exams: 30% (5)'
           + '<br>4. Lab quizzes: 5%'
           + '<br>5. iChecks and tChecks: 5%'
-          + '<br><br>Up to 3% in Scholar Points for verified engagement hours plus a strong exam average. No exam counts above 102%. Full detail in your ' + ilink(s.syllabus, 'syllabus') + '. To see where you stand from your own scores, use the ' + ilink('grade-calculator.html', 'grade calculator') + '.';
+          + '<br><br>Up to 3% in Scholar Points for verified engagement hours plus a strong exam average. No exam counts above 102%. Full detail in your ' + ilink(s.syllabus, 'syllabus') + '. To see where you stand from your own scores, use the ' + ilink('grade-calculator.html', 'grade calculator') + '.'
+          + '<br><br>Trying to raise it? The ' + ilink('bio004-study-protocol.html', 'Study Protocol') + ' is a flow chart of exactly what to do this week, one box at a time.';
 
       case 'exams':
         return examLine(ctx, ctx.nextExam)
@@ -404,7 +405,7 @@
           + '<br><br>Then start an error log. For each wrong answer write what you thought, what is correct, why you missed it, and what you will remember. Try the same question cold a week later, and only cross it off when you can get its whole type right without looking.'
           + '<br><br>Two honest questions about how you prepared: how many days did you spread the studying across, and how much of it was retrieval instead of rereading? One day of cramming scores very differently from a week of spaced work, even at the same hour total.'
           + '<br><br>Then bring the sorted exam to office hours, 30 minutes before class. That conversation gets you much further than "I studied but it did not work." '
-          + a('masteryOS', 'Mastery OS') + ' has a Gap Finder for rebuilding the weak spots you just found.';
+          + a('masteryOS', 'Mastery OS') + ' has a Gap Finder for rebuilding the weak spots you just found. And for next week, run one lane of the ' + ilink('bio004-study-protocol.html', 'Study Protocol') + ': it is a flow chart of exactly what to do, box by box.';
 
       case 'stillpass':
         return '<p>Do the math before you decide anything. Feelings are terrible at this.</p>'
@@ -441,7 +442,8 @@
           + '<br><br><b>Retrieve cold.</b> Blank paper, two minutes, write everything you know before you look at anything.'
           + '<br><b>Draw it.</b> If you cannot draw the structure from memory and label it, you do not know it yet.'
           + '<br><b>Space it.</b> Recall it today, again in two days, then further out.'
-          + '<br><br>When you get something wrong, name which kind of wrong it was: never studied it, studied it but never understood it, understood it but could not recall it, or knew it and lost it to misreading. Those four need different repairs. And rate yourself honestly per topic: could teach it, understand it, fuzzy, or missing. Study time belongs to fuzzy and missing.';
+          + '<br><br>When you get something wrong, name which kind of wrong it was: never studied it, studied it but never understood it, understood it but could not recall it, or knew it and lost it to misreading. Those four need different repairs. And rate yourself honestly per topic: could teach it, understand it, fuzzy, or missing. Study time belongs to fuzzy and missing.'
+          + '<br><br>Want this as exact steps instead of advice? The ' + ilink('bio004-study-protocol.html', 'Study Protocol') + ' is a flow chart: start at the top, do one box at a time.';
 
       case 'module': {
         var mods = ctx.moduleOf(wk);

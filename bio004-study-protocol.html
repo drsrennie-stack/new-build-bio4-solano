@@ -16,12 +16,12 @@
    box is a step; boxes with a tool link straight into it. Paper
    steps are marked with a dashed gold border, because the paper
    is the tool.
-   Course design system: navy, terra, gold, white cards on the
-   off-white page. No serif, no italics.
+   Site brand: deep navy #08101F, maroon #7A2A22, gold #DCB45C,
+   white cards on the off-white page, same tokens as welcome.html. No serif, no italics.
    ============================================================ */
   :root{
-    --sp-navy:#1E3D4C; --sp-navydeep:#142a36;
-    --sp-gold:#B8924A; --sp-terra:#C2734D; --sp-terradark:#A0522D;
+    --sp-navy:#08101F; --sp-navydeep:#5E201A;
+    --sp-gold:#DCB45C; --sp-terra:#DCB45C; --sp-terradark:#7A2A22;
     --sp-line:#DCE1E4; --sp-page:#FAFAF9; --sp-card:#FFFFFF;
     --f:'Plus Jakarta Sans',system-ui,sans-serif;
     --fe:'DM Sans',system-ui,sans-serif;
@@ -43,14 +43,14 @@
 
   /* the start decision, ACLS style */
   .decide{background:var(--sp-navy);color:#fff;border-radius:14px;padding:20px 22px;margin:26px 0 0;
-    text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+    text-align:center;box-shadow:0 1px 3px rgba(11,21,48,0.10)}
   .decide p{margin:0;font-weight:800;font-size:19px}
-  .decide .sub{font-weight:400;font-size:14.5px;margin-top:4px;color:#D7E0E6}
+  .decide .sub{font-weight:400;font-size:14.5px;margin-top:4px;color:#E8CE85}
   .branches{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:14px}
-  .branches a{display:block;background:#fff;color:var(--sp-navy);text-decoration:none;font-weight:700;
-    font-size:15.5px;padding:12px 20px;border-radius:10px;border:2px solid var(--sp-gold)}
-  .branches a:hover{background:#F5F0E6}
-  .branches a:focus-visible{outline:3px solid var(--sp-gold);outline-offset:3px}
+  .branches a{display:block;background:#7A2A22;color:#fff;text-decoration:none;font-weight:700;
+    font-size:15.5px;padding:12px 20px;border-radius:10px;border:0;transition:background-color 200ms ease,transform 200ms ease}
+  .branches a:hover{background:#5E201A;transform:translateY(-2px)}
+  .branches a:focus-visible{outline:3px solid #DCB45C;outline-offset:3px}
 
   .lanes{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:30px}
   @media (max-width:760px){ .lanes{grid-template-columns:1fr} }
@@ -62,7 +62,7 @@
     letter-spacing:.1em;text-transform:uppercase;color:var(--sp-terradark);margin-bottom:2px}
   .lane .goal{margin:0;padding:0 16px 14px;border:1px solid var(--sp-line);border-top:0;border-bottom:0;
     background:var(--sp-card);text-align:center;font-size:14.5px;color:var(--sp-navy)}
-  .lane-head{border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.08);margin-bottom:2px}
+  .lane-head{border-radius:12px;box-shadow:0 1px 3px rgba(11,21,48,0.10);margin-bottom:2px}
   .lane-head .goal{border-radius:0 0 12px 12px;border-bottom:1px solid var(--sp-line)}
 
   /* the flow: step boxes joined by arrows */
@@ -73,9 +73,9 @@
   .flow li::after{content:"";position:absolute;left:50%;top:20px;transform:translateX(-50%);
     border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--sp-navy)}
   .step{background:var(--sp-card);border:1px solid var(--sp-line);border-radius:12px;
-    padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,0.08);
+    padding:14px 16px;box-shadow:0 1px 3px rgba(11,21,48,0.10);
     transition:transform 200ms ease,box-shadow 200ms ease}
-  .step:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,0,0,0.10)}
+  .step:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(11,21,48,0.16)}
   @media (prefers-reduced-motion:reduce){ .step{transition:none} .step:hover{transform:none} }
   .step.paper{border:1px dashed var(--sp-gold)}
   .snum{font-family:var(--fe);font-size:11.5px;font-weight:700;letter-spacing:.1em;
@@ -87,10 +87,10 @@
     color:var(--sp-navy);background:var(--sp-card);border:2px solid var(--sp-gold);
     border-radius:9px;padding:8px 14px}
   .go:hover{background:#F5F0E6;color:var(--sp-navydeep)}
-  .go:focus-visible{outline:3px solid var(--sp-gold);outline-offset:2px}
+  .go:focus-visible{outline:3px solid #DCB45C;outline-offset:2px}
 
   .loopback{margin-top:26px;background:var(--sp-card);border:1px solid var(--sp-terra);border-radius:12px;
-    padding:14px 18px;font-size:15px;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+    padding:14px 18px;font-size:15px;box-shadow:0 1px 3px rgba(11,21,48,0.10)}
   .loopback b{color:var(--sp-terradark)}
 
   footer.foot{border-top:1px solid var(--sp-line);margin-top:44px;padding-top:16px;font-size:14px;color:var(--sp-navy)}
@@ -99,6 +99,15 @@
 <body>
 <a class="skip" href="#lanes">Skip to the protocol</a>
 <div class="wrap">
+
+  <!-- Shown only inside an iframe (Canvas). Opens the course site in a
+       new tab, because target=_top would throw Canvas out of its frame. -->
+  <p id="framebar" hidden style="margin:0 0 18px;background:#FFFFFF;border:1px solid #DCE1E4;
+     border-radius:10px;padding:10px 14px;font-size:14.5px;box-shadow:0 1px 3px rgba(11,21,48,0.10)">
+    You are viewing this inside Canvas. Every tool here also lives in <b>Course tools</b> on the
+    course site. <a href="welcome.html" target="_blank" rel="noopener"
+    style="color:#08101F;font-weight:700">Open the course site &#8599;</a>
+  </p>
 
   <header>
     <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Study Protocol</p>
@@ -239,6 +248,13 @@
 (function () {
   'use strict';
   var FRAME_ID = 'bio004-study-protocol';
+  /* In an iframe, show the way back to the course site. */
+  try {
+    if (window.parent && window.parent !== window) {
+      var fb = document.getElementById('framebar');
+      if (fb) fb.hidden = false;
+    }
+  } catch (e) {}
   function sendHeight() {
     var h = (window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight);
     if (window.parent && window.parent !== window) parent.postMessage({type: 'resize', id: FRAME_ID, height: h}, '*');
