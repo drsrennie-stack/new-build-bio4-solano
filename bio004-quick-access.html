@@ -41,6 +41,14 @@
   .intro{margin:14px 0 0;max-width:62ch}
   .intro p{margin:0 0 10px}
 
+  .secline{font-size:14.5px;background:var(--soft);border:1px solid var(--line);
+    border-radius:10px;padding:10px 14px;margin:6px 0 0}
+  .secline b{font-weight:800}
+  .secline button{font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;margin:2px 6px 2px 0;
+    padding:7px 12px;border-radius:8px;border:2px solid var(--line);background:#fff;color:var(--navy)}
+  .secline button:hover{border-color:var(--navy)}
+  .secline button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  .secline .chg{font-size:13px;margin-left:8px}
   h2{font-size:20px;font-weight:800;letter-spacing:-.01em;margin:36px 0 12px}
 
   /* big obvious buttons */
@@ -70,17 +78,26 @@
 
   /* week sections */
   .week{border-top:1px solid var(--line);padding:22px 0 6px;margin-top:26px}
-  .week h3{font-size:19px;font-weight:800;margin:0}
+  .module-h{font-size:16px;font-weight:800;letter-spacing:.02em;color:var(--accent);
+    margin:40px 0 0;padding-top:24px;border-top:2px solid var(--navy)}
+  .module-h .module-t{font-weight:600;color:var(--ink)}
+  .week h4{font-size:19px;font-weight:800;margin:0}
   .week .topic{font-size:15px;color:var(--ink);margin:4px 0 0}
   .week .examnote{font-size:14.5px;font-weight:700;color:var(--accent);margin:8px 0 0}
-  .cat{margin:14px 0 0}
-  .cat h4{font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--ink);margin:0 0 6px}
-  .links{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
-  .links a{display:block;padding:13px 16px;border:2px solid var(--line);border-radius:10px;
-    color:var(--navy);text-decoration:none;font-weight:600;font-size:15.5px;background:#fff}
-  .links a:hover{border-color:var(--navy);background:var(--soft)}
-  .links a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+  .rows{list-style:none;margin:12px 0 0;padding:0}
+  .rows li{display:grid;grid-template-columns:118px 1fr;gap:12px;align-items:center;
+    border-bottom:1px solid var(--line);padding:4px 0}
+  .rows li:first-child{border-top:1px solid var(--line)}
+  .rows .k{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink)}
+  .rows a{display:block;padding:9px 6px;color:var(--navy);text-decoration:none;
+    font-weight:600;font-size:15.5px;border-radius:8px}
+  .rows a:hover{background:var(--soft)}
+  .rows a:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+  @media (max-width:520px){
+    .rows li{grid-template-columns:1fr;gap:0;padding:8px 0}
+    .rows a{padding:2px 0 4px}
+  }
   .totop{display:inline-block;margin:16px 0 4px;font-size:14px;color:var(--ink);font-weight:600}
   .totop:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 
@@ -96,48 +113,19 @@
     <p class="course-line">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
     <h1>Quick Access to course materials</h1>
     <div class="intro">
-      <p>The main course site is the full interactive learning environment, and everything there
-      still works the way you have been shown. This page is the same materials as a plain list,
-      for anyone who prefers a simple map. Use whichever one works best for you; they lead to
-      the same places.</p>
-      <p>Not sure where to begin? Start with the current week below, and check the
-      <a href="bio004-course-calendar.html" target="_top">course calendar</a> for dates and what
-      comes next.</p>
+      <p>Every week of the course, every material, one sheet. If you would rather not use
+      the interactive environment just yet, that is fine: everything you need is right here,
+      and you can move over whenever you feel ready.</p>
+      <p class="secline" id="secline"></p>
     </div>
   </header>
 
-  <h2>Main pages</h2>
-  <ul class="btns">
-    <li><a class="btn" href="bio004-course-calendar.html" target="_top">Course Calendar<small>every class day, every date</small></a></li>
-    <li><a class="btn" href="start-here.html" target="_top">Where to Start<small>first-week orientation</small></a></li>
-    <li><a class="btn" href="today.html" target="_top">Today<small>the one thing to do now</small></a></li>
-    <li><a class="btn" href="bio004-tour-poster.html" target="_top">How-To Videos<small>short tours of every tool</small></a></li>
-  </ul>
-  <p class="note-card"><b>Course Tools</b> is the round button in the bottom corner of this page
-  and every course page. It holds the same tools wherever you are: pre-work, Mastery OS, lab
-  sprints, Loops, the Atlas, study sessions and your syllabus.</p>
-
-  <h2 id="lost">If you feel lost</h2>
-  <div class="lost">
-    <ol>
-      <li>Find the <a href="#weeks" id="lost-current">current week</a> in the list below.</li>
-      <li>Complete the assigned pre-work sheet.</li>
-      <li>Open the notes and the assigned videos.</li>
-      <li>Use the lab and practice materials for that week.</li>
-      <li>Check the <a href="bio004-course-calendar.html" target="_top">course calendar</a> for what comes next.</li>
-      <li>Still cannot find something? Open the <a href="bio004-tour-poster.html" target="_top">How-To videos</a>,
-          or message Dr. Rennie in the Canvas Inbox.</li>
-    </ol>
-  </div>
-
-  <h2 id="weeks">Jump to a week</h2>
-  <ul class="jump" id="jump" aria-label="Jump to week"></ul>
+  <div id="weeks"></div>
 
   <div id="weekList">
     <div class="fallback" id="fallback">
-      <b>The week list is loading.</b> If it does not appear, every material is still reachable
-      from the <a href="bio004-course-calendar.html" target="_top">course calendar</a>, listed on
-      the day it belongs to.
+      <b>The week list is loading.</b> If it does not appear after a refresh, post in the
+      Virtual Office or email Dr. Rennie and it will get fixed.
     </div>
   </div>
 
@@ -155,6 +143,74 @@
   var SL = window.BIO004_SESSION_LINKS;
   var MODS = window.BIO004_MODULES || [];
   if (!SL) return; /* fallback card stays */
+
+  /* ---- section awareness. Same convention as every other page:
+     ?sec= on the address wins, then the remembered choice. The page
+     works fine without one; exam dates just defer to the calendar. ---- */
+  var SEC_NAMES = { 'mw':'Mon / Wed · Afternoon', 'tr-am':'Tue / Thu · Morning', 'tr-eve':'Tue / Thu · Evening' };
+  var SEC_CLASS = { 'mw':'class1', 'tr-am':'class2', 'tr-eve':'class3' };
+  function getSec() {
+    try { var m = location.search.match(/[?&]sec=(mw|tr-am|tr-eve)/); if (m) return m[1]; } catch (e) {}
+    try { var v = localStorage.getItem('bio004-section'); if (SEC_NAMES[v]) return v; } catch (e) {}
+    return null;
+  }
+  var SEC = getSec();
+  if (SEC) { try { localStorage.setItem('bio004-section', SEC); } catch (e) {} }
+
+  function applySec() {
+    if (!SEC) return;
+    document.querySelectorAll('[data-seclink]').forEach(function (a) {
+      var base = a.getAttribute('href').split('?')[0];
+      a.setAttribute('href', base + '?sec=' + SEC);
+    });
+  }
+
+  function fmtDate(iso) {
+    var p = iso.split('-');
+    var d = new Date(+p[0], +p[1] - 1, +p[2]);
+    return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()] + ', '
+      + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]
+      + ' ' + d.getDate();
+  }
+  function examDate(n) {
+    var X = window.BIO004_SECTIONS;
+    if (!SEC || !X || !X.sections) return null;
+    var sect = X.sections[SEC_CLASS[SEC]];
+    if (!sect || !sect.exams) return null;
+    for (var i = 0; i < sect.exams.length; i++) {
+      if (sect.exams[i].n === n) return sect.exams[i].lecture;
+    }
+    return null;
+  }
+
+  function renderSecLine() {
+    var el = document.getElementById('secline');
+    if (!el) return;
+    if (SEC) {
+      el.innerHTML = 'Your class: <b>' + SEC_NAMES[SEC] + '</b>. The exam dates below are '
+        + 'for this class. '
+        + '<button type="button" class="chg" data-chg>Not your class? Change it</button>';
+      el.querySelector('[data-chg]').addEventListener('click', function () {
+        SEC = null;
+        try { localStorage.removeItem('bio004-section'); } catch (e) {}
+        renderSecLine(); rerender();
+      });
+    } else {
+      el.innerHTML = '<b>Which class are you in?</b> Pick one and the exam dates below will '
+        + 'match your class.<br>'
+        + Object.keys(SEC_NAMES).map(function (k) {
+            return '<button type="button" data-pick="' + k + '">' + SEC_NAMES[k] + '</button>';
+          }).join('');
+      el.querySelectorAll('[data-pick]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          SEC = b.getAttribute('data-pick');
+          try { localStorage.setItem('bio004-section', SEC); } catch (e) {}
+          renderSecLine(); rerender();
+        });
+      });
+    }
+    applySec();
+  }
 
   function todayISO() {
     try {
@@ -199,6 +255,14 @@
     (e.sheets || []).forEach(function (it) { if (it && it.t) w.topics[it.t] = 1; });
   });
 
+  /* Boundary weeks (4, 7, 14) sit in two modules' week lists; they belong
+     to the LATER module, so a later module's claim overwrites an earlier
+     one's. */
+  var wkModule = {};
+  MODS.forEach(function (m) {
+    (m.weeks || []).forEach(function (w) { wkModule[w] = m; });
+  });
+
   var wkNums = Object.keys(weeks).map(Number).sort(function (a, b) { return a - b; });
   wkNums.forEach(function (w) {
     if (weeks[w].first <= TODAY && TODAY <= weeks[w].last) curWk = w;
@@ -209,54 +273,78 @@
     }
   }
 
-  /* jump strip */
-  var jump = document.getElementById('jump');
-  jump.innerHTML = wkNums.map(function (w) {
-    return '<li><a href="#week-' + w + '"' + (w === curWk ? ' class="now" aria-current="true"' : '')
-      + '>Wk ' + w + '</a></li>';
-  }).join('');
-
-  if (curWk !== null) {
-    var lc = document.getElementById('lost-current');
-    lc.href = '#week-' + curWk;
-    lc.textContent = 'current week (Week ' + curWk + ')';
+  /* Same row order every week so the sheet reads like a table:
+     Competencies, Notes, Pre-work, Videos, Lab, Workbooks, Loops,
+     Recall cards, Brain dump. Notes, Pre-work, Videos, Lab and
+     Workbooks come from session-links.js; the last three are the same
+     tools each week, listed per week anyway so a student on week 9
+     never has to scroll to find them. */
+  function weekRows(wd) {
+    var rows = [];
+    rows.push({k:'Competencies', t:'Competency map for this module (Mastery OS)',
+               u:'mastery-os-fall-2026.html#s-map'});
+    /* Every link names its material in full, so "Cell Anatomy notes" and
+       "Cell Anatomy pre-work sheet" read apart even with the label ignored. */
+    Object.keys(wd.notes).forEach(function (u) { rows.push({k:'Notes', t:wd.notes[u] + ' notes', u:u}); });
+    Object.keys(wd.sheets).forEach(function (u) { rows.push({k:'Pre-work', t:wd.sheets[u] + ' pre-work sheet', u:u}); });
+    Object.keys(wd.videos).forEach(function (u) { rows.push({k:'Videos', t:wd.videos[u], u:u}); });
+    Object.keys(wd.lab).forEach(function (u) {
+      var t = wd.lab[u];
+      if (/lab-sprint/.test(u)) t += ' lab sprint';
+      rows.push({k:'Lab', t:t, u:u});
+    });
+    Object.keys(wd.practice).forEach(function (u) { rows.push({k:'Workbook', t:wd.practice[u] + ' workbook', u:u}); });
+    rows.push({k:'Loops', t:'Loops · fast visual practice', u:'https://drsrennie-stack.github.io/loops/', ext:true});
+    rows.push({k:'Recall cards', t:'Recall cards (Mastery OS)', u:'mastery-os-fall-2026.html#s-recall'});
+    rows.push({k:'Brain dump', t:'Brain dump practice · blank page retrieval', u:'brain-dump-practice.html'});
+    return rows;
   }
 
-  var CATS = [
-    ['sheets',   'Pre-Work'],
-    ['notes',    'Course Notes'],
-    ['videos',   'Videos'],
-    ['lab',      'Lab Materials'],
-    ['practice', 'Practice']
-  ];
-
-  var html = wkNums.map(function (w) {
+  var lastMod = null;
+  function buildHtml() {
+   lastMod = null;
+   return wkNums.map(function (w) {
     var wd = weeks[w];
     var topics = Object.keys(wd.topics).join(' · ');
-    var out = '<section class="week" id="week-' + w + '" aria-labelledby="wh-' + w + '">'
-      + '<h3 id="wh-' + w + '">Week ' + w + (w === curWk ? ' · this week' : '') + '</h3>';
-    var mt = modTitle(w);
-    if (topics || mt) {
-      out += '<p class="topic">' + esc(topics || '') + (topics && mt ? ' — ' : '') + esc(mt) + '</p>';
+    var out = '';
+    var m = wkModule[w];
+    if (m && m.n !== lastMod) {
+      lastMod = m.n;
+      out += '<h3 class="module-h" id="module-' + m.n + '">Module ' + m.n
+        + ' <span class="module-t">· ' + esc(m.title) + '</span></h3>';
+    }
+    out += '<section class="week" id="week-' + w + '" aria-labelledby="wh-' + w + '">'
+      + '<h4 id="wh-' + w + '">Week ' + w + (w === curWk ? ' · this week' : '') + '</h4>';
+    if (topics) {
+      out += '<p class="topic">' + esc(topics) + '</p>';
     }
     if (wd.exam) {
-      out += '<p class="examnote">Exam ' + wd.exam + ' happens this week. Your exact date is on the '
-        + '<a href="bio004-course-calendar.html" target="_top">course calendar</a>.</p>';
+      var xd = examDate(wd.exam);
+      out += '<p class="examnote">Exam ' + wd.exam
+        + (xd ? ' for your class: ' + fmtDate(xd) + '.'
+              : ' is this week. Pick your class above to see your date.') + '</p>';
     }
-    CATS.forEach(function (c) {
-      var bucket = wd[c[0]], urls = Object.keys(bucket);
-      if (!urls.length) return;
-      out += '<div class="cat"><h4>' + c[1] + '</h4><ul class="links">';
-      urls.forEach(function (u) {
-        out += '<li><a href="' + esc(u) + '" target="_top">' + esc(bucket[u]) + '</a></li>';
-      });
-      out += '</ul></div>';
+    out += '<ul class="rows">';
+    weekRows(wd).forEach(function (r) {
+      out += '<li><span class="k">' + esc(r.k) + '</span>'
+        + '<a href="' + esc(r.u) + '"'
+        + (r.ext ? ' target="_blank" rel="noopener"' : ' target="_top"')
+        + '>' + esc(r.t) + (r.ext ? ' \u2197' : '') + '</a></li>';
     });
-    out += '<a class="totop" href="#top">Return to top &uarr;</a></section>';
+    out += '</ul>';
+    out += '</section>';
     return out;
-  }).join('');
+   }).join('');
+  }
+  var html = buildHtml();
 
+  function rerender() {
+    document.getElementById('weekList').innerHTML = buildHtml();
+    applySec();
+  }
   document.getElementById('weekList').innerHTML = html;
+  renderSecLine();
+  applySec();
 
   /* height sender for embeds, same shape as every other page */
   var FRAME_ID = 'bio004-quick-access';
