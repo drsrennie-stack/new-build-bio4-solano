@@ -127,7 +127,7 @@
 
   th.day{width:58px;min-width:58px;}
   th.day.daygrp{width:76px;min-width:76px;border-bottom:1px solid var(--gold);}
-  th.part{width:38px;min-width:38px;font-size:10px;font-weight:700;letter-spacing:.03em;background:#27505f;}
+  th.part{width:38px;min-width:38px;font-size:10px;font-weight:700;letter-spacing:.03em;background:var(--navy-deep);}
   .chk{min-width:34px;}
   td.cellwrap .chk{min-width:52px;}
   td.cellwrap.labcell{border-left:1px dotted rgba(255,255,255,.001);}
@@ -169,6 +169,9 @@
   td.actcell{padding:4px 6px;white-space:nowrap;text-align:center;}
   .mini{appearance:none;font:inherit;font-size:11px;font-weight:700;padding:5px 9px;border-radius:5px;cursor:pointer;border:1px solid var(--terra-dark);background:#fff;color:var(--terra-dark);min-height:28px;}
   .mini:hover{background:#f6e9e2;}
+  .mini.edit{border-color:var(--navy);color:var(--navy);margin-right:5px;}
+  .mini.edit:hover{background:var(--navy-tint);}
+  .sortsel{font-size:12.5px;font-weight:600;}
   .mini:focus-visible{outline:3px solid var(--focus);outline-offset:1px;}
 
   .help{font-size:11.5px;color:var(--gray);margin-top:14px;line-height:1.6;max-width:82ch;}
@@ -267,6 +270,12 @@
     <button type="button" class="btn" id="btnExportAtt">Export attendance CSV</button>
     <button type="button" class="btn" id="btnClearAtt">Clear attendance</button>
     <button type="button" class="btn" id="btnPrintAtt">Print</button>
+    <span class="fldinline"><label class="clabel" for="sortAtt">Sort</label>
+      <select id="sortAtt" class="courseSel sortsel" style="min-width:14em">
+        <option value="name">Name, A to Z</option>
+        <option value="teampos">Team, then position</option>
+        <option value="teamname">Team, then name</option>
+      </select></span>
     <span class="legend">Click a cell to cycle: <b>&#10003; present</b>, <b>&ndash; partial</b>, <b>&#10005; absent</b>, blank</span>
   </div>
 
@@ -303,6 +312,12 @@
     <button type="button" class="btn" id="btnImportRos">Import roster&hellip;</button>
     <button type="button" class="btn" id="btnExportRos">Export roster &amp; history CSV</button>
     <button type="button" class="btn" id="btnPrintRos">Print</button>
+    <span class="fldinline"><label class="clabel" for="sortRos">Sort</label>
+      <select id="sortRos" class="courseSel sortsel" style="min-width:14em">
+        <option value="name">Name, A to Z</option>
+        <option value="teampos">Team, then position</option>
+        <option value="teamname">Team, then name</option>
+      </select></span>
     <span class="fldinline" id="drpFilterWrap" hidden><label class="clabel" for="drpFilter">Show</label>
       <select id="drpFilter" class="courseSel" style="min-width:13em">
         <option value="all">Drops and no-shows</option>
@@ -502,6 +517,25 @@
   </form>
 </div>
 
+<!-- ===================== EDIT STUDENT ===================== -->
+<div class="overlay" id="ovEdit" hidden>
+  <form class="dialog narrow" id="editForm" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+    <h2 id="editTitle">Edit student</h2>
+    <p class="lead" id="editLead">Correcting a name here keeps everything attached to this student: attendance, team, position, status and history.</p>
+    <fieldset>
+      <legend>Student</legend>
+      <div class="fld"><label for="editName">Name, as Last, First</label><input type="text" id="editName"></div>
+      <div class="fld" style="margin-top:10px"><label for="editCode">Add code</label><input type="text" id="editCode" placeholder="optional"></div>
+      <label class="switch" style="margin-top:12px"><input type="checkbox" id="editConf"> FERPA confidential / directory hold</label>
+    </fieldset>
+    <p class="err" id="editErr" role="alert"></p>
+    <div class="actions">
+      <button type="button" class="btn" id="editCancel">Cancel</button>
+      <button type="submit" class="btn primary" id="editSave">Save changes</button>
+    </div>
+  </form>
+</div>
+
 <!-- ===================== CONFIRM ===================== -->
 <div class="overlay" id="ovConfirm" hidden>
   <div class="dialog narrow" role="alertdialog" aria-modal="true" aria-labelledby="confTitle" aria-describedby="confBody">
@@ -569,6 +603,16 @@ function norm(s){return String(s||"").toLowerCase().replace(/[^a-z0-9]+/g,"");}
 function lastName(n){var p=String(n).split(",");return (p[0]||n).trim().toLowerCase();}
 function byName(a,b){return lastName(a.name).localeCompare(lastName(b.name))||String(a.name).localeCompare(String(b.name));}
 function byPos(a,b){return ((a.pos==null?9999:a.pos)-(b.pos==null?9999:b.pos))||byName(a,b);}
+var SORTS=["name","teampos","teamname"];
+function sortMode(){var m=state&&state.sort;return SORTS.indexOf(m)<0?"name":m;}
+function teamRank(s){return (s.team==null)?9999:s.team;}
+function bySeat(a,b){return ((a.seat==null?9999:a.seat)-(b.seat==null?9999:b.seat))||byName(a,b);}
+function byTeamPos(a,b){return (teamRank(a)-teamRank(b))||bySeat(a,b);}
+function byTeamName(a,b){return (teamRank(a)-teamRank(b))||byName(a,b);}
+function sortRoster(arr){
+  var m=sortMode();
+  return arr.sort(m==="teampos"?byTeamPos:(m==="teamname"?byTeamName:byName));
+}
 function statusLabel(s){return s==="enrolled"?"Enrolled":s==="waitlist"?"Wait List":"Dropped";}
 
 /* ===================== storage ===================== */
@@ -934,7 +978,7 @@ function teamIndexFor(course,name){
 }
 function blankCourse(){
   return {id:uid("c"),meta:{},schedule:{start:"",weeks:16,weekdays:[],meet:"",time:"",skip:[]},days:[],
-    tbl:false,split:false,hideWl:false,teamNames:DEFNAMES.slice(),teamCount:6,seatCount:6,color:0,students:[]};
+    tbl:false,split:false,hideWl:false,teamNames:DEFNAMES.slice(),teamCount:6,seatCount:6,color:0,sort:"name",students:[]};
 }
 function padTeams(arr){
   var out=(arr||[]).slice(0,MAXTEAMS);
@@ -951,13 +995,13 @@ function courseLabel(m,sc){
 /* ===================== selectors ===================== */
 function students(){return state?state.students:[];}
 function byStatus(st){return students().filter(function(s){return s.status===st;});}
-function onList(){return students().filter(function(s){return s.status!=="dropped";}).sort(byName);}
+function onList(){return sortRoster(students().filter(function(s){return s.status!=="dropped";}));}
 function rollList(){
-  return students().filter(function(s){
+  return sortRoster(students().filter(function(s){
     if(s.status==="dropped")return false;
     if(s.status==="waitlist"&&state&&state.hideWl)return false;
     return true;
-  }).sort(byName);
+  }));
 }
 function getU(u){var a=students();for(var i=0;i<a.length;i++){if(a[i].uid===u)return a[i];}return null;}
 function persist(){if(state)saveCourseRec(state);}
@@ -1351,7 +1395,8 @@ function renderRos(){
       "<td class='datewrap'>"+esc(fmtDate(s.since))+"</td>"+
       (isList?"":"<td class='datewrap'>"+esc(s.reason||"")+"</td>")+
       "<td class='histwrap'>"+logHtml(s)+"</td>"+
-      "<td class='actcell'><button type='button' class='mini' data-act='remove' data-uid='"+s.uid+"'>Remove</button></td>"+
+      "<td class='actcell'><button type='button' class='mini edit' data-act='edit' data-uid='"+s.uid+"'>Edit</button>"+
+      "<button type='button' class='mini' data-act='remove' data-uid='"+s.uid+"'>Remove</button></td>"+
       "</tr>";
   });
   $("rosBody").innerHTML=h||"<tr><td class='empty' colspan='"+cols+"'>"+
@@ -1365,8 +1410,29 @@ function renderRos(){
 }
 
 function renderAll(){
-  applyBodyClasses();applyAccent();paintHeader();paintClassTabs();renderAtt();renderRos();
+  applyBodyClasses();applyAccent();paintHeader();paintClassTabs();syncSortSelects();renderAtt();renderRos();
 }
+
+/* ===================== sort order ===================== */
+function syncSortSelects(){
+  var m=sortMode();
+  ["sortAtt","sortRos"].forEach(function(id){var el=$(id);if(el)el.value=m;});
+}
+function sortWord(m){
+  return m==="teampos"?"team, then position":(m==="teamname"?"team, then name":"name, A to Z");
+}
+function setSort(m){
+  if(!state)return;
+  if(SORTS.indexOf(m)<0)m="name";
+  if(state.sort===m){syncSortSelects();return;}
+  state.sort=m;
+  persist();syncSortSelects();renderAtt();renderRos();
+  notice("Class list now sorted by "+sortWord(m)+".",true);
+}
+["sortAtt","sortRos"].forEach(function(id){
+  var el=$(id);
+  if(el)el.addEventListener("change",function(){setSort(el.value);});
+});
 
 /* ===================== view + tab switching ===================== */
 function wireTablist(list,onSelect){
@@ -1414,6 +1480,7 @@ document.addEventListener("click",function(e){
   var b=e.target.closest?e.target.closest("button"):null;
   if(!b||!state)return;
   if(b.classList.contains("chk")){cycleCell(b);return;}
+  if(b.getAttribute("data-act")==="edit"){openEdit(b.getAttribute("data-uid"));return;}
   if(b.getAttribute("data-act")==="remove"){
     var u=b.getAttribute("data-uid"),s=getU(u);
     if(!s)return;
@@ -1560,6 +1627,45 @@ $("statusForm").addEventListener("submit",function(e){
   closeOv("ovStatus");
   renderAll();
   notice(s.name+": "+statusLabel(s.status)+((s.status==="dropped"&&s.dropKind==="noshow")?" (no-show)":"")+" as of "+fmtDate(d)+".",true);
+});
+
+/* ===================== edit student ===================== */
+var editUid=null;
+function openEdit(u){
+  var s=getU(u);
+  if(!s)return;
+  editUid=u;
+  $("editName").value=s.name||"";
+  $("editCode").value=s.code||"";
+  $("editConf").checked=!!s.conf;
+  $("editErr").textContent="";
+  $("editLead").textContent="Correcting a name here keeps everything attached to "+s.name+
+    ": attendance, team, position, status and history all stay put.";
+  openOv("ovEdit","editName");
+}
+$("editCancel").addEventListener("click",function(){editUid=null;closeOv("ovEdit");});
+$("editForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  var s=getU(editUid);
+  if(!s){editUid=null;closeOv("ovEdit");return;}
+  var nm=$("editName").value.trim();
+  if(!nm){$("editErr").textContent="Enter a name as Last, First.";$("editName").focus();return;}
+  var conf=$("editConf").checked;
+  if(/\[c\]\s*$/i.test(nm)){conf=true;nm=nm.replace(/\[c\]\s*$/i,"").trim();}
+  if(!nm){$("editErr").textContent="Enter a name as Last, First.";$("editName").focus();return;}
+  var dup=students().some(function(o){return o.uid!==s.uid&&norm(o.name)===norm(nm);});
+  if(dup){$("editErr").textContent=nm+" is already on this class's roster.";$("editName").focus();return;}
+  var old=s.name,code=$("editCode").value.trim(),changed=[];
+  if(norm(old)!==norm(nm)||old!==nm)changed.push("name");
+  if((s.code||"")!==code)changed.push("add code");
+  if(!!s.conf!==conf)changed.push("confidential flag");
+  if(!changed.length){editUid=null;closeOv("ovEdit");return;}
+  if(!Array.isArray(s.log))s.log=[];
+  if(old!==nm)s.log.push({d:todayISO(),a:"Name corrected to "+nm,r:"",from:old,to:s.status});
+  s.name=nm;s.code=code;s.conf=conf;
+  editUid=null;
+  persist();closeOv("ovEdit");renderAtt();renderRos();
+  notice((old===nm?nm:(old+" is now "+nm))+". Attendance, team, position, status and history were kept.",true);
 });
 
 /* ===================== add student ===================== */
@@ -1805,6 +1911,7 @@ function activate(id){
   if(c.split==null)c.split=false;
   if(c.hideWl==null)c.hideWl=false;
   if(c.color==null)c.color=0;
+  if(SORTS.indexOf(c.sort)<0)c.sort="name";
   if(!c.schedule)c.schedule={start:"",weeks:16,weekdays:[],meet:"",time:"",skip:[]};
   if(!Array.isArray(c.schedule.skip))c.schedule.skip=[];
   if(!Array.isArray(c.students))c.students=[];
