@@ -2608,12 +2608,7 @@
     return u.searchParams.get("iframeId") || "bio304-prework";
   })();
   function sendHeight(){
-    const h = Math.max(
-      document.body.scrollHeight,
-      document.documentElement.scrollHeight,
-      document.body.offsetHeight,
-      document.documentElement.offsetHeight
-    );
+    const h = (window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight);
     try {
       window.parent.postMessage({ type: "iframe-height", id: id, height: h }, "*");
     } catch(e){}

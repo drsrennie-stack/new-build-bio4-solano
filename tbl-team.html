@@ -805,10 +805,7 @@ html { scroll-behavior: smooth; }
   (function () {
     var FRAME_ID = 'bio004-tbl-team';
     function sendHeight() {
-      var h = Math.max(
-        document.documentElement.scrollHeight,
-        document.body ? document.body.scrollHeight : 0
-      );
+      var h = (window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight);
       try {
         parent.postMessage({ type: 'resize', id: FRAME_ID, height: h }, '*');
         parent.postMessage({ type: 'iframeHeight', id: FRAME_ID, height: h }, '*');

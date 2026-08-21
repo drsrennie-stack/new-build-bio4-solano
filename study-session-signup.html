@@ -1263,10 +1263,7 @@ document.addEventListener("visibilitychange", () => { if(!document.hidden) load(
 <script>
 (function(){
   function sendHeight(){
-    var h = Math.max(
-      document.body.scrollHeight, document.documentElement.scrollHeight,
-      document.body.offsetHeight, document.documentElement.offsetHeight
-    );
+    var h = (window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight);
     parent.postMessage({ type: "setHeight", id: "study-session-signup", height: h }, "*");
   }
   window.addEventListener("load", sendHeight);

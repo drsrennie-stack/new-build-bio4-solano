@@ -127,9 +127,7 @@ ul.plain li{font-size:14px;line-height:1.6;color:var(--muted);margin-bottom:7px}
 body.present{background:var(--navy)}
 body.present .site-header,body.present .keys{display:none}
 body.present .deck{max-width:none;padding:0;gap:0}
-body.present .slide{display:none;border-radius:0;border:0;box-shadow:none;min-height:100vh;min-height:100dvh;padding:4vh 7vw 120px;overflow:hidden}
-.pfs{position:fixed;top:14px;right:16px;z-index:66;background:var(--terra);color:#fff;border:0;border-radius:999px;padding:9px 16px;font-family:var(--font);font-weight:800;font-size:13px;cursor:pointer;display:none;box-shadow:0 4px 12px rgba(0,0,0,.3)}
-body.present .pfs.show{display:block}
+body.present .slide{display:none;border-radius:0;border:0;box-shadow:none;min-height:100vh;min-height:100dvh;padding:5vh 7vw}
 body.present .slide.is-current{display:flex;flex-direction:column;justify-content:center}
 body.present .snum{display:none}
 .present-bar{display:none;position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:50;gap:10px;align-items:center}
@@ -169,8 +167,8 @@ body.present .clock-hint{display:none}
 .row.rv:not(.open)::after{right:0;bottom:-2px}
 .slide.dark .rv:not(.open)::after,.darkpanel.rv:not(.open)::after{color:var(--gold)}
 .card.rv.open{transform:scale(1.02);box-shadow:0 10px 26px rgba(8,16,31,0.16);z-index:2}
-.slide.has-open .rv:not(.open){opacity:0.92}
-.slide.has-open .rv:not(.open):hover{opacity:1}
+.slide.has-open .rv:not(.open){opacity:0.55}
+.slide.has-open .rv:not(.open):hover{opacity:0.85}
 .row.rv:not(.open) h3{margin-bottom:0}
 .rvhint{position:fixed;left:50%;transform:translateX(-50%);bottom:76px;z-index:50;font-size:11.5px;color:var(--faint);display:none;white-space:nowrap}
 body.present .rvhint{display:block}
@@ -183,8 +181,7 @@ body.present .rvhint{display:block}
 .slide.dark .kw b,.darkpanel .kw b{color:var(--gold)}
 .rv .rv-body>p:not(.kw),.rv .rv-body>ul,.rv .rv-body>.srcline{font-size:13px;color:var(--muted)}
 .darkpanel.rv .rv-body>p:not(.kw),.darkpanel.rv .rv-body>ul,.slide.dark .rv .rv-body>p:not(.kw),.slide.dark .rv .rv-body>ul,.slide.dark .rv .rv-body>.srcline{color:var(--light)}
-.darkpanel.rv .rv-body>ul li,.slide.dark .rv .rv-body>ul li,.darkpanel ul.plain li,.darkpanel p{color:var(--light)}
-.darkpanel .label{color:var(--gold)}
+.darkpanel.rv .rv-body>ul li,.slide.dark .rv .rv-body>ul li{color:var(--light)}
 .rv.seen:not(.open) .label,.rv.seen:not(.open) h3{color:var(--terra)}
 .rv.seen:not(.open)::after{content:'\2713 opened';color:var(--teal)}
 .zoom-back{position:fixed;inset:0;background:rgba(8,16,31,0.55);z-index:80;opacity:0;transition:opacity 260ms ease;pointer-events:none}
@@ -243,6 +240,60 @@ body.present .qrbadge.show{display:block}
   <p class="keys"><kbd>T</kbd> clock &nbsp; <kbd>Q</kbd> survey code &nbsp; <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> pick class &nbsp; <kbd>&rarr;</kbd> or <kbd>Space</kbd> or click to advance &nbsp; <kbd>&larr;</kbd> back &nbsp; <kbd>Esc</kbd> exit &nbsp;&middot;&nbsp; On a phone, just scroll.</p>
 </header>
 
+
+<!-- Digital Atlas, added by bio004-atlas-tile-add.py. Click or scan, opens in a second tab. -->
+<style>
+  .atl-wrap{max-width:900px;margin:22px auto;padding:0 26px}
+  .atl-tile{display:grid;grid-template-columns:52px 1fr 124px;gap:18px;align-items:center;
+    background:#0B1530;border-radius:16px;padding:16px 20px;text-decoration:none;color:#fff;
+    box-shadow:0 0 0 2px #C9A14A,0 8px 18px -12px rgba(8,16,31,.4);
+    transition:transform .2s ease,box-shadow .2s ease}
+  .atl-tile:hover{transform:translateY(-2px);box-shadow:0 0 0 2px #C9A14A,0 12px 22px -12px rgba(8,16,31,.55)}
+  .atl-tile:focus-visible{outline:3px solid #C9A14A;outline-offset:3px}
+  .atl-ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;
+    background:linear-gradient(145deg,#5C7FA8,#2F4C7D);box-shadow:inset 0 1px 0 rgba(255,255,255,.45)}
+  .atl-ic svg{width:26px;height:26px;stroke:#0B1530;fill:none;stroke-width:2.1;
+    stroke-linecap:round;stroke-linejoin:round}
+  .atl-tag{font-family:'DM Sans',system-ui,sans-serif;font-size:10.5px;font-weight:800;
+    letter-spacing:.14em;text-transform:uppercase;color:#E8C97E;margin:0}
+  .atl-h{font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:19px;font-weight:800;
+    letter-spacing:-.015em;color:#EBCE86;margin:2px 0 0;line-height:1.2}
+  .atl-d{font-size:12.5px;color:#E9EDF3;margin:3px 0 0;line-height:1.4}
+  /* 124px, not 92. At 92 a phone camera has under three pixels per module and
+     hunts for the code. */
+  .atl-qr{width:124px;height:124px;background:#fff;border-radius:11px;padding:6px}
+  .atl-qr-svg{width:100%;height:100%;display:block;shape-rendering:crispEdges}
+  .atl-qr-line{stroke:#0B1530}
+  @media (prefers-reduced-motion:reduce){.atl-tile:hover{transform:none}}
+  @media (max-width:640px){
+    .atl-tile{grid-template-columns:1fr;justify-items:center;text-align:center;gap:12px}
+  }
+  @media print{
+    .atl-wrap{margin:14pt auto;padding:0}
+    .atl-tile{break-inside:avoid;grid-template-columns:34pt 1fr 68pt;gap:12pt;padding:10pt 13pt;
+      border-radius:10pt;box-shadow:0 0 0 1.2pt #C9A14A;
+      -webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .atl-ic{width:34pt;height:34pt;border-radius:9pt}
+    .atl-ic svg{width:17pt;height:17pt}
+    .atl-tag{font-size:6.6pt}
+    .atl-h{font-size:12.5pt}
+    .atl-d{font-size:8.4pt}
+    .atl-qr{width:68pt;height:68pt;padding:3.5pt;border-radius:7pt}
+  }
+</style>
+<div class="atl-wrap">
+  <a class="atl-tile" href="https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02" target="_blank" rel="noopener"
+     aria-label="Open the Digital Atlas in a new tab">
+    <span class="atl-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg></span>
+    <span>
+      <span class="atl-tag" style="display:block">Open it beside this page</span>
+      <span class="atl-h" style="display:block">Digital Atlas</span>
+      <span class="atl-d" style="display:block">Turn the structures around while you read. Click here, or scan the code with your phone, and it opens in a second window.</span>
+    </span>
+    <span class="atl-qr"><svg viewBox="0 0 35 35" preserveAspectRatio="xMidYMid meet" class="atl-qr-svg" aria-hidden="true" focusable="false"><path class="atl-qr-line" stroke="#08101f" d="M1 1.5h7m1 0h6m2 0h1m1 0h1m4 0h2m1 0h7m-33 1h1m5 0h1m3 0h1m1 0h3m1 0h1m1 0h3m1 0h1m3 0h1m5 0h1m-33 1h1m1 0h3m1 0h1m2 0h1m1 0h2m1 0h1m2 0h2m1 0h2m1 0h2m1 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h2m6 0h2m1 0h1m1 0h1m1 0h2m1 0h1m1 0h3m1 0h1m-33 1h1m1 0h3m1 0h1m1 0h3m2 0h1m2 0h1m2 0h1m1 0h3m2 0h1m1 0h3m1 0h1m-33 1h1m5 0h1m1 0h1m1 0h4m1 0h1m2 0h1m1 0h3m1 0h1m1 0h1m5 0h1m-33 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-25 1h2m4 0h1m2 0h7m-24 1h1m3 0h1m1 0h3m1 0h1m1 0h2m1 0h1m1 0h1m2 0h10m2 0h1m-31 1h1m6 0h2m1 0h1m1 0h2m1 0h1m5 0h1m1 0h1m3 0h3m-32 1h1m1 0h1m3 0h1m1 0h2m3 0h3m2 0h1m1 0h2m1 0h1m1 0h2m2 0h1m1 0h1m-27 1h1m4 0h2m1 0h1m1 0h1m4 0h2m3 0h1m5 0h1m-32 1h3m2 0h2m4 0h3m1 0h2m2 0h2m1 0h1m3 0h1m1 0h2m2 0h1m-33 1h1m2 0h1m4 0h1m1 0h1m3 0h1m3 0h3m1 0h1m3 0h2m1 0h2m-31 1h2m2 0h1m1 0h1m5 0h1m1 0h2m1 0h2m2 0h3m1 0h4m2 0h1m-31 1h1m2 0h1m2 0h11m3 0h1m2 0h3m1 0h2m-28 1h2m1 0h3m3 0h1m1 0h1m3 0h1m1 0h1m1 0h3m2 0h1m1 0h2m1 0h1m-31 1h2m1 0h1m4 0h2m1 0h1m1 0h3m1 0h1m3 0h2m5 0h4m-33 1h4m1 0h2m2 0h1m3 0h1m1 0h1m1 0h1m2 0h2m1 0h3m1 0h1m1 0h1m1 0h1m-29 1h1m3 0h1m2 0h1m1 0h3m2 0h3m1 0h3m3 0h1m-28 1h3m1 0h1m1 0h2m1 0h1m3 0h3m2 0h3m1 0h1m1 0h1m1 0h1m2 0h1m1 0h1m-32 1h3m1 0h2m4 0h2m1 0h2m1 0h1m2 0h2m2 0h1m1 0h3m2 0h2m-30 1h6m2 0h2m4 0h3m3 0h2m3 0h1m2 0h2m-30 1h1m4 0h1m1 0h4m1 0h1m2 0h3m1 0h6m1 0h1m3 0h1m-33 1h4m2 0h1m1 0h3m1 0h4m1 0h6m1 0h6m1 0h2m-25 1h5m1 0h5m3 0h1m1 0h1m3 0h1m1 0h3m-33 1h7m1 0h2m4 0h2m2 0h1m1 0h2m2 0h1m1 0h1m1 0h2m1 0h1m-32 1h1m5 0h1m3 0h4m2 0h1m4 0h1m2 0h1m3 0h1m2 0h2m-33 1h1m1 0h3m1 0h1m1 0h1m2 0h1m4 0h1m4 0h1m2 0h6m-30 1h1m1 0h3m1 0h1m2 0h1m1 0h3m3 0h2m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-31 1h1m1 0h3m1 0h1m2 0h1m2 0h4m2 0h1m2 0h1m1 0h2m1 0h4m-30 1h1m5 0h1m2 0h1m2 0h2m1 0h3m3 0h2m1 0h1m4 0h1m-30 1h7m1 0h3m1 0h1m4 0h1m1 0h4m1 0h1m4 0h1m2 0h1"/></svg></span>
+  </a>
+</div>
+
 <main class="deck" id="deck">
 
 
@@ -256,8 +307,8 @@ body.present .qrbadge.show{display:block}
   </div>
   <div class="grid2" style="align-items:center;margin-top:8px">
     <div>
-      <p class="lede">If you are enrolled, please take three minutes and fill out the team survey while we get settled. If you are waiting on an add code, go ahead and fill it out too. It only helps me build good teams. There are no wrong answers and it is not graded.</p>
-      <p class="bigline">Already did it from the class page? You are all set. No phone? Open the course home page on any device and the survey pops right up.</p>
+      <p class="lede">If you are enrolled, please take three minutes and complete the team survey while we get started. Once you have an add code, you may complete it too. It helps me build balanced teams, there are no wrong answers, and it is used for nothing else.</p>
+      <p class="bigline">Already did it from the class page? You are set. No phone? Raise a hand and I will bring you a paper copy.</p>
     </div>
     <div class="qrblock qrcol" style="max-width:340px;margin:0 auto"><img class="secqr" src="data:image/png;base64,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" alt="QR code for the team survey" style="width:260px;height:260px"><div class="qt"><b>Team survey</b><span class="seclabel">all three classes</span></div></div>
   </div>
@@ -267,10 +318,10 @@ body.present .qrbadge.show{display:block}
 <section class="slide dark"><span class="snum">1</span>
   <p class="kicker">BIO 004 &middot; Human Anatomy &middot; Solano Community College &middot; Fall 2026</p>
   <h2 class="stitle" style="font-size:clamp(34px,6vw,58px)">Anatomy is not<br><span class="tc">a spectator sport.</span></h2>
-  <p class="lede">Welcome! Today I want to show you how this course works and why I run it this way. Every choice in this class has a reason, and you deserve to know what those reasons are.</p>
+  <p class="lede">Welcome. Today I want to walk you through how this course works and the evidence behind why we do it this way, because every choice in this class has a reason, and you deserve to know what those reasons are.</p>
   <div class="qrblock">
     <img src="data:image/png;base64,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" alt="QR code linking to these slides">
-    <div class="qt"><b>Follow along on your phone</b><span>Scan the code, or go to the course home page and open How This Course Works. These slides stay posted all semester, so you can come back to them any time.</span></div>
+    <div class="qt"><b>Follow along on your phone</b><span>Scan the code, or go to the course home and open How This Course Works. These slides stay posted all term.</span></div>
   </div>
   <p class="lede" style="margin-top:22px;color:var(--faint);font-size:14px"><b style="color:var(--white)">Dr. Sharilyn Rennie</b> &nbsp;&middot;&nbsp; Professor of Anatomy &amp; Physiology &nbsp;&middot;&nbsp; srennie@solano.edu</p>
 </section>
@@ -280,11 +331,11 @@ body.present .qrbadge.show{display:block}
   <p class="kicker">Who is teaching you</p>
   <h2 class="stitle">Three careers, <span class="hl">one classroom</span></h2>
   <div class="rows">
-    <div class="row"><div class="dot">1</div><div><h3>United States Air Force</h3><p class="kw"><b>Air Force medic.</b> Lives depended on it.</p><p>I was a Critical Care Medical Technician and an Aerospace Medicine Technician. I learned this material because people's lives depended on it.</p></div></div>
-    <div class="row"><div class="dot">2</div><div><h3>Doctor of Naturopathic Medicine</h3><p class="kw"><b>Clinician.</b> I used anatomy on <b>real patients</b>.</p><p>I trained and practiced as a clinician. For me, anatomy was never a list to memorize. It was what I used every day with real patients.</p></div></div>
-    <div class="row"><div class="dot">3</div><div><h3>Professor of Anatomy &amp; Physiology</h3><p class="kw"><b>Years</b> teaching this course. I kept what <b>works</b>.</p><p>I have taught this course for years. Along the way I kept the things that really help students learn and let go of the things that do not.</p></div></div>
+    <div class="row"><div class="dot">1</div><div><h3>United States Air Force</h3><p class="kw"><b>Air Force medic.</b> Lives depended on it.</p><p>Critical Care Medical Technician and Aerospace Medicine Technician. I learned this material because lives depended on it.</p></div></div>
+    <div class="row"><div class="dot">2</div><div><h3>Doctor of Naturopathic Medicine</h3><p class="kw"><b>Clinician.</b> Anatomy used on <b>real patients</b>.</p><p>Clinical training and practice. For me, anatomy was never trivia. It was the working knowledge I used with real patients.</p></div></div>
+    <div class="row"><div class="dot">3</div><div><h3>Professor of Anatomy &amp; Physiology</h3><p class="kw"><b>Years</b> teaching this course. Kept what <b>works</b>.</p><p>I have taught this course for years, and along the way I have kept what genuinely helps students learn and let go of what does not.</p></div></div>
   </div>
-  <p class="bigline terra">Everything in this course is here because I have watched it work: in the field, in the clinic, and right here in this classroom.</p>
+  <p class="bigline terra">Everything in this course is here because I have watched it work in the field, in the clinic, and in this classroom.</p>
 </section>
 
 <!-- 3 EVIDENCE -->
@@ -292,36 +343,36 @@ body.present .qrbadge.show{display:block}
   <p class="kicker">How I chose this format</p>
   <h2 class="stitle">The evidence behind <span class="hl">active learning</span></h2>
   <div class="grid2">
-    <div class="card"><p class="big">+6%</p><p class="label">Higher exam scores</p><p class="kw">About <b>half a letter grade</b> higher on exams.</p><p>In science classes that added active learning, exam scores went up by about 6 points on average. That is roughly half a letter grade.</p></div>
-    <div class="card"><p class="big">1 in 3</p><p class="label">Fewer students failing</p><p class="kw">Failing grades dropped from <b>33.8% to 21.8%</b>.</p><p>About one in three failing grades disappeared when classes added active learning. The failure rate dropped from 33.8% to 21.8%.</p></div>
+    <div class="card"><p class="big">+6%</p><p class="label">Higher exam scores</p><p class="kw">About <b>half a letter grade</b> higher on exams.</p><p>Active learning raised average exam performance by about 6 percentage points, which works out to roughly half a letter grade, across STEM disciplines.</p></div>
+    <div class="card"><p class="big">1 in 3</p><p class="label">Fewer students failing</p><p class="kw">Failure rate <b>33.8% &rarr; 21.8%</b>.</p><p>Roughly one in three failures disappeared when courses added active learning, with failure rates falling from 33.8% to 21.8%.</p></div>
   </div>
-  <p class="srcline">Source: Freeman and colleagues (2014), Proceedings of the National Academy of Sciences. They combined the results of 225 studies of college science courses.</p>
-  <p class="bigline">There is great teaching in every format. This is simply the approach with the strongest evidence for a course like ours, so that is what I built our class time around.</p>
+  <p class="srcline">Source: Freeman et al. (2014), Proceedings of the National Academy of Sciences. Meta-analysis of 225 studies of undergraduate STEM courses.</p>
+  <p class="bigline">There is great teaching in every format, and this is simply the approach with the strongest evidence for a course like ours. That is why I built our class time around it.</p>
 </section>
 
 <!-- 4 FULL LECTURE -->
 <section class="slide"><span class="snum">4</span>
   <p class="kicker">More instruction, not less</p>
   <h2 class="stitle">You still get the <span class="hl">full lecture</span></h2>
-  <p class="lede">Nothing has been cut. You get guided lecture with me in person all semester, plus the concept lecture videos online to prepare with. That is more teaching than a lecture-only class, not less. And the online part has some real perks.</p>
+  <p class="lede">Nothing has been cut. You get guided lecture in person all term, and on top of that you get the concept lecture videos online as your preparation. That is more instruction than a lecture-only course, not less, and the online half comes with some real advantages.</p>
   <div class="rows">
-    <div class="row"><div class="dot navy">1</div><div><h3>Watch on your terms</h3><p class="kw"><b>Pause, rewind, replay.</b> At your speed.</p><p>Pause when you need a minute. Rewind the part that went by too fast. Replay anything as many times as you want. A live lecture goes at one speed. This one goes at yours.</p></div></div>
-    <div class="row"><div class="dot navy">2</div><div><h3>Work in the order that helps you learn</h3><p class="kw"><b>Sheet first, video second.</b> You pick the order.</p><p>You pick the order. Do the pre-work sheet first with your notes and reading open, then watch the video to check yourself. The lecture makes a lot more sense once you have already tried the material on your own.</p></div></div>
-    <div class="row"><div class="dot navy">3</div><div><h3>Go back to exactly the concept you need</h3><p class="kw"><b>Jump to the concept</b> you need. No rewatching everything.</p><p>The videos are organized by topic. When it is time to review for an exam, you can jump straight to the one idea you are shaky on instead of sitting through a whole recording to find it.</p></div></div>
+    <div class="row"><div class="dot navy">1</div><div><h3>Watch on your terms</h3><p class="kw"><b>Pause. Rewind. Replay.</b> Your speed.</p><p>Pause when you need a minute, rewind the part that went by too fast, and replay anything as many times as it takes. A live lecture moves at one speed. Yours moves at your speed.</p></div></div>
+    <div class="row"><div class="dot navy">2</div><div><h3>Work in the order that helps you learn</h3><p class="kw"><b>Sheet first, video second.</b> You control the order.</p><p>You control the sequence. Work the pre-work sheet with your notes and reading open first, then watch the video as your check. The lecture lands differently when you have already wrestled with the material.</p></div></div>
+    <div class="row"><div class="dot navy">3</div><div><h3>Go back to exactly the concept you need</h3><p class="kw"><b>Jump to the concept</b> you need. No rewatching everything.</p><p>The lectures are organized by topic, so when exam review comes you can jump straight to the one concept you are shaky on instead of listening to a whole recording again to find it.</p></div></div>
   </div>
-  <p class="bigline terra">So the lecture is all still here, and it stays here all semester, whenever you need it.</p>
+  <p class="bigline terra">So the lecture is all still here, and it stays here all term, on demand, whenever you need it back.</p>
 </section>
 
 <!-- 5 SHEET BEFORE VIDEO -->
 <section class="slide"><span class="snum">5</span>
   <p class="kicker">The order is on purpose</p>
   <h2 class="stitle">Why the <span class="hl">worksheet comes before the video</span></h2>
-  <p class="lede">The pre-work asks you to do the sheet first and watch the video second. That order is not random. It comes from two lines of learning research, one for each kind of thing anatomy asks you to learn.</p>
+  <p class="lede">The pre-work asks you to work the sheet first and watch the video second, and that order comes straight out of two lines of learning research, one for each kind of thing anatomy asks of you.</p>
   <div class="grid2">
-    <div class="card"><p class="label terra">For ideas you can reason through</p><p class="kw"><b>Try it first, then hear the explanation.</b> Deeper understanding.</p><p>Things like what a plane actually cuts, how directional terms work, and why structures sit where they do. Trying problems before you hear the explanation builds deeper understanding than hearing the explanation first, and it helps you more with new problems later.</p><p class="srcline">Sinha and Kapur (2021), who reviewed dozens of studies on exactly this question</p></div>
-    <div class="card"><p class="label terra">For names you simply have to learn</p><p class="kw"><b>Guessing before the answer</b> makes names stick. Even wrong guesses.</p><p>There is no logic to figure out for why the styloid process is called that. You just have to learn it. But guessing before you see the answer helps the name stick better than reading it cold. Researchers call this the pretesting effect, and it works even when your guesses are wrong.</p><p class="srcline">Richland, Kornell and Kao (2009); Journal of Cognition (2025)</p></div>
+    <div class="card"><p class="label terra">For ideas you can reason through</p><p class="kw"><b>Struggle first, explanation second</b> = deeper understanding.</p><p>What a plane actually cuts, how directional terms behave, why structures sit where they sit. Wrestling with problems before you hear the explanation builds deeper understanding than hearing the explanation first, and it carries over better to new problems.</p><p class="srcline">Sinha &amp; Kapur (2021), a meta-analysis of this exact question</p></div>
+    <div class="card"><p class="label terra">For names you simply have to learn</p><p class="kw"><b>Guessing before the answer</b> makes names stick. Even wrong guesses.</p><p>There is nothing to reason out about why the styloid process is called that. But even guessing before you see the answer helps the name stick better than reading it cold. Researchers call this the pretesting effect, and it holds even when your guesses are wrong.</p><p class="srcline">Richland, Kornell &amp; Kao (2009); Journal of Cognition (2025)</p></div>
   </div>
-  <p class="bigline">Two things matter as much as the order. Keep your notes and reading open while you do the sheet; you are not supposed to do it from memory. And watch the video soon after you finish, because the video is your answer key, and an answer key helps most while your attempt is still fresh in your mind.</p>
+  <p class="bigline">Two instructions matter as much as the order. Keep your notes and reading open while you work the sheet, because supported effort is what works. And watch the video soon after you finish, because the video is your answer key, and answer keys help most while your attempt is still fresh.</p>
 </section>
 
 <!-- 6 RETRIEVAL -->
@@ -331,18 +382,18 @@ body.present .qrbadge.show{display:block}
   <div class="grid2">
     <div class="card">
       <p class="label terra">Feels productive, fades fast</p>
-      <p class="kw"><b>Pull it out of memory.</b> Don&rsquo;t just reread.</p><ul class="plain"><li>Rereading the chapter</li><li>Highlighting everything</li><li>Recopying your notes</li></ul>
+      <p class="kw"><b>Retrieve</b>, don&rsquo;t reread.</p><ul class="plain"><li>Rereading the chapter</li><li>Highlighting everything</li><li>Recopying your notes</li></ul>
       <p class="label teal" style="margin-top:18px">Actually builds memory</p>
       <ul class="plain"><li>Writing out what you know before you feel ready</li><li>Explaining a structure out loud from memory</li><li>Short practice sessions spaced over days</li></ul>
     </div>
     <div class="darkpanel">
       <p class="big" style="font-size:clamp(40px,6vw,56px);font-weight:800;margin:0 0 8px">~50%</p>
       <p class="label" style="font-size:11.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin:0 0 10px">More remembered one week later</p>
-      <p class="kw"><b>61% vs 40%</b> recall one week later.</p><p>Students who practiced pulling material out of memory remembered far more a week later than students who spent the same time rereading it: about 61% versus 40%.</p>
-      <p class="srcnote">Roediger and Karpicke (2006), Psychological Science; Cepeda and colleagues (2006) on spacing out practice.</p>
+      <p class="kw"><b>61% vs 40%</b> recall one week later.</p><p>Students who practiced recalling material retained far more after a week than students who spent the same time restudying it (about 61% vs 40% recall).</p>
+      <p class="srcnote">Roediger &amp; Karpicke (2006), Psychological Science; Cepeda et al. (2006) on spaced practice.</p>
     </div>
   </div>
-  <p class="bigline">This is why the course is full of brain dumps, readiness quizzes, and daily recall cards. Every one of them is a chance to practice pulling the material out of your own head, and that is what makes it stick.</p>
+  <p class="bigline">This is why the course is full of brain dumps, readiness quizzes, and daily recall cards. Each one gives your memory another round of practice at retrieving.</p>
 </section>
 
 <!-- 7 TBL -->
@@ -350,12 +401,12 @@ body.present .qrbadge.show{display:block}
   <p class="kicker">The method</p>
   <h2 class="stitle">Team-Based Learning: <span class="hl">one cycle, four steps</span></h2>
   <div class="grid4">
-    <div class="card step"><p class="n">1</p><h3>Prepare</h3><p class="kw"><b>Sheet</b>, then <b>video</b>. Before class.</p><p>Before class, you do the pre-work sheet with your notes open, then watch the video to check yourself.</p></div>
-    <div class="card step"><p class="n">2</p><h3>iRAT</h3><p class="kw"><b>Short quiz, on your own.</b> Your prep earns it.</p><p>The iRAT stands for Individual Readiness Assurance Test. It is a short quiz you take on your own, and your prep is what earns this score.</p></div>
-    <div class="card step"><p class="n">3</p><h3>tRAT</h3><p class="kw"><b>Same quiz, with your team.</b> Instant feedback. Talk it out.</p><p>The same quiz again, this time with your team and with instant feedback, so you can talk it through and make your case for an answer.</p></div>
-    <div class="card step"><p class="n">4</p><h3>Apply</h3><p class="kw"><b>Real cases, together.</b> This is where anatomy sticks.</p><p>Your team works through real cases and problems together. This part is not graded, but it is where the anatomy really sinks in.</p></div>
+    <div class="card step"><p class="n">1</p><h3>Prepare</h3><p class="kw"><b>Sheet</b>, then <b>video</b>. Before class.</p><p>Before class, you work through the pre-work sheet with your notes open, then watch the video to check yourself.</p></div>
+    <div class="card step"><p class="n">2</p><h3>iRAT</h3><p class="kw"><b>Short quiz, alone.</b> Your prep earns it.</p><p>The Individual Readiness Assurance Test, a short quiz you take on your own. Your preparation is what earns this score.</p></div>
+    <div class="card step"><p class="n">3</p><h3>tRAT</h3><p class="kw"><b>Same quiz, with your team.</b> Instant feedback. Argue it out.</p><p>The same quiz again, this time with your team and with instant feedback, so you can talk it through and make your case.</p></div>
+    <div class="card step"><p class="n">4</p><h3>Apply</h3><p class="kw"><b>Real cases, together.</b> Where anatomy sticks.</p><p>Your team works cases and application problems together. It is not graded, but it is where the anatomy really settles in.</p></div>
   </div>
-  <p class="bigline">We will do nine TBL sessions this semester, worth 30% of your grade. There are no make-ups or drops, so preparing becomes a habit. Notice the whole cycle is built from remembering, getting feedback, and applying what you know.</p>
+  <p class="bigline">We will do nine TBL sessions this term, worth 30% of your grade, with no make-ups or drops, so preparing becomes a habit. Notice that the whole cycle is built from retrieval, feedback, and application.</p>
 </section>
 
 <!-- 8 TEAMS -->
@@ -366,18 +417,18 @@ body.present .qrbadge.show{display:block}
     <div class="darkpanel">
       <p class="big" style="font-size:clamp(40px,6vw,56px);font-weight:800;margin:0 0 8px">97%+</p>
       <p class="label" style="font-size:11.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin:0 0 10px">Of teams outscore their own best member</p>
-      <p class="kw">The <b>team beats its best member</b>, almost every time.</p><p>In the classic TBL research, when teams retook a test together, they almost always scored higher than the single best person on the team.</p>
-      <p class="srcnote">Watson, Michaelsen and Sharp (1991)</p>
+      <p class="kw">The <b>team beats its best member</b>, almost every time.</p><p>In classic TBL research, teams retaking the same test nearly always scored higher than the strongest individual on that team.</p>
+      <p class="srcnote">Watson, Michaelsen &amp; Sharp (1991)</p>
     </div>
     <div>
       <div class="rows">
-        <div class="row"><div class="dot">1</div><div><h3>Struggling students gain the most</h3><p class="kw">The biggest gains go to <b>students who came in struggling</b>.</p><p>In medical school TBL courses, the biggest exam gains went to the students who came in with the weakest grades (Koles and colleagues, 2010, Academic Medicine).</p></div></div>
-        <div class="row"><div class="dot">2</div><div><h3>Healthcare is a team job</h3><p class="kw"><b>Nobody cares for a patient alone.</b></p><p>In healthcare, nobody cares for a patient alone. Working through problems with a steady team is practice for the job you are heading toward.</p></div></div>
-        <div class="row"><div class="dot">3</div><div><h3>Same team all term</h3><p class="kw"><b>5&ndash;7 people, balanced by survey.</b> Same team all term.</p><p>Your team of five to seven people comes from the survey you just took, so every team starts out balanced. Nobody gets picked last, and the same team stays with you all semester.</p></div></div>
+        <div class="row"><div class="dot">1</div><div><h3>Struggling students gain the most</h3><p class="kw">Biggest gains: <b>students who came in struggling</b>.</p><p>In medical school TBL courses, the biggest exam gains went to students in the lowest academic quartile (Koles et al., 2010, Academic Medicine).</p></div></div>
+        <div class="row"><div class="dot">2</div><div><h3>Healthcare is a team job</h3><p class="kw"><b>Nobody cares for a patient alone.</b></p><p>In healthcare, nobody cares for a patient alone. Working problems with a steady team is practice for the job itself.</p></div></div>
+        <div class="row"><div class="dot">3</div><div><h3>Same team all term</h3><p class="kw"><b>5&ndash;7 people, balanced by survey.</b> Same team all term.</p><p>Your team of five to seven comes from a Week 1 survey, so every team starts out balanced. Nobody gets picked last, and the same team stays with you all semester.</p></div></div>
       </div>
     </div>
   </div>
-  <p class="bigline terra">If you are worried that you are not "the smart one," good news: this format was practically built for you.</p>
+  <p class="bigline terra">If you are worried you are not "the smart one," this format was practically built for you.</p>
 </section>
 
 
@@ -385,13 +436,10 @@ body.present .qrbadge.show{display:block}
 <section class="slide dark"><span class="snum">8b</span>
   <p class="kicker">Three minutes, right now</p>
   <h2 class="stitle">Help me build <span class="hl">your team</span></h2>
-  <div class="secpills" role="group" aria-label="Which class is in the room">
-    <button type="button" data-sec="mw">Class 1 · Mon/Wed</button><button type="button" data-sec="tr-am">Class 2 · Tue/Thu AM</button><button type="button" data-sec="tr-eve">Class 3 · Tue/Thu Eve</button>
-  </div>
   <div class="grid2" style="align-items:center;margin-top:18px">
     <div>
-      <p class="lede">Scan the code and answer twelve quick questions. There are no wrong answers and it is not graded. I use your answers to make sure every team starts out balanced, and you will meet your team before we leave today.</p>
-      <p class="bigline"><span class="sechint">This code is for this class only.</span> No phone handy? Open the course home page on any device, the survey pop-up is right there.</p>
+      <p class="lede">Scan the code and answer twelve quick questions. There are no wrong answers and nothing is graded. I use them to make sure every team starts balanced, and you will meet your team before we leave today.</p>
+      <p class="bigline">Pick your class on the first screen. No phone? Raise a hand and I will bring you a paper copy.</p>
     </div>
     <div class="qrblock qrcol" style="max-width:340px;margin:0 auto"><img class="secqr" src="data:image/png;base64,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" alt="QR code for the team survey" style="width:260px;height:260px"><div class="qt"><b>Team survey</b><span class="seclabel">all three classes</span></div></div>
   </div>
@@ -402,12 +450,12 @@ body.present .qrbadge.show{display:block}
   <p class="kicker">The rhythm</p>
   <h2 class="stitle">What a <span class="hl">week</span> feels like</h2>
   <div class="grid4">
-    <div class="card"><p class="label">Night before</p><p class="kw"><b>Sheet &rarr; video &rarr; lab structures.</b></p><p>Do the pre-work sheet with your notes and reading open, watch the video to check yourself, and look over the lab structures for tomorrow.</p></div>
-    <div class="card"><p class="label">Class day</p><p class="kw"><b>Brain dump</b> first (it counts) &rarr; active learning &rarr; lab.</p><p>We start with a brain dump: a few minutes of writing down what you remember from the pre-work. It counts for points. Then active learning, then lab.</p></div>
-    <div class="card"><p class="label">TBL and exam days</p><p class="kw"><b>iRAT &rarr; tRAT &rarr; cases.</b> Exam days: <b>practical + lecture exam</b>.</p><p>On TBL days you take the iRAT, then the tRAT, then work cases with your team. On exam days you take the lab practical and the lecture exam, one pair per module.</p></div>
-    <div class="card"><p class="label">After class</p><p class="kw"><b>A few minutes a day.</b> Recall cards + Loops.</p><p>Spend a few minutes a day in Mastery OS with your Recall cards, and use the Loops videos to practice for lab.</p></div>
+    <div class="card"><p class="label">Night before</p><p class="kw"><b>Sheet &rarr; video &rarr; lab structures.</b></p><p>Work the pre-work sheet with your notes and reading open, watch the video to check yourself, and look over the lab structures.</p></div>
+    <div class="card"><p class="label">Class day</p><p class="kw"><b>Brain dump</b> first (for points) &rarr; active learning &rarr; lab.</p><p>We open with a brain dump, a few minutes of writing down what you remember from the pre-work, and it counts for points. Then active learning, then lab.</p></div>
+    <div class="card"><p class="label">TBL and exam days</p><p class="kw"><b>iRAT &rarr; tRAT &rarr; cases.</b> Exam days: <b>practical + lecture exam</b>.</p><p>On TBL days you take the iRAT, then the tRAT, then work cases together. On exam days you sit the lab practical and the lecture exam, one pair per module.</p></div>
+    <div class="card"><p class="label">After class</p><p class="kw"><b>A few minutes a day.</b> Recall cards + Loops.</p><p>Spend a few minutes a day in Mastery OS with your Recall cards, and use the Loops videos to rehearse for lab.</p></div>
   </div>
-  <p class="bigline">This weekly rhythm is the whole course. Keep it up each week and the grade tends to take care of itself, because anatomy builds on itself and steady practice beats cramming every time.</p>
+  <p class="bigline">The cycle is the curriculum. Keep the rhythm each week and the grade tends to follow, because anatomy builds on itself and steady practice beats cramming every time.</p>
 </section>
 
 <!-- 10 GRADE -->
@@ -426,13 +474,13 @@ body.present .qrbadge.show{display:block}
     <div class="gcallouts"><span><i style="background:var(--gold)"></i>Lab Quizzes 5%</span><span><i style="background:#3D4860"></i>Brain Dumps 5%</span></div>
   </div>
   <div class="legend">
-    <div class="leg"><i style="background:var(--terra)"></i><div><b>TBL, 30%</b><span>9 sessions, iRAT plus tRAT, no drops.</span></div></div>
+    <div class="leg"><i style="background:var(--terra)"></i><div><b>TBL, 30%</b><span>9 sessions, iRAT + tRAT, no drops.</span></div></div>
     <div class="leg"><i style="background:var(--navy)"></i><div><b>Lecture Exams, 30%</b><span>5 exams, one per module.</span></div></div>
     <div class="leg"><i style="background:var(--teal)"></i><div><b>Lab Practicals, 30%</b><span>5 station-based practicals, one per module.</span></div></div>
     <div class="leg"><i style="background:var(--gold)"></i><div><b>Lab Quizzes, 5%</b><span>End-of-day checks in lab.</span></div></div>
     <div class="leg"><i style="background:#3D4860"></i><div><b>Brain Dumps, 5%</b><span>Real effort earns full credit.</span></div></div>
   </div>
-  <p class="bigline terra">Scholar Points can add up to another 3% at the end of the semester. You earn them with verified study hours, which are the habits that really do predict success in this class. And the grade calculator shows you exactly where you stand, any day you want to look.</p>
+  <p class="bigline terra">Scholar Points add up to another 3% at the end of the term for verified study hours, the habits that genuinely predict success here. And the grade calculator shows you exactly where you stand, any day of the term.</p>
 </section>
 
 <!-- 11-14 ACTIVITY ROUNDS -->
@@ -441,11 +489,11 @@ body.present .qrbadge.show{display:block}
   <p class="roundnum">1</p>
   <p class="kicker">Your first brain dump: the team charter</p>
   <h2 class="stitle">The <span class="hl">best team</span> you were ever on</h2>
-  <p class="lede" style="max-width:44em">Think of the best team you have ever been part of. Any team counts: work, sports, family, a group project that actually worked. Write down everything people did that made it good. Focus on what they did, not how it felt.</p>
+  <p class="lede" style="max-width:44em">Think of the best team you have ever been part of. Any team counts: work, sports, family, or a group project that actually worked. Write down every behavior that made it good, focusing on what people did rather than how it felt.</p>
   <div class="card checkcard"><p class="label terra">What your page needs</p>
-    <p class="kw"><b>Six or more things people did.</b> Actions, not feelings.</p><ul><li>At least six things people did, written as specific actions, like "showed up on time" or "said when they were lost"</li><li>What people did, not how it felt, so nothing vague like "good vibes" or "we clicked"</li><li>Name or briefly describe the team at the top</li></ul>
+    <p class="kw"><b>Six+ behaviors.</b> Actions, not feelings.</p><ul><li>At least six behaviors, written as specific actions, like showed up on time or said when they were lost</li><li>What people did, not how it felt, so nothing vague like good vibes or we clicked</li><li>Name or briefly describe the team at the top</li></ul>
   </div>
-  <p class="bigline terra">Write on your own for now, no talking yet. Your points today come from real effort on this page.</p>
+  <p class="bigline terra">Private writing, no talking yet. Your points today come from real effort on this page.</p>
 </section>
 
 <section class="slide paper" data-timer="180"><span class="snum">12</span>
@@ -453,11 +501,11 @@ body.present .qrbadge.show{display:block}
   <p class="roundnum">2</p>
   <p class="kicker">Your first brain dump: the team charter</p>
   <h2 class="stitle">The <span class="hl">worst team</span> you were ever on</h2>
-  <p class="lede" style="max-width:44em">Now think of the worst team you were ever part of. Write down the things people did that hurt it. Then go back and turn each one into a rule that would have prevented it, worded as something to do rather than something not to do.</p>
+  <p class="lede" style="max-width:44em">Now think of the worst team you were ever part of. Write down the behaviors that hurt it, and then go back and turn each one into the rule that would have prevented it, phrased as something to do rather than something to avoid.</p>
   <div class="card checkcard"><p class="label terra">What your page needs</p>
-    <p class="kw"><b>Five or more things people did</b>, each turned into a <b>rule</b>.</p><ul><li>At least five things people did that hurt the team</li><li>Each one turned into a rule, written as a "do" rather than a "do not"</li><li>Actions only, no names and no personalities. Include anything you did yourself</li></ul>
+    <p class="kw"><b>Five+ behaviors</b>, each flipped into a <b>rule</b>.</p><ul><li>At least five behaviors that caused damage</li><li>Each one flipped into a rule, written as a do rather than a do not</li><li>Behaviors only, no names and no personalities, including anything you did yourself</li></ul>
   </div>
-  <p class="bigline terra">Still writing on your own. Being honest here is what makes the charter worth signing later.</p>
+  <p class="bigline terra">Still private writing. Honesty here is what makes the charter worth signing later.</p>
 </section>
 
 <section class="slide paper" data-timer="300"><span class="snum">13</span>
@@ -465,11 +513,11 @@ body.present .qrbadge.show{display:block}
   <p class="roundnum">3</p>
   <p class="kicker">Your first brain dump: the team charter</p>
   <h2 class="stitle">Compare and <span class="hl">find the repeats</span></h2>
-  <p class="lede" style="max-width:44em">Now talk. Read your lists to your team, both the good and the bad, and mark every item that shows up on more than one person's list. Those repeats are the things your team already agrees on, and they are the raw material for your charter.</p>
+  <p class="lede" style="max-width:44em">Now talk. Read your lists to your team, both the good and the bad, and mark every behavior that shows up on more than one list. Those repeats are the things your team already agrees about, and they become the raw material for your charter.</p>
   <div class="card checkcard"><p class="label terra">What your page needs</p>
-    <p class="kw"><b>Everyone reads.</b> Mark the <b>repeats</b>.</p><ul><li>Everyone reads their lists out loud, and nobody skips the worst-team list</li><li>Mark each item that shows up on more than one list</li><li>Keep one running list of the repeats where the whole team can see it</li></ul>
+    <p class="kw"><b>Everyone reads.</b> Mark the <b>repeats</b>.</p><ul><li>Everyone reads, nobody skips their worst-team list</li><li>Mark each behavior that appears on more than one list</li><li>Keep a shared running list of the repeats where everyone can see it</li></ul>
   </div>
-  <p class="bigline terra">Listen for the overlaps. When you agree without planning to, that is the strongest kind of agreement.</p>
+  <p class="bigline terra">Listen for the overlaps. Agreement you did not plan is the strongest kind.</p>
 </section>
 
 <section class="slide paper" data-timer="420"><span class="snum">14</span>
@@ -477,11 +525,11 @@ body.present .qrbadge.show{display:block}
   <p class="roundnum">4</p>
   <p class="kicker">Your first brain dump: the team charter</p>
   <h2 class="stitle">Write and <span class="hl">sign your charter</span></h2>
-  <p class="lede" style="max-width:44em">Together, turn your repeats into five to seven rules in your own words. Make them rules you would actually keep for a whole semester on a team you cannot leave. Do not write anything you would break by week three. When the rules feel real, everyone signs the page.</p>
+  <p class="lede" style="max-width:44em">Together, turn your repeats into five to seven rules, written in your own words, that you would actually keep for a whole semester on a team you cannot leave. Write nothing you would break by week three. When the rules feel real, every member signs the page.</p>
   <div class="card checkcard"><p class="label terra">What your page needs</p>
-    <p class="kw"><b>5&ndash;7 rules. Everyone signs.</b></p><ul><li>Five to seven rules, numbered, in your team&rsquo;s own words</li><li>Each rule clear enough that you could tell whether someone kept it</li><li>Every member&rsquo;s signature at the bottom, and your team name at the top</li></ul>
+    <p class="kw"><b>5&ndash;7 rules. Everyone signs.</b></p><ul><li>Five to seven rules, numbered, in your team&rsquo;s own words</li><li>Each rule specific enough that you could tell whether someone kept it</li><li>Every member&rsquo;s signature at the bottom, and your team name at the top</li></ul>
   </div>
-  <p class="bigline terra">This page is what your team holds each other to all semester. I will take a photo of it before you leave today.</p>
+  <p class="bigline terra">This page is what your team holds each other to all semester. I will collect a photo of it today.</p>
 </section>
 
 <!-- 15 TOOLS -->
@@ -489,12 +537,12 @@ body.present .qrbadge.show{display:block}
   <p class="kicker">Your tools</p>
   <h2 class="stitle">Everything you need, <span class="hl">in one place</span></h2>
   <div class="grid2">
-    <div class="card"><h3>Start Here</h3><p class="kw"><b>Day-one page.</b> Week 1 checklist.</p><p>Your day-one page. It has a short Week 1 checklist that walks you through your accounts, your tools, your team, and what to do first.</p></div>
-    <div class="card"><h3>Mastery OS</h3><p class="kw"><b>Your study app.</b> Recall, weak spots, teach an AI.</p><p>The free study app that runs in your browser. It keeps track of what you know, runs your daily recall practice, shows you your weak spots, and lets you teach a concept to an AI to find out whether you really have it down.</p></div>
-    <div class="card"><h3>Recall cards &amp; Loops videos</h3><p class="kw"><b>A few minutes a day.</b> Nothing slips away.</p><p>Daily practice questions built on the memory research you just saw. A few minutes a day is the whole habit. Everything you have practiced stays in your queue, so nothing slips away.</p></div>
-    <div class="card"><h3>Digital Atlas &amp; grade calculator</h3><p class="kw"><b>Atlas</b> for recall. <b>Calculator</b> so your grade is never a mystery.</p><p>Anatomy images picked for practicing recall, plus a calculator that shows where you stand whenever you want to check, so your grade is never a mystery.</p></div>
+    <div class="card"><h3>Start Here</h3><p class="kw"><b>Day-one page.</b> Week 1 checklist.</p><p>Your day-one page, with a short Week 1 checklist that walks you through your accounts, your tools, your team, and what to do first.</p></div>
+    <div class="card"><h3>Mastery OS</h3><p class="kw"><b>Your study app.</b> Recall, weak spots, teach an AI.</p><p>The free study app that runs in your browser. It tracks your competencies, runs your spaced recall, shows you your weak spots, and lets you teach a concept to an AI to see whether you really have it.</p></div>
+    <div class="card"><h3>Recall cards &amp; Loops videos</h3><p class="kw"><b>A few minutes a day.</b> Nothing slips away.</p><p>Daily practice questions built straight from the retrieval research. A few minutes a day is the whole habit, and everything you have rated stays in your practice queue so nothing slips away.</p></div>
+    <div class="card"><h3>Digital Atlas &amp; grade calculator</h3><p class="kw"><b>Atlas</b> for recall. <b>Calculator</b> so your grade is never a mystery.</p><p>Curated anatomy references built for active recall, along with a calculator that shows your standing whenever you want to check, so your grade is never a mystery.</p></div>
   </div>
-  <p class="bigline">Bookmark four pages today: Start Here, the course calendar, Mastery OS, and your section&rsquo;s syllabus. I built every one of these for you, so please use them.</p>
+  <p class="bigline">Bookmark four pages today: Start Here, the course calendar, Mastery OS, and your section&rsquo;s syllabus. I built every one of these for this course, so please use them.</p>
 </section>
 
 <!-- 16 SCAVENGER -->
@@ -504,13 +552,13 @@ body.present .qrbadge.show{display:block}
   <h2 class="stitle">Team <span class="hl">scavenger hunt</span></h2>
   <div class="grid2">
     <div class="card"><p class="label terra">Your team&rsquo;s mission: find and write down</p>
-      <p class="kw"><b>Find five things</b> on the course site.</p><ul class="plain"><li>Two things on the Week 1 checklist on the Start Here page</li><li>What TBL is worth in your final grade, and how many TBLs there are</li><li>One way to earn Scholar Points, and the most you can earn</li><li>Where the Recall cards live and how often to use them</li><li>The 20-minute attendance rule, in your own words</li></ul>
+      <p class="kw"><b>Find five things</b> on the course site.</p><ul class="plain"><li>The Week 1 checklist on Start Here: name two things on it</li><li>What TBL is worth in your final grade, and how many TBLs there are</li><li>One way to earn Scholar Points, and the maximum bonus</li><li>Where the Recall cards live and how often to use them</li><li>The 20-minute attendance rule, in your own words</li></ul>
     </div>
     <div class="darkpanel"><p class="label" style="font-size:11.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin:0 0 10px">Rules</p>
-      <p class="kw"><b>10 minutes.</b> Any device. First correct team wins.</p><ul class="plain"><li>10 minutes on the clock</li><li>Any device, any teammate</li><li>The first team to get everything right wins, and gets announced with full honors</li><li>Every team that gets everything right earns bragging rights</li></ul>
+      <p class="kw"><b>10 minutes.</b> Any device. First correct team wins.</p><ul class="plain"><li>10 minutes on the clock</li><li>Any device, any teammate</li><li>First team fully correct wins, and gets announced with full honors</li><li>Every fully correct team gets bragging rights</li></ul>
     </div>
   </div>
-  <p class="bigline terra">The point of this one is simple: on day one, your team learns to find answers together before asking me. That habit is half of what makes teams work.</p>
+  <p class="bigline terra">The point of this one is simple: on day one, your team learns to find answers together before asking me, and that habit is half of TBL.</p>
 </section>
 
 <!-- 17 MY AI -->
@@ -518,11 +566,11 @@ body.present .qrbadge.show{display:block}
   <p class="kicker">Full transparency</p>
   <h2 class="stitle">Yes, I use AI to build this course. <span class="hl">Here is how.</span></h2>
   <div class="rows">
-    <div class="row"><div class="dot navy">1</div><div><h3>What I use it for</h3><p class="kw"><b>It drafts and builds.</b> It does not replace knowing the material.</p><p>I use it to draft practice questions, to build the study tools you just saw, and to turn my materials into cleaner formats. It is a power tool for building things, not a replacement for knowing the material.</p></div></div>
-    <div class="row"><div class="dot navy">2</div><div><h3>What happens before you see it</h3><p class="kw"><b>AI writes the draft. I check it. I decide.</b></p><p>Every fact, question, and answer key gets checked against the textbook and my own clinical and teaching experience before it ever reaches you. The AI may write the first draft, but I do the checking and the deciding.</p></div></div>
-    <div class="row"><div class="dot navy">3</div><div><h3>Why I am telling you</h3><p class="kw">You deserve to know. And <b>watching responsible use is part of your education</b>.</p><p>You deserve to know how your course materials are made. And you are heading into a field where AI tools are everywhere, so watching someone use them responsibly is part of your education.</p></div></div>
+    <div class="row"><div class="dot navy">1</div><div><h3>What I use it for</h3><p class="kw"><b>Drafts and builds.</b> Not a substitute for expertise.</p><p>Drafting practice questions, building the study tools you just met, and turning my materials into cleaner formats. It is a power tool for building, not a substitute for expertise.</p></div></div>
+    <div class="row"><div class="dot navy">2</div><div><h3>What happens before you see it</h3><p class="kw"><b>AI drafts. I verify. I decide.</b></p><p>Every fact, question, and answer key gets checked against the textbook and my own clinical and teaching experience before it ever reaches you. The AI may draft, but I do the verifying and the deciding.</p></div></div>
+    <div class="row"><div class="dot navy">3</div><div><h3>Why I am telling you</h3><p class="kw">You deserve to know. And <b>watching responsible use is part of your education</b>.</p><p>You deserve to know how your course materials are made. And you are entering a field where AI tools are everywhere, so watching someone use them responsibly is part of your education.</p></div></div>
   </div>
-  <p class="bigline terra">The rule I follow is the same one I will ask of you: let AI help with the busywork, but never hand it your thinking, and never trust it without checking.</p>
+  <p class="bigline terra">The rule I follow is the same one I will ask of you: let AI help with the labor, but never hand it the thinking, and never trust it unverified.</p>
 </section>
 
 <!-- 18 YOUR AI -->
@@ -531,14 +579,14 @@ body.present .qrbadge.show{display:block}
   <h2 class="stitle">AI: <span class="hl">encouraged for studying</span>, strict for grades</h2>
   <div class="grid2">
     <div class="card"><p class="label teal">For studying: encouraged</p>
-      <p class="kw"><b>Quiz me. Explain it differently. Check my explanation.</b></p><ul class="plain"><li>Use the "Teach it to an AI" feature in Mastery OS to find out whether you really understand a concept</li><li>Have it quiz you, and give your answer before it shows you anything</li><li>Ask it to explain a concept a different way than the book does</li></ul>
+      <p class="kw"><b>Quiz me. Explain it differently. Check my explanation.</b></p><ul class="plain"><li>Use the Teach it to an AI feature in Mastery OS to test whether you really have a concept</li><li>Have it quiz you, and answer before it shows you anything</li><li>Ask it to explain a concept a different way than the book</li></ul>
     </div>
     <div class="card"><p class="label terra">For graded work: strict</p>
-      <p class="kw"><b>Only on marked assignments.</b> Never on exams or graded TBL work.</p><ul class="plain"><li>AI is allowed only on assignments that are specifically marked as AI assignments</li><li>No AI on exams or on any graded part of a TBL session</li><li>Be careful about trusting it blindly. It can be confidently, smoothly wrong</li></ul>
+      <p class="kw"><b>Only on marked assignments.</b> Never on exams or graded TBL.</p><ul class="plain"><li>Generative AI only on assignments specifically marked as AI assignments</li><li>No AI on exams or on any graded part of a TBL</li><li>Be careful about trusting it blindly, because it can be confidently and fluently wrong</li></ul>
     </div>
   </div>
-  <p class="bigline">Here is a simple test for any time you use it: when you finish, can you do it without the AI? If yes, it helped you learn. If not, it did the remembering for you, and remembering you skip is memory you never build.</p>
-  <p class="srcline">When you are not sure where the line is, just ask me. Asking is always the easier option.</p>
+  <p class="bigline">Here is a simple test for every use: when you finish, can you do it without the AI? If yes, it helped you learn. If not, it did the retrieving for you, and retrieval you skip is memory you never build.</p>
+  <p class="srcline">When you are not sure where the line is, ask me. Asking is always the cheaper option.</p>
 </section>
 
 <!-- 19 FACT CHECK -->
@@ -547,12 +595,12 @@ body.present .qrbadge.show{display:block}
   <p class="kicker">Catch the AI</p>
   <h2 class="stitle">The <span class="hl">fact-check</span> drill</h2>
   <div class="grid2">
-    <div class="card"><p class="label terra">Step 1 &middot; Ask</p><p class="kw"><b>Ask</b> an AI five anatomy questions.</p><p>As a team, ask an AI tool five factual anatomy questions. Start with body regions, directional terms, or anything you remember from earlier classes.</p></div>
-    <div class="card"><p class="label terra">Step 2 &middot; Verify</p><p class="kw"><b>Check</b> every answer against the book.</p><p>Check every answer against the OpenStax textbook or the course pages. Write down the section that backs it up or contradicts it.</p></div>
-    <div class="card"><p class="label terra">Step 3 &middot; Judge</p><p class="kw"><b>Judge:</b> correct, misleading, or wrong.</p><p>Grade each answer as fully correct, technically true but misleading, or wrong. Keep asking more detailed questions until you catch one that is not quite right.</p></div>
-    <div class="card"><p class="label terra">Step 4 &middot; Report</p><p class="kw"><b>Report</b> your best catch.</p><p>Each team shares its best catch with the class: what the AI said, what the book says, and why the difference matters.</p></div>
+    <div class="card"><p class="label terra">Step 1 &middot; Ask</p><p class="kw"><b>Ask</b> an AI five anatomy questions.</p><p>As a team, ask an AI tool five factual anatomy questions. Start with body regions, directional terms, or anything you remember from prior classes.</p></div>
+    <div class="card"><p class="label terra">Step 2 &middot; Verify</p><p class="kw"><b>Verify</b> every answer against the source.</p><p>Check every answer against OpenStax or the course pages. Write down the section that confirms or contradicts each one.</p></div>
+    <div class="card"><p class="label terra">Step 3 &middot; Judge</p><p class="kw"><b>Judge:</b> correct, misleading, or wrong.</p><p>Grade each answer as fully correct, technically true but misleading, or wrong. Keep pushing into more precise territory until you catch one that is not quite right.</p></div>
+    <div class="card"><p class="label terra">Step 4 &middot; Report</p><p class="kw"><b>Report</b> your best catch.</p><p>Each team shares its best catch with the class: what the AI said, what the source says, and why the difference matters.</p></div>
   </div>
-  <p class="bigline terra">The point of this one: checking is the real skill. In healthcare, an unchecked answer becomes a patient safety problem, so we start the habit now.</p>
+  <p class="bigline terra">The point of this one is that verification is the real skill. In healthcare, an unverified answer becomes a patient safety problem, so we start the habit now.</p>
 </section>
 
 <!-- 20 THE DEAL -->
@@ -561,13 +609,13 @@ body.present .qrbadge.show{display:block}
   <h2 class="stitle">What I promise. <span class="hl">What I ask.</span></h2>
   <div class="grid2">
     <div><p class="label" style="font-size:11.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin:0 0 10px">I promise</p>
-      <ul class="plain"><li>Every method in this course is backed by evidence, and I will show you the evidence</li><li>No mystery grades, no gotcha exams</li><li>Tools built just for this course, free to you</li><li>A professor who has actually done this work in the real world</li></ul>
+      <ul class="plain"><li>Every method backed by evidence, and I will show you the evidence</li><li>No mystery grades, no gotcha exams</li><li>Tools built specifically for this course, free to you</li><li>A professor who has done this job in the real world</li></ul>
     </div>
     <div><p class="label" style="font-size:11.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin:0 0 10px">I ask</p>
-      <ul class="plain"><li>Do the pre-work, because your team is counting on you</li><li>Practice remembering before you reread, even when it feels hard</li><li>Use AI to build your brain, never to replace it</li><li>Ask questions early, because small confusions grow fast in a class where everything builds on what came before</li></ul>
+      <ul class="plain"><li>Do the pre-work, because your team is counting on you</li><li>Practice retrieving before you review, even when it feels hard</li><li>Use AI to build your brain, never to replace it</li><li>Ask questions early, because small confusions grow in a cumulative course</li></ul>
     </div>
   </div>
-  <p class="lede" style="margin-top:22px">Tonight: bookmark Start Here, set up your accounts, and start the Week 1 pre-work. Have your gloves and lab coat ready by Week 2.</p>
+  <p class="lede" style="margin-top:22px">Tonight, bookmark Start Here, set up your accounts, and start the Week 1 pre-work. Have your gloves and lab coat ready by Week 5.</p>
   <p class="bigline" style="font-size:clamp(22px,3.5vw,30px)">Let&rsquo;s get to work.</p>
 </section>
 
@@ -585,7 +633,7 @@ body.present .qrbadge.show{display:block}
     <li>Richland, Kornell &amp; Kao (2009). The pretesting effect: Do unsuccessful retrieval attempts enhance learning? Journal of Experimental Psychology: Applied.</li>
     <li>The pretesting effect: Exploring the impact of feedback and final test timing (2025). Journal of Cognition.</li>
   </ul>
-  <p class="bigline">All of these are real studies, and most are free to read. Looking things up before you believe them is a habit this course is trying to build in you, so feel free to start with mine.</p>
+  <p class="bigline">All of these are real, and most are free to read. Looking things up before you believe them is a habit this course is trying to build in you, so feel welcome to start with mine.</p>
 </section>
 
 </main>
@@ -609,7 +657,6 @@ body.present .qrbadge.show{display:block}
 <div class="zoom-back" id="zoomBack"></div>
 <div class="zoom" id="zoom" role="dialog" aria-modal="true"><button type="button" class="zoom-close" id="zoomClose">Close &middot; Esc</button><div class="zoom-inner" id="zoomInner"></div></div>
 <div class="rvhint">Click a box and it zooms out &middot; arrow opens the next box, then advances &middot; <b style="color:#D9DEE8">A</b> marks all seen</div>
-<button type="button" class="pfs" id="pfsBtn">Full screen (F)</button>
 <div class="present-bar">
   <button type="button" class="pbtn" id="prevBtn" aria-label="Previous slide">&larr;</button>
   <span class="pcount" id="pcount">1 / 21</span>
@@ -631,44 +678,25 @@ body.present .qrbadge.show{display:block}
     idx = i;
     if (window.__zoomOpen && window.__zoomOpen()) window.__zoomClose();
     slides.forEach(function(s, k){ s.classList.toggle('is-current', k === idx); });
-    fitCurrent();
     pcount.textContent = (idx + 1) + ' / ' + slides.length;
     var lastQR = Array.prototype.findIndex.call(slides, function(s){ return s.querySelector('.snum') && s.querySelector('.snum').textContent === '8b'; });
     var qb = document.getElementById('qrbadge'); var bigHere = !!slides[idx].querySelector('.qrblock.qrcol'); if (qb && !qb.dataset.userHidden) qb.classList.toggle('show', idx <= lastQR && !bigHere);
     progress.style.width = (((idx + 1) / slides.length) * 100) + '%';
   }
-  function fitCurrent(){
-    if (!on) return;
-    var s = slides[idx]; if (!s) return;
-    s.style.zoom = '';
-    var avail = window.innerHeight;
-    var need = s.scrollHeight;
-    if (need > avail){ s.style.zoom = String(Math.max(0.55, (avail / need) * 0.985)); }
-  }
-  window.addEventListener('resize', function(){ if (on) fitCurrent(); });
   function enter(i){
     on = true;
     document.body.classList.add('present');
     show(i || 0);
-    var fsb = document.getElementById('pfsBtn');
-    if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().then(function(){ fsb.classList.remove('show'); }).catch(function(){ fsb.classList.add('show'); });
-    else fsb.classList.add('show');
+    if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(function(){});
   }
-  function goFull(){ if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().then(function(){ document.getElementById('pfsBtn').classList.remove('show'); }).catch(function(){}); }
-  document.getElementById('pfsBtn').addEventListener('click', goFull);
   function exit(){
     on = false;
     document.body.classList.remove('present');
-    slides.forEach(function(s){ s.classList.remove('is-current'); s.style.zoom=''; });
+    slides.forEach(function(s){ s.classList.remove('is-current'); });
     if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(function(){});
   }
 
-  document.getElementById('presentBtn').addEventListener('click', function(){
-    var url = location.href.split('#')[0];
-    url += (url.indexOf('?') >= 0 ? '&' : '?') + 'present=1';
-    var w = window.open(url, 'bio004-slides', 'popup=yes,width=' + Math.min(1440, screen.availWidth) + ',height=' + Math.min(900, screen.availHeight) + ',menubar=no,toolbar=no,location=no,status=no');
-    if (!w) enter(0);   /* pop-up blocked: present right here instead */
-  });
+  document.getElementById('presentBtn').addEventListener('click', function(){ enter(0); });
   document.getElementById('prevBtn').addEventListener('click', function(){ show(idx - 1); });
   document.getElementById('nextBtn').addEventListener('click', function(){ show(idx + 1); });
   document.getElementById('exitBtn').addEventListener('click', exit);
@@ -682,15 +710,14 @@ body.present .qrbadge.show{display:block}
   document.addEventListener('keydown', function(e){
     if (!on) return;
     var tag = (e.target && e.target.tagName ? e.target.tagName : '').toLowerCase();
-    if (e.key === 'f' || e.key === 'F'){ e.preventDefault(); goFull(); return; }
     if (e.key === 'q' || e.key === 'Q'){ e.preventDefault(); var qb=document.getElementById('qrbadge'); qb.dataset.userHidden = qb.classList.contains('show') ? '1' : ''; qb.classList.toggle('show'); return; }
     if (e.key === 'ArrowRight' || e.key === 'PageDown'){ e.preventDefault(); if (!(window.__rvNext && window.__rvNext())) show(idx + 1); }
     else if (e.key === 'ArrowLeft' || e.key === 'PageUp' || e.key === 'Backspace'){ e.preventDefault(); if (window.__zoomOpen && window.__zoomOpen()) { window.__zoomClose(); } else show(idx - 1); }
     else if (e.key === ' ' && tag !== 'button'){ e.preventDefault(); if (!(window.__rvNext && window.__rvNext())) show(idx + 1); }
     else if (e.key === 'Escape'){ if (!(window.__zoomOpen && window.__zoomOpen())) exit(); }
   });
-  document.addEventListener('fullscreenchange', function(){ if (!document.fullscreenElement && on){ document.getElementById('pfsBtn').classList.add('show'); } else if (document.fullscreenElement){ document.getElementById('pfsBtn').classList.remove('show'); } fitCurrent(); });
-  if (/[?&#]present(=|&|$|#)/.test(location.href)) enter(0);
+  document.addEventListener('fullscreenchange', function(){ if (!document.fullscreenElement && on){ exit(); } });
+  if (/[?#&]present/.test(location.href)) enter(0);
 })();
 
 /* ---------- floating clock ---------- */
@@ -906,32 +933,41 @@ body.present .qrbadge.show{display:block}
   if (!SEC[cur]) cur = null;
   function paint(){
     var big = document.getElementById('secBig');
-    document.querySelectorAll('.secpills button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.sec===cur ? 'true':'false'); });
+    document.querySelectorAll('#secPills button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.sec===cur ? 'true':'false'); });
     if (cur){
-      if (big) big.innerHTML = SEC[cur].big + '<small>' + SEC[cur].small + '</small>';
+      big.innerHTML = SEC[cur].big + '<small>' + SEC[cur].small + '</small>';
       document.querySelectorAll('img.secqr').forEach(function(im){ im.src = 'data:image/png;base64,' + SEC[cur].qr; });
       document.querySelectorAll('.seclabel').forEach(function(el){ el.textContent = SEC[cur].label; });
-      document.querySelectorAll('.sechint').forEach(function(el){ el.textContent = 'This code is for ' + SEC[cur].label + ' only.'; });
     } else {
-      if (big) big.innerHTML = 'ALL CLASSES<small>CLICK TO PICK YOUR CLASS</small>';
+      big.innerHTML = 'ALL CLASSES<small>CLICK TO PICK YOUR CLASS</small>';
       document.querySelectorAll('img.secqr').forEach(function(im){ im.src = 'data:image/png;base64,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'; });
       document.querySelectorAll('.seclabel').forEach(function(el){ el.textContent = 'all three classes'; });
-      document.querySelectorAll('.sechint').forEach(function(el){ el.textContent = 'Pick your class on the first screen.'; });
     }
   }
   function setSec(s){ cur = s; try { localStorage.setItem('bio004-section', cur); } catch(err){} paint(); }
-  document.querySelectorAll('.secpills button').forEach(function(b){ b.addEventListener('click', function(e){ e.stopPropagation(); setSec(b.dataset.sec); }); });
+  document.querySelectorAll('#secPills button').forEach(function(b){ b.addEventListener('click', function(e){ e.stopPropagation(); setSec(b.dataset.sec); }); });
   document.addEventListener('keydown', function(e){
     if (e.target && /input|textarea/i.test(e.target.tagName)) return;
     if (e.key === '1') setSec('mw'); else if (e.key === '2') setSec('tr-am'); else if (e.key === '3') setSec('tr-eve');
   });
-  if (document.getElementById('secBig')) document.getElementById('secBig').addEventListener('click', function(e){
+  document.getElementById('secBig').addEventListener('click', function(e){
     e.stopPropagation();
     var i = cur ? order.indexOf(cur) : -1; cur = order[(i+1) % order.length];
     try { localStorage.setItem('bio004-section', cur); } catch(err){}
     paint();
   });
   paint();
+})();
+</script>
+<script>
+/* Height sender, the same block every other page carries. Without it this
+   deck cannot tell a Kajabi frame how tall it is. */
+(function(){
+  var FRAME_ID = 'bio004-course-introduction';
+  function sendHeight(){ var h = (window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight); if (window.parent && window.parent!==window) parent.postMessage({type:'resize', id:FRAME_ID, height:h}, '*'); }
+  window.addEventListener('load', sendHeight); window.addEventListener('resize', sendHeight);
+  if (window.ResizeObserver) new ResizeObserver(sendHeight).observe(document.body);
+  [200,600,1200,2400].forEach(function(t){ setTimeout(sendHeight, t); });
 })();
 </script>
 </body>
