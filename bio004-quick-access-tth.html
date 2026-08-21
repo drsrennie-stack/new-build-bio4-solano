@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Quick Access &middot; BIO 004 Human Anatomy &middot; Fall 2026</title>
-<meta name="description" content="A simple list of BIO 004 course materials, week by week. Same materials as the main course site, plainer map.">
+<title>Quick Access (Tue/Thu) &middot; BIO 004 Human Anatomy &middot; Fall 2026</title>
+<meta name="description" content="A simple list of BIO 004 course materials, week by week. Same materials as the main course site, plainer map. This copy is locked to the Tuesday / Thursday class.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet">
@@ -133,13 +133,8 @@
      works fine without one; exam dates just defer to the calendar. ---- */
   var SEC_NAMES = { 'mw':'Mon / Wed · Afternoon', 'tr-am':'Tue / Thu · Morning', 'tr-eve':'Tue / Thu · Evening' };
   var SEC_CLASS = { 'mw':'class1', 'tr-am':'class2', 'tr-eve':'class3' };
-  function getSec() {
-    try { var m = location.search.match(/[?&]sec=(mw|tr-am|tr-eve)/); if (m) return m[1]; } catch (e) {}
-    try { var v = localStorage.getItem('bio004-section'); if (SEC_NAMES[v]) return v; } catch (e) {}
-    return null;
-  }
-  var SEC = getSec();
-  if (SEC) { try { localStorage.setItem('bio004-section', SEC); } catch (e) {} }
+  /* This copy is locked to one class. No picker, no remembering. */
+  var SEC = 'tr-am';
 
   function applySec() {
     if (!SEC) return;
@@ -170,29 +165,8 @@
   function renderSecLine() {
     var el = document.getElementById('secline');
     if (!el) return;
-    if (SEC) {
-      el.innerHTML = 'Your class: <b>' + SEC_NAMES[SEC] + '</b>. The exam dates below are '
-        + 'for this class. '
-        + '<button type="button" class="chg" data-chg>Not your class? Change it</button>';
-      el.querySelector('[data-chg]').addEventListener('click', function () {
-        SEC = null;
-        try { localStorage.removeItem('bio004-section'); } catch (e) {}
-        renderSecLine(); rerender();
-      });
-    } else {
-      el.innerHTML = '<b>Which class are you in?</b> Pick one and the exam dates below will '
-        + 'match your class.<br>'
-        + Object.keys(SEC_NAMES).map(function (k) {
-            return '<button type="button" data-pick="' + k + '">' + SEC_NAMES[k] + '</button>';
-          }).join('');
-      el.querySelectorAll('[data-pick]').forEach(function (b) {
-        b.addEventListener('click', function () {
-          SEC = b.getAttribute('data-pick');
-          try { localStorage.setItem('bio004-section', SEC); } catch (e) {}
-          renderSecLine(); rerender();
-        });
-      });
-    }
+    el.innerHTML = 'This page is for the <b>Tuesday / Thursday</b> class. '
+      + 'Exam dates below are for this class.';
     applySec();
   }
 
@@ -331,7 +305,7 @@
   applySec();
 
   /* height sender for embeds, same shape as every other page */
-  var FRAME_ID = 'bio004-quick-access';
+  var FRAME_ID = 'bio004-quick-access-tth';
   function sendHeight() {
     var h = (window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight);
     if (window.parent && window.parent !== window) parent.postMessage({type: 'resize', id: FRAME_ID, height: h}, '*');
