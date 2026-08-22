@@ -70,6 +70,31 @@ a{color:var(--rust)}
 .btn.ghost{background:transparent}
 .btn svg{width:18px;height:18px;flex:none}
 
+/* ---------- the mastery ticker ---------- */
+.tickcard{background:var(--white);border:1.5px solid var(--line);border-radius:var(--r-lg);
+  padding:18px 20px;box-shadow:var(--shadow);margin-bottom:18px}
+.tickhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.tickhead .t{font-size:17px;font-weight:800;color:var(--navy)}
+.tickhead .big{font-size:26px;font-weight:800;color:var(--navy);margin-left:auto}
+.tickdelta{display:inline-flex;align-items:center;gap:4px;font-family:var(--eyebrow);font-size:12px;
+  font-weight:700;border-radius:999px;padding:2px 9px;border:1px solid var(--line)}
+.tickdelta.up{color:var(--ok)}
+.tickdelta.down{color:var(--bad)}
+.tickdelta.flat{color:var(--ink-faint)}
+.tickwrap{position:relative;margin-top:10px}
+.tickwrap svg{display:block;width:100%;height:auto}
+.tick-axis{font:600 11px var(--eyebrow);fill:var(--ink-faint)}
+.tick-grid{stroke:var(--line-soft);stroke-width:1}
+.tick-line{fill:none;stroke:var(--terra-dark);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.tick-area{fill:rgba(194,115,77,0.12)}
+.tick-dot{fill:var(--terra-dark);stroke:var(--white);stroke-width:2}
+.tick-endlab{font:800 13px var(--disp);fill:var(--navy)}
+.tick-xhair{stroke:var(--line);stroke-width:1;stroke-dasharray:3 3}
+.ticktip{position:absolute;pointer-events:none;background:var(--card-navy);color:#EDF1F3;border-radius:8px;
+  padding:7px 11px;font:600 12.5px var(--disp);white-space:nowrap;transform:translate(-50%,-115%);display:none}
+.ticktip b{color:var(--gold-light)}
+.ticknote{font-size:13.5px;color:var(--ink-soft);margin-top:8px}
+
 /* ---------- logo / header ---------- */
 .site-header{position:sticky;top:0;z-index:30;background:rgba(250,250,249,.86);backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line-soft)}
 .hbar{max-width:1120px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:14px}
@@ -700,6 +725,7 @@ section.block:first-of-type{border-top:none}
       <div class="sec-head">
         <div><p class="eyebrow">Section 2</p><h2 id="h-dash">Mastery Dashboard</h2><p class="lead">Where you are strong, and where you are exposed.</p></div>
       </div>
+      <div id="tickerWrap"><!-- JS: the mastery ticker --></div>
       <div class="grid g4" id="dashGrid"><!-- JS --></div>
     </div>
   </section>
@@ -1580,6 +1606,30 @@ function currentWeekNumber(){
    these need a first pass, not repair. */
 function untouched(){
   return allComps().filter(function(x){ return inPlay(x.c) && !x.c.last; });
+}
+
+/* FORGETTING IS REAL. A competency untouched for weeks drifts back
+   down, so the board and the ticker tell the truth instead of freezing
+   at the best day the student ever had. Two weeks of grace, then 2
+   points per idle week, floored at 20 so evidence never fully erases.
+   S.decayAt limits it to one application per real week, so reloading
+   the page never compounds it. Touching the competency again (any
+   bumpComp) resets c.last and stops the slide. */
+function applyDecay(){
+  var today=dparse(TODAY);
+  var lastRun=S.decayAt?dparse(S.decayAt):null;
+  if(lastRun&&(today-lastRun)<7*86400000)return false;
+  var steps=lastRun?Math.max(1,Math.min(4,Math.floor((today-lastRun)/(7*86400000)))):1;
+  allComps().forEach(function(x){
+    var c=x.c;
+    if(!c.last||!c.mastery||c.mastery<=20)return;
+    var idle=Math.floor((today-dparse(c.last))/86400000);
+    if(idle<14)return;
+    c.mastery=Math.max(20,c.mastery-2*steps);
+    c.conf=c.mastery>=75?'high':c.mastery>=50?'med':'low';
+  });
+  S.decayAt=TODAY;
+  return true;
 }
 
 /* Anything last touched before the fall term began is left over from
@@ -2727,7 +2777,18 @@ function mmTask(c){
   var steps=[
     {emoji:'🗺️',h:'Map it from your notes',p:'Open your notes for '+c.name+'. On paper or a whiteboard, build a mind-map: put '+c.name+' in the center and branch out every related structure, term, and connection you can find. Take about five minutes.',cta:'I have mapped it'}, {emoji:'🧠',h:'Now rebuild it from memory',p:'Close your notes. On a fresh page, redraw the whole mind-map from memory, no peeking. This retrieval is what builds durable memory.',cta:'I have rebuilt it'}, {emoji:'🔍',h:'Compare and score',p:'Put the two side by side. What did you miss? Those gaps are your next repair targets for '+c.name+'. How much came back?',cta:null}
   ];
-  function render(){var s=steps[step];var b='<div class="g-center"><div class="g-emoji">'+s.emoji+'</div><h3>'+esc(s.h)+'</h3><p>'+esc(s.p)+'</p>';if(step<2)b+='<div class="g-actions"><button class="btn gold" id="mmNext">'+esc(s.cta)+'</button></div>';else b+='<div class="g-actions"><button class="btn" data-mmscore="2">Under half</button><button class="btn" data-mmscore="4">Most of it</button><button class="btn gold" data-mmscore="6">Almost all</button></div>';b+='</div>';gBody(b);if(step<2){var n=$('#mmNext');if(n)n.onclick=function(){step++;render();};}}
+  function render(){var s=steps[step];var b='<div class="g-center"><div class="g-emoji">'+s.emoji+'</div><h3>'+esc(s.h)+'</h3><p>'+esc(s.p)+'</p>';
+    if(step<2)b+='<div class="g-actions"><button class="btn gold" id="mmNext">'+esc(s.cta)+'</button></div>';
+    else{
+      /* with a checklist available, ticks replace the three feelings
+         buttons, so the score is counted rather than guessed */
+      var rub=rubricFor(c)||[];
+      if(rub.length)b+='<div class="g-actions"><button class="btn gold" id="mmCheck">Check myself off the list</button></div>';
+      else b+='<div class="g-actions"><button class="btn" data-mmscore="2">Under half</button><button class="btn" data-mmscore="4">Most of it</button><button class="btn gold" data-mmscore="6">Almost all</button></div>';
+    }
+    b+='</div>';gBody(b);
+    if(step<2){var n=$('#mmNext');if(n)n.onclick=function(){step++;render();};}
+    var mc=$('#mmCheck');if(mc)mc.onclick=function(){selfCheckList(c,rubricFor(c)||[],'recall',mindMap);};}
   render();
 }
 
@@ -3245,6 +3306,37 @@ function bdCheck(c,words){
   $$('#gameBody .pm-step').forEach(function(btn){btn.onclick=function(){var i=+btn.getAttribute('data-bdi');checked[i]=!checked[i];btn.setAttribute('aria-pressed',checked[i]?'true':'false');var g=0;for(var k in checked)if(checked[k])g++;var cs=$('#bdCount');if(cs)cs.textContent=g+' of '+rub.length;};});
   $('#bdScore').onclick=function(){var g=0;for(var k in checked)if(checked[k])g++;bdResult(c,rub.length,g);};
 }
+/* One tickable self-check list, shared by every exercise that ends in
+   "grade yourself". Ticks are the data: the score comes from the count,
+   the credit flows into mastery, skills, dims, calibration, and the
+   evidence log, exactly like the brain dump has always done. kind
+   picks which dimension and evidence tag the ticks feed. */
+function selfCheckList(c,rub,kind,againFn){
+  var checked={};
+  var b='<div class="g-qmeta"><span>Check off what you got</span><span>'+esc(c.name)+'</span></div>';
+  b+='<p class="g-q" style="font-size:15px">Tick every item you actually covered. Be honest, this is your score, and every tick is recorded.</p>';
+  b+='<ul style="list-style:none;padding:0;margin:0 0 14px;display:grid;gap:8px">'+rub.map(function(x,i){return '<li><button type="button" class="pm-step" data-sci="'+i+'" aria-pressed="false"><span class="pm-box" aria-hidden="true"></span><span class="lbl">'+esc(x)+'</span></button></li>';}).join('')+'</ul>';
+  b+='<div class="g-actions"><span style="align-self:center;font-weight:800" id="scCount">0 of '+rub.length+'</span><button class="btn gold" id="scScore">Score me</button></div>';
+  gBody(b);
+  $$('#gameBody .pm-step').forEach(function(btn){btn.onclick=function(){var i=+btn.getAttribute('data-sci');checked[i]=!checked[i];btn.setAttribute('aria-pressed',checked[i]?'true':'false');var g=0;for(var k in checked)if(checked[k])g++;var cs=$('#scCount');if(cs)cs.textContent=g+' of '+rub.length;};});
+  $('#scScore').onclick=function(){var g=0;for(var k in checked)if(checked[k])g++;selfCheckResult(c,rub.length,g,kind,againFn);};
+}
+function selfCheckResult(c,total,got,kind,againFn){
+  var pct=total?Math.round(got/total*100):0;
+  var bump=Math.max(1,Math.round((got/(total||1))*6));
+  bumpComp(c,bump);
+  bumpSkill('Retrieval',2);bumpSkill('Gap Identification',2);
+  if(kind==='draw'){bumpDim('draw',Math.max(2,bump));if(c.ev.indexOf('draw')<0)c.ev.push('draw');}
+  else{bumpDim('recall',Math.max(2,bump));if(c.ev.indexOf('retrieval')<0)c.ev.push('retrieval');}
+  try{logCalibration(c,bump);}catch(e){}
+  selfScored(c,bump);
+  save();renderAll();
+  var emoji=pct>=80?'✅':pct>=50?'📈':'🔁';
+  var msg=pct>=80?'Strong coverage.':pct>=50?'Solid, with gaps to close.':'Thin, worth another pass.';
+  gBody('<div class="g-center"><div class="g-emoji">'+emoji+'</div><h3>'+pct+'%, '+got+' of '+total+'</h3><p>'+msg+' The items you left unticked are your repair targets for '+esc(c.name)+'. Mastery updated from your ticks.</p><div class="g-actions"><button class="btn gold" id="scAgain">Practice again</button><button class="btn" data-gameclose>Done</button></div></div>');
+  var a=$('#scAgain');if(a)a.onclick=function(){if(againFn)againFn();};
+}
+
 function bdResult(c,total,got){
   var pct=total?Math.round(got/total*100):0;var bump=Math.max(1,Math.round((got/(total||1))*6));bumpComp(c,bump);bumpSkill('Retrieval',2);bumpSkill('Gap Identification',1);
   /* the dump scores itself against a rubric, so it never reached the
@@ -3836,15 +3928,17 @@ function drawKnow(){
       }
       b+='<button class="btn" data-toolblank="mastery-canvas.html?comp='+encodeURIComponent(c.id)+'&title='+encodeURIComponent(c.name)+'&conf='+encodeURIComponent(CUR_CONF||'')+'">'+esc(t.canvas)+'</button></div>';
       if(rub.length){
-        b+='<div class="reference-box"><h4>Self-check, should include ('+revealed.length+' of '+rub.length+')</h4><ul>'+(revealed.length?revealed.map(function(x){return '<li>'+esc(x)+'</li>';}).join(''):'<li style="list-style:none;color:var(--ink-faint)">Hidden. Do it first, then reveal to grade yourself.</li>')+'</ul></div>';
-        b+='<div class="g-actions">'+(shown<rub.length?'<button class="btn" id="dkHint">Reveal one</button><button class="btn" id="dkAll">Show full checklist</button>':'<span style="color:var(--ok);font-weight:700;align-self:center">Full checklist shown, grade yourself.</span>')+'</div>';
+        b+='<div class="reference-box"><h4>Self-check, should include ('+revealed.length+' of '+rub.length+')</h4><ul>'+(revealed.length?revealed.map(function(x){return '<li>'+esc(x)+'</li>';}).join(''):'<li style="list-style:none;color:var(--ink-faint)">Hidden. Do the drawing first, then grade yourself against the checklist.</li>')+'</ul></div>';
+        b+='<div class="g-actions">'+(shown<rub.length?'<button class="btn" id="dkHint">Reveal one</button>':'')+'<button class="btn gold" id="dkAll">Done drawing, check myself off</button></div>';
       }else{
         b+='<p style="color:var(--ink-soft)">Check your work against your notes, the atlas, and the structure list.</p>';
+        b+='<div class="g-actions"><span style="align-self:center;font-weight:700;margin-right:4px">How complete were you?</span><button class="btn" data-mmscore="2">Patchy</button><button class="btn" data-mmscore="4">Solid</button><button class="btn gold" data-mmscore="6">Thorough</button></div>';
       }
-      b+='<div class="g-actions"><span style="align-self:center;font-weight:700;margin-right:4px">How complete were you?</span><button class="btn" data-mmscore="2">Patchy</button><button class="btn" data-mmscore="4">Solid</button><button class="btn gold" data-mmscore="6">Thorough</button></div>';
       gBody(b);
       var h=$('#dkHint');if(h)h.onclick=function(){shown=Math.min(rub.length,shown+1);render();};
-      var a=$('#dkAll');if(a)a.onclick=function(){shown=rub.length;render();};
+      /* the checklist is not a display, it is the score sheet: every
+         tick records, exactly like the brain dump */
+      var a=$('#dkAll');if(a)a.onclick=function(){selfCheckList(c,rub,'draw',drawKnow);};
     }
     render();
   }
@@ -3879,7 +3973,102 @@ function renderTogether(){var el=$('#togetherGrid');if(!el)return;el.innerHTML=M
 /* =========================================================
    RENDER ALL
 ========================================================= */
+/* ============================================================
+   THE MASTERY TICKER
+   Course mastery as a stock chart: one snapshot per day into
+   localStorage, drawn as a line on the dashboard. Purely
+   additive: if anything here fails, the dashboard renders
+   exactly as before.
+   ============================================================ */
+var TICK_KEY='bio004-mastery-history';
+function courseMasteryPct(){
+  var t=0,n=0;
+  S.units.forEach(function(u){u.comps.forEach(function(c){t+=(c.mastery||0);n++;});});
+  return n?Math.round(t/n):0;
+}
+function tickerLog(){
+  var h={};
+  try{h=JSON.parse(localStorage.getItem(TICK_KEY))||{};}catch(e){h={};}
+  var d=new Date();
+  function p(x){return (x<10?'0':'')+x;}
+  var iso=d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());
+  h[iso]=courseMasteryPct();                 /* last write of the day wins */
+  try{localStorage.setItem(TICK_KEY,JSON.stringify(h));}catch(e){}
+  return h;
+}
+function tickFmtDay(iso){
+  var p=iso.split('-');
+  return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+p[1]-1]+' '+(+p[2]);
+}
+function renderTicker(){
+  var el=$('#tickerWrap'); if(!el)return;
+  try{
+    var h=tickerLog();
+    var days=Object.keys(h).sort();
+    var vals=days.map(function(d){return h[d];});
+    var now=vals[vals.length-1];
+    /* week delta: against the newest point at least 6 days old, else the first */
+    var ref=0;
+    for(var i=days.length-1;i>=0;i--){
+      if((new Date(days[days.length-1])-new Date(days[i]))>=6*86400000){ref=i;break;}
+    }
+    var chg=now-vals[ref];
+    var chip=chg>0?'<span class="tickdelta up">&#9650; +'+chg+' this week</span>'
+      :chg<0?'<span class="tickdelta down">&#9660; '+chg+' this week</span>'
+      :'<span class="tickdelta flat">holding</span>';
+    var head='<div class="tickhead"><span class="t">Your mastery, day by day</span>'+chip+
+      '<span class="big">'+now+'%</span></div>';
+    if(days.length<2){
+      el.innerHTML='<div class="tickcard">'+head+
+        '<p class="ticknote">Your line starts drawing tomorrow. One point lands here every day, and every session you run moves it. This is the long game, made visible.</p></div>';
+      return;
+    }
+    var W=720,H=200,L=40,R=46,T=14,B=28,iw=W-L-R,ih=H-T-B,n=vals.length;
+    var maxY=Math.max(50,Math.ceil(Math.max.apply(null,vals)/10)*10);
+    function x(i){return L+iw*i/(n-1);}
+    function y(v){return T+ih*(1-v/maxY);}
+    var s='';
+    for(var g=0;g<=maxY;g+=10){
+      s+='<line class="tick-grid" x1="'+L+'" y1="'+y(g)+'" x2="'+(W-R)+'" y2="'+y(g)+'"/>';
+      if(g%20===0)s+='<text class="tick-axis" x="'+(L-8)+'" y="'+(y(g)+4)+'" text-anchor="end">'+g+'</text>';
+    }
+    var lab=n<=4?days.map(function(_,i){return i;}):[0,Math.floor((n-1)/2),n-1];
+    lab.forEach(function(i){
+      s+='<text class="tick-axis" x="'+x(i)+'" y="'+(H-8)+'" text-anchor="middle">'+tickFmtDay(days[i])+'</text>';
+    });
+    var pts=vals.map(function(v,i){return x(i)+','+y(v);});
+    s+='<polygon class="tick-area" points="'+L+','+y(0)+' '+pts.join(' ')+' '+(W-R)+','+y(0)+'"/>';
+    s+='<polyline class="tick-line" points="'+pts.join(' ')+'"/>';
+    s+='<line class="tick-xhair" id="tickXh" x1="0" y1="'+T+'" x2="0" y2="'+(T+ih)+'" style="display:none"/>';
+    s+='<circle class="tick-dot" id="tickHd" r="5" style="display:none"/>';
+    s+='<circle class="tick-dot" cx="'+x(n-1)+'" cy="'+y(now)+'" r="4"/>';
+    s+='<text class="tick-endlab" x="'+(x(n-1)+8)+'" y="'+(y(now)+4)+'">'+now+'%</text>';
+    el.innerHTML='<div class="tickcard">'+head+
+      '<div class="tickwrap" id="tickWrap2">'+
+      '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Line chart of your course mastery by day, currently '+now+' percent"></svg>'+
+      '<div class="ticktip" id="tickTip"></div></div></div>';
+    var svg=el.querySelector('svg'); svg.innerHTML=s;
+    var wrap=$('#tickWrap2'),tip=$('#tickTip'),xh=$('#tickXh'),hd=$('#tickHd');
+    wrap.addEventListener('mousemove',function(e){
+      var r=svg.getBoundingClientRect();
+      var px=(e.clientX-r.left)/r.width*W;
+      var i=Math.round((px-L)/iw*(n-1)); if(i<0)i=0; if(i>n-1)i=n-1;
+      var cx=x(i),cy=y(vals[i]);
+      xh.setAttribute('x1',cx);xh.setAttribute('x2',cx);xh.style.display='';
+      hd.setAttribute('cx',cx);hd.setAttribute('cy',cy);hd.style.display='';
+      tip.style.display='block';
+      tip.style.left=(cx/W*r.width)+'px';
+      tip.style.top=(cy/H*r.height)+'px';
+      tip.innerHTML=esc(tickFmtDay(days[i]))+' &middot; <b>'+vals[i]+'%</b>';
+    });
+    wrap.addEventListener('mouseleave',function(){
+      xh.style.display='none';hd.style.display='none';tip.style.display='none';
+    });
+  }catch(e){ el.innerHTML=''; el.setAttribute('data-tickerr',String(e&&e.stack||e)); }
+}
+
 function renderAll(){
+  renderTicker();
   $('#greetBadge').textContent=S.profile.name?('Hi, '+S.profile.name):'Welcome';
   renderDayRail();renderPlan();renderDailyBuild();renderDashboard();renderMap();renderWeakness();renderLoopWeak();renderFlow();renderEvidence();renderSkills();renderExercises();renderTogether();runBandSync();
 }
@@ -4113,7 +4302,9 @@ if(!Array.isArray(S.grades))S.grades=[];
 applySchedule(false);
 /* Persist what the cards contributed, otherwise the rolled-up
    mastery is recomputed but never written and is lost on reload. */
-if(ingestRecall()) save();
+var BOOT_CHG=ingestRecall();
+try{ if(applyDecay()) BOOT_CHG=true; }catch(e){}
+if(BOOT_CHG) save();
 renderCoachPrompts();
 coachSay('bot','Blub blub. I am Hootie the Knowfish, your Mastery Coach. I read your progress and point you at the single best next move. Ask me anything, or tap a prompt below.');
 if(!S.profile.onboarded){OB={step:0,data:obSeedData()};showOnboard();}
