@@ -30,7 +30,8 @@
   + '.lpov .lp-sub{font-size:15px;color:#C8D2DA;margin:0 0 30px}'
   + '.lpov .lp-eyebrow{font-family:"DM Sans",system-ui,sans-serif;font-size:11px;font-weight:700;'
   + 'letter-spacing:.18em;text-transform:uppercase;color:#CFA95F;margin:0}'
-  + '.lpov .lp-deck{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:16px}'
+  + '.lpov .lp-deck{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:640px;margin:0 auto}'
+  + '@media (max-width:430px){.lpov .lp-deck{grid-template-columns:1fr}}'
   + '.lpov .lp-door{background:#fff;color:#08101F;border:0;border-radius:18px;padding:20px 16px 18px;'
   + 'text-align:center;text-decoration:none;display:block;cursor:pointer;font-family:inherit;'
   + 'box-shadow:0 14px 34px -12px rgba(0,0,0,.6);transition:transform .18s ease,box-shadow .18s ease}'
@@ -50,6 +51,7 @@
   + '.lpov .lp-ghost{background:none;border:1.5px solid rgba(244,239,232,.45);color:#F4EFE8;cursor:pointer;'
   + 'font-family:inherit;font-weight:700;font-size:13.5px;border-radius:999px;padding:8px 16px}'
   + '.lpov .lp-ghost:hover{border-color:#CFA95F;color:#fff}'
+  + '.lpov .lp-calrow{margin-top:20px;text-align:center}'
   + '.lpov .lp-subdeck{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px}'
   + '.lpov .lp-subdeck .lp-door{padding:15px 13px}'
   + '.lpov .lp-subdeck .lp-ic{width:42px;height:42px;border-radius:12px;margin-bottom:8px}'
@@ -91,7 +93,9 @@
   } catch (e) {}
   function u(page) {
     var bits = page.split('#');
-    return bits[0] + (sec ? '?sec=' + sec : '') + (bits[1] ? '#' + bits[1] : '');
+    var base = bits[0];
+    if (sec) base += (base.indexOf('?') > -1 ? '&' : '?') + 'sec=' + sec;
+    return base + (bits[1] ? '#' + bits[1] : '');
   }
   function go(page) { return 'href="' + u(page) + '" target="_top"'; }
   function ext(url) { return 'href="' + url + '" target="_blank" rel="noopener"'; }
@@ -109,34 +113,37 @@
     + '<div class="lp-panel on" data-lp="home"><div class="lp-deck">'
     + door('ic-terra', I.book, 'Lecture', 'Notes, videos, pre-work, course materials', 'data-lpopen="lecture"')
     + door('ic-navy', I.flask, 'Lab', 'Loops, lab sprints, the Digital Atlas', 'data-lpopen="lab"')
-    + door('ic-gold', I.bulb, 'Study', 'Mastery OS, recall cards, brain dump', 'data-lpopen="study"')
-    + door('ic-blue', I.cal, 'Calendar', 'It is right behind this screen', 'data-lpclose="1"')
-    + '</div></div>'
+    + door('ic-gold', I.bulb, 'Study', 'Mastery OS, recall cards, loops, brain dump', 'data-lpopen="study"')
+    + door('ic-blue', I.flow, 'Study Protocol', 'The flow chart for this week', go('bio004-study-protocol.html'))
+    + '</div>'
+    + '<div class="lp-calrow"><button class="lp-ghost" data-lpclose="1">Go to the calendar &#8594;</button></div>'
+    + '</div>'
 
     + '<div class="lp-panel" data-lp="lecture">'
     + '<div class="lp-backrow"><button class="lp-ghost" data-lpback="1">&#8592; Back to the four doors</button></div>'
     + '<div class="lp-subdeck">'
     + door('ic-terra', I.grid, 'Course materials', 'Everything, organized by module', go('course-materials.html'))
-    + door('ic-terra', I.play, 'Videos', 'Every week, by name, one sheet', go('bio004-quick-access.html'))
-    + door('ic-terra', I.pen, 'Notes', 'Week by week, same sheet', go('bio004-quick-access.html'))
-    + door('ic-terra', I.check, 'Pre-work', 'The sheet due before class', go('bio004-quick-access.html'))
+    + door('ic-gold', I.play, 'Videos', 'Just the videos, by module', go('bio004-quick-access.html?cat=videos'))
+    + door('ic-navy', I.pen, 'Notes', 'Just the notes, by module', go('bio004-quick-access.html?cat=notes'))
+    + door('ic-blue', I.check, 'Pre-work', 'Just what is due before class', go('bio004-quick-access.html?cat=prework'))
     + '</div></div>'
 
     + '<div class="lp-panel" data-lp="lab">'
     + '<div class="lp-backrow"><button class="lp-ghost" data-lpback="1">&#8592; Back to the four doors</button></div>'
     + '<div class="lp-subdeck">'
-    + door('ic-navy', I.loop, 'Loops', 'Fast visual practice', ext('https://drsrennie-stack.github.io/loops/'))
+    + door('ic-terra', I.loop, 'Loops', 'Fast visual practice', ext('https://drsrennie-stack.github.io/loops/'))
     + door('ic-navy', I.clock, 'Lab sprints', 'Structure checklists by station', go('lab-sprints.html'))
-    + door('ic-navy', I.globe, 'Digital Atlas', 'Turn the structures around', ext('https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02'))
-    + door('ic-navy', I.scope, 'Histology help', 'Every slide tool, sorted', go('histology-help.html'))
+    + door('ic-gold', I.globe, 'Digital Atlas', 'Turn the structures around', ext('https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02'))
+    + door('ic-blue', I.scope, 'Histology help', 'Every slide tool, sorted', go('histology-help.html'))
     + '</div></div>'
 
     + '<div class="lp-panel" data-lp="study">'
     + '<div class="lp-backrow"><button class="lp-ghost" data-lpback="1">&#8592; Back to the four doors</button></div>'
     + '<div class="lp-subdeck">'
     + door('ic-gold', I.brain, 'Mastery OS', 'Your plan, dials, and session', go('mastery-os-fall-2026.html'))
-    + door('ic-gold', I.cards, 'Recall cards', 'Straight into what is due', go('mastery-os-fall-2026.html#s-recall'))
-    + door('ic-gold', I.pen, 'Brain dump', 'Blank page, timer, check yourself', go('brain-dump-practice.html'))
+    + door('ic-blue', I.cards, 'Recall cards', 'Straight into what is due', go('mastery-os-fall-2026.html#s-recall'))
+    + door('ic-terra', I.loop, 'Loops', 'Fast visual practice, any topic', ext('https://drsrennie-stack.github.io/loops/'))
+    + door('ic-navy', I.pen, 'Brain dump', 'Blank page, timer, check yourself', go('brain-dump-practice.html'))
     + door('ic-gold', I.flow, 'Study Protocol', 'The flow chart for this week', go('bio004-study-protocol.html'))
     + '</div></div>'
 
