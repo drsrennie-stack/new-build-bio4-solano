@@ -931,6 +931,15 @@
 
         var fresh = false;
         try { fresh = window.history.length <= 1; } catch (e) {}
+        /* The tab may have no history of its own (opened fresh from
+           Canvas, a QR, an emailed link) and still have arrived FROM
+           somewhere. The referrer is that somewhere, so "back" can mean
+           the page the student actually came from instead of the
+           course home. */
+        var ref = '';
+        try {
+          if (document.referrer && document.referrer !== window.location.href) ref = document.referrer;
+        } catch (e) {}
 
         var st = document.createElement('style');
         st.textContent =
@@ -949,7 +958,13 @@
 
         var arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>';
         var el;
-        if (fresh) {
+        if (fresh && ref) {
+          el = document.createElement('a');
+          el.href = ref;
+          el.target = '_top';
+          el.innerHTML = arrow + '<span class="bb-t">Back</span>';
+          el.setAttribute('aria-label', 'Go back to the previous page');
+        } else if (fresh) {
           el = document.createElement('a');
           el.href = 'welcome.html';
           el.target = '_top';
@@ -961,13 +976,14 @@
           el.innerHTML = arrow + '<span class="bb-t">Back</span>';
           el.setAttribute('aria-label', 'Go back to the previous page');
           /* history.length lies in some browsers. If back() moved
-             nothing after half a second, go to the course home so the
-             button is never dead. */
+             nothing after half a second, go to the page that linked
+             here, and failing that the course home, so the button is
+             never dead. */
           el.addEventListener('click', function () {
             var before = window.location.href;
             window.history.back();
             setTimeout(function () {
-              if (window.location.href === before) window.location.href = 'welcome.html';
+              if (window.location.href === before) window.location.href = ref || 'welcome.html';
             }, 500);
           });
         }
