@@ -5,8 +5,7 @@
    Nothing is remembered on purpose: Scrubs' call, so a student
    who picked Lab once is not funneled to Lab forever. Choosing
    Calendar just closes the curtain, because the page behind it
-   IS the calendar. Escape or "Straight to the calendar" also
-   close it.
+   IS the calendar. Escape also closes it.
 
    To put it on a page: <script src="bio004-launchpad-overlay.js">
    after the page's content. Built for bio004-course-calendar.html.
@@ -51,7 +50,6 @@
   + '.lpov .lp-ghost{background:none;border:1.5px solid rgba(244,239,232,.45);color:#F4EFE8;cursor:pointer;'
   + 'font-family:inherit;font-weight:700;font-size:13.5px;border-radius:999px;padding:8px 16px}'
   + '.lpov .lp-ghost:hover{border-color:#CFA95F;color:#fff}'
-  + '.lpov .lp-skip{margin-top:26px}'
   + '.lpov .lp-subdeck{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px}'
   + '.lpov .lp-subdeck .lp-door{padding:15px 13px}'
   + '.lpov .lp-subdeck .lp-ic{width:42px;height:42px;border-radius:12px;margin-bottom:8px}'
@@ -113,8 +111,7 @@
     + door('ic-navy', I.flask, 'Lab', 'Loops, lab sprints, the Digital Atlas', 'data-lpopen="lab"')
     + door('ic-gold', I.bulb, 'Study', 'Mastery OS, recall cards, brain dump', 'data-lpopen="study"')
     + door('ic-blue', I.cal, 'Calendar', 'It is right behind this screen', 'data-lpclose="1"')
-    + '</div>'
-    + '<p class="lp-skip"><button class="lp-ghost" data-lpclose="1">Straight to the calendar</button></p></div>'
+    + '</div></div>'
 
     + '<div class="lp-panel" data-lp="lecture">'
     + '<div class="lp-backrow"><button class="lp-ghost" data-lpback="1">&#8592; Back to the four doors</button></div>'
