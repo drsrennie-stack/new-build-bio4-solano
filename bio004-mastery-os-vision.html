@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mastery OS Vision &middot; Design Preview &middot; BIO 004</title>
+<meta name="description" content="A clickable design preview of Mastery OS as a focus machine: one 50-minute session, one thing on screen at a time, a real beginning and a real end. Sample data, wired to nothing.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   MASTERY OS VISION: THE FOCUS MACHINE. Clickable mockup,
+   SAMPLE DATA, wired to nothing.
+
+   Scrubs' spec, in her words, restated:
+   - Students should not have to think about what to do next.
+   - One screen, one thing on it. They do it, check it, and the
+     next thing pops up. Between things they pick from a couple
+     of offered options, and then only the picked thing shows.
+   - The screen behind gets a dark hue so the one thing is the
+     only thing.
+   - A real beginning and a real end: the app runs a 50 minute
+     Pomodoro. They choose a topic, or Daily Recommended, and
+     stop deciding.
+   The dials stay on the base page as a glance band. Weak spot
+   rows launch a focused session on that topic in one click.
+   Site brand: navy #08101F, maroon #7A2A22, gold #DCB45C.
+   ============================================================ */
+  :root{
+    --v-ink:#08101F; --v-maroon:#7A2A22; --v-maroondark:#5E201A;
+    --v-gold:#DCB45C; --v-straw:#E8CE85; --v-goldtext:#6F5316;
+    --v-line:#DCE1E4; --v-track:#ECE7DD; --v-page:#FAFAF9; --v-card:#FFFFFF;
+    --f:'Plus Jakarta Sans',system-ui,sans-serif;
+    --fe:'DM Sans',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--v-page);color:var(--v-ink);font-family:var(--f);line-height:1.55;font-size:16.5px}
+  a:focus-visible,button:focus-visible{outline:3px solid var(--v-gold);outline-offset:2px}
+  .wrap{max-width:1020px;margin:0 auto;padding:26px 20px 90px}
+
+  .preview-band{background:var(--v-ink);color:#F4EFE8;border-radius:12px;padding:12px 18px;
+    font-size:14.5px;margin-bottom:26px}
+  .preview-band b{color:var(--v-straw)}
+
+  .eyebrow{font-family:var(--fe);font-size:12px;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--v-maroon);margin:0 0 8px}
+  h1{font-size:clamp(26px,5vw,38px);font-weight:800;letter-spacing:-.02em;margin:0;line-height:1.1}
+  .lede{max-width:66ch;margin:12px 0 0}
+
+  .bigstart{display:inline-flex;align-items:center;gap:12px;margin-top:20px;cursor:pointer;
+    background:var(--v-maroon);color:#fff;border:0;border-radius:14px;padding:18px 30px;
+    font:800 19px/1 var(--f);box-shadow:0 12px 26px rgba(11,21,48,0.16);
+    transition:transform 200ms ease,background-color 200ms ease}
+  .bigstart:hover{background:var(--v-maroondark);transform:translateY(-2px)}
+  @media (prefers-reduced-motion:reduce){ .bigstart{transition:none} .bigstart:hover{transform:none} }
+  .bigstart small{display:block;font-weight:600;font-size:12.5px;opacity:.85;margin-top:4px}
+
+  h2{font-size:14px;font-family:var(--fe);font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--v-maroon);margin:44px 0 4px}
+  .secnote{font-size:14.5px;margin:0 0 14px;max-width:70ch;color:#3A4550}
+
+  .glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:12px}
+  .stat{background:var(--v-card);border:1px solid var(--v-line);border-radius:16px;padding:16px;
+    box-shadow:0 1px 3px rgba(11,21,48,0.10);display:flex;gap:14px;align-items:center}
+  .stat .num{font-size:30px;font-weight:800;line-height:1;letter-spacing:-.02em}
+  .stat .cap{font-family:var(--fe);font-size:11px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--v-maroon)}
+  .stat .sub{font-size:12.5px;color:#3A4550;margin-top:3px}
+  .ring{width:64px;height:64px;flex:none}
+  .ring circle{fill:none;stroke-width:8}
+  .ring .track{stroke:var(--v-track)}
+  .ring .val{stroke:var(--v-maroon);stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}
+  .minibar{height:8px;border-radius:4px;background:var(--v-track);margin-top:8px;overflow:hidden}
+  .minibar span{display:block;height:100%;border-radius:4px;background:var(--v-maroon)}
+
+  .spot{background:var(--v-card);border:1px solid var(--v-line);border-radius:14px;padding:14px 16px;
+    margin-top:10px;box-shadow:0 1px 3px rgba(11,21,48,0.10);
+    display:grid;grid-template-columns:1fr auto;gap:8px 16px;align-items:center}
+  @media (max-width:640px){ .spot{grid-template-columns:1fr} }
+  .spot .nm{font-weight:800;font-size:15.5px}
+  .spot .why{font-size:13px;color:#3A4550;margin-top:2px}
+  .spot .bar{height:8px;border-radius:4px;background:var(--v-track);margin-top:8px;max-width:340px;overflow:hidden}
+  .spot .bar span{display:block;height:100%;border-radius:4px;background:var(--v-maroon)}
+  .spot .pct{font-weight:800;font-size:13.5px;margin-left:8px}
+  .spot button{font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;
+    background:var(--v-card);color:var(--v-ink);border:2px solid var(--v-gold);border-radius:999px;padding:8px 15px}
+  .spot button:hover{background:#F7EEDA}
+
+  /* ================= THE SESSION ================= */
+  /* Everything behind goes under the hue. One card. Nothing else. */
+  .session{position:fixed;inset:0;z-index:100;display:none;
+    background:rgba(8,16,31,0.72);padding:20px;overflow:auto}
+  .session.on{display:grid;place-items:center}
+  .scard{width:min(560px,100%);background:var(--v-card);border-radius:20px;
+    padding:26px 28px;box-shadow:0 24px 60px rgba(0,0,0,0.45)}
+
+  .stopbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+  .clock{font-family:var(--fe);font-weight:700;font-size:13px;letter-spacing:.08em;color:var(--v-ink)}
+  .clock b{font-size:17px;letter-spacing:0}
+  .dots{display:flex;gap:6px}
+  .dots span{width:10px;height:10px;border-radius:50%;background:var(--v-track);border:1px solid var(--v-line)}
+  .dots span.did{background:var(--v-maroon);border-color:var(--v-maroon)}
+  .dots span.now{background:var(--v-gold);border-color:var(--v-gold)}
+  .leave{font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;color:#3A4550;
+    background:none;border:0;text-decoration:underline;padding:4px}
+
+  .scode{display:inline-block;font-family:var(--fe);font-size:11px;font-weight:700;letter-spacing:.1em;
+    padding:3px 10px;border-radius:999px;background:var(--v-ink);color:#F4EFE8}
+  .sname{font-size:24px;font-weight:800;letter-spacing:-.01em;margin:12px 0 0;line-height:1.15}
+  .swhy{font-size:14.5px;color:#3A4550;margin:8px 0 0}
+  .swhy b{color:var(--v-maroon)}
+  .sbody{margin:16px 0 0;border:1px dashed var(--v-line);border-radius:12px;padding:14px 16px;
+    font-size:14.5px;background:#FDFCFA}
+  .sdo{display:block;width:100%;margin-top:18px;font:800 17px/1 var(--f);cursor:pointer;
+    background:var(--v-maroon);color:#fff;border:0;border-radius:12px;padding:16px}
+  .sdo:hover{background:var(--v-maroondark)}
+
+  /* choice screens: the question is the only thing on screen */
+  .q{font-size:24px;font-weight:800;letter-spacing:-.01em;margin:4px 0 0;line-height:1.2}
+  .qsub{font-size:14.5px;color:#3A4550;margin:8px 0 0}
+  .opts{display:grid;gap:10px;margin-top:18px}
+  .opt{display:block;width:100%;text-align:left;font:inherit;cursor:pointer;
+    background:var(--v-card);border:2px solid var(--v-line);border-radius:12px;padding:14px 16px}
+  .opt:hover{border-color:var(--v-gold);background:#FDFBF5}
+  .opt.rec{border-color:var(--v-gold);background:#FDFBF5}
+  .opt .on{font-weight:800;font-size:16px}
+  .opt .on .rectag{font-family:var(--fe);font-size:10.5px;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--v-goldtext);margin-left:8px}
+  .opt .od{font-size:13px;color:#3A4550;margin-top:2px}
+
+  .fin{text-align:center}
+  .fin .big{font-size:26px;font-weight:800;margin:10px 0 0}
+  .fin p{font-size:15px}
+  .fin .stats{display:flex;gap:18px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+  .fin .stats div{font-size:13px;color:#3A4550}
+  .fin .stats b{display:block;font-size:22px;color:var(--v-ink)}
+
+  .demo{margin-top:14px;text-align:right}
+  .demo button{font:inherit;font-size:11.5px;font-weight:700;cursor:pointer;color:#3A4550;
+    background:none;border:1px dashed var(--v-line);border-radius:8px;padding:5px 10px}
+
+  footer.foot{border-top:1px solid var(--v-line);margin-top:56px;padding-top:16px;font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="preview-band"><b>Design preview with sample data.</b> Wired to nothing. Click the big
+  button and run a session: pick a track, do the one thing on screen, check it off, pick the next.
+  There is a demo control on each card to skip the clock.</div>
+
+  <header>
+    <p class="eyebrow">BIO 004 &middot; Mastery OS &middot; What it could be</p>
+    <h1>One screen. One thing. Fifty minutes.</h1>
+    <p class="lede">The student decides twice: that they are studying, and what topic. After that the
+    machine runs the session. One activity fills the screen, everything else goes under the hue, and
+    when they check it off the next thing appears. There is a real beginning and a real end.</p>
+    <button class="bigstart" id="start">Start a 50 minute session
+      <small>You pick the topic. It picks everything else.</small></button>
+  </header>
+
+  <h2>At a glance</h2>
+  <p class="secnote">The data you love stays, out here on the base page. Reading it takes zero clicks
+  and none of it is a door: the session is the only door.</p>
+  <div class="glance">
+    <div class="stat">
+      <svg class="ring" viewBox="0 0 64 64" role="img" aria-label="Course mastery 34 percent">
+        <circle class="track" cx="32" cy="32" r="26"/>
+        <circle class="val" cx="32" cy="32" r="26" stroke-dasharray="55.5 107.8"/>
+      </svg>
+      <div><span class="cap">Course mastery</span><div class="num">34%</div>
+      <div class="sub">up 6 this week</div></div>
+    </div>
+    <div class="stat">
+      <div><span class="cap">Cards due tonight</span><div class="num">23</div>
+      <div class="sub">9 are Cell Anatomy, and Monday is your Cell TBL</div></div>
+    </div>
+    <div class="stat">
+      <div><span class="cap">Streak</span><div class="num">4 nights</div>
+      <div class="sub">longest so far: 4</div></div>
+    </div>
+    <div class="stat">
+      <div style="flex:1"><span class="cap">Weakest right now</span><div class="num" style="font-size:19px">Body cavities</div>
+      <div class="minibar" role="img" aria-label="Body cavities mastery 41 percent"><span style="width:41%"></span></div>
+      <div class="sub">41%</div></div>
+    </div>
+  </div>
+
+  <h2>Weak spots</h2>
+  <p class="secnote">Each row is one click from a focused session on exactly that topic. No Prove It,
+  no picker in between: the click IS the start.</p>
+  <div id="spots"></div>
+
+  <footer class="foot">
+    <p>BIO 004 Human Anatomy &middot; Fall 2026 &middot; Solano Community College<br>
+    Dr. Sharilyn Rennie</p>
+  </footer>
+</div>
+
+<!-- ============ THE SESSION OVERLAY ============ -->
+<div class="session" id="session" role="dialog" aria-modal="true" aria-label="Study session">
+  <div class="scard" id="scard"></div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  /* Sample data. The real build draws these from the schedule, the
+     recall history, weaknesses() and loopWeakStations(). */
+  var TRACKS = {
+    daily: { label: 'Daily recommended', queue: [
+      { code:'CC', name:'Clear your 23 due cards', min:12,
+        why:'<b>9 are Cell Anatomy</b> and Monday is your Cell TBL. Due cards always go first.',
+        body:'The cards deal right here, one at a time, organelles first. Answer, flip, next.' },
+      { code:'DIKI', name:'Draw the generalized cell', min:12,
+        why:'You missed <b>3 of 5</b> organelle cards just now. Drawing is the repair for that kind of miss.',
+        body:'The canvas opens here with the prompt and a checklist. Draw it, label it, check it against the list.' },
+      { code:'LS', name:'Loop Sprint: Tissues', min:10,
+        why:'Lab this week is connective tissue and you missed <b>4 of 6</b> epithelial stations last time.',
+        body:'Loops opens on the Tissues loop. Your station scores land back in the session when you return.' },
+      { code:'BPD', name:'Blank page dump: the cell', min:6,
+        why:'End on retrieval. Two minutes of everything you know, no notes.',
+        body:'A timer and a blank page. Write until it rings, then check yourself against the competency list.' } ] },
+    lecture: { label: 'Lecture: the Cell TBL', queue: [
+      { code:'CC', name:'Cell Anatomy cards, DOK 2 and up', min:15,
+        why:'The TBL is written from the <b>high-yield cell competencies</b>. These are their cards.',
+        body:'The cell bank deals here, hardest first.' },
+      { code:'DIKI', name:'Draw the endomembrane path', min:12,
+        why:'The path from rough ER to exocytosis is the most-missed cell question every term.',
+        body:'Canvas opens with the pathway prompt. Draw the route, label each stop.' },
+      { code:'TIO', name:'Teach the organelles out loud', min:10,
+        why:'If you can say it without notes, the TBL cannot surprise you.',
+        body:'The tutor listens and names your holes. Speak plainly, no reading.' } ] },
+    lab: { label: 'Lab: tissues under the scope', queue: [
+      { code:'CHART', name:'Rebuild your tissue chart, blank', min:12,
+        why:'Location, function, special structures. The chart <b>you</b> built is the one you remember.',
+        body:'A blank chart scaffold opens here. Fill it from memory, then check against the notes.' },
+      { code:'LS', name:'Loop Sprint: epithelial review', min:10,
+        why:'You missed <b>4 of 6</b> epithelial stations. Lab reviews them this week.',
+        body:'Loops opens at your missed stations first.' },
+      { code:'LS2', name:'Loop Sprint: connective, first look', min:10,
+        why:'Connective starts Tuesday. Wrong answers cost nothing today; recognition starts now.',
+        body:'The connective stations deal in learn mode: answer, see, next.' } ] },
+    draw: { label: 'Just draw', queue: [
+      { code:'DIKI', name:'Draw the generalized cell', min:12,
+        why:'Weakest drawable topic on your board tonight.',
+        body:'Canvas, prompt, checklist.' },
+      { code:'DIKI', name:'Draw the four tissue types', min:12,
+        why:'Lab is tissues this week. Four boxes, one page.',
+        body:'Canvas opens with the four-box scaffold.' },
+      { code:'DIKI', name:'Draw the body cavities', min:12,
+        why:'Your weakest topic overall, at <b>41%</b>.',
+        body:'Canvas opens with the torso outline. Fill in every cavity and subdivision.' } ] }
+  };
+  var SPOTS = [
+    { nm:'Body cavities', pct:41, why:'6 cards missed twice. Last seen 3 days ago.', track:'draw' },
+    { nm:'Epithelial tissue', pct:55, why:'You missed 4 of 6 Loop stations. Lab reviews it this week.', track:'lab' },
+    { nm:'Cell organelles', pct:62, why:'Improving, but Monday is the Cell TBL.', track:'lecture' }
+  ];
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  var sess = document.getElementById('session'), card = document.getElementById('scard');
+  var queue = [], idx = -1, doneCount = 0, secs = 50 * 60, timer = null, lastFocus = null;
+
+  function mmss(s) {
+    var m = Math.floor(s / 60), x = s % 60;
+    return m + ':' + (x < 10 ? '0' : '') + x;
+  }
+  function tick() {
+    secs--;
+    var c = document.getElementById('clk');
+    if (c) c.innerHTML = '<b>' + mmss(secs) + '</b> left of 50:00';
+    if (secs <= 0) { clearInterval(timer); finish(); }
+  }
+  function dots() {
+    var out = '<div class="dots" aria-hidden="true">';
+    for (var i = 0; i < queue.length; i++) {
+      out += '<span class="' + (i < idx ? 'did' : (i === idx ? 'now' : '')) + '"></span>';
+    }
+    return out + '</div>';
+  }
+  function topbar() {
+    return '<div class="stopbar"><span class="clock" id="clk"><b>' + mmss(secs) + '</b> left of 50:00</span>'
+      + dots()
+      + '<button class="leave" id="leave">End session</button></div>';
+  }
+  function wire() {
+    var lv = document.getElementById('leave');
+    if (lv) lv.addEventListener('click', finish);
+    var first = card.querySelector('button:not(.leave):not(.demo button), .opt');
+    if (first) first.focus();
+  }
+
+  function openSession() {
+    lastFocus = document.activeElement;
+    secs = 50 * 60; doneCount = 0; idx = -1; queue = [];
+    sess.classList.add('on');
+    document.body.style.overflow = 'hidden';
+    card.innerHTML = topbar()
+      + '<p class="q">What do you want to work on?</p>'
+      + '<p class="qsub">Pick once. After this, the machine runs the session and you just do the thing on screen.</p>'
+      + '<div class="opts">'
+      + '<button class="opt rec" data-track="daily"><span class="on">Daily recommended<span class="rectag">what the app would deal</span></span><span class="od" style="display:block">Due cards first, then the repair for what you miss, then lab prep. About 40 minutes of work in the 50.</span></button>'
+      + '<button class="opt" data-track="lecture"><span class="on">Lecture</span><span class="od" style="display:block">The Cell TBL is Monday. Cards, the pathway drawing, teach it out loud.</span></button>'
+      + '<button class="opt" data-track="lab"><span class="on">Lab</span><span class="od" style="display:block">Tissue chart from memory, epithelial review, first look at connective.</span></button>'
+      + '<button class="opt" data-track="draw"><span class="on">Just draw</span><span class="od" style="display:block">Three drawing rounds on your three weakest drawable topics.</span></button>'
+      + '</div>';
+    card.querySelectorAll('[data-track]').forEach(function (b) {
+      b.addEventListener('click', function () { startTrack(b.getAttribute('data-track')); });
+    });
+    wire();
+    if (timer) clearInterval(timer);
+    timer = setInterval(tick, 1000);
+  }
+
+  function startTrack(key) {
+    queue = TRACKS[key].queue.slice();
+    idx = 0;
+    showActivity();
+  }
+
+  function showActivity() {
+    var a = queue[idx];
+    card.innerHTML = topbar()
+      + '<span class="scode">' + esc(a.code) + ' &middot; about ' + a.min + ' min</span>'
+      + '<p class="sname">' + esc(a.name) + '</p>'
+      + '<p class="swhy">' + a.why + '</p>'
+      + '<div class="sbody">' + esc(a.body) + '</div>'
+      + '<button class="sdo" id="doneBtn">Done. What is next?</button>'
+      + '<div class="demo"><button id="skipclk" type="button">Demo: skip the clock ahead 10 min</button></div>';
+    document.getElementById('doneBtn').addEventListener('click', function () {
+      doneCount++;
+      if (idx + 1 >= queue.length || secs < 240) finish();
+      else chooser();
+    });
+    document.getElementById('skipclk').addEventListener('click', function () {
+      secs = Math.max(1, secs - 600); tick();
+    });
+    wire();
+  }
+
+  /* Between activities: they choose the next one. Then only it shows. */
+  function chooser() {
+    idx++;
+    var rec = queue[idx];
+    var altPool = queue.slice(idx + 1).concat(queue.slice(0, Math.max(0, idx - 1)));
+    var alts = altPool.slice(0, 2);
+    card.innerHTML = topbar()
+      + '<p class="q">Nice. One down.</p>'
+      + '<p class="qsub">Pick the next one. Whatever you pick becomes the only thing on the screen.</p>'
+      + '<div class="opts">'
+      + '<button class="opt rec" data-pick="rec"><span class="on">' + esc(rec.name)
+      + '<span class="rectag">recommended next</span></span><span class="od" style="display:block">' + rec.why + '</span></button>'
+      + alts.map(function (a, i) {
+          return '<button class="opt" data-pick="' + i + '"><span class="on">' + esc(a.name)
+            + '</span><span class="od" style="display:block">about ' + a.min + ' min</span></button>';
+        }).join('')
+      + '</div>';
+    card.querySelector('[data-pick="rec"]').addEventListener('click', showActivity);
+    card.querySelectorAll('[data-pick]:not([data-pick="rec"])').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var a = alts[+b.getAttribute('data-pick')];
+        var qi = queue.indexOf(a);
+        queue.splice(qi, 1);
+        queue.splice(idx, 0, a);
+        showActivity();
+      });
+    });
+    wire();
+  }
+
+  function finish() {
+    if (timer) { clearInterval(timer); timer = null; }
+    var spent = 50 * 60 - secs;
+    card.innerHTML = '<div class="fin">'
+      + '<span class="scode">Session over</span>'
+      + '<p class="big">That was the studying.</p>'
+      + '<p>Everything you did is already on your dials. The app has nothing more to suggest tonight, and that is on purpose. Close the laptop.</p>'
+      + '<div class="stats">'
+      + '<div><b>' + doneCount + '</b>activities done</div>'
+      + '<div><b>' + mmss(spent) + '</b>time in session</div>'
+      + '<div><b>+4%</b>course mastery (sample)</div>'
+      + '</div>'
+      + '<button class="sdo" id="closeBtn" style="margin-top:20px">Back to the dials</button></div>';
+    document.getElementById('closeBtn').addEventListener('click', closeSession);
+    wire();
+    var cb = document.getElementById('closeBtn'); if (cb) cb.focus();
+  }
+
+  function closeSession() {
+    if (timer) { clearInterval(timer); timer = null; }
+    sess.classList.remove('on');
+    document.body.style.overflow = '';
+    if (lastFocus) lastFocus.focus();
+  }
+
+  sess.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') finish();
+  });
+
+  document.getElementById('start').addEventListener('click', openSession);
+
+  /* weak spots: the click IS the start */
+  document.getElementById('spots').innerHTML = SPOTS.map(function (s, i) {
+    return '<div class="spot">'
+      + '<div><span class="nm">' + esc(s.nm) + '</span><span class="pct">' + s.pct + '%</span>'
+      + '<div class="why">' + esc(s.why) + '</div>'
+      + '<div class="bar" role="img" aria-label="' + esc(s.nm) + ' mastery ' + s.pct + ' percent">'
+      + '<span style="width:' + s.pct + '%"></span></div></div>'
+      + '<div><button data-spot="' + i + '">Fix this now &middot; 50 min on it</button></div>'
+      + '</div>';
+  }).join('');
+  document.getElementById('spots').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-spot]');
+    if (!b) return;
+    openSession();
+    startTrack(SPOTS[+b.getAttribute('data-spot')].track);
+  });
+})();
+</script>
+</body>
+</html>
