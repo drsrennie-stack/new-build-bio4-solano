@@ -4,166 +4,241 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mastery OS Vision &middot; Design Preview &middot; BIO 004</title>
-<meta name="description" content="A clickable design preview of Mastery OS as a focus machine: one 50-minute session, one thing on screen at a time, a real beginning and a real end. Sample data, wired to nothing.">
+<meta name="description" content="A clickable design preview of Mastery OS as a focus machine, with market-style progress charts. Sample data, wired to nothing.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   MASTERY OS VISION: THE FOCUS MACHINE. Clickable mockup,
-   SAMPLE DATA, wired to nothing.
+   MASTERY OS VISION: THE FOCUS MACHINE + THE TICKER.
+   Clickable mockup, SAMPLE DATA, wired to nothing.
 
-   Scrubs' spec, in her words, restated:
-   - Students should not have to think about what to do next.
-   - One screen, one thing on it. They do it, check it, and the
-     next thing pops up. Between things they pick from a couple
-     of offered options, and then only the picked thing shows.
-   - The screen behind gets a dark hue so the one thing is the
-     only thing.
-   - A real beginning and a real end: the app runs a 50 minute
-     Pomodoro. They choose a topic, or Daily Recommended, and
-     stop deciding.
-   The dials stay on the base page as a glance band. Weak spot
-   rows launch a focused session on that topic in one click.
-   Site brand: navy #08101F, maroon #7A2A22, gold #DCB45C.
+   TOKENS ARE MASTERY OS'S OWN, copied from the live
+   mastery-os-fall-2026.html :root (the PRIMARY teaching
+   palette). Not the welcome-page skin, not palettes.md by
+   memory: the app's actual sheet. Lora excluded on Scrubs'
+   standing rule: no serif, no italics.
+
+   The machine: one 50 minute session, one thing on screen,
+   dark hue behind it, a real beginning and a real end.
+   The ticker: her dials, plus market-style charts. Course
+   mastery as a day-by-day line with crosshair and tooltip,
+   and every topic as a watchlist row: sparkline, price
+   (mastery), and week change, with one button that IS the
+   session start for that topic.
    ============================================================ */
   :root{
-    --v-ink:#08101F; --v-maroon:#7A2A22; --v-maroondark:#5E201A;
-    --v-gold:#DCB45C; --v-straw:#E8CE85; --v-goldtext:#6F5316;
-    --v-line:#DCE1E4; --v-track:#ECE7DD; --v-page:#FAFAF9; --v-card:#FFFFFF;
-    --f:'Plus Jakarta Sans',system-ui,sans-serif;
-    --fe:'DM Sans',system-ui,sans-serif;
+    --navy:#08101F; --navy-deep:#050A14; --navy-tint:#EDF1F3;
+    --card-navy:#08101F; --near-black:#05080F;
+    --rust:#A0522D; --terra:#C2734D; --terra-dark:#A0522D;
+    --gold:#B8924A; --gold-light:#CFA95F; --gold-text:#6F5316;
+    --white:#FFFFFF; --offwhite:#FAFAF9;
+    --ink:#08101F; --ink-soft:#2A3949; --ink-faint:rgba(8,16,31,0.72);
+    --line:rgba(30,61,76,0.16); --line-soft:rgba(30,61,76,0.08);
+    --ok:#1E4C33; --warn:#8A5A1E; --bad:#7A2E2E;
+    --shadow:0 1px 3px rgba(0,0,0,0.08);
+    --lift:0 8px 16px rgba(0,0,0,0.10);
+    --disp:'Plus Jakarta Sans',system-ui,sans-serif;
+    --eyeb:'DM Sans',system-ui,sans-serif;
+    --r-sm:6px; --r:10px; --r-lg:16px;
+    --ease:cubic-bezier(.22,.61,.36,1);
   }
   *{box-sizing:border-box}
   html,body{margin:0}
-  body{background:var(--v-page);color:var(--v-ink);font-family:var(--f);line-height:1.55;font-size:16.5px}
-  a:focus-visible,button:focus-visible{outline:3px solid var(--v-gold);outline-offset:2px}
+  body{background:var(--offwhite);color:var(--ink);font-family:var(--disp);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  h1,h2,h3{letter-spacing:-.02em;color:var(--navy);line-height:1.15;margin:0}
+  button{font-family:inherit;cursor:pointer}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:var(--r-sm)}
   .wrap{max-width:1020px;margin:0 auto;padding:26px 20px 90px}
 
-  .preview-band{background:var(--v-ink);color:#F4EFE8;border-radius:12px;padding:12px 18px;
+  .preview-band{background:var(--card-navy);color:#EDF1F3;border-radius:var(--r);padding:12px 18px;
     font-size:14.5px;margin-bottom:26px}
-  .preview-band b{color:var(--v-straw)}
+  .preview-band b{color:var(--gold-light)}
 
-  .eyebrow{font-family:var(--fe);font-size:12px;font-weight:700;letter-spacing:.14em;
-    text-transform:uppercase;color:var(--v-maroon);margin:0 0 8px}
-  h1{font-size:clamp(26px,5vw,38px);font-weight:800;letter-spacing:-.02em;margin:0;line-height:1.1}
-  .lede{max-width:66ch;margin:12px 0 0}
+  .applogo{display:inline-flex;align-items:center;gap:12px;margin-bottom:22px}
+  .applogo svg{height:38px;flex:none}
+  .applogo .lt{font-size:20px;font-weight:800;color:var(--navy);letter-spacing:-.02em;line-height:1}
+  .applogo .lt .ac{color:var(--rust)}
+  .applogo .ls{font-family:var(--eyeb);font-size:9px;font-weight:700;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--ink-faint);display:block;margin-top:3px}
 
-  .bigstart{display:inline-flex;align-items:center;gap:12px;margin-top:20px;cursor:pointer;
-    background:var(--v-maroon);color:#fff;border:0;border-radius:14px;padding:18px 30px;
-    font:800 19px/1 var(--f);box-shadow:0 12px 26px rgba(11,21,48,0.16);
-    transition:transform 200ms ease,background-color 200ms ease}
-  .bigstart:hover{background:var(--v-maroondark);transform:translateY(-2px)}
+  .eyebrow{font-family:var(--eyeb);font-size:13px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--terra-dark);margin:0 0 8px}
+  h1{font-size:clamp(26px,5vw,38px);font-weight:800}
+  .lede{max-width:66ch;margin:12px 0 0;color:var(--ink-soft)}
+  .lede b{color:var(--ink)}
+
+  .bigstart{display:inline-flex;flex-direction:column;align-items:flex-start;gap:4px;margin-top:20px;
+    background:var(--navy);color:#fff;border:1.5px solid var(--navy);border-radius:var(--r-lg);
+    padding:18px 30px;font:800 19px/1.2 var(--disp);box-shadow:var(--lift);
+    transition:transform .18s var(--ease),background .18s}
+  .bigstart:hover{background:var(--near-black);transform:translateY(-1px)}
   @media (prefers-reduced-motion:reduce){ .bigstart{transition:none} .bigstart:hover{transform:none} }
-  .bigstart small{display:block;font-weight:600;font-size:12.5px;opacity:.85;margin-top:4px}
+  .bigstart small{font-weight:600;font-size:12.5px;color:#C8D2DA}
 
-  h2{font-size:14px;font-family:var(--fe);font-weight:700;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--v-maroon);margin:44px 0 4px}
-  .secnote{font-size:14.5px;margin:0 0 14px;max-width:70ch;color:#3A4550}
+  h2.sec{font-family:var(--eyeb);font-size:13px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--terra-dark);margin:44px 0 4px}
+  .secnote{font-size:14.5px;margin:0 0 14px;max-width:70ch;color:var(--ink-soft)}
 
+  /* ---------- glance tiles ---------- */
   .glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:12px}
-  .stat{background:var(--v-card);border:1px solid var(--v-line);border-radius:16px;padding:16px;
-    box-shadow:0 1px 3px rgba(11,21,48,0.10);display:flex;gap:14px;align-items:center}
-  .stat .num{font-size:30px;font-weight:800;line-height:1;letter-spacing:-.02em}
-  .stat .cap{font-family:var(--fe);font-size:11px;font-weight:700;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--v-maroon)}
-  .stat .sub{font-size:12.5px;color:#3A4550;margin-top:3px}
+  .stat{background:var(--white);border:1.5px solid var(--line);border-radius:var(--r-lg);padding:16px;
+    box-shadow:var(--shadow);display:flex;gap:14px;align-items:center}
+  .stat .num{font-size:30px;font-weight:800;line-height:1;letter-spacing:-.02em;color:var(--navy)}
+  .stat .cap{font-family:var(--eyeb);font-size:11px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--terra-dark)}
+  .stat .sub{font-size:12.5px;color:var(--ink-soft);margin-top:3px}
   .ring{width:64px;height:64px;flex:none}
   .ring circle{fill:none;stroke-width:8}
-  .ring .track{stroke:var(--v-track)}
-  .ring .val{stroke:var(--v-maroon);stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}
-  .minibar{height:8px;border-radius:4px;background:var(--v-track);margin-top:8px;overflow:hidden}
-  .minibar span{display:block;height:100%;border-radius:4px;background:var(--v-maroon)}
+  .ring .track{stroke:var(--navy-tint)}
+  .ring .val{stroke:var(--gold);stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}
 
-  .spot{background:var(--v-card);border:1px solid var(--v-line);border-radius:14px;padding:14px 16px;
-    margin-top:10px;box-shadow:0 1px 3px rgba(11,21,48,0.10);
-    display:grid;grid-template-columns:1fr auto;gap:8px 16px;align-items:center}
-  @media (max-width:640px){ .spot{grid-template-columns:1fr} }
-  .spot .nm{font-weight:800;font-size:15.5px}
-  .spot .why{font-size:13px;color:#3A4550;margin-top:2px}
-  .spot .bar{height:8px;border-radius:4px;background:var(--v-track);margin-top:8px;max-width:340px;overflow:hidden}
-  .spot .bar span{display:block;height:100%;border-radius:4px;background:var(--v-maroon)}
-  .spot .pct{font-weight:800;font-size:13.5px;margin-left:8px}
-  .spot button{font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;
-    background:var(--v-card);color:var(--v-ink);border:2px solid var(--v-gold);border-radius:999px;padding:8px 15px}
-  .spot button:hover{background:#F7EEDA}
+  .delta{display:inline-flex;align-items:center;gap:4px;font-family:var(--eyeb);font-size:12px;
+    font-weight:700;letter-spacing:.02em;border-radius:999px;padding:2px 9px;border:1px solid var(--line)}
+  .delta.up{color:var(--ok)}
+  .delta.down{color:var(--bad)}
+  .delta.flat{color:var(--ink-faint)}
+
+  /* ---------- the ticker ---------- */
+  .chartcard{background:var(--white);border:1.5px solid var(--line);border-radius:var(--r-lg);
+    padding:18px 20px;box-shadow:var(--shadow);margin-top:12px}
+  .chead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .chead .t{font-size:17px;font-weight:800;color:var(--navy)}
+  .chead .big{font-size:26px;font-weight:800;color:var(--navy);margin-left:auto}
+  .chartwrap{position:relative;margin-top:10px}
+  .chartwrap svg{display:block;width:100%;height:auto}
+  .axis{font:600 11px var(--eyeb);fill:var(--ink-faint)}
+  .grid{stroke:var(--line-soft);stroke-width:1}
+  .mline{fill:none;stroke:var(--terra-dark);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+  .marea{fill:rgba(194,115,77,0.12)}
+  .mdot{fill:var(--terra-dark);stroke:var(--white);stroke-width:2}
+  .endlab{font:800 13px var(--disp);fill:var(--navy)}
+  .xhair{stroke:var(--line);stroke-width:1;stroke-dasharray:3 3}
+  .ttip{position:absolute;pointer-events:none;background:var(--card-navy);color:#EDF1F3;border-radius:8px;
+    padding:7px 11px;font:600 12.5px var(--disp);white-space:nowrap;transform:translate(-50%,-115%);display:none}
+  .ttip b{color:var(--gold-light)}
+
+  /* ---------- the watchlist ---------- */
+  .wl{margin-top:12px}
+  .wlrow{background:var(--white);border:1.5px solid var(--line);border-radius:var(--r-lg);
+    padding:13px 16px;margin-top:10px;box-shadow:var(--shadow);
+    display:grid;grid-template-columns:1fr auto auto auto;gap:8px 18px;align-items:center;
+    transition:transform .18s var(--ease),box-shadow .18s var(--ease)}
+  .wlrow:hover{transform:translateY(-2px);box-shadow:var(--lift)}
+  @media (prefers-reduced-motion:reduce){ .wlrow{transition:none} .wlrow:hover{transform:none} }
+  @media (max-width:680px){ .wlrow{grid-template-columns:1fr auto} }
+  .wlrow .nm{font-weight:800;font-size:15.5px;color:var(--navy)}
+  .wlrow .why{font-size:12.5px;color:var(--ink-soft);margin-top:2px}
+  .spark{width:120px;height:34px}
+  .spark polyline{fill:none;stroke:var(--terra-dark);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+  .wlrow .px{font-size:19px;font-weight:800;color:var(--navy);text-align:right}
+  .wlrow .px small{display:block;font:700 10.5px var(--eyeb);letter-spacing:.08em;color:var(--ink-faint);text-transform:uppercase}
+  .fixbtn{font:700 13.5px var(--disp);background:var(--white);color:var(--navy);
+    border:1.5px solid var(--gold);border-radius:999px;padding:8px 15px}
+  .fixbtn:hover{background:#F6EFDF}
+  @media (max-width:680px){ .spark,.wlhide{display:none} }
 
   /* ================= THE SESSION ================= */
-  /* Everything behind goes under the hue. One card. Nothing else. */
   .session{position:fixed;inset:0;z-index:100;display:none;
-    background:rgba(8,16,31,0.72);padding:20px;overflow:auto}
+    background:rgba(5,8,15,0.74);padding:20px;overflow:auto}
   .session.on{display:grid;place-items:center}
-  .scard{width:min(560px,100%);background:var(--v-card);border-radius:20px;
-    padding:26px 28px;box-shadow:0 24px 60px rgba(0,0,0,0.45)}
+  .scard{width:min(560px,100%);background:var(--white);border-radius:20px;
+    padding:26px 28px;box-shadow:0 24px 60px rgba(0,0,0,0.5)}
 
   .stopbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
-  .clock{font-family:var(--fe);font-weight:700;font-size:13px;letter-spacing:.08em;color:var(--v-ink)}
+  .clock{font-family:var(--eyeb);font-weight:700;font-size:13px;letter-spacing:.06em;color:var(--ink)}
   .clock b{font-size:17px;letter-spacing:0}
   .dots{display:flex;gap:6px}
-  .dots span{width:10px;height:10px;border-radius:50%;background:var(--v-track);border:1px solid var(--v-line)}
-  .dots span.did{background:var(--v-maroon);border-color:var(--v-maroon)}
-  .dots span.now{background:var(--v-gold);border-color:var(--v-gold)}
-  .leave{font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;color:#3A4550;
-    background:none;border:0;text-decoration:underline;padding:4px}
+  .dots span{width:10px;height:10px;border-radius:50%;background:var(--navy-tint);border:1px solid var(--line)}
+  .dots span.did{background:var(--navy);border-color:var(--navy)}
+  .dots span.now{background:var(--gold);border-color:var(--gold)}
+  .leave{font:700 12.5px var(--disp);color:var(--ink-soft);background:none;border:0;text-decoration:underline;padding:4px}
 
-  .scode{display:inline-block;font-family:var(--fe);font-size:11px;font-weight:700;letter-spacing:.1em;
-    padding:3px 10px;border-radius:999px;background:var(--v-ink);color:#F4EFE8}
-  .sname{font-size:24px;font-weight:800;letter-spacing:-.01em;margin:12px 0 0;line-height:1.15}
-  .swhy{font-size:14.5px;color:#3A4550;margin:8px 0 0}
-  .swhy b{color:var(--v-maroon)}
-  .sbody{margin:16px 0 0;border:1px dashed var(--v-line);border-radius:12px;padding:14px 16px;
-    font-size:14.5px;background:#FDFCFA}
-  .sdo{display:block;width:100%;margin-top:18px;font:800 17px/1 var(--f);cursor:pointer;
-    background:var(--v-maroon);color:#fff;border:0;border-radius:12px;padding:16px}
-  .sdo:hover{background:var(--v-maroondark)}
+  .scode{display:inline-block;font-family:var(--eyeb);font-size:11px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;padding:3px 10px;border-radius:999px;background:var(--card-navy);color:#EDF1F3}
+  .sname{font-size:24px;font-weight:800;margin:12px 0 0;line-height:1.15;color:var(--navy)}
+  .swhy{font-size:14.5px;color:var(--ink-soft);margin:8px 0 0}
+  .swhy b{color:var(--terra-dark)}
+  .sbody{margin:16px 0 0;border:1.5px dashed var(--line);border-radius:var(--r);padding:14px 16px;
+    font-size:14.5px;background:var(--offwhite)}
+  .sdo{display:block;width:100%;margin-top:18px;font:800 17px/1 var(--disp);
+    background:var(--navy);color:#fff;border:1.5px solid var(--navy);border-radius:var(--r);padding:16px}
+  .sdo:hover{background:var(--near-black)}
 
-  /* choice screens: the question is the only thing on screen */
-  .q{font-size:24px;font-weight:800;letter-spacing:-.01em;margin:4px 0 0;line-height:1.2}
-  .qsub{font-size:14.5px;color:#3A4550;margin:8px 0 0}
+  .q{font-size:24px;font-weight:800;margin:4px 0 0;line-height:1.2;color:var(--navy)}
+  .qsub{font-size:14.5px;color:var(--ink-soft);margin:8px 0 0}
   .opts{display:grid;gap:10px;margin-top:18px}
-  .opt{display:block;width:100%;text-align:left;font:inherit;cursor:pointer;
-    background:var(--v-card);border:2px solid var(--v-line);border-radius:12px;padding:14px 16px}
-  .opt:hover{border-color:var(--v-gold);background:#FDFBF5}
-  .opt.rec{border-color:var(--v-gold);background:#FDFBF5}
-  .opt .on{font-weight:800;font-size:16px}
-  .opt .on .rectag{font-family:var(--fe);font-size:10.5px;font-weight:700;letter-spacing:.08em;
-    text-transform:uppercase;color:var(--v-goldtext);margin-left:8px}
-  .opt .od{font-size:13px;color:#3A4550;margin-top:2px}
+  .opt{display:block;width:100%;text-align:left;font:inherit;background:var(--white);
+    border:1.5px solid var(--line);border-radius:var(--r);padding:14px 16px}
+  .opt:hover{border-color:var(--gold);background:#FCF9F2}
+  .opt.rec{border:1.5px solid var(--gold);background:#FCF9F2}
+  .opt .on{font-weight:800;font-size:16px;color:var(--navy)}
+  .opt .on .rectag{font-family:var(--eyeb);font-size:10.5px;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--gold-text);margin-left:8px}
+  .opt .od{font-size:13px;color:var(--ink-soft);margin-top:2px;display:block}
 
   .fin{text-align:center}
-  .fin .big{font-size:26px;font-weight:800;margin:10px 0 0}
-  .fin p{font-size:15px}
+  .fin .big{font-size:26px;font-weight:800;margin:10px 0 0;color:var(--navy)}
+  .fin p{font-size:15px;color:var(--ink-soft)}
   .fin .stats{display:flex;gap:18px;justify-content:center;margin-top:14px;flex-wrap:wrap}
-  .fin .stats div{font-size:13px;color:#3A4550}
-  .fin .stats b{display:block;font-size:22px;color:var(--v-ink)}
+  .fin .stats div{font:600 13px var(--disp);color:var(--ink-soft)}
+  .fin .stats b{display:block;font-size:22px;color:var(--navy)}
+
+  .chippick{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .chippick button{font:700 13.5px var(--disp);background:var(--white);color:var(--navy);
+    border:1.5px solid var(--line);border-radius:999px;padding:9px 15px}
+  .chippick button[aria-pressed="true"]{border-color:var(--gold);background:#F6EFDF;color:var(--navy)}
+  .chippick button:hover{border-color:var(--gold)}
+  .chipgo{display:block;width:100%;margin-top:16px;font:800 16px/1 var(--disp);
+    background:var(--navy);color:#fff;border:1.5px solid var(--navy);border-radius:var(--r);padding:14px}
+  .chipgo:hover{background:var(--near-black)}
+  .chipgo[disabled]{background:var(--navy-tint);color:var(--ink-faint);border-color:var(--line);cursor:not-allowed}
+
+  .brk{text-align:center}
+  .brk .bigclock{font-family:var(--eyeb);font-weight:700;font-size:44px;color:var(--navy);margin:10px 0 0}
+  .brk p{font-size:15px;color:var(--ink-soft)}
+
+  .auto{display:block;width:100%;margin-top:16px;text-align:center;font:800 18px/1.3 var(--disp);
+    background:var(--gold);color:var(--navy);border:1.5px solid var(--gold);border-radius:var(--r-lg);padding:18px}
+  .auto:hover{background:var(--gold-light)}
+  .auto small{display:block;font-weight:600;font-size:12.5px;color:#4A3A12;margin-top:4px}
 
   .demo{margin-top:14px;text-align:right}
-  .demo button{font:inherit;font-size:11.5px;font-weight:700;cursor:pointer;color:#3A4550;
-    background:none;border:1px dashed var(--v-line);border-radius:8px;padding:5px 10px}
+  .demo button{font:700 11.5px var(--disp);color:var(--ink-soft);
+    background:none;border:1px dashed var(--line);border-radius:8px;padding:5px 10px}
 
-  footer.foot{border-top:1px solid var(--v-line);margin-top:56px;padding-top:16px;font-size:14px}
+  footer.foot{border-top:1px solid var(--line);margin-top:56px;padding-top:16px;font-size:14px;color:var(--ink-soft)}
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <div class="preview-band"><b>Design preview with sample data.</b> Wired to nothing. Click the big
-  button and run a session: pick a track, do the one thing on screen, check it off, pick the next.
-  There is a demo control on each card to skip the clock.</div>
+  <div class="preview-band"><b>Design preview with sample data.</b> Wired to nothing. Press the big
+  button and run a session, hover the chart, poke a watchlist row. Tokens are Mastery OS's own
+  palette, from the live app.</div>
+
+  <div class="applogo">
+    <svg viewBox="40 10 125 148" aria-hidden="true"><g transform="translate(0,18)">
+      <g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#C2734D"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C2734D"/></g>
+      <g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#A0522D"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#A0522D"/></g>
+      <g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#FAFAF9"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#FAFAF9"/></g>
+    </g></svg>
+    <span><span class="lt">Mastery <span class="ac">OS</span></span><span class="ls">Human Anatomy</span></span>
+  </div>
 
   <header>
     <p class="eyebrow">BIO 004 &middot; Mastery OS &middot; What it could be</p>
-    <h1>One screen. One thing. Fifty minutes.</h1>
-    <p class="lede">The student decides twice: that they are studying, and what topic. After that the
-    machine runs the session. One activity fills the screen, everything else goes under the hue, and
-    when they check it off the next thing appears. There is a real beginning and a real end.</p>
-    <button class="bigstart" id="start">Start a 50 minute session
-      <small>You pick the topic. It picks everything else.</small></button>
+    <h1>One screen. One thing. One round at a time.</h1>
+    <p class="lede">The student picks their Pomodoro length once and a focus for each round: a
+    specific topic or two, a whole module combo, or autopilot on their weaknesses. The machine runs
+    everything else, one activity at a time under the hue, breaks included. Out here, their progress
+    reads like a market: <b>the line is their mastery</b>, day by day, and every topic is a position
+    with a price and a weekly change.</p>
+    <button class="bigstart" id="start">Start a study session
+      <small>You pick the round length and the focus. It picks everything else.</small></button>
   </header>
 
-  <h2>At a glance</h2>
-  <p class="secnote">The data you love stays, out here on the base page. Reading it takes zero clicks
-  and none of it is a door: the session is the only door.</p>
+  <h2 class="sec">At a glance</h2>
   <div class="glance">
     <div class="stat">
       <svg class="ring" viewBox="0 0 64 64" role="img" aria-label="Course mastery 34 percent">
@@ -171,7 +246,7 @@
         <circle class="val" cx="32" cy="32" r="26" stroke-dasharray="55.5 107.8"/>
       </svg>
       <div><span class="cap">Course mastery</span><div class="num">34%</div>
-      <div class="sub">up 6 this week</div></div>
+      <div class="sub"><span class="delta up">&#9650; +6 this week</span></div></div>
     </div>
     <div class="stat">
       <div><span class="cap">Cards due tonight</span><div class="num">23</div>
@@ -181,17 +256,24 @@
       <div><span class="cap">Streak</span><div class="num">4 nights</div>
       <div class="sub">longest so far: 4</div></div>
     </div>
-    <div class="stat">
-      <div style="flex:1"><span class="cap">Weakest right now</span><div class="num" style="font-size:19px">Body cavities</div>
-      <div class="minibar" role="img" aria-label="Body cavities mastery 41 percent"><span style="width:41%"></span></div>
-      <div class="sub">41%</div></div>
+  </div>
+
+  <h2 class="sec">Your mastery, day by day</h2>
+  <p class="secnote">The whole course as one line. Every session you run moves it. Hover for any day.</p>
+  <div class="chartcard">
+    <div class="chead"><span class="t">Course mastery</span>
+      <span class="delta up">&#9650; +6 this week</span>
+      <span class="big">34%</span></div>
+    <div class="chartwrap" id="chartwrap">
+      <svg id="chart" viewBox="0 0 720 240" role="img" aria-label="Line chart of course mastery from August 17 to August 30, sample data, rising from 12 percent to 34 percent"></svg>
+      <div class="ttip" id="ttip"></div>
     </div>
   </div>
 
-  <h2>Weak spots</h2>
-  <p class="secnote">Each row is one click from a focused session on exactly that topic. No Prove It,
-  no picker in between: the click IS the start.</p>
-  <div id="spots"></div>
+  <h2 class="sec">Your positions</h2>
+  <p class="secnote">Every topic like a stock: the sparkline is its two weeks, the number is where it
+  stands, the change is this week. One click opens a 50 minute session on exactly that topic.</p>
+  <div class="wl" id="wl"></div>
 
   <footer class="foot">
     <p>BIO 004 Human Anatomy &middot; Fall 2026 &middot; Solano Community College<br>
@@ -199,7 +281,6 @@
   </footer>
 </div>
 
-<!-- ============ THE SESSION OVERLAY ============ -->
 <div class="session" id="session" role="dialog" aria-modal="true" aria-label="Study session">
   <div class="scard" id="scard"></div>
 </div>
@@ -207,63 +288,135 @@
 <script>
 (function () {
   'use strict';
-  /* Sample data. The real build draws these from the schedule, the
-     recall history, weaknesses() and loopWeakStations(). */
-  var TRACKS = {
-    daily: { label: 'Daily recommended', queue: [
-      { code:'CC', name:'Clear your 23 due cards', min:12,
-        why:'<b>9 are Cell Anatomy</b> and Monday is your Cell TBL. Due cards always go first.',
-        body:'The cards deal right here, one at a time, organelles first. Answer, flip, next.' },
-      { code:'DIKI', name:'Draw the generalized cell', min:12,
-        why:'You missed <b>3 of 5</b> organelle cards just now. Drawing is the repair for that kind of miss.',
-        body:'The canvas opens here with the prompt and a checklist. Draw it, label it, check it against the list.' },
-      { code:'LS', name:'Loop Sprint: Tissues', min:10,
-        why:'Lab this week is connective tissue and you missed <b>4 of 6</b> epithelial stations last time.',
-        body:'Loops opens on the Tissues loop. Your station scores land back in the session when you return.' },
-      { code:'BPD', name:'Blank page dump: the cell', min:6,
-        why:'End on retrieval. Two minutes of everything you know, no notes.',
-        body:'A timer and a blank page. Write until it rings, then check yourself against the competency list.' } ] },
-    lecture: { label: 'Lecture: the Cell TBL', queue: [
-      { code:'CC', name:'Cell Anatomy cards, DOK 2 and up', min:15,
-        why:'The TBL is written from the <b>high-yield cell competencies</b>. These are their cards.',
-        body:'The cell bank deals here, hardest first.' },
-      { code:'DIKI', name:'Draw the endomembrane path', min:12,
-        why:'The path from rough ER to exocytosis is the most-missed cell question every term.',
-        body:'Canvas opens with the pathway prompt. Draw the route, label each stop.' },
-      { code:'TIO', name:'Teach the organelles out loud', min:10,
-        why:'If you can say it without notes, the TBL cannot surprise you.',
-        body:'The tutor listens and names your holes. Speak plainly, no reading.' } ] },
-    lab: { label: 'Lab: tissues under the scope', queue: [
-      { code:'CHART', name:'Rebuild your tissue chart, blank', min:12,
-        why:'Location, function, special structures. The chart <b>you</b> built is the one you remember.',
-        body:'A blank chart scaffold opens here. Fill it from memory, then check against the notes.' },
-      { code:'LS', name:'Loop Sprint: epithelial review', min:10,
-        why:'You missed <b>4 of 6</b> epithelial stations. Lab reviews them this week.',
-        body:'Loops opens at your missed stations first.' },
-      { code:'LS2', name:'Loop Sprint: connective, first look', min:10,
-        why:'Connective starts Tuesday. Wrong answers cost nothing today; recognition starts now.',
-        body:'The connective stations deal in learn mode: answer, see, next.' } ] },
-    draw: { label: 'Just draw', queue: [
-      { code:'DIKI', name:'Draw the generalized cell', min:12,
-        why:'Weakest drawable topic on your board tonight.',
-        body:'Canvas, prompt, checklist.' },
-      { code:'DIKI', name:'Draw the four tissue types', min:12,
-        why:'Lab is tissues this week. Four boxes, one page.',
-        body:'Canvas opens with the four-box scaffold.' },
-      { code:'DIKI', name:'Draw the body cavities', min:12,
-        why:'Your weakest topic overall, at <b>41%</b>.',
-        body:'Canvas opens with the torso outline. Fill in every cavity and subdivision.' } ] }
-  };
-  var SPOTS = [
-    { nm:'Body cavities', pct:41, why:'6 cards missed twice. Last seen 3 days ago.', track:'draw' },
-    { nm:'Epithelial tissue', pct:55, why:'You missed 4 of 6 Loop stations. Lab reviews it this week.', track:'lab' },
-    { nm:'Cell organelles', pct:62, why:'Improving, but Monday is the Cell TBL.', track:'lecture' }
+  /* ---------------- sample data ---------------- */
+  var SERIES = { days: ['Aug 17','Aug 18','Aug 19','Aug 20','Aug 21','Aug 22','Aug 23','Aug 24','Aug 25','Aug 26','Aug 27','Aug 28','Aug 29','Aug 30'],
+                 vals: [12, 15, 17, 21, 24, 26, 25, 27, 29, 31, 30, 32, 33, 34] };
+  var POSITIONS = [
+    { nm:'Cell organelles', pct:62, chg:+9,  why:'Improving, but Monday is the Cell TBL.', track:'lecture',
+      hist:[41,44,48,50,53,53,57,62] },
+    { nm:'Epithelial tissue', pct:55, chg:+4, why:'You missed 4 of 6 Loop stations. Lab reviews it this week.', track:'lab',
+      hist:[44,46,49,51,51,53,54,55] },
+    { nm:'Anatomical terminology', pct:78, chg:+2, why:'Holding. Cards resurface every few days on their own.', track:'daily',
+      hist:[70,73,74,75,76,76,77,78] },
+    { nm:'Body cavities', pct:41, chg:-3, why:'6 cards missed twice. Last seen 3 days ago.', track:'draw',
+      hist:[47,46,46,45,44,44,42,41] },
+    { nm:'Directional terms', pct:84, chg:0, why:'Solid. Nothing due here tonight.', track:'daily',
+      hist:[80,82,83,84,84,84,84,84] }
   ];
 
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
+  /* ---------------- the hero chart ---------------- */
+  (function chart() {
+    var W = 720, H = 240, L = 40, R = 46, T = 16, B = 30;
+    var iw = W - L - R, ih = H - T - B;
+    var n = SERIES.vals.length, maxY = 50;
+    function x(i){ return L + iw * i / (n - 1); }
+    function y(v){ return T + ih * (1 - v / maxY); }
+    var svg = document.getElementById('chart');
+    var out = '';
+    [0, 10, 20, 30, 40, 50].forEach(function (g) {
+      out += '<line class="grid" x1="' + L + '" y1="' + y(g) + '" x2="' + (W - R) + '" y2="' + y(g) + '"/>';
+      out += '<text class="axis" x="' + (L - 8) + '" y="' + (y(g) + 4) + '" text-anchor="end">' + g + '</text>';
+    });
+    [0, 4, 8, 13].forEach(function (i) {
+      out += '<text class="axis" x="' + x(i) + '" y="' + (H - 8) + '" text-anchor="middle">' + SERIES.days[i] + '</text>';
+    });
+    var pts = SERIES.vals.map(function (v, i) { return x(i) + ',' + y(v); });
+    out += '<polygon class="marea" points="' + L + ',' + y(0) + ' ' + pts.join(' ') + ' ' + (W - R) + ',' + y(0) + '"/>';
+    out += '<polyline class="mline" points="' + pts.join(' ') + '"/>';
+    out += '<line class="xhair" id="xh" x1="0" y1="' + T + '" x2="0" y2="' + (T + ih) + '" style="display:none"/>';
+    out += '<circle class="mdot" id="hdot" r="5" style="display:none"/>';
+    out += '<circle class="mdot" cx="' + x(n-1) + '" cy="' + y(SERIES.vals[n-1]) + '" r="4"/>';
+    out += '<text class="endlab" x="' + (x(n-1) + 8) + '" y="' + (y(SERIES.vals[n-1]) + 4) + '">' + SERIES.vals[n-1] + '%</text>';
+    svg.innerHTML = out;
+
+    var wrap = document.getElementById('chartwrap'), tip = document.getElementById('ttip');
+    var xh = document.getElementById('xh'), hdot = document.getElementById('hdot');
+    function show(e) {
+      var r = svg.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width * W;
+      var i = Math.round((px - L) / iw * (n - 1));
+      if (i < 0) i = 0; if (i > n - 1) i = n - 1;
+      var cx = x(i), cy = y(SERIES.vals[i]);
+      xh.setAttribute('x1', cx); xh.setAttribute('x2', cx); xh.style.display = '';
+      hdot.setAttribute('cx', cx); hdot.setAttribute('cy', cy); hdot.style.display = '';
+      tip.style.display = 'block';
+      tip.style.left = (cx / W * r.width) + 'px';
+      tip.style.top = (cy / H * r.height) + 'px';
+      tip.innerHTML = esc(SERIES.days[i]) + ' &middot; <b>' + SERIES.vals[i] + '%</b>';
+    }
+    function hide() { xh.style.display = 'none'; hdot.style.display = 'none'; tip.style.display = 'none'; }
+    wrap.addEventListener('mousemove', show);
+    wrap.addEventListener('mouseleave', hide);
+  })();
+
+  /* ---------------- the watchlist ---------------- */
+  function sparkline(hist) {
+    var w = 120, h = 34, lo = Math.min.apply(null, hist), hi = Math.max.apply(null, hist);
+    var span = (hi - lo) || 1;
+    var pts = hist.map(function (v, i) {
+      return (i * w / (hist.length - 1)).toFixed(1) + ',' + (3 + (h - 6) * (1 - (v - lo) / span)).toFixed(1);
+    }).join(' ');
+    return '<svg class="spark" viewBox="0 0 120 34" aria-hidden="true"><polyline points="' + pts + '"/></svg>';
+  }
+  function deltaChip(chg) {
+    if (chg > 0) return '<span class="delta up">&#9650; +' + chg + '</span>';
+    if (chg < 0) return '<span class="delta down">&#9660; ' + chg + '</span>';
+    return '<span class="delta flat">&#8212;&#65038; 0</span>';
+  }
+  document.getElementById('wl').innerHTML = POSITIONS.map(function (s, i) {
+    return '<div class="wlrow">'
+      + '<div><span class="nm">' + esc(s.nm) + '</span><div class="why">' + esc(s.why) + '</div></div>'
+      + '<span class="wlhide">' + sparkline(s.hist) + '</span>'
+      + '<div class="px">' + s.pct + '%<small>2 weeks</small>' + deltaChip(s.chg) + '</div>'
+      + '<div><button class="fixbtn" data-spot="' + i + '">Work on this &middot; 50 min</button></div>'
+      + '</div>';
+  }).join('');
+  document.getElementById('wl').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-spot]');
+    if (!b) return;
+    openSession();
+    roundNum = 1;
+    startRound(actsFor(POSITIONS[+b.getAttribute('data-spot')].nm), false);
+  });
+
+  /* ---------------- the session: pomodoro rounds ---------------- */
+  var TOPICS = ['Anatomical terminology','Directional terms','Body cavities','Cell organelles','Epithelial tissue'];
+  var WEAK_ORDER = ['Body cavities','Epithelial tissue','Cell organelles','Anatomical terminology','Directional terms'];
+
+  function actsFor(scopeLabel) {
+    return [
+      { code:'CC', name:'Clear the cards: ' + scopeLabel, min:14,
+        why:'Due and missed cards on <b>' + esc(scopeLabel) + '</b> deal first. Retrieval before anything.',
+        body:'The cards deal right here, one at a time. Answer, flip, next.' },
+      { code:'DIKI', name:'Draw it: ' + scopeLabel, min:12,
+        why:'Whatever you missed in the cards just became the drawing prompt.',
+        body:'The canvas opens here with the prompt and its checklist. Every checklist item you tick is recorded.' },
+      { code:'LS', name:'Loop Sprint: ' + scopeLabel, min:10,
+        why:'Recognition under time. Your station scores land back on your line.',
+        body:'Loops opens on the matching tiles.' },
+      { code:'BPD', name:'Blank page dump: ' + scopeLabel, min:6,
+        why:'End the round on pure retrieval, no notes.',
+        body:'A timer and a blank page. Write until it rings, then tick off what you got against the list. Every tick is recorded.' } ];
+  }
+  function comboActs() {
+    return [
+      { code:'LS', name:'Loops: Intro sweep', min:12,
+        why:'The whole intro in one pass: <b>terminology, regions, cavities, planes</b>. Exposure, not depth.',
+        body:'Four short loops back to back. Wrong answers just mark the map.' },
+      { code:'CC', name:'Mixed cards: all of Module 1', min:14,
+        why:'Every Module 1 topic shuffled together, the way the exam deals them.',
+        body:'Cards deal across the whole module, hardest topics weighted heavier.' },
+      { code:'BPD', name:'Blank page dump: the module', min:8,
+        why:'One page, everything you know about Module 1. The gaps you feel are the next round.',
+        body:'Timer, blank page, then tick what you covered against the module checklist. Recorded.' } ];
+  }
+
   var sess = document.getElementById('session'), card = document.getElementById('scard');
-  var queue = [], idx = -1, doneCount = 0, secs = 50 * 60, timer = null, lastFocus = null;
+  var CFG = { round: 50 * 60, brk: 10 * 60, longBrk: 30 * 60, longEvery: 3 };
+  var roundNum = 0, queue = [], idx = -1, doneCount = 0, roundsDone = 0;
+  var secs = 0, timer = null, mode = 'work', lastFocus = null, autopilot = false;
 
   function mmss(s) {
     var m = Math.floor(s / 60), x = s % 60;
@@ -272,8 +425,16 @@
   function tick() {
     secs--;
     var c = document.getElementById('clk');
-    if (c) c.innerHTML = '<b>' + mmss(secs) + '</b> left of 50:00';
-    if (secs <= 0) { clearInterval(timer); finish(); }
+    if (c) c.innerHTML = '<b>' + mmss(Math.max(0, secs)) + '</b> ' + (mode === 'work' ? 'left in round ' + roundNum : 'break');
+    if (secs <= 0) {
+      clearInterval(timer); timer = null;
+      if (mode === 'work') endRound(); else planRound();
+    }
+  }
+  function startClock(n, m) {
+    if (timer) clearInterval(timer);
+    secs = n; mode = m;
+    timer = setInterval(tick, 1000);
   }
   function dots() {
     var out = '<div class="dots" aria-hidden="true">';
@@ -282,85 +443,181 @@
     }
     return out + '</div>';
   }
-  function topbar() {
-    return '<div class="stopbar"><span class="clock" id="clk"><b>' + mmss(secs) + '</b> left of 50:00</span>'
-      + dots()
+  function topbar(showDots) {
+    return '<div class="stopbar"><span class="clock" id="clk"><b>' + mmss(Math.max(0, secs)) + '</b> '
+      + (mode === 'work' ? 'left in round ' + roundNum : 'break') + '</span>'
+      + (showDots ? dots() : '<span></span>')
       + '<button class="leave" id="leave">End session</button></div>';
+  }
+  function demoRow() {
+    return '<div class="demo"><button id="skipclk" type="button">Demo: skip the clock</button></div>';
   }
   function wire() {
     var lv = document.getElementById('leave');
     if (lv) lv.addEventListener('click', finish);
-    var first = card.querySelector('button:not(.leave):not(.demo button), .opt');
+    var sk = document.getElementById('skipclk');
+    if (sk) sk.addEventListener('click', function () { secs = Math.min(secs, 3); });
+    var first = card.querySelector('.opt, .sdo, .auto, .chipgo');
     if (first) first.focus();
   }
 
+  /* screen 1: their pomodoro, their numbers */
   function openSession() {
     lastFocus = document.activeElement;
-    secs = 50 * 60; doneCount = 0; idx = -1; queue = [];
+    roundNum = 0; roundsDone = 0; doneCount = 0; queue = []; idx = -1; autopilot = false;
     sess.classList.add('on');
     document.body.style.overflow = 'hidden';
-    card.innerHTML = topbar()
-      + '<p class="q">What do you want to work on?</p>'
-      + '<p class="qsub">Pick once. After this, the machine runs the session and you just do the thing on screen.</p>'
+    mode = 'setup'; if (timer) { clearInterval(timer); timer = null; }
+    card.innerHTML = '<div class="stopbar"><span class="clock">Session setup</span><span></span>'
+      + '<button class="leave" id="leave">Close</button></div>'
+      + '<p class="q">How long is a round for you?</p>'
+      + '<p class="qsub">Your Pomodoro, your numbers. Breaks run themselves: 10 minutes between rounds, '
+      + 'a 30 minute long break after round 3.</p>'
       + '<div class="opts">'
-      + '<button class="opt rec" data-track="daily"><span class="on">Daily recommended<span class="rectag">what the app would deal</span></span><span class="od" style="display:block">Due cards first, then the repair for what you miss, then lab prep. About 40 minutes of work in the 50.</span></button>'
-      + '<button class="opt" data-track="lecture"><span class="on">Lecture</span><span class="od" style="display:block">The Cell TBL is Monday. Cards, the pathway drawing, teach it out loud.</span></button>'
-      + '<button class="opt" data-track="lab"><span class="on">Lab</span><span class="od" style="display:block">Tissue chart from memory, epithelial review, first look at connective.</span></button>'
-      + '<button class="opt" data-track="draw"><span class="on">Just draw</span><span class="od" style="display:block">Three drawing rounds on your three weakest drawable topics.</span></button>'
+      + '<button class="opt rec" data-len="50"><span class="on">50 minutes<span class="rectag">classic deep round</span></span><span class="od">Three or four activities per round.</span></button>'
+      + '<button class="opt" data-len="25"><span class="on">25 minutes</span><span class="od">Short and sharp. Two activities per round.</span></button>'
+      + '<button class="opt" data-len="42"><span class="on">My baseline: 42 minutes</span><span class="od">From your focus test. Re-run it anytime.</span></button>'
       + '</div>';
-    card.querySelectorAll('[data-track]').forEach(function (b) {
-      b.addEventListener('click', function () { startTrack(b.getAttribute('data-track')); });
+    document.getElementById('leave').addEventListener('click', closeSession);
+    card.querySelectorAll('[data-len]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        CFG.round = (+b.getAttribute('data-len')) * 60;
+        planRound();
+      });
     });
     wire();
-    if (timer) clearInterval(timer);
-    timer = setInterval(tick, 1000);
   }
 
-  function startTrack(key) {
-    queue = TRACKS[key].queue.slice();
-    idx = 0;
+  /* screen 2: what is this round about */
+  function planRound() {
+    roundNum++;
+    mode = 'plan'; if (timer) { clearInterval(timer); timer = null; }
+    var postLong = roundsDone > 0 && roundsDone % CFG.longEvery === 0;
+    if (postLong) { autopilotScreen(); return; }
+    var recs = [
+      null,
+      { t: 'Anatomical terminology + Directional terms', s: 'Two specific topics, every way at them.', kind: 'spec2' },
+      { t: 'Body cavities', s: 'Your weakest position, one round, every way at it.', kind: 'spec1' },
+      { t: 'All of Module 1, total review', s: 'The combo round: broad exposure so nothing goes stale.', kind: 'combo' }
+    ];
+    var rec = recs[Math.min(roundNum, 3)];
+    card.innerHTML = '<div class="stopbar"><span class="clock">Round ' + roundNum + ' of the session</span><span></span>'
+      + '<button class="leave" id="leave">End session</button></div>'
+      + '<p class="q">Round ' + roundNum + ': what is the focus?</p>'
+      + '<p class="qsub">' + mmss(CFG.round) + ' on whatever you pick. Specific goes deep, the module combo goes wide, and mixing rounds keeps everything warm.</p>'
+      + '<div class="opts">'
+      + '<button class="opt rec" data-plan="rec"><span class="on">' + esc(rec.t)
+      + '<span class="rectag">recommended</span></span><span class="od">' + esc(rec.s) + '</span></button>'
+      + '<button class="opt" data-plan="pick"><span class="on">Specific topics, my pick</span><span class="od">Choose one or two and go deep on just those.</span></button>'
+      + '<button class="opt" data-plan="combo"><span class="on">Whole module combo</span><span class="od">Loops and mixed cards across all of Module 1 for the round.</span></button>'
+      + '<button class="opt" data-plan="auto"><span class="on">My weaknesses, autopilot</span><span class="od">One button. It runs weakest to least weak, no more decisions.</span></button>'
+      + '</div>';
+    card.querySelector('[data-plan="rec"]').addEventListener('click', function () {
+      if (rec.kind === 'combo') startRound(comboActs(), false);
+      else startRound(actsFor(rec.t), false);
+    });
+    card.querySelector('[data-plan="pick"]').addEventListener('click', pickTopics);
+    card.querySelector('[data-plan="combo"]').addEventListener('click', function () { startRound(comboActs(), false); });
+    card.querySelector('[data-plan="auto"]').addEventListener('click', function () { startRound(autoQueue(), true); });
+    wire();
+  }
+
+  /* screen 2b: pick one or two topics */
+  function pickTopics() {
+    var picked = [];
+    card.innerHTML = '<div class="stopbar"><span class="clock">Round ' + roundNum + '</span><span></span>'
+      + '<button class="leave" id="leave">End session</button></div>'
+      + '<p class="q">Pick one or two topics.</p>'
+      + '<p class="qsub">The round stays on what you pick. Everything else waits its turn.</p>'
+      + '<div class="chippick">'
+      + TOPICS.map(function (t, i) {
+          return '<button type="button" data-chip="' + i + '" aria-pressed="false">' + esc(t) + '</button>';
+        }).join('')
+      + '</div>'
+      + '<button class="chipgo" id="chipgo" disabled>Start the round</button>';
+    card.querySelectorAll('[data-chip]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var t = TOPICS[+b.getAttribute('data-chip')];
+        var at = picked.indexOf(t);
+        if (at > -1) { picked.splice(at, 1); b.setAttribute('aria-pressed', 'false'); }
+        else if (picked.length < 2) { picked.push(t); b.setAttribute('aria-pressed', 'true'); }
+        var go = document.getElementById('chipgo');
+        go.disabled = !picked.length;
+        go.textContent = picked.length ? ('Start the round: ' + picked.join(' + ')) : 'Start the round';
+      });
+    });
+    document.getElementById('chipgo').addEventListener('click', function () {
+      if (picked.length) startRound(actsFor(picked.join(' + ')), false);
+    });
+    wire();
+  }
+
+  /* the post-long-break screen: one button, zero decisions */
+  function autopilotScreen() {
+    card.innerHTML = '<div class="stopbar"><span class="clock">Back from your long break</span><span></span>'
+      + '<button class="leave" id="leave">End session</button></div>'
+      + '<p class="q">Good break. Now the machine drives.</p>'
+      + '<p class="qsub">Your board, weakest to least weak. You do not pick anything else today.</p>'
+      + '<button class="auto" id="autogo">Run my weaknesses, weakest first'
+      + '<small>' + esc(WEAK_ORDER.slice(0,3).join(' &rarr; ').replace(/&amp;rarr;/g,'&rarr;')) + ' &rarr; &hellip;</small></button>'
+      + '<div class="opts" style="margin-top:12px">'
+      + '<button class="opt" data-plan="self"><span class="on">Or plan a round myself</span><span class="od">Specific topics or the module combo, your call.</span></button>'
+      + '</div>';
+    document.getElementById('autogo').addEventListener('click', function () { startRound(autoQueue(), true); });
+    card.querySelector('[data-plan="self"]').addEventListener('click', function () { roundNum--; roundsDone = 0; planRound(); });
+    wire();
+  }
+  function autoQueue() {
+    /* weakest first: one heavy activity per weakness, in order */
+    return WEAK_ORDER.slice(0, 4).map(function (t, i) {
+      var a = actsFor(t)[i % 2];  /* alternate cards and drawing down the list */
+      a.why = '<b>#' + (i + 1) + ' on your weakness board.</b> ' + a.why;
+      return a;
+    });
+  }
+
+  function startRound(q, isAuto) {
+    queue = q; idx = 0; autopilot = isAuto;
+    startClock(CFG.round, 'work');
     showActivity();
   }
 
   function showActivity() {
     var a = queue[idx];
-    card.innerHTML = topbar()
+    card.innerHTML = topbar(true)
       + '<span class="scode">' + esc(a.code) + ' &middot; about ' + a.min + ' min</span>'
       + '<p class="sname">' + esc(a.name) + '</p>'
       + '<p class="swhy">' + a.why + '</p>'
       + '<div class="sbody">' + esc(a.body) + '</div>'
-      + '<button class="sdo" id="doneBtn">Done. What is next?</button>'
-      + '<div class="demo"><button id="skipclk" type="button">Demo: skip the clock ahead 10 min</button></div>';
+      + '<button class="sdo" id="doneBtn">' + (autopilot ? 'Done. Next, no thinking.' : 'Done. What is next?') + '</button>'
+      + demoRow();
     document.getElementById('doneBtn').addEventListener('click', function () {
       doneCount++;
-      if (idx + 1 >= queue.length || secs < 240) finish();
-      else chooser();
-    });
-    document.getElementById('skipclk').addEventListener('click', function () {
-      secs = Math.max(1, secs - 600); tick();
+      if (idx + 1 >= queue.length) { endRound(); return; }
+      if (autopilot) { idx++; showActivity(); return; }   /* autopilot never asks */
+      chooser();
     });
     wire();
   }
 
-  /* Between activities: they choose the next one. Then only it shows. */
   function chooser() {
     idx++;
     var rec = queue[idx];
-    var altPool = queue.slice(idx + 1).concat(queue.slice(0, Math.max(0, idx - 1)));
+    var altPool = queue.slice(idx + 1);
     var alts = altPool.slice(0, 2);
-    card.innerHTML = topbar()
+    card.innerHTML = topbar(true)
       + '<p class="q">Nice. One down.</p>'
       + '<p class="qsub">Pick the next one. Whatever you pick becomes the only thing on the screen.</p>'
       + '<div class="opts">'
       + '<button class="opt rec" data-pick="rec"><span class="on">' + esc(rec.name)
-      + '<span class="rectag">recommended next</span></span><span class="od" style="display:block">' + rec.why + '</span></button>'
+      + '<span class="rectag">recommended next</span></span><span class="od">' + rec.why + '</span></button>'
       + alts.map(function (a, i) {
           return '<button class="opt" data-pick="' + i + '"><span class="on">' + esc(a.name)
-            + '</span><span class="od" style="display:block">about ' + a.min + ' min</span></button>';
+            + '</span><span class="od">about ' + a.min + ' min</span></button>';
         }).join('')
-      + '</div>';
+      + '</div>' + demoRow();
     card.querySelector('[data-pick="rec"]').addEventListener('click', showActivity);
-    card.querySelectorAll('[data-pick]:not([data-pick="rec"])').forEach(function (b) {
+    card.querySelectorAll('.opt[data-pick]:not([data-pick="rec"])').forEach(function (b) {
       b.addEventListener('click', function () {
         var a = alts[+b.getAttribute('data-pick')];
         var qi = queue.indexOf(a);
@@ -372,21 +629,48 @@
     wire();
   }
 
+  /* round over: the break runs itself */
+  function endRound() {
+    roundsDone++;
+    var long = roundsDone % CFG.longEvery === 0;
+    startClock(long ? CFG.longBrk : CFG.brk, 'break');
+    card.innerHTML = '<div class="stopbar"><span class="clock" id="clk"><b>' + mmss(secs) + '</b> break</span><span></span>'
+      + '<button class="leave" id="leave">End session</button></div>'
+      + '<div class="brk">'
+      + '<span class="scode">' + (long ? 'Long break' : 'Break') + ' &middot; round ' + roundsDone + ' done</span>'
+      + '<p class="bigclock" id="brkclock">' + mmss(secs) + '</p>'
+      + '<p>' + (long
+          ? 'Thirty minutes. Eat something, move, go outside. When you come back there is exactly one button waiting.'
+          : 'Ten minutes. Stand up, water, no scrolling into another world. The next round plans itself when this hits zero.')
+      + '</p>'
+      + '<button class="sdo" id="skipbrk" style="max-width:280px;margin:14px auto 0">Skip the break</button>'
+      + '</div>' + demoRow();
+    var iv = setInterval(function () {
+      var c = document.getElementById('brkclock');
+      if (!c) { clearInterval(iv); return; }
+      c.textContent = mmss(Math.max(0, secs));
+    }, 500);
+    document.getElementById('skipbrk').addEventListener('click', function () {
+      if (timer) { clearInterval(timer); timer = null; }
+      planRound();
+    });
+    wire();
+  }
+
   function finish() {
     if (timer) { clearInterval(timer); timer = null; }
-    var spent = 50 * 60 - secs;
     card.innerHTML = '<div class="fin">'
       + '<span class="scode">Session over</span>'
       + '<p class="big">That was the studying.</p>'
-      + '<p>Everything you did is already on your dials. The app has nothing more to suggest tonight, and that is on purpose. Close the laptop.</p>'
+      + '<p>' + roundsDone + ' round' + (roundsDone === 1 ? '' : 's') + ', ' + doneCount
+      + ' activities, all of it already on your line. The app has nothing more to suggest tonight, and that is on purpose. Close the laptop.</p>'
       + '<div class="stats">'
-      + '<div><b>' + doneCount + '</b>activities done</div>'
-      + '<div><b>' + mmss(spent) + '</b>time in session</div>'
-      + '<div><b>+4%</b>course mastery (sample)</div>'
+      + '<div><b>' + roundsDone + '</b>rounds</div>'
+      + '<div><b>' + doneCount + '</b>activities</div>'
+      + '<div><b><span class="delta up">&#9650; +4%</span></b>course mastery (sample)</div>'
       + '</div>'
-      + '<button class="sdo" id="closeBtn" style="margin-top:20px">Back to the dials</button></div>';
+      + '<button class="sdo" id="closeBtn" style="margin-top:20px">Back to your charts</button></div>';
     document.getElementById('closeBtn').addEventListener('click', closeSession);
-    wire();
     var cb = document.getElementById('closeBtn'); if (cb) cb.focus();
   }
 
@@ -400,25 +684,8 @@
   sess.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') finish();
   });
-
   document.getElementById('start').addEventListener('click', openSession);
 
-  /* weak spots: the click IS the start */
-  document.getElementById('spots').innerHTML = SPOTS.map(function (s, i) {
-    return '<div class="spot">'
-      + '<div><span class="nm">' + esc(s.nm) + '</span><span class="pct">' + s.pct + '%</span>'
-      + '<div class="why">' + esc(s.why) + '</div>'
-      + '<div class="bar" role="img" aria-label="' + esc(s.nm) + ' mastery ' + s.pct + ' percent">'
-      + '<span style="width:' + s.pct + '%"></span></div></div>'
-      + '<div><button data-spot="' + i + '">Fix this now &middot; 50 min on it</button></div>'
-      + '</div>';
-  }).join('');
-  document.getElementById('spots').addEventListener('click', function (e) {
-    var b = e.target.closest('button[data-spot]');
-    if (!b) return;
-    openSession();
-    startTrack(SPOTS[+b.getAttribute('data-spot')].track);
-  });
 })();
 </script>
 </body>
