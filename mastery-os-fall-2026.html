@@ -547,6 +547,14 @@ section.block:first-of-type{border-top:none}
    reflows. No ring: a gold outline reads as a form error.
    ================================================ */
 .dr-head{background:var(--navy);color:#fff;border-radius:var(--r-lg);padding:22px 24px;margin:0 0 4px}
+.dr-headrow{display:flex;gap:20px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.dr-headmain{flex:1;min-width:260px}
+.dr-headside{display:flex;flex-direction:column;align-items:center;gap:10px;flex:none}
+.dr-exam{text-align:center}
+.dr-exam b{display:block;font-size:34px;font-weight:800;color:#fff;line-height:1}
+.dr-exam span{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#EBCE86;margin-top:4px}
+.dr-reco{margin-top:10px !important;font-size:13.5px;color:#EBCE86 !important;max-width:64ch}
+.dr-reco b{color:#fff}
 .dr-head .eyebrow{color:#EBCE86;margin:0 0 6px}
 .dr-head h2{font-size:26px;font-weight:800;letter-spacing:-.015em;margin:0 0 6px;color:#fff}
 .dr-head p{margin:0;font-size:14px;color:#E7EAEE;max-width:64ch}
@@ -739,7 +747,7 @@ section.block:first-of-type{border-top:none}
 
       <div id="dayRail"></div>
 
-      <div class="plan" id="planCard"><!-- JS --></div><div id="dailyBuild"></div>
+      <div id="dailyBuild"></div>
     </div>
   </section>
 
@@ -1755,42 +1763,13 @@ function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');
 
 /* =========================================================
    RENDER: SECTION 1 - TODAY'S PLAN
+   The old billboard here (five unclickable rows restating the day
+   rail, plus a stat list) was removed on Aug 22 at Scrubs's call:
+   none of it was usable. Days-to-exam and Plan my week now live in
+   the day rail header. renderPlan stays as a no-op because cramUsed
+   and the render chain still call it.
 ========================================================= */
-function renderPlan(){
-  var lec=todayLecture(),lab=todayLab(),due=dueToday(),weak=weaknesses(),rec=recommendedChallenge();
-  var name=S.profile.name?(', '+esc(S.profile.name)):'';
-  function names(arr){return arr.length?arr.map(function(x){return esc(x.c.name);}).join(', '):'None scheduled';}
-  var exam=daysToExam();
-  var html=''+
-  '<p class="peyebrow">Section 1 · Today\'s Mastery Plan</p>'+
-  '<h1 id="h-plan">Here is your highest-value work'+name+'.</h1>'+
-  '<p class="psub">Diagnose, repair, retrieve, apply, teach, reflect. Chosen from where you are exposed right now.</p>'+
-  '<div class="plan-grid">'+
-    '<div class="plan-list">'+
-      plItem(I.target,'Today\'s lecture competencies',names(lec))+
-      plItem(I.flask,'Today\'s lab competencies',names(lab))+
-      plItem(I.recall,'Retrieval practice due today',due.length+' competenc'+(due.length===1?'y':'ies')+' up for recall')+
-      plItem(I.weak,'Weaknesses to repair',weak.length+' flagged · start with '+(weak[0]?esc(weak[0].c.name):'none'))+
-      plItem(I.bolt,'Recommended mastery challenge','Prove '+(rec?esc(rec.c.name):'a weak competency')+' with a fresh method')+
-    '</div>'+
-    '<div class="plan-side">'+
-      '<div class="count"><div class="num">'+(exam>0?exam:0)+'</div><div class="lbl">days to '+esc(S.course.examName||'next exam')+'</div></div>'+
-      '<div class="metric-row"><span>Study days</span><b>'+(S.profile.days||4)+' / week</b></div>'+
-      '<div class="metric-row"><span>Weekly target (grade '+esc(gradeLabel())+')</span><b>'+gradeHours()+' h</b></div>'+
-      '<div class="metric-row"><span>Recommended today</span><b>'+hoursPerDay()+' h</b></div>'+
-      '<div class="metric-row"><span>Overall readiness</span><b>'+readiness()+'%</b></div>'+
-      '<div class="metric-row"><span>Recall due</span><b>'+due.length+'</b></div>'+
-      '<div class="metric-row"><span>Weak spots</span><b>'+weak.length+'</b></div>'+
-    '</div>'+
-  '</div>'+
-  '<div class="plan-cta">'+
-    '<button class="btn gold big" data-planwizard>'+I.bolt+'Plan my week</button>'+
-  '</div>'+
-  '<p style="font-size:12.5px;color:var(--gold-light);margin-top:10px;opacity:.85">One step at a time. We\'ll recommend what to do first, you stay in control.</p>'+
-  cramMeter();
-  $('#planCard').innerHTML=html;
-}
-function plItem(icon,title,body){return '<div class="pl-item"><span class="ic">'+icon+'</span><div><h3>'+title+'</h3><p>'+body+'</p></div></div>';}
+function renderPlan(){}
 function cramMeter(){
   var used=Math.min(2,cramCount(moduleKey()));var dots='';
   for(var i=0;i<2;i++){dots+='<span aria-hidden="true" style="width:9px;height:9px;border-radius:50%;display:inline-block;background:'+(i<used?'var(--gold)':'rgba(255,255,255,.22)')+'"></span>';}
@@ -2910,14 +2889,27 @@ function drBuild(){
   var tot=0,keep=[];
   for(var i=0;i<steps.length;i++){ if(tot+steps[i].mins>budget && keep.length>=2) break; tot+=steps[i].mins; keep.push(steps[i]); }
   DR.steps=keep; DR.budget=tot||budget; DR.i=0; DR.done=0; DR.spent=0;
+  /* the meter is real and it REMEMBERS: cards checked off earlier today
+     stay checked off after a reload. A new day starts clean. */
+  try{
+    var sv=JSON.parse(localStorage.getItem('bio004-dayrail')||'null');
+    if(sv && sv.d===TODAY && sv.done && sv.done.length){
+      DR.steps.forEach(function(s){
+        if(sv.done.indexOf(s.name+'|'+(s.topic||''))>-1) s.doneFlag=true;
+      });
+    }
+  }catch(e){}
+  drRecount();
   var head=drHeadline(due,lec,lab,over);
   DR.headline=head; DR.over=over;
 }
 function drTile(s,i,state){
-  var open=(state==='now');
+  /* every remaining card is a real choice, not just the Now one:
+     the student picks what they want to do. Done cards rest. */
+  var hit=(i>=0 && !s.none && state!=='done');
   return '<div class="dr-slot" data-state="'+state+'" data-i="'+i+'">'
    +'<div class="dr-tile '+(s.tool?'tool-'+s.tool:'')+(s.none?' none':'')+'">'
-   +(open?'<button class="dr-hit" data-dri="'+i+'" aria-label="Open '+esc(s.name)+(s.topic?', '+esc(s.topic):'')+'"></button>':'')
+   +(hit?'<button class="dr-hit" data-dri="'+i+'" aria-label="Open '+esc(s.name)+(s.topic?', '+esc(s.topic):'')+'"></button>':'')
    +(state==='now'?'<span class="dr-pill now">Now</span>':'')
    +(state==='done'?'<span class="dr-pill done">Done</span>':'')
    +(s.catch?'<span class="dr-catch">'+esc(s.catch)+'</span>':'')
@@ -2935,13 +2927,35 @@ function renderDayRail(){
   var el=$('#dayRail'); if(!el) return;
   if(!DR.steps.length) drBuild();
   var pct=DR.budget?Math.round(DR.spent/DR.budget*100):0;
-  var h='<div class="dr-head"><p class="eyebrow">Your track for today &middot; '+longToday()+'</p>'
-   +'<h2>'+DR.headline.h+'</h2><p>'+DR.headline.p+'</p>'
+  /* the running recommendation, in plain words: what is done, what is
+     not, and which card the system would pick next. The student can
+     still open any card they like. */
+  var doneL=DR.steps.filter(function(s){return s.doneFlag;});
+  var leftL=DR.steps.filter(function(s){return !s.doneFlag;});
+  var pick=DR.steps[DR.i], reco='';
+  if(DR.steps.length && leftL.length && pick){
+    if(!doneL.length){
+      reco='Start on any card. Our pick: <b>'+esc(pick.name)+'</b>, it clears what is due first.';
+    } else {
+      reco='Done: <b>'+doneL.map(function(s){return esc(s.name);}).join('</b>, <b>')+'</b>. '
+        +'Not yet: <b>'+leftL.map(function(s){return esc(s.name);}).join('</b>, <b>')+'</b>. '
+        +'Our pick next: <b>'+esc(pick.name)+'</b>.';
+    }
+  }
+  var exam=daysToExam();
+  var h='<div class="dr-head"><div class="dr-headrow"><div class="dr-headmain">'
+   +'<p class="eyebrow">Your track for today &middot; '+longToday()+'</p>'
+   +'<h2 id="h-plan">'+DR.headline.h+'</h2><p>'+DR.headline.p+'</p>'
+   +(reco?'<p class="dr-reco" aria-live="polite">'+reco+'</p>':'')
+   +'</div><div class="dr-headside">'
+   +(exam>0?'<div class="dr-exam"><b>'+exam+'</b><span>days to '+esc(S.course.examName||'next exam')+'</span></div>':'')
+   +'<button class="btn gold" data-planwizard>Plan my week</button>'
+   +'</div></div>'
    +'<div class="dr-meter"><span>'+DR.spent+' of '+DR.budget+' min</span>'
    +'<span class="bar"><span style="width:'+pct+'%"></span></span>'
    +'<span>'+DR.done+' of '+DR.steps.length+' done</span></div></div>';
   h+='<div class="dr-steps">'+DR.steps.map(function(s,i){
-       return drTile(s,i, i<DR.i?'done':(i===DR.i?'now':'later'));}).join('')+'</div>';
+       return drTile(s,i, s.doneFlag?'done':(i===DR.i?'now':'later'));}).join('')+'</div>';
   if(DR.i>=DR.steps.length){
     h+='<div class="dr-fork"><p class="eyebrow">Your call</p>'
      +'<h3>That is everything. The rest is yours.</h3>'
@@ -2968,22 +2982,42 @@ function longToday(){
 /* Session titles run long. A headline is a headline. */
 function drShort(s,n){ s=String(s||''); return s.length>(n||42)?s.slice(0,(n||42)-1).replace(/[,;:\s]+$/,'')+'…':s; }
 function drOpen(i){
-  if(i!==DR.i) return;
-  var slot=$('#dayRail').querySelectorAll('.dr-slot')[i]; if(!slot) return;
+  if(i<0 || !DR.steps[i] || DR.steps[i].doneFlag) return;
+  var slot=$('#dayRail').querySelector('.dr-slot[data-i="'+i+'"]'); if(!slot) return;
+  DR.openI=i;
   slot.classList.add('open', i < DR.steps.length/2 ? 'left':'right');
   $('#dr-scrim').classList.add('on');
   var b=slot.querySelector('[data-drgo]'); if(b)b.focus();
 }
+function drRecount(){
+  /* done, minutes and the Now marker all follow the flags, so cards
+     can be finished in any order the student picks */
+  DR.done=0; DR.spent=0; DR.i=DR.steps.length;
+  for(var k=0;k<DR.steps.length;k++){
+    if(DR.steps[k].doneFlag){ DR.done++; DR.spent+=DR.steps[k].mins; }
+    else if(DR.i===DR.steps.length){ DR.i=k; }
+  }
+}
 function drClose(complete){
-  var i=DR.i, s=DR.steps[i];
+  var i=(typeof DR.openI==='number')?DR.openI:DR.i, s=DR.steps[i];
   var slot=$('#dayRail').querySelector('.dr-slot.open');
   if(slot) slot.classList.remove('open','left','right');
   $('#dr-scrim').classList.remove('on');
+  DR.openI=null;
   setTimeout(function(){
-    if(complete && s){ DR.done++; DR.spent+=s.mins; DR.i++; }
+    if(complete && s && !s.doneFlag){ s.doneFlag=true; drRecount(); drSave(); }
     renderDayRail();
     var n=$('#dayRail').querySelector('.dr-hit'); if(n)n.focus();
   },320);
+}
+function drSave(){
+  try{
+    localStorage.setItem('bio004-dayrail', JSON.stringify({
+      d: TODAY,
+      done: DR.steps.filter(function(s){return s.doneFlag;})
+                    .map(function(s){return s.name+'|'+(s.topic||'');})
+    }));
+  }catch(e){}
 }
 document.addEventListener('click',function(e){
   var hit=e.target.closest('[data-dri]'); if(hit){ drOpen(+hit.getAttribute('data-dri')); return; }

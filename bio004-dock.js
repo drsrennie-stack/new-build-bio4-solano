@@ -352,8 +352,8 @@
              url: BASE + 'lab-sprints.html', icon: 'flask', tone: 'navy',
              qr: 'labs', kw: 'lab sprints models dissection structures practical stations bench' });
     t.push({ g: 'Lab materials', name: 'Digital Atlas', sub: 'Turn the structures around and look at them',
-             url: 'https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02', icon: 'globe', tone: 'gold',
-             qr: 'atlas', ext: true, kw: 'atlas 3d explore rotate structures lab' });
+             url: BASE + 'bio004-digital-atlas.html', icon: 'globe', tone: 'gold',
+             qr: 'atlas', kw: 'atlas 3d explore rotate structures lab' });
     t.push({ g: 'Course materials', name: 'Exam modules', sub: 'Exactly what each exam covers',
              url: BASE + 'bio004-exam-modules.html' + q, icon: 'flask', tone: 'navy', qr: 'exams', kw: 'exam modules covers scope' });
     /* OPENSTAX, AS A REFERENCE, NOT AS A TEXT.

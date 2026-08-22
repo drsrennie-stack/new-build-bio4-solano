@@ -133,7 +133,7 @@
     + '<div class="lp-subdeck">'
     + door('ic-terra', I.loop, 'Loops', 'Fast visual practice', ext('https://drsrennie-stack.github.io/loops/'))
     + door('ic-navy', I.clock, 'Lab sprints', 'Structure checklists by station', go('lab-sprints.html'))
-    + door('ic-gold', I.globe, 'Digital Atlas', 'Turn the structures around', ext('https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02'))
+    + door('ic-gold', I.globe, 'Digital Atlas', 'Turn the structures around', go('bio004-digital-atlas.html'))
     + door('ic-blue', I.scope, 'Histology help', 'Every slide tool, sorted', go('histology-help.html'))
     + '</div></div>'
 
