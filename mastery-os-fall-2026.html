@@ -555,6 +555,20 @@ section.block:first-of-type{border-top:none}
 .dr-exam span{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#EBCE86;margin-top:4px}
 .dr-reco{margin-top:10px !important;font-size:13.5px;color:#EBCE86 !important;max-width:64ch}
 .dr-reco b{color:#fff}
+.dr-ticks{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.tk-row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;cursor:pointer;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:10px;
+  padding:8px 12px;color:#fff;font:inherit}
+.tk-row:hover{border-color:#EBCE86}
+.tk-row:focus-visible{outline:3px solid #EBCE86;outline-offset:2px}
+.tk-name{flex:none;width:128px;font-size:13px;font-weight:800}
+.tk-segs{flex:1;display:flex;gap:4px}
+.tk-seg{height:8px;flex:1;border-radius:4px;background:rgba(255,255,255,.16)}
+.tk-seg.part{background:linear-gradient(90deg,var(--gold) 50%,rgba(255,255,255,.16) 50%)}
+.tk-seg.on{background:var(--gold)}
+.tk-count{flex:none;font-size:12px;font-weight:700;color:#EBCE86;min-width:62px;text-align:right}
+.tk-sum{margin:2px 0 0 !important;font-size:12.5px;color:#E7EAEE !important}
+@media (max-width:560px){ .tk-name{width:96px;font-size:12px} .tk-count{min-width:52px} }
 .dr-head .eyebrow{color:#EBCE86;margin:0 0 6px}
 .dr-head h2{font-size:26px;font-weight:800;letter-spacing:-.015em;margin:0 0 6px;color:#fff}
 .dr-head p{margin:0;font-size:14px;color:#E7EAEE;max-width:64ch}
@@ -598,9 +612,14 @@ section.block:first-of-type{border-top:none}
 .dr-pill.done{background:#2E4A3A;color:#CFE6D8}
 .dr-catch{position:absolute;top:10px;left:10px;font-size:9.5px;font-weight:800;letter-spacing:.08em;
   text-transform:uppercase;padding:3px 7px;border-radius:99px;background:#8B3A2E;color:#fff}
-.dr-slot[data-state="now"] .dr-tile{transform:translateY(-16px) scale(1.06);
-  box-shadow:0 44px 76px -24px rgba(8,16,31,.66),0 12px 26px -10px rgba(8,16,31,.34)}
-.dr-slot[data-state="now"]:hover .dr-tile{transform:translateY(-21px) scale(1.07)}
+/* All cards are equal choices, so all of them sit level. The system's
+   pick is marked by the gold Now pill, not by a lifted card. Every
+   clickable card lifts the same amount on hover. */
+.dr-slot:not(.open):not([data-state="done"]):hover .dr-tile{transform:translateY(-6px);
+  box-shadow:0 18px 34px -16px rgba(8,16,31,.55)}
+@media (prefers-reduced-motion:reduce){
+  .dr-slot:not(.open):not([data-state="done"]):hover .dr-tile{transform:none}
+}
 .dr-slot[data-state="done"] .dr-tile{background:#16203A}
 .dr-slot[data-state="done"] .dr-ic{background:linear-gradient(145deg,#4E5F73,#2B384C)}
 .dr-slot[data-state="done"] .dr-name,.dr-slot[data-state="done"] .dr-sub{opacity:.72}
@@ -2842,10 +2861,10 @@ function drHeadline(due,lec,lab,over){
   if(lab.length){
     var ln=lab[0].c.name;
     return {h: ln.length<=34 ? ('Tonight sets up '+esc(ln)+' in lab.') : 'Tonight sets up tomorrow’s lab.',
-    p:'Each card says why it is here. Work left to right. When you reach the line you are finished.'};
+    p:'Each card says why it is here. Start wherever you like, the bars below keep the score. When everything is cleared you are finished.'};
   }
   if(lec.length) return {h:'Tonight is '+esc(drShort(lec[0].c.name,46))+'.',
-    p:'Each card says why it is here. Work left to right. When you reach the line you are finished.'};
+    p:'Each card says why it is here. Start wherever you like, the bars below keep the score. When everything is cleared you are finished.'};
   if(due.length) return {h:'Nothing new tonight. Keep what you have.',
     p:'No class material is due, so tonight is recall and repair only.'};
   return {h:'Nothing is due. This is getting ahead.',
@@ -2923,10 +2942,60 @@ function drTile(s,i,state){
    +'<button class="btn" data-drdone="'+i+'">Done</button></div>'
    +'</div></div>';
 }
+/* ---- the tick bars. Real counts, real targets, every row a link.
+   Cards: 50 review + 50 new a day (Scrubs's targets). A card answered
+   today whose FIRST attempt ever was today counts as new; any other
+   card answered today is a review coming back. Ten segments of five. ---- */
+function cardCountsToday(){
+  var rev=0, nw=0;
+  try{
+    var st=JSON.parse(localStorage.getItem('bio004-recall-v2')||'null');
+    if(st && st.topics) Object.keys(st.topics).forEach(function(tid){
+      var cards=(st.topics[tid]||{}).cards||{};
+      Object.keys(cards).forEach(function(cid){
+        var h=(cards[cid]||{}).history; if(!h||!h.length) return;
+        var today=false, first='';
+        h.forEach(function(e){
+          var at=(e&&(e.at||e.date))||''; if(!at) return;
+          if(!first||at<first) first=at;
+          if(at.slice(0,10)===TODAY) today=true;
+        });
+        if(!today) return;
+        if(first.slice(0,10)===TODAY) nw++; else rev++;
+      });
+    });
+  }catch(e){}
+  return {rev:rev, nw:nw};
+}
+function tkSegs(done,target,per){
+  var n=Math.ceil(target/per), out='';
+  for(var i=1;i<=n;i++){
+    out+='<span class="tk-seg'+(done>=i*per?' on':(done>(i-1)*per?' part':''))+'"></span>';
+  }
+  return out;
+}
+function drTicks(){
+  var cc=cardCountsToday();
+  var h='<div class="dr-ticks">'
+   +'<button type="button" class="tk-row" data-tkscroll="s-recall" aria-label="Review cards, '+cc.rev+' of 50 done. Go to recall.">'
+   +'<span class="tk-name">Review cards</span><span class="tk-segs" aria-hidden="true">'+tkSegs(cc.rev,50,5)+'</span>'
+   +'<span class="tk-count">'+cc.rev+' of 50</span></button>'
+   +'<button type="button" class="tk-row" data-tkscroll="s-recall" aria-label="New cards, '+cc.nw+' of 50 done. Go to recall.">'
+   +'<span class="tk-name">New cards</span><span class="tk-segs" aria-hidden="true">'+tkSegs(cc.nw,50,5)+'</span>'
+   +'<span class="tk-count">'+cc.nw+' of 50</span></button>';
+  DR.steps.forEach(function(s,i){
+    if(/recall/i.test(s.name)) return; /* the two card bars ARE its ticks */
+    h+='<button type="button" class="tk-row" data-tkstep="'+i+'" aria-label="'+esc(s.name)+', '+(s.doneFlag?'done':'not done yet')+'. Open it.">'
+     +'<span class="tk-name">'+esc(s.name)+'</span>'
+     +'<span class="tk-segs" aria-hidden="true"><span class="tk-seg'+(s.doneFlag?' on':'')+'"></span></span>'
+     +'<span class="tk-count">'+(s.doneFlag?'Done':'To do')+'</span></button>';
+  });
+  h+='<p class="tk-sum">'+DR.done+' of '+DR.steps.length+' activities cleared. Every bar is a link.</p></div>';
+  return h;
+}
 function renderDayRail(){
   var el=$('#dayRail'); if(!el) return;
   if(!DR.steps.length) drBuild();
-  var pct=DR.budget?Math.round(DR.spent/DR.budget*100):0;
   /* the running recommendation, in plain words: what is done, what is
      not, and which card the system would pick next. The student can
      still open any card they like. */
@@ -2951,9 +3020,8 @@ function renderDayRail(){
    +(exam>0?'<div class="dr-exam"><b>'+exam+'</b><span>days to '+esc(S.course.examName||'next exam')+'</span></div>':'')
    +'<button class="btn gold" data-planwizard>Plan my week</button>'
    +'</div></div>'
-   +'<div class="dr-meter"><span>'+DR.spent+' of '+DR.budget+' min</span>'
-   +'<span class="bar"><span style="width:'+pct+'%"></span></span>'
-   +'<span>'+DR.done+' of '+DR.steps.length+' done</span></div></div>';
+   +drTicks()
+   +'</div>';
   h+='<div class="dr-steps">'+DR.steps.map(function(s,i){
        return drTile(s,i, s.doneFlag?'done':(i===DR.i?'now':'later'));}).join('')+'</div>';
   if(DR.i>=DR.steps.length){
@@ -3021,6 +3089,13 @@ function drSave(){
 }
 document.addEventListener('click',function(e){
   var hit=e.target.closest('[data-dri]'); if(hit){ drOpen(+hit.getAttribute('data-dri')); return; }
+  var tks=e.target.closest('[data-tkstep]'); if(tks){ drOpen(+tks.getAttribute('data-tkstep')); return; }
+  var tkr=e.target.closest('[data-tkscroll]');
+  if(tkr){
+    var sec=document.getElementById(tkr.getAttribute('data-tkscroll'));
+    if(sec){ sec.scrollIntoView({behavior:'smooth'}); try{sec.focus({preventScroll:true});}catch(x){} }
+    return;
+  }
   var go=e.target.closest('[data-drgo]');
   if(go){ var s=DR.steps[+go.getAttribute('data-drgo')]; if(s&&s.go)s.go(); return; }
   var dn=e.target.closest('[data-drdone]'); if(dn){ drClose(true); return; }
@@ -4738,6 +4813,17 @@ document.addEventListener('keydown',function(e){
 
 /* live sync from the spaced-recall engine (other tab writes the shared store) */
 window.addEventListener('storage',function(e){if(e.key===RECALL_KEY||e.key==='bio004-evidence-v1'||e.key==='bio004-recall-v2'||e.key==='loopsEngine_v1'){if(ingestRecall())renderAll();}});
+/* keep the tick bars honest while a student works cards in this same
+   tab: refresh the rail every half minute when nothing is open */
+setInterval(function(){
+  try{
+    if(document.hidden) return;
+    if(typeof RUN!=='undefined' && RUN && RUN.active) return;
+    if(typeof FS!=='undefined' && FS && FS.active) return;
+    var dr=$('#dayRail');
+    if(dr && !dr.querySelector('.dr-slot.open')) renderDayRail();
+  }catch(e){}
+},30000);
 window.addEventListener('focus',function(){if(ingestRecall())renderAll();});
 
 /* section nav active state */
