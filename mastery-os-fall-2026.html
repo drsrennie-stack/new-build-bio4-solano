@@ -941,6 +941,7 @@ section.block:first-of-type{border-top:none}
      competencies-fall2026.js is an older copy without the "general" body-system
      tag that buildFromSchedule() groups by, so it must not be used here. -->
 <script src="card-competency-map.js"></script>
+<script src="card-competency-fine.js"></script>
 <script src="mastery-evidence.js"></script>
 <script src="competenciesfall2026.js"></script>
 <script src="resources.js"></script>
@@ -3137,6 +3138,7 @@ function runEnd(msg){
 function runAdvance(k){
   if(!RUN||!RUN.active)return false;
   if(k&&RUN.done.indexOf(k)<0)RUN.done.push(k);
+  actMinBump(RUN_ACTMAP[k]&&RUN_ACTMAP[k].min?RUN_ACTMAP[k].min:8);
   save();renderAll();
   runOpenOverlay();
   runNext(false);
@@ -3445,11 +3447,146 @@ document.addEventListener('click',function(e){
   var t=e.target.closest('[data-focussession]');
   if(t){e.preventDefault();fsOpen();}
 });
+/* ============================================================
+   SUNDAY NIGHT RECAP. Once a week, fireworks and the numbers:
+   the reps they put in, how their line moved, and the top five
+   from the class board if the leaderboard is configured. Top
+   five only; everyone below it studies in peace.
+   ============================================================ */
+var ODO_RANKS=[[100,'First Incision'],[500,'Dissector'],[1000,'Prosector'],
+  [2500,'Anatomist'],[5000,'Master Anatomist'],[10000,'Cadaver Whisperer'],
+  [20000,'Vesalius Tier'],[50000,'Legend of the Lab']];
+function odoRead(){ try{return JSON.parse(localStorage.getItem('bio004-card-odometer'))||{total:0,cards:{},days:{}};}catch(e){return {total:0,cards:{},days:{}};} }
+function odoFmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,','); }
+function odoRank(t){ var cur=null; for(var i=0;i<ODO_RANKS.length;i++){ if(t>=ODO_RANKS[i][0])cur=ODO_RANKS[i]; } return cur; }
+/* ---- the four leaderboard metrics. Accuracy is deliberately NOT
+   one of them: an accuracy board rewards only reviewing what you
+   already know. These four reward showing up. "Activity minutes"
+   is method minutes completed, not wall clock, so idling earns
+   nothing. ---- */
+function actMinBump(m){
+  try{
+    var a=JSON.parse(localStorage.getItem('bio004-activity-odometer'))||{min:0};
+    a.min+=Math.max(0,m||0);
+    localStorage.setItem('bio004-activity-odometer',JSON.stringify(a));
+  }catch(e){}
+}
+function actMinRead(){
+  try{return (JSON.parse(localStorage.getItem('bio004-activity-odometer'))||{min:0}).min||0;}catch(e){return 0;}
+}
+function odoLoopsTotal(){
+  var st=loopStationStore(); if(!st)return 0;
+  var t=0;
+  Object.keys(st).forEach(function(k){ var r=st[k]; if(r&&r.seen)t+=r.seen; });
+  return t;
+}
+window.BIO004_METRICS=function(){
+  return { cards:odoRead().total, loops:odoLoopsTotal(),
+           progress:courseMasteryPct(), actmin:actMinRead() };
+};
+function odoWeekReps(){
+  var od=odoRead(),sum=0,d=new Date();
+  for(var i=0;i<7;i++){
+    var k=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+    sum+=od.days[k]||0; d.setDate(d.getDate()-1);
+  }
+  return sum;
+}
+function recapFireworks(cv){
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var ctx=cv.getContext('2d'),W=cv.width,H=cv.height,parts=[];
+  var COLORS=['#DCB45C','#CFA95F','#C2734D','#EDF1F3','#B8924A'];
+  function burst(){
+    var x=W*(0.15+Math.random()*0.7),y=H*(0.15+Math.random()*0.5);
+    for(var i=0;i<26;i++){
+      var a=Math.PI*2*i/26,v=1.2+Math.random()*2.2;
+      parts.push({x:x,y:y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:1,c:COLORS[Math.floor(Math.random()*COLORS.length)]});
+    }
+  }
+  burst();
+  var t=0;
+  gI(setInterval(function(){
+    if(!cv.isConnected)return;
+    t++; if(t%28===0&&t<200)burst();
+    ctx.fillStyle='rgba(8,16,31,0.22)';ctx.fillRect(0,0,W,H);
+    parts.forEach(function(p){
+      p.x+=p.vx;p.y+=p.vy;p.vy+=0.03;p.life-=0.012;
+      if(p.life>0){ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle=p.c;ctx.fillRect(p.x,p.y,2.6,2.6);}
+    });
+    ctx.globalAlpha=1;
+    parts=parts.filter(function(p){return p.life>0;});
+  },33));
+}
+function showWeekRecap(){
+  runOpenOverlay();
+  var od=odoRead(),week=odoWeekReps(),rk=odoRank(od.total);
+  /* mastery move this week, from the ticker history */
+  var chg=null;
+  try{
+    var h=JSON.parse(localStorage.getItem(TICK_KEY))||{};
+    var days=Object.keys(h).sort();
+    if(days.length>1){
+      var now=h[days[days.length-1]],ref=h[days[0]];
+      for(var i=days.length-1;i>=0;i--){
+        if((new Date(days[days.length-1])-new Date(days[i]))>=6*86400000){ref=h[days[i]];break;}
+      }
+      chg=now-ref;
+    }
+  }catch(e){}
+  gSet('The week is in the books','Sunday recap');
+  var b='<div class="g-center">'
+    + '<canvas id="fwCanvas" width="520" height="150" aria-hidden="true" '
+    + 'style="width:100%;max-width:520px;border-radius:12px;background:#08101F"></canvas>'
+    + '<h3 style="margin-top:12px">'+odoFmt(week)+' card'+(week===1?'':'s')+' this week</h3>'
+    + '<p>'+odoFmt(od.total)+' all time'
+    + (rk?', rank: <b>'+rk[1]+'</b>':'')
+    + (chg!=null?(chg>=0?'. Your mastery line moved <b style="color:var(--ok)">up '+chg+'</b> this week.':'. Your line slipped <b style="color:var(--bad)">'+Math.abs(chg)+'</b> this week; the machine knows where.'):'')
+    + '</p><div id="recapBoard" style="text-align:left;margin-top:8px"></div>'
+    + '<div class="g-actions"><button class="btn gold" data-gameclose>Start next week strong</button></div></div>';
+  gBody(b);
+  var cv=$('#fwCanvas');if(cv)recapFireworks(cv);
+  /* top five, only if the class board is live */
+  var CFG=window.BIO004_LEADERBOARD||{};
+  if(CFG.CSV_URL){
+    fetch(CFG.CSV_URL).then(function(r){return r.text();}).then(function(text){
+      var rows=text.split(/\r?\n/).slice(1).map(function(line){
+        var p=line.split(',');
+        return {nick:(p[1]||'').replace(/^"|"$/g,'').trim(),count:parseInt(String(p[2]||'').replace(/[^0-9]/g,''),10)};
+      }).filter(function(r){return r.nick&&!isNaN(r.count);});
+      var latest={};rows.forEach(function(r){latest[r.nick.toLowerCase()]=r;});
+      var all=Object.keys(latest).map(function(k){return latest[k];});
+      all.sort(function(a,b){return b.count-a.count;});
+      if(!all.length)return;
+      var el=$('#recapBoard');if(!el)return;
+      el.innerHTML='<p style="font-weight:800;margin:8px 0 4px">Class top five, code names only</p>'
+        + all.slice(0,5).map(function(r,i){
+            return '<p style="display:flex;justify-content:space-between;gap:12px;margin:3px 0;font-size:14px">'
+              + '<span>'+(i===0?'\u{1F3C6} ':'#'+(i+1)+' ')+esc(r.nick)+'</span><b>'+odoFmt(r.count)+'</b></p>';
+          }).join('')
+        + (all.length>5?'<p style="font-size:12px;color:var(--ink-soft)">'+(all.length-5)+' more studying quietly below the board.</p>':'');
+    }).catch(function(){});
+  }
+}
+/* fire it once per week, Sunday from 5 pm */
+(function(){
+  try{
+    var now=new Date();
+    if(now.getDay()===0&&now.getHours()>=17&&S.profile&&S.profile.onboarded){
+      var wk=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+      if(localStorage.getItem('bio004-week-recap')!==wk){
+        localStorage.setItem('bio004-week-recap',wk);
+        setTimeout(showWeekRecap,1400);
+      }
+    }
+  }catch(e){}
+})();
+
 /* QA hook: lets an automated test drive a session without faking
    fifty minutes of clicking. Reads state, ends the current Run the
    same way the engine would. Not referenced by any UI. */
 window.BIO004_FS_DEBUG={
   endRun:function(m){runEnd(m||'done');},
+  recap:function(){showWeekRecap();},
   state:function(){return {
     fs:FS?{mode:FS.mode,round:FS.round,seg:FS.seg,roundsDone:FS.roundsDone,secs:FS.secs,auto:FS.auto,postLong:FS.postLong}:null,
     run:RUN?{topic:RUN.comp&&RUN.comp.name,auto:!!RUN.fsAuto,budget:RUN.budget}:null};}
@@ -3607,6 +3744,7 @@ function selfCheckList(c,rub,kind,againFn){
 function selfCheckResult(c,total,got,kind,againFn){
   var pct=total?Math.round(got/total*100):0;
   var bump=Math.max(1,Math.round((got/(total||1))*6));
+  if(!(RUN&&RUN.active))actMinBump(10);   /* in a run, runAdvance counts it */
   bumpComp(c,bump);
   bumpSkill('Retrieval',2);bumpSkill('Gap Identification',2);
   if(kind==='draw'){bumpDim('draw',Math.max(2,bump));if(c.ev.indexOf('draw')<0)c.ev.push('draw');}
@@ -3621,7 +3759,9 @@ function selfCheckResult(c,total,got,kind,againFn){
 }
 
 function bdResult(c,total,got){
-  var pct=total?Math.round(got/total*100):0;var bump=Math.max(1,Math.round((got/(total||1))*6));bumpComp(c,bump);bumpSkill('Retrieval',2);bumpSkill('Gap Identification',1);
+  var pct=total?Math.round(got/total*100):0;var bump=Math.max(1,Math.round((got/(total||1))*6));
+  if(!(RUN&&RUN.active))actMinBump(10);
+  bumpComp(c,bump);bumpSkill('Retrieval',2);bumpSkill('Gap Identification',1);
   /* the dump scores itself against a rubric, so it never reached the
      data-mmscore path where the dashboards get fed */
   bumpDim('recall',Math.max(2,bump));
@@ -4402,7 +4542,7 @@ document.addEventListener('click',function(e){
      drawings you did, and c.ev stayed empty, so Evidence of Mastery never
      recorded that you had drawn the thing. Both are fed now, keyed to the
      exercise that was actually running. */
-  if(t.hasAttribute('data-mmscore')){var sc=+t.getAttribute('data-mmscore');var msg='Exercise logged. Mastery updated.';if(CUR_EX){bumpComp(CUR_EX,sc);bumpSkill('Retrieval',3);bumpSkill('Gap Identification',2);logCalibration(CUR_EX,sc);msg=calibrationToast(sc);
+  if(t.hasAttribute('data-mmscore')){var sc=+t.getAttribute('data-mmscore');var msg='Exercise logged. Mastery updated.';if(CUR_EX){if(!(RUN&&RUN.active))actMinBump(10);bumpComp(CUR_EX,sc);bumpSkill('Retrieval',3);bumpSkill('Gap Identification',2);logCalibration(CUR_EX,sc);msg=calibrationToast(sc);
     var exDim={drawknow:'draw',mindmap:'draw',braindump:'recall'}[CUR_EX_KIND]||'draw';
     bumpDim(exDim,Math.max(2,sc));
     var exEv={drawknow:'draw',mindmap:'draw',braindump:'retrieval'}[CUR_EX_KIND]||'draw';
@@ -4613,6 +4753,7 @@ else{renderAll();}
 </script>
 
 <script src="bio004-card-bank.js"></script>
+<script src="bio004-leaderboard-config.js"></script>
 <script src="recall-view.js"></script>
 <!-- The day-one placement check. Loads after the card bank and after
      loops-stations.js, because it builds its pool from both. -->

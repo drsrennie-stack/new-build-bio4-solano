@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Card Leaderboard &middot; BIO 004 Human Anatomy</title>
+<meta name="description" content="The BIO 004 card count leaderboard. Code names only, opt-in only, top five only. Post your lifetime rep count and see where you stand.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   THE CARD LEADERBOARD.
+   Reps as bragging rights. Everything about it is deliberately
+   gentle: posting is opt-in, names are code names the student
+   invents, and only the TOP FIVE ever show, so nobody at the
+   bottom has anything to panic about. A student who has posted
+   sees their own position privately, on their device only.
+   Data flow: post = a prefilled Google Form; standings = the
+   form's published sheet CSV. Config in
+   bio004-leaderboard-config.js. Unconfigured, the page still
+   explains itself and shows the rank ladder.
+   Mastery OS token sheet. No serif, no italics.
+   ============================================================ */
+  :root{
+    --navy:#08101F; --near-black:#05080F; --navy-tint:#EDF1F3;
+    --rust:#A0522D; --terra:#C2734D; --terra-dark:#A0522D;
+    --gold:#B8924A; --gold-light:#CFA95F; --gold-text:#6F5316;
+    --white:#FFFFFF; --offwhite:#FAFAF9;
+    --ink:#08101F; --ink-soft:#2A3949; --ink-faint:rgba(8,16,31,0.72);
+    --line:rgba(30,61,76,0.16);
+    --ok:#1E4C33; --bad:#7A2E2E;
+    --shadow:0 1px 3px rgba(0,0,0,0.08); --lift:0 8px 16px rgba(0,0,0,0.10);
+    --disp:'Plus Jakarta Sans',system-ui,sans-serif;
+    --eyeb:'DM Sans',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--offwhite);color:var(--ink);font-family:var(--disp);font-size:16.5px;line-height:1.55}
+  button{font-family:inherit;cursor:pointer}
+  a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  .wrap{max-width:760px;margin:0 auto;padding:28px 20px 80px}
+
+  .eyebrow{font-family:var(--eyeb);font-size:12px;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--terra-dark);margin:0 0 8px}
+  h1{font-size:clamp(26px,5vw,36px);font-weight:800;letter-spacing:-.02em;margin:0;line-height:1.1;color:var(--navy)}
+  .lede{max-width:64ch;margin:12px 0 0;color:var(--ink-soft)}
+  .lede b{color:var(--ink)}
+
+  h2{font-family:var(--eyeb);font-size:13px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--terra-dark);margin:38px 0 10px}
+
+  .card{background:var(--white);border:1.5px solid var(--line);border-radius:16px;
+    padding:18px 20px;box-shadow:var(--shadow)}
+
+  /* my count */
+  .mine{background:var(--navy);color:#EDF1F3;border-radius:16px;padding:18px 20px;
+    display:flex;flex-wrap:wrap;gap:8px 22px;align-items:baseline}
+  .mine .big{font-size:34px;font-weight:800;letter-spacing:-.02em}
+  .mine .rk{color:var(--gold-light);font-weight:800}
+  .mine small{font-size:13px;color:#C8D2DA}
+
+  .postrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .postrow input{font:inherit;font-size:15px;padding:11px 14px;border:1.5px solid var(--line);
+    border-radius:10px;background:var(--white);color:var(--ink);flex:1;min-width:200px}
+  .postrow button{font:800 15px var(--disp);background:var(--gold);color:var(--navy);
+    border:0;border-radius:10px;padding:12px 20px}
+  .postrow button:hover{background:var(--gold-light)}
+  .postrow button[disabled]{background:var(--navy-tint);color:var(--ink-faint);cursor:not-allowed}
+  .note{font-size:13.5px;color:var(--ink-soft);margin-top:10px}
+
+  /* standings */
+  .row{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;
+    background:var(--white);border:1.5px solid var(--line);border-radius:14px;
+    padding:12px 16px;margin-top:10px;box-shadow:var(--shadow)}
+  .row .pos{font-family:var(--eyeb);font-weight:700;font-size:15px;color:var(--ink-faint);text-align:center}
+  .row.first{border-color:var(--gold);box-shadow:var(--lift)}
+  .row.first .pos{color:var(--gold-text);font-size:19px}
+  .row .nick{font-weight:800;font-size:16px;color:var(--navy)}
+  .row .nick small{display:block;font-weight:600;font-size:11.5px;color:var(--terra-dark)}
+  .row .cnt{font-weight:800;font-size:18px;color:var(--navy)}
+  .quiet{font-size:13.5px;color:var(--ink-soft);margin-top:10px}
+  .youline{margin-top:14px;background:var(--navy-tint);border-radius:12px;padding:12px 16px;
+    font-size:14.5px;font-weight:700;color:var(--navy)}
+
+  /* rank ladder */
+  .ladder{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  .ladder li{display:flex;justify-content:space-between;gap:12px;background:var(--white);
+    border:1.5px solid var(--line);border-radius:12px;padding:10px 16px;font-size:14.5px}
+  .ladder b{color:var(--navy)}
+  .ladder .n{font-family:var(--eyeb);font-weight:700;color:var(--terra-dark)}
+  .ladder li.got{border-color:var(--gold);background:#FCF9F2}
+
+  footer.foot{border-top:1px solid var(--line);margin-top:48px;padding-top:16px;font-size:14px;color:var(--ink-soft)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Recall Rx</p>
+    <h1>The Card Leaderboard</h1>
+    <p class="lede">Every card you answer is a rep, repeats included, and your counts never reset.
+    Four boards, all effort, none of them accuracy, on purpose: <b>Cards seen</b>, <b>Loop reps</b>,
+    <b>Overall progress</b>, and <b>Activity minutes</b> (method minutes completed, not clock time,
+    so idling earns nothing). <b>You never have to use your own name</b>: pick a code name, post
+    your numbers, and only the <b>top five</b> per board ever show. Everyone else studies in peace.</p>
+  </header>
+
+  <h2>Your count</h2>
+  <div class="mine" id="mine"><!-- JS --></div>
+  <div class="card" style="margin-top:14px">
+    <b>Post it to the board</b>
+    <div class="postrow">
+      <input id="nick" type="text" maxlength="24" placeholder="Your code name, e.g. AxonAvenger"
+        aria-label="Code name for the leaderboard">
+      <button id="post" type="button">Post my count</button>
+    </div>
+    <p class="note">Opt-in only. What leaves this device: your code name and a number. No name, no
+    ID, no email. Post again any time to update your count; your newest post is the one that counts.
+    Keep the code name school-appropriate; Dr. Rennie sees the raw list.</p>
+  </div>
+
+  <h2>The boards &middot; top five only</h2>
+  <div id="board"><!-- JS --></div>
+
+  <h2>Session hosts &middot; this week</h2>
+  <div class="card" id="hostIntro">
+    <b>Host a Study With Me session, earn points from the people who came.</b>
+    <p class="note" style="margin-top:6px">Student-led sessions only. After a session, attendees rate
+    it 1 to 10. Every rating adds to the host's weekly total, so a great session with six people
+    beats a great session with two. Top five hosts show each week; the board starts fresh by
+    looking only at the last 7 days.</p>
+    <div class="postrow"><button id="rateBtn" type="button">Rate a session I attended</button></div>
+  </div>
+  <div id="hosts"><!-- JS --></div>
+
+  <h2>The ranks</h2>
+  <ul class="ladder" id="ladder"><!-- JS --></ul>
+
+  <footer class="foot">
+    <p>BIO 004 Human Anatomy &middot; Fall 2026 &middot; Solano Community College<br>
+    Dr. Sharilyn Rennie</p>
+  </footer>
+</div>
+
+<script src="bio004-leaderboard-config.js"></script>
+<script>
+(function () {
+  'use strict';
+  var CFG = window.BIO004_LEADERBOARD || {};
+  var OKEY = 'bio004-card-odometer', NKEY = 'bio004-leaderboard-nick';
+  var RANKS = [
+    [100,'First Incision'],[500,'Dissector'],[1000,'Prosector'],
+    [2500,'Anatomist'],[5000,'Master Anatomist'],[10000,'Cadaver Whisperer'],
+    [20000,'Vesalius Tier'],[50000,'Legend of the Lab']
+  ];
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  /* real CSV parsing: quoted cells hold commas (checkbox answers do) */
+  function parseCSV(text){
+    var rows=[],row=[],cell='',q=false;
+    for(var i=0;i<text.length;i++){
+      var ch=text[i];
+      if(q){
+        if(ch==='"'){ if(text[i+1]==='"'){cell+='"';i++;} else q=false; }
+        else cell+=ch;
+      }else{
+        if(ch==='"')q=true;
+        else if(ch===','){row.push(cell);cell='';}
+        else if(ch==='\n'||ch==='\r'){ if(cell!==''||row.length){row.push(cell);rows.push(row);row=[];cell='';} }
+        else cell+=ch;
+      }
+    }
+    if(cell!==''||row.length){row.push(cell);rows.push(row);}
+    return rows;
+  }
+  function od(){ try{ return JSON.parse(localStorage.getItem(OKEY))||{total:0,cards:{},days:{}}; }catch(e){ return {total:0,cards:{},days:{}}; } }
+  function rankOf(t){ var cur=null,next=null; for(var i=0;i<RANKS.length;i++){ if(t>=RANKS[i][0])cur=RANKS[i]; else {next=RANKS[i];break;} } return {cur:cur,next:next}; }
+
+  function loopsTotal(){
+    try{
+      var st=JSON.parse(localStorage.getItem('loopsEngine_v1'))||{},t=0;
+      Object.keys(st).forEach(function(k){ if(st[k]&&st[k].seen)t+=st[k].seen; });
+      return t;
+    }catch(e){ return 0; }
+  }
+  function actMin(){
+    try{ return (JSON.parse(localStorage.getItem('bio004-activity-odometer'))||{min:0}).min||0; }catch(e){ return 0; }
+  }
+  function progressPct(){
+    /* the same number the Mastery OS ticker logs daily */
+    try{
+      var h=JSON.parse(localStorage.getItem('bio004-mastery-history'))||{};
+      var ks=Object.keys(h).sort();
+      return ks.length?h[ks[ks.length-1]]:0;
+    }catch(e){ return 0; }
+  }
+  var mine = od(), rk = rankOf(mine.total);
+  var uniq = Object.keys(mine.cards).length;
+  var MYM = { cards: mine.total, loops: loopsTotal(), progress: progressPct(), actmin: actMin() };
+  document.getElementById('mine').innerHTML =
+    '<span class="big">' + fmt(MYM.cards) + '</span><small>cards seen</small>'
+    + '<small><b>' + fmt(MYM.loops) + '</b> loop reps</small>'
+    + '<small><b>' + MYM.progress + '%</b> progress</small>'
+    + '<small><b>' + fmt(MYM.actmin) + '</b> activity min</small>'
+    + (rk.cur ? '<span class="rk">' + rk.cur[1] + '</span>' : '<small>first rank at 100 cards</small>')
+    + (rk.next ? '<small>' + fmt(rk.next[0] - mine.total) + ' to ' + rk.next[1] + '</small>' : '')
+    + '<small style="flex-basis:100%"><b>' + fmt(uniq) + '</b> unique cards &middot; <b>'
+    + fmt(Math.max(0, mine.total - uniq)) + '</b> repeat reps</small>';
+
+  document.getElementById('ladder').innerHTML = RANKS.map(function (r) {
+    return '<li' + (mine.total >= r[0] ? ' class="got"' : '') + '><b>' + r[1] + '</b><span class="n">' + fmt(r[0]) + ' cards</span></li>';
+  }).join('');
+
+  /* posting: a prefilled Google Form. Nothing is sent until the
+     student submits the form themselves. */
+  var nickEl = document.getElementById('nick');
+  try { nickEl.value = localStorage.getItem(NKEY) || ''; } catch (e) {}
+  var postBtn = document.getElementById('post');
+  var configured = CFG.FORM_URL && CFG.ENTRY_NICK && CFG.ENTRY_CARDS;
+  if (!configured) {
+    postBtn.disabled = true;
+    postBtn.textContent = 'Board opens soon';
+  }
+  postBtn.addEventListener('click', function () {
+    if (!configured) return;
+    var nick = (nickEl.value || '').trim();
+    if (!nick) { nickEl.focus(); return; }
+    try { localStorage.setItem(NKEY, nick); } catch (e) {}
+    var u = CFG.FORM_URL + (CFG.FORM_URL.indexOf('?') > -1 ? '&' : '?')
+      + 'usp=pp_url&' + CFG.ENTRY_NICK + '=' + encodeURIComponent(nick)
+      + '&' + CFG.ENTRY_CARDS + '=' + encodeURIComponent(MYM.cards)
+      + (CFG.ENTRY_LOOPS ? '&' + CFG.ENTRY_LOOPS + '=' + encodeURIComponent(MYM.loops) : '')
+      + (CFG.ENTRY_PROGRESS ? '&' + CFG.ENTRY_PROGRESS + '=' + encodeURIComponent(MYM.progress) : '')
+      + (CFG.ENTRY_ACTMIN ? '&' + CFG.ENTRY_ACTMIN + '=' + encodeURIComponent(MYM.actmin) : '');
+    window.open(u, '_blank', 'noopener');
+  });
+
+  /* standings from the published sheet */
+  var board = document.getElementById('board');
+  function showEmpty(msg) {
+    board.innerHTML = '<div class="card">' + msg + '</div>';
+  }
+  /* the host board: last 7 days of ratings, points = sum of scores */
+  var rateBtn=document.getElementById('rateBtn');
+  if(rateBtn){
+    if(CFG.RATE_FORM_URL){
+      rateBtn.addEventListener('click',function(){ window.open(CFG.RATE_FORM_URL,'_blank','noopener'); });
+    }else{
+      rateBtn.disabled=true; rateBtn.textContent='Rating opens soon';
+    }
+  }
+  function renderHosts(){
+    var el=document.getElementById('hosts');
+    if(!el)return;
+    if(!CFG.RATE_CSV_URL){
+      el.innerHTML='';
+      return;
+    }
+    fetch(CFG.RATE_CSV_URL).then(function(r){return r.text();}).then(function(text){
+      var cut=Date.now()-7*86400000;
+      var tally={};
+      parseCSV(text).slice(1).forEach(function(p){
+        var ts=Date.parse(p[0]);
+        if(!isNaN(ts)&&ts<cut)return;
+        var host=String(p[1]||'').trim();
+        var score=parseInt(String(p[2]||'').replace(/[^0-9]/g,''),10);
+        if(!host||isNaN(score))return;
+        score=Math.max(1,Math.min(10,score));
+        var t=tally[host.toLowerCase()]||(tally[host.toLowerCase()]={host:host,pts:0,n:0});
+        t.pts+=score;t.n++;
+      });
+      var hosts=Object.keys(tally).map(function(k){return tally[k];});
+      hosts.sort(function(a,b){return b.pts-a.pts;});
+      if(!hosts.length){
+        el.innerHTML='<p class="quiet">No sessions rated this week yet. Host one, or rate the one you went to.</p>';
+        return;
+      }
+      el.innerHTML=hosts.slice(0,5).map(function(h,i){
+        return '<div class="row'+(i===0?' first':'')+'">'
+          + '<span class="pos">'+(i===0?'&#127942;':'#'+(i+1))+'</span>'
+          + '<span class="nick">'+esc(h.host)+'<small>'+h.n+' rating'+(h.n===1?'':'s')+' this week</small></span>'
+          + '<span class="cnt">'+fmt(h.pts)+' pts</span></div>';
+      }).join('');
+    }).catch(function(){ el.innerHTML=''; });
+  }
+  if(!CFG.CSV_URL)renderHosts();
+
+  if (!CFG.CSV_URL) {
+    showEmpty('<b>The board opens soon.</b> Your count is already climbing, and it never resets. '
+      + 'When the board goes live, post your code name and see where you stand.');
+    return;
+  }
+  fetch(CFG.CSV_URL).then(function (r) { return r.text(); }).then(function (text) {
+    /* CSV columns follow the form's question order:
+       timestamp, code name, class, cards, loops, progress, activity min.
+       Newest post per code name wins. */
+    var rows = parseCSV(text).slice(1).map(function (p) {
+      function num(x){ return parseInt(String(x||'').replace(/[^0-9]/g,''),10)||0; }
+      return { nick:String(p[1]||'').trim(), sec:String(p[2]||'').trim(),
+               cards:num(p[3]), loops:num(p[4]), progress:num(p[5]), actmin:num(p[6]) };
+    }).filter(function (r) { return r.nick; });
+    var latest = {};
+    rows.forEach(function (r) { latest[r.nick.toLowerCase()] = r; });
+    var all = Object.keys(latest).map(function (k) { return latest[k]; });
+    if (!all.length) { showEmpty('<b>Nobody has posted yet.</b> Be the first code name on the board.'); return; }
+    var myNick=''; try{ myNick=(localStorage.getItem(NKEY)||'').toLowerCase(); }catch(e){}
+    var CATS=[
+      ['cards','Cards seen',function(v){return fmt(v);}],
+      ['loops','Loop reps',function(v){return fmt(v);}],
+      ['progress','Overall progress',function(v){return v+'%';}],
+      ['actmin','Activity minutes',function(v){return fmt(v);}]
+    ];
+    var html='';
+    CATS.forEach(function(cat){
+      var key=cat[0],label=cat[1],show=cat[2];
+      var sorted=all.slice().sort(function(a,b){return b[key]-a[key];});
+      var top=sorted.slice(0,5).filter(function(r){return r[key]>0;});
+      if(!top.length)return;
+      html+='<h2 style="margin-top:26px">'+label+'</h2>';
+      html+=top.map(function(r,i){
+        return '<div class="row'+(i===0?' first':'')+'">'
+          + '<span class="pos">'+(i===0?'&#127942;':'#'+(i+1))+'</span>'
+          + '<span class="nick">'+esc(r.nick)+(key==='cards'&&rankOf(r.cards).cur?'<small>'+rankOf(r.cards).cur[1]+'</small>':'')+'</span>'
+          + '<span class="cnt">'+show(r[key])+'</span></div>';
+      }).join('');
+      if(myNick&&latest[myNick]){
+        var pos=sorted.findIndex(function(r){return r.nick.toLowerCase()===myNick;})+1;
+        if(pos>5)html+='<div class="youline">'+label+': you are #'+pos+' of '+sorted.length+'. Only you can see this line.</div>';
+      }
+    });
+    if(all.length>5)html+='<p class="quiet">'+(all.length-5)+' or more studying quietly below the boards. That is the whole point.</p>';
+    board.innerHTML=html||'<div class="card"><b>Nobody has posted numbers yet.</b></div>';
+    renderHosts();
+  }).catch(function () {
+    showEmpty('<b>Could not reach the board right now.</b> Your counts are safe on this device; try again later.');
+  });
+})();
+</script>
+</body>
+</html>

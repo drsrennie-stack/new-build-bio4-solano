@@ -37,6 +37,47 @@
   var MOUNT = 'recallMount';
   var SKEY  = 'bio004-recall-progress';   // this engine's own spacing state
   var VKEY  = 'bio004-recall-v2';         // the feed Mastery OS already reads
+  var OKEY  = 'bio004-card-odometer';     // lifetime rep counter, every answer ever
+
+  /* ---------- the odometer: reps for bragging rights ----------
+     Every graded card is a rep, repeats included, like a view count.
+     total: every answer ever. cards: per-card counts, so unique and
+     repeat reps fall out of it. days: per-day counts for "today". */
+  var RANKS = [
+    [100,'First Incision'],[500,'Dissector'],[1000,'Prosector'],
+    [2500,'Anatomist'],[5000,'Master Anatomist'],[10000,'Cadaver Whisperer'],
+    [20000,'Vesalius Tier'],[50000,'Legend of the Lab']
+  ];
+  function odRead() {
+    try { return JSON.parse(localStorage.getItem(OKEY)) || { total: 0, cards: {}, days: {} }; }
+    catch (e) { return { total: 0, cards: {}, days: {} }; }
+  }
+  function odBump(entry) {
+    try {
+      var od = odRead();
+      od.total++;
+      od.cards[entry.key] = (od.cards[entry.key] || 0) + 1;
+      var d = today();
+      od.days[d] = (od.days[d] || 0) + 1;
+      /* keep the day log from growing forever */
+      var ks = Object.keys(od.days);
+      if (ks.length > 400) { ks.sort(); delete od.days[ks[0]]; }
+      localStorage.setItem(OKEY, JSON.stringify(od));
+      var el = document.getElementById('rv-odo-total');
+      if (el) el.textContent = fmtNum(od.total);
+      var tl = document.getElementById('rv-odo-today');
+      if (tl) tl.textContent = fmtNum(od.days[d]);
+    } catch (e) {}
+  }
+  function fmtNum(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function odRank(total) {
+    var cur = null, next = null;
+    for (var i = 0; i < RANKS.length; i++) {
+      if (total >= RANKS[i][0]) cur = RANKS[i];
+      else { next = RANKS[i]; break; }
+    }
+    return { cur: cur, next: next };
+  }
 
   /* Leitner-style spacing, in days. A card you get right moves out a
      box, a card you miss goes back to the start. Deliberately coarse:
@@ -307,6 +348,7 @@
     p.next = addDays(today(), BOX_DAYS[p.box]);
     progress[entry.key] = p;
     save(progress);
+    odBump(entry);
     feedMasteryOS(entry, right);
     runLog.push({ topicId: entry.topicId, topicTitle: entry.topicTitle,
                   moduleTitle: entry.moduleTitle, right: !!right });
@@ -362,7 +404,28 @@
       opts += '<option value="' + esc(k) + '"' + (filter.module === k ? ' selected' : '') + '>'
             + esc(mods[k]) + '</option>';
     });
-    return ''
+    /* the odometer band: lifetime reps, todays reps, rank. Pure
+       bragging rights, and it never resets. */
+    var od = odRead();
+    var uniq = Object.keys(od.cards).length;
+    var reps = Math.max(0, od.total - uniq);
+    var rk = odRank(od.total);
+    var todayN = od.days[today()] || 0;
+    var odo = ''
+      + '<div class="rv-odo" role="group" aria-label="Your lifetime card count" '
+      + 'style="display:flex;flex-wrap:wrap;gap:8px 22px;align-items:baseline;'
+      + 'background:#08101F;color:#EDF1F3;border-radius:12px;padding:14px 18px;margin:0 0 14px">'
+      + '<span style="font-size:30px;font-weight:800;letter-spacing:-.02em" id="rv-odo-total">' + fmtNum(od.total) + '</span>'
+      + '<span style="font-size:13px">cards answered, all time</span>'
+      + '<span style="font-size:13px"><b id="rv-odo-today">' + fmtNum(todayN) + '</b> today</span>'
+      + '<span style="font-size:13px"><b>' + fmtNum(uniq) + '</b> unique &middot; <b>' + fmtNum(reps) + '</b> repeat reps</span>'
+      + (rk.cur ? '<span style="font-size:13px;color:#CFA95F;font-weight:800">' + rk.cur[1] + '</span>' : '')
+      + (rk.next ? '<span style="font-size:12px;color:#C8D2DA">' + fmtNum(rk.next[0] - od.total) + ' to ' + rk.next[1] + '</span>'
+                 : (rk.cur ? '<span style="font-size:12px;color:#C8D2DA">Top rank. Absurd. Respect.</span>' : ''))
+      + '<a href="bio004-card-leaderboard.html" target="_blank" rel="noopener" '
+      + 'style="margin-left:auto;color:#fff;font-weight:700;font-size:13px">Class leaderboard &#8599;</a>'
+      + '</div>';
+    return odo
       + '<div class="rv-stats" role="group" aria-label="Your recall progress">'
       +   '<p class="rv-stat"><strong>' + s.total + '</strong><span>cards in the bank</span></p>'
       +   '<p class="rv-stat"><strong>' + s.seen + '</strong><span>you have seen</span></p>'

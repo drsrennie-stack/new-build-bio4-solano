@@ -84,10 +84,15 @@ window.BIO004_CARD_COMPETENCY_MAP = {
   "t-urinary-system": { title:"The Urinary System", comps:["w6-kidney-gross","w6-kidney-internal","w6-nephron-parts","w6-nephron-types","w6-jga-filtration","w6-kidney-bloodsupply","w6-urine-path","w6-urinary-disorders"] },
   "t-reproductive-male": { title:"The Male Reproductive System", comps:["w6-scrotum-testes","w6-sperm-path","w6-sperm-cell","w6-male-glands-penis","w6-male-disorders"] },
   "t-reproductive-female": { title:"The Female Reproductive System", comps:["w6-ovary","w6-ovum-path","w6-uterus","w6-vagina-vulva","w6-mammary"] },
-  "t-pregnancy-and-birth": { title:"Pregnancy and Birth", comps:["w6-fertilization-implant","w6-placenta-membranes","w6-gravid-labor"] },
+  "t-pregnancy-and-birth": { title:"Pregnancy and Birth", comps:["w6-uterus","w6-ovum-path"] },
+  /* AUDIT Aug 22: its three original comps (w6-fertilization-implant,
+     w6-placenta-membranes, w6-gravid-labor) do not exist in
+     competenciesfall2026.js, so this deck fed evidence to nothing and
+     no competency could reach it. Re-pointed at the two real
+     reproductive-anatomy competencies its cards reinforce. */
   "t-nervous-tissue": { title:"Functional Organization and Nervous Tissue", comps:["w8-ns-organization","w8-neuron-parts","w8-synapse-parts","w8-neuron-classification","w8-neuroglia","w8-myelination"] },
   "t-neuronal-integration": { title:"Gross Anatomy and Neuronal Integration", comps:["w8-tissue-collections","w8-gray-white-matter","w8-reflex-arc","w8-reflex-types","w8-neuronal-pools"] },
-  "t-cns-brain-spinal-cord": { title:"CNS: The Brain and Spinal Cord", comps:["w7-brain-organization","w7-brain-development","w7-cerebrum-surface","w7-cortex-functional-areas","w7-white-matter-tracts","w7-basal-ganglia","w7-diencephalon","w7-cerebellum","w7-limbic-system","w7-circle-of-willis","w8-cord-external","w8-cord-roots","w8-cord-internal","w7-brainstem-regions","w7-midbrain","w7-pons","w7-medulla","w7-cranial-nerve-nuclei","w7-reticular-formation"] },
+  "t-cns-brain-spinal-cord": { title:"CNS: The Brain and Spinal Cord", comps:["w7-brain-organization","w7-cerebrum-surface","w7-cortex-functional-areas","w7-white-matter-tracts","w7-basal-ganglia","w7-diencephalon","w7-cerebellum","w7-limbic-system","w7-circle-of-willis","w8-cord-external","w8-cord-roots","w8-cord-internal","w7-brainstem-regions","w7-midbrain","w7-pons","w7-medulla","w7-cranial-nerve-nuclei","w7-reticular-formation"] },
   "t-cns-meninges-csf": { title:"CNS Meninges and CSF", comps:["w7-cranial-meninges","w7-spinal-meninges-spaces","w7-cord-termination-lp","w7-ventricles","w7-csf-circulation","w7-bbb"] },
   "t-pns": { title:"The Peripheral Nervous System", comps:["w8-nerve-structure","w8-spinal-nerves-rami","w8-sensory-receptors","w8-cranial-nerves","w8-nerve-plexuses"] },
   "t-ans": { title:"The Autonomic Nervous System", comps:["w8-ans-pathway","w8-ans-ganglia-divisions"] },

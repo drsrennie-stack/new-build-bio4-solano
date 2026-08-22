@@ -100,6 +100,13 @@ function merge(cc, src) {
         if (!k || seen.has(k)) return;          // same question, whatever deck it came from
         seen.add(k);
         if (!c.src) c.src = src.replace('.js', '');
+        /* Aug 22 audit: card ids must be unique WITHIN a topic. Two decks
+           merged into one topic with colliding c1..cN ids, so two
+           different cards shared one spacing record and one competency
+           identity in the topicId:cardId key every consumer uses. */
+        let cid = String(c.id), bump = 1;
+        while (top.cards.some(x => String(x.id) === cid)) { bump++; cid = c.id + '-x' + bump; }
+        c.id = cid;
         top.cards.push(c);
         prov[src] = (prov[src] || 0) + 1;
       });
