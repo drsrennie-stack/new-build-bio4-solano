@@ -70,6 +70,22 @@ a{color:var(--rust)}
 .btn.ghost{background:transparent}
 .btn svg{width:18px;height:18px;flex:none}
 
+/* ---------- the focus session ---------- */
+.fs-banner{background:var(--card-navy);color:#EDF1F3;border-radius:var(--r-lg);
+  padding:18px 20px;margin-bottom:18px;display:flex;gap:18px;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;box-shadow:var(--shadow)}
+.fs-banner b{display:block;font-size:17px;letter-spacing:-.01em}
+.fs-banner span{font-size:13.5px;color:#C8D2DA;max-width:52ch;display:block;margin-top:2px}
+.fs-clock{font-family:var(--eyebrow);font-weight:700;font-size:13px;letter-spacing:.04em;
+  color:var(--navy);background:var(--offwhite);border:1.5px solid var(--gold);
+  border-radius:999px;padding:6px 13px;white-space:nowrap;margin-right:10px}
+.fs-chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 16px}
+.fs-chips button{font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer;
+  background:var(--white);color:var(--navy);border:1.5px solid var(--line);
+  border-radius:999px;padding:9px 15px}
+.fs-chips button[aria-pressed="true"]{border-color:var(--gold);background:#F6EFDF}
+.fs-chips button:hover{border-color:var(--gold)}
+
 /* ---------- the mastery ticker ---------- */
 .tickcard{background:var(--white);border:1.5px solid var(--line);border-radius:var(--r-lg);
   padding:18px 20px;box-shadow:var(--shadow);margin-bottom:18px}
@@ -713,6 +729,14 @@ section.block:first-of-type{border-top:none}
            One row of cards, each one a named method with today's material in
            it and the reason it is there written on it. Built from the real
            schedule, the real due dates and the real weak spots. -->
+      <!-- THE FOCUS SESSION: one screen, one thing, rounds and breaks
+           run by the app. The student picks length and focus only. -->
+      <div class="fs-banner">
+        <div><b>Study session</b>
+        <span>One thing on screen at a time, rounds and breaks run for you. You pick the round length and the focus. It does the rest.</span></div>
+        <button class="btn gold big" data-focussession>Start a session</button>
+      </div>
+
       <div id="dayRail"></div>
 
       <div class="plan" id="planCard"><!-- JS --></div><div id="dailyBuild"></div>
@@ -3131,9 +3155,10 @@ function runNext(first){
   var pick=shuffle(pool.slice())[0];
   var fits=pool.filter(function(a){return a.min<=left;});
   if(fits.length&&pick.min>left)pick=shuffle(fits)[0];
-  var others=pool.filter(function(a){return a.k!==pick.k;}).slice(0,3);
+  /* autopilot rounds show ONE option. The whole point is no picking. */
+  var others=RUN.fsAuto?[]:pool.filter(function(a){return a.k!==pick.k;}).slice(0,3);
 
-  gSet(first?'Study Run':'Next up','One topic, every way at it');
+  gSet((typeof FS!=='undefined'&&FS&&FS.active)?('Round '+FS.round+(RUN.fsAuto?' · autopilot':'')):(first?'Study Run':'Next up'),'One topic, every way at it');
   var pct=Math.max(0,Math.min(100,Math.round(spent/RUN.budget*100)));
   var b='<div style="text-align:left">';
   b+='<div class="run-meter"><span>'+spent+' of '+RUN.budget+' min</span>'
@@ -3155,10 +3180,13 @@ function runNext(first){
      + '<span class="ro-min">'+a.min+' min</span></button>';
   });
   b+='</div>';
-  b+='<div class="g-actions"><button class="btn" id="runSwapTopic">Different topic</button>'
+  b+='<div class="g-actions">'
+   + (RUN.fsAuto?'':'<button class="btn" id="runSwapTopic">Different topic</button>')
    + '<button class="btn ghost" id="runQuit">Stop the run</button></div>';
-  b+='<p style="font-size:12px;color:var(--ink-soft);margin-top:10px">The gold one is the one we picked. '
-   + 'The rest are there only if you want something specific.</p></div>';
+  b+=(RUN.fsAuto
+   ? '<p style="font-size:12px;color:var(--ink-soft);margin-top:10px">Autopilot: weakest first. Nothing to pick, just do the gold one.</p></div>'
+   : '<p style="font-size:12px;color:var(--ink-soft);margin-top:10px">The gold one is the one we picked. '
+   + 'The rest are there only if you want something specific.</p></div>');
   gBody(b);
   $$('#gameBody [data-rungo]').forEach(function(btn){
     btn.onclick=function(){ runGo(btn.getAttribute('data-rungo')); };
@@ -3171,6 +3199,261 @@ function runGo(k){
   RUN.current=k;
   a.go(RUN.comp);
 }
+
+/* ============================================================
+   THE FOCUS SESSION. Scrubs' rounds machine, riding the Run
+   engine so every activity, credit, and return band keeps
+   working exactly as it does today.
+
+   Shape of a session: pick a round length once (their own
+   Pomodoro settings drive the breaks), then per round pick a
+   focus: the recommended topic, their own one or two topics,
+   a total-review combo, or weakness autopilot. Each round is
+   one or more Runs; runEnd is intercepted while a session is
+   active so rounds chain into breaks instead of ending. After
+   every Nth round the long break fires, and the screen after
+   the long break is one button: weakest first, no decisions.
+   ============================================================ */
+var FS=null;
+function fsCfg(){
+  /* A student who has set their own Pomodoro gets their numbers.
+     Everyone else gets the session defaults: 10 between rounds,
+     30 long, long break after every 3rd round. */
+  if(S.profile&&S.profile.pomodoro){
+    var p=pomo();
+    return { brkMin:(p.shortBrk||10), longMin:(p.longBrk||30), longEvery:(p.longEvery||3) };
+  }
+  return { brkMin:10, longMin:30, longEvery:3 };
+}
+function fsInPlayComps(){ return allComps().filter(function(x){return inPlay(x.c);}).map(function(x){return x.c;}); }
+function fsWeakOrder(){
+  var out=weaknesses().map(function(x){return x.c;});
+  var seen={};out.forEach(function(c){seen[c.id]=1;});
+  fsInPlayComps().sort(function(a,b){return (a.mastery||0)-(b.mastery||0);})
+    .forEach(function(c){ if(out.length<6&&!seen[c.id]){out.push(c);seen[c.id]=1;} });
+  return out;
+}
+function fsClock(){
+  var head=document.querySelector('#gameOverlay .sheet-head');
+  if(!head)return null;
+  var el=document.getElementById('fsClock');
+  if(!el){
+    el=document.createElement('span');
+    el.id='fsClock';el.className='fs-clock';
+    el.setAttribute('role','timer');el.setAttribute('aria-live','off');
+    head.insertBefore(el,head.querySelector('#gameClose'));
+  }
+  return el;
+}
+function fsClockKill(){ var el=document.getElementById('fsClock'); if(el)el.parentNode.removeChild(el); }
+function fsFmt(s){s=Math.max(0,Math.round(s));var m=Math.floor(s/60),x=s%60;return m+':'+(x<10?'0':'')+x;}
+function fsPaint(){
+  var el=fsClock(); if(!el||!FS)return;
+  if(FS.mode==='work')el.textContent=(FS.secs>0?fsFmt(FS.secs)+' left · round '+FS.round:'Time. Finish this one.');
+  else if(FS.mode==='break')el.textContent=fsFmt(FS.secs)+' break';
+  else el.textContent='Round '+FS.round;
+  var bc=document.getElementById('fsBrkClock'); if(bc)bc.textContent=fsFmt(FS.secs);
+}
+function fsTick(){
+  if(!FS||!FS.active)return;
+  if(FS.mode==='work'||FS.mode==='break'){
+    FS.secs--;
+    if(FS.secs<=0){
+      if(FS.mode==='break'){ FS.mode='plan'; fsAfterBreak(); }
+      /* work hitting zero does not yank the activity; the Run's own
+         budget check ends the round at the next natural seam */
+    }
+  }
+  fsPaint();
+}
+function fsOpen(){
+  if(FS&&FS.active){ fsResume(); return; }
+  FS={active:true,round:0,roundsDone:0,sinceLong:0,acts:0,mode:'setup',
+      roundMin:50,plan:[],seg:0,auto:false,secs:0,postLong:false,
+      timer:setInterval(fsTick,1000)};
+  runOpenOverlay();
+  var p=pomo(),c=fsCfg();
+  gSet('Study Session','One screen, one thing');
+  var opts=[[p.focus||50,'My Pomodoro: '+(p.focus||50)+' minutes','From your settings. Change it any time under Pomodoro setup.']];
+  if((p.focus||50)!==50)opts.push([50,'50 minutes','The classic deep round.']);
+  if((p.focus||50)!==25)opts.push([25,'25 minutes','Short and sharp.']);
+  var b='<div style="text-align:left"><p class="g-q">How long is a round?</p>'
+    + '<p style="font-size:13.5px;color:var(--ink-soft)">Pick once. Breaks run themselves: '
+    + c.brkMin+' minutes between rounds, a '+c.longMin+' minute long break after every '
+    + c.longEvery+' rounds.</p><div class="run-next">'
+    + opts.map(function(o,i){return '<button type="button" class="run-opt'+(i===0?' primary':'')+'" data-fslen="'+o[0]+'">'
+      + '<span><strong>'+esc(o[1])+'</strong><small>'+esc(o[2])+'</small></span><span class="ro-min">'+o[0]+' min</span></button>';}).join('')
+    + '</div><div class="g-actions"><button class="btn ghost" data-gameclose>Not now</button></div></div>';
+  gBody(b);
+  $$('#gameBody [data-fslen]').forEach(function(btn){
+    btn.onclick=function(){ FS.roundMin=+btn.getAttribute('data-fslen'); fsPlanRound(); };
+  });
+  fsPaint();
+}
+function fsResume(){
+  runOpenOverlay();
+  if(FS.mode==='work'){ if(RUN&&RUN.active)runNext(false); else fsNextSeg(); }
+  else if(FS.mode==='break')fsBreakScreen(FS.longNow);
+  else if(FS.mode==='plan'){ if(FS.postLong)fsAutoScreen(); else fsPlanRound(true); }
+  else fsOpen();
+}
+function fsPlanRound(resume){
+  if(!resume)FS.round++;
+  FS.mode='plan';FS.postLong=false;
+  var w=fsWeakOrder(),rec=w[0];
+  gSet('Round '+FS.round,'What is the focus?');
+  var b='<div style="text-align:left"><p class="g-q">'+FS.roundMin+' minutes on whatever you pick.</p>'
+    + '<p style="font-size:13.5px;color:var(--ink-soft)">Specific goes deep. The combo goes wide, so nothing goes stale. Mixing rounds is the point.</p>'
+    + '<div class="run-next">';
+  if(rec){
+    b+='<button type="button" class="run-opt primary" data-fsp="rec">'
+      + '<span><strong>'+esc(rec.name)+'</strong><small>Weakest thing on your board, every way at it for the round.</small></span>'
+      + '<span class="ro-min">'+FS.roundMin+' min</span></button>';
+  }
+  b+='<button type="button" class="run-opt" data-fsp="pick"><span><strong>Specific topics, my pick</strong><small>Choose one or two and go deep on just those.</small></span><span class="ro-min">'+FS.roundMin+' min</span></button>'
+   + '<button type="button" class="run-opt" data-fsp="combo"><span><strong>Total review combo</strong><small>Your four lowest topics, one pass each. Broad exposure, no dwelling.</small></span><span class="ro-min">'+FS.roundMin+' min</span></button>'
+   + '<button type="button" class="run-opt" data-fsp="auto"><span><strong>My weaknesses, autopilot</strong><small>Weakest to least weak. Nothing else to decide.</small></span><span class="ro-min">'+FS.roundMin+' min</span></button>'
+   + '</div><div class="g-actions"><button class="btn ghost" id="fsEnd1">End the session</button></div></div>';
+  gBody(b);
+  var e1=$('#fsEnd1');if(e1)e1.onclick=fsFinish;
+  var h={rec:function(){fsBeginRound([rec],false);},
+         pick:fsChips,
+         combo:function(){fsBeginRound(w.slice(0,4),false);},
+         auto:function(){fsBeginRound(w.slice(0,4),true);}};
+  $$('#gameBody [data-fsp]').forEach(function(btn){
+    btn.onclick=function(){h[btn.getAttribute('data-fsp')]();};
+  });
+  fsPaint();
+}
+function fsChips(){
+  var wk=currentWeekNumber();
+  var pool=fsInPlayComps();
+  pool.sort(function(a,b){
+    var aw=weekOf(a)===wk?0:1, bw=weekOf(b)===wk?0:1;
+    return aw-bw||(a.mastery||0)-(b.mastery||0);
+  });
+  pool=pool.slice(0,12);
+  var picked=[];
+  gSet('Round '+FS.round,'Pick one or two topics');
+  var b='<div style="text-align:left"><p class="g-q">The round stays on what you pick.</p>'
+    + '<div class="fs-chips">'
+    + pool.map(function(c,i){return '<button type="button" data-fsc="'+i+'" aria-pressed="false">'+esc(c.name)+'</button>';}).join('')
+    + '</div><div class="g-actions"><button class="btn gold" id="fsChipGo" disabled>Start the round</button>'
+    + '<button class="btn ghost" id="fsChipBack">Back</button></div></div>';
+  gBody(b);
+  $('#fsChipBack').onclick=function(){fsPlanRound(true);};
+  $$('#gameBody [data-fsc]').forEach(function(btn){
+    btn.onclick=function(){
+      var c=pool[+btn.getAttribute('data-fsc')],at=picked.indexOf(c);
+      if(at>-1){picked.splice(at,1);btn.setAttribute('aria-pressed','false');}
+      else if(picked.length<2){picked.push(c);btn.setAttribute('aria-pressed','true');}
+      var go=$('#fsChipGo');go.disabled=!picked.length;
+      go.textContent=picked.length?('Start: '+picked.map(function(c){return c.name;}).join(' + ')):'Start the round';
+    };
+  });
+  $('#fsChipGo').onclick=function(){ if(picked.length)fsBeginRound(picked.slice(),false); };
+  fsPaint();
+}
+function fsAutoScreen(){
+  FS.mode='plan';FS.postLong=true;
+  var w=fsWeakOrder();
+  gSet('Back from the break','Now the machine drives');
+  gBody('<div class="g-center"><div class="g-emoji">🎯</div><h3>One button. Zero decisions.</h3>'
+    + '<p>Your board, weakest to least weak: <b>'+esc(w.slice(0,3).map(function(c){return c.name;}).join(' → '))+'</b> and on down.</p>'
+    + '<div class="g-actions"><button class="btn gold big" id="fsAutoGo">Run my weaknesses, weakest first</button></div>'
+    + '<div class="g-actions"><button class="btn" id="fsSelf">Or plan this round myself</button>'
+    + '<button class="btn ghost" id="fsEnd2">End the session</button></div></div>');
+  $('#fsAutoGo').onclick=function(){FS.round++;fsBeginRound(w.slice(0,4),true);};
+  $('#fsSelf').onclick=function(){FS.round++;fsPlanRound(true);};
+  $('#fsEnd2').onclick=fsFinish;
+  fsPaint();
+}
+function fsBeginRound(comps,auto){
+  FS.plan=comps;FS.seg=0;FS.auto=auto;
+  FS.mode='work';FS.secs=FS.roundMin*60;FS.postLong=false;
+  fsNextSeg();
+}
+function fsNextSeg(){
+  var c=FS.plan[FS.seg];
+  if(!c){fsEndRound();return;}
+  var per=Math.max(5,Math.round(FS.roundMin/FS.plan.length));
+  RUN={active:true,comp:c,done:[],started:Date.now(),budget:per,fsAuto:FS.auto};
+  runOpenOverlay();
+  runNext(true);
+  fsPaint();
+}
+/* runEnd is intercepted below: a finished Run becomes the next
+   segment, the break, or the end of the session, never the engine's
+   own "Run finished" screen. */
+function fsRunEnded(msg){
+  if(RUN)FS.acts+=RUN.done.length;
+  RUN=null;save();renderAll();
+  if(/^Stopped/.test(msg||'')){fsFinish();return;}
+  FS.seg++;
+  if(FS.seg<FS.plan.length&&FS.secs>120){fsNextSeg();return;}
+  fsEndRound();
+}
+function fsEndRound(){
+  FS.roundsDone++;FS.sinceLong++;
+  var cfg=fsCfg();
+  var long=FS.sinceLong>=cfg.longEvery;
+  if(long)FS.sinceLong=0;
+  FS.longNow=long;
+  FS.mode='break';FS.secs=(long?cfg.longMin:cfg.brkMin)*60;
+  FS.postLong=long;
+  fsBreakScreen(long);
+}
+function fsBreakScreen(long){
+  runOpenOverlay();
+  gSet(long?'Long break':'Break','Round '+FS.roundsDone+' done');
+  gBody('<div class="g-center"><div class="g-emoji">'+(long?'🌿':'💧')+'</div>'
+    + '<h3 id="fsBrkClock" style="font-size:42px">'+fsFmt(FS.secs)+'</h3>'
+    + '<p>'+(long
+        ? 'Eat something, move, go outside. When you come back there is exactly one button waiting.'
+        : 'Stand up, water, eyes off the screen. The next round plans itself when this hits zero.')
+    + '</p><div class="g-actions"><button class="btn gold" id="fsSkipBrk">Skip the break</button>'
+    + '<button class="btn ghost" id="fsEnd3">End the session</button></div></div>');
+  $('#fsSkipBrk').onclick=function(){FS.mode='plan';fsAfterBreak();};
+  $('#fsEnd3').onclick=fsFinish;
+  fsPaint();
+}
+function fsAfterBreak(){
+  if(FS.postLong)fsAutoScreen();
+  else fsPlanRound();
+}
+function fsFinish(){
+  if(!FS)return;
+  var rounds=FS.roundsDone,acts=FS.acts;
+  if(FS.timer)clearInterval(FS.timer);
+  FS=null;fsClockKill();
+  save();renderAll();
+  runOpenOverlay();
+  gSet('Session over','That was the studying');
+  gBody('<div class="g-center"><div class="g-emoji">✅</div><h3>'
+    + rounds+' round'+(rounds===1?'':'s')+', '+acts+' activit'+(acts===1?'y':'ies')+'</h3>'
+    + '<p>All of it is already on your mastery line. The app has nothing more to suggest right now, and that is on purpose. Close the laptop.</p>'
+    + '<div class="g-actions"><button class="btn gold" data-gameclose>Back to my charts</button></div></div>');
+}
+/* the interception: while a session is active, every runEnd routes
+   into the session instead of the engine's own end screen */
+var fsCoreRunEnd=runEnd;
+runEnd=function(msg){
+  if(FS&&FS.active){fsRunEnded(msg);return;}
+  fsCoreRunEnd(msg);
+};
+document.addEventListener('click',function(e){
+  var t=e.target.closest('[data-focussession]');
+  if(t){e.preventDefault();fsOpen();}
+});
+/* QA hook: lets an automated test drive a session without faking
+   fifty minutes of clicking. Reads state, ends the current Run the
+   same way the engine would. Not referenced by any UI. */
+window.BIO004_FS_DEBUG={
+  endRun:function(m){runEnd(m||'done');},
+  state:function(){return {
+    fs:FS?{mode:FS.mode,round:FS.round,seg:FS.seg,roundsDone:FS.roundsDone,secs:FS.secs,auto:FS.auto,postLong:FS.postLong}:null,
+    run:RUN?{topic:RUN.comp&&RUN.comp.name,auto:!!RUN.fsAuto,budget:RUN.budget}:null};}
+};
 
 /* ---- the three activities that had no runner of their own ---- */
 function runCards(c){
