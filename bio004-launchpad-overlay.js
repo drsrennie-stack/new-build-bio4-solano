@@ -17,9 +17,11 @@
   'use strict';
   if (window.__BIO004_LAUNCHPAD__) return;
   window.__BIO004_LAUNCHPAD__ = true;
-  /* stay out of the way inside iframes: Canvas embeds the calendar
-     directly and a popup inside a frame reads as a glitch */
-  try { if (window.parent && window.parent !== window) return; } catch (e) {}
+  /* Canvas shows the calendar inside an iframe, and the doors are
+     MEANT to appear there first: that is the whole point. The only
+     opt-out is explicit: add ?nolaunch=1 to the address for an embed
+     that should skip straight to the calendar. */
+  if (/[?&]nolaunch=1/.test(window.location.search)) return;
 
   var css = ''
   + '.lpov{position:fixed;inset:0;z-index:2147482998;background:#08101F;overflow:auto;'
