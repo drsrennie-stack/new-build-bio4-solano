@@ -292,7 +292,7 @@
   dates.forEach(function (d) {
     var e = SL[d];
     var w = weeks[e.wk] || (weeks[e.wk] = {
-      sheets:{}, notes:{}, videos:{}, lab:{}, practice:{}, exam:null, topics:{}, first:d, last:d });
+      sheets:{}, notes:{}, videos:[], vseen:{}, lab:{}, practice:{}, exam:null, topics:{}, first:d, last:d });
     if (d < w.first) w.first = d;
     if (d > w.last)  w.last = d;
     if (e.exam) w.exam = e.exam;
@@ -303,13 +303,16 @@
     take(e.notes, w.notes);
     take(e.lab, w.lab);
     take(e.workbooks, w.practice);
-    /* Videos keep their day order, with each day's lecture slides
-       RIGHT AFTER that day's video, so the red video card and its
-       blue slides card sit next to each other. */
+    /* Videos are an ORDERED list, day by day: the day's video(s),
+       then that day's lecture slides. Each such set renders on its
+       own row, so a video always sits beside its slides. */
     (e.videos || []).forEach(function (it) {
-      if (it && it.u) w.videos[it.u] = { t: it.t || it.u, s: false };
+      if (it && it.u && !w.vseen[it.u]) { w.vseen[it.u] = 1; w.videos.push({ u: it.u, t: it.t || it.u, s: false }); }
     });
-    if (e.slides && e.slides.u) w.videos[e.slides.u] = { t: e.slides.t || 'Lecture slides', s: true };
+    if (e.slides && e.slides.u && !w.vseen[e.slides.u]) {
+      w.vseen[e.slides.u] = 1;
+      w.videos.push({ u: e.slides.u, t: e.slides.t || 'Lecture slides', s: true });
+    }
     (e.sheets || []).forEach(function (it) { if (it && it.t) w.topics[it.t] = 1; });
   });
 
@@ -376,20 +379,38 @@
 
   /* One card per material. Same categories every week so the filters
      mean the same thing everywhere. */
-  function weekCards(wd) {
+  function vcard(v) {
+    /* both stay in the Videos filter; the card color and label tell
+       them apart: video red, lecture slides blue */
+    return '<a class="mcard" data-cat="videos" href="' + esc(v.u) + '" target="_top">'
+      + '<span class="mic ' + (v.s ? 'ic-blue' : 'ic-red') + '" aria-hidden="true"><svg viewBox="0 0 24 24">'
+      + (v.s ? IC.slides : IC.play) + '</svg></span>'
+      + '<span class="mk">' + (v.s ? 'Lecture slides' : 'Video') + '</span>'
+      + '<b>' + esc(v.t) + '</b></a>';
+  }
+  /* Each video-and-its-slides set gets its OWN row: a new row starts
+     whenever a video follows slides. Two videos sharing one set of
+     slides stay together on the same row. */
+  function videoRows(wd) {
+    var rows = [], cur = [], prevSlides = false;
+    wd.videos.forEach(function (v) {
+      if (!v.s && prevSlides && cur.length) { rows.push(cur); cur = []; }
+      cur.push(v);
+      prevSlides = v.s;
+    });
+    if (cur.length) rows.push(cur);
+    return rows.map(function (r) {
+      return '<div class="cards">' + r.map(vcard).join('') + '</div>';
+    }).join('');
+  }
+  function preCards(wd) {
     var out = '';
     Object.keys(wd.notes).forEach(function (u) { out += card('notes', wd.notes[u] + ' notes', u); });
     Object.keys(wd.sheets).forEach(function (u) { out += card('prework', wd.sheets[u] + ' pre-work sheet', u); });
-    Object.keys(wd.videos).forEach(function (u) {
-      var v = wd.videos[u];
-      /* both stay in the Videos filter; the card color and label tell
-         them apart: video red, lecture slides blue */
-      out += '<a class="mcard" data-cat="videos" href="' + esc(u) + '" target="_top">'
-        + '<span class="mic ' + (v.s ? 'ic-blue' : 'ic-red') + '" aria-hidden="true"><svg viewBox="0 0 24 24">'
-        + (v.s ? IC.slides : IC.play) + '</svg></span>'
-        + '<span class="mk">' + (v.s ? 'Lecture slides' : 'Video') + '</span>'
-        + '<b>' + esc(v.t) + '</b></a>';
-    });
+    return out;
+  }
+  function postCards(wd) {
+    var out = '';
     Object.keys(wd.lab).forEach(function (u) {
       var t = wd.lab[u];
       if (/lab-sprint/.test(u)) t += ' lab sprint';
@@ -424,7 +445,11 @@
         + (xd ? ' for your class: ' + fmtDate(xd) + '.'
               : ' is this week. Pick your class above to see your date.') + '</p>';
     }
-    out += '</div><div class="cards">' + weekCards(wd) + '</div></section>';
+    out += '</div>'
+      + '<div class="cards">' + preCards(wd) + '</div>'
+      + videoRows(wd)
+      + '<div class="cards">' + postCards(wd) + '</div>'
+      + '</section>';
     return out;
    }).join('');
   }
@@ -494,6 +519,10 @@
       c.hidden = (cat !== 'all' && c.getAttribute('data-cat') !== cat);
     });
     document.querySelectorAll('#weekList .wkblock').forEach(function (wk) {
+      /* a row with nothing visible in it should not leave a gap */
+      wk.querySelectorAll('.cards').forEach(function (g) {
+        g.hidden = !g.querySelector('.mcard:not([hidden])');
+      });
       var any = wk.querySelector('.mcard:not([hidden])');
       wk.hidden = !any;
       var sb = document.querySelector('[data-sbweek="' + wk.id.replace('week-', '') + '"]');
