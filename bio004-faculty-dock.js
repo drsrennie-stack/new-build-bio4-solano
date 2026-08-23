@@ -35,7 +35,7 @@
         { name: 'Lab Question of the Night', sub: 'project it, spin the picker', href: 'bio004-lab-question-tonight.html', icon: 'night', color: 'gold' },
         { name: 'Lab Sprints', sub: 'structure checklists', href: 'lab-sprints.html', icon: 'clock', color: 'terra' },
         { name: 'Histology Help', sub: 'every slide tool', href: 'histology-help.html', icon: 'scope', color: 'teal' },
-        { name: 'Digital Atlas', sub: 'in the course frame', href: 'bio004-digital-atlas.html', icon: 'globe', color: 'light' },
+        { name: 'Digital Atlas', sub: 'opens in its own tab', href: 'https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02', icon: 'globe', color: 'light' },
       ]},
       { label: 'Grades and attendance', apps: [
         /* Course Engine is THE attendance tool (her words, Aug 23):
@@ -154,7 +154,9 @@
       TOOLS.groups.forEach(function (g) {
         inner += '<div class="fd-group"><p class="fd-gl">' + g.label + '</p><div class="fd-grid">';
         g.apps.forEach(function (a) {
-          inner += '<a class="fd-tile" href="' + href(a) + '">'
+          var h = href(a);
+          inner += '<a class="fd-tile" href="' + h + '"'
+            + (/^https?:/.test(h) ? ' target="_blank" rel="noopener"' : '') + '>'
             + '<span class="fd-ic fd-' + a.color + '" aria-hidden="true"><svg viewBox="0 0 32 32" stroke="currentColor">' + TOOLS.icons[a.icon] + '</svg></span>'
             + '<span class="fd-name">' + a.name + '</span>'
             + '<span class="fd-sub">' + a.sub + '</span></a>';
