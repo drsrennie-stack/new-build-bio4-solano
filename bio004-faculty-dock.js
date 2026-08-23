@@ -42,6 +42,7 @@
            attendance, teams and roster in one app. attendance-engine.html
            still exists in the repo but is not the one she runs. */
         { name: 'Course Engine', sub: 'attendance, teams, roster', href: 'Course_Engine.html', icon: 'clipboard', color: 'gold' },
+        { name: 'Attendance Engine', sub: 'links to Course Engine', href: 'attendance-engine.html', icon: 'clipboard', color: 'terra' },
         { name: 'Grade Engine', sub: 'weighted gradebook', href: 'grade-engine.html', icon: 'calc', color: 'teal' },
         { name: 'Grade Calculator', sub: 'the student one', href: 'grade-calculator.html', icon: 'calc', color: 'light' },
       ]},
