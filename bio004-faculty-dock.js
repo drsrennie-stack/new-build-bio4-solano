@@ -85,8 +85,26 @@
     sectionPage: { 'mw': 'class1.html', 'tr-am': 'class2.html', 'tr-eve': 'class3.html' }
   };
 
-  /* ---------- the floating pill + pop-up. Not on the hub itself. ---------- */
+  /* ---------- the floating pill + the Course-tools-style panel.
+     Not on the hub itself. ---------- */
   if (/(^|\/)faculty\.html$/.test(window.location.pathname)) return;
+
+  /* Facts for the "today" strip, from the course calendar. */
+  var TERM_START = new Date(2026, 7, 17); /* Monday of week 1 */
+  var CLOSURES = {
+    '2026-09-07': 'Labor Day, campus closed',
+    '2026-10-13': 'Professional Development day, no class',
+    '2026-11-11': 'Veterans Day, campus closed',
+    '2026-11-25': 'Travel day, no class',
+    '2026-11-26': 'Thanksgiving, campus closed',
+    '2026-11-27': 'Thanksgiving break, campus closed'
+  };
+  var EXAMS = {
+    mw: [['Exam 1','2026-09-09'],['Exam 2','2026-09-30'],['Exam 3','2026-10-21'],['Exam 4','2026-11-16'],['Exam 5','2026-12-09']],
+    tr: [['Exam 1','2026-09-08'],['Exam 2','2026-09-29'],['Exam 3','2026-10-22'],['Exam 4','2026-11-17'],['Exam 5','2026-12-10']]
+  };
+  var SEC_LABEL = { 'mw': 'Mon / Wed · Afternoon', 'tr-am': 'Tue / Thu · Morning', 'tr-eve': 'Tue / Thu · Evening' };
+
   function boot() {
     try {
       if (document.body.hasAttribute('data-no-faculty-dock')) return;
@@ -102,35 +120,66 @@
         + '.fd-pill:focus-visible{outline:3px solid #DCB45C;outline-offset:3px}'
         + '.fd-pill svg{width:16px;height:16px;stroke:#DCB45C}'
         + 'body.present .fd-pill{display:none}'
-        + '.fdov{position:fixed;inset:0;z-index:2147482901;background:rgba(4,8,18,.96);display:none;overflow:auto;'
-        + 'font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#fff}'
-        + '.fdov.on{display:block}'
-        + '.fd-wrap{max-width:1020px;margin:0 auto;padding:34px 22px 60px}'
-        + '.fd-head{display:flex;align-items:flex-start;gap:16px}'
-        + '.fd-head .t{flex:1}'
-        + '.fd-eyebrow{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#DCB45C;margin:0 0 6px}'
-        + '.fd-head h2{font-size:clamp(22px,3.5vw,30px);font-weight:800;margin:0;color:#fff}'
-        + '.fd-close{background:none;border:1.5px solid rgba(244,239,232,.45);color:#F4EFE8;cursor:pointer;'
-        + 'font:800 13.5px/1 "Plus Jakarta Sans",system-ui,sans-serif;border-radius:999px;padding:9px 16px}'
+
+        + '.fdov{position:fixed;inset:0;z-index:2147482901;background:rgba(4,8,18,.72);display:none;overflow:auto;'
+        + 'font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#fff;padding:4vh 16px 6vh}'
+        + '.fdov.on{display:flex;align-items:flex-start;justify-content:center}'
+        + '.fd-panel{background:#0B1530;border:1px solid rgba(255,255,255,.09);border-radius:26px;'
+        + 'max-width:1160px;width:100%;padding:24px 26px 32px;box-shadow:0 40px 90px -30px rgba(0,0,0,.8)}'
+
+        + '.fd-head{display:flex;align-items:center;gap:16px;margin-bottom:16px}'
+        + '.fd-head h2{font-size:23px;font-weight:800;margin:0;color:#fff;letter-spacing:-.01em}'
+        + '.fd-sec{font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#DCB45C;flex:1}'
+        + '.fd-close{background:none;border:1.5px solid rgba(244,239,232,.4);color:#F4EFE8;cursor:pointer;'
+        + 'width:44px;height:44px;border-radius:50%;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center}'
         + '.fd-close:hover{border-color:#DCB45C;color:#fff}'
         + '.fd-close:focus-visible{outline:3px solid #DCB45C;outline-offset:2px}'
-        + '.fd-group{margin-top:28px}'
-        + '.fd-gl{font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#8A96AC;margin:0 0 12px}'
-        + '.fd-grid{display:grid;gap:13px;grid-template-columns:repeat(auto-fill,minmax(156px,1fr))}'
-        + 'a.fd-tile{display:flex;flex-direction:column;align-items:center;text-align:center;gap:9px;'
-        + 'background:#1E2A47;border:1px solid #2C3A5C;border-radius:16px;padding:16px 12px 13px;text-decoration:none;color:#fff;'
+
+        + '.fd-search{display:flex;align-items:center;gap:12px;border:2px solid #C9A14A;border-radius:18px;'
+        + 'background:rgba(255,255,255,.04);padding:14px 18px}'
+        + '.fd-search svg{width:19px;height:19px;stroke:#8A96AC;flex:none}'
+        + '.fd-search input{flex:1;background:none;border:0;outline:0;color:#fff;font:600 17px "Plus Jakarta Sans",system-ui,sans-serif}'
+        + '.fd-search input::placeholder{color:#8A96AC}'
+        + '.fd-search .hint{font-size:13.5px;color:#A7B1C2;white-space:nowrap}'
+        + '.fd-search:focus-within{border-color:#DCB45C;box-shadow:0 0 0 3px rgba(220,180,92,.18)}'
+
+        + '.fd-now{display:flex;flex-wrap:wrap;gap:9px;margin:14px 0 4px}'
+        + '.fd-chip{font-size:13px;font-weight:700;color:#E7EAEE;background:rgba(255,255,255,.06);'
+        + 'border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:7px 14px}'
+        + '.fd-chip.warn{color:#F0C4AC;border-color:rgba(240,196,172,.4)}'
+        + 'a.fd-chip.go{color:#0B1530;background:#DCB45C;border-color:#DCB45C;text-decoration:none}'
+        + 'a.fd-chip.go:hover{background:#E8CE85}'
+        + 'a.fd-chip.go:focus-visible{outline:3px solid #fff;outline-offset:2px}'
+
+        + '.fd-group{margin-top:20px}'
+        + '.fd-gh{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;cursor:pointer;'
+        + 'color:#DCB45C;font:700 12.5px "Plus Jakarta Sans",system-ui,sans-serif;letter-spacing:.2em;'
+        + 'text-transform:uppercase;padding:8px 2px;text-align:left}'
+        + '.fd-gh svg{width:13px;height:13px;stroke:#DCB45C;transition:transform 180ms ease;flex:none}'
+        + '.fd-gh[aria-expanded="false"] svg{transform:rotate(-90deg)}'
+        + '.fd-gh .fd-count{margin-left:auto;color:#8A96AC;letter-spacing:0;font-size:13.5px}'
+        + '.fd-gh:focus-visible{outline:3px solid #DCB45C;outline-offset:2px;border-radius:6px}'
+        + '.fd-grid{display:grid;gap:13px;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));padding-top:6px}'
+        + '.fd-grid[hidden]{display:none}'
+
+        + 'a.fd-tile{display:flex;gap:14px;align-items:flex-start;text-align:left;'
+        + 'background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);border-radius:18px;'
+        + 'padding:16px 15px;text-decoration:none;color:#fff;'
         + 'transition:transform 160ms ease,border-color 160ms ease}'
-        + 'a.fd-tile:hover{transform:translateY(-3px);border-color:#DCB45C}'
+        + 'a.fd-tile:hover{transform:translateY(-2px);border-color:#DCB45C}'
         + 'a.fd-tile:focus-visible{outline:3px solid #DCB45C;outline-offset:2px}'
-        + '.fd-ic{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.35)}'
+        + 'a.fd-tile[hidden]{display:none}'
+        + '.fd-ic{width:52px;height:52px;border-radius:15px;display:flex;align-items:center;justify-content:center;'
+        + 'flex:none;box-shadow:0 4px 12px rgba(0,0,0,.35)}'
         + '.fd-ic svg{width:26px;height:26px}'
         + '.fd-gold{background:#DCB45C}.fd-gold svg{stroke:#08101F;color:#08101F}'
         + '.fd-terra{background:#8B1D1D}.fd-terra svg{stroke:#fff;color:#fff}'
         + '.fd-teal{background:#2C5F66}.fd-teal svg{stroke:#fff;color:#fff}'
         + '.fd-light{background:#fff}.fd-light svg{stroke:#08101F;color:#08101F}'
-        + '.fd-name{font-size:13px;font-weight:700;line-height:1.25}'
-        + '.fd-sub{font-size:10.5px;color:#8A96AC;line-height:1.3;margin-top:-3px}'
-        + '@media (prefers-reduced-motion:reduce){a.fd-tile{transition:none}a.fd-tile:hover{transform:none}}'
+        + '.fd-name{font-size:16px;font-weight:800;line-height:1.3}'
+        + '.fd-sub{font-size:12.5px;color:#A7B1C2;line-height:1.35;margin-top:3px}'
+        + '.fd-none{margin:16px 2px 0;font-size:14.5px;color:#A7B1C2}'
+        + '@media (prefers-reduced-motion:reduce){a.fd-tile,.fd-gh svg{transition:none}a.fd-tile:hover{transform:none}}'
         + '@media print{.fd-pill,.fdov{display:none !important}}';
       var st = document.createElement('style');
       st.textContent = css;
@@ -143,28 +192,77 @@
         return a.href;
       }
 
+      /* ---- the today strip: date, week, who meets, next exam, and a
+         straight door to tonight's lab question on lab nights ---- */
+      function nowChips() {
+        var d = new Date();
+        function p(n){ return (n < 10 ? '0' : '') + n; }
+        var T = d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+        var W = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        var M = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        var wk = Math.floor((d - TERM_START) / (7 * 864e5)) + 1;
+        var chips = '<span class="fd-chip">' + W[d.getDay()] + ', ' + M[d.getMonth()] + ' ' + d.getDate()
+          + (wk >= 1 && wk <= 17 ? ' · Week ' + wk : '') + '</span>';
+        if (CLOSURES[T]) {
+          chips += '<span class="fd-chip warn">' + CLOSURES[T] + '</span>';
+        } else {
+          var dow = d.getDay();
+          if (dow === 1 || dow === 3) chips += '<span class="fd-chip">Mon/Wed class meets today</span>';
+          else if (dow === 2 || dow === 4) chips += '<span class="fd-chip">Tue/Thu classes meet today</span>';
+          else chips += '<span class="fd-chip">No classes today</span>';
+        }
+        var track = (sec === 'mw') ? 'mw' : (sec ? 'tr' : null);
+        var lists = track ? [[track, EXAMS[track]]] : [['mw', EXAMS.mw], ['tr', EXAMS.tr]];
+        lists.forEach(function (pair) {
+          for (var i = 0; i < pair[1].length; i++) {
+            var ed = pair[1][i];
+            if (ed[1] >= T) {
+              var dp = ed[1].split('-');
+              var days = Math.round((new Date(+dp[0], +dp[1] - 1, +dp[2]) - new Date(d.getFullYear(), d.getMonth(), d.getDate())) / 864e5);
+              chips += '<span class="fd-chip">' + ed[0] + (track ? '' : ' (' + (pair[0] === 'mw' ? 'MW' : 'TR') + ')')
+                + (days === 0 ? ' is TODAY' : ' in ' + days + ' day' + (days === 1 ? '' : 's')) + '</span>';
+              break;
+            }
+          }
+        });
+        var dow2 = d.getDay();
+        if (dow2 >= 1 && dow2 <= 3 && !CLOSURES[T]) {
+          chips += '<a class="fd-chip go" href="bio004-lab-question-tonight.html">Tonight’s lab question →</a>';
+        }
+        return chips;
+      }
+
       var ov = document.createElement('div');
       ov.className = 'fdov';
       ov.setAttribute('role', 'dialog');
       ov.setAttribute('aria-modal', 'true');
       ov.setAttribute('aria-label', 'Faculty tools');
-      var inner = '<div class="fd-wrap"><div class="fd-head"><div class="t">'
-        + '<p class="fd-eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>'
-        + '<h2>Faculty tools</h2></div>'
-        + '<button type="button" class="fd-close" data-fdclose>Close &#10005;</button></div>';
-      TOOLS.groups.forEach(function (g) {
-        inner += '<div class="fd-group"><p class="fd-gl">' + g.label + '</p><div class="fd-grid">';
+      var inner = '<div class="fd-panel"><div class="fd-head">'
+        + '<h2>Faculty tools</h2>'
+        + '<span class="fd-sec">' + (SEC_LABEL[sec] || 'BIO 004 · Fall 2026') + '</span>'
+        + '<button type="button" class="fd-close" data-fdclose aria-label="Close">&#10005;</button></div>'
+        + '<div class="fd-search"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>'
+        + '<input type="text" id="fdq" placeholder="Type to find a tool, then Enter" aria-label="Find a faculty tool">'
+        + '<span class="hint">Esc to close</span></div>'
+        + '<div class="fd-now" aria-label="Today">' + nowChips() + '</div>';
+      TOOLS.groups.forEach(function (g, gi) {
+        inner += '<div class="fd-group" data-fg="' + gi + '">'
+          + '<button type="button" class="fd-gh" aria-expanded="true" aria-controls="fdg-' + gi + '">'
+          + '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>'
+          + g.label + '<span class="fd-count">' + g.apps.length + '</span></button>'
+          + '<div class="fd-grid" id="fdg-' + gi + '">';
         g.apps.forEach(function (a) {
           var h = href(a);
-          inner += '<a class="fd-tile" href="' + h + '"'
+          var hay = (a.name + ' ' + a.sub + ' ' + g.label).toLowerCase();
+          inner += '<a class="fd-tile" data-hay="' + hay.replace(/"/g, '') + '" href="' + h + '"'
             + (/^https?:/.test(h) ? ' target="_blank" rel="noopener"' : '') + '>'
             + '<span class="fd-ic fd-' + a.color + '" aria-hidden="true"><svg viewBox="0 0 32 32" stroke="currentColor">' + TOOLS.icons[a.icon] + '</svg></span>'
-            + '<span class="fd-name">' + a.name + '</span>'
-            + '<span class="fd-sub">' + a.sub + '</span></a>';
+            + '<span><span class="fd-name">' + a.name + '</span>'
+            + '<span class="fd-sub" style="display:block">' + a.sub + '</span></span></a>';
         });
         inner += '</div></div>';
       });
-      inner += '</div>';
+      inner += '<p class="fd-none" id="fdNone" hidden>Nothing matches. Try another word, or Esc to clear.</p></div>';
       ov.innerHTML = inner;
       document.body.appendChild(ov);
 
@@ -175,23 +273,64 @@
       pill.setAttribute('aria-haspopup', 'dialog');
       document.body.appendChild(pill);
 
+      var q = ov.querySelector('#fdq');
+      function applyFilter() {
+        var v = q.value.trim().toLowerCase();
+        var any = false;
+        ov.querySelectorAll('.fd-group').forEach(function (g) {
+          var vis = 0;
+          g.querySelectorAll('.fd-tile').forEach(function (t) {
+            var hit = !v || t.getAttribute('data-hay').indexOf(v) > -1;
+            t.hidden = !hit;
+            if (hit) vis++;
+          });
+          g.hidden = !vis;
+          var c = g.querySelector('.fd-count'); if (c) c.textContent = vis;
+          /* searching opens every group so hits are never hidden shut */
+          if (v) {
+            var gh = g.querySelector('.fd-gh'), gr = g.querySelector('.fd-grid');
+            gh.setAttribute('aria-expanded', 'true'); gr.hidden = false;
+          }
+          if (vis) any = true;
+        });
+        ov.querySelector('#fdNone').hidden = any;
+      }
+      q.addEventListener('input', applyFilter);
+      q.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          var first = ov.querySelector('.fd-group:not([hidden]) .fd-tile:not([hidden])');
+          if (first) first.click();
+        }
+      });
+
+      ov.addEventListener('click', function (e) {
+        var gh = e.target.closest('.fd-gh');
+        if (gh) {
+          var open = gh.getAttribute('aria-expanded') === 'true';
+          gh.setAttribute('aria-expanded', String(!open));
+          var gr = document.getElementById(gh.getAttribute('aria-controls'));
+          if (gr) gr.hidden = open;
+          return;
+        }
+        if (e.target === ov || e.target.closest('[data-fdclose]')) close();
+      });
+
       var lastFocus = null;
       function open() {
         lastFocus = document.activeElement;
         ov.classList.add('on');
-        var first = ov.querySelector('.fd-close');
-        if (first) first.focus();
+        q.value = ''; applyFilter();
+        q.focus();
       }
       function close() {
         ov.classList.remove('on');
         if (lastFocus && lastFocus.focus) lastFocus.focus();
       }
       pill.addEventListener('click', open);
-      ov.addEventListener('click', function (e) {
-        if (e.target === ov || e.target.closest('[data-fdclose]')) close();
-      });
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && ov.classList.contains('on')) close();
+        if (e.key !== 'Escape' || !ov.classList.contains('on')) return;
+        if (document.activeElement === q && q.value) { q.value = ''; applyFilter(); return; }
+        close();
       });
     } catch (e) {}
   }
