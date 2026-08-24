@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tissue Chart Practice &middot; BIO 004 Human Anatomy &middot; Fall 2026</title>
+<meta name="description" content="The interactive tissue chart: pictures from the Loops slides with what it looks like, location, function, and special structures. Hide a column, recall, then reveal.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TISSUE CHART PRACTICE
+   The interactive twin of Study Protocol Steps 1 and 2. Students
+   BUILD their own chart first, on paper; this page is the drill
+   afterwards. Pick what to hide (names, looks, locations,
+   functions, special structures), recall, then reveal cell by
+   cell. The Looks column also takes their own typed description
+   before the reveal, so they produce before they compare.
+   Pictures come straight from the Loops tissues slides.
+   ============================================================ */
+  :root{
+    --navy:#08101F; --maroon:#7A2A22; --tint:#EDF1F3;
+    --gold:#DCB45C; --line:#DCE1E4; --page:#FAFAF9; --card:#FFFFFF;
+    --f:'Plus Jakarta Sans',system-ui,sans-serif;
+    --fe:'DM Sans',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none !important}
+  html,body{margin:0}
+  body{background:var(--page);color:var(--navy);font-family:var(--f);line-height:1.5;font-size:16px}
+  .skip{position:absolute;left:-9999px}
+  .skip:focus{left:12px;top:12px;background:var(--card);padding:10px 14px;border-radius:6px;z-index:20;outline:3px solid var(--navy)}
+  .wrap{max-width:1220px;margin:0 auto;padding:26px 18px 80px}
+  .course-line{font-family:var(--fe);font-size:12px;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--maroon);margin:0 0 8px}
+  h1{font-size:clamp(25px,4.6vw,34px);font-weight:800;letter-spacing:-.02em;margin:0;line-height:1.1}
+  .intro{margin:12px 0 0;max-width:74ch}
+  .intro b{color:var(--maroon)}
+
+  .bar{position:sticky;top:0;z-index:10;background:var(--page);padding:12px 0 10px;
+    display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;border-bottom:1px solid var(--line)}
+  .bar .t{font-family:var(--fe);font-size:11.5px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--maroon)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font:inherit;font-size:13px;font-weight:700;cursor:pointer;padding:8px 14px;
+    border-radius:999px;border:1px solid var(--navy);background:var(--card);color:var(--navy)}
+  .chip:hover{border-color:var(--gold)}
+  .chip[aria-pressed="true"]{background:var(--navy);color:#fff}
+  .chip.ghost{border-style:dashed}
+  a:focus-visible,button:focus-visible,textarea:focus-visible{outline:3px solid var(--maroon);outline-offset:2px}
+  #pnote{position:absolute;left:-9999px}
+
+  .tblwrap{overflow-x:auto;margin-top:16px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+  table{border-collapse:collapse;width:100%;min-width:1080px}
+  caption{text-align:left;padding:14px 16px 4px;font-weight:800;font-size:15px}
+  th{font-family:var(--fe);font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--maroon);text-align:left;padding:12px 12px 8px;border-bottom:2px solid var(--gold);background:var(--card)}
+  td{padding:12px;border-bottom:1px solid var(--line);vertical-align:top;font-size:14.5px}
+  tr:last-child td{border-bottom:0}
+  tr[data-fam]{background:var(--card)}
+  .fam-row td{font-family:var(--fe);font-size:12px;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--maroon);background:var(--tint);padding:9px 12px}
+  td.pic{width:190px}
+  td.pic img{width:176px;height:auto;border-radius:8px;border:1px solid var(--line);display:block}
+  td.name b{font-size:15.5px}
+  .cw .ans{display:block}
+  .cw .veil, .cw .desc{display:none}
+  /* practicing: the veil replaces the answer until opened */
+  .cw.practice .ans{display:none}
+  .cw.practice .veil{display:inline-block;font:700 13px var(--f);cursor:pointer;
+    border:1.5px dashed var(--maroon);color:var(--maroon);background:var(--card);
+    border-radius:9px;padding:8px 14px}
+  .cw.practice .veil:hover{border-color:var(--gold);border-style:solid}
+  .cw.practice .desc{display:block;width:100%;min-height:52px;margin:0 0 8px;font:inherit;font-size:13.5px;
+    border:1px solid var(--line);border-radius:8px;padding:8px;resize:vertical;background:#fff;color:var(--navy)}
+  .cw.practice.open .ans{display:block;border-left:3px solid var(--gold);padding-left:9px;cursor:pointer}
+  .cw.practice.open .veil{display:none}
+  .rehide-hint{font-size:11.5px;color:#3D4A57;display:none}
+  .cw.practice.open .rehide-hint{display:block;margin-top:4px}
+  td.pic .cw.practice .veil{width:176px;height:120px}
+  .sp b{color:var(--maroon)}
+  /* ---- one at a time: big picture left, the chart's answers right ---- */
+  .focus{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:22px;margin-top:18px;align-items:start}
+  @media (max-width:900px){ .focus{grid-template-columns:1fr} }
+  .f-img{position:sticky;top:74px}
+  @media (max-width:900px){ .f-img{position:static} }
+  .f-img img{width:100%;height:auto;max-height:68vh;object-fit:contain;background:#fff;
+    border:1px solid var(--line);border-radius:14px;box-shadow:0 1px 3px rgba(11,21,48,.10)}
+  .f-nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .f-count{font-family:var(--fe);font-size:12px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--maroon);margin:0 0 10px}
+  .f-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+  .f-card .k{font-family:var(--fe);font-size:11px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--maroon);display:block;margin-bottom:6px}
+  #fRevealAll{margin-top:4px}
+  @media print{
+    .bar,.skip{display:none}
+    .cw .ans{display:block !important}.cw .veil,.cw .desc{display:none !important}
+    .tblwrap{overflow:visible;border:0}
+  }
+  footer.foot{border-top:1px solid var(--line);margin-top:34px;padding-top:14px;font-size:13.5px}
+</style>
+</head>
+<body data-no-reading-mode>
+<a class="skip" href="#chart">Skip to the chart</a>
+<div class="wrap">
+  <header>
+    <p class="course-line">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
+    <h1>Tissue Chart Practice</h1>
+    <p class="intro"><b>Build your own chart first.</b> Steps 1 and 2 of the Study Protocol, on paper,
+    are where the learning happens. This page is the drill for AFTER: hide a column, say the answer
+    out loud or type your description, then reveal and check yourself. Same pictures as the lab slides.</p>
+  </header>
+
+  <div class="bar">
+    <span class="t">Mode</span>
+    <div class="chips" role="group" aria-label="Practice mode">
+      <button type="button" class="chip mode" data-mode="chart" aria-pressed="true">Whole chart</button>
+      <button type="button" class="chip mode" data-mode="focus" aria-pressed="false">One at a time</button>
+    </div>
+    <span class="t">Show</span>
+    <div class="chips" role="group" aria-label="Filter by tissue family">
+      <button type="button" class="chip fam" data-fam="all" aria-pressed="true">All</button>
+      <button type="button" class="chip fam" data-fam="ep" aria-pressed="false">Epithelial</button>
+      <button type="button" class="chip fam" data-fam="ct" aria-pressed="false">Connective</button>
+      <button type="button" class="chip fam" data-fam="mn" aria-pressed="false">Muscle and nervous</button>
+    </div>
+    <span class="t chartonly">Hide and recall</span>
+    <div class="chips chartonly" role="group" aria-label="Choose what to practice">
+      <button type="button" class="chip col" data-col="name" aria-pressed="false">Names</button>
+      <button type="button" class="chip col" data-col="fam" aria-pressed="false">Tissue types</button>
+      <button type="button" class="chip col" data-col="look" aria-pressed="false">What it looks like</button>
+      <button type="button" class="chip col" data-col="loc" aria-pressed="false">Locations</button>
+      <button type="button" class="chip col" data-col="func" aria-pressed="false">Functions</button>
+      <button type="button" class="chip col" data-col="sp" aria-pressed="false">Special structures</button>
+      <button type="button" class="chip col" data-col="pic" aria-pressed="false">Pictures</button>
+    </div>
+    <div class="chips chartonly">
+      <button type="button" class="chip ghost" id="shuffleBtn">Shuffle rows</button>
+      <button type="button" class="chip ghost" id="resetBtn">Show everything</button>
+    </div>
+  </div>
+  <p id="pnote" aria-live="polite"></p>
+
+  <div class="focus" id="focusView" hidden>
+    <div class="f-img">
+      <img id="fImg" src="" alt="">
+      <div class="f-nav">
+        <button type="button" class="chip" id="fRandom">Random tissue</button>
+        <button type="button" class="chip ghost" id="fPrev">&#8592; Previous</button>
+        <button type="button" class="chip ghost" id="fNext">Next &#8594;</button>
+      </div>
+    </div>
+    <div class="f-panel">
+      <p class="f-count" id="fCount"></p>
+      <div id="fCards"></div>
+      <button type="button" class="chip" id="fRevealAll">Reveal everything on this one</button>
+    </div>
+  </div>
+
+  <div class="tblwrap" id="chart">
+    <table>
+      <caption>One row per tissue. Simple squamous appears twice on purpose: it looks different in the
+      alveoli than in Bowman&#39;s capsule, and the lab exam can show either.</caption>
+      <thead><tr>
+        <th scope="col">Picture</th><th scope="col">Tissue</th><th scope="col">Tissue type</th><th scope="col">What it looks like</th>
+        <th scope="col">Location</th><th scope="col">Function</th><th scope="col">Special structures</th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <footer class="foot">
+    <p>BIO 004 Human Anatomy &middot; Fall 2026 &middot; Solano Community College<br>Dr. Sharilyn Rennie</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var IMG = 'https://drsrennie-stack.github.io/loops/images/tissues/';
+  function f(n){ return IMG + 's' + (n < 10 ? '0' + n : n) + '.jpg'; }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  /* One row per tissue. sp entries: [structure, what it does]. */
+  var FAMS = { ep:'Epithelial tissue', ct:'Connective tissue', mn:'Muscle and nervous tissue' };
+  var ROWS = [
+    { fam:'ep', img:16, name:'Simple Squamous Epithelium',
+      look:'Very thin flat cells in a single layer. Air sac walls look like thin lace, with flattened nuclei that bulge like fried eggs.',
+      loc:'Alveoli of the lungs', func:'Gas exchange by diffusion; filtration',
+      sp:[['Thin single layer','So thin that gases cross easily']] },
+    { fam:'ep', img:8, name:'Simple Squamous Epithelium',
+      look:'A single flat layer wrapping the glomerulus as a thin capsule; a rim of flattened nuclei around the capillary tuft.',
+      loc:'Bowman&#39;s capsule of the kidney', func:'Filtration',
+      sp:[['Parietal layer of the renal corpuscle','Forms the capsule around the glomerulus']] },
+    { fam:'ep', img:12, name:'Simple Cuboidal Epithelium',
+      look:'One layer of square cells with large round central nuclei, often forming rings around a tube.',
+      loc:'Renal tubules of the kidney; glands', func:'Absorption and secretion',
+      sp:[['Round central nucleus','The giveaway when you compare it to squamous or columnar']] },
+    { fam:'ep', img:22, name:'Simple Columnar Epithelium',
+      look:'One layer of tall column shaped cells; oval nuclei lined up near the base.',
+      loc:'Stomach or intestines', func:'Absorption and secretion',
+      sp:[['Microvilli','Increase surface area for increased absorption'],
+          ['Goblet cells','Production and secretion of mucus']] },
+    { fam:'ep', img:14, name:'Pseudostratified Ciliated Columnar Epithelium',
+      look:'Looks layered because nuclei sit at different heights, but every cell touches the basement membrane. Cilia fringe the free surface.',
+      loc:'Upper respiratory tract', func:'Moves mucus, with trapped debris, out of the airway',
+      sp:[['Cilia','Move substances along the surface of the tissue'],
+          ['Goblet cells','Production and secretion of mucus']] },
+    { fam:'ep', img:2, name:'Keratinized Stratified Squamous Epithelium',
+      look:'Many layers, flattened toward the surface; the top layers are dead, without nuclei, under a band of keratin.',
+      loc:'Skin (epidermis)', func:'Protection from abrasion and water loss',
+      sp:[['Keratin','Tough waterproofing protein at the surface'],
+          ['Dead surface cells','No nuclei in the top layers']] },
+    { fam:'ep', img:20, name:'Non-Keratinized Stratified Squamous Epithelium',
+      look:'Many layers, flattened at the surface, but the surface cells are alive and keep their nuclei. Always moist.',
+      loc:'Mouth, esophagus, vagina', func:'Protection from abrasion or trauma',
+      sp:[['Living surface cells','Nuclei visible all the way to the top']] },
+    { fam:'ep', img:4, name:'Stratified Cuboidal Epithelium',
+      look:'Two or more layers of cube shaped cells wrapped around an open central space.',
+      loc:'Ducts of sweat glands and other large glands', func:'Protects the duct it lines',
+      sp:[['Lumen','The free (apical) surface at the center of the ring']] },
+    { fam:'ep', img:6, name:'Transitional Epithelium',
+      look:'Layered, with dome shaped surface cells when the organ is relaxed; the whole sheet flattens when stretched.',
+      loc:'Urinary bladder and ureters', func:'Accommodates stretch',
+      sp:[['Dome cells','Rounded surface cells that flatten with filling']] },
+
+    { fam:'ct', img:42, name:'Loose Areolar Connective Tissue',
+      look:'An open, loose weave of fibers in ground substance with scattered cells and lots of empty looking space.',
+      loc:'Under epithelia; around organs, nerves and vessels', func:'Cushions, binds, and holds tissue fluid',
+      sp:[['Elastic fibers','Thin dark branching fibers that let it recoil'],
+          ['Collagen fibers','Thicker pink fibers for strength'],
+          ['Fibroblasts and mast cells','The resident cells scattered through it']] },
+    { fam:'ct', img:40, name:'Adipose Tissue',
+      look:'Chicken wire: large empty looking cells packed together, each nucleus squeezed to the edge.',
+      loc:'Around vital organs; behind the eyeball; under the skin', func:'Energy storage, insulation, cushioning',
+      sp:[['Single giant fat droplet','Fills each cell and pushes the nucleus aside']] },
+    { fam:'ct', img:28, name:'Reticular Connective Tissue',
+      look:'A net of fine dark branching fibers crowded with small round cells.',
+      loc:'Spleen, lymph nodes, tonsils', func:'Supportive framework (stroma) for lymphoid organs',
+      sp:[['Reticular fibers','The fine branching net itself']] },
+    { fam:'ct', img:38, name:'Dense Regular Connective Tissue',
+      look:'Wavy bundles of collagen all running the SAME direction, with flattened nuclei squeezed between them in rows.',
+      loc:'Tendons and ligaments', func:'Withstands strong pull in one direction; attaches muscle to bone',
+      sp:[['Parallel collagen fibers','All one direction; that is what makes it regular']] },
+    { fam:'ct', img:32, name:'Dense Irregular Connective Tissue',
+      look:'Thick collagen bundles woven in every direction.',
+      loc:'Dermis of the skin', func:'Strength against pull from many directions',
+      sp:[['Fiber direction','Every which way; the difference from dense regular']] },
+    { fam:'ct', img:36, name:'Elastic Connective Tissue',
+      look:'Wavy dark elastic sheets stacked in layers through the wall.',
+      loc:'Muscular arteries; the aorta', func:'Stretch and recoil with every heartbeat',
+      sp:[['Elastic lamellae','The stacked wavy sheets']] },
+    { fam:'ct', img:30, name:'Compact Bone Tissue',
+      look:'Tree rings: osteons, each with a central canal surrounded by rings of small dark lacunae.',
+      loc:'Shafts and surfaces of bones', func:'Structural support; serum calcium regulation',
+      sp:[['Central canal','Carries vessels and nerves through the osteon'],
+          ['Lacunae with osteocytes','The small dark spaces in the rings'],
+          ['Canaliculi','Hairline channels connecting the lacunae']] },
+
+    { fam:'mn', img:56, name:'Skeletal Muscle Tissue',
+      look:'Long parallel fibers with clear striations and many nuclei pushed to the edges.',
+      loc:'Attached to the skeleton', func:'Voluntary movement',
+      sp:[['Striations','The banding pattern across every fiber'],
+          ['Multiple peripheral nuclei','Many per fiber, at the edge']] },
+    { fam:'mn', img:60, name:'Cardiac Muscle Tissue',
+      look:'Branching striated fibers with one central nucleus each, joined by dark stepping lines.',
+      loc:'Wall of the heart', func:'Involuntary pumping of blood',
+      sp:[['Intercalated discs','The dark junction lines that couple the cells']] },
+    { fam:'mn', img:58, name:'Smooth Muscle Tissue',
+      look:'Spindle shaped cells with a single central nucleus and NO striations.',
+      loc:'Walls of hollow organs and blood vessels', func:'Involuntary movement: peristalsis, vessel tone',
+      sp:[['No striations','The giveaway next to skeletal and cardiac']] },
+    { fam:'mn', img:49, name:'Nervous Tissue',
+      look:'Large neuron cell bodies with processes, surrounded by many smaller glial nuclei. The spinal cord shows gray matter (a butterfly) inside white matter.',
+      loc:'Brain, spinal cord, nerves', func:'Carries and processes electrical signals',
+      sp:[['Neurons','The signaling cells with long processes'],
+          ['Glial cells','Support cells; their small nuclei fill the field'],
+          ['Gray matter and the dorsal horn','Cell body regions of the spinal cord']] },
+  ];
+
+  function typeOf(r) {
+    if (r.fam === 'ep') return 'Epithelial tissue';
+    if (r.fam === 'ct') return 'Connective tissue';
+    return /nervous/i.test(r.name) ? 'Nervous tissue' : 'Muscle tissue';
+  }
+  function cw(col, inner, describe) {
+    return '<div class="cw" data-col="' + col + '">'
+      + (describe ? '<textarea class="desc" placeholder="Type your own description first, from memory" aria-label="Your own description, typed from memory"></textarea>' : '')
+      + '<button type="button" class="veil">Reveal</button>'
+      + '<div class="ans">' + inner
+      + '<span class="rehide-hint">Click the answer to hide it again</span></div></div>';
+  }
+  function rowHtml(r, i) {
+    var sp = r.sp.map(function (p) { return '<b>' + p[0] + ':</b> ' + p[1]; }).join('<br>');
+    return '<tr data-fam="' + r.fam + '" data-i="' + i + '">'
+      + '<td class="pic">' + cw('pic', '<img src="' + f(r.img) + '" alt="Micrograph: ' + esc(r.name.replace(/&#39;/g, "'")) + '">') + '</td>'
+      + '<td class="name">' + cw('name', '<b>' + r.name + '</b>') + '</td>'
+      + '<td>' + cw('fam', typeOf(r)) + '</td>'
+      + '<td>' + cw('look', r.look, true) + '</td>'
+      + '<td>' + cw('loc', r.loc) + '</td>'
+      + '<td>' + cw('func', r.func) + '</td>'
+      + '<td class="sp">' + cw('sp', sp) + '</td>'
+      + '</tr>';
+  }
+  function famRow(fam) { return '<tr class="fam-row" data-famrow="' + fam + '"><td colspan="7">' + FAMS[fam] + '</td></tr>'; }
+
+  var order = ROWS.map(function (_, i) { return i; });
+  function render() {
+    var out = '', lastFam = null;
+    order.forEach(function (i) {
+      var r = ROWS[i];
+      if (r.fam !== lastFam) { out += famRow(r.fam); lastFam = r.fam; }
+      out += rowHtml(r, i);
+    });
+    document.getElementById('tbody').innerHTML = out;
+    applyCols(); applyFam();
+  }
+
+  /* which columns are being practiced */
+  var HID = {};
+  function applyCols() {
+    document.querySelectorAll('#tbody .cw').forEach(function (c) {
+      var on = !!HID[c.getAttribute('data-col')];
+      if (!on) c.classList.remove('open');
+      c.classList.toggle('practice', on);
+    });
+    /* the family header rows give the type away, so they leave when
+       tissue types are being practiced */
+    document.querySelectorAll('#tbody tr[data-famrow]').forEach(function (tr) {
+      tr.style.display = HID.fam ? 'none' : '';
+    });
+  }
+  document.querySelectorAll('.chip.col').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var col = b.getAttribute('data-col');
+      HID[col] = !HID[col];
+      b.setAttribute('aria-pressed', String(!!HID[col]));
+      applyCols();
+      document.getElementById('pnote').textContent = HID[col]
+        ? 'Hiding ' + b.textContent + '. Recall first, then reveal.'
+        : b.textContent + ' shown again.';
+    });
+  });
+
+  /* family filter */
+  var FAM = 'all';
+  function applyFam() {
+    document.querySelectorAll('#tbody tr[data-fam]').forEach(function (tr) {
+      tr.hidden = (FAM !== 'all' && tr.getAttribute('data-fam') !== FAM);
+    });
+    document.querySelectorAll('#tbody tr[data-famrow]').forEach(function (tr) {
+      tr.hidden = (FAM !== 'all' && tr.getAttribute('data-famrow') !== FAM);
+    });
+  }
+  document.querySelectorAll('.chip.fam').forEach(function (b) {
+    b.addEventListener('click', function () {
+      FAM = b.getAttribute('data-fam');
+      document.querySelectorAll('.chip.fam').forEach(function (x) {
+        x.setAttribute('aria-pressed', String(x === b));
+      });
+      applyFam();
+    });
+  });
+
+  /* reveal and re-hide, one cell at a time */
+  document.getElementById('tbody').addEventListener('click', function (e) {
+    var v = e.target.closest('.veil');
+    if (v) { v.closest('.cw').classList.add('open'); return; }
+    var a = e.target.closest('.cw.practice.open .ans');
+    if (a && !e.target.closest('a')) { a.closest('.cw').classList.remove('open'); }
+  });
+
+  document.getElementById('shuffleBtn').addEventListener('click', function () {
+    for (var i = order.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = order[i]; order[i] = order[j]; order[j] = t;
+    }
+    /* keep families grouped so the header rows stay honest */
+    var rank = { ep: 0, ct: 1, mn: 2 };
+    order.sort(function (a, b) { return rank[ROWS[a].fam] - rank[ROWS[b].fam]; });
+    render();
+    document.getElementById('pnote').textContent = 'Rows shuffled within each family.';
+  });
+  document.getElementById('resetBtn').addEventListener('click', function () {
+    HID = {};
+    document.querySelectorAll('.chip.col').forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+    applyCols();
+    document.getElementById('pnote').textContent = 'Everything shown.';
+  });
+
+  render();
+
+  /* ---- one at a time: the toggle her way. Big picture, everything
+     else behind reveal boxes, one tissue in focus. ---- */
+  var MODE = 'chart', fPool = [], fPos = 0;
+  function famPool() {
+    var p = [];
+    ROWS.forEach(function (r, i) { if (FAM === 'all' || r.fam === FAM) p.push(i); });
+    return p;
+  }
+  function renderFocus() {
+    fPool = famPool();
+    if (!fPool.length) { FAM = 'all'; fPool = famPool(); }
+    if (fPos >= fPool.length) fPos = 0;
+    var r = ROWS[fPool[fPos]];
+    var img = document.getElementById('fImg');
+    img.src = f(r.img);
+    img.alt = 'Micrograph to identify. Reveal the cards for the answer.';
+    document.getElementById('fCount').textContent =
+      'Tissue ' + (fPos + 1) + ' of ' + fPool.length;
+    var sp = r.sp.map(function (p) { return '<b>' + p[0] + ':</b> ' + p[1]; }).join('<br>');
+    document.getElementById('fCards').innerHTML =
+        '<div class="f-card"><span class="k">Tissue type</span>' + cw('fam', typeOf(r)) + '</div>'
+      + '<div class="f-card"><span class="k">Tissue</span>' + cw('name', '<b>' + r.name + '</b>') + '</div>'
+      + '<div class="f-card"><span class="k">What it looks like</span>' + cw('look', r.look, true) + '</div>'
+      + '<div class="f-card"><span class="k">Location</span>' + cw('loc', r.loc) + '</div>'
+      + '<div class="f-card"><span class="k">Function</span>' + cw('func', r.func) + '</div>'
+      + '<div class="f-card"><span class="k">Special structures</span>' + cw('sp', sp) + '</div>';
+    /* in focus mode every field starts hidden; that is the drill */
+    document.querySelectorAll('#fCards .cw').forEach(function (c) { c.classList.add('practice'); });
+  }
+  function setMode(m) {
+    MODE = m;
+    document.querySelectorAll('.chip.mode').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-mode') === m));
+    });
+    var focus = (m === 'focus');
+    document.getElementById('focusView').hidden = !focus;
+    document.getElementById('chart').hidden = focus;
+    document.querySelectorAll('.chartonly').forEach(function (el) { el.hidden = focus; });
+    if (focus) renderFocus();
+    document.getElementById('pnote').textContent = focus
+      ? 'One tissue at a time. Recall each field, then reveal it.'
+      : 'The whole chart.';
+  }
+  document.querySelectorAll('.chip.mode').forEach(function (b) {
+    b.addEventListener('click', function () { setMode(b.getAttribute('data-mode')); });
+  });
+  document.getElementById('fRandom').addEventListener('click', function () {
+    if (fPool.length > 1) {
+      var n; do { n = Math.floor(Math.random() * fPool.length); } while (n === fPos);
+      fPos = n;
+    }
+    renderFocus();
+  });
+  document.getElementById('fNext').addEventListener('click', function () { fPos = (fPos + 1) % fPool.length; renderFocus(); });
+  document.getElementById('fPrev').addEventListener('click', function () { fPos = (fPos - 1 + fPool.length) % fPool.length; renderFocus(); });
+  document.getElementById('fRevealAll').addEventListener('click', function () {
+    document.querySelectorAll('#fCards .cw.practice').forEach(function (c) { c.classList.add('open'); });
+  });
+  document.getElementById('focusView').addEventListener('click', function (e) {
+    var v = e.target.closest('.veil');
+    if (v) { v.closest('.cw').classList.add('open'); return; }
+    var a = e.target.closest('.cw.practice.open .ans');
+    if (a) a.closest('.cw').classList.remove('open');
+  });
+
+  /* height sender for embeds */
+  var FRAME_ID = 'bio004-tissue-chart-practice';
+  function sendHeight() {
+    var h = document.body.scrollHeight;
+    if (window.parent && window.parent !== window) parent.postMessage({type: 'resize', id: FRAME_ID, height: h}, '*');
+  }
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+  if (window.ResizeObserver) new ResizeObserver(sendHeight).observe(document.body);
+  [200, 600, 1200].forEach(function (t) { setTimeout(sendHeight, t); });
+})();
+</script>
+<script src="bio004-dock.js"></script>
+</body>
+</html>
