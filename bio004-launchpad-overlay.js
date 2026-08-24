@@ -137,6 +137,7 @@
        opens in its own tab and the course tab stays behind it. */
     + door('ic-gold', I.globe, 'Digital Atlas', 'Opens in its own tab', ext('https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02'))
     + door('ic-blue', I.scope, 'Histology help', 'Every slide tool, sorted', go('histology-help.html'))
+    + door('ic-gold', I.grid, 'Tissue Chart', 'The chart behind reveal boxes', go('bio004-tissue-chart-practice.html'))
     + '</div></div>'
 
     + '<div class="lp-panel" data-lp="study">'
@@ -147,6 +148,7 @@
     + door('ic-terra', I.loop, 'Loops', 'Fast visual practice, any topic', ext('https://drsrennie-stack.github.io/loops/'))
     + door('ic-navy', I.pen, 'Brain dump', 'Blank page, timer, check yourself', go('brain-dump-practice.html'))
     + door('ic-gold', I.flow, 'Study Protocol', 'The flow chart for this week', go('bio004-study-protocol.html'))
+    + door('ic-blue', I.grid, 'Tissue Chart', 'Recall it column by column', go('bio004-tissue-chart-practice.html'))
     + '</div></div>'
 
     + '</div>';

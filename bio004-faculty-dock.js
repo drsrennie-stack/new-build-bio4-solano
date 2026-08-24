@@ -35,6 +35,7 @@
         { name: 'Lab Question of the Night', sub: 'project it, spin the picker', href: 'bio004-lab-question-tonight.html', icon: 'night', color: 'gold' },
         { name: 'Lab Sprints', sub: 'structure checklists', href: 'lab-sprints.html', icon: 'clock', color: 'terra' },
         { name: 'Histology Help', sub: 'every slide tool', href: 'histology-help.html', icon: 'scope', color: 'teal' },
+        { name: 'Tissue Chart Practice', sub: 'the reveal-box chart', href: 'bio004-tissue-chart-practice.html', icon: 'gridic', color: 'gold' },
         { name: 'Digital Atlas', sub: 'opens in its own tab', href: 'https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02', icon: 'globe', color: 'light' },
       ]},
       { label: 'Grades and attendance', apps: [
@@ -232,6 +233,30 @@
         return chips;
       }
 
+      /* ---- "Right now": the tools for THIS day, assembled by the
+         calendar, so the panel opens on what she needs instead of a
+         wall of categories. Everything else starts collapsed. ---- */
+      function byName(n) {
+        var hit = null;
+        TOOLS.groups.forEach(function (g) {
+          g.apps.forEach(function (a) { if (a.name === n) hit = a; });
+        });
+        return hit;
+      }
+      function rightNow() {
+        var d = new Date(), dow = d.getDay();
+        function p(n){ return (n < 10 ? '0' : '') + n; }
+        var T = d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+        var names;
+        if (CLOSURES[T]) names = ['Course Calendar', 'Brain Dump Bank', 'Grade Engine'];
+        else if (dow >= 1 && dow <= 3) names = ['Course Engine', 'Lab Question of the Night', 'Brain Dump Selector', 'Course Page'];
+        else if (dow === 4) names = ['Course Engine', 'Brain Dump Selector', 'Course Page'];
+        else names = ['Course Calendar', 'Brain Dump Bank', 'Grade Engine', 'Lab Question of the Night'];
+        return names.map(byName).filter(Boolean);
+      }
+      var RENDER_GROUPS = [{ label: 'Right now', apps: rightNow(), open: true }]
+        .concat(TOOLS.groups.map(function (g) { return { label: g.label, apps: g.apps, open: false }; }));
+
       var ov = document.createElement('div');
       ov.className = 'fdov';
       ov.setAttribute('role', 'dialog');
@@ -245,12 +270,12 @@
         + '<input type="text" id="fdq" placeholder="Type to find a tool, then Enter" aria-label="Find a faculty tool">'
         + '<span class="hint">Esc to close</span></div>'
         + '<div class="fd-now" aria-label="Today">' + nowChips() + '</div>';
-      TOOLS.groups.forEach(function (g, gi) {
-        inner += '<div class="fd-group" data-fg="' + gi + '">'
-          + '<button type="button" class="fd-gh" aria-expanded="true" aria-controls="fdg-' + gi + '">'
+      RENDER_GROUPS.forEach(function (g, gi) {
+        inner += '<div class="fd-group" data-fg="' + gi + '" data-open="' + g.open + '">'
+          + '<button type="button" class="fd-gh" aria-expanded="' + g.open + '" aria-controls="fdg-' + gi + '">'
           + '<svg viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>'
           + g.label + '<span class="fd-count">' + g.apps.length + '</span></button>'
-          + '<div class="fd-grid" id="fdg-' + gi + '">';
+          + '<div class="fd-grid" id="fdg-' + gi + '"' + (g.open ? '' : ' hidden') + '>';
         g.apps.forEach(function (a) {
           var h = href(a);
           var hay = (a.name + ' ' + a.sub + ' ' + g.label).toLowerCase();
@@ -286,10 +311,15 @@
           });
           g.hidden = !vis;
           var c = g.querySelector('.fd-count'); if (c) c.textContent = vis;
-          /* searching opens every group so hits are never hidden shut */
+          /* searching opens every group so hits are never hidden shut;
+             clearing the search restores the calm default: Right now
+             open, everything else folded */
+          var gh = g.querySelector('.fd-gh'), gr = g.querySelector('.fd-grid');
           if (v) {
-            var gh = g.querySelector('.fd-gh'), gr = g.querySelector('.fd-grid');
             gh.setAttribute('aria-expanded', 'true'); gr.hidden = false;
+          } else {
+            var def = g.getAttribute('data-open') === 'true';
+            gh.setAttribute('aria-expanded', String(def)); gr.hidden = !def;
           }
           if (vis) any = true;
         });
