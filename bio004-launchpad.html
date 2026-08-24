@@ -84,6 +84,11 @@
   .calrow a{display:inline-block;background:none;border:1.5px solid rgba(244,239,232,.45);color:var(--offtext);
     text-decoration:none;font-weight:700;font-size:13.5px;border-radius:999px;padding:8px 18px}
   .calrow a:hover{border-color:var(--gold-light);color:#fff}
+  .discrow{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center}
+  .discrow .dlbl{font-size:12.5px;font-weight:700;color:#C8D2DA}
+  .discrow a{display:inline-block;background:none;border:1.5px solid rgba(244,239,232,.45);color:var(--offtext);
+    text-decoration:none;font-weight:700;font-size:13px;border-radius:999px;padding:7px 14px}
+  .discrow a:hover{border-color:var(--gold-light);color:#fff}
 
   footer{margin-top:44px;font-size:13px;color:#8C96A5}
 </style>
@@ -127,6 +132,7 @@
       </a>
     </div>
     <div class="calrow"><a data-go="bio004-course-calendar.html" href="bio004-course-calendar.html" target="_top">Go to the calendar &#8594;</a></div>
+    <div class="discrow" id="discRow" aria-label="Class Discord servers"></div>
   </div>
 
   <!-- level two: lecture -->
@@ -197,6 +203,24 @@
       var base = bits[0] + (bits[0].indexOf('?') > -1 ? '&' : '?') + 'sec=' + sec;
       a.setAttribute('href', base + (bits[1] ? '#' + bits[1] : ''));
     });
+  }
+  /* class Discord servers, one per section */
+  var DISCORD = {
+    'mw':     { label: '80650 &middot; MW 12:30 to 4:50', url: 'https://discord.gg/8kr8b27ePE' },
+    'tr-am':  { label: '80654 &middot; TR 9:30 to 1:50',  url: 'https://discord.gg/XxhERvqf3N' },
+    'tr-eve': { label: '80655 &middot; TR 5:30 to 9:50',  url: 'https://discord.gg/7Z2k7DePJ6' }
+  };
+  var dr = document.getElementById('discRow');
+  if (dr) {
+    function dpill(d, text) { return '<a href="' + d.url + '" target="_blank" rel="noopener">' + text + '</a>'; }
+    if (sec && DISCORD[sec]) {
+      dr.innerHTML = '<span class="dlbl">Your class Discord:</span>' + dpill(DISCORD[sec], 'Join ' + DISCORD[sec].label + ' &#8594;');
+    } else {
+      dr.innerHTML = '<span class="dlbl">Class Discord:</span>'
+        + dpill(DISCORD['mw'], DISCORD['mw'].label)
+        + dpill(DISCORD['tr-am'], DISCORD['tr-am'].label)
+        + dpill(DISCORD['tr-eve'], DISCORD['tr-eve'].label);
+    }
   }
   /* height sender for embeds */
   var FRAME_ID = 'bio004-launchpad';

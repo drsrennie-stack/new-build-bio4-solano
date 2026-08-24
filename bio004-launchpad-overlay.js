@@ -52,6 +52,11 @@
   + 'font-family:inherit;font-weight:700;font-size:13.5px;border-radius:999px;padding:8px 16px}'
   + '.lpov .lp-ghost:hover{border-color:#CFA95F;color:#fff}'
   + '.lpov .lp-calrow{margin-top:20px;text-align:center}'
+  + '.lpov .lp-disc{margin-top:12px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center}'
+  + '.lpov .lp-dlbl{font-size:12.5px;font-weight:700;color:#C8D2DA}'
+  + '.lpov .lp-disc a{display:inline-block;background:none;border:1.5px solid rgba(244,239,232,.45);color:#F4EFE8;'
+  + 'text-decoration:none;font-weight:700;font-size:13px;border-radius:999px;padding:7px 14px}'
+  + '.lpov .lp-disc a:hover{border-color:#CFA95F;color:#fff}'
   + '.lpov .lp-subdeck{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px}'
   + '.lpov .lp-subdeck .lp-door{padding:15px 13px}'
   + '.lpov .lp-subdeck .lp-ic{width:42px;height:42px;border-radius:12px;margin-bottom:8px}'
@@ -126,6 +131,7 @@
     + '<span class="lp-bt"><b>Need motivation?</b><span>Short reads for hard weeks, from Dr. Rennie</span></span></a>'
     + '</div>'
     + '<div class="lp-calrow"><button class="lp-ghost" data-lpclose="1">Go to the calendar &#8594;</button></div>'
+    + '<div class="lp-disc" id="lpDisc"></div>'
     + '</div>'
 
     + '<div class="lp-panel" data-lp="lecture">'
@@ -161,6 +167,26 @@
     + '</div></div>'
 
     + '</div>';
+
+  /* class Discord servers, one per section; the picked section wins */
+  var DISCORD = {
+    'mw':     { label: '80650 &middot; MW 12:30 to 4:50', url: 'https://discord.gg/8kr8b27ePE' },
+    'tr-am':  { label: '80654 &middot; TR 9:30 to 1:50',  url: 'https://discord.gg/XxhERvqf3N' },
+    'tr-eve': { label: '80655 &middot; TR 5:30 to 9:50',  url: 'https://discord.gg/7Z2k7DePJ6' }
+  };
+  (function () {
+    var el = ov.querySelector('#lpDisc');
+    if (!el) return;
+    function dpill(d, text) { return '<a href="' + d.url + '" target="_blank" rel="noopener">' + text + '</a>'; }
+    if (sec && DISCORD[sec]) {
+      el.innerHTML = '<span class="lp-dlbl">Your class Discord:</span>' + dpill(DISCORD[sec], 'Join ' + DISCORD[sec].label + ' &#8594;');
+    } else {
+      el.innerHTML = '<span class="lp-dlbl">Class Discord:</span>'
+        + dpill(DISCORD['mw'], DISCORD['mw'].label)
+        + dpill(DISCORD['tr-am'], DISCORD['tr-am'].label)
+        + dpill(DISCORD['tr-eve'], DISCORD['tr-eve'].label);
+    }
+  })();
 
   function boot() {
     var st = document.createElement('style');
