@@ -255,6 +255,7 @@
     {id:'mastery',  kw:['mastery','recall','flashcard','gap finder','cram','spaced','study tool','study engine']},
     {id:'study',    kw:['study with me','co-study','study session','study group','sign up','study hours','engagement hour']},
     {id:'atlas',    kw:['atlas','3d','model','viewer','explore structure']},
+    {id:'tissuechart', kw:['tissue chart','tissue practice','practice tissue','study tissue','tissue type','histology chart','tissue drill']},
     {id:'loops',    kw:['loop','practice question','practice q']},
     {id:'prework',  kw:['pre-work','prework','packet','before class','homework','tonight','what should i do','assignment']},
     {id:'howstudy', kw:['how do i study','how should i study','memor','forget','remember','stick','retain','draw','retrieval','revise','review','reread','re-read','rereading','take notes','notes better','better notes','study tips','study advice']},
@@ -366,6 +367,11 @@
 
       case 'mastery':
         return a('masteryOS', 'Mastery OS') + ' is your study engine: spaced recall, a 3-Day Cram planner, and a Gap Finder that shows exactly what is weak. Open it and set up your plan.';
+
+      case 'tissuechart':
+        return 'Tissue Chart Practice is the whole tissue chart with reveal boxes: pictures, looks, locations, functions, special structures.'
+          + '<br><br>Find it in <b>Course tools</b> (bottom left corner, type tissue chart) or behind the <b>Lab</b> or <b>Study</b> door. Build your own paper chart first, then drill this one: '
+          + ilink('bio004-tissue-chart-practice.html', 'Tissue Chart Practice') + '.';
 
       case 'study':
         return a('study') + ' is live co-study time. Sign up, show up, and you bank verified engagement hours toward Scholar Points at the same time.';
