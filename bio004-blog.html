@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Need motivation? &middot; BIO 004 &middot; Fall 2026</title>
+<meta name="description" content="Short encouragement reads from Dr. Rennie, organized by category.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=DM+Sans:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#08101F; --navy2:#1E2A47; --maroon:#7A2A22; --terra:#C2734D;
+    --gold:#DCB45C; --gold2:#B8924A;
+    --line:#DCE1E4; --page:#FAFAF9; --card:#FFFFFF; --soft:#3D4A57;
+    --f:'Plus Jakarta Sans',system-ui,sans-serif;
+    --fe:'DM Sans',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  [hidden]{display:none !important}
+  body{background:var(--page);color:var(--navy);font-family:var(--f);line-height:1.55;font-size:16.5px}
+  .skip{position:absolute;left:-999px}
+  .skip:focus{left:12px;top:12px;background:var(--navy);color:#fff;padding:10px 14px;border-radius:8px;z-index:60}
+  .wrap{max-width:1020px;margin:0 auto;padding:34px 20px 70px}
+
+  .eyebrow{font-family:var(--fe);font-size:12px;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--maroon);margin:0 0 8px}
+  h1{font-size:clamp(28px,5vw,40px);font-weight:800;letter-spacing:-.02em;margin:0 0 10px;line-height:1.08}
+  .sub{font-size:17px;color:var(--soft);max-width:62ch;margin:0 0 26px}
+  .sub b{color:var(--navy)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 26px}
+  .chip{font-family:var(--f);font-weight:700;font-size:14px;color:var(--navy);
+    background:var(--card);border:1px solid var(--line);border-radius:999px;
+    padding:8px 18px;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease}
+  .chip:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,0,0,.10)}
+  .chip[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+  .chip:focus-visible{outline:3px solid var(--gold2);outline-offset:3px}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
+  .post{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;overflow:hidden;text-decoration:none;color:var(--navy);
+    box-shadow:0 1px 3px rgba(0,0,0,.08);
+    transition:transform .2s ease,box-shadow .2s ease}
+  .post:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,0,0,.10)}
+  .post:focus-visible{outline:3px solid var(--gold2);outline-offset:3px}
+  .post img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;border-bottom:1px solid var(--line)}
+  .post .pad{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .post .cat{font-family:var(--fe);font-size:11px;font-weight:700;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--terra)}
+  .post h2{font-size:19px;font-weight:800;letter-spacing:-.01em;margin:0;line-height:1.25}
+  .post p{margin:0;font-size:14.5px;color:var(--soft)}
+  .post .meta{margin-top:auto;padding-top:10px;font-family:var(--fe);font-size:12.5px;font-weight:700;color:var(--soft)}
+  .post .meta b{color:var(--gold2)}
+
+  .none{color:var(--soft);font-weight:600;padding:26px 4px}
+  footer{border-top:1px solid var(--line);margin-top:44px;padding-top:16px;font-size:14px;color:var(--soft)}
+  footer b{color:var(--navy)}
+  @media (prefers-reduced-motion:reduce){.chip,.post{transition:none}.chip:hover,.post:hover{transform:none}}
+</style>
+</head>
+<body data-no-reading-mode>
+<a class="skip" href="#main">Skip to main content</a>
+<main id="main" class="wrap">
+  <p class="eyebrow">BIO 004 &middot; From Dr. Rennie</p>
+  <h1>Need motivation?</h1>
+  <p class="sub">Short reads for hard weeks. Anatomy is a lot, and some days the hardest part is
+  not the material. Pick a category, or just pick whatever title sounds like today. <b>New posts
+  all term.</b></p>
+
+  <div class="chips" role="group" aria-label="Filter posts by category" id="chips"></div>
+
+  <div class="cards" id="cards" aria-live="polite"></div>
+  <p class="none" id="none" hidden>Nothing in this category yet. Check back soon.</p>
+
+  <footer><b>Dr. Sharilyn Rennie</b> &middot; BIO 004 Human Anatomy &middot; Solano Community College</footer>
+</main>
+
+<script>
+/* ================= POSTS, the single source of truth =================
+   To publish a post:
+   1. Duplicate bio004-blog-post-template.html, rename it, fill it in
+      (instructions are at the top of that file).
+   2. Add one entry here, newest first. Fields:
+        title  the post title
+        cat    its category (chips build themselves from these)
+        img    card image path      alt  what the image shows
+        blurb  one or two sentences for the card
+        date   display date         min  minutes to read
+        url    the post's html file
+   The three entries below are EXAMPLES pointing at the template.
+   Replace them with real posts as you publish.
+==================================================================== */
+var POSTS = [
+  { title: "You Don't Have to Struggle Alone",
+    cat: 'Encouragement',
+    img: 'images/blog/boost-sunrise.svg', alt: 'A gold sun rising behind a stack of books',
+    blurb: 'You can sit in a room full of people and still feel like the only one who does not get it. You are not, and you do not have to stay quiet about it.',
+    date: 'Aug 24, 2026', min: 3,
+    url: 'bio004-blog-struggle-alone.html' },
+  { title: 'Why We Learn in Teams',
+    cat: 'Teamwork',
+    img: 'images/blog/teams-friends.jpg', alt: 'Six friends standing arm in arm, seen from behind, looking out together',
+    blurb: 'Teams can be frustrating. That is part of the point. What you practice here is what patients will count on later.',
+    date: 'Aug 24, 2026', min: 3,
+    url: 'bio004-blog-why-teams.html' }
+];
+/* ==================================================================== */
+(function () {
+  'use strict';
+  var current = 'All';
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  var cats = ['All'];
+  POSTS.forEach(function (p) { if (cats.indexOf(p.cat) < 0) cats.push(p.cat); });
+
+  var chips = document.getElementById('chips');
+  chips.innerHTML = cats.map(function (c) {
+    return '<button type="button" class="chip" aria-pressed="' + (c === current) + '" data-cat="' + esc(c) + '">' + esc(c) + '</button>';
+  }).join('');
+  chips.addEventListener('click', function (e) {
+    var b = e.target.closest('.chip'); if (!b) return;
+    current = b.getAttribute('data-cat');
+    chips.querySelectorAll('.chip').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+    draw();
+  });
+
+  var cards = document.getElementById('cards');
+  function draw() {
+    var list = POSTS.filter(function (p) { return current === 'All' || p.cat === current; });
+    document.getElementById('none').hidden = list.length > 0;
+    cards.innerHTML = list.map(function (p) {
+      return '<a class="post" href="' + esc(p.url) + '" target="_top">'
+        + '<img src="' + esc(p.img) + '" alt="' + esc(p.alt) + '">'
+        + '<span class="pad">'
+        + '<span class="cat">' + esc(p.cat) + '</span>'
+        + '<h2>' + esc(p.title) + '</h2>'
+        + '<p>' + esc(p.blurb) + '</p>'
+        + '<span class="meta">' + esc(p.date) + ' &middot; <b>' + p.min + ' min read</b></span>'
+        + '</span></a>';
+    }).join('');
+  }
+  draw();
+})();
+</script>
+
+<script>
+(function () {
+  'use strict';
+  var FRAME_ID = 'bio004-blog';
+  function sendHeight() {
+    var h = document.body.scrollHeight;
+    if (window.parent && window.parent !== window) parent.postMessage({type: 'resize', id: FRAME_ID, height: h}, '*');
+  }
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+  if (window.ResizeObserver) new ResizeObserver(sendHeight).observe(document.body);
+  [200, 600, 1200].forEach(function (t) { setTimeout(sendHeight, t); });
+})();
+</script>
+<script src="bio004-dock.js"></script>
+</body>
+</html>

@@ -57,6 +57,12 @@
   + '.lpov .lp-subdeck .lp-ic{width:42px;height:42px;border-radius:12px;margin-bottom:8px}'
   + '.lpov .lp-subdeck .lp-ic svg{width:21px;height:21px}'
   + '.lpov .lp-subdeck .lp-door b{font-size:15px}'
+  + '.lpov .lp-boost{grid-column:1/-1;display:flex;align-items:center;gap:14px;text-align:left;'
+  + 'background:linear-gradient(135deg,#DCB45C,#B8924A);padding:16px 20px}'
+  + '.lpov .lp-boost .lp-ic{margin:0;flex:none}'
+  + '.lpov .lp-boost .lp-bt{display:block}'
+  + '.lpov .lp-boost b{color:#08101F}'
+  + '.lpov .lp-boost .lp-bt span{color:rgba(8,16,31,.78)}'
   + '.lpov a:focus-visible,.lpov button:focus-visible{outline:3px solid #CFA95F;outline-offset:3px;border-radius:8px}'
   + '@media print{.lpov{display:none}}';
 
@@ -64,6 +70,7 @@
     return '<span class="lp-ic ' + cls + '" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + path + '</svg></span>';
   }
   var I = {
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
     book: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
     flask: '<path d="M10 2v7.5L4.5 19a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L14 9.5V2"/><path d="M8 2h8"/>',
     bulb: '<path d="M12 2a7 7 0 0 1 7 7c0 2.4-1.2 4.2-2.6 5.6-.8.8-1.4 1.9-1.4 3v.4H9v-.4c0-1.1-.6-2.2-1.4-3C6.2 13.2 5 11.4 5 9a7 7 0 0 1 7-7z"/><path d="M9 21h6"/>',
@@ -115,6 +122,8 @@
     + door('ic-navy', I.flask, 'Lab', 'Loops, lab sprints, the Digital Atlas', 'data-lpopen="lab"')
     + door('ic-gold', I.bulb, 'Study', 'Mastery OS, recall cards, loops, brain dump', 'data-lpopen="study"')
     + door('ic-blue', I.flow, 'Study Protocol', 'The flow chart for this week', go('bio004-study-protocol.html'))
+    + '<a class="lp-door lp-boost" ' + go('bio004-blog.html') + '>' + ic('ic-navy', I.sun)
+    + '<span class="lp-bt"><b>Need motivation?</b><span>Short reads for hard weeks, from Dr. Rennie</span></span></a>'
     + '</div>'
     + '<div class="lp-calrow"><button class="lp-ghost" data-lpclose="1">Go to the calendar &#8594;</button></div>'
     + '</div>'
