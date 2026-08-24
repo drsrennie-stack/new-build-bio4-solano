@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab Question of the Night &middot; BIO 004 Human Anatomy &middot; Fall 2026</title>
+<meta name="description" content="One projected practice question per lab night, straight from the Loops histology images. The slide picks itself by the date.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=DM+Sans:wght@700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   LAB QUESTION OF THE NIGHT
+   One slide per lab night, chosen BY THE DATE, so the same link
+   projected every evening shows that night's question. Images and
+   answers come from the Loops tissues loop (images/tissues/), the
+   question frame first, the labeled answer frame on reveal.
+
+   Week of Aug 24: epithelial, Mon / Tue / Wed.
+   Week of Aug 31: connective, Mon / Tue / Wed.
+   Any other date shows the nearest upcoming question with a note.
+   Arrow keys or the corner arrows move between questions, Space,
+   Enter, or the button reveals. ?q=1..6 forces a slide.
+   ============================================================ */
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{display:flex;flex-direction:column;background:#08101F;color:#F4EFE8;
+    font-family:'Plus Jakarta Sans',system-ui,sans-serif;min-height:100vh}
+  .top{display:flex;align-items:center;gap:14px;padding:14px 22px 0}
+  .eyebrow{font-family:'DM Sans',system-ui,sans-serif;font-size:12px;font-weight:700;
+    letter-spacing:.14em;text-transform:uppercase;color:#DCB45C;margin:0;flex:1}
+  .datenote{font-size:13px;font-weight:700;color:#F4EFE8;opacity:.85}
+  .stage{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;
+    padding:6px 22px 12px;gap:10px}
+  h1{font-size:clamp(17px,2.2vw,25px);font-weight:800;letter-spacing:-.015em;margin:0;text-align:center}
+  .offnote{font-size:14px;color:#DCB45C;font-weight:700;margin:0;text-align:center}
+  /* the image owns every pixel the chrome does not need */
+  .imgwrap{flex:1;min-height:0;max-width:96vw;display:flex;align-items:center;justify-content:center;
+    background:#fff;border-radius:14px;padding:8px;box-shadow:0 30px 70px -30px rgba(0,0,0,.7)}
+  .imgwrap img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;border-radius:8px}
+  .bar{display:flex;align-items:center;gap:12px 16px;flex-wrap:wrap;justify-content:center}
+  .prompts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .p-chip{background:rgba(255,255,255,.06);border:1px solid rgba(244,239,232,.3);border-radius:12px;
+    padding:7px 14px;font-size:clamp(14px,1.8vw,18px);font-weight:800}
+  .p-chip .k{display:block;font-family:'DM Sans',system-ui,sans-serif;font-size:11px;font-weight:700;
+    letter-spacing:.1em;text-transform:uppercase;color:#DCB45C}
+  .p-chip .v{color:#fff}
+  .p-chip.answered .v{color:#DCB45C}
+  .acts{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
+  .btn{font:800 15px/1 'Plus Jakarta Sans',system-ui,sans-serif;cursor:pointer;border-radius:999px;
+    padding:12px 22px;border:2px solid #DCB45C;background:#DCB45C;color:#08101F}
+  .btn:hover{background:#E8CE85;border-color:#E8CE85}
+  .btn.ghost{background:none;color:#F4EFE8;border-color:rgba(244,239,232,.45)}
+  .btn.ghost:hover{border-color:#DCB45C;color:#fff}
+  .btn:focus-visible{outline:3px solid #fff;outline-offset:3px}
+  .nav{position:fixed;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.08);
+    border:1.5px solid rgba(244,239,232,.35);color:#F4EFE8;border-radius:50%;width:46px;height:46px;
+    cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center}
+  .nav:hover{border-color:#DCB45C;color:#fff}
+  .nav:focus-visible{outline:3px solid #DCB45C;outline-offset:2px}
+  .nav.prev{left:14px}.nav.next{right:14px}
+  .rand{border:1px solid rgba(244,239,232,.25);border-radius:14px;padding:10px 18px;
+    display:flex;flex-direction:column;align-items:center;gap:4px}
+  .r-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:center}
+  .r-lab{font-size:14px;font-weight:800;color:#F4EFE8}
+  #rMax{font:800 15px 'Plus Jakarta Sans',system-ui,sans-serif;background:#0B1530;color:#F4EFE8;
+    border:1.5px solid rgba(244,239,232,.45);border-radius:8px;padding:7px 10px}
+  #rMax:focus-visible{outline:3px solid #DCB45C;outline-offset:2px}
+  .btn.spin{padding:10px 22px}
+  .btn.rreset{padding:9px 16px;font-size:13px}
+  .r-num{font-size:clamp(30px,4vw,44px);font-weight:800;color:#DCB45C;min-width:58px;text-align:center;line-height:1}
+  .r-hist{margin:0;font-size:13.5px;font-weight:700;color:#F4EFE8;opacity:.9;min-height:1.4em}
+  .r-hist b{color:#DCB45C}
+  footer{padding:0 22px 14px;font-size:12.5px;color:#8C96A5;text-align:center}
+  footer a{color:#DCB45C}
+  .pbtn{padding:8px 16px;font-size:13px}
+  /* ---------- present mode: fullscreen, chrome gone, image maximal ---------- */
+  body.present footer,body.present .loopslink{display:none}
+  body.present .top{padding-top:8px}
+  body.present .stage{padding:4px 14px 10px;gap:8px}
+  body.present .imgwrap{max-width:98vw}
+  body.present .pbtn::after{content:''}
+  @media print{.nav,.bar,.pbtn{display:none}}
+</style>
+</head>
+<body data-no-back data-no-reading-mode>
+  <div class="top">
+    <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Lab Question of the Night</p>
+    <span class="datenote" id="dateNote"></span>
+    <button type="button" class="btn ghost pbtn" id="presentBtn">Present</button>
+  </div>
+
+  <main class="stage">
+    <h1 id="qTitle"></h1>
+    <p class="offnote" id="offNote" hidden></p>
+    <div class="imgwrap"><img id="slideImg" src="" alt=""></div>
+    <div class="bar">
+      <div class="prompts" id="prompts"></div>
+      <button type="button" class="btn" id="revealBtn">Reveal the answer</button>
+      <a class="btn ghost loopslink" href="https://drsrennie-stack.github.io/loops/" target="_blank" rel="noopener">Practice more in Loops &#8599;</a>
+      <div class="rand">
+        <div class="r-row">
+          <label class="r-lab" for="rMax">Random pick, 1 to</label>
+          <select id="rMax"></select>
+          <button type="button" class="btn spin" id="spinBtn">Spin</button>
+          <span class="r-num" id="rNum" aria-live="polite">&ndash;</span>
+          <button type="button" class="btn ghost rreset" id="resetBtn">Reset</button>
+        </div>
+        <p class="r-hist" id="rHist" aria-live="polite"></p>
+      </div>
+    </div>
+  </main>
+
+  <button type="button" class="nav prev" id="prevBtn" aria-label="Previous question">&#8592;</button>
+  <button type="button" class="nav next" id="nextBtn" aria-label="Next question">&#8594;</button>
+
+  <footer>BIO 004 Human Anatomy &middot; Fall 2026 &middot; Dr. Sharilyn Rennie</footer>
+
+<script>
+(function () {
+  'use strict';
+  var IMG = 'https://drsrennie-stack.github.io/loops/images/tissues/';
+  function f(n){ return IMG + 's' + (n < 10 ? '0' + n : n) + '.jpg'; }
+
+  /* Six nights. Question frame, labeled answer frame, prompts, answers. */
+  var Q = [
+    { date:'2026-08-24', unit:'Epithelial tissue', q:6,  a:7,
+      labels:['Tissue','Function'],     ans:['Transitional Epithelium','Accommodates stretch'] },
+    { date:'2026-08-25', unit:'Epithelial tissue', q:14, a:15,
+      labels:['Tissue','Location'],     ans:['Pseudostratified Ciliated Columnar Epithelium','Upper Respiratory Tract'] },
+    { date:'2026-08-26', unit:'Epithelial tissue', q:16, a:17,
+      labels:['Tissue','Location'],     ans:['Simple Squamous Epithelium','Alveoli of the lungs'] },
+    { date:'2026-08-31', unit:'Connective tissue', q:38, a:39,
+      labels:['Tissue','Location'],     ans:['Dense Regular Connective Tissue','Tendon'] },
+    { date:'2026-09-01', unit:'Connective tissue', q:40, a:41,
+      labels:['Tissue','One location'], ans:['Adipose Tissue','Around vital organs, behind the eyeball'] },
+    { date:'2026-09-02', unit:'Connective tissue', q:32, a:33,
+      labels:['Tissue','One location'], ans:['Dense Irregular Connective Tissue','Dermis of the skin'] }
+
+    /* =====================================================================
+       SHELLS FOR THE REST OF THE TERM, one block per week, Mon / Tue / Wed.
+       To light a week up: tell Claude the topic (or the loop to pull from),
+       the entries get filled in, and the block's comment marks come off.
+       Then add a comma after the Sep 2 entry above. A date left inside a
+       comment simply shows the nearest upcoming question, nothing breaks.
+       Holiday nights AND exam days are already marked from the course
+       calendar; no question gets written for either.
+       ===================================================================== */
+    /* ---- WEEK 4 · Sep 7 ---- TOPIC: to be set
+       Mon Sep 7: Labor Day, campus closed, no night question
+       Tue Sep 8: EXAM DAY (Exam 1, Tue/Thu classes), no night question
+       Wed Sep 9: EXAM DAY (Exam 1, Mon/Wed class), no night question
+    */
+    /* ---- WEEK 5 · Sep 14 ---- TOPIC: to be set
+    { date:'2026-09-14', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Mon Sep 14
+    { date:'2026-09-15', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Tue Sep 15
+    { date:'2026-09-16', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Wed Sep 16
+    */
+    /* ---- WEEK 6 · Sep 21 ---- TOPIC: to be set
+    { date:'2026-09-21', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Mon Sep 21
+    { date:'2026-09-22', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Tue Sep 22
+    { date:'2026-09-23', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Wed Sep 23
+    */
+    /* ---- WEEK 7 · Sep 28 ---- TOPIC: to be set
+    { date:'2026-09-28', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Mon Sep 28
+       Tue Sep 29: EXAM DAY (Exam 2, Tue/Thu classes), no night question
+       Wed Sep 30: EXAM DAY (Exam 2, Mon/Wed class), no night question
+    */
+    /* ---- WEEK 8 · Oct 5 ---- TOPIC: to be set
+    { date:'2026-10-05', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Mon Oct 5
+    { date:'2026-10-06', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Tue Oct 6
+    { date:'2026-10-07', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Wed Oct 7
+    */
+    /* ---- WEEK 9 · Oct 12 ---- TOPIC: to be set
+    { date:'2026-10-12', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Mon Oct 12
+       Tue Oct 13: Professional Development, no class, no night question
+    { date:'2026-10-14', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Wed Oct 14
+    */
+    /* ---- WEEK 10 · Oct 19 ---- TOPIC: to be set
+    { date:'2026-10-19', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Mon Oct 19
+    { date:'2026-10-20', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Tue Oct 20
+       Wed Oct 21: EXAM DAY (Exam 3, Mon/Wed class), no night question
+    */
+    /* ---- WEEK 11 · Oct 26 ---- TOPIC: to be set
+    { date:'2026-10-26', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Mon Oct 26
+    { date:'2026-10-27', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Tue Oct 27
+    { date:'2026-10-28', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Wed Oct 28
+    */
+    /* ---- WEEK 12 · Nov 2 ---- TOPIC: to be set
+    { date:'2026-11-02', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Mon Nov 2
+    { date:'2026-11-03', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Tue Nov 3
+    { date:'2026-11-04', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Wed Nov 4
+    */
+    /* ---- WEEK 13 · Nov 9 ---- TOPIC: to be set
+    { date:'2026-11-09', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Mon Nov 9
+    { date:'2026-11-10', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Tue Nov 10
+       Wed Nov 11: Veterans Day, campus closed, no night question
+    */
+    /* ---- WEEK 14 · Nov 16 ---- TOPIC: to be set
+       Mon Nov 16: EXAM DAY (Exam 4, Mon/Wed class), no night question
+       Tue Nov 17: EXAM DAY (Exam 4, Tue/Thu classes), no night question
+    { date:'2026-11-18', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Wed Nov 18
+    */
+    /* ---- WEEK 15 · Nov 23 ---- TOPIC: to be set
+    { date:'2026-11-23', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Mon Nov 23
+    { date:'2026-11-24', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Tue Nov 24
+       Wed Nov 25: Travel Day, no class, no night question
+    */
+    /* ---- WEEK 16 · Nov 30 ---- TOPIC: to be set
+    { date:'2026-11-30', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Mon Nov 30
+    { date:'2026-12-01', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Tue Dec 1
+    { date:'2026-12-02', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Wed Dec 2
+    */
+    /* ---- WEEK 17 · Dec 7 ---- TOPIC: to be set
+    { date:'2026-12-07', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Mon Dec 7
+    { date:'2026-12-08', unit:'TOPIC', q:0,  a:0,
+      labels:['Tissue','Location'],     ans:['ANSWER','ANSWER'] },   // Tue Dec 8
+       Wed Dec 9: EXAM DAY (Exam 5, Mon/Wed class), no night question
+    */
+  ];
+
+  function todayISO(){
+    try {
+      var m = location.search.match(/[?&]today=(\d{4}-\d{2}-\d{2})/);
+      if (m) return m[1];
+    } catch (e) {}
+    var d = new Date();
+    function p(n){ return (n < 10 ? '0' : '') + n; }
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+  var TODAY = todayISO();
+
+  /* which slide: ?q= wins, then today's exact date, then the nearest
+     upcoming night, then the last one */
+  var idx = -1, forced = false, offdate = false;
+  try {
+    var qm = location.search.match(/[?&]q=([1-6])/);
+    if (qm) { idx = +qm[1] - 1; forced = true; }
+  } catch (e) {}
+  if (idx < 0) {
+    for (var i = 0; i < Q.length; i++) { if (Q[i].date === TODAY) { idx = i; break; } }
+  }
+  if (idx < 0) {
+    offdate = true;
+    for (var j = 0; j < Q.length; j++) { if (Q[j].date > TODAY) { idx = j; break; } }
+    if (idx < 0) idx = Q.length - 1;
+  }
+
+  var revealed = false;
+  function fmt(iso){
+    var p = iso.split('-');
+    var d = new Date(+p[0], +p[1] - 1, +p[2]);
+    return ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()] + ', '
+      + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()] + ' ' + d.getDate();
+  }
+  function render(){
+    var s = Q[idx];
+    document.getElementById('dateNote').textContent = 'Night ' + (idx + 1) + ' of ' + Q.length + ' · ' + fmt(s.date);
+    document.getElementById('qTitle').textContent = s.unit + (revealed ? ' · answer' : '');
+    var off = document.getElementById('offNote');
+    off.hidden = !(offdate && !forced);
+    if (!off.hidden) off.textContent = 'No lab question is scheduled for today. This is the ' + fmt(s.date) + ' question.';
+    var img = document.getElementById('slideImg');
+    img.src = f(revealed ? s.a : s.q);
+    img.alt = revealed
+      ? 'Labeled answer slide: ' + s.ans.join('; ')
+      : 'Histology slide. Name the ' + s.labels.join(' and the ').toLowerCase() + '.';
+    document.getElementById('prompts').innerHTML = s.labels.map(function (k, n) {
+      return '<div class="p-chip' + (revealed ? ' answered' : '') + '"><span class="k">' + k + '</span>'
+        + '<span class="v">' + (revealed ? s.ans[n] : '?') + '</span></div>';
+    }).join('');
+    document.getElementById('revealBtn').textContent = revealed ? 'Hide the answer' : 'Reveal the answer';
+    /* preload the other frame so reveal is instant on the projector */
+    var pre = new Image(); pre.src = f(revealed ? s.q : s.a);
+  }
+  function go(n){
+    idx = (n + Q.length) % Q.length;
+    revealed = false; forced = true;
+    render();
+  }
+  document.getElementById('revealBtn').addEventListener('click', function () { revealed = !revealed; render(); });
+  document.getElementById('prevBtn').addEventListener('click', function () { go(idx - 1); });
+  document.getElementById('nextBtn').addEventListener('click', function () { go(idx + 1); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') go(idx - 1);
+    else if (e.key === 'ArrowRight') go(idx + 1);
+    else if (e.key === ' ' || e.key === 'Enter') {
+      if (e.target && ['BUTTON','A','SELECT'].indexOf(e.target.tagName) > -1) return;
+      e.preventDefault(); revealed = !revealed; render();
+    }
+  });
+  render();
+
+  /* ---- random student picker. 1 to N, N is hers to set (a group
+     of 7 exists). No repeats on one slide until every number has
+     come up, and the numbers already rolled stay on screen. Each
+     slide keeps its own list, saved so a refresh mid-class keeps
+     the night's picks. ---- */
+  var RK = 'bio004-nightq-rolls';
+  function rload(){ try{ return JSON.parse(localStorage.getItem(RK)) || {}; }catch(e){ return {}; } }
+  var RS = rload();
+  RS.max = RS.max || 6; RS.slides = RS.slides || {};
+  function rsave(){ try{ localStorage.setItem(RK, JSON.stringify(RS)); }catch(e){} }
+  function rolls(){ var k = 'q' + idx; return RS.slides[k] = RS.slides[k] || []; }
+
+  var maxSel = document.getElementById('rMax');
+  for (var mo = 2; mo <= 10; mo++) {
+    var op = document.createElement('option');
+    op.value = mo; op.textContent = mo;
+    if (mo === RS.max) op.selected = true;
+    maxSel.appendChild(op);
+  }
+  maxSel.addEventListener('change', function () { RS.max = +maxSel.value; rsave(); renderRand(); });
+
+  function renderRand(){
+    var r = rolls();
+    document.getElementById('rNum').innerHTML = r.length ? String(r[r.length - 1]) : '&ndash;';
+    document.getElementById('rHist').innerHTML = r.length
+      ? 'Already up this slide: ' + r.map(function (n, i) {
+          return (i === r.length - 1 ? '<b>' + n + '</b>' : n);
+        }).join(' · ')
+      : 'Nobody picked yet for this slide.';
+  }
+  document.getElementById('spinBtn').addEventListener('click', function () {
+    var r = rolls(), pool = [];
+    for (var n = 1; n <= RS.max; n++) { if (r.indexOf(n) === -1) pool.push(n); }
+    if (!pool.length) {
+      /* everyone in the group has been up: start a fresh round */
+      r.length = 0;
+      for (var n2 = 1; n2 <= RS.max; n2++) pool.push(n2);
+    }
+    r.push(pool[Math.floor(Math.random() * pool.length)]);
+    rsave(); renderRand();
+  });
+
+  /* Reset wipes every slide's roll history (a fresh class, a new
+     semester). Two clicks on purpose: the first arms it, the second
+     inside three seconds does it. The group size choice is kept. */
+  var resetBtn = document.getElementById('resetBtn'), resetArm = null;
+  resetBtn.addEventListener('click', function () {
+    if (resetArm) {
+      clearTimeout(resetArm); resetArm = null;
+      RS.slides = {}; rsave(); renderRand();
+      resetBtn.textContent = 'Reset';
+    } else {
+      resetBtn.textContent = 'Sure? Tap again';
+      resetArm = setTimeout(function () {
+        resetArm = null; resetBtn.textContent = 'Reset';
+      }, 3000);
+    }
+  });
+
+  /* a new slide shows its own list */
+  var coreRender = render;
+  render = function(){ coreRender(); renderRand(); };
+  renderRand();
+
+  /* ---- present mode: one click, fullscreen, nothing but the slide,
+     the prompts, the reveal, and the picker ---- */
+  var pBtn = document.getElementById('presentBtn');
+  function setPresent(on){
+    document.body.classList.toggle('present', on);
+    pBtn.textContent = on ? 'Exit' : 'Present';
+  }
+  pBtn.addEventListener('click', function () {
+    var on = !document.body.classList.contains('present');
+    setPresent(on);
+    try {
+      if (on && document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+      else if (!on && document.fullscreenElement) document.exitFullscreen();
+    } catch (e) {}
+  });
+  document.addEventListener('fullscreenchange', function () {
+    if (!document.fullscreenElement && document.body.classList.contains('present')) setPresent(false);
+  });
+
+  /* height sender for embeds */
+  var FRAME_ID = 'bio004-lab-question-tonight';
+  function sendHeight(){
+    var h = document.body.scrollHeight;
+    if (window.parent && window.parent !== window) parent.postMessage({type:'resize', id:FRAME_ID, height:h}, '*');
+  }
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+  if (window.ResizeObserver) new ResizeObserver(sendHeight).observe(document.body);
+  [200, 600, 1200].forEach(function (t) { setTimeout(sendHeight, t); });
+})();
+</script>
+<script src="bio004-faculty-dock.js"></script>
+</body>
+</html>
