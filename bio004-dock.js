@@ -266,7 +266,7 @@
   };
 
   var I = {
-    sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    heart:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21.2l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/>',
     brain:'<path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-1 5 3 3 0 0 0 2 5 3 3 0 0 0 4 1V4z"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 1 5 3 3 0 0 1-2 5 3 3 0 0 1-4 1"/>',
     cards:'<rect x="3" y="5" width="14" height="14" rx="2"/><path d="M7 9h6M7 13h4"/><path d="M21 8v9a2 2 0 0 1-2 2"/>',
     loop:'<path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>',
@@ -468,7 +468,7 @@
        sometimes the thing a student needs from the course is not
        content. Lives behind the gold door on the launchpad too. */
     t.push({ g: 'About the course', name: 'Need motivation?', sub: 'Short reads for hard weeks, from Dr. Rennie',
-             url: BASE + 'bio004-blog.html', icon: 'sun', tone: 'gold', qr: 'blog',
+             url: BASE + 'bio004-blog.html', icon: 'heart', tone: 'gold', qr: 'blog',
              kw: 'motivation encouragement blog boost pep talk stuck tired overwhelmed struggling behind teams alone help' });
 
     t.push({ g: 'About the course', name: 'Device policy', sub: 'Sign it, then save the PDF for Canvas',
