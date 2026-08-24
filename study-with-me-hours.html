@@ -73,7 +73,7 @@
   .totals{position:relative;overflow:hidden;background:
       radial-gradient(130% 120% at 100% 0%, rgba(164,71,47,.14), rgba(164,71,47,0) 55%),
       var(--card-soft);}
-  .tot-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:6px;}
+  .tot-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:12px;margin-top:6px;}
   @media(max-width:640px){.tot-grid{grid-template-columns:1fr 1fr;}}
   .tot{background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 2px 8px rgba(11,21,48,.06);}
   .tot .lbl{font-family:var(--fe);font-weight:700;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);}
@@ -128,7 +128,7 @@
 <main id="main" class="wrap">
   <p class="eyebrow">BIO 004 &middot; Study With Me</p>
   <h1>My Study With Me <span class="a">Hours</span></h1>
-  <p class="lead">Scholar Points hours come from three kinds of work: <b>Study With Me</b> (hosting or attending, they count the same), <b>tutoring</b>, and <b>open lab</b>. Log each session as you do it, it <b>saves in your browser</b>. At the <b>end of every module</b>, click Save as PDF and upload it to the Canvas assignment. Do not save it all up for December. A Study With Me session only counts if it was on the schedule, I check.</p>
+  <p class="lead">Scholar Points hours come from three kinds of work: <b>Study With Me</b> (hosting or attending, they count the same), <b>tutoring</b>, and <b>open lab</b>. Log each session as you do it, it <b>saves in your browser</b>. At the <b>end of every module</b>, click Save as PDF and upload it to the Canvas assignment. Do not save it all up for December. A Study With Me session only counts if it was on the schedule, I check. New for Fall 2026: completing <b>Bio101, How to Study Science</b> with a passing grade banks a one-time <b>20 hours</b>, see the Bio101 card below.</p>
 
   <!-- YOUR INFO -->
   <section class="card no-print" aria-labelledby="infoH">
@@ -178,6 +178,17 @@
     <div class="actions"><button type="button" class="btn btn-primary" id="addBtn">Add to my log</button></div>
   </section>
 
+  <!-- BIO101 ONE-TIME CREDIT -->
+  <section class="card" aria-labelledby="bioH">
+    <h2 id="bioH">Bio101 credit, one time</h2>
+    <p class="sub">Bio101, How to Study Science, is a half unit online Solano course, September 3 to November 1, CRN 80767. Pass it with a P or a C or above and it banks a one-time <strong>20 hours</strong> toward your 36. Weekly caps do not apply to it, and 20 is the most it can add.</p>
+    <label for="bio101Chk" style="display:flex;align-items:flex-start;gap:10px;font-weight:700;cursor:pointer;">
+      <input type="checkbox" id="bio101Chk" style="width:20px;height:20px;margin-top:2px;accent-color:var(--terra);flex:none;">
+      <span>I completed Bio101 with a passing grade, a P or a C or above</span>
+    </label>
+    <p class="hint" style="font-family:var(--fe);font-size:.78rem;color:var(--soft);margin:8px 0 0;">To make it official, the Bio101 professor of record emails Dr. Rennie directly confirming you completed the course with a passing score. This box puts it on your log sheet; the 20 hours are final once that email arrives.</p>
+  </section>
+
   <!-- LOG -->
   <section class="card" aria-labelledby="logH">
     <h2 id="logH">My log</h2>
@@ -210,6 +221,7 @@
       <div class="tot"><div class="lbl">Tutoring</div><div class="big" id="t-tutor-h">0.00</div><div class="pts" id="t-tutor-p">0 banked</div></div>
       <div class="tot"><div class="lbl">Open lab</div><div class="big" id="t-lab-h">0.00</div><div class="pts" id="t-lab-p">0 banked</div></div>
       <div class="tot"><div class="lbl">Not counted</div><div class="big" id="t-other-h">0.00</div><div class="pts" id="t-other-p">0 banked</div></div>
+      <div class="tot"><div class="lbl">Bio101</div><div class="big" id="t-bio-h">0</div><div class="pts" id="t-bio-p">not claimed</div></div>
       <div class="tot grand"><div class="lbl">Banked total</div><div class="big" id="t-all-h">0.00</div><div class="pts" id="t-all-p">of 36</div></div>
     </div>
     <p class="rubric" id="rubricLine"></p>
@@ -232,6 +244,7 @@
       <li>Tutoring counts whether you gave it or received it, at the ASTC or peer to peer. Name who it was with.</li>
       <li>A Study With Me session only counts if it was on the schedule. I compare your links against it.</li>
       <li>Anything logged as "something else" stays in your record but does not bank toward the 36.</li>
+      <li><strong>Bio101</strong> is a one-time 20 hours, checked off on this sheet. It becomes final when the Bio101 professor of record emails me that you completed the course with a passing score.</li>
     </ul>
   </div>
 
@@ -259,6 +272,11 @@
    Students are welcome to keep going past a cap, it just stops
    adding to the total. 'other' is logged for their own record and
    banks nothing.
+
+   Bio101 (How to Study Science, Fall 2026) is separate from the
+   three kinds: a one-time 20-hour credit via the checkbox card,
+   exempt from both caps, verified by email from the Bio101
+   professor of record.
 ============================================================= */
 const TERMS = {
   summer: { label: "Summer (8 weeks)",         weeks: 8,  weeklyCapPerKind: 9, termCapPerKind: 20, required: 36 },
@@ -273,7 +291,7 @@ const KINDS = ["swm","tutor","lab"];
 const $ = s => document.querySelector(s);
 const KEY = "swm_hours_v1";
 const TYPES = { host:"SWM hosted", attend:"SWM attended", tutor:"Tutoring", lab:"Open lab", other:"Not counted" };
-let state = { name:"", email:"", term:"", entries:[] };
+let state = { name:"", email:"", term:"", bio101:false, entries:[] };
 
 function load(){ try{ const s = JSON.parse(localStorage.getItem(KEY)); if(s) state = Object.assign(state, s); }catch(e){} }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
@@ -300,6 +318,10 @@ const termEl = $("#s-term");
 termEl.value = TERMS[state.term] ? state.term : "summer";
 state.term = termEl.value;
 termEl.addEventListener("change", ()=>{ state.term = termEl.value; save(); render(); });
+
+/* ---- Bio101 one-time credit ---- */
+const bioEl = $("#bio101Chk");
+bioEl.addEventListener("change", ()=>{ state.bio101 = bioEl.checked; save(); render(); });
 
 /* ---- type-driven labels ---- */
 function syncTypeUI(){
@@ -403,7 +425,14 @@ function render(){
   const wkBody=$("#wkBody");
   wkBody.innerHTML = wkKeys.length ? rows.join("") : '<tr><td colspan="7" class="empty">No entries yet.</td></tr>';
   $("#wkSub").textContent = "Up to " + wcap + " hours a week bank from each kind, and up to " + tcap +
-    " hours all term from each kind. Log more if you like, and please do. Past a cap it just stops adding to the 36.";
+    " hours all term from each kind. Log more if you like, and please do. Past a cap it just stops adding to the 36." +
+    (state.bio101 ? " Your Bio101 credit is not part of the weekly table, it shows in your totals." : "");
+
+  // Bio101 one-time credit: 20 hours, flat, exempt from the weekly and
+  // per-kind caps because it is a single award, 20 is its own maximum.
+  bioEl.checked = !!state.bio101;
+  const bioBank = state.bio101 ? 20 : 0;
+  bankedTotal += bioBank;
 
   // requirement progress
   const required = term.required;
@@ -411,10 +440,11 @@ function render(){
   const pct = required>0 ? Math.round((prog/required)*100) : 0;
   $("#reqBar").style.width = Math.min(100,pct) + "%";
   $("#reqSub").textContent = term.label + ", " + required + " banked hours for the full +2%. Up to " + wcap +
-    " hours a week and " + tcap + " hours all term from any one kind. 25 of the 36 also unlocks the +1% if your exam average is above 80%.";
+    " hours a week and " + tcap + " hours all term from any one kind. Bio101 adds a one-time 20 on top of that. 25 of the 36 also unlocks the +1% if your exam average is above 80%.";
   const remaining = Math.max(0, Math.round((required - bankedTotal)*100)/100);
   const parts = [];
   KINDS.forEach(kd=>{ parts.push(KIND_LABEL[kd] + " " + termBanked[kd].toFixed(2) + "/" + tcap); });
+  parts.push("Bio101 " + bioBank + "/20");
   $("#reqLine").innerHTML = "<b>" + bankedTotal.toFixed(2) + " of " + required + " hours banked</b> (" + pct + "%). " +
     (remaining>0 ? (remaining.toFixed(2) + " to go. ") : "That is the full +2%, nice work. ") +
     (bankedTotal >= 25 ? "You have also passed 25 hours, so the +1% is open to you if your exam average finishes above 80%. " : "") +
@@ -432,6 +462,8 @@ function render(){
   set("#t-lab-h","#t-lab-p",sum.lab,termBanked.lab);
   $("#t-other-h").textContent = sum.other.toFixed(2);
   $("#t-other-p").textContent = "not counted";
+  $("#t-bio-h").textContent = state.bio101 ? "20.00" : "0.00";
+  $("#t-bio-p").textContent = state.bio101 ? "banked, one time" : "not claimed";
   $("#t-all-h").textContent = bankedTotal.toFixed(2);
   $("#t-all-p").textContent = "of " + required;
   $("#rubricLine").textContent = "Every hour counts the same, whether you hosted it, attended it, gave the tutoring or "
