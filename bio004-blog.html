@@ -30,7 +30,44 @@
   .sub{font-size:17px;color:var(--soft);max-width:62ch;margin:0 0 26px}
   .sub b{color:var(--navy)}
 
-  .chips{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 26px}
+  .featured{display:grid;grid-template-columns:1.05fr .95fr;background:var(--card);
+    border:1px solid var(--line);border-radius:16px;overflow:hidden;text-decoration:none;
+    color:var(--navy);box-shadow:0 10px 22px rgba(8,16,31,.14);margin:0 0 30px;
+    transition:transform .2s ease,box-shadow .2s ease}
+  .featured:hover{transform:translateY(-2px);box-shadow:0 16px 30px rgba(8,16,31,.18)}
+  .featured:focus-visible{outline:3px solid var(--gold2);outline-offset:3px}
+  .featured img{width:100%;height:100%;min-height:250px;object-fit:cover;display:block}
+  .f-pad{padding:26px 28px;display:flex;flex-direction:column;gap:10px;justify-content:center}
+  .f-tag{align-self:flex-start;font-family:var(--fe);font-size:11.5px;font-weight:700;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--navy);background:var(--gold);
+    border-radius:999px;padding:5px 14px}
+  .featured h2{font-size:clamp(21px,3.4vw,27px);font-weight:800;letter-spacing:-.01em;margin:0;line-height:1.2}
+  .featured p{margin:0;font-size:15.5px;color:var(--soft)}
+  .f-meta{font-family:var(--fe);font-size:12.5px;font-weight:700;color:var(--soft)}
+  .f-go{font-weight:800;font-size:15px;color:var(--maroon)}
+  @media (max-width:680px){.featured{grid-template-columns:1fr}.featured img{min-height:190px;height:auto}}
+
+  .topbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;
+    gap:14px;margin:0 0 26px}
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .views{display:flex;flex:none;background:var(--card);border:1px solid var(--line);
+    border-radius:999px;overflow:hidden}
+  .vbtn{font-family:var(--f);font-weight:700;font-size:13.5px;border:0;background:none;
+    color:var(--navy);padding:9px 18px;cursor:pointer}
+  .vbtn[aria-pressed="true"]{background:var(--navy);color:#fff}
+  .vbtn:focus-visible{outline:3px solid var(--gold2);outline-offset:-3px}
+
+  .list{flex-direction:column;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08);display:flex}
+  .lrow{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;padding:15px 18px;
+    text-decoration:none;color:var(--navy);border-bottom:1px solid var(--line)}
+  .lrow:last-child{border-bottom:0}
+  .lrow:hover .lt,.lrow:focus-visible .lt{color:var(--maroon)}
+  .lrow:focus-visible{outline:3px solid var(--gold2);outline-offset:-3px}
+  .lc{font-family:var(--fe);font-size:11px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--terra);flex:none;min-width:110px}
+  .lt{font-weight:800;font-size:16.5px;flex:1;min-width:200px}
+  .lm{font-family:var(--fe);font-size:12.5px;font-weight:700;color:var(--soft);flex:none;white-space:nowrap}
   .chip{font-family:var(--f);font-weight:700;font-size:14px;color:var(--navy);
     background:var(--card);border:1px solid var(--line);border-radius:999px;
     padding:8px 18px;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease}
@@ -69,9 +106,18 @@
   not the material. Pick a category, or just pick whatever title sounds like today. <b>New posts
   all term.</b></p>
 
-  <div class="chips" role="group" aria-label="Filter posts by category" id="chips"></div>
+  <a class="featured" id="featured" target="_top" hidden></a>
+
+  <div class="topbar">
+    <div class="chips" role="group" aria-label="Filter posts by category" id="chips"></div>
+    <div class="views" role="group" aria-label="How to show the posts">
+      <button type="button" class="vbtn" data-view="cards" aria-pressed="true">Cards</button>
+      <button type="button" class="vbtn" data-view="list" aria-pressed="false">List</button>
+    </div>
+  </div>
 
   <div class="cards" id="cards" aria-live="polite"></div>
+  <div class="list" id="list" hidden></div>
   <p class="none" id="none" hidden>Nothing in this category yet. Check back soon.</p>
 
   <footer><b>Dr. Sharilyn Rennie</b> &middot; BIO 004 Human Anatomy &middot; Solano Community College</footer>
@@ -142,11 +188,63 @@ var POSTS = [
     date: 'Aug 24, 2026', min: 3,
     url: 'bio004-blog-why-teams.html' }
 ];
+/* ============== POST OF THE WEEK, the strategic schedule ==============
+   Each entry takes over on its date (use Mondays) and holds the featured
+   spot until the next entry's date. Add a line any time to aim a post at
+   a moment in the term (exam weeks, team friction, midterm slump).
+   When the schedule runs out, FEATURE_ROTATION below cycles weekly on
+   its own, so the spot is never empty.
+==================================================================== */
+var FEATURE_SCHEDULE = [
+  { from: '2026-08-24', url: 'bio004-blog-struggle-alone.html' },
+  { from: '2026-08-31', url: 'bio004-blog-why-teams.html' },
+  { from: '2026-09-07', url: 'bio004-blog-first-exam-data.html' }
+];
+var FEATURE_ROTATION = [
+  'bio004-blog-a-students-get-tutors.html',
+  'bio004-blog-rereading.html',
+  'bio004-blog-why-i-make-you-draw.html',
+  'bio004-blog-joy-and-breaks.html',
+  'bio004-blog-ai-answer-machine.html',
+  'bio004-blog-struggle-alone.html',
+  'bio004-blog-why-teams.html'
+];
 /* ==================================================================== */
 (function () {
   'use strict';
   var current = 'All';
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+  /* pick the post of the week */
+  var WEEK = 7 * 24 * 60 * 60 * 1000;
+  var now = new Date(); now.setHours(0, 0, 0, 0);
+  var featUrl = null, lastFrom = null;
+  FEATURE_SCHEDULE.forEach(function (s) {
+    var d = new Date(s.from + 'T00:00:00');
+    if (d <= now) { featUrl = s.url; lastFrom = d; }
+  });
+  if (lastFrom && (now - lastFrom) >= WEEK && FEATURE_ROTATION.length) {
+    var weeksPast = Math.floor((now - lastFrom) / WEEK) - 1;
+    featUrl = FEATURE_ROTATION[weeksPast % FEATURE_ROTATION.length];
+  }
+  var FEAT = null;
+  POSTS.forEach(function (p) { if (p.url === featUrl) FEAT = p; });
+
+  var featEl = document.getElementById('featured');
+  if (FEAT) {
+    featEl.hidden = false;
+    featEl.href = FEAT.url;
+    featEl.setAttribute('aria-label', 'Recommended this week: ' + FEAT.title);
+    featEl.innerHTML = '<img src="' + esc(FEAT.img) + '" alt="' + esc(FEAT.alt) + '">'
+      + '<span class="f-pad">'
+      + '<span class="f-tag">Recommended this week</span>'
+      + '<h2>' + esc(FEAT.title) + '</h2>'
+      + '<p>' + esc(FEAT.blurb) + '</p>'
+      + '<span class="f-meta">' + esc(FEAT.cat) + ' &middot; ' + FEAT.min + ' min read</span>'
+      + '<span class="f-go">Read it &#8594;</span>'
+      + '</span>';
+  }
+
   var cats = ['All'];
   POSTS.forEach(function (p) { if (cats.indexOf(p.cat) < 0) cats.push(p.cat); });
 
@@ -161,20 +259,51 @@ var POSTS = [
     draw();
   });
 
+  /* cards or list, remembered per student */
+  var view = 'cards';
+  try { view = localStorage.getItem('bio004-blog-view') || 'cards'; } catch (e) {}
+  if (view !== 'list') view = 'cards';
+  var viewBtns = document.querySelectorAll('.vbtn');
+  viewBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      view = b.getAttribute('data-view');
+      try { localStorage.setItem('bio004-blog-view', view); } catch (e) {}
+      draw();
+    });
+  });
+
   var cards = document.getElementById('cards');
+  var listEl = document.getElementById('list');
   function draw() {
-    var list = POSTS.filter(function (p) { return current === 'All' || p.cat === current; });
+    viewBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-view') === view)); });
+    /* the featured post sits big at the top, so skip it in the All feed */
+    var list = POSTS.filter(function (p) {
+      if (current === 'All' && FEAT && p.url === FEAT.url) return false;
+      return current === 'All' || p.cat === current;
+    });
     document.getElementById('none').hidden = list.length > 0;
-    cards.innerHTML = list.map(function (p) {
-      return '<a class="post" href="' + esc(p.url) + '" target="_top">'
-        + '<img src="' + esc(p.img) + '" alt="' + esc(p.alt) + '">'
-        + '<span class="pad">'
-        + '<span class="cat">' + esc(p.cat) + '</span>'
-        + '<h2>' + esc(p.title) + '</h2>'
-        + '<p>' + esc(p.blurb) + '</p>'
-        + '<span class="meta">' + esc(p.date) + ' &middot; <b>' + p.min + ' min read</b></span>'
-        + '</span></a>';
-    }).join('');
+    cards.hidden = view !== 'cards';
+    listEl.hidden = view !== 'list';
+    if (view === 'cards') {
+      cards.innerHTML = list.map(function (p) {
+        return '<a class="post" href="' + esc(p.url) + '" target="_top">'
+          + '<img src="' + esc(p.img) + '" alt="' + esc(p.alt) + '">'
+          + '<span class="pad">'
+          + '<span class="cat">' + esc(p.cat) + '</span>'
+          + '<h2>' + esc(p.title) + '</h2>'
+          + '<p>' + esc(p.blurb) + '</p>'
+          + '<span class="meta">' + esc(p.date) + ' &middot; <b>' + p.min + ' min read</b></span>'
+          + '</span></a>';
+      }).join('');
+    } else {
+      listEl.innerHTML = list.map(function (p) {
+        return '<a class="lrow" href="' + esc(p.url) + '" target="_top">'
+          + '<span class="lc">' + esc(p.cat) + '</span>'
+          + '<span class="lt">' + esc(p.title) + '</span>'
+          + '<span class="lm">' + p.min + ' min read</span>'
+          + '</a>';
+      }).join('');
+    }
   }
   draw();
 })();
