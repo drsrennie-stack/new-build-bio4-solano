@@ -62,6 +62,8 @@
   .switch input:not(:checked) ~ .sw-track ~ .sw-side, .switch #swChart{color:#8C96A5}
   .switch:has(input:not(:checked)) #swChart{color:var(--navy)}
   .switch:has(input:checked) #swFocus{color:var(--navy)}
+  .switch:has(input:not(:checked)) #swRead{color:var(--navy)}
+  .switch:has(input:checked) #swRecall{color:var(--navy)}
   @media (prefers-reduced-motion:reduce){ .sw-track,.sw-knob{transition:none} }
 
   /* the family dropdown */
@@ -145,6 +147,18 @@
     .tblwrap{overflow:visible;border:0}
   }
   footer.foot{border-top:1px solid var(--line);margin-top:34px;padding-top:14px;font-size:13.5px}
+  /* click a slide to enlarge it; click again (or Esc) to put it back */
+  td.pic .cw:not(.practice) img, .f-img img{cursor:zoom-in}
+  .lightbox{position:fixed;inset:0;z-index:200;background:rgba(8,16,31,.9);display:none;
+    align-items:center;justify-content:center;padding:22px;cursor:zoom-out}
+  .lightbox.on{display:flex}
+  .lightbox img{max-width:94vw;max-height:92vh;width:auto;height:auto;border-radius:10px;background:#fff;
+    box-shadow:0 40px 90px -30px rgba(0,0,0,.8)}
+  .lb-close{position:fixed;top:16px;right:16px;width:46px;height:46px;border-radius:50%;cursor:pointer;
+    background:none;border:1.5px solid rgba(244,239,232,.5);color:#F4EFE8;font-size:18px;line-height:1;
+    display:flex;align-items:center;justify-content:center}
+  .lb-close:hover{border-color:var(--gold);color:#fff}
+  .lb-close:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 </style>
 </head>
 <body data-no-reading-mode>
@@ -183,16 +197,23 @@
       </select>
     </label>
 
-    <fieldset class="hides chartonly">
-      <legend>Hide and recall</legend>
-      <label><input type="checkbox" data-col="name"> Names</label>
-      <label><input type="checkbox" data-col="fam"> Tissue types</label>
-      <label><input type="checkbox" data-col="look"> Looks</label>
-      <label><input type="checkbox" data-col="loc"> Locations</label>
-      <label><input type="checkbox" data-col="func"> Functions</label>
-      <label><input type="checkbox" data-col="sp"> Special structures</label>
-      <label><input type="checkbox" data-col="pic"> Pictures</label>
+    <fieldset class="hides">
+      <legend>Include</legend>
+      <label><input type="checkbox" data-col="pic" checked> Pictures</label>
+      <label><input type="checkbox" data-col="name" checked> Names</label>
+      <label><input type="checkbox" data-col="fam" checked> Tissue types</label>
+      <label><input type="checkbox" data-col="look" checked> Looks</label>
+      <label><input type="checkbox" data-col="loc" checked> Locations</label>
+      <label><input type="checkbox" data-col="func" checked> Functions</label>
+      <label><input type="checkbox" data-col="sp" checked> Special structures</label>
     </fieldset>
+
+    <label class="switch chartonly" for="practiceSwitch">
+      <span class="sw-side" id="swRead">Read</span>
+      <input type="checkbox" id="practiceSwitch" role="switch" aria-label="Turn recall practice on: included fields hide behind reveal boxes">
+      <span class="sw-track" aria-hidden="true"><span class="sw-knob"></span></span>
+      <span class="sw-side" id="swRecall">Recall</span>
+    </label>
 
     <span class="acts chartonly">
       <button type="button" class="txt" id="shuffleBtn">Shuffle</button>
@@ -204,7 +225,7 @@
 
   <div class="focus" id="focusView" hidden>
     <div class="f-img">
-      <img id="fImg" src="" alt="">
+      <img id="fImg" src="" alt="" tabindex="0" role="button">
       <div class="f-nav">
         <button type="button" class="chip gold" id="fRandom">Random tissue</button>
         <button type="button" class="chip ghost" id="fPrev">&#8592; Previous</button>
@@ -223,11 +244,16 @@
       <caption>One row per tissue. Simple squamous appears twice on purpose: it looks different in the
       alveoli than in Bowman&#39;s capsule, and the lab exam can show either.</caption>
       <thead><tr>
-        <th scope="col">Picture</th><th scope="col">Tissue</th><th scope="col">Tissue type</th><th scope="col">What it looks like</th>
-        <th scope="col">Location</th><th scope="col">Function</th><th scope="col">Special structures</th>
+        <th scope="col" data-col="pic">Picture</th><th scope="col" data-col="name">Tissue</th><th scope="col" data-col="fam">Tissue type</th><th scope="col" data-col="look">What it looks like</th>
+        <th scope="col" data-col="loc">Location</th><th scope="col" data-col="func">Function</th><th scope="col" data-col="sp">Special structures</th>
       </tr></thead>
       <tbody id="tbody"></tbody>
     </table>
+  </div>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged slide">
+    <button type="button" class="lb-close" id="lbClose" aria-label="Close the enlarged slide">&#10005;</button>
+    <img id="lbImg" src="" alt="">
   </div>
 
   <footer class="foot">
@@ -354,7 +380,7 @@
   function rowHtml(r, i) {
     var sp = r.sp.map(function (p) { return '<b>' + p[0] + ':</b> ' + p[1]; }).join('<br>');
     return '<tr data-fam="' + r.fam + '" data-i="' + i + '">'
-      + '<td class="pic">' + cw('pic', '<img src="' + f(r.img) + '" alt="Micrograph: ' + esc(r.name.replace(/&#39;/g, "'")) + '">') + '</td>'
+      + '<td class="pic">' + cw('pic', '<img src="' + f(r.img) + '" tabindex="0" role="button" alt="Micrograph: ' + esc(r.name.replace(/&#39;/g, "'")) + '. Press Enter to enlarge.">') + '</td>'
       + '<td class="name">' + cw('name', '<b>' + r.name + '</b>') + '</td>'
       + '<td>' + cw('fam', typeOf(r)) + '</td>'
       + '<td>' + cw('look', r.look, true) + '</td>'
@@ -377,29 +403,49 @@
     applyCols(); applyFam();
   }
 
-  /* which columns are being practiced */
-  var HID = {};
+  /* The checkboxes pick what is INCLUDED in the chart. The Read /
+     Recall switch is the memory tool: in Recall, every included field
+     except the picture hides behind a reveal box. One at a time always
+     drills the included fields against the big picture. */
+  var COLS = ['pic','name','fam','look','loc','func','sp'];
+  var INC = {}; COLS.forEach(function (c) { INC[c] = true; });
+  var PRACTICE = false;
   function applyCols() {
-    document.querySelectorAll('#tbody .cw').forEach(function (c) {
-      var on = !!HID[c.getAttribute('data-col')];
-      if (!on) c.classList.remove('open');
-      c.classList.toggle('practice', on);
+    COLS.forEach(function (col) {
+      var inc = !!INC[col];
+      document.querySelectorAll('th[data-col="' + col + '"]').forEach(function (th) { th.hidden = !inc; });
+      document.querySelectorAll('#tbody .cw[data-col="' + col + '"]').forEach(function (c) {
+        var td = c.closest('td'); if (td) td.hidden = !inc;
+        var prac = PRACTICE && inc && col !== 'pic';
+        if (!prac) c.classList.remove('open');
+        c.classList.toggle('practice', prac);
+      });
+      document.querySelectorAll('#fCards .cw[data-col="' + col + '"]').forEach(function (c) {
+        var card = c.closest('.f-card'); if (card) card.hidden = !inc;
+        if (!inc) c.classList.remove('open');
+        c.classList.toggle('practice', inc);
+      });
     });
-    /* the family header rows give the type away, so they leave when
-       tissue types are being practiced */
+    /* in Recall the family header rows would give the type away */
     document.querySelectorAll('#tbody tr[data-famrow]').forEach(function (tr) {
-      tr.style.display = HID.fam ? 'none' : '';
+      tr.style.display = (PRACTICE && INC.fam) ? 'none' : '';
     });
   }
   document.querySelectorAll('.hides input').forEach(function (c) {
     c.addEventListener('change', function () {
-      var col = c.getAttribute('data-col');
-      HID[col] = c.checked;
+      INC[c.getAttribute('data-col')] = c.checked;
       applyCols();
-      document.getElementById('pnote').textContent = c.checked
-        ? 'Hiding ' + c.parentElement.textContent.trim() + '. Recall first, then reveal.'
-        : c.parentElement.textContent.trim() + ' shown again.';
+      document.getElementById('pnote').textContent =
+        c.parentElement.textContent.trim() + (c.checked ? ' included.' : ' left out.');
     });
+  });
+  var practiceSwitch = document.getElementById('practiceSwitch');
+  practiceSwitch.addEventListener('change', function () {
+    PRACTICE = practiceSwitch.checked;
+    applyCols();
+    document.getElementById('pnote').textContent = PRACTICE
+      ? 'Recall is on. Say each answer, then reveal it.'
+      : 'Reading mode. Everything included is shown.';
   });
 
   /* family filter */
@@ -438,10 +484,12 @@
     document.getElementById('pnote').textContent = 'Rows shuffled within each family.';
   });
   document.getElementById('resetBtn').addEventListener('click', function () {
-    HID = {};
-    document.querySelectorAll('.hides input').forEach(function (c) { c.checked = false; });
+    COLS.forEach(function (c) { INC[c] = true; });
+    PRACTICE = false;
+    document.getElementById('practiceSwitch').checked = false;
+    document.querySelectorAll('.hides input').forEach(function (c) { c.checked = true; });
     applyCols();
-    document.getElementById('pnote').textContent = 'Everything shown.';
+    document.getElementById('pnote').textContent = 'Everything included and shown.';
   });
 
   render();
@@ -472,8 +520,8 @@
       + '<div class="f-card"><span class="k">Location</span>' + cw('loc', r.loc) + '</div>'
       + '<div class="f-card"><span class="k">Function</span>' + cw('func', r.func) + '</div>'
       + '<div class="f-card"><span class="k">Special structures</span>' + cw('sp', sp) + '</div>';
-    /* in focus mode every field starts hidden; that is the drill */
-    document.querySelectorAll('#fCards .cw').forEach(function (c) { c.classList.add('practice'); });
+    /* the same checkboxes decide what is hidden here */
+    applyCols();
   }
   function setMode(m) {
     MODE = m;
@@ -508,6 +556,37 @@
     if (v) { v.closest('.cw').classList.add('open'); return; }
     var a = e.target.closest('.cw.practice.open .ans');
     if (a) a.closest('.cw').classList.remove('open');
+  });
+
+  /* ---- click a slide, see it big; any click or Esc puts it back ---- */
+  var lb = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lbImg');
+  var lbLast = null;
+  function lbOpen(img) {
+    lbImg.src = img.src;
+    lbImg.alt = 'Enlarged: ' + (img.alt || 'slide');
+    lb.classList.add('on');
+    lbLast = img;
+    document.getElementById('lbClose').focus();
+  }
+  function lbShut() {
+    lb.classList.remove('on');
+    lbImg.src = '';
+    if (lbLast && lbLast.focus) lbLast.focus();
+  }
+  function zoomable(t) {
+    return t.closest && (t.closest('td.pic .cw:not(.practice) img') || t.closest('.f-img img'));
+  }
+  document.addEventListener('click', function (e) {
+    if (lb.classList.contains('on')) { if (e.target.closest('#lightbox')) lbShut(); return; }
+    var img = zoomable(e.target);
+    if (img) lbOpen(img);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && lb.classList.contains('on')) { lbShut(); return; }
+    if ((e.key === 'Enter' || e.key === ' ') && zoomable(e.target)) {
+      e.preventDefault(); lbOpen(e.target);
+    }
   });
 
   /* height sender for embeds */
