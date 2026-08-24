@@ -39,27 +39,49 @@
     text-transform:uppercase;color:var(--maroon);margin:0 0 8px}
   h1{font-size:clamp(27px,4.6vw,38px);font-weight:800;letter-spacing:-.02em;margin:0;line-height:1.08}
   .hero .sub{margin:8px 0 0;font-size:17px;color:#3D4A57;max-width:60ch}
-  .callout{margin:18px 0 0;background:var(--card);border:1px solid var(--line);border-left:3px solid var(--gold);
+  .callout{margin:18px 0 0;background:var(--card);border:1px solid var(--line);
     border-radius:12px;padding:14px 18px;font-size:15px;max-width:76ch;
     box-shadow:0 1px 3px rgba(11,21,48,.10)}
   .callout b{color:var(--maroon)}
 
   .bar{position:sticky;top:10px;z-index:10;margin-top:22px;
     background:var(--card);border:1px solid var(--line);border-radius:16px;
-    padding:14px 18px;display:flex;flex-wrap:wrap;gap:12px 26px;align-items:flex-end;
-    box-shadow:0 6px 18px -10px rgba(11,21,48,.25)}
-  .cluster{display:flex;flex-direction:column;gap:7px}
-  .bar .t{font-family:var(--fe);font-size:10.5px;font-weight:700;letter-spacing:.12em;
-    text-transform:uppercase;color:var(--maroon)}
-  .chips{display:flex;flex-wrap:wrap;gap:8px}
-  .chip{font:inherit;font-size:13px;font-weight:700;cursor:pointer;padding:8px 15px;
-    border-radius:999px;border:1px solid var(--navy);background:var(--card);color:var(--navy);
-    transition:border-color 160ms ease,transform 160ms ease}
-  .chip:hover{border-color:var(--gold);transform:translateY(-1px)}
-  @media (prefers-reduced-motion:reduce){ .chip{transition:none} .chip:hover{transform:none} }
-  .chip[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
-  .chip.ghost{border-style:dashed;color:#3D4A57;border-color:#9AA5B1}
-  .chip.ghost:hover{border-style:solid;border-color:var(--gold);color:var(--navy)}
+    padding:12px 18px;display:flex;flex-wrap:wrap;gap:10px 26px;align-items:center;
+    box-shadow:0 6px 18px -10px rgba(11,21,48,.25);font-size:14px}
+
+  /* the mode switch */
+  .switch{display:inline-flex;align-items:center;gap:10px;cursor:pointer;font-weight:800;font-size:14px}
+  .switch input{position:absolute;opacity:0;width:1px;height:1px}
+  .sw-track{width:46px;height:26px;border-radius:999px;background:var(--navy);position:relative;
+    flex:none;transition:background 180ms ease}
+  .sw-knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;
+    transition:transform 180ms ease}
+  .switch input:checked ~ .sw-track .sw-knob{transform:translateX(20px)}
+  .switch input:focus-visible ~ .sw-track{outline:3px solid var(--maroon);outline-offset:2px}
+  .sw-side{color:#8C96A5}
+  .switch input:not(:checked) ~ .sw-track ~ .sw-side, .switch #swChart{color:#8C96A5}
+  .switch:has(input:not(:checked)) #swChart{color:var(--navy)}
+  .switch:has(input:checked) #swFocus{color:var(--navy)}
+  @media (prefers-reduced-motion:reduce){ .sw-track,.sw-knob{transition:none} }
+
+  /* the family dropdown */
+  .famsel{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:14px}
+  .famsel select{font:700 14px var(--f);color:var(--navy);background:var(--card);
+    border:1px solid var(--line);border-radius:8px;padding:7px 10px;cursor:pointer}
+  .famsel select:hover{border-color:var(--gold)}
+
+  /* hide-and-recall checkboxes */
+  .hides{border:0;margin:0;padding:0;display:inline-flex;flex-wrap:wrap;gap:6px 16px;align-items:center}
+  .hides legend{float:left;padding:0;margin-right:4px;font-weight:800;font-size:14px}
+  .hides label{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;cursor:pointer}
+  .hides input{width:16px;height:16px;accent-color:var(--navy);cursor:pointer}
+
+  /* the two quiet actions */
+  .acts{display:inline-flex;align-items:center;gap:8px;color:#8C96A5}
+  .txt{font:700 13.5px var(--f);color:var(--maroon);background:none;border:0;cursor:pointer;
+    padding:4px 2px;text-decoration:underline;text-underline-offset:3px}
+  .txt:hover{color:var(--navy)}
+
   a:focus-visible,button:focus-visible,textarea:focus-visible{outline:3px solid var(--maroon);outline-offset:2px}
   #pnote{position:absolute;left:-9999px}
 
@@ -68,13 +90,13 @@
   table{border-collapse:collapse;width:100%;min-width:1080px}
   caption{text-align:left;padding:14px 16px 4px;font-weight:800;font-size:15px}
   th{font-family:var(--fe);font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
-    color:var(--maroon);text-align:left;padding:12px 12px 8px;border-bottom:2px solid var(--gold);background:var(--card)}
+    color:var(--maroon);text-align:left;padding:12px 12px 8px;border-bottom:1px solid var(--line);background:var(--card)}
   td{padding:14px 12px;border-bottom:1px solid var(--line);vertical-align:top;font-size:14.5px;line-height:1.55}
   tr:last-child td{border-bottom:0}
   tr[data-fam]{background:var(--card)}
   tr[data-fam]:hover td{background:#FCFBF8}
   .fam-row td{font-family:var(--fe);font-size:12px;font-weight:700;letter-spacing:.14em;
-    text-transform:uppercase;color:var(--maroon);background:var(--tint);padding:9px 12px}
+    text-transform:uppercase;color:var(--maroon);background:var(--card);padding:18px 12px 6px}
   td.pic{width:190px}
   td.pic img{width:176px;height:auto;border-radius:10px;border:1px solid var(--line);display:block;
     box-shadow:0 1px 3px rgba(11,21,48,.12)}
@@ -89,7 +111,7 @@
   .cw.practice .veil:hover{border-color:var(--gold);border-style:solid}
   .cw.practice .desc{display:block;width:100%;min-height:52px;margin:0 0 8px;font:inherit;font-size:13.5px;
     border:1px solid var(--line);border-radius:8px;padding:8px;resize:vertical;background:#fff;color:var(--navy)}
-  .cw.practice.open .ans{display:block;border-left:3px solid var(--gold);padding-left:9px;cursor:pointer}
+  .cw.practice.open .ans{display:block;border:1px solid var(--gold);border-radius:8px;padding:8px 10px;cursor:pointer}
   .cw.practice.open .veil{display:none}
   .rehide-hint{font-size:11.5px;color:#3D4A57;display:none}
   .cw.practice.open .rehide-hint{display:block;margin-top:4px}
@@ -103,6 +125,11 @@
   .f-img img{width:100%;height:auto;max-height:68vh;object-fit:contain;background:#fff;
     border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 34px -18px rgba(11,21,48,.35)}
   .f-nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .chip{font:700 13px var(--f);cursor:pointer;padding:8px 15px;border-radius:999px;
+    border:1px solid var(--navy);background:var(--card);color:var(--navy)}
+  .chip:hover{border-color:var(--gold)}
+  .chip.ghost{border-style:dashed;color:#3D4A57;border-color:#9AA5B1}
+  .chip.ghost:hover{border-style:solid;border-color:var(--gold);color:var(--navy)}
   .f-count{font-family:var(--fe);font-size:12px;font-weight:700;letter-spacing:.1em;
     text-transform:uppercase;color:var(--maroon);margin:0 0 10px}
   .f-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 16px;margin-bottom:10px;
@@ -140,33 +167,38 @@
   </header>
 
   <div class="bar">
-    <div class="cluster"><span class="t">Mode</span>
-    <div class="chips" role="group" aria-label="Practice mode">
-      <button type="button" class="chip mode" data-mode="chart" aria-pressed="true">Whole chart</button>
-      <button type="button" class="chip mode" data-mode="focus" aria-pressed="false">One at a time</button>
-    </div></div>
-    <div class="cluster"><span class="t">Show</span>
-    <div class="chips" role="group" aria-label="Filter by tissue family">
-      <button type="button" class="chip fam" data-fam="all" aria-pressed="true">All</button>
-      <button type="button" class="chip fam" data-fam="ep" aria-pressed="false">Epithelial</button>
-      <button type="button" class="chip fam" data-fam="ct" aria-pressed="false">Connective</button>
-      <button type="button" class="chip fam" data-fam="mn" aria-pressed="false">Muscle and nervous</button>
-    </div></div>
-    <div class="cluster chartonly"><span class="t">Hide and recall</span>
-    <div class="chips" role="group" aria-label="Choose what to practice">
-      <button type="button" class="chip col" data-col="name" aria-pressed="false">Names</button>
-      <button type="button" class="chip col" data-col="fam" aria-pressed="false">Tissue types</button>
-      <button type="button" class="chip col" data-col="look" aria-pressed="false">What it looks like</button>
-      <button type="button" class="chip col" data-col="loc" aria-pressed="false">Locations</button>
-      <button type="button" class="chip col" data-col="func" aria-pressed="false">Functions</button>
-      <button type="button" class="chip col" data-col="sp" aria-pressed="false">Special structures</button>
-      <button type="button" class="chip col" data-col="pic" aria-pressed="false">Pictures</button>
-    </div></div>
-    <div class="cluster chartonly"><span class="t">Order</span>
-    <div class="chips">
-      <button type="button" class="chip ghost" id="shuffleBtn">Shuffle rows</button>
-      <button type="button" class="chip ghost" id="resetBtn">Show everything</button>
-    </div></div>
+    <label class="switch" for="modeSwitch">
+      <span class="sw-side" id="swChart">Whole chart</span>
+      <input type="checkbox" id="modeSwitch" role="switch" aria-label="Switch between the whole chart and one tissue at a time">
+      <span class="sw-track" aria-hidden="true"><span class="sw-knob"></span></span>
+      <span class="sw-side" id="swFocus">One at a time</span>
+    </label>
+
+    <label class="famsel">Show
+      <select id="famSel">
+        <option value="all">All tissues</option>
+        <option value="ep">Epithelial</option>
+        <option value="ct">Connective</option>
+        <option value="mn">Muscle and nervous</option>
+      </select>
+    </label>
+
+    <fieldset class="hides chartonly">
+      <legend>Hide and recall</legend>
+      <label><input type="checkbox" data-col="name"> Names</label>
+      <label><input type="checkbox" data-col="fam"> Tissue types</label>
+      <label><input type="checkbox" data-col="look"> Looks</label>
+      <label><input type="checkbox" data-col="loc"> Locations</label>
+      <label><input type="checkbox" data-col="func"> Functions</label>
+      <label><input type="checkbox" data-col="sp"> Special structures</label>
+      <label><input type="checkbox" data-col="pic"> Pictures</label>
+    </fieldset>
+
+    <span class="acts chartonly">
+      <button type="button" class="txt" id="shuffleBtn">Shuffle</button>
+      <span aria-hidden="true">&middot;</span>
+      <button type="button" class="txt" id="resetBtn">Show everything</button>
+    </span>
   </div>
   <p id="pnote" aria-live="polite"></p>
 
@@ -359,15 +391,14 @@
       tr.style.display = HID.fam ? 'none' : '';
     });
   }
-  document.querySelectorAll('.chip.col').forEach(function (b) {
-    b.addEventListener('click', function () {
-      var col = b.getAttribute('data-col');
-      HID[col] = !HID[col];
-      b.setAttribute('aria-pressed', String(!!HID[col]));
+  document.querySelectorAll('.hides input').forEach(function (c) {
+    c.addEventListener('change', function () {
+      var col = c.getAttribute('data-col');
+      HID[col] = c.checked;
       applyCols();
-      document.getElementById('pnote').textContent = HID[col]
-        ? 'Hiding ' + b.textContent + '. Recall first, then reveal.'
-        : b.textContent + ' shown again.';
+      document.getElementById('pnote').textContent = c.checked
+        ? 'Hiding ' + c.parentElement.textContent.trim() + '. Recall first, then reveal.'
+        : c.parentElement.textContent.trim() + ' shown again.';
     });
   });
 
@@ -381,14 +412,10 @@
       tr.hidden = (FAM !== 'all' && tr.getAttribute('data-famrow') !== FAM);
     });
   }
-  document.querySelectorAll('.chip.fam').forEach(function (b) {
-    b.addEventListener('click', function () {
-      FAM = b.getAttribute('data-fam');
-      document.querySelectorAll('.chip.fam').forEach(function (x) {
-        x.setAttribute('aria-pressed', String(x === b));
-      });
-      applyFam();
-    });
+  document.getElementById('famSel').addEventListener('change', function () {
+    FAM = this.value;
+    applyFam();
+    if (MODE === 'focus') { fPos = 0; renderFocus(); }
   });
 
   /* reveal and re-hide, one cell at a time */
@@ -412,7 +439,7 @@
   });
   document.getElementById('resetBtn').addEventListener('click', function () {
     HID = {};
-    document.querySelectorAll('.chip.col').forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+    document.querySelectorAll('.hides input').forEach(function (c) { c.checked = false; });
     applyCols();
     document.getElementById('pnote').textContent = 'Everything shown.';
   });
@@ -450,9 +477,7 @@
   }
   function setMode(m) {
     MODE = m;
-    document.querySelectorAll('.chip.mode').forEach(function (b) {
-      b.setAttribute('aria-pressed', String(b.getAttribute('data-mode') === m));
-    });
+    document.getElementById('modeSwitch').checked = (m === 'focus');
     var focus = (m === 'focus');
     document.getElementById('focusView').hidden = !focus;
     document.getElementById('chart').hidden = focus;
@@ -462,8 +487,9 @@
       ? 'One tissue at a time. Recall each field, then reveal it.'
       : 'The whole chart.';
   }
-  document.querySelectorAll('.chip.mode').forEach(function (b) {
-    b.addEventListener('click', function () { setMode(b.getAttribute('data-mode')); });
+  var modeSwitch = document.getElementById('modeSwitch');
+  modeSwitch.addEventListener('change', function () {
+    setMode(modeSwitch.checked ? 'focus' : 'chart');
   });
   document.getElementById('fRandom').addEventListener('click', function () {
     if (fPool.length > 1) {
