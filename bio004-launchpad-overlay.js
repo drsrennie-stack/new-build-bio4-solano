@@ -52,11 +52,15 @@
   + 'font-family:inherit;font-weight:700;font-size:13.5px;border-radius:999px;padding:8px 16px}'
   + '.lpov .lp-ghost:hover{border-color:#CFA95F;color:#fff}'
   + '.lpov .lp-calrow{margin-top:20px;text-align:center}'
-  + '.lpov .lp-disc{margin-top:12px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center}'
+  + '.lpov .lp-disc{margin-top:14px;display:flex;flex-direction:column;gap:12px;align-items:center}'
   + '.lpov .lp-dlbl{font-size:12.5px;font-weight:700;color:#C8D2DA}'
+  + '.lpov .lp-drow{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;align-items:flex-start}'
+  + '.lpov .lp-dcard{display:flex;flex-direction:column;align-items:center;gap:9px}'
   + '.lpov .lp-disc a{display:inline-block;background:none;border:1.5px solid rgba(244,239,232,.45);color:#F4EFE8;'
   + 'text-decoration:none;font-weight:700;font-size:13px;border-radius:999px;padding:7px 14px}'
   + '.lpov .lp-disc a:hover{border-color:#CFA95F;color:#fff}'
+  + '.lpov .lp-dqr{background:#fff;border-radius:10px;padding:7px;line-height:0}'
+  + '.lpov .lp-dqr svg{width:96px;height:96px;display:block}'
   + '.lpov .lp-subdeck{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px}'
   + '.lpov .lp-subdeck .lp-door{padding:15px 13px}'
   + '.lpov .lp-subdeck .lp-ic{width:42px;height:42px;border-radius:12px;margin-bottom:8px}'
@@ -170,21 +174,25 @@
 
   /* class Discord servers, one per section; the picked section wins */
   var DISCORD = {
-    'mw':     { label: '80650 &middot; MW 12:30 to 4:50', url: 'https://discord.gg/8kr8b27ePE' },
-    'tr-am':  { label: '80654 &middot; TR 9:30 to 1:50',  url: 'https://discord.gg/XxhERvqf3N' },
-    'tr-eve': { label: '80655 &middot; TR 5:30 to 9:50',  url: 'https://discord.gg/7Z2k7DePJ6' }
+    'mw':     { label: '80650 &middot; MW 12:30 to 4:50', url: 'https://discord.gg/8kr8b27ePE', qr: '<svg viewBox="0 0 33 33" class="segno"><path class="qrline" stroke="#0b1530" d="M2 2.5h7m1 0h2m1 0h3m2 0h1m5 0h7m-29 1h1m5 0h1m2 0h2m2 0h3m4 0h1m1 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h2m2 0h2m2 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m1 0h2m3 0h1m2 0h3m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h3m1 0h2m3 0h1m3 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m1 0h2m1 0h1m2 0h2m3 0h1m2 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-21 1h2m1 0h4m2 0h1m-17 1h1m1 0h1m1 0h4m1 0h1m2 0h2m1 0h2m1 0h1m1 0h3m1 0h2m1 0h1m-29 1h2m1 0h1m3 0h1m1 0h3m3 0h1m1 0h1m2 0h1m1 0h2m4 0h1m-28 1h1m1 0h1m2 0h2m1 0h1m3 0h1m3 0h3m2 0h1m4 0h1m-28 1h2m1 0h1m1 0h1m4 0h1m1 0h1m5 0h1m2 0h2m2 0h3m-27 1h1m2 0h5m1 0h1m5 0h2m2 0h1m1 0h2m-23 1h1m3 0h1m1 0h3m2 0h2m3 0h1m1 0h3m1 0h1m1 0h1m1 0h1m-28 1h1m1 0h1m3 0h6m1 0h2m1 0h2m9 0h2m-29 1h1m4 0h1m1 0h2m1 0h1m1 0h1m1 0h1m2 0h5m1 0h1m4 0h1m-29 1h1m1 0h1m2 0h2m2 0h1m2 0h3m1 0h1m1 0h2m1 0h1m1 0h1m3 0h1m-27 1h5m3 0h1m2 0h1m2 0h1m1 0h1m2 0h4m3 0h2m-29 1h1m1 0h1m2 0h2m2 0h2m1 0h1m4 0h1m2 0h2m1 0h1m1 0h1m1 0h2m-20 1h1m2 0h8m3 0h2m3 0h1m-29 1h1m3 0h1m1 0h5m1 0h1m3 0h1m3 0h8m-20 1h1m2 0h2m4 0h4m3 0h1m2 0h2m-29 1h7m1 0h1m4 0h1m4 0h1m1 0h1m1 0h1m1 0h4m-28 1h1m5 0h1m1 0h1m1 0h2m1 0h4m3 0h1m3 0h1m1 0h3m-29 1h1m1 0h3m1 0h1m2 0h5m2 0h1m1 0h1m1 0h6m1 0h1m-28 1h1m1 0h3m1 0h1m1 0h2m2 0h1m2 0h1m1 0h1m1 0h4m1 0h1m1 0h1m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h3m3 0h2m1 0h3m3 0h1m3 0h1m-29 1h1m5 0h1m1 0h3m1 0h1m3 0h2m2 0h2m1 0h1m3 0h1m-28 1h7m2 0h3m2 0h2m1 0h1m1 0h2m1 0h1m1 0h2m1 0h1"/></svg>' },
+    'tr-am':  { label: '80654 &middot; TR 9:30 to 1:50',  url: 'https://discord.gg/XxhERvqf3N', qr: '<svg viewBox="0 0 33 33" class="segno"><path class="qrline" stroke="#0b1530" d="M2 2.5h7m2 0h1m2 0h1m1 0h2m4 0h1m1 0h7m-29 1h1m5 0h1m9 0h5m1 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h3m2 0h1m1 0h1m1 0h4m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m6 0h1m1 0h2m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h2m3 0h1m3 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m1 0h1m1 0h3m1 0h1m2 0h3m2 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-19 1h3m1 0h1m2 0h2m-18 1h1m2 0h1m1 0h1m1 0h2m1 0h2m1 0h1m5 0h2m1 0h2m1 0h1m-24 1h1m1 0h1m1 0h1m7 0h2m1 0h1m4 0h2m1 0h3m-29 1h1m1 0h1m1 0h3m1 0h1m1 0h2m2 0h1m5 0h2m1 0h1m1 0h2m1 0h1m-29 1h1m1 0h3m3 0h1m2 0h1m1 0h2m1 0h3m2 0h1m1 0h2m2 0h2m-24 1h2m1 0h1m2 0h1m1 0h1m1 0h1m1 0h1m1 0h2m2 0h1m1 0h1m2 0h1m-29 1h1m1 0h3m4 0h3m1 0h6m3 0h1m1 0h1m1 0h1m1 0h1m-28 1h3m1 0h12m1 0h1m3 0h1m1 0h1m3 0h1m-28 1h1m2 0h1m3 0h1m1 0h1m1 0h1m1 0h1m1 0h2m2 0h1m1 0h2m1 0h1m-26 1h3m2 0h2m5 0h3m1 0h1m1 0h2m1 0h1m5 0h1m-28 1h1m3 0h1m5 0h1m1 0h1m1 0h1m2 0h2m2 0h1m1 0h2m3 0h1m-26 1h1m2 0h1m3 0h2m2 0h2m2 0h1m4 0h1m1 0h2m1 0h1m-22 1h1m1 0h1m1 0h10m2 0h3m2 0h1m-29 1h3m2 0h3m1 0h1m2 0h3m2 0h1m1 0h6m1 0h3m-21 1h2m4 0h2m3 0h2m3 0h1m1 0h1m1 0h1m-29 1h7m3 0h4m1 0h3m1 0h2m1 0h1m1 0h1m3 0h1m-29 1h1m5 0h1m6 0h1m1 0h1m1 0h1m1 0h2m3 0h2m1 0h1m-28 1h1m1 0h3m1 0h1m1 0h4m1 0h2m3 0h7m2 0h2m-29 1h1m1 0h3m1 0h1m3 0h2m1 0h1m2 0h1m1 0h1m4 0h1m1 0h1m1 0h1m-28 1h1m1 0h3m1 0h1m3 0h1m1 0h1m3 0h1m2 0h3m5 0h2m-29 1h1m5 0h1m1 0h2m3 0h1m3 0h1m1 0h5m1 0h1m1 0h2m-29 1h7m2 0h2m3 0h2m1 0h1m2 0h1m1 0h1m1 0h1m2 0h1"/></svg>' },
+    'tr-eve': { label: '80655 &middot; TR 5:30 to 9:50',  url: 'https://discord.gg/7Z2k7DePJ6', qr: '<svg viewBox="0 0 33 33" class="segno"><path class="qrline" stroke="#0b1530" d="M2 2.5h7m2 0h1m1 0h1m4 0h1m1 0h2m2 0h7m-29 1h1m5 0h1m4 0h1m3 0h1m1 0h4m1 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h3m2 0h1m1 0h1m1 0h2m3 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m4 0h1m1 0h1m1 0h2m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h4m1 0h2m2 0h2m3 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m1 0h1m1 0h3m4 0h3m2 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-19 1h4m3 0h1m-17 1h1m2 0h1m1 0h1m1 0h2m1 0h1m2 0h1m2 0h2m2 0h1m1 0h2m1 0h1m-25 1h2m1 0h1m1 0h2m6 0h2m2 0h1m2 0h3m1 0h3m-29 1h1m3 0h3m1 0h1m1 0h1m1 0h1m1 0h2m4 0h2m1 0h4m1 0h1m-29 1h1m1 0h1m1 0h1m3 0h1m2 0h1m1 0h2m1 0h3m1 0h2m1 0h1m3 0h2m-27 1h1m2 0h4m4 0h1m3 0h1m1 0h2m2 0h1m1 0h1m2 0h1m-27 1h3m4 0h3m1 0h4m1 0h1m3 0h1m1 0h1m1 0h1m1 0h1m-28 1h3m2 0h3m2 0h6m1 0h1m2 0h1m2 0h1m3 0h1m-25 1h2m2 0h2m2 0h3m1 0h2m2 0h1m2 0h1m1 0h1m-26 1h1m1 0h1m3 0h1m3 0h1m1 0h1m3 0h1m1 0h3m2 0h1m3 0h1m-28 1h2m2 0h2m1 0h2m3 0h1m1 0h1m2 0h2m2 0h2m1 0h1m3 0h1m-27 1h2m2 0h1m3 0h1m3 0h2m2 0h1m4 0h4m1 0h1m-27 1h1m4 0h3m3 0h6m1 0h1m2 0h2m3 0h1m-29 1h3m2 0h3m1 0h1m1 0h4m2 0h1m1 0h6m2 0h2m-21 1h2m3 0h3m3 0h2m3 0h1m1 0h1m1 0h1m-29 1h7m2 0h4m1 0h4m1 0h2m1 0h1m1 0h1m3 0h1m-29 1h1m5 0h1m3 0h1m2 0h3m1 0h1m1 0h2m3 0h2m1 0h1m-28 1h1m1 0h3m1 0h1m1 0h2m1 0h1m1 0h2m3 0h7m2 0h2m-29 1h1m1 0h3m1 0h1m3 0h1m2 0h2m1 0h1m1 0h1m4 0h1m2 0h2m-28 1h1m1 0h3m1 0h1m3 0h1m5 0h1m2 0h3m3 0h4m-29 1h1m5 0h1m1 0h2m1 0h1m1 0h1m3 0h1m4 0h2m1 0h1m1 0h2m-29 1h7m2 0h2m3 0h2m1 0h1m2 0h3m1 0h1m1 0h2"/></svg>' }
   };
   (function () {
     var el = ov.querySelector('#lpDisc');
     if (!el) return;
-    function dpill(d, text) { return '<a href="' + d.url + '" target="_blank" rel="noopener">' + text + '</a>'; }
+    function dcard(d, text) {
+      return '<span class="lp-dcard"><a href="' + d.url + '" target="_blank" rel="noopener">' + text + '</a>'
+        + '<span class="lp-dqr" aria-hidden="true">' + d.qr + '</span></span>';
+    }
     if (sec && DISCORD[sec]) {
-      el.innerHTML = '<span class="lp-dlbl">Your class Discord:</span>' + dpill(DISCORD[sec], 'Join ' + DISCORD[sec].label + ' &#8594;');
+      el.innerHTML = '<span class="lp-dlbl">Your class Discord, click or scan:</span><span class="lp-drow">'
+        + dcard(DISCORD[sec], 'Join ' + DISCORD[sec].label + ' &#8594;') + '</span>';
     } else {
-      el.innerHTML = '<span class="lp-dlbl">Class Discord:</span>'
-        + dpill(DISCORD['mw'], DISCORD['mw'].label)
-        + dpill(DISCORD['tr-am'], DISCORD['tr-am'].label)
-        + dpill(DISCORD['tr-eve'], DISCORD['tr-eve'].label);
+      el.innerHTML = '<span class="lp-dlbl">Class Discord, click yours or scan it:</span><span class="lp-drow">'
+        + dcard(DISCORD['mw'], DISCORD['mw'].label)
+        + dcard(DISCORD['tr-am'], DISCORD['tr-am'].label)
+        + dcard(DISCORD['tr-eve'], DISCORD['tr-eve'].label) + '</span>';
     }
   })();
 
