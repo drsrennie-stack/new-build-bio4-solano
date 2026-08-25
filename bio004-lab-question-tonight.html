@@ -74,6 +74,27 @@
   footer{padding:0 22px 14px;font-size:12.5px;color:#8C96A5;text-align:center}
   footer a{color:#DCB45C}
   .pbtn{padding:8px 16px;font-size:13px}
+  /* ---------- the curtain: blank stage until she opens it ---------- */
+  .imgwrap{position:relative}
+  .curtain{position:absolute;inset:0;border:0;background:#141d33;cursor:pointer;overflow:hidden;
+    border-radius:8px;padding:0;font-family:inherit}
+  .curtain[hidden]{display:none}
+  .c-panel{position:absolute;top:0;bottom:0;width:50.5%;
+    background:repeating-linear-gradient(90deg,#1E2A47 0 46px,#243154 46px 92px);
+    box-shadow:inset 0 -30px 40px rgba(0,0,0,.35);transition:transform .6s ease}
+  .c-left{left:0}
+  .c-right{right:0}
+  .c-text{position:absolute;inset:0;display:flex;flex-direction:column;gap:10px;align-items:center;
+    justify-content:center;color:#fff;font-weight:800;font-size:clamp(18px,2.6vw,27px);
+    text-align:center;padding:24px;transition:opacity .3s ease}
+  .c-sub{display:block;font-size:14.5px;font-weight:700;color:#DCB45C}
+  .curtain:focus-visible{outline:3px solid #B8924A;outline-offset:3px}
+  .curtain.open{background:transparent;pointer-events:none}
+  .curtain.open .c-left{transform:translateX(-103%)}
+  .curtain.open .c-right{transform:translateX(103%)}
+  .curtain.open .c-text{opacity:0}
+  @media (prefers-reduced-motion:reduce){.c-panel,.c-text{transition:none}}
+
   /* ---------- present mode: fullscreen, chrome gone, image maximal ---------- */
   body.present footer,body.present .loopslink{display:none}
   body.present .top{padding-top:8px}
@@ -93,7 +114,15 @@
   <main class="stage">
     <h1 id="qTitle"></h1>
     <p class="offnote" id="offNote" hidden></p>
-    <div class="imgwrap"><img id="slideImg" src="" alt=""></div>
+    <div class="imgwrap">
+      <img id="slideImg" src="" alt="">
+      <button type="button" class="curtain" id="curtain" aria-label="Open the curtain and show tonight's question, near full screen">
+        <span class="c-panel c-left" aria-hidden="true"></span>
+        <span class="c-panel c-right" aria-hidden="true"></span>
+        <span class="c-text">Tonight's question is behind the curtain
+          <span class="c-sub">Spin the picker below, then click to open</span></span>
+      </button>
+    </div>
     <div class="bar">
       <div class="prompts" id="prompts"></div>
       <button type="button" class="btn" id="revealBtn">Reveal the answer</button>
@@ -307,7 +336,28 @@
     revealed = false; forced = true;
     render();
   }
-  document.getElementById('revealBtn').addEventListener('click', function () { revealed = !revealed; render(); });
+  /* ---- the curtain. The stage starts covered so she can run the
+     picker first. One click opens the drapes AND drops the page into
+     Present mode, so the question lands near full screen. A fresh
+     load (each lab night) starts covered again. ---- */
+  var CURT = document.getElementById('curtain');
+  var curtained = true;
+  function openCurtain(){
+    if (!curtained) return;
+    curtained = false;
+    if (!document.body.classList.contains('present')) {
+      setPresent(true);
+      try { if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen(); } catch (e) {}
+    }
+    CURT.classList.add('open');
+    setTimeout(function () { CURT.hidden = true; }, 700);
+  }
+  CURT.addEventListener('click', openCurtain);
+
+  document.getElementById('revealBtn').addEventListener('click', function () {
+    if (curtained) { openCurtain(); return; }
+    revealed = !revealed; render();
+  });
   document.getElementById('prevBtn').addEventListener('click', function () { go(idx - 1); });
   document.getElementById('nextBtn').addEventListener('click', function () { go(idx + 1); });
   document.addEventListener('keydown', function (e) {
@@ -315,7 +365,9 @@
     else if (e.key === 'ArrowRight') go(idx + 1);
     else if (e.key === ' ' || e.key === 'Enter') {
       if (e.target && ['BUTTON','A','SELECT'].indexOf(e.target.tagName) > -1) return;
-      e.preventDefault(); revealed = !revealed; render();
+      e.preventDefault();
+      if (curtained) { openCurtain(); return; }
+      revealed = !revealed; render();
     }
   });
   render();
