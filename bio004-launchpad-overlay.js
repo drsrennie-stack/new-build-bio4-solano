@@ -72,6 +72,39 @@
   + '.lpov .lp-boost .lp-bt{display:block}'
   + '.lpov .lp-boost b{color:#08101F}'
   + '.lpov .lp-boost .lp-bt span{color:rgba(8,16,31,.78)}'
+  + '.lpov .lp-news{grid-column:1/-1;display:flex;align-items:center;gap:14px;text-align:left;'
+  + 'background:linear-gradient(135deg,#C2734D,#8a4526);padding:16px 20px;position:relative;width:100%}'
+  + '.lpov .lp-news b{color:#fff}'
+  + '.lpov .lp-news .lp-bt{display:block}'
+  + '.lpov .lp-news .lp-bt span{color:rgba(255,255,255,.88)}'
+  + '.lpov .lp-news .lp-ic{margin:0;flex:none;background:rgba(8,16,31,.35)}'
+  + '.lpov .lp-abadge{position:absolute;top:-9px;right:-9px;background:#DCB45C;color:#08101F;font-weight:800;'
+  + 'border-radius:999px;min-width:26px;height:26px;display:flex;align-items:center;justify-content:center;'
+  + 'font-size:13px;padding:0 8px;box-shadow:0 4px 10px rgba(0,0,0,.4);border:2px solid #08101F}'
+  + '.lpov .lp-ann a.ai{display:block;text-decoration:none;color:inherit}'
+  + '.lpov .lp-ann a.ai:hover .at,.lpov .lp-ann a.ai:focus-visible .at{color:#8a4526}'
+  + '.lpov .lp-ann{background:#fff;color:#08101F;border-radius:16px;padding:18px 18px 14px;text-align:left;'
+  + 'box-shadow:0 14px 34px -12px rgba(0,0,0,.6);margin:26px auto 0;max-width:640px}'
+  + '.lpov .lp-ann h2{font-size:16px;font-weight:800;margin:0;color:#08101F}'
+  + '.lpov .lp-ann .asub{font-family:"DM Sans",system-ui,sans-serif;font-size:10.5px;font-weight:700;'
+  + 'letter-spacing:.14em;text-transform:uppercase;color:#8a4526;margin:2px 0 4px}'
+  + '.lpov .lp-ann .ai{border-top:1px solid rgba(30,61,76,.14);padding:11px 0 10px}'
+  + '.lpov .lp-ann .ai:first-of-type{border-top:0}'
+  + '.lpov .lp-ann .ad{font-family:"DM Sans",system-ui,sans-serif;font-size:10.5px;font-weight:700;'
+  + 'letter-spacing:.1em;text-transform:uppercase;color:#2A3949}'
+  + '.lpov .lp-ann .anew{display:inline-block;background:#B8924A;color:#fff;border-radius:999px;'
+  + 'font-size:9.5px;font-weight:700;padding:2px 8px;margin-left:6px;vertical-align:1px}'
+  + '.lpov .lp-ann .at{font-weight:800;font-size:14.5px;margin:3px 0 3px;color:#08101F}'
+  + '.lpov .lp-ann .ab{font-size:13px;color:#2A3949;margin:0}'
+  + '.lpov .lp-ann .al{display:inline-block;font-weight:700;font-size:12.5px;color:#8a4526;'
+  + 'text-decoration:none;margin-top:5px}'
+  + '.lpov .lp-ann .al:hover{text-decoration:underline}'
+  + '.lpov .lp-ann .anote{font-family:"DM Sans",system-ui,sans-serif;font-size:10.5px;color:#2A3949;'
+  + 'margin:10px 0 0;border-top:1px solid rgba(30,61,76,.14);padding-top:9px}'
+  + '@media(min-width:1060px){.lpov .lp-wrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;'
+  + 'column-gap:30px;max-width:1200px;align-items:start}'
+  + '.lpov .lp-wrap>*{grid-column:1}'
+  + '.lpov .lp-wrap>.lp-ann{grid-column:2;grid-row:1/span 30;margin:40px 0 0;max-width:none}}'
   + '.lpov a:focus-visible,.lpov button:focus-visible{outline:3px solid #CFA95F;outline-offset:3px;border-radius:8px}'
   + '@media print{.lpov{display:none}}';
 
@@ -80,6 +113,8 @@
   }
   var I = {
     heart: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21.2l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/>',
+    target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+    mega: '<path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
     book: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
     flask: '<path d="M10 2v7.5L4.5 19a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L14 9.5V2"/><path d="M8 2h8"/>',
     bulb: '<path d="M12 2a7 7 0 0 1 7 7c0 2.4-1.2 4.2-2.6 5.6-.8.8-1.4 1.9-1.4 3v.4H9v-.4c0-1.1-.6-2.2-1.4-3C6.2 13.2 5 11.4 5 9a7 7 0 0 1 7-7z"/><path d="M9 21h6"/>',
@@ -133,6 +168,9 @@
     + door('ic-blue', I.flow, 'Study Protocol', 'The flow chart for this week', go('bio004-study-protocol.html'))
     + '<a class="lp-door lp-boost" ' + go('bio004-blog.html') + '>' + ic('ic-navy', I.heart)
     + '<span class="lp-bt"><b>Need motivation?</b><span>Short reads for hard weeks, from Dr. Rennie</span></span></a>'
+    + '<button class="lp-door lp-news" data-lpopen="news" id="lpNewsDoor">' + ic('', I.mega)
+    + '<span class="lp-bt"><b>Weekly announcements</b><span>What you missed, in one place</span></span>'
+    + '<span class="lp-abadge" id="lpAnnBadge" hidden aria-hidden="true"></span></button>'
     + '</div>'
     + '<div class="lp-calrow"><button class="lp-ghost" data-lpclose="1">Go to the calendar &#8594;</button></div>'
     + '<div class="lp-disc" id="lpDisc"></div>'
@@ -168,7 +206,13 @@
     + door('ic-navy', I.pen, 'Brain dump', 'Blank page, timer, check yourself', go('brain-dump-practice.html'))
     + door('ic-gold', I.flow, 'Study Protocol', 'The flow chart for this week', go('bio004-study-protocol.html'))
     + door('ic-blue', I.grid, 'Tissue Chart', 'Recall it column by column', go('bio004-tissue-chart-practice.html'))
+    + door('ic-terra', I.target, 'Exam Builder', 'Fresh practice exam, any time', go('bio004-practice-exam-builder.html'))
     + '</div></div>'
+
+    + '<div class="lp-panel" data-lp="news">'
+    + '<div class="lp-backrow"><button class="lp-ghost" data-lpback="1">&#8592; Back to the four doors</button></div>'
+    + '<div class="lp-ann" id="lpNewsList" style="margin-top:0"></div>'
+    + '</div>'
 
     + '</div>';
 
@@ -194,6 +238,69 @@
         + dcard(DISCORD['tr-am'], DISCORD['tr-am'].label)
         + dcard(DISCORD['tr-eve'], DISCORD['tr-eve'].label) + '</span>';
     }
+  })();
+
+  /* announcements column: bio004-announcements.js is loaded on demand so
+     every page that carries the overlay shows the same list */
+  (function () {
+    var tag = document.createElement('script');
+    tag.src = 'bio004-announcements.js';
+    tag.onload = function () {
+      var A = window.BIO004_ANNOUNCEMENTS;
+      if (!A || !A.length) return;
+      var wrap = ov.querySelector('.lp-wrap');
+      if (!wrap) return;
+      var aesc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); };
+      var MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      var now = new Date(); now.setHours(0, 0, 0, 0);
+      var sorted = A.slice().sort(function (a, b) { return a.date === b.date ? 0 : (a.date < b.date ? 1 : -1); });
+      var itemHTML = function (a) {
+        var d = new Date(a.date + 'T00:00:00');
+        var isNew = (now - d) <= 7 * 864e5;
+        var ext = /^https?:/i.test(a.link || '');
+        var inner = '<span class="ad">' + MO[d.getMonth()] + ' ' + d.getDate() + '</span>'
+          + (isNew ? '<span class="anew">NEW</span>' : '')
+          + '<div class="at">' + aesc(a.title) + '</div>'
+          + '<p class="ab">' + aesc(a.body) + '</p>'
+          + (a.link ? '<span class="al">' + aesc(a.linkLabel || 'Read it') + ' &#8594;</span>' : '');
+        return a.link
+          ? '<a class="ai" href="' + aesc(a.link) + '"' + (ext ? ' target="_blank" rel="noopener"' : ' target="_top"') + '>' + inner + '</a>'
+          : '<div class="ai">' + inner + '</div>';
+      };
+      var head = '<div class="asub">From Dr. Rennie</div><h2>Announcements</h2>';
+      var note = '<p class="anote">Announcements also go out by email through Canvas.</p>';
+      var el = document.createElement('aside');
+      el.className = 'lp-ann';
+      el.setAttribute('aria-label', 'Announcements');
+      el.innerHTML = head + sorted.slice(0, 5).map(itemHTML).join('') + note;
+      wrap.appendChild(el);
+      var newsList = ov.querySelector('#lpNewsList');
+      if (newsList) newsList.innerHTML = head + sorted.slice(0, 15).map(itemHTML).join('') + note;
+
+      /* unread badge on the Weekly announcements door */
+      var badge = ov.querySelector('#lpAnnBadge');
+      var newsDoor = ov.querySelector('#lpNewsDoor');
+      var readDate = '';
+      try { readDate = localStorage.getItem('bio004-ann-read') || ''; } catch (e) {}
+      var unread = A.filter(function (a) { return a.date > readDate; }).length;
+      if (badge && unread > 0) {
+        badge.hidden = false;
+        badge.textContent = unread > 9 ? '9+' : unread;
+        if (newsDoor) newsDoor.setAttribute('aria-label', 'Weekly announcements, ' + unread + ' unread');
+      }
+      var markRead = function () {
+        var mx = A.reduce(function (m, a) { return a.date > m ? a.date : m; }, '');
+        try { localStorage.setItem('bio004-ann-read', mx); } catch (e) {}
+        if (badge) badge.hidden = true;
+        if (newsDoor) newsDoor.setAttribute('aria-label', 'Weekly announcements');
+      };
+      ov.addEventListener('click', function (e) {
+        if (e.target.closest('[data-lpopen="news"]')) markRead();
+      });
+      /* on a wide screen the column is in plain sight, so it counts as read */
+      if (window.matchMedia && matchMedia('(min-width:1060px)').matches) markRead();
+    };
+    document.head.appendChild(tag);
   })();
 
   function boot() {
