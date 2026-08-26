@@ -215,6 +215,7 @@
       <a class="door" data-go="bio004-study-protocol.html" href="bio004-study-protocol.html" target="_top"><span class="icsq ic-gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v4M12 11v4M12 19v2"/><rect x="8" y="7" width="8" height="4" rx="1"/><rect x="8" y="15" width="8" height="4" rx="1"/></svg></span><b>Study Protocol</b><span>The flow chart: what to try this week</span></a>
       <a class="door" data-go="bio004-tissue-chart-practice.html" href="bio004-tissue-chart-practice.html" target="_top"><span class="icsq ic-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span><b>Tissue Chart</b><span>Recall it column by column</span></a>
       <a class="door" data-go="bio004-practice-exam-builder.html" href="bio004-practice-exam-builder.html" target="_top"><span class="icsq ic-terra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></span><b>Exam Builder</b><span>Fresh practice exam, any time</span></a>
+      <a class="door" data-go="study-with-me-hours.html" href="study-with-me-hours.html" target="_top"><span class="icsq ic-gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><b>Study With Me</b><span>Log your hours, bank Scholar Points</span></a>
     </div>
   </div>
 
@@ -293,6 +294,10 @@
     Object.keys(panels).forEach(function (k) {
       document.getElementById(panels[k]).classList.toggle('on', k === key);
     });
+    /* the news panel IS the announcements list, so the side column
+       steps aside while it is open to avoid showing the list twice */
+    var ac = document.getElementById('annCol');
+    if (ac) ac.style.display = (key === 'news') ? 'none' : '';
     var first = document.querySelector('#' + panels[key] + ' .door, #' + panels[key] + ' button');
     if (first) first.focus();
   }

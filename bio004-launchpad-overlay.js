@@ -115,6 +115,7 @@
     heart: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21.2l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/>',
     target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
     mega: '<path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
+    people: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
     book: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
     flask: '<path d="M10 2v7.5L4.5 19a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L14 9.5V2"/><path d="M8 2h8"/>',
     bulb: '<path d="M12 2a7 7 0 0 1 7 7c0 2.4-1.2 4.2-2.6 5.6-.8.8-1.4 1.9-1.4 3v.4H9v-.4c0-1.1-.6-2.2-1.4-3C6.2 13.2 5 11.4 5 9a7 7 0 0 1 7-7z"/><path d="M9 21h6"/>',
@@ -207,6 +208,7 @@
     + door('ic-gold', I.flow, 'Study Protocol', 'The flow chart for this week', go('bio004-study-protocol.html'))
     + door('ic-blue', I.grid, 'Tissue Chart', 'Recall it column by column', go('bio004-tissue-chart-practice.html'))
     + door('ic-terra', I.target, 'Exam Builder', 'Fresh practice exam, any time', go('bio004-practice-exam-builder.html'))
+    + door('ic-gold', I.people, 'Study With Me', 'Log your hours, bank Scholar Points', go('study-with-me-hours.html'))
     + '</div></div>'
 
     + '<div class="lp-panel" data-lp="news">'
@@ -316,6 +318,10 @@
       ov.querySelectorAll('.lp-panel').forEach(function (p) {
         p.classList.toggle('on', p.getAttribute('data-lp') === key);
       });
+      /* the news panel IS the announcements list, so the side column
+         steps aside while it is open to avoid showing the list twice */
+      var ann = ov.querySelector('.lp-ann');
+      if (ann) ann.style.display = (key === 'news') ? 'none' : '';
       var f = ov.querySelector('.lp-panel.on .lp-door, .lp-panel.on button');
       if (f) f.focus();
     }
