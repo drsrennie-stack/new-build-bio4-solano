@@ -691,6 +691,60 @@ section.block:first-of-type{border-top:none}
 .run-done{font-size:12.5px;color:var(--ink-soft);margin:0 0 6px}
 .run-done b{color:var(--navy)}
 @media (prefers-reduced-motion: reduce){.run-opt:hover{transform:none}}
+/* ============ TWO VIEWS: Today / My progress ============
+   The app opens on Today: one linear path, one live button.
+   Everything analytical lives behind the My progress tab. */
+.vtabs{display:flex;gap:8px;padding:9px 16px;max-width:1120px;margin:0 auto}
+.vtab{font-family:inherit;font-weight:800;font-size:14px;border:1px solid var(--line);background:var(--white);
+  color:var(--ink-soft);border-radius:999px;padding:9px 24px;cursor:pointer}
+.vtab[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.vtab:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+body[data-view="today"] .secnav ul{display:none}
+body[data-view="today"] #s-dash,body[data-view="today"] #s-map,body[data-view="today"] #s-weak,
+body[data-view="today"] #s-flow,body[data-view="today"] #s-evidence,body[data-view="today"] #s-skills,
+body[data-view="today"] #s-coach,body[data-view="today"] #s-together{display:none}
+body[data-view="progress"] #s-plan,body[data-view="progress"] #s-recall{display:none}
+body[data-view="progress"] #workRail{display:none}
+
+/* the focus session banner steps back: the rail is the boss */
+.fs-banner{padding:12px 16px}
+.fs-banner b{font-size:14px}
+.fs-banner span{font-size:12.5px}
+
+/* ============ THE WORKLIST RAIL ============
+   Scrubs's design: a persistent clickable list beside the work, so a
+   student never gets lost behind the one thing they clicked. Items
+   cross off as they finish. Today's steps use it; a weakness repair
+   run swaps its contents. */
+#workRail{float:right;position:sticky;top:118px;width:232px;margin:18px 16px 18px 26px;
+  background:var(--white);border:1px solid var(--line);border-radius:14px;padding:14px 14px 10px;z-index:26;
+  box-shadow:0 8px 20px rgba(11,21,48,.12)}
+#workRail[hidden]{display:none}
+#workRail .wr-eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--terra-dark);margin:0 0 2px}
+#workRail h3{font-size:14.5px;font-weight:800;margin:0 0 6px;color:var(--navy)}
+.wr-item{display:flex;gap:9px;align-items:flex-start;width:100%;text-align:left;background:none;border:0;
+  border-top:1px solid var(--line-soft);padding:9px 2px;cursor:pointer;font-family:inherit;font-size:13px;
+  font-weight:700;color:var(--navy);line-height:1.35}
+.wr-item:first-of-type{border-top:0}
+.wr-item .wr-dot{flex:none;width:16px;height:16px;border-radius:50%;border:2px solid var(--line);margin-top:1px;position:relative}
+.wr-item.done{color:var(--ink-faint);text-decoration:line-through}
+.wr-item.done .wr-dot{background:var(--navy);border-color:var(--navy)}
+.wr-item.done .wr-dot::after{content:'\2713';color:#fff;font-size:10px;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-decoration:none}
+.wr-item:hover:not(.done),.wr-item:focus-visible{color:var(--terra-dark)}
+.wr-item:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
+.wr-sub{display:block;font-weight:600;font-size:11.5px;color:var(--ink-soft);text-decoration:none}
+.wr-foot{border-top:1px solid var(--line);margin-top:6px;padding-top:8px;font-size:11.5px;color:var(--ink-soft)}
+.wr-foot button{background:none;border:0;padding:0;font:inherit;font-weight:700;color:var(--terra-dark);cursor:pointer;text-decoration:underline}
+@media(max-width:1099px){
+  /* narrow screens and Canvas iframes: the list becomes a sticky
+     chip scroller across the top, same items, same cross-off */
+  #workRail{float:none;position:sticky;top:104px;width:auto;margin:0 0 14px;display:flex;gap:8px;
+    overflow-x:auto;align-items:center;padding:10px 12px;border-radius:12px}
+  #workRail .wr-eyebrow,#workRail h3{display:none}
+  .wr-item{border-top:0;border:1px solid var(--line);border-radius:999px;padding:6px 12px;white-space:nowrap;flex:none;width:auto}
+  .wr-item .wr-sub{display:none}
+  .wr-foot{border-top:0;margin:0;padding:0;white-space:nowrap;flex:none}
+}
 </style>
 </head>
 <body>
@@ -732,14 +786,16 @@ section.block:first-of-type{border-top:none}
   </div>
 </header>
 
-<!-- ============ SECTION NAV ============ -->
-<nav class="secnav" aria-label="Sections">
+<!-- ============ VIEW NAV: two doors, not ten ============ -->
+<nav class="secnav" aria-label="Views">
+  <div class="vtabs">
+    <button type="button" class="vtab" id="tabToday" data-goview="today" aria-pressed="true">Today</button>
+    <button type="button" class="vtab" id="tabProg" data-goview="progress" aria-pressed="false">My progress</button>
+  </div>
   <ul>
-    <li><a href="#s-plan">Today</a></li>
     <li><a href="#s-dash">Dashboard</a></li>
     <li><a href="#s-map">Competencies</a></li>
     <li><a href="#s-weak">Weaknesses</a></li>
-    <li><a href="#s-recall">Recall</a></li>
     <li><a href="#s-flow">Self-Tutoring</a></li>
     <li><a href="#s-evidence">Evidence</a></li>
     <li><a href="#s-skills">Learning Skills</a></li>
@@ -749,6 +805,11 @@ section.block:first-of-type{border-top:none}
 </nav>
 
 <main id="main">
+  <!-- THE WORKLIST RAIL: the persistent clickable list. Floats beside
+       the work on wide screens, becomes a sticky chip scroller on
+       narrow ones. Filled by wlRender(). -->
+  <aside id="workRail" aria-label="Your worklist" hidden></aside>
+
   <!-- 1 TODAY'S PLAN -->
   <section class="block" id="s-plan" aria-labelledby="h-plan" tabindex="-1">
     <div class="wrap">
@@ -758,13 +819,14 @@ section.block:first-of-type{border-top:none}
            schedule, the real due dates and the real weak spots. -->
       <!-- THE FOCUS SESSION: one screen, one thing, rounds and breaks
            run by the app. The student picks length and focus only. -->
-      <div class="fs-banner">
-        <div><b>Study session</b>
-        <span>One thing on screen at a time, rounds and breaks run for you. You pick the round length and the focus. It does the rest.</span></div>
-        <button class="btn gold big" data-focussession>Start a session</button>
-      </div>
-
       <div id="dayRail"></div>
+
+      <!-- demoted below the rail: an option, not a rival entry point -->
+      <div class="fs-banner">
+        <div><b>Prefer a guided timer?</b>
+        <span>The Focus Session runs the same list one thing at a time, with rounds and breaks handled for you.</span></div>
+        <button class="btn" data-focussession>Start a Focus Session</button>
+      </div>
 
       <div id="dailyBuild"></div>
     </div>
@@ -797,6 +859,7 @@ section.block:first-of-type{border-top:none}
     <div class="wrap">
       <div class="sec-head">
         <div><p class="eyebrow">Section 4</p><h2 id="h-weak">Weakness Dashboard</h2><p class="lead">Collected from your misses, your low-confidence answers, and recall you have let slip.</p></div>
+        <button class="btn rust" data-worklist-weak>Work the list</button>
       </div>
       <div id="weakWrap"><!-- JS --></div>
       <div id="loopWeak"><!-- JS --></div>
@@ -819,7 +882,7 @@ section.block:first-of-type{border-top:none}
     <div class="wrap">
       <div class="sec-head">
         <div><p class="eyebrow">Section 5</p><h2 id="h-flow">Self-Tutoring Workflow</h2><p class="lead">The same six steps every session, until running them is a habit.</p></div>
-        <button class="btn primary" data-session="today">Start today's session</button>
+        <button class="btn" data-goview="today">Go to Today</button>
       </div>
       <div class="flow" id="flowWrap"><!-- JS --></div>
       <h3 style="margin:30px 0 4px;font-size:17px">Signature exercises</h3>
@@ -855,7 +918,7 @@ section.block:first-of-type{border-top:none}
       <div class="sec-head">
         <div><p class="eyebrow">Section 8</p><h2 id="h-co">AI Mastery Coach</h2><p class="lead">Meet Hootie the Knowfish. He reads your progress and points you at one action.</p></div>
       </div>
-      <div class="card coach">
+      <div class="card coach"><!-- keep -->
         <div class="coach-hdr"><span class="coach-ava" role="img" aria-label="Hootie the Knowfish">🐡</span><div><strong>Hootie the Knowfish</strong><span>Your Mastery Coach, DPhil (Anatomy)</span></div></div>
         <div class="coach-log" id="coachLog" role="log" aria-live="polite" aria-label="Coach conversation"></div>
         <div class="coach-prompts" id="coachPrompts" aria-label="Suggested prompts"></div>
@@ -1830,7 +1893,7 @@ function renderDailyBuild(){
   var fwd=nc?('Keeps you moving forward toward '+esc(nc.label)+' on '+esc(nc.dayName)+'. '):'';
   var note=fwd+'Ordered to your gaps: highest-yield work for Week '+p.week.n+' first, your weakest within that, and competencies you have proven drop out to spaced review. Includes pre-exposure to new material plus due reviews from earlier weeks.'+(nc&&nc.exam&&nc.days<=3?' Weighted toward review with the exam coming up.':'');
   var trim=p.trimmed?'<p class="build-trim">'+p.trimmed+' more competenc'+(p.trimmed===1?'y':'ies')+' did not fit today’s '+fmtHM(p.budget)+'. Add a study day or more hours to reach them, or they roll to tomorrow.</p>':'';
-  el.innerHTML='<div class="card build-card"><div class="build-head"><div><p class="eyebrow">'+eyebrow+'</p><h3>'+fmtHM(doneMins)+' of '+fmtHM(p.budget)+' done</h3></div><button class="btn primary" data-session="today">Start today&#39;s session</button></div><div class="build-bar" role="img" aria-label="'+pct+' percent of today complete"><span style="width:'+pct+'%"></span></div><p style="font-size:12px;color:var(--ink-faint);margin:0 0 10px">'+note+'</p>'+(rows||'<p style="color:var(--ink-faint);padding:8px 0">Nothing scheduled. Enjoy the breather.</p>')+trim+'</div>';
+  el.innerHTML='<div class="card build-card"><div class="build-head"><div><p class="eyebrow">'+eyebrow+'</p><h3>'+fmtHM(doneMins)+' of '+fmtHM(p.budget)+' done</h3></div><button class="btn" data-session="today">Guided session</button></div><div class="build-bar" role="img" aria-label="'+pct+' percent of today complete"><span style="width:'+pct+'%"></span></div><p style="font-size:12px;color:var(--ink-faint);margin:0 0 10px">'+note+'</p>'+(rows||'<p style="color:var(--ink-faint);padding:8px 0">Nothing scheduled. Enjoy the breather.</p>')+trim+'</div>';
 }
 
 /* =========================================================
@@ -1847,7 +1910,7 @@ function ring(pct,color,big){
 function ringColor(v){return v>=70?'#3F7A5B':v>=50?'#B8924A':'#A0522D';}
 function renderDashboard(){
   var rd=readiness();
-  var top='<div class="card readiness">'+ring(rd,'#B8924A',true)+'<div class="rtext"><p class="eyebrow" style="color:var(--gold)">Practice Readiness</p><h3>Practice readiness: '+rd+'%</h3><p>'+readinessLine(rd)+'</p><p style="font-size:12px;opacity:.72;margin-top:8px">This reflects only what you have practiced here, not everything your exam may cover. Always cross-check the structure list and syllabus.</p></div><div style="flex:1"></div><button class="btn gold" data-session="today">Start today&#39;s session</button></div>';
+  var top='<div class="card readiness">'+ring(rd,'#B8924A',true)+'<div class="rtext"><p class="eyebrow" style="color:var(--gold)">Practice Readiness</p><h3>Practice readiness: '+rd+'%</h3><p>'+readinessLine(rd)+'</p><p style="font-size:12px;opacity:.72;margin-top:8px">This reflects only what you have practiced here, not everything your exam may cover. Always cross-check the structure list and syllabus.</p></div><div style="flex:1"></div><button class="btn gold" data-goview="today">Go to Today</button></div>';
   var cards=S.dims.map(function(d){
     return '<div class="card hover ring-card"><div class="ring-wrap">'+ring(d.val,ringColor(d.val))+'</div><h3>'+esc(d.name)+'</h3><p class="rsub">'+bandWord(d.val)+'</p></div>';
   }).join('');
@@ -4599,10 +4662,121 @@ function renderTicker(){
   }catch(e){ el.innerHTML=''; el.setAttribute('data-tickerr',String(e&&e.stack||e)); }
 }
 
+/* =========================================================
+   TWO VIEWS + THE WORKLIST RAIL
+   One linear Today, one quiet My progress. The rail is the
+   persistent clickable list on the right (chips on narrow
+   screens): today's steps, or a weakness repair run, items
+   crossing off as they finish. Scrubs's design.
+========================================================= */
+var PROG_SECTIONS=['s-dash','s-map','s-weak','s-flow','s-evidence','s-skills','s-coach','s-together'];
+function setView(v){
+  document.body.setAttribute('data-view',v);
+  var tT=$('#tabToday'),tP=$('#tabProg');
+  if(tT){tT.setAttribute('aria-pressed',String(v==='today'));}
+  if(tP){tP.setAttribute('aria-pressed',String(v==='progress'));}
+}
+function viewFor(id){
+  if(PROG_SECTIONS.indexOf(id)>-1)return 'progress';
+  if(id==='s-plan'||id==='s-recall')return 'today';
+  return null;
+}
+function routeHash(){
+  var id=(location.hash||'').replace('#','').split('?')[0];
+  if(!id)return;
+  var v=viewFor(id); if(v)setView(v);
+  var el=document.getElementById(id);
+  if(el)setTimeout(function(){el.scrollIntoView({behavior:'smooth',block:'start'});},40);
+}
+window.addEventListener('hashchange',routeHash);
+
+var WLKEY='bio004-worklist';
+var WL_DOSE=5;
+var WL={mode:'today',startedAt:null,items:[]};
+function wlLoad(){
+  try{
+    var s=JSON.parse(localStorage.getItem(WLKEY)||'null');
+    if(s && s.d===TODAY && s.mode==='weak' && s.items && s.items.length) WL=s;
+  }catch(e){}
+}
+function wlSave(){
+  try{localStorage.setItem(WLKEY,JSON.stringify({d:TODAY,mode:WL.mode,startedAt:WL.startedAt,items:WL.items}));}catch(e){}
+}
+function wlCompTopics(){
+  /* the map is topicId -> {title, comps:[compIds]} */
+  var map=window.BIO004_CARD_COMPETENCY_MAP||{},out={};
+  Object.keys(map).forEach(function(tid){
+    var v=map[tid];
+    var comps=(v&&v.comps)?v.comps:(typeof v==='string'?[v]:[]);
+    comps.forEach(function(cid){(out[cid]=out[cid]||[]).push(tid);});
+  });
+  return out;
+}
+function wlAttemptsSince(compId,sinceIso){
+  var topics=wlCompTopics()[compId]||[],n=0;
+  try{
+    var st=JSON.parse(localStorage.getItem('bio004-recall-v2')||'null');
+    if(st&&st.topics)topics.forEach(function(tid){
+      var t=st.topics[tid];if(!t||!t.cards)return;
+      Object.keys(t.cards).forEach(function(cid){
+        var h=(t.cards[cid]||{}).history||[];
+        h.forEach(function(e){var at=(e&&(e.at||e.date))||'';if(at&&at>=sinceIso)n++;});
+      });
+    });
+  }catch(e){}
+  return n;
+}
+function wlStartWeak(){
+  var w=weaknesses().slice(0,8);
+  if(!w.length){toast('No flagged weaknesses right now. Nothing to repair.');return;}
+  WL={mode:'weak',startedAt:new Date().toISOString(),items:w.map(function(x){return {id:x.c.id,name:x.c.name};})};
+  wlSave();
+  setView('today');
+  location.hash='s-recall';
+  if(window.BIO004_RECALL_OPEN)window.BIO004_RECALL_OPEN(WL.items[0].id);
+  wlRender();
+  toast('Repair list is on your worklist. '+WL_DOSE+' cards on one crosses it off.');
+}
+function wlBackToday(){
+  WL={mode:'today',startedAt:null,items:[]};
+  try{localStorage.removeItem(WLKEY);}catch(e){}
+  if(window.BIO004_RECALL_OPEN)window.BIO004_RECALL_OPEN(null);
+  wlRender();
+}
+function wlRender(){
+  var el=document.getElementById('workRail'); if(!el)return;
+  var h='';
+  if(WL.mode==='weak'){
+    var doneN=0;
+    h+='<p class="wr-eyebrow">Repair run</p><h3>Weak spots</h3>';
+    h+=WL.items.map(function(it){
+      var got=wlAttemptsSince(it.id,WL.startedAt);
+      var done=got>=WL_DOSE; if(done)doneN++;
+      return '<button type="button" class="wr-item'+(done?' done':'')+'" data-wlweak="'+esc(it.id)+'" '
+        +'aria-label="'+esc(it.name)+', '+(done?'crossed off':got+' of '+WL_DOSE+' cards done')+'. Open its cards.">'
+        +'<span class="wr-dot" aria-hidden="true"></span><span>'+esc(it.name)
+        +'<span class="wr-sub">'+(done?'Crossed off':got+' of '+WL_DOSE+' cards')+'</span></span></button>';
+    }).join('');
+    h+='<div class="wr-foot">'+doneN+' of '+WL.items.length+' crossed off &middot; <button type="button" data-wlback>Back to today</button></div>';
+    el.hidden=false; el.innerHTML=h; return;
+  }
+  if(typeof DR==='undefined'||!DR.steps||!DR.steps.length){el.hidden=true;return;}
+  h+='<p class="wr-eyebrow">Today</p><h3>Your list</h3>';
+  h+=DR.steps.map(function(s,i){
+    return '<button type="button" class="wr-item'+(s.doneFlag?' done':'')+'" data-wlstep="'+i+'" '
+      +'aria-label="'+esc(s.name)+(s.topic?', '+esc(s.topic):'')+', '+(s.doneFlag?'done':'to do')+'. Open it.">'
+      +'<span class="wr-dot" aria-hidden="true"></span><span>'+esc(s.name)
+      +(s.topic?'<span class="wr-sub">'+esc(s.topic)+'</span>':'')+'</span></button>';
+  }).join('');
+  try{var cc=cardCountsToday();h+='<div class="wr-foot">Cards today: '+cc.rev+' review &middot; '+cc.nw+' new</div>';}catch(e){}
+  el.hidden=false; el.innerHTML=h;
+}
+
 function renderAll(){
   renderTicker();
   $('#greetBadge').textContent=S.profile.name?('Hi, '+S.profile.name):'Welcome';
   renderDayRail();renderPlan();renderDailyBuild();renderDashboard();renderMap();renderWeakness();renderLoopWeak();renderFlow();renderEvidence();renderSkills();renderExercises();renderTogether();runBandSync();
+  wlRender();
 }
 
 /* =========================================================
@@ -4610,7 +4784,7 @@ function renderAll(){
 ========================================================= */
 var lastFocus=null;
 document.addEventListener('click',function(e){
-  var t=e.target.closest('[data-planwizard],[data-session],[data-prove],[data-tool],[data-toolblank],[data-selfev],[data-logev],[data-logafter],[data-stage],[data-unit],[data-prompt],[data-scroll],[data-sclose],[data-game],[data-exercise],[data-gameclose],[data-drawscore],[data-mmscore],[data-opengrades],[data-gradedel],[data-cram],[data-gaptopic],[data-topicreview],[data-midcram],[data-midstart],[data-weakjump],[data-pomosetup],[data-baseline],[data-cramday],[data-setdays],[data-cramallpomo],[data-gapstart],[data-cramskip],[data-cramretest],[data-daydone],[data-pretest]');
+  var t=e.target.closest('[data-goview],[data-worklist-weak],[data-wlstep],[data-wlweak],[data-wlback],[data-planwizard],[data-session],[data-prove],[data-tool],[data-toolblank],[data-selfev],[data-logev],[data-logafter],[data-stage],[data-unit],[data-prompt],[data-scroll],[data-sclose],[data-game],[data-exercise],[data-gameclose],[data-drawscore],[data-mmscore],[data-opengrades],[data-gradedel],[data-cram],[data-gaptopic],[data-topicreview],[data-midcram],[data-midstart],[data-weakjump],[data-pomosetup],[data-baseline],[data-cramday],[data-setdays],[data-cramallpomo],[data-gapstart],[data-cramskip],[data-cramretest],[data-daydone],[data-pretest]');
   if(!t)return;
   /* The placement check owns its own overlay, so the session modal steps
      out of the way while it runs and the results land on the board. */
@@ -4618,6 +4792,23 @@ document.addEventListener('click',function(e){
     if(window.BIO004_PRETEST){
       window.BIO004_PRETEST.open({ onFinish: function(res){ applyPretest(res); } });
     }
+    return;
+  }
+  if(t.hasAttribute('data-goview')){setView(t.getAttribute('data-goview'));window.scrollTo({top:0,behavior:'smooth'});return;}
+  if(t.hasAttribute('data-worklist-weak')){wlStartWeak();return;}
+  if(t.hasAttribute('data-wlback')){wlBackToday();return;}
+  if(t.hasAttribute('data-wlstep')){
+    var wi=+t.getAttribute('data-wlstep');
+    setView('today');
+    var ws=DR.steps[wi];
+    if(ws && /recall/i.test(ws.name)){ if(window.BIO004_RECALL_OPEN)window.BIO004_RECALL_OPEN(null); location.hash='s-recall'; }
+    else { var drEl=$('#dayRail'); if(drEl)drEl.scrollIntoView({behavior:'smooth',block:'start'}); drOpen(wi); }
+    return;
+  }
+  if(t.hasAttribute('data-wlweak')){
+    setView('today');
+    if(window.BIO004_RECALL_OPEN)window.BIO004_RECALL_OPEN(t.getAttribute('data-wlweak'));
+    location.hash='s-recall';
     return;
   }
   if(t.hasAttribute('data-planwizard')){openPlanWizard();return;}
@@ -4632,7 +4823,7 @@ document.addEventListener('click',function(e){
   if(t.hasAttribute('data-pomosetup')){openSessionChooser('today');return;}
   if(t.hasAttribute('data-baseline')){openBaseline('today');return;}
   if(t.hasAttribute('data-midstart')){if(CRAM&&!CRAM.counted){cramUsed(CRAM.key);CRAM.counted=true;}startGapFinder();return;}
-  if(t.hasAttribute('data-weakjump')){closeGame();var wl=$('#s-weak');if(wl)wl.scrollIntoView({behavior:'smooth',block:'start'});return;}
+  if(t.hasAttribute('data-weakjump')){closeGame();setView('progress');var wl=$('#s-weak');if(wl)wl.scrollIntoView({behavior:'smooth',block:'start'});return;}
   if(t.hasAttribute('data-gapstart')){if(CRAM&&!CRAM.counted){cramUsed(CRAM.key);CRAM.counted=true;}startGapFinder();return;}
   if(t.hasAttribute('data-cramskip')){if(CRAM&&!CRAM.counted){cramUsed(CRAM.key);CRAM.counted=true;}buildCramPlan(false);return;}
   if(t.hasAttribute('data-cramretest')){recheckGaps();return;}
@@ -4670,7 +4861,7 @@ document.addEventListener('click',function(e){
   else if(t.hasAttribute('data-stage')){SESS={_stageK:t.getAttribute('data-stage')};openSession('stage');}
   else if(t.hasAttribute('data-unit')){toggleUnit(t.getAttribute('data-unit'));}
   else if(t.hasAttribute('data-prompt')){var id=t.getAttribute('data-prompt');coachSay('you',esc(t.textContent));coachRespond(id,'');}
-  else if(t.hasAttribute('data-scroll')){if(t.hasAttribute('data-sclose'))closeSession();var el=$(t.getAttribute('data-scroll'));if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
+  else if(t.hasAttribute('data-scroll')){if(t.hasAttribute('data-sclose'))closeSession();var sid=t.getAttribute('data-scroll').replace('#','');var sv=viewFor(sid);if(sv)setView(sv);var el=$(t.getAttribute('data-scroll'));if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
 });
 function toggleUnit(id){S.__openUnits=S.__openUnits||{};S.__openUnits[id]=!S.__openUnits[id];renderMap();}
 
@@ -4852,6 +5043,12 @@ renderCoachPrompts();
 coachSay('bot','Blub blub. I am Hootie the Knowfish, your Mastery Coach. I read your progress and point you at the single best next move. Ask me anything, or tap a prompt below.');
 if(!S.profile.onboarded){OB={step:0,data:obSeedData()};showOnboard();}
 else{renderAll();}
+
+/* the app opens on Today unless a deep link says otherwise */
+setView('today');
+wlLoad();
+routeHash();
+wlRender();
 
 })();
 </script>
