@@ -234,6 +234,10 @@ section.block:first-of-type{border-top:none}
 .tag-missed{background:#f6e4e0;color:var(--bad)}
 .tag-conf{background:#f6ecd9;color:var(--warn)}
 .tag-overdue{background:#e5e9f2;color:var(--navy)}
+.tag-ahead{background:#F3E8CF;color:var(--gold-text)}
+.build-ahead{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+.build-ahead summary{cursor:pointer;font-weight:700;font-size:13px;color:var(--ink-soft)}
+.build-ahead summary:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
 .weak-item .wn{font-weight:700;font-size:14px;flex:1}
 .weak-item .wu{font-size:12px;color:var(--ink-faint)}
 
@@ -699,6 +703,24 @@ section.block:first-of-type{border-top:none}
   color:var(--ink-soft);border-radius:999px;padding:9px 24px;cursor:pointer}
 .vtab[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
 .vtab:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+/* Freestyle is a launcher, not a view: gold border marks it apart */
+.vtab-free{border-color:var(--gold2);color:var(--navy);margin-left:auto}
+.vtab-free:hover{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+/* the chooser grid inside the game overlay */
+.fw-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+@media(max-width:560px){.fw-grid{grid-template-columns:1fr}}
+.fw-act{display:flex;gap:11px;align-items:flex-start;text-align:left;background:var(--white);
+  border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;cursor:pointer;font:inherit;
+  color:var(--navy);transition:transform .2s ease,box-shadow .2s ease}
+.fw-act:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,0,0,.10);border-color:var(--gold2)}
+.fw-act:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.fw-act .fw-ic{flex:none;width:34px;height:34px;border-radius:9px;background:var(--navy);color:#fff;display:grid;place-items:center}
+.fw-act .fw-ic svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fw-act b{display:block;font-weight:800;font-size:14px;line-height:1.3}
+.fw-act .fw-sub{display:block;font-size:12px;color:var(--ink-soft)}
+/* what the day-rail budget trimmed, named instead of vanished */
+.dr-trim{font-size:12.5px;color:var(--ink-soft);margin:10px 2px 0}
+.dr-trim button{background:none;border:0;padding:0;font:inherit;font-weight:700;color:var(--terra-dark);text-decoration:underline;cursor:pointer}
 body[data-view="today"] .secnav ul{display:none}
 body[data-view="today"] #s-dash,body[data-view="today"] #s-map,body[data-view="today"] #s-weak,
 body[data-view="today"] #s-flow,body[data-view="today"] #s-evidence,body[data-view="today"] #s-skills,
@@ -791,6 +813,7 @@ body[data-view="progress"] #workRail{display:none}
   <div class="vtabs">
     <button type="button" class="vtab" id="tabToday" data-goview="today" aria-pressed="true">Today</button>
     <button type="button" class="vtab" id="tabProg" data-goview="progress" aria-pressed="false">My progress</button>
+    <button type="button" class="vtab vtab-free" data-freestyle>Freestyle</button>
   </div>
   <ul>
     <li><a href="#s-dash">Dashboard</a></li>
@@ -1267,7 +1290,28 @@ function buildFromSchedule(){
   }
   return {units:units,course:{label:SCHEDULE.course,exam:nextExam().date,examName:nextExam().name,lecture:(cw.lecture||[]).slice(),lab:(cw.lab||cw.lecture||[]).slice(),highyield:SCHEDULE.highyield||''}};
 }
-function applySchedule(force){var b=buildFromSchedule();S.course=b.course;if(force||!(S.__schedV>=2)){S.units=b.units;S.__schedV=2;}save();}
+/* __schedV 3: rebuilds units for anyone still carrying the old
+   summer-mapped units (integument week 1, skeletal week 2), which
+   made the fall app serve Module 2 material in Week 2 of a 17-week
+   term. Progress is carried over by comp id where ids match, and
+   ingestRecall() restores mastery from the raw card, loop, and
+   evidence stores either way, so nothing a student earned is lost. */
+function applySchedule(force){
+  var b=buildFromSchedule();S.course=b.course;
+  if(force||!(S.__schedV>=3)){
+    var old={};
+    (S.units||[]).forEach(function(u){(u.comps||[]).forEach(function(c){if(c&&c.id)old[c.id]=c;});});
+    S.units=b.units;
+    S.units.forEach(function(u){u.comps.forEach(function(c){
+      var o=old[c.id];if(!o)return;
+      c.mastery=o.mastery||c.mastery;c.conf=o.conf||c.conf;
+      if(o.last)c.last=o.last;if(o.next)c.next=o.next;
+      if(o.ev&&o.ev.length)c.ev=o.ev;if(o.today)c.today=o.today;
+    });});
+    S.__schedV=3;
+  }
+  save();
+}
 /* ---- Schedule import (instructor setup): accept schedule.js, JSON, or course-schedule HTML ---- */
 function normWeek(w){var o={n:w.n||w.number,start:w.start||w.startDate,end:w.end||w.endDate,title:w.title||w.weekTitle||('Week '+(w.n||w.number)),lecture:w.lecture||[],lab:w.lab||null,labExam:w.labExam||null,tbl:w.tbl||null};if(w.lectureMidterm)o.lectureMidterm=w.lectureMidterm;if(w.cumulative)o.cumulative=w.cumulative;return o;}
 function mapImportedWeek(w){return {n:w.number,start:w.startDate,end:w.endDate,title:w.weekTitle,lecture:w.weekTitle?[w.weekTitle]:[],lab:(w.labChecklist&&w.labChecklist.topics)||null,labExam:null,tbl:null};}
@@ -1866,10 +1910,17 @@ function buildDailyPlan(){
   var budget=Math.round(hoursPerDay()*60);
   var cw=scheduleCurrentWeek();
   var order={core:0,high:1,support:2};
-  var newComps=[];S.units.forEach(function(u){if(u.week===cw.n)u.comps.forEach(function(c){newComps.push(c);});});
+  /* Gate by the COMPETENCY'S week, not the unit's. Units group a whole
+     body system, so the unit's week is only the week the system STARTS;
+     gating on it poured every skeletal competency into Week 2. The
+     schedule is the schedule: new work is this week's comps only. */
+  var newComps=[];allComps().forEach(function(x){if(weekOf(x.c)===cw.n)newComps.push(x.c);});
   newComps=newComps.filter(function(c){return !(c.mastery>=85&&c.conf==='high');}); /* proven ones drop out to spaced review */
   newComps.sort(function(a,b){var ya=(order[a.yield]==null?1:order[a.yield]),yb=(order[b.yield]==null?1:order[b.yield]);return ya!==yb?ya-yb:a.mastery-b.mastery;}); /* yield tier first, then the student's weakest within it */
-  var reviews=[];allComps().forEach(function(x){if(x.c.last&&x.u.week<cw.n&&isDue(x.c.next))reviews.push(x.c);});
+  var reviews=[];allComps().forEach(function(x){if(x.c.last&&weekOf(x.c)<cw.n&&isDue(x.c.next))reviews.push(x.c);});
+  /* work-ahead is allowed but labeled: next week's comps, collapsed */
+  var ahead=[];allComps().forEach(function(x){if(weekOf(x.c)===cw.n+1)ahead.push(x.c);});
+  ahead.sort(function(a,b){var ya=(order[a.yield]==null?1:order[a.yield]),yb=(order[b.yield]==null?1:order[b.yield]);return ya-yb;});
   reviews.sort(function(a,b){return dayDiff(a.next,b.next);});
   var nc=nextKeyEvent();
   var reviewFrac=0.35;
@@ -1877,7 +1928,7 @@ function buildDailyPlan(){
   var items=[],used=0,reviewCap=Math.round(budget*reviewFrac),rUsed=0,trimmed=0;
   reviews.forEach(function(c){var m=12;if(rUsed+m<=reviewCap){items.push({type:'review',c:c,mins:m});rUsed+=m;used+=m;}else trimmed++;});
   newComps.forEach(function(c){var m=c.est||30;if(used+m<=budget){items.push({type:'new',c:c,mins:m});used+=m;}else trimmed++;});
-  return {items:items,budget:budget,used:used,trimmed:trimmed,week:cw,nc:nc};
+  return {items:items,budget:budget,used:used,trimmed:trimmed,week:cw,nc:nc,ahead:ahead};
 }
 function renderDailyBuild(){
   var el=$('#dailyBuild');if(!el)return;
@@ -1893,7 +1944,14 @@ function renderDailyBuild(){
   var fwd=nc?('Keeps you moving forward toward '+esc(nc.label)+' on '+esc(nc.dayName)+'. '):'';
   var note=fwd+'Ordered to your gaps: highest-yield work for Week '+p.week.n+' first, your weakest within that, and competencies you have proven drop out to spaced review. Includes pre-exposure to new material plus due reviews from earlier weeks.'+(nc&&nc.exam&&nc.days<=3?' Weighted toward review with the exam coming up.':'');
   var trim=p.trimmed?'<p class="build-trim">'+p.trimmed+' more competenc'+(p.trimmed===1?'y':'ies')+' did not fit today’s '+fmtHM(p.budget)+'. Add a study day or more hours to reach them, or they roll to tomorrow.</p>':'';
-  el.innerHTML='<div class="card build-card"><div class="build-head"><div><p class="eyebrow">'+eyebrow+'</p><h3>'+fmtHM(doneMins)+' of '+fmtHM(p.budget)+' done</h3></div><button class="btn" data-session="today">Guided session</button></div><div class="build-bar" role="img" aria-label="'+pct+' percent of today complete"><span style="width:'+pct+'%"></span></div><p style="font-size:12px;color:var(--ink-faint);margin:0 0 10px">'+note+'</p>'+(rows||'<p style="color:var(--ink-faint);padding:8px 0">Nothing scheduled. Enjoy the breather.</p>')+trim+'</div>';
+  /* work ahead: next week's comps, collapsed and clearly labeled, so
+     getting ahead is possible but never mistaken for owed work */
+  var aheadRows=(p.ahead||[]).map(function(c){
+    var isDone=!!done[c.id];
+    return '<div class="build-row'+(isDone?' done':'')+'"><button class="chk" data-daydone="'+c.id+'" aria-pressed="'+(isDone?'true':'false')+'" aria-label="Mark '+esc(c.name)+' done">'+(isDone?I.checkW:'')+'</button><div class="bn">'+esc(c.name)+'<span class="tag tag-ahead">Ahead</span></div><span class="bm">'+(c.est||30)+' min</span><button class="btn" data-prove="'+c.id+'">Do it</button></div>';
+  }).join('');
+  var aheadBlock=aheadRows?'<details class="build-ahead"><summary>Working ahead? Week '+(p.week.n+1)+' has '+p.ahead.length+' competenc'+(p.ahead.length===1?'y':'ies')+'</summary><p style="font-size:12px;color:var(--ink-faint);margin:8px 0 4px">This is next week’s material. It has not been taught yet, so nothing here is owed and nothing here counts as behind. Preview it if today is clear.</p>'+aheadRows+'</details>':'';
+  el.innerHTML='<div class="card build-card"><div class="build-head"><div><p class="eyebrow">'+eyebrow+'</p><h3>'+fmtHM(doneMins)+' of '+fmtHM(p.budget)+' done</h3></div><button class="btn" data-session="today">Guided session</button></div><div class="build-bar" role="img" aria-label="'+pct+' percent of today complete"><span style="width:'+pct+'%"></span></div><p style="font-size:12px;color:var(--ink-faint);margin:0 0 10px">'+note+'</p>'+(rows||'<p style="color:var(--ink-faint);padding:8px 0">Nothing scheduled. Enjoy the breather.</p>')+trim+aheadBlock+'</div>';
 }
 
 /* =========================================================
@@ -2899,12 +2957,29 @@ function drBudget(){
   var m=p.minutes||(p.hoursPerDay?Math.round(p.hoursPerDay*60):0);
   return Math.max(20,Math.min(180,m||45));
 }
-/* Which loop should tonight point at, and why */
+/* The weakest REAL competency in this week's material, else the
+   overall weakest, else the first comp. Always a real comp with an
+   id: the old lec[0]/lab[0] fallback handed back schedule EVENT
+   names ("TBL 1: Cell Anatomy") wearing a comp costume, which broke
+   openProve and put event titles on the Draw tile. */
+function currentWeekTarget(){
+  var cw=scheduleCurrentWeek();
+  var pool=allComps().filter(function(x){return weekOf(x.c)===cw.n;});
+  pool.sort(function(a,b){return (a.c.mastery||0)-(b.c.mastery||0);});
+  if(pool.length)return pool[0];
+  var w=weaknesses();if(w.length)return w[0];
+  return allComps()[0]||null;
+}
+/* Which loop should tonight point at, and why. Schedule-first: a
+   weak station wins, then a loop covering material ALREADY TAUGHT
+   (this week backwards), never a loop from a future module. */
 function drLoopPick(){
   var w=(typeof loopWeakStations==='function')?loopWeakStations():[];
   if(w.length) return {title:w[0].loopTitle,name:w[0].name,miss:Math.round(w[0].miss*100),weak:true};
-  var lab=todayLab();
-  if(lab.length){ var lp=loopFor(lab[0].c.id); if(lp) return {title:lp.title,name:lab[0].c.name,weak:false}; }
+  var cw=scheduleCurrentWeek();
+  var taught=allComps().filter(function(x){return weekOf(x.c)<=cw.n;});
+  taught.sort(function(a,b){return weekOf(b.c)-weekOf(a.c)||((a.c.mastery||0)-(b.c.mastery||0));}); /* newest week first, weakest within it */
+  for(var i=0;i<taught.length;i++){ var lp=loopFor(taught[i].c.id); if(lp) return {title:lp.title,name:taught[i].c.name,weak:false}; }
   var L=window.BIO004_LOOPS||[];
   return L.length?{title:L[0].title,name:'',weak:false}:null;
 }
@@ -2946,10 +3021,10 @@ function drBuild(){
       body:'Answer from memory and rate how sure you are <b>before</b> you look. Being sure and being wrong is the gap that costs marks, and it is the one you cannot feel from the inside.',
       go:function(){ if(window.BIO004_RECALL_OPEN)window.BIO004_RECALL_OPEN(null); location.hash='s-recall'; }});
   }
-  var target=(lec[0]||lab[0]||weak[0]||allComps()[0]);
+  var target=currentWeekTarget();
   if(target){
     steps.push({tool:'',ic:'draw',name:'Draw to Know It',sub:'From memory, then check',mins:20,topic:target.c.name,
-      why:lec.length?'Today’s lecture competency.':'Your weakest competency in play.',
+      why:'This week’s material, your weakest first.',
       body:'<b>'+esc(target.c.name)+'.</b> Blank paper, nothing in front of you. Then reveal the checklist and mark yourself honestly. The gaps are the point.',
       go:function(){ CUR_EX=target.c; openGame('drawknow'); }});
   }
@@ -2967,9 +3042,14 @@ function drBuild(){
       body:'<b>'+esc(weak[0].c.name)+'.</b> Say it out loud to an empty room, in plain language, no notes. Where you stall is the gap. That is the bit to go back to, not the bit that came out fluently.',
       go:function(){ openProve(weak[0].c.id); }});
   }
-  /* never blow the plan: trim from the end until it fits */
-  var tot=0,keep=[];
-  for(var i=0;i<steps.length;i++){ if(tot+steps[i].mins>budget && keep.length>=2) break; tot+=steps[i].mins; keep.push(steps[i]); }
+  /* never blow the plan: trim what does not fit, but SAY SO. A tile
+     that silently vanishes reads as a bug ("my loops disappeared"),
+     so anything cut is named under the rail with a Freestyle link.
+     Skip-and-continue rather than break, so a small later step can
+     still fit after a big one is cut. */
+  var tot=0,keep=[],cut=[];
+  for(var i=0;i<steps.length;i++){ if(tot+steps[i].mins>budget && keep.length>=3){ cut.push(steps[i].name); continue; } tot+=steps[i].mins; keep.push(steps[i]); }
+  DR.trimmed=cut;
   DR.steps=keep; DR.budget=tot||budget; DR.i=0; DR.done=0; DR.spent=0;
   /* the meter is real and it REMEMBERS: cards checked off earlier today
      stay checked off after a reload. A new day starts clean. */
@@ -3087,6 +3167,11 @@ function renderDayRail(){
    +'</div>';
   h+='<div class="dr-steps">'+DR.steps.map(function(s,i){
        return drTile(s,i, s.doneFlag?'done':(i===DR.i?'now':'later'));}).join('')+'</div>';
+  if(DR.trimmed && DR.trimmed.length){
+    h+='<p class="dr-trim">Trimmed to fit your '+DR.budget+' minutes: <b>'
+     +DR.trimmed.map(esc).join('</b>, <b>')+'</b>. Not gone, just not owed today. '
+     +'Run either any time from <button type="button" data-freestyle>Freestyle</button>.</p>';
+  }
   if(DR.i>=DR.steps.length){
     h+='<div class="dr-fork"><p class="eyebrow">Your call</p>'
      +'<h3>That is everything. The rest is yours.</h3>'
@@ -4772,6 +4857,83 @@ function wlRender(){
   el.hidden=false; el.innerHTML=h;
 }
 
+/* =========================================================
+   THE FIRST QUESTION, AND FREESTYLE.
+
+   The moment the app opens, one choice: run today's track, or
+   skip the schedule and pick any activity. The point is to
+   spend the student's first decision for them, so the page
+   never opens as a wall of options. Shown once per sitting
+   (sessionStorage), and Freestyle stays one tap away in the
+   top bar for the rest of the visit.
+
+   Freestyle launches count exactly like tracked work: every
+   activity writes to the same stores the mastery math reads
+   (cards to bio004-recall-v2, the Loops app to loopsEngine_v1,
+   drawing and dumps to bio004-evidence-v1), so there is no
+   second-class way to study. */
+function freestyleTarget(){
+  /* a real competency from the current week, weakest first, so the
+     exercises follow the schedule and openProve gets a real id */
+  var t=currentWeekTarget();
+  return t?t.c:null;
+}
+function openWelcome(){
+  runOpenOverlay(); $('#gameClose').focus();
+  gSet('How do you want to work?','One tap, then you are working');
+  var left=(DR.steps||[]).filter(function(s){return !s.doneFlag;}).length;
+  gBody('<div class="g-center"><div class="g-emoji">&#127919;</div><h3>Catch up, or freestyle?</h3>'
+   +'<p>Catch up runs today\'s track'+(left?' ('+left+' thing'+(left===1?'':'s')+' left on it)':'')
+   +'. Freestyle skips the schedule and lets you pick any activity. Both count the same.</p>'
+   +'<div class="g-actions"><button class="btn gold big" data-fwmode="catchup">Catch up for today</button>'
+   +'<button class="btn big" data-fwmode="freestyle">Freestyle</button></div>'
+   +'<p style="font-size:12px;color:var(--ink-faint);margin-top:12px">Freestyle lives in the top bar whenever you want it later.</p></div>');
+}
+var FW_ICONS={
+  focus:'<svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg>',
+  exam:'<svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
+  weak:'<svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h9"/></svg>'
+};
+function openFreestyle(){
+  runOpenOverlay(); $('#gameClose').focus();
+  gSet('Freestyle','No order, no schedule. Pick a thing.');
+  var t=freestyleTarget(), tn=t?esc(t.name):'';
+  function act(k,ic,name,sub){
+    return '<button type="button" class="fw-act" data-fwact="'+k+'"><span class="fw-ic" aria-hidden="true">'+ic+'</span>'
+      +'<span><b>'+name+'</b><span class="fw-sub">'+sub+'</span></span></button>';
+  }
+  gBody('<div><p style="margin:0 0 4px;font-size:13.5px;color:var(--ink-soft)">Everything here counts toward your mastery exactly like the track does.'
+   +(tn?(' Exercises that need a topic open on <b>'+tn+'</b>; you can swap it once inside.'):'')+'</p>'
+   +'<div class="fw-grid">'
+   +act('recall',I.recall,'Recall cards','Spaced cards, due first')
+   +act('loops',I.retrieve,'Loops','Name it before the label')
+   +act('draw',I.draw,'Draw to Know It','From memory, then check')
+   +act('braindump',I.recall,'Brain Dump','Blank page, cold')
+   +act('mindmap',I.draw,'Mind-Map then Recall','Notes to memory, then rebuild')
+   +act('teach',I.speak,'Teach It aloud','Plain language, no notes')
+   +act('teachai',I.teach,'Teach an AI','It quizzes you back')
+   +act('focus',FW_ICONS.focus,'Focus Session','Guided timer runs the list')
+   +act('weaklist',FW_ICONS.weak,'Work my weak list','Top weak spots, crossed off')
+   +act('gapfinder',I.diagnose,'Gap Finder','Pick topics, find what is missing')
+   +act('exambuilder',FW_ICONS.exam,'Practice Exam Builder','Build a full mock exam')
+   +'</div></div>');
+}
+function fwLaunch(k){
+  closeGame();
+  var c=freestyleTarget();
+  if(k==='recall'){ setView('today'); if(window.BIO004_RECALL_OPEN)window.BIO004_RECALL_OPEN(null); location.hash='s-recall'; }
+  else if(k==='loops'){ window.open(LOOPS_BASE,'_blank','noopener'); }
+  else if(k==='draw'&&c){ CUR_EX=c; openGame('drawknow'); }
+  else if(k==='mindmap'&&c){ CUR_EX=c; openGame('mindmap'); }
+  else if(k==='braindump'&&c){ CUR_EX=c; openGame('braindump'); }
+  else if(k==='teach'&&c){ openProve(c.id); }
+  else if(k==='teachai'&&c){ CUR_EX=c; runOpenOverlay(); $('#gameClose').focus(); aiTutorScreen(c); }
+  else if(k==='focus'){ fsOpen(); }
+  else if(k==='weaklist'){ wlStartWeak(); }
+  else if(k==='gapfinder'){ openGapByTopic(); }
+  else if(k==='exambuilder'){ window.open('bio004-practice-exam-builder.html','_top'); }
+}
+
 function renderAll(){
   renderTicker();
   $('#greetBadge').textContent=S.profile.name?('Hi, '+S.profile.name):'Welcome';
@@ -4784,7 +4946,7 @@ function renderAll(){
 ========================================================= */
 var lastFocus=null;
 document.addEventListener('click',function(e){
-  var t=e.target.closest('[data-goview],[data-worklist-weak],[data-wlstep],[data-wlweak],[data-wlback],[data-planwizard],[data-session],[data-prove],[data-tool],[data-toolblank],[data-selfev],[data-logev],[data-logafter],[data-stage],[data-unit],[data-prompt],[data-scroll],[data-sclose],[data-game],[data-exercise],[data-gameclose],[data-drawscore],[data-mmscore],[data-opengrades],[data-gradedel],[data-cram],[data-gaptopic],[data-topicreview],[data-midcram],[data-midstart],[data-weakjump],[data-pomosetup],[data-baseline],[data-cramday],[data-setdays],[data-cramallpomo],[data-gapstart],[data-cramskip],[data-cramretest],[data-daydone],[data-pretest]');
+  var t=e.target.closest('[data-freestyle],[data-fwmode],[data-fwact],[data-goview],[data-worklist-weak],[data-wlstep],[data-wlweak],[data-wlback],[data-planwizard],[data-session],[data-prove],[data-tool],[data-toolblank],[data-selfev],[data-logev],[data-logafter],[data-stage],[data-unit],[data-prompt],[data-scroll],[data-sclose],[data-game],[data-exercise],[data-gameclose],[data-drawscore],[data-mmscore],[data-opengrades],[data-gradedel],[data-cram],[data-gaptopic],[data-topicreview],[data-midcram],[data-midstart],[data-weakjump],[data-pomosetup],[data-baseline],[data-cramday],[data-setdays],[data-cramallpomo],[data-gapstart],[data-cramskip],[data-cramretest],[data-daydone],[data-pretest]');
   if(!t)return;
   /* The placement check owns its own overlay, so the session modal steps
      out of the way while it runs and the results land on the board. */
@@ -4794,6 +4956,13 @@ document.addEventListener('click',function(e){
     }
     return;
   }
+  if(t.hasAttribute('data-freestyle')){openFreestyle();return;}
+  if(t.hasAttribute('data-fwmode')){
+    if(t.getAttribute('data-fwmode')==='freestyle'){openFreestyle();}
+    else{closeGame();setView('today');var drEl0=$('#dayRail');if(drEl0)drEl0.scrollIntoView({behavior:'smooth',block:'start'});}
+    return;
+  }
+  if(t.hasAttribute('data-fwact')){fwLaunch(t.getAttribute('data-fwact'));return;}
   if(t.hasAttribute('data-goview')){setView(t.getAttribute('data-goview'));window.scrollTo({top:0,behavior:'smooth'});return;}
   if(t.hasAttribute('data-worklist-weak')){wlStartWeak();return;}
   if(t.hasAttribute('data-wlback')){wlBackToday();return;}
@@ -5049,6 +5218,18 @@ setView('today');
 wlLoad();
 routeHash();
 wlRender();
+
+/* THE FIRST QUESTION: catch up or freestyle, once per sitting.
+   Skipped when onboarding is running, when a deep link asked for a
+   specific section, and when a weak-list repair run is mid-flight,
+   because interrupting any of those with a modal would be rude. */
+try{
+  if(S.profile.onboarded && !location.hash && WL.mode!=='weak'
+     && !sessionStorage.getItem('bio004-welcome-v1')){
+    sessionStorage.setItem('bio004-welcome-v1','1');
+    openWelcome();
+  }
+}catch(e){}
 
 })();
 </script>
