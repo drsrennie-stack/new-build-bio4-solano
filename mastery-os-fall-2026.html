@@ -718,6 +718,11 @@ section.block:first-of-type{border-top:none}
 .fw-act .fw-ic svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .fw-act b{display:block;font-weight:800;font-size:14px;line-height:1.3}
 .fw-act .fw-sub{display:block;font-size:12px;color:var(--ink-soft)}
+/* the welcome chooser's badge: same stroke-icon language as the
+   dashboard tiles, instead of an emoji that matches nothing */
+.g-icbadge{width:52px;height:52px;border-radius:14px;background:var(--navy);color:#fff;
+  display:grid;place-items:center;margin:0 auto 12px}
+.g-icbadge svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 /* what the day-rail budget trimmed, named instead of vanished */
 .dr-trim{font-size:12.5px;color:var(--ink-soft);margin:10px 2px 0}
 .dr-trim button{background:none;border:0;padding:0;font:inherit;font-weight:700;color:var(--terra-dark);text-decoration:underline;cursor:pointer}
@@ -2539,9 +2544,9 @@ function proveDo(c,k){
   if(k==='loop'){loopProveScreen(c);return;}
   if(e.href){
     var url=e.href;
-    if(k==='draw'||k==='label')url+='?title='+encodeURIComponent(c.name);
+    if(k==='draw'||k==='label')url+='?comp='+encodeURIComponent(c.id)+'&title='+encodeURIComponent(c.name);
     else if(e.href.indexOf('spaced-recall')>-1)url+='#comp='+encodeURIComponent(c.id);
-    window.open(url,'_blank','noopener');
+    window.open(toolURL(url),'_blank','noopener');
     logEvidence(k,c.id);proveComplete(c,k);
     return;
   }
@@ -2632,10 +2637,23 @@ function aiTutorScreen(c){
 /* =========================================================
    TOOL LINK (open sibling tool, respecting iframe target)
 ========================================================= */
+/* Tool links must survive every home this page has: the live site, a
+   Kajabi or Canvas iframe of it, and a copy opened straight off a
+   download. A relative link like mastery-canvas.html resolves fine on
+   the live site and 404s everywhere else, which is how "Map it on
+   canvas" died. Any same-site page link is resolved against the site
+   itself; in-page hash links stay in-page. */
+var SITE_BASE='https://drsrennie-stack.github.io/new-build-bio4-solano/';
+function toolURL(href){
+  href=String(href||'');
+  if(!href||href.charAt(0)==='#'||/^https?:/i.test(href))return href;
+  try{ if(location.protocol!=='file:'&&location.host==='drsrennie-stack.github.io')return href; }catch(e){}
+  return SITE_BASE+href;
+}
 function openTool(href,logAfter){
   if(logAfter){var p=logAfter.split(':');logEvidence(p[0],p[1]);}
   /* target=_top so the tool replaces the framed page in Kajabi/GitHub Pages */
-  try{window.open(href,'_top');}catch(e){window.location.href=href;}
+  try{window.open(toolURL(href),'_top');}catch(e){window.location.href=toolURL(href);}
 }
 
 /* =========================================================
@@ -3900,7 +3918,7 @@ function runSprint(c){
     'then tick it. Anything you tick without finding it is a mark you will lose in the lab exam.</p>'+
     '<div class="g-actions"><button class="btn gold" id="rsGo">Open the sprint</button>'+
     '<button class="btn" id="rsDone">I did the sprint</button></div></div>');
-  $('#rsGo').onclick=function(){window.open(sp.file,'_blank','noopener');};
+  $('#rsGo').onclick=function(){window.open(toolURL(sp.file),'_blank','noopener');};
   $('#rsDone').onclick=function(){bumpComp(c,4);bumpDim('lab',2);runAdvance('labsprint');};
 }
 
@@ -4858,6 +4876,202 @@ function wlRender(){
 }
 
 /* =========================================================
+   EXAM RUN-IN. Two scheduled nudges before every exam.
+
+   Seven days out: run two gap finders while there is still time
+   to act on what they find. Lecture is a cold multiple-choice
+   check, DOK 2 and 3 only, drawn from the card bank across the
+   exam's coverage. Lab is the Loops Practice Lab Exam (the 52
+   randomized questions). Results write to the evidence store as
+   'gapfinder', so the Weakness Dashboard picks them up and the
+   student repairs from there.
+
+   Four days out: same pair, but the lecture check is built half
+   from what the first run and the dashboard flagged, half from
+   coverage they have not touched, same DOK levels. Then a hand-off
+   to the Exam Cram planner for the final days.
+
+   Both prompts are skippable, each shows once per exam, and the
+   seven-day one says the four-day one is coming. */
+var RUNIN_KEY='bio004-runin-v1';
+function runinState(){ try{ return JSON.parse(localStorage.getItem(RUNIN_KEY)||'{}')||{}; }catch(e){ return {}; } }
+function runinPatch(patch){
+  var e=nextExam(); if(!e||!e.date)return;
+  var s=runinState(), k=e.name+'|'+e.date;
+  s[k]=s[k]||{};
+  Object.keys(patch).forEach(function(kk){ s[k][kk]=patch[kk]; });
+  try{ localStorage.setItem(RUNIN_KEY,JSON.stringify(s)); }catch(e2){}
+}
+function runinRec(){
+  var e=nextExam(); if(!e||!e.date)return {};
+  return runinState()[e.name+'|'+e.date]||{};
+}
+function runinStage(){
+  var d=daysToExam();
+  if(d>=1&&d<=4)return 'd4';
+  if(d>=5&&d<=7)return 'd7';
+  return null;
+}
+function runinDue(){
+  var st=runinStage(); if(!st)return null;
+  return runinRec()[st]?null:st;
+}
+/* the weeks this exam owns: everything after the previous exam,
+   up to and including the exam's own week */
+function runinWeeks(){
+  var e=nextExam();
+  var weekOfDate=function(dt){ var n=1; SCHEDULE.weeks.forEach(function(w){ if(w.start<=dt)n=w.n; }); return n; };
+  var n=weekOfDate(e.date), p=0;
+  scheduleExams().forEach(function(x){ if(x.date<e.date){ var wn=weekOfDate(x.date); if(wn>p)p=wn; } });
+  var out=[]; for(var k=p+1;k<=n;k++)out.push(k);
+  return out.length?out:[scheduleCurrentWeek().n];
+}
+/* card-bank topics whose competencies fall inside the exam's coverage */
+function runinBank(){
+  var weeks=runinWeeks();
+  var MAP=window.BIO004_CARD_COMPETENCY_MAP||{};
+  var B=window.BIO004_CARD_BANK;
+  var bank={};
+  if(!B||!B.modules)return bank;
+  B.modules.forEach(function(m){ (m.topics||[]).forEach(function(t){
+    var entry=MAP[t.id]; var comps=(entry&&entry.comps)||[];
+    if(!comps.length)return;
+    if(!comps.some(function(id){ return weeks.indexOf(weekOf({id:id}))>-1; }))return;
+    var cs=(t.cards||[]).filter(function(c){ return c.options&&c.options.length>=3&&(c.dok===2||c.dok===3); });
+    if(cs.length)bank[t.id]={title:t.title,comps:comps,cards:cs};
+  });});
+  return bank;
+}
+function runinAttemptedTopics(){
+  var out={};
+  try{
+    var rv=JSON.parse(localStorage.getItem('bio004-recall-v2')||'null');
+    if(rv&&rv.topics)Object.keys(rv.topics).forEach(function(tid){
+      var cards=(rv.topics[tid]&&rv.topics[tid].cards)||{};
+      if(Object.keys(cards).some(function(cid){ var h=cards[cid]&&cards[cid].history; return h&&h.length; }))out[tid]=1;
+    });
+  }catch(e){}
+  return out;
+}
+/* draw n questions, one dok at a time, at most 2 per topic, topics shuffled */
+function runinDraw(bank,tids,dok,n,usedQ){
+  var out=[], pool=[];
+  shuffle(tids.slice()).forEach(function(tid){
+    shuffle(bank[tid].cards.slice()).forEach(function(c){ if(c.dok===dok)pool.push({tid:tid,c:c}); });
+  });
+  var perTopic={};
+  pool.forEach(function(x){
+    if(out.length>=n)return;
+    if(usedQ[x.c.q])return;
+    if((perTopic[x.tid]||0)>=2)return;
+    usedQ[x.c.q]=1; perTopic[x.tid]=(perTopic[x.tid]||0)+1; out.push(x);
+  });
+  return out;
+}
+function runinBuildQuiz(stage){
+  var bank=runinBank(), tids=Object.keys(bank);
+  if(!tids.length)return [];
+  var usedQ={}, qs=[];
+  if(stage==='d4'){
+    var rec=runinRec();
+    var weakComps={}; weaknesses().slice(0,15).forEach(function(x){ weakComps[x.c.id]=1; });
+    var missed=rec.d7Missed||[];
+    var weakT=tids.filter(function(t){ return missed.indexOf(t)>-1||bank[t].comps.some(function(id){return weakComps[id];}); });
+    var asked=rec.d7Topics||[], attempted=runinAttemptedTopics();
+    var newT=tids.filter(function(t){ return !attempted[t]&&asked.indexOf(t)===-1&&weakT.indexOf(t)===-1; });
+    /* 50% weak, 50% untouched, same levels, backfilled from everything */
+    qs=qs.concat(runinDraw(bank,weakT,2,5,usedQ),runinDraw(bank,weakT,3,5,usedQ));
+    qs=qs.concat(runinDraw(bank,newT,2,5,usedQ),runinDraw(bank,newT,3,5,usedQ));
+    if(qs.length<20)qs=qs.concat(runinDraw(bank,tids,2,Math.ceil((20-qs.length)/2),usedQ),runinDraw(bank,tids,3,20-qs.length,usedQ));
+  }else{
+    qs=qs.concat(runinDraw(bank,tids,2,10,usedQ),runinDraw(bank,tids,3,10,usedQ));
+    if(qs.length<20)qs=qs.concat(runinDraw(bank,tids,2,20-qs.length,usedQ));
+  }
+  return shuffle(qs).slice(0,20).map(function(x){ return {tid:x.tid,topic:bank[x.tid].title,comps:bank[x.tid].comps,c:x.c}; });
+}
+var RG=null;
+function runinStartQuiz(stage){
+  var qs=runinBuildQuiz(stage);
+  if(!qs.length){ toast('No eligible questions found for this exam window yet.'); return; }
+  RG={stage:stage,qs:qs,i:0,right:0,byTopic:{}};
+  runOpenOverlay(); $('#gameClose').focus();
+  gSet('Gap Finder: Lecture',(stage==='d4'?'Half weak spots, half new ground. ':'')+'DOK 2 and 3, cold, no notes');
+  runinQ();
+}
+function runinQ(){
+  var g=RG,q=g.qs[g.i],answered=false;
+  var order=shuffle(q.c.options.map(function(_,i){return i;}));
+  gBody('<div class="g-qmeta"><span>'+(g.i+1)+' of '+g.qs.length+'</span><span class="proto-badge">DOK '+q.c.dok+'</span></div>'+
+    '<div class="g-timer"><span style="width:'+(g.i/g.qs.length*100)+'%"></span></div>'+
+    '<p class="g-q">'+esc(q.c.q)+'</p>'+
+    '<div class="g-tiles" id="rgTiles">'+order.map(function(oi,i){
+      return '<button class="g-tile t'+i+'" data-oi="'+oi+'"><span class="sym">'+'◆■●▲'.charAt(i%4)+'</span><span>'+esc(q.c.options[oi])+'</span></button>';
+    }).join('')+'</div>'+
+    '<div class="g-feedback" id="rgFb" aria-live="polite"></div>');
+  $$('#rgTiles .g-tile').forEach(function(b){ b.onclick=function(){
+    if(answered)return; answered=true;
+    var oi=+b.getAttribute('data-oi'), correct=oi===q.c.correctIndex;
+    var bt=g.byTopic[q.tid]=g.byTopic[q.tid]||{topic:q.topic,comps:q.comps,got:0,of:0};
+    bt.of++; if(correct){bt.got++;g.right++;}
+    $$('#rgTiles .g-tile').forEach(function(x){ x.disabled=true;
+      if(+x.getAttribute('data-oi')===q.c.correctIndex)x.classList.add('correct');
+      else if(+x.getAttribute('data-oi')===oi)x.classList.add('wrong'); });
+    var fb=$('#rgFb');
+    if(fb){ fb.textContent=correct?'Correct':'Not quite. '+(q.c.a||''); fb.className='g-feedback '+(correct?'good':'bad'); }
+    gT(setTimeout(function(){ g.i++; g.i<g.qs.length?runinQ():runinFinish(); },correct?700:2200));
+  };});
+}
+function runinFinish(){
+  var g=RG; if(!g)return;
+  var E=window.BIO004_EVIDENCE;
+  var missedT=[],askedT=[];
+  Object.keys(g.byTopic).forEach(function(tid){
+    var bt=g.byTopic[tid]; askedT.push(tid);
+    if(bt.got<bt.of)missedT.push(tid);
+    if(E&&E.record)E.record(bt.comps,'gapfinder',bt.got,bt.of,null);
+  });
+  if(g.stage==='d7')runinPatch({d7Topics:askedT,d7Missed:missedT,d7:'done'});
+  else runinPatch({d4:'done'});
+  try{ ingestRecall(); }catch(e){}
+  save(); renderAll();
+  var missNames=missedT.map(function(t){ return esc(g.byTopic[t].topic); });
+  var pct=Math.round(g.right/g.qs.length*100);
+  gSet('Gap Finder: Lecture','What it found');
+  gBody('<div class="g-center"><div class="g-icbadge" aria-hidden="true">'+I.diagnose+'</div>'+
+    '<h3>'+g.right+' of '+g.qs.length+' cold ('+pct+'%)</h3>'+
+    (missNames.length?'<p>Missed ground: <b>'+missNames.join('</b>, <b>')+'</b>. All of it just landed on your Weakness Dashboard.</p>'
+      :'<p>Nothing missed at DOK 2 and 3. Run the lab side, then keep your recall warm.</p>')+
+    '<div class="g-actions"><button class="btn gold big" id="rgWeak">Work the weak list</button>'+
+    '<button class="btn" id="rgDash">Open the Weakness Dashboard</button></div>'+
+    (g.stage==='d4'?'<div class="g-actions"><button class="btn" id="rgCram">Plan the final days</button></div>':'')+
+    '<div class="g-actions"><button class="btn" data-gameclose>Done</button></div></div>');
+  var w=$('#rgWeak'); if(w)w.onclick=function(){ closeGame(); wlStartWeak(); };
+  var d=$('#rgDash'); if(d)d.onclick=function(){ closeGame(); setView('progress'); location.hash='s-weak'; };
+  var c=$('#rgCram'); if(c)c.onclick=function(){ closeGame(); openCram(); };
+  RG=null;
+}
+function openRunin(stage){
+  var e=nextExam(), d=daysToExam();
+  runinPatch(stage==='d7'?{d7:'seen'}:{d4:'seen'});
+  runOpenOverlay(); $('#gameClose').focus();
+  gSet('Exam run-in',e.name+' · '+d+' day'+(d===1?'':'s')+' out');
+  var lead=stage==='d7'
+    ? 'This is the window where finding a gap still leaves time to fix it. I recommend running both gap finders now. You can skip this, and either way you will get one more prompt 4 days out, targeted at whatever is still weak.'
+    : 'Last targeted pass: half of this check comes from what is already flagged as weak, half from coverage you have not touched, same DOK levels. Run both, then plan the final days.';
+  gBody('<div style="text-align:left"><p style="margin:0 0 14px">'+lead+'</p>'+
+    '<div class="fw-grid">'+
+    '<button type="button" class="fw-act" id="riLec"><span class="fw-ic" aria-hidden="true">'+I.recall+'</span><span><b>Lecture gap finder</b><span class="fw-sub">20 cold multiple choice, DOK 2 and 3 only</span></span></button>'+
+    '<button type="button" class="fw-act" id="riLab"><span class="fw-ic" aria-hidden="true">'+I.micro+'</span><span><b>Lab gap finder (Loops)</b><span class="fw-sub">Practice Lab Exam: 52 randomized questions</span></span></button>'+
+    '</div>'+
+    '<p style="font-size:12.5px;color:var(--ink-soft);margin:12px 0 0">In Loops, open <b>Practice Lab Exam</b> and tick the loops your exam covers'+(stage==='d4'?', leaning on the stations it marks weak plus ones you have not run':'')+'. Misses from both finders point you at the Weakness Dashboard, and that is where the fixing happens.</p>'+
+    '<div class="g-actions" style="margin-top:16px">'+(stage==='d4'?'<button class="btn" id="riCram">Plan the final days</button>':'')+
+    '<button class="btn" data-gameclose>Not now</button></div></div>');
+  var l=$('#riLec'); if(l)l.onclick=function(){ runinStartQuiz(stage); };
+  var b=$('#riLab'); if(b)b.onclick=function(){ window.open(LOOPS_BASE,'_blank','noopener'); };
+  var cr=$('#riCram'); if(cr)cr.onclick=function(){ closeGame(); openCram(); };
+}
+
+/* =========================================================
    THE FIRST QUESTION, AND FREESTYLE.
 
    The moment the app opens, one choice: run today's track, or
@@ -4882,7 +5096,7 @@ function openWelcome(){
   runOpenOverlay(); $('#gameClose').focus();
   gSet('How do you want to work?','One tap, then you are working');
   var left=(DR.steps||[]).filter(function(s){return !s.doneFlag;}).length;
-  gBody('<div class="g-center"><div class="g-emoji">&#127919;</div><h3>Catch up, or freestyle?</h3>'
+  gBody('<div class="g-center"><div class="g-icbadge" aria-hidden="true">'+I.bolt+'</div><h3>Catch up, or freestyle?</h3>'
    +'<p>Catch up runs today\'s track'+(left?' ('+left+' thing'+(left===1?'':'s')+' left on it)':'')
    +'. Freestyle skips the schedule and lets you pick any activity. Both count the same.</p>'
    +'<div class="g-actions"><button class="btn gold big" data-fwmode="catchup">Catch up for today</button>'
@@ -4914,6 +5128,7 @@ function openFreestyle(){
    +act('teachai',I.teach,'Teach an AI','It quizzes you back')
    +act('focus',FW_ICONS.focus,'Focus Session','Guided timer runs the list')
    +act('weaklist',FW_ICONS.weak,'Work my weak list','Top weak spots, crossed off')
+   +(runinStage()?act('runin',I.clock,'Exam run-in','Both gap finders, '+daysToExam()+' day'+(daysToExam()===1?'':'s')+' to the exam'):'')
    +act('gapfinder',I.diagnose,'Gap Finder','Pick topics, find what is missing')
    +act('exambuilder',FW_ICONS.exam,'Practice Exam Builder','Build a full mock exam')
    +'</div></div>');
@@ -4931,7 +5146,8 @@ function fwLaunch(k){
   else if(k==='focus'){ fsOpen(); }
   else if(k==='weaklist'){ wlStartWeak(); }
   else if(k==='gapfinder'){ openGapByTopic(); }
-  else if(k==='exambuilder'){ window.open('bio004-practice-exam-builder.html','_top'); }
+  else if(k==='runin'){ var rs=runinStage(); if(rs)openRunin(rs); }
+  else if(k==='exambuilder'){ window.open(toolURL('bio004-practice-exam-builder.html'),'_top'); }
 }
 
 function renderAll(){
@@ -4983,7 +5199,7 @@ document.addEventListener('click',function(e){
   if(t.hasAttribute('data-planwizard')){openPlanWizard();return;}
   if(t.hasAttribute('data-game')){openGame(t.getAttribute('data-game'));return;}
   if(t.hasAttribute('data-exercise')){openGame(t.getAttribute('data-exercise'));return;}
-  if(t.hasAttribute('data-toolblank')){window.open(t.getAttribute('data-toolblank'),'_blank','noopener');return;}
+  if(t.hasAttribute('data-toolblank')){window.open(toolURL(t.getAttribute('data-toolblank')),'_blank','noopener');return;}
   if(t.hasAttribute('data-cram')){openCram();return;}
   if(t.hasAttribute('data-gaptopic')){openTool('#s-weak');return;}
   if(t.hasAttribute('data-topicreview')){openTool('#s-weak#review');return;}
@@ -5222,12 +5438,17 @@ wlRender();
 /* THE FIRST QUESTION: catch up or freestyle, once per sitting.
    Skipped when onboarding is running, when a deep link asked for a
    specific section, and when a weak-list repair run is mid-flight,
-   because interrupting any of those with a modal would be rude. */
+   because interrupting any of those with a modal would be rude.
+   Inside an exam run-in window, the run-in prompt outranks it:
+   seven and four days out, the exam is the first question. */
 try{
-  if(S.profile.onboarded && !location.hash && WL.mode!=='weak'
-     && !sessionStorage.getItem('bio004-welcome-v1')){
-    sessionStorage.setItem('bio004-welcome-v1','1');
-    openWelcome();
+  if(S.profile.onboarded && !location.hash && WL.mode!=='weak'){
+    var __ri=runinDue();
+    if(__ri){ openRunin(__ri); }
+    else if(!sessionStorage.getItem('bio004-welcome-v1')){
+      sessionStorage.setItem('bio004-welcome-v1','1');
+      openWelcome();
+    }
   }
 }catch(e){}
 
