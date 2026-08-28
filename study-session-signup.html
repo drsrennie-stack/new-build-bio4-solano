@@ -251,6 +251,18 @@
 .pill.last{background:#7A2A22;color:#fff}
 .csplit{font-size:.86rem;line-height:1.5;color:var(--csoft,#3D4757);margin:6px 0 0}
 .csplit b{color:inherit}
+/* THE DOOR
+   A session nobody can get into is a session that did not happen. Every
+   session now carries one contact the host has promised to watch, and the
+   card writes the message for the student so the ask takes one tap. */
+.cdoor{font-family:var(--font-display);font-weight:700;font-size:.86rem;color:var(--cink);}
+.cdoor span{color:var(--csoft);font-weight:700;}
+.door-box{background:#FAFAF9;border-radius:12px;padding:14px 16px;margin:4px 0 12px;box-shadow:var(--shadow-rest);}
+.door-box p{margin:0;font-family:var(--font-body);font-size:.92rem;color:var(--page-ink);line-height:1.5;}
+.door-box .door-who{font-family:var(--font-display);font-weight:800;color:var(--page-ink);display:block;margin-bottom:2px;}
+.door-box .door-how{font-family:var(--font-body);font-size:.86rem;color:var(--page-soft);}
+.door-msg{width:100%;min-height:96px;font-family:var(--font-body);font-size:.92rem;line-height:1.5;padding:10px 12px;border-radius:10px;border:1px solid #C9CFD8;background:#fff;color:var(--page-ink);resize:vertical;}
+.linkrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px;}
 </style>
 </head>
 <body>
@@ -350,8 +362,11 @@
       <ul>
         <li>Host on your own Zoom or in person. On Zoom, record it, that recording earns your host credit.</li>
         <li>After the session, tap "Host? Add recording and attendance" and paste your recording link and Zoom attendance report.</li>
+        <li><strong>Post a door contact and watch it.</strong> Every session carries one contact for people who cannot get in. Keep it open on your phone or your screen from 10 minutes before the start until the session ends, and answer it. If somebody took the time to show up, they get in.</li>
+        <li><strong>Bring a cohost for anything big.</strong> One of you runs the room, the other watches the door and the messages, so nobody sits outside waiting while you are mid-sentence. On Zoom, make them a cohost so they can admit people themselves.</li>
+        <li><strong>Test your meeting link before you post it,</strong> using the test button in the form. A dead link is the one thing that wastes everybody's hour.</li>
         <li>Sign up with your full roster name, and use it in Zoom, so hosts can match you.</li>
-        <li>Emails stay private to Dr. Rennie, never posted here.</li>
+        <li>Your signup email stays private to Dr. Rennie. The only thing posted publicly is the door contact you choose when you host, and <strong>a phone number is never required.</strong> Email or Discord is fine if you would rather not give out your number.</li>
         <li>If you sign up, show up, or cancel your seat so someone else can take it.</li>
       </ul>
     </div>
@@ -443,7 +458,52 @@
               <div class="field">
       <label for="h-zoom">Online meeting link</label>
       <input id="h-zoom" name="zoomLink" type="url" maxlength="400" placeholder="https://zoom.us/j/...">
-      <span class="hint">Required for online sessions.</span>
+      <span class="hint">Required for online sessions. Paste the whole link, then test it here before you post it.</span>
+      <div class="linkrow">
+        <button type="button" class="btn btn-ghost btn-sm" id="h-testlink">Test this link</button>
+        <span class="hint" id="h-testhint">Opens in a new tab. If it does not open your meeting, fix it now, not at 7pm.</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="grouplabel" id="doorlabel">If somebody cannot get in</span>
+      <p class="hint" style="margin:-4px 0 10px;">Somebody who showed up needs a way to tell you the link is dead, or that they are stuck in the waiting room, or standing outside the wrong room. Pick the one you will actually have open.</p>
+      <p class="hint" style="margin:-4px 0 10px;"><strong>A phone number is never required.</strong> Email and Discord work just as well, so if you would rather not give out your number, use one of those instead.</p>
+      <div class="field-row">
+        <div class="field">
+          <label for="h-doorkind">How they reach you <span class="req" aria-hidden="true">*</span></label>
+          <select id="h-doorkind" name="doorKind" required>
+            <option value="email" selected>Email</option>
+            <option value="discord">Discord</option>
+            <option value="text">Text message, only if you want to</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="h-door">Door contact <span class="req" aria-hidden="true">*</span></label>
+          <input id="h-door" name="doorContact" type="text" required maxlength="80" autocomplete="off" placeholder="you@solano.edu">
+          <span class="hint" id="doorHint">This one is posted on the session card, so classmates can reach you. Everything else you enter stays private.</span>
+        </div>
+      </div>
+      <label class="checkline" for="h-doorack">
+        <input type="checkbox" id="h-doorack" name="doorAck" required>
+        <span>I will keep this open on my phone or my screen from 10 minutes before the start until the session ends, and I will answer it and let people in.</span>
+      </label>
+    </div>
+
+    <div class="field">
+      <span class="grouplabel" id="colabel">Cohost, optional and recommended</span>
+      <p class="hint" style="margin:-4px 0 10px;">One person runs the room, the other watches the door and the messages. Nobody sits outside while you are mid-sentence. On Zoom, make them a cohost so they can admit people.</p>
+      <div class="field-row">
+        <div class="field">
+          <label for="h-coname">Cohost name</label>
+          <input id="h-coname" name="cohostName" type="text" maxlength="60" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="h-cocontact">Cohost email or number</label>
+          <input id="h-cocontact" name="cohostContact" type="text" maxlength="80" autocomplete="off">
+          <span class="hint">Posted as a second door, so there are two ways in.</span>
+        </div>
+      </div>
     </div>
     <div class="field-row">
       <div class="field">
@@ -569,6 +629,36 @@
   </form>
 </dialog>
 
+<!-- DOOR DIALOG: reaching the host when the link fails -->
+<dialog id="doorDialog" aria-labelledby="doorTitle">
+  <div class="dlg-inner">
+    <p class="dlg-eyebrow">Cannot get in</p>
+    <h2 class="dlg-title" id="doorTitle">Message the host</h2>
+    <p class="dlg-sub" id="doorSub"></p>
+    <div class="door-box" id="doorBox"></div>
+    <div class="field">
+      <label for="door-why">What is happening</label>
+      <select id="door-why">
+        <option value="link">The meeting link does not work</option>
+        <option value="wait">I am stuck in the waiting room</option>
+        <option value="pass">The passcode is not being accepted</option>
+        <option value="room">I am here in person and cannot find the room</option>
+        <option value="other">Something else</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="door-msg">Your message</label>
+      <textarea id="door-msg" class="door-msg" maxlength="600"></textarea>
+      <span class="hint">Edit it if you want. Sending opens your own email or messages app.</span>
+    </div>
+    <div class="dlg-actions">
+      <button type="button" class="btn btn-ghost btn-sm" data-close>Close</button>
+      <button type="button" class="btn btn-navy btn-sm" id="doorCopy">Copy message</button>
+      <a class="btn btn-primary btn-sm" id="doorGo" href="#">Send it</a>
+    </div>
+  </div>
+</dialog>
+
 <!-- LIVE ROOMS DIALOG -->
 <dialog id="roomsDialog" aria-labelledby="roomsTitle">
   <div class="dlg-inner">
@@ -665,6 +755,10 @@ const ROLE_DELIM = " ::r:: ";
 const ACT_DELIM  = " ::a:: ";
 const LAB_DELIM  = " ::l:: ";
 const RATE_DELIM = " ::$:: ";
+/* The door: how a student reaches the host when the link fails. Stored as
+   kind|contact. The cohost is a second door, stored as name|contact. */
+const DOOR_DELIM = " ::d:: ";
+const CO_DELIM   = " ::2:: ";
 function normRole(r){
   r = String(r || "").trim().toLowerCase();
   return (r === "tutor" || r === "faculty") ? r : "student";
@@ -672,6 +766,20 @@ function normRole(r){
 function splitExtras(t){
   let raw = String(t || "");
   let passcode = "", location = "", role = "", activity = "", isLab = false, rate = 0;
+  let doorKind = "", doorContact = "", cohostName = "", cohostContact = "";
+  /* Peel in reverse of the order they were appended. */
+  let c2 = raw.indexOf(CO_DELIM);
+  if(c2 >= 0){
+    const co = raw.slice(c2 + CO_DELIM.length).split("|");
+    cohostName = (co[0] || "").trim(); cohostContact = (co[1] || "").trim();
+    raw = raw.slice(0, c2);
+  }
+  let d = raw.indexOf(DOOR_DELIM);
+  if(d >= 0){
+    const dr = raw.slice(d + DOOR_DELIM.length).split("|");
+    doorKind = normDoorKind(dr[0]); doorContact = (dr[1] || "").trim();
+    raw = raw.slice(0, d);
+  }
   let r = raw.indexOf(RATE_DELIM);
   if(r >= 0){ rate = parseFloat(raw.slice(r + RATE_DELIM.length)) || 0; raw = raw.slice(0, r); }
   let l = raw.indexOf(LAB_DELIM);
@@ -685,7 +793,38 @@ function splitExtras(t){
   let k = raw.indexOf(ROLE_DELIM);
   if(k >= 0){ role = raw.slice(k + ROLE_DELIM.length); raw = raw.slice(0, k); }
   return { topic: raw, location: location, passcode: passcode, role: normRole(role),
-           activity: activity, isLab: isLab, rate: rate };
+           activity: activity, isLab: isLab, rate: rate,
+           doorKind: doorKind, doorContact: doorContact,
+           cohostName: cohostName, cohostContact: cohostContact };
+}
+function normDoorKind(k){
+  k = String(k || "").trim().toLowerCase();
+  return (k === "text" || k === "discord") ? k : "email";
+}
+function doorWord(kind){
+  return kind === "text" ? "text message" : (kind === "discord" ? "Discord" : "email");
+}
+function hasDoor(s){ return !!(s && s.doorContact); }
+/* mailto and sms are the only two routes that work on a locked-down phone in
+   a hallway with no app installed. Discord has no reliable deep link to a
+   handle, so that one is copy-and-paste with the handle shown. */
+function doorHref(s, body){
+  const kind = normDoorKind(s.doorKind);
+  const to = String(s.doorContact || "").trim();
+  if(!to) return "";
+  if(kind === "text"){
+    const num = to.replace(/[^\d+]/g, "");
+    if(!num) return "";
+    return "sms:" + num + "?&body=" + encodeURIComponent(body);
+  }
+  if(kind === "discord") return "";
+  const subject = "Cannot get in: " + (s.topic || "study session");
+  let href = "mailto:" + encodeURIComponent(to).replace(/%40/g, "@");
+  const co = String(s.cohostContact || "").trim();
+  href += "?subject=" + encodeURIComponent(subject);
+  if(co && co.indexOf("@") > 0) href += "&cc=" + encodeURIComponent(co).replace(/%40/g, "@");
+  href += "&body=" + encodeURIComponent(body);
+  return href;
 }
 function saveIdentity(name, email){
   try{ localStorage.setItem("ssg_identity_v1", JSON.stringify({name:name, email:email})); }catch(e){}
@@ -765,7 +904,9 @@ async function load(){
 function render(sessions){
   loadingEl.style.display = "none";
   (sessions || []).forEach(s => { const p = splitExtras(s.topic); s.topic = p.topic; s.location = p.location;
-    s.passcode = p.passcode; s.role = p.role; s.activity = p.activity; s.isLab = p.isLab; s.rate = p.rate; });
+    s.passcode = p.passcode; s.role = p.role; s.activity = p.activity; s.isLab = p.isLab; s.rate = p.rate;
+    s.doorKind = p.doorKind; s.doorContact = p.doorContact;
+    s.cohostName = p.cohostName; s.cohostContact = p.cohostContact; });
   rawSessions = (sessions || []).slice().sort((a,b) => (a.date+a.time).localeCompare(b.date+b.time));
   const todayStr = ymd(new Date());
   allSessions = rawSessions.filter(s => s.date >= todayStr);
@@ -783,6 +924,8 @@ function attachSignup(scope){
     b.addEventListener("click", () => openCancel(b.getAttribute("data-cancel-session"), "session")));
   scope.querySelectorAll("[data-join]").forEach(b =>
     b.addEventListener("click", () => logJoin(b.getAttribute("data-join"))));
+  scope.querySelectorAll("[data-door]").forEach(b =>
+    b.addEventListener("click", () => openDoor(b.getAttribute("data-door"))));
 }
 
 function renderList(){
@@ -940,7 +1083,9 @@ function card(s){
     }
   } else if(!loc){
     if(js.kind === "live"){
-      joinBtn = '<button type="button" class="btn btn-ghost btn-sm" disabled>No link yet</button>';
+      /* A live session with no link used to end here, at a disabled button.
+         Now it ends at the host. */
+      joinBtn = '<button type="button" class="btn btn-navy btn-sm" data-door="' + esc(s.id) + '">No link yet, message the host</button>';
     } else if(js.kind === "before"){
       joinBtn = '<button type="button" class="btn btn-ghost btn-sm" disabled>Opens ' + esc(fmtTime(s.time)) + '</button>';
     }
@@ -964,7 +1109,12 @@ function card(s){
     '<div class="ctime">' + esc(fmtTime(s.time)) + '</div>' +
     '<div class="ctopic">' + esc(s.topic) + '</div>' +
     splitLine(s, att.length) +
-    '<div class="chost">Host: ' + esc(s.hostName || "TBD") + '</div>' +
+    '<div class="chost">Host: ' + esc(s.hostName || "TBD") +
+      (s.cohostName ? ' &middot; Cohost: ' + esc(s.cohostName) : '') + '</div>' +
+    (hasDoor(s)
+      ? '<div class="cdoor"><span>Cannot get in?</span> ' + esc(s.hostName ? s.hostName.split(" ")[0] : "The host") +
+        ' is watching ' + esc(doorWord(s.doorKind)) + ' during this session</div>'
+      : '') +
     (loc ? '<div class="cloc"><span>In person:</span> ' + esc(loc) + '</div>' : '') +
     (s.passcode ? '<div class="cpass"><span>Passcode:</span> ' + esc(s.passcode) + '</div>' : '') +
     '<div class="cseats">' + esc(seats) + '</div>' +
@@ -975,9 +1125,12 @@ function card(s){
         ? '<button type="button" class="btn btn-ghost btn-sm" disabled>Session full</button>'
         : '<button type="button" class="btn btn-primary btn-sm" data-signup="' + esc(s.id) + '">Sign up</button>') +
       joinBtn +
+      (js.kind === "live" && hasLink
+        ? '<button type="button" class="btn btn-ghost btn-sm" data-door="' + esc(s.id) + '">Cannot get in?</button>' : '') +
       (rec ? '<a class="btn btn-navy btn-sm" href="' + esc(rec) + '" target="_blank" rel="noopener">Watch recording</a>' : '') +
     '</div>' +
     '<div class="card-links">' +
+      (js.kind === "ended" ? '' : '<button type="button" class="hostlink" data-door="' + esc(s.id) + '">Cannot get in? Message the host</button>') +
       (att.length ? '<button type="button" class="hostlink" data-cancel-spot="' + esc(s.id) + '">Cancel my spot</button>' : '') +
       '<button type="button" class="hostlink" data-wrap="' + esc(s.id) + '">Host? Add recording and attendance</button>' +
       '<button type="button" class="hostlink danger" data-cancel-session="' + esc(s.id) + '">Cancel session (host)</button>' +
@@ -993,6 +1146,45 @@ $("#hostBtn").addEventListener("click", () => {
   $("#h-date").min = new Date().toISOString().slice(0,10);
   $("#h-topic").placeholder = "e.g. Appendicular skeleton review";
   hostDialog.showModal();
+});
+/* Most dead links are dead before the session starts: a half-copied URL, a
+   Zoom invitation pasted whole, or the meeting id typed without the domain.
+   Catching that here costs the host ten seconds and saves somebody an hour. */
+function badMeetingLink(link){
+  const v = String(link || "").trim();
+  if(!v) return "";
+  if(!/^https?:\/\//i.test(v)) return "A meeting link has to start with https://. Copy the whole link from your meeting app.";
+  if(/\s/.test(v)) return "That link has a space in it, so it will break. Paste just the link, nothing around it.";
+  if(/zoom\.us/i.test(v) && !/\/(j|my|s|w)\//i.test(v)) return "That looks like a Zoom page rather than a join link. The join link has /j/ and the meeting number in it.";
+  return "";
+}
+$("#h-testlink").addEventListener("click", () => {
+  const v = $("#h-zoom").value.trim();
+  const hint = $("#h-testhint");
+  if(!v){ hint.textContent = "Paste your meeting link first, then test it."; $("#h-zoom").focus(); return; }
+  const problem = badMeetingLink(v);
+  if(problem){ hint.textContent = problem; return; }
+  hint.textContent = "Opened in a new tab. If your meeting did not come up, fix the link before you post.";
+  window.open(v, "_blank", "noopener");
+});
+$("#h-doorkind").addEventListener("change", function(){
+  const inp = $("#h-door");
+  const hint = $("#doorHint");
+  if(this.value === "text"){
+    inp.placeholder = "707 555 0134";
+    hint.textContent = "Posted on the session card, so only do this if you are happy for classmates to have your number. Email and Discord work just as well.";
+  } else if(this.value === "discord"){
+    inp.placeholder = "yourname#0000 or your handle";
+    hint.textContent = "Posted on the session card. Classmates copy their message and send it to you in Discord.";
+  } else {
+    inp.placeholder = "you@solano.edu";
+    hint.textContent = "This one is posted on the session card, so classmates can reach you. Everything else you enter stays private.";
+  }
+});
+/* The host email is almost always the right door, so offer it. */
+$("#h-email").addEventListener("blur", function(){
+  const d = $("#h-door");
+  if(!d.value.trim() && $("#h-doorkind").value === "email") d.value = this.value.trim();
 });
 $("#h-role").addEventListener("change", function(){
   $("#h-topic").placeholder = (this.value === "Faculty")
@@ -1025,6 +1217,15 @@ $("#hostForm").addEventListener("submit", async (e) => {
   if(normRole(role) === "student" && actVal) topicPayload += ACT_DELIM + actVal;
   if(labVal) topicPayload += LAB_DELIM;
   if(rateVal > 0) topicPayload += RATE_DELIM + rateVal;
+  /* The door rides last, so splitExtras can peel it first. Pipes and the
+     delimiter itself are stripped, because either would split the field. */
+  const clean = v => String(v || "").replace(/\|/g, " ").replace(/::/g, "").trim();
+  const doorKind = normDoorKind(el("doorKind").value);
+  const doorContact = clean(el("doorContact").value);
+  const coName = clean(el("cohostName").value);
+  const coContact = clean(el("cohostContact").value);
+  if(doorContact) topicPayload += DOOR_DELIM + doorKind + "|" + doorContact;
+  if(coName || coContact) topicPayload += CO_DELIM + coName + "|" + coContact;
   const payload = {
     action: "create",
     hostName: el("hostName").value.trim(),
@@ -1039,6 +1240,20 @@ $("#hostForm").addEventListener("submit", async (e) => {
   if(!payload.hostName || !payload.hostEmail || !baseTopic || !payload.date || !payload.time){
     $("#hostErr").textContent = "Please fill in all required fields."; return;
   }
+  if(!doorContact){
+    $("#hostErr").textContent = "Add a door contact. Somebody who cannot get in has to be able to reach you."; return;
+  }
+  if(doorKind === "email" && doorContact.indexOf("@") < 1){
+    $("#hostErr").textContent = "That door contact is not an email address. Change the method, or fix the address."; return;
+  }
+  if(doorKind === "text" && doorContact.replace(/[^\d]/g, "").length < 7){
+    $("#hostErr").textContent = "That does not look like a phone number a classmate could text."; return;
+  }
+  if(!(document.getElementById("h-doorack") || {}).checked){
+    $("#hostErr").textContent = "Please agree to watch your door contact during the session."; return;
+  }
+  const linkProblem = badMeetingLink(payload.zoomLink);
+  if(linkProblem){ $("#hostErr").textContent = linkProblem; return; }
   const inPerson = (campus && campus !== "Online") || !!roomText;
   if(campus === "Online" && !payload.zoomLink){
     $("#hostErr").textContent = "This is an online session. Please add the meeting link."; return;
@@ -1051,7 +1266,7 @@ $("#hostForm").addEventListener("submit", async (e) => {
     await api(payload);
     saveIdentity(payload.hostName, payload.hostEmail);
     hostDialog.close();
-    setStatus("Your session is posted. Thanks for hosting.", "ok");
+    setStatus("Your session is posted. Keep your door contact open from 10 minutes before the start, so anyone who cannot get in can reach you.", "ok");
     await load();
   }catch(err){
     $("#hostErr").textContent = err.message;
@@ -1229,8 +1444,91 @@ $("#suHostCancel").addEventListener("click", () => {
 /* ---------- dialog close buttons + backdrop ---------- */
 document.querySelectorAll("[data-close]").forEach(b =>
   b.addEventListener("click", () => b.closest("dialog").close()));
-[hostDialog, signupDialog, roomsDialog, wrapDialog, cancelDialog, confirmDialog].forEach(d =>
+[hostDialog, signupDialog, roomsDialog, wrapDialog, cancelDialog, confirmDialog, document.getElementById("doorDialog")].forEach(d =>
   d.addEventListener("click", e => { if(e.target === d) d.close(); }));
+
+/* ---------- THE DOOR ---------- */
+const doorDialog = $("#doorDialog");
+let doorSession = null;
+const DOOR_LINES = {
+  link: "The meeting link on the card is not working for me.",
+  wait: "I am sitting in the waiting room and have not been let in.",
+  pass: "The passcode is not being accepted.",
+  room: "I am here in person and I cannot find the room.",
+  other: "I am having trouble getting in."
+};
+function doorMessage(s, why){
+  const me = getIdentity();
+  const who = (me.name || "").trim();
+  return (who ? who + " here. " : "Hi. ") +
+    "I am trying to join " + (s.topic || "your study session") +
+    " at " + fmtTime(s.time) + " on " + fmtDate(s.date) + ". " +
+    (DOOR_LINES[why] || DOOR_LINES.other) +
+    " Can you let me in?" +
+    (me.email ? " You can reach me at " + me.email + "." : "");
+}
+function openDoor(id){
+  const s = rawSessions.find(x => x.id === id);
+  if(!s) return;
+  doorSession = s;
+  $("#doorSub").textContent = '"' + s.topic + '" at ' + fmtTime(s.time) + ", hosted by " + (s.hostName || "TBD") + ".";
+  $("#door-why").value = (!joinLink(s) && s.location) ? "room" : "link";
+  renderDoor();
+  doorDialog.showModal();
+}
+function renderDoor(){
+  const s = doorSession;
+  if(!s) return;
+  const msg = doorMessage(s, $("#door-why").value);
+  $("#door-msg").value = msg;
+  const go = $("#doorGo");
+  const box = $("#doorBox");
+  const kind = normDoorKind(s.doorKind);
+  if(hasDoor(s)){
+    const second = (s.cohostName || s.cohostContact)
+      ? '<span class="door-how">Cohost' + (s.cohostName ? ' ' + esc(s.cohostName) : '') +
+        (s.cohostContact ? ', ' + esc(s.cohostContact) : '') + ', is a second way in.</span>'
+      : '';
+    box.innerHTML =
+      '<p><span class="door-who">' + esc(s.hostName || "The host") + ' &middot; ' + esc(doorWord(kind)) + '</span>' +
+      '<span class="door-how">' + esc(s.doorContact) + '</span>' +
+      '<span class="door-how">Watched from 10 minutes before the start until the session ends.</span>' +
+      second + '</p>';
+    const href = doorHref(s, msg);
+    if(href){
+      go.setAttribute("href", href);
+      go.hidden = false;
+      go.textContent = kind === "text" ? "Text the host" : "Email the host";
+      go.removeAttribute("target");
+    } else {
+      /* Discord, or a number we cannot dial. Copy is the route. */
+      go.hidden = true;
+    }
+    $("#doorCopy").textContent = (kind === "discord") ? "Copy my message" : "Copy it instead";
+  } else {
+    /* Older sessions, posted before the door existed, and any host who left
+       it blank. Never leave a student standing outside with nothing. */
+    box.innerHTML = '<p><span class="door-who">This host did not post a door contact</span>' +
+      '<span class="door-how">Post in your section Discord, or in the Virtual Office board, and email Dr. Rennie at srennie@solano.edu so the session can be credited even if you could not get in.</span></p>';
+    go.setAttribute("href", "mailto:srennie@solano.edu?subject=" +
+      encodeURIComponent("Could not get into a Study With Me session") + "&body=" + encodeURIComponent(msg));
+    go.hidden = false;
+    go.textContent = "Email Dr. Rennie";
+    $("#doorCopy").textContent = "Copy my message";
+  }
+}
+$("#door-why").addEventListener("change", renderDoor);
+$("#doorCopy").addEventListener("click", async () => {
+  const box = $("#door-msg");
+  try{
+    await navigator.clipboard.writeText(box.value);
+    setStatus("Message copied. Paste it wherever you can reach your host.", "ok");
+  }catch(e){
+    box.focus(); box.select();
+    setStatus("Press copy on your keyboard, the message is selected.", "");
+  }
+});
+$("#doorGo").addEventListener("click", () => { doorDialog.close(); });
 
 function openConfirm(s, email){
   if(!s){ return; }
@@ -1246,6 +1544,20 @@ function openConfirm(s, email){
     html += '<p class="cf-note">The host has not added a meeting link yet. Check back on the card, or watch your email.</p>';
   }
   if(s.passcode){ html += '<p class="cf-line"><strong>Passcode:</strong> ' + esc(s.passcode) + '</p>'; }
+  /* Save this before they need it. Nobody hunts for a contact while standing
+     outside a locked room with two minutes gone. */
+  if(hasDoor(s)){
+    html += '<div class="door-box" style="margin-top:12px;"><p>' +
+      '<span class="door-who">If you cannot get in</span>' +
+      '<span class="door-how">Message ' + esc(s.hostName || "the host") + ' by ' + esc(doorWord(s.doorKind)) +
+      ': <strong>' + esc(s.doorContact) + '</strong>. They are watching it during the session.' +
+      (s.cohostName || s.cohostContact
+        ? ' Cohost' + (s.cohostName ? ' ' + esc(s.cohostName) : '') + (s.cohostContact ? ', ' + esc(s.cohostContact) : '') + ', can also let you in.'
+        : '') +
+      '</span></p></div>';
+  } else {
+    html += '<p class="cf-note">This host has not posted a contact for problems getting in. If you get stuck, post in your section Discord and email Dr. Rennie at srennie@solano.edu.</p>';
+  }
   if(email){ html += '<p class="cf-note">We also emailed these details to <strong>' + esc(email) + '</strong>.</p>'; }
   $("#cfDetails").innerHTML = html;
   confirmDialog.showModal();
