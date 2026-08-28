@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anatomy Games · BIO 004 Human Anatomy</title>
+<meta name="description" content="Team games for BIO 004 Human Anatomy. Retrieval practice you play out loud with your table.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#08101F;
+  --navy-tint:#ECEFF4;
+  --navy-line:#1E2A47;
+  --maroon:#7A2A22;
+  --maroon-dark:#5E201A;
+  --terra:#8B1D1D;
+  --terra-dark:#6B1616;
+  --gold:#DCB45C;
+  --gold-text:#6E5018;
+  --straw:#E8CE85;
+  --straw-light:#F2E2B8;
+  --offwhite-text:#F4EFE8;
+  --card:#FFFFFF;
+  --ink-muted:#3D4860;
+  --rule-soft:#DCE0E6;
+  --r-block:8px;
+  --r-card:16px;
+  --shadow-rest:0 1px 3px rgba(11,21,48,.10);
+  --shadow-hover:0 12px 26px rgba(11,21,48,.16);
+  --display:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--maroon);color:var(--navy);font-family:var(--body);font-size:17px;line-height:1.55}
+em,i,cite,dfn,var,address{font-style:normal}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.15;margin:0}
+p{margin:0 0 .8rem}
+p:last-child{margin-bottom:0}
+button{font:inherit;color:inherit}
+a{color:var(--navy)}
+:focus-visible{outline:3px solid var(--navy);outline-offset:2px;box-shadow:0 0 0 6px var(--gold);border-radius:4px}
+
+.skip-link{position:absolute;left:-9999px;top:0;background:var(--navy);color:#fff;padding:.7rem 1.1rem;border-radius:0 0 var(--r-block) 0;z-index:200;font-weight:700}
+.skip-link:focus{left:0}
+
+.wrap{max-width:1180px;margin:0 auto;padding:1.8rem 1.1rem 3rem}
+.masthead{padding:.4rem 0 1.6rem}
+.eyebrow{font-family:var(--display);font-weight:700;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--straw-light);margin:0 0 .5rem}
+.masthead h1{font-size:clamp(2.1rem,5.5vw,3.2rem);color:#fff;letter-spacing:-.01em}
+.masthead .sub{color:var(--straw-light);font-weight:600;margin-top:.5rem;max-width:56ch}
+
+.grid{display:grid;gap:1.1rem;grid-template-columns:repeat(auto-fill,minmax(268px,1fr))}
+
+.tile{
+  background:var(--card);border-radius:var(--r-card);box-shadow:var(--shadow-rest);
+  padding:1.3rem 1.3rem 1.1rem;display:flex;flex-direction:column;
+  transition:transform 200ms ease,box-shadow 200ms ease;
+}
+.tile:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.tile.soon .icon{background:var(--maroon-dark)}
+.icon{
+  width:74px;height:74px;border-radius:18px;display:grid;place-items:center;
+  background:var(--navy);margin-bottom:.9rem;box-shadow:var(--shadow-rest);
+}
+.icon svg{width:46px;height:46px;display:block}
+.chip{
+  display:inline-block;font-family:var(--display);font-weight:700;font-size:.64rem;letter-spacing:.12em;
+  text-transform:uppercase;border-radius:99px;padding:.2rem .6rem;margin-bottom:.5rem;
+  background:var(--navy-tint);color:var(--navy);align-self:flex-start;
+}
+.chip.build{background:var(--gold);color:var(--navy)}
+.tile h2{font-size:1.22rem;margin-bottom:.35rem}
+.tile .blurb{font-size:.95rem;color:var(--ink-muted);margin-bottom:1rem}
+.tile .foot{margin-top:auto;display:flex;gap:.55rem;flex-wrap:wrap;align-items:center}
+.play{
+  font-family:var(--display);font-weight:700;font-size:.95rem;text-decoration:none;
+  background:var(--navy);color:#fff;border-radius:var(--r-block);padding:.62rem 1.1rem;
+  border:2px solid var(--navy);display:inline-block;
+}
+.play:hover{background:var(--navy-line)}
+.qrbtn{
+  font-family:var(--display);font-weight:700;font-size:.9rem;background:#fff;color:var(--navy);
+  border:2px solid var(--navy);border-radius:var(--r-block);padding:.6rem .9rem;cursor:pointer;
+}
+.play.disabled{background:#fff;color:var(--ink-muted);border-color:var(--rule-soft);pointer-events:none}
+.qrpanel{margin-top:.9rem;padding-top:.9rem;border-top:1px solid var(--rule-soft)}
+.qrpanel .qrbox{width:132px;height:132px;display:grid;place-items:center;background:#fff}
+.qrpanel .qrbox img,.qrpanel .qrbox canvas{width:132px;height:132px}
+.qrpanel .url{font-size:.76rem;color:var(--ink-muted);word-break:break-all;margin-top:.5rem}
+
+.note{
+  background:var(--navy);color:#fff;border-radius:var(--r-card);padding:1.3rem 1.4rem;margin-top:1.6rem;
+  box-shadow:var(--shadow-rest);
+}
+.note h2{font-size:1.05rem;color:#fff;margin-bottom:.5rem}
+.note .lab{font-family:var(--display);font-weight:700;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+.note code{
+  display:block;background:var(--navy-line);color:#fff;border-radius:var(--r-block);
+  padding:.8rem .9rem;font-size:.82rem;white-space:pre-wrap;word-break:break-word;margin-top:.7rem;
+  font-family:var(--display);font-weight:600;
+}
+footer.credit{margin-top:2rem;color:var(--offwhite-text);font-size:.88rem;text-align:center}
+footer.credit b{color:#fff;font-weight:700}
+.visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+@media print{
+  body{background:#fff}
+  .tile{break-inside:avoid;box-shadow:none;border:1px solid var(--rule-soft)}
+  .qrbtn,.note{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.001ms !important;animation-duration:.001ms !important}
+  .tile:hover{transform:none}
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to the games</a>
+
+<div class="wrap">
+  <header class="masthead">
+    <p class="eyebrow">BIO 004 &middot; Human Anatomy</p>
+    <h1>Anatomy Games</h1>
+    <p class="sub">Team games you play out loud. Every one of them asks you to pull the answer out of your own head first, which is the part that actually builds the memory.</p>
+  </header>
+
+  <main id="main">
+    <h2 class="visually-hidden">Game list</h2>
+    <div class="grid" id="gameGrid"></div>
+
+    <section class="note" aria-labelledby="addHeading">
+      <p class="lab">Instructor note</p>
+      <h2 id="addHeading">Adding the next game</h2>
+      <p>Open this file, find the GAMES list near the top of the script, and add one entry. The tile, the button and the QR code all build themselves from it. Set status to "live" once the file is in the folder, or leave it "build" to show it as in progress.</p>
+      <code>{ name:"Skeletal Escape Room", file:"escape-skeletal.html", module:"Module 2", status:"live",
+  blurb:"Solve the case by working out which bone is which.", icon:"key" }</code>
+    </section>
+  </main>
+
+  <footer class="credit">
+    <p><b>Dr. Sharilyn Rennie</b> &middot; BIO 004 Human Anatomy &middot; Solano College</p>
+  </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   GAMES
+   Add a game by adding one entry to this list.
+   status: "live" for a file that exists, "build" for one still in progress
+   icon:   cards | match | key | dice | brain | timer
+   ============================================================ */
+var GAMES = [
+  {
+    name: "Anatomy Taboo",
+    file: "anatomy-taboo.html",
+    module: "Module 1",
+    status: "live",
+    icon: "cards",
+    blurb: "Describe the term to your team without using the five words on the card. 115 cards across intro, cells, tissues and skin."
+  },
+  {
+    name: "Memory Match",
+    file: "memory-match.html",
+    module: "Module 1",
+    status: "live",
+    icon: "match",
+    blurb: "Two boards, images on one and words on the other. Match the slide to its tissue name, its function or its location."
+  },
+  {
+    name: "Histology Escape Room",
+    file: "",
+    module: "Module 1",
+    status: "build",
+    icon: "key",
+    blurb: "Work the outbreak case. Each tissue you identify correctly unlocks the next piece of information."
+  }
+];
+
+var ICONS = {
+  cards: '<svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">' +
+         '<rect x="7" y="12" width="21" height="28" rx="3" fill="#FFFFFF"/>' +
+         '<rect x="18" y="7" width="21" height="28" rx="3" fill="#DCB45C" stroke="#08101F" stroke-width="2"/>' +
+         '<path d="M23 16h11M23 21h11M23 26h7" stroke="#08101F" stroke-width="2" stroke-linecap="round"/></svg>',
+  match: '<svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">' +
+         '<rect x="6" y="8" width="15" height="15" rx="3" fill="#FFFFFF"/>' +
+         '<rect x="27" y="8" width="15" height="15" rx="3" fill="#DCB45C"/>' +
+         '<rect x="6" y="26" width="15" height="15" rx="3" fill="#DCB45C"/>' +
+         '<rect x="27" y="26" width="15" height="15" rx="3" fill="#FFFFFF"/></svg>',
+  key:   '<svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">' +
+         '<circle cx="17" cy="20" r="9" fill="none" stroke="#DCB45C" stroke-width="4"/>' +
+         '<path d="M23 26l13 13M31 34l4-4M35 38l4-4" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/></svg>',
+  dice:  '<svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">' +
+         '<rect x="8" y="8" width="32" height="32" rx="6" fill="#FFFFFF"/>' +
+         '<circle cx="18" cy="18" r="3.2" fill="#08101F"/><circle cx="30" cy="18" r="3.2" fill="#08101F"/>' +
+         '<circle cx="24" cy="24" r="3.2" fill="#8B1D1D"/>' +
+         '<circle cx="18" cy="30" r="3.2" fill="#08101F"/><circle cx="30" cy="30" r="3.2" fill="#08101F"/></svg>',
+  brain: '<svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">' +
+         '<path d="M24 10c-6 0-9 3-9 7 0 1-3 2-3 6s3 5 3 7c0 4 4 8 9 8s9-4 9-8c0-2 3-3 3-7s-3-5-3-6c0-4-3-7-9-7z" fill="#FFFFFF"/>' +
+         '<path d="M24 12v24M18 18h12M18 28h12" stroke="#8B1D1D" stroke-width="2.4" stroke-linecap="round"/></svg>',
+  timer: '<svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">' +
+         '<circle cx="24" cy="26" r="14" fill="#FFFFFF"/>' +
+         '<path d="M24 18v8l6 4" stroke="#08101F" stroke-width="3" stroke-linecap="round" fill="none"/>' +
+         '<path d="M19 8h10" stroke="#DCB45C" stroke-width="4" stroke-linecap="round"/></svg>'
+};
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g, function(ch){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch];
+  });
+}
+function absUrl(file){
+  try{ return new URL(file, window.location.href).href; }
+  catch(e){ return file; }
+}
+
+var grid = document.getElementById("gameGrid");
+
+GAMES.forEach(function(g, i){
+  var live = g.status === "live" && g.file;
+  var art = document.createElement("article");
+  art.className = "tile" + (live ? "" : " soon");
+
+  var qrId = "qr" + i;
+  var panelId = "qrp" + i;
+
+  art.innerHTML =
+    '<div class="icon">' + (ICONS[g.icon] || ICONS.cards) + '</div>' +
+    '<span class="chip' + (live ? '' : ' build') + '">' + esc(g.module) + (live ? '' : ' &middot; in build') + '</span>' +
+    '<h2>' + esc(g.name) + '</h2>' +
+    '<p class="blurb">' + esc(g.blurb) + '</p>' +
+    '<div class="foot">' +
+      (live
+        ? '<a class="play" href="' + esc(g.file) + '" target="_top">Play</a>' +
+          '<button type="button" class="qrbtn" data-qr="' + i + '" aria-expanded="false" aria-controls="' + panelId + '">QR</button>'
+        : '<span class="play disabled" aria-disabled="true">Coming soon</span>') +
+    '</div>' +
+    (live ? '<div class="qrpanel" id="' + panelId + '" hidden>' +
+              '<div class="qrbox" id="' + qrId + '"></div>' +
+              '<p class="url">' + esc(absUrl(g.file)) + '</p>' +
+            '</div>' : '');
+
+  grid.appendChild(art);
+});
+
+grid.addEventListener("click", function(e){
+  var btn = e.target.closest("button[data-qr]");
+  if(!btn) return;
+  var i = btn.getAttribute("data-qr");
+  var panel = document.getElementById("qrp" + i);
+  var open = panel.hasAttribute("hidden");
+  if(open){
+    panel.removeAttribute("hidden");
+    btn.setAttribute("aria-expanded", "true");
+    var box = document.getElementById("qr" + i);
+    if(box && !box.getAttribute("data-drawn")){
+      box.setAttribute("data-drawn", "1");
+      if(window.QRCode){
+        try{
+          new window.QRCode(box, {
+            text: absUrl(GAMES[i].file),
+            width: 132, height: 132,
+            colorDark: "#08101F", colorLight: "#FFFFFF"
+          });
+        }catch(err){
+          box.textContent = "Use the link below.";
+        }
+      }else{
+        box.textContent = "Use the link below.";
+      }
+    }
+  }else{
+    panel.setAttribute("hidden", "");
+    btn.setAttribute("aria-expanded", "false");
+  }
+});
+
+/* ============================================================
+   IFRAME HEIGHT SENDER
+   ============================================================ */
+(function(){
+  var FRAME_ID = "bio004-games";
+  function sendHeight(){
+    var h = Math.max(
+      document.body.scrollHeight, document.documentElement.scrollHeight,
+      document.body.offsetHeight, document.documentElement.offsetHeight
+    );
+    try{ window.parent.postMessage({ id: FRAME_ID, frameId: FRAME_ID, height: h, frameHeight: h }, "*"); }catch(e){}
+  }
+  window.addEventListener("load", sendHeight);
+  window.addEventListener("resize", sendHeight);
+  if(window.ResizeObserver){ try{ new ResizeObserver(sendHeight).observe(document.body); }catch(e){} }
+  setTimeout(sendHeight, 400);
+})();
+
+})();
+</script>
+</body>
+</html>
