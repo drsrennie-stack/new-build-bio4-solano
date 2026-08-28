@@ -373,7 +373,7 @@ details.lib[open] > summary .chev{transform:rotate(180deg)}
             <line x1="22" y1="7" x2="22" y2="23" stroke="currentColor" stroke-width="1.4"/>
           </svg>
         </span>
-        <span><span class="lbl">Histology</span><span class="meta">49 tissues, cells and skin structures</span></span>
+        <span><span class="lbl">Histology</span><span class="meta">48 tissues, cells and skin structures</span></span>
       </button>
       <button type="button" class="subject" id="subjRegions" data-subject="regions" aria-pressed="false">
         <span class="ico" aria-hidden="true">
@@ -763,9 +763,6 @@ var HISTOLOGY = [
   {id:"macrophage", deck:"cell", name:"Macrophage",
    fn:"Engulfs debris, dead cells, and pathogens.",
    loc:"Areolar tissue and the lymphoid organs.", gLoc:"areolar"},
-  {id:"mast-cell", deck:"cell", name:"Mast cell",
-   fn:"Releases histamine and heparin to start an inflammatory response.",
-   loc:"Areolar tissue, clustered along the small blood vessels.", gLoc:"areolar"},
   {id:"chondrocyte", deck:"cell", name:"Chondrocyte",
    fn:"Maintains the cartilage matrix around it.",
    loc:"Inside a lacuna within cartilage."},
@@ -933,11 +930,12 @@ var LOOP_MAP = {
     "meissner":"skin/s03",             "apocrine-gland":"skin/s05",
     "hair-follicle":"skin/s06",        "stratum-corneum":"skin/s07",
     "stratum-lucidum":"skin/s09",      "eccrine-gland":"skin/s10",
-    "reticular-dermis":"skin/s11"
+    "reticular-dermis":"skin/s11",     "papillary-dermis":"skin/s08"
   },
   regions: {
     "patellar":"intro/s01",  "lumbar":"intro/s02",       "calcaneal":"intro/s04",
-    "mammary":"intro/s05",   "scapular":"intro/s06",     "brachial":"intro/s07",
+    "mammary":"intro/s05",   "pectoral":"intro/s05",     "scapular":"intro/s06",
+    "brachial":"intro/s07",
     "sternal":"intro/s08",   "axillary":"intro/s09",     "popliteal":"intro/s10",
     "antebrachial":"intro/s11", "otic":"intro/s12",      "pubic":"intro/s13",
     "crural":"intro/s15",    "olecranal":"intro/s16",    "acromial":"intro/s17",
@@ -1150,15 +1148,29 @@ function reseatTeams(){
    ROUND
    ============================================================ */
 function pickRound(n, groupKey){
-  var cands = shuffle(pool()), used = {}, out = [];
+  var cands = shuffle(pool()), used = {}, usedImg = {}, out = [];
+  var byImage = (radioVal("left") === "image");
+  /* two items can legitimately share one picture, mammary and pectoral for one,
+     so never deal both of them into the same round or the board is unsolvable */
+  function imageClash(t){
+    if(!byImage) return false;
+    var im = imgSrc(t);
+    return !!im && !!usedImg[im];
+  }
+  function take(t){
+    if(byImage){ var im = imgSrc(t); if(im) usedImg[im] = true; }
+    out.push(t);
+  }
   cands.forEach(function(t){
     if(out.length >= n) return;
     var g = t.groups[groupKey];
-    if(used[g]) return;
-    used[g] = true; out.push(t);
+    if(used[g] || imageClash(t)) return;
+    used[g] = true; take(t);
   });
   if(out.length < n){
-    cands.forEach(function(t){ if(out.length < n && out.indexOf(t) === -1) out.push(t); });
+    cands.forEach(function(t){
+      if(out.length < n && out.indexOf(t) === -1 && !imageClash(t)) take(t);
+    });
   }
   return out;
 }
