@@ -159,7 +159,14 @@ ul.forbidden li{
 .track > i{display:block;height:100%;background:var(--gold);width:100%}
 
 /* ---------- teams ---------- */
-.teams{display:grid;gap:.7rem;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.teams{display:grid;gap:.7rem;grid-template-columns:repeat(auto-fit,minmax(122px,1fr))}
+.namegrid{display:grid;gap:.55rem}
+.namerow{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:.6rem}
+.namerow .nn{
+  font-family:var(--display);font-weight:800;font-size:.8rem;color:var(--navy);
+  background:var(--navy-tint);border-radius:99px;padding:.25rem .6rem;white-space:nowrap;
+}
+.namerow input{padding:.45rem .6rem}
 .team{
   background:#fff;border:1.5px solid var(--rule-soft);border-radius:var(--r-card);
   padding:.75rem .8rem;box-shadow:var(--shadow-rest);text-align:center;
@@ -340,6 +347,8 @@ footer.credit b{color:#fff;font-weight:700}
             <option value="4" selected>4 teams</option>
             <option value="5">5 teams</option>
             <option value="6">6 teams</option>
+            <option value="7">7 teams</option>
+            <option value="8">8 teams</option>
           </select>
         </div>
 
@@ -369,14 +378,22 @@ footer.credit b{color:#fff;font-weight:700}
         </div>
       </section>
 
+      <section class="card" aria-labelledby="nameHeading">
+        <p class="section-label" id="nameHeading">Team names</p>
+        <p class="hint" style="margin-bottom:.8rem">Hand the keyboard around and let each team type their own name, or fill a set and edit from there.</p>
+        <div id="teamNames" class="namegrid"></div>
+        <div class="btn-row" style="margin-top:.9rem">
+          <button type="button" class="btn btn-ghost btn-sm" data-theme="space">Space set</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-theme="leaves">Leaves set</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-theme="success">Success set</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-theme="numbered">Numbered</button>
+        </div>
+        <p class="hint" style="margin-top:.7rem">Names stay in this browser session only. Nothing about a student is saved anywhere.</p>
+      </section>
+
       <section class="card" aria-labelledby="teamHeading">
-        <p class="section-label" id="teamHeading">Teams and scores</p>
+        <p class="section-label" id="teamHeading">Scores</p>
         <div class="teams" id="teamBoard"></div>
-        <details style="margin-top:.9rem">
-          <summary style="cursor:pointer;font-family:var(--display);font-weight:700;font-size:.9rem">Rename teams</summary>
-          <div id="teamNames" class="five" style="margin-top:.7rem"></div>
-          <p class="hint" style="margin-top:.6rem">Team names live in this browser session only. Nothing about a student is saved.</p>
-        </details>
       </section>
 
       <section class="card dark" aria-labelledby="counterHeading">
@@ -773,19 +790,49 @@ function renderTeams(){
   names.innerHTML = "";
   teams.forEach(function(t, i){
     var id = "tn" + i;
+    var row = document.createElement("div");
+    row.className = "namerow";
+
+    var chip = document.createElement("span");
+    chip.className = "nn";
+    chip.setAttribute("aria-hidden", "true");
+    chip.textContent = (i + 1);
+
     var lab = document.createElement("label");
     lab.setAttribute("for", id);
     lab.className = "visually-hidden";
-    lab.textContent = "Name for team " + (i+1);
+    lab.textContent = "Name for team " + (i + 1);
+
     var inp = document.createElement("input");
-    inp.type = "text"; inp.id = id; inp.value = t.name;
+    inp.type = "text";
+    inp.id = id;
+    inp.value = t.name;
+    inp.setAttribute("placeholder", "Examples: Team " + (i + 1));
     inp.addEventListener("input", function(){
-      teams[i].name = inp.value || ("Team " + (i+1));
+      teams[i].name = inp.value.trim() || ("Team " + (i + 1));
       renderTeamBoardOnly();
     });
-    names.appendChild(lab);
-    names.appendChild(inp);
+
+    row.appendChild(chip);
+    row.appendChild(lab);
+    row.appendChild(inp);
+    names.appendChild(row);
   });
+}
+
+var NAME_SETS = {
+  space:   ["Nebula","Pulsar","Quasar","Neptune","Orion","Romulan","Vega","Andromeda"],
+  leaves:  ["Ginkgo","Maple","Aspen","Birch","Elm","Hickory","Willow","Cedar"],
+  success: ["Ambition","Momentum","Impact","Discovery","Peak Performers","Collaborators","Persistence","Focus"],
+  numbered:["Team 1","Team 2","Team 3","Team 4","Team 5","Team 6","Team 7","Team 8"]
+};
+
+function fillNames(key){
+  var set = NAME_SETS[key];
+  if(!set) return;
+  teams.forEach(function(t, i){ t.name = set[i] || ("Team " + (i + 1)); });
+  renderTeams();
+  setStatus("Team names filled from the " + (key === "numbered" ? "numbered" : key) + " set. Edit any of them by typing.");
 }
 function renderTeamBoardOnly(){
   var board = $("teamBoard");
@@ -1019,7 +1066,7 @@ function resetGame(){
 }
 
 function setTeams(n){
-  var defaults = ["Team 1","Team 2","Team 3","Team 4","Team 5","Team 6"];
+  var defaults = ["Team 1","Team 2","Team 3","Team 4","Team 5","Team 6","Team 7","Team 8"];
   var next = [];
   for(var i=0;i<n;i++){
     next.push({ name: teams[i] ? teams[i].name : defaults[i], score: teams[i] ? teams[i].score : 0 });
@@ -1272,6 +1319,11 @@ $("deckPick").addEventListener("change", function(){
   deckId = $("deckPick").value;
   clearCardForm();
   resetGame();
+});
+$("teamNames").parentNode.addEventListener("click", function(e){
+  var b = e.target.closest("button[data-theme]");
+  if(!b) return;
+  fillNames(b.getAttribute("data-theme"));
 });
 $("teamCount").addEventListener("change", function(){
   setTeams(parseInt($("teamCount").value, 10));

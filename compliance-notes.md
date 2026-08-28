@@ -1,28 +1,126 @@
-# Accessibility compliance notes: index
+# Accessibility compliance notes
 
-**Project:** BIO 004 Human Anatomy, Fall 2026
-**Repo:** drsrennie-stack/new-build-bio4-solano
-**Maintainer:** Dr. Sharilyn Rennie
+**Project:** Anatomy Games hub and Anatomy Taboo
+**Files covered:** games.html, anatomy-taboo.html
+**Date:** August 28, 2026
+**Reviewer:** Dr. Sharilyn Rennie (build and audit prepared for review)
 
-One compliance-notes file per deliverable, named for what it covers, so no
-review ever overwrites another. This file is only the index. When a new
-deliverable ships, add its notes as `compliance-notes-<deliverable>.md` and
-list it here.
+---
 
-## The notes on file
+## 1. WCAG version and level achieved
 
-| File | Covers | Date |
-|------|--------|------|
-| `compliance-notes-fall-sweep.md` | Fall 2026 site sweep: syllabus-schedule.js, week-extras.js, missing-figure.js, and the pages touched in the audit | Aug 11, 2026 |
-| `compliance-notes-mastery-tools.md` | Study tools: bio004-draw.html, bio004-day-review.html, Mastery OS changed sections, mastery-evidence.js, draw-checklists.js, loops-index.js, dock tiles | Aug 9, 2026 |
-| `compliance-notes-recall-rx-exam-units.md` | Recall Rx spaced-recall system and the Muscle, Lymphatic, and Blood exam-unit decks | Aug 2026 |
-| `compliance-notes-brain-dump.md` | Brain Dump system (was misnamed `compliance-notes_4.md`) | Aug 2026 |
-| `compliance-notes-exam-simulator.md` | Exam Simulator and AI Exam Tutor: exam-simulator.html, ai-exam-tutor.html, exam-bank.sample.js, competency-upload-template.csv | Aug 25, 2026 |
+Target: WCAG 2.2 Level AA minimum, AAA where achievable.
 
-## Housekeeping
+| Criterion | Level | Result |
+|---|---|---|
+| 1.1.1 Non-text content | A | Pass. All decorative SVG icons carry `aria-hidden="true"`. Icon-only controls have accessible names. |
+| 1.3.1 Info and relationships | A | Pass. Semantic `header`, `main`, `section`, `footer`, `table` with `caption` and `th scope`, every section labelled with `aria-labelledby`. |
+| 1.3.2 Meaningful sequence | A | Pass. DOM order matches visual order in both single and two-column layouts. |
+| 1.4.3 Contrast (minimum) | AA | Pass. See section 3. |
+| 1.4.6 Contrast (enhanced) | AAA | Pass on every text pair. Lowest is 7.49:1. |
+| 1.4.4 Resize text | AA | Pass. All type in rem, layout reflows to one column below 900px. |
+| 1.4.10 Reflow | AA | Pass. No horizontal scroll at 320px width. |
+| 1.4.11 Non-text contrast | AA | Pass for all controls. See section 3 note on card dividers. |
+| 1.4.12 Text spacing | AA | Pass. No fixed heights on text containers. |
+| 2.1.1 Keyboard | A | Pass. Every control reachable and operable. See section 4. |
+| 2.1.2 No keyboard trap | A | Pass. |
+| 2.2.1 Timing adjustable | A | Pass. The countdown is optional (No timer setting), and can be paused, resumed and reset at any point. It gates nothing: no answer is lost and no content disappears when it expires. |
+| 2.4.1 Bypass blocks | A | Pass. Skip link to `#main` on both pages. |
+| 2.4.3 Focus order | A | Pass. |
+| 2.4.6 Headings and labels | AA | Pass. One h1 per page, h2 for sections, no skipped levels. |
+| 2.4.7 Focus visible | AA | Pass. 3px navy outline plus a 6px gold ring, visible on white, navy and maroon surfaces. |
+| 2.4.11 Focus not obscured | AA (2.2) | Pass. No sticky or overlaying elements. |
+| 2.5.3 Label in name | A | Pass. Visible button text matches accessible name. |
+| 2.5.8 Target size (minimum) | AA (2.2) | Pass. Measured in Chromium: smallest targets are the score adjust buttons at 36 by 28 and 42 by 28 CSS pixels, and the two checkboxes at 24 by 24. All clear the 24 by 24 minimum. Every other control exceeds 44px in its long dimension. |
+| 3.2.2 On input | A | Pass. Changing deck, team count or timer updates the game state but moves no focus and opens nothing unexpected. |
+| 3.3.1 Error identification | A | Pass. Missing target term or forbidden word in the card builder produces a message in the live region and moves focus to the offending field. |
+| 3.3.2 Labels or instructions | A | Pass. Every input has a `label` with `for`, visible or visually hidden. |
+| 4.1.2 Name, role, value | A | Pass. `aria-expanded` on both disclosure controls, `role="timer"`, `role="status"`. |
+| 4.1.3 Status messages | AA | Pass. `#status` is `role="status"` with `aria-live="polite"`. |
 
-`compliance-notes_4.md` still exists on the live repo under its old name and
-can be deleted there; its content lives on as `compliance-notes-brain-dump.md`.
-The Aug 11 site-sweep notes were briefly overwritten by the Exam Simulator
-notes when both were named `compliance-notes.md`; both are preserved above
-under their own names.
+Not applicable: audio and video criteria (no media), 3.3.7 redundant entry, 3.3.8 accessible authentication (no login).
+
+---
+
+## 2. Sound
+
+The buzzer, the correct chime and the bonus chime are generated with the Web Audio API. Sound is never the only signal:
+
+- Buzzer: status region reads "Buzzed. That clue does not count." or "Time is up."
+- Correct: status region names the team and the score, the card gains a gold ring, and the score number updates on screen.
+- Time expiring: the clock turns gold and the progress track empties.
+
+Sound can be switched off entirely. Nothing autoplays before a user gesture, so no browser audio policy is violated.
+
+---
+
+## 3. Color contrast audit
+
+| Text / background | Ratio | Level |
+|---|---|---|
+| White on maroon page ground #FFFFFF / #7A2A22 | 9.63:1 | AAA |
+| Eyebrow and subhead #F2E2B8 / #7A2A22 | 7.49:1 | AAA |
+| Body and target term #08101F / #FFFFFF | 19.02:1 | AAA |
+| Forbidden words and section labels #6B1616 / #FFFFFF | 11.99:1 | AAA |
+| Hint text #3D4860 / #FFFFFF | 9.15:1 | AAA |
+| Text on navy card #FFFFFF / #08101F | 19.02:1 | AAA |
+| Gold labels and clock on navy #DCB45C / #08101F | 9.71:1 | AAA |
+| Hint on navy card #ECEFF4 / #08101F | 16.50:1 | AAA |
+| Navy on gold button #08101F / #DCB45C | 9.71:1 | AAA |
+| White on buzzer #FFFFFF / #8B1D1D | 9.17:1 | AAA |
+| Status bar #08101F / #ECEFF4 | 16.50:1 | AAA |
+| Disabled ghost button text #FFFFFF / #1E2A47 | 14.21:1 | AAA (disabled controls are exempt) |
+| Focus ring gold against maroon #DCB45C / #7A2A22 | 4.92:1 | Pass, exceeds the 3:1 non-text minimum |
+| Focus ring navy against white #08101F / #FFFFFF | 19.02:1 | Pass |
+| Forbidden chip border #8B1D1D / #FFFFFF | 9.17:1 | Pass |
+
+Note on card dividers: the hairline `#DCE0E6` used between table rows and above the QR panel measures 1.33:1 against white. It is decorative. No control or boundary depends on it, since every card is defined by its white fill against the maroon ground (9.63:1) and every control carries its own 2px navy border.
+
+---
+
+## 4. Keyboard navigation flow verified
+
+**games.html:** skip link, then each tile in reading order (Play link, then QR button), then nothing further. QR panels expand in place and the button reports `aria-expanded`.
+
+**anatomy-taboo.html:** skip link, Start / Pause / Reset timer, Correct / Skip / Next card, Buzzer, deck select, team count, timer length, challenge and sound checkboxes, Reset game, Print card sheets, one text input per team in the Team names panel, the four name-set fill buttons, per-team +1 and -1 buttons, then the instructor builder disclosure and its full form and card table.
+
+Each team name input carries a visually hidden label reading "Name for team 3". The number chip beside it is `aria-hidden`, so a screen reader hears the label rather than a bare digit.
+
+Shortcuts, which are suppressed while focus is in any input, textarea or select so typing is never intercepted:
+
+- Space starts the turn, or pauses and resumes the clock
+- C marks correct
+- S skips
+- N draws the next card
+- B sounds the buzzer
+
+---
+
+## 5. Screen reader testing
+
+**Status: automated only. A human screen reader pass is still outstanding.**
+
+What was actually verified: the accessibility tree exported from headless Chromium, plus a code review of every name, role and live region. Every control below came back with the intended role and accessible name.
+
+- Landmarks resolve as banner, main, contentinfo.
+- The status region carries `role="status"` with `aria-live="polite"` and is written once per turn event: whose turn it is, correct with the team name and score, skip, buzz, time up, and deck reshuffle.
+- The clock is `role="timer"` with `aria-live="off"` on purpose, so the countdown does not interrupt the announcement of game events every second.
+- The card face is hidden with the `hidden` attribute until the turn starts, so it is absent from the accessibility tree rather than merely invisible.
+- Score buttons announce as "Add a point to Team 3" rather than "plus one".
+- Table rows in the builder announce the target term as the row context before the Edit and Delete buttons.
+
+---
+
+## 6. Known limitations and remediation plan
+
+1. **QR code library on the hub page.** games.html loads qrcodejs from cdnjs for the QR panel. With no network the panel shows the plain URL instead, which is the accessible fallback and the printable one. Remediation if a fully offline hub is wanted: drop the QR button, or inline a QR encoder.
+2. **Browser storage.** Custom decks save to localStorage. In a private window or with site data blocked the save fails silently and the session still plays normally. Export all decks produces a text copy she can keep. No student information is ever written to storage.
+3. **Team names are session only.** Renaming teams is deliberately not persisted, so nothing a student is identified by can survive the class. This is a FERPA decision, not an oversight.
+4. **Print card sheets** uses the browser print dialog. Sheet layout is verified in Chromium at Letter size; other browsers may paginate slightly differently.
+5. **Screen reader coverage is the open item.** Roles, names and live regions were confirmed from the accessibility tree, but no human pass with VoiceOver, NVDA or JAWS has been run. Worth doing before the tool is assigned for independent student use. It is currently an instructor-run classroom tool projected at the front of the room, which lowers, but does not remove, the risk.
+
+---
+
+## 7. Reviewer
+
+Prepared August 28, 2026. Sign-off pending review by Dr. Sharilyn Rennie.
