@@ -46,6 +46,7 @@ body{
   line-height:1.55;
 }
 em,i,cite,dfn,var,address{font-style:normal}
+[hidden]{display:none !important}
 h1,h2,h3,h4{font-family:var(--display);font-weight:800;line-height:1.15;margin:0}
 p{margin:0 0 .8rem}
 p:last-child{margin-bottom:0}
@@ -160,6 +161,40 @@ ul.forbidden li{
 
 /* ---------- teams ---------- */
 .teams{display:grid;gap:.7rem;grid-template-columns:repeat(auto-fit,minmax(122px,1fr))}
+/* ---------- topic picker ---------- */
+.picker{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:.6rem;
+  background:#fff;border:1.5px solid var(--rule);border-radius:var(--r-block);
+  padding:.55rem .65rem;cursor:pointer;text-align:left;
+  font-family:var(--display);font-weight:700;font-size:.95rem;color:var(--navy);
+}
+.picker:hover{border-color:var(--navy)}
+.picker .pchev{font-family:var(--display);font-weight:800;color:var(--terra-dark);font-size:1.1rem;line-height:1}
+.decklist{
+  margin-top:.6rem;border:1.5px solid var(--rule-soft);border-radius:var(--r-block);padding:.75rem .8rem;
+}
+.deckcheck{display:flex;align-items:flex-start;gap:.6rem;padding:.3rem 0}
+.deckcheck input{margin-top:.15rem;width:24px;height:24px;flex:0 0 24px;accent-color:var(--navy)}
+.deckcheck label{font-weight:600;font-size:.92rem;line-height:1.35}
+.deckcheck .cnt{color:var(--ink-muted);font-weight:600}
+
+/* ---------- practice tally ---------- */
+.tally{display:grid;gap:.7rem;grid-template-columns:repeat(auto-fit,minmax(112px,1fr))}
+.tally .t{
+  background:#fff;border:1.5px solid var(--rule-soft);border-radius:var(--r-card);
+  padding:.7rem .6rem;text-align:center;box-shadow:var(--shadow-rest);
+}
+.tally .t.lead{background:var(--navy);border-color:var(--gold);color:#fff}
+.tally .t b{
+  display:block;font-family:var(--display);font-weight:800;font-size:2rem;line-height:1.1;
+  font-variant-numeric:tabular-nums;
+}
+.tally .t span{
+  display:block;font-family:var(--display);font-weight:700;font-size:.66rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-muted);margin-top:.15rem;
+}
+.tally .t.lead span{color:var(--gold)}
+
 .namegrid{display:grid;gap:.55rem}
 .namerow{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:.6rem}
 .namerow .nn{
@@ -276,7 +311,7 @@ footer.credit b{color:#fff;font-weight:700}
         <h2 id="cardHeading" class="visually-hidden">Current card</h2>
         <div class="playcard" id="playcard">
           <div class="cover" id="cover">
-            <p class="big">Set up your teams, then press Start turn.</p>
+            <p class="big" id="coverLine">Set up your teams, then press Start turn.</p>
             <p class="hint">The card stays covered until the clue giver is ready, so nobody sees the term early.</p>
           </div>
           <div id="cardFace" hidden>
@@ -312,13 +347,14 @@ footer.credit b{color:#fff;font-weight:700}
           </div>
         </div>
         <div class="track" aria-hidden="true"><i id="trackFill"></i></div>
-        <p class="hint" style="margin-top:.7rem">Keyboard: space starts or pauses, C is correct, S is skip, N is next card, B is the buzzer.</p>
+        <p class="hint" style="margin-top:.7rem">Keyboard: space starts or pauses, C is correct, S is skip, M is missed in practice mode, N is next card, B is the buzzer.</p>
       </section>
 
       <section class="card" aria-labelledby="controlHeading">
         <p class="section-label" id="controlHeading">Turn controls</p>
         <div class="btn-row" style="margin-bottom:.7rem">
           <button type="button" class="btn" id="btnCorrect" disabled>Correct, plus 1</button>
+          <button type="button" class="btn btn-ghost" id="btnMissed" disabled hidden>Missed it</button>
           <button type="button" class="btn btn-ghost" id="btnSkip" disabled>Skip</button>
           <button type="button" class="btn btn-ghost" id="btnNext" disabled>Next card</button>
         </div>
@@ -334,12 +370,31 @@ footer.credit b{color:#fff;font-weight:700}
       <section class="card" aria-labelledby="setupHeading">
         <p class="section-label" id="setupHeading">Game setup</p>
 
-        <label class="field" for="deckPick">
-          <span class="lab">Deck</span>
-          <select id="deckPick"></select>
+        <label class="field" for="modePick">
+          <span class="lab">How you are playing</span>
+          <select id="modePick">
+            <option value="teams" selected>Teams against each other</option>
+            <option value="practice">One team practicing</option>
+          </select>
         </label>
 
         <div class="field">
+          <span class="lab" id="deckLab">Topics in play</span>
+          <button type="button" class="picker" id="deckToggle" aria-expanded="false" aria-controls="deckList">
+            <span id="deckSummary">1 topic, 15 cards</span>
+            <span class="pchev" aria-hidden="true">+</span>
+          </button>
+          <div class="decklist" id="deckList" hidden role="group" aria-labelledby="deckLab">
+            <div id="deckChecks"></div>
+            <div class="btn-row" style="margin-top:.7rem">
+              <button type="button" class="btn btn-ghost btn-sm" id="deckAll">Select all</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="deckNone">Clear</button>
+            </div>
+            <p class="hint" style="margin-top:.6rem">Tick more than one and the cards shuffle together into a single deck.</p>
+          </div>
+        </div>
+
+        <div class="field" id="teamCountField">
           <span class="lab" id="teamCountLab">Number of teams</span>
           <select id="teamCount" aria-labelledby="teamCountLab">
             <option value="2">2 teams</option>
@@ -380,9 +435,9 @@ footer.credit b{color:#fff;font-weight:700}
 
       <section class="card" aria-labelledby="nameHeading">
         <p class="section-label" id="nameHeading">Team names</p>
-        <p class="hint" style="margin-bottom:.8rem">Hand the keyboard around and let each team type their own name, or fill a set and edit from there.</p>
+        <p class="hint" id="nameHint" style="margin-bottom:.8rem">Hand the keyboard around and let each team type their own name, or fill a set and edit from there.</p>
         <div id="teamNames" class="namegrid"></div>
-        <div class="btn-row" style="margin-top:.9rem">
+        <div class="btn-row" id="nameSets" style="margin-top:.9rem">
           <button type="button" class="btn btn-ghost btn-sm" data-theme="space">Space set</button>
           <button type="button" class="btn btn-ghost btn-sm" data-theme="leaves">Leaves set</button>
           <button type="button" class="btn btn-ghost btn-sm" data-theme="success">Success set</button>
@@ -394,6 +449,11 @@ footer.credit b{color:#fff;font-weight:700}
       <section class="card" aria-labelledby="teamHeading">
         <p class="section-label" id="teamHeading">Scores</p>
         <div class="teams" id="teamBoard"></div>
+        <div class="tally" id="practiceBoard" hidden>
+          <div class="t lead"><b id="pGot">0</b><span>Got it</span></div>
+          <div class="t"><b id="pMissed">0</b><span>Came back around</span></div>
+          <div class="t"><b id="pPct">0%</b><span>First try</span></div>
+        </div>
       </section>
 
       <section class="card dark" aria-labelledby="counterHeading">
@@ -403,7 +463,8 @@ footer.credit b{color:#fff;font-weight:700}
           <span><span class="num" id="cLeft">0</span> <span class="cap">cards left</span></span>
           <span><span class="num" id="cRound">1</span> <span class="cap">pass through the deck</span></span>
         </div>
-        <p class="hint" style="margin-top:.7rem">No card repeats until the whole deck has been played. Skipped cards go back in and come around again.</p>
+        <p class="hint" id="teamNote" style="margin-top:.7rem">No card repeats until every card has been played. Skipped cards go back in and come around again.</p>
+        <p class="hint" id="practiceNote" hidden style="margin-top:.7rem">Anything you miss goes back into the deck, so the round is not over until you have cleared every card once.</p>
       </section>
 
     </div>
@@ -418,6 +479,10 @@ footer.credit b{color:#fff;font-weight:700}
 
         <section aria-labelledby="deckMgmt">
           <p class="section-label" id="deckMgmt">Decks</p>
+          <label class="field" for="editDeckPick">
+            <span class="lab">Deck you are editing</span>
+            <select id="editDeckPick"></select>
+          </label>
           <div class="btn-row" style="margin-bottom:.6rem">
             <button type="button" class="btn btn-sm" id="btnDeckNew">New deck</button>
             <button type="button" class="btn btn-ghost btn-sm" id="btnDeckRename">Rename this deck</button>
@@ -630,7 +695,11 @@ var BUILT_IN = [
    ============================================================ */
 var STORE_KEY = "bio004-taboo-v1";
 var decks = [];
-var deckId = null;
+var deckId = null;      /* the deck the builder is editing */
+var selDecks = [];      /* ids of the topics ticked for play */
+var mode = "teams";     /* teams | practice */
+var gotCount = 0;
+var missedCount = 0;
 var queue = [];
 var resolved = [];
 var current = null;
@@ -683,9 +752,41 @@ function load(){
   return null;
 }
 
+/* The deck the instructor builder is pointed at. Play uses the pool below. */
 function currentDeck(){
   for(var i=0;i<decks.length;i++){ if(decks[i].id === deckId) return decks[i]; }
   return decks[0];
+}
+
+/* THE POOL.
+   Play draws from every ticked topic at once, shuffled together, rather
+   than from one deck at a time. One topic ticked behaves exactly as a
+   single deck did. */
+function playDecks(){
+  var out = decks.filter(function(d){ return selDecks.indexOf(d.id) >= 0; });
+  return out.length ? out : (decks.length ? [decks[0]] : []);
+}
+function poolCards(){
+  var all = [];
+  playDecks().forEach(function(d){
+    d.cards.forEach(function(c){ all.push(c); });
+  });
+  return all;
+}
+function poolTotal(){ return poolCards().length; }
+function cardById(id){
+  var found = null;
+  decks.forEach(function(d){
+    d.cards.forEach(function(c){ if(c.id === id) found = c; });
+  });
+  return found;
+}
+function poolLabel(){
+  var d = playDecks();
+  var n = poolTotal();
+  if(!d.length) return "No topics ticked";
+  if(d.length === 1) return d[0].name + ", " + n + " cards";
+  return d.length + " topics, " + n + " cards";
 }
 
 function shuffle(arr){
@@ -757,7 +858,44 @@ function setStatus(msg, alert){
 }
 
 function renderDeckPick(){
-  var sel = $("deckPick");
+  /* The ticked-topic list inside the collapsible picker. */
+  var box = $("deckChecks");
+  box.innerHTML = "";
+  decks.forEach(function(d){
+    var id = "dk-" + d.id;
+    var row = document.createElement("div");
+    row.className = "deckcheck";
+
+    var inp = document.createElement("input");
+    inp.type = "checkbox";
+    inp.id = id;
+    inp.value = d.id;
+    inp.checked = selDecks.indexOf(d.id) >= 0;
+    inp.addEventListener("change", function(){
+      if(inp.checked){
+        if(selDecks.indexOf(d.id) < 0) selDecks.push(d.id);
+      }else{
+        selDecks = selDecks.filter(function(x){ return x !== d.id; });
+      }
+      if(!selDecks.length){
+        setStatus("Tick at least one topic. Playing the first one for now.", true);
+      }
+      resetGame();
+    });
+
+    var lab = document.createElement("label");
+    lab.setAttribute("for", id);
+    lab.innerHTML = esc(d.name) + ' <span class="cnt">(' + d.cards.length + ')</span>';
+
+    row.appendChild(inp);
+    row.appendChild(lab);
+    box.appendChild(row);
+  });
+
+  $("deckSummary").textContent = poolLabel();
+  $("deckSub").textContent = poolLabel();
+
+  var sel = $("editDeckPick");
   sel.innerHTML = "";
   decks.forEach(function(d){
     var o = document.createElement("option");
@@ -766,8 +904,6 @@ function renderDeckPick(){
     if(d.id === deckId) o.selected = true;
     sel.appendChild(o);
   });
-  var d = currentDeck();
-  $("deckSub").textContent = d ? d.name : "";
 }
 
 function renderTeams(){
@@ -853,12 +989,18 @@ function renderTeamBoardOnly(){
 }
 
 function renderCounter(){
-  var d = currentDeck();
-  var total = d ? d.cards.length : 0;
+  var total = poolTotal();
   $("cTotal").textContent = total;
   $("cCompleted").textContent = resolved.length;
   $("cLeft").textContent = Math.max(0, total - resolved.length);
   $("cRound").textContent = round;
+
+  if(mode === "practice"){
+    var tries = gotCount + missedCount;
+    $("pGot").textContent = gotCount;
+    $("pMissed").textContent = missedCount;
+    $("pPct").textContent = tries ? Math.round(gotCount / tries * 100) + "%" : "0%";
+  }
 }
 
 function renderCard(){
@@ -898,10 +1040,32 @@ function renderClock(){
   $("trackFill").style.width = (timerLen ? (remaining/timerLen*100) : 100) + "%";
 }
 
+function renderMode(){
+  var practice = mode === "practice";
+  $("teamCountField").hidden = practice;
+  $("teamBoard").hidden = practice;
+  $("practiceBoard").hidden = !practice;
+  $("btnMissed").hidden = !practice;
+  $("btnSkip").hidden = practice;
+  $("teamHeading").textContent = practice ? "How the round is going" : "Scores";
+  $("nameHeading").textContent = practice ? "Team name" : "Team names";
+  $("nameHint").textContent = practice
+    ? "Name yourselves if you want to. It is only used in the messages on screen."
+    : "Hand the keyboard around and let each team type their own name, or fill a set and edit from there.";
+  $("nameSets").hidden = practice;
+  $("btnCorrect").textContent = practice ? "Got it" : "Correct, plus 1";
+  $("practiceNote").hidden = !practice;
+  $("teamNote").hidden = practice;
+  $("coverLine").textContent = practice
+    ? "Press Start turn and describe the card to each other."
+    : "Set up your teams, then press Start turn.";
+}
+
 function renderControls(){
   var playing = !!current;
   $("btnCorrect").disabled = !playing || !revealed || challengeOpen || awarded;
   $("btnSkip").disabled = !playing || !revealed || challengeOpen || awarded;
+  $("btnMissed").disabled = !playing || !revealed || challengeOpen || awarded;
   $("btnNext").disabled = !playing || !revealed;
   $("btnPause").disabled = !playing || timerLen === 0 || timeUp;
   $("btnTimerReset").disabled = !playing || timerLen === 0;
@@ -924,8 +1088,7 @@ function renderAll(){
    GAME FLOW
    ============================================================ */
 function buildQueue(){
-  var d = currentDeck();
-  queue = d ? shuffle(d.cards.map(function(c){ return c.id; })) : [];
+  queue = shuffle(poolCards().map(function(c){ return c.id; }));
 }
 
 function newRound(){
@@ -940,12 +1103,8 @@ function drawCard(){
     if(round === 1 && resolved.length === 0){ buildQueue(); }
     else { newRound(); }
   }
-  var d = currentDeck();
   var id = queue.shift();
-  current = null;
-  if(d){
-    for(var i=0;i<d.cards.length;i++){ if(d.cards[i].id === id) current = d.cards[i]; }
-  }
+  current = cardById(id);
   revealed = false;
   timeUp = false;
   challengeOpen = false;
@@ -995,7 +1154,9 @@ function markResolved(){
   if(current && resolved.indexOf(current.id) === -1){ resolved.push(current.id); }
 }
 
+/* In practice there is only one team, so nothing rotates. */
 function rotateTeam(){
+  if(mode === "practice") return;
   if(teams.length){ activeTeam = (activeTeam + 1) % teams.length; }
 }
 
@@ -1003,11 +1164,13 @@ function correct(){
   if(!current || !revealed) return;
   stopTimer();
   teams[activeTeam].score += 1;
+  if(mode === "practice"){ gotCount += 1; }
   awarded = true;
   playDing();
   $("playcard").classList.add("correct");
   markResolved();
   renderTeamBoardOnly(); renderCounter();
+  var who = mode === "practice" ? "Got it" : ("Correct. " + teams[activeTeam].name + " scores");
   if($("optChallenge").checked && current.c){
     challengeOpen = true;
     $("challengeQ").textContent = "";
@@ -1015,11 +1178,27 @@ function correct(){
     $("btnChallengeWin").hidden = true;
     $("btnChallengeMiss").hidden = true;
     $("challengePanel").hidden = false;
-    setStatus("Correct. " + teams[activeTeam].name + " scores. Challenge question is ready.");
+    setStatus(who + ". Challenge question is ready.");
   }else{
-    setStatus("Correct. " + teams[activeTeam].name + " scores. Press Next card.");
+    setStatus(who + ". Press Next card.");
   }
   renderControls();
+}
+
+/* PRACTICE ONLY.
+   A missed card goes back into the deck rather than counting as done, so
+   the round is not over until the team has cleared every card once. That
+   is the difference between practising and just getting through it. */
+function missed(){
+  if(!current || !revealed) return;
+  stopTimer();
+  missedCount += 1;
+  var pos = queue.length ? Math.floor(Math.random()*queue.length) + 1 : 0;
+  queue.splice(Math.min(pos, queue.length), 0, current.id);
+  playBuzz();
+  drawCard();
+  renderCounter();
+  setStatus("That one comes back around later. Press Start turn for the next card.");
 }
 
 function skip(){
@@ -1035,13 +1214,21 @@ function skip(){
 
 function nextCard(){
   if(!current) return;
+  /* In practice, moving on from a card nobody answered is a miss, not a
+     card cleared. Otherwise the deck empties without anyone saying it. */
+  if(mode === "practice" && !awarded){ missed(); return; }
   markResolved();
   rotateTeam();
   var beforeRound = round;
   drawCard();
   renderTeamBoardOnly();
   if(round !== beforeRound){
-    setStatus("Every card has been played. The deck reshuffled for pass " + round + ". " + teams[activeTeam].name + " is up.", true);
+    var done = mode === "practice"
+      ? "Deck cleared. " + gotCount + " right, " + missedCount + " that came back around. Reshuffled for another pass."
+      : "Every card has been played. The deck reshuffled for pass " + round + ". " + teams[activeTeam].name + " is up.";
+    setStatus(done, true);
+  }else if(mode === "practice"){
+    setStatus("Press Start turn for the next card.");
   }else{
     setStatus(teams[activeTeam].name + " is up next. Press Start turn.");
   }
@@ -1055,7 +1242,10 @@ function resetGame(){
   revealed = false;
   timeUp = false;
   challengeOpen = false;
+  awarded = false;
   activeTeam = 0;
+  gotCount = 0;
+  missedCount = 0;
   teams.forEach(function(t){ t.score = 0; });
   buildQueue();
   remaining = timerLen;
@@ -1067,6 +1257,12 @@ function resetGame(){
 
 function setTeams(n){
   var defaults = ["Team 1","Team 2","Team 3","Team 4","Team 5","Team 6","Team 7","Team 8"];
+  if(mode === "practice"){
+    n = 1;
+    defaults = ["Our team"];
+    /* A leftover "Team 1" from team play is not a name anyone chose. */
+    if(teams[0] && /^Team \d$/.test(teams[0].name)){ teams[0].name = "Our team"; }
+  }
   var next = [];
   for(var i=0;i<n;i++){
     next.push({ name: teams[i] ? teams[i].name : defaults[i], score: teams[i] ? teams[i].score : 0 });
@@ -1186,6 +1382,8 @@ function deleteDeck(){
   if(decks.length === 1){ setStatus("Keep at least one deck.", true); return; }
   if(!window.confirm('Delete the deck "' + d.name + '" and all ' + d.cards.length + ' of its cards?')) return;
   decks = decks.filter(function(x){ return x.id !== d.id; });
+  selDecks = selDecks.filter(function(x){ return x !== d.id; });
+  if(!selDecks.length){ selDecks = [decks[0].id]; }
   deckId = decks[0].id;
   save();
   resetGame();
@@ -1212,6 +1410,7 @@ function importDecks(){
     });
     decks = incoming;
     deckId = decks[0].id;
+    selDecks = [decks[0].id];
     save();
     resetGame();
     setStatus("Imported " + decks.length + " decks.");
@@ -1225,6 +1424,7 @@ function restoreBuiltIn(){
   var custom = decks.filter(function(d){ return !d.builtIn; });
   decks = deepCopy(BUILT_IN).concat(custom);
   deckId = decks[0].id;
+  selDecks = [decks[0].id];
   save();
   resetGame();
   setStatus("Built in decks restored.");
@@ -1234,13 +1434,13 @@ function restoreBuiltIn(){
    PRINT SHEETS
    ============================================================ */
 function buildPrint(){
-  var d = currentDeck();
-  if(!d) return;
   var html = '<div class="sheet">';
-  d.cards.forEach(function(c){
-    html += '<div class="pcard"><div class="pt">' + esc(c.t) + '</div><ul class="pf">';
-    c.f.forEach(function(w){ html += "<li>" + esc(w) + "</li>"; });
-    html += '</ul><div class="pd">' + esc(d.name) + ' &middot; BIO 004 Human Anatomy</div></div>';
+  playDecks().forEach(function(d){
+    d.cards.forEach(function(c){
+      html += '<div class="pcard"><div class="pt">' + esc(c.t) + '</div><ul class="pf">';
+      c.f.forEach(function(w){ html += "<li>" + esc(w) + "</li>"; });
+      html += '</ul><div class="pd">' + esc(d.name) + ' &middot; BIO 004 Human Anatomy</div></div>';
+    });
   });
   html += "</div>";
   $("printArea").innerHTML = html;
@@ -1315,10 +1515,40 @@ $("cardRows").addEventListener("click", function(e){
   if(dl){ deleteCard(dl.getAttribute("data-del")); }
 });
 
-$("deckPick").addEventListener("change", function(){
-  deckId = $("deckPick").value;
-  clearCardForm();
+$("btnMissed").addEventListener("click", missed);
+
+$("deckToggle").addEventListener("click", function(){
+  var list = $("deckList");
+  var open = list.hasAttribute("hidden");
+  if(open){ list.removeAttribute("hidden"); } else { list.setAttribute("hidden", ""); }
+  $("deckToggle").setAttribute("aria-expanded", open ? "true" : "false");
+  $("deckToggle").querySelector(".pchev").textContent = open ? "−" : "+";
+});
+$("deckAll").addEventListener("click", function(){
+  selDecks = decks.map(function(d){ return d.id; });
   resetGame();
+  setStatus("All topics in play, " + poolTotal() + " cards.");
+});
+$("deckNone").addEventListener("click", function(){
+  selDecks = [decks[0].id];
+  resetGame();
+  setStatus("Back to one topic, " + poolTotal() + " cards.");
+});
+
+$("editDeckPick").addEventListener("change", function(){
+  deckId = $("editDeckPick").value;
+  clearCardForm();
+  renderBuilder();
+});
+
+$("modePick").addEventListener("change", function(){
+  mode = $("modePick").value;
+  renderMode();
+  setTeams(mode === "practice" ? 1 : parseInt($("teamCount").value, 10));
+  resetGame();
+  setStatus(mode === "practice"
+    ? "One team practising. Clear the deck, and anything you miss comes back."
+    : "Team play. Press Start game to begin.");
 });
 $("teamNames").parentNode.addEventListener("click", function(e){
   var b = e.target.closest("button[data-theme]");
@@ -1361,7 +1591,8 @@ document.addEventListener("keydown", function(e){
     else if(!$("btnPause").disabled){ $("btnPause").click(); }
   }
   else if(k === "c" && !$("btnCorrect").disabled){ e.preventDefault(); correct(); }
-  else if(k === "s" && !$("btnSkip").disabled){ e.preventDefault(); skip(); }
+  else if(k === "m" && mode === "practice" && !$("btnMissed").disabled){ e.preventDefault(); missed(); }
+  else if(k === "s" && mode !== "practice" && !$("btnSkip").disabled){ e.preventDefault(); skip(); }
   else if(k === "n" && !$("btnNext").disabled){ e.preventDefault(); nextCard(); }
   else if(k === "b"){ e.preventDefault(); $("btnBuzz").click(); }
 });
@@ -1377,9 +1608,12 @@ function boot(){
     d.cards.forEach(function(c){ c.id = c.id || uid(); });
   });
   deckId = decks[0].id;
+  selDecks = [decks[0].id];
+  mode = $("modePick").value;
   timerLen = parseInt($("timerLen").value, 10);
   remaining = timerLen;
   setTeams(parseInt($("teamCount").value, 10));
+  renderMode();
   buildQueue();
   renderAll();
 }
