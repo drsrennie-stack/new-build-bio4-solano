@@ -32,6 +32,14 @@
   --display:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
+/* DUSK, the second colour. Matches the toggle in the games themselves,
+   through the same stored setting, so the hub and the game agree. */
+[data-theme="dusk"]{
+  --maroon:#1A3E59;
+  --maroon-dark:#123047;
+  --straw-light:#BFDCEF;
+  --straw:#A8D2EC;
+}
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--maroon);color:var(--navy);font-family:var(--body);font-size:17px;line-height:1.55}
@@ -52,6 +60,11 @@ a{color:var(--navy)}
 .masthead h1{font-size:clamp(2.1rem,5.5vw,3.2rem);color:#fff;letter-spacing:-.01em}
 .masthead .sub{color:var(--straw-light);font-weight:600;margin-top:.5rem;max-width:56ch}
 
+.btn-theme{
+  font-family:var(--display);font-weight:700;font-size:.85rem;background:transparent;color:var(--straw-light);
+  border:1.5px solid var(--straw-light);border-radius:var(--r-block);padding:.4rem .8rem;cursor:pointer;margin-top:.8rem;
+}
+.btn-theme:hover{background:#fff;color:var(--navy);border-color:#fff}
 .grid{display:grid;gap:1.1rem;grid-template-columns:repeat(auto-fill,minmax(268px,1fr))}
 
 .tile{
@@ -118,12 +131,21 @@ footer.credit b{color:#fff;font-weight:700}
 </style>
 </head>
 <body>
+<script>
+(function(){
+  try{
+    var t = localStorage.getItem("bio004-game-theme");
+    if(t === "dusk"){ document.documentElement.setAttribute("data-theme", "dusk"); }
+  }catch(e){}
+})();
+</script>
 <a class="skip-link" href="#main">Skip to the games</a>
 
 <div class="wrap">
   <header class="masthead">
     <p class="eyebrow">BIO 004 &middot; Human Anatomy</p>
     <h1>Anatomy Games</h1>
+    <button type="button" class="btn-theme" id="btnTheme">Switch to dusk</button>
     <p class="sub">Team games you play out loud. Every one of them asks you to pull the answer out of your own head first, which is the part that actually builds the memory.</p>
   </header>
 
@@ -163,7 +185,7 @@ var GAMES = [
     module: "Module 1",
     status: "live",
     icon: "cards",
-    blurb: "Describe the term to your team without using the five words on the card. 115 cards across intro, cells, tissues and skin."
+    blurb: "Describe the term to your team without using the five words on the card. 119 cards across intro, cells, tissues and skin."
   },
   {
     name: "Memory Match",
@@ -171,7 +193,7 @@ var GAMES = [
     module: "Module 1",
     status: "live",
     icon: "match",
-    blurb: "Two boards, images on one and words on the other. Histology slides to tissue name, function or location, and body regions to their terms."
+    blurb: "Two boards, images on one and words on the other. Match the slide to its tissue name, its function or its location."
   },
   {
     name: "Histology Escape Room",
@@ -219,6 +241,22 @@ function absUrl(file){
   try{ return new URL(file, window.location.href).href; }
   catch(e){ return file; }
 }
+
+(function(){
+  var btn = document.getElementById("btnTheme");
+  function label(){
+    var now = document.documentElement.getAttribute("data-theme") === "dusk" ? "dusk" : "maroon";
+    btn.textContent = "Switch to " + (now === "dusk" ? "maroon" : "dusk");
+  }
+  btn.addEventListener("click", function(){
+    var next = document.documentElement.getAttribute("data-theme") === "dusk" ? "maroon" : "dusk";
+    if(next === "dusk"){ document.documentElement.setAttribute("data-theme", "dusk"); }
+    else { document.documentElement.removeAttribute("data-theme"); }
+    try{ localStorage.setItem("bio004-game-theme", next); }catch(e){}
+    label();
+  });
+  label();
+})();
 
 var grid = document.getElementById("gameGrid");
 

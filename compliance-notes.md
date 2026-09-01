@@ -1,152 +1,163 @@
 # Accessibility compliance notes
 
-**Project:** Memory Match (BIO 004 Human Anatomy, Module 1)
-**Files covered:** `memory-match.html`, its present window, and the print card sheets it generates (`memory-match-print-histology.pdf`, `memory-match-print-regions.pdf`)
-**Date:** August 26, 2026
-**Reviewer:** Dr. Sharilyn Rennie
+**Project:** Anatomy Games hub and Anatomy Taboo
+**Files covered:** games.html, anatomy-taboo.html
+**Date:** August 28, 2026 (revised the same day for multi-topic play and practice mode)
+**Reviewer:** Dr. Sharilyn Rennie (build and audit prepared for review)
 
 ---
 
-## 1. What the file contains
+## 1. WCAG version and level achieved
 
-One HTML file with two subjects, three surfaces, and one shared engine.
+Target: WCAG 2.2 Level AA minimum, AAA where achievable.
 
-- **Histology**, 48 items across six groups: epithelial tissue, connective tissue proper, cartilage and bone and blood, muscle and nervous, skin layers and structures, special cells. Match slide to tissue name, function, or location.
-- **Body regions**, 56 regional terms across five groups: head and neck, trunk front, trunk back, upper limb, lower limb. Match region image to term, term to common name, or term to location.
-- **Control surface**, the page itself, for setting up and playing at a bench.
-- **Present window**, a separate browser window for projecting to the room.
-- **Print view**, card sheets, card backs, an answer key, table rules, and a team score sheet.
-- **Frame grabber**, opens a local video file, steps through it, and captures stills named for the repo folder.
-
-Two ways to play, matching Anatomy Taboo: teams against each other, or one team practicing on its own. Practice mode hides the team panel and the turn indicator and swaps in a tally of cleared, still down, misses, and a first-try percentage. A pair counts as first try when neither of its cards had already been turned over and rejected.
-
-Groups are picked through the same collapsed picker Anatomy Taboo uses: a button carrying `aria-expanded` and `aria-controls`, opening a labelled group of real checkboxes with per-group counts and Select all and Clear.
-
-Images resolve in this order: anything loaded or captured this session, then the matched station slide in the Loops repo at `https://drsrennie-stack.github.io/loops/images/`, then this repo's own `images/` folder. The source preference is switchable and the unpicked source stays as the fallback. Both repos serve from the same drsrennie-stack.github.io address, so the cross-repo reads are same origin and nothing is copied or duplicated.
-
----
-
-## 2. WCAG version and level achieved
-
-Target: WCAG 2.2 Level AA minimum, Level AAA where achievable.
-
-| Criterion | Level | Result | How it is met |
-|---|---|---|---|
-| 1.1.1 Non-text content | A | Pass | Meaningful SVGs carry `role="img"` and a label; decorative ones carry `aria-hidden="true"`. Card images use an alt that names the card code, never the answer. |
-| 1.3.1 Info and relationships | A | Pass | Semantic landmarks. Setup uses real `fieldset`/`legend`/`input`. Team names use real labelled text inputs. Study sheet, answer key, and tournament board are real tables with `caption` and scoped headers. |
-| 1.3.2 Meaningful sequence | A | Pass | DOM order matches visual order in one and two column layouts, and in the present window. |
-| 1.4.1 Use of color | A | Pass | A flipped card is never signalled by color alone. Content changes from a face-down glyph to the image or the words, matched cards add a check icon, and the team that owns a matched card is named in the match log as well as marked by a color square. |
-| 1.4.3 Contrast (minimum) | AA | Pass | See section 4. Lowest text ratio measured is 7.44:1. |
-| 1.4.6 Contrast (enhanced) | AAA | Pass | Every text pair clears 7:1. |
-| 1.4.10 Reflow | AA | Pass | Boards collapse to one column at 960px. No horizontal scroll at 320px. Wide tables scroll inside their own container. |
-| 1.4.11 Non-text contrast | AA | Pass | Card borders and state rings clear 3:1 against both their fill and the surface behind them. Two remediations are recorded in section 4. |
-| 1.4.12 Text spacing | AA | Pass | No fixed heights on text containers. Card text wraps. Present mode scales type from viewport height with a floor in pixels. |
-| 2.1.1 Keyboard | A | Pass | Every card is a `button`. Setup is native radios and checkboxes. Team rows are text inputs with labelled remove buttons. |
-| 2.1.2 No keyboard trap | A | Pass | No modal layers in the control window. The image library is a native `details`. The present window closes on Escape. |
-| 2.4.1 Bypass blocks | A | Pass | Skip link to `#main`, visible on focus. |
-| 2.4.3 Focus order | A | Pass | Source order only, no positive tabindex. |
-| 2.4.7 Focus visible | AA | Pass | 3px gold outline at 3px offset on `:focus-visible`. On white that is remediated by the navy card edge beneath it; on navy and maroon it measures 9.71:1 and 4.92:1. |
-| 2.4.11 Focus not obscured | AA | Pass | No sticky headers or overlays over focusable content. The end-of-round banner in the present window covers a finished board only, and dismisses on click. |
-| 2.5.8 Target size | AA | Pass | Smallest control card is 116px wide. Choice chips are at least 36px by 44px. Team remove buttons are 32px with 10px of surrounding padding inside a 44px row. |
-| 3.2.2 On input | A | Pass | Changing a setup option updates the summary line only. Typing a team name updates the scoreboard label only. Nothing deals, prints, or opens a window without a button press. |
-| 3.3.2 Labels or instructions | A | Pass | Every group carries a legend, every team input a label. The summary line states what is being matched, from how many items, and how many of them already have a Loops slide. Placeholder text opens with "Examples:" and sits at #8C93A1 so it does not read as a filled field. |
-| 1.2.x Time-based media | A | N/A with note | The frame grabber plays a local video the instructor supplies, as a source for still capture rather than as instructional content. It uses the native `video` element with its own controls, keyboard support, and whatever captions the file carries. Captioning the Loops videos themselves is governed by wherever those videos are published, not by this tool. |
-| 4.1.2 Name, role, value | A | Pass | `aria-pressed` on the subject tiles, `aria-expanded` and `aria-controls` on the study sheet toggle and on the groups picker, `role="radiogroup"` with accessible names, `role="group"` on the picker's checkbox list labelled by its own label, boards labelled by their headings. |
-| 2.4.5 Multiple ways | AA | Pass | The game is reachable from the games hub tile and from the course tools drawer, and carries a back link to the hub in its own header. |
-| 4.1.3 Status messages | AA | Pass | `role="status"` with `aria-live="polite"` announces subject change, deal, match with the scoring team and points, miss, reveal, and the round result. |
-
----
-
-## 3. Reduced motion
-
-`prefers-reduced-motion: reduce` removes every transition and hover lift in both windows. Card state still changes instantly, so nothing depends on animation.
-
----
-
-## 4. Color contrast audit
-
-Measured against the live BIO 004 tokens.
-
-### Text
-
-| Foreground | Background | Ratio | Level |
-|---|---|---|---|
-| Navy `#08101F` | Card `#FFFFFF` | 19.02:1 | AAA |
-| Navy `#08101F` | Page `#FAFAF9` | 18.21:1 | AAA |
-| Muted ink `#3D4860` | Card `#FFFFFF` | 9.15:1 | AAA |
-| Muted ink `#3D4860` | Navy-tint `#ECEFF4` | 7.94:1 | AAA |
-| Terra-dark `#6B1616` | Card `#FFFFFF` | 11.99:1 | AAA |
-| Maroon `#7A2A22` | Card `#FFFFFF` | 9.63:1 | AAA |
-| Maroon `#7A2A22` | Page `#FAFAF9` | 9.22:1 | AAA |
-| White `#FFFFFF` | Maroon surface `#7A2A22` | 9.63:1 | AAA |
-| Off-white `#F4EFE8` | Maroon surface `#7A2A22` | 8.83:1 | AAA |
-| White `#FFFFFF` | Navy `#08101F` | 19.02:1 | AAA |
-| Straw `#E8CE85` | Navy `#08101F` | 12.31:1 | AAA |
-| Gold `#DCB45C` | Navy `#08101F` | 9.71:1 | AAA |
-| Navy `#08101F` | Gold chip `#DCB45C` | 9.71:1 | AAA |
-| Navy `#08101F` | Navy-tint `#ECEFF4` | 16.50:1 | AAA |
-| Gold-text `#6E5018` | Card `#FFFFFF` | 7.44:1 | AAA |
-
-### Interface boundaries and state
-
-| Element | Ratio | Note |
+| Criterion | Level | Result |
 |---|---|---|
-| Default card border `#8C90A0` on white | 3.18:1 | Pass |
-| Wrong-state border `#8B1D1D` on white | 9.17:1 | Pass |
-| Matched border `#08101F` on white | 19.02:1 | Pass |
-| Gold `#DCB45C` on white | 1.96:1 | **Fails alone, remediated** |
-| Navy `#08101F` on maroon `#7A2A22` | 1.98:1 | **Fails alone, remediated** |
-| Gold `#DCB45C` on maroon `#7A2A22` | 4.92:1 | Pass |
+| 1.1.1 Non-text content | A | Pass. All decorative SVG icons carry `aria-hidden="true"`. Icon-only controls have accessible names. |
+| 1.3.1 Info and relationships | A | Pass. Semantic `header`, `main`, `section`, `footer`, `table` with `caption` and `th scope`, every section labelled with `aria-labelledby`. |
+| 1.3.2 Meaningful sequence | A | Pass. DOM order matches visual order in both single and two-column layouts. |
+| 1.4.3 Contrast (minimum) | AA | Pass. See section 7. |
+| 1.4.6 Contrast (enhanced) | AAA | Pass on every text pair. Lowest is 7.49:1. |
+| 1.4.4 Resize text | AA | Pass. All type in rem, layout reflows to one column below 900px. |
+| 1.4.10 Reflow | AA | Pass. No horizontal scroll at 320px width. |
+| 1.4.11 Non-text contrast | AA | Pass for all controls. See the note at the end of section 6. |
+| 1.4.12 Text spacing | AA | Pass. No fixed heights on text containers. |
+| 2.1.1 Keyboard | A | Pass. Every control reachable and operable. See section 6. |
+| 2.1.2 No keyboard trap | A | Pass. |
+| 2.2.1 Timing adjustable | A | Pass. The countdown is optional (No timer setting), defaults to 90 seconds, and can be paused, resumed and reset at any point. It gates nothing: no answer is lost and no content disappears when it expires. |
+| 2.4.1 Bypass blocks | A | Pass. Skip link to `#main` on both pages. |
+| 2.4.3 Focus order | A | Pass. |
+| 2.4.6 Headings and labels | AA | Pass. One h1 per page, h2 for sections, no skipped levels. |
+| 2.4.7 Focus visible | AA | Pass. 3px navy outline plus a 6px gold ring, visible on white, navy and maroon surfaces. |
+| 2.4.11 Focus not obscured | AA (2.2) | Pass. Present mode covers the page but hides what is underneath, so no focused control is ever behind it. |
+| 2.5.3 Label in name | A | Pass. Visible button text matches accessible name. |
+| 2.5.8 Target size (minimum) | AA (2.2) | Pass. Measured in Chromium with the topic picker open: no interactive target falls below 24 by 24 CSS pixels. Smallest are the score adjust buttons at 36 by 28 and 42 by 28, and every checkbox at 24 by 24. Every other control exceeds 44px in its long dimension. |
+| 3.2.2 On input | A | Pass. Changing mode, topics, team count or timer resets the round and updates the board, but moves no focus and opens nothing unexpected. Each change is announced in the live region. |
+| 3.3.1 Error identification | A | Pass. Missing target term or forbidden word in the card builder produces a message in the live region and moves focus to the offending field. |
+| 3.3.2 Labels or instructions | A | Pass. Every input has a `label` with `for`, visible or visually hidden. |
+| 4.1.2 Name, role, value | A | Pass. `aria-expanded` on every disclosure control, `role="timer"`, `role="status"`. |
+| 4.1.3 Status messages | AA | Pass. `#status` is `role="status"` with `aria-live="polite"`. |
 
-**Gold on white remediation.** The gold selected-card border is kept for brand consistency but never carries the state alone. It sits inside a 2px navy outline at 19.02:1, and the card content changes at the same moment.
-
-**Navy on maroon remediation.** In the present window the face-down cards are navy sitting on a maroon board. Navy against maroon is 1.98:1, so every present card carries a 2px gold border, which measures 4.92:1 against the maroon board and 9.71:1 against the card's own navy fill. Face-up cards switch to a near-white fill at 9.63:1 against the board, so they are identifiable without the border.
-
----
-
-## 5. Keyboard navigation flow verified
-
-1. Tab 1 reaches the skip link, Enter jumps to `main`.
-2. Tab reaches the two subject tiles. Enter or Space switches subject; the announcement confirms it.
-3. Tab through the five setup radio groups. Arrow keys move within each. Tab reaches the groups picker button; Enter or Space opens it, then Tab moves through the checkboxes, Select all and Clear. The button's label reports the current selection, so the state is readable without opening it.
-4. Tab reaches Deal the boards, Present, Build print cards, Study sheet.
-5. Tab through the team rows. Each name is an editable field with its own label; each remove button announces which team it removes. Tab continues to the theme fill buttons, Add a team, and Back to solo.
-6. After dealing, Tab moves through the left board cards in grid order, then the right board cards.
-7. Enter or Space flips a card. One card from each board resolves the pair.
-8. Matched cards become `disabled` and drop out of the tab order, so the remaining set gets shorter each turn.
-9. In the present window, Tab reaches every card, Enter or Space plays it, F toggles full screen, and Escape closes the window and returns focus to the control window.
-10. Shift+Tab reverses cleanly throughout. No trap, no focus loss on re-render.
-
----
-
-## 6. Screen reader testing
-
-Verified with VoiceOver on macOS in Safari and Chrome.
-
-- Landmarks announce as banner, main, and contentinfo.
-- Heading order runs h1 to h2 to h3 with no skipped levels.
-- Subject tiles announce as toggle buttons with their pressed state.
-- Each card announces its accessible name, its button role, and its disabled state once matched.
-- The live region announces "Boards dealt. 8 pairs.", then "Match. Simple squamous epithelium. Nebula scores 2." or "Not a match.", then the round result naming the winning team.
-- Card images announce as "Unlabeled image C03", which does not give away the answer.
-- The study sheet toggle announces its expanded and collapsed state.
+Not applicable: audio and video criteria (no media), 3.3.7 redundant entry, 3.3.8 accessible authentication (no login).
 
 ---
 
-## 7. Known limitations and remediation plan
+## 2. Modes and the two answer paths
 
-1. **Visual identification cannot be made non-visual.** Matching a micrograph or a body diagram to a term is an inherently visual task, and no text alternative preserves the assessment. **Remediation:** both subjects ship an equivalent word-only mode. Histology gives tissue name to function and tissue name to location; body regions gives regional term to common name and regional term to location. Point any student who needs it at that mode, and assess visual identification for that student through the lab practical accommodation already on file.
-2. **Color vision.** Stained micrographs can be hard to separate for students with color vision deficiency. **Remediation:** where you have a choice of image, pick the one with the clearest structural cue rather than the strongest color cue. Nothing in either interface depends on hue.
-3. **Team color squares.** Team identity uses a color square in three places. **Remediation:** the team name appears in text beside every square, and the match log names the scoring team in words, so the color is decorative rather than load bearing.
-4. **Present window and pop-up blockers.** Some browsers block the second window. **Remediation:** the page detects the block and tells you to allow pop-ups for the page, rather than failing silently.
-5. **Print cards.** The printed set carries no text alternative. **Remediation:** the answer key sheet doubles as the accessible version of the deck, and the on-screen study sheet covers the same content.
-6. **Image coverage.** 31 of the 48 histology items and 30 of the 56 regional terms are matched to a labelled station slide already in the Loops repo, so those boards work with nothing added. The rest display and print a coded placeholder until an image exists for them, either captured with the frame grabber or dropped into this repo's `images/` folder. This is a content gap, not an accessibility defect.
-9. **Two items sharing one picture.** Mammary and pectoral both key to the same Loops station, `intro/s05`, because that station's answer covers both. Two identical pictures on one board with two different correct answers would be unsolvable. **Remediation:** the round picker treats a shared image as a collision and never deals both items into the same image round. They can still both appear when the left board holds words, where their names tell them apart. Verified over 200 generated rounds at maximum size.
-7. **Frame grabber controls.** Video scrubbing is a fine motor task. **Remediation:** the four nudge buttons step by one frame and one second in each direction, so no dragging is required to land on a frame, and the native video controls remain available for anyone who prefers them.
-8. **Bulk download.** The download button issues one download per captured file in sequence. Some browsers ask permission for multiple downloads on first use. **Remediation:** each file is named for its item, so an interrupted batch can be finished by capturing and downloading the remainder without any renaming.
+The game runs in two modes and the controls change with them, so both were walked separately.
+
+- **Teams:** Correct, Skip and Next card. Turn passes on a completed card.
+- **Challenge:** after a correct card, an optional recall question for the whole team. The question is revealed first, the answer only when the instructor asks for it, so the reveal is a deliberate act rather than something the screen does on its own. Both appear on the projector as well as the panel.
+- **One team practising:** Correct becomes "Got it", Skip is removed, and "Missed it" appears. A missed card returns to the deck, so the tally reads Got it, Came back around, and a first-try percentage. Nothing rotates.
+
+Mode is a `select`, not a pair of tabs, so it is reachable and changeable from the keyboard with no custom key handling. Changing it resets the round and announces the change in the live region. The M shortcut is bound only in practice mode and S only in team mode, so a key never silently does nothing the visible controls would do.
+
+## 3. Present mode
+
+Present mode replaces the page with a projector view: card, clock, scores and the status line, plus a control bar. It is the same state rendered twice, not a second copy of the game, so the two views cannot drift apart.
+
+- Entering it hides the instructor panel with the `hidden` attribute, so the panel leaves the tab order entirely and focus lands on Start turn.
+- Escape exits, and so does leaving fullscreen by any route, so the room never ends up looking at a stuck screen.
+- Type scales with the viewport (`clamp`), with the target term reaching 5.2rem, so the back row can read it. Contrast is the same set of pairs audited in section 6, since it reuses the same tokens.
+- The stage buttons call the same functions as the panel buttons and mirror their disabled and hidden state, so nothing is operable on the projector that is not operable on the panel.
+
+## 4. The two colours
+
+The game ships in two colour schemes, switched by a button in Game setup and mirrored on the projector. Dusk moves four tokens and nothing else: the page ground to #1A3E59, the nested band to #123047, and the two on-ground text colours to #BFDCEF and #A8D2EC. Cards, ink, gold and the buzzer are unchanged, so every other pair in section 5 holds in both schemes.
+
+| Dusk pair | Ratio | Level |
+|---|---|---|
+| Page ground, white heading #FFFFFF / #1A3E59 | 11.19:1 | AAA |
+| Eyebrow and subhead #BFDCEF / #1A3E59 | 7.83:1 | AAA |
+| Footer credit #F4EFE8 / #1A3E59 | 9.78:1 | AAA |
+| Gold focus ring against the ground #DCB45C / #1A3E59 | 5.71:1 | Pass, over the 3:1 non-text minimum |
+| White card against the ground | 11.19:1 | The card edge is carried by value, not by a border |
+
+The choice is stored in localStorage under one key shared with the games hub, so the hub and the game agree, and it is applied by a small script before first paint so the room never sees the colour change on load.
+
+## 5. Sound
+
+The buzzer, the correct chime and the bonus chime are generated with the Web Audio API. Sound is never the only signal:
+
+- Buzzer: status region reads "Buzzed. That clue does not count." or "Time is up."
+- Correct: status region names the team and the score, the card gains a gold ring, and the score number updates on screen.
+- Time expiring: the clock turns gold and the progress track empties.
+
+Sound can be switched off entirely. Nothing autoplays before a user gesture, so no browser audio policy is violated.
 
 ---
 
-## 8. Reviewer
+## 6. Color contrast audit
 
-Built and audited August 26, 2026. Re-audit when the image folders are populated, to confirm alt text and print output.
+| Text / background | Ratio | Level |
+|---|---|---|
+| White on maroon page ground #FFFFFF / #7A2A22 | 9.63:1 | AAA |
+| Eyebrow and subhead #F2E2B8 / #7A2A22 | 7.49:1 | AAA |
+| Body and target term #08101F / #FFFFFF | 19.02:1 | AAA |
+| Forbidden words and section labels #6B1616 / #FFFFFF | 11.99:1 | AAA |
+| Hint text #3D4860 / #FFFFFF | 9.15:1 | AAA |
+| Text on navy card #FFFFFF / #08101F | 19.02:1 | AAA |
+| Gold labels and clock on navy #DCB45C / #08101F | 9.71:1 | AAA |
+| Hint on navy card #ECEFF4 / #08101F | 16.50:1 | AAA |
+| Navy on gold button #08101F / #DCB45C | 9.71:1 | AAA |
+| White on buzzer #FFFFFF / #8B1D1D | 9.17:1 | AAA |
+| Status bar #08101F / #ECEFF4 | 16.50:1 | AAA |
+| Disabled ghost button text #FFFFFF / #1E2A47 | 14.21:1 | AAA (disabled controls are exempt) |
+| Focus ring gold against maroon #DCB45C / #7A2A22 | 4.92:1 | Pass, exceeds the 3:1 non-text minimum |
+| Focus ring navy against white #08101F / #FFFFFF | 19.02:1 | Pass |
+| Forbidden chip border #8B1D1D / #FFFFFF | 9.17:1 | Pass |
+
+Note on card dividers: the hairline `#DCE0E6` used between table rows and above the QR panel measures 1.33:1 against white. It is decorative. No control or boundary depends on it, since every card is defined by its white fill against the maroon ground (9.63:1) and every control carries its own 2px navy border.
+
+---
+
+## 7. Keyboard navigation flow verified
+
+**games.html:** skip link, then each tile in reading order (Play link, then QR button), then nothing further. QR panels expand in place and the button reports `aria-expanded`.
+
+**anatomy-taboo.html:** skip link, Start / Pause / Reset timer, Correct / Missed it / Skip / Next card, Buzzer, mode select, the Topics in play disclosure button and, when open, one checkbox per topic plus Select all and Clear, team count, timer length, challenge and sound checkboxes, Reset game, Print card sheets, one text input per team in the Team names panel, the four name-set fill buttons, per-team +1 and -1 buttons, then the instructor builder disclosure with its deck select, full form and card table.
+
+The Topics in play control is a button with `aria-expanded` and `aria-controls` onto a `role="group"` labelled by the same "Topics in play" text, so the checkbox set announces as one named group rather than five loose checkboxes. Controls that do not apply to the current mode are removed with the `hidden` attribute rather than visually hidden, so they leave the tab order and the accessibility tree together.
+
+Each team name input carries a visually hidden label reading "Name for team 3". The number chip beside it is `aria-hidden`, so a screen reader hears the label rather than a bare digit.
+
+Shortcuts, which are suppressed while focus is in any input, textarea or select so typing is never intercepted:
+
+- Escape leaves present mode
+- Space starts the turn, or pauses and resumes the clock
+- C marks correct, in both modes
+- S skips, team mode only
+- M marks missed, practice mode only
+- N draws the next card
+- B sounds the buzzer
+
+---
+
+## 8. Screen reader testing
+
+**Status: automated only. A human screen reader pass is still outstanding.**
+
+What was actually verified: the accessibility tree exported from headless Chromium, plus a code review of every name, role and live region. Every control below came back with the intended role and accessible name.
+
+- Landmarks resolve as banner, main, contentinfo.
+- The status region carries `role="status"` with `aria-live="polite"` and is written once per turn event: whose turn it is, correct with the team name and score, skip, buzz, time up, and deck reshuffle.
+- The clock is `role="timer"` with `aria-live="off"` on purpose, so the countdown does not interrupt the announcement of game events every second.
+- The card face is hidden with the `hidden` attribute until the turn starts, so it is absent from the accessibility tree rather than merely invisible.
+- Score buttons announce as "Add a point to Team 3" rather than "plus one".
+- Table rows in the builder announce the target term as the row context before the Edit and Delete buttons.
+
+---
+
+## 9. Known limitations and remediation plan
+
+1. **QR code library on the hub page.** games.html loads qrcodejs from cdnjs for the QR panel. With no network the panel shows the plain URL instead, which is the accessible fallback and the printable one. Remediation if a fully offline hub is wanted: drop the QR button, or inline a QR encoder.
+2. **Browser storage.** Custom decks save to localStorage. In a private window or with site data blocked the save fails silently and the session still plays normally. Export all decks produces a text copy she can keep. No student information is ever written to storage.
+3. **Team names are session only.** Renaming teams is deliberately not persisted, so nothing a student is identified by can survive the class. This is a FERPA decision, not an oversight.
+4. **Print card sheets** uses the browser print dialog. Sheet layout is verified in Chromium at Letter size; other browsers may paginate slightly differently.
+5. **Screen reader coverage is the open item.** Roles, names and live regions were confirmed from the accessibility tree, but no human pass with VoiceOver, NVDA or JAWS has been run. Worth doing before the tool is assigned for independent student use. It is currently an instructor-run classroom tool projected at the front of the room, which lowers, but does not remove, the risk.
+
+---
+
+## 10. Reviewer
+
+Prepared August 28, 2026. Sign-off pending review by Dr. Sharilyn Rennie.

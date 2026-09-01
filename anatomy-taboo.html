@@ -35,6 +35,17 @@
   --display:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
+/* DUSK.
+   A second colour for the same game, taken from the photo: deep dusk
+   blue where the maroon sits, warm gold kept as the accent, white cards
+   unchanged. Only four tokens move, so every contrast pair already
+   audited stays audited. */
+[data-theme="dusk"]{
+  --maroon:#1A3E59;
+  --maroon-dark:#123047;
+  --straw-light:#BFDCEF;
+  --straw:#A8D2EC;
+}
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
@@ -240,6 +251,10 @@ ul.forbidden li{
 .challenge{margin-top:1rem;border-radius:var(--r-card);background:var(--navy);color:#fff;padding:1.1rem 1.2rem}
 .challenge h3{color:var(--gold);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;margin-bottom:.5rem}
 .challenge .q{font-size:1.08rem;font-weight:600;margin-bottom:.9rem}
+.challenge .ans{
+  font-family:var(--display);font-weight:800;color:var(--gold);font-size:1.15rem;
+  border-top:1px solid var(--navy-line);padding-top:.7rem;margin-bottom:.9rem;
+}
 
 /* ---------- builder ---------- */
 details.builder{margin-top:1.2rem}
@@ -269,6 +284,86 @@ footer.credit b{color:#fff;font-weight:700}
   clip:rect(0 0 0 0);white-space:nowrap;border:0;
 }
 
+/* ---------- present mode ---------- */
+.stage{
+  position:fixed;inset:0;z-index:120;background:var(--maroon);
+  display:flex;flex-direction:column;gap:1rem;padding:1.1rem 1.4rem 1.2rem;overflow:auto;
+}
+.stage-top{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.stage-eyebrow{
+  font-family:var(--display);font-weight:700;font-size:.8rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--straw-light);margin:0;
+}
+.stage-turn{
+  margin:0 auto 0 0;font-family:var(--display);font-weight:800;color:#fff;
+  font-size:clamp(1.1rem,2.2vw,1.7rem);
+}
+.stage-turn b{color:var(--gold)}
+.stage-main{display:grid;gap:1rem;grid-template-columns:minmax(0,1fr) minmax(240px,26%);flex:1 1 auto;min-height:0}
+@media(max-width:820px){.stage-main{grid-template-columns:1fr}}
+.stage-card{
+  background:#fff;border-radius:var(--r-card);box-shadow:var(--shadow-rest);
+  padding:1.6rem;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;min-height:0;
+}
+.stage-card.correct{box-shadow:0 0 0 6px var(--gold),var(--shadow-hover)}
+.stage-cover{font-family:var(--display);font-weight:800;color:var(--navy);font-size:clamp(1.3rem,3vw,2.2rem);margin:0}
+.stage-label{
+  font-family:var(--display);font-weight:700;font-size:clamp(.7rem,1.1vw,.9rem);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--terra-dark);margin:0 0 .5rem;
+}
+.stage-target{
+  font-family:var(--display);font-weight:800;color:var(--navy);line-height:1.05;
+  font-size:clamp(2.2rem,6.4vw,5.2rem);margin:0 0 1.2rem;
+}
+ul.stage-forbidden{list-style:none;margin:0 0 .9rem;padding:0;display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center}
+ul.stage-forbidden li{
+  font-family:var(--display);font-weight:700;color:var(--terra-dark);
+  font-size:clamp(1.1rem,2.4vw,1.9rem);border:2px solid var(--terra);border-radius:99px;padding:.28rem 1.1rem;
+}
+.stage-auto{font-size:clamp(.85rem,1.3vw,1.05rem);color:var(--ink-muted);margin:0}
+.stage-auto b{color:var(--navy)}
+.stage-side{
+  background:var(--navy);border-radius:var(--r-card);padding:1.2rem;
+  display:flex;flex-direction:column;justify-content:center;gap:.5rem;text-align:center;
+}
+.stage-challenge{
+  background:var(--navy-line);border-radius:var(--r-block);padding:.9rem 1rem;margin-bottom:.6rem;text-align:left;
+}
+.stage-q{color:#fff;font-weight:600;font-size:clamp(1rem,1.7vw,1.35rem);margin:0}
+.stage-a{
+  font-family:var(--display);font-weight:800;color:var(--gold);font-size:clamp(1.05rem,1.9vw,1.5rem);
+  margin:.7rem 0 0;padding-top:.6rem;border-top:1px solid rgba(255,255,255,.25);
+}
+.stage-clock{
+  font-family:var(--display);font-weight:800;color:#fff;font-variant-numeric:tabular-nums;
+  font-size:clamp(2.6rem,7vw,5.5rem);line-height:1;margin:0;
+}
+.stage-clock.warn,.stage-clock.done{color:var(--gold)}
+.stage-track{height:12px;border-radius:99px;background:var(--navy-line);overflow:hidden}
+.stage-track > i{display:block;height:100%;background:var(--gold);width:100%}
+.stage-count{
+  font-family:var(--display);font-weight:700;font-size:clamp(.72rem,1.1vw,.9rem);letter-spacing:.1em;
+  text-transform:uppercase;color:var(--gold);margin:.4rem 0 0;
+}
+.stage-status{color:#fff;font-weight:600;font-size:clamp(.95rem,1.5vw,1.2rem);margin:0}
+.stage-scores{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center}
+.stage-scores .s{
+  background:#fff;border-radius:var(--r-block);padding:.45rem .95rem;text-align:center;min-width:104px;
+}
+.stage-scores .s.on{background:var(--navy);color:#fff;box-shadow:0 0 0 3px var(--gold)}
+.stage-scores .s .n{display:block;font-family:var(--display);font-weight:700;font-size:clamp(.8rem,1.2vw,1rem)}
+.stage-scores .s .v{
+  display:block;font-family:var(--display);font-weight:800;font-variant-numeric:tabular-nums;
+  font-size:clamp(1.3rem,2.4vw,2rem);line-height:1.1;
+}
+.stage-bar{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center}
+.stage-bar .btn{flex:0 1 auto}
+.stage-bar .btn-buzz{width:auto;font-size:1.05rem;padding:.72rem 1.6rem}
+/* A white ghost button at 55 percent over the maroon ground reads pink.
+   Disabled controls on the stage go to the navy line colour instead. */
+.stage-bar .btn:disabled{background:var(--navy-line);color:#fff;border-color:var(--navy-line);opacity:.9}
+
 /* ---------- print card sheets ---------- */
 #printArea{display:none}
 @media print{
@@ -293,7 +388,70 @@ footer.credit b{color:#fff;font-weight:700}
 </style>
 </head>
 <body>
+<script>
+/* Set before first paint so the room never sees the colour switch. */
+(function(){
+  try{
+    var t = localStorage.getItem("bio004-game-theme");
+    if(t === "dusk"){ document.documentElement.setAttribute("data-theme", "dusk"); }
+  }catch(e){}
+})();
+</script>
 <a class="skip-link" href="#main">Skip to the game</a>
+
+<!-- ============================================================
+     PRESENT MODE
+     The whole game on one screen for the projector. Setup, the deck
+     picker and the builder are the instructor's business and stay off
+     the wall. Everything a student needs to see is here.
+     ============================================================ -->
+<div id="stage" class="stage" hidden>
+  <div class="stage-top">
+    <p class="stage-eyebrow" id="stDeck">&nbsp;</p>
+    <p class="stage-turn" id="stTeam">&nbsp;</p>
+    <button type="button" class="btn btn-ghost btn-sm" id="stTheme">Switch to dusk</button>
+    <button type="button" class="btn btn-ghost btn-sm" id="stExit">Exit present mode</button>
+  </div>
+
+  <div class="stage-main">
+    <div class="stage-card">
+      <p class="stage-cover" id="stCover">Press Start turn.</p>
+      <div id="stFace" hidden>
+        <p class="stage-label">Describe this term</p>
+        <p class="stage-target" id="stTarget">&nbsp;</p>
+        <p class="stage-label">Do not say</p>
+        <ul class="stage-forbidden" id="stForbidden"></ul>
+        <p class="stage-auto" id="stAuto"></p>
+      </div>
+    </div>
+    <div class="stage-side">
+      <div class="stage-challenge" id="stChallenge" hidden>
+        <p class="stage-label" style="color:var(--gold)">Challenge, whole team</p>
+        <p class="stage-q" id="stChQ">&nbsp;</p>
+        <p class="stage-a" id="stChA" hidden>&nbsp;</p>
+      </div>
+      <p class="stage-clock" id="stClock">1:30</p>
+      <div class="stage-track" aria-hidden="true"><i id="stTrack"></i></div>
+      <p class="stage-count" id="stCount">&nbsp;</p>
+      <p class="stage-status" id="stStatus">&nbsp;</p>
+    </div>
+  </div>
+
+  <div class="stage-scores" id="stScores"></div>
+
+  <div class="stage-bar">
+    <button type="button" class="btn btn-gold" id="stStart">Start turn</button>
+    <button type="button" class="btn" id="stCorrect">Correct</button>
+    <button type="button" class="btn btn-ghost" id="stMissed" hidden>Missed it</button>
+    <button type="button" class="btn btn-ghost" id="stSkip">Skip</button>
+    <button type="button" class="btn btn-ghost" id="stNext">Next card</button>
+    <button type="button" class="btn btn-gold" id="stChShow" hidden>Read the challenge</button>
+    <button type="button" class="btn btn-gold" id="stChReveal" hidden>Show the answer</button>
+    <button type="button" class="btn btn-gold" id="stChWin" hidden>They got it, plus 1</button>
+    <button type="button" class="btn btn-ghost" id="stChMiss" hidden>No bonus</button>
+    <button type="button" class="btn btn-buzz" id="stBuzz">BUZZER</button>
+  </div>
+</div>
 
 <div class="wrap">
   <header class="masthead">
@@ -326,11 +484,13 @@ footer.credit b{color:#fff;font-weight:700}
         <div class="status" id="status" role="status" aria-live="polite">Press Start game to begin.</div>
 
         <div class="challenge" id="challengePanel" hidden>
-          <h3>Challenge round, one bonus point</h3>
+          <h3>Challenge, whole team, one bonus point</h3>
           <p class="q" id="challengeQ">&nbsp;</p>
+          <p class="ans" id="challengeA" hidden>&nbsp;</p>
           <div class="btn-row">
-            <button type="button" class="btn btn-gold" id="btnChallengeShow">Show the challenge question</button>
-            <button type="button" class="btn btn-gold" id="btnChallengeWin" hidden>Bonus earned, plus 1</button>
+            <button type="button" class="btn btn-gold" id="btnChallengeShow">Read the challenge question</button>
+            <button type="button" class="btn btn-gold" id="btnChallengeReveal" hidden>Show the answer</button>
+            <button type="button" class="btn btn-gold" id="btnChallengeWin" hidden>They got it, plus 1</button>
             <button type="button" class="btn btn-ghost" id="btnChallengeMiss" hidden>No bonus</button>
           </div>
         </div>
@@ -339,7 +499,7 @@ footer.credit b{color:#fff;font-weight:700}
       <section class="card dark" aria-labelledby="timerHeading">
         <p class="section-label" id="timerHeading">Timer</p>
         <div class="timerbar">
-          <p class="clock" id="clock" role="timer" aria-live="off">1:00</p>
+          <p class="clock" id="clock" role="timer" aria-live="off">1:30</p>
           <div class="btn-row" style="flex:1 1 320px">
             <button type="button" class="btn btn-gold" id="btnStart">Start game</button>
             <button type="button" class="btn btn-ghost" id="btnPause" disabled>Pause</button>
@@ -413,14 +573,14 @@ footer.credit b{color:#fff;font-weight:700}
             <option value="0">No timer</option>
             <option value="30">30 seconds</option>
             <option value="45">45 seconds</option>
-            <option value="60" selected>60 seconds</option>
-            <option value="90">90 seconds</option>
+            <option value="60">60 seconds</option>
+            <option value="90" selected>90 seconds</option>
           </select>
         </label>
 
         <div class="check">
           <input type="checkbox" id="optChallenge">
-          <label for="optChallenge">Challenge mode, one bonus point after a correct answer</label>
+          <label for="optChallenge">Challenge mode, a bonus recall question for the whole team after a correct answer</label>
         </div>
         <div class="check">
           <input type="checkbox" id="optSound" checked>
@@ -428,6 +588,8 @@ footer.credit b{color:#fff;font-weight:700}
         </div>
 
         <div class="btn-row">
+          <button type="button" class="btn btn-sm" id="btnPresent">Present mode</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="btnTheme">Switch to dusk</button>
           <button type="button" class="btn btn-ghost btn-sm" id="btnResetGame">Reset game</button>
           <button type="button" class="btn btn-ghost btn-sm" id="btnPrint">Print card sheets</button>
         </div>
@@ -518,7 +680,11 @@ footer.credit b{color:#fff;font-weight:700}
           </div>
           <label class="field" for="fChallenge">
             <span class="lab">Challenge question, optional</span>
-            <input type="text" id="fChallenge" placeholder="Examples: Name one location and explain why this tissue suits it">
+            <input type="text" id="fChallenge" placeholder="Examples: Name the structures that waterproof the epidermis">
+          </label>
+          <label class="field" for="fAnswer">
+            <span class="lab">Challenge answer</span>
+            <input type="text" id="fAnswer" placeholder="Examples: Lamellar granules, also called lamellar bodies">
           </label>
           <div class="btn-row">
             <button type="button" class="btn" id="btnCardSave">Add card</button>
@@ -560,133 +726,133 @@ footer.credit b{color:#fff;font-weight:700}
    ============================================================ */
 var BUILT_IN = [
 { id:"d1", builtIn:true, name:"Histology: Epithelium & Connective Tissue", cards:[
- {id:"d1c01", t:"Simple Squamous Epithelium", f:["flat","thin","one layer","alveoli","diffusion"], c:"Name one location where you would find it and explain how its structure fits what happens there."},
- {id:"d1c02", t:"Simple Cuboidal Epithelium", f:["cube","kidney","tubules","one layer","secretion"], c:"Name two locations and say what the cells are doing in each one."},
- {id:"d1c03", t:"Simple Columnar Epithelium", f:["tall","intestine","digestive","one layer","microvilli"], c:"What surface specializations might sit on its free surface, and what does each one do?"},
- {id:"d1c04", t:"Pseudostratified Ciliated Columnar Epithelium", f:["respiratory","trachea","cilia","mucus","goblet"], c:"Why does this tissue look layered when it is not? Name the evidence on the slide that gives it away."},
- {id:"d1c05", t:"Stratified Squamous Epithelium", f:["many layers","flat","skin","protection","keratin"], c:"Explain the difference between the keratinized and the non-keratinized version, and give a location for each."},
- {id:"d1c06", t:"Transitional Epithelium", f:["bladder","urinary","stretch","dome","distension"], c:"Describe how the surface cells change shape between the empty and the full state of the organ."},
- {id:"d1c07", t:"Goblet Cell", f:["mucus","secrete","epithelial","cup","intestine"], c:"Describe what this cell looks like under the microscope and explain why it takes that shape."},
- {id:"d1c08", t:"Basement Membrane", f:["epithelium","underneath","anchor","connective","basal"], c:"Name the two layers that make it up and say which tissue contributes each one."},
- {id:"d1c09", t:"Areolar Connective Tissue", f:["loose","packing","underneath","collagen","elastic"], c:"Name two cell types you would expect to find in it and what each one does."},
- {id:"d1c10", t:"Adipose Tissue", f:["fat","energy","adipocyte","insulation","lipid"], c:"Describe what the cell looks like on a slide and explain why the nucleus sits where it does."},
- {id:"d1c11", t:"Dense Regular Connective Tissue", f:["tendon","ligament","parallel","collagen","tensile"], c:"Explain how the fiber arrangement matches the direction of pull on the structure."},
- {id:"d1c12", t:"Dense Irregular Connective Tissue", f:["dermis","collagen","directions","strength","irregular"], c:"How would you distinguish this from dense regular connective tissue on a slide?"},
- {id:"d1c13", t:"Hyaline Cartilage", f:["glassy","trachea","nose","chondrocyte","lacuna"], c:"Describe two histological features you would use to identify it."},
- {id:"d1c14", t:"Elastic Cartilage", f:["ear","epiglottis","flexible","elastic fibers","cartilage"], c:"How would you tell this apart from hyaline cartilage on a slide? Name what you would look for in the matrix."},
- {id:"d1c15", t:"Fibrocartilage", f:["intervertebral disc","pubic symphysis","collagen","compression","cartilage"], c:"How would you tell this apart from dense regular connective tissue on a slide?"}
+ {id:"d1c01", t:"Simple Squamous Epithelium", f:["flat","thin","one layer","alveoli","diffusion"], c:"Simple squamous epithelium lining the blood vessels and heart chambers has its own name. What is it?", a:"Endothelium. The version lining the serous cavities is mesothelium"},
+ {id:"d1c02", t:"Simple Cuboidal Epithelium", f:["cube","kidney","tubules","one layer","secretion"], c:"Name the tiny projections on the free surface of kidney tubule cells that increase absorption.", a:"Microvilli"},
+ {id:"d1c03", t:"Simple Columnar Epithelium", f:["tall","intestine","digestive","one layer","microvilli"], c:"What do we call the dense carpet of microvilli on the free surface of an intestinal lining cell?", a:"The brush border"},
+ {id:"d1c04", t:"Pseudostratified Ciliated Columnar Epithelium", f:["respiratory","trachea","cilia","mucus","goblet"], c:"Name the clearing mechanism this tissue runs, sweeping trapped debris up and out of the airway.", a:"The mucociliary escalator"},
+ {id:"d1c05", t:"Stratified Squamous Epithelium", f:["many layers","flat","skin","protection","keratin"], c:"Name the junction, abundant between these cells, that keeps the layers from shearing apart.", a:"Desmosomes"},
+ {id:"d1c06", t:"Transitional Epithelium", f:["bladder","urinary","stretch","dome","distension"], c:"Transitional epithelium has a formal name used in most current texts. What is it?", a:"Urothelium"},
+ {id:"d1c07", t:"Goblet Cell", f:["mucus","secrete","epithelial","cup","intestine"], c:"Name the glycoprotein a goblet cell releases, which becomes mucus once it takes on water.", a:"Mucin"},
+ {id:"d1c08", t:"Basement Membrane", f:["epithelium","underneath","anchor","connective","basal"], c:"Name the two layers of the basement membrane.", a:"The basal lamina and the reticular lamina"},
+ {id:"d1c09", t:"Areolar Connective Tissue", f:["loose","packing","underneath","collagen","elastic"], c:"Name the cell in areolar tissue that releases histamine and heparin during inflammation.", a:"The mast cell"},
+ {id:"d1c10", t:"Adipose Tissue", f:["fat","energy","adipocyte","insulation","lipid"], c:"Name the multilocular, mitochondria-rich fat found mostly in newborns.", a:"Brown adipose tissue, brown fat"},
+ {id:"d1c11", t:"Dense Regular Connective Tissue", f:["tendon","ligament","parallel","collagen","tensile"], c:"Name the flattened sheet version of this tissue that attaches muscle to muscle.", a:"An aponeurosis"},
+ {id:"d1c12", t:"Dense Irregular Connective Tissue", f:["dermis","collagen","directions","strength","irregular"], c:"Which layer of the dermis is built from dense irregular connective tissue?", a:"The reticular layer"},
+ {id:"d1c13", t:"Hyaline Cartilage", f:["glassy","trachea","nose","chondrocyte","lacuna"], c:"Name the membrane around most hyaline cartilage that carries its blood supply.", a:"The perichondrium"},
+ {id:"d1c14", t:"Elastic Cartilage", f:["ear","epiglottis","flexible","elastic fibers","cartilage"], c:"Name the protein that makes up the fibers giving this cartilage its springiness.", a:"Elastin"},
+ {id:"d1c15", t:"Fibrocartilage", f:["intervertebral disc","pubic symphysis","collagen","compression","cartilage"], c:"Name the fibrocartilage ring around the outside of an intervertebral disc.", a:"The anulus fibrosus. The soft centre is the nucleus pulposus"}
 ]},
 { id:"d2", builtIn:true, name:"Module 1: Intro to Anatomy", cards:[
- {id:"d2c01", t:"Anatomical Position", f:["standing","palms","forward","reference","feet"], c:"Name two things that differ between this position and the way a person normally stands."},
- {id:"d2c02", t:"Supine", f:["back","lying","face up","position","prone"], c:"Give a clinical situation where a patient would be placed this way and say why."},
- {id:"d2c03", t:"Prone", f:["face down","stomach","lying","back","supine"], c:"Name the opposite position and describe it."},
- {id:"d2c04", t:"Sagittal Plane", f:["left","right","vertical","midline","divide"], c:"Explain the difference between the midsagittal and parasagittal versions."},
- {id:"d2c05", t:"Frontal Plane", f:["coronal","front","back","anterior","vertical"], c:"Name a structure this plane would cut through if it passed down the middle of the body."},
- {id:"d2c06", t:"Transverse Plane", f:["horizontal","superior","inferior","cross section","divide"], c:"Which imaging method most often shows the body in this plane, and why is that useful?"},
- {id:"d2c07", t:"Proximal", f:["closer","trunk","attachment","limb","distal"], c:"Use the term correctly in one sentence about the wrist and the elbow."},
- {id:"d2c08", t:"Distal", f:["farther","away","limb","trunk","proximal"], c:"Explain why these two terms are only used for limbs."},
- {id:"d2c09", t:"Superficial", f:["surface","skin","toward","deep","outer"], c:"Name two structures and say which one is superficial to the other."},
- {id:"d2c10", t:"Deep", f:["inside","internal","below surface","superficial","under"], c:"Give an example where a structure is deep to one thing and superficial to another."},
- {id:"d2c11", t:"Dorsal Body Cavity", f:["brain","spinal cord","cranial","vertebral","back"], c:"Name its two subdivisions and what each one holds."},
- {id:"d2c12", t:"Ventral Body Cavity", f:["front","thoracic","abdominal","organs","anterior"], c:"Name the muscle that separates its two main divisions."},
- {id:"d2c13", t:"Mediastinum", f:["heart","middle","thoracic","between the lungs","esophagus"], c:"Name three structures found there besides the heart."},
- {id:"d2c14", t:"Pericardium", f:["heart","sac","serous","membrane","surrounds"], c:"Name its two layers and say what sits between them."},
- {id:"d2c15", t:"Parietal Layer", f:["wall","lines","cavity","visceral","serous"], c:"Explain how this layer differs from the visceral layer, using one organ as your example."},
- {id:"d2c16", t:"Visceral Layer", f:["organ","covers","surface","parietal","serous"], c:"Trace what a serous membrane does as it folds from one layer into the other."},
- {id:"d2c17", t:"Retroperitoneal", f:["behind","peritoneum","kidney","posterior","abdominal"], c:"Name three organs in this position."},
- {id:"d2c18", t:"Serous Membrane", f:["fluid","slippery","double layer","friction","cavity"], c:"Name the three serous membranes of the ventral cavity and where each one is found."},
- {id:"d2c19", t:"Umbilical Region", f:["navel","belly button","center","abdomen","middle"], c:"Name the region directly above it and the region directly below it."},
- {id:"d2c20", t:"Right Upper Quadrant", f:["liver","gallbladder","quadrant","upper","right"], c:"Name two organs found there and one complaint that would point you to that area."},
- {id:"d2c21", t:"Antebrachial", f:["forearm","arm","elbow","wrist","between"], c:"Give the everyday term for it and name the region just proximal to it."},
- {id:"d2c22", t:"Popliteal", f:["behind the knee","back of the leg","knee","posterior","joint"], c:"Name a structure you can feel there on a living person."},
- {id:"d2c23", t:"Axillary", f:["armpit","underarm","shoulder","hair","sweat"], c:"Name a type of gland concentrated in this region."},
- {id:"d2c24", t:"Inguinal", f:["groin","hip","thigh","junction","hernia"], c:"Why is this region a common site for a hernia?"},
- {id:"d2c25", t:"Antecubital", f:["elbow","front","crease","blood draw","arm"], c:"Why is this the usual site for drawing blood?"},
- {id:"d2c26", t:"Levels of Structural Organization", f:["chemical","cell","tissue","organ","system"], c:"List the levels in order from smallest to largest."}
+ {id:"d2c01", t:"Anatomical Position", f:["standing","palms","forward","reference","feet"], c:"In anatomical position the palms face forward. What is that forearm position called?", a:"Supination"},
+ {id:"d2c02", t:"Supine", f:["back","lying","face up","position","prone"], c:"Name the position with the patient on their back, hips and knees flexed, feet in supports.", a:"The lithotomy position"},
+ {id:"d2c03", t:"Prone", f:["face down","stomach","lying","back","supine"], c:"Name the position for lying on one side, used to keep an airway clear.", a:"The lateral recumbent position, the recovery position"},
+ {id:"d2c04", t:"Sagittal Plane", f:["left","right","vertical","midline","divide"], c:"What is the specific name for a sagittal cut exactly down the midline?", a:"The midsagittal, or median, plane"},
+ {id:"d2c05", t:"Frontal Plane", f:["coronal","front","back","anterior","vertical"], c:"Name the plane that passes at an angle, parallel to none of the three standard planes.", a:"An oblique plane"},
+ {id:"d2c06", t:"Transverse Plane", f:["horizontal","superior","inferior","cross section","divide"], c:"What is a transverse section also called in medical imaging?", a:"A cross section, or axial section"},
+ {id:"d2c07", t:"Proximal", f:["closer","trunk","attachment","limb","distal"], c:"Which directional term means toward the midline of the body?", a:"Medial"},
+ {id:"d2c08", t:"Distal", f:["farther","away","limb","trunk","proximal"], c:"Which directional term means toward the tail, or the lower part of a structure?", a:"Caudal, or inferior"},
+ {id:"d2c09", t:"Superficial", f:["surface","skin","toward","deep","outer"], c:"Which term means on the same side of the body, the opposite of contralateral?", a:"Ipsilateral"},
+ {id:"d2c10", t:"Deep", f:["inside","internal","below surface","superficial","under"], c:"Which term names the back of the hand and the top of the foot?", a:"Dorsal, the dorsum"},
+ {id:"d2c11", t:"Dorsal Body Cavity", f:["brain","spinal cord","cranial","vertebral","back"], c:"Name the three connective tissue membranes covering the brain and spinal cord.", a:"Dura mater, arachnoid mater and pia mater, the meninges"},
+ {id:"d2c12", t:"Ventral Body Cavity", f:["front","thoracic","abdominal","organs","anterior"], c:"Name the serous membrane lining the abdominal cavity and covering its organs.", a:"The peritoneum"},
+ {id:"d2c13", t:"Mediastinum", f:["heart","middle","thoracic","between the lungs","esophagus"], c:"Name the gland in the superior mediastinum that is large in children and shrinks with age.", a:"The thymus"},
+ {id:"d2c14", t:"Pericardium", f:["heart","sac","serous","membrane","surrounds"], c:"Name the fluid-filled space between the two layers of serous pericardium.", a:"The pericardial cavity"},
+ {id:"d2c15", t:"Parietal Layer", f:["wall","lines","cavity","visceral","serous"], c:"Name the serous membrane lining the thoracic wall around the lungs.", a:"The parietal pleura"},
+ {id:"d2c16", t:"Visceral Layer", f:["organ","covers","surface","parietal","serous"], c:"The visceral serous membrane on the outer surface of the heart has another name. What is it?", a:"The epicardium"},
+ {id:"d2c17", t:"Retroperitoneal", f:["behind","peritoneum","kidney","posterior","abdominal"], c:"Which retroperitoneal glands sit on top of the kidneys?", a:"The adrenal, or suprarenal, glands"},
+ {id:"d2c18", t:"Serous Membrane", f:["fluid","slippery","double layer","friction","cavity"], c:"Name the double fold of peritoneum that anchors the intestines to the posterior abdominal wall.", a:"The mesentery"},
+ {id:"d2c19", t:"Umbilical Region", f:["navel","belly button","center","abdomen","middle"], c:"Name the two regions that sit to the left and right of the umbilical region.", a:"The lumbar, or lateral, regions"},
+ {id:"d2c20", t:"Right Upper Quadrant", f:["liver","gallbladder","quadrant","upper","right"], c:"Which quadrant contains the appendix?", a:"The right lower quadrant"},
+ {id:"d2c21", t:"Antebrachial", f:["forearm","arm","elbow","wrist","between"], c:"Which regional term names the wrist?", a:"Carpal"},
+ {id:"d2c22", t:"Popliteal", f:["behind the knee","back of the leg","knee","posterior","joint"], c:"Which regional term names the calf?", a:"Sural"},
+ {id:"d2c23", t:"Axillary", f:["armpit","underarm","shoulder","hair","sweat"], c:"Which regional term names the shoulder blade region?", a:"Scapular"},
+ {id:"d2c24", t:"Inguinal", f:["groin","hip","thigh","junction","hernia"], c:"Which regional term names the hip, the lateral pelvis?", a:"Coxal"},
+ {id:"d2c25", t:"Antecubital", f:["elbow","front","crease","blood draw","arm"], c:"Name the vein most often used for a blood draw in this region.", a:"The median cubital vein"},
+ {id:"d2c26", t:"Levels of Structural Organization", f:["chemical","cell","tissue","organ","system"], c:"What is the smallest level of organization that is considered alive?", a:"The cell"}
 ]},
 { id:"d3", builtIn:true, name:"Module 1: Cell Anatomy", cards:[
- {id:"d3c01", t:"Plasma Membrane", f:["phospholipid","bilayer","boundary","barrier","cell"], c:"Describe how the phospholipids are arranged and explain why the heads face the way they do."},
- {id:"d3c02", t:"Nucleus", f:["DNA","control","center","chromatin","membrane"], c:"Name two structures found inside it and say what each one does."},
- {id:"d3c03", t:"Nucleolus", f:["ribosome","nucleus","dark","dense","RNA"], c:"What gets assembled here, and where does it go next?"},
- {id:"d3c04", t:"Rough Endoplasmic Reticulum", f:["ribosome","protein","rough","membrane","folded"], c:"Explain what makes it look rough and what that means for the proteins made there."},
- {id:"d3c05", t:"Smooth Endoplasmic Reticulum", f:["lipid","no ribosomes","tubules","calcium","detoxify"], c:"Name a cell type that has a lot of it and say why that cell needs it."},
- {id:"d3c06", t:"Golgi Apparatus", f:["package","ship","stack","vesicle","sort"], c:"Trace the path a secreted protein takes from where it is made to where it leaves the cell."},
- {id:"d3c07", t:"Mitochondrion", f:["ATP","energy","powerhouse","cristae","double membrane"], c:"Describe the shape of its inner membrane and explain what that shape accomplishes."},
- {id:"d3c08", t:"Lysosome", f:["enzyme","digest","break down","vesicle","waste"], c:"What would happen inside the cell if a large number of these ruptured?"},
- {id:"d3c09", t:"Peroxisome", f:["enzyme","detoxify","hydrogen peroxide","liver","vesicle"], c:"How is this organelle different from a lysosome?"},
- {id:"d3c10", t:"Ribosome", f:["protein","synthesis","small","RNA","build"], c:"Name the two places these are found in a cell and say where the proteins made in each place end up."},
- {id:"d3c11", t:"Centriole", f:["microtubule","division","pair","spindle","cylinder"], c:"Where in the cell do they sit, and what forms around them when the cell divides?"},
- {id:"d3c12", t:"Cytoskeleton", f:["filament","microtubule","support","shape","structure"], c:"Name the three types of fibers that make it up."},
- {id:"d3c13", t:"Microvilli", f:["finger","surface area","absorption","brush border","projections"], c:"How do these differ from cilia in both structure and job?"},
- {id:"d3c14", t:"Cilia", f:["hair","move","sweep","respiratory","surface"], c:"Name a location where these are found and describe what they move."},
- {id:"d3c15", t:"Flagellum", f:["tail","sperm","whip","movement","long"], c:"How many of these does a human cell that has one usually carry, and which cell is it?"},
- {id:"d3c16", t:"Cytosol", f:["fluid","inside","cytoplasm","watery","organelles"], c:"Explain the difference between cytosol and cytoplasm."},
- {id:"d3c17", t:"Chromatin", f:["DNA","protein","nucleus","thread","coiled"], c:"What does it turn into when the cell is about to divide?"},
- {id:"d3c18", t:"Nuclear Envelope", f:["double membrane","pores","nucleus","surrounds","barrier"], c:"What passes through its pores, and in which direction does each thing travel?"},
- {id:"d3c19", t:"Vesicle", f:["sac","transport","membrane","small","carry"], c:"Name two organelles that produce or receive these."},
- {id:"d3c20", t:"Desmosome", f:["anchor","junction","rivet","cells","skin"], c:"Name a tissue where these are numerous and explain why that tissue needs them."},
- {id:"d3c21", t:"Tight Junction", f:["seal","leak","junction","impermeable","stomach"], c:"Name a location where a leaky version of this junction would cause a problem, and say what the problem would be."},
- {id:"d3c22", t:"Gap Junction", f:["pore","connexon","communicate","ions","cardiac"], c:"Name two tissues that rely on these and say what passes between the cells."}
+ {id:"d3c01", t:"Plasma Membrane", f:["phospholipid","bilayer","boundary","barrier","cell"], c:"Name the model describing the membrane as proteins drifting in a lipid bilayer.", a:"The fluid mosaic model"},
+ {id:"d3c02", t:"Nucleus", f:["DNA","control","center","chromatin","membrane"], c:"Name the protein meshwork just inside the nuclear envelope that gives the nucleus its shape.", a:"The nuclear lamina"},
+ {id:"d3c03", t:"Nucleolus", f:["ribosome","nucleus","dark","dense","RNA"], c:"Name the two things that combine here to build a ribosomal subunit.", a:"Ribosomal RNA and protein"},
+ {id:"d3c04", t:"Rough Endoplasmic Reticulum", f:["ribosome","protein","rough","membrane","folded"], c:"Name the process, beginning in the rough ER, that adds sugar chains to a new protein.", a:"Glycosylation"},
+ {id:"d3c05", t:"Smooth Endoplasmic Reticulum", f:["lipid","no ribosomes","tubules","calcium","detoxify"], c:"In a muscle cell the smooth ER has its own name and stores calcium. What is it called?", a:"The sarcoplasmic reticulum"},
+ {id:"d3c06", t:"Golgi Apparatus", f:["package","ship","stack","vesicle","sort"], c:"Name the flattened membrane sacs stacked to make the Golgi.", a:"Cisternae"},
+ {id:"d3c07", t:"Mitochondrion", f:["ATP","energy","powerhouse","cristae","double membrane"], c:"Name the fluid held inside the inner mitochondrial membrane.", a:"The matrix"},
+ {id:"d3c08", t:"Lysosome", f:["enzyme","digest","break down","vesicle","waste"], c:"Name the process by which a cell digests its own worn out organelles.", a:"Autophagy"},
+ {id:"d3c09", t:"Peroxisome", f:["enzyme","detoxify","hydrogen peroxide","liver","vesicle"], c:"Name the peroxisome enzyme that splits hydrogen peroxide into water and oxygen.", a:"Catalase"},
+ {id:"d3c10", t:"Ribosome", f:["protein","synthesis","small","RNA","build"], c:"Name the two pieces a ribosome is assembled from.", a:"A large subunit and a small subunit"},
+ {id:"d3c11", t:"Centriole", f:["microtubule","division","pair","spindle","cylinder"], c:"Name the region of the cell that holds the centrioles and organizes microtubules.", a:"The centrosome"},
+ {id:"d3c12", t:"Cytoskeleton", f:["filament","microtubule","support","shape","structure"], c:"Name the protein that microfilaments are built from.", a:"Actin"},
+ {id:"d3c13", t:"Microvilli", f:["finger","surface area","absorption","brush border","projections"], c:"Name the protein that builds the microtubules in a cilium, in contrast to the actin inside a microvillus.", a:"Tubulin"},
+ {id:"d3c14", t:"Cilia", f:["hair","move","sweep","respiratory","surface"], c:"Name the microtubule arrangement inside a motile cilium.", a:"The 9 + 2 arrangement"},
+ {id:"d3c15", t:"Flagellum", f:["tail","sperm","whip","movement","long"], c:"Name the structure at the base of a cilium or flagellum that anchors it.", a:"The basal body"},
+ {id:"d3c16", t:"Cytosol", f:["fluid","inside","cytoplasm","watery","organelles"], c:"Name the general term for everything between the plasma membrane and the nucleus.", a:"Cytoplasm"},
+ {id:"d3c17", t:"Chromatin", f:["DNA","protein","nucleus","thread","coiled"], c:"Name the bead-like unit of DNA wound around histone proteins.", a:"A nucleosome"},
+ {id:"d3c18", t:"Nuclear Envelope", f:["double membrane","pores","nucleus","surrounds","barrier"], c:"Which organelle is the nuclear envelope continuous with?", a:"The rough endoplasmic reticulum"},
+ {id:"d3c19", t:"Vesicle", f:["sac","transport","membrane","small","carry"], c:"Name the process a cell uses to take material in by wrapping it in membrane.", a:"Endocytosis"},
+ {id:"d3c20", t:"Desmosome", f:["anchor","junction","rivet","cells","skin"], c:"Name the filaments inside the cell that anchor into a desmosome.", a:"Intermediate filaments, keratin filaments"},
+ {id:"d3c21", t:"Tight Junction", f:["seal","leak","junction","impermeable","stomach"], c:"Name the two proteins that seal a tight junction.", a:"Claudins and occludins"},
+ {id:"d3c22", t:"Gap Junction", f:["pore","connexon","communicate","ions","cardiac"], c:"Name the channel that forms a gap junction.", a:"A connexon, built from connexin proteins"}
 ]},
 { id:"d4", builtIn:true, name:"Module 1: Tissues Beyond Epithelium", cards:[
- {id:"d4c01", t:"Epithelial Tissue", f:["cover","line","avascular","sheet","surface"], c:"Name three features shared by every epithelium."},
- {id:"d4c02", t:"Apical Surface", f:["free","top","exposed","lumen","basal"], c:"Name two specializations found on this surface and what each one does."},
- {id:"d4c03", t:"Reticular Connective Tissue", f:["network","lymph node","spleen","mesh","fibers"], c:"Name two organs built on this framework and explain what the framework holds."},
- {id:"d4c04", t:"Elastic Connective Tissue", f:["stretch","recoil","artery","elastin","fibers"], c:"Name a location where it is found and explain why that location needs recoil."},
- {id:"d4c05", t:"Blood", f:["plasma","red cells","vessels","liquid","connective tissue"], c:"Explain why this counts as a connective tissue when it does not look like one."},
- {id:"d4c06", t:"Compact Bone", f:["hard","osteon","dense","calcium","matrix"], c:"Name the parts of an osteon you would see in cross section."},
- {id:"d4c07", t:"Spongy Bone", f:["trabeculae","holes","light","marrow","porous"], c:"How does its structure differ from compact bone, and where in a long bone would you find it?"},
- {id:"d4c08", t:"Osteocyte", f:["bone cell","lacuna","mature","canaliculi","matrix"], c:"How does a cell trapped in hard matrix stay connected to its neighbors?"},
- {id:"d4c09", t:"Chondrocyte", f:["cartilage","cell","lacuna","matrix","round"], c:"Name the three types of cartilage this cell is found in."},
- {id:"d4c10", t:"Lacuna", f:["space","cell","sits","cartilage","bone"], c:"Name the two tissues where you would see these and say what sits inside."},
- {id:"d4c11", t:"Perichondrium", f:["cover","cartilage","membrane","connective","outside"], c:"Which cartilage lacks it, and why does that matter?"},
- {id:"d4c12", t:"Skeletal Muscle Tissue", f:["striated","voluntary","multinucleated","bone","long"], c:"Name two features you would use to tell it from cardiac muscle on a slide."},
- {id:"d4c13", t:"Cardiac Muscle Tissue", f:["heart","intercalated disc","branched","striated","involuntary"], c:"Describe what an intercalated disc looks like and what it joins."},
- {id:"d4c14", t:"Smooth Muscle Tissue", f:["involuntary","spindle","no striations","organ wall","hollow"], c:"Name two organs where it is found and say what its contraction accomplishes there."},
- {id:"d4c15", t:"Neuron", f:["nerve cell","axon","dendrite","signal","brain"], c:"Name its three basic parts and say what each one does."},
- {id:"d4c16", t:"Neuroglia", f:["glial","support","nervous","neuron","small"], c:"Name one of these cells and describe its job."},
- {id:"d4c17", t:"Mucous Membrane", f:["line","moist","mucus","cavity","outside"], c:"How does this membrane differ from a serous membrane in both structure and location?"},
- {id:"d4c18", t:"Synovial Membrane", f:["joint","lubricate","cavity","fluid","cartilage"], c:"What makes this membrane unusual compared with the other body membranes?"},
- {id:"d4c19", t:"Cutaneous Membrane", f:["skin","dry","epidermis","dermis","cover"], c:"Name the two tissue layers that make it up and say what each layer is made of."},
- {id:"d4c20", t:"Exocrine Gland", f:["duct","surface","secrete","sweat","saliva"], c:"Name three exocrine glands and say what each one releases."},
- {id:"d4c21", t:"Endocrine Gland", f:["hormone","ductless","blood","secrete","thyroid"], c:"Explain the structural difference between this and an exocrine gland."},
- {id:"d4c22", t:"Merocrine Gland", f:["exocytosis","sweat","intact","vesicle","secrete"], c:"Compare the three gland types by what happens to the cell as it secretes."},
- {id:"d4c23", t:"Holocrine Gland", f:["whole cell","rupture","sebaceous","oil","dies"], c:"Explain what has to happen to the gland after it secretes."},
- {id:"d4c24", t:"Apocrine Gland", f:["pinch off","apex","portion","sweat","axillary"], c:"Where in the body would you look for these, and what happens to the cell after secretion?"},
- {id:"d4c25", t:"Fibroblast", f:["connective tissue","collagen","fibers","produce","cell"], c:"What would happen to a wound if these cells did not do their job?"},
- {id:"d4c26", t:"Macrophage", f:["engulf","eat","immune","phagocyte","debris"], c:"Name two places in the body where these cells are common."},
- {id:"d4c27", t:"Mast Cell", f:["histamine","allergy","granules","release","connective"], c:"Where in the tissue are these cells usually found, and why does that location make sense?"},
- {id:"d4c28", t:"Collagen Fiber", f:["strong","protein","white","tough","connective"], c:"Name two tissues built mostly from this fiber and say what the fiber does there."},
- {id:"d4c29", t:"Elastic Fiber", f:["stretch","recoil","elastin","yellow","connective"], c:"Name a tissue where this fiber outnumbers collagen and explain why."},
- {id:"d4c30", t:"Reticular Fiber", f:["thin","branching","network","collagen","support"], c:"Name an organ whose internal framework is built from these."}
+ {id:"d4c01", t:"Epithelial Tissue", f:["cover","line","avascular","sheet","surface"], c:"Epithelium has no blood supply of its own. How does it get its nutrients?", a:"By diffusion from the connective tissue underneath"},
+ {id:"d4c02", t:"Apical Surface", f:["free","top","exposed","lumen","basal"], c:"Name the surface of an epithelial cell that faces the basement membrane.", a:"The basal surface"},
+ {id:"d4c03", t:"Reticular Connective Tissue", f:["network","lymph node","spleen","mesh","fibers"], c:"Name the cell that produces reticular fibers.", a:"The reticular cell, a type of fibroblast"},
+ {id:"d4c04", t:"Elastic Connective Tissue", f:["stretch","recoil","artery","elastin","fibers"], c:"Name the artery whose wall carries the most elastic tissue in the body.", a:"The aorta"},
+ {id:"d4c05", t:"Blood", f:["plasma","red cells","vessels","liquid","connective tissue"], c:"Name the three formed elements of blood.", a:"Erythrocytes, leukocytes and platelets"},
+ {id:"d4c06", t:"Compact Bone", f:["hard","osteon","dense","calcium","matrix"], c:"Name the channel at the centre of an osteon that carries its blood vessels.", a:"The central, or Haversian, canal"},
+ {id:"d4c07", t:"Spongy Bone", f:["trabeculae","holes","light","marrow","porous"], c:"Which marrow fills the spaces of spongy bone in an adult flat bone?", a:"Red bone marrow"},
+ {id:"d4c08", t:"Osteocyte", f:["bone cell","lacuna","mature","canaliculi","matrix"], c:"Name the bone cell that builds matrix and the one that breaks it down.", a:"The osteoblast builds, the osteoclast breaks down"},
+ {id:"d4c09", t:"Chondrocyte", f:["cartilage","cell","lacuna","matrix","round"], c:"Name the immature cell that lays down cartilage matrix before it is trapped inside.", a:"The chondroblast"},
+ {id:"d4c10", t:"Lacuna", f:["space","cell","sits","cartilage","bone"], c:"Name the tiny channels connecting one lacuna to the next in bone.", a:"Canaliculi"},
+ {id:"d4c11", t:"Perichondrium", f:["cover","cartilage","membrane","connective","outside"], c:"Name the equivalent membrane on the outside of a bone.", a:"The periosteum"},
+ {id:"d4c12", t:"Skeletal Muscle Tissue", f:["striated","voluntary","multinucleated","bone","long"], c:"Name the connective tissue sheath around a whole skeletal muscle.", a:"The epimysium"},
+ {id:"d4c13", t:"Cardiac Muscle Tissue", f:["heart","intercalated disc","branched","striated","involuntary"], c:"Name the junction inside an intercalated disc that passes the signal cell to cell.", a:"The gap junction"},
+ {id:"d4c14", t:"Smooth Muscle Tissue", f:["involuntary","spindle","no striations","organ wall","hollow"], c:"Name the two smooth muscle layers in the intestinal wall by their fiber direction.", a:"An inner circular layer and an outer longitudinal layer"},
+ {id:"d4c15", t:"Neuron", f:["nerve cell","axon","dendrite","signal","brain"], c:"Name the fatty sheath around many axons and the cell that makes it outside the brain and cord.", a:"Myelin, made by Schwann cells"},
+ {id:"d4c16", t:"Neuroglia", f:["glial","support","nervous","neuron","small"], c:"Name the glial cell whose end feet wrap capillaries and help form the blood brain barrier.", a:"The astrocyte"},
+ {id:"d4c17", t:"Mucous Membrane", f:["line","moist","mucus","cavity","outside"], c:"Name the loose connective tissue layer under the epithelium of a mucous membrane.", a:"The lamina propria"},
+ {id:"d4c18", t:"Synovial Membrane", f:["joint","lubricate","cavity","fluid","cartilage"], c:"Name the small fluid filled sacs lined by this membrane that cushion tendons over bone.", a:"Bursae"},
+ {id:"d4c19", t:"Cutaneous Membrane", f:["skin","dry","epidermis","dermis","cover"], c:"Name the layer beneath the skin that is not part of the cutaneous membrane.", a:"The hypodermis, the subcutaneous layer"},
+ {id:"d4c20", t:"Exocrine Gland", f:["duct","surface","secrete","sweat","saliva"], c:"Name the two parts of a typical multicellular exocrine gland.", a:"A duct and a secretory unit, the acinus"},
+ {id:"d4c21", t:"Endocrine Gland", f:["hormone","ductless","blood","secrete","thyroid"], c:"Which organ is both exocrine and endocrine, releasing digestive enzymes and hormones?", a:"The pancreas"},
+ {id:"d4c22", t:"Merocrine Gland", f:["exocytosis","sweat","intact","vesicle","secrete"], c:"Name the sweat gland that secretes by this method and is found nearly everywhere on the body.", a:"The eccrine sweat gland"},
+ {id:"d4c23", t:"Holocrine Gland", f:["whole cell","rupture","sebaceous","oil","dies"], c:"Name the oily secretion released by the holocrine gland of the skin.", a:"Sebum"},
+ {id:"d4c24", t:"Apocrine Gland", f:["pinch off","apex","portion","sweat","axillary"], c:"Name the modified gland of this type found in the ear canal.", a:"The ceruminous gland"},
+ {id:"d4c25", t:"Fibroblast", f:["connective tissue","collagen","fibers","produce","cell"], c:"Name what happens when fibroblasts fill a wound with new collagen.", a:"Fibrosis, scar formation"},
+ {id:"d4c26", t:"Macrophage", f:["engulf","eat","immune","phagocyte","debris"], c:"Name the fixed macrophage found in the liver.", a:"The Kupffer cell"},
+ {id:"d4c27", t:"Mast Cell", f:["histamine","allergy","granules","release","connective"], c:"Name the anticoagulant mast cells release alongside histamine.", a:"Heparin"},
+ {id:"d4c28", t:"Collagen Fiber", f:["strong","protein","white","tough","connective"], c:"Name the vitamin needed to build collagen properly, whose lack causes scurvy.", a:"Vitamin C"},
+ {id:"d4c29", t:"Elastic Fiber", f:["stretch","recoil","elastin","yellow","connective"], c:"Name the sheet of elastic fibers between the tunics of an artery wall.", a:"The internal elastic lamina"},
+ {id:"d4c30", t:"Reticular Fiber", f:["thin","branching","network","collagen","support"], c:"Which type of collagen are reticular fibers made from?", a:"Type III collagen"}
 ]},
 { id:"d5", builtIn:true, name:"Module 1: Integumentary System", cards:[
- {id:"d5c01", t:"Epidermis", f:["outer","skin","layer","epithelium","avascular"], c:"Name its layers from deepest to most superficial."},
- {id:"d5c02", t:"Dermis", f:["under the skin","connective tissue","blood vessels","thick","below"], c:"Name its two layers and one structure found in each."},
- {id:"d5c03", t:"Hypodermis", f:["fat","under","deep","insulation","adipose"], c:"Why is this layer usually described as below the skin rather than part of it?"},
- {id:"d5c04", t:"Stratum Basale", f:["deepest","bottom","dividing","new cells","layer"], c:"Name two cell types found in this layer besides keratinocytes."},
- {id:"d5c05", t:"Stratum Spinosum", f:["spiny","thick","desmosome","prickly","layer"], c:"What gives this layer its appearance on a prepared slide?"},
- {id:"d5c06", t:"Stratum Granulosum", f:["granule","keratohyalin","dying","flatten","layer"], c:"What is happening to the cells as they pass through this layer?"},
- {id:"d5c07", t:"Stratum Lucidum", f:["clear","thin","palms","soles","layer"], c:"Where is this layer found, and why only there?"},
- {id:"d5c08", t:"Stratum Corneum", f:["dead","surface","keratin","flakes","top"], c:"Roughly how long does a cell take to travel from the deepest layer to here, and what has happened to it along the way?"},
- {id:"d5c09", t:"Keratinocyte", f:["keratin","epidermis","most common","tough","cell"], c:"Describe what happens to this cell as it moves toward the skin surface."},
- {id:"d5c10", t:"Melanocyte", f:["pigment","melanin","color","basale","ultraviolet"], c:"People with different skin tones have about the same number of these cells, so what actually differs?"},
- {id:"d5c11", t:"Melanin", f:["pigment","color","brown","protect","ultraviolet"], c:"Where in the skin is it made, and where does it end up?"},
- {id:"d5c12", t:"Tactile Cell", f:["touch","Merkel","sensory","receptor","basale"], c:"What kind of information does this cell pick up, and which layer is it in?"},
- {id:"d5c13", t:"Dendritic Cell", f:["Langerhans","immune","epidermis","star","defense"], c:"What is an immune cell doing in the epidermis?"},
- {id:"d5c14", t:"Papillary Layer", f:["dermis","bumpy","areolar","fingerprint","upper"], c:"How does this layer produce fingerprints?"},
- {id:"d5c15", t:"Reticular Layer", f:["dermis","dense irregular","deep","thick","collagen"], c:"Why does its fiber arrangement suit the forces the skin takes?"},
- {id:"d5c16", t:"Dermal Papillae", f:["projection","bump","upward","ridge","dermis"], c:"What do these do for the junction between the two skin layers?"},
- {id:"d5c17", t:"Sebaceous Gland", f:["oil","sebum","hair follicle","holocrine","skin"], c:"Trace how the secretion reaches the skin surface."},
- {id:"d5c18", t:"Eccrine Sweat Gland", f:["sweat","cool","merocrine","palms","water"], c:"Where are these most concentrated, and how does the secretion get out?"},
- {id:"d5c19", t:"Apocrine Sweat Gland", f:["armpit","odor","puberty","axillary","sweat"], c:"Where does it empty its secretion, and how is that different from the other sweat gland?"},
- {id:"d5c20", t:"Ceruminous Gland", f:["ear","wax","canal","modified","cerumen"], c:"What is this gland a modified version of, and what is its secretion for?"},
- {id:"d5c21", t:"Hair Follicle", f:["hair","root","sheath","grow","skin"], c:"Describe what you would see in a cross section of one."},
- {id:"d5c22", t:"Arrector Pili", f:["goosebumps","hair","muscle","smooth","stand up"], c:"What tissue type is it, and what happens to the skin surface when it contracts?"},
- {id:"d5c23", t:"Hair Bulb", f:["root","base","grow","matrix","expanded"], c:"What sits inside it, and why does damage there affect the whole hair?"},
- {id:"d5c24", t:"Nail Matrix", f:["nail","grow","thicken","divide","proximal"], c:"Where is it, and what happens to the nail if it is injured?"},
- {id:"d5c25", t:"Lunule", f:["moon","white","nail","crescent","base"], c:"Why does this part of the nail look different from the rest?"},
- {id:"d5c26", t:"Nail Bed", f:["under","nail","epidermis","pink","attach"], c:"Why does it look pink, and what does a change in that color tell you?"}
+ {id:"d5c01", t:"Epidermis", f:["outer","skin","layer","epithelium","avascular"], c:"Name the structures that release lipids between the cells and waterproof the epidermis.", a:"Lamellar granules, also called lamellar bodies"},
+ {id:"d5c02", t:"Dermis", f:["under the skin","connective tissue","blood vessels","thick","below"], c:"Name the tension lines in the dermis that surgeons cut along so a wound heals neatly.", a:"Cleavage lines, or Langer lines"},
+ {id:"d5c03", t:"Hypodermis", f:["fat","under","deep","insulation","adipose"], c:"Name the clinical term for the hypodermis.", a:"Superficial fascia"},
+ {id:"d5c04", t:"Stratum Basale", f:["deepest","bottom","dividing","new cells","layer"], c:"This layer has an older name meaning the germinating layer. What is it?", a:"The stratum germinativum"},
+ {id:"d5c05", t:"Stratum Spinosum", f:["spiny","thick","desmosome","prickly","layer"], c:"Name the filaments pulled into spines when this tissue is prepared for a slide.", a:"Tonofilaments, bundles of keratin intermediate filaments"},
+ {id:"d5c06", t:"Stratum Granulosum", f:["granule","keratohyalin","dying","flatten","layer"], c:"Name the process by which these cells fill with keratin and die.", a:"Keratinization, or cornification"},
+ {id:"d5c07", t:"Stratum Lucidum", f:["clear","thin","palms","soles","layer"], c:"Name the clear protein in this layer, made from keratohyalin.", a:"Eleidin"},
+ {id:"d5c08", t:"Stratum Corneum", f:["dead","surface","keratin","flakes","top"], c:"Name the process by which the surface cells flake away.", a:"Desquamation, exfoliation"},
+ {id:"d5c09", t:"Keratinocyte", f:["keratin","epidermis","most common","tough","cell"], c:"Name the fully keratinized dead cell at the skin surface.", a:"A corneocyte, or squame"},
+ {id:"d5c10", t:"Melanocyte", f:["pigment","melanin","color","basale","ultraviolet"], c:"Name the vesicle that carries melanin from a melanocyte into a keratinocyte.", a:"A melanosome"},
+ {id:"d5c11", t:"Melanin", f:["pigment","color","brown","protect","ultraviolet"], c:"Name the two forms of melanin, the brown black one and the red yellow one.", a:"Eumelanin and pheomelanin"},
+ {id:"d5c12", t:"Tactile Cell", f:["touch","Merkel","sensory","receptor","basale"], c:"Name the sensory nerve ending this cell partners with.", a:"A tactile disc, a Merkel disc"},
+ {id:"d5c13", t:"Dendritic Cell", f:["Langerhans","immune","epidermis","star","defense"], c:"Where do these cells travel once they have picked up an antigen?", a:"To the lymph nodes"},
+ {id:"d5c14", t:"Papillary Layer", f:["dermis","bumpy","areolar","fingerprint","upper"], c:"Name the light touch receptor found in the dermal papillae.", a:"The tactile corpuscle, a Meissner corpuscle"},
+ {id:"d5c15", t:"Reticular Layer", f:["dermis","dense irregular","deep","thick","collagen"], c:"Name the deep pressure receptor found in this layer and the hypodermis.", a:"The lamellar corpuscle, a Pacinian corpuscle"},
+ {id:"d5c16", t:"Dermal Papillae", f:["projection","bump","upward","ridge","dermis"], c:"Name the surface ridges these projections produce.", a:"Friction ridges, the epidermal ridges"},
+ {id:"d5c17", t:"Sebaceous Gland", f:["oil","sebum","hair follicle","holocrine","skin"], c:"Name the unit made of a hair, its follicle, an arrector pili and this gland.", a:"The pilosebaceous unit"},
+ {id:"d5c18", t:"Eccrine Sweat Gland", f:["sweat","cool","merocrine","palms","water"], c:"Name two solutes in eccrine sweat besides water.", a:"Sodium chloride and urea. Potassium and lactic acid also count"},
+ {id:"d5c19", t:"Apocrine Sweat Gland", f:["armpit","odor","puberty","axillary","sweat"], c:"Where does an apocrine sweat gland empty its secretion?", a:"Into a hair follicle"},
+ {id:"d5c20", t:"Ceruminous Gland", f:["ear","wax","canal","modified","cerumen"], c:"Name the other gland type that contributes to earwax alongside these.", a:"Sebaceous glands"},
+ {id:"d5c21", t:"Hair Follicle", f:["hair","root","sheath","grow","skin"], c:"Name the three layers of a hair shaft from the outside in.", a:"Cuticle, cortex and medulla"},
+ {id:"d5c22", t:"Arrector Pili", f:["goosebumps","hair","muscle","smooth","stand up"], c:"Which division of the nervous system makes this muscle contract?", a:"The sympathetic division"},
+ {id:"d5c23", t:"Hair Bulb", f:["root","base","grow","matrix","expanded"], c:"Name the cluster of dermal tissue that pokes into the hair bulb and feeds it.", a:"The dermal papilla, the hair papilla"},
+ {id:"d5c24", t:"Nail Matrix", f:["nail","grow","thicken","divide","proximal"], c:"Name the visible part of the nail in front of the lunule.", a:"The nail body, the nail plate"},
+ {id:"d5c25", t:"Lunule", f:["moon","white","nail","crescent","base"], c:"Name the fold of skin overlapping the base of the nail.", a:"The eponychium, the cuticle"},
+ {id:"d5c26", t:"Nail Bed", f:["under","nail","epidermis","pink","attach"], c:"Name the thickened stratum corneum under the free edge of the nail.", a:"The hyponychium"}
 ]}
 ];
 
@@ -709,8 +875,8 @@ var teams = [];
 var activeTeam = 0;
 var editingCardId = null;
 
-var timerLen = 60;
-var remaining = 60;
+var timerLen = 90;
+var remaining = 90;
 var ticking = false;
 var tickHandle = null;
 var timeUp = false;
@@ -855,6 +1021,7 @@ function setStatus(msg, alert){
   var el = $("status");
   el.textContent = msg;
   el.className = alert ? "status alert" : "status";
+  syncStage();
 }
 
 function renderDeckPick(){
@@ -986,6 +1153,7 @@ function renderTeamBoardOnly(){
       '</div>';
     board.appendChild(wrap);
   });
+  syncStage();
 }
 
 function renderCounter(){
@@ -1001,6 +1169,7 @@ function renderCounter(){
     $("pMissed").textContent = missedCount;
     $("pPct").textContent = tries ? Math.round(gotCount / tries * 100) + "%" : "0%";
   }
+  syncStage();
 }
 
 function renderCard(){
@@ -1023,6 +1192,7 @@ function renderCard(){
     face.hidden = true;
     cover.style.display = "flex";
   }
+  syncStage();
 }
 
 function renderClock(){
@@ -1038,6 +1208,7 @@ function renderClock(){
   el.textContent = m + ":" + (s < 10 ? "0" : "") + s;
   el.className = "clock" + (remaining === 0 ? " done" : (remaining <= 10 ? " warn" : ""));
   $("trackFill").style.width = (timerLen ? (remaining/timerLen*100) : 100) + "%";
+  syncStage();
 }
 
 function renderMode(){
@@ -1072,6 +1243,130 @@ function renderControls(){
   $("btnPause").textContent = ticking ? "Pause" : "Resume";
   $("btnStart").textContent = !current ? "Start game" : (revealed ? "Start turn" : "Start turn");
   $("btnStart").disabled = !!current && revealed && ticking;
+  syncStage();
+}
+
+/* ============================================================
+   PRESENT MODE
+   One screen for the room. The stage reads the same state the
+   instructor panel does, so there is nothing to keep in sync by hand
+   and nothing that can drift apart mid game.
+   ============================================================ */
+var presenting = false;
+
+function syncStage(){
+  if(!presenting) return;
+
+  $("stDeck").textContent = poolLabel();
+
+  if(mode === "practice"){
+    $("stTeam").innerHTML = "Practice round";
+  }else{
+    $("stTeam").innerHTML = "Up now: <b>" + esc(teams[activeTeam] ? teams[activeTeam].name : "") + "</b>";
+  }
+
+  /* card */
+  var face = $("stFace");
+  if(current && revealed){
+    face.hidden = false;
+    $("stCover").hidden = true;
+    $("stTarget").textContent = current.t;
+    var ul = $("stForbidden");
+    ul.innerHTML = "";
+    current.f.forEach(function(w){
+      var li = document.createElement("li");
+      li.textContent = w;
+      ul.appendChild(li);
+    });
+    $("stAuto").innerHTML = "Also blocked, inside the term: <b>" + esc(autoBanned(current.t).join(", ")) + "</b>";
+  }else{
+    face.hidden = true;
+    $("stCover").hidden = false;
+    $("stCover").textContent = current
+      ? "Turn your chair around, then press Start turn."
+      : "Press Start turn to begin.";
+  }
+  $("stCover").parentNode.classList.toggle("correct", $("playcard").classList.contains("correct"));
+
+  /* clock */
+  $("stClock").textContent = $("clock").textContent;
+  $("stClock").className = "stage-clock" + (timerLen && remaining === 0 ? " done" : (timerLen && remaining <= 10 ? " warn" : ""));
+  $("stTrack").style.width = $("trackFill").style.width || "100%";
+
+  /* counter and status */
+  $("stCount").textContent = mode === "practice"
+    ? (resolved.length + " of " + poolTotal() + " cleared, " + missedCount + " came back")
+    : (resolved.length + " of " + poolTotal() + " cards done");
+  $("stStatus").textContent = $("status").textContent;
+
+  /* scores */
+  var box = $("stScores");
+  box.innerHTML = "";
+  if(mode === "practice"){
+    [["Got it", gotCount], ["Came back around", missedCount],
+     ["First try", (gotCount + missedCount) ? Math.round(gotCount/(gotCount+missedCount)*100) + "%" : "0%"]]
+      .forEach(function(pair, i){
+        var d = document.createElement("div");
+        d.className = "s" + (i === 0 ? " on" : "");
+        d.innerHTML = '<span class="n">' + esc(pair[0]) + '</span><span class="v">' + esc(String(pair[1])) + '</span>';
+        box.appendChild(d);
+      });
+  }else{
+    teams.forEach(function(t, i){
+      var d = document.createElement("div");
+      d.className = "s" + (i === activeTeam ? " on" : "");
+      d.innerHTML = '<span class="n">' + esc(t.name) + '</span><span class="v">' + t.score + '</span>';
+      box.appendChild(d);
+    });
+  }
+
+  /* challenge, mirrored so the room can read the question */
+  var chOpen = !$("challengePanel").hidden && !!$("challengeQ").textContent;
+  $("stChallenge").hidden = !chOpen;
+  if(chOpen){
+    $("stChQ").textContent = $("challengeQ").textContent;
+    $("stChA").hidden = $("challengeA").hidden;
+    $("stChA").textContent = $("challengeA").textContent;
+  }
+
+  /* the stage buttons mirror the panel buttons exactly */
+  [["stStart","btnStart"],["stCorrect","btnCorrect"],["stMissed","btnMissed"],
+   ["stSkip","btnSkip"],["stNext","btnNext"],
+   ["stChShow","btnChallengeShow"],["stChReveal","btnChallengeReveal"],
+   ["stChWin","btnChallengeWin"],["stChMiss","btnChallengeMiss"]].forEach(function(pair){
+    var src = $(pair[1]);
+    var dst = $(pair[0]);
+    dst.disabled = src.disabled;
+    dst.hidden = src.hidden;
+  });
+  /* The challenge buttons live inside the panel on the instructor side,
+     so their own hidden flag says nothing while the panel is shut. On the
+     stage they sit in the open control bar and need the panel's state. */
+  if($("challengePanel").hidden){
+    ["stChShow","stChReveal","stChWin","stChMiss"].forEach(function(id){ $(id).hidden = true; });
+  }
+  $("stCorrect").textContent = mode === "practice" ? "Got it" : "Correct";
+}
+
+function enterPresent(){
+  presenting = true;
+  $("stage").hidden = false;
+  document.querySelector(".wrap").hidden = true;
+  try{
+    if(document.documentElement.requestFullscreen){ document.documentElement.requestFullscreen(); }
+  }catch(e){}
+  syncStage();
+  $("stStart").focus();
+}
+
+function exitPresent(){
+  presenting = false;
+  $("stage").hidden = true;
+  document.querySelector(".wrap").hidden = false;
+  try{
+    if(document.fullscreenElement && document.exitFullscreen){ document.exitFullscreen(); }
+  }catch(e){}
+  $("btnPresent").focus();
 }
 
 function renderAll(){
@@ -1174,7 +1469,10 @@ function correct(){
   if($("optChallenge").checked && current.c){
     challengeOpen = true;
     $("challengeQ").textContent = "";
+    $("challengeA").textContent = "";
+    $("challengeA").hidden = true;
     $("btnChallengeShow").hidden = false;
+    $("btnChallengeReveal").hidden = true;
     $("btnChallengeWin").hidden = true;
     $("btnChallengeMiss").hidden = true;
     $("challengePanel").hidden = false;
@@ -1299,6 +1597,7 @@ function clearCardForm(){
   $("fTarget").value = "";
   ["fF1","fF2","fF3","fF4","fF5"].forEach(function(id){ $(id).value = ""; });
   $("fChallenge").value = "";
+  $("fAnswer").value = "";
   $("btnCardSave").textContent = "Add card";
 }
 
@@ -1310,13 +1609,14 @@ function saveCard(){
   if(!t){ setStatus("A card needs a target term.", true); $("fTarget").focus(); return; }
   if(f.length < 1){ setStatus("Add at least one forbidden word.", true); $("fF1").focus(); return; }
   var c = $("fChallenge").value.trim();
+  var a = $("fAnswer").value.trim();
   if(editingCardId){
     d.cards.forEach(function(card){
-      if(card.id === editingCardId){ card.t = t; card.f = f; card.c = c; }
+      if(card.id === editingCardId){ card.t = t; card.f = f; card.c = c; card.a = a; }
     });
     setStatus("Card updated.");
   }else{
-    d.cards.push({ id: uid(), t: t, f: f, c: c });
+    d.cards.push({ id: uid(), t: t, f: f, c: c, a: a });
     setStatus("Card added to " + d.name + ".");
   }
   save();
@@ -1334,6 +1634,7 @@ function editCard(id){
       $("fTarget").value = card.t;
       for(var i=0;i<5;i++){ $("fF" + (i+1)).value = card.f[i] || ""; }
       $("fChallenge").value = card.c || "";
+      $("fAnswer").value = card.a || "";
       $("btnCardSave").textContent = "Save changes";
       $("fTarget").focus();
     }
@@ -1406,7 +1707,7 @@ function importDecks(){
     incoming.forEach(function(d){
       if(!d.name || !Array.isArray(d.cards)) throw new Error("shape");
       d.id = d.id || uid();
-      d.cards.forEach(function(c){ c.id = c.id || uid(); c.f = c.f || []; });
+      d.cards.forEach(function(c){ c.id = c.id || uid(); c.f = c.f || []; c.a = c.a || ""; });
     });
     decks = incoming;
     deckId = decks[0].id;
@@ -1475,11 +1776,25 @@ $("btnBuzz").addEventListener("click", function(){
 $("btnResetGame").addEventListener("click", resetGame);
 $("btnPrint").addEventListener("click", function(){ buildPrint(); window.print(); });
 
+/* CHALLENGE.
+   Not a second description of the same card. It is one hard recall
+   question off the same material, whose answer is a term the team has
+   to produce, so the bonus point rewards remembering rather than
+   talking around the word again. Whole team may answer. */
 $("btnChallengeShow").addEventListener("click", function(){
   $("challengeQ").textContent = current && current.c ? current.c : "";
   $("btnChallengeShow").hidden = true;
+  $("btnChallengeReveal").hidden = false;
   $("btnChallengeWin").hidden = false;
   $("btnChallengeMiss").hidden = false;
+  setStatus("Challenge question is up. The whole team can answer.");
+  $("btnChallengeReveal").focus();
+});
+$("btnChallengeReveal").addEventListener("click", function(){
+  $("challengeA").textContent = current && current.a ? current.a : "No answer saved for this card.";
+  $("challengeA").hidden = false;
+  $("btnChallengeReveal").hidden = true;
+  syncStage();
   $("btnChallengeWin").focus();
 });
 $("btnChallengeWin").addEventListener("click", function(){
@@ -1516,6 +1831,46 @@ $("cardRows").addEventListener("click", function(e){
 });
 
 $("btnMissed").addEventListener("click", missed);
+
+/* PRESENT MODE WIRING.
+   The stage buttons call the same functions the panel does rather than
+   forwarding clicks, so there is one code path per action. */
+function themeNow(){
+  return document.documentElement.getAttribute("data-theme") === "dusk" ? "dusk" : "maroon";
+}
+function renderTheme(){
+  var next = themeNow() === "dusk" ? "maroon" : "dusk";
+  $("btnTheme").textContent = "Switch to " + next;
+  $("stTheme").textContent = "Switch to " + next;
+}
+function toggleTheme(){
+  var next = themeNow() === "dusk" ? "maroon" : "dusk";
+  if(next === "dusk"){ document.documentElement.setAttribute("data-theme", "dusk"); }
+  else { document.documentElement.removeAttribute("data-theme"); }
+  try{ localStorage.setItem("bio004-game-theme", next); }catch(e){}
+  renderTheme();
+  setStatus(next === "dusk" ? "Dusk colours." : "Maroon colours.");
+}
+$("btnTheme").addEventListener("click", toggleTheme);
+$("stTheme").addEventListener("click", toggleTheme);
+
+$("btnPresent").addEventListener("click", enterPresent);
+$("stExit").addEventListener("click", exitPresent);
+$("stStart").addEventListener("click", function(){ $("btnStart").click(); });
+$("stCorrect").addEventListener("click", correct);
+$("stMissed").addEventListener("click", missed);
+$("stSkip").addEventListener("click", skip);
+$("stNext").addEventListener("click", nextCard);
+$("stBuzz").addEventListener("click", function(){ $("btnBuzz").click(); });
+$("stChShow").addEventListener("click", function(){ $("btnChallengeShow").click(); });
+$("stChReveal").addEventListener("click", function(){ $("btnChallengeReveal").click(); });
+$("stChWin").addEventListener("click", function(){ $("btnChallengeWin").click(); });
+$("stChMiss").addEventListener("click", function(){ $("btnChallengeMiss").click(); });
+document.addEventListener("fullscreenchange", function(){
+  /* Leaving fullscreen with the browser's own Escape should leave the
+     stage too, otherwise the room is looking at a stuck screen. */
+  if(!document.fullscreenElement && presenting){ exitPresent(); }
+});
 
 $("deckToggle").addEventListener("click", function(){
   var list = $("deckList");
@@ -1585,6 +1940,7 @@ document.addEventListener("keydown", function(e){
   if(tag === "input" || tag === "textarea" || tag === "select") return;
   if(e.metaKey || e.ctrlKey || e.altKey) return;
   var k = e.key.toLowerCase();
+  if(e.key === "Escape" && presenting){ e.preventDefault(); exitPresent(); return; }
   if(e.key === " " || e.code === "Space"){
     e.preventDefault();
     if(!current || !revealed){ $("btnStart").click(); }
@@ -1614,6 +1970,7 @@ function boot(){
   remaining = timerLen;
   setTeams(parseInt($("teamCount").value, 10));
   renderMode();
+  renderTheme();
   buildQueue();
   renderAll();
 }
