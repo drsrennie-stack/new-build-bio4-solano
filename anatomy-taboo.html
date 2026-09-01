@@ -773,8 +773,7 @@ var BUILT_IN = [
  {id:"d2c22", t:"Popliteal", f:["behind the knee", "back of the leg", "knee", "posterior", "joint"], c:"Which regional term names the calf?", a:"Sural"},
  {id:"d2c23", t:"Axillary", f:["armpit", "underarm", "shoulder", "hair", "sweat"], c:"Which regional term names the shoulder blade region?", a:"Scapular"},
  {id:"d2c24", t:"Inguinal", f:["groin", "hip", "thigh", "junction", "hernia"], c:"Which regional term names the hip, the lateral pelvis?", a:"Coxal"},
- {id:"d2c25", t:"Antecubital", f:["elbow", "front", "crease", "blood draw", "arm"], c:"Name the vein most often used for a blood draw in this region.", a:"The median cubital vein"},
- {id:"d2c26", t:"Levels of Structural Organization", f:["chemical", "cell", "tissue", "organ", "system"], c:"What is the smallest level of organization that is considered alive?", a:"The cell"}
+ {id:"d2c25", t:"Antecubital", f:["elbow", "front", "crease", "blood draw", "arm"], c:"Name the vein most often used for a blood draw in this region.", a:"The median cubital vein"}
 ]},
 { id:"d3", builtIn:true, name:"Module 1: Cell Anatomy", cards:[
  {id:"d3c01", t:"Plasma Membrane", f:["phospholipid", "bilayer", "boundary", "barrier", "cell"], c:"Name the model describing the membrane as proteins drifting in a lipid bilayer.", a:"The fluid mosaic model"},
@@ -1003,7 +1002,11 @@ var STORE_KEY = "bio004-taboo-v1";
 /* Bump when decks are added to BUILT_IN. A returning instructor has her
    own saved copy, so new built-in decks are merged in by id rather than
    overwriting anything she has edited or written herself. */
-var BUILT_IN_V = 2;
+var BUILT_IN_V = 3;
+/* Cards pulled from the built-in set. A saved copy keeps its own decks,
+   so retired ids are cleared on upgrade. Anything she wrote herself has
+   a generated id and is never in this list. */
+var RETIRED = ["d2c26"];
 var decks = [];
 var deckId = null;      /* the deck the builder is editing */
 var selDecks = [];      /* ids of the topics ticked for play */
@@ -1064,6 +1067,11 @@ function load(){
         var have = {};
         parsed.decks.forEach(function(d){ have[d.id] = true; });
         var merged = parsed.decks.slice();
+        if(parsed.v !== BUILT_IN_V){
+          merged.forEach(function(d){
+            d.cards = d.cards.filter(function(c){ return RETIRED.indexOf(c.id) < 0; });
+          });
+        }
         var added = 0;
         deepCopy(BUILT_IN).forEach(function(d){
           if(!have[d.id]){ merged.push(d); added += 1; }
