@@ -2,7 +2,7 @@
 
 **Project:** Anatomy Games hub and Anatomy Taboo
 **Files covered:** games.html, anatomy-taboo.html
-**Date:** August 28, 2026 (revised the same day for multi-topic play and practice mode)
+**Date:** August 28, 2026, revised September 1, 2026 for multi-topic play, practice mode, present mode, the two colour schemes and the full-course card set
 **Reviewer:** Dr. Sharilyn Rennie (build and audit prepared for review)
 
 ---
@@ -24,7 +24,7 @@ Target: WCAG 2.2 Level AA minimum, AAA where achievable.
 | 1.4.12 Text spacing | AA | Pass. No fixed heights on text containers. |
 | 2.1.1 Keyboard | A | Pass. Every control reachable and operable. See section 6. |
 | 2.1.2 No keyboard trap | A | Pass. |
-| 2.2.1 Timing adjustable | A | Pass. The countdown is optional (No timer setting), defaults to 90 seconds, and can be paused, resumed and reset at any point. It gates nothing: no answer is lost and no content disappears when it expires. |
+| 2.2.1 Timing adjustable | A | Pass. The countdown is optional (No timer setting), defaults to 90 seconds, and can be paused, resumed and reset at any point. Nothing is lost when it expires: the unanswered card returns to the deck and comes around again, and every point already scored stands. |
 | 2.4.1 Bypass blocks | A | Pass. Skip link to `#main` on both pages. |
 | 2.4.3 Focus order | A | Pass. |
 | 2.4.6 Headings and labels | AA | Pass. One h1 per page, h2 for sections, no skipped levels. |
@@ -46,9 +46,9 @@ Not applicable: audio and video criteria (no media), 3.3.7 redundant entry, 3.3.
 
 The game runs in two modes and the controls change with them, so both were walked separately.
 
-- **Teams:** Correct, Skip and Next card. Turn passes on a completed card.
-- **Challenge:** after a correct card, an optional recall question for the whole team. The question is revealed first, the answer only when the instructor asks for it, so the reveal is a deliberate act rather than something the screen does on its own. Both appear on the projector as well as the panel.
-- **One team practising:** Correct becomes "Got it", Skip is removed, and "Missed it" appears. A missed card returns to the deck, so the tally reads Got it, Came back around, and a first-try percentage. Nothing rotates.
+- **Teams:** the clock runs for the whole turn. Correct and Skip pull the next card onto the screen without stopping it, so a team clears as many as it can. Next round ends the turn and passes to the next team. The cover screen appears once per turn, at the start, where the guesser needs it.
+- **Challenge:** at the end of a turn, an optional recall question for the whole team, drawn from the last card they got right, so it never interrupts a running clock. The question is revealed first, the answer only when the instructor asks for it, so the reveal is a deliberate act rather than something the screen does on its own. Both appear on the projector as well as the panel.
+- **One team practising:** Correct becomes "Got it", Skip is removed, and "Missed it" appears. Both pull the next card the same way. A missed card returns to the deck, so the tally reads Got it, Came back around, and a first-try percentage. Nothing rotates.
 
 Mode is a `select`, not a pair of tabs, so it is reachable and changeable from the keyboard with no custom key handling. Changing it resets the round and announces the change in the live region. The M shortcut is bound only in practice mode and S only in team mode, so a key never silently does nothing the visible controls would do.
 
@@ -128,7 +128,7 @@ Shortcuts, which are suppressed while focus is in any input, textarea or select 
 - C marks correct, in both modes
 - S skips, team mode only
 - M marks missed, practice mode only
-- N draws the next card
+- N ends the turn and passes to the next team
 - B sounds the buzzer
 
 ---
