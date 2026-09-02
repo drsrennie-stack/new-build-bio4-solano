@@ -70,10 +70,10 @@ input[type=text],select{font-family:var(--fb);font-size:16px;color:var(--ink);ba
 .q.unanswered-flag{border:2px solid var(--rust)}
 .qnum{font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--rust);margin:0 0 6px}
 .qtext{font-weight:600;margin:0 0 12px}
-.opt{display:flex;gap:10px;align-items:flex-start;border:1.5px solid var(--line-soft);border-radius:9px;padding:10px 12px;margin:0 0 8px;cursor:pointer}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1.5px solid var(--line-soft);border-radius:9px;padding:10px 12px;margin:0 0 8px;cursor:pointer;background:var(--page);transition:box-shadow 200ms ease,transform 200ms ease}
 .opt:hover{border-color:var(--navy)}
 .opt input{margin-top:3px;width:18px;height:18px;accent-color:#0B1530;flex:none}
-.opt.sel{border:2px solid var(--navy);background:var(--navy-tint);padding:9px 11px}
+.opt.sel{border:2px solid var(--navy);background:var(--page);padding:9px 11px;box-shadow:0 8px 18px rgba(11,21,48,.16),0 2px 5px rgba(11,21,48,.10);transform:translateY(-2px)}
 /* sticky progress */
 .bar{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;border-radius:0 0 12px 12px;padding:10px 16px;display:flex;align-items:center;gap:14px;margin:0 0 18px}
 .bar b{font-family:var(--fd);font-size:14px}
@@ -188,10 +188,10 @@ h1 .hx{color:var(--rust)}
 @media (max-width:700px){.catref{grid-template-columns:1fr}}
 .catref .ct{border-left:4px solid var(--gold);padding:2px 0 2px 12px}
 .catref .ct b{font-family:var(--fd)}
-.chip{display:inline-flex;gap:8px;align-items:center;border:1.5px solid var(--line-soft);border-radius:99px;padding:8px 14px;margin:0 8px 8px 0;cursor:pointer;font-family:var(--fd);font-size:13.5px;font-weight:700}
+.chip{display:inline-flex;gap:8px;align-items:center;border:1.5px solid var(--line-soft);border-radius:99px;padding:8px 14px;margin:0 8px 8px 0;cursor:pointer;font-family:var(--fd);font-size:13.5px;font-weight:700;background:var(--page);transition:box-shadow 200ms ease,transform 200ms ease}
 .chip:hover{border-color:var(--navy)}
 .chip input{width:16px;height:16px;accent-color:#0B1530;flex:none;margin:0}
-.chip.sel{border:2px solid var(--navy);background:var(--navy-tint);padding:7px 13px}
+.chip.sel{border:2px solid var(--navy);background:var(--page);padding:7px 13px;box-shadow:0 6px 14px rgba(11,21,48,.16);transform:translateY(-1px)}
 .tally{border-collapse:collapse;width:100%}
 .tally th,.tally td{border:1px solid var(--line-soft);padding:6px 10px;text-align:left;font-size:14.5px}
 .tally th{font-family:var(--fd);background:var(--navy);color:#fff}
@@ -450,9 +450,10 @@ h1 .hx{color:var(--rust)}
   var TOTAL = Q.length + TF.length + 10 + CONF.length * 4; /* 70 */
   var PARTS = Q.length + TF.length + 10 + CONF.length + 1; /* 56 */
 
-  var KEY = 'bio004-gap-exam-1-v3';   /* unchanged so in-class attempts carry over */
-  var WKEY = 'bio004-metacog-1-v1';
-  try { localStorage.removeItem('bio004-gap-exam-1-v1'); localStorage.removeItem('bio004-gap-exam-1-v2'); } catch (e) {}
+  var KEY = 'bio004-gap-exam-1-v4';   /* v4: the question set was rewritten, so index-keyed answers from any earlier version must never carry over */
+  var WKEY = 'bio004-metacog-1-v2';
+  var FP = '""" + "9ffd48592f35" + """';  /* fingerprint of the question data below; any future edit to the questions resets saved answers automatically */
+  try { ['bio004-gap-exam-1-v1', 'bio004-gap-exam-1-v2', 'bio004-gap-exam-1-v3', 'bio004-metacog-1-v1'].forEach(function (k) { localStorage.removeItem(k); }); } catch (e) {}
   function loadJ(k) { try { return JSON.parse(localStorage.getItem(k) || '{}') || {}; } catch (e) { return {}; } }
   function saveS(x) { try { localStorage.setItem(KEY, JSON.stringify(x)); } catch (e) {} }
   function saveW() { try { localStorage.setItem(WKEY, JSON.stringify(W)); } catch (e) {} }
@@ -465,6 +466,14 @@ h1 .hx{color:var(--rust)}
   var W = loadJ(WKEY);
   W.codes = W.codes || {}; W.manual = W.manual || []; W.r1 = W.r1 || ''; W.r2 = W.r2 || ''; W.r3 = W.r3 || '';
   W.done = W.done || false;
+
+  /* if the saved state was written against a different question set,
+     it is meaningless index-keyed noise: start clean */
+  if (S.fp !== FP) {
+    S = { fp: FP, mc: {}, shuffles: {}, tf: {}, tfw: {}, match: {}, conf: {}, dump: { pick: '', text: '', checks: {}, revealed: false }, graded: false };
+    W = { codes: {}, manual: [], r1: '', r2: '', r3: '', done: false };
+    saveS(S); saveW();
+  }
 
   function shuffleFor(key, n) {
     if (S.shuffles[key]) return S.shuffles[key];
