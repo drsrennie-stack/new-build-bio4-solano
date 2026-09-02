@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anatomy Kahoots &middot; BIO 004 Human Anatomy</title>
+<meta name="description" content="Every BIO 004 class Kahoot in one place, organized by module. Play the class game again as a rematch, or run the challenge link your professor posts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+/* ============================================================
+   ANATOMY KAHOOTS
+   Sister page to games.html: same dark ground, same white tiles,
+   organized by module. The KAHOOTS list near the top of the
+   script is the only thing to edit: paste a Kahoot link into an
+   entry and its tile goes live by itself.
+   ============================================================ */
+:root{
+  --navy:#08101F; --navy-tint:#ECEFF4; --navy-line:#1E2A47;
+  --maroon:#7A2A22; --maroon-dark:#5E201A;
+  --terra:#8B1D1D; --terra-dark:#6B1616;
+  --gold:#DCB45C; --gold-text:#6E5018;
+  --straw:#E8CE85; --straw-light:#F2E2B8;
+  --offwhite-text:#F4EFE8;
+  --card:#FFFFFF; --ink:#0B1530; --ink-muted:#4E5464;
+  --fd:'Plus Jakarta Sans',system-ui,sans-serif;
+  --fb:'Figtree',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--maroon-dark);color:var(--offwhite-text);font-family:var(--fb);font-size:16.5px;line-height:1.55}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:12px;top:12px;background:var(--card);color:var(--ink);padding:10px 14px;border-radius:6px;z-index:20;outline:3px solid var(--gold)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1080px;margin:0 auto;padding:34px max(22px,4vw) 60px}
+.eyebrow{font-family:var(--fd);font-size:12.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--straw);margin:0 0 10px}
+h1{font-family:var(--fd);font-size:clamp(36px,6vw,56px);font-weight:800;letter-spacing:-.02em;line-height:1.04;margin:0 0 14px;color:#FFFFFF}
+.lede{max-width:62ch;margin:0 0 8px;color:var(--straw-light);font-weight:600}
+.lede2{max-width:66ch;margin:0 0 26px;color:var(--offwhite-text);opacity:.85;font-size:15px}
+.modhead{font-family:var(--fd);font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--straw);margin:34px 0 12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.modhead::after{content:"";flex:1;height:1px;background:rgba(244,239,232,.25)}
+.count{font-weight:600;letter-spacing:.02em;text-transform:none;color:var(--straw-light)}
+.klist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.krow{background:var(--card);color:var(--ink);border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,.22);display:flex;align-items:center;gap:12px;padding:10px 14px}
+.krow.done{background:var(--navy-tint);border:2px solid var(--navy);padding:8px 12px}
+.kcheck{display:flex;align-items:center;flex:none}
+.kcheck input{width:22px;height:22px;accent-color:#0B1530;cursor:pointer}
+.kicon{width:34px;height:34px;border-radius:9px;background:var(--navy);display:flex;align-items:center;justify-content:center;flex:none}
+.kicon svg{width:20px;height:20px}
+.kname{flex:1;min-width:0}
+.kname b{font-family:var(--fd);font-size:15.5px;font-weight:700;letter-spacing:-.01em;display:block;line-height:1.25}
+.kname span{font-size:12.5px;color:var(--ink-muted);display:block;line-height:1.3}
+.krow.done .kname b::after{content:" ✓";color:#0B1530}
+.play{font-family:var(--fd);font-weight:700;font-size:13.5px;background:var(--navy);color:#FFFFFF;border:2px solid var(--navy);border-radius:9px;padding:7px 16px;text-decoration:none;display:inline-block;flex:none}
+.play:hover{background:#16233F}
+.qrbtn{font-family:var(--fd);font-weight:700;font-size:13.5px;background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:9px;padding:7px 12px;cursor:pointer;flex:none}
+.qrbtn:hover{background:var(--navy-tint)}
+.krow.done .qrbtn{background:var(--navy-tint)}
+.soonbtn{font-family:var(--fd);font-weight:700;font-size:12.5px;color:var(--ink-muted);border:2px dashed var(--ink-muted);border-radius:9px;padding:7px 12px;display:inline-block;flex:none}
+.resetrow{margin-top:26px}
+.resetbtn{font-family:var(--fd);font-weight:700;font-size:14px;background:transparent;color:var(--straw-light);border:2px solid rgba(244,239,232,.45);border-radius:10px;padding:9px 18px;cursor:pointer}
+.resetbtn:hover{border-color:var(--gold);color:#FFFFFF}
+@media (max-width:560px){
+  .krow{flex-wrap:wrap}
+  .kname{flex:1 1 60%}
+  .kname span{display:none}
+}
+.note{background:var(--navy);border-radius:14px;padding:22px 24px;margin-top:40px;box-shadow:0 8px 22px rgba(0,0,0,.28)}
+.note .lab{font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:0 0 6px}
+.note h2{font-family:var(--fd);font-size:20px;font-weight:800;margin:0 0 8px;color:#FFFFFF}
+.note p{margin:0 0 10px;font-size:15px;color:var(--offwhite-text);opacity:.92}
+.note code{display:block;background:#050A14;color:var(--straw-light);border-radius:8px;padding:12px 14px;font-size:13px;overflow-x:auto;white-space:pre}
+.credit{border-top:1px solid rgba(244,239,232,.25);margin-top:44px;padding-top:16px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13.5px;color:var(--straw-light)}
+.credit b{font-family:var(--fd);letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+/* QR modal */
+.qrback{position:fixed;inset:0;background:rgba(5,10,20,.8);display:flex;align-items:center;justify-content:center;z-index:50}
+.qrback[hidden]{display:none}
+.qrcard{background:var(--card);color:var(--ink);border-radius:16px;padding:26px 26px 20px;text-align:center;max-width:340px}
+.qrcard h2{font-family:var(--fd);font-size:19px;font-weight:800;margin:0 0 12px}
+.qrcard .qrbox{display:flex;justify-content:center;margin-bottom:12px}
+.qrclose{font-family:var(--fd);font-weight:700;font-size:15px;background:var(--navy);color:#FFF;border:0;border-radius:10px;padding:10px 22px;cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the Kahoots</a>
+<main id="main" class="wrap">
+  <p class="eyebrow">BIO 004 &middot; Human Anatomy</p>
+  <h1>Anatomy Kahoots</h1>
+  <p class="lede">Every class Kahoot in one place, organized by module.</p>
+  <p class="lede2">Play the class game again as a rematch on your own, or scan the QR with your group and race. Tick the box when you have played one; your checkmarks are remembered on this device. A row marked "link coming" goes live the day we play it in class.</p>
+  <p class="eyebrow" id="overall" aria-live="polite"></p>
+
+  <div id="mods" aria-live="polite"></div>
+
+  <section class="note" aria-labelledby="addHeading">
+    <p class="lab">Instructor note</p>
+    <h2 id="addHeading">Adding or updating a Kahoot</h2>
+    <p>Open this file, find the KAHOOTS list near the top of the script, and paste the Kahoot link (the kahoot.it challenge link or the create.kahoot.it share link) into the entry's url. The tile flips from "link coming" to a Play button by itself, and the QR builds from the same link. Add a new entry the same way; module can be 1 to 5.</p>
+    <code tabindex="0" role="region" aria-label="Example Kahoot entry">{ module: 2, name: "Kahoot Review: Bone and Bone Details", url: "https://kahoot.it/challenge/...", blurb: "The week 7 class review." }</code>
+  </section>
+
+  <footer class="credit">
+    <p><b>BIO 004 Human Anatomy</b> &middot; Fall 2026 &middot; Solano Community College</p>
+    <p>Dr. Sharilyn Rennie</p>
+  </footer>
+</main>
+
+<div class="qrback" id="qrback" hidden role="dialog" aria-modal="true" aria-labelledby="qrTitle">
+  <div class="qrcard">
+    <h2 id="qrTitle">Scan to play</h2>
+    <div class="qrbox" id="qrbox"></div>
+    <button type="button" class="qrclose" id="qrclose">Close</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =========================================================
+     THE KAHOOTS. This list is the whole page. One entry per
+     Kahoot: module (1 to 5), name, url (leave "" until the
+     link exists), blurb. Order within a module is play order.
+  ========================================================= */
+  var KAHOOTS = [
+    { module: 1, name: "Introduction to Anatomy", url: "https://create.kahoot.it/share/introduction-to-anatomy/da4886f6-ae0a-41c0-9571-0a0109c0d47d", blurb: "Anatomical language, planes, and the spaces of the body." },
+    { module: 1, name: "Body Regions and Directions", url: "https://create.kahoot.it/share/body-regions-directions/9567ef37-3634-4ddc-81e3-3c9f82efbadb", blurb: "Regional landmarks and directional terms." },
+    { module: 1, name: "Cell Anatomy 1", url: "https://create.kahoot.it/share/cell-anatomy-1/beb08878-f1f6-4ba6-afce-0733262b8cd9", blurb: "Organelles, membranes, and what each part of the cell does." },
+    { module: 1, name: "Cell Anatomy 2", url: "https://create.kahoot.it/share/cell-anatomy-2/fa8487b6-10b7-4cc8-ae5a-652e39753661", blurb: "Cell anatomy, part 2." },
+    { module: 1, name: "Intro to Epithelial and Connective Tissue", url: "https://create.kahoot.it/share/intro-to-epithelial-connective-tissues/4399fc12-930a-4313-ae34-2f7f2ab12122", blurb: "Epithelial and connective tissue: types, locations, functions." },
+    { module: 1, name: "Tissues", url: "https://create.kahoot.it/share/tissues/acb05618-958c-458b-a016-d7bafea8e609", blurb: "All four tissue types." },
+    { module: 1, name: "Integumentary 1", url: "https://create.kahoot.it/share/integumentary-1/1f1343a8-6fe9-4ef4-889d-a88f8ea51b8f", blurb: "Layers, glands, and receptors of the skin, part 1." },
+    { module: 1, name: "Integumentary 2", url: "https://create.kahoot.it/share/integumentary-2/08e3a840-6a6a-4855-8493-534247dd2079", blurb: "Layers, glands, and receptors of the skin, part 2." },
+    { module: 2, name: "Bone Tissue and Microanatomy (Fill in the Blank)", url: "https://create.kahoot.it/share/bone-tissue-fill-in-the-blank/891c4275-907e-48ac-b7ab-a936f4b22272", blurb: "Cartilage, the osteon, and the long bone, typed from memory." },
+    { module: 2, name: "Bone Tissue & Cartilage", url: "https://create.kahoot.it/share/bone-tissue-cartilage/bd761506-6017-49be-bdf6-89093cf19fc4", blurb: "Bone tissue and the three cartilages." },
+    { module: 2, name: "Axial Skeleton 2: Spine & Skull", url: "https://create.kahoot.it/share/axial-skeleton-2-spine-and-skill/fb570041-c018-435b-9483-7c3ba12a4c0a", blurb: "The skull and the vertebral column." },
+    { module: 2, name: "Appendicular Skeleton: Upper Extremity", url: "https://create.kahoot.it/share/appendicular-skeleton-1-upper-extremity/5687df03-0153-47a5-9626-1d7596711b1a", blurb: "Clavicle, scapula, humerus, forearm, and hand." },
+    { module: 2, name: "Appendicular Skeleton: Lower Extremity", url: "https://create.kahoot.it/share/appendicular-skeleton-le-2/b2d79607-305a-469f-ae1b-11a305591a49", blurb: "Coxal bone, femur, leg, and foot." },
+    { module: 2, name: "More Random Skeletal Anatomy", url: "https://create.kahoot.it/share/skeletal-lecture-material-more-bone-tissue/65f6752e-a698-465b-a52f-500e39079313", blurb: "A grab bag from across the skeleton." },
+    { module: 2, name: "Bone and Bone Details", url: "https://create.kahoot.it/share/bones-and-bone-details/0ee75c9c-45cf-4fb2-852d-87c47fee1e68", blurb: "The week 7 class review: bone tissue, markings, and the skeleton." },
+    { module: 3, name: "Heart Anatomy (Part I)", url: "https://create.kahoot.it/share/heart-anatomy-part-i/550dde93-38ca-4d93-a46f-c20479be1a30", blurb: "Chambers, valves, vessels, and the path of blood." },
+    { module: 3, name: "Heart Anatomy (Lab)", url: "https://create.kahoot.it/share/heart-lab/9a86ded8-2c80-497c-bbb1-d2e6f609e2bf", blurb: "The heart as the lab tags it: chambers, valves, and vessels on the model." },
+    { module: 3, name: "Heart Terminology", url: "https://create.kahoot.it/share/heart-terminology/44e1fe7a-dd6b-40a2-9766-d1be08724a33", blurb: "The vocabulary of the heart." },
+    { module: 3, name: "Muscle Tissue", url: "https://create.kahoot.it/share/muscle-tissue/f93b1043-27d5-44d0-aa1d-c9ab4fcb69aa", blurb: "Skeletal, cardiac, and smooth muscle tissue." },
+    { module: 3, name: "Combo: Muscle Tissue & Microanatomy", url: "https://create.kahoot.it/share/combo-muscle-tissue-microanatomy/3f5d5647-1e1d-46ef-94d1-cf966b8ffa49", blurb: "Muscle tissue plus the sarcomere and wrappings, combined." },
+    { module: 3, name: "More Muscle Histology & Microanatomy", url: "https://create.kahoot.it/share/muscle-histology-microanatomy/82a995d6-ddf8-459a-9daf-fb3cb6ed58b8", blurb: "More muscle histology and microanatomy." },
+    { module: 3, name: "Blood Terminology", url: "https://create.kahoot.it/share/blood-physiology-terminology/0b0338c2-f1d0-4fcd-bce9-707894a03963", blurb: "The vocabulary of blood." },
+    { module: 3, name: "Blood Vessel Terminology", url: "https://create.kahoot.it/share/blood-vessel-terminology/527eef84-aa79-4e97-babb-3ca61c478401", blurb: "The vocabulary of vessels." },
+    { module: 3, name: "Blood", url: "https://create.kahoot.it/share/blood/78bc1be0-1f2d-4b58-abd3-b18ed7a841a7", blurb: "Formed elements and what each one does." },
+    { module: 3, name: "Actions & Innervations: Head, Neck and Upper Extremity", url: "https://create.kahoot.it/share/actions-and-innervations-muscles-of-head-neck-and-upper-extremity/15ae16d0-77d5-42c2-9dd6-a36d04186968", blurb: "What each muscle does and the nerve that drives it." },
+    { module: 3, name: "Combo: BV, Heart, Lymph", url: "https://create.kahoot.it/share/combo-bv-heart-lymph/4c07d983-f935-48de-9e10-12c405b07172", blurb: "Blood vessels, heart, and lymphatics, combined." },
+    { module: 4, name: "Respiratory Anatomy", url: "https://create.kahoot.it/share/respiratory-lecture/86283b6e-4b75-48a9-927b-64103fe506d5", blurb: "The respiratory tract from nose to alveoli." },
+    { module: 4, name: "Lymphatic Terminology", url: "https://create.kahoot.it/share/lymphatic-terminology/15384352-7c76-43e8-b1a1-65cde1d579c9", blurb: "The vocabulary of the lymphatic system." },
+    { module: 4, name: "GI Anatomy I: Mouth to Esophagus", url: "https://create.kahoot.it/share/gi-anatomy-part-i-mouth-through-esophagus/78f4943d-8d45-4ca0-ad79-8669befbdbdc", blurb: "The alimentary canal from the mouth through the esophagus." },
+    { module: 4, name: "GI Anatomy II: Stomach to Small Intestine", url: "https://create.kahoot.it/share/gi-ii-anatomy-stomach-to-small-int-anatomy/f20ad478-7764-4f8c-a0e0-a00b5a9e90e9", blurb: "Stomach and small intestine anatomy." },
+    { module: 4, name: "GI Anatomy III: Colon to Rectum", url: "https://create.kahoot.it/share/gi-iii-anatomy/9da438af-ad7c-4147-8031-954303f97434", blurb: "Colon through rectum." },
+    { module: 4, name: "Renal Anatomy", url: "https://create.kahoot.it/share/renal-system-lecture-material/5918a3c6-038c-4bfe-8f9b-f04fe4668bb6", blurb: "The urinary system, the week 15 class game." },
+    { module: 4, name: "Female Reproductive Anatomy 1", url: "https://create.kahoot.it/share/female-reproductive-anatomy-cycle-1/97f6991b-7fef-4535-b6f6-a8c852db9259", blurb: "Female reproductive anatomy, cycle 1." },
+    { module: 4, name: "Female Reproductive Anatomy 2", url: "https://create.kahoot.it/share/female-reproduction-anatomy-cycle-2-advanced/be1d97ed-85ba-4b8f-9c9e-2cd3c53c5288", blurb: "Female reproductive anatomy, cycle 2, advanced." },
+    { module: 4, name: "Male Reproductive Anatomy", url: "https://create.kahoot.it/share/male-reproductive-system-lecture/00e2ee3d-0ea4-4ff4-b96f-98251c2fccb9", blurb: "Male reproductive anatomy." },
+    { module: 5, name: "Nervous Tissue 1", url: "https://create.kahoot.it/share/nervous-tissue-cycle-1/3aa70dc4-b83f-4b5c-9276-6d802866d930", blurb: "Neurons, neuroglia, and nervous tissue, cycle 1." },
+    { module: 5, name: "Nervous Tissue 2", url: "https://create.kahoot.it/share/nervous-tissue-cycle-2/8bdcffe3-ed89-4100-a99e-d98afd856561", blurb: "Neurons, neuroglia, and nervous tissue, cycle 2." },
+    { module: 5, name: "More Nervous Tissue Anatomy", url: "https://create.kahoot.it/share/nervous-tissue-anatomy/8cf5904f-e3f9-4a9c-a51b-8acbb50948e7", blurb: "More nervous tissue anatomy." },
+    { module: 5, name: "CNS: Brain & Meninges 1", url: "https://create.kahoot.it/share/cns-anatomy-brain-meninges-cycle-1/4fac26f9-7cf2-445d-9c34-6773a2f6c2b6", blurb: "Brain, meninges, and CSF, cycle 1." },
+    { module: 5, name: "CNS: Brain & Meninges 2", url: "https://create.kahoot.it/share/cns-anatomy-brain-meninges-cycle-2/c5427e5c-d685-4e36-93d3-49d4c226b08e", blurb: "Brain, meninges, and CSF, cycle 2." },
+    { module: 5, name: "CNS 3", url: "https://create.kahoot.it/share/cns-lecture-material/18b41c17-02b9-4505-bc6c-d6366445a5f4", blurb: "CNS lecture material, cycle 3." },
+    { module: 5, name: "Cranial Nerves 1", url: "https://create.kahoot.it/share/cranial-nerves-cycle-1-dok-1/19d7b4ed-c41c-4b64-8923-87519a02d830", blurb: "The twelve cranial nerves, cycle 1, DOK 1." },
+    { module: 5, name: "Cranial Nerves 2", url: "https://create.kahoot.it/share/cranial-nerves-cycle-2-dok-2-3/d0032052-c00b-461b-be40-a763aec97cf1", blurb: "The twelve cranial nerves, cycle 2, DOK 2 and 3." },
+    { module: 5, name: "Neuro: Spinal Cord and Spinal Nerves", url: "https://create.kahoot.it/share/neuro-spinal-cord-spinal-nerves-anatomy-cycle-1/760e36e3-5a93-45ba-8486-b6dff33b2aca", blurb: "Spinal cord and spinal nerve anatomy, cycle 1." },
+    { module: 5, name: "Neuro: Spine and Spinal Cord Anatomy", url: "https://create.kahoot.it/share/neuro-spine-and-spinal-cord-anatomy-cycle-2/3b1a92cd-b092-4a42-bf76-0e487eff1203", blurb: "Spine and spinal cord anatomy, cycle 2." },
+    { module: 5, name: "ANS, PNS, ENS", url: "https://create.kahoot.it/share/ans-pns-ens-nervous-system/15138566-c7c2-4d60-a64c-154c1c1ae7c5", blurb: "The divisions of the nervous system." }
+  ];
+
+  var MODULES = {
+    1: "Module 1 · Intro, Cells, Tissues, Integument",
+    2: "Module 2 · Skeletal System and Joints",
+    3: "Module 3 · Muscle, Heart and Blood",
+    4: "Module 4 · Respiratory, Digestive, Urinary and Reproductive",
+    5: "Module 5 · Nervous System and Senses"
+  };
+
+  var ICON = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">' +
+    '<rect x="3" y="3" width="8" height="8" rx="2" fill="#DCB45C"/>' +
+    '<circle cx="17" cy="7" r="4" fill="#FFFFFF"/>' +
+    '<path d="M3 17 L7 13 L11 17 L7 21 Z" fill="#FFFFFF"/>' +
+    '<path d="M14 14 h6 v6 h-6 Z" fill="#DCB45C" transform="rotate(45 17 17)"/>' +
+    '</svg>';
+
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+  /* Checkmarks live in this browser only. The id is the Kahoot's own
+     uuid from its link, so renaming a tile never loses its checkmark. */
+  var KEY = 'bio004-kahoots-done-v1';
+  function loadDone() { try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { return {}; } }
+  function saveDone(d) { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (e) {} }
+  function idOf(k) {
+    var m = /([0-9a-f]{8}-[0-9a-f-]{27,})/.exec(k.url || '');
+    return m ? m[1] : (k.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  }
+  var done = loadDone();
+
+  var mods = document.getElementById('mods');
+  function render() {
+    var html = '';
+    for (var m = 1; m <= 5; m++) {
+      var list = KAHOOTS.filter(function (k) { return k.module === m; });
+      if (!list.length) continue;
+      var played = list.filter(function (k) { return done[idOf(k)]; }).length;
+      html += '<h2 class="modhead" id="mod' + m + '">' + esc(MODULES[m]) +
+              '<span class="count">' + played + ' of ' + list.length + ' played</span></h2>';
+      html += '<ul class="klist" aria-labelledby="mod' + m + '">';
+      list.forEach(function (k) {
+        var id = idOf(k);
+        var live = !!k.url;
+        var isDone = !!done[id];
+        html += '<li class="krow' + (isDone ? ' done' : '') + '" data-id="' + esc(id) + '">' +
+          '<span class="kcheck"><input type="checkbox" data-id="' + esc(id) + '"' + (isDone ? ' checked' : '') +
+            ' aria-label="Mark ' + esc(k.name) + ' as played"></span>' +
+          '<span class="kicon">' + ICON + '</span>' +
+          '<span class="kname"><b>' + esc(k.name) + '</b><span>' + esc(k.blurb) + '</span></span>' +
+          (live
+            ? '<a class="play" href="' + esc(k.url) + '" target="_blank" rel="noopener">Play</a>' +
+              '<button type="button" class="qrbtn" data-url="' + esc(k.url) + '" data-name="' + esc(k.name) + '">QR</button>'
+            : '<span class="soonbtn">Link coming</span>') +
+          '</li>';
+      });
+      html += '</ul>';
+    }
+    html += '<p class="resetrow"><button type="button" class="resetbtn" id="resetDone">Reset my checkmarks</button></p>';
+    mods.innerHTML = html;
+    overall();
+  }
+  function overall() {
+    var total = KAHOOTS.length;
+    var played = KAHOOTS.filter(function (k) { return done[idOf(k)]; }).length;
+    document.getElementById('overall').textContent = 'Played ' + played + ' of ' + total;
+  }
+  render();
+
+  mods.addEventListener('change', function (e) {
+    var c = e.target;
+    if (!c.matches || !c.matches('input[type="checkbox"][data-id]')) return;
+    var id = c.getAttribute('data-id');
+    if (c.checked) done[id] = Date.now(); else delete done[id];
+    saveDone(done);
+    render();
+  });
+  mods.addEventListener('click', function (e) {
+    if (e.target && e.target.id === 'resetDone') {
+      done = {};
+      saveDone(done);
+      render();
+    }
+  });
+
+  /* QR modal */
+  var back = document.getElementById('qrback');
+  var box = document.getElementById('qrbox');
+  var title = document.getElementById('qrTitle');
+  var lastFocus = null;
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.qrbtn');
+    if (b) {
+      lastFocus = b;
+      box.innerHTML = '';
+      title.textContent = 'Scan to play: ' + b.getAttribute('data-name');
+      if (window.QRCode) { new QRCode(box, { text: b.getAttribute('data-url'), width: 220, height: 220, correctLevel: QRCode.CorrectLevel.M }); }
+      else { var a = document.createElement('a'); a.href = b.getAttribute('data-url'); a.textContent = b.getAttribute('data-url'); a.style.wordBreak = 'break-all'; box.appendChild(a); }
+      back.hidden = false;
+      document.getElementById('qrclose').focus();
+    }
+    if (e.target === back || e.target.id === 'qrclose') {
+      back.hidden = true;
+      if (lastFocus) lastFocus.focus();
+    }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !back.hidden) { back.hidden = true; if (lastFocus) lastFocus.focus(); }
+  });
+
+  /* iframe height sender for Canvas */
+  var FRAME_ID = 'bio004-kahoots';
+  function sendHeight() {
+    var h = (window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight);
+    if (window.parent && window.parent !== window) parent.postMessage({ type: 'resize', id: FRAME_ID, height: h }, '*');
+  }
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+  if (window.ResizeObserver) new ResizeObserver(sendHeight).observe(document.body);
+  [200, 600, 1200].forEach(function (t) { setTimeout(sendHeight, t); });
+})();
+</script>
+<script src="bio004-dock.js"></script>
+</body>
+</html>
