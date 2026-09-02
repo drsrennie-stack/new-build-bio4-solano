@@ -276,6 +276,7 @@ h1 .hx{color:var(--rust)}
             <option>Class 3, Tue/Thu evening</option>
           </select></div>
       </div>
+      <p class="warn" id="idWarn" role="status" hidden></p>
     </div>
     <div class="gates">
       <div class="gate unlocked" id="gateExam">
@@ -495,7 +496,7 @@ h1 .hx{color:var(--rust)}
 
   var KEY = 'bio004-gap-exam-1-v4';   /* v4: the question set was rewritten, so index-keyed answers from any earlier version must never carry over */
   var WKEY = 'bio004-metacog-1-v2';
-  var FP = '""" + "9ffd48592f35" + """';  /* fingerprint of the question data below; any future edit to the questions resets saved answers automatically */
+  var FP = 'c003887e5af8';  /* fingerprint of the question data below; any future edit to the questions resets saved answers automatically */
   try { ['bio004-gap-exam-1-v1', 'bio004-gap-exam-1-v2', 'bio004-gap-exam-1-v3', 'bio004-metacog-1-v1'].forEach(function (k) { localStorage.removeItem(k); }); } catch (e) {}
   function loadJ(k) { try { return JSON.parse(localStorage.getItem(k) || '{}') || {}; } catch (e) { return {}; } }
   function saveS(x) { try { localStorage.setItem(KEY, JSON.stringify(x)); } catch (e) {} }
@@ -512,6 +513,8 @@ h1 .hx{color:var(--rust)}
 
   /* if the saved state was written against a different question set,
      it is meaningless index-keyed noise: start clean */
+  var LEGACY_FP = '"""' + '9ffd48592f35' + '"""';
+  if (S.fp === LEGACY_FP) { S.fp = FP; saveS(S); } /* same question set, marker format fixed */
   if (S.fp !== FP) {
     S = { fp: FP, mc: {}, shuffles: {}, tf: {}, tfw: {}, match: {}, dump: { pick: '', text: '', checks: {}, revealed: false }, graded: false };
     W = { codes: {}, manual: [], r1: '', r2: '', r3: '', done: false };
@@ -1107,12 +1110,13 @@ h1 .hx{color:var(--rust)}
   function buildMetaSheet(g) {
     var w = who();
     var all = allMissMeta();
+    var coded = all.filter(function (m) { return m.code; }).length;
     var t = tallies();
     var top = topCats();
     var codesTxt = all.map(function (m) { return m.label + '=' + (m.code || '?'); }).join('  ');
     var ps = '<div class="ps-page"><h1>BIO 004 &middot; Metacognition Worksheet 1</h1>' +
       '<p class="ps-meta"><strong>' + esc(w.name) + '</strong> &middot; ' + esc(w.sec) + ' &middot; printed ' + esc(new Date().toLocaleDateString()) + ' &middot; the graded part</p>' +
-      '<p class="ps-score">Gap Exam 1: ' + g.earned + ' of ' + g.total + ' (' + g.pct + '%) &middot; ' + all.length + ' missed item' + (all.length === 1 ? '' : 's') + ' coded</p>';
+      '<p class="ps-score">Gap Exam 1: ' + g.earned + ' of ' + g.total + ' (' + g.pct + '%) &middot; ' + coded + ' of ' + all.length + ' missed item' + (all.length === 1 ? '' : 's') + ' coded' + (W.done ? '' : ' &middot; WORKSHEET NOT SUBMITTED YET') + '</p>';
     if (all.length) {
       ps += '<h2>Codes (miss = type)</h2><p class="ps-line">' + esc(codesTxt) + '</p>' +
         '<h2>Tallies</h2><table class="ps-topics"><tr><th scope="col">Miss type</th><th scope="col">Count</th><th scope="col">Points it cost</th></tr>' +
@@ -1122,9 +1126,10 @@ h1 .hx{color:var(--rust)}
     } else {
       ps += '<p class="ps-line">Clean run: no misses to code.</p>';
     }
-    ps += '<h2>Reflection 1 &middot; What my biggest category says about how I study</h2><p class="ps-refl">' + esc(W.r1.trim()) + '</p>' +
-      '<h2>Reflection 2 &middot; Familiar versus known, with my own miss as the example</h2><p class="ps-refl">' + esc(W.r2.trim()) + '</p>' +
-      '<h2>Reflection 3 &middot; What I will do differently, and when</h2><p class="ps-refl">' + esc(W.r3.trim()) + '</p>' +
+    function refl(x) { return x.trim() ? esc(x.trim()) : 'Not written yet.'; }
+    ps += '<h2>Reflection 1 &middot; What my biggest category says about how I study</h2><p class="ps-refl">' + refl(W.r1) + '</p>' +
+      '<h2>Reflection 2 &middot; Familiar versus known, with my own miss as the example</h2><p class="ps-refl">' + refl(W.r2) + '</p>' +
+      '<h2>Reflection 3 &middot; What I will do differently, and when</h2><p class="ps-refl">' + refl(W.r3) + '</p>' +
       '<div class="ps-rec"><h2>Plan of attack (from my tallies): keep this page</h2>' +
       (top.length ? ((triage() ? '<p><strong>Triage first:</strong> coverage before technique. Competency packet, notes page, note sheet for the worst topics tonight, then retrieval on those only, plus office hours.</p>' : '') +
         top.map(function (c, i) { return '<p>' + (i + 1) + '. ' + t[c.n].count + ' × <strong>' + esc(c.name) + '</strong>: ' + esc(SOLUTIONS[c.n].split('.').slice(0, 2).join('.') + '.') + '</p>'; }).join('')) :
@@ -1152,37 +1157,53 @@ h1 .hx{color:var(--rust)}
     return lines.join('\n');
   }
 
-  document.getElementById('resPrintBtn').addEventListener('click', function () {
-    if (!S.graded) return;
+  /* Every print, from any button or the browser menu, carries BOTH
+     pages: the exam sheet and the metacognition sheet. Unfinished
+     worksheet parts print visibly unfinished instead of missing. */
+  function buildSheets() {
+    if (!S.graded) return false;
     var g = grade();
-    document.getElementById('printsheet').innerHTML = buildExamSheet(g) + (W.done ? buildMetaSheet(g) : '');
+    document.getElementById('printsheet').innerHTML = buildExamSheet(g) + buildMetaSheet(g);
+    return true;
+  }
+  window.addEventListener('beforeprint', function () { buildSheets(); });
+
+  document.getElementById('resPrintBtn').addEventListener('click', function () {
+    if (!buildSheets()) return;
     window.print();
   });
   function needsIdentity() {
     var w = who();
     if (w.name !== '(no name)' && w.sec !== '(no section)') return false;
     show('home');
+    var iw = document.getElementById('idWarn');
+    iw.hidden = false;
+    iw.textContent = 'Your sheet needs a name and section first. Fill them in here, then go back into Part 2 and print or copy again.';
     var el = document.getElementById(w.name === '(no name)' ? 'sname' : 'ssec');
     el.classList.add('unanswered-flag');
     el.focus();
     return true;
   }
+  ['sname', 'ssec'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', function () {
+      this.classList.remove('unanswered-flag');
+      document.getElementById('idWarn').hidden = true;
+    });
+  });
   document.getElementById('mPrintBtn').addEventListener('click', function () {
     if (needsIdentity()) return;
     if (!validateMeta()) return;
-    var g = grade();
-    document.getElementById('mBlock').textContent = buildBlock(g);
-    document.getElementById('printsheet').innerHTML = buildExamSheet(g) + buildMetaSheet(g);
+    document.getElementById('mBlock').textContent = buildBlock(grade());
+    buildSheets();
     W.done = true; saveW();
     window.print();
   });
   document.getElementById('mCopyBtn').addEventListener('click', function () {
     if (needsIdentity()) return;
     if (!validateMeta()) return;
-    var g = grade();
-    var txt = buildBlock(g);
+    var txt = buildBlock(grade());
     document.getElementById('mBlock').textContent = txt;
-    document.getElementById('printsheet').innerHTML = buildExamSheet(g) + buildMetaSheet(g);
+    buildSheets();
     W.done = true; saveW();
     var ok = document.getElementById('mCopyOk');
     function done() { ok.textContent = 'Copied. Now paste it into the assignment.'; }
