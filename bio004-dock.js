@@ -317,6 +317,12 @@
              url: BASE + 'games.html', icon: 'cards', tone: 'gold', hot: true, qr: 'games',
              kw: 'games game play taboo memory match escape room team teams class activity fun '
                + 'review retrieval practice competition points buzzer cards' });
+    /* THE GOLD ONE: the standing front door for readiness checks.
+       The card never changes; today's check and every future one
+       attach inside bio004-readiness.html. */
+    t.push({ g: 'This week', name: 'Readiness', sub: 'The check for today opens here at class time, with your class code',
+             url: BASE + 'bio004-readiness.html', icon: 'target', tone: 'navy', hot: 'gold',
+             kw: 'readiness ready gap check exam 1 lecture gap exam metacognition worksheet code class today' });
     t.push({ g: 'This week', name: 'Study With Me', sub: 'Join a session this week or start one yourself',
              url: BASE + 'study-session-signup.html' + q, icon: 'people', tone: 'terra', qr: 'study', kw: 'study with me sessions group hours host' });
     t.push({ g: 'This week', name: 'Course calendar', sub: 'Every class day and what to prepare for it',
@@ -399,9 +405,6 @@
     t.push({ g: 'Course materials', name: 'Case deep dives', sub: 'One clinical case per topic, with the PDF',
              url: BASE + 'course-index.html' + q, icon: 'flask', tone: 'terra', soon: true,
              kw: 'deep dive cases clinical index topics' });
-    t.push({ g: 'Practice and recall', name: 'Exam 1 Gap Check', sub: 'Locked until class; the code opens the gap exam and the graded worksheet',
-             url: BASE + 'bio004-lecture-gap-exam-1.html', icon: 'target', tone: 'gold',
-             kw: 'gap check readiness exam 1 lecture gap exam metacognition worksheet code class locked' });
     t.push({ g: 'Practice and recall', name: 'Practice Exam Builder', sub: 'Build a fresh full-format exam any time, then track your scores',
              url: BASE + 'bio004-practice-exam-builder.html', icon: 'target', tone: 'gold', qr: 'exambuilder',
              kw: 'practice exam builder generator test unlimited build confidence dok predict score midterm mock' });
@@ -616,6 +619,10 @@
 '.bd-tile.hot{background:#8B1D1D;border-color:#B8452F}',
 '.bd-tile.hot:hover{background:#A02323;border-color:#DCB45C}',
 '.bd-tile.hot .bd-s{color:#F2E2B8;opacity:1}',
+'.bd-tile.hotgold{background:#DCB45C;border-color:#B8863B}',
+'.bd-tile.hotgold:hover{background:#E4C177;border-color:#08101F}',
+'.bd-tile.hotgold .bd-n{color:#08101F}',
+'.bd-tile.hotgold .bd-s{color:#1F2B14;color:#3A2E10;opacity:1}',
 '.bd-ic{flex:0 0 auto;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;',
 '  box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}',
 '.bd-ic svg{width:20px;height:20px}',
@@ -808,7 +815,7 @@
         }
         var target = t.ext ? ' target="_blank" rel="noopener"' : ' target="_top"';
         html += '<div class="bd-cell">' +
-          '<a class="bd-tile' + (t.hot ? ' hot' : '') + '" href="' + esc(t.url) + '"' + target + '>' +
+          '<a class="bd-tile' + (t.hot === 'gold' ? ' hot hotgold' : t.hot ? ' hot' : '') + '" href="' + esc(t.url) + '"' + target + '>' +
             '<span class="bd-ic ' + t.tone + '">' + icon(t.icon) + '</span>' +
             '<span class="bd-tx"><span class="bd-n">' + esc(t.name) +
               (t.ext ? '<span class="bd-ext" aria-label="opens in a new tab">&#8599;</span>' : '') +

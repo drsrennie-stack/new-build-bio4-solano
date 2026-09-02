@@ -24,6 +24,7 @@ list it here.
 | `compliance-notes-intro-round-table-sheets.md` | Introduction to Anatomy Round Table printable lab sheets: intro-round-table-sheets.html and the rendered PDF | Sep 1, 2026 |
 | `compliance-notes-kahoots.md` | Anatomy Kahoots hub (kahoots.html) and the Kahoots dock tile in bio004-dock.js | Sep 2, 2026 |
 | `compliance-notes-lecture-gap-exam-1.md` | Exam 1 Gap Check: gap exam plus graded Metacognition Worksheet, both in bio004-lecture-gap-exam-1.html | Sep 2, 2026 |
+| `compliance-notes-readiness.md` | Readiness hub (bio004-readiness.html) and the gold Readiness dock card | Sep 2, 2026 |
 
 ## Housekeeping
 

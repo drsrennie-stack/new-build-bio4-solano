@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Readiness &middot; BIO 004 Human Anatomy</title>
+<meta name="description" content="The standing front door for BIO 004 readiness checks: today's check and every future one live here, each opening at class time with a class code.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   READINESS HUB. The gold Course tools card points here and never
+   changes; each readiness check (the Exam 1 Gap Check today, and
+   every future one) is one entry in the READINESS array at the top
+   of the script. Entries carry a status: current (gold card with a
+   TODAY pill), coming (gray dashed, no link yet), or past (plain
+   card, still openable). Nothing else on the page needs editing.
+   ============================================================ */
+:root{
+  --navy:#0B1530; --navy-mid:#1C2E4F; --navy-tint:#ECEFF4;
+  --rust:#8B3A2E; --rust-dark:#6B2A20;
+  --gold:#C9A14A; --gold-text:#6E5018;
+  --page:#FFFFFF; --soft:#FAFAF9; --ink:#0B1530; --muted:#4E5464;
+  --line:#8C90A0; --line-soft:rgba(11,21,48,.14);
+  --fd:'Plus Jakarta Sans',system-ui,sans-serif;
+  --fb:'Figtree',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--soft);color:var(--ink);font-family:var(--fb);font-size:16.5px;line-height:1.55}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:12px;top:12px;background:var(--page);padding:10px 14px;border-radius:6px;z-index:30;outline:3px solid var(--rust)}
+a{color:var(--rust)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--rust);outline-offset:2px;border-radius:6px}
+.site-header{background:var(--page);border-bottom:.5px solid var(--line-soft);padding:16px max(20px,4vw)}
+.site-logo{display:inline-flex;align-items:center;gap:12px;text-decoration:none;color:var(--navy)}
+.site-logo svg{height:44px;width:auto;display:block}
+.logo-title{font-family:var(--fd);font-size:20px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.logo-title .a{color:var(--rust)}
+.logo-sub{font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;opacity:.72;display:block;margin-top:3px}
+.wrap{max-width:860px;margin:0 auto;padding:26px max(18px,4vw) 90px}
+.eyebrow{font-family:var(--fd);font-size:12px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);margin:0 0 10px}
+h1{font-family:var(--fd);font-size:clamp(32px,5.6vw,50px);font-weight:800;letter-spacing:-.03em;line-height:1.08;margin:0 0 16px;color:var(--navy)}
+h2{font-family:var(--fd);font-size:21px;font-weight:800;letter-spacing:-.01em;margin:0 0 10px;color:var(--navy)}
+h3{font-family:var(--fd);font-size:16.5px;font-weight:700;margin:0 0 6px;color:var(--navy)}
+.card{background:var(--page);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin:0 0 16px;box-shadow:0 1px 3px rgba(11,21,48,.08)}
+.lede{margin:0 0 10px;color:var(--ink)}
+.small{font-size:14px;color:var(--muted)}
+ul{margin:0 0 10px;padding-left:22px}
+li{margin:0 0 6px}
+label{font-family:var(--fd);font-size:13.5px;font-weight:700;display:block;margin:0 0 6px}
+input[type=text],select{font-family:var(--fb);font-size:16px;color:var(--ink);background:var(--page);border:1.5px solid var(--line);border-radius:8px;padding:10px 12px;width:100%}
+.idgrid{display:grid;grid-template-columns:2fr 1.4fr;gap:14px}
+@media (max-width:560px){.idgrid{grid-template-columns:1fr}}
+/* questions */
+.q{background:var(--page);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:0 0 14px;box-shadow:0 1px 3px rgba(11,21,48,.08)}
+.q.unanswered-flag{border:2px solid var(--rust)}
+.qnum{font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--rust);margin:0 0 6px}
+.qtext{font-weight:600;margin:0 0 12px}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1.5px solid var(--line-soft);border-radius:9px;padding:10px 12px;margin:0 0 8px;cursor:pointer;background:var(--page);transition:box-shadow 200ms ease,transform 200ms ease}
+.opt:hover{border-color:var(--navy)}
+.opt input{margin-top:3px;width:18px;height:18px;accent-color:#0B1530;flex:none}
+.opt.sel{border:2px solid var(--navy);background:var(--page);padding:9px 11px;box-shadow:0 8px 18px rgba(11,21,48,.16),0 2px 5px rgba(11,21,48,.10);transform:translateY(-2px)}
+/* sticky progress */
+.bar{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;border-radius:0 0 12px 12px;padding:10px 16px;display:flex;align-items:center;gap:14px;margin:0 0 18px}
+.bar b{font-family:var(--fd);font-size:14px}
+.track{display:block;flex:1;height:8px;background:rgba(255,255,255,.25);border-radius:99px;overflow:hidden}
+.fill{display:block;height:100%;background:var(--gold);width:0%}
+.btn{font-family:var(--fd);font-weight:800;font-size:13.5px;letter-spacing:.09em;text-transform:uppercase;background:var(--rust);color:#fff;border:2px solid var(--rust);border-radius:8px;padding:14px 26px;cursor:pointer}
+.btn:hover{background:var(--rust-dark);border-color:var(--rust-dark)}
+.btn:focus-visible{outline-color:var(--navy)}
+.btn.ghost{background:var(--page);color:var(--navy);border-color:var(--navy)}
+.btn.ghost:hover{background:var(--navy-tint)}
+.btn.ghost:focus-visible{outline-color:var(--rust)}
+.warn{color:var(--rust-dark);font-weight:600;margin:10px 0 0}
+/* results */
+.scorebig{font-family:var(--fd);font-size:52px;font-weight:800;letter-spacing:-.02em;line-height:1;color:var(--navy);margin:0}
+.band{font-family:var(--fd);font-size:16px;font-weight:700;color:var(--rust);margin:4px 0 12px}
+.tline{display:flex;align-items:center;gap:12px;margin:0 0 8px}
+.tline .tn{flex:0 0 15em;font-family:var(--fd);font-size:13.5px;font-weight:700}
+.tline .tt{display:block;flex:1;height:12px;background:var(--navy-tint);border-radius:99px;overflow:hidden}
+.tline .tf{display:block;height:100%;background:var(--navy)}
+.tline .tv{flex:0 0 3.4em;font-family:var(--fd);font-size:13px;font-weight:700;text-align:right}
+.weak{border-left:4px solid var(--rust);padding:2px 0 2px 14px;margin:0 0 12px}
+.weak b{font-family:var(--fd)}
+.planstep{display:flex;gap:12px;margin:0 0 14px}
+.pnum{font-family:var(--fd);flex:none;width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+.missed{font-size:14.5px}
+.missed li{margin-bottom:4px}
+.copyblock{background:var(--navy);color:#F2E2B8;border-radius:10px;padding:14px 16px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;white-space:pre-wrap;word-break:break-word}
+.foot{border-top:1px solid var(--line-soft);margin-top:40px;padding-top:14px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13.5px;color:var(--muted)}
+[hidden]{display:none !important}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+/* exam sections */
+.secthead{font-family:var(--fd);font-size:17px;font-weight:800;color:var(--rust-dark);letter-spacing:.02em;margin:30px 0 4px}
+.secnote{margin:0 0 12px;font-size:14px;color:var(--muted)}
+.fix{margin:6px 0 2px;padding:10px 12px;border:1.5px dashed var(--gold);border-radius:9px;background:#FBF6EC}
+.fix label{font-size:13px;color:var(--ink)}
+.fix input{max-width:340px}
+.mrow{display:flex;gap:12px;align-items:center;margin:0 0 8px;flex-wrap:wrap}
+.mrow label{flex:0 0 9.5em;margin:0}
+.mrow select{flex:1;min-width:240px;width:auto}
+.crow{display:flex;gap:12px;align-items:center;margin:0 0 8px;flex-wrap:wrap}
+.crow label{flex:1;font-family:var(--fb);font-weight:400;font-size:15.5px;margin:0}
+.crow input{width:74px;font-family:var(--fb);font-size:16px;color:var(--ink);background:var(--page);border:1.5px solid var(--line);border-radius:8px;padding:8px;text-align:center}
+textarea{font-family:var(--fb);font-size:16px;color:var(--ink);background:var(--page);border:1.5px solid var(--line);border-radius:8px;padding:10px 12px;width:100%;overflow:hidden;resize:vertical}
+/* one-page printable result sheet: hidden on screen, the only thing in print */
+#printsheet{display:none}
+@media print{
+  @page{size:letter;margin:0.5in}
+  body{background:#fff}
+  body > *{display:none !important}
+  #printsheet{display:block !important;color:#000;font-family:var(--fb);font-size:11px;line-height:1.4}
+  #printsheet h1{font-family:var(--fd);font-size:17px;font-weight:800;color:#000;margin:0 0 1px}
+  #printsheet h2{font-family:var(--fd);font-size:12px;font-weight:800;color:#000;margin:12px 0 4px}
+  .ps-meta{margin:0 0 2px}
+  .ps-score{font-family:var(--fd);font-size:13px;font-weight:800;margin:8px 0 2px}
+  .ps-band{margin:0 0 4px}
+  .ps-topics{border-collapse:collapse;width:100%;font-size:10.5px}
+  .ps-topics th,.ps-topics td{border:1px solid #777;padding:2px 6px;text-align:left}
+  .ps-topics th{font-family:var(--fd);font-weight:700}
+  .ps-ans{display:grid;grid-auto-flow:column;gap:1px 14px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:9.5px}
+  .ps-mc{grid-template-rows:repeat(10,auto)}
+  .ps-tf{grid-template-rows:repeat(5,auto)}
+  .ps-line{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:9.5px;margin:0 0 2px}
+  .ps-ans span{white-space:nowrap}
+  .ps-note{font-size:9px;color:#333;margin:3px 0 0}
+  .ps-rec p{margin:0 0 3px}
+  .ps-refl{white-space:pre-wrap;font-size:9.5px;margin:0 0 4px}
+  .ps-page{break-after:page}
+  .ps-page:last-child{break-after:auto}
+}
+
+/* MedMasters editorial layer: display type, numerals, pills, band */
+h1 .hx{color:var(--rust)}
+.steps{padding:6px 22px}
+.step{display:grid;grid-template-columns:84px 1fr;gap:2px 20px;padding:18px 0;border-top:1px solid var(--line-soft);align-items:start}
+.step:first-child{border-top:0}
+.stepnum{font-family:var(--fd);font-weight:800;font-size:42px;line-height:1;color:var(--rust);letter-spacing:-.02em}
+.step h2{font-size:19px;margin:2px 0 4px}
+.step p{margin:0;color:var(--muted);font-size:15px}
+@media (max-width:560px){.step{grid-template-columns:52px 1fr}.stepnum{font-size:28px}}
+.band{background:var(--navy);border-radius:14px;padding:26px 28px;margin:0 0 16px;color:#F2E2B8}
+.beyebrow{color:var(--gold);font-family:var(--fd);font-size:11.5px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;margin:0 0 10px}
+.band h2{color:#fff;font-size:clamp(22px,3.5vw,30px);letter-spacing:-.02em;margin:0 0 10px}
+.band .bem{color:var(--gold)}
+.band p{color:#F2E2B8}
+.band .btn:focus-visible{outline-color:var(--gold)}
+.pill{position:absolute;top:-13px;left:20px;font-family:var(--fd);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;padding:5px 12px;border-radius:6px}
+.pill.terra{background:var(--rust);color:#fff}
+.pill.navy{background:var(--navy);color:#fff}
+.gnum{font-family:var(--fd);font-weight:800;font-size:40px;line-height:1;color:var(--rust);letter-spacing:-.02em;margin:4px 0 10px}
+.gate.locked .gnum{color:var(--line)}
+.gate.locked .btn:disabled{background:var(--page);color:var(--muted);border:2px dashed var(--line);cursor:not-allowed}
+.secthead{display:flex;align-items:baseline;gap:14px;border-top:1px solid var(--line-soft);padding-top:24px;margin:36px 0 4px}
+.secthead .sn{font-family:var(--fd);font-weight:800;font-size:38px;line-height:1;color:var(--rust);letter-spacing:-.02em}
+/* landing cards (course interactive state colors) */
+.gates{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:24px 0 16px}
+@media (max-width:700px){.gates{grid-template-columns:1fr}}
+.gate{position:relative;background:var(--page);border-radius:12px;padding:24px 24px;box-shadow:0 1px 3px rgba(11,21,48,.08)}
+.gate h2{margin-top:0}
+.gate.locked{border:2px dashed var(--line)}
+.gate.locked h2,.gate.locked p{color:var(--muted)}
+.gate.unlocked{border:2px solid var(--gold)}
+.gate.done{border:2px solid var(--navy);background:var(--navy-tint)}
+.gstat{font-family:var(--fd);font-size:13.5px;font-weight:700;margin:10px 0 12px;color:var(--navy)}
+.gate.locked .gstat{color:var(--muted)}
+.backrow{margin:0 0 14px}
+/* worksheet */
+.callout{background:var(--navy);border-radius:14px;padding:26px 28px;margin:0 0 16px;color:#F2E2B8}
+.fkgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0 14px}
+@media (max-width:700px){.fkgrid{grid-template-columns:1fr}}
+.fkcard{background:var(--page);border-radius:10px;padding:16px 18px;box-shadow:0 10px 22px rgba(0,0,0,.28)}
+.fklab{font-family:var(--fd);font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;margin:0 0 2px}
+.fkcard.fam .fklab{color:var(--rust)}
+.fkcard.kno .fklab{color:var(--navy)}
+.fkcard .fktag{font-family:var(--fd);font-size:13.5px;font-weight:700;color:var(--muted);margin:0 0 10px}
+.fkcard li{color:var(--ink)}
+.fkcard ul{list-style:none;padding:0;margin:0}
+.fkcard li{position:relative;padding:8px 0 8px 26px;margin:0;border-top:1px solid var(--line-soft);font-size:14.5px;color:var(--ink)}
+.fkcard li:first-child{border-top:0}
+.fkcard.fam li::before{content:"\25CB";position:absolute;left:2px;color:var(--muted)}
+.fkcard.kno li::before{content:"\2713";position:absolute;left:2px;color:var(--navy);font-weight:800}
+.callout h2{color:#fff;font-size:clamp(22px,3.5vw,30px);letter-spacing:-.02em}
+.callout p{color:#F2E2B8}
+.callout strong{color:#E8CE85}
+.catref{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px}
+@media (max-width:700px){.catref{grid-template-columns:1fr}}
+.catref .ct{border-left:4px solid var(--gold);padding:2px 0 2px 12px}
+.catref .ct b{font-family:var(--fd)}
+.chip{display:inline-flex;gap:8px;align-items:center;border:1.5px solid var(--line-soft);border-radius:99px;padding:8px 14px;margin:0 8px 8px 0;cursor:pointer;font-family:var(--fd);font-size:13.5px;font-weight:700;background:var(--page);transition:box-shadow 200ms ease,transform 200ms ease}
+.chip:hover{border-color:var(--navy)}
+.chip input{width:16px;height:16px;accent-color:#0B1530;flex:none;margin:0}
+.chip.sel{border:2px solid var(--navy);background:var(--page);padding:7px 13px;box-shadow:0 6px 14px rgba(11,21,48,.16);transform:translateY(-1px)}
+.tally{border-collapse:collapse;width:100%}
+.tally th,.tally td{border:1px solid var(--line-soft);padding:6px 10px;text-align:left;font-size:14.5px}
+.tally th{font-family:var(--fd);background:var(--navy);color:#fff}
+.cnt{font-size:12.5px;color:var(--muted);text-align:right;margin:4px 0 0}
+.mstem{font-size:14.5px;color:var(--muted);margin:0 0 10px}
+</style>
+</head>
+<body data-no-reading-mode>
+<a class="skip" href="#main">Skip to the exam</a>
+<header class="site-header">
+  <a href="welcome.html" target="_top" class="site-logo" aria-label="BIO 004 Human Anatomy, course home">
+    <svg viewBox="40 10 125 148" role="img" aria-hidden="true" focusable="false"><g transform="translate(0, 18)"><g transform="translate(60, 0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#0B1530"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#0B1530"/></g><g transform="translate(100, 0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/></g><g transform="translate(140, 0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/></g></g></svg>
+    <span><span class="logo-title">Human <span class="a">Anatomy</span></span><span class="logo-sub">BIO 004 &middot; Solano Community College</span></span>
+  </a>
+</header>
+
+<main id="main" class="wrap">
+  <p class="eyebrow">BIO 004 &middot; Readiness</p>
+  <h1>Prove you are <span class="hx">ready</span>.</h1>
+
+  <div class="card steps">
+    <div class="step"><span class="stepnum" aria-hidden="true">01</span><div><h2>Open the current check at class time.</h2><p><strong>Dr. Rennie gives your class its code</strong> when it is time. Each class has its own.</p></div></div>
+    <div class="step"><span class="stepnum" aria-hidden="true">02</span><div><h2>Do both parts.</h2><p><strong>The exam finds your gaps; the worksheet is the graded part.</strong></p></div></div>
+    <div class="step"><span class="stepnum" aria-hidden="true">03</span><div><h2>Submit one PDF, keep one.</h2><p><strong>Upload it to the assignment</strong> and keep the copy; the last page is your plan of attack.</p></div></div>
+  </div>
+
+  <h2 class="secthead"><span class="sn" aria-hidden="true">&#9679;</span>The checks</h2>
+  <p class="secnote">Newest first. A gold card is live now; a dashed one is coming and opens on its class day.</p>
+  <div id="list"></div>
+
+  <div class="card">
+    <p class="small" style="margin:0"><strong>Instructor note:</strong> to attach the next readiness check, add one entry to the READINESS list at the top of this page's script (title, sub, url, date, status). The Course tools card never needs to change.</p>
+  </div>
+
+  <footer class="foot">
+    <p>BIO 004 Human Anatomy &middot; Fall 2026 &middot; Solano Community College</p>
+    <p>Dr. Sharilyn Rennie</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============ THE LIST: one entry per readiness check ============
+     status: 'current' (live now, gold, TODAY pill)
+             'coming'  (announced, gray dashed, no link needed yet)
+             'past'    (still openable, plain card) */
+  var READINESS = [
+    { title: 'Exam 1 Gap Check', date: 'Week 3 · Sep 2',
+      sub: 'The full Exam 1 lecture format (about 50 minutes), then the graded Metacognition Worksheet (about 30). Opens with your class code.',
+      url: 'bio004-lecture-gap-exam-1.html', status: 'current' }
+  ];
+
+  function esc(x) { return String(x).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+  var html = '';
+  READINESS.forEach(function (r, i) {
+    var cls = r.status === 'current' ? 'gate unlocked' : (r.status === 'coming' ? 'gate locked' : 'card');
+    html += '<div class="' + cls + '" style="margin:0 0 18px;position:relative">';
+    if (r.status === 'current') html += '<span class="pill terra">Today</span>';
+    if (r.status === 'coming') html += '<span class="pill navy">Coming</span>';
+    html += '<p class="gnum" aria-hidden="true">' + pad(READINESS.length - i) + '</p>' +
+      '<h2 style="margin-top:0">' + esc(r.title) + '</h2>' +
+      '<p class="gstat">' + esc(r.date) + '</p>' +
+      '<p class="small" style="margin:0 0 12px">' + esc(r.sub) + '</p>';
+    if (r.status === 'coming' || !r.url) {
+      html += '<button type="button" class="btn" disabled>Opens on its class day</button>';
+    } else {
+      html += '<a class="btn" style="display:inline-block;text-decoration:none" href="' + esc(r.url) + '" target="_top">' + (r.status === 'current' ? 'Open the check' : 'Reopen it') + '</a>';
+    }
+    html += '</div>';
+  });
+  document.getElementById('list').innerHTML = html;
+
+  /* iframe height sender for Canvas */
+  var FRAME_ID = 'bio004-readiness';
+  function sendHeight() {
+    var h = (window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight);
+    if (window.parent && window.parent !== window) parent.postMessage({ type: 'resize', id: FRAME_ID, height: h }, '*');
+  }
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+  if (window.ResizeObserver) new ResizeObserver(sendHeight).observe(document.body);
+  [200, 600, 1200].forEach(function (t) { setTimeout(sendHeight, t); });
+})();
+</script>
+<script src="bio004-dock.js"></script>
+</body>
+</html>
