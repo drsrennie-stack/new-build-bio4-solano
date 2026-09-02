@@ -1,0 +1,44 @@
+# Accessibility compliance notes: Exam 1 Gap Check (gap exam + metacognition worksheet, one page)
+
+**Project:** BIO 004 Human Anatomy, Fall 2026, Solano Community College
+**Files covered:** `bio004-lecture-gap-exam-1.html` (now contains BOTH parts; the separate bio004-metacognition-1.html was retired the same day)
+**Date:** September 2, 2026 (final revision: both parts merged onto one page behind a two-card landing view; questions hand-rewritten at true DOK 2 and 3; directions condensed to numbered bold-lead lists)
+**Reviewer:** Dr. Sharilyn Rennie (build and automated checks by Claude)
+
+## 1. What this is
+
+One page, two parts, one submission. A landing view shows two cards in the course interactive state colors: locked is gray with a dashed border, unlocked is brushed gold, completed is navy on the navy tint, and state is never color alone (each card carries a text status line). Part 1 is the Lecture Gap Exam, about 50 minutes, not graded: 70 points plus bonus in the full Exam 1 format (30 multiple choice; 10 applied true or false where marking false opens a labeled box to fix the bold term for a bonus point; two 5-item matching sets; five confidence questions scored tRAT-style with 4 points distributed per question; a brain dump chosen from three prompts, self-checked, reported not scored). All scored items are hand-written at true DOK 2 and 3 (vignettes, section interpretation, layer-order and spatial reasoning) after Dr. Rennie flagged the card bank's DOK tags as inflated; every core and high-yield week 1 to 3 competency appears at least once. Part 2 is the Metacognition Worksheet, about 30 minutes, THE GRADED PIECE: it unlocks when Part 1 is graded and receives the missed questions automatically and instantly (in memory, no cross-page hop), including any confidence question with 2 or fewer of its 4 points on the right answer. The student codes each miss with one of six types (never met it, familiar not known, mixed it up, misread it, second-guessed, term gap), tallies build live, three short reflections are collected, and a plan of attack orders the fixes by their own tallies, with a triage mode when 25 or more points were lost or 40 percent or more of codes are type 1. Directions everywhere are short numbered lists with bold lead terms. Submission happens once, at the end of Part 2: one printed PDF (exam result sheet page 1, metacognition sheet page 2, every response in master-key order for classwide item analysis) that the student both uploads and keeps, since page 2 ends with their plan of attack; a copy-paste text block is the alternative. A separate "print my gap map to keep" button on the results view serves students mid-flow. Exam storage stays under `bio004-gap-exam-1-v3` and worksheet storage under `bio004-metacog-1-v1`, so attempts made earlier the same day, when the two parts were separate pages, carry straight over.
+
+## 2. WCAG version and target
+
+WCAG 2.2, Level AA met on every criterion tested; AAA contrast on every text pair (navy #0B1530 on white 18:1; rust #8B3A2E accents 7.66:1; rust-dark section heads 9.9:1; straw-on-navy result block 15.4:1; white on navy progress bar 18:1; ink labels on the gold-dashed bonus box #FBF6EC above 15:1). The print sheet is black on white.
+
+## 3. Structure and semantics
+
+- Course masthead with the three-figure mark, skip link, one h1; exam sections have h2 headings with plain-language scoring notes.
+- Every question in every section is a `<fieldset>` with a `<legend>` carrying its number, topic, and where relevant DOK and point value. Multiple choice, true/false, and the dump prompts use real radio inputs inside `<label>`s; matching uses labeled `<select>`s; confidence uses labeled `<input type="number" min="0" max="4">` per option with a live "Points placed: n of 4" status line per question; the dump key items are labeled checkboxes.
+- The true/false bonus box appears only after False is selected, is a bordered region with its own label tied to the input, and its content persists.
+- The reveal-the-key button carries `aria-expanded` and `aria-controls`. The sticky progress line is `role="status"` and counts all 56 answerable parts.
+- Grading with anything open outlines every unfinished fieldset in rust, names the counts per section in a text warning (including confidence questions whose points do not total 4 and an empty brain dump), and scrolls to the first one; state is never color alone.
+- The print sheet is display:none on screen; right and wrong on it are text symbols, never color. Printing before grading yields a sheet that says to grade first.
+- The page opts out of the site reading-format sectioner (`data-no-reading-mode`), as interactive tools do, so no view is ever inside a collapsed section.
+- View switching toggles `hidden` on four sections (home, exam, results, worksheet); back links and card buttons are real buttons and links, the locked card's button is a true disabled button, and focus-visible rings apply throughout.
+- No italics, no em dashes; byline Dr. Sharilyn Rennie.
+
+## 4. Keyboard and screen reader
+
+Everything is operable by keyboard across all four views: the two cards, every radio group, select, number input, and textarea, the code pills, reveal, grade, back links, copy, and both print buttons, all with a 3px rust focus ring. Automated check: axe-core 4.x (wcag2a + wcag2aa) on the results and worksheet views: 0 violations, no console errors. A full simulated run of the merged page verified: gate states before and after grading and after submitting, the exam scoring math (sections, bonus words including a rejected misspelling and no bonus on a wrongly-marked-true item, topic totals 17/12/16/13/12 = 70), the instant hand-off of exactly the missed items into Part 2, code tallies and the triage trigger, validation messages on both parts, the combined block, the two-page PDF (exam sheet then metacognition sheet), the keep-a-copy print, and full persistence across reload.
+
+## 5. Privacy
+
+The page sends nothing anywhere. The name and section exist only in the student's browser, in the block they choose to copy, and on the sheets they choose to print; localStorage holds exam answers, shuffles, and dump text under `bio004-gap-exam-1-v3` (stale v1 and v2 state is removed on load) and worksheet codes, manual rows, and reflections under `bio004-metacog-1-v1`. Names are never stored.
+
+## 6. Known limitations
+
+- Answers are present in the page source, as with every self-grading tool in the course; Part 1 is a gap finder, not a graded assessment.
+- Submission is print-to-PDF or copy-paste into wherever it is posted (Canvas); there is no automatic collection, by design.
+- Results are recomputed, not stored: refreshing returns to the two cards with everything intact.
+- The printed sheets list responses, never stems or correct answers, so a circulating PDF does not leak the key.
+- The attempt persists on the device with no clear button, by design; on a shared computer a second student should use their own browser profile. Repeat practice belongs in the Practice Exam Builder.
+- The worksheet's codes are self-reported; it grades honesty and specificity, not diagnostic accuracy. Reflections are capped at 450 characters each so the sheet stays one page.
+- Students who graded Part 1 before this merged version shipped will find Part 2 already unlocked with their misses loaded; a student whose exam state predates the graded flag just presses Grade again (answers intact) to unlock it.
