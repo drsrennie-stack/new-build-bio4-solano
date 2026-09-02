@@ -34,6 +34,9 @@
   --r-card:16px;
 }
 *,*::before,*::after{box-sizing:border-box}
+/* Any class that sets display beats the browser's own [hidden] rule, which
+   silently broke the practice tally and the team strip. Settle it once here. */
+[hidden]{display:none !important}
 html{-webkit-text-size-adjust:100%}
 body{
   margin:0;background:var(--page);color:var(--navy);
@@ -190,7 +193,24 @@ legend{font-family:"Plus Jakarta Sans";font-weight:700;font-size:.7rem;letter-sp
 .tchip[data-active="true"]{background:var(--navy);color:#fff;box-shadow:0 0 0 3px var(--gold),var(--shadow-on-dark)}
 .tchip[data-active="true"] .sc{background:var(--gold);color:var(--navy)}
 
+/* the one rule people get wrong: you take one card from each board, not two from one */
+.playhint{
+  background:var(--card);border-radius:var(--r-card);box-shadow:var(--shadow-on-dark);
+  padding:14px 18px;margin:0 0 16px;color:var(--navy);font-weight:600;font-size:1rem;
+  display:flex;align-items:center;gap:.7rem;
+}
+.playhint .step{
+  flex:0 0 auto;background:var(--navy);color:var(--straw);border-radius:99px;
+  font-family:"Plus Jakarta Sans";font-weight:800;font-size:.72rem;letter-spacing:.1em;
+  text-transform:uppercase;padding:.28rem .7rem;
+}
 .boards{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.board.awaiting{box-shadow:0 0 0 3px var(--gold),var(--shadow-on-dark)}
+.board.awaiting h3::after{
+  content:"pick here";margin-left:.6rem;background:var(--gold);color:var(--navy);
+  font-family:"Plus Jakarta Sans";font-size:.62rem;font-weight:800;letter-spacing:.1em;
+  text-transform:uppercase;padding:.2rem .55rem;border-radius:99px;vertical-align:middle;
+}
 @media (max-width:960px){.boards{grid-template-columns:1fr}}
 .board{background:var(--card);border-radius:var(--r-card);box-shadow:var(--shadow-on-dark);padding:18px 18px 20px}
 .board h3{font-size:1.05rem;color:var(--navy)}
@@ -295,6 +315,49 @@ details.lib[open] > summary .chev{transform:rotate(180deg)}
   .btn:hover,.tile:hover,.subject:hover{transform:none}
 }
 
+/* ================= PRESENT STAGE =================
+   One screen, in page, the way Anatomy Taboo does it. */
+#stage{
+  position:fixed;inset:0;z-index:9000;background:var(--navy);color:#fff;
+  display:flex;flex-direction:column;padding:1.4vh 1.6vw;overflow:hidden;
+}
+#stage[hidden]{display:none}
+#stageBar{flex:0 0 auto;display:flex;align-items:center;gap:1.2vw;flex-wrap:wrap;padding-bottom:1.2vh}
+#stageTtl{font-family:"Plus Jakarta Sans";font-weight:800;font-size:clamp(15px,2.2vh,30px);letter-spacing:-.01em}
+#stageSub{color:var(--straw);font-weight:600;font-size:clamp(11px,1.5vh,18px)}
+#stageChips{margin-left:auto;display:flex;gap:.7vw;flex-wrap:wrap;align-items:center}
+#stage .pchip{background:var(--card);color:var(--navy);border-radius:99px;padding:.5vh 1vh;display:flex;align-items:center;gap:.6vh;font-weight:700;font-size:clamp(11px,1.7vh,20px)}
+#stage .pchip .d{width:1.4vh;height:1.4vh;min-width:10px;min-height:10px;border-radius:4px}
+#stage .pchip .s{background:var(--navy-tint);border-radius:99px;padding:0 .8vh;font-family:"Plus Jakarta Sans";font-weight:800;min-width:3vh;text-align:center}
+#stage .pchip[data-a="true"]{background:var(--gold);box-shadow:0 0 0 .5vh rgba(232,206,133,.35)}
+#stage .pchip[data-a="true"] .s{background:var(--navy);color:#fff}
+#stageBoards{flex:1 1 auto;display:grid;grid-template-columns:1fr 1fr;gap:1.2vw;min-height:0}
+#stage .pboard{background:var(--maroon);border-radius:14px;padding:1.2vh 1vw;display:flex;flex-direction:column;min-height:0}
+#stage .pbh{flex:0 0 auto;font-family:"Plus Jakarta Sans";font-weight:800;font-size:clamp(11px,1.8vh,22px);color:#fff;padding-bottom:.9vh}
+#stage .pgrid{flex:1 1 auto;display:grid;gap:.8vh;min-height:0}
+#stage .pt{
+  position:relative;border:2px solid var(--gold);border-radius:10px;background:var(--navy);color:var(--straw);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;
+  padding:.6vh;min-height:0;box-shadow:0 2px 6px rgba(0,0,0,.3);font-family:"Plus Jakarta Sans";font-weight:800;
+}
+#stage .pt .c{font-size:clamp(10px,1.7vh,20px);letter-spacing:.08em}
+#stage .pt[data-s="up"],#stage .pt[data-s="matched"],#stage .pt[data-s="wrong"]{background:var(--card);color:var(--navy)}
+#stage .pt[data-s="up"]{box-shadow:0 0 0 .55vh var(--gold),0 2px 6px rgba(0,0,0,.3)}
+#stage .pt[data-s="wrong"]{border-color:var(--terra);box-shadow:0 0 0 .55vh var(--terra),0 2px 6px rgba(0,0,0,.3)}
+#stage .pt[data-s="matched"]{background:var(--navy-tint);border-color:var(--navy);opacity:.95;cursor:default}
+#stage .pt .t{font-family:"Figtree";font-weight:500;font-size:clamp(10px,1.75vh,21px);line-height:1.25;padding:.4vh}
+#stage .pt .t.term{font-family:"Plus Jakarta Sans";font-weight:800;font-size:clamp(11px,2vh,26px)}
+#stage .pt img{width:100%;height:100%;object-fit:cover;border-radius:8px}
+#stage .pt .ni{font-size:clamp(9px,1.5vh,16px);color:var(--ink-muted);font-weight:700}
+#stage .pt .ow{position:absolute;right:.5vh;bottom:.5vh;width:1.5vh;height:1.5vh;min-width:11px;min-height:11px;border-radius:4px}
+#stage .pt .sc{position:absolute;left:.5vh;top:.5vh;background:rgba(8,16,31,.85);color:#fff;font-size:clamp(8px,1.2vh,13px);padding:.15vh .7vh;border-radius:99px;letter-spacing:.06em}
+#stageFoot{flex:0 0 auto;padding-top:1vh;display:flex;gap:1.2vw;align-items:center;color:var(--straw);font-size:clamp(10px,1.5vh,17px);font-weight:600}
+#stageFoot .btn{padding:.4rem .9rem;font-size:clamp(10px,1.5vh,16px)}
+#stageBanner{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(8,16,31,.94);text-align:center;padding:4vw;z-index:9100}
+#stageBanner.on{display:flex}
+#stageBanner h2{font-family:"Plus Jakarta Sans";font-weight:800;font-size:clamp(22px,7vh,86px);margin:0 0 2vh;color:var(--gold)}
+#stageBanner p{font-size:clamp(13px,2.6vh,34px);margin:0;color:#fff}
+
 /* ================= PRINT ================= */
 #printRoot{display:none}
 @media print{
@@ -373,7 +436,7 @@ details.lib[open] > summary .chev{transform:rotate(180deg)}
             <line x1="22" y1="7" x2="22" y2="23" stroke="currentColor" stroke-width="1.4"/>
           </svg>
         </span>
-        <span><span class="lbl">Histology</span><span class="meta">48 tissues, cells and skin structures</span></span>
+        <span><span class="lbl">Histology</span><span class="meta">49 tissues, cells and skin structures</span></span>
       </button>
       <button type="button" class="subject" id="subjRegions" data-subject="regions" aria-pressed="false">
         <span class="ico" aria-hidden="true">
@@ -508,13 +571,15 @@ details.lib[open] > summary .chev{transform:rotate(180deg)}
 
       <p class="visually-hidden" id="liveRegion" role="status" aria-live="polite"></p>
 
+      <p class="playhint" id="playHint"><span class="step">How to play</span><span id="playHintText">Turn over one card on the left board and one on the right board. Nothing happens until you have one from each side.</span></p>
+
       <div class="boards">
-        <div class="board">
+        <div class="board" id="boardLeft">
           <h3 id="leftBoardH">Left board</h3>
           <p class="bhint" id="leftBoardHint"></p>
           <div class="grid img" id="leftGrid" role="group" aria-labelledby="leftBoardH"></div>
         </div>
-        <div class="board">
+        <div class="board" id="boardRight">
           <h3 id="rightBoardH">Right board</h3>
           <p class="bhint" id="rightBoardHint">Then turn over the card you think goes with it.</p>
           <div class="grid txt" id="rightGrid" role="group" aria-labelledby="rightBoardH"></div>
@@ -545,7 +610,7 @@ details.lib[open] > summary .chev{transform:rotate(180deg)}
 
     <details class="lib screen-only" id="grabPanel">
       <summary>
-        <span>Grab frames from a video <span class="libstat" id="grabStat"></span></span>
+        <span>Grab frames from a video, instructor setup <span class="libstat" id="grabStat"></span></span>
         <svg class="chev" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 6.5 9 11.5 14 6.5" fill="none" stroke="#08101F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </summary>
       <div class="libbody">
@@ -585,7 +650,7 @@ details.lib[open] > summary .chev{transform:rotate(180deg)}
 
     <details class="lib screen-only" id="libPanel">
       <summary>
-        <span>Image library <span class="libstat" id="libStat"></span></span>
+        <span>Image library, instructor setup <span class="libstat" id="libStat"></span></span>
         <svg class="chev" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 6.5 9 11.5 14 6.5" fill="none" stroke="#08101F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </summary>
       <div class="libbody">
@@ -597,10 +662,10 @@ details.lib[open] > summary .chev{transform:rotate(180deg)}
             <label class="choice"><input type="radio" name="imgsrc" value="local"><span>This repo's images folder</span></label>
           </div>
         </fieldset>
-        <p class="hint" style="margin-bottom:14px">Whichever you pick, the other one is the fallback, and anything you load or capture in this session beats both. Drop a whole folder on the box and it matches files to items by filename. <button type="button" class="filebtn" id="copyNamesBtn">Copy the filename list for the folder</button></p>
+        <p class="hint" style="margin-bottom:14px">Whichever you pick, the other one is the fallback, and anything you load or capture in this session beats both. Dragging a whole folder onto the box matches files to items by filename. <button type="button" class="filebtn" id="copyNamesBtn">Copy the filename list for the folder</button></p>
         <div class="dropzone" id="dropzone">
-          <p style="margin:0 0 8px"><strong>Drop images here</strong></p>
-          <p style="margin:0 0 10px">A file named <code id="egName">simple-squamous.jpg</code> matches on its own.</p>
+          <p style="margin:0 0 8px"><strong>Add image files</strong></p>
+          <p style="margin:0 0 10px">This is for loading pictures, not for playing. A file named <code id="egName">simple-squamous.jpg</code> matches on its own, and you can drag a folder onto this box.</p>
           <button type="button" class="btn ghost" id="pickBtn">Choose files</button>
           <input type="file" id="bulkInput" accept="image/*" multiple class="visually-hidden">
         </div>
@@ -616,6 +681,23 @@ details.lib[open] > summary .chev{transform:rotate(180deg)}
     <span class="meta">BIO 004 Human Anatomy · Solano College</span>
   </div>
 </footer>
+
+<section id="stage" hidden aria-label="Present mode">
+  <div id="stageBar">
+    <div><div id="stageTtl"></div><div id="stageSub"></div></div>
+    <div id="stageChips"></div>
+  </div>
+  <div id="stageBoards">
+    <div class="pboard"><div class="pbh" id="stageLH"></div><div class="pgrid" id="stageLG"></div></div>
+    <div class="pboard"><div class="pbh" id="stageRH"></div><div class="pgrid" id="stageRG"></div></div>
+  </div>
+  <div id="stageFoot">
+    <span id="stageStat"></span>
+    <button type="button" class="btn gold" id="stageExit">Exit present mode</button>
+    <span>Esc also exits</span>
+  </div>
+</section>
+<div id="stageBanner" aria-hidden="true"><div><h2 id="stageBH"></h2><p id="stageBP"></p></div></div>
 
 <div id="printRoot" aria-hidden="true"></div>
 
@@ -637,16 +719,19 @@ var HISTOLOGY = [
    loc:"Air sacs of the lungs, the filtration membrane of the kidney, and the lining of blood vessels and serous membranes."},
   {id:"simple-cuboidal", deck:"epi", name:"Simple cuboidal epithelium",
    fn:"Secretes and absorbs.", gFn:"secrete-absorb",
-   loc:"Kidney tubules, thyroid follicles, the ducts of small glands, and the surface of the ovary."},
+   loc:"Kidney tubules, thyroid follicles, the ducts of small glands, and the surface of the ovary.", gLoc:"absorptive-surface"},
   {id:"simple-columnar", deck:"epi", name:"Simple columnar epithelium",
    fn:"Absorbs nutrients and secretes mucus and digestive enzymes.", gFn:"secrete-absorb",
    loc:"Lining of the stomach, small intestine, and large intestine."},
-  {id:"ciliated-columnar", deck:"epi", name:"Ciliated simple columnar epithelium",
-   fn:"Moves material along the surface with beating cilia.", gFn:"cilia",
-   loc:"Lining of the uterine tubes, the uterus, and the smaller bronchi."},
+  {id:"microvilli", deck:"epi", name:"Microvilli, the brush border",
+   fn:"Fold the free surface into tiny projections so the cell can absorb far more.",
+   loc:"Free surface of the epithelium lining the small intestine and the kidney tubules.", gLoc:"absorptive-surface"},
+  {id:"cilia", deck:"epi", name:"Cilia",
+   fn:"Beat in waves to sweep material along the surface.", gFn:"cilia",
+   loc:"Free surface of the epithelium lining the trachea and the uterine tubes.", gLoc:"airway"},
   {id:"pseudostratified", deck:"epi", name:"Pseudostratified ciliated columnar epithelium",
    fn:"Secretes mucus and sweeps it back out of the airway with cilia.", gFn:"cilia",
-   loc:"Lining of the trachea and most of the upper respiratory tract."},
+   loc:"Lining of the trachea and most of the upper respiratory tract.", gLoc:"airway"},
   {id:"strat-squam-kerat", deck:"epi", name:"Keratinized stratified squamous epithelium",
    fn:"Protects against abrasion and water loss with a tough surface of dead cells.", gFn:"protect",
    loc:"Epidermis of the skin."},
@@ -913,38 +998,83 @@ var SUBJECTS = {
    ------------------------------------------------------------ */
 var LOOPS_BASE = "https://drsrennie-stack.github.io/loops/images/";
 
+/* ------------------------------------------------------------
+   LOOPS REPO IMAGES
+   Your Loops practice tool already holds labelled station slides at
+   drsrennie-stack.github.io/loops/images/<dir>/sNN.jpg. Both repos serve
+   from the same drsrennie-stack.github.io origin, so this page can point
+   straight at them with nothing copied and nothing to keep in sync.
+   Each entry below is the Loops station whose answer matches the item.
+   ------------------------------------------------------------ */
+var LOOPS_BASE = "https://drsrennie-stack.github.io/loops/images/";
+
 var LOOP_MAP = {
+  /* A Loops station is TWO files: the question slide then the answer slide.
+     buildPairs in the loops repo is [2+2k, 3+2k], so for station number N,
+     counting from 1, the QUESTION slide is s(2N) and the answer is s(2N+1).
+     Numbering by station position was wrong on every image and put several
+     answer slides, term printed on the face, onto cards. All question slides. */
   histology: {
-    "strat-squam-kerat":"tissues/s01", "strat-cuboidal":"tissues/s02",
-    "transitional":"tissues/s03",      "simple-squamous":"tissues/s04",
-    "simple-cuboidal":"tissues/s06",   "pseudostratified":"tissues/s07",
-    "goblet-cell":"tissues/s09",       "strat-squam-nonkerat":"tissues/s10",
-    "simple-columnar":"tissues/s11",   "ciliated-columnar":"tissues/s12",
-    "fibroblast":"tissues/s13",        "reticular":"tissues/s14",
-    "compact-bone":"tissues/s15",      "dense-irregular":"tissues/s16",
-    "elastic-ct":"tissues/s18",        "dense-regular":"tissues/s19",
-    "adipose":"tissues/s20",           "areolar":"tissues/s21",
-    "nervous-tissue":"tissues/s24",    "skeletal-muscle":"tissues/s28",
-    "smooth-muscle":"tissues/s29",     "cardiac-muscle":"tissues/s30",
-    "pacinian":"skin/s01",             "sebaceous-gland":"skin/s02",
-    "meissner":"skin/s03",             "apocrine-gland":"skin/s05",
-    "hair-follicle":"skin/s06",        "stratum-corneum":"skin/s07",
-    "stratum-lucidum":"skin/s09",      "eccrine-gland":"skin/s10",
-    "reticular-dermis":"skin/s11",     "papillary-dermis":"skin/s08"
+    "strat-squam-kerat":"tissues/s02",    /* station 1  */
+    "strat-cuboidal":"tissues/s04",       /* station 2  */
+    "transitional":"tissues/s06",         /* station 3  */
+    "simple-squamous":"tissues/s08",      /* station 4  */
+    "microvilli":"tissues/s10",           /* station 5  */
+    "simple-cuboidal":"tissues/s12",      /* station 6  */
+    "pseudostratified":"tissues/s14",     /* station 7  */
+    "goblet-cell":"tissues/s18",          /* station 9  */
+    "strat-squam-nonkerat":"tissues/s20", /* station 10 */
+    "simple-columnar":"tissues/s22",      /* station 11 */
+    "cilia":"tissues/s24",                /* station 12 */
+    "fibroblast":"tissues/s26",           /* station 13 */
+    "reticular":"tissues/s28",            /* station 14 */
+    "compact-bone":"tissues/s30",         /* station 15 */
+    "dense-irregular":"tissues/s32",      /* station 16 */
+    "elastic-ct":"tissues/s36",           /* station 18 */
+    "dense-regular":"tissues/s38",        /* station 19 */
+    "adipose":"tissues/s40",              /* station 20 */
+    "areolar":"tissues/s42",              /* station 21 */
+    "nervous-tissue":"tissues/s48",       /* station 24 */
+    "skeletal-muscle":"tissues/s56",      /* station 28 */
+    "smooth-muscle":"tissues/s58",        /* station 29 */
+    "cardiac-muscle":"tissues/s60",       /* station 30 */
+
+    "pacinian":"skin/s02",                /* skin 1  */
+    "sebaceous-gland":"skin/s04",         /* skin 2  */
+    "meissner":"skin/s06",                /* skin 3  */
+    "apocrine-gland":"skin/s10",          /* skin 5  */
+    "hair-follicle":"skin/s12",           /* skin 6  */
+    "stratum-corneum":"skin/s14",         /* skin 7  */
+    "papillary-dermis":"skin/s16",        /* skin 8  */
+    "stratum-lucidum":"skin/s18",         /* skin 9  */
+    "eccrine-gland":"skin/s20",           /* skin 10 */
+    "reticular-dermis":"skin/s22",        /* skin 11 */
+
+    "chondrocyte":"bone/s02",             /* bone 1  */
+    "osteocyte":"bone/s62"                /* bone 31 */
+    /* hyaline, elastic cartilage and fibrocartilage are absent on purpose:
+       her own stained slides in images/histology/ are used instead. */
   },
   regions: {
-    "patellar":"intro/s01",  "lumbar":"intro/s02",       "calcaneal":"intro/s04",
-    "mammary":"intro/s05",   "pectoral":"intro/s05",     "scapular":"intro/s06",
-    "brachial":"intro/s07",
-    "sternal":"intro/s08",   "axillary":"intro/s09",     "popliteal":"intro/s10",
-    "antebrachial":"intro/s11", "otic":"intro/s12",      "pubic":"intro/s13",
-    "crural":"intro/s15",    "olecranal":"intro/s16",    "acromial":"intro/s17",
-    "cervical":"intro/s18",  "antecubital":"intro/s24",  "vertebral":"intro/s26",
-    "occipital":"intro/s27", "umbilical":"intro/s29",    "sural":"intro/s30",
-    "pollex":"intro/s31",    "plantar":"intro/s32",      "buccal":"intro/s34",
-    "femoral":"intro/s36",   "orbital":"intro/s37",      "sacral":"intro/s38",
-    "gluteal":"intro/s39",   "hallux":"intro/s40"
+    "patellar":"intro/s02",    "lumbar":"intro/s04",       "calcaneal":"intro/s08",
+    "mammary":"intro/s10",     "pectoral":"intro/s10",     "scapular":"intro/s12",
+    "brachial":"intro/s14",    "sternal":"intro/s16",      "axillary":"intro/s18",
+    "popliteal":"intro/s20",   "antebrachial":"intro/s22", "otic":"intro/s24",
+    "pubic":"intro/s26",       "crural":"intro/s30",       "olecranal":"intro/s32",
+    "acromial":"intro/s34",    "cervical":"intro/s36",     "antecubital":"intro/s48",
+    "vertebral":"intro/s52",   "occipital":"intro/s54",    "umbilical":"intro/s58",
+    "sural":"intro/s60",       "pollex":"intro/s62",       "plantar":"intro/s64",
+    "buccal":"intro/s68",      "femoral":"intro/s72",      "orbital":"intro/s74",
+    "sacral":"intro/s76",      "gluteal":"intro/s78",      "hallux":"intro/s80"
   }
+};
+
+/* Pictures that are near enough to each other that two of them on one board
+   would be guesswork rather than recall. Nested views of the same structure,
+   for one. Items sharing a family never deal into the same image round. */
+var PIC_FAMILY = {
+  histology: {},
+  regions: { "cephalic":"head-whole", "cranial":"head-whole", "facial":"head-whole" }
 };
 
 /* fill in defaults */
@@ -954,6 +1084,7 @@ Object.keys(SUBJECTS).forEach(function(sk){
     it.subject = sk;
     it.file = it.id + s.imageExt;
     it.loop = (LOOP_MAP[sk] && LOOP_MAP[sk][it.id]) ? LOOPS_BASE + LOOP_MAP[sk][it.id] + ".jpg" : null;
+    it.picFam = (PIC_FAMILY[sk] && PIC_FAMILY[sk][it.id]) || null;
     it.groups = {
       name: it.id,
       fn:   it.gFn  || ("fn-"  + it.id),
@@ -974,7 +1105,6 @@ var teams = [{ name:"You", color:TEAM_COLORS[0], score:0, rounds:0, total:0 }];
 var tourny = [];           // round results
 var game = null;
 var timerId = null;
-var presentWin = null;
 
 var $  = function(s,r){ return (r||document).querySelector(s); };
 var $$ = function(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
@@ -1152,13 +1282,14 @@ function pickRound(n, groupKey){
   var byImage = (radioVal("left") === "image");
   /* two items can legitimately share one picture, mammary and pectoral for one,
      so never deal both of them into the same round or the board is unsolvable */
+  function picKey(t){ return t.picFam || imgSrc(t); }
   function imageClash(t){
     if(!byImage) return false;
-    var im = imgSrc(t);
-    return !!im && !!usedImg[im];
+    var k = picKey(t);
+    return !!k && !!usedImg[k];
   }
   function take(t){
-    if(byImage){ var im = imgSrc(t); if(im) usedImg[im] = true; }
+    if(byImage){ var k = picKey(t); if(k) usedImg[k] = true; }
     out.push(t);
   }
   cands.forEach(function(t){
@@ -1285,6 +1416,30 @@ function renderBoards(){
       ? "No image files found yet. Open the image library below and load them, or switch the left board to words."
       : fieldLabel("left","image").hint;
   }
+  updatePlayHint();
+}
+
+/* People reach for classic concentration and click two cards on one board.
+   Nothing resolves, and it reads as broken. So say what is needed next, and
+   mark the board it is needed from. */
+function updatePlayHint(){
+  if(!game) return;
+  var lf = fieldLabel("left", game.left), rf = fieldLabel("right", game.right);
+  var txt, wantLeft = false, wantRight = false;
+  if(game.over){
+    txt = "Round over. Deal a new round to go again.";
+  } else if(game.selLeft && !game.selRight){
+    txt = "You have one from the " + lf.board.toLowerCase() + ". Now turn over a card on the " + rf.board.toLowerCase() + ".";
+    wantRight = true;
+  } else if(game.selRight && !game.selLeft){
+    txt = "You have one from the " + rf.board.toLowerCase() + ". Now turn over a card on the " + lf.board.toLowerCase() + ".";
+    wantLeft = true;
+  } else {
+    txt = "Turn over one card on each board, one on the left and one on the right. A pair only resolves once you have one from each side.";
+  }
+  $("#playHintText").textContent = txt;
+  $("#boardLeft").classList.toggle("awaiting", wantLeft);
+  $("#boardRight").classList.toggle("awaiting", wantRight);
 }
 
 function renderTeamStrip(){
@@ -1325,8 +1480,18 @@ function announce(m){ $("#liveRegion").textContent = m; }
 
 function play(side, id){
   if(!game || game.lock || game.matched[id]) return;
-  if(side === "left")  game.selLeft  = (game.selLeft  === id) ? null : id;
-  else                 game.selRight = (game.selRight === id) ? null : id;
+  var sameBoardShuffle = false;
+  if(side === "left"){
+    sameBoardShuffle = !!game.selLeft && game.selLeft !== id && !game.selRight;
+    game.selLeft  = (game.selLeft  === id) ? null : id;
+  } else {
+    sameBoardShuffle = !!game.selRight && game.selRight !== id && !game.selLeft;
+    game.selRight = (game.selRight === id) ? null : id;
+  }
+  if(sameBoardShuffle){
+    var other = (side === "left") ? fieldLabel("right", game.right) : fieldLabel("left", game.left);
+    announce("Still the same board. Take your second card from the " + other.board.toLowerCase() + ".");
+  }
   game.wrongFlash = false;
   renderBoards(); renderPresent();
 
@@ -1391,7 +1556,7 @@ function finish(){
     msg = "Board cleared. " + game.firstTry + " of " + game.items.length
         + " found on the first try, " + game.misses + " miss" + (game.misses === 1 ? "" : "es") + ".";
     teams[0].total += teams[0].score;
-    announce(msg); $("#setupNote").textContent = msg; renderPresent();
+    announce(msg); $("#setupNote").textContent = msg; updatePlayHint(); renderPresent();
     return;
   }
   if(teams.length > 1){
@@ -1413,6 +1578,7 @@ function finish(){
   }
   announce(msg);
   $("#setupNote").textContent = msg;
+  updatePlayHint();
   renderPresent();
 }
 
@@ -1423,7 +1589,7 @@ function revealRest(){
   });
   game.selLeft = null; game.selRight = null; game.over = true;
   if(timerId) clearInterval(timerId);
-  renderBoards(); updateStats(); renderPresent();
+  renderBoards(); updateStats(); updatePlayHint(); renderPresent();
   announce("All remaining pairs revealed.");
 }
 
@@ -1627,90 +1793,30 @@ function downloadCaptured(){
 }
 
 /* ============================================================
-   PRESENT MODE  (separate window)
+   PRESENT MODE
+   One screen, in page, full screen, the way Anatomy Taboo does it.
+   Same state as the setup panel, so a click here and a click there
+   are the same move.
    ============================================================ */
-var PRESENT_CSS = ""
- + ":root{--navy:#08101F;--maroon:#7A2A22;--gold:#DCB45C;--straw:#E8CE85;--card:#fff;--tint:#ECEFF4;--terra:#8B1D1D;--muted:#3D4860}"
- + "*{box-sizing:border-box}"
- + "html,body{margin:0;height:100%;overflow:hidden;background:var(--navy);color:#fff;"
- + "font-family:'Figtree','Plus Jakarta Sans',system-ui,sans-serif}"
- + "em,i{font-style:normal}"
- + "#shell{height:100vh;display:flex;flex-direction:column;padding:1.4vh 1.6vw}"
- + "#bar{flex:0 0 auto;display:flex;align-items:center;gap:1.2vw;flex-wrap:wrap;padding-bottom:1.2vh}"
- + "#ttl{font-family:'Plus Jakarta Sans';font-weight:800;font-size:clamp(15px,2.2vh,30px);letter-spacing:-.01em}"
- + "#sub{color:var(--straw);font-weight:600;font-size:clamp(11px,1.5vh,18px)}"
- + "#chips{margin-left:auto;display:flex;gap:.7vw;flex-wrap:wrap}"
- + ".pchip{background:var(--card);color:var(--navy);border-radius:99px;padding:.5vh 1vh;display:flex;align-items:center;gap:.6vh;"
- + "font-weight:700;font-size:clamp(11px,1.7vh,20px)}"
- + ".pchip .d{width:1.4vh;height:1.4vh;min-width:10px;min-height:10px;border-radius:4px}"
- + ".pchip .s{background:var(--tint);border-radius:99px;padding:0 .8vh;font-family:'Plus Jakarta Sans';font-weight:800;min-width:3vh;text-align:center}"
- + ".pchip[data-a='true']{background:var(--gold);box-shadow:0 0 0 .5vh rgba(232,206,133,.35)}"
- + ".pchip[data-a='true'] .s{background:var(--navy);color:#fff}"
- + "#stage{flex:1 1 auto;display:grid;grid-template-columns:1fr 1fr;gap:1.2vw;min-height:0}"
- + ".pboard{background:var(--maroon);border-radius:14px;padding:1.2vh 1vw;display:flex;flex-direction:column;min-height:0}"
- + ".pbh{flex:0 0 auto;font-family:'Plus Jakarta Sans';font-weight:800;font-size:clamp(11px,1.8vh,22px);color:#fff;padding-bottom:.9vh}"
- + ".pgrid{flex:1 1 auto;display:grid;gap:.8vh;min-height:0}"
- + ".pt{position:relative;border:2px solid var(--gold);border-radius:10px;background:var(--navy);color:var(--straw);cursor:pointer;"
- + "display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:.6vh;min-height:0;"
- + "box-shadow:0 2px 6px rgba(0,0,0,.3);font-family:'Plus Jakarta Sans';font-weight:800}"
- + ".pt .c{font-size:clamp(10px,1.7vh,20px);letter-spacing:.08em}"
- + ".pt[data-s='up'],.pt[data-s='matched'],.pt[data-s='wrong']{background:var(--card);color:var(--navy)}"
- + ".pt[data-s='up']{box-shadow:0 0 0 .55vh var(--gold),0 2px 6px rgba(0,0,0,.3)}"
- + ".pt[data-s='wrong']{box-shadow:0 0 0 .55vh var(--terra),0 2px 6px rgba(0,0,0,.3)}"
- + ".pt[data-s='matched']{background:var(--tint);border-color:var(--navy);opacity:.95;cursor:default}"
- + ".pt[data-s='wrong']{border-color:var(--terra)}"
- + ".pt .t{font-family:'Figtree';font-weight:500;font-size:clamp(10px,1.75vh,21px);line-height:1.25;padding:.4vh}"
- + ".pt .t.term{font-family:'Plus Jakarta Sans';font-weight:800;font-size:clamp(11px,2vh,26px)}"
- + ".pt img{width:100%;height:100%;object-fit:cover;border-radius:8px}"
- + ".pt .ni{font-size:clamp(9px,1.5vh,16px);color:var(--muted);font-weight:700}"
- + ".pt .ow{position:absolute;right:.5vh;bottom:.5vh;width:1.5vh;height:1.5vh;min-width:11px;min-height:11px;border-radius:4px}"
- + ".pt .sc{position:absolute;left:.5vh;top:.5vh;background:rgba(8,16,31,.85);color:#fff;font-size:clamp(8px,1.2vh,13px);"
- + "padding:.15vh .7vh;border-radius:99px;letter-spacing:.06em}"
- + "#foot{flex:0 0 auto;padding-top:1vh;display:flex;gap:1.2vw;align-items:center;color:var(--straw);"
- + "font-size:clamp(10px,1.5vh,17px);font-weight:600}"
- + "#banner{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(8,16,31,.94);"
- + "text-align:center;padding:4vw}"
- + "#banner.on{display:flex}"
- + "#banner .in{max-width:80vw}"
- + "#banner h2{font-family:'Plus Jakarta Sans';font-weight:800;font-size:clamp(22px,7vh,86px);margin:0 0 2vh;color:var(--gold)}"
- + "#banner p{font-size:clamp(13px,2.6vh,34px);margin:0;color:#fff}"
- + "@media (prefers-reduced-motion:reduce){*{transition:none!important}}";
+var staged = false;
 
 function openPresent(){
-  if(presentWin && !presentWin.closed){ presentWin.focus(); renderPresent(); return; }
-  var w = window.open("", "bio004present", "width=1280,height=800");
-  if(!w){ $("#setupNote").textContent = "The browser blocked the present window. Allow pop-ups for this page and press Present again."; return; }
-  presentWin = w;
-  var d = w.document;
-  d.open();
-  d.write('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Memory Match · Present</title>'
-    + '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
-    + '<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">'
-    + '<style>' + PRESENT_CSS + '</style></head><body>'
-    + '<div id="shell">'
-    + '<div id="bar"><div><div id="ttl"></div><div id="sub"></div></div><div id="chips"></div></div>'
-    + '<div id="stage">'
-    + '<div class="pboard"><div class="pbh" id="lh"></div><div class="pgrid" id="lg"></div></div>'
-    + '<div class="pboard"><div class="pbh" id="rh"></div><div class="pgrid" id="rg"></div></div>'
-    + '</div>'
-    + '<div id="foot"><span id="fstat"></span><span id="fhint">F for full screen · Esc to close</span></div>'
-    + '</div><div id="banner"><div class="in"><h2 id="bh"></h2><p id="bp"></p></div></div>'
-    + '</body></html>');
-  d.close();
-
-  d.addEventListener("click", function(e){
-    var t = e.target.closest(".pt");
-    if(t) play(t.getAttribute("data-side"), t.getAttribute("data-id"));
-  });
-  d.addEventListener("keydown", function(e){
-    if(e.key === "Escape"){ w.close(); }
-    if(e.key === "f" || e.key === "F"){
-      if(d.fullscreenElement) d.exitFullscreen(); else d.documentElement.requestFullscreen();
-    }
-  });
-  w.addEventListener("resize", renderPresent);
+  staged = true;
+  $("#stage").hidden = false;
+  document.body.style.overflow = "hidden";
+  var el = document.documentElement;
+  if(el.requestFullscreen) el.requestFullscreen().catch(function(){});
   renderPresent();
-  w.focus();
+  $("#stageExit").focus();
+  announce("Present mode on. Escape exits.");
+}
+function closePresent(){
+  staged = false;
+  $("#stage").hidden = true;
+  $("#stageBanner").classList.remove("on");
+  document.body.style.overflow = "";
+  if(document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(function(){});
+  announce("Present mode off.");
 }
 
 function gridShape(n){
@@ -1724,33 +1830,35 @@ function gridShape(n){
   return best;
 }
 
-function renderPresent(){
-  if(!presentWin || presentWin.closed) return;
-  var d = presentWin.document;
-  if(!d.getElementById("lg")) return;
+function pOwner(id){
+  var oi = game.owner[id];
+  if(oi === undefined || teams.length < 2 || isPractice()) return "";
+  return '<span class="ow" style="background:'+teams[oi].color+'"></span>';
+}
 
+function renderPresent(){
+  if(!staged) return;
   if(!game){
-    d.getElementById("ttl").textContent = "Memory Match";
-    d.getElementById("sub").textContent = "Deal a round in the control window.";
-    d.getElementById("lg").innerHTML = ""; d.getElementById("rg").innerHTML = "";
+    $("#stageTtl").textContent = "Memory Match";
+    $("#stageSub").textContent = "Deal a round to start.";
+    $("#stageLG").innerHTML = ""; $("#stageRG").innerHTML = "";
     return;
   }
   var lf = fieldLabel("left", game.left), rf = fieldLabel("right", game.right);
-  d.getElementById("ttl").textContent = SUBJECTS[game.subject].label + " Memory Match";
-  d.getElementById("sub").textContent = lf.label + " to " + rf.label.toLowerCase();
-  d.getElementById("lh").textContent = lf.board;
-  d.getElementById("rh").textContent = rf.board;
+  $("#stageTtl").textContent = SUBJECTS[game.subject].label + " Memory Match";
+  $("#stageSub").textContent = lf.label + " to " + rf.label.toLowerCase();
+  $("#stageLH").textContent = lf.board;
+  $("#stageRH").textContent = rf.board;
 
   var shape = gridShape(game.items.length);
-  ["lg","rg"].forEach(function(gid){
-    var el = d.getElementById(gid);
+  ["#stageLG","#stageRG"].forEach(function(sel){
+    var el = $(sel);
     el.style.gridTemplateColumns = "repeat(" + shape.cols + ",1fr)";
     el.style.gridTemplateRows = "repeat(" + shape.rows + ",1fr)";
   });
 
-  d.getElementById("lg").innerHTML = game.leftOrder.map(function(it,i){
-    var st = stateOf(it.id, "left");
-    var inner;
+  $("#stageLG").innerHTML = game.leftOrder.map(function(it,i){
+    var st = stateOf(it.id, "left"), inner;
     if(st === "down"){
       inner = '<span class="c">' + (game.left === "image" ? game.codes[it.id] : ("Card " + (i+1))) + '</span>';
     } else if(game.left === "image"){
@@ -1760,57 +1868,51 @@ function renderPresent(){
     } else {
       inner = '<span class="t term">'+esc(it.name)+'</span>';
     }
-    return '<button class="pt" data-side="left" data-id="'+it.id+'" data-s="'+st+'"'+(st==="matched"?" disabled":"")+'>'
-      + inner + (st==="matched" ? pOwner(it.id) : "") + '</button>';
+    return '<button type="button" class="pt" data-side="left" data-id="'+it.id+'" data-s="'+st+'"'
+      + (st==="matched"?" disabled":"") + '>' + inner + (st==="matched" ? pOwner(it.id) : "") + '</button>';
   }).join("");
 
-  d.getElementById("rg").innerHTML = game.rightOrder.map(function(it,i){
+  $("#stageRG").innerHTML = game.rightOrder.map(function(it,i){
     var st = stateOf(it.id, "right");
     var inner = (st === "down")
       ? '<span class="c">Card ' + (i+1) + '</span>'
       : '<span class="t'+(game.right==="name"?" term":"")+'">'+esc(rightText(it))+'</span>';
-    return '<button class="pt" data-side="right" data-id="'+it.id+'" data-s="'+st+'"'+(st==="matched"?" disabled":"")+'>'
-      + inner + (st==="matched" ? pOwner(it.id) : "") + '</button>';
+    return '<button type="button" class="pt" data-side="right" data-id="'+it.id+'" data-s="'+st+'"'
+      + (st==="matched"?" disabled":"") + '>' + inner + (st==="matched" ? pOwner(it.id) : "") + '</button>';
   }).join("");
 
   renderPresentStats();
 
-  var banner = d.getElementById("banner");
+  var banner = $("#stageBanner");
   if(game.over){
     var top = Math.max.apply(null, teams.map(function(t){ return t.score; }));
     var win = teams.filter(function(t){ return t.score === top; });
-    d.getElementById("bh").textContent = (teams.length > 1 && !isPractice())
+    $("#stageBH").textContent = (teams.length > 1 && !isPractice())
       ? (win.length > 1 ? "Tied at " + top : win[0].name + " wins")
       : "Board cleared";
-    d.getElementById("bp").textContent = isPractice()
-      ? game.firstTry + " of " + game.items.length + " on the first try · " + game.misses + " miss" + (game.misses === 1 ? "" : "es")
-      : game.flips + " flips · " + game.hits + " matches";
+    $("#stageBP").textContent = isPractice()
+      ? game.firstTry + " of " + game.items.length + " on the first try, " + game.misses + " miss" + (game.misses === 1 ? "" : "es")
+      : game.flips + " flips, " + game.hits + " matches";
     banner.classList.add("on");
-    banner.onclick = function(){ banner.classList.remove("on"); };
   } else {
     banner.classList.remove("on");
-    banner.onclick = null;
   }
 }
-function pOwner(id){
-  var oi = game.owner[id];
-  if(oi === undefined || teams.length < 2) return "";
-  return '<span class="ow" style="background:'+teams[oi].color+'"></span>';
-}
+
 function renderPresentStats(){
-  if(!presentWin || presentWin.closed || !game) return;
-  var d = presentWin.document;
-  var chips = d.getElementById("chips");
-  if(!chips) return;
-  chips.innerHTML = (teams.length > 1 ? teams : []).map(function(t,i){
+  if(!staged || !game) return;
+  var chips = $("#stageChips");
+  chips.innerHTML = (teams.length > 1 && !isPractice() ? teams : []).map(function(t,i){
     return '<span class="pchip" data-a="'+(i===game.turn)+'"><span class="d" style="background:'+t.color+'"></span>'
       + esc(t.name) + '<span class="s">'+t.score+'</span></span>';
   }).join("");
   var done = Object.keys(game.matched).length;
   var s = Math.floor((Date.now() - game.started)/1000);
-  d.getElementById("fstat").textContent =
-    done + " of " + game.items.length + " matched · " + game.flips + " flips · "
-    + Math.floor(s/60) + ":" + String(s%60).padStart(2,"0");
+  $("#stageStat").textContent = isPractice()
+    ? done + " of " + game.items.length + " cleared, " + game.misses + " miss" + (game.misses===1?"":"es")
+        + ", " + (done ? Math.round(game.firstTry/done*100) + "% first try" : "no first try yet")
+    : done + " of " + game.items.length + " matched, " + game.flips + " flips, "
+        + Math.floor(s/60) + ":" + String(s%60).padStart(2,"0");
 }
 
 /* ============================================================
@@ -2038,6 +2140,19 @@ $("#fw1s").addEventListener("click", function(){ nudge(1); });
 $("#captureBtn").addEventListener("click", capture);
 $("#downloadBtn").addEventListener("click", downloadCaptured);
 
+$("#stage").addEventListener("click", function(e){
+  var t = e.target.closest(".pt");
+  if(t) play(t.getAttribute("data-side"), t.getAttribute("data-id"));
+});
+$("#stageBanner").addEventListener("click", function(){ this.classList.remove("on"); });
+$("#stageExit").addEventListener("click", closePresent);
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape" && staged) closePresent();
+});
+document.addEventListener("fullscreenchange", function(){
+  if(!document.fullscreenElement && staged) closePresent();
+});
+
 $("#pickBtn").addEventListener("click", function(){ $("#bulkInput").click(); });
 $("#bulkInput").addEventListener("change", function(e){ ingestFiles(e.target.files); e.target.value = ""; });
 $("#libGrid").addEventListener("click", function(e){
@@ -2055,7 +2170,6 @@ var dz = $("#dropzone");
 ["dragleave","drop"].forEach(function(ev){ dz.addEventListener(ev, function(e){ e.preventDefault(); dz.classList.remove("over"); }); });
 dz.addEventListener("drop", function(e){ if(e.dataTransfer && e.dataTransfer.files) ingestFiles(e.dataTransfer.files); });
 
-window.addEventListener("beforeunload", function(){ if(presentWin && !presentWin.closed) presentWin.close(); });
 </script>
 
 <script>
