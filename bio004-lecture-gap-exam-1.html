@@ -116,7 +116,7 @@ input[type=text],select{font-family:var(--fb);font-size:16px;color:var(--ink);ba
 .crow{display:flex;gap:12px;align-items:center;margin:0 0 8px;flex-wrap:wrap}
 .crow label{flex:1;font-family:var(--fb);font-weight:400;font-size:15.5px;margin:0}
 .crow input{width:74px;font-family:var(--fb);font-size:16px;color:var(--ink);background:var(--page);border:1.5px solid var(--line);border-radius:8px;padding:8px;text-align:center}
-textarea{font-family:var(--fb);font-size:16px;color:var(--ink);background:var(--page);border:1.5px solid var(--line);border-radius:8px;padding:10px 12px;width:100%}
+textarea{font-family:var(--fb);font-size:16px;color:var(--ink);background:var(--page);border:1.5px solid var(--line);border-radius:8px;padding:10px 12px;width:100%;overflow:hidden;resize:vertical}
 /* one-page printable result sheet: hidden on screen, the only thing in print */
 #printsheet{display:none}
 @media print{
@@ -181,6 +181,19 @@ h1 .hx{color:var(--rust)}
 .backrow{margin:0 0 14px}
 /* worksheet */
 .callout{background:var(--navy);border-radius:14px;padding:26px 28px;margin:0 0 16px;color:#F2E2B8}
+.fkgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0 14px}
+@media (max-width:700px){.fkgrid{grid-template-columns:1fr}}
+.fkcard{background:var(--page);border-radius:10px;padding:16px 18px;box-shadow:0 10px 22px rgba(0,0,0,.28)}
+.fklab{font-family:var(--fd);font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;margin:0 0 2px}
+.fkcard.fam .fklab{color:var(--rust)}
+.fkcard.kno .fklab{color:var(--navy)}
+.fkcard .fktag{font-family:var(--fd);font-size:13.5px;font-weight:700;color:var(--muted);margin:0 0 10px}
+.fkcard li{color:var(--ink)}
+.fkcard ul{list-style:none;padding:0;margin:0}
+.fkcard li{position:relative;padding:8px 0 8px 26px;margin:0;border-top:1px solid var(--line-soft);font-size:14.5px;color:var(--ink)}
+.fkcard li:first-child{border-top:0}
+.fkcard.fam li::before{content:"\25CB";position:absolute;left:2px;color:var(--muted)}
+.fkcard.kno li::before{content:"\2713";position:absolute;left:2px;color:var(--navy);font-weight:800}
 .callout h2{color:#fff;font-size:clamp(22px,3.5vw,30px);letter-spacing:-.02em}
 .callout p{color:#F2E2B8}
 .callout strong{color:#E8CE85}
@@ -215,13 +228,22 @@ h1 .hx{color:var(--rust)}
     <p class="eyebrow">BIO 004 &middot; Exam 1 Gap Check</p>
     <h1>Opens <span class="hx">in class</span>.</h1>
     <div class="gate locked" style="max-width:560px">
-      <h2>Enter the class code</h2>
+      <h2>Set up, then unlock</h2>
       <ol style="margin:0 0 14px;padding-left:22px">
-        <li><strong>This unlocks at class time.</strong></li>
-        <li><strong>Dr. Rennie gives you the code</strong> at the start of class.</li>
+        <li><strong>Your name and your class first.</strong></li>
+        <li><strong>Dr. Rennie gives your class its code</strong> at the start of class. Each class has its own.</li>
         <li><strong>Enter it once.</strong> This device stays unlocked after that.</li>
       </ol>
-      <label for="codeIn">Class code</label>
+      <p style="margin:0 0 12px"><label for="gateName">Your name</label>
+      <input type="text" id="gateName" autocomplete="name" style="max-width:340px"></p>
+      <p style="margin:0 0 12px"><label for="gateSec">Your class</label>
+      <select id="gateSec" style="max-width:340px;width:100%">
+        <option value="">Choose your class...</option>
+        <option>Class 1, Mon/Wed afternoon</option>
+        <option>Class 2, Tue/Thu morning</option>
+        <option>Class 3, Tue/Thu evening</option>
+      </select></p>
+      <label for="codeIn">Your class code</label>
       <input type="text" id="codeIn" autocomplete="off" autocapitalize="none" spellcheck="false" style="max-width:260px">
       <p style="margin:12px 0 0"><button type="button" class="btn" id="codeBtn">Unlock</button></p>
       <p class="warn" id="codeWarn" role="status" hidden></p>
@@ -349,8 +371,32 @@ h1 .hx{color:var(--rust)}
     <h1>Now fix the <span class="hx">why</span>.</h1>
     <div class="callout">
       <h2>Familiar is not the same as known</h2>
-      <p style="margin:0 0 8px"><strong>Familiar</strong> means the answer looks right once you see it. <strong>Known</strong> means you can produce it with the page blank and the options hidden. Re-reading, highlighting, and watching videos build familiarity; they feel like studying because everything you look at seems recognizable. The exam does not ask whether you recognize the answer. It asks you to produce it.</p>
-      <p style="margin:0">Only forced retrieval builds knowledge: blank-page brain dumps, recall cards, gap finders, saying it out loud with the notes closed. If most of your misses land in category 2 below, that is your diagnosis, and it is the most fixable one on the list.</p>
+      <p style="margin:0"><strong>Familiar</strong> means the answer looks right once you see it. <strong>Known</strong> means you can produce it with the page blank. The exam only ever asks you to produce it.</p>
+      <div class="fkgrid">
+        <div class="fkcard fam">
+          <p class="fklab">Familiar</p>
+          <p class="fktag">Feels like studying. Builds recognition.</p>
+          <ul>
+            <li>Re-reading the slides or notes</li>
+            <li>Highlighting and re-highlighting</li>
+            <li>Re-watching the lecture videos</li>
+            <li>Looking at the diagram and nodding</li>
+            <li>Reviewing with the answers visible</li>
+          </ul>
+        </div>
+        <div class="fkcard kno">
+          <p class="fklab">Known</p>
+          <p class="fktag">Is studying. Builds recall.</p>
+          <ul>
+            <li>Blank-page brain dump, then fix it in a different color</li>
+            <li>Recall cards: answer before you flip</li>
+            <li>Gap finders and practice exams, notes closed</li>
+            <li>Re-drawing the diagram from memory</li>
+            <li>Saying it out loud with the notes closed</li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin:0">Every row on the left has its replacement on the right, same row. If most of your misses land in category 2 below, that swap is your whole weekend.</p>
     </div>
 
     <h2 class="secthead"><span class="sn" aria-hidden="true">01</span>The six miss types</h2>
@@ -372,11 +418,11 @@ h1 .hx{color:var(--rust)}
     <p class="secnote">These are graded on honesty and specificity, not length. Two or three sentences each.</p>
     <div class="card">
       <p style="margin:0 0 6px"><label for="r1">1. Look at your biggest category. What does it tell you about how you have actually been studying? Be specific about what you do when you sit down to study.</label></p>
-      <textarea id="r1" rows="4" maxlength="450"></textarea><p class="cnt" id="r1c"></p>
+      <textarea id="r1" rows="4"></textarea><p class="cnt" id="r1c"></p>
       <p style="margin:14px 0 6px"><label for="r2">2. Explain the difference between being familiar with something and knowing it, in your own words, using one of your actual misses as the example.</label></p>
-      <textarea id="r2" rows="4" maxlength="450"></textarea><p class="cnt" id="r2c"></p>
+      <textarea id="r2" rows="4"></textarea><p class="cnt" id="r2c"></p>
       <p style="margin:14px 0 6px"><label for="r3">3. What exactly will you do differently before Exam 1? Name the day, the tool, and the topic. "Study more" is not an answer.</label></p>
-      <textarea id="r3" rows="4" maxlength="450"></textarea><p class="cnt" id="r3c"></p>
+      <textarea id="r3" rows="4"></textarea><p class="cnt" id="r3c"></p>
     </div>
 
     <h2 class="secthead"><span class="sn" aria-hidden="true">05</span>Your plan of attack</h2>
@@ -599,7 +645,9 @@ h1 .hx{color:var(--rust)}
       '<div id="dumpKey"></div></fieldset>';
     document.getElementById('dumpsec').innerHTML = html;
     renderDumpKey();
-    document.getElementById('dumpText').addEventListener('input', function () { S.dump.text = this.value; saveS(S); prog(); });
+    var dt = document.getElementById('dumpText');
+    dt.style.height = 'auto'; dt.style.height = (dt.scrollHeight + 4) + 'px';
+    dt.addEventListener('input', function () { S.dump.text = this.value; saveS(S); prog(); this.style.height = 'auto'; this.style.height = (this.scrollHeight + 4) + 'px'; });
     document.getElementById('dumpReveal').addEventListener('click', function () {
       S.dump.revealed = true; saveS(S);
       this.setAttribute('aria-expanded', 'true');
@@ -1004,13 +1052,14 @@ h1 .hx{color:var(--rust)}
     var last = document.getElementById('ml' + (W.manual.length - 1));
     if (last) last.focus();
   });
+  function grow(ta) { ta.style.height = 'auto'; ta.style.height = (ta.scrollHeight + 4) + 'px'; }
   ['r1', 'r2', 'r3'].forEach(function (r) {
     var ta = document.getElementById(r);
     var cnt = document.getElementById(r + 'c');
     ta.value = W[r];
-    function upd() { cnt.textContent = (450 - ta.value.length) + ' characters left'; }
-    upd();
-    ta.addEventListener('input', function () { W[r] = ta.value; saveW(); upd(); });
+    function upd() { cnt.textContent = ta.value.length ? ta.value.length + ' characters' : ''; }
+    upd(); grow(ta);
+    ta.addEventListener('input', function () { W[r] = ta.value; saveW(); upd(); grow(ta); });
   });
 
   function validateMeta() {
@@ -1149,7 +1198,17 @@ h1 .hx{color:var(--rust)}
     document.getElementById('printsheet').innerHTML = buildExamSheet(g) + (W.done ? buildMetaSheet(g) : '');
     window.print();
   });
+  function needsIdentity() {
+    var w = who();
+    if (w.name !== '(no name)' && w.sec !== '(no section)') return false;
+    show('home');
+    var el = document.getElementById(w.name === '(no name)' ? 'sname' : 'ssec');
+    el.classList.add('unanswered-flag');
+    el.focus();
+    return true;
+  }
   document.getElementById('mPrintBtn').addEventListener('click', function () {
+    if (needsIdentity()) return;
     if (!validateMeta()) return;
     var g = grade();
     document.getElementById('mBlock').textContent = buildBlock(g);
@@ -1158,6 +1217,7 @@ h1 .hx{color:var(--rust)}
     window.print();
   });
   document.getElementById('mCopyBtn').addEventListener('click', function () {
+    if (needsIdentity()) return;
     if (!validateMeta()) return;
     var g = grade();
     var txt = buildBlock(g);
@@ -1211,33 +1271,50 @@ h1 .hx{color:var(--rust)}
   });
 
   /* ================= class-time lock =================
-     INSTRUCTOR: the accepted class codes live in CODES below,
-     base64-encoded so a casual view-source does not show them in
-     plain text. This is pacing, not security: a determined student
-     can defeat any lock that runs in their own browser. To change
-     a code, open any browser console, type btoa('yournewcode')
-     using all lowercase, and replace an entry with the result.
+     INSTRUCTOR: each class section has its own code, in SECODES
+     below, base64-encoded so a casual view-source does not show
+     them in plain text. A code only unlocks the section it belongs
+     to, and the section chosen at the gate prints on the student's
+     sheet. This is pacing, not security: a determined student can
+     defeat any lock that runs in their own browser. To change a
+     code, open any browser console, type btoa('yournewcode')
+     using all lowercase, and replace that section's value.
      Anyone who already has exam progress on the device is treated
      as unlocked, so this can ship mid-week without relocking
      students who took it in class before the gate existed. */
   var UKEY = 'bio004-gapcheck1-unlock';
-  var CODES = ['YXhpYWw=','ZGlzdGFs','bWVkaWFs'];
+  var SKEY = 'bio004-gapcheck1-sec';
+  /* one code per class section; a code only unlocks the section it belongs to */
+  var SECODES = {
+    'Class 1, Mon/Wed afternoon': 'YXhpYWw=',
+    'Class 2, Tue/Thu morning': 'ZGlzdGFs',
+    'Class 3, Tue/Thu evening': 'bWVkaWFs'
+  };
   function unlocked() {
     try { if (localStorage.getItem(UKEY) === '1') return true; } catch (e) {}
     return S.graded || partsDone() > 0;
   }
   function tryCode() {
-    var v = (document.getElementById('codeIn').value || '').trim().toLowerCase();
     var warn = document.getElementById('codeWarn');
+    var sec = document.getElementById('gateSec').value;
+    var v = (document.getElementById('codeIn').value || '').trim().toLowerCase();
+    if (!sec) {
+      warn.hidden = false;
+      warn.textContent = 'Choose your class first. The code is different for each class.';
+      return;
+    }
     var enc = '';
     try { enc = btoa(v); } catch (e) {}
-    if (v && CODES.indexOf(enc) >= 0) {
-      try { localStorage.setItem(UKEY, '1'); } catch (e) {}
+    if (v && enc === SECODES[sec]) {
+      try { localStorage.setItem(UKEY, '1'); localStorage.setItem(SKEY, sec); } catch (e) {}
+      var nm = document.getElementById('gateName').value.trim();
+      if (nm) document.getElementById('sname').value = nm;
+      document.getElementById('ssec').value = sec;
       warn.hidden = true;
       show('home');
     } else {
       warn.hidden = false;
-      warn.textContent = 'That is not the code. Check the board or ask Dr. Rennie.';
+      warn.textContent = 'That is not the code for your class. Each class gets its own code at class time; a code from another class will not open it.';
     }
   }
   document.getElementById('codeBtn').addEventListener('click', tryCode);
@@ -1247,6 +1324,10 @@ h1 .hx{color:var(--rust)}
   renderExam();
   if (S.graded) { renderResults(grade()); }
   rebuildMeta();
+  try {
+    var savedSec = localStorage.getItem(SKEY);
+    if (savedSec && !document.getElementById('ssec').value) document.getElementById('ssec').value = savedSec;
+  } catch (e) {}
   gates();
   show(unlocked() ? 'home' : 'lockgate');
 
