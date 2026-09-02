@@ -399,6 +399,9 @@
     t.push({ g: 'Course materials', name: 'Case deep dives', sub: 'One clinical case per topic, with the PDF',
              url: BASE + 'course-index.html' + q, icon: 'flask', tone: 'terra', soon: true,
              kw: 'deep dive cases clinical index topics' });
+    t.push({ g: 'Practice and recall', name: 'Exam 1 Gap Check', sub: 'Locked until class; the code opens the gap exam and the graded worksheet',
+             url: BASE + 'bio004-lecture-gap-exam-1.html', icon: 'target', tone: 'gold',
+             kw: 'gap check readiness exam 1 lecture gap exam metacognition worksheet code class locked' });
     t.push({ g: 'Practice and recall', name: 'Practice Exam Builder', sub: 'Build a fresh full-format exam any time, then track your scores',
              url: BASE + 'bio004-practice-exam-builder.html', icon: 'target', tone: 'gold', qr: 'exambuilder',
              kw: 'practice exam builder generator test unlimited build confidence dok predict score midterm mock' });
@@ -408,6 +411,9 @@
     t.push({ g: 'Practice and recall', name: 'Study Protocol', sub: 'A flow chart of exactly what to try this week, step by step',
              url: BASE + 'bio004-study-protocol.html', icon: 'target', tone: 'gold', qr: 'protocol',
              kw: 'study protocol how to study improve grade improve grades method plan boxes flow chart steps what should i try' });
+    t.push({ g: 'Practice and recall', name: 'Kahoots', sub: 'Every class Kahoot by module, play the rematch any time',
+             url: BASE + 'kahoots.html', icon: 'play', tone: 'gold',
+             kw: 'kahoot kahoots quiz game review class rematch challenge questions module play' });
     t.push({ g: 'Practice and recall', name: 'Mastery OS', sub: 'Your cards, your weak spots, and a plan around them',
              url: BASE + 'mastery-os-fall-2026.html' + q, icon: 'brain', tone: 'gold', qr: 'mastery',
              kw: 'mastery os plan cram competency recall cards flashcards spaced question rx study '

@@ -182,6 +182,24 @@ textarea{font-family:var(--fb);font-size:16px;color:var(--ink);background:var(--
 
 <main id="main" class="wrap">
 
+  <!-- ============ LOCK GATE (code given at class time) ============ -->
+  <section id="lockgate" hidden>
+    <p class="eyebrow">BIO 004 &middot; Exam 1 run-up</p>
+    <h1>Exam 1 Gap Check</h1>
+    <div class="gate locked" style="max-width:560px">
+      <h2>Opens in class</h2>
+      <ol style="margin:0 0 14px;padding-left:22px">
+        <li><strong>This unlocks at class time.</strong></li>
+        <li><strong>Dr. Rennie gives you the code</strong> at the start of class.</li>
+        <li><strong>Enter it once.</strong> This device stays unlocked after that.</li>
+      </ol>
+      <label for="codeIn">Class code</label>
+      <input type="text" id="codeIn" autocomplete="off" autocapitalize="none" spellcheck="false" style="max-width:260px">
+      <p style="margin:12px 0 0"><button type="button" class="btn" id="codeBtn">Unlock</button></p>
+      <p class="warn" id="codeWarn" role="status" hidden></p>
+    </div>
+  </section>
+
   <!-- ============ HOME: THE TWO CARDS ============ -->
   <section id="home">
     <p class="eyebrow">BIO 004 &middot; Exam 1 run-up</p>
@@ -424,7 +442,7 @@ textarea{font-family:var(--fb);font-size:16px;color:var(--ink);background:var(--
     return idx;
   }
 
-  var views = { home: 1, exam: 1, results: 1, metacog: 1 };
+  var views = { lockgate: 1, home: 1, exam: 1, results: 1, metacog: 1 };
   function show(v) {
     Object.keys(views).forEach(function (id) { document.getElementById(id).hidden = (id !== v); });
     if (v === 'home') gates();
@@ -1147,12 +1165,45 @@ textarea{font-family:var(--fb);font-size:16px;color:var(--ink);background:var(--
     document.getElementById(id).addEventListener('click', function (e) { e.preventDefault(); show('home'); });
   });
 
+  /* ================= class-time lock =================
+     INSTRUCTOR: the accepted class codes live in CODES below,
+     base64-encoded so a casual view-source does not show them in
+     plain text. This is pacing, not security: a determined student
+     can defeat any lock that runs in their own browser. To change
+     a code, open any browser console, type btoa('yournewcode')
+     using all lowercase, and replace an entry with the result.
+     Anyone who already has exam progress on the device is treated
+     as unlocked, so this can ship mid-week without relocking
+     students who took it in class before the gate existed. */
+  var UKEY = 'bio004-gapcheck1-unlock';
+  var CODES = ['YXhpYWw=','ZGlzdGFs','bWVkaWFs'];
+  function unlocked() {
+    try { if (localStorage.getItem(UKEY) === '1') return true; } catch (e) {}
+    return S.graded || partsDone() > 0;
+  }
+  function tryCode() {
+    var v = (document.getElementById('codeIn').value || '').trim().toLowerCase();
+    var warn = document.getElementById('codeWarn');
+    var enc = '';
+    try { enc = btoa(v); } catch (e) {}
+    if (v && CODES.indexOf(enc) >= 0) {
+      try { localStorage.setItem(UKEY, '1'); } catch (e) {}
+      warn.hidden = true;
+      show('home');
+    } else {
+      warn.hidden = false;
+      warn.textContent = 'That is not the code. Check the board or ask Dr. Rennie.';
+    }
+  }
+  document.getElementById('codeBtn').addEventListener('click', tryCode);
+  document.getElementById('codeIn').addEventListener('keydown', function (e) { if (e.key === 'Enter') tryCode(); });
+
   /* ================= boot ================= */
   renderExam();
   if (S.graded) { renderResults(grade()); }
   rebuildMeta();
   gates();
-  show('home');
+  show(unlocked() ? 'home' : 'lockgate');
 
   /* iframe height sender for Canvas */
   var FRAME_ID = 'bio004-lecture-gap-exam-1';
