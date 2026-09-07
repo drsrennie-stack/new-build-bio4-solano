@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Use It &middot; the weekly application case &middot; BIO 005 Human Physiology</title>
+<link rel="stylesheet" href="assets/fonts-site.css">
+<!-- ==========================================================
+     THE USE IT ASSIGNMENT DIRECTIONS. One file, fifteen weeks.
+
+     Embed it in Canvas with ?week=N. Every week's four cases, the
+     five questions that week asks, and the submission rules come
+     from bio005-apply-cases.js, so there is one place to edit and
+     fifteen assignments cannot drift apart.
+
+     ONE THING STILL TO SETTLE, flagged not decided.
+     bio005-week-grid.js does not list 'apply' in Week 1's due
+     items, but week-01.html has a full Apply stage with these four
+     cases in it. Either Week 1's case is assigned or it is not.
+     This page renders Week 1 either way; the grid is Scrubs' call.
+     ========================================================== -->
+<style>
+:root{
+  --navy:#0B1530; --navy-deep:#060A18; --navy-tint:#ECEFF4;
+  --rust:#8B3A2E; --rust-dark:#6E2D24;
+  --gold:#C9A14A; --gold-text:#624612;
+  --page:#FAFAF9; --slate:#8C90A0;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+  color:var(--navy);background:var(--page);line-height:1.65;font-size:15.5px;
+  padding:40px max(28px,4vw)}
+.inner{max-width:820px;margin:0 auto}
+.skip{position:absolute;left:-9999px;top:0;background:var(--navy);color:#fff;padding:12px 18px;font-weight:700;text-decoration:none;z-index:20}
+.skip:focus{left:0;top:0}
+a{color:var(--rust)}
+:focus-visible{outline:3px solid var(--rust);outline-offset:3px}
+
+header.brand{display:flex;align-items:center;gap:12px;padding:18px max(28px,4vw);
+  border-bottom:1px solid rgba(11,21,48,.14);margin:-40px max(-28px,-4vw) 28px;background:#fff}
+header.brand .bwm{font-weight:800;font-size:16px;letter-spacing:-.01em;color:var(--navy)}
+header.brand .bwm b{color:var(--rust)}
+header.brand .bsub{display:block;font-size:10.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#4F5468}
+
+.homebar{margin:0 0 18px}
+.homebtn{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:800;
+  letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--rust);
+  background:#fff;border:1px solid rgba(11,21,48,.16);border-radius:8px;padding:10px 16px;
+  transition:transform 160ms ease,box-shadow 160ms ease}
+.homebtn:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(11,21,48,.10)}
+@media print{.homebar{display:none}}
+
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:var(--rust);margin:0 0 12px}
+h1{font-size:clamp(27px,4.6vw,38px);font-weight:800;letter-spacing:-.02em;margin:0 0 6px;line-height:1.08}
+h1 .two{color:var(--rust)}
+.sub{margin:0 0 4px;font-weight:700}
+.due{color:var(--rust);font-weight:800;margin:0 0 20px}
+p{max-width:70ch}
+h2{font-size:19px;font-weight:800;margin:30px 0 8px;letter-spacing:-.01em}
+
+.card{position:relative;background:#fff;border-radius:12px;padding:18px 20px 16px;
+  box-shadow:0 1px 3px rgba(11,21,48,.10);margin:12px 0 4px;overflow:hidden}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--rust)}
+.card .label{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--rust);margin:0 0 8px}
+.card ol,.card ul{margin:0;padding-left:22px}
+.card li{margin:0 0 9px;max-width:66ch}
+.card li:last-child{margin-bottom:0}
+
+/* The four rooms. One card each, a colored tab on the card boundary,
+   room name in a color that clears AAA on white. Gold is the reason
+   the label color and the tab color are separate variables. */
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;margin:14px 0 4px}
+.choice{position:relative;background:#fff;border-radius:12px;padding:18px 20px;
+  box-shadow:0 1px 3px rgba(11,21,48,.10);overflow:hidden;
+  transition:transform 200ms ease,box-shadow 200ms ease}
+.choice:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(11,21,48,.10)}
+.choice::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--tab,var(--rust))}
+.choice .kind{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink,var(--rust));margin:6px 0 6px}
+.choice h3{font-size:18px;font-weight:800;margin:0 0 8px;letter-spacing:-.01em;line-height:1.25}
+.choice p{margin:0 0 10px;max-width:none}
+.choice p:last-child{margin-bottom:0}
+.choice .go{font-size:14.5px;color:#2A3448}
+.r0{--tab:#8B3A2E;--ink:#8B3A2E}
+.r1{--tab:#0B1530;--ink:#0B1530}
+.r2{--tab:#C9A14A;--ink:#624612}
+.r3{--tab:#6E2D24;--ink:#6E2D24}
+
+details{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(11,21,48,.10);margin:16px 0 4px;overflow:hidden}
+details>summary{cursor:pointer;padding:14px 20px;font-weight:800;list-style:none}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"+ ";color:var(--rust);font-weight:800}
+details[open]>summary::before{content:"\2212 "}
+details>summary:focus-visible{outline:3px solid var(--rust);outline-offset:-3px}
+details .body{padding:0 20px 18px}
+details .body ul{margin:0;padding-left:22px}
+details .body li{margin:0 0 9px;max-width:66ch}
+
+.btns{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0 4px}
+.btn{display:inline-block;font-weight:800;text-decoration:none;border-radius:10px;padding:13px 20px;letter-spacing:.03em}
+.btn.solid{background:var(--rust);color:#fff;border:1.5px solid var(--rust)}
+.btn.solid:hover{background:var(--rust-dark);border-color:var(--rust-dark)}
+.btn.line{background:#fff;color:var(--rust);border:1.5px solid var(--rust)}
+.btn.line:hover{background:#fff;color:var(--rust-dark);border-color:var(--rust-dark)}
+
+.note{font-size:14px;color:#414B5C;max-width:66ch}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+@media(max-width:620px){.choices{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the assignment</a>
+<header class="brand">
+  <svg width="30" height="36" viewBox="40 10 125 148" role="img" aria-label="BIO 005 Human Physiology">
+    <g transform="translate(0,18)">
+      <g transform="translate(60,0) rotate(8 0 130)">
+        <circle cx="0" cy="20" r="10" fill="#0B1530"/>
+        <path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#0B1530"/>
+      </g>
+      <g transform="translate(100,0)">
+        <circle cx="0" cy="10" r="11" fill="#8B3A2E"/>
+        <path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/>
+      </g>
+      <g transform="translate(140,0) rotate(-8 0 130)">
+        <circle cx="0" cy="20" r="10" fill="#C9A14A"/>
+        <path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/>
+      </g>
+    </g>
+  </svg>
+  <span><span class="bwm">BIO <b>005</b></span><span class="bsub">Human Physiology &middot; Fall 2026</span></span>
+</header>
+
+<main id="main" class="inner">
+  <div class="homebar"><a class="homebtn" href="course-start.html" target="_top"><span aria-hidden="true">&larr;</span> Course home</a></div>
+
+  <p class="eyebrow">Assignment &middot; graded &middot; Use It, 25% of your grade</p>
+  <h1>Use it: <span class="two">choose a case</span></h1>
+  <p class="sub" id="wkline"></p>
+  <p class="due" id="dueline"></p>
+
+  <p id="frame"></p>
+  <p>Four cases, four different rooms, the same physiology underneath. They differ in who the patient is and what you are looking at, not in how hard they are. <strong>Pick one.</strong> Pick the one closest to where you are heading, or the one furthest from it, whichever you would rather spend an hour on. Every one of them is a full answer.</p>
+
+  <h2 id="five-h">Whichever case you choose, answer these five</h2>
+  <div class="card" aria-labelledby="five-h">
+    <p class="label">Required for every case</p>
+    <ol id="five"></ol>
+  </div>
+
+  <h2 id="cases-h">This week's four cases</h2>
+  <div class="choices" id="cases"></div>
+
+  <details>
+    <summary>What a strong answer looks like</summary>
+    <div class="body">
+      <p>Length is not what makes it strong. A good answer to any of these fits on one page and does four things.</p>
+      <ul>
+        <li><strong>It names the thing precisely.</strong> Not "blood pressure" but "mean arterial pressure", not "the enzyme" but which enzyme and where it works. Then it says why that distinction matters here.</li>
+        <li><strong>It traces the mechanism in order</strong> rather than jumping from stimulus to outcome. Every step gets named, including the ones that are easy to skip.</li>
+        <li><strong>It separates what the evidence shows from what you are inferring.</strong> Both are allowed. Confusing them is not.</li>
+        <li><strong>It names what would change the answer.</strong> The most useful sentence in a clinical write up starts "I would want to know".</li>
+      </ul>
+      <p style="margin-bottom:0">A correct number with no explanation earns half credit. That is true every week, on every question.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Using AI on this one</summary>
+    <div class="body">
+      <p><strong>Open, with disclosure.</strong> Use It is the category where you are allowed to use AI, and you have to say so.</p>
+      <ul>
+        <li>Use it to check a definition, to ask how a mechanism works, or to push back on your own reasoning.</li>
+        <li>At the end of your answer, add one or two lines: what you used it for, and what you did with what it gave you. "I asked it to explain the Haldane effect and then rewrote question three because my first version had the direction backwards" is a good disclosure.</li>
+        <li>What is being graded is whether your naming, your mechanism and your interpretation hold together as one person thinking. That is very visible when it is missing.</li>
+      </ul>
+      <p style="margin-bottom:0">Undisclosed use is the only version of this that is a problem.</p>
+    </div>
+  </details>
+
+  <h2>Turning it in</h2>
+  <div class="card">
+    <ol>
+      <li><strong>Say which case you chose</strong> at the top of the page, by its letter and its title. If you do not name it, it cannot be graded.</li>
+      <li><strong>Answer all five questions</strong> in order, numbered. About one page. Handwritten is fine and always has been.</li>
+      <li><strong>Add your AI disclosure</strong> at the end, even if it is one line saying you did not use any.</li>
+      <li>Photograph or scan into <strong>one PDF</strong>, in order, and submit it here before <strong>10:00 pm</strong>. Wait for the Canvas confirmation screen.</li>
+    </ol>
+  </div>
+
+  <p class="note" id="capstone">Keep every week's case answer. They accumulate into your patient file, which is the capstone of this course, and in Week 15 you will be asked to draw on what you wrote in weeks you have half forgotten.</p>
+
+  <div class="btns" id="btns"></div>
+</main>
+
+<script src="bio005-apply-cases.js"></script>
+<script>
+(function(){
+  var A = window.BIO005_APPLY;
+  var DUE = ['Sunday, September 13','Sunday, September 20','Sunday, September 27',
+             'Sunday, October 4','Sunday, October 11','Sunday, October 18',
+             'Sunday, October 25','Sunday, November 1','Sunday, November 8',
+             'Sunday, November 15','Sunday, November 22','Sunday, November 29',
+             'Sunday, December 6','Sunday, December 13','Wednesday, December 16'];
+  var LETTER = ['A','B','C','D'];
+
+  var m = /[?&]week=(\d{1,2})/.exec(location.search);
+  var w = m ? Math.max(1, Math.min(15, parseInt(m[1],10))) : 1;
+  var wk = A && A.weeks && A.weeks[w];
+
+  if (!wk){
+    document.getElementById('wkline').textContent =
+      'Week ' + w + ' is not in the case bank yet. Tell Dr. Rennie, because that is a mistake and not a design choice.';
+    return;
+  }
+
+  document.title = 'Use It · Week ' + w + ' · BIO 005 Human Physiology';
+  document.getElementById('wkline').innerHTML = 'Week ' + w + ' · ' + wk.title;
+  document.getElementById('dueline').textContent = 'Due ' + DUE[w-1] + ' at 10:00 pm';
+  document.getElementById('frame').innerHTML = wk.frame;
+
+  document.getElementById('five').innerHTML =
+    wk.five.map(function(q){ return '<li>' + q + '</li>'; }).join('');
+
+  document.getElementById('cases').innerHTML = wk.cases.map(function(c, i){
+    return '<article class="choice r' + i + '">' +
+             '<p class="kind">Case ' + LETTER[i] + ' &nbsp;|&nbsp; ' + c.room + '</p>' +
+             '<h3>' + c.h + '</h3>' +
+             '<p>' + c.body + '</p>' +
+             '<p class="go"><strong>Work it:</strong> ' + c.go + '</p>' +
+           '</article>';
+  }).join('');
+
+  var btns = ['<a class="btn line" href="week-' + (w<10?'0':'') + w +
+              '-competencies.html" target="_top">The competencies behind it</a>'];
+  if (w === 15){
+    btns.unshift('<a class="btn solid" href="BIO005-patient-file.html" target="_top">Open your patient file</a>');
+  }
+  document.getElementById('btns').innerHTML = btns.join('');
+})();
+</script>
+<script>
+/* iframe height sender. The id keeps this page's messages distinct from
+   the other embeds on the same Canvas page. */
+(function(){
+  var id = 'apply-' + Math.random().toString(36).slice(2,8);
+  function post(){ try{ parent.postMessage({frame:id, height:document.documentElement.scrollHeight}, '*'); }catch(e){} }
+  if ('ResizeObserver' in window){ new ResizeObserver(post).observe(document.documentElement); }
+  window.addEventListener('load', post);
+  window.addEventListener('resize', post);
+  document.addEventListener('toggle', post, true);
+  post();
+})();
+</script>
+</body>
+</html>
