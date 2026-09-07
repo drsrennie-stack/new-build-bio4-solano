@@ -34,9 +34,16 @@ raster images in the deck.
 the Canvas front page "Enter Human Physiology Course" embeds, and
 `door-study.html`, the study tools page. Both were carrying a retired course
 model and four full-width dark bands that are not the brand. Contrast
-measured on both: every text pair AAA. The gold icon tile moved from
-`#8A6D33` (4.87:1 with white strokes, which clears the 3:1 graphics rule but
-not the AAA target the rest of the course holds) to `#624612` at 8.73:1.
+measured on both: every text pair AAA.
+
+The gold card on `door-study.html` uses two values of the same hue, each
+picked for its job. The icon tile is the real brand gold `#C9A14A` with navy
+`#0B1530` strokes on it, 7.46:1, because a readable-on-white gold like
+`#624612` reads olive brown as a whole tile and the brief was maroon, dark
+blue and yellow. The 5px tab is `#B0871F` at 3.32:1 on the white card, since
+brand gold sits at 2.42:1, under the 3:1 a meaningful graphic needs. Card
+color is never the only thing telling one tile from another: each has its
+own title and icon.
 
 **Added September 7, 2026, third batch.** `competency-sheet-print.html` and
 the PDF it builds, `BIO005-Fall2026-Competency-Sheet.pdf`. Every competency
@@ -54,9 +61,12 @@ in `tools/make_pdf.py` retypes a `/Div` that is a direct child of an `/LI`,
 and only that, so nothing else in the tree moves.
 
 **Added September 7, 2026, second batch.** `course-grid.html` (the one page
-schedule with the started and done tracker), `practice-log.html` and
-`assignment-practice-log.html` (the ungraded weekly practice log), plus the
-data files `bio005-week-grid.js` and `bio005-practice-log.js`.
+schedule with the started and done tracker) and `assignment-practice-log.html`
+(the ungraded weekly practice log), plus the data file `bio005-week-grid.js`.
+
+`practice-log.html` and `bio005-practice-log.js` were part of this batch and
+were **retired the same day**. They duplicated a log `practice-exam.html`
+already prints. See limitation 14.
 
 **Also touched September 7, 2026, verified for regressions only:**
 `welcome.html`, `assignment-discussion-01-visionboard.html`, `week-01.html`,
@@ -228,10 +238,10 @@ human VoiceOver and NVDA passes in limitation 1.
 The second batch of September 7 files was checked the same way. On
 `course-grid.html` each item's two boxes sit in a `role="group"` labeled by
 the item name, so a screen reader announces "Lab, Started checkbox" rather
-than an orphan "Started"; 71 groups, no unlabeled input. On
-`practice-log.html` the trend chart is `aria-hidden` with a sentence beneath
-it stating the same numbers in words, since a line drawn in SVG is not
-readable and a described chart is.
+than an orphan "Started"; 71 groups, no unlabeled input. The trend chart on the retired
+`practice-log.html` was `aria-hidden` with a sentence beneath it stating the
+same numbers in words; that pattern is worth keeping if a chart is ever added
+to the generator's own log.
 
 The assistant was also audited on September 7, 2026 against the current course
 model. Retired facts found and corrected: note sheets at 20 percent, book
@@ -263,7 +273,9 @@ schedule from this page" to every question asked on them.
 | 11 | Weeks 5 to 8 are described three different ways in this repo. Canvas and the PhysioEx lab map agree (5 nervous system, 6 muscle, 7 endocrine, 8 reproduction); `bio005-schedule-fall2026.js` does not (5 synapses, 6 sensory, 7 muscle, 8 hormones and reproduction together). | The schedule of record needs realigning to Canvas, and the sensory competencies (`w7-*`) need a home when it is. Not done here: moving competencies is a teaching decision, not a side effect of building a grid. |
 | 12 | `window.BIO005_GRADING` in `bio005-schedule-fall2026.js` called itself the model of record while holding the retired five component model. Corrected September 7. Nothing read it, which is the only reason no page repeated those numbers to a student. | Wire the pages that state grade weights to read this object, so there is one place to change instead of six. |
 | 13 | The practice log and the grid tracker both keep state in one browser on one device. Both say so in plain language on the page. | The practice log has an export and import for moving between devices. The grid ticks do not; they are low stakes enough that adding one would cost more than it returns. |
-| 14 | `bio005-practice-log.js` reads the generator's `bio005-exam-history-v1` defensively, because it does not own that file's shape. A row it cannot read is skipped silently. | Once `practice-exam.html` is in this repo, replace the tolerant reader with the real field names and make an unreadable row visible rather than silent. Until then, skipping beats guessing: a wrong entry in a log used to decide who to email is worse than a missing one. |
+| 14 | `practice-log.html` and `bio005-practice-log.js` were built before `practice-exam.html` was in this repo, and they duplicated a weekly log the generator already prints, with the same purpose and nearly the same wording. Retired September 7, 2026; every reference rewired to the generator. | Nothing outstanding. Recorded here because the first fix was only half a fix: on finding the generator I made the log read its history instead of retiring the tool, which removed the duplicate data and left the duplicate tool. |
+| 15 | The Mastery Check was described in two places as a tool that no longer exists: 20 questions, every competency asked twice, never shows a score. That was the design written before `practice-exam.html` was built. Corrected September 7, 2026 in `syllabus-fall2026.html` and `how-this-course-works.html`. | Nothing outstanding for Week 1. Weeks 2 to 15 are still 122-line stubs with no stage 04 at all, so the button that launches the week's Mastery Check exists only on `week-01.html`. It has to be added as each week page is built. |
+| 16 | The Reflect discussion is now one file, `assignment-discussion-metacognition.html?week=N`, serving all fifteen weeks. `assignment-discussion-01-metacognition.html` was retired into it. | Nothing outstanding. Question four is the only per-week text; it lives in one `Q4` map at the bottom of the file. Week 1's Sunday deadline and optional replies are data in that same script, not a second page. |
 
 ---
 
