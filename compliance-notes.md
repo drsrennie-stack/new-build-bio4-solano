@@ -30,6 +30,21 @@ the Week 1 Reflect discussion, and slide 23 of
 `slides-p-introduction-to-physiology.html`, which carries the first two
 raster images in the deck.
 
+**Added September 7, 2026, third batch.** `competency-sheet-print.html` and
+the PDF it builds, `BIO005-Fall2026-Competency-Sheet.pdf`. Every competency
+is written out in full, so a student can turn the list into a study guide
+rather than reading 268 labels. 14 pages, PDF/UA-1, 268 list items in
+`/LI` + `/Lbl` + `/LBody`, 15 `/H2`, one `/Sect` per week.
+
+Two things had to be fixed to get there. The first layout used CSS grid,
+which WeasyPrint only partly supports: it broke competency names one word
+per line and ran to 31 pages. Rebuilt in plain block and inline layout, so
+the browser and the PDF agree. And WeasyPrint tags a list item's wrapper as
+`/Div`, leaving the `/LBody` missing, which makes a screen reader read the
+text as a loose group rather than as the body of item N. `relabel_list_bodies()`
+in `tools/make_pdf.py` retypes a `/Div` that is a direct child of an `/LI`,
+and only that, so nothing else in the tree moves.
+
 **Added September 7, 2026, second batch.** `course-grid.html` (the one page
 schedule with the started and done tracker), `practice-log.html` and
 `assignment-practice-log.html` (the ungraded weekly practice log), plus the
@@ -203,9 +218,9 @@ page, and full keyboard reach with a visible focus ring. Both still need the
 human VoiceOver and NVDA passes in limitation 1.
 
 The second batch of September 7 files was checked the same way. On
-`course-grid.html` each item's two boxes sit in a `role="group"` labelled by
+`course-grid.html` each item's two boxes sit in a `role="group"` labeled by
 the item name, so a screen reader announces "Lab, Started checkbox" rather
-than an orphan "Started"; 71 groups, no unlabelled input. On
+than an orphan "Started"; 71 groups, no unlabeled input. On
 `practice-log.html` the trend chart is `aria-hidden` with a sentence beneath
 it stating the same numbers in words, since a line drawn in SVG is not
 readable and a described chart is.
@@ -240,6 +255,7 @@ schedule from this page" to every question asked on them.
 | 11 | Weeks 5 to 8 are described three different ways in this repo. Canvas and the PhysioEx lab map agree (5 nervous system, 6 muscle, 7 endocrine, 8 reproduction); `bio005-schedule-fall2026.js` does not (5 synapses, 6 sensory, 7 muscle, 8 hormones and reproduction together). | The schedule of record needs realigning to Canvas, and the sensory competencies (`w7-*`) need a home when it is. Not done here: moving competencies is a teaching decision, not a side effect of building a grid. |
 | 12 | `window.BIO005_GRADING` in `bio005-schedule-fall2026.js` called itself the model of record while holding the retired five component model. Corrected September 7. Nothing read it, which is the only reason no page repeated those numbers to a student. | Wire the pages that state grade weights to read this object, so there is one place to change instead of six. |
 | 13 | The practice log and the grid tracker both keep state in one browser on one device. Both say so in plain language on the page. | The practice log has an export and import for moving between devices. The grid ticks do not; they are low stakes enough that adding one would cost more than it returns. |
+| 14 | `bio005-practice-log.js` reads the generator's `bio005-exam-history-v1` defensively, because it does not own that file's shape. A row it cannot read is skipped silently. | Once `practice-exam.html` is in this repo, replace the tolerant reader with the real field names and make an unreadable row visible rather than silent. Until then, skipping beats guessing: a wrong entry in a log used to decide who to email is worse than a missing one. |
 
 ---
 
