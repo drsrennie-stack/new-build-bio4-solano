@@ -198,21 +198,35 @@ h2{font-size:clamp(23px,3.4vw,30px);color:var(--maroon);line-height:1.18;margin-
 .tools{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(258px,100%),1fr));
   margin:6px 0 0;padding:0;list-style:none}
 .tools li{margin:0;display:flex}
-a.tool{display:flex;flex-direction:column;width:100%;text-decoration:none;color:inherit;
+a.tool{position:relative;display:flex;flex-direction:column;width:100%;text-decoration:none;color:inherit;
   background:var(--card);border:1px solid var(--rule-soft);border-radius:14px;
-  padding:22px 22px 20px;box-shadow:var(--shadow);
+  padding:24px 22px 20px;box-shadow:var(--shadow);overflow:hidden;
   transition:transform 200ms ease,box-shadow 200ms ease,border-color 200ms ease}
 a.tool:hover{transform:translateY(-2px);box-shadow:var(--lift);border-color:var(--rule)}
 a.tool:focus-visible{outline:3px solid var(--maroon);outline-offset:3px}
-.ico{width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;
-  margin:0 0 14px;flex:0 0 auto}
-.ico svg{width:26px;height:26px;display:block}
-.ico.navy{background:var(--navy)}
-.ico.maroon{background:var(--maroon)}
-/* #8A6D33 put white icon strokes at 4.87:1. That clears WCAG's 3:1
-   for graphics, but the rest of this course targets AAA, and #624612
-   costs nothing and reaches 8.73:1. */
-.ico.gold{background:#624612}
+
+/* The colored tab on the card's top boundary. Her brand element, and
+   here it is also what tells one card from another at a glance: three
+   brand colors dealt out so no two neighbors in a three column grid
+   share one. */
+a.tool::before{content:'';position:absolute;left:0;right:0;top:0;height:5px;background:var(--tab)}
+a.tool{--accent:#0B1530;--tab:#0B1530;--ink:#FFFFFF}
+a.tool.c-navy   {--accent:#0B1530;--tab:#0B1530;--ink:#FFFFFF}
+a.tool.c-maroon {--accent:#8B3A2E;--tab:#8B3A2E;--ink:#FFFFFF}
+/* THE GOLD CARD, Sep 7 2026. It was #624612, which is the readable
+   gold this course uses for small text on white, but as a whole tile
+   it reads olive brown rather than gold. Scrubs asked for maroon, dark
+   blue and yellow, so the tile is the real brand gold #C9A14A with
+   NAVY strokes on it: 7.46:1, AAA, and it actually looks gold.
+   The 5px tab is a separate value. Brand gold sits at 2.42:1 against
+   the white card, under the 3:1 a meaningful graphic needs, so the tab
+   uses #B0871F at 3.32:1. Same hue, one is on white and one carries
+   dark strokes, and each is picked for the job it does. */
+a.tool.c-gold   {--accent:#C9A14A;--tab:#B0871F;--ink:#0B1530}
+
+.ico{width:50px;height:50px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+  margin:2px 0 14px;flex:0 0 auto;background:var(--accent)}
+.ico svg{width:25px;height:25px;display:block;stroke:var(--ink)}
 a.tool h3{font-size:19px;color:var(--navy);margin:0 0 6px;line-height:1.25}
 a.tool p{font-size:15.5px;color:var(--muted);margin:0;max-width:none}
 a.tool .np{display:inline-block;margin-top:12px;font-size:10.5px;font-weight:700;
@@ -248,77 +262,39 @@ a.tool .np{display:inline-block;margin-top:12px;font-size:10.5px;font-weight:700
 <div class="wrap">
 
   <section aria-labelledby="retrieve-h">
-    <h2 id="retrieve-h">Get it out of your head</h2>
-    <p class="groupnote">Four ways to make yourself produce the physiology from nothing. Rotate between them; the switching is part of what makes it stick.</p>
+    <h2 id="retrieve-h">Five ways to study</h2>
+    <p class="groupnote">All of them make you produce the answer instead of recognizing it. None of them are graded. Rotate between them; the switching is part of what makes it stick.</p>
     <ul class="tools">
 
-      <li><a class="tool" href="practice-exam.html" target="_top">
-        <span class="ico maroon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="#fff"/></svg></span>
-        <h3>Practice exam and Gap Finder</h3>
-        <p>Build a real exam over any weeks you choose. At the end you get the competencies that need work, not just a score. Every exam is a different draw from about 5,600 questions.</p>
-        <span class="np">No points</span>
+      <li><a class="tool c-maroon" href="practice-exam.html" target="_top">
+        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="#fff"/></svg></span>
+        <h3>Practice exam</h3>
+        <p>A real exam over any weeks you pick, the competencies to work on, and your weekly log.</p>
+        <span class="np">Log is required weekly</span>
       </a></li>
 
-      <li><a class="tool" href="mastery-physio-os-standalone.html" target="_top">
-        <span class="ico navy" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="12" rx="2"/><path d="M7 3h14v12"/></svg></span>
+      <li><a class="tool c-navy" href="mastery-physio-os-standalone.html" target="_top">
+        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="14" height="12" rx="2"/><path d="M7 3h14v12"/></svg></span>
         <h3>Recall cards</h3>
-        <p>Spaced recall across all 268 competencies, with the full explanation of why the right answer is right and why each wrong one is wrong. The gap finder shows where you are weak before a grade depends on it.</p>
-        <span class="np">No points</span>
+        <p>Spaced recall, with the full reason every answer is right or wrong.</p>
       </a></li>
 
-      <li><a class="tool" href="mastery-canvas.html" target="_top">
-        <span class="ico gold" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7a2.8 2.8 0 0 0-4-4l-7 7-1 5z"/><path d="M4 20h6"/></svg></span>
-        <h3>Draw it to know it</h3>
-        <p>A blank canvas. Draw a pathway with nothing in front of you, then check it against the real thing. If you cannot produce it without looking, you have not learned it yet, and better to find that out now than in an exam window.</p>
-        <span class="np">No points</span>
+      <li><a class="tool c-gold" href="mastery-canvas.html" target="_top">
+        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7a2.8 2.8 0 0 0-4-4l-7 7-1 5z"/><path d="M4 20h6"/></svg></span>
+        <h3>Draw it</h3>
+        <p>A blank canvas. Mechanism, sequence, mind map, loop. Produce it from nothing, then check it.</p>
       </a></li>
 
-      <li><a class="tool" href="braindump-week01.html" target="_top">
-        <span class="ico navy" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h11l4 4v14H5z"/><path d="M15 3v5h5"/><path d="M9 12h6M9 16h4"/></svg></span>
+      <li><a class="tool c-navy" href="braindump-week01.html" target="_top">
+        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h11l4 4v14H5z"/><path d="M15 3v5h5"/><path d="M9 12h6M9 16h4"/></svg></span>
         <h3>Brain dumps</h3>
-        <p>A prompt, a blank page and a timer. Write everything you have on the topic without looking, then open the answer and mark what you missed. Two different prompts for every competency, so you can do it twice.</p>
-        <span class="np">No points</span>
+        <p>A prompt, a blank page, a timer. Two prompts for every competency.</p>
       </a></li>
 
-    </ul>
-  </section>
-
-  <section aria-labelledby="know-h">
-    <h2 id="know-h">Know what you are aiming at</h2>
-    <p class="groupnote">Nothing is graded that is not on the competency list. These are the two ways to read it.</p>
-    <ul class="tools">
-
-      <li><a class="tool" href="competency-sheet-print.html" target="_top">
-        <span class="ico maroon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></span>
+      <li><a class="tool c-gold" href="competency-sheet-print.html" target="_top">
+        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></span>
         <h3>The competency list</h3>
-        <p>All 268, by week, each written out in full and tagged lecture or lab. Print it and turn each line into a question, and you have that week's study guide already written.</p>
-      </a></li>
-
-      <li><a class="tool" href="competency-packet-fall2026.html" target="_top">
-        <span class="ico gold" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M15 3v5h5"/></svg></span>
-        <h3>The Competency Packet</h3>
-        <p>The formal document, grouped by midterm and by week, with the anatomy, chemistry and math the course assumes you arrive with.</p>
-      </a></li>
-
-    </ul>
-  </section>
-
-  <section aria-labelledby="track-h">
-    <h2 id="track-h">Keep track of it</h2>
-    <p class="groupnote">One of these you hand in. It carries no points either, and the reason is on the page.</p>
-    <ul class="tools">
-
-      <li><a class="tool" href="practice-log.html" target="_top">
-        <span class="ico navy" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7 15l4-5 3 3 5-7"/></svg></span>
-        <h3>Practice engagement sheet</h3>
-        <p>Every practice exam you run, with your average and whether the numbers are moving. Print it as a PDF and upload it once a week.</p>
-        <span class="np">Not graded, required</span>
-      </a></li>
-
-      <li><a class="tool" href="how-this-course-works.html" target="_top">
-        <span class="ico gold" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg></span>
-        <h3>How a week runs</h3>
-        <p>The seven parts of a week, in order, with what each one is for. Click any one to open it up.</p>
+        <p>All 268, in full, plus the anatomy, chemistry and math assumed coming in.</p>
       </a></li>
 
     </ul>
