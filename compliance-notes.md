@@ -30,6 +30,14 @@ the Week 1 Reflect discussion, and slide 23 of
 `slides-p-introduction-to-physiology.html`, which carries the first two
 raster images in the deck.
 
+**Rebuilt September 7, 2026.** `physiology-course-home.html`, which is what
+the Canvas front page "Enter Human Physiology Course" embeds, and
+`door-study.html`, the study tools page. Both were carrying a retired course
+model and four full-width dark bands that are not the brand. Contrast
+measured on both: every text pair AAA. The gold icon tile moved from
+`#8A6D33` (4.87:1 with white strokes, which clears the 3:1 graphics rule but
+not the AAA target the rest of the course holds) to `#624612` at 8.73:1.
+
 **Added September 7, 2026, third batch.** `competency-sheet-print.html` and
 the PDF it builds, `BIO005-Fall2026-Competency-Sheet.pdf`. Every competency
 is written out in full, so a student can turn the list into a study guide
