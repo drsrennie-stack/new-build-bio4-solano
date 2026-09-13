@@ -208,7 +208,7 @@
     + door('ic-gold', I.flow, 'Study Protocol', 'The flow chart for this week', go('bio004-study-protocol.html'))
     + door('ic-blue', I.grid, 'Tissue Chart', 'Recall it column by column', go('bio004-tissue-chart-practice.html'))
     + door('ic-terra', I.target, 'Exam Builder', 'Fresh practice exam, any time', go('bio004-practice-exam-builder.html'))
-    + door('ic-gold', I.people, 'Study With Me', 'Log your hours, bank Scholar Points', go('study-with-me-hours.html'))
+    + door('ic-gold', I.people, 'Study With Me', 'See the calendar, join a session or host one', go('study-session-signup.html'))
     + '</div></div>'
 
     + '<div class="lp-panel" data-lp="news">'
