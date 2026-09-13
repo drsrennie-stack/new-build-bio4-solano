@@ -127,9 +127,22 @@ ul.bul>li::before{content:"";position:absolute;left:2px;top:14px;width:6px;heigh
 .spin .hl{color:var(--gold)}
 .spin .sub{color:rgba(255,255,255,.82);margin:0 0 18px;max-width:62ch}
 .spin .ctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 18px}
-.spin label{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.75)}
-.spin select{font:inherit;font-size:15px;padding:10px 12px;border-radius:var(--r-btn);
-  border:1px solid rgba(255,255,255,.3);background:#fff;color:var(--navy);min-height:44px}
+.sp-weeks{border:0;margin:0 0 16px;padding:0;min-width:0}
+.sp-weeks legend{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.75);padding:0;margin:0 0 10px}
+.sp-presets{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.sp-preset{font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;background:transparent;color:#fff;
+  border:1px solid rgba(255,255,255,.38);border-radius:var(--r-pill);padding:9px 15px;min-height:40px}
+.sp-preset:hover{background:rgba(255,255,255,.10)}
+.sp-preset:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.sp-chips{display:flex;flex-wrap:wrap;gap:7px}
+.sp-chip{font:inherit;font-size:14px;font-weight:700;cursor:pointer;background:transparent;color:#fff;
+  border:1px solid rgba(255,255,255,.38);border-radius:var(--r-pill);
+  min-width:52px;min-height:44px;padding:10px 14px;text-align:center}
+.sp-chip:hover{background:rgba(255,255,255,.10)}
+.sp-chip[aria-pressed="true"]{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.sp-chip:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.sp-loading,.sp-note{font-size:12.5px;color:rgba(255,255,255,.7);margin:10px 0 0}
 .spin .go{font-size:12px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;
   background:var(--gold);color:var(--navy);border:1px solid var(--gold);border-radius:var(--r-pill);
   padding:13px 24px;min-height:44px}
@@ -222,9 +235,14 @@ ul.bul>li::before{content:"";position:absolute;left:2px;top:14px;width:6px;heigh
   <h2 id="spin-h">Spin a <span class="hl">brain dump</span></h2>
   <p class="sub">Press it and it hands you one competency from the week. That is the one you do. No choosing, no starting with the easy one, and no sitting there deciding instead of writing.</p>
 
+  <fieldset class="sp-weeks" id="spWeeks">
+    <legend>Pick the weeks you want in the pool</legend>
+    <div class="sp-presets" id="spPresets"></div>
+    <div class="sp-chips" id="spChips"><p class="sp-loading">Loading the competency list...</p></div>
+    <p class="sp-note" id="spNote"></p>
+  </fieldset>
+
   <div class="ctl">
-    <label for="spWeek">From</label>
-    <select id="spWeek"><option value="">Loading the competency list...</option></select>
     <button type="button" class="go" id="spGo">Spin it</button>
     <button type="button" class="go again" id="spAgain" hidden>Another one</button>
   </div>
@@ -401,16 +419,16 @@ ul.bul>li::before{content:"";position:absolute;left:2px;top:14px;width:6px;heigh
    ============================================================ */
 (function(){
   "use strict";
-  var sel=document.getElementById('spWeek'), go=document.getElementById('spGo'),
+  var chips=document.getElementById('spChips'), presets=document.getElementById('spPresets'),
+      note=document.getElementById('spNote'), go=document.getElementById('spGo'),
       again=document.getElementById('spAgain'), out=document.getElementById('spOut');
-  if(!sel||!go||!out) return;
+  if(!chips||!go||!out) return;
 
   var COMPS=(window.BIO005_COMPETENCIES||[]).filter(function(c){return c&&c.id&&c.name;});
   if(!COMPS.length){
-    sel.innerHTML='<option>The competency list did not load</option>';
-    sel.disabled=true; go.disabled=true;
-    out.innerHTML='<p class="idle">The competency list did not load, so there is nothing to spin. '
+    chips.innerHTML='<p class="sp-loading">The competency list did not load, so there is nothing to spin. '
       +'The week competency pages still have every prompt on them.</p>';
+    go.disabled=true;
     return;
   }
 
@@ -418,25 +436,88 @@ ul.bul>li::before{content:"";position:absolute;left:2px;top:14px;width:6px;heigh
   var TERM_START=new Date(2026,8,8);
   var thisWeek=Math.max(1,Math.min(15,Math.floor((new Date()-TERM_START)/(7*864e5))+1));
 
+  /* ONLY WEEKS THAT HAVE OPENED.
+
+     A spinner that can hand out week 11 in week 2 is handing out material
+     nobody has been taught, which is discouraging rather than useful. The
+     pool is capped at the current week, and later weeks appear on their
+     own as the term moves. */
   var weeks=[];
-  COMPS.forEach(function(c){ if(c.week && weeks.indexOf(c.week)<0) weeks.push(c.week); });
+  COMPS.forEach(function(c){
+    if(c.week && c.week<=thisWeek && weeks.indexOf(c.week)<0) weeks.push(c.week);
+  });
   weeks.sort(function(a,b){return a-b;});
 
-  var opts='<option value="now">This week, week '+thisWeek+'</option>'
-         + '<option value="sofar">Everything taught so far</option>';
-  weeks.forEach(function(w){ opts+='<option value="'+w+'">Week '+w+'</option>'; });
-  sel.innerHTML=opts;
+  var picked={};
+  picked[thisWeek]=true;
+  if(weeks.indexOf(thisWeek)<0 && weeks.length) picked[weeks[weeks.length-1]]=true;
 
-  function pool(){
-    var v=sel.value;
-    if(v==='now') return COMPS.filter(function(c){return c.week===thisWeek;});
-    if(v==='sofar') return COMPS.filter(function(c){return c.week<=thisWeek;});
-    return COMPS.filter(function(c){return String(c.week)===String(v);});
+  function selected(){
+    var out=[];
+    weeks.forEach(function(w){ if(picked[w]) out.push(w); });
+    return out;
   }
 
-  function bagKey(){ return 'bio005-bd-bag-'+sel.value; }
+  function pool(){
+    var ws=selected();
+    return COMPS.filter(function(c){ return ws.indexOf(c.week)>-1; });
+  }
+
+  /* The bag is keyed to the exact set of weeks chosen, so switching to a
+     midterm-sized pool does not inherit the history of a one-week pool. */
+  function bagKey(){ return 'bio005-bd-bag-'+selected().join('-'); }
   function readBag(){ try{ return JSON.parse(localStorage.getItem(bagKey())||'[]')||[]; }catch(e){ return []; } }
   function writeBag(a){ try{ localStorage.setItem(bagKey(),JSON.stringify(a)); }catch(e){} }
+
+  function drawChips(){
+    chips.innerHTML=weeks.map(function(w){
+      return '<button type="button" class="sp-chip" data-wk="'+w+'" aria-pressed="'+(picked[w]?'true':'false')+'">'
+        +'Week '+w+'</button>';
+    }).join('');
+    [].forEach.call(chips.querySelectorAll('.sp-chip'),function(b){
+      b.onclick=function(){
+        var w=+b.getAttribute('data-wk');
+        picked[w]=!picked[w];
+        /* never leave the pool empty: the last one stays on */
+        if(!selected().length){ picked[w]=true; }
+        b.setAttribute('aria-pressed',picked[w]?'true':'false');
+        afterChange();
+      };
+    });
+  }
+
+  var PRESETS=[
+    {label:'This week only', pick:function(){ return [thisWeek]; }},
+    {label:'Everything so far', pick:function(){ return weeks.slice(); }},
+    {label:'Midterm 1, weeks 1 to 7', pick:function(){ return weeks.filter(function(w){return w<=7;}); }},
+    {label:'Midterm 2, weeks 8 to 14', pick:function(){ return weeks.filter(function(w){return w>=8&&w<=14;}); }}
+  ];
+
+  function drawPresets(){
+    presets.innerHTML=PRESETS.map(function(p,i){
+      var got=p.pick();
+      if(!got.length) return '';
+      return '<button type="button" class="sp-preset" data-pre="'+i+'">'+p.label+'</button>';
+    }).join('');
+    [].forEach.call(presets.querySelectorAll('.sp-preset'),function(b){
+      b.onclick=function(){
+        var got=PRESETS[+b.getAttribute('data-pre')].pick();
+        if(!got.length) return;
+        picked={};
+        got.forEach(function(w){ picked[w]=true; });
+        drawChips(); afterChange();
+      };
+    });
+  }
+
+  function afterChange(){
+    var ws=selected(), n=pool().length;
+    note.textContent=ws.length===1
+      ? ('Week '+ws[0]+', '+n+' competenc'+(n===1?'y':'ies')+' in the pool.')
+      : (ws.length+' weeks selected, '+n+' competencies in the pool.');
+    out.innerHTML='<p class="idle">Press Spin it for a prompt from that set.</p>';
+    again.hidden=true;
+  }
 
   function pick(){
     var p=pool();
@@ -464,7 +545,7 @@ ul.bul>li::before{content:"";position:absolute;left:2px;top:14px;width:6px;heigh
     return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]; }); }
 
   function show(r){
-    if(!r){ out.innerHTML='<p class="idle">No competencies in that week yet.</p>'; return; }
+    if(!r){ out.innerHTML='<p class="idle">No competencies in the weeks you picked.</p>'; return; }
     var c=r.comp;
     var h='<p class="wk">Week '+c.week+(c.general?' &middot; '+esc(c.general):'')+'</p>';
     h+='<h3>'+esc(c.name)+'</h3>';
@@ -482,13 +563,10 @@ ul.bul>li::before{content:"";position:absolute;left:2px;top:14px;width:6px;heigh
       btn.replaceWith(d);
     };
     again.hidden=false;
-    go.textContent='Spin it';
   }
 
   function roll(){
     var r=pick();
-    /* A short shuffle before it settles, so pressing the button visibly
-       does something. Skipped entirely for reduced motion. */
     if(!window.matchMedia||!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
       out.classList.add('rolling');
       setTimeout(function(){ out.classList.remove('rolling'); show(r); },160);
@@ -497,10 +575,8 @@ ul.bul>li::before{content:"";position:absolute;left:2px;top:14px;width:6px;heigh
 
   go.onclick=roll;
   again.onclick=roll;
-  sel.onchange=function(){
-    out.innerHTML='<p class="idle">Press Spin it for a prompt from that set.</p>';
-    again.hidden=true;
-  };
+
+  drawPresets(); drawChips(); afterChange();
 }());
 </script>
 
