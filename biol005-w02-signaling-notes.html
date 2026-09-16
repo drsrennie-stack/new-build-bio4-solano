@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cell signaling &middot; Notes &middot; BIO 005</title>
+<link rel="stylesheet" href="assets/fonts-site.css">
+<style>
+:root{
+  --navy:#0B1530; --navy-72:#4F576A; --navy-15:rgba(11,21,48,.15); --navy-08:rgba(11,21,48,.08);
+  --terra:#8B3A2E; --terra-dark:#6B2A20;
+  --gold:#C9A14A;
+  --white:#FFFFFF; --page:#FFFFFF; --wash:#FAFAF9;
+  --r-card:8px; --r-btn:4px; --r-pill:99px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+  background:var(--page); color:var(--navy); font-size:16px; line-height:1.6; font-style:normal;
+}
+em,i,cite,dfn,var,address{font-style:normal}
+button{font-family:inherit}
+a{color:var(--terra)}
+:focus-visible{outline:3px solid var(--terra);outline-offset:3px;border-radius:4px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:16px;top:16px;position:fixed;background:var(--navy);color:#fff;padding:10px 14px;border-radius:4px;z-index:400}
+.vh{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* ---------- editorial type ---------- */
+.disp{font-family:'Open Sans','Plus Jakarta Sans',system-ui,sans-serif;font-weight:800;letter-spacing:-.02em;line-height:1.08}
+.disp .hl{color:var(--terra)}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--terra);margin:0 0 10px}
+.eyebrow.navy{color:var(--navy-72)}
+.lede{font-size:18px;color:var(--navy-72);max-width:64ch;margin:0 0 22px}
+.muted{color:var(--navy-72)}
+
+/* ---------- chrome ---------- */
+.site-header{display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  padding:14px max(16px,3vw);background:#fff;border-bottom:.5px solid var(--navy-15)}
+.site-logo{display:inline-flex;align-items:center;gap:13px;text-decoration:none;flex:1;min-width:250px}
+.site-logo svg{height:42px;width:auto;display:block;flex:0 0 auto}
+.logo-title{font-family:'Open Sans','Plus Jakarta Sans',sans-serif;font-size:19px;font-weight:800;letter-spacing:-.02em;color:var(--navy);display:block}
+.logo-title .logo-accent{color:var(--terra)}
+.logo-sub{display:block;font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--navy-72);margin-top:3px}
+
+/* ---------- cards ---------- */
+.card{background:#fff;border:.5px solid var(--navy-15);border-radius:var(--r-card);padding:24px 22px}
+.card.navy{background:var(--navy);color:#fff;border-color:var(--navy)}
+.card.navy .eyebrow{color:var(--gold)}
+.card.navy a{color:var(--gold)}
+.card.feature{border:2px solid var(--terra)}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:860px){.g2,.g3{grid-template-columns:1fr}}
+
+/* badge pill overlapping a card top */
+.badged{position:relative;margin-top:14px}
+.badged>.pill{position:absolute;top:-13px;left:20px}
+.pill{display:inline-flex;align-items:center;gap:7px;background:var(--terra);color:#fff;
+  font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
+  padding:7px 14px;border-radius:var(--r-pill)}
+.pill.navy{background:var(--navy)}
+.pill.ghost{background:#fff;color:var(--navy);border:.5px solid var(--navy-15)}
+
+/* statement band */
+.band{background:var(--navy);color:#fff;border-radius:var(--r-card);padding:26px 26px}
+.band p{margin:0;font-family:'Open Sans','Plus Jakarta Sans',sans-serif;font-weight:700;
+  font-size:clamp(18px,2.2vw,25px);line-height:1.32;letter-spacing:-.01em}
+.band .em{color:var(--gold)}
+
+/* oversized step numerals */
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps>li{counter-increment:s;display:grid;grid-template-columns:64px 1fr;gap:18px;
+  padding:20px 0;border-top:.5px solid var(--navy-15)}
+.steps>li:first-child{border-top:0;padding-top:6px}
+.steps>li::before{content:counter(s,decimal-leading-zero);
+  font-family:'Open Sans','Plus Jakarta Sans',sans-serif;font-weight:800;font-size:34px;
+  color:var(--terra);line-height:1;letter-spacing:-.03em}
+.steps h3,.steps h4{margin:0 0 6px;font-size:17.5px;font-weight:800;letter-spacing:-.01em;
+  text-transform:none;color:var(--navy)}
+.steps p{margin:0 0 8px}
+.steps p:last-child{margin-bottom:0}
+
+/* buttons */
+.btn{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;
+  border-radius:var(--r-btn);padding:13px 20px;border:1px solid var(--terra);background:var(--terra);
+  color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{background:var(--terra-dark);border-color:var(--terra-dark)}
+.btn.ghost{background:transparent;color:var(--navy);border-color:var(--navy-15)}
+.btn.ghost:hover{background:var(--wash);border-color:var(--navy)}
+.btn.navy{background:var(--navy);border-color:var(--navy)}
+.btn.navy:hover{background:#16213d}
+
+/* lists */
+ul.bul{margin:0 0 14px;padding:0;list-style:none}
+ul.bul>li{padding:5px 0 5px 20px;position:relative}
+ul.bul>li::before{content:"";position:absolute;left:2px;top:14px;width:6px;height:6px;background:var(--terra);border-radius:50%}
+ul.bul>li>ul{margin:6px 0 2px}
+ul.bul>li>ul>li::before{background:var(--navy-72);width:5px;height:5px}
+
+/* tables */
+.tbl{width:100%;border-collapse:collapse;font-size:14.5px}
+.tbl caption{caption-side:top;text-align:left;font-size:10.5px;font-weight:800;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--terra);padding:0 0 10px}
+.tbl th,.tbl td{text-align:left;padding:9px 12px;border-bottom:.5px solid var(--navy-15);vertical-align:top}
+.tbl thead th{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--navy-72);font-weight:700}
+.tbl tbody th{font-weight:800}
+.tbl td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl td.num .alt{font-size:.86em;color:var(--navy-72)}
+
+/* figures */
+figure{margin:0}
+.fig{width:100%;height:auto;display:block;background:#fff;border:.5px solid var(--navy-15);border-radius:var(--r-card);cursor:zoom-in}
+figcaption{font-size:13px;color:var(--navy-72);margin:9px 0 0}
+figcaption b{color:var(--terra)}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- notes page ---------- */
+.wrap{max-width:940px;margin:0 auto;padding:26px max(16px,4vw) 60px}
+.hero{padding:8px 0 26px;border-bottom:.5px solid var(--navy-15);margin-bottom:26px}
+.hero h1{font-family:'Open Sans','Plus Jakarta Sans',sans-serif;font-size:clamp(30px,5vw,50px);
+  font-weight:800;letter-spacing:-.03em;line-height:1.06;margin:0 0 14px}
+.hero h1 .hl{color:var(--terra)}
+.metarow{display:flex;flex-wrap:wrap;gap:9px;margin:16px 0 0}
+h2{font-family:'Open Sans','Plus Jakarta Sans',sans-serif;font-size:clamp(21px,2.7vw,28px);
+  font-weight:800;letter-spacing:-.02em;margin:40px 0 8px;padding-top:22px;border-top:.5px solid var(--navy-15)}
+h2:first-of-type{border-top:0;padding-top:0}
+h2 .hl{color:var(--terra)}
+h3{font-size:11px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--terra);margin:26px 0 10px}
+h4{font-size:16.5px;font-weight:800;letter-spacing:-.01em;margin:18px 0 6px;color:var(--navy)}
+p{margin:0 0 13px}
+.sub{color:var(--navy-72);margin:0 0 18px;max-width:66ch}
+
+/* term blocks, boxed so each definition reads as its own card */
+.terms{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:8px 0 0}
+@media(max-width:760px){.terms{grid-template-columns:1fr}}
+.term{background:#fff;border:.5px solid var(--navy-15);border-radius:var(--r-card);padding:14px 16px}
+.term dt{font-weight:800;font-size:15.5px;margin:0 0 4px}
+.term dd{margin:0;font-size:14.5px;color:var(--navy-72)}
+.term dd b{color:var(--navy)}
+
+/* compartment color key: the same three codes are used in the figure,
+   in this legend, and on each group box, so a student can match them by eye */
+.ckey{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 0}
+.ckitem{display:inline-flex;align-items:center;gap:9px;border:.5px solid var(--navy-15);
+  border-radius:var(--r-card);padding:9px 14px;font-size:13.5px;font-weight:700;color:var(--navy)}
+.sw{width:22px;height:22px;border-radius:5px;flex:0 0 auto}
+.sw.ext{background:var(--wash);border:1.6px dashed var(--navy-72)}
+.sw.int{background:#fff;border:2.4px solid var(--terra)}
+.sw.icf{background:var(--navy);border:1.6px solid var(--navy)}
+.ckitem .lb{line-height:1.2}
+.ckitem .sub{font-weight:600;color:var(--navy-72);font-size:12.5px;line-height:1.2}
+body.present .ckitem{font-size:clamp(13px,1.3vw,18px)}
+body.present .sw{width:26px;height:26px}
+
+/* grouped compartments: the group border shows what contains what */
+.tgroup{border-radius:var(--r-card);padding:16px 18px 18px;margin:0 0 14px}
+.tgroup .glab{font-size:11px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;
+  margin:0 0 4px;display:flex;align-items:center;gap:9px}
+.tgroup .glab .sw{width:16px;height:16px;border-radius:4px}
+.tgroup .gnote{font-size:14px;color:var(--navy-72);margin:0 0 6px}
+.tgroup.ext{border:1.4px dashed var(--navy-72);background:var(--wash)}
+.tgroup.ext .glab{color:var(--navy-72)}
+.tgroup.int{border:2px solid var(--terra)}
+.tgroup.int .glab{color:var(--terra)}
+.tgroup.icf{border:1.8px solid var(--navy)}
+.tgroup.icf .glab{color:var(--navy)}
+
+/* causal chain */
+.chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin:8px 0 6px}
+.chain .lk{flex:1 1 130px;min-width:120px;background:#fff;border:.5px solid var(--navy-15);
+  border-radius:var(--r-card);padding:12px 13px}
+.chain .lk .k{font-size:9.5px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);margin:0 0 4px}
+.chain .lk p{margin:0;font-size:14px;line-height:1.4}
+.chain .ar{display:flex;align-items:center;justify-content:center;color:var(--terra);
+  font-size:20px;font-weight:800;padding:0 8px;flex:0 0 auto}
+@media(max-width:700px){.chain{flex-direction:column}.chain .ar{transform:rotate(90deg);padding:5px 0}}
+
+/* key box */
+.key{border:2px solid var(--terra);border-radius:var(--r-card);padding:16px 18px;margin:18px 0}
+.key .tag{font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--terra);margin:0 0 7px}
+.key p:last-child,.key ul:last-child{margin-bottom:0}
+
+/* equation */
+.eq{background:var(--wash);border:.5px solid var(--navy-15);border-radius:var(--r-card);padding:16px 18px;margin:14px 0}
+.eq .f{font-size:19px;font-weight:800;letter-spacing:.01em;margin:0 0 9px;font-variant-numeric:tabular-nums}
+.eq .k{font-size:13.5px;color:var(--navy-72);margin:0 0 6px}
+.eq .k b{color:var(--navy)}
+.eq .says{font-size:14px;margin:0}
+.eq .says b{color:var(--terra)}
+
+.page-foot{margin-top:44px;border-top:.5px solid var(--navy-15);padding-top:16px;font-size:13px;color:var(--navy-72)}
+
+@media print{
+  @page{margin:13mm}
+  .site-header .site-logo svg{height:32px}
+  .wb,.wb-launch,.lightbox,.skip{display:none!important}
+  body{font-size:10.5pt}
+  h2{break-after:avoid;page-break-after:avoid}
+  .card,.key,.eq,figure,.chain,.term,.tgroup,.cprof{break-inside:avoid;page-break-inside:avoid}
+  .clin-body[hidden]{display:block!important}
+  .clin-btn{display:none!important}
+  .clin-grid{grid-template-columns:repeat(2,1fr)}
+  .card.navy,.band{background:#fff!important;color:#0B1530!important;border:1px solid #bbb!important}
+  .card.navy .eyebrow,.band .em{color:#6B2A20!important}
+}
+
+/* transcript blocks and worked problems */
+.sl{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--navy-72);margin:0 0 10px}
+.sl b{color:var(--terra)}
+.tx p{max-width:70ch}
+.work{list-style:none;margin:0;padding:0;counter-reset:w}
+.work>li{counter-increment:w;position:relative;padding:9px 0 9px 42px;border-top:.5px solid var(--navy-15);font-size:15px;line-height:1.5}
+.work>li:first-child{border-top:0;padding-top:0}
+.work>li::before{content:counter(w);position:absolute;left:0;top:9px;font-family:'Open Sans','Plus Jakarta Sans',sans-serif;font-weight:800;font-size:22px;color:var(--terra);line-height:1.1}
+.work>li:first-child::before{top:0}
+.prob{border:2px solid var(--terra);border-radius:var(--r-card);padding:18px 20px;margin:18px 0}
+.prob .tag{font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--terra);margin:0 0 8px}
+.prob .q{font-weight:800;margin:0 0 12px;font-size:16px}
+.prob .q+ul{margin-bottom:14px}
+.prob h5{font-size:10.5px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--navy-72);margin:14px 0 8px}
+sup,sub{font-size:.72em;line-height:0}
+img.fig{object-fit:contain}
+@media print{.prob,.work>li{break-inside:avoid;page-break-inside:avoid}}
+
+/* collapsible clinical bar: what this means in medicine, nursing, respiratory therapy */
+.clin{margin:18px 0 0}
+.clin-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:14px;
+  font-family:inherit;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
+  background:#fff;color:var(--navy);border:1px solid var(--navy-15);border-radius:var(--r-btn);
+  padding:14px 18px;cursor:pointer;text-align:left}
+.clin-btn:hover{border-color:var(--navy);background:var(--wash)}
+.clin-btn[aria-expanded="true"]{border:2px solid var(--navy);
+  box-shadow:0 6px 16px rgba(11,21,48,.10),0 3px 6px rgba(11,21,48,.06)}
+.clin-btn .chev{font-size:15px;color:var(--terra);transition:transform .18s ease}
+.clin-btn[aria-expanded="true"] .chev{transform:rotate(90deg)}
+.clin-body{margin:12px 0 0}
+.clin-body[hidden]{display:none}
+.clin-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:1180px){.clin-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.clin-grid{grid-template-columns:1fr}}
+.cprof{border:.5px solid var(--navy-15);border-radius:var(--r-card);padding:15px 16px}
+.cprof .who{display:inline-flex;align-items:center;font-size:10px;font-weight:800;letter-spacing:.18em;
+  text-transform:uppercase;color:#fff;background:var(--navy);border-radius:var(--r-pill);
+  padding:6px 12px;margin:0 0 10px}
+.cprof.n .who{background:var(--terra)}
+/* "Radiologic technology" is the longest label of the four; tighten its tracking
+   so the pill stays on one line and all four card texts start on the same line. */
+.cprof.x .who{background:#6B5017;letter-spacing:.07em;white-space:nowrap}
+.cprof.r .who,.cprof.n .who,.cprof.m .who{white-space:nowrap}
+.cprof.r .who{background:#2C4A70}
+.cprof .means{margin:0 0 9px;font-size:14.5px;line-height:1.45}
+.cprof .eg{margin:0;font-size:14px;color:var(--navy-72);line-height:1.45}
+.cprof .eg b{color:var(--terra)}
+body.present .clin-btn{font-size:clamp(11px,1.05vw,15px);padding:15px 20px}
+body.present .cprof .means{font-size:clamp(14px,1.4vw,20px)}
+body.present .cprof .eg{font-size:clamp(13px,1.3vw,18px)}
+body.present .cprof .who{font-size:clamp(10px,1vw,13px)}
+/* While recording, an open clinical bar owns the slide. Four professions side by
+   side need the full width; scaled down to fit around the slide content they are
+   unreadable on camera. Closing the bar brings the slide straight back. */
+body.present .slide.clinopen .slide-body>*:not(.clin){display:none}
+body.present .slide.clinopen .clin{margin-top:4px}
+body.present .slide.clinopen .cprof{padding:18px 20px}
+
+.lightbox{position:fixed;inset:0;z-index:300;background:rgba(11,21,48,.92);display:flex;
+  align-items:center;justify-content:center;padding:4vh 4vw}
+.lightbox[hidden]{display:none}
+.lightbox .lb-inner{max-width:96vw;max-height:92vh;overflow:auto;background:#fff;border-radius:var(--r-card);padding:14px}
+.mapcard{cursor:zoom-in}
+.mapcard .mc-hit{transition:fill .15s ease}
+.mapcard:hover .mc-hit{fill:#FAFAF9;stroke-width:2.6}
+.mapcard:focus{outline:none}
+.mapcard:focus-visible .mc-hit{stroke:#8B3A2E;stroke-width:3.4}
+.lb-card{max-width:min(80vw,880px)}
+.lb-card .lb-h{background:var(--terra);color:#fff;border-radius:var(--r-card) var(--r-card) 0 0;
+  padding:20px 26px;font-family:'Open Sans','Plus Jakarta Sans',sans-serif;font-weight:800;
+  font-size:clamp(24px,3vw,38px);letter-spacing:-.02em;margin:0}
+.lb-card ul{list-style:none;margin:0;padding:22px 26px 26px;border:1.5px solid var(--navy);
+  border-top:0;border-radius:0 0 var(--r-card) var(--r-card)}
+.lb-card li{position:relative;padding:10px 0 10px 30px;font-size:clamp(18px,2vw,26px);line-height:1.4}
+.lb-card li::before{content:"";position:absolute;left:4px;top:22px;width:9px;height:9px;
+  background:var(--terra);border-radius:50%}
+.lightbox .lb-close{position:absolute;top:16px;right:18px;background:var(--terra);color:#fff;border:0;
+  border-radius:var(--r-btn);padding:12px 18px;font-weight:800;font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;cursor:pointer}
+
+/* ---------- competency close-out, shared by the notes and the decks ---------- */
+.cmpwrap{margin:10px 0 0}
+.cmp{background:#fff;border:.5px solid var(--navy-15);border-radius:var(--r-card);padding:16px 18px 18px}
+.cmp .cn{font-family:'Open Sans','Plus Jakarta Sans',sans-serif;font-weight:800;font-size:30px;
+  line-height:1;letter-spacing:-.03em;color:var(--terra);margin:0 0 6px}
+.cmp h4{margin:0 0 4px;font-size:16.5px;font-weight:800;letter-spacing:-.01em;color:var(--navy)}
+.cmp .ccan{margin:0;font-size:14px;color:var(--navy-72)}
+.cmp .pick{margin:13px 0 0;font-size:12.5px;font-weight:700;color:var(--navy-72)}
+.pr{position:relative;border-radius:8px;padding:13px 15px 12px;margin:14px 0 0}
+.pr p{margin:0;font-size:14.5px;line-height:1.5}
+.pr.a{border:1.6px solid var(--terra)}
+.pr.b{border:1.6px solid var(--navy)}
+.pr .pl{position:absolute;top:-10px;left:13px;background:#fff;padding:0 7px;
+  font-family:'Open Sans','Plus Jakarta Sans',sans-serif;font-weight:800;font-size:11px;
+  letter-spacing:.16em}
+.pr.a .pl{color:var(--terra)}
+.pr.b .pl{color:var(--navy)}
+.cmplist{list-style:none;margin:10px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:8px 18px}
+.cmplist li{display:grid;grid-template-columns:32px 1fr;gap:10px;align-items:baseline;
+  padding:7px 0;border-top:.5px solid var(--navy-15);font-size:15px}
+.cmplist li .k{font-family:'Open Sans','Plus Jakarta Sans',sans-serif;font-weight:800;
+  color:var(--terra);font-variant-numeric:tabular-nums}
+@media(max-width:760px){.cmplist{grid-template-columns:1fr}.cmpwrap .grid{grid-template-columns:1fr}}
+@media print{.cmp,.pr{break-inside:avoid;page-break-inside:avoid}}
+
+.prereq .card{padding:18px 20px}
+.prereq .eyebrow{margin-bottom:8px}
+.prereq ul.bul{margin-bottom:6px}
+.prereq ul.bul>li{padding:3px 0 3px 18px;font-size:14.5px}
+.prereq ul.bul>li::before{top:12px;width:5px;height:5px}
+.prereq .pqnote{font-size:13.5px;color:var(--navy-72);margin:10px 0 0}
+.prereq .pqlink{margin:12px 0 0;font-size:13.5px;font-weight:700}
+@media(max-width:860px){.prereq{grid-template-columns:1fr}}
+
+#printbtn{border:0;cursor:pointer;font:inherit}
+@media print{#printbtn{display:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="site-header">
+  <a class="site-logo" href="welcome.html" target="_top" aria-label="BIOL 005 Human Physiology, course home">
+    <svg viewBox="40 10 125 148" aria-hidden="true" focusable="false"><g transform="translate(0,18)"><g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#0B1530"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#0B1530"/></g><g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/></g><g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/></g></g></svg>
+    <span><span class="logo-title">Human <span class="logo-accent">Physiology</span></span><span class="logo-sub">BIO 005 &middot; Week 2</span></span>
+  </a>
+</header>
+<main class="wrap" id="main">
+<div class="hero"><p class="eyebrow">Week 2 &middot; Lecture notes and transcript</p><h1>How cells <span class="hl">talk to each other</span></h1><p class="lede">The third part of Week 2. The cell as a structure, then what crosses its membrane, and now how one cell sends a message to another. Signal types, where the receptor sits and why, the G protein cascade, the second messengers, amplification, agonists and antagonists, how a signal is switched off, and what a dose response curve tells you. Silverthorn chapter 6.</p><div class="metarow"><span class="pill">Competencies 17 to 25 of week 2</span><span class="pill navy">11 sections &middot; 3 worked problems</span><button type="button" class="pill navy" id="printbtn">Print these notes</button></div></div><div class="key"><p class="tag">How to use this sheet</p><p>Pass one, before the video: read a section, then close the page and put what you can into the box for that competency on your <b>Cellular physiology and transport</b> note sheet. Pass two, after the video: come back in your second color and add what you missed. Try each worked problem yourself before you read the work. Every pathway in the rest of this course is the five steps in this one wearing different clothes, so it is worth the time now. There is a Print button above if you would rather work from paper.</p></div><h2>The problem for <span class="hl">today</span></h2><p class="sl"><b>Where this sits</b></p><div class="tx"><p>You have the cell as a structure, and you have the ways things cross its membrane. Both of those are about a single cell looking after itself.</p><p>This section is about cells talking to each other. Your body has roughly thirty trillion cells and they have to act as one thing. A signal molecule released in one place has to reach the right cells somewhere else, be recognized, be converted into something the inside of the cell can act on, be amplified enough to matter, and then be switched off.</p><p>Every signal pathway you will meet for the rest of this course, and there are a great many, is the same five steps in a different costume: <b>signal, receptor, transduction, response, termination</b>. Learn the shape once here and the endocrine, nervous and cardiovascular weeks stop being new material and start being examples.</p></div><h2>Signal types, and how far <span class="hl">they travel</span></h2><p class="sl"><b>Competency 17</b></p><div class="tx"><p>Signals are classified by how they get to their target, and the classification tells you how fast the response is and how widely it spreads.</p><p><b>Gap junctional.</b> Ions and small molecules pass directly from one cell into the next through connexon pores, with nothing released into the extracellular fluid at all. This is the fastest kind, and you met the junction itself in the first half of this week. It is how cardiac muscle contracts as one unit.</p><p><b>Contact dependent.</b> A membrane molecule on one cell binds a receptor on the cell touching it. Immune cells check each other this way.</p><p><b>Autocrine.</b> The cell releases a signal that acts on itself. Common in immune signaling and in growth control.</p><p><b>Paracrine.</b> Released into the interstitial fluid and acting on neighboring cells, over a short distance, then broken down before it travels far. Histamine in an allergic response works this way.</p><p><b>Neurotransmitter.</b> A neuron releases it into a tiny synaptic cleft onto one target cell. Very short distance, very fast, very precise.</p><p><b>Neurohormone and hormone.</b> Released into the blood and carried everywhere. Slow to arrive, long lasting, and it reaches every cell in the body, so specificity has to come from somewhere else.</p><p>That last point is the one worth holding. A hormone in the blood touches every cell you have. What decides which cells respond is not where the signal goes; it is which cells carry a receptor for it. <b>No receptor, no response.</b> That single idea explains why one hormone can do different things in different tissues and nothing at all in most of them.</p></div><h2>Where the receptor sits, and what <span class="hl">decides that</span></h2><p class="sl"><b>Competency 18</b></p><div class="tx"><p>There are only two places a receptor can be, and one property of the signal molecule decides which.</p><p><b>Lipophobic signals</b>, meaning water soluble ones: peptides, proteins, catecholamines like epinephrine. They cannot cross the lipid bilayer, so their receptor has to be <b>on the cell surface</b>, with a binding site facing out.</p><p><b>Lipophilic signals</b>, meaning lipid soluble ones: steroid hormones, thyroid hormone. They pass straight through the membrane, so their receptor is <b>inside the cell</b>, in the cytosol or the nucleus.</p><p>Everything else follows from that one fact, and this is the part students find surprising.</p><p>A surface receptor cannot reach into the cell itself, so the message has to be relayed by proteins already sitting inside. Those relays are fast, because the machinery is already built and waiting. The response starts in <b>seconds</b>, and it stops soon after the signal leaves.</p><p>An intracellular receptor binds its signal and the complex acts on DNA, turning genes on or off. Making new protein takes time. The response starts in <b>hours</b> and lasts for hours or days after the signal has gone.</p><p>So if a question tells you a hormone is a steroid, you already know the receptor is inside, the mechanism is gene transcription, the onset is slow and the effect is long. You have not memorized that; you worked it out from solubility.</p><p>One thing to be careful about. Lipophilic hormones do not dissolve well in blood, which is mostly water, so they travel bound to carrier proteins. Only the free fraction can enter cells, and that is why a total hormone level and a free hormone level are different measurements.</p></div><div class="prob"><p class="tag">Worked problem 1</p><p class="q">Two patients are given a drug. Patient A gets a peptide hormone and reports an effect within a couple of minutes that has worn off an hour later. Patient B gets a steroid hormone and feels nothing for several hours, but the effect is still measurable two days later. Explain both time courses from the chemistry of the molecules, without looking up either drug.</p><p class="sub">Peptides are lipophobic. Steroids are lipophilic.</p><h5>The work</h5><ol class="work"><li>Patient A. A peptide cannot cross the membrane, so its receptor is on the cell surface.</li><li>Surface receptors work through proteins that are already in the cell: G proteins, enzymes, second messengers. Nothing has to be built, so the response begins in seconds to minutes.</li><li>Those same second messengers are broken down continuously, so when the hormone leaves the receptor the signal collapses quickly. Short onset, short duration.</li><li>Patient B. A steroid crosses the membrane and binds a receptor inside the cell.</li><li>The receptor complex acts on DNA and changes which proteins the cell makes. Transcription and translation take hours, which is the delay.</li><li>Once made, those proteins persist until they are degraded, so the effect outlives the hormone by a long way. Slow onset, long duration.</li><li>The picture to draw: two cells side by side, one with the signal stopping at the surface and a cascade inside, one with the signal walking straight through to the nucleus. Put a clock on each.</li><li>The point to carry: onset and duration are not facts to memorize per hormone. They fall out of where the receptor is, which falls out of whether the molecule dissolves in lipid.</li></ol></div><h2>The pathway, feature by <span class="hl">feature</span></h2><p class="sl"><b>Competency 19, part one</b></p><div class="tx"><p>Every surface signal pathway has the same parts, and naming them makes any new pathway readable.</p><p><b>The ligand</b> is the signal molecule. <b>The receptor</b> binds it, and binding changes the receptor's shape. That shape change is the whole trick: it is how information gets from outside to inside without the molecule itself ever entering.</p><p><b>Transduction</b> is converting the message into a form the inside of the cell can use. <b>Amplification</b> happens along the way. <b>The response</b> is what the cell actually does: open a channel, run an enzyme, secrete something, contract, divide.</p><p>Four families of surface receptor, and you can sort almost anything into one of them.</p><p><b>Receptor channels.</b> The receptor is itself an ion channel. Ligand binds, channel opens, ions flow. This is the fastest possible surface mechanism, milliseconds, and it is how the neuromuscular junction works.</p><p><b>G protein coupled receptors.</b> The receptor activates a G protein, which activates an amplifier enzyme, which makes a second messenger. The biggest family by far, and the target of a large share of all prescription drugs.</p><p><b>Receptor enzymes.</b> The receptor has an enzyme site on its inner face, usually a kinase. The insulin receptor is one.</p><p><b>Integrin receptors.</b> Linked to the cytoskeleton, they transduce mechanical information about what the cell is attached to.</p></div><h2>G protein coupled receptors, <span class="hl">step by step</span></h2><p class="sl"><b>Competency 19, part two</b></p><div class="tx"><p>This is the pathway to be able to draw from blank paper, because so much else is a variation on it.</p><p>The parts: a receptor that crosses the membrane seven times, a <b>G protein</b> sitting on the inner face with three subunits called alpha, beta and gamma, an <b>amplifier enzyme</b>, and a <b>second messenger</b>.</p><p>At rest the alpha subunit holds GDP and the whole thing is quiet.</p><p><b>One.</b> The ligand binds the receptor on the outside and the receptor changes shape.</p><p><b>Two.</b> The receptor's inner face now grips the G protein, and the alpha subunit swaps its GDP for GTP. That swap is the switch turning on.</p><p><b>Three.</b> The activated alpha subunit separates and moves along the inner face of the membrane to the amplifier enzyme.</p><p><b>Four.</b> The amplifier enzyme runs and produces second messenger, a lot of it.</p><p><b>Five.</b> The second messenger activates a protein kinase, which adds phosphate groups to target proteins and changes what they do. Phosphorylation is the cell's general purpose on switch.</p><p><b>Six.</b> The alpha subunit hydrolyses its own GTP back to GDP and reassembles with beta and gamma. The switch turns itself off, which is why the pathway does not run forever.</p><p>Worth noticing: the G protein is a timer as well as a switch. How long the alpha subunit takes to hydrolyze GTP sets how long the signal lasts. Cholera toxin works by locking the alpha subunit so it cannot hydrolyze its GTP; the switch jams on, cAMP stays high, chloride and water pour into the gut, and that is the diarrhea.</p></div><h2>Second messengers, and the <span class="hl">ones to know</span></h2><p class="sl"><b>Competency 20</b></p><div class="tx"><p>A second messenger is a small molecule made inside the cell in response to a signal outside it. The hormone is the first messenger and never gets in; the second messenger is what actually carries the news around the cytosol.</p><p><b>Cyclic AMP.</b> The amplifier enzyme is adenylyl cyclase, which converts ATP to cAMP. cAMP activates protein kinase A. Epinephrine acting on a beta receptor runs this pathway.</p><p><b>IP3 and DAG.</b> The amplifier enzyme is phospholipase C, which cuts a membrane phospholipid into two messengers at once. IP3 diffuses to the endoplasmic reticulum and opens calcium channels there; DAG stays in the membrane and activates protein kinase C.</p><p><b>Calcium.</b> The most widely used messenger in the body, and it works because the cell holds cytosolic calcium extremely low, about ten thousand times lower than outside. Opening a calcium channel for a moment therefore produces a large proportional change, and calcium binds calmodulin or troponin and changes what they do. That very low resting level, which the calcium pumps from the transport half of this week maintain, is what makes calcium usable as a signal at all.</p><p><b>Cyclic GMP</b> and <b>nitric oxide</b>. Nitric oxide is a gas that diffuses straight into the neighboring cell, raises cGMP, and relaxes smooth muscle. This is how nitroglycerin relieves angina and how sildenafil works.</p></div><h2>Amplification: why one molecule <span class="hl">matters</span></h2><p class="sl"><b>Competency 22</b></p><div class="tx"><p>A hormone is present in blood at very low concentration, often a billionth of a mole per liter. The response it produces can be enormous. The gap between those two is amplification, and it is a property of the cascade, not of the hormone.</p><p>Each step multiplies. One ligand activates one receptor, but that receptor activates many G proteins before the ligand lets go. Each G protein switches on an amplifier enzyme, and each enzyme makes many molecules of second messenger. Each second messenger activates a kinase, and each kinase phosphorylates many target proteins.</p><p>Multiply four steps of roughly ten to a hundred each and one hormone molecule ends up changing millions of product molecules. The classic worked figure for epinephrine driving glycogen breakdown in a liver cell is a single hormone molecule producing on the order of a hundred million molecules of glucose.</p><p>Two consequences. Sensitivity: a cell can respond to a vanishingly small signal, which is what lets hormones work at the concentrations they do. And fragility: a cascade with that much gain has to be shut off precisely, or a trace of signal would run away. Which is the next section.</p></div><div class="prob"><p class="tag">Worked problem 2</p><p class="q">Epinephrine is released during a fright and reaches the liver at a concentration of about one nanomole per liter, while glucose leaves the liver in millimolar amounts. Work through the cascade and say where the gain comes from, then say what would happen if the G protein could not hydrolyze its GTP.</p><p class="sub">Epinephrine is lipophobic and acts at a beta receptor. Adenylyl cyclase, cAMP and protein kinase A are involved.</p><h5>The work</h5><ol class="work"><li>Epinephrine cannot enter the cell, so it binds a surface receptor. Shape change.</li><li>The receptor activates G proteins. One occupied receptor turns on many G proteins while the ligand is bound, so the first multiplication happens here.</li><li>Each alpha subunit activates adenylyl cyclase, and each enzyme molecule converts many ATP into cAMP. Second multiplication, and the biggest one.</li><li>cAMP activates protein kinase A, and each kinase phosphorylates many targets. Third multiplication.</li><li>The phosphorylated enzymes break glycogen down to glucose, and each of those enzymes works on many glycogen molecules. Fourth.</li><li>Four multiplying steps take one nanomolar signal to a millimolar output. No single step is remarkable; the product of four is.</li><li>If the alpha subunit could not hydrolyze its GTP, the switch would never turn itself off. cAMP would stay high, kinase A would stay active, and the liver would keep dumping glucose with no signal present. That is not hypothetical; it is the mechanism of cholera toxin in the gut and of certain tumours in endocrine tissue.</li><li>The picture to draw: a funnel widening at each step, with the step names on it, and a separate small drawing of the alpha subunit with its GTP crossed out.</li></ol></div><h2>Receptor enzymes and intracellular <span class="hl">receptors</span></h2><p class="sl"><b>Competency 21</b></p><div class="tx"><p><b>Receptor enzymes</b> skip the G protein. The receptor itself carries an enzyme site on its inner face, almost always a tyrosine kinase, and ligand binding switches that enzyme on directly.</p><p>The insulin receptor is the one to know. Insulin binds, the receptor autophosphorylates, and a chain of intracellular proteins is phosphorylated in turn. One of the results is that vesicles carrying GLUT4 transporters fuse with the plasma membrane, which raises glucose uptake in muscle and fat. Notice that the final step is exocytosis inserting a facilitated diffusion carrier: three separate ideas from this week in one pathway.</p><p><b>Intracellular receptors</b> are the lipophilic route. The hormone crosses the membrane, binds its receptor in the cytosol or nucleus, and the complex binds DNA at a response element and changes transcription of specific genes.</p><p>Cortisol and the sex steroids work this way, and so does thyroid hormone, which is not a steroid but is lipophilic and behaves like one for this purpose. Slow, long lasting, and it changes what the cell is rather than just what it is doing at this moment.</p></div><h2>Turning the volume up and <span class="hl">down</span></h2><p class="sl"><b>Competency 23</b></p><div class="tx"><p>A cell is not a fixed listener. It changes how loudly it hears a signal by changing its receptors, and this is as important clinically as the signal itself.</p><p><b>Down regulation.</b> Sustained high signal, and the cell removes receptors from its surface or makes fewer of them. The same amount of hormone now produces less effect. This is the mechanism behind drug tolerance, and it is part of why a constant infusion of a hormone works less well than a pulsed one.</p><p><b>Up regulation.</b> Sustained low signal, and the cell adds receptors, becoming more sensitive. A denervated muscle does this and becomes hypersensitive to acetylcholine.</p><p>Then the two words for molecules that bind receptors.</p><p>An <b>agonist</b> binds and activates. It does what the natural ligand does. A <b>full agonist</b> can produce the maximum response; a <b>partial agonist</b> activates the receptor but cannot reach the maximum however much you give.</p><p>An <b>antagonist</b> binds and does not activate. It occupies the site and blocks the real ligand. A beta blocker is an antagonist at the receptor epinephrine uses.</p><p><b>Competitive</b> antagonists bind the same site and can be outcompeted by enough agonist, so the dose response curve shifts right but still reaches the same maximum. A <b>noncompetitive</b> antagonist cannot be outcompeted, so the maximum itself comes down. Which of those two a drug is decides whether more agonist can rescue the patient, which is why the distinction is on the exam and in the clinic.</p></div><h2>Signal termination, and what happens <span class="hl">when it fails</span></h2><p class="sl"><b>Competency 24</b></p><div class="tx"><p>Nothing above matters unless the signal can be stopped. A pathway with that much amplification and no off switch is a pathology, not a control system.</p><p>The ways a signal ends.</p><p><b>The ligand leaves or is destroyed.</b> Acetylcholinesterase breaks down acetylcholine in the synaptic cleft in about a millisecond. Neurotransmitters are also taken back up into the cell that released them. Hormones are cleared by the liver and the kidney, and a hormone's half life tells you how long its effect persists.</p><p><b>The receptor stops responding.</b> Receptors are internalised or chemically modified so they no longer couple to their G protein.</p><p><b>The switch turns itself off.</b> The G protein hydrolyses its GTP, as above.</p><p><b>The second messenger is destroyed.</b> Phosphodiesterase breaks cAMP down continuously. Calcium is pumped back out of the cytosol and into the endoplasmic reticulum.</p><p><b>The phosphate comes off.</b> Phosphatases reverse what the kinases did. Every on switch in the cell has a matching off switch, and the state of a protein at any moment is the balance between the two.</p><p>Failure of termination is a recognisable category of disease. Cholera toxin jams the G protein on. Some tumours carry a mutation that leaves a receptor permanently active with no ligand at all. Conversely, sildenafil works by <b>inhibiting termination</b>: it blocks the phosphodiesterase that would break down cGMP, so the relaxing signal lasts longer. Knowing how a pathway is switched off tells you where a drug can act.</p></div><h2>Dose and response, and what <span class="hl">a curve tells you</span></h2><p class="sl"><b>Competency 25</b></p><div class="tx"><p>Plot the response against the dose and the curve is not a straight line. It rises slowly at low doses, steeply in the middle, then flattens.</p><p>The flattening is <b>saturation</b>, and it is the same idea as the transport maximum from the other half of this week: a finite number of receptors, all occupied. Past that point more drug adds nothing and side effects are all that is left.</p><p>Plot dose on a logarithmic axis and the same data becomes a tidy S shape, which is why nearly every published dose response curve is drawn that way.</p><p>Two numbers come off the curve.</p><p><b>EC50</b> is the dose giving half the maximum response, and it measures <b>potency</b>: how much drug you need. A lower EC50 means a more potent drug.</p><p><b>Maximal response</b> measures <b>efficacy</b>: how much the drug can do at its best.</p><p>They are independent, and confusing them is the commonest error here. A very potent drug with a low ceiling is worse for a severe problem than a less potent drug with a high one. A partial agonist has lower efficacy no matter how potent it is.</p><p>On the curve: a competitive antagonist shifts it right, so the EC50 rises but the maximum is unchanged. A noncompetitive antagonist lowers the maximum. Being able to look at a shifted curve and say which kind of blocker was added is the competency.</p></div><div class="prob"><p class="tag">Worked problem 3</p><p class="q">Two dose response curves are drawn for the same agonist. In experiment one a blocker is added and the curve shifts to the right with the same maximum. In experiment two a different blocker is added and the maximum falls, with no rightward shift. Identify each blocker, and say which patient you could rescue by giving more agonist.</p><p class="sub">Competitive antagonists bind the same site as the agonist. Noncompetitive ones do not.</p><h5>The work</h5><ol class="work"><li>Experiment one. The maximum is unchanged, so every receptor can still produce a full response if the agonist reaches it. More agonist restores the original effect.</li><li>That is a <b>competitive antagonist</b>. It binds the same site and the two molecules compete, so raising agonist concentration wins the competition.</li><li>The shift right means a higher EC50: you need more drug for the same effect. Potency has fallen, efficacy has not.</li><li>Experiment two. The maximum is lower, so some receptors cannot produce a response at any agonist concentration.</li><li>That is a <b>noncompetitive antagonist</b>. Raising the agonist does not help, because the problem is not competition for the binding site.</li><li>Efficacy has fallen. EC50 may be unchanged.</li><li>Clinically: you can out dose the competitive blocker and you cannot out dose the noncompetitive one. That is the difference between an overdose you can treat with more agonist and one you have to support until the drug clears.</li><li>The picture to draw: one set of axes with three curves on it, the control, the right shifted one, and the flattened one, with EC50 marked on each.</li></ol></div><h2>What this half assumes you <span class="hl">already have</span></h2><p class="sl"><b>Before you go on</b></p><div class="tx"><p>From the cell and tissues half: the membrane with proteins in it, and gap junctions, which are the one signaling route that needs no receptor at all.</p><p>From the transport half: ion channels and gating, since a receptor channel is both; the calcium pumps, because the low resting calcium they maintain is what makes calcium usable as a messenger; and exocytosis, because that is how insulin puts GLUT4 into the membrane and how a neuron releases transmitter.</p><p>From Week 1: the control loop. A signal pathway is the efferent limb of one, drawn at molecular scale.</p><p>Going forward: Week 3 is membrane potential, neurons and synapses, and a synapse is a paracrine signal across a very small gap onto a receptor channel. You have already met every part of it.</p></div><h2>Close the page and <span class="hl">produce it</span></h2><p class="sub">The nine signaling competencies this lecture covers, plus the two from earlier in the week that the other notes name but never teach: determinants of permeability, and compartment separation with its clinical volume shifts. Both belong here, because permeability is what decides where a receptor has to sit, and a volume shift is what a signal is usually defending. Pick one prompt per competency. Blank paper, nothing open.</p><p class="sub"><a href="competency-brain-dump.html" target="_top">Read the full instructions first</a>, including how the first pass before the lecture differs from the second pass after it.</p><div class="cmpwrap"><div class="grid g2"><section class="cmp"><p class="cn" aria-hidden="true">01</p><h4>Signal types and range</h4><p class="ccan">Classify a chemical signal as autocrine, paracrine, neurotransmitter, neurohormone, or hormone by its route and distance of travel.</p><p class="pick">Do one of the two. Head your paper with the number.</p><div class="pr a"><p class="pl">1-1</p><p>Draw one target cell in the middle of the box. Draw an arrow in from each of the five signal types, autocrine, paracrine, neurotransmitter, neurohormone, hormone. Label each arrow with how far it traveled and what carried it.</p></div><div class="pr b"><p class="pl">1-2</p><p>Make a five row table. Signal type, where it is released, how far it goes, what it travels through. Fill it from memory, then check one row against the book.</p></div></section><section class="cmp"><p class="cn" aria-hidden="true">02</p><h4>Receptor location and ligand solubility</h4><p class="ccan">Predict whether a signal molecule binds a surface receptor or an intracellular receptor from its lipid solubility and relate that to the speed and duration of the response.</p><p class="pick">Do one of the two. Head your paper with the number.</p><div class="pr a"><p class="pl">2-1</p><p>Draw a cell with one surface receptor and one intracellular receptor. Show the path a lipid soluble signal takes and the path a water soluble one takes. Mark which response is faster and which lasts longer.</p></div><div class="pr b"><p class="pl">2-2</p><p>Write the two questions you would ask about any new signal molecule to predict where its receptor sits. Then answer both for a steroid and for a peptide hormone.</p></div></section><section class="cmp"><p class="cn" aria-hidden="true">03</p><h4>G protein coupled receptors</h4><p class="ccan">Trace a G protein coupled receptor pathway from ligand binding through the G protein and amplifier enzyme to the second messenger and the cellular response.</p><p class="pick">Do one of the two. Head your paper with the number.</p><div class="pr a"><p class="pl">3-1</p><p>Draw the membrane with a receptor crossing it, and trace the pathway in numbered order: ligand binds, the G protein swaps GDP for GTP, the alpha subunit leaves, it switches on the amplifier enzyme, the enzyme makes second messenger, the messenger switches on a kinase, the kinase changes a target protein. Beside each step write roughly how many molecules that one step produced from one. One line: name the step where the biggest multiplication happened.</p></div><div class="pr b"><p class="pl">3-2</p><p>Draw a Gs pathway and a Gq pathway side by side, starting from the same membrane and ending at two different cellular responses. Label the amplifier enzyme and the second messenger on each. Then draw the off switch on both, GTP being hydrolyzed on the alpha subunit. One line: cholera toxin jams that off switch open, so write what the gut cell keeps doing and why the person loses fluid.</p></div></section><section class="cmp"><p class="cn" aria-hidden="true">04</p><h4>Second messengers</h4><p class="ccan">Identify cyclic AMP, IP3, diacylglycerol, and calcium as second messengers and state the enzyme that generates each and one target it activates.</p><p class="pick">Do one of the two. Head your paper with the number.</p><div class="pr a"><p class="pl">4-1</p><p>Draw a membrane and put all four second messengers on one page: cyclic AMP, IP3, diacylglycerol, and calcium. For each, draw where it comes from, the enzyme or channel that produced it, and an arrow to one thing it switches on. Keep DAG in the membrane and IP3 out in the cytosol, because that is where they actually go. One line: one of the four is not made by an enzyme at all, so name it and say where it comes from instead.</p></div><div class="pr b"><p class="pl">4-2</p><p>Draw phospholipase C cutting PIP2 in the membrane and follow both halves. Send IP3 to the endoplasmic reticulum and draw what comes out. Leave DAG where it is and draw what it activates. Show the two halves converging on one response. Draw the adenylyl cyclase and cyclic AMP route beside it for contrast. One line: cyclic AMP is destroyed by phosphodiesterase, so say what a drug that blocks that enzyme does to the signal.</p></div></section><section class="cmp"><p class="cn" aria-hidden="true">05</p><h4>Catalytic receptors and intracellular receptors</h4><p class="ccan">Compare a receptor enzyme such as the insulin receptor with an intracellular steroid receptor by mechanism and by time course of the response.</p><p class="pick">Do one of the two. Head your paper with the number.</p><div class="pr a"><p class="pl">5-1</p><p>Draw one cell with the insulin receptor in the membrane on one side and a steroid receptor sitting inside the cell on the other. Trace both from hormone arrival to final response, the steroid crossing the membrane and reaching DNA, the insulin receptor phosphorylating itself and moving a glucose transporter to the surface. Put a clock beside each showing how long the response takes. One line: name the one you could not use if you needed the effect ten seconds from now.</p></div><div class="pr b"><p class="pl">5-2</p><p>Draw one time axis with two response curves on it, a receptor enzyme response and a steroid response, each from hormone arrival through peak to fade. Make the onsets and durations honestly different. Under the axis, draw what is physically being changed in each case, an existing protein being modified or a new protein being built. One line: say which of the two you would want for the next thirty seconds and which for the next week.</p></div></section><section class="cmp"><p class="cn" aria-hidden="true">06</p><h4>Signal amplification</h4><p class="ccan">Explain how a cascade amplifies a signal and estimate the size of the amplification across the steps of a given pathway.</p><p class="pick">Do one of the two. Head your paper with the number.</p><div class="pr a"><p class="pl">6-1</p><p>Draw a three step cascade as a widening funnel. Put a number on each step and multiply them down the side to get the total amplification.</p></div><div class="pr b"><p class="pl">6-2</p><p>Start from one ligand and write the count at each step of a cascade until you reach the response. One line per step, numbers only, no sentences.</p></div></section><section class="cmp"><p class="cn" aria-hidden="true">07</p><h4>Receptor modulation</h4><p class="ccan">Define agonist, antagonist, competitive inhibition, up regulation, and down regulation and predict the effect of chronic ligand excess on target cell sensitivity.</p><p class="pick">Do one of the two. Head your paper with the number.</p><div class="pr a"><p class="pl">7-1</p><p>Draw one target cell three times. Normal, after a long stretch of scarce signal, after a long stretch of excess signal. Show the receptor count changing in each and label which is up regulation and which is down.</p></div><div class="pr b"><p class="pl">7-2</p><p>Define agonist, antagonist, up regulation and down regulation in your own words, one line each. Then explain in two lines why a patient who needs more opioid for the same effect is usually showing down regulation rather than drug seeking.</p></div></section><section class="cmp"><p class="cn" aria-hidden="true">08</p><h4>Signal termination</h4><p class="ccan">Name three mechanisms that end a chemical signal and explain why a signal that cannot be terminated produces pathology.</p><p class="pick">Do one of the two. Head your paper with the number.</p><div class="pr a"><p class="pl">8-1</p><p>Draw one signal running from receptor to response across a cell, then add three different off switches to that same drawing at three different points: the ligand removed or destroyed outside the cell, the second messenger broken down inside, and the response protein having its phosphate taken off. Name the enzyme doing each. One line: pick the switch nearest the response and say what still goes wrong if only that one fails.</p></div><div class="pr b"><p class="pl">8-2</p><p>Pick a signal, not insulin, and draw it working normally, then draw it again with its termination broken. In the broken version show what piles up and where. Underneath, draw the effect on the tissue as two panels, one over minutes and one over weeks. One line: a signal that never shuts off eventually produces less response rather than more, so write what the cell did to itself.</p></div></section><section class="cmp"><p class="cn" aria-hidden="true">09</p><h4>Dose response relationships</h4><p class="ccan">Plot a dose response curve, identify threshold, maximal response, and EC50, and compare a full agonist with a partial agonist on the same axes.</p><p class="pick">Do one of the two. Head your paper with the number.</p><div class="pr a"><p class="pl">9-1</p><p>Draw a dose response curve with log dose on the x axis and response as a percentage of maximum on the y. Mark threshold, EC50, and the maximal response, with construction lines dropped to the axes. Then plot a partial agonist on the same axes. One line: the partial agonist never reaches the top no matter how much you add, so say what that tells you about the drug that raising the dose cannot fix.</p></div><div class="pr b"><p class="pl">9-2</p><p>Draw three curves on one set of axes: a full agonist alone, the same agonist with a competitive antagonist added, and the same agonist with an antagonist that will not come off the receptor. Show which curve slides sideways and which one gets shorter. One line: only one of the two antagonists can be beaten by giving more agonist, so name it and say what feature of the graph proves it.</p></div></section><section class="cmp"><p class="cn" aria-hidden="true">10</p><h4>Determinants of permeability</h4><p class="ccan">Rank molecules by their ability to cross a lipid bilayer unaided using size, charge, and lipid solubility, and predict which will require a protein.</p><p class="pick">Do one of the two. Head your paper with the number.</p><div class="pr a"><p class="pl">10-1</p><p>Draw a bilayer as a vertical wall down the middle of your page. Line up six molecules on the left: oxygen, carbon dioxide, water, a steroid hormone, glucose, and a sodium ion. Draw an arrow straight through the wall for each one that crosses unaided, a blocked arrow for each that cannot, and a protein set into the wall for each that needs help. One line: sodium is tiny and still cannot cross, so say what actually stopped it.</p></div><div class="pr b"><p class="pl">10-2</p><p>Draw a ranking ladder, most permeable at the top and least at the bottom, and place at least six molecules of your own choosing on it. Beside each rung write the properties that put it there: size, lipid solubility, and charge where it applies. One line: name the pair on your ladder that are close in size but far apart in rank, and say what separates them.</p></div></section><section class="cmp"><p class="cn" aria-hidden="true">11</p><h4>Compartment separation and clinical volume shifts</h4><p class="ccan">Predict the direction of water movement between compartments when extracellular osmolarity rises or falls and name a clinical situation that produces each shift.</p><p class="pick">Do one of the two. Head your paper with the number.</p><div class="pr a"><p class="pl">11-1</p><p>Draw a patient with swollen ankles and a low blood pressure. Use arrows to show where the water went.</p></div><div class="pr b"><p class="pl">11-2</p><p>Draw three scenarios: water gained in the vessels, water lost from the body, water moved into tissue. Predict blood pressure under each.</p></div></section></div></div>
+<p class="page-foot">Dr. Sharilyn Rennie &middot; BIO 005 Human Physiology &middot; Compartments, cells and tissues. Values given are typical teaching figures, not laboratory reference ranges. Figures &copy; Pearson Education, Silverthorn Human Physiology 9e, used under the instructor license for this course.</p>
+
+</main>
+<div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Enlarged figure">
+  <button type="button" class="lb-close" aria-label="Close the enlarged figure">&#10005; Close</button>
+  <div class="lb-inner"></div>
+</div>
+<!-- ===================================================================
+     WHITEBOARD OVERLAY
+     Draw over the lecture while you teach. Works with a stylus, a mouse,
+     or a finger. Records normally in Loom, and the toolbar drags out of
+     the way of Loom's own controls.
+     Keyboard: W opens and closes, P pen, H highlighter, E eraser,
+     1 to 8 colors, [ and ] size, Ctrl+Z undo, T hides the toolbar,
+     Escape closes.
+     =================================================================== -->
+<style>
+.wb-launch{position:fixed;right:18px;bottom:18px;z-index:2147482000;
+  background:var(--terra,#8B3A2E);color:#fff;border:0;border-radius:99px;
+  padding:12px 18px;font-family:inherit;font-weight:800;font-size:12px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;
+  box-shadow:0 6px 18px rgba(11,21,48,.28);display:inline-flex;align-items:center;gap:8px}
+.wb-launch:hover{background:#6B2A20}
+.wb-launch:focus-visible{outline:3px solid #C9A14A;outline-offset:3px}
+.wb-launch .wb-key{font-weight:700;font-size:11px;opacity:.8;letter-spacing:.06em}
+
+.wb{position:fixed;inset:0;z-index:2147483000}
+body.wb-on .wb-launch{display:none}
+body.wb-on .present-bar,body.wb-on .present-exit-top,body.wb-on .strip-bar{display:none!important}
+.wb[hidden]{display:none}
+.wb.bg-white{background:#FFFFFF}
+.wb.bg-dark{background:#0B1530}
+.wb.bg-grid{background:#FFFFFF;background-image:
+  repeating-linear-gradient(to right,#E3E7ED 0 1px,transparent 1px 32px),
+  repeating-linear-gradient(to bottom,#E3E7ED 0 1px,transparent 1px 32px)}
+.wb-canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;
+  cursor:crosshair;display:block}
+
+.wb-bar{position:absolute;top:12px;right:14px;transform:none;
+  display:flex;align-items:center;flex-wrap:wrap;gap:5px;
+  background:rgba(11,21,48,.96);border-radius:14px;padding:7px 9px;
+  box-shadow:0 10px 30px rgba(0,0,0,.4);max-width:min(97vw,1240px)}
+.wb-bar.dragging{opacity:.9}
+.wb.bar-hidden .wb-bar{display:none}
+.wb-grip{cursor:grab;background:transparent;border:0;color:#9FB0C6;font-size:18px;
+  padding:6px 4px;line-height:1;touch-action:none}
+.wb-grip:active{cursor:grabbing}
+.wb-sep{width:1px;height:24px;background:rgba(255,255,255,.2);margin:0 2px}
+.wb-b{font-family:inherit;font-weight:700;font-size:12.5px;color:#fff;background:transparent;
+  border:1px solid rgba(255,255,255,.28);border-radius:8px;padding:7px 9px;cursor:pointer;
+  min-height:36px;min-width:36px;display:inline-flex;align-items:center;justify-content:center;
+  gap:5px;white-space:nowrap}
+.wb-b.icon{padding:7px 10px;font-size:15px}
+.wb-b:hover{background:rgba(255,255,255,.14)}
+.wb-b[aria-pressed="true"]{background:#8B3A2E;border-color:#8B3A2E}
+.wb-b:focus-visible,.wb-grip:focus-visible,.wb-sw:focus-visible{outline:3px solid #C9A14A;outline-offset:2px}
+.wb-b.danger[aria-pressed]{}
+.wb-count{color:#DCE4EE;font-weight:800;font-size:12px;padding:0 3px;
+  font-variant-numeric:tabular-nums;min-width:66px;text-align:center}
+.wb-sw{width:28px;height:28px;border-radius:8px;border:2px solid rgba(255,255,255,.35);
+  cursor:pointer;padding:0}
+.wb-sw[aria-pressed="true"]{border-color:#fff;box-shadow:0 0 0 3px rgba(201,161,74,.85)}
+.wb-size{width:32px;height:32px;border-radius:8px;border:1px solid rgba(255,255,255,.28);
+  background:transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.wb-size[aria-pressed="true"]{background:#8B3A2E;border-color:#8B3A2E}
+.wb-size i{display:block;background:var(--wb-ink,#fff);border-radius:50%;box-shadow:0 0 0 1px rgba(255,255,255,.5)}
+.wb-size.s i{width:5px;height:5px}
+.wb-size.m i{width:9px;height:9px}
+.wb-size.l i{width:15px;height:15px}
+.wb-hint{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);
+  background:rgba(11,21,48,.9);color:#DCE4EE;font-size:12.5px;font-weight:600;
+  padding:7px 14px;border-radius:999px;pointer-events:none;opacity:0;transition:opacity .25s ease}
+.wb-hint.show{opacity:1}
+@media(prefers-reduced-motion:reduce){.wb-hint{transition:none}}
+@media(max-width:700px){
+  .wb-bar{left:8px;right:8px;top:8px;transform:none;max-width:none;justify-content:center}
+  .wb-b .wb-lbl{display:none}
+}
+@media print{.wb,.wb-launch{display:none!important}}
+</style>
+
+<button type="button" id="wbLaunch" class="wb-launch" aria-label="Open the pen layer to draw over these slides">
+  <span aria-hidden="true">&#9998;</span> Pen <span class="wb-key" aria-hidden="true">W</span>
+</button>
+
+<div id="wb" class="wb bg-clear" hidden role="application" aria-label="Whiteboard overlay for drawing over the lecture">
+  <canvas id="wbCanvas" class="wb-canvas" aria-label="Drawing surface. Use a stylus, mouse, or finger to draw."></canvas>
+
+  <div id="wbBar" class="wb-bar" role="toolbar" aria-label="Whiteboard tools">
+    <button type="button" class="wb-grip" id="wbGrip" aria-label="Drag to move this toolbar">&#10495;</button>
+
+    <button type="button" class="wb-b wb-tool" data-tool="pen" aria-pressed="true" aria-label="Pen">
+      <span aria-hidden="true">&#9998;</span><span class="wb-lbl">Pen</span></button>
+    <button type="button" class="wb-b wb-tool" data-tool="marker" aria-pressed="false" aria-label="Highlighter">
+      <span aria-hidden="true">&#9646;</span><span class="wb-lbl">Marker</span></button>
+    <button type="button" class="wb-b wb-tool" data-tool="eraser" aria-pressed="false" aria-label="Eraser">
+      <span aria-hidden="true">&#9633;</span><span class="wb-lbl">Erase</span></button>
+
+    <span class="wb-sep" aria-hidden="true"></span>
+
+    <button type="button" class="wb-sw" data-color="#8B3A2E" aria-pressed="true"  aria-label="Rust" style="background:#8B3A2E"></button>
+    <button type="button" class="wb-sw" data-color="#0B1530" aria-pressed="false" aria-label="Navy" style="background:#0B1530"></button>
+    <button type="button" class="wb-sw" data-color="#6E5018" aria-pressed="false" aria-label="Dark gold" style="background:#6E5018"></button>
+    <button type="button" class="wb-sw" data-color="#1D6FB8" aria-pressed="false" aria-label="Blue" style="background:#1D6FB8"></button>
+    <button type="button" class="wb-sw" data-color="#12795A" aria-pressed="false" aria-label="Green" style="background:#12795A"></button>
+    <button type="button" class="wb-sw" data-color="#8E2F73" aria-pressed="false" aria-label="Magenta" style="background:#8E2F73"></button>
+    <button type="button" class="wb-sw" data-color="#111111" aria-pressed="false" aria-label="Black" style="background:#111111"></button>
+    <button type="button" class="wb-sw" data-color="#FFFFFF" aria-pressed="false" aria-label="White" style="background:#FFFFFF"></button>
+
+    <span class="wb-sep" aria-hidden="true"></span>
+
+    <button type="button" class="wb-size s" data-size="3"  aria-pressed="false" aria-label="Thin"><i></i></button>
+    <button type="button" class="wb-size m" data-size="6"  aria-pressed="true"  aria-label="Medium"><i></i></button>
+    <button type="button" class="wb-size l" data-size="13" aria-pressed="false" aria-label="Thick"><i></i></button>
+
+    <span class="wb-sep" aria-hidden="true"></span>
+
+    <button type="button" class="wb-b icon" id="wbUndo" aria-label="Undo the last stroke"><span aria-hidden="true">&#8630;</span></button>
+    <button type="button" class="wb-b" id="wbClear" aria-label="Clear this board">Clear</button>
+
+    <span class="wb-sep" aria-hidden="true"></span>
+
+    <button type="button" class="wb-b" id="wbBg" aria-label="Change the board background: overlay, white, grid, or dark">
+      <span class="wb-lbl">Overlay</span></button>
+
+    <span class="wb-sep" aria-hidden="true"></span>
+
+    <button type="button" class="wb-b" id="wbPrev" aria-label="Previous board">&#8249;</button>
+    <span class="wb-count" id="wbCount" role="status" aria-live="polite">Board 1 of 1</span>
+    <button type="button" class="wb-b" id="wbNext" aria-label="Next board, or add a new one">&#8250;</button>
+
+    <span class="wb-sep wb-slidenav" aria-hidden="true"></span>
+    <button type="button" class="wb-b wb-slidenav" id="wbSlidePrev" aria-label="Previous slide, on a fresh board">
+      <span aria-hidden="true">&#8592;</span><span class="wb-lbl">Slide</span></button>
+    <button type="button" class="wb-b wb-slidenav" id="wbSlideNext" aria-label="Next slide, on a fresh board">
+      <span class="wb-lbl">Slide</span><span aria-hidden="true">&#8594;</span></button>
+
+    <span class="wb-sep" aria-hidden="true"></span>
+
+    <button type="button" class="wb-b icon" id="wbSave" aria-label="Save this board as a PNG image"><span aria-hidden="true">&#8615;</span></button>
+    <button type="button" class="wb-b icon" id="wbClose" aria-label="Close the whiteboard"><span aria-hidden="true">&#10005;</span></button>
+  </div>
+
+  <p class="wb-hint" id="wbHint" role="status" aria-live="polite"></p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var wb=document.getElementById('wb'), cv=document.getElementById('wbCanvas'),
+      bar=document.getElementById('wbBar'), grip=document.getElementById('wbGrip'),
+      launch=document.getElementById('wbLaunch'), hint=document.getElementById('wbHint'),
+      countEl=document.getElementById('wbCount');
+  if(!wb||!cv) return;
+  var ctx=cv.getContext('2d');
+
+  var tool='pen', color='#8B3A2E', size=6, penSeen=false, drawing=false, cur=null;
+  var boards=[[]], page=0;
+  var BGS=['clear','white','grid','dark'];
+  var BG_LABEL={clear:'Overlay',white:'White',grid:'Grid',dark:'Dark'};
+  var BG_SAY={clear:'Drawing over the slide',white:'White board',grid:'Grid board',dark:'Dark board'};
+  var bgIndex=0;
+  var lastFocus=null;
+
+  function strokes(){ return boards[page]; }
+
+  function say(msg){
+    hint.textContent=msg; hint.classList.add('show');
+    clearTimeout(say._t); say._t=setTimeout(function(){hint.classList.remove('show');},1600);
+  }
+  function updateCount(){ countEl.textContent='Board '+(page+1)+' of '+boards.length; }
+
+  /* ---------- sizing ---------- */
+  function sizeCanvas(){
+    var dpr=Math.min(window.devicePixelRatio||1,2);
+    var w=wb.clientWidth||window.innerWidth, h=wb.clientHeight||window.innerHeight;
+    cv.width=Math.max(1,Math.round(w*dpr)); cv.height=Math.max(1,Math.round(h*dpr));
+    cv.style.width=w+'px'; cv.style.height=h+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    redraw();
+  }
+
+  /* ---------- drawing ---------- */
+  function paintStroke(s){
+    var pts=s.pts; if(!pts.length) return;
+    ctx.save();
+    ctx.lineCap='round'; ctx.lineJoin='round';
+    if(s.tool==='eraser'){
+      ctx.globalCompositeOperation='destination-out';
+      ctx.strokeStyle='rgba(0,0,0,1)';
+      ctx.globalAlpha=1;
+    } else {
+      ctx.globalCompositeOperation='source-over';
+      ctx.strokeStyle=s.color;
+      ctx.globalAlpha=(s.tool==='marker')?0.34:1;
+    }
+    if(pts.length===1){
+      var r=(s.tool==='marker'?s.size*2.6:s.size*(0.55+pts[0].p))/2;
+      ctx.globalCompositeOperation=(s.tool==='eraser')?'destination-out':'source-over';
+      ctx.beginPath(); ctx.arc(pts[0].x,pts[0].y,Math.max(0.6,r),0,Math.PI*2);
+      ctx.fillStyle=(s.tool==='eraser')?'rgba(0,0,0,1)':s.color; ctx.fill();
+      ctx.restore(); return;
+    }
+    for(var i=1;i<pts.length;i++){
+      var a=pts[i-1], b=pts[i];
+      var w;
+      if(s.tool==='marker') w=s.size*2.6;
+      else if(s.tool==='eraser') w=s.size*3.4;
+      else w=s.size*(0.55+b.p);
+      ctx.lineWidth=Math.max(0.7,w);
+      ctx.beginPath();
+      ctx.moveTo(a.x,a.y);
+      var mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
+      ctx.quadraticCurveTo(a.x,a.y,mx,my);
+      ctx.lineTo(b.x,b.y);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+  function redraw(){
+    ctx.save(); ctx.setTransform(1,0,0,1,0,0);
+    ctx.clearRect(0,0,cv.width,cv.height); ctx.restore();
+    strokes().forEach(paintStroke);
+  }
+
+  function point(e){
+    var r=cv.getBoundingClientRect();
+    var p=(typeof e.pressure==='number'&&e.pressure>0)?e.pressure:0.5;
+    if(e.pointerType==='mouse') p=0.5;
+    return {x:e.clientX-r.left, y:e.clientY-r.top, p:p};
+  }
+  cv.addEventListener('pointerdown',function(e){
+    if(e.pointerType==='pen') penSeen=true;
+    if(e.pointerType==='touch'&&penSeen) return;      /* palm rejection once a stylus is in use */
+    if(e.pointerType==='mouse'&&e.button!==0) return;
+    e.preventDefault();
+    try{cv.setPointerCapture(e.pointerId);}catch(err){}
+    drawing=true;
+    cur={tool:tool,color:color,size:size,pts:[point(e)]};
+    strokes().push(cur);
+    paintStroke(cur);
+  });
+  cv.addEventListener('pointermove',function(e){
+    if(!drawing||!cur) return;
+    if(e.pointerType==='touch'&&penSeen) return;
+    e.preventDefault();
+    var evs=(e.getCoalescedEvents?e.getCoalescedEvents():null)||[e];
+    for(var i=0;i<evs.length;i++){
+      var p=point(evs[i]);
+      var last=cur.pts[cur.pts.length-1];
+      if(Math.abs(p.x-last.x)<0.4&&Math.abs(p.y-last.y)<0.4) continue;
+      cur.pts.push(p);
+      paintStroke({tool:cur.tool,color:cur.color,size:cur.size,pts:[last,p]});
+    }
+  });
+  function endStroke(e){
+    if(!drawing) return;
+    drawing=false; cur=null;
+    try{cv.releasePointerCapture(e.pointerId);}catch(err){}
+  }
+  cv.addEventListener('pointerup',endStroke);
+  cv.addEventListener('pointercancel',endStroke);
+  cv.addEventListener('pointerleave',function(e){ if(drawing) endStroke(e); });
+
+  /* ---------- toolbar ---------- */
+  function setPressed(nodes,match){
+    nodes.forEach(function(n){ n.setAttribute('aria-pressed', match(n)?'true':'false'); });
+  }
+  var toolBtns=Array.prototype.slice.call(document.querySelectorAll('.wb-tool')),
+      swBtns=Array.prototype.slice.call(document.querySelectorAll('.wb-sw')),
+      sizeBtns=Array.prototype.slice.call(document.querySelectorAll('.wb-size'));
+
+  function setTool(t){
+    tool=t; setPressed(toolBtns,function(n){return n.getAttribute('data-tool')===t;});
+    cv.style.cursor=(t==='eraser')?'cell':'crosshair';
+  }
+  function setColor(c){
+    color=c; if(tool==='eraser') setTool('pen');
+    bar.style.setProperty('--wb-ink',c);
+    setPressed(swBtns,function(n){return n.getAttribute('data-color').toUpperCase()===c.toUpperCase();});
+  }
+  function setSize(s){
+    size=s; setPressed(sizeBtns,function(n){return +n.getAttribute('data-size')===s;});
+  }
+  toolBtns.forEach(function(b){b.addEventListener('click',function(){setTool(b.getAttribute('data-tool'));});});
+  swBtns.forEach(function(b){b.addEventListener('click',function(){setColor(b.getAttribute('data-color'));});});
+  sizeBtns.forEach(function(b){b.addEventListener('click',function(){setSize(+b.getAttribute('data-size'));});});
+
+  document.getElementById('wbUndo').addEventListener('click',function(){
+    if(strokes().length){ strokes().pop(); redraw(); } else say('Nothing to undo');
+  });
+  document.getElementById('wbClear').addEventListener('click',function(){
+    boards[page]=[]; redraw(); say('Board cleared');
+  });
+  var bgBtn=document.getElementById('wbBg');
+  function applyBg(){
+    BGS.forEach(function(b){ wb.classList.remove('bg-'+b); });
+    wb.classList.add('bg-'+BGS[bgIndex]);
+    bgBtn.querySelector('.wb-lbl').textContent=BG_LABEL[BGS[bgIndex]];
+  }
+  bgBtn.addEventListener('click',function(){
+    bgIndex=(bgIndex+1)%BGS.length; applyBg();
+    if(BGS[bgIndex]==='dark'&&color==='#0B1530') setColor('#FFFFFF');
+    if(BGS[bgIndex]!=='dark'&&color==='#FFFFFF') setColor('#8B3A2E');
+    say(BG_SAY[BGS[bgIndex]]);
+  });
+
+  function goPage(i){ page=Math.max(0,Math.min(boards.length-1,i)); updateCount(); redraw(); }
+  document.getElementById('wbPrev').addEventListener('click',function(){
+    if(page===0){ say('First board'); return; } goPage(page-1);
+  });
+  document.getElementById('wbNext').addEventListener('click',function(){
+    if(page===boards.length-1){ boards.push([]); say('New board'); }
+    goPage(page+1);
+  });
+
+  /* slide stepping, only when the host page has a deck */
+  var slideNav=Array.prototype.slice.call(document.querySelectorAll('.wb-slidenav'));
+  function haveDeck(){ return typeof window.__deckStep==='function'; }
+  if(!haveDeck()) slideNav.forEach(function(n){ n.style.display='none'; });
+  function stepSlide(d){
+    if(!haveDeck()) return;
+    window.__deckStep(d);
+    boards.push([]); goPage(boards.length-1);
+    say(d>0?'Next slide, fresh board':'Previous slide, fresh board');
+  }
+  var sp=document.getElementById('wbSlidePrev'), sn=document.getElementById('wbSlideNext');
+  if(sp) sp.addEventListener('click',function(){stepSlide(-1);});
+  if(sn) sn.addEventListener('click',function(){stepSlide(1);});
+
+  document.getElementById('wbSave').addEventListener('click',function(){
+    var out=document.createElement('canvas'); out.width=cv.width; out.height=cv.height;
+    var o=out.getContext('2d');
+    o.fillStyle=(BGS[bgIndex]==='dark')?'#0B1530':'#FFFFFF';
+    o.fillRect(0,0,out.width,out.height);
+    o.drawImage(cv,0,0);
+    try{
+      out.toBlob(function(blob){
+        if(!blob){ say('Could not save'); return; }
+        var url=URL.createObjectURL(blob), a=document.createElement('a');
+        a.href=url; a.download='whiteboard-board-'+(page+1)+'.png';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(function(){URL.revokeObjectURL(url);},2000);
+        say('Saved as PNG');
+      },'image/png');
+    }catch(err){ say('Could not save'); }
+  });
+
+  /* drag the toolbar out of the way of Loom's controls, and remember where it lands */
+  var BAR_KEY='wb-bar-pos';
+  function placeBar(x,y){
+    bar.style.transform='none'; bar.style.right='auto';
+    bar.style.left=x+'px'; bar.style.top=y+'px';
+  }
+  function restoreBar(){
+    try{
+      var v=JSON.parse(localStorage.getItem(BAR_KEY)||'null');
+      if(v&&typeof v.x==='number'){
+        var w=bar.offsetWidth||420,h=bar.offsetHeight||90;
+        placeBar(Math.max(4,Math.min(window.innerWidth-w-4,v.x)),
+                 Math.max(4,Math.min(window.innerHeight-h-4,v.y)));
+      }
+    }catch(err){}
+  }
+  (function(){
+    var dragging=false,ox=0,oy=0;
+    grip.addEventListener('pointerdown',function(e){
+      dragging=true; bar.classList.add('dragging');
+      var r=bar.getBoundingClientRect();
+      ox=e.clientX-r.left; oy=e.clientY-r.top;
+      placeBar(r.left,r.top);
+      try{grip.setPointerCapture(e.pointerId);}catch(err){}
+      e.preventDefault();
+    });
+    grip.addEventListener('pointermove',function(e){
+      if(!dragging) return;
+      var w=bar.offsetWidth,h=bar.offsetHeight;
+      var x=Math.max(4,Math.min(window.innerWidth-w-4,e.clientX-ox));
+      var y=Math.max(4,Math.min(window.innerHeight-h-4,e.clientY-oy));
+      placeBar(x,y);
+    });
+    function stop(e){ if(!dragging) return; dragging=false; bar.classList.remove('dragging');
+      try{localStorage.setItem(BAR_KEY,JSON.stringify({x:bar.offsetLeft,y:bar.offsetTop}));}catch(err){}
+      try{grip.releasePointerCapture(e.pointerId);}catch(err){} }
+    grip.addEventListener('pointerup',stop);
+    grip.addEventListener('pointercancel',stop);
+  })();
+
+  /* ---------- open and close ---------- */
+  function open(){
+    lastFocus=document.activeElement;
+    wb.hidden=false; document.body.classList.add('wb-on');
+    launch.setAttribute('aria-expanded','true');
+    sizeCanvas(); updateCount(); restoreBar();
+    document.getElementById('wbClose').focus();
+    say('Whiteboard on. W closes it, T hides the toolbar.');
+  }
+  function close(){
+    wb.hidden=true; document.body.classList.remove('wb-on');
+    launch.setAttribute('aria-expanded','false');
+    if(lastFocus&&lastFocus.focus) lastFocus.focus(); else launch.focus();
+  }
+  function toggle(){ wb.hidden?open():close(); }
+  launch.setAttribute('aria-expanded','false');
+  launch.addEventListener('click',toggle);
+  document.getElementById('wbClose').addEventListener('click',close);
+
+  window.addEventListener('resize',function(){ if(!wb.hidden) sizeCanvas(); });
+  document.addEventListener('fullscreenchange',function(){ if(!wb.hidden) setTimeout(sizeCanvas,60); });
+
+  /* ---------- keyboard ---------- */
+  var COLOR_KEYS=['#8B3A2E','#0B1530','#6E5018','#1D6FB8','#12795A','#8E2F73','#111111','#FFFFFF'];
+  var SIZES=[3,6,13];
+  document.addEventListener('keydown',function(e){
+    var t=e.target, tag=(t&&t.tagName?t.tagName:'').toLowerCase();
+    if(tag==='input'||tag==='textarea'||tag==='select'||(t&&t.isContentEditable)) return;
+    var k=e.key.toLowerCase();
+    if(k==='w'&&!e.ctrlKey&&!e.metaKey&&!e.altKey){ e.preventDefault(); toggle(); return; }
+    if(wb.hidden) return;
+    /* while the board is open it owns the keyboard, so slide keys do not fire underneath */
+    if(k==='escape'){ e.preventDefault(); close(); return; }
+    if(k==='t'){ e.preventDefault(); wb.classList.toggle('bar-hidden');
+      say(wb.classList.contains('bar-hidden')?'Toolbar hidden, press T to bring it back':'Toolbar shown'); return; }
+    if(k==='z'&&(e.ctrlKey||e.metaKey)){ e.preventDefault();
+      if(strokes().length){strokes().pop();redraw();} return; }
+    if(k==='p'){ e.preventDefault(); setTool('pen'); say('Pen'); return; }
+    if(k==='h'){ e.preventDefault(); setTool('marker'); say('Highlighter'); return; }
+    if(k==='e'){ e.preventDefault(); setTool('eraser'); say('Eraser'); return; }
+    if(k==='c'){ e.preventDefault(); boards[page]=[]; redraw(); say('Board cleared'); return; }
+    if(k==='['){ e.preventDefault(); setSize(SIZES[Math.max(0,SIZES.indexOf(size)-1)]); return; }
+    if(k===']'){ e.preventDefault(); setSize(SIZES[Math.min(SIZES.length-1,SIZES.indexOf(size)+1)]); return; }
+    if(k>='1'&&k<='8'){ e.preventDefault(); setColor(COLOR_KEYS[+k-1]); return; }
+    if(e.key==='ArrowRight'||e.key==='ArrowLeft'){
+      e.preventDefault(); e.stopPropagation();
+      if(haveDeck()) stepSlide(e.key==='ArrowRight'?1:-1);
+      return;
+    }
+  },true);
+
+  applyBg(); setTool('pen'); setColor('#8B3A2E'); setSize(6); updateCount();
+})();
+</script>
+
+<script>
+(function(){ "use strict";
+var PAGE_ID='biol005-w03-compartments-notes';
+
+(function(){
+  var lb=document.getElementById('lightbox'); if(!lb) return;
+  var inner=lb.querySelector('.lb-inner'),close=lb.querySelector('.lb-close'),last=null;
+  function shut(){lb.hidden=true;inner.innerHTML='';if(last)last.focus();}
+  /* a single branch card of a top-down map enlarges on its own */
+  document.querySelectorAll('.mapcard').forEach(function(card){
+    function openCard(e){
+      e.preventDefault(); e.stopPropagation();
+      last=card;
+      var b=card.getAttribute('data-b')||'';
+      var leaves=(card.getAttribute('data-l')||'').split('|').filter(Boolean);
+      inner.innerHTML='<div class="lb-card"><p class="lb-h"></p><ul></ul></div>';
+      inner.querySelector('.lb-h').textContent=b;
+      var ul=inner.querySelector('ul');
+      leaves.forEach(function(t){var li=document.createElement('li');li.textContent=t;ul.appendChild(li);});
+      lb.hidden=false; close.focus();
+    }
+    card.addEventListener('click',openCard);
+    card.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' ')openCard(e);});
+  });
+
+  document.querySelectorAll('.fig').forEach(function(f){
+    /* A map whose branches are themselves buttons is a group, not a single
+       image. Giving it a tab stop of its own nests one control inside another,
+       which is a real problem for anyone moving by keyboard. */
+    if (f.querySelector('[tabindex],button,a')) { f.setAttribute('role','group'); return; }
+    f.setAttribute('tabindex','0'); f.setAttribute('role','img');
+    function open(e){
+      if(document.body.classList.contains('wb-on'))return;
+      e.preventDefault(); e.stopPropagation();
+      last=f; inner.innerHTML=f.outerHTML;
+      var big=inner.querySelector('svg,img');
+      if(big){big.removeAttribute('tabindex');big.style.width='min(94vw,1500px)';big.style.cursor='default';}
+      lb.hidden=false; close.focus();
+    }
+    f.addEventListener('click',open);
+    f.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' ')open(e);});
+  });
+  close.addEventListener('click',shut);
+  lb.addEventListener('click',function(e){if(e.target===lb)shut();});
+  document.addEventListener('keydown',function(e){if(!lb.hidden&&e.key==='Escape')shut();});
+})();
+
+(function(){
+  document.querySelectorAll('.clin-btn').forEach(function(b){
+    if(b.dataset.wired) return; b.dataset.wired='1';
+    var box=document.getElementById(b.getAttribute('aria-controls'));
+    b.addEventListener('click',function(){
+      var open=b.getAttribute('aria-expanded')==='true';
+      b.setAttribute('aria-expanded',open?'false':'true');
+      if(box)box.hidden=open;
+    });
+  });
+})();
+
+
+  function sendHeight(){
+    try{parent.postMessage({type:'resize',id:PAGE_ID,height:document.documentElement.scrollHeight},'*');}catch(e){}
+  }
+  window.addEventListener('load',sendHeight);
+  window.addEventListener('resize',sendHeight);
+  if(window.ResizeObserver)new ResizeObserver(sendHeight).observe(document.body);
+
+})();
+</script>
+<script src="bio005-nav.js" defer></script>
+<!-- Ask Hootie, on every page. -->
+<script src="schedule-fall2026.js"></script>
+<script src="hootie.js"></script>
+<!-- A way back, on every page. -->
+<script src="bio005-back.js"></script>
+<script src="bio005-collapse.js"></script>
+
+<script>(function(){var b=document.getElementById("printbtn");if(b)b.addEventListener("click",function(){window.print();});})();</script>
+</body>
+</html>

@@ -1,30 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Weekly schedule &middot; BIO 005 Human Physiology</title>
-<link rel="icon" type="image/svg+xml" href="icon.svg">
-<link rel="stylesheet" href="assets/fonts-site.css">
-<link rel="stylesheet" href="assets/brand.css">
-<meta name="description" content="All fifteen weeks with their dates. Weeks 2 and 3 are one block, and everything in it is due September 27.">
-<script>
-/* Pick the chrome before paint, from the head, so nothing flickers and so the
-   footer is covered even though it has not been parsed yet. Inside a Canvas
-   iframe the sticky brand bar, the Course home link and the dark footer are
-   all wrong, because Canvas already wraps the page in its own navigation, and
-   two sets of menus in one screen is what sent students in circles. Opened
-   directly they are exactly right. If this never runs the site chrome stays,
-   which is the safer failure: a student stranded on the open web is worse
-   than one extra link inside Canvas. */
-(function(){
-  var framed = false;
-  try { framed = (window.top !== window.self); } catch(e){ framed = true; }
-  if(framed) document.documentElement.className += " framed";
-}());
-</script>
-<style>
-:root{
+# -*- coding: utf-8 -*-
+"""
+Design kit for the BIO 005 off Canvas site.
+
+FORKED FROM virtual-office.html, Sep 15 2026. That page is the reference for
+this site and the rule is to fork it rather than invent a layout. The first
+version of this kit invented one, and lost the brand: the three figure mark,
+the two tone wordmark, the two tone headline, the dark navy signature panel,
+the gold dot footer. This version carries all of it.
+
+BRAND OF RECORD, Sep 6 2026, from the live medmasterscollaborative.com system:
+  navy #0B1530, navy-deep #060A18, navy-tint #ECEFF4, maroon #8B3A2E,
+  maroon-dark #6E2D24, gold #C9A14A, gold-deep #8A6D33, white cards,
+  off-white #FAFAF9 page, bone #F5F1E8 on the dark band only.
+  Open Sans 800 for headlines. Plus Jakarta Sans for everything else.
+  The three figure mark runs navy, maroon, gold, and the third figure is gold.
+  Gold never carries text or a border on a light page. Use gold-deep there.
+  No italics. No decorative bars closing a section. White cards lift off the
+  page with a shadow, never a border.
+
+ONE FILE, TWO HOMES. Every page works on the site and inside a Canvas iframe:
+  - opened directly it carries the full chrome, sticky brand bar and the dark
+    footer, exactly like virtual-office.html.
+  - inside a Canvas iframe the site chrome comes off and one gold Back to
+    Canvas modules button takes its place, because Canvas already wraps the
+    page in its own navigation and two sets of menus is what sent students in
+    circles.
+The page ships with both and removes the wrong one in a synchronous script
+before paint, so nothing flickers. If that script never runs the site chrome
+is what stays, because a student stranded on the open web is the worse case.
+"""
+
+import io, os, html
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+SITE = "https://drsrennie-stack.github.io/human-physiology-Fa26/"
+CANVAS = "https://yccd.instructure.com/courses/42616/"
+MODULES = CANVAS + "modules"
+HOME = "course.html"
+
+# The three figure mark, lifted from virtual-office.html unchanged. Navy,
+# maroon, gold, left to right, and the third figure is gold.
+MARK = ('<svg viewBox="40 10 125 148" width="22" height="26" role="img" '
+        'aria-label="BIO 005 Human Physiology, course home">'
+        '<g transform="translate(0,18)">'
+        '<g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#0B1530"/>'
+        '<path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 '
+        'L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#0B1530"/></g>'
+        '<g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/>'
+        '<path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 '
+        'L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/></g>'
+        '<g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/>'
+        '<path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 '
+        'L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/></g>'
+        '</g></svg>')
+
+# Fallback tokens, identical to assets/brand.css, so a page still renders
+# right in a preview or opened straight from disk. On the live site brand.css
+# loads first and these repeat the same values.
+TOKENS = """:root{
   --navy:#0B1530; --navy-deep:#060A18; --navy-tint:#ECEFF4;
   --gold:#C9A14A; --gold-ink:#060A18; --gold-deep:#8A6D33;
   --maroon:#8B3A2E; --maroon-dark:#6E2D24;
@@ -32,8 +66,9 @@
   --ink-soft:#414B5C; --line:rgba(11,21,48,0.16);
   --display:'Open Sans',system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
   --body:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
-}
+}"""
 
+PAGE_CSS = """
 *,*::before,*::after{box-sizing:border-box}
 html,body{margin:0}
 html{-webkit-text-size-adjust:100%}
@@ -212,91 +247,19 @@ footer :focus-visible{outline-color:var(--gold)}
   h1,h2,h3{break-after:avoid;page-break-after:avoid}
   a{color:#000;text-decoration:none}
 }
+"""
 
-
-</style>
-</head>
-<body>
-<a class="skip" href="#main">Skip to main content</a>
-
-<div class="brandbar" id="siteBar"><div class="wrap wide">
-  <a class="mark" href="course.html"><svg viewBox="40 10 125 148" width="22" height="26" role="img" aria-label="BIO 005 Human Physiology, course home"><g transform="translate(0,18)"><g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#0B1530"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#0B1530"/></g><g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/></g><g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/></g></g></svg>
-    <span><span class="wm">BIO <b>005</b></span><span class="wmsub">Human Physiology</span></span>
-  </a>
-  <span class="course">BIO 005 &middot; Fall 2026</span>
-</div></div>
-
-<div id="siteBack"><div class="wrap wide"><a class="back" href="course.html">&larr; Course home</a></div></div>
-
-<div class="framehead" id="frameHead"><div class="wrap wide">
-  <a class="chip-back" href="https://yccd.instructure.com/courses/42616/modules" target="_top">
-    <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M10.5 2 4 8l6.5 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    Back to Canvas modules</a>
-</div></div>
-
-<header class="hero"><div class="wrap wide">
-  <p class="eyebrow">Start here &amp;middot; Fall 2026</p>
-  <h1>The whole term, <span>week by week.</span></h1>
-  <p class="lede">All fifteen weeks with their dates. Weeks 2 and 3 are one block, and everything in it is due September 27.</p>
-</div></header>
-
-<main id="main"><div class="wrap wide">
-<section class="card">
-  <h2>Weeks 2 and 3 are one block</h2>
-  <p>I gave you the two weeks together on one set of material, because the cell
-    is where this course gets hard and a single week is not enough time to do it
-    properly. There is no separate Week 3 to find. It is the same week, twice as
-    long.</p>
-  <p><b>Everything in the block is due Sunday, September 27.</b> The next week to
-    open is Week 4, on Monday, September 28.</p>
-</section>
-
-<section class="card">
-  <h2>All fifteen weeks</h2>
-  <p>A week opens at 8:00 am Pacific on its Monday and everything in it is due
-    Sunday night, unless that week's page says otherwise. Discussions are the
-    usual exception, because the first post is due earlier in the week so replies
-    have something to reply to.</p>
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th scope="col">Week</th><th scope="col">Dates</th><th scope="col">What it covers</th><th scope="col">Status</th></tr></thead>
-      <tbody>
-        <tr><td colspan="4"><b>Part 1, Foundations</b></td></tr>
-        <tr><td><b>Week 1</b></td><td>September 8 to 13</td><td>How physiology works and what keeps you steady</td><td>Open now</td></tr>
-        <tr><td><b>Weeks 2 and 3</b></td><td>September 14 to 27</td><td>The cell: structure, transport and signaling. Two weeks on one set of material. Everything is due September 27.</td><td>Open now</td></tr>
-        <tr><td colspan="4"><b>Part 2, Control systems</b></td></tr>
-        <tr><td><b>Week 4</b></td><td>September 28 to October 4</td><td>Membrane potential, neurons and synapses</td><td>Opens September 28</td></tr>
-        <tr><td><b>Week 5</b></td><td>October 5 to 11</td><td>Reflexes, and sensing the world</td><td>Opens October 5</td></tr>
-        <tr><td><b>Week 6</b></td><td>October 12 to 18</td><td>Muscle, and how movement gets commanded</td><td>Opens October 12</td></tr>
-        <tr><td><b>Week 7</b></td><td>October 19 to 25</td><td>Hormones, the autonomic system, and reproduction</td><td>Opens October 19</td></tr>
-        <tr><td><b>Week 8</b></td><td>October 26 to November 1</td><td>Midterm 1. The exam window is October 26 to 28.</td><td>Opens October 26</td></tr>
-        <tr><td colspan="4"><b>Part 3, Systems in action</b></td></tr>
-        <tr><td><b>Week 9</b></td><td>November 2 to 8</td><td>The heart as a pump</td><td>Opens November 2</td></tr>
-        <tr><td><b>Week 10</b></td><td>November 9 to 15</td><td>Pressure, flow, and holding blood pressure steady</td><td>Opens November 9</td></tr>
-        <tr><td><b>Week 11</b></td><td>November 16 to 22</td><td>Blood and how the body defends itself</td><td>Opens November 16</td></tr>
-        <tr><td><b>Week 12</b></td><td>November 23 to 29</td><td>Digestion, and how you use food for fuel</td><td>Opens November 23</td></tr>
-        <tr><td><b>Week 13</b></td><td>November 30 to December 6</td><td>Breathing, gas transport, and the fast pH lever</td><td>Opens November 30</td></tr>
-        <tr><td><b>Week 14</b></td><td>December 7 to 13</td><td>The kidney and body fluid balance</td><td>Opens December 7</td></tr>
-        <tr><td><b>Week 15</b></td><td>December 14 to 16</td><td>The slow pH lever, putting it together, and the final. The final window is December 14 to 16.</td><td>Opens December 14</td></tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<section class="card">
-  <h2>The same eight steps every week</h2>
-  <p>Whatever the topic, the week runs the same way: your first pass on paper,
-    the concept videos in a second color, upload the note sheet, study it for
-    several days, the lab, your patient chart entry, the discussion, then the
-    Mastery Check.</p>
-  <div class="btns">
-    <a class="btn sec" href="how-every-week-works.html">How every week works</a>
-    <a class="btn sec" href="course.html">Back to the course list</a>
-  </div>
-</section>
-</div></main>
-
-<div id="siteFoot"><footer><div class="wrap">
+# THE TOOLS LIVE HERE, NOT ON EVERY PAGE. Sep 16 2026.
+# The old floating dock rode on every page, which is part of what sent students
+# in circles, and inside a Canvas frame it is actively wrong: Canvas already
+# wraps the page in navigation. So the tools are a destination, reachable three
+# ways and no more: the Course Tools item in the Canvas module, the button on
+# the course home, and this footer link, which puts them one click from any
+# site page without any floating chrome. The step pages get nothing, because a
+# step page has one job. Step 4 is the exception that proves it: it carries the
+# four study buttons inline, because that is the step where a student is
+# actually choosing how to practice.
+FOOTER = """<footer><div class="wrap">
   <nav class="flinks" aria-label="Course links">
     <a href="course.html">Course home</a><span class="dot" aria-hidden="true">&middot;</span>
     <a href="course-schedule.html">Schedule</a><span class="dot" aria-hidden="true">&middot;</span>
@@ -306,18 +269,134 @@ footer :focus-visible{outline-color:var(--gold)}
     <a href="ai-in-this-course.html">AI in this course</a><span class="dot" aria-hidden="true">&middot;</span>
     <a href="accessibility.html">Accessibility</a><span class="dot" aria-hidden="true">&middot;</span>
     <a href="virtual-office.html">Virtual Office</a><span class="dot" aria-hidden="true">&middot;</span>
-    <a href="https://yccd.instructure.com/courses/42616/" target="_blank" rel="noopener">Canvas<span class="vh"> (opens in a new tab)</span></a>
+    <a href="%(canvas)s" target="_blank" rel="noopener">Canvas<span class="vh"> (opens in a new tab)</span></a>
   </nav>
   <p class="fleg">BIO 005 Human Physiology &middot; Fall 2026 &middot; Dr. Sharilyn Rennie<br>
      If a page does not work for you, tell me in the Virtual Office and I will fix it.</p>
-</div></footer></div>
+</div></footer>""" % dict(canvas=CANVAS)
+
+
+def esc(t):
+    return html.escape(t, quote=False)
+
+
+def p(t, cls=""):
+    return '<p%s>%s</p>' % ((' class="%s"' % cls) if cls else "", t)
+
+
+def card(*blocks):
+    return '<section class="card">%s</section>' % "".join(blocks)
+
+
+def steps(items, two=False):
+    """A numbered list. Big gold numerals in Plus Jakarta Sans."""
+    cls = "steps two" if two else "steps"
+    return '<ol class="%s" role="list">%s</ol>' % (
+        cls, "".join("<li>%s</li>" % i for i in items))
+
+
+def ul(items):
+    return "<ul>" + "".join("<li>%s</li>" % i for i in items) + "</ul>"
+
+
+def btn(label, href, primary=True, newtab=False, top=False):
+    cls = "btn" if primary else "btn sec"
+    if newtab:
+        tail = ' target="_blank" rel="noopener"'
+        label = label + '<span class="vh"> (opens in a new tab)</span>'
+    elif top:
+        tail = ' target="_top"'
+    else:
+        tail = ''
+    return '<a class="%s" href="%s"%s>%s</a>' % (cls, href, tail, label)
+
+
+def btns(*items):
+    return '<div class="btns">%s</div>' % "".join(i for i in items if i)
+
+
+def page(slug, title, eyebrow, h1, h1_tail, blurb, body,
+         wide=False, home_is_self=False, extra_css=""):
+    """One page that works on the site and inside a Canvas iframe.
+
+    h1 and h1_tail make the two tone headline: h1 sits in navy, h1_tail in
+    maroon after it. Pass h1_tail="" for a single tone heading, but almost
+    every page should have one, because the color break is what makes the
+    headline read as this course rather than as any page on the internet.
+    """
+    frame_id = "bio005-" + slug
+    head = esc(h1) + (' <span>%s</span>' % esc(h1_tail) if h1_tail else "")
+    backlink = "" if home_is_self else (
+        '<div class="wrap%s"><a class="back" href="%s">&larr; Course home</a></div>'
+        % (" wide" if wide else "", HOME))
+    w = " wide" if wide else ""
+    return """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>%(title)s &middot; BIO 005 Human Physiology</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="stylesheet" href="assets/fonts-site.css">
+<link rel="stylesheet" href="assets/brand.css">
+<meta name="description" content="%(desc)s">
+<script>
+/* Pick the chrome before paint, from the head, so nothing flickers and so the
+   footer is covered even though it has not been parsed yet. Inside a Canvas
+   iframe the sticky brand bar, the Course home link and the dark footer are
+   all wrong, because Canvas already wraps the page in its own navigation, and
+   two sets of menus in one screen is what sent students in circles. Opened
+   directly they are exactly right. If this never runs the site chrome stays,
+   which is the safer failure: a student stranded on the open web is worse
+   than one extra link inside Canvas. */
+(function(){
+  var framed = false;
+  try { framed = (window.top !== window.self); } catch(e){ framed = true; }
+  if(framed) document.documentElement.className += " framed";
+}());
+</script>
+<style>
+%(tokens)s
+%(css)s
+%(extra)s
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+
+<div class="brandbar" id="siteBar"><div class="wrap%(w)s">
+  <a class="mark" href="%(home)s">%(mark)s
+    <span><span class="wm">BIO <b>005</b></span><span class="wmsub">Human Physiology</span></span>
+  </a>
+  <span class="course">BIO 005 &middot; Fall 2026</span>
+</div></div>
+
+<div id="siteBack">%(backlink)s</div>
+
+<div class="framehead" id="frameHead"><div class="wrap%(w)s">
+  <a class="chip-back" href="%(modules)s" target="_top">
+    <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M10.5 2 4 8l6.5 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Back to Canvas modules</a>
+</div></div>
+
+<header class="hero"><div class="wrap%(w)s">
+  <p class="eyebrow">%(eyebrow)s</p>
+  <h1>%(head)s</h1>
+  <p class="lede">%(blurb)s</p>
+</div></header>
+
+<main id="main"><div class="wrap%(w)s">
+%(body)s
+</div></main>
+
+<div id="siteFoot">%(footer)s</div>
 
 <script>
 /* Iframe height sender. Canvas strips script tags from a pasted page, so the
    Canvas iframe carries a measured height and nothing listens for this. It
    stays for the course site and Kajabi, where a listener does exist. */
 (function(){
-  var FRAME_ID = "bio005-course-schedule";
+  var FRAME_ID = "%(frame)s";
   function sendHeight(){
     var h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight,
                      document.body.offsetHeight, document.documentElement.offsetHeight);
@@ -334,3 +413,7 @@ footer :focus-visible{outline-color:var(--gold)}
 </script>
 </body>
 </html>
+""" % dict(title=esc(title), desc=esc(blurb), tokens=TOKENS, css=PAGE_CSS,
+           extra=extra_css, mark=MARK, home=HOME, backlink=backlink, w=w,
+           modules=MODULES, eyebrow=esc(eyebrow), head=head, blurb=esc(blurb),
+           body=body, footer=FOOTER, frame=frame_id)
