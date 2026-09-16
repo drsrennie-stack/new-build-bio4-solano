@@ -1,1268 +1,2630 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Spaced Recall, BIO 005 Human Physiology</title>
-<meta name="description" content="Daily spaced recall practice for BIO 005 Human Physiology. Cards come back on a schedule, and the questions get harder as you prove you know the material.">
-<link rel="icon" href="os/icon.svg" type="image/svg+xml">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIO 004 Pre-Work and Spaced Recall</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --maroon:#7A2A22;
-  --maroon-dark:#5E201A;
-  --maroon-tint:#F3ECEB;
-  --gold:#B8924A;
-  --gold-text:#634710;
-  --ink:#08101F;
-  --ink-soft:#2A3949;
-  --slate:#484F5E;
-  --white:#FFFFFF;
-  --offwhite:#FAFAF9;
-  --line:#DDE1E7;
-  --ok:#1E4C33;
-  --ok-tint:#EAF2ED;
-  --bad:#7A2E2E;
-  --bad-tint:#F7ECEC;
-  --rest-shadow:0 1px 3px rgba(0,0,0,.08);
-  --hover-shadow:0 8px 16px rgba(0,0,0,.10);
-}
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{
-  margin:0;background:var(--offwhite);color:var(--ink);
-  font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
-  font-size:17px;line-height:1.6;
-}
-.skip{position:absolute;left:-9999px;top:0;background:var(--maroon);color:#fff;padding:12px 18px;z-index:99;border-radius:0 0 8px 0}
-.skip:focus{left:0}
-a{color:var(--maroon)}
-a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
-  outline:3px solid var(--maroon);outline-offset:3px;
-}
-.wrap{max-width:860px;margin:0 auto;padding:0 20px}
+  :root {
+    --navy: #0B1530;
+    --navy-deep: #060A18;
+    --navy-tint: #FFFFFF;
+    --gold: #C9A14A;
+    --gold-deep: #C9A14A;
+    --terra: #8B3A2E;
+    --terra-dark: #A0452F;
+    --white: #FFFFFF;
+    --off-white: #FFFFFF;
+    --gray-line: #8C90A0;
+    --gray-soft: #8C90A0;
+    --shadow-rest: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-hover: 0 8px 16px rgba(0,0,0,0.10);
+    --t-fast: 150ms ease;
+    --t-med: 200ms ease;
+  }
 
-/* brand bar and header band */
-.brandbar{background:var(--white);border-bottom:1px solid var(--line)}
-.brandbar .wrap{display:flex;align-items:center;gap:12px;min-height:56px;flex-wrap:wrap}
-.brandbar img{width:26px;height:26px}
-.brandbar .course{font-family:'DM Sans',system-ui,sans-serif;font-size:12px;letter-spacing:.10em;
-  text-transform:uppercase;color:var(--maroon-dark);font-weight:700}
-.band{background:var(--maroon);color:#fff;padding:26px 0 30px}
-.band h1{font-size:30px;font-weight:800;margin:2px 0 6px;line-height:1.22}
-.band p{margin:0;color:#F3E7E5;max-width:62ch}
-.eyebrow{font-family:'DM Sans',system-ui,sans-serif;font-size:12px;letter-spacing:.10em;
-  text-transform:uppercase;font-weight:700;color:#F4E1B6;margin:0}
-
-main{padding:26px 0 60px}
-section{margin:0 0 26px}
-h2{font-size:21px;font-weight:700;color:var(--maroon-dark);margin:0 0 12px}
-h3{font-size:17px;font-weight:700;color:var(--ink);margin:0 0 6px}
-
-.card{
-  background:var(--white);border:1px solid var(--line);border-radius:12px;
-  padding:22px;box-shadow:var(--rest-shadow);
-  transition:transform 200ms ease, box-shadow 200ms ease;
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0;
+  font-size: 17.9px;
+  line-height: 1.65;
 }
-.card.lift:hover{transform:translateY(-2px);box-shadow:var(--hover-shadow)}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  body {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    color: var(--navy);
+    background: var(--off-white);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
 
-/* this week */
-.weekhead{display:flex;flex-wrap:wrap;gap:10px 26px;align-items:baseline}
-.weekhead .wk{font-size:12px;font-family:'DM Sans',system-ui,sans-serif;letter-spacing:.10em;
-  text-transform:uppercase;font-weight:700;color:var(--maroon-dark)}
-.big{font-size:34px;font-weight:800;line-height:1;color:var(--ink);display:block}
-.stat{min-width:104px}
-.stat .lab{font-size:13px;color:var(--slate);display:block;margin-top:4px}
-.statrow{display:flex;flex-wrap:wrap;gap:20px 30px;margin-top:16px}
+  /* Skip link */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--navy);
+    color: var(--white);
+    padding: 12px 18px;
+    z-index: 100;
+    text-decoration: none;
+    border-radius: 0 0 6px 0;
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 600;
+  }
+  .skip-link:focus { left: 0; }
 
-/* buttons */
-.btn{
-  font:inherit;font-weight:700;border-radius:9px;padding:13px 22px;cursor:pointer;
-  border:1px solid var(--maroon);background:var(--maroon);color:#fff;
-  transition:background 200ms ease;
-}
-.btn:hover{background:var(--maroon-dark)}
-.btn.ghost{background:var(--white);color:var(--maroon-dark);border-color:var(--maroon)}
-.btn.ghost:hover{background:var(--maroon-tint)}
-.btn[disabled]{opacity:.55;cursor:not-allowed}
-.btnrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  /* Focus indicators */
+  :focus-visible {
+    outline:3px solid #6B1616;outline-offset:2px;box-shadow:0 0 0 5px rgba(255,255,255,.92);
+    border-radius: 2px;
+  }
 
-/* the question */
-.qmeta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
-.pill{
-  font-family:'DM Sans',system-ui,sans-serif;font-size:12px;font-weight:700;
-  letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:999px;
-  border:1px solid var(--line);color:var(--ink-soft);background:var(--offwhite);
-}
-.pill.level{border-color:var(--gold);color:var(--gold-text);background:#FBF6EA}
-.qtext{font-size:20px;font-weight:600;line-height:1.45;margin:0 0 18px}
-fieldset{border:0;padding:0;margin:0}
-legend{position:absolute;left:-9999px}
-.opt{display:block;margin:0 0 10px}
-.opt input{position:absolute;opacity:0;width:1px;height:1px}
-.opt > span{
-  display:block;padding:14px 16px;border:1px solid var(--line);border-radius:10px;
-  background:var(--white);cursor:pointer;line-height:1.5;
-}
-.opt > span:hover{border-color:var(--maroon);background:var(--maroon-tint)}
-.opt input:focus-visible + span{outline:3px solid var(--maroon);outline-offset:3px}
-.opt input:checked + span{border-color:var(--maroon);border-width:2px;padding:13px 15px;background:var(--maroon-tint)}
-.opt.right > span{border-color:var(--ok);border-width:2px;padding:13px 15px;background:var(--ok-tint)}
-.opt.wrong > span{border-color:var(--bad);border-width:2px;padding:13px 15px;background:var(--bad-tint)}
-.opt.locked > span{cursor:default}
-.opt.locked > span:hover{border-color:inherit;background:inherit}
-.mark{font-weight:700;font-family:'DM Sans',system-ui,sans-serif;font-size:13px;
-  letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:3px}
-.mark.r{color:var(--ok)}
-.mark.w{color:var(--bad)}
+  /* Header */
+  header.page-header {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-line);
+    padding: 24px 32px 20px;
+  }
+  .eyebrow {
+    font-family: "DM Sans", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 13.4px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--terra-dark);
+    margin: 0 0 6px;
+  }
+  h1.page-title {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 800;
+    font-size: clamp(29.1px, 3.2vw, 40.3px);
+    color: var(--navy);
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .subhead {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: clamp(16.8px, 1.6vw, 20.2px);
+    color: var(--terra-dark);
+    margin: 0 0 8px;
+  }
+  .usage {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-style: italic;
+    color: var(--gray-soft);
+    font-size: 16.8px;
+    margin: 6px 0 0;
+    max-width: 70ch;
+  }
 
-.answer{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
-.answer h3{margin-bottom:8px}
-.answer p{margin:0 0 12px}
-.next{margin-top:18px}
+  /* Top nav */
+  nav.top-nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  nav.top-nav button {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 15.7px;
+    background: transparent;
+    color: var(--navy);
+    border: 1px solid var(--gray-line);
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast);
+  }
+  nav.top-nav button:hover,
+  nav.top-nav button:focus-visible {
+    background: var(--navy-tint);
+    border-color: var(--navy);
+  }
+  nav.top-nav button[aria-current="page"] {
+    background: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+  }
 
-.conf{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
-.conf p{margin:0 0 10px;font-size:15px;color:var(--slate)}
-.conf .btnrow{margin-top:0}
-.conf .btn{padding:10px 16px;font-size:15px}
+  /* Main layout */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 24px 60px;
+  }
 
-/* week record */
-.days{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 18px}
-.day{
-  flex:1 1 84px;min-width:84px;border:1px solid var(--line);border-radius:10px;
-  padding:12px 10px;text-align:center;background:var(--white);
-}
-.day.done{border-color:var(--maroon);border-width:2px;padding:11px 9px;background:var(--maroon-tint)}
-.day.today{box-shadow:inset 0 0 0 2px var(--gold)}
-.day .dn{font-family:'DM Sans',system-ui,sans-serif;font-size:12px;font-weight:700;
-  letter-spacing:.06em;text-transform:uppercase;color:var(--slate);display:block}
-.day .dv{font-size:22px;font-weight:800;display:block;margin-top:5px;color:var(--ink)}
-.day .du{font-size:12px;color:var(--slate);display:block}
+  .view { display: none; }
+  .view.active { display: block; }
 
-table{border-collapse:collapse;width:100%;font-size:16px}
-caption{text-align:left;font-size:15px;color:var(--slate);padding-bottom:8px}
-th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
-th{font-family:'DM Sans',system-ui,sans-serif;font-size:12px;letter-spacing:.06em;
-  text-transform:uppercase;color:var(--slate);font-weight:700}
-td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
-.scroller{overflow-x:auto}
+  /* Cards */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--gray-line);
+    border-radius: 10px;
+    padding: 22px 24px;
+    box-shadow: var(--shadow-rest);
+    transition: transform var(--t-med), box-shadow var(--t-med);
+    margin-bottom: 16px;
+  }
+  .card.interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+    cursor: pointer;
+  }
+  .card.state-locked {
+    border-style: dashed;
+    border-color: var(--gray-line);
+    background: var(--off-white);
+  }
+  .card.state-unlocked {
+    border-color: var(--gold);
+  }
+  .card.state-completed {
+    border-color: var(--navy);
+    background: var(--navy-tint);
+  }
 
-/* goal chooser */
-.goals{display:flex;flex-wrap:wrap;gap:12px;margin:0}
-.goal{flex:1 1 300px;margin:0}
-.goal input{position:absolute;opacity:0;width:1px;height:1px}
-.goal > span{
-  display:block;padding:16px 18px;border:1px solid var(--line);border-radius:10px;
-  background:var(--white);cursor:pointer;height:100%;
-}
-.goal > span:hover{border-color:var(--maroon);background:var(--maroon-tint)}
-.goal input:focus-visible + span{outline:3px solid var(--maroon);outline-offset:3px}
-.goal input:checked + span{border-color:var(--maroon);border-width:2px;padding:15px 17px;background:var(--maroon-tint)}
-.goal .gt{display:block;font-weight:700;font-size:17px;margin-bottom:4px}
-.goal .gn{display:block;font-family:'DM Sans',system-ui,sans-serif;font-size:13px;
-  font-weight:700;letter-spacing:.04em;color:var(--maroon-dark);margin-bottom:6px}
-.goal .gd{display:block;font-size:15px;color:var(--slate);line-height:1.5}
-.meter{margin-top:18px}
-.meter .bar{height:14px;border-radius:999px;background:#EDEFF2;overflow:hidden;border:1px solid #7E858F}
-.meter .fill{height:100%;background:var(--maroon);width:0}
-.meter .cap{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:15px;margin:8px 0 0}
-.meter .cap b{font-variant-numeric:tabular-nums}
-.note{font-size:15px;color:var(--slate);margin:10px 0 0}
-.live{margin:0}
-.empty{color:var(--slate)}
-/* how it works */
-.discl{margin-top:18px}
-.discl button{
-  font:inherit;font-weight:700;font-size:16px;color:var(--maroon-dark);background:none;
-  border:0;padding:0;cursor:pointer;text-align:left;text-decoration:underline;
-}
-.discl button:hover{color:var(--maroon)}
-.discl .body{margin-top:14px;border-top:1px solid var(--line);padding-top:16px}
-.discl h3{margin:18px 0 6px}
-.discl h3:first-child{margin-top:0}
-.discl ul{margin:6px 0 0;padding-left:22px}
-.discl li{margin:0 0 7px}
-footer{border-top:1px solid var(--line);background:var(--white);padding:22px 0;font-size:15px}
-footer a{margin:0 4px}
-footer .sep{color:var(--slate)}
-@media (max-width:600px){
-  .band h1{font-size:25px}
-  .qtext{font-size:18px}
-  body{font-size:16px}
-}
+  h2 {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 600;
+    color: var(--terra-dark);
+    font-size: 24.6px;
+    margin: 0 0 12px;
+  }
+  h3 {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 600;
+    color: var(--terra-dark);
+    font-size: 19px;
+    margin: 0 0 8px;
+  }
+  h4 {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 600;
+    color: var(--navy);
+    font-size: 16.8px;
+    margin: 0 0 6px;
+  }
+
+  /* Topic list (dashboard) */
+  .topic-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .topic-meta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-size: 14.6px;
+    color: var(--gray-soft);
+  }
+  .pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-family: "DM Sans", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 12.3px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid var(--gray-line);
+  }
+  .pill.locked { background: transparent; color: var(--gray-soft); }
+  .pill.unlocked { background: transparent; color: var(--gold-deep); border-color: var(--gold); }
+  .pill.completed { background: var(--navy-tint); color: var(--navy); border-color: var(--navy); }
+  .pill.due { background: transparent; color: var(--terra-dark); border-color: var(--terra); }
+
+
+  /* Multiple-choice option buttons (spaced recall) */
+  .mc-options {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin: 14px 0 10px;
+  }
+  .mc-option {
+    text-align: left;
+    background: var(--white);
+    border: 2px solid var(--gray-line);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-size: 16.8px;
+    color: var(--navy);
+    cursor: pointer;
+    transition: border-color var(--t-fast), background var(--t-fast);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    line-height: 1.45;
+  }
+  .mc-option:hover:not(:disabled),
+  .mc-option:focus-visible:not(:disabled) {
+    border-color: var(--navy);
+    background: var(--navy-tint);
+  }
+  .mc-option .mc-letter {
+    flex-shrink: 0;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 700;
+    color: var(--terra-dark);
+    width: 1.6em;
+  }
+  .mc-option.correct {
+    border-color: var(--navy);
+    background: var(--navy-tint);
+  }
+  .mc-option.correct .mc-letter { color: var(--navy); }
+  .mc-option.wrong {
+    border-color: var(--terra-dark);
+    background: #FFFFFF;
+  }
+  .mc-option.wrong .mc-letter { color: var(--terra-dark); }
+  .mc-option:disabled { cursor: default; opacity: 0.85; }
+  .mc-option.dim { opacity: 0.5; }
+
+  .feedback-panel {
+    background: var(--navy-tint);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 14px 0 10px;
+  }
+  .feedback-panel.wrong {
+    background: #FFFFFF;
+    border-left-color: var(--terra-dark);
+  }
+  .feedback-panel .fb-label {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 12.3px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin: 0 0 4px;
+  }
+  .feedback-panel.wrong .fb-label { color: var(--terra-dark); }
+  .feedback-panel .fb-explain {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    color: var(--navy);
+    margin: 0;
+    font-size: 16.2px;
+    line-height: 1.55;
+  }
+
+  /* Buttons */
+  .btn {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 15.7px;
+    padding: 10px 18px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary {
+    background: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+  }
+  .btn-primary:hover, .btn-primary:focus-visible {
+    background: var(--navy-deep);
+    border-color: var(--navy-deep);
+  }
+  .btn-gold {
+    background: var(--navy);
+    color: var(--white);
+    border: 2px solid var(--gold);
+  }
+  .btn-gold:hover, .btn-gold:focus-visible {
+    background: var(--navy-deep);
+    border-color: var(--gold-deep);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--navy);
+    border-color: var(--gray-line);
+  }
+  .btn-ghost:hover, .btn-ghost:focus-visible {
+    background: var(--navy-tint);
+    border-color: var(--navy);
+  }
+  .btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .stat {
+    background: var(--white);
+    border: 1px solid var(--gray-line);
+    border-radius: 10px;
+    padding: 16px 18px;
+    box-shadow: var(--shadow-rest);
+  }
+  .stat-label {
+    font-family: "DM Sans", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 12.3px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--terra-dark);
+    margin: 0 0 4px;
+  }
+  .stat-value {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 31.4px;
+    color: var(--navy);
+    line-height: 1;
+  }
+  .stat-sub {
+    font-size: 13.4px;
+    color: var(--gray-soft);
+    margin-top: 4px;
+  }
+
+  /* Video panel */
+  .video-frame {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: var(--navy-deep);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .video-frame .placeholder-label {
+    text-align: center;
+    padding: 24px;
+    max-width: 80%;
+  }
+  .video-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 6px;
+    background: var(--gold);
+    width: 0%;
+    transition: width 250ms linear;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .video-progress { transition: none; }
+  }
+
+  /* Gate */
+  .gate {
+    background: var(--white);
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin-top: 14px;
+  }
+  .gate label {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 600;
+    color: var(--navy);
+    display: block;
+    margin: 0 0 8px;
+  }
+  .gate textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 12px;
+    border: 1px solid var(--gray-line);
+    border-radius: 6px;
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-size: 17.9px;
+    color: var(--navy);
+    background: var(--off-white);
+    resize: vertical;
+  }
+  .gate textarea:focus { background: var(--white); }
+  .gate-feedback {
+    margin-top: 10px;
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-style: italic;
+    min-height: 1.5em;
+  }
+  .gate-feedback.error { color: var(--terra-dark); }
+  .gate-feedback.success { color: var(--navy); font-style: normal; font-weight: 600; font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif; }
+  .gate-meter {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin: 12px 0;
+    font-family: "DM Sans", system-ui, sans-serif;
+    font-size: 14.6px;
+    color: var(--gray-soft);
+  }
+  .gate-meter span strong { color: var(--navy); }
+
+  /* Learning view: single column. Notes are an external link, not an inline panel. */
+  .learn-single {
+    max-width: 720px;
+  }
+
+  /* Card practice */
+  .practice-card {
+    background: var(--white);
+    border: 2px solid var(--navy);
+    border-radius: 10px;
+    padding: 26px;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--shadow-rest);
+  }
+  .practice-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .dok-badge {
+    font-family: "DM Sans", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 12.3px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid;
+  }
+  .dok-1 { color: var(--navy); border-color: var(--navy); }
+  .dok-2 { color: var(--navy); border-color: var(--gold-deep); background: #FFFFFF; }
+  .dok-3 { color: var(--terra-dark); border-color: var(--terra-dark); }
+
+  .progress-text {
+    font-family: "DM Sans", system-ui, sans-serif;
+    font-size: 13.4px;
+    color: var(--gray-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .q-text {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 22.4px;
+    color: var(--navy);
+    margin: 12px 0 16px;
+  }
+  .a-text {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-size: 17.9px;
+    color: var(--navy);
+    padding: 14px 16px;
+    background: var(--navy-tint);
+    border-radius: 4px;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .a-text.revealed { display: block; }
+
+  .rate-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+  }
+  @media (max-width: 540px) {
+    .rate-row { grid-template-columns: repeat(2, 1fr); }
+  }
+  .rate-btn {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 14.6px;
+    padding: 12px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--gray-line);
+    background: var(--white);
+    cursor: pointer;
+    color: var(--navy);
+    transition: background var(--t-fast), border-color var(--t-fast);
+    line-height: 1.2;
+    text-align: center;
+  }
+  .rate-btn small {
+    display: block;
+    font-weight: 500;
+    font-size: 12.3px;
+    color: var(--gray-soft);
+    margin-top: 4px;
+    font-family: "DM Sans", system-ui, sans-serif;
+  }
+  .rate-btn:hover, .rate-btn:focus-visible {
+    background: var(--navy-tint);
+    border-color: var(--navy);
+  }
+  .rate-btn.again { border-color: var(--terra); }
+  .rate-btn.again:hover, .rate-btn.again:focus-visible { background: #FFFFFF; }
+  .rate-btn.easy { border-color: var(--gold); }
+  .rate-btn.easy:hover, .rate-btn.easy:focus-visible { background: #FFFFFF; }
+
+  /* Mastery bars */
+  .mastery-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 60px;
+    align-items: center;
+    gap: 10px;
+    margin: 6px 0;
+    font-family: "DM Sans", system-ui, sans-serif;
+    font-size: 14.6px;
+  }
+  .mastery-bar {
+    height: 8px;
+    background: var(--navy-tint);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .mastery-fill {
+    height: 100%;
+    background: var(--navy);
+    border-radius: 4px;
+    transition: width var(--t-med);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mastery-fill { transition: none; }
+  }
+  .mastery-fill.l1 { background: var(--navy); }
+  .mastery-fill.l2 { background: var(--gold-deep); }
+  .mastery-fill.l3 { background: var(--terra-dark); }
+
+  /* Sessions list */
+  .session-row {
+    display: grid;
+    grid-template-columns: 130px 1fr 70px 70px;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-line);
+    font-family: "DM Sans", system-ui, sans-serif;
+    font-size: 14.6px;
+  }
+  .session-row:last-child { border-bottom: none; }
+  .session-row .date { color: var(--navy); font-weight: 600; }
+  .session-row .topics { color: var(--gray-soft); }
+
+  /* Live region */
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0);
+    white-space: nowrap; border: 0;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    color: var(--gray-soft);
+    padding: 20px;
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-style: italic;
+    font-size: 14.6px;
+  }
+
+  /* Empty state */
+  .empty {
+    text-align: center;
+    padding: 30px 16px;
+    color: var(--gray-soft);
+    font-style: italic;
+  }
+
+  /* Module groups */
+  .module-group {
+    background: var(--white);
+    border: 1px solid var(--gray-line);
+    border-radius: 10px;
+    box-shadow: var(--shadow-rest);
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .module-group > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 16px 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    border-bottom: 1px solid transparent;
+    transition: background var(--t-fast), border-color var(--t-fast);
+  }
+  .module-group > summary::-webkit-details-marker { display: none; }
+  .module-group[open] > summary { border-bottom-color: var(--gray-line); }
+  .module-group > summary:hover,
+  .module-group > summary:focus-visible {
+    background: var(--navy-tint);
+  }
+  .module-group > summary::before {
+    content: "+";
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid var(--navy);
+    color: var(--navy);
+    text-align: center;
+    line-height: 20px;
+    font-weight: 700;
+    font-size: 15.7px;
+    flex-shrink: 0;
+  }
+  .module-group[open] > summary::before { content: "−"; }
+  .module-week {
+    font-family: "DM Sans", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 12.3px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--terra-dark);
+  }
+  .module-title {
+    font-weight: 700;
+    font-size: 19px;
+    color: var(--navy);
+    flex: 1;
+    min-width: 200px;
+  }
+  .module-progress {
+    font-family: "DM Sans", system-ui, sans-serif;
+    font-size: 14.6px;
+    color: var(--gray-soft);
+  }
+  .module-progress.complete { color: var(--navy); font-weight: 700; }
+  .module-body { padding: 12px 18px 18px; }
+  .module-body .card { margin-bottom: 10px; padding: 16px 18px; }
+  .module-body .card:last-child { margin-bottom: 0; }
+  .module-body .card h3 { font-size: 16.8px; margin: 0 0 4px; }
+
+  /* "Tonight" highlight ribbon */
+  .tonight-block {
+    background: var(--navy-tint);
+    border: 1px solid var(--navy);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 22px;
+  }
+  .tonight-block h3 {
+    color: var(--navy);
+    margin-top: 0;
+  }
+
+  /* Daily Review nudge banner (dashboard) */
+  .dr-nudge {
+    background: var(--white);
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    box-shadow: var(--shadow-rest);
+  }
+  .dr-nudge-text { flex: 1; min-width: 240px; }
+  .dr-nudge-eyebrow {
+    font-family: "DM Sans", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 12.3px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--terra-dark);
+    margin: 0 0 4px;
+  }
+  .dr-nudge-headline {
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 19px;
+    margin: 0 0 4px;
+  }
+  .dr-nudge-sub {
+    font-family: 'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;
+    font-style: italic;
+    color: var(--gray-soft);
+    font-size: 15.7px;
+    margin: 0;
+  }
+
+  /* Toolbar */
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 18px 0;
+  }
+
+  /* Print styles */
+  @media print {
+    nav.top-nav, .skip-link, footer, .no-print { display: none !important; }
+    body { background: white; color: black; }
+    .view { display: none; }
+    .view.print-view { display: block !important; }
+    .card, .stat, .practice-card, .notes-panel {
+      box-shadow: none;
+      border-color: #888;
+      page-break-inside: avoid;
+    }
+    header.page-header { border-bottom: 2px solid #333; }
+    h1.page-title, h2, h3, h4 { color: black; }
+    .mastery-fill { background: #555 !important; }
+    .pill { border-color: #555; }
+  }
+
+  /* High contrast preference */
+  @media (prefers-contrast: more) {
+    .card, .stat, .practice-card, .notes-panel { border-color: var(--navy); }
+    .gray-line, .pill { border-color: var(--navy); }
+  }
+  /* mcas-rebrand v1: MCAS site header (atlas branding) */
+  .site-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; padding: 18px max(24px,4vw) 14px; border-bottom: 1px solid rgba(11,21,48,0.12); background: var(--white); }
+  .site-logo { display: inline-flex; align-items: center; gap: 14px; text-decoration: none; }
+  .site-logo svg { height: 46px; width: auto; display: block; }
+  .logo-text { display: flex; flex-direction: column; gap: 2px; }
+  .logo-title { font-size: 23.5px; font-weight: 800; letter-spacing: -0.02em; color: var(--navy); line-height: 1; }
+  .logo-title .logo-accent { color: var(--terra); }
+  .logo-sub { font-size: 11.2px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--navy); opacity: 0.72; }
+  .site-logo:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 3px; border-radius: 6px; }
+  @media print { .site-header { display: none !important; } }
 </style>
 </head>
 <body>
-<a class="skip" href="#main">Skip to the practice cards</a>
 
-<header>
-<div class="brandbar">
-  <div class="wrap">
-    <img src="os/icon.svg" alt="" aria-hidden="true">
-    <span class="course">BIO 005 Human Physiology &middot; Yuba College</span>
-  </div>
-</div>
+<a href="#main-content" class="skip-link">Skip to main content</a>
 
-<div class="band">
-  <div class="wrap">
-    <p class="eyebrow">Spaced recall</p>
-    <h1>Practice a little, most days</h1>
-    <p>Cards you get right come back later. Cards you miss come back tomorrow. Once you can hold a
-       topic at one level, the questions on it step up to the next one.</p>
-  </div>
+<header class="page-header">
+  <p class="eyebrow">BIO 004 &middot; Human Anatomy</p>
+  <h1 class="page-title">Pre-Work and Spaced Recall</h1>
+  <p class="subhead" id="subhead-context">Tonight&rsquo;s prep, your daily review, and your engagement record</p>
+  <p class="usage">Work through tonight's cards and rate how you felt on each one. Come back tomorrow and your due cards will be ready for review.</p>
+  <nav class="top-nav" aria-label="Primary">
+    <button type="button" data-nav="dashboard" aria-current="page">Tonight&rsquo;s pre-work</button>
+    <button type="button" data-nav="review">Daily review</button>
+    <button type="button" data-nav="report">Engagement report</button>
+    <button type="button" data-nav="settings">Settings</button>
+  </nav>
 </header>
 
-<main id="main" class="wrap">
+<div role="status" aria-live="polite" class="sr-only" id="live-region"></div>
 
-  <!-- ============ YOUR GOAL ============ -->
-  <section aria-labelledby="h-goal">
-    <h2 id="h-goal">Your goal</h2>
-    <div class="card">
-      <fieldset>
-        <legend class="gn" style="margin-bottom:10px">Pick how you want to use this</legend>
-        <div class="goals">
-          <label class="goal">
-            <input type="radio" name="goal" value="keepup" id="goalKeepup" checked>
-            <span>
-              <span class="gt">Keep up</span>
-              <span class="gn">15 cards, about 8 minutes, 5 days a week</span>
-              <span class="gd">Holds on to what you have learned and keeps you current with the
-              week being taught. It samples the course rather than covering it, so plan on the
-              note sheets and the reading to do the rest.</span>
-            </span>
-          </label>
-          <label class="goal">
-            <input type="radio" name="goal" value="coverage" id="goalCoverage">
-            <span>
-              <span class="gt">Cover the course</span>
-              <span class="gn">About 60 cards, 25 minutes, 7 days a week</span>
-              <span class="gd">Drives every competency in the course to the point where you can
-              recall it reliably. This one only works if you come back every day, because a card
-              cannot move forward twice in the same day.</span>
-            </span>
-          </label>
-        </div>
-      </fieldset>
+<main id="main-content" tabindex="-1">
 
-      <div class="discl">
-        <button type="button" id="howBtn" aria-expanded="false" aria-controls="howBody">
-          How this works, and what it takes to cover the course
-        </button>
-        <div class="body" id="howBody" hidden>
-          <h3>What the tool is doing</h3>
-          <p>Every question is tied to one course competency and sits at one of three levels.
-             Level 1 asks you to recall something. Level 2 asks you to apply it. Level 3 asks
-             you to work out what happens when conditions change. You start at level 1 on
-             everything. Level 2 opens on a topic once you have proved level 1 on it, and
-             level 3 opens the same way off level 2. You cannot skip ahead, and you do not
-             have to unlock anything by hand.</p>
-          <p>When you get a card right it goes away for longer: one day, then four, then
-             twelve, then thirty, then seventy-five. When you get it wrong it comes back
-             tomorrow. A card counts as proved once you have answered it right on two
-             separate days, which is why one long session cannot substitute for showing up
-             on several days.</p>
-
-          <h3>What covered means</h3>
-          <p>A competency is covered when three of its cards are proved at every level it
-             has cards for. That is the same bar the tool uses to open the next level, so
-             covering a competency and unlocking its hardest questions are the same thing.
-             There are 268 competencies in the course.</p>
-          <p>Covered does not mean every card in the bank. There are 4,980 cards and about
-             eighteen per competency. The spares are there so there is always a fresh
-             question waiting when you miss one.</p>
-
-          <h3>What it takes</h3>
-          <ul>
-            <li><b>Keep up.</b> About 15 cards a day, five days a week, roughly 8 to 10
-                minutes. You will stay current with the week being taught and hold on to
-                what you have already learned. You will not cover the course this way, and
-                that is a fair choice as long as you know you are making it.</li>
-            <li><b>Cover the course.</b> Around 60 cards a day, seven days a week, roughly
-                25 minutes. Over a term that gets almost every competency in the course
-                proved at level 1.</li>
-            <li><b>Going deeper than that.</b> Getting every competency proved at level 2 as
-                well takes about 125 cards a day, seven days a week, close to an hour. That
-                is a real commitment on top of the reading, the note sheets and the lab, so
-                think about whether the hour is better spent here or on the note sheets.</li>
-          </ul>
-
-          <h3>Days matter more than length</h3>
-          <p>A card can only move forward once a day, no matter how many times you see it.
-             Sixty cards on each of seven days moves you much further than four hundred
-             cards on two days. If you have twenty minutes and a choice between doing them
-             all today or ten minutes today and ten tomorrow, split them.</p>
-
-          <h3>You do not have to pick chapters</h3>
-          <p>The set is built for you every day. Cards that are due come first, oldest
-             first, from any week of the course. Then a few cards you have never seen are
-             added, with some always kept for the week being taught now and the rest taken
-             from the oldest material you have not finished. So earlier chapters come back
-             on their own, and nothing you started in week 3 gets stranded because week 9
-             arrived. There is no chapter menu because you do not need one.</p>
-
-          <h3>What it cannot do for you</h3>
-          <ul>
-            <li>Material taught in the last two or three weeks of the term will not have
-                time to climb the whole ladder before the term ends. For those weeks, lean
-                on the note sheets and the teach-back work.</li>
-            <li>These cards are multiple choice. Every graded thing in this course asks you
-                to draw a mechanism, teach it out loud, or answer out loud. The cards are
-                practice for the thinking, not practice for the format.</li>
-            <li>Your progress is saved in this browser on this device. If you clear your
-                browsing data or switch computers, you start over.</li>
-          </ul>
-        </div>
+  <!-- DASHBOARD -->
+  <section class="view active" id="view-dashboard" aria-labelledby="dash-heading">
+    <h2 id="dash-heading">Tonight&rsquo;s pre-work</h2>
+    <div class="stats-row">
+      <div class="stat">
+        <p class="stat-label">Streak</p>
+        <p class="stat-value" id="stat-streak">0</p>
+        <p class="stat-sub">days in a row</p>
       </div>
+      <div class="stat">
+        <p class="stat-label">Cards due today</p>
+        <p class="stat-value" id="stat-due">0</p>
+        <p class="stat-sub">from prior sessions</p>
+      </div>
+      <div class="stat">
+        <p class="stat-label">Topics tonight</p>
+        <p class="stat-value" id="stat-topics-tonight">0</p>
+        <p class="stat-sub" id="stat-topics-tonight-sub">today&rsquo;s pre-work</p>
+      </div>
+      <div class="stat">
+        <p class="stat-label">All-time cards</p>
+        <p class="stat-value" id="stat-total-cards">0</p>
+        <p class="stat-sub">reviewed</p>
+      </div>
+    </div>
+    <div id="topic-list" aria-live="polite"></div>
+  </section>
 
-      <div class="meter">
-        <div class="bar"><div class="fill" id="covFill"></div></div>
-        <p class="cap">
-          <span>Competencies covered: <b id="covN">0</b> of <b id="covT">268</b></span>
-          <span>Recall proved: <b id="covL1">0</b></span>
-          <span>Apply proved: <b id="covL2">0</b></span>
-          <span>Analyze proved: <b id="covL3">0</b></span>
-        </p>
-        <p class="note" id="covNote"></p>
+  <!-- TOPIC LOCKED (video + gate) -->
+  <section class="view" id="view-topic" aria-labelledby="topic-heading">
+    <button type="button" class="btn btn-ghost" data-nav="dashboard" style="margin-bottom:14px;">&larr; Back to tonight&rsquo;s list</button>
+    <h2 id="topic-heading">Topic</h2>
+    <p class="usage" id="topic-summary"></p>
+
+    <div class="card" id="video-card">
+      <h3 id="video-card-heading">Step 1. Watch the lecture video</h3>
+      <p class="usage" id="video-status">Watch this topic's lecture video on its lecture page, then return here to keep going.</p>
+      <div class="toolbar">
+        <a class="btn btn-primary" id="btn-open-lecture-page" href="#" target="_top" hidden>Open lecture page &rarr;</a>
+        <button type="button" class="btn btn-primary" id="btn-simulate-watch" hidden>Simulate watching (10s)</button>
+        <button type="button" class="btn btn-gold" id="btn-mark-watched">I&rsquo;ve watched it</button>
+      </div>
+      <div class="video-frame" id="video-frame-legacy" aria-label="Legacy in-app video player" hidden>
+        <div class="placeholder-label" id="video-placeholder-label">Placeholder video. The real video must play start-to-finish before the next step appears.</div>
+        <div class="video-progress" id="video-progress"></div>
+      </div>
+    </div>
+
+    <p class="usage" id="gate-locked-note" style="margin-top:16px;">Step 2 unlocks once Step 1 is complete.</p>
+
+    <div class="gate" id="gate-card" aria-labelledby="gate-heading" hidden>
+      <h3 id="gate-heading">Step 2. Explain in your own words</h3>
+      <label for="gate-input">In your own words, what did this video teach you? Aim for at least 60 words and include the key ideas.</label>
+      <textarea id="gate-input" aria-describedby="gate-help" placeholder="Type your explanation here..."></textarea>
+      <p id="gate-help" class="usage">Your explanation stays on this device. It will print with your engagement report so your professor can see your understanding.</p>
+      <p class="usage" id="gate-preview-hint" hidden style="margin-top:6px;">
+        <strong style="color:var(--terra-dark);font-style:normal;">Preview mode hint:</strong>
+        the system is looking for these key concepts in your explanation:
+        <span id="gate-preview-keywords" style="font-family:'DM Sans',system-ui,sans-serif;font-style:normal;color:var(--navy);"></span>
+      </p>
+      <div class="gate-meter" aria-live="polite">
+        <span>Words: <strong id="gate-word-count">0</strong> / 60</span>
+        <span>Concepts found: <strong id="gate-keyword-count">0</strong> / <span id="gate-keyword-target">0</span></span>
+        <button type="button" id="btn-toggle-preview-hint" class="btn btn-ghost" style="padding:4px 10px;font-size:13.4px;margin-left:auto;">Show concepts (preview)</button>
+      </div>
+      <div class="toolbar">
+        <button type="button" class="btn btn-primary" id="btn-submit-gate">Unlock notes and questions</button>
+      </div>
+      <p class="gate-feedback" id="gate-feedback" role="status"></p>
+    </div>
+  </section>
+
+  <!-- LEARNING VIEW (cards; notes link out to the existing notes hub) -->
+  <section class="view" id="view-learn" aria-labelledby="learn-heading">
+    <div class="toolbar" style="margin-bottom:14px;">
+      <button type="button" class="btn btn-ghost" data-nav="dashboard">&larr; Back to tonight&rsquo;s list</button>
+      <a id="link-open-notes" class="btn btn-gold" target="_blank" rel="noopener noreferrer" href="#" hidden>Open notes &#x2197;</a>
+      <a id="link-open-reading" class="btn btn-ghost" target="_blank" rel="noopener noreferrer" href="#" hidden>OpenStax reference &#x2197;</a>
+      <span id="notes-link-pending" class="usage" style="font-style:italic;align-self:center;">Notes link not yet wired for this topic.</span>
+    </div>
+    <h2 id="learn-heading">Spaced recall</h2>
+    <p class="usage" style="margin-top:-6px;">Try to recall the answer before opening the notes. Reach for notes only when you are genuinely stuck.</p>
+    <div class="learn-single">
+      <div>
+        <div class="practice-card" id="practice-card" aria-live="polite">
+          <div class="practice-meta">
+            <span class="dok-badge dok-1" id="card-dok-badge">DOK 1</span>
+            <span class="progress-text" id="card-progress">Card 1 of 20</span>
+          </div>
+          <div>
+            <p class="q-text" id="card-question">Question loads here.</p>
+            <div class="mc-options" id="mc-options" role="group" aria-label="Answer choices"></div>
+            <div class="feedback-panel" id="feedback-panel" hidden>
+              <p class="fb-label" id="fb-label">CORRECT</p>
+              <p class="fb-explain" id="fb-explain"></p>
+            </div>
+            <p class="a-text" id="card-answer" hidden>Answer loads here.</p>
+          </div>
+          <div>
+            <p class="usage" id="rate-instructions" hidden style="margin:0 0 8px;">How hard did that feel? Your rating tunes when the card comes back.</p>
+            <div class="rate-row" id="rate-row" hidden>
+              <button type="button" class="rate-btn again" data-rate="again">Again<small>didn&rsquo;t know it</small></button>
+              <button type="button" class="rate-btn" data-rate="hard">Hard<small>got it, struggled</small></button>
+              <button type="button" class="rate-btn" data-rate="good">Good<small>knew it</small></button>
+              <button type="button" class="rate-btn easy" data-rate="easy">Easy<small>solid</small></button>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:18px;">
+          <h3>Mastery in this topic</h3>
+          <div class="mastery-row"><span>DOK 1</span><div class="mastery-bar"><div class="mastery-fill l1" id="mastery-l1" style="width:0%"></div></div><span id="mastery-l1-text">0%</span></div>
+          <div class="mastery-row"><span>DOK 2</span><div class="mastery-bar"><div class="mastery-fill l2" id="mastery-l2" style="width:0%"></div></div><span id="mastery-l2-text">0%</span></div>
+          <div class="mastery-row"><span>DOK 3</span><div class="mastery-bar"><div class="mastery-fill l3" id="mastery-l3" style="width:0%"></div></div><span id="mastery-l3-text">0%</span></div>
+          <p class="usage" id="dok-adapt-note">Adaptive level: warming up at DOK 1.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ THIS WEEK ============ -->
-  <section aria-labelledby="h-week">
-    <h2 id="h-week">This week</h2>
-    <div class="card">
-      <div class="weekhead">
-        <span class="wk" id="wkLabel">Week 1</span>
-        <span id="wkTitle"></span>
-      </div>
-      <div class="statrow">
-        <div class="stat"><span class="big" id="sDue">0</span><span class="lab">cards ready today</span></div>
-        <div class="stat"><span class="big" id="sMins">0</span><span class="lab">minutes for today's set</span></div>
-        <div class="stat"><span class="big" id="sDays">0</span><span class="lab">days practiced this week</span></div>
-        <div class="stat"><span class="big" id="sHold">0</span><span class="lab">cards holding</span></div>
-      </div>
-      <p class="note" id="wkNote"></p>
+  <!-- DAILY REVIEW -->
+  <section class="view" id="view-review" aria-labelledby="review-heading">
+    <h2 id="review-heading">Daily review</h2>
+    <p class="usage" id="review-mode-note">These cards are due based on how you rated them last time. Lower confidence resurfaces first.</p>
+    <div class="toolbar" style="margin-bottom:12px;flex-wrap:wrap;gap:8px;align-items:center;">
+      <span style="font-family:'DM Sans',system-ui,sans-serif;font-weight:700;font-size:12.3px;letter-spacing:.1em;text-transform:uppercase;color:var(--terra-dark);">Show</span>
+      <button type="button" class="btn btn-primary" id="btn-review-due" aria-pressed="true">Due today only</button>
+      <button type="button" class="btn btn-ghost" id="btn-review-all" aria-pressed="false">All unlocked cards</button>
+      <button type="button" class="btn btn-gold" id="btn-review-weak">Drill my weak spots</button>
     </div>
+    <div id="review-body"></div>
   </section>
 
-  <!-- ============ PRACTICE ============ -->
-  <section aria-labelledby="h-practice">
-    <h2 id="h-practice">Practice</h2>
-    <div class="card" id="runner">
-      <div id="startPanel">
-        <h3>Today's set</h3>
-        <p id="startText">Loading your cards.</p>
-        <div class="btnrow">
-          <button class="btn" id="btnStart" type="button" disabled>Start</button>
-          <button class="btn ghost" id="btnMissed" type="button" disabled>Practice what I missed</button>
-        </div>
-      </div>
-
-      <div id="qPanel" hidden>
-        <div class="qmeta">
-          <span class="pill" id="pTopic"></span>
-          <span class="pill level" id="pLevel"></span>
-          <span class="pill" id="pCount"></span>
-        </div>
-        <p class="qtext" id="qText"></p>
-        <form id="qForm">
-          <fieldset>
-            <legend id="qLegend">Choose one answer</legend>
-            <div id="optWrap"></div>
-          </fieldset>
-          <div class="btnrow">
-            <button class="btn" id="btnSubmit" type="submit" disabled>Check my answer</button>
-          </div>
-        </form>
-
-        <div class="conf" id="confPanel" hidden>
-          <p id="confAsk">Before you see the explanation: how sure are you?</p>
-          <div class="btnrow">
-            <button class="btn ghost" type="button" data-conf="yes">Sure</button>
-            <button class="btn ghost" type="button" data-conf="maybe">Half sure</button>
-            <button class="btn ghost" type="button" data-conf="no">Guessing</button>
-          </div>
-        </div>
-
-        <div class="answer" id="answerPanel" hidden>
-          <h3 id="verdict"></h3>
-          <p id="expl"></p>
-          <p class="note" id="schedNote"></p>
-          <div class="btnrow next">
-            <button class="btn" id="btnNext" type="button">Next card</button>
-            <button class="btn ghost" id="btnStop" type="button">Stop for today</button>
-          </div>
-        </div>
-      </div>
-
-      <div id="donePanel" hidden>
-        <h3 id="doneTitle">That is the set</h3>
-        <p id="doneText"></p>
-        <div class="btnrow">
-          <button class="btn" id="btnMore" type="button">Keep going</button>
-        </div>
-      </div>
+  <!-- ENGAGEMENT REPORT -->
+  <section class="view print-view" id="view-report" aria-labelledby="report-heading">
+    <h2 id="report-heading">Engagement report</h2>
+    <p class="usage">A printable record of your nightly work. Hand this in or save it as a PDF.</p>
+    <div class="toolbar no-print">
+      <button type="button" class="btn btn-primary" id="btn-print">Print or save as PDF</button>
+      <button type="button" class="btn btn-ghost" id="btn-export">Export progress code</button>
+      <button type="button" class="btn btn-ghost" id="btn-import">Import progress code</button>
     </div>
-    <p class="live" aria-live="polite" id="liveRegion" style="position:absolute;left:-9999px"></p>
+    <div id="report-body"></div>
   </section>
 
-  <!-- ============ WHAT YOU DID ============ -->
-  <section aria-labelledby="h-record">
-    <h2 id="h-record">What you did this week</h2>
+  <!-- SETTINGS -->
+  <section class="view" id="view-settings" aria-labelledby="settings-heading">
+    <h2 id="settings-heading">Settings</h2>
     <div class="card">
-      <p class="note" style="margin:0 0 12px"><b id="sWeekCards">0</b> cards answered this week.</p>
-      <div class="days" id="dayStrip"></div>
-      <div class="scroller">
-        <table id="topicTable">
-          <caption id="tCaption">Topics you touched this week, and the level you are working at in each one.</caption>
-          <thead>
-            <tr>
-              <th scope="col">Topic</th>
-              <th scope="col">Cards</th>
-              <th scope="col">First try correct</th>
-              <th scope="col">Level you are on</th>
-            </tr>
-          </thead>
-          <tbody id="tBody"></tbody>
-        </table>
+      <h3>Reset and data</h3>
+      <p class="usage">Everything is stored on this device only. No names, no IDs, no accounts.</p>
+      <div class="toolbar">
+        <button type="button" class="btn btn-ghost" id="btn-reset-day">Simulate next day (for testing)</button>
+        <button type="button" class="btn btn-ghost" id="btn-reset-all">Reset all progress</button>
       </div>
-      <p class="note" id="levelNote"></p>
+    </div>
+    <div class="card">
+      <h3>About this tool</h3>
+      <p class="usage">The BIO 004 pre-work and spaced-recall tool. Each lecture asks you to watch the video and write a short explanation to unlock its cards, then runs an adaptive card set across DOK 1 to 3. Reviews carry across days using a lightweight SM2-style scheduler.</p>
     </div>
   </section>
 
 </main>
 
 <footer>
-  <div class="wrap">
-    <a href="syllabus-fall2026.html" target="_top">Syllabus</a><span class="sep">&middot;</span>
-    <a href="course-schedule.html" target="_top">Schedule</a><span class="sep">&middot;</span>
-    <a href="competency-study-guide.html" target="_top">Study guide</a><span class="sep">&middot;</span>
-    <a href="mastery-canvas.html" target="_top">Drawing canvas</a><span class="sep">&middot;</span>
-    <a href="accessibility.html" target="_top">Accessibility</a>
-    <p class="note">Dr. Sharilyn Rennie</p>
-  </div>
+  <p>Dr. Sharilyn Rennie &middot; BIO 004 &middot; All progress stays on your device.</p>
 </footer>
 
-<script src="bio005-competencies.js"></script>
-<script src="os/card-competency-map.js"></script>
-<script src="os/bio005-card-bank.js"></script>
+<!-- External course content. Edit course-content.js to add/edit modules, topics, and cards.
+     If this file is missing, the engine falls back to a single bundled demo topic. -->
+<script src="https://drsrennie-stack.github.io/new-build-bio4-solano/course-content.js"></script>
+<script src="https://drsrennie-stack.github.io/new-build-bio4-solano/gap-cards.js"></script>
+
 <script>
 /* ============================================================
-   Spaced Recall, BIO 005 Human Physiology
-
-   This page does three things and nothing else:
-     1. shows what is due today,
-     2. runs the cards,
-     3. shows what the student did this week.
-
-   It reads and writes the SAME spacing state as the recall engine
-   inside Mastery Physio OS (localStorage key bio005-recall-progress),
-   so a student who used either one keeps their history.
-
-   HOW THE SPACING WORKS
-   Leitner boxes, in days: 0, 1, 4, 12, 30, 75. A card answered right
-   moves out one box, so it comes back later. A card missed drops to
-   box 0 and comes back the same day or the next one. "Holding" means
-   box 2 or better, which can only happen by being right on two
-   separate days, so a lucky guess cannot fake it.
-
-   HOW COVERAGE WORKS
-   A student can choose between two goals. Keep up is a 15 card set
-   built by buildSet, which holds on to what is learned and stays
-   current with the week being taught. Cover the course is a larger
-   set built by buildCoverSet, which drives every competency toward
-   three cards holding at every level. tools/sim_coverage.js measures
-   what each one costs in cards and minutes a day.
-
-   HOW THE DIFFICULTY RISES
-   Every card carries a DOK level: 1 recall, 2 apply, 3 analyze. The
-   gate is per competency. Level 1 is always open. Level 2 opens once
-   3 of that competency's level 1 cards are holding, and level 3 opens
-   the same way off level 2. The threshold is capped at how many cards
-   actually exist at that level, so a competency with only two level 1
-   cards is not stuck forever. A student who keeps practicing therefore
-   meets harder questions on the same material over time, without ever
-   being handed an analyze question on something they cannot yet recall.
+   BIO 004 Pre-Work and Spaced Recall
+   Engine only. Content is loaded from course-content.js.
+   localStorage only. No PII collected.
    ============================================================ */
-(function () {
-  'use strict';
 
-  var SKEY = 'bio005-recall-progress';   // shared with the OS recall engine
-  var VKEY = 'bio005-recall-v2';         // the per card history the OS reads
-  var DKEY = 'bio005-recall-days';       // this page's day log, for the week view
+(function(){
+  "use strict";
 
-  var GKEY = 'bio005-recall-goal';       // keep up, or cover the course
+  /* ---------- CONTENT ----------
+     Course content lives in course-content.js (loaded above).
+     If that file is missing, a single demo topic is bundled here as fallback. */
 
-  /* Leitner ladder, in days. Lengthened Sep 2026 after the coverage
-     simulation: the old 0, 1, 3, 7, 16, 35 ladder spent so much of a
-     student's daily budget re-asking cards they already knew that there
-     was never room to reach the rest of the course. */
-  var BOX_DAYS = [0, 1, 4, 12, 30, 75];
-  var HOLDING  = 2;
-  var GATE_N   = 3;
+  const FALLBACK_CONTENT = {
+    courseLabel: "BIO 004 Human Anatomy",
+    modules: [{
+      id: "m-demo",
+      title: "Demo (load course-content.js for the full course)",
+      week: 0,
+      topics: [
+      {
+        id: "t-homeostasis",
+        title: "Homeostasis and Feedback Loops",
+        summary: "Levels of organization, set points, and how negative feedback keeps internal variables stable.",
+        videoLabel: "Video: Homeostasis and feedback loops (placeholder)",
+        gateKeywords: ["homeostasis", "feedback", "set point", "receptor", "effector"],
+        notes: [
+          { heading: "Levels of organization", body: [
+            "Chemical, cellular, tissue, organ, organ system, organism.",
+            "Each level builds on the one below it. Function emerges as complexity increases."
+          ]},
+          { heading: "Homeostasis", body: [
+            "Maintenance of a relatively stable internal environment despite external change.",
+            "Set point: the target value for a regulated variable (for example, core body temperature near 37 degrees C)."
+          ]},
+          { heading: "Negative feedback (the workhorse)", body: [
+            "Stimulus changes a variable away from set point.",
+            "Receptor detects the change.",
+            "Control center compares to set point and signals an effector.",
+            "Effector produces a response that opposes the change and returns the variable toward set point."
+          ]},
+          { heading: "Positive feedback (less common)", body: [
+            "Amplifies the original signal until an end point is reached.",
+            "Examples: oxytocin in labor, platelet plug formation."
+          ]}
+        ],
+        cards: [
+          { id: "h-1", dok: 1, q: "Define homeostasis.", a: "The maintenance of a relatively stable internal environment despite external change." },
+          { id: "h-2", dok: 1, q: "List the four core components of a negative feedback loop.", a: "Stimulus, receptor, control center, effector (with a response that opposes the change)." },
+          { id: "h-3", dok: 1, q: "What is a set point?", a: "The target value a regulated variable is kept near (for example, ~37 degrees C for core body temperature)." },
+          { id: "h-4", dok: 1, q: "Give one example of a regulated variable.", a: "Core body temperature, blood glucose, blood pH, blood pressure, blood osmolarity, or arterial pO2." },
+          { id: "h-5", dok: 1, q: "Which feedback type is most common in physiology?", a: "Negative feedback." },
+          { id: "h-6", dok: 2, q: "Explain how negative feedback returns body temperature to set point after exercise.", a: "Skin and hypothalamic thermoreceptors detect a rise. The hypothalamic control center compares to set point and signals effectors: sweat glands secrete (evaporative cooling) and cutaneous vessels dilate (heat loss to environment). Core temperature falls back toward set point." },
+          { id: "h-7", dok: 2, q: "Contrast negative and positive feedback in terms of their effect on the original stimulus.", a: "Negative feedback opposes the change and stabilizes the variable. Positive feedback amplifies the change and drives the system to an end point." },
+          { id: "h-8", dok: 2, q: "Why is positive feedback less common in homeostasis?", a: "Because it amplifies change rather than stabilizing it. It is useful only when a system needs to reach an end point quickly (childbirth, clot formation) and then be shut off." },
+          { id: "h-9", dok: 2, q: "Identify the receptor, control center, and effector in the baroreceptor response to a drop in blood pressure.", a: "Receptor: baroreceptors in the carotid sinus and aortic arch. Control center: cardiovascular centers in the medulla. Effectors: heart (increased rate and contractility) and vascular smooth muscle (vasoconstriction)." },
+          { id: "h-10", dok: 3, q: "Predict what happens to a patient whose hypothalamic set point for temperature is reset upward by pyrogens during fever.", a: "The body now treats normal core temperature as too low. Effectors that conserve and generate heat activate: vasoconstriction (cold skin), shivering, and behavioral chill-seeking. Core temperature rises to the new (elevated) set point. When pyrogens clear, the set point falls and the patient sweats and vasodilates to dump the excess heat." },
+          { id: "h-11", dok: 3, q: "A patient with type 1 diabetes has lost the ability to make insulin. Analyze how this disrupts the negative feedback loop that controls blood glucose, and predict the consequence after a meal.", a: "Insulin is the effector signal that drives glucose into cells and lowers blood glucose. Without it, the loop cannot complete: receptors detect the post-meal glucose spike, but no effector response brings it back to set point. Blood glucose rises and stays elevated (hyperglycemia)." },
+          { id: "h-12", dok: 3, q: "Design an experiment to determine whether shivering is under negative feedback control. What would you measure and what would constitute evidence?", a: "Cool the subject and measure core temperature over time alongside EMG activity from skeletal muscle. Evidence of negative feedback: shivering EMG activity rises as core temperature falls below set point and falls back to baseline as core temperature returns to set point. The response opposes the temperature change, which is the defining feature." }
+        ]
+      }
+    ]
+  }]
+};
 
-  var SET_SIZE = 15;                     // Keep up: cards in one sitting
-  var NEW_PER_SET = 5;                   // Keep up: how many may be brand new
-  var COVER_CAP = 90;                    // Cover the course: daily ceiling
-  var COVER_NEW = 0.35;                  // Cover the course: share held for new cards
-  var CURRENT_FLOOR = 3;                 // new cards always kept for this week
+  /* Use external content if course-content.js loaded; otherwise fall back to the demo. */
+  const CONTENT = (typeof window !== "undefined" && window.BIO004_COURSE_CONTENT)
+    ? window.BIO004_COURSE_CONTENT
+    : FALLBACK_CONTENT;
 
-  /* Seconds per card, for the "minutes for today's set" estimate. Word
-     counts are measured from the bank: 103 words at level 1, 121 at
-     level 2, 153 at level 3, counting question, options and explanation.
-     Costed at 200 words a minute plus a thinking pause. */
-  var WORDS = { 1: 103, 2: 121, 3: 153 };
-  var THINK = { 1: 10, 2: 15, 3: 20 };
-  function cardSeconds(e) {
-    var first = !progress[e.key];
-    var full = WORDS[e.dok] / 200 * 60 + THINK[e.dok];
-    return first ? full : (WORDS[e.dok] * 0.4 / 200 * 60 + THINK[e.dok] * 0.5) * 1.25;
+  /* Flatten helpers (topics live inside modules). */
+  function allTopics(){
+    const out = [];
+    (CONTENT.modules || []).forEach(m => (m.topics || []).forEach(t => out.push(t)));
+    return out;
+  }
+  function topicById(id){
+    for (const m of (CONTENT.modules || [])) {
+      for (const t of (m.topics || [])) {
+        if (t.id === id) return t;
+      }
+    }
+    return null;
+  }
+  function moduleByTopicId(id){
+    for (const m of (CONTENT.modules || [])) {
+      for (const t of (m.topics || [])) {
+        if (t.id === id) return m;
+      }
+    }
+    return null;
   }
 
-  var TERM_START = new Date(2026, 8, 8); // Tue 8 September 2026
-  var TERM_WEEKS = 15;
-  var LEVEL_NAME = { 1: 'Level 1 recall', 2: 'Level 2 apply', 3: 'Level 3 analyze' };
+  /* ---------- STATE / PERSISTENCE ---------- */
 
-  function $(id) { return document.getElementById(id); }
-  function esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  const STORAGE_KEY = "bio304_spaced_recall_v1";
+  const DAY_MS = 24 * 60 * 60 * 1000;
+
+  function todayKey(offsetDays){
+    // Single source of truth for "now" with the simulated-day offset applied once.
+    const ms = Date.now() + (((offsetDays || 0) + (STATE.daysSimulated || 0)) * DAY_MS);
+    return new Date(ms).toISOString().slice(0,10);
+  }
+
+  // Fisher-Yates shuffle. Returns a new array so callers don't have to clone.
+  function shuffleArray(arr){
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function nowSim(){
+    return Date.now() + (STATE.daysSimulated || 0) * DAY_MS;
+  }
+
+  function freshState(){
+    return {
+      version: 1,
+      createdAt: new Date().toISOString(),
+      daysSimulated: 0,
+      topics: {},
+      sessions: [],
+      lastOpenedDate: ""
+    };
+  }
+
+  function loadState(){
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return freshState();
+      const parsed = JSON.parse(raw);
+      if (!parsed.version) return freshState();
+      return parsed;
+    } catch(e){
+      return freshState();
+    }
+  }
+
+  function saveState(){
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE));
+    } catch(e){
+      announce("Could not save progress. Storage may be full or disabled.");
+    }
+  }
+
+  let STATE = loadState();
+
+  function getTopicState(topicId){
+    if (!STATE.topics[topicId]) {
+      STATE.topics[topicId] = {
+        videoWatched: false,
+        gateCompleted: false,
+        gateExplanation: "",
+        gateCompletedAt: "",
+        unlockedAt: "",
+        cards: {},
+        dok: { 1: { correct: 0, total: 0 }, 2: { correct: 0, total: 0 }, 3: { correct: 0, total: 0 } },
+        adaptiveLevel: 1
+      };
+    }
+    return STATE.topics[topicId];
+  }
+
+  function getCardState(topicId, cardId, dok){
+    const ts = getTopicState(topicId);
+    if (!ts.cards[cardId]) {
+      ts.cards[cardId] = {
+        dok: dok,
+        reps: 0,
+        lapses: 0,
+        ease: 2.5,
+        interval: 0,
+        nextDue: nowSim(),
+        lastRating: "",
+        history: []
+      };
+    }
+    return ts.cards[cardId];
+  }
+
+  /* ---------- SCHEDULER (SM2-lite) ---------- */
+
+  function scheduleCard(cardState, rating, wasCorrect){
+    // Correctness is now captured directly from the multiple-choice click.
+    // If they got it wrong, the card always resurfaces tomorrow, regardless
+    // of the difficulty rating they then gave. Right answers + difficulty
+    // rating tune the interval the SM-2 way.
+    const ratingMap = { again: 1, hard: 2, good: 3, easy: 4 };
+    const q = ratingMap[rating] || 3;
+    cardState.history.push({
+      at: new Date(nowSim()).toISOString(),
+      rating: rating,
+      correct: !!wasCorrect
+    });
+    cardState.lastRating = rating;
+    cardState.lastCorrect = !!wasCorrect;
+
+    if (!wasCorrect || q === 1) {
+      // Wrong answer OR student self-rated "again": reset interval.
+      cardState.reps = 0;
+      cardState.lapses += 1;
+      cardState.interval = 0;
+      cardState.ease = Math.max(1.3, cardState.ease - 0.2);
+      cardState.nextDue = nowSim() + 0.7 * DAY_MS;
+      return;
+    }
+
+    cardState.reps += 1;
+    if (cardState.reps === 1) {
+      cardState.interval = 1;
+    } else if (cardState.reps === 2) {
+      cardState.interval = 3;
+    } else {
+      cardState.interval = Math.round(cardState.interval * cardState.ease);
+    }
+    if (q === 2) {
+      cardState.ease = Math.max(1.3, cardState.ease - 0.15);
+      cardState.interval = Math.max(1, Math.round(cardState.interval * 0.8));
+    } else if (q === 4) {
+      cardState.ease = cardState.ease + 0.15;
+      cardState.interval = Math.round(cardState.interval * 1.2);
+    }
+    cardState.nextDue = nowSim() + cardState.interval * DAY_MS;
+  }
+
+  /* ---------- DOK MASTERY / ADAPTATION ---------- */
+
+  function recordDokOutcome(topicId, dok, rating, wasCorrect){
+    // Mastery now tracks real correctness from the multiple-choice click,
+    // not the student's self-rated difficulty. Also tracks "correct in a row"
+    // so DOK level N+1 unlocks after 3 correct in a row at level N.
+    const ts = getTopicState(topicId);
+    if (!ts.dok[dok]) ts.dok[dok] = { correct: 0, total: 0, streak: 0 };
+    if (typeof ts.dok[dok].streak !== "number") ts.dok[dok].streak = 0;
+    ts.dok[dok].total += 1;
+    if (wasCorrect) {
+      ts.dok[dok].correct += 1;
+      ts.dok[dok].streak += 1;
+    } else {
+      ts.dok[dok].streak = 0;
+    }
+  }
+
+  function masteryFor(topicId, dok){
+    const ts = getTopicState(topicId);
+    const b = ts.dok[dok];
+    if (!b || b.total < 3) return 0;
+    return b.correct / b.total;
+  }
+
+  function computeAdaptiveLevel(topicId){
+    const ts = getTopicState(topicId);
+    const m1 = masteryFor(topicId, 1);
+    const m2 = masteryFor(topicId, 2);
+    // New rule: also require 3 consecutive correct at level N before
+    // unlocking level N+1. Streak is tracked in recordDokOutcome.
+    const streak1 = (ts.dok[1] && ts.dok[1].streak) || 0;
+    const streak2 = (ts.dok[2] && ts.dok[2].streak) || 0;
+    if (m1 >= 0.7 && streak1 >= 3 && m2 >= 0.6 && streak2 >= 3) return 3;
+    if (m1 >= 0.7 && streak1 >= 3) return 2;
+    return 1;
+  }
+
+  function pickCardForTopic(topicId){
+    const topic = topicById(topicId);
+    if (!topic) return null;
+    const level = computeAdaptiveLevel(topicId);
+    const ts = getTopicState(topicId);
+
+    // 1) Any cards due now (across DOK levels)?
+    // Shuffle shuffledCards so order isn't memorizable.
+    const shuffledCards = shuffleArray(topic.cards);
+    const due = shuffledCards
+      .map(c => ({ card: c, st: getCardState(topicId, c.id, c.dok) }))
+      .filter(x => x.st.reps > 0 && x.st.nextDue <= nowSim())
+      .sort((a,b) => a.st.nextDue - b.st.nextDue);
+    if (due.length) return due[0].card;
+
+    // 2) Otherwise pick a new card at the adaptive level (or below if none).
+    const newCards = shuffledCards.filter(c => {
+      const st = getCardState(topicId, c.id, c.dok);
+      return st.reps === 0 && c.dok <= level;
+    });
+    if (newCards.length) {
+      // Prefer the lowest-DOK new card so we ladder up.
+      newCards.sort((a,b) => a.dok - b.dok);
+      return newCards[0];
+    }
+
+    // 3) Everything new at this level is used. Mix in any not-yet-due cards
+    // due in the next 24h to keep practice rolling, or higher-DOK new cards.
+    const higher = shuffledCards.filter(c => {
+      const st = getCardState(topicId, c.id, c.dok);
+      return st.reps === 0;
+    });
+    if (higher.length) return higher.sort((a,b) => a.dok - b.dok)[0];
+
+    const soon = shuffledCards
+      .map(c => ({ card: c, st: getCardState(topicId, c.id, c.dok) }))
+      .sort((a,b) => a.st.nextDue - b.st.nextDue);
+    return soon.length ? soon[0].card : null;
+  }
+
+  function countDueGlobally(){
+    let n = 0;
+    allTopics().forEach(t => {
+      t.cards.forEach(c => {
+        const st = getCardState(t.id, c.id, c.dok);
+        if (st.reps > 0 && st.nextDue <= nowSim()) n += 1;
+      });
+    });
+    return n;
+  }
+
+  function totalCardsReviewed(){
+    let n = 0;
+    Object.values(STATE.topics).forEach(ts => {
+      Object.values(ts.cards).forEach(c => { n += c.history.length; });
+    });
+    return n;
+  }
+
+  /* ---------- SESSIONS / STREAK ---------- */
+
+  function logSessionActivity(meta){
+    const day = todayKey(0);
+    let s = STATE.sessions.find(x => x.date === day);
+    if (!s) {
+      s = { date: day, topicsCompleted: [], cardsReviewed: 0, gates: [] };
+      STATE.sessions.push(s);
+    }
+    if (meta.topicCompleted && !s.topicsCompleted.includes(meta.topicCompleted)) {
+      s.topicsCompleted.push(meta.topicCompleted);
+    }
+    if (meta.cardReview) s.cardsReviewed += 1;
+    if (meta.gate) s.gates.push(meta.gate);
+    saveState();
+  }
+
+  function computeStreak(){
+    if (!STATE.sessions.length) return 0;
+    const dates = STATE.sessions.map(s => s.date).sort();
+    const today = todayKey(0);
+    let streak = 0;
+    let cursor = new Date(today + "T00:00:00");
+    for (let i = 0; i < 365; i++){
+      const key = cursor.toISOString().slice(0,10);
+      if (dates.includes(key)) {
+        streak += 1;
+        cursor = new Date(cursor.getTime() - DAY_MS);
+      } else if (i === 0) {
+        // No activity today yet. Look at yesterday for a streak.
+        cursor = new Date(cursor.getTime() - DAY_MS);
+      } else {
+        break;
+      }
+    }
+    return streak;
+  }
+
+  /* ---------- DOM HELPERS ---------- */
+
+  const $ = (sel, root) => (root || document).querySelector(sel);
+  const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+
+  function announce(msg){
+    const lr = $("#live-region");
+    if (lr) { lr.textContent = ""; setTimeout(() => { lr.textContent = msg; }, 30); }
+  }
+
+  /* ---------- NAVIGATION ---------- */
+
+  let CURRENT_TOPIC = null;
+  let CURRENT_CARD = null;
+  let CURRENT_CARD_CORRECT = null;  // set by MC click, consumed by rateCard
+  let CURRENT_CARD_OPTIONS = null;   // shuffled option order for the current render
+
+  // Weak-spots drill: a cross-topic session of the student's weakest seen cards.
+  let WEAK_ACTIVE = false, WEAK_QUEUE = [], WEAK_TOTAL = 0;
+
+  function nav(view, topicId){
+    WEAK_ACTIVE = false; WEAK_QUEUE = [];   // any normal navigation ends a weak-spots drill
+    $$(".view").forEach(v => v.classList.remove("active"));
+    const target = $("#view-" + view);
+    if (target) target.classList.add("active");
+    $$("nav.top-nav button").forEach(b => {
+      const isCurrent = b.dataset.nav === view || (view === "topic" && b.dataset.nav === "dashboard") || (view === "learn" && b.dataset.nav === "dashboard");
+      b.setAttribute("aria-current", isCurrent ? "page" : "false");
+    });
+    if (view === "dashboard") renderDashboard();
+    if (view === "topic") renderTopic(topicId);
+    if (view === "learn") renderLearn(topicId);
+    if (view === "review") renderReview();
+    if (view === "report") renderReport();
+    if (view === "settings") renderSettings();
+    const main = $("#main-content");
+    if (main) main.focus({ preventScroll: false });
+  }
+
+  /* ---------- DASHBOARD ---------- */
+
+  function topicStatus(topicId){
+    const ts = STATE.topics[topicId];
+    if (!ts) return "locked";
+    if (ts.gateCompleted && ts.videoWatched) return "completed";
+    return "unlocked";
+  }
+
+  /* Course-day calendar: pre-work runs Mon, Tue, Thu, Fri. Wednesday is
+     spaced-recall + lab. Saturday/Sunday are off (recall available). */
+  const COURSE_DAYS_OF_WEEK = [1, 2, 4, 5]; // Mon Tue Thu Fri (JS getDay: 0=Sun)
+  const COURSE_DAY_NAMES = ["Monday", "Tuesday", "Thursday", "Friday"];
+  const COURSE_DAY_SHORT = ["Mon", "Tue", "Thu", "Fri"];
+
+  /* Compute the current day in the course (1-32) given courseStart.
+     Only Mon/Tue/Thu/Fri advance the course day. On Wed/Sat/Sun the course
+     day is whatever the most recent Mon/Tue/Thu/Fri was. Returns 0 if
+     courseStart is not set (release scheduling disabled). */
+  function currentDayInCourse(){
+    if (!CONTENT.courseStart) return 0;
+    const start = new Date(CONTENT.courseStart + "T00:00:00");
+    const now = new Date(nowSim());
+    const startMs = start.getTime();
+    const nowMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    if (nowMidnight < startMs) return 0;
+    let day = 0;
+    for (let t = startMs; t <= nowMidnight; t += DAY_MS) {
+      const d = new Date(t);
+      if (COURSE_DAYS_OF_WEEK.includes(d.getDay())) day += 1;
+    }
+    return day;
+  }
+
+  /* Is today a pre-work day (Mon/Tue/Thu/Fri) or a recall+lab day (Wed)? */
+  function todayIsCourseDay(){
+    const now = new Date(nowSim());
+    return COURSE_DAYS_OF_WEEK.includes(now.getDay());
+  }
+  function todayIsLabRecallDay(){
+    const now = new Date(nowSim());
+    return now.getDay() === 3; // Wednesday
+  }
+
+  /* Released = topic's dayInCourse is <= the current course day (or no schedule). */
+  function isReleased(topic){
+    if (!CONTENT.courseStart || !topic.dayInCourse) return true;
+    return topic.dayInCourse <= currentDayInCourse();
+  }
+
+  function topicsForToday(){
+    // Topics whose dayInCourse equals exactly today's course day.
+    if (!CONTENT.courseStart) return [];
+    const today = currentDayInCourse();
+    return allTopics().filter(t => t.dayInCourse === today);
+  }
+
+  function topicsTonight(){
+    // Tonight's pre-work = released topics not yet completed today.
+    const today = todayKey(0);
+    const session = STATE.sessions.find(s => s.date === today);
+    return allTopics().filter(t => {
+      if (!isReleased(t)) return false;
+      const completedToday = session && session.topicsCompleted.includes(t.id);
+      return !completedToday;
     });
   }
-  function today() {
-    var d = new Date();
-    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
-  }
-  function pad(n) { return (n < 10 ? '0' : '') + n; }
-  function addDays(iso, n) {
-    var p = iso.split('-'), d = new Date(+p[0], +p[1] - 1, +p[2] + n);
-    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
-  }
-  function readLS(k) { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch (e) { return {}; } }
-  function writeLS(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 
-  var progress = readLS(SKEY);
-  var dayLog   = readLS(DKEY);           // { 'YYYY-MM-DD': { n, right, topics:{id:{n,right}} } }
+  function renderDashboard(){
+    $("#stat-streak").textContent = computeStreak();
+    $("#stat-due").textContent = countDueGlobally();
+    // Tonight count: if courseStart is set, today's topics. Otherwise preview day 1.
+    let tonightCount;
+    if (CONTENT.courseStart) {
+      tonightCount = todayIsLabRecallDay() ? 0 : topicsForToday().length;
+    } else {
+      tonightCount = allTopics().filter(t => t.dayInCourse === 1).length;
+    }
+    $("#stat-topics-tonight").textContent = tonightCount;
+    const sub = $("#stat-topics-tonight-sub");
+    if (sub) {
+      if (CONTENT.courseStart) {
+        sub.textContent = todayIsLabRecallDay() ? "Wednesday recall day" : "today's pre-work";
+      } else {
+        sub.textContent = "preview (set courseStart)";
+      }
+    }
+    $("#stat-total-cards").textContent = totalCardsReviewed();
 
-  /* ---------- flatten the bank ---------- */
-  var ALL = [];
-  var COMP_WEEK = {}, COMP_NAME = {};
-  (window.BIO005_COMPETENCIES || []).forEach(function (c) {
-    COMP_WEEK[c.id] = c.week || 0;
-    COMP_NAME[c.id] = c.name || c.id;
-  });
+    const wrap = $("#topic-list");
+    wrap.innerHTML = "";
 
-  function flatten() {
-    var bank = window.BIO005_CARD_BANK;
-    if (!bank || !bank.modules) return [];
-    var out = [];
-    bank.modules.forEach(function (m) {
-      (m.topics || []).forEach(function (t) {
-        (t.cards || []).forEach(function (c) {
-          out.push({
-            key: t.id + ':' + c.id,
-            card: c,
-            topicId: t.id,
-            topicTitle: t.title,
-            comp: c.competencyId || t.id,
-            dok: Math.max(1, Math.min(3, +c.dok || 1)),
-            week: c.week || COMP_WEEK[c.competencyId] || 0
+    const all = allTopics();
+    if (!all.length) {
+      wrap.innerHTML = '<div class="card"><p class="empty">No course content loaded. Make sure course-content.js is in the same folder as this file.</p></div>';
+      return;
+    }
+
+    // Daily Review nudge banner: shown when cards are due AND it's not a
+    // recall day (the recall day block already has its own daily-review CTA).
+    const nudgeDue = countDueGlobally();
+    if (nudgeDue > 0 && !(CONTENT.courseStart && todayIsLabRecallDay())) {
+      const nudge = document.createElement("div");
+      nudge.className = "dr-nudge";
+      nudge.setAttribute("role", "status");
+      nudge.innerHTML =
+        '<div class="dr-nudge-text">' +
+          '<p class="dr-nudge-eyebrow">Daily review</p>' +
+          '<p class="dr-nudge-headline">You have ' + nudgeDue + ' card' + (nudgeDue === 1 ? '' : 's') + ' due for review today.</p>' +
+          '<p class="dr-nudge-sub">Take a few minutes before tonight’s pre-work. Cards are sharpest when you review them on the day they’re due.</p>' +
+        '</div>' +
+        '<button type="button" class="btn btn-primary" id="btn-dr-nudge">Start daily review</button>';
+      wrap.appendChild(nudge);
+    }
+
+    // Group topics by week (1-8) and day-of-week (0=Mon, 1=Tue, 2=Thu, 3=Fri).
+    const byWeek = {};
+    all.forEach(t => {
+      if (!t.dayInCourse) return;
+      const wk = Math.ceil(t.dayInCourse / 4);
+      const dayIdx = (t.dayInCourse - 1) % 4;
+      byWeek[wk] = byWeek[wk] || {};
+      byWeek[wk][dayIdx] = byWeek[wk][dayIdx] || [];
+      byWeek[wk][dayIdx].push(t);
+    });
+
+    // Today highlight block (only when courseStart is set)
+    const todayDay = currentDayInCourse();
+    if (CONTENT.courseStart && todayDay > 0) {
+      if (todayIsLabRecallDay()) {
+        const wk = Math.ceil(todayDay / 4);
+        const due = countDueGlobally();
+        const recall = document.createElement("div");
+        recall.className = "tonight-block";
+        recall.innerHTML = `
+          <h3>Today is recall and lab day (Week ${wk}, Wednesday)</h3>
+          <p class="usage">No new pre-work releases today. Review the cards that are due, then head to lab.</p>
+          <div class="toolbar" style="margin:8px 0 0;">
+            <button class="btn btn-primary" data-nav="review">Open daily review (${due} cards due)</button>
+          </div>
+        `;
+        wrap.appendChild(recall);
+      } else {
+        const todaysTopics = topicsForToday();
+        if (todaysTopics.length) {
+          const wk = Math.ceil(todayDay / 4);
+          const dayName = COURSE_DAY_NAMES[(todayDay - 1) % 4];
+          const tonight = document.createElement("div");
+          tonight.className = "tonight-block";
+          tonight.innerHTML = `<h3>Tonight (Week ${wk}, ${dayName})</h3>`;
+          todaysTopics.forEach(t => {
+            const status = topicStatus(t.id);
+            const btnLabel = status === "completed" ? "Reopen" : status === "unlocked" ? "Continue" : "Start";
+            const btnClass = status === "completed" ? "btn-ghost" : "btn-primary";
+            const row = document.createElement("div");
+            row.style.cssText = "display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;flex-wrap:wrap;";
+            row.innerHTML = `
+              <div style="flex:1;min-width:240px;">
+                <strong style="font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans',sans-serif;color:var(--navy);">${escapeHtml(t.title)}</strong>
+                <div class="usage" style="margin:2px 0 0;">${escapeHtml(t.summary || "")}</div>
+              </div>
+              <button class="btn ${btnClass}" data-open-topic="${t.id}">${btnLabel}</button>
+            `;
+            tonight.appendChild(row);
           });
+          wrap.appendChild(tonight);
+        }
+      }
+    }
+
+    // Determine the "active" week to auto-expand.
+    let activeWeek = todayDay > 0 ? Math.ceil(todayDay / 4) : null;
+    if (!activeWeek) {
+      for (let wk = 1; wk <= 8; wk++) {
+        const wkTopics = Object.values(byWeek[wk] || {}).flat();
+        if (wkTopics.some(t => topicStatus(t.id) !== "completed")) {
+          activeWeek = wk;
+          break;
+        }
+      }
+    }
+    activeWeek = activeWeek || 1;
+
+    const totalWeeks = Math.max(...Object.keys(byWeek).map(Number));
+
+    for (let wk = 1; wk <= totalWeeks; wk++) {
+      const days = byWeek[wk] || {};
+      const wkTopics = Object.values(days).flat();
+      const completed = wkTopics.filter(t => topicStatus(t.id) === "completed").length;
+      const totalCards = wkTopics.reduce((acc, t) => acc + t.cards.length, 0);
+
+      // Module titles represented this week (subtle metadata)
+      const modSet = new Set();
+      wkTopics.forEach(t => {
+        const m = moduleByTopicId(t.id);
+        if (m) modSet.add(m.title);
+      });
+      const moduleTitleList = Array.from(modSet).join(" + ");
+
+      const details = document.createElement("details");
+      details.className = "module-group";
+      if (wk === activeWeek) details.open = true;
+
+      const summary = document.createElement("summary");
+      summary.innerHTML = `
+        <span class="module-week">Week ${wk}</span>
+        <span class="module-title">${escapeHtml(moduleTitleList)}</span>
+        <span class="module-progress${completed === wkTopics.length ? " complete" : ""}">${completed} of ${wkTopics.length} complete  .  ${totalCards} cards</span>
+      `;
+      details.appendChild(summary);
+
+      const body = document.createElement("div");
+      body.className = "module-body";
+
+      // Render 4 day rows + a Wed divider between Tue and Thu.
+      for (let di = 0; di < 4; di++) {
+        if (di === 2) {
+          const wedRow = document.createElement("div");
+          wedRow.style.cssText = "margin:8px 0;padding:10px 14px;background:var(--off-white);border-radius:4px;font-family:'DM Sans',system-ui,sans-serif;font-size:13.4px;color:var(--gray-soft);letter-spacing:0.03em;";
+          wedRow.innerHTML = '<strong style="color:var(--navy);font-family:\'Plus Jakarta Sans\',system-ui,sans-serif;font-size:14.6px;text-transform:uppercase;letter-spacing:0.08em;">Wednesday</strong> &nbsp;.&nbsp; recall and lab day. No new pre-work.';
+          body.appendChild(wedRow);
+        }
+
+        const dayLong = COURSE_DAY_NAMES[di];
+        const dayShort = COURSE_DAY_SHORT[di];
+        const dayTopics = days[di] || [];
+
+        const dayHeader = document.createElement("div");
+        dayHeader.style.cssText = "margin:10px 0 4px;font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans',system-ui,sans-serif;font-weight:700;font-size:14.6px;color:var(--terra-dark);text-transform:uppercase;letter-spacing:0.08em;";
+        dayHeader.textContent = `${dayLong}  .  Day ${(wk - 1) * 4 + di + 1}`;
+        body.appendChild(dayHeader);
+
+        if (dayTopics.length === 0) {
+          const empty = document.createElement("div");
+          empty.style.cssText = "padding:8px 14px;color:var(--gray-soft);font-style:italic;font-family:'Plus Jakarta Sans Variable','Plus Jakarta Sans',system-ui,sans-serif;font-size:14.6px;";
+          empty.textContent = "No pre-work assigned.";
+          body.appendChild(empty);
+          continue;
+        }
+
+        dayTopics.forEach(t => {
+          const status = topicStatus(t.id);
+          const released = isReleased(t);
+          const ts = STATE.topics[t.id];
+          const cardsReviewed = ts ? Object.values(ts.cards).reduce((acc,c) => acc + c.history.length, 0) : 0;
+          const seen = ts ? Object.values(ts.cards).filter(c => c.history.length > 0).length : 0;
+          const hasVideo = !!t.videoUrl;
+          const mod = moduleByTopicId(t.id);
+          const modLabel = mod ? mod.title : "";
+
+          const card = document.createElement("article");
+          card.className = "card state-" + status + (released ? "" : " state-unreleased");
+          if (!released) card.style.opacity = "0.55";
+          card.innerHTML = `
+            <div class="topic-row">
+              <div style="flex:1; min-width:240px;">
+                <h3>${escapeHtml(t.title)}</h3>
+                <p class="usage" style="margin:2px 0 6px;font-style:italic;">${escapeHtml(t.summary || "")}</p>
+                <div class="topic-meta">
+                  ${released
+                    ? `<span class="pill ${status}">${status === "completed" ? "Completed" : status === "unlocked" ? "In progress" : "Not started"}</span>`
+                    : `<span class="pill locked">Not yet open</span>`}
+                  <span style="color:var(--gray-soft);">${escapeHtml(modLabel)}</span>
+                  <span>${t.cards.length} cards (${seen} seen, ${cardsReviewed} reviews)</span>
+                  ${hasVideo ? "" : '<span style="color:var(--terra-dark);">video pending</span>'}
+                </div>
+              </div>
+              <div class="toolbar" style="margin:0;">
+                ${ !released
+                  ? `<button class="btn btn-ghost" disabled>Locked</button>`
+                  : status === "completed"
+                    ? `<button class="btn btn-ghost" data-open-topic="${t.id}">Reopen</button>`
+                    : status === "unlocked"
+                      ? `<button class="btn btn-gold" data-open-topic="${t.id}">Continue</button>`
+                      : `<button class="btn btn-primary" data-open-topic="${t.id}">Start</button>`
+                }
+              </div>
+            </div>
+          `;
+          body.appendChild(card);
         });
+      }
+
+      details.appendChild(body);
+      wrap.appendChild(details);
+    }
+
+    // Daily Review nudge button: bind directly (data-nav listeners are
+    // wired once at init and don't reach dynamically-inserted elements).
+    var nudgeBtn = document.getElementById("btn-dr-nudge");
+    if (nudgeBtn) {
+      nudgeBtn.addEventListener("click", function () { nav("review"); });
+    }
+
+    // Also bind the recall-day "Open daily review" button if present,
+    // for the same reason. Looking for any data-nav buttons inside the
+    // dashboard's topic-list that haven't been wired yet.
+    $$('#topic-list [data-nav]').forEach(function (b) {
+      if (b.dataset.navWired) return;
+      b.dataset.navWired = "1";
+      b.addEventListener("click", function () { nav(b.dataset.nav); });
+    });
+
+    $$('[data-open-topic]').forEach(b => {
+      b.addEventListener("click", () => {
+        const id = b.dataset.openTopic;
+        CURRENT_TOPIC = id;
+        const ts = getTopicState(id);
+        // Option A: check the cross-page gate flag set by the lecture page.
+        // If the student has passed the lecture-page gate, jump straight to cards.
+        var gatePassed = false;
+        gatePassed = true; // lecture gate removed: cards open directly
+        if (gatePassed || ts.gateCompleted) {
+          if (!ts.gateCompleted) {
+            ts.gateCompleted = true;
+            ts.videoWatched = true;
+            saveTopicState(id, ts);
+          }
+          nav("learn", id);
+        } else {
+          nav("topic", id);
+        }
       });
     });
-    return out;
   }
 
-  /* ---------- the census: what every competency has, holds, and has in flight
+  /* ---------- TOPIC (video + gate) ---------- */
 
-     HOLD  cards at box 2 or better, which is the proved bar
-     FLIGHT cards started but not yet holding
-     HAVE  cards that exist at all
+  function renderTopic(topicId){
+    // Option A: the topic view is now a single pointer back to the lecture page.
+    // The cards live behind the lecture-page gate. If a student lands here, the
+    // gate isn't passed yet, so route them to the lecture page (or show a fallback
+    // mark-complete button for topics without a lecture page).
+    CURRENT_TOPIC = topicId;
+    const topic = topicById(topicId);
+    if (!topic) { nav("dashboard"); return; }
+    // Lecture gate removed: open cards directly for every topic.
+    var _ts = getTopicState(topicId);
+    if (!_ts.gateCompleted) { _ts.gateCompleted = true; _ts.videoWatched = true; saveTopicState(topicId, _ts); }
+    nav("learn", topicId);
+    return;
+    const ts = getTopicState(topicId);
+    $("#topic-heading").textContent = topic.title;
+    $("#topic-summary").textContent = topic.summary || "";
 
-     Coverage of a competency means three cards holding at every level it
-     owns cards for, which is the same threshold the gate already uses. So
-     covering a competency and opening its top level are one act. */
-  var GATE = {}, CENSUS = {}, COMPS = [];
-  function census() {
-    CENSUS = {};
-    ALL.forEach(function (e) {
-      var g = CENSUS[e.comp] || (CENSUS[e.comp] = {
-        have: { 1: 0, 2: 0, 3: 0 }, hold: { 1: 0, 2: 0, 3: 0 }, flight: { 1: 0, 2: 0, 3: 0 } });
-      g.have[e.dok]++;
-      var p = progress[e.key];
-      if (!p) return;
-      if ((p.box || 0) >= HOLDING) g.hold[e.dok]++; else g.flight[e.dok]++;
-    });
-    COMPS = Object.keys(CENSUS);
-    GATE = {};
-    COMPS.forEach(function (k) {
-      var g = CENSUS[k], open = 1;
-      var need2 = Math.min(GATE_N, g.have[1]);
-      if (g.have[2] && need2 && g.hold[1] >= need2) open = 2;
-      var need3 = Math.min(GATE_N, g.have[2]);
-      if (open === 2 && g.have[3] && need3 && g.hold[2] >= need3) open = 3;
-      GATE[k] = open;
-    });
-  }
-  var computeGates = census;              // the old name, kept so nothing breaks
-  function gateFor(e) { return GATE[e.comp] || 1; }
+    // Hide the legacy Step 1 (video) and Step 2 (gate) cards entirely under Option A.
+    if ($("#video-card")) $("#video-card").hidden = true;
+    if ($("#gate-card")) $("#gate-card").hidden = true;
+    if ($("#gate-locked-note")) $("#gate-locked-note").hidden = true;
 
-  function needAt(comp, dok) {
-    var g = CENSUS[comp];
-    return g ? Math.min(GATE_N, g.have[dok]) : 0;
-  }
-  function isCovered(comp) {
-    var g = CENSUS[comp];
-    if (!g) return false;
-    return [1, 2, 3].every(function (d) { return !g.have[d] || g.hold[d] >= needAt(comp, d); });
-  }
-  function coverageStats() {
-    var done = 0, l1 = 0, l2 = 0, l3 = 0;
-    COMPS.forEach(function (c) {
-      var g = CENSUS[c];
-      if (g.have[1] && g.hold[1] >= needAt(c, 1)) l1++;
-      if (g.have[2] && g.hold[2] >= needAt(c, 2)) l2++;
-      if (g.have[3] && g.hold[3] >= needAt(c, 3)) l3++;
-      if (isCovered(c)) done++;
-    });
-    return { done: done, total: COMPS.length, l1: l1, l2: l2, l3: l3 };
-  }
-
-  /* ---------- scheduling ---------- */
-  function isDue(e) {
-    var p = progress[e.key];
-    if (!p) return true;
-    return !p.next || p.next <= today();
-  }
-  function currentWeek() {
-    var wk = Math.floor((new Date() - TERM_START) / 604800000) + 1;
-    return wk < 1 ? 1 : (wk > TERM_WEEKS ? TERM_WEEKS : wk);
-  }
-  var WEEK = currentWeek();
-
-  /* Only material that has been taught. A student in week 3 should not
-     meet a renal card. */
-  function taught(e) { return !e.week || e.week <= WEEK; }
-
-  function duePool() {
-    return ALL.filter(function (e) {
-      return taught(e) && e.dok <= gateFor(e) && isDue(e);
-    });
-  }
-  function missedPool() {
-    return ALL.filter(function (e) {
-      var p = progress[e.key];
-      return taught(e) && e.dok <= gateFor(e) && p && p.wrong > 0 && (p.box || 0) < HOLDING;
-    });
-  }
-
-  /* HOW A SITTING IS BUILT, AND WHY IT IS BUILT THIS WAY
-
-     A first version of this page filled every set with brand new cards
-     from the current week. Simulated over a whole term it never once
-     served a level 2 question: new material arrived faster than any
-     competency could be driven to the level 1 threshold, so the gate
-     never opened and the difficulty never rose. Reviews have to come
-     first for spacing to mean anything.
-
-     So a set of 15 is: up to 10 cards that are DUE for review, then 5
-     cards the student has never seen. The 5 new slots are split, half
-     to a level that has just opened on something already proved, half
-     to material from the week being taught now. That split is what
-     keeps both jobs alive: the course keeps moving forward, and the
-     questions on what is already learned keep getting harder.
-
-     tools/sim_difficulty.js runs this over 15 simulated weeks and
-     reports the level mix week by week. */
-  function spread(list) {
-    var by = {}, order = [];
-    list.forEach(function (e) {
-      if (!by[e.comp]) { by[e.comp] = []; order.push(e.comp); }
-      by[e.comp].push(e);
-    });
-    var out = [], round = 0, more = true;
-    while (more) {
-      more = false;
-      for (var i = 0; i < order.length; i++) {
-        if (by[order[i]].length > round) { out.push(by[order[i]][round]); more = true; }
-      }
-      round++;
-    }
-    return out;
-  }
-
-  /* How many level 1 cards of a competency still have to hold before
-     level 2 can open. Used to put a competency that is partway there
-     ahead of one that has not been started. */
-  function started(e) {
-    var have = { 1: 0 }, hold = { 1: 0 };
-    for (var i = 0; i < ALL.length; i++) {
-      var x = ALL[i];
-      if (x.comp !== e.comp || x.dok !== 1) continue;
-      have[1]++;
-      var p = progress[x.key];
-      if (p && (p.box || 0) >= HOLDING) hold[1]++;
-    }
-    var need = Math.min(GATE_N, have[1]);
-    return (hold[1] > 0 && hold[1] < need) ? 0 : 1;
-  }
-
-  function buildSet(pool) {
-    var reviews = [], fresh = [];
-    pool.forEach(function (e) { (progress[e.key] ? reviews : fresh).push(e); });
-
-    /* Most overdue first, and at the same due date the deeper card first. */
-    reviews.sort(function (a, b) {
-      var na = progress[a.key].next || '', nb = progress[b.key].next || '';
-      return (na < nb ? -1 : na > nb ? 1 : 0) || (b.dok - a.dok);
-    });
-
-    var deeper = fresh.filter(function (e) { return e.dok > 1; }).sort(function (a, b) {
-      return (b.dok - a.dok) || (started(a) - started(b)) ||
-             ((COMP_WEEK[b.comp] || 0) - (COMP_WEEK[a.comp] || 0));
-    });
-    var newest = fresh.filter(function (e) { return e.dok === 1; }).sort(function (a, b) {
-      return ((COMP_WEEK[b.comp] || b.week || 0) - (COMP_WEEK[a.comp] || a.week || 0)) ||
-             (started(a) - started(b));
-    });
-
-    var rev = spread(reviews);
-    deeper = spread(deeper);
-    newest = spread(newest);
-    var takeDeep = deeper.slice(0, Math.ceil(NEW_PER_SET / 2));
-    var takeNew = newest.slice(0, NEW_PER_SET - takeDeep.length);
-    var newCards = takeDeep.concat(takeNew);
-
-    var out = rev.slice(0, SET_SIZE - newCards.length).concat(newCards);
-    if (out.length < SET_SIZE) {
-      var used = {};
-      out.forEach(function (e) { used[e.key] = 1; });
-      var rest = rev.concat(deeper, newest).filter(function (e) { return !used[e.key]; });
-      out = out.concat(rest.slice(0, SET_SIZE - out.length));
-    }
-    return out;
-  }
-
-  /* HOW A COVERING SITTING IS BUILT
-
-     Different job, different rules. Keeping up means touching this week
-     and holding on to the rest. Covering means driving every competency
-     in the course to three cards holding at every level, which is a much
-     larger and much more ordered piece of work.
-
-     Three rules do the work, and all three came out of the simulation in
-     tools/sim_coverage.js:
-
-     1. Due reviews are taken strictly by how overdue they are, not
-        rotated across competencies. Rotating caps a competency at one
-        review a day, and a competency needs nine cards holding, so the
-        rotation alone made coverage unreachable.
-
-     2. No more cards are started for a competency and a level than it is
-        actually short of. Without that cap a single day starts every card
-        a competency owns, the review load balloons, and nothing ever
-        climbs.
-
-     3. Oldest unseen material first, with a floor kept for the week being
-        taught now. That is what makes going back to earlier chapters
-        automatic: a student never has to choose a chapter, and nothing
-        taught in week 3 is left behind because week 9 arrived. */
-  function buildCoverSet(cap) {
-    var reviews = [], fresh = [];
-    ALL.forEach(function (e) {
-      if (!taught(e) || e.dok > gateFor(e)) return;
-      var p = progress[e.key];
-      if (p) { if (isDue(e)) reviews.push(e); }
-      else {
-        var g = CENSUS[e.comp];
-        if (g.hold[e.dok] + g.flight[e.dok] < needAt(e.comp, e.dok)) fresh.push(e);
-      }
-    });
-
-    reviews.sort(function (a, b) {
-      var na = progress[a.key].next || '', nb = progress[b.key].next || '';
-      return (na < nb ? -1 : na > nb ? 1 : 0) || (b.dok - a.dok);
-    });
-
-    var reserveNew = Math.min(fresh.length, Math.ceil(cap * COVER_NEW));
-    var takeRev = reviews.slice(0, Math.max(0, cap - reserveNew));
-    var newSlots = Math.min(cap - takeRev.length, fresh.length);
-
-    var current = fresh.filter(function (e) { return (COMP_WEEK[e.comp] || e.week) === WEEK; })
-      .sort(function (a, b) { return a.dok - b.dok; });
-    var backlog = fresh.slice().sort(function (a, b) {
-      return ((COMP_WEEK[a.comp] || a.week || 0) - (COMP_WEEK[b.comp] || b.week || 0)) ||
-             (a.dok - b.dok);
-    });
-
-    var room = {}, used = {}, picked = [];
-    function take(list, limit) {
-      for (var i = 0; i < list.length && picked.length < limit; i++) {
-        var e = list[i];
-        if (used[e.key]) continue;
-        var k = e.comp + '|' + e.dok, g = CENSUS[e.comp];
-        if (room[k] === undefined) room[k] = needAt(e.comp, e.dok) - g.hold[e.dok] - g.flight[e.dok];
-        if (room[k] <= 0) continue;
-        room[k]--; used[e.key] = 1; picked.push(e);
-      }
-    }
-    take(spread(current), Math.min(CURRENT_FLOOR, newSlots));
-    take(spread(backlog), newSlots);
-    return takeRev.concat(picked);
-  }
-
-  /* ---------- the goal ---------- */
-  function goal() {
-    try { return localStorage.getItem(GKEY) === 'coverage' ? 'coverage' : 'keepup'; }
-    catch (e) { return 'keepup'; }
-  }
-  function setGoal(g) { try { localStorage.setItem(GKEY, g); } catch (e) {} }
-  function todaySet() {
-    return goal() === 'coverage'
-      ? buildCoverSet(COVER_CAP)
-      : buildSet(duePool());
-  }
-  function setMinutes(list) {
-    var sec = 0;
-    list.forEach(function (e) { sec += cardSeconds(e); });
-    return Math.max(1, Math.round(sec / 60));
-  }
-
-  /* ---------- grading ---------- */
-  function grade(e, right, confidence) {
-    var p = progress[e.key] || { box: 0, right: 0, wrong: 0 };
-    var before = gateFor(e);
-    if (right) {
-      p.right = (p.right || 0) + 1;
-      p.box = Math.min((p.box || 0) + 1, BOX_DAYS.length - 1);
-      /* Right, but the student says they were guessing. Hold it at box 1
-         so it comes back tomorrow and has to be earned again. */
-      if (confidence === 'no' && p.box > 1) p.box = 1;
-      if (confidence === 'no') p.unsure = true; else if (p.box >= HOLDING) p.unsure = false;
+    // Build (or reset) a simple "Watch the lecture first" card injected after the heading.
+    var existing = document.getElementById("lecture-pointer-card");
+    if (existing) existing.remove();
+    var card = document.createElement("div");
+    card.id = "lecture-pointer-card";
+    card.className = "card";
+    if (topic.lecturePageUrl) {
+      card.innerHTML =
+        '<h3>Watch the lecture first</h3>' +
+        '<p class="usage">This topic\'s cards unlock after you finish the lecture video and complete the short retrieval check on the lecture page. The lecture page sets a flag that this app reads automatically; once it\'s set, you land here at the cards directly.</p>' +
+        '<div class="toolbar" style="margin-top:14px;">' +
+          '<a class="btn btn-primary" id="btn-go-lecture" href="' + topic.lecturePageUrl + '" target="_top">Open the lecture page &rarr;</a>' +
+          '<button type="button" class="btn btn-ghost" id="btn-back-dashboard" data-nav="dashboard">Back to tonight\'s list</button>' +
+        '</div>';
     } else {
-      p.wrong = (p.wrong || 0) + 1;
-      p.box = 0;
+      // Fallback for topics without a lecture page yet: a simple "mark complete" button
+      card.innerHTML =
+        '<h3>Lecture page coming soon</h3>' +
+        '<p class="usage">A dedicated lecture page is not wired up yet for this topic. You can mark it complete to preview the cards.</p>' +
+        '<div class="toolbar" style="margin-top:14px;">' +
+          '<button type="button" class="btn btn-primary" id="btn-skip-gate">Mark complete and open cards</button>' +
+          '<button type="button" class="btn btn-ghost" id="btn-back-dashboard" data-nav="dashboard">Back to tonight\'s list</button>' +
+        '</div>';
     }
-    p.last = today();
-    p.next = addDays(today(), BOX_DAYS[p.box]);
-    progress[e.key] = p;
-    writeLS(SKEY, progress);
-    logDay(e, right);
-    feedOS(e, right);
-    computeGates();
-    var after = gateFor(e);
-    return { box: p.box, next: p.next, opened: after > before ? after : 0 };
-  }
+    var view = $("#view-topic");
+    view.appendChild(card);
 
-  function logDay(e, right) {
-    var d = today();
-    var rec = dayLog[d] || (dayLog[d] = { n: 0, right: 0, topics: {} });
-    rec.n++;
-    if (right) rec.right++;
-    var t = rec.topics[e.topicId] || (rec.topics[e.topicId] = { n: 0, right: 0, title: e.topicTitle });
-    t.n++;
-    if (right) t.right++;
-    t.title = e.topicTitle;
-    /* Keep the log to the last 120 days so it cannot grow without bound. */
-    var keys = Object.keys(dayLog).sort();
-    while (keys.length > 120) { delete dayLog[keys.shift()]; }
-    writeLS(DKEY, dayLog);
-  }
-
-  /* Keep feeding the per card history the rest of the site already reads,
-     so nothing that depended on the old engine goes dark. */
-  function feedOS(e, right) {
-    var st = readLS(VKEY);
-    if (!st.topics) st.topics = {};
-    var t = st.topics[e.topicId] || (st.topics[e.topicId] = { cards: {} });
-    if (!t.cards) t.cards = {};
-    var c = t.cards[e.card.id] || (t.cards[e.card.id] = { history: [] });
-    c.history.push({ correct: !!right, at: today() });
-    if (c.history.length > 20) c.history = c.history.slice(-20);
-    writeLS(VKEY, st);
-  }
-
-  /* ---------- week helpers ---------- */
-  function mondayOf(d) {
-    var x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-    var back = (x.getDay() + 6) % 7;        // Monday is 0
-    x.setDate(x.getDate() - back);
-    return x;
-  }
-  function weekDays() {
-    var m = mondayOf(new Date()), out = [];
-    for (var i = 0; i < 7; i++) {
-      var d = new Date(m.getFullYear(), m.getMonth(), m.getDate() + i);
-      out.push(d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()));
-    }
-    return out;
-  }
-  var DAYNAME = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
-  /* ---------- rendering ---------- */
-  function renderWeek() {
-    var days = weekDays();
-    var td = today();
-    var n = 0, active = 0;
-    days.forEach(function (d) {
-      var r = dayLog[d];
-      if (r && r.n) { n += r.n; active++; }
-    });
-    var holding = 0;
-    Object.keys(progress).forEach(function (k) {
-      if ((progress[k].box || 0) >= HOLDING) holding++;
-    });
-
-    $('wkLabel').textContent = 'Week ' + WEEK;
-    var wtitle = (window.BIO005_WEEKS && window.BIO005_WEEKS[WEEK - 1] &&
-                  (window.BIO005_WEEKS[WEEK - 1].title || window.BIO005_WEEKS[WEEK - 1].name)) || '';
-    $('wkTitle').textContent = wtitle;
-    var plan = todaySet();
-    $('sDue').textContent = plan.length;
-    $('sMins').textContent = setMinutes(plan);
-    $('sDays').textContent = active;
-    $('sWeekCards').textContent = n;
-    $('sHold').textContent = holding;
-
-    var target = goal() === 'coverage' ? 7 : 5;
-    var note;
-    if (!active) {
-      note = 'Nothing logged this week yet. Today\'s set is ' + plan.length +
-             ' cards, about ' + setMinutes(plan) + ' minutes.';
-    } else if (active < target) {
-      note = 'Practiced on ' + active + (active === 1 ? ' day' : ' days') +
-             ' this week. Your goal asks for ' + target + '. A card cannot move forward twice in ' +
-             'the same day, so more days does more for you than a longer sitting.';
-    } else {
-      note = 'Practiced on ' + active + ' days this week, which is what your goal asks for.';
-    }
-    $('wkNote').textContent = note;
-    renderCoverage();
-
-    // day strip
-    var strip = days.map(function (d, i) {
-      var r = dayLog[d] || { n: 0 };
-      var cls = 'day' + (r.n ? ' done' : '') + (d === td ? ' today' : '');
-      return '<div class="' + cls + '">' +
-             '<span class="dn">' + DAYNAME[i] + '</span>' +
-             '<span class="dv">' + r.n + '</span>' +
-             '<span class="du">' + (r.n === 1 ? 'card' : 'cards') + '</span>' +
-             '</div>';
-    }).join('');
-    $('dayStrip').innerHTML = strip;
-
-    // topic table
-    var agg = {};
-    days.forEach(function (d) {
-      var r = dayLog[d];
-      if (!r || !r.topics) return;
-      Object.keys(r.topics).forEach(function (tid) {
-        var s = r.topics[tid];
-        var a = agg[tid] || (agg[tid] = { n: 0, right: 0, title: s.title || tid });
-        a.n += s.n; a.right += s.right;
-        if (s.title) a.title = s.title;
+    // Wire the buttons
+    var skipBtn = document.getElementById("btn-skip-gate");
+    if (skipBtn) {
+      skipBtn.addEventListener("click", function () {
+        ts.gateCompleted = true;
+        ts.videoWatched = true;
+        try { window.localStorage.setItem("bio304-gate-" + topic.id, "true"); } catch(e) {}
+        try { window.localStorage.setItem("bio304-video-" + topic.id, "true"); } catch(e) {}
+        saveTopicState(topic.id, ts);
+        nav("learn", topic.id);
       });
-    });
-    var rows = Object.keys(agg).sort(function (a, b) { return agg[b].n - agg[a].n; });
-    if (!rows.length) {
-      $('tBody').innerHTML = '<tr><td colspan="4" class="empty">Nothing yet this week. ' +
-        'Once you answer some cards, this table shows which topics you worked on and what level you reached in each one.</td></tr>';
-      $('levelNote').textContent = '';
+    }
+    var backBtn = document.getElementById("btn-back-dashboard");
+    if (backBtn) {
+      backBtn.addEventListener("click", function () { nav("dashboard"); });
+    }
+    var goBtn = document.getElementById("btn-go-lecture");
+    if (goBtn) {
+      // When the student returns from the lecture page with the gate passed,
+      // the dashboard's click handler will skip topic view next time.
+    }
+  }
+
+  function renderVideoPlayer(topic){
+    const frame = document.querySelector(".video-frame");
+    if (!frame) return;
+    // Clear any previously mounted player but preserve the placeholder elements.
+    Array.from(frame.querySelectorAll(".mounted-player")).forEach(el => el.remove());
+    const placeholder = $("#video-placeholder-label");
+    if (!topic.videoUrl) {
+      if (placeholder) placeholder.style.display = "";
       return;
     }
-    $('tBody').innerHTML = rows.map(function (tid) {
-      var a = agg[tid];
-      var lv = topicLevel(tid);
-      var pct = a.n ? Math.round(a.right * 100 / a.n) : 0;
-      return '<tr><td>' + esc(a.title) + '</td>' +
-             '<td class="n">' + a.n + '</td>' +
-             '<td class="n">' + pct + '%</td>' +
-             '<td>' + esc(LEVEL_NAME[lv]) + '</td></tr>';
-    }).join('');
-    $('levelNote').textContent =
-      'The level column is the deepest question type open to you in that topic right now. ' +
-      'Level 2 opens when three level 1 cards are holding, and level 3 opens the same way off level 2.';
-  }
-
-  function renderCoverage() {
-    var c = coverageStats();
-    var pct = c.total ? Math.round(c.done * 100 / c.total) : 0;
-    $('covFill').style.width = pct + '%';
-    $('covN').textContent = c.done;
-    $('covT').textContent = c.total;
-    $('covL1').textContent = c.l1;
-    $('covL2').textContent = c.l2;
-    $('covL3').textContent = c.l3;
-
-    var note;
-    if (goal() === 'coverage') {
-      note = 'Covered means three cards holding at every level the competency has, and holding ' +
-             'means you were right on two separate days. You do not have to pick chapters. ' +
-             'Once this week has had its share, the set fills from the oldest material you have ' +
-             'not finished, so earlier weeks come back on their own.';
+    if (placeholder) placeholder.style.display = "none";
+    const url = topic.videoUrl;
+    const isYouTube = /youtu\.?be/.test(url);
+    if (isYouTube) {
+      // For YouTube, embed via iframe API. Detecting "ended" reliably requires the YT IFrame API,
+      // which is loaded lazily. For now we embed the player so the student can watch.
+      // The "Mark watched" gate is still enforced via the Simulate/Mark watched buttons until
+      // the YT API is fully wired in v2.
+      const id = ytIdFromUrl(url);
+      const iframe = document.createElement("iframe");
+      iframe.className = "mounted-player";
+      iframe.src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(id) + "?rel=0&modestbranding=1";
+      iframe.title = topic.videoLabel || topic.title;
+      iframe.allow = "accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+      iframe.allowFullscreen = true;
+      iframe.style.cssText = "position:absolute;inset:0;width:100%;height:100%;border:0;";
+      frame.appendChild(iframe);
     } else {
-      note = 'On Keep up, this bar moves slowly and that is expected. It is here so you can see ' +
-             'the difference between keeping up and covering the course. Switch goals any time; ' +
-             'nothing you have already done is lost.';
-    }
-    $('covNote').textContent = note;
-  }
-
-  /* The level a topic is at, taken as the deepest gate open across the
-     competencies that topic covers. */
-  function topicLevel(tid) {
-    var best = 1;
-    ALL.forEach(function (e) {
-      if (e.topicId !== tid) return;
-      var g = gateFor(e);
-      if (g > best) best = g;
-    });
-    return best;
-  }
-
-  /* ---------- the runner ---------- */
-  var queue = [], pos = 0, picked = null, current = null, answered = false, correct = false;
-
-  function say(msg) { $('liveRegion').textContent = msg; }
-
-  function showStart() {
-    $('startPanel').hidden = false;
-    $('qPanel').hidden = true;
-    $('donePanel').hidden = true;
-    var plan = todaySet(), missed = missedPool().length;
-    $('btnStart').disabled = false;
-    $('btnMissed').disabled = missed === 0;
-    if (!plan.length) {
-      $('startText').textContent =
-        'Nothing is waiting for you right now, which means the spacing is doing its job. ' +
-        'You can still run a set of cards you have already seen if you want the practice.';
-      $('btnStart').textContent = 'Practice anyway';
-    } else {
-      var mins = setMinutes(plan);
-      $('btnStart').textContent = 'Start ' + plan.length + ' cards';
-      $('startText').textContent =
-        (goal() === 'coverage'
-          ? 'Today\'s set is ' + plan.length + ' cards, about ' + mins + ' minutes. ' +
-            'That is what covering the course asks of you today. It changes day to day, ' +
-            'because it is built from what is actually due and what you have not met yet.'
-          : 'Today\'s set is ' + plan.length + ' cards, about ' + mins + ' minutes.') +
-        (missed ? ' You also have ' + missed + ' you missed and have not got back yet.' : '');
+      // Self-hosted file (mp4/webm). Use a native <video> with the "ended" event to enable Mark watched.
+      const video = document.createElement("video");
+      video.className = "mounted-player";
+      video.src = url;
+      video.controls = true;
+      video.preload = "metadata";
+      video.style.cssText = "position:absolute;inset:0;width:100%;height:100%;background:black;";
+      video.addEventListener("ended", () => {
+        $("#video-progress").style.width = "100%";
+        $("#btn-mark-watched").disabled = false;
+        $("#video-status").textContent = "Video complete. Click ‘Mark watched’ to proceed.";
+        announce("Video complete. You can mark it watched.");
+      });
+      video.addEventListener("timeupdate", () => {
+        if (video.duration > 0) {
+          $("#video-progress").style.width = ((video.currentTime / video.duration) * 100).toFixed(1) + "%";
+        }
+      });
+      frame.appendChild(video);
     }
   }
 
-  function start(pool, label) { startPlan(buildSet(pool), label); }
-
-  function startPlan(plan, label) {
-    queue = plan;
-    if (!queue.length) {
-      queue = buildSet(ALL.filter(function (e) { return taught(e) && e.dok <= gateFor(e); }));
+  function ytIdFromUrl(url){
+    try {
+      const u = new URL(url);
+      if (u.hostname.includes("youtu.be")) return u.pathname.slice(1);
+      const v = u.searchParams.get("v");
+      if (v) return v;
+      const parts = u.pathname.split("/");
+      return parts[parts.length - 1] || "";
+    } catch(e) {
+      return url;
     }
-    pos = 0;
-    if (!queue.length) { showStart(); return; }
-    $('startPanel').hidden = true;
-    $('donePanel').hidden = true;
-    $('qPanel').hidden = false;
-    say(label + ', ' + queue.length + ' cards.');
-    showCard();
   }
 
-  function showCard() {
-    current = queue[pos];
-    picked = null; answered = false; correct = false;
-    var c = current.card;
-    $('pTopic').textContent = current.topicTitle;
-    $('pLevel').textContent = LEVEL_NAME[current.dok];
-    $('pCount').textContent = 'Card ' + (pos + 1) + ' of ' + queue.length;
-    $('qText').textContent = c.q;
-    $('qLegend').textContent = c.q;
-
-    var opts = c.options || [];
-    $('optWrap').innerHTML = opts.map(function (t, i) {
-      return '<label class="opt" data-i="' + i + '">' +
-             '<input type="radio" name="opt" value="' + i + '">' +
-             '<span>' + esc(t) + '</span></label>';
-    }).join('');
-
-    $('btnSubmit').disabled = true;
-    $('btnSubmit').hidden = false;
-    $('confPanel').hidden = true;
-    $('answerPanel').hidden = true;
-    $('qPanel').scrollIntoView({ block: 'nearest' });
-    var first = $('optWrap').querySelector('input');
-    if (first) first.focus();
+  let simulateTimer = null;
+  function simulateWatch(){
+    const ts = getTopicState(CURRENT_TOPIC);
+    if (ts.videoWatched) return;
+    let progress = 0;
+    $("#btn-simulate-watch").disabled = true;
+    $("#btn-mark-watched").disabled = true;
+    if (simulateTimer) clearInterval(simulateTimer);
+    simulateTimer = setInterval(() => {
+      progress += 10;
+      $("#video-progress").style.width = progress + "%";
+      $("#video-status").textContent = "Watching... " + progress + "%";
+      if (progress >= 100) {
+        clearInterval(simulateTimer);
+        $("#btn-mark-watched").disabled = false;
+        $("#video-status").textContent = "Video complete. Click ‘Mark watched’ to proceed.";
+        announce("Video complete. You can mark it watched.");
+      }
+    }, 1000);
   }
 
-  $('optWrap').addEventListener('change', function (ev) {
-    if (!ev.target || ev.target.name !== 'opt') return;
-    if (answered) {                       // locked, put the choice back
-      var keep = $('optWrap').querySelector('input[value="' + picked + '"]');
-      if (keep) keep.checked = true;
+  function markWatched(){
+    const ts = getTopicState(CURRENT_TOPIC);
+    ts.videoWatched = true;
+    saveState();
+    // Mirror the in-app watched state to the cross-page flag the lecture pages use,
+    // so navigating between surfaces is consistent.
+    try { window.localStorage.setItem("bio304-video-" + CURRENT_TOPIC, "true"); } catch(e) {}
+    announce("Video marked watched. Now write your explanation.");
+    renderTopic(CURRENT_TOPIC);
+    $("#gate-input").focus();
+  }
+
+  function gateCheck(topic, text){
+    const words = (text || "").trim().split(/\s+/).filter(Boolean);
+    const wordCount = words.length;
+    const lowered = (text || "").toLowerCase();
+    const matched = topic.gateKeywords.filter(k => lowered.includes(k.toLowerCase()));
+    const minWords = 60;
+    const minKeywords = Math.max(2, Math.ceil(topic.gateKeywords.length * 0.6));
+    return {
+      wordCount: wordCount,
+      keywordCount: matched.length,
+      matched: matched,
+      minWords: minWords,
+      minKeywords: minKeywords,
+      passed: wordCount >= minWords && matched.length >= minKeywords
+    };
+  }
+
+  function updateGateMeter(topic, text){
+    const r = gateCheck(topic, text);
+    $("#gate-word-count").textContent = r.wordCount;
+    $("#gate-keyword-count").textContent = r.keywordCount;
+  }
+
+  function submitGate(){
+    const topic = topicById(CURRENT_TOPIC);
+    if (!topic) return;
+    const ts = getTopicState(CURRENT_TOPIC);
+    if (!ts.videoWatched) {
+      const fb = $("#gate-feedback");
+      fb.textContent = "Watch the video first, then come back to this step.";
+      fb.className = "gate-feedback error";
+      announce("Watch the video first.");
       return;
     }
-    picked = +ev.target.value;
-    $('btnSubmit').disabled = false;
-  });
-  $('optWrap').addEventListener('click', function (ev) {
-    if (answered && ev.target.closest('.opt')) ev.preventDefault();
-  });
-
-  $('qForm').addEventListener('submit', function (ev) {
-    ev.preventDefault();
-    if (picked === null || answered) return;
-    answered = true;
-    correct = picked === current.card.correctIndex;
-    $('btnSubmit').hidden = true;
-    $('confPanel').hidden = false;
-    $('confAsk').textContent = 'Before the explanation: how sure were you?';
-    var b = $('confPanel').querySelector('button');
-    if (b) b.focus();
-  });
-
-  $('confPanel').addEventListener('click', function (ev) {
-    var b = ev.target.closest('button[data-conf]');
-    if (!b) return;
-    finish(b.getAttribute('data-conf'));
-  });
-
-  function finish(confidence) {
-    $('confPanel').hidden = true;
-    var c = current.card;
-
-    // lock and mark the options
-    Array.prototype.forEach.call($('optWrap').children, function (lab) {
-      var i = +lab.getAttribute('data-i');
-      var input = lab.querySelector('input');
-      /* aria-disabled rather than disabled, so a keyboard or screen reader
-         user can still walk the options and hear which one was right. The
-         change guard below is what actually stops a second answer. */
-      input.setAttribute('aria-disabled', 'true');
-      input.setAttribute('readonly', 'readonly');
-      lab.classList.add('locked');
-      var span = lab.querySelector('span');
-      if (i === c.correctIndex) {
-        lab.classList.add('right');
-        span.innerHTML = '<span class="mark r">Correct answer</span>' + esc(c.options[i]);
-      } else if (i === picked) {
-        lab.classList.add('wrong');
-        span.innerHTML = '<span class="mark w">You chose this</span>' + esc(c.options[i]);
-      }
-    });
-
-    var res = grade(current, correct, confidence);
-    $('verdict').textContent = correct ? 'Right' : 'Not this time';
-    $('expl').textContent = c.explanation || c.a || '';
-
-    var days = BOX_DAYS[res.box];
-    var when = days === 0 ? 'later today' : (days === 1 ? 'tomorrow' : 'in ' + days + ' days');
-    var sched = correct
-      ? 'You will see this card again ' + when + '.'
-      : 'You will see this card again ' + when + ', because a miss sends it back to the start.';
-    if (res.opened) {
-      sched += ' ' + LEVEL_NAME[res.opened].charAt(0).toUpperCase() + LEVEL_NAME[res.opened].slice(1) +
-               ' questions just opened on ' + (COMP_NAME[current.comp] || 'this competency') + '.';
+    const text = $("#gate-input").value;
+    const r = gateCheck(topic, text);
+    const fb = $("#gate-feedback");
+    if (r.passed) {
+      ts.gateCompleted = true;
+      ts.gateExplanation = text;
+      ts.gateCompletedAt = new Date(nowSim()).toISOString();
+      ts.unlockedAt = ts.gateCompletedAt;
+      logSessionActivity({ gate: { topicId: CURRENT_TOPIC, at: ts.gateCompletedAt, words: r.wordCount, text: text } });
+      saveState();
+      fb.textContent = "Unlocked. Notes and questions are ready.";
+      fb.className = "gate-feedback success";
+      announce("Gate unlocked.");
+      setTimeout(() => nav("learn", CURRENT_TOPIC), 600);
+    } else {
+      const needWords = Math.max(0, r.minWords - r.wordCount);
+      const needKw = Math.max(0, r.minKeywords - r.keywordCount);
+      const parts = [];
+      if (needWords > 0) parts.push("add about " + needWords + " more words");
+      if (needKw > 0) parts.push("include " + needKw + " more key concept(s) from the video");
+      fb.textContent = "Not quite yet. Try to " + parts.join(" and ") + ".";
+      fb.className = "gate-feedback error";
+      announce("Explanation needs more detail.");
     }
-    $('schedNote').textContent = sched;
-
-    $('answerPanel').hidden = false;
-    $('btnNext').textContent = (pos + 1 >= queue.length) ? 'Finish the set' : 'Next card';
-    $('btnNext').focus();
-    say((correct ? 'Correct. ' : 'Incorrect. ') + sched);
-    renderWeek();
   }
 
-  $('btnNext').addEventListener('click', function () {
-    pos++;
-    if (pos >= queue.length) { showDone(); return; }
-    showCard();
-  });
-  $('btnStop').addEventListener('click', function () { showDone(true); });
+  /* ---------- LEARNING VIEW ---------- */
 
-  function showDone(early) {
-    $('qPanel').hidden = true;
-    $('donePanel').hidden = false;
-    var d = dayLog[today()] || { n: 0, right: 0 };
-    var pct = d.n ? Math.round(d.right * 100 / d.n) : 0;
-    $('doneTitle').textContent = early ? 'Stopped for today' : 'That is the set';
-    $('doneText').textContent =
-      d.n + (d.n === 1 ? ' card' : ' cards') + ' today, ' + pct + '% right on the first try. ' +
-      'Coming back tomorrow is worth more than doing another set now, but the button is there if you want it.';
-    $('btnMore').focus();
-    renderWeek();
+  function renderLearn(topicId){
+    CURRENT_TOPIC = topicId;
+    const topic = topicById(topicId);
+    if (!topic) { nav("dashboard"); return; }
+    const ts = getTopicState(topicId);
+    if (!ts.gateCompleted) { nav("topic", topicId); return; }
+    $("#learn-heading").textContent = topic.title;
+    renderNotesLink(topic);
+    renderMastery(topicId);
+    loadNextCard();
   }
 
-  $('btnMore').addEventListener('click', function () { startPlan(todaySet(), 'Another set'); });
-  $('btnStart').addEventListener('click', function () {
-    var plan = todaySet();
-    if (!plan.length) plan = buildSet(ALL.filter(function (e) {
-      return taught(e) && e.dok <= gateFor(e);
-    }));
-    startPlan(plan, "Today's set");
-  });
-  $('btnMissed').addEventListener('click', function () { start(missedPool(), 'Cards you missed'); });
+  function renderNotesLink(topic){
+    const notesLink = $("#link-open-notes");
+    const readingLink = $("#link-open-reading");
+    const pending = $("#notes-link-pending");
 
-  /* ---------- the how it works panel ---------- */
-  (function () {
-    var btn = $('howBtn'), body = $('howBody');
-    if (!btn || !body) return;
-    btn.addEventListener('click', function () {
-      var open = btn.getAttribute('aria-expanded') === 'true';
-      btn.setAttribute('aria-expanded', open ? 'false' : 'true');
-      body.hidden = open;
-      btn.textContent = open
-        ? 'How this works, and what it takes to cover the course'
-        : 'Hide how this works';
+    if (topic.notesUrl) {
+      notesLink.href = topic.notesUrl;
+      notesLink.hidden = false;
+      pending.hidden = true;
+    } else {
+      notesLink.hidden = true;
+      notesLink.href = "#";
+      pending.hidden = false;
+    }
+
+    if (topic.readingUrl) {
+      readingLink.href = topic.readingUrl;
+      readingLink.hidden = false;
+      // If we have a reading link but no notes link, hide the pending note since at least one reference is wired.
+      if (topic.readingUrl && !topic.notesUrl) pending.hidden = true;
+    } else {
+      readingLink.hidden = true;
+      readingLink.href = "#";
+    }
+  }
+
+  function renderMastery(topicId){
+    [1,2,3].forEach(lv => {
+      const m = masteryFor(topicId, lv);
+      const pct = Math.round(m * 100);
+      $("#mastery-l" + lv).style.width = pct + "%";
+      $("#mastery-l" + lv + "-text").textContent = pct + "%";
     });
-  })();
+    const level = computeAdaptiveLevel(topicId);
+    const msg = level === 1
+      ? "Adaptive level: building DOK 1 fluency."
+      : level === 2
+        ? "Adaptive level: mixing in DOK 2 application questions."
+        : "Adaptive level: working at DOK 3 analysis questions.";
+    $("#dok-adapt-note").textContent = msg;
+  }
 
-  /* ---------- the goal chooser ---------- */
-  function wireGoal() {
-    var g = goal();
-    var el = document.querySelector('input[name="goal"][value="' + g + '"]');
-    if (el) el.checked = true;
-    Array.prototype.forEach.call(document.querySelectorAll('input[name="goal"]'), function (r) {
-      r.addEventListener('change', function () {
-        if (!r.checked) return;
-        setGoal(r.value);
-        renderWeek();
-        showStart();
-        say(r.value === 'coverage'
-          ? 'Goal set to cover the course. Today\'s set is now sized for that.'
-          : 'Goal set to keep up. Today\'s set is fifteen cards.');
+  function loadNextCard(){
+    if (WEAK_ACTIVE) { return loadNextWeakCard(); }
+    const card = pickCardForTopic(CURRENT_TOPIC);
+    CURRENT_CARD_CORRECT = null;
+    CURRENT_CARD_OPTIONS = null;
+
+    const mcWrap = $("#mc-options");
+    const fb = $("#FFFFFFck-panel");
+    const rateRow = $("#rate-row");
+    const rateInstructions = $("#rate-instructions");
+    const ans = $("#card-answer");
+
+    // Always reset UI between cards
+    if (mcWrap) mcWrap.innerHTML = "";
+    if (fb) fb.hidden = true;
+    if (rateRow) rateRow.hidden = true;
+    if (rateInstructions) rateInstructions.hidden = true;
+    if (ans) ans.hidden = true;
+
+    if (!card) {
+      $("#card-question").textContent = "All cards in this topic are scheduled out. Come back tomorrow or rotate to another topic.";
+      $("#card-dok-badge").textContent = "DONE";
+      $("#card-dok-badge").className = "dok-badge dok-1";
+      $("#card-progress").textContent = "";
+      return;
+    }
+
+    CURRENT_CARD = card;
+    const topic = topicById(CURRENT_TOPIC);
+    const idx = topic.cards.findIndex(c => c.id === card.id) + 1;
+    $("#card-question").textContent = card.q;
+    $("#card-dok-badge").textContent = "DOK " + card.dok;
+    $("#card-dok-badge").className = "dok-badge dok-" + card.dok;
+    $("#card-progress").textContent = "Card " + idx + " of " + topic.cards.length;
+
+    renderMcOptions(card);
+  }
+
+  // Render the 4 multiple-choice options in random order each time.
+  function renderMcOptions(card){
+    const wrap = $("#mc-options");
+    if (!wrap) return;
+    wrap.innerHTML = "";
+
+    // If a card somehow lacks options (older content), fall back to a single
+    // "Show answer" affordance so the app still works on legacy data.
+    if (!card.options || !Array.isArray(card.options) || card.options.length !== 4) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "btn btn-primary";
+      btn.textContent = "Show answer";
+      btn.addEventListener("click", function(){
+        $("#card-answer").textContent = card.a;
+        $("#card-answer").hidden = false;
+        $("#rate-instructions").hidden = false;
+        $("#rate-row").hidden = false;
+        CURRENT_CARD_CORRECT = true; // legacy path counts as correct for scheduling
+        announce("Answer revealed. Rate how that felt.");
+      });
+      wrap.appendChild(btn);
+      return;
+    }
+
+    // Build a shuffled order: array of original indices in randomized positions.
+    const order = shuffleArray([0, 1, 2, 3]);
+    CURRENT_CARD_OPTIONS = order;
+    const letters = ["A", "B", "C", "D"];
+
+    order.forEach((origIdx, pos) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "mc-option";
+      btn.setAttribute("data-orig-index", String(origIdx));
+      btn.setAttribute("aria-label", "Option " + letters[pos] + ": " + card.options[origIdx]);
+      btn.innerHTML = '<span class="mc-letter">' + letters[pos] + '.</span><span>' + escapeHtml(card.options[origIdx]) + '</span>';
+      btn.addEventListener("click", function(){ handleMcChoice(origIdx); });
+      wrap.appendChild(btn);
+    });
+
+    announce("Question loaded. Pick the best answer from " + order.length + " options.");
+  }
+
+  // Called when the student clicks an MC option.
+  function handleMcChoice(chosenOrigIdx){
+    if (!CURRENT_CARD) return;
+    if (CURRENT_CARD_CORRECT !== null) return; // already answered
+
+    const card = CURRENT_CARD;
+    const wasCorrect = (chosenOrigIdx === card.correctIndex);
+    CURRENT_CARD_CORRECT = wasCorrect;
+
+    // Mark the buttons
+    $$("#mc-options .mc-option").forEach(b => {
+      const orig = parseInt(b.getAttribute("data-orig-index"), 10);
+      b.disabled = true;
+      if (orig === card.correctIndex) b.classList.add("correct");
+      else if (orig === chosenOrigIdx) b.classList.add("wrong");
+      else b.classList.add("dim");
+    });
+
+    // Reveal the feedback panel with explanation
+    const fb = $("#FFFFFFck-panel");
+    const fbLabel = $("#fb-label");
+    const fbExplain = $("#fb-explain");
+    if (fb && fbLabel && fbExplain) {
+      fb.hidden = false;
+      fb.classList.toggle("wrong", !wasCorrect);
+      fbLabel.textContent = wasCorrect ? "CORRECT" : "NOT QUITE";
+      fbExplain.textContent = card.explanation || card.a || "";
+    }
+    // Show the canonical answer text too for students who like to see it
+    // separated from the explanation.
+    const ans = $("#card-answer");
+    if (ans) {
+      ans.hidden = false;
+      ans.textContent = "Answer: " + card.a;
+    }
+
+    // Show the difficulty rating row
+    $("#rate-instructions").hidden = false;
+    $("#rate-row").hidden = false;
+
+    announce(wasCorrect ? "Correct. Rate how that felt." : "Not quite. Read the explanation, then rate how that felt.");
+  }
+
+  // revealAnswer removed; MC click handler replaces it
+
+
+  function rateCard(rating){
+    if (!CURRENT_CARD) return;
+    const cardSt = getCardState(CURRENT_TOPIC, CURRENT_CARD.id, CURRENT_CARD.dok);
+    // Correctness was set when the student clicked their MC option.
+    // If for some reason it wasn't recorded (legacy data), assume correct
+    // so the rating still functions.
+    const wasCorrect = (CURRENT_CARD_CORRECT === null) ? true : !!CURRENT_CARD_CORRECT;
+    scheduleCard(cardSt, rating, wasCorrect);
+    recordDokOutcome(CURRENT_TOPIC, CURRENT_CARD.dok, rating, wasCorrect);
+    logSessionActivity({ cardReview: true });
+    saveState();
+
+    // Check if topic is "done for tonight" (every card has been seen at least once today).
+    const ts = getTopicState(CURRENT_TOPIC);
+    const topic = topicById(CURRENT_TOPIC);
+    const seenCount = topic.cards.filter(c => {
+      const s = ts.cards[c.id];
+      return s && s.history.length > 0;
+    }).length;
+    if (seenCount >= topic.cards.length) {
+      logSessionActivity({ topicCompleted: CURRENT_TOPIC });
+    }
+    renderMastery(CURRENT_TOPIC);
+    loadNextCard();
+  }
+
+  /* ---------- WEAK-SPOTS DRILL (cross-topic) ---------- */
+
+  // Switch to the learn view without routing through nav() (which would clear
+  // the weak-spots session). Mirrors nav()'s view-switch.
+  function showLearnView(){
+    $$(".view").forEach(v => v.classList.remove("active"));
+    const target = $("#view-learn"); if (target) target.classList.add("active");
+    $$("nav.top-nav button").forEach(b => b.setAttribute("aria-current", b.dataset.nav === "dashboard" ? "page" : "false"));
+    const main = $("#main-content"); if (main) main.focus({ preventScroll: false });
+  }
+
+  // Build a queue of the student's weakest SEEN cards, across unlocked topics.
+  // Weakness score: repeated lapses weigh most, then low ease, then a last-wrong answer.
+  function buildWeakQueue(limit){
+    const items = [];
+    allTopics().forEach(t => {
+      const ts = STATE.topics[t.id];
+      if (!(ts && ts.gateCompleted)) return;                 // only unlocked topics
+      t.cards.forEach(c => {
+        const st = ts.cards[c.id];
+        if (!st || !st.history || !st.history.length) return; // only cards seen at least once
+        let score = (st.lapses || 0) * 2;
+        score += Math.max(0, 2.5 - (st.ease || 2.5)) * 1.5;
+        if (st.lastCorrect === false) score += 2;
+        if (score > 0) items.push({ topicId: t.id, card: c, score: score, ease: st.ease || 2.5 });
+      });
+    });
+    items.sort((a, b) => b.score - a.score || a.ease - b.ease);
+    return items.slice(0, limit || 20).map(i => ({ topicId: i.topicId, card: i.card }));
+  }
+
+  function startWeakSession(){
+    const q = buildWeakQueue(20);
+    const note = $("#review-mode-note");
+    if (!q.length) {
+      if (note) note.textContent = "No weak spots yet. Work through some cards first; the ones you miss or rate hard collect here for a focused drill.";
+      if (typeof announce === "function") announce("No weak spots yet. Do some cards first, then come back.");
+      return;
+    }
+    WEAK_QUEUE = q; WEAK_TOTAL = q.length; WEAK_ACTIVE = true;
+    showLearnView();
+    $("#learn-heading").textContent = "Your weak spots";
+    loadNextCard();
+  }
+
+  function loadNextWeakCard(){
+    CURRENT_CARD_CORRECT = null; CURRENT_CARD_OPTIONS = null;
+    const mcWrap = $("#mc-options"); const fb = $("#FFFFFFck-panel");
+    const rateRow = $("#rate-row"); const rateInstructions = $("#rate-instructions"); const ans = $("#card-answer");
+    if (mcWrap) mcWrap.innerHTML = "";
+    if (fb) fb.hidden = true;
+    if (rateRow) rateRow.hidden = true;
+    if (rateInstructions) rateInstructions.hidden = true;
+    if (ans) ans.hidden = true;
+
+    const done = WEAK_TOTAL - WEAK_QUEUE.length;
+    if (!WEAK_QUEUE.length) {
+      WEAK_ACTIVE = false;
+      $("#card-question").textContent = "Weak-spot session complete. Those " + WEAK_TOTAL + " cards are rescheduled by how you just rated them. Come back anytime to drill the next set.";
+      $("#card-dok-badge").textContent = "DONE";
+      $("#card-dok-badge").className = "dok-badge dok-1";
+      $("#card-progress").textContent = "";
+      return;
+    }
+    const item = WEAK_QUEUE.shift();
+    CURRENT_TOPIC = item.topicId;
+    CURRENT_CARD = item.card;
+    const topic = topicById(item.topicId);
+    $("#learn-heading").textContent = "Your weak spots";
+    renderNotesLink(topic);
+    renderMastery(item.topicId);
+    $("#card-question").textContent = item.card.q;
+    $("#card-dok-badge").textContent = "DOK " + item.card.dok;
+    $("#card-dok-badge").className = "dok-badge dok-" + item.card.dok;
+    $("#card-progress").textContent = "Weak spot " + (done + 1) + " of " + WEAK_TOTAL + " · " + topic.title;
+    renderMcOptions(item.card);
+  }
+
+  /* ---------- DAILY REVIEW ---------- */
+
+  // 'due' = only cards whose nextDue is now or earlier (the daily-review default).
+  // 'all' = every card from a topic the student has already unlocked (passed the gate).
+  //         Lets students drill everything they've ever seen, ignoring schedule.
+  //         Locked topics stay hidden.
+  let REVIEW_MODE = "due";
+
+  function renderReview(){
+    const body = $("#review-body");
+    body.innerHTML = "";
+    const items = [];
+    allTopics().forEach(t => {
+      const ts = STATE.topics[t.id];
+      if (REVIEW_MODE === "all" && !(ts && ts.gateCompleted)) return; // skip locked topics
+      t.cards.forEach(c => {
+        const st = getCardState(t.id, c.id, c.dok);
+        if (REVIEW_MODE === "due") {
+          if (st.reps > 0 && st.nextDue <= nowSim()) items.push({ topic: t, card: c, st: st });
+        } else {
+          // "all unlocked": include every card from an unlocked topic, whether seen or not.
+          items.push({ topic: t, card: c, st: st });
+        }
+      });
+    });
+
+    // Update the mode toggle UI and the helper paragraph.
+    const btnDue = $("#btn-review-due");
+    const btnAll = $("#btn-review-all");
+    if (btnDue && btnAll) {
+      btnDue.classList.toggle("btn-primary", REVIEW_MODE === "due");
+      btnDue.classList.toggle("btn-ghost", REVIEW_MODE !== "due");
+      btnDue.setAttribute("aria-pressed", REVIEW_MODE === "due" ? "true" : "false");
+      btnAll.classList.toggle("btn-primary", REVIEW_MODE === "all");
+      btnAll.classList.toggle("btn-ghost", REVIEW_MODE !== "all");
+      btnAll.setAttribute("aria-pressed", REVIEW_MODE === "all" ? "true" : "false");
+    }
+    const note = $("#review-mode-note");
+    if (note) {
+      note.textContent = REVIEW_MODE === "due"
+        ? "These cards are due based on how you rated them last time. Lower confidence resurfaces first."
+        : "Drill every card from topics you've unlocked, regardless of due date. Useful before a quiz. Topics you haven't unlocked yet are not shown.";
+    }
+
+    if (!items.length) {
+      body.innerHTML = REVIEW_MODE === "due"
+        ? '<div class="card"><p class="empty">No cards are due right now. Come back tomorrow, or start a new topic from tonight’s pre-work.</p></div>'
+        : '<div class="card"><p class="empty">No unlocked topics yet. Start tonight’s pre-work first, then come back here.</p></div>';
+      return;
+    }
+
+    // Order: lowest ease first (struggle cards), then earliest due.
+    items.sort((a,b) => a.st.ease - b.st.ease || a.st.nextDue - b.st.nextDue);
+    const wrap = document.createElement("div");
+    wrap.className = "card";
+    const total = items.length;
+    const heading = REVIEW_MODE === "due"
+      ? total + " card" + (total === 1 ? "" : "s") + " due across topics"
+      : total + " card" + (total === 1 ? "" : "s") + " in your unlocked deck";
+    wrap.innerHTML = "<h3>" + heading + "</h3>";
+    const list = document.createElement("div");
+    items.slice(0, 30).forEach(item => {
+      const row = document.createElement("div");
+      row.style.cssText = "display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--gray-line);";
+      row.innerHTML = `
+        <div style="flex:1; min-width:0;">
+          <div style="font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans',sans-serif;font-weight:600;color:var(--navy);">${escapeHtml(item.topic.title)}</div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:13.4px;color:var(--gray-soft);">DOK ${item.card.dok} &middot; last rated "${item.st.lastRating || "new"}"</div>
+        </div>
+        <button class="btn btn-gold" data-review-open="${item.topic.id}">Review</button>
+      `;
+      list.appendChild(row);
+    });
+    if (items.length > 30) {
+      const more = document.createElement("p");
+      more.className = "usage";
+      more.style.marginTop = "10px";
+      more.textContent = "Showing top 30 of " + items.length + ". Open a topic to drill all of its cards.";
+      list.appendChild(more);
+    }
+    wrap.appendChild(list);
+    body.appendChild(wrap);
+
+    $$('[data-review-open]').forEach(b => {
+      b.addEventListener("click", () => {
+        const tid = b.dataset.reviewOpen;
+        const ts = getTopicState(tid);
+        if (!ts.gateCompleted) nav("topic", tid);
+        else nav("learn", tid);
       });
     });
   }
 
-  /* ---------- go ---------- */
-  ALL = flatten();
-  if (!ALL.length) {
-    $('startText').textContent =
-      'The card bank did not load. Reload the page, and if it keeps happening tell Dr. Rennie which browser you are using.';
+  function setReviewMode(mode){
+    REVIEW_MODE = mode;
+    renderReview();
+  }
+
+  /* ---------- ENGAGEMENT REPORT ---------- */
+
+  function renderReport(){
+    const body = $("#report-body");
+    body.innerHTML = "";
+
+    const stats = document.createElement("div");
+    stats.className = "stats-row";
+    stats.innerHTML = `
+      <div class="stat"><p class="stat-label">Streak</p><p class="stat-value">${computeStreak()}</p><p class="stat-sub">days</p></div>
+      <div class="stat"><p class="stat-label">Sessions logged</p><p class="stat-value">${STATE.sessions.length}</p><p class="stat-sub">total</p></div>
+      <div class="stat"><p class="stat-label">Card reviews</p><p class="stat-value">${totalCardsReviewed()}</p><p class="stat-sub">all time</p></div>
+      <div class="stat"><p class="stat-label">Cards due now</p><p class="stat-value">${countDueGlobally()}</p><p class="stat-sub">across topics</p></div>
+    `;
+    body.appendChild(stats);
+
+    // Per-topic mastery
+    const masteryCard = document.createElement("div");
+    masteryCard.className = "card";
+    masteryCard.innerHTML = "<h3>Mastery by topic</h3>";
+    allTopics().forEach(t => {
+      const ts = STATE.topics[t.id];
+      if (!ts) return;
+      const tWrap = document.createElement("div");
+      tWrap.style.cssText = "margin:10px 0;padding:8px 0;border-bottom:1px solid var(--gray-line);";
+      const tt = document.createElement("h4");
+      tt.textContent = t.title;
+      tWrap.appendChild(tt);
+      [1,2,3].forEach(lv => {
+        const m = masteryFor(t.id, lv);
+        const pct = Math.round(m * 100);
+        const row = document.createElement("div");
+        row.className = "mastery-row";
+        row.innerHTML = `<span>DOK ${lv}</span><div class="mastery-bar"><div class="mastery-fill l${lv}" style="width:${pct}%"></div></div><span>${pct}%</span>`;
+        tWrap.appendChild(row);
+      });
+      masteryCard.appendChild(tWrap);
+    });
+    body.appendChild(masteryCard);
+
+    // Sessions list
+    const sessionsCard = document.createElement("div");
+    sessionsCard.className = "card";
+    sessionsCard.innerHTML = "<h3>Session log</h3>";
+    if (!STATE.sessions.length) {
+      sessionsCard.innerHTML += '<p class="empty">No sessions yet. Complete tonight’s pre-work to start the log.</p>';
+    } else {
+      const headerRow = document.createElement("div");
+      headerRow.className = "session-row";
+      headerRow.innerHTML = '<div class="date">Date</div><div class="topics">Topics covered</div><div>Cards</div><div>Gates</div>';
+      sessionsCard.appendChild(headerRow);
+      STATE.sessions.slice().reverse().forEach(s => {
+        const row = document.createElement("div");
+        row.className = "session-row";
+        const titles = s.topicsCompleted.map(id => {
+          const t = topicById(id);
+          return t ? t.title : id;
+        }).join(", ") || "(in progress)";
+        row.innerHTML = `<div class="date">${s.date}</div><div class="topics">${escapeHtml(titles)}</div><div>${s.cardsReviewed}</div><div>${(s.gates || []).length}</div>`;
+        sessionsCard.appendChild(row);
+      });
+    }
+    body.appendChild(sessionsCard);
+
+    // Gate explanations (so professor can see understanding)
+    const gateCard = document.createElement("div");
+    gateCard.className = "card";
+    gateCard.innerHTML = "<h3>Your gate explanations</h3><p class=\"usage\">What you wrote in your own words to unlock each topic.</p>";
+    let any = false;
+    allTopics().forEach(t => {
+      const ts = STATE.topics[t.id];
+      if (ts && ts.gateCompleted && ts.gateExplanation) {
+        any = true;
+        const block = document.createElement("div");
+        block.style.cssText = "margin:12px 0;padding:12px 14px;background:var(--off-white);border-radius:4px;";
+        block.innerHTML = `<h4>${escapeHtml(t.title)}</h4><p style="white-space:pre-wrap;margin:6px 0 0;">${escapeHtml(ts.gateExplanation)}</p><p style="font-family:'DM Sans',sans-serif;font-size:12.3px;color:var(--gray-soft);margin-top:6px;">Submitted ${escapeHtml((ts.gateCompletedAt || "").slice(0,10))}</p>`;
+        gateCard.appendChild(block);
+      }
+    });
+    if (!any) gateCard.innerHTML += '<p class="empty">No gate explanations submitted yet.</p>';
+    body.appendChild(gateCard);
+  }
+
+  /* ---------- SETTINGS ---------- */
+
+  function renderSettings(){
+    // No dynamic content yet; buttons wired in init().
+  }
+
+  function resetAll(){
+    if (!confirm("Erase all progress on this device? This cannot be undone.")) return;
+    STATE = freshState();
+    saveState();
+    announce("All progress reset.");
+    nav("dashboard");
+  }
+
+  function simulateNextDay(){
+    STATE.daysSimulated = (STATE.daysSimulated || 0) + 1;
+    saveState();
+    announce("Simulated +1 day. Reload the dashboard to see due cards.");
+    nav("dashboard");
+  }
+
+  /* ---------- EXPORT / IMPORT ---------- */
+
+  function exportProgress(){
+    const blob = btoa(unescape(encodeURIComponent(JSON.stringify(STATE))));
+    const ta = document.createElement("textarea");
+    ta.value = blob;
+    ta.style.cssText = "position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:9999;width:80vw;height:40vh;padding:14px;border:2px solid var(--navy);border-radius:8px;font-family:monospace;font-size:13.4px;background:white;";
+    const close = document.createElement("button");
+    close.textContent = "Close";
+    close.className = "btn btn-primary";
+    close.style.cssText = "position:fixed;left:50%;top:calc(50% + 22vh);transform:translateX(-50%);z-index:9999;";
+    close.addEventListener("click", () => { ta.remove(); close.remove(); });
+    document.body.appendChild(ta);
+    document.body.appendChild(close);
+    ta.select();
+    announce("Progress code shown. Copy it and save it somewhere safe.");
+  }
+
+  function importProgress(){
+    const blob = prompt("Paste your exported progress code:");
+    if (!blob) return;
+    try {
+      const parsed = JSON.parse(decodeURIComponent(escape(atob(blob.trim()))));
+      if (!parsed.version) throw new Error("not valid");
+      STATE = parsed;
+      saveState();
+      announce("Progress imported.");
+      nav("dashboard");
+    } catch(e){
+      alert("That code did not parse. Make sure you copied the whole thing.");
+    }
+  }
+
+  /* ---------- UTIL ---------- */
+
+  function escapeHtml(s){
+    return String(s || "").replace(/[&<>"']/g, ch => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[ch]));
+  }
+
+  /* ---------- INIT ---------- */
+
+  function init(){
+    // Top nav
+    $$('nav.top-nav button').forEach(b => {
+      b.addEventListener("click", () => nav(b.dataset.nav));
+    });
+    // Back buttons inside views
+    $$('[data-nav]').forEach(b => {
+      if (b.closest("nav.top-nav")) return;
+      b.addEventListener("click", () => nav(b.dataset.nav));
+    });
+
+    // Topic / gate handlers
+    $("#btn-simulate-watch").addEventListener("click", simulateWatch);
+    $("#btn-mark-watched").addEventListener("click", markWatched);
+    $("#gate-input").addEventListener("input", (e) => {
+      const topic = topicById(CURRENT_TOPIC);
+      if (topic) updateGateMeter(topic, e.target.value);
+    });
+    $("#btn-submit-gate").addEventListener("click", submitGate);
+    $("#btn-toggle-preview-hint").addEventListener("click", () => {
+      const hint = $("#gate-preview-hint");
+      const btn = $("#btn-toggle-preview-hint");
+      const showing = !hint.hidden;
+      hint.hidden = showing;
+      btn.textContent = showing ? "Show concepts (preview)" : "Hide concepts";
+    });
+
+    // Card handlers
+    // (legacy btn-reveal removed; MC replaces it)
+    $$('.rate-btn').forEach(b => {
+      b.addEventListener("click", () => rateCard(b.dataset.rate));
+    });
+
+    // Keyboard shortcuts for card practice
+    document.addEventListener("keydown", (e) => {
+      if (!$("#view-learn").classList.contains("active")) return;
+      if (document.activeElement && document.activeElement.tagName === "TEXTAREA") return;
+      if (e.key === " " || e.key === "Enter") {
+        if (!$("#rate-row").hidden) return; // already revealed
+        e.preventDefault();
+        revealAnswer();
+      } else if (!$("#rate-row").hidden) {
+        if (e.key === "1") rateCard("again");
+        else if (e.key === "2") rateCard("hard");
+        else if (e.key === "3") rateCard("good");
+        else if (e.key === "4") rateCard("easy");
+      }
+    });
+
+    // Review mode toggle
+    const btnReviewDue = $("#btn-review-due");
+    const btnReviewAll = $("#btn-review-all");
+    if (btnReviewDue) btnReviewDue.addEventListener("click", () => setReviewMode("due"));
+    if (btnReviewAll) btnReviewAll.addEventListener("click", () => setReviewMode("all"));
+    const btnReviewWeak = $("#btn-review-weak");
+    if (btnReviewWeak) btnReviewWeak.addEventListener("click", startWeakSession);
+
+    // Report
+    $("#btn-print").addEventListener("click", () => { nav("report"); setTimeout(() => window.print(), 200); });
+    $("#btn-export").addEventListener("click", exportProgress);
+    $("#btn-import").addEventListener("click", importProgress);
+
+    // Settings
+    $("#btn-reset-day").addEventListener("click", simulateNextDay);
+    $("#btn-reset-all").addEventListener("click", resetAll);
+
+    // Track that the user opened the app today (counts toward streak even without finishing a card).
+    const today = todayKey(0);
+    if (STATE.lastOpenedDate !== today) {
+      STATE.lastOpenedDate = today;
+      // Pre-create today's session row so streak reflects activity.
+      if (!STATE.sessions.find(s => s.date === today)) {
+        STATE.sessions.push({ date: today, topicsCompleted: [], cardsReviewed: 0, gates: [] });
+      }
+      saveState();
+    }
+
+    // Deep-link routing based on URL hash.
+    //   #topic=t-X       -> open that topic (cards view if past gate, gate view otherwise)
+    //   #view=review     -> open the Daily Review view
+    //   #view=dashboard  -> open the dashboard (same as no hash)
+    //   anything else    -> dashboard
+    var deepLinkTopic = null;
+    var deepLinkView = null;
+    try {
+      var hash = window.location.hash || "";
+      var mTopic = hash.match(/#topic=([\w-]+)/);
+      var mView  = hash.match(/#view=(\w+)/);
+      if (mTopic && mTopic[1]) deepLinkTopic = mTopic[1];
+      if (mView  && mView[1])  deepLinkView  = mView[1];
+    } catch (e) {}
+    if (deepLinkTopic && topicById(deepLinkTopic)) {
+      CURRENT_TOPIC = deepLinkTopic;
+      const ts = getTopicState(deepLinkTopic);
+      if (ts.gateCompleted) nav("learn", deepLinkTopic);
+      else nav("topic", deepLinkTopic);
+      try { history.replaceState(null, "", window.location.pathname + window.location.search); } catch (e) {}
+    } else if (deepLinkView === "review") {
+      nav("review");
+      try { history.replaceState(null, "", window.location.pathname + window.location.search); } catch (e) {}
+    } else if (deepLinkView === "dashboard") {
+      nav("dashboard");
+    } else {
+      nav("dashboard");
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
   } else {
-    census();
-    wireGoal();
-    renderWeek();
-    showStart();
+    init();
+  }
+
+})();
+
+/* ---------- IFRAME HEIGHT SENDER (required for Kajabi embeds) ---------- */
+(function(){
+  "use strict";
+  if (window.self === window.top) return; // not in an iframe
+  const id = (function(){
+    const u = new URL(window.location.href);
+    return u.searchParams.get("iframeId") || "bio304-prework";
+  })();
+  function sendHeight(){
+    const h = (window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight);
+    try {
+      window.parent.postMessage({ type: "iframe-height", id: id, height: h }, "*");
+    } catch(e){}
+  }
+  window.addEventListener("load", sendHeight);
+  window.addEventListener("resize", sendHeight);
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(sendHeight);
+    ro.observe(document.body);
+  } else {
+    setInterval(sendHeight, 800);
   }
 })();
 </script>
 
-<script>
-/* Height sender for the Canvas iframe. */
-(function () {
-  var id = 'spaced-recall';
-  function post() {
-    try { parent.postMessage({ frame: id, height: document.documentElement.scrollHeight }, '*'); } catch (e) {}
-  }
-  if ('ResizeObserver' in window) { new ResizeObserver(post).observe(document.documentElement); }
-  window.addEventListener('load', post);
-  window.addEventListener('resize', post);
-  post();
-})();
-</script>
-<script src="bio005-nav.js" defer></script>
+
+<script src="bio004-dock.js"></script>
 </body>
 </html>
