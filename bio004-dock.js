@@ -325,6 +325,9 @@
              kw: 'readiness ready gap check exam 1 lecture gap exam metacognition worksheet code class today' });
     t.push({ g: 'This week', name: 'Study With Me', sub: 'Join a session this week or start one yourself',
              url: BASE + 'study-session-signup.html' + q, icon: 'people', tone: 'terra', qr: 'study', kw: 'study with me sessions group hours host' });
+    t.push({ g: 'This week', name: 'Weekly schedule', sub: 'Each class day: pre-work, brain dump or TBL, lecture, lab',
+             url: BASE + 'bio004-weekly-schedule.html' + q, icon: 'cal', tone: 'terra',
+             kw: 'weekly schedule week agenda prework pre-work brain dump tbl lecture lab topics what is due today case tips ai' });
     t.push({ g: 'This week', name: 'Course calendar', sub: 'Every class day and what to prepare for it',
              url: BASE + 'bio004-course-calendar.html' + q, icon: 'cal', tone: 'navy', qr: 'calendar',
              /* 'start here' and 'how this course works' land here on
