@@ -20,6 +20,10 @@
    The doors screen shows the newest 5.
    ============================================================ */
 window.BIO004_ANNOUNCEMENTS = [
+  { date: '2026-09-20',
+    title: 'Lab Environment, Attendance, and Devices',
+    body: 'Updates and clarifications on how lab runs: study however works for you, keep the room workable for everyone, and know where the device line is. Earplugs are fine, earbuds are not. An unauthorized device in your ear during anything graded is a zero, and the IRAT through the TRAT is one continuous device-free period. Read the whole thing; you are responsible for it.',
+    link: 'bio004-lab-policy-announcement.html', linkLabel: 'Read the full announcement' },
   { date: '2026-08-24',
     title: 'Study With Me: Bonus Week',
     body: 'This week only: host a Study With Me for your regular time plus 1 bonus point per hour, attend for plus 0.5 per hour, and the weekly cap rises to 5 hours. Post it on the board, invite everyone, sign up, show up.',
