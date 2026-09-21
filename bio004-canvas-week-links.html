@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Canvas week links · BIO 004 · instructor tool</title>
+<meta name="description" content="The links that put the weekly schedule into your Canvas modules. For you, not for students.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#08101F; --ink:#08101F; --navy-tint:#ECEFF4;
+  --terra:#8B1D1D; --terra-dark:#6B1616;
+  --gold:#DCB45C; --gold-text:#6F5316;
+  --page:#FAFAF9; --muted:#4A5763; --line:#E3E6EB;
+  --radius:12px; --rest:0 1px 3px rgba(0,0,0,0.08); --lift:0 10px 22px rgba(0,0,0,0.12);
+  --t:transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+  --font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --eb:'DM Sans','Plus Jakarta Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+em,i{font-style:normal}
+a{color:var(--navy);font-weight:600;text-underline-offset:3px}
+a:hover{color:var(--terra-dark)}
+:focus-visible{outline:3px solid var(--terra-dark);outline-offset:2px;border-radius:6px}
+.skip{position:absolute;left:-9999px;background:var(--terra-dark);color:#fff;padding:10px 16px;border-radius:8px;font-weight:700;z-index:50}
+.skip:focus{left:16px;top:16px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:1000px;margin:0 auto;padding:28px 16px 64px}
+.cover{background:var(--navy);border-radius:var(--radius);padding:clamp(22px,4vw,32px);color:#fff;box-shadow:0 10px 26px rgba(8,16,31,.22)}
+.cover-eyebrow{font-family:var(--eb);font-size:.72rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
+.cover h1{font-weight:800;font-size:clamp(26px,4.4vw,38px);line-height:1.08;margin:0}
+.cover h1 span{color:var(--gold)}
+.cover p{margin:12px 0 0;color:#E7EAF0;max-width:70ch}
+h2{font-weight:800;font-size:22px;margin:30px 0 6px;color:var(--navy)}
+h3{font-weight:800;font-size:17px;margin:0 0 6px;color:var(--navy)}
+.eyebrow{font-family:var(--eb);font-size:.7rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--terra-dark);margin:26px 0 4px}
+p{margin:8px 0}
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--rest);padding:18px;margin:12px 0}
+.small{font-size:14px;color:var(--muted)}
+ol.steps{margin:8px 0 0;padding-left:22px}
+ol.steps li{margin:6px 0}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;background:var(--navy-tint);padding:2px 6px;border-radius:5px}
+pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;background:var(--navy-tint);padding:12px;border-radius:8px;overflow:auto;margin:10px 0}
+button{font:inherit;cursor:pointer}
+.copy{font-family:var(--font);font-weight:700;font-size:.85rem;background:#fff;border:1.5px solid var(--navy-tint);border-radius:999px;padding:7px 14px;color:var(--navy);min-height:40px;transition:var(--t);white-space:nowrap}
+.copy:hover{border-color:var(--terra-dark)}
+.copy.done{background:var(--navy);border-color:var(--navy);color:#fff}
+table{width:100%;border-collapse:collapse;margin-top:6px}
+caption{text-align:left;font-family:var(--eb);font-size:.7rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--terra-dark);padding-bottom:8px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top;font-size:15px}
+th{font-family:var(--eb);font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+tbody tr:hover{background:#FCFCFB}
+.wk-n{font-weight:800}
+.dates{font-size:14px;color:var(--muted);white-space:nowrap}
+.what{font-size:14px}
+.exam{font-family:var(--eb);font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:var(--navy);color:#fff;border-radius:999px;padding:2px 9px;margin-left:6px;white-space:nowrap}
+.url{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;color:var(--muted);word-break:break-all}
+footer{text-align:center;margin-top:40px;padding:24px 16px;background:var(--navy);border-radius:var(--radius);color:#fff}
+footer .by{font-weight:800}
+footer .role{font-size:.85rem;color:#E7EAF0}
+@media (max-width:700px){ .dates{white-space:normal} th:nth-child(3),td:nth-child(3){display:none} }
+@media print{ .copy{display:none} body{background:#fff} .card,footer{box-shadow:none;border:1px solid #bbb} footer{background:#fff;color:#000} }
+</style>
+</head>
+<body>
+<a class="skip" href="#links">Skip to the week links</a>
+<main class="wrap">
+
+  <section class="cover">
+    <p class="cover-eyebrow">BIO 004 &middot; Fall 2026 &middot; For you, not for students</p>
+    <h1>Canvas week <span>links</span></h1>
+    <p>One link per week module. Each one opens the weekly schedule on that week, where the student finds their pre-work, the brain dump or TBL, the lecture and the lab. Canvas holds the link, the site holds the content, so when a date or a file changes you change it once and Canvas follows.</p>
+  </section>
+
+  <p class="eyebrow">Set this up once</p>
+  <div class="card">
+    <h3>Put one button on the Canvas home page</h3>
+    <p>Edit the home page, click the HTML editor button (<code>&lt;/&gt;</code>), and paste this where you want it. It opens on whatever week the term is in, so it stays right all semester.</p>
+    <pre id="homeBtn">&lt;p&gt;&lt;a class="btn btn-primary" href="https://drsrennie-stack.github.io/new-build-bio4-solano/bio004-weekly-schedule.html" target="_blank" rel="noopener"&gt;This week: pre-work, class and lab &#8599;&lt;/a&gt;&lt;/p&gt;</pre>
+    <button type="button" class="copy" data-copy-el="homeBtn">Copy the button</button>
+  </div>
+
+  <div class="card">
+    <h3>Add one item to each week module</h3>
+    <ol class="steps">
+      <li>Open the week module in Canvas and click the <b>+</b>.</li>
+      <li>Choose <b>External URL</b>, paste that week's link from the table below, and tick <b>Load in a new tab</b>.</li>
+      <li>Name it the same way every week, so the module list reads down cleanly: <code>Week 06 &middot; Schedule and pre-work</code>.</li>
+      <li>Publish it.</li>
+    </ol>
+    <p class="small">Seventeen items, one pass, and then there is nothing to maintain. Nothing here is graded, so no dates or points to set.</p>
+  </div>
+
+  <div class="card">
+    <h3>All three sections in one shell</h3>
+    <p>The links carry no section, on purpose. A student picks their class once at the top of the schedule page, the site remembers it, and every page follows that choice from then on. Until they pick, the page says so and shows Mon / Wed.</p>
+    <p class="small">If you want to point one student at their own section, add <code>?sec=mw</code>, <code>?sec=tr-am</code> or <code>?sec=tr-eve</code> to the end of the link.</p>
+  </div>
+
+  <p class="eyebrow" id="links">The 17 week links</p>
+  <div class="card">
+    <table>
+      <caption>Copy each one into its week module</caption>
+      <thead>
+        <tr><th scope="col">Week</th><th scope="col">Mon / Wed</th><th scope="col">Tue / Thu</th><th scope="col">What is in it</th><th scope="col"><span class="sr">Copy the link</span></th></tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <p class="small" id="fallback" hidden>The dates could not load, so the links are listed on their own below.</p>
+  </div>
+
+  <div class="card">
+    <h3>Two more links worth having</h3>
+    <p><b>Course home</b>, where students pick their section the first time:<br>
+      <span class="url">https://drsrennie-stack.github.io/new-build-bio4-solano/welcome.html</span></p>
+    <button type="button" class="copy" data-copy-text="https://drsrennie-stack.github.io/new-build-bio4-solano/welcome.html">Copy</button>
+    <p style="margin-top:14px"><b>Today</b>, the one thing to do tonight:<br>
+      <span class="url">https://drsrennie-stack.github.io/new-build-bio4-solano/today.html</span></p>
+    <button type="button" class="copy" data-copy-text="https://drsrennie-stack.github.io/new-build-bio4-solano/today.html">Copy</button>
+  </div>
+
+  <p class="sr" role="status" aria-live="polite" id="status"></p>
+
+  <footer>
+    <div class="by">Dr. Sharilyn Rennie</div>
+    <div class="role">BIO 004 Human Anatomy &middot; Solano Community College &middot; Fall 2026</div>
+  </footer>
+</main>
+
+<script src="schedule-fall2026.js"></script>
+<script>
+(function(){
+  'use strict';
+  var BASE='https://drsrennie-stack.github.io/new-build-bio4-solano/bio004-weekly-schedule.html#week-';
+  var S=window.BIO004_SECTIONS, SESS=window.BIO004_SESSIONS, MODS=window.BIO004_MODULES;
+  var DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function pd(s){ var p=s.split('-'); return new Date(+p[0],+p[1]-1,+p[2]); }
+  function label(s){ var d=pd(s); return DAYS[d.getDay()]+' '+MON[d.getMonth()]+' '+d.getDate(); }
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function strip(h){ var t=document.createElement('div'); t.innerHTML=h||''; return t.textContent.replace(/\s+/g,' ').trim(); }
+
+  function span(track,wk){
+    var all=(SESS&&SESS[track]?SESS[track]:[]).filter(function(s){ return s.wk===wk; });
+    var meets=all.filter(function(s){ return s.kind!=='off'; });
+    var off=all.filter(function(s){ return s.kind==='off'; });
+    if(!all.length) return '';
+    var out=meets.map(function(s){ return label(s.date); }).join(' and ');
+    if(off.length) out+=(out?', ':'')+off.map(function(s){ return label(s.date)+' off'; }).join(' and ');
+    return out;
+  }
+  function what(wk){
+    var list=(SESS&&SESS.mw?SESS.mw:[]).filter(function(s){ return s.wk===wk; });
+    var bits=[], exam='';
+    list.forEach(function(s){
+      if(s.kind==='exam'){ var n=(strip((s.text||[]).join(' ')).match(/Exam (\d)/)||[])[1]; exam='Exam '+n; }
+      else if(s.kind==='class'){
+        var t=strip(s.lines && s.lines[0] ? s.lines[0][1] : '');
+        var tbl=t.match(/TBL \d+/); if(tbl) bits.push(tbl[0]);
+      }
+    });
+    var mods=(MODS||[]).filter(function(m){ return m.weeks.indexOf(wk)>-1; }).map(function(m){ return 'Module '+m.n; }).join(' into ');
+    var out=mods; if(bits.length) out+=', '+bits.join(' and ');
+    return { text:out, exam:exam };
+  }
+
+  var rows=document.getElementById('rows');
+  var html='';
+  for(var wk=1; wk<=17; wk++){
+    var url=BASE+wk, w=what(wk);
+    html+='<tr><td class="wk-n">'+wk+'</td>'
+      + '<td class="dates">'+esc(span('mw',wk))+'</td>'
+      + '<td class="dates">'+esc(span('tr',wk))+'</td>'
+      + '<td class="what">'+esc(w.text)+(w.exam?'<span class="exam">'+esc(w.exam)+'</span>':'')+'</td>'
+      + '<td><button type="button" class="copy" data-copy-text="'+esc(url)+'">Copy week '+wk+'</button></td></tr>';
+  }
+  if(!S || !SESS){
+    document.getElementById('fallback').hidden=false;
+    html='';
+    for(var k=1;k<=17;k++){
+      html+='<tr><td class="wk-n">'+k+'</td><td colspan="3" class="url">'+BASE+k+'</td>'
+        + '<td><button type="button" class="copy" data-copy-text="'+BASE+k+'">Copy week '+k+'</button></td></tr>';
+    }
+  }
+  rows.innerHTML=html;
+
+  function say(m){ var s=document.getElementById('status'); s.textContent=''; setTimeout(function(){ s.textContent=m; },30); }
+  function put(btn,text){
+    function done(){ var old=btn.textContent; btn.classList.add('done'); btn.textContent='Copied'; say('Copied'); setTimeout(function(){ btn.classList.remove('done'); btn.textContent=old; },1600); }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else fallback();
+    function fallback(){
+      var ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('readonly','');
+      ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); done(); }catch(e){ say('Copy did not work here, select the link and copy it by hand.'); }
+      document.body.removeChild(ta);
+    }
+  }
+  document.addEventListener('click', function(e){
+    var b=e.target.closest('.copy'); if(!b) return;
+    if(b.hasAttribute('data-copy-text')) put(b, b.getAttribute('data-copy-text'));
+    else { var el=document.getElementById(b.getAttribute('data-copy-el')); if(el) put(b, el.textContent); }
+  });
+})();
+</script>
+</body>
+</html>
