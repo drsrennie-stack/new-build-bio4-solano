@@ -519,6 +519,34 @@
     display:flex;align-items:center;justify-content:center;padding:28px 22px;
   }
   .wt[hidden]{display:none}
+  .steps-note{margin:-2px 0 20px;font-size:13.5px;color:var(--ink-mid);text-align:center}
+
+  /* THE VIEWER. Opening the sheet, the notes or a video used to send the
+     student to another page, or to another tab, and the evening's list
+     was gone from in front of them. It opens on top of Today now, and
+     closing it puts them back exactly where they were. */
+  .vw[hidden]{display:none}
+  .vw{position:fixed;inset:0;z-index:2147482000;background:rgba(8,16,31,.72);
+    display:flex;align-items:center;justify-content:center;padding:18px}
+  .vw-box{background:var(--white);border-radius:16px;width:min(1100px,100%);
+    height:min(92vh,100%);display:flex;flex-direction:column;overflow:hidden;
+    box-shadow:0 30px 70px -20px rgba(0,0,0,.6)}
+  .vw-bar{display:flex;align-items:center;gap:12px;padding:12px 14px;
+    border-bottom:1px solid var(--line);background:var(--white)}
+  .vw-t{flex:1 1 auto;min-width:0;font-weight:800;font-size:15.5px;color:var(--navy);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .vw-btn{font:inherit;font-size:13px;font-weight:700;cursor:pointer;
+    border:1.5px solid var(--line-strong);background:var(--white);color:var(--navy);
+    border-radius:999px;padding:9px 15px;min-height:40px;white-space:nowrap}
+  .vw-btn:hover{border-color:var(--terra-dark)}
+  .vw-close{background:var(--navy);border-color:var(--navy);color:#fff}
+  .vw-frame{flex:1 1 auto;width:100%;border:0;background:var(--white)}
+  .vw-fall{padding:18px;font-size:15px;color:var(--ink-mid)}
+  @media (max-width:600px){
+    .vw{padding:0}
+    .vw-box{height:100%;border-radius:0}
+    .vw-t{font-size:14px}
+  }
   .wt-in{max-width:560px;text-align:center;color:var(--white)}
   .wt-line{
     opacity:0;margin:0 0 20px;font-size:clamp(18px,3.4vw,23px);
@@ -551,6 +579,18 @@
 <a class="skip" href="#main">Skip to today's work</a>
 
 <!-- ===== first-run walkthrough, one line at a time ===== -->
+<div class="vw" id="vw" role="dialog" aria-modal="true" aria-labelledby="vw-t" hidden>
+  <div class="vw-box">
+    <div class="vw-bar">
+      <h2 class="vw-t" id="vw-t">Opening</h2>
+      <a class="vw-btn" id="vw-tab" href="#" target="_blank" rel="noopener">Open in a new tab</a>
+      <button class="vw-btn vw-close" type="button" id="vw-x">Close</button>
+    </div>
+    <iframe class="vw-frame" id="vw-frame" title="Course material" src="about:blank"></iframe>
+    <p class="vw-fall" id="vw-fall" hidden>This one will not open inside the page. Use the button above to open it in a new tab.</p>
+  </div>
+</div>
+
 <div class="wt on-navy" id="wt" role="dialog" aria-modal="true" aria-labelledby="wt-h" hidden>
   <div class="wt-in">
     <h2 class="sr-only" id="wt-h">How this page works</h2>
@@ -612,6 +652,7 @@
   <p class="rh-note" id="rh-note" hidden></p>
 
   <ol class="steps" id="steps"></ol>
+  <p class="steps-note">Tap any step to open or close it, in any order. Everything opens on this page, and Done is your own tick, nothing is sent to me.</p>
 
   <div class="optional" id="optional" hidden></div>
 
@@ -1142,8 +1183,20 @@
     var mod = moduleForWeek(next.wk);
     var s = [];
 
+    /* The topic goes in the title. "Work the pre-work sheet" told a student
+       to do a thing without telling them which thing, so they had to open
+       the sheet to find out what tonight was even about. */
+    function names(list){
+      if(!list || !list.length) return '';
+      var t = list.map(function(n){ return n.t; });
+      return t.length < 2 ? t[0] : t.slice(0,-1).join(', ') + ' and ' + t[t.length-1];
+    }
+    var sheetName = names(L && L.sheets);
+    var videoName = names(L && L.videos);
+    var labName   = names(L && L.lab);
+
     s.push({
-      title:'Work the pre-work sheet',
+      title:'Work the pre-work sheet' + (sheetName ? ': ' + sheetName : ''),
       mins:EST.worksheet,
       hint:'Handwritten. This is the one thing that has to happen tonight.',
       /* Two minutes closed book turns the first pass into a pretest rather
@@ -1168,7 +1221,7 @@
        the thing this whole night is built on. So it does not get to look like
        an optional fourth of a to-do list. */
     s.push({
-      title:'Mark your own sheet against the video',
+      title:'Mark your own sheet against the video' + (videoName ? ': ' + videoName : ''),
       mins:EST.videos,
       stateLabel:'Answer key',
       hint:'Not extra. This is where you find out what you got wrong, while it is still fixable.',
@@ -1186,7 +1239,7 @@
     var lab = [{kind:'Atlas', url:'atlas-coloring-book.html', title:'the atlas'}];
     if(mod) lab.unshift({kind:'Structures', url:'module-' + mod + '-structure-list.html', title:'Module ' + mod + ' lab structure list', cta:'Open the structure list'});
     s.push({
-      title:'Pre-study the lab structures',
+      title:'Pre-study the lab structures' + (labName ? ' for ' + labName : ''),
       mins:EST.structures,
       hint:'So lab is recognition, not first contact.',
       body:'<p>Read through the structures you will be handed tomorrow, then put your eyes on them in the atlas. You are not memorizing here, you are making tomorrow familiar. Bring the list with you, you fill it in as you go.</p>',
@@ -1364,6 +1417,9 @@
   var elSteps = document.getElementById('steps');
   var elAnnounce = document.getElementById('announce');
   var PLAN = null;
+  /* Which steps the student has opened or closed by hand, by position.
+     Undefined means "follow the plan", which opens the current step. */
+  var OPENED = {};
 
   function render(){
     document.getElementById('hero-h1').innerHTML = PLAN.heroH1;
@@ -1439,7 +1495,10 @@
       var isNow = (i === nowIdx);
       var cls = 'step' + (done ? ' is-done' : '') + (isNow ? ' is-now' : '');
       var state = done ? 'Done' : (isNow ? 'Now' : (st.stateLabel || 'Later'));
-      var open = isNow;
+      /* A step a student opened by hand stays open when the list redraws,
+         so ticking Done no longer shuts everything they had spread out.
+         Nothing here is gated: any step opens in any order. */
+      var open = OPENED[i] === true ? true : (OPENED[i] === false ? false : isNow);
 
       /* ONE thing to click. The step's first link is the action. Anything
          else it needs sits underneath as plain text links, deliberately
@@ -1463,11 +1522,11 @@
            external links, where it is what it is for. */
         var attr  = first.ext
           ? ' target="_blank" rel="noopener"'
-          : ' target="bio004-work"';
+          : ' target="bio004-work" data-view="1"';
         links = '<a class="primary" href="' + first.url + '"' + attr + '>' +
                   '<span>' + (first.cta || 'Open ' + first.title) + '</span>' +
                   '<span class="arr" aria-hidden="true">&rarr;</span>' +
-                  '<span class="sr-only"> (opens in a tab beside this one)</span>' +
+                  '<span class="sr-only"> (opens on top of this page)</span>' +
                 '</a>';
         var rest = st.links.slice(1);
         if(rest.length){
@@ -1483,7 +1542,7 @@
                  between notes and workbook without collecting eight. */
               var a = l.ext
                 ? ' target="_blank" rel="noopener"'
-                : ' target="bio004-ref"';
+                : ' target="bio004-ref" data-view="1"';
               var label = (seen[l.title] > 1 && l.kind) ? (l.title + ' ' + l.kind.toLowerCase()) : l.title;
               return '<a href="' + l.url + '"' + a + '>' + label + '</a>';
             }).join(', ') + '</p>';
@@ -1597,6 +1656,9 @@
       var open = head.getAttribute('aria-expanded') === 'true';
       head.setAttribute('aria-expanded', String(!open));
       body.hidden = open;
+      var li = head.closest('li');
+      var idx = li ? Array.prototype.indexOf.call(li.parentNode.children, li) : -1;
+      if(idx > -1) OPENED[idx] = !open;
       return;
     }
     var d = e.target.closest('[data-done]');
@@ -2063,5 +2125,87 @@
      here could reach the day's material but not the rest of the course. -->
 <script src="bio004-dock.js"></script>
 <script src="dock-coachmark.js"></script>
+
+<script>
+/* ============================================================
+   THE VIEWER
+   Same-site material opens on top of Today rather than replacing
+   it. Escape closes, so does the Close button, and focus goes
+   back to the link that opened it. Anything that refuses to be
+   framed falls back to the new tab button, which is always there.
+   External links are left alone: they still open in a new tab.
+   ============================================================ */
+(function(){
+  'use strict';
+  var vw = document.getElementById('vw'),
+      box = vw.querySelector('.vw-box'),
+      frame = document.getElementById('vw-frame'),
+      title = document.getElementById('vw-t'),
+      tab = document.getElementById('vw-tab'),
+      fall = document.getElementById('vw-fall'),
+      closeBtn = document.getElementById('vw-x'),
+      lastFocus = null, watchdog = null, prevOverflow = '';
+
+  function openView(url, label){
+    lastFocus = document.activeElement;
+    title.textContent = label || 'Course material';
+    frame.title = label || 'Course material';
+    tab.href = url;
+    fall.hidden = true;
+    frame.hidden = false;
+    frame.src = url + (url.indexOf('?') > -1 ? '&' : '?') + 'nolaunch=1';
+    prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    vw.hidden = false;
+    closeBtn.focus();
+    /* Some pages refuse to be framed. If nothing has loaded after a few
+       seconds, stop pretending and point at the new tab button. */
+    clearTimeout(watchdog);
+    watchdog = setTimeout(function(){
+      var blank = true;
+      try { blank = !frame.contentDocument || !frame.contentDocument.body || !frame.contentDocument.body.innerHTML; }
+      catch(e){ blank = false; }   /* cross origin means it did load */
+      if(blank){ frame.hidden = true; fall.hidden = false; }
+    }, 4000);
+  }
+  function closeView(){
+    clearTimeout(watchdog);
+    vw.hidden = true;
+    frame.src = 'about:blank';
+    document.body.style.overflow = prevOverflow;
+    if(lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[data-view]');
+    if(a){
+      if(e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;  /* let them open a tab on purpose */
+      var href = a.getAttribute('href') || '';
+      if(!href || href.charAt(0) === '#') return;
+      var probe = document.createElement('a'); probe.href = href;
+      if(probe.host !== window.location.host) return;                     /* external stays a new tab */
+      e.preventDefault();
+      var label = a.cloneNode(true);
+      Array.prototype.forEach.call(label.querySelectorAll('.sr-only,.arr'), function(x){ x.remove(); });
+      openView(probe.href, (label.textContent || '').replace(/\s+/g,' ').trim());
+      return;
+    }
+    if(e.target.closest('#vw-x')) { closeView(); return; }
+    if(e.target === vw) closeView();                                      /* click the dim area */
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && !vw.hidden){ closeView(); }
+  });
+  /* keep the tab key inside the dialog while it is open */
+  vw.addEventListener('keydown', function(e){
+    if(e.key !== 'Tab') return;
+    var f = box.querySelectorAll('a[href], button, iframe');
+    if(!f.length) return;
+    var first = f[0], last = f[f.length-1];
+    if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+  });
+})();
+</script>
 </body>
 </html>
