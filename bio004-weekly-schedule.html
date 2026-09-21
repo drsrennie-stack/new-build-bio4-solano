@@ -249,15 +249,15 @@ footer.site-foot{text-align:center;margin-top:40px;padding:26px 16px;background:
   <section class="cover">
     <p class="cover-eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
     <h1>Your weekly <span>schedule</span></h1>
-    <p class="cover-lede">Pick a day on the calendar. Every class day opens the same way, in the same order: your pre-work, the brain dump or TBL, what I will teach, and your lab.</p>
+    <p class="cover-lede">Pick a day on the calendar. Every class day opens the same way, in the same order: your pre-work topic, how class starts, the lecture topic, and your lab.</p>
     <p class="cover-sec"><span class="cs-k">Your section</span><span class="cs-v" id="coverSec">Mon / Wed</span></p>
   </section>
 
   <ol class="order" aria-label="The four parts of every class day">
-    <li class="card"><b>Pre-work</b><span>Before class. Sheet first, then notes, then the video.</span></li>
-    <li class="card"><b>Brain dump or TBL</b><span>Start of class. What it covers, so nothing is a surprise.</span></li>
-    <li class="card"><b>Lecture</b><span>What I will teach and what to listen for.</span></li>
-    <li class="card"><b>Lab</b><span>The lab number, the topic, and the lab sprint.</span></li>
+    <li class="card"><b>Pre-work</b><span>Tonight's topic. Sheet first, then notes, then the video.</span></li>
+    <li class="card"><b>Brain dump or TBL</b><span>How class opens, and what to bring to it.</span></li>
+    <li class="card"><b>Lecture</b><span>The topic, and what to listen for.</span></li>
+    <li class="card"><b>Lab</b><span>The lab number, the topic and the lab sprint.</span></li>
   </ol>
 
   <section class="card controls noprint" aria-label="Choose your section and week">
@@ -688,10 +688,17 @@ var LOOPS = "https://drsrennie-stack.github.io/loops/";
   }
 
   /* ---------- parts ---------- */
+  function names(list){
+    if(!list || !list.length) return '';
+    var t=list.map(function(x){ return x.t; });
+    return t.length<2 ? t[0] : t.slice(0,-1).join(', ')+' and '+t[t.length-1];
+  }
   function prework(iso, ex, key, isTbl){
     var L=LINKS[iso]||{}, out='';
+    var topic = names(L.sheets);
     var prep = isTbl ? pick(ex,'prep',key) : '';
     if(prep) out += '<p><span class="kicker">TBL prep:</span> '+esc(prep)+'</p>';
+    if(topic) out += '<p><span class="kicker">'+(prep?'Sheet due tonight: ':'Topic: ')+esc(topic)+'</span></p>';
     var steps=[];
     if(L.sheets&&L.sheets.length) steps.push('<li><span class="kicker">Sheet first:</span> '+L.sheets.map(function(x){return a(x.u,x.t);}).join(', ')+'</li>');
     if(L.notes&&L.notes.length) steps.push('<li><span class="kicker">Keep open while you work:</span> '+L.notes.map(function(x){return a(x.u,x.t+' notes');}).join(', ')+'</li>');
@@ -715,18 +722,29 @@ var LOOPS = "https://drsrennie-stack.github.io/loops/";
         + '<p><span class="kicker">Team charter dump.</span> There is no class behind you yet, so today\'s dump is about how your team will work together.</p>';
     }
     if(c){
-      var cex=EX[c]||{}, when=poolDate(key,c);
+      /* The topic is deliberately not printed. A brain dump is retrieval, and
+         knowing which prompt is coming turns it into a night of rereading one
+         topic. Students prepare by keeping up, not by studying the answer. */
       return '<h4><span class="n" aria-hidden="true">2</span>Brain dump</h4>'
-        + '<p><span class="kicker">Covers: '+esc(cex.dump||('pool '+c))+'</span>'+(when?' (from '+esc(when)+')':'')+'.</p>'
-        + '<p class="small">5 minutes, blank paper, closed notes, phone away. It covers the last dump day: that pre-work, lecture, and lab. Practice with '+a('brain-dump-practice.html','Brain Dump Practice')+'.</p>';
+        + '<p>5 minutes, blank paper, closed notes, phone away, at the start of class.</p>'
+        + '<p class="small">The prompt is not posted ahead of time. It comes from recent material, so keeping up with your pre-work, lecture and lab is the preparation. Practice the format in '+a('brain-dump-practice.html','Brain Dump Practice')+'.</p>';
     }
     return '<h4><span class="n" aria-hidden="true">2</span>Brain dump</h4><p>No brain dump today.</p>';
   }
 
-  function lecture(ex, key){
-    var teach = pick(ex,'teach',key)||[];
+  function lecture(ex, key, isTbl){
+    var teach = (pick(ex,'teach',key)||[]).slice();
+    var title = pick(ex,'title',key);
+    /* On a TBL day the lecture is the lab preview that follows the TBL, so
+       printing the TBL name again in the lecture box just said the same thing
+       twice. The first bullet already names what the preview covers. */
+    if(isTbl && teach.length){
+      var m = teach[0].match(/lab preview on (.+)$/i);
+      if(m){ title = 'After the TBL: '+m[1].charAt(0).toUpperCase()+m[1].slice(1); teach.shift(); }
+      else title = 'After the TBL';
+    }
     return '<h4><span class="n" aria-hidden="true">3</span>Lecture</h4>'
-      + '<p><span class="kicker">'+esc(pick(ex,'title',key))+'</span></p>'
+      + '<p><span class="kicker">'+esc(title)+'</span></p>'
       + (teach.length?'<ul>'+teach.map(function(t){return '<li>'+esc(t)+'</li>';}).join('')+'</ul>':'');
   }
 
@@ -765,7 +783,7 @@ var LOOPS = "https://drsrennie-stack.github.io/loops/";
       + '<div class="parts">'
       + '<section class="part"><h4><span class="n" aria-hidden="true">1</span>Pre-work, before class</h4>'+prework(s.date, ex, key, isTbl)+'</section>'
       + '<section class="part">'+dumpOrTbl(b, ex, key)+'</section>'
-      + '<section class="part">'+lecture(ex, key)+'</section>'
+      + '<section class="part">'+lecture(ex, key, isTbl)+'</section>'
       + '<section class="part">'+lab(s, s.date, ex, b, key)+'</section>'
       + '</div>' + caseBlock(ex, s.date) + '</article>';
   }
@@ -835,7 +853,11 @@ var LOOPS = "https://drsrennie-stack.github.io/loops/";
         else if(b && REVIEW_POOLS[b.n]){ e.kind='review'; e.short='Review'; }
         else e.short='Class';
         e.title=b?pick(ex,'title',key):strip(line(s,'In class'));
+        /* the cell already carries "TBL 3" as its label, so the topic under it
+           drops the prefix rather than saying the number twice */
+        if(e.kind==='tbl') e.title=String(e.title).replace(/^TBL\s*\d+\s*[:·-]\s*/i,'');
         e.lab=strip(line(s,'Lab'));
+        e.pre=names((LINKS[s.date]||{}).sheets);
       }
       map[s.date]=e;
     });
@@ -878,7 +900,8 @@ var LOOPS = "https://drsrennie-stack.github.io/loops/";
     var items=list.map(function(s){ var e=M[s.date];
       return '<li><button type="button" class="ag k-'+e.kind+'" data-day="'+s.date+'" aria-pressed="'+(s.date===state.day?'true':'false')+'">'
         +'<span class="ag-dot" aria-hidden="true"></span><span class="ag-txt"><span class="ag-date">'+esc(longLabel(s.date))+(s.date===TODAY?' · Today':'')+'</span>'
-        +'<span class="ag-kind">'+esc(KIND_LABEL[e.kind])+'</span><span class="ag-title">'+esc(e.title)+'</span>'
+        +'<span class="ag-kind">'+esc(e.kind==='tbl' ? e.short+' day' : KIND_LABEL[e.kind])+'</span><span class="ag-title">'+esc(e.title)+'</span>'
+        +(e.pre?'<span class="ag-lab">Pre-work: '+esc(e.pre)+'</span>':'')
         +(e.lab?'<span class="ag-lab">Lab: '+esc(e.lab)+'</span>':'')+'</span></button></li>';
     }).join('');
 
