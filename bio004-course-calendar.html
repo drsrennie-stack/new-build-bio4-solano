@@ -259,6 +259,42 @@
   }
 
   /* legend */
+  /* THE PEEK PANEL.
+     Clicking a day used to leave the calendar for Today. That is still one
+     tap away, but a student looking at the month usually wants one answer,
+     "what is that day", and leaving the map to get it loses their place.
+     This panel is the headline only: the four topics and what class opens
+     with. The full plan, with its tick rows, stays in Today. */
+  .pk[hidden]{display:none}
+  .pk{position:fixed;inset:0;z-index:2147481000;background:rgba(8,16,31,.72);
+    display:flex;align-items:center;justify-content:center;padding:18px;}
+  .pk-box{background:#fff;border-radius:16px;width:min(560px,100%);max-height:92vh;overflow:auto;
+    box-shadow:0 30px 70px -20px rgba(0,0,0,.6);}
+  .pk-hd{padding:18px 20px 12px;border-bottom:1px solid var(--navy-tint);}
+  .pk-k{font-family:var(--font-eyebrow);font-size:.62rem;font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--terra-dark);margin:0 0 4px;}
+  .pk-t{font-family:var(--font-display);font-weight:800;font-size:1.2rem;color:var(--navy);margin:0;}
+  .pk-body{padding:14px 20px 4px;}
+  .pk-row{display:grid;grid-template-columns:104px 1fr;gap:10px;padding:10px 0;
+    border-top:1px solid #F0EEE9;align-items:start;}
+  .pk-row:first-child{border-top:0;}
+  .pk-lab{font-family:var(--font-eyebrow);font-size:.58rem;font-weight:800;letter-spacing:.08em;
+    text-transform:uppercase;background:var(--navy);color:#FAFAF9;border-radius:6px;
+    padding:5px 6px;text-align:center;line-height:1.15;}
+  .pk-lab.tbl{background:var(--gold);color:#08101F;}
+  .pk-lab.dump{background:var(--terra-dark);}
+  .pk-v{font-size:.92rem;line-height:1.45;color:var(--navy);}
+  .pk-v .q{display:block;font-size:.78rem;color:var(--gray);margin-top:2px;}
+  .pk-foot{display:flex;flex-wrap:wrap;gap:9px;padding:14px 20px 18px;}
+  .pk-btn{font:inherit;font-family:var(--font-display);font-weight:700;font-size:.86rem;cursor:pointer;
+    border:1.5px solid var(--navy-tint);background:#fff;color:var(--navy);border-radius:999px;
+    padding:10px 16px;min-height:44px;text-decoration:none;display:inline-flex;align-items:center;}
+  .pk-btn:hover{border-color:var(--terra-dark);}
+  .pk-go{background:var(--navy);border-color:var(--navy);color:#fff;}
+  .pk-go:hover{color:#fff;}
+  @media (max-width:520px){ .pk{padding:0} .pk-box{max-height:100%;height:100%;border-radius:0}
+    .pk-row{grid-template-columns:1fr;gap:4px} .pk-lab{justify-self:start;padding:4px 10px} }
+
   .legend{display:flex;flex-wrap:wrap;gap:9px 16px;margin-top:16px;padding:14px 16px;background:#fff;border:0;border-radius:var(--radius);box-shadow:var(--shadow-rest);}
   .legend .lg{display:inline-flex;align-items:center;gap:7px;font-size:.82rem;font-weight:600;color:var(--navy);}
   .legend .sw{width:14px;height:14px;border-radius:4px;flex:0 0 auto;}
@@ -341,6 +377,21 @@
     </div>
 
   </main>
+
+  <div class="pk" id="pk" role="dialog" aria-modal="true" aria-labelledby="pk-t" hidden>
+    <div class="pk-box">
+      <div class="pk-hd">
+        <p class="pk-k" id="pk-k">Class day</p>
+        <h2 class="pk-t" id="pk-t">A day</h2>
+      </div>
+      <div class="pk-body" id="pk-body"></div>
+      <div class="pk-foot">
+        <a class="pk-btn pk-go" id="pk-day" href="#" target="_top">Open the full plan</a>
+        <a class="pk-btn" id="pk-week" href="#" target="_top">See the whole week</a>
+        <button class="pk-btn" type="button" id="pk-x">Close</button>
+      </div>
+    </div>
+  </div>
 
   <footer>
     <div class="by">Dr. Sharilyn Rennie</div>
@@ -621,6 +672,10 @@
   function subFor(s){
     if(s.lm==='holiday') return '';
     if(s.lm==='exam')    return 'Lecture exam + lab practical';
+    /* On a TBL day the tag already says TBL 3, and what a student wants from
+       the square is what the TBL is ON. The lab for that day is one tap away
+       in the peek panel. */
+    if(s.lm==='tbl')     return String(s.lec).replace(/^TBL\s*\d+\s*[:·-]\s*/i,'');
     return s.lab || '';
   }
 
@@ -1342,5 +1397,119 @@
 <script src="bio004-dock.js"></script>
 <script src="dock-coachmark.js"></script>
 <script src="bio004-launchpad-overlay.js"></script>
+
+<script>
+/* ============================================================
+   THE PEEK PANEL
+   A day in the grid answers itself now: the topics, and what class
+   opens with. The full plan with its tick rows is still the one in
+   Today, one button away, so there is still only one implementation
+   of a day.
+   ============================================================ */
+(function(){
+  'use strict';
+  var pk = document.getElementById('pk'), body = document.getElementById('pk-body'),
+      kk = document.getElementById('pk-k'), tt = document.getElementById('pk-t'),
+      goDay = document.getElementById('pk-day'), goWeek = document.getElementById('pk-week'),
+      grid = document.getElementById('grid'), lastFocus = null, prevOverflow = '';
+  var DOW = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var MON = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var START = new Date(2026,7,17);
+
+  function esc(x){ return String(x==null?'':x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function pd(iso){ var p=iso.split('-'); return new Date(+p[0],+p[1]-1,+p[2]); }
+  function weekOf(iso){ var w = Math.floor((pd(iso)-START)/(7*864e5))+1; return Math.max(1,Math.min(17,w)); }
+  function sec(){
+    var m = window.location.search.match(/[?&]sec=(mw|tr-am|tr-eve)/);
+    if(m) return m[1];
+    try { return localStorage.getItem('bio004-section') || 'mw'; } catch(e){ return 'mw'; }
+  }
+  function names(list){
+    if(!list || !list.length) return '';
+    var t = list.map(function(x){ return x.t; });
+    return t.length < 2 ? t[0] : t.slice(0,-1).join(', ') + ' and ' + t[t.length-1];
+  }
+  function row(label, cls, value, hint){
+    if(!value) return '';
+    return '<div class="pk-row"><span class="pk-lab ' + cls + '">' + esc(label) + '</span>'
+      + '<span class="pk-v">' + esc(value) + (hint ? '<span class="q">' + esc(hint) + '</span>' : '') + '</span></div>';
+  }
+
+  function open(iso){
+    var DC = window.BIO004_DAY_CARD;
+    if(!DC) return false;
+    var s = DC.sessionFor ? DC.sessionFor(iso, sec()) : null;
+    if(!s) return false;
+    var L = (window.BIO004_SESSION_LINKS || {})[iso] || {};
+    var d = pd(iso);
+    lastFocus = document.activeElement;
+
+    tt.textContent = DOW[d.getDay()] + ', ' + MON[d.getMonth()] + ' ' + d.getDate();
+    kk.textContent = s.lm === 'exam' ? 'Exam day' : s.lm === 'tbl' ? 'TBL day'
+                   : s.lm === 'holiday' ? 'No class' : 'Class day';
+
+    var html = '';
+    if(s.lm === 'holiday'){
+      html = row('No class', '', String(s.lec).replace(/, No Class/i,''), 'Campus is closed. No lecture and no lab.');
+    } else if(s.lm === 'exam'){
+      html = row('Exam', '', s.lec, 'Lecture exam and lab practical, both today. Doors lock at the start.');
+    } else {
+      var pre = names(L.sheets) || (s.pw && s.pw.t) || '';
+      html += row('Pre-work', '', pre, 'Work the sheet by hand the night before, with your notes open.');
+      if(s.lm === 'tbl'){
+        html += row('TBL', 'tbl', s.lec, 'iRAT on your own, then the tRAT with your team, then appeals. No brain dump today.');
+      } else {
+        html += row('Brain dump', 'dump', 'At the start of class, 5 minutes, closed notes',
+                    'The prompt is not posted ahead. It comes from recent material.');
+      }
+      /* On a TBL day the TBL row above already says it, so this would be the
+         same sentence twice. */
+      if(s.lm !== 'tbl') html += row('Lecture', '', s.lec);
+      html += row('Lab', '', s.lab || '');
+    }
+    body.innerHTML = html;
+
+    goDay.href = 'today.html?day=' + iso;
+    goWeek.href = 'bio004-weekly-schedule.html#week-' + weekOf(iso);
+    goDay.hidden = (s.lm === 'holiday');
+    prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    pk.hidden = false;
+    goDay.hidden ? goWeek.focus() : goDay.focus();
+    return true;
+  }
+  function close(){
+    pk.hidden = true;
+    document.body.style.overflow = prevOverflow;
+    if(lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  if(grid){
+    grid.addEventListener('click', function(e){
+      var a = e.target.closest('a.cell');
+      if(!a) return;
+      if(e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+      var iso = (a.getAttribute('href') || '').split('day=')[1];
+      if(!iso) return;
+      if(open(iso)) e.preventDefault();      /* if the panel cannot build, the link still works */
+    });
+  }
+  document.addEventListener('click', function(e){
+    if(e.target.closest('#pk-x')) { close(); return; }
+    if(e.target === pk) close();
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && !pk.hidden) close();
+  });
+  pk.addEventListener('keydown', function(e){
+    if(e.key !== 'Tab') return;
+    var f = pk.querySelectorAll('a[href]:not([hidden]), button');
+    if(!f.length) return;
+    var first = f[0], last = f[f.length-1];
+    if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+  });
+})();
+</script>
 </body>
 </html>
