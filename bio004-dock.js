@@ -329,7 +329,10 @@
              url: BASE + 'bio004-weekly-schedule.html' + q, icon: 'cal', tone: 'terra',
              kw: 'weekly schedule week agenda prework pre-work brain dump tbl lecture lab topics what is due today case tips ai' });
     t.push({ g: 'This week', name: 'Course calendar', sub: 'Every class day and what to prepare for it',
-             url: BASE + 'bio004-course-calendar.html' + q, icon: 'cal', tone: 'navy', qr: 'calendar',
+             /* nolaunch=1 so the calendar opens as the calendar. Without it the
+                launchpad curtain drops in front of it and the tile feels like a
+                loop back to the doors. */
+             url: BASE + 'bio004-course-calendar.html' + (q ? q + '&nolaunch=1' : '?nolaunch=1'), icon: 'cal', tone: 'navy', qr: 'calendar',
              /* 'start here' and 'how this course works' land here on
                 purpose. Both had their own tiles and came out, and the
                 Start here walkthrough is a dialog on this page now, so

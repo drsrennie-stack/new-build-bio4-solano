@@ -665,8 +665,12 @@ var LOOPS = "https://drsrennie-stack.github.io/loops/";
   var state = { sec:st.sec, chosen:st.chosen, week:currentWeek(), all:false };
 
   function currentWeek(){
+    /* Saturday and Sunday open on the week that is about to start, because
+       that is the week a student is doing pre-work for. The "This week" chip
+       still marks the calendar week, so nothing on screen contradicts itself. */
     var start=pd(S.start), now=new Date(); now=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-    var w=Math.floor((now-start)/(7*864e5))+1;
+    var dow=now.getDay(), roll=(dow===6||dow===0)?2:0;
+    var w=Math.floor((now-start+roll*864e5)/(7*864e5))+1;
     return Math.max(1,Math.min(17,w));
   }
   var TODAY = (function(){ var n=new Date(); return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0'); })();
@@ -1007,7 +1011,6 @@ var LOOPS = "https://drsrennie-stack.github.io/loops/";
 <script src="hootie.js"></script>
 <script src="bio004-dock.js"></script>
 <script src="dock-coachmark.js"></script>
-<script src="bio004-launchpad-overlay.js"></script>
 
 <script>
 /* Height sender for Canvas and Kajabi iframes. */

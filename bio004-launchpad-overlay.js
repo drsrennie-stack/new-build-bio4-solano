@@ -22,6 +22,19 @@
      that should skip straight to the calendar. */
   if (/[?&]nolaunch=1/.test(window.location.search)) return;
 
+  /* The curtain is for students ARRIVING at the course, from Canvas, a
+     phone link or a fresh tab. It was also opening when they were already
+     inside the site, which is how "Go to the calendar" became a loop: the
+     calendar loaded and the doors dropped in front of it again. So if the
+     click came from another page on this same site, the doors stay down. */
+  try {
+    if (document.referrer) {
+      var from = document.createElement('a');
+      from.href = document.referrer;
+      if (from.host === window.location.host) return;
+    }
+  } catch (e) {}
+
   var css = ''
   + '.lpov{position:fixed;inset:0;z-index:2147482998;background:#08101F;overflow:auto;'
   + 'font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#F4EFE8}'
@@ -52,6 +65,8 @@
   + 'font-family:inherit;font-weight:700;font-size:13.5px;border-radius:999px;padding:8px 16px}'
   + '.lpov .lp-ghost:hover{border-color:#CFA95F;color:#fff}'
   + '.lpov .lp-calrow{margin-top:20px;text-align:center}'
+  + '.lpov .lp-calrow{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}'
+  + '.lpov a.lp-ghost{display:inline-block;text-decoration:none;line-height:1.4}'
   + '.lpov .lp-disc{margin-top:14px;display:flex;flex-direction:column;gap:12px;align-items:center}'
   + '.lpov .lp-dlbl{font-size:12.5px;font-weight:700;color:#C8D2DA}'
   + '.lpov .lp-drow{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;align-items:flex-start}'
@@ -150,6 +165,24 @@
     return base + (bits[1] ? '#' + bits[1] : '');
   }
   function go(page) { return 'href="' + u(page) + '" target="_top"'; }
+
+  /* The calendar row used to be a single button that only closed the
+     curtain, which is right on the calendar page and wrong on every other
+     page that loads this file: on the Canvas front door, "Go to the
+     calendar" dropped the student on the front door instead. So the button
+     is a real link anywhere the calendar is not already behind the curtain,
+     and those pages also get a way out that says what it does, since the
+     calendar button used to be the only one. */
+  var here = (window.location.pathname.split('/').pop() || '').toLowerCase();
+  var ON_CALENDAR = here === 'bio004-course-calendar.html' || here === '';
+  function calRow() {
+    if (ON_CALENDAR) {
+      return '<button class="lp-ghost" data-lpclose="1">Go to the calendar &#8594;</button>';
+    }
+    return '<a class="lp-ghost" ' + go('bio004-course-calendar.html?nolaunch=1') + '>Go to the calendar &#8594;</a>'
+         + '<button class="lp-ghost lp-stay" data-lpclose="1">Close this and stay here</button>';
+  }
+
   function ext(url) { return 'href="' + url + '" target="_blank" rel="noopener"'; }
 
   var ov = document.createElement('div');
@@ -173,7 +206,7 @@
     + '<span class="lp-bt"><b>Weekly announcements</b><span>What you missed, in one place</span></span>'
     + '<span class="lp-abadge" id="lpAnnBadge" hidden aria-hidden="true"></span></button>'
     + '</div>'
-    + '<div class="lp-calrow"><button class="lp-ghost" data-lpclose="1">Go to the calendar &#8594;</button></div>'
+    + '<div class="lp-calrow">' + calRow() + '</div>'
     + '<div class="lp-disc" id="lpDisc"></div>'
     + '</div>'
 
