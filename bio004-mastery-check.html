@@ -133,6 +133,22 @@ textarea{min-height:90px;resize:vertical}
 .conf .cl{font-weight:700;font-size:14.5px;margin-right:4px}
 .conf label{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--navy);border-radius:999px;padding:6px 12px;font-size:14.5px;font-weight:600}
 .conf input{accent-color:var(--navy)}
+.opt.pts{align-items:center}
+.opt.pts input{width:3.4em;margin:0;padding:6px 4px;text-align:center;font:inherit;font-weight:700;border:1px solid var(--gray);border-radius:6px;flex:none;height:auto}
+.opt.pts label{flex:1}
+.q .stem.tfst{font-weight:400}
+.q .stem.tfst strong{font-weight:800;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.ptsline{font-size:14.5px;font-weight:700;color:var(--muted);margin:8px 0 0}
+.ptsline.over{color:var(--rust-dark)}
+.tfrow{display:flex;flex-wrap:wrap;gap:10px}
+.tfrow label{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--navy);border-radius:999px;padding:7px 16px;font-weight:600}
+.tfrow input{accent-color:var(--navy);width:18px;height:18px}
+.fixbox{margin-top:10px}
+.fixbox label{display:block;font-weight:700;margin:0 0 6px}
+.terms{list-style:none;padding:0;margin:0 0 12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:4px 16px}
+.mrow{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line-soft)}
+.mrow label{flex:1 1 260px}
+.mrow select{width:auto;min-width:150px}
 .q.unanswered{box-shadow:0 0 0 2px var(--rust),var(--shadow)}
 .verdict{font-family:var(--fd);font-weight:800;margin:10px 0 4px}
 .verdict.ok{color:var(--navy)}
@@ -248,7 +264,11 @@ td.n,th.n{text-align:right;white-space:nowrap}
 
   <div class="card noprint">
     <h2>Start over on this device</h2>
-    <p class="small">Clears every saved check, gap and checklist for this course in this browser. Use it on a shared computer when you are finished.</p>
+    <div class="redflag" role="note">
+      <h3>Read this before you clear anything</h3>
+      <p>Everything you do on this page builds a record of your gaps: every check, every red flag, and every checklist, for every module. Keep adding to it all semester. When the cumulative final comes, that record shows you which gaps kept coming back, and those are the ones to study first.</p>
+      <p style="margin:0">Clearing deletes all of it, for every module, and it cannot be brought back. Only clear it if you are on a shared or school computer and you are finished with it for good. If you want to keep a copy first, open your repair plan above for each module you have worked on and save each one as a PDF.</p>
+    </div>
     <div class="actions"><button type="button" class="btn ghost" id="wipe">Clear my saved work</button><span id="wipemsg" class="small" aria-live="polite"></span></div>
   </div>
 
@@ -262,6 +282,7 @@ td.n,th.n{text-align:right;white-space:nowrap}
 <script src="card-competency-map.js"></script>
 <script src="card-competency-fine.js"></script>
 <script src="bio004-mastery-items.js"></script>
+<script src="bio004-mastery-exam.js"></script>
 <script>
 (function(){
 'use strict';
@@ -353,28 +374,39 @@ function relatedOf(id){
 }
 
 /* ================= scoring and gaps ================= */
-var CONF = {sure:'Sure', unsure:'Unsure', guess:'Guess'};
-function attemptsFor(which){ var d=day(); return which==='prove' ? (d.prove?[d.prove]:[]) : d.checks; }
+/* Confidence comes from the 4-point spread on multiple choice, the way the
+   lecture exams score it: 3 or 4 points on one option is sure, a 2 and 2
+   split is unsure, and points spread one at a time is a guess. A question
+   counts as right when 3 or more points sit on the correct answer.
+   True or false and matching carry no confidence (conf 'na'). */
+var CONF = {sure:'3 or 4 points on one answer', unsure:'Split 2 and 2', guess:'Spread 1 point at a time'};
 function compStats(attempts){
   var st={};
   attempts.forEach(function(a){ a.answers.forEach(function(r){
     var s=st[r.comp]=st[r.comp]||{n:0,right:0,flag:0,wrong:0,fragile:0,items:[]};
-    s.n++; if(r.right){ s.right++; if(r.conf!=='sure') s.fragile++; } else { if(r.conf==='sure') s.flag++; else s.wrong++; }
+    s.n++;
+    if(r.right){ s.right++; if(r.conf==='unsure'||r.conf==='guess') s.fragile++; }
+    else { if(r.conf==='sure') s.flag++; else s.wrong++; }
     s.items.push(r);
   }); });
   Object.keys(st).forEach(function(id){ var s=st[id]; s.status = s.flag?'flag' : s.wrong?'gap' : s.fragile?'fragile' : 'solid'; s.priority = s.flag*3 + s.wrong*2 + s.fragile; });
   return st;
 }
 var STATUS = {
-  flag:{tag:'Red flag', cls:'flag', say:'You were sure, and you were wrong. That means you are holding a wrong idea, not just a missing one, and you would not think to look it up. Fix these first.'},
-  gap:{tag:'Gap', cls:'gap', say:'You missed it and you knew you were unsure. The idea is not there yet. Rebuild it from the notes, then test yourself without them.'},
-  fragile:{tag:'Fragile', cls:'fragile', say:'You got it right but were not sure. That answer will not hold up under exam pressure. A few rounds of retrieval will make it solid.'},
-  solid:{tag:'Solid', cls:'solid', say:'Right and sure. Keep it warm with a quick review, but spend your time elsewhere.'},
+  flag:{tag:'Red flag', cls:'flag', say:'You put most of your points on a wrong answer. That means you are holding a wrong idea, not just a missing one, and you would not think to look it up. Fix these first.'},
+  gap:{tag:'Gap', cls:'gap', say:'You missed it. The idea is not there yet. Rebuild it from the notes, then test yourself without them.'},
+  fragile:{tag:'Fragile', cls:'fragile', say:'You got it right but split your points. That answer will not hold up under exam pressure. A few rounds of retrieval will make it solid.'},
+  solid:{tag:'Solid', cls:'solid', say:'Right, with your points where they belonged. Keep it warm with a quick review, but spend your time elsewhere.'},
   untested:{tag:'Not tested yet', cls:'untested', say:'No question on this one yet. Take another check to find out where it stands.'}
 };
 
 /* ================= generator ================= */
-function seenIds(){ var s={}; moduleDays().forEach(function(k){ var d=S.days[k]; d.checks.concat(d.prove?[d.prove]:[]).forEach(function(a){ a.answers.forEach(function(r){ s[r.id]=1; }); }); }); return s; }
+function EXAM(){ return (MB.exam||{})[S.module] || null; }
+var LENGTHS = {
+  quick:{label:'Quick check', time:'about 15 to 20 minutes', tf:5, mc:10, match:5},
+  mini:{label:'Mini exam', time:'about 30 to 35 minutes', tf:10, mc:20, match:5}
+};
+function seenIds(){ var s={}; moduleDays().forEach(function(k){ var d=S.days[k]; d.checks.concat(d.prove?[d.prove]:[]).forEach(function(a){ a.answers.forEach(function(r){ s[r.id]=1; }); if(a.match) s['set:'+a.match.set]=1; if(a.dump) (a.dump.choices||[]).forEach(function(x){ s['dump:'+x]=1; }); }); }); return s; }
 function pickItems(n, comps, seen){
   var pool=(POOL[S.module]||[]).filter(function(it){ return !comps || comps.indexOf(it.comp)!==-1; });
   var byComp={}; pool.forEach(function(it){ (byComp[it.comp]=byComp[it.comp]||[]).push(it); });
@@ -383,10 +415,47 @@ function pickItems(n, comps, seen){
   while(out.length<n){ var added=false; order.forEach(function(c){ if(out.length>=n) return; var it=byComp[c][round]; if(it){ out.push(it); added=true; } }); if(!added) break; round++; }
   return shuffle(out).map(function(it){ var ord=it.options.map(function(_,i){ return i; }); shuffle(ord); return {it:it, order:ord}; });
 }
+function spread(list, n, seen){
+  /* unseen first, one per competency before any competency repeats */
+  var L=shuffle(list.slice()).sort(function(a,b){ return (seen[a.id]?1:0)-(seen[b.id]?1:0); });
+  var out=[], used={};
+  L.forEach(function(it){ if(out.length<n && !used[it.comp]){ out.push(it); used[it.comp]=1; } });
+  L.forEach(function(it){ if(out.length<n && out.indexOf(it)===-1) out.push(it); });
+  return out;
+}
+function pickTF(n, seen){
+  var ex=EXAM(); if(!ex || !ex.tf || !n) return [];
+  var nf=Math.ceil(n/2), nt=n-nf;
+  if(Math.random()<0.5){ var t=nf; nf=nt; nt=t; }
+  var f=spread(ex.tf.filter(function(x){ return !x.ans; }), nf, seen), t2=spread(ex.tf.filter(function(x){ return x.ans; }), nt, seen);
+  return shuffle(f.concat(t2));
+}
+function pickMatch(n, seen){
+  var ex=EXAM(); if(!ex || !ex.match || !ex.match.length) return null;
+  var sets=shuffle(ex.match.filter(function(m){ return m.pairs.length>=n; })).sort(function(a,b){ return (seen['set:'+a.id]?1:0)-(seen['set:'+b.id]?1:0); });
+  var set=sets[0]; if(!set) return null;
+  var pairs=shuffle(set.pairs.slice()).slice(0,n);
+  var terms=pairs.map(function(p,i){ return i; }), tries=0;
+  /* the key may never run in item order, forward or backward */
+  do { shuffle(terms); tries++; } while(tries<50 && (terms.every(function(v,i){ return v===i; }) || terms.every(function(v,i){ return v===terms.length-1-i; })));
+  return {set:set.id, title:set.title, pairs:pairs, terms:terms};
+}
+function pickDumps(seen){
+  var ex=EXAM(); if(!ex || !ex.dumps || !ex.dumps.length) return [];
+  var byArea={}; shuffle(ex.dumps.slice()).sort(function(a,b){ return (seen['dump:'+a.id]?1:0)-(seen['dump:'+b.id]?1:0); }).forEach(function(d){ (byArea[d.area]=byArea[d.area]||[]).push(d); });
+  return shuffle(Object.keys(byArea)).slice(0,3).map(function(a){ return byArea[a][0]; });
+}
+function findDump(id){ var ex=EXAM(); return ex&&ex.dumps ? ex.dumps.filter(function(d){ return d.id===id; })[0] : null; }
+function findTF(id){ var ex=EXAM(); return ex&&ex.tf ? ex.tf.filter(function(t){ return t.id===id; })[0] : null; }
+function findItem(id){ var p=POOL[S.module]||[]; for(var i=0;i<p.length;i++) if(p[i].id===id) return p[i]; return null; }
+function norm(s){ return String(s||'').toLowerCase().replace(/[^a-z0-9]/g,''); }
+function tfHtml(st){ var m=/^(.*)\[\[(.*?)\]\](.*)$/.exec(st); return m ? esc(m[1])+'<strong>'+esc(m[2])+'</strong>'+esc(m[3]) : esc(st); }
+function tfPlain(st){ return String(st).replace(/\[\[|\]\]/g,''); }
+function tfTerm(st){ var m=/\[\[(.*?)\]\]/.exec(st); return m?m[1]:''; }
 
 /* ================= steps ================= */
 var STEPS = [
-  {k:'check', n:'Step 1', t:'Check', s:'15 to 20 min, alone, closed notes'},
+  {k:'check', n:'Step 1', t:'Check', s:'15 to 35 min, alone, closed notes'},
   {k:'gap',   n:'Step 2', t:'Find the gap', s:'5 min, name three'},
   {k:'fix',   n:'Step 3', t:'Fix it', s:'25 to 30 min, group or on your own'},
   {k:'prove', n:'Step 4', t:'Prove it', s:'20 to 25 min, you first'},
@@ -418,88 +487,213 @@ function refresh(){ renderSteps(); renderProgress(); sendHeight(); }
 /* ================= step 1: check ================= */
 var VIEWS = {};
 VIEWS.check = function(v){
-  var d=day(); var pool=(POOL[S.module]||[]).length;
-  var h='<div class="card"><p class="eyebrow">Step 1 &middot; Check</p><h2>Take a mastery check.</h2>'+
-    '<ol><li>Close your notes and put your phone away. Treat this like the exam.</li>'+
-    '<li>Answer every question, then mark how you feel about it: <strong>Sure</strong>, <strong>Unsure</strong>, or <strong>Guess</strong>. Be honest. That mark is how we tell a wrong idea from a missing one.</li>'+
-    '<li>Submit, then read the reasoning for anything you missed or were unsure about.</li></ol>'+
-    '<p class="small muted">Every check is built fresh from '+pool+' questions on this module, spread across its '+(MODCOMPS[S.module]||[]).length+' competencies. Take as many as you like. Questions you have already seen are used last.</p>'+
-    '<p class="lab" id="lenlab">How many questions?</p><div class="pills" role="group" aria-labelledby="lenlab">'+
-    [10,15,20,30].map(function(n){ return '<button type="button" class="pill" data-n="'+n+'" aria-pressed="'+(n===15?'true':'false')+'">'+n+'</button>'; }).join('')+'</div>'+
-    '<p class="hint">15 questions takes about 15 to 20 minutes.</p>'+
+  var d=day(); var pool=(POOL[S.module]||[]).length; var ex=EXAM();
+  var h='<div class="card"><p class="eyebrow">Step 1 &middot; Check</p><h2>Take a mastery check, set up like the exam.</h2>'+
+    '<ol><li>Close your notes and put your phone away. Treat this like the real exam.</li>'+
+    '<li>It has the same parts as the lecture exam: true or false with a fix, multiple choice with confidence points, matching, and a brain dump you choose from three.</li>'+
+    '<li>On multiple choice, spread 4 points across the options. Put all 4 on one answer when you are certain, and split them when you are not. Be honest. How you spread your points is how we tell a wrong idea from a missing one.</li>'+
+    '<li>Submit, then check your brain dump against the key and read the reasoning for everything you missed.</li></ol>'+
+    (ex ? '' : '<p class="small"><strong>This module is multiple choice only for now.</strong> The true or false, matching and brain dump questions for it are still being written.</p>')+
+    '<p class="small muted">Every check is built fresh from this module’s question bank ('+pool+' multiple choice'+(ex&&ex.tf?', '+ex.tf.length+' true or false, '+ex.match.length+' matching sets, '+ex.dumps.length+' brain dumps':'')+'), spread across its '+(MODCOMPS[S.module]||[]).length+' competencies. Take as many as you like. Questions you have already seen are used last.</p>'+
+    '<p class="lab" id="lenlab">Which length?</p><div class="pills" role="group" aria-labelledby="lenlab">'+
+    Object.keys(LENGTHS).map(function(k){ var L=LENGTHS[k]; return '<button type="button" class="pill" data-len="'+k+'" aria-pressed="'+(k==='mini'?'true':'false')+'">'+L.label+'</button>'; }).join('')+'</div>'+
+    '<p class="hint" id="lenhint" aria-live="polite"></p>'+
     '<div class="actions"><button type="button" class="btn" id="gen">Build my check</button>'+(d.checks.length?'<button type="button" class="btn ghost" id="lastres">See my last results</button>':'')+'</div></div><div id="exam"></div>';
   v.innerHTML=h;
-  var n=15; $$('.pill',v).forEach(function(b){ b.addEventListener('click', function(){ n=+b.getAttribute('data-n'); $$('.pill',v).forEach(function(o){ o.setAttribute('aria-pressed', o===b?'true':'false'); }); }); });
-  $('#gen',v).addEventListener('click', function(){ startExam($('#exam',v), 'check', pickItems(n, null, seenIds())); });
+  var len='mini';
+  function hint(){ var L=LENGTHS[len]; $('#lenhint',v).textContent = ex ? L.label+': '+L.tf+' true or false, '+L.mc+' multiple choice, '+L.match+' matching, and one brain dump chosen from three. Plan on '+L.time+'.' : L.label+': '+(L.mc+L.tf)+' multiple choice.'; }
+  $$('.pill',v).forEach(function(b){ b.addEventListener('click', function(){ len=b.getAttribute('data-len'); $$('.pill',v).forEach(function(o){ o.setAttribute('aria-pressed', o===b?'true':'false'); }); hint(); }); });
+  hint();
+  $('#gen',v).addEventListener('click', function(){
+    var L=LENGTHS[len], seen=seenIds();
+    var tf=pickTF(ex?L.tf:0, seen), mc=pickItems(ex?L.mc:L.mc+L.tf, null, seen), mt=ex?pickMatch(L.match, seen):null, dp=ex?pickDumps(seen):[];
+    startCheck($('#exam',v), {len:len, tf:tf, mc:mc, match:mt, dumps:dp});
+  });
   if($('#lastres',v)) $('#lastres',v).addEventListener('click', function(){ showResults($('#exam',v), d.checks[d.checks.length-1]); });
 };
 
-function startExam(host, kind, picked, gapComps){
-  if(!picked.length){ host.innerHTML='<p class="msg">There are no questions for this module yet.</p>'; return; }
-  live={kind:kind, picked:picked, id:uid(), gapComps:gapComps||null};
-  var h='<form id="xform" novalidate>';
-  picked.forEach(function(p,i){
-    var it=p.it;
-    h+='<div class="q" id="q'+i+'"><fieldset><legend>Question '+(i+1)+' of '+picked.length+'</legend><p class="stem" id="st'+i+'">'+esc(it.stem)+'</p>'+
-      '<div class="opts" role="radiogroup" aria-labelledby="st'+i+'">'+p.order.map(function(oi,k){ return '<label class="opt"><input type="radio" name="a'+i+'" value="'+oi+'"><span class="l">'+LET[k]+'.</span><span>'+esc(it.options[oi])+'</span></label>'; }).join('')+'</div></fieldset>'+
-      '<fieldset class="conf"><legend class="cl">How sure are you?</legend>'+['sure','unsure','guess'].map(function(c){ return '<label><input type="radio" name="c'+i+'" value="'+c+'">'+CONF[c]+'</label>'; }).join('')+'</fieldset>'+
-      (kind==='prove'?'<div class="teamrow" id="tr'+i+'" hidden><label for="t'+i+'">Team answer</label><select id="t'+i+'"><option value="">Same as mine</option>'+p.order.map(function(oi,k){ return '<option value="'+oi+'">'+LET[k]+'</option>'; }).join('')+'</select></div>':'')+
-      '</div>';
-  });
-  h+='<div class="actions"><button type="submit" class="btn" id="xsub">'+(kind==='prove'?'Lock my answers':'Submit my check')+'</button><span class="msg" id="xmsg" role="alert"></span></div></form>';
-  host.innerHTML=h; host.scrollIntoView({block:'start'}); $('#q0 input',host).focus(); sendHeight();
+/* one multiple choice question with 4 confidence points */
+function mcBlock(prefix, i, n, it, order, label){
+  return '<div class="q" id="'+prefix+'q'+i+'"><fieldset><legend>'+esc(label)+' '+(i+1)+' of '+n+'</legend><p class="stem" id="'+prefix+'st'+i+'">'+esc(it.stem)+'</p>'+
+    '<div class="opts">'+order.map(function(oi,k){ var id=prefix+'p'+i+'_'+k; return '<div class="opt pts"><input type="number" inputmode="numeric" min="0" max="4" step="1" id="'+id+'" data-q="'+i+'" data-o="'+oi+'" aria-describedby="'+prefix+'st'+i+'"><label for="'+id+'"><span class="l">'+LET[k]+'.</span> '+esc(it.options[oi])+'</label></div>'; }).join('')+
+    '</div><p class="ptsline" id="'+prefix+'pl'+i+'" aria-live="polite">Points placed: 0 of 4</p></fieldset></div>';
+}
+function wirePoints(host, prefix){
+  $$('input[type=number]', host).forEach(function(inp){ inp.addEventListener('input', function(){
+    var i=inp.getAttribute('data-q'); var sum=$$('input[data-q="'+i+'"]', host).reduce(function(s,x){ var v=parseInt(x.value,10); return s+(isNaN(v)?0:v); },0);
+    var pl=$('#'+prefix+'pl'+i, host); if(pl){ pl.textContent='Points placed: '+sum+' of 4'+(sum>4?'. That is too many.':''); pl.classList.toggle('over', sum!==4 && sum>0); }
+  }); });
+}
+function readPoints(host, i, nOpts){
+  var pts=[]; for(var k=0;k<nOpts;k++) pts.push(0);
+  $$('input[data-q="'+i+'"]', host).forEach(function(x){ var v=parseInt(x.value,10); pts[+x.getAttribute('data-o')] = (isNaN(v)||v<0)?0:v; });
+  return pts;
+}
+function mcRecord(it, order, pts){
+  var max=Math.max.apply(null, pts), picked=pts.indexOf(max), pr=pts[it.correct]||0;
+  return {kind:'mc', id:it.id, comp:it.comp, pts:pts, order:order, picked:picked, ptsRight:pr, right:pr>=3, conf: max>=3?'sure':max===2?'unsure':'guess'};
+}
+
+function startCheck(host, E){
+  if(!E.mc.length && !E.tf.length){ host.innerHTML='<p class="msg">There are no questions for this module yet.</p>'; return; }
+  live={kind:'check', E:E, id:uid()};
+  var h='<form id="xform" novalidate>', part=0;
+  if(E.tf.length){ part++;
+    h+='<div class="card"><p class="eyebrow">Part '+part+'</p><h3 style="margin-top:0">True or false, then fix it</h3><p>Decide whether each statement is true or false. If it is false, write the word or phrase that should replace the <strong>bold term</strong> to make it true. Each right answer is 1 point, and a correct fix on a false statement earns a half-point bonus.</p></div>';
+    E.tf.forEach(function(t,i){
+      h+='<div class="q" id="tfq'+i+'"><fieldset><legend>True or false '+(i+1)+' of '+E.tf.length+'</legend><p class="stem tfst" id="tfst'+i+'">'+tfHtml(t.st)+'</p>'+
+        '<div class="tfrow"><label><input type="radio" name="tf'+i+'" value="T"> True</label><label><input type="radio" name="tf'+i+'" value="F"> False</label></div>'+
+        '<div class="fixbox" id="tffx'+i+'" hidden><label for="tfin'+i+'">If it is false, what should replace the bold term?</label><input type="text" id="tfin'+i+'" autocomplete="off"></div></fieldset></div>';
+    });
+  }
+  if(E.mc.length){ part++;
+    h+='<div class="card"><p class="eyebrow">Part '+part+'</p><h3 style="margin-top:0">Multiple choice, with confidence points</h3><p>Choose the best answer. Spread 4 points across the options for each question: all 4 on one answer if you are certain, or split them if you are unsure. You earn the points you place on the correct answer. Leave the other boxes empty or at 0.</p></div>';
+    E.mc.forEach(function(p,i){ h+=mcBlock('mc', i, E.mc.length, p.it, p.order, 'Multiple choice'); });
+  }
+  if(E.match){ part++;
+    var M=E.match;
+    h+='<div class="card q" id="mtq"><p class="eyebrow">Part '+part+'</p><h3 style="margin-top:0">Matching: '+esc(M.title)+'</h3><p>Match each description to one term. Each term is used once.</p>'+
+      '<ul class="terms" aria-label="Terms">'+M.terms.map(function(pi,k){ return '<li><strong>'+LET[k]+'.</strong> '+esc(M.pairs[pi][0])+'</li>'; }).join('')+'</ul>'+
+      M.pairs.map(function(p,i){ return '<div class="mrow"><label for="mt'+i+'"><span class="l">'+(i+1)+'.</span> '+esc(p[1])+'</label><select id="mt'+i+'"><option value="">Choose a letter</option>'+M.terms.map(function(pi,k){ return '<option value="'+pi+'">'+LET[k]+'</option>'; }).join('')+'</select></div>'; }).join('')+'</div>';
+  }
+  if(E.dumps.length){ part++;
+    h+='<div class="card q" id="bdq"><p class="eyebrow">Part '+part+'</p><h3 style="margin-top:0">Brain dump: choose one</h3><p>Pick one prompt and write or sketch everything you know, with no notes. Paper is fine too. You will check it against the key after you submit.</p>'+
+      '<fieldset class="chk" style="border:0;padding:0;margin:0"><legend class="vh">Choose one brain dump prompt</legend>'+E.dumps.map(function(d,k){ return '<label><input type="radio" name="bd" value="'+esc(d.id)+'"><span><strong>'+esc(d.title)+'.</strong> '+esc(d.prompt)+'</span></label>'; }).join('')+'</fieldset>'+
+      '<div class="field" style="margin-top:10px"><label for="bdtext">Your brain dump</label><textarea id="bdtext" rows="7"></textarea><p class="hint">Or write it on paper and leave this box empty.</p></div></div>';
+  }
+  h+='<div class="actions"><button type="submit" class="btn" id="xsub">Submit my check</button><span class="msg" id="xmsg" role="alert"></span></div></form>';
+  host.innerHTML=h; host.scrollIntoView({block:'start'}); var f1=$('input',host); if(f1) f1.focus(); sendHeight();
+  E.tf.forEach(function(t,i){ $$('input[name="tf'+i+'"]',host).forEach(function(r){ r.addEventListener('change', function(){ $('#tffx'+i,host).hidden = r.value!=='F'; sendHeight(); }); }); });
+  wirePoints(host,'mc');
   $('#xform',host).addEventListener('submit', function(e){
     e.preventDefault();
-    var missing=[]; picked.forEach(function(p,i){ var ok=$('input[name="a'+i+'"]:checked',host) && $('input[name="c'+i+'"]:checked',host); $('#q'+i,host).classList.toggle('unanswered', !ok); if(!ok) missing.push(i+1); });
-    if(missing.length){ $('#xmsg',host).textContent='Answer and mark Sure, Unsure or Guess on question'+(missing.length>1?'s ':' ')+missing.join(', ')+'.'; $('#q'+(missing[0]-1)+' input',host).focus(); return; }
-    var answers=picked.map(function(p,i){ var pk=+$('input[name="a'+i+'"]:checked',host).value; return {id:p.it.id, comp:p.it.comp, picked:pk, conf:$('input[name="c'+i+'"]:checked',host).value, right:pk===p.it.correct, order:p.order}; });
-    var a={id:live.id, kind:kind, at:new Date().toISOString(), answers:answers, score:answers.filter(function(r){ return r.right; }).length/answers.length};
-    if(kind==='prove'){ a.gapComps=live.gapComps; a.revealed=false; day().prove=a; save(); lockForTeam(host, a); refresh(); return; }
+    var miss={tf:[], mc:[], match:0, dump:false}; $$('.unanswered',host).forEach(function(x){ x.classList.remove('unanswered'); });
+    E.tf.forEach(function(t,i){ if(!$('input[name="tf'+i+'"]:checked',host)){ miss.tf.push(i+1); $('#tfq'+i,host).classList.add('unanswered'); } });
+    E.mc.forEach(function(p,i){ var s=readPoints(host,i,p.it.options.length).reduce(function(a,b){ return a+b; },0); if(s!==4){ miss.mc.push(i+1); $('#mcq'+i,host).classList.add('unanswered'); } });
+    if(E.match) E.match.pairs.forEach(function(p,i){ if(!$('#mt'+i,host).value) miss.match++; });
+    if(E.match && miss.match) $('#mtq',host).classList.add('unanswered');
+    if(E.dumps.length && !$('input[name="bd"]:checked',host)){ miss.dump=true; $('#bdq',host).classList.add('unanswered'); }
+    var msg=[]; if(miss.tf.length) msg.push('true or false '+miss.tf.join(', '));
+    if(miss.mc.length) msg.push('multiple choice '+miss.mc.join(', ')+' (points must total 4)');
+    if(miss.match) msg.push(miss.match+' matching '+(miss.match===1?'item':'items'));
+    if(miss.dump) msg.push('choose a brain dump prompt');
+    if(msg.length){ $('#xmsg',host).textContent='Still to finish: '+msg.join('; ')+'.'; var first=$('.unanswered',host); if(first){ first.scrollIntoView({block:'center'}); var fi=$('input,select',first); if(fi) fi.focus(); } return; }
+    var answers=[], bonus=0, earned=0, max=0;
+    E.tf.forEach(function(t,i){ var j=$('input[name="tf'+i+'"]:checked',host).value==='T'; var fix=$('#tfin'+i,host).value.trim(); var right=j===t.ans; var b=(!t.ans && !j && fix && (t.accept||[]).some(function(a){ return norm(a)===norm(fix); }))?1:0; bonus+=b*0.5; earned+=right?1:0; max+=1;
+      answers.push({kind:'tf', id:t.id, comp:t.comp, judged:j, fix:fix, bonus:b, right:right, conf:'na'}); });
+    E.mc.forEach(function(p,i){ var r=mcRecord(p.it, p.order, readPoints(host,i,p.it.options.length)); earned+=r.ptsRight; max+=4; answers.push(r); });
+    var M=null;
+    if(E.match){ M={set:E.match.set, title:E.match.title, pairs:E.match.pairs, terms:E.match.terms};
+      E.match.pairs.forEach(function(p,i){ var pk=+$('#mt'+i,host).value; var right=pk===i; earned+=right?1:0; max+=1; answers.push({kind:'match', id:E.match.set+':'+i, comp:p[2], row:i, picked:pk, right:right, conf:'na'}); }); }
+    var D=null; if(E.dumps.length){ D={choices:E.dumps.map(function(d){ return d.id; }), chosen:$('input[name="bd"]:checked',host).value, text:$('#bdtext',host).value, checked:[]}; }
+    var a={id:live.id, kind:'check', len:E.len, at:new Date().toISOString(), answers:answers, match:M, dump:D, earned:earned, bonus:bonus, max:max, score:max?earned/max:0};
     day().checks.push(a); save(); refresh(); showResults(host, a);
   });
 }
-function findItem(id){ var p=POOL[S.module]||[]; for(var i=0;i<p.length;i++) if(p[i].id===id) return p[i]; return null; }
+
+/* the Prove It set: multiple choice with confidence points, then a team step */
+function startExam(host, kind, picked, gapComps){
+  if(!picked.length){ host.innerHTML='<p class="msg">There are no questions for these competencies yet.</p>'; return; }
+  live={kind:kind, picked:picked, id:uid(), gapComps:gapComps||null};
+  var h='<form id="xform" novalidate><div class="card"><p>Spread 4 points across the options for each question, the same way as on the exam.</p></div>';
+  picked.forEach(function(p,i){ h+=mcBlock('pv', i, picked.length, p.it, p.order, 'Question'); });
+  h+='<div class="actions"><button type="submit" class="btn" id="xsub">Lock my answers</button><span class="msg" id="xmsg" role="alert"></span></div></form>';
+  host.innerHTML=h; host.scrollIntoView({block:'start'}); $('input',host).focus(); sendHeight();
+  wirePoints(host,'pv');
+  $('#xform',host).addEventListener('submit', function(e){
+    e.preventDefault();
+    var missing=[]; picked.forEach(function(p,i){ var s=readPoints(host,i,p.it.options.length).reduce(function(a,b){ return a+b; },0); $('#pvq'+i,host).classList.toggle('unanswered', s!==4); if(s!==4) missing.push(i+1); });
+    if(missing.length){ $('#xmsg',host).textContent='Place exactly 4 points on question'+(missing.length>1?'s ':' ')+missing.join(', ')+'.'; $('#pvq'+(missing[0]-1)+' input',host).focus(); return; }
+    var answers=picked.map(function(p,i){ return mcRecord(p.it, p.order, readPoints(host,i,p.it.options.length)); });
+    var a={id:live.id, kind:kind, at:new Date().toISOString(), answers:answers, score:answers.reduce(function(s,r){ return s+r.ptsRight; },0)/(4*answers.length)};
+    a.gapComps=live.gapComps; a.revealed=false; day().prove=a; save(); lockForTeam(host, a); refresh();
+  });
+}
+
+/* ================= review ================= */
 function reviewItem(r, i, team){
+  if(r.kind==='tf'){ var t=findTF(r.id); if(!t) return '';
+    var h='<div class="q"><p class="small muted" style="margin:0 0 4px">True or false '+(i+1)+' &middot; '+esc((COMP[r.comp]||{}).name||'')+'</p><p class="stem tfst">'+tfHtml(t.st)+'</p>'+
+      '<p class="verdict '+(r.right?'ok':'no')+'">'+(r.right?'Correct':'Not this time')+'. You said '+(r.judged?'true':'false')+', and the statement is '+(t.ans?'true':'false')+'.</p>';
+    if(!t.ans){ h+='<p>'+(r.fix?'Your fix: '+esc(r.fix)+'. '+(r.bonus?'<strong>That fix earns the bonus.</strong>':'That fix did not match.'):'No fix written.')+(t.why?'':' An accepted fix: '+esc(t.accept[0])+'.')+'</p>'; }
+    if(t.why) h+='<details'+(r.right?'':' open')+'><summary>The reasoning</summary><div class="why"><p>'+esc(t.why)+'</p></div></details>';
+    return h+'</div>'; }
+  if(r.kind==='match') return '';
   var it=findItem(r.id); if(!it) return '';
   var ord=r.order||it.options.map(function(_,k){ return k; });
-  var h='<div class="q"><p class="small muted" style="margin:0 0 4px">Question '+(i+1)+' &middot; '+esc((COMP[r.comp]||{}).name||'')+'</p><p class="stem">'+esc(it.stem)+'</p><div class="opts">';
-  ord.forEach(function(oi,k){ var cls = oi===it.correct?' right':(oi===r.picked?' wrong':''); h+='<div class="opt'+cls+'"><span class="l">'+LET[k]+'.</span><span>'+esc(it.options[oi])+(oi===it.correct?' <strong>(correct answer)</strong>':'')+(oi===r.picked?' <strong>(your answer)</strong>':'')+(team!=null&&oi===team&&team!==r.picked?' <strong>(team answer)</strong>':'')+'</span></div>'; });
-  h+='</div><p class="verdict '+(r.right?'ok':'no')+'">'+(r.right?'Correct':'Not this time')+', marked '+CONF[r.conf]+(!r.right&&r.conf==='sure'?'. Red flag.':'.')+'</p>';
-  h+='<details'+(r.right&&r.conf==='sure'?'':' open')+'><summary>The reasoning</summary><div class="why"><p>'+esc(it.why)+'</p>';
+  var h='<div class="q"><p class="small muted" style="margin:0 0 4px">Multiple choice '+(i+1)+' &middot; '+esc((COMP[r.comp]||{}).name||'')+'</p><p class="stem">'+esc(it.stem)+'</p><div class="opts">';
+  ord.forEach(function(oi,k){ var p=r.pts?r.pts[oi]:0; var cls = oi===it.correct?' right':(p>0?' wrong':''); h+='<div class="opt'+cls+'"><span class="l">'+LET[k]+'.</span><span>'+esc(it.options[oi])+(oi===it.correct?' <strong>(correct answer)</strong>':'')+(p?' <strong>('+p+(p===1?' point':' points')+' from you)</strong>':'')+(team!=null&&oi===team?' <strong>(team answer)</strong>':'')+'</span></div>'; });
+  var prr=r.ptsRight!=null?r.ptsRight:(r.right?4:0);
+  h+='</div><p class="verdict '+(r.right?'ok':'no')+'">'+prr+' of 4 points'+(!r.right&&r.conf==='sure'?'. Red flag: most of your points were on a wrong answer.':r.right&&r.conf!=='sure'?'. Right, but split.':'.')+'</p>';
+  h+='<details'+(prr===4?'':' open')+'><summary>The reasoning</summary><div class="why"><p>'+esc(it.why)+'</p>';
   if(it.whyNot){ h+='<ul>'+ord.map(function(oi,k){ return oi===it.correct?'':'<li><strong>'+LET[k]+'.</strong> '+esc(it.whyNot[oi])+'</li>'; }).join('')+'</ul>'; }
-  h+='</div></details></div>';
-  return h;
+  return h+'</div></details></div>';
 }
+function matchReview(a){
+  var M=a.match; if(!M) return '';
+  var rows=a.answers.filter(function(r){ return r.kind==='match'; });
+  return '<div class="card"><h3 style="margin-top:0">Matching: '+esc(M.title)+'</h3><div class="tablewrap" tabindex="0" role="region" aria-label="Table, scrolls sideways on small screens"><table><thead><tr><th>Description</th><th>You chose</th><th>Answer</th></tr></thead><tbody>'+
+    rows.map(function(r){ var p=M.pairs[r.row]; return '<tr><td>'+esc(p[1])+'</td><td>'+(r.right?'':'')+esc(M.pairs[r.picked]?M.pairs[r.picked][0]:'')+(r.right?' (right)':' (not this time)')+'</td><td><strong>'+esc(p[0])+'</strong></td></tr>'; }).join('')+'</tbody></table></div></div>';
+}
+function mcAnswers(ans){ return ans.filter(function(r){ return r.kind==='mc' || !r.kind; }); }
 function calib(ans){
-  var g={sure:[0,0],unsure:[0,0],guess:[0,0]}; ans.forEach(function(r){ g[r.conf][r.right?0:1]++; }); return g;
+  var g={sure:[0,0],unsure:[0,0],guess:[0,0]}; mcAnswers(ans).forEach(function(r){ if(g[r.conf]) g[r.conf][r.right?0:1]++; }); return g;
 }
 function calibText(g){
   var out=[]; var sureN=g.sure[0]+g.sure[1];
-  if(g.sure[1]) out.push('You were sure and wrong on '+g.sure[1]+(g.sure[1]===1?' question':' questions')+'. Those are your red flags, and they matter more than anything else on this page.');
-  if(sureN>=3 && g.sure[0]/sureN>=0.9) out.push('When you say Sure, you are right almost every time. Your confidence is trustworthy.');
-  else if(sureN>=3 && g.sure[0]/sureN<0.75) out.push('Your Sure is right only '+pct(g.sure[0]/sureN)+' percent of the time. Slow down on questions that feel easy and check each option against what you know.');
+  if(g.sure[1]) out.push('You put 3 or 4 points on a wrong answer '+g.sure[1]+(g.sure[1]===1?' time':' times')+'. Those are your red flags, and they matter more than anything else on this page.');
+  if(sureN>=3 && g.sure[0]/sureN>=0.9) out.push('When you commit your points to one answer, you are right almost every time. Your confidence is trustworthy.');
+  else if(sureN>=3 && g.sure[0]/sureN<0.75) out.push('When you committed 3 or 4 points, you were right only '+pct(g.sure[0]/sureN)+' percent of the time. Slow down on questions that feel easy and check each option against what you know.');
   var lowRight=g.unsure[0]+g.guess[0], lowN=lowRight+g.unsure[1]+g.guess[1];
-  if(lowN>=3 && lowRight/lowN>=0.6) out.push('You got '+lowRight+' of '+lowN+' right when you were unsure or guessing. You know more than you think, but it is not solid yet. Retrieval practice turns that into Sure.');
-  if(!out.length) out.push('Look at the table: every Unsure and Guess, right or wrong, is a place to practice.');
+  if(lowN>=3 && lowRight/lowN>=0.6) out.push('When you split your points, the right answer still got most of them '+lowRight+' of '+lowN+' times. You know more than you think, but it is not solid yet. Retrieval practice turns that into full points.');
+  if(!out.length) out.push('Every question where you split your points, right or wrong, is a place to practice.');
   return out;
 }
+function sectionScores(a){
+  var s={tf:[0,0], mc:[0,0], match:[0,0]};
+  a.answers.forEach(function(r){ if(r.kind==='tf'){ s.tf[1]++; if(r.right) s.tf[0]++; } else if(r.kind==='match'){ s.match[1]++; if(r.right) s.match[0]++; } else { s.mc[1]+=4; s.mc[0]+=(r.ptsRight!=null?r.ptsRight:(r.right?4:0)); } });
+  return s;
+}
 function showResults(host, a){
-  var g=calib(a.answers); var st=compStats([a]);
-  var flags=a.answers.filter(function(r){ return !r.right && r.conf==='sure'; });
-  var h='<div class="card"><p class="eyebrow">Your results</p><h2>'+pct(a.score)+' percent. Now the useful part.</h2>'+
-    '<div class="stats"><div class="stat"><b>'+a.answers.filter(function(r){return r.right;}).length+' of '+a.answers.length+'</b><small>Correct</small></div>'+
-    '<div class="stat"><b>'+g.sure[1]+'</b><small>Red flags: sure and wrong</small></div>'+
-    '<div class="stat"><b>'+(g.unsure[0]+g.guess[0])+'</b><small>Right, but not sure</small></div></div>'+
-    '<div class="tablewrap" tabindex="0" role="region" aria-label="Table, scrolls sideways on small screens"><table><caption class="vh">Accuracy by confidence</caption><thead><tr><th>You marked</th><th class="n">Right</th><th class="n">Wrong</th></tr></thead><tbody>'+
+  var g=calib(a.answers); var sc=sectionScores(a);
+  var flags=mcAnswers(a.answers).filter(function(r){ return !r.right && r.conf==='sure'; });
+  var dump=a.dump?findDump(a.dump.chosen):null;
+  var h='<div class="card"><p class="eyebrow">Your results</p><h2>'+pct(a.score)+' percent'+(a.bonus?' plus '+a.bonus+' bonus':'')+'. Now the useful part.</h2>'+
+    '<div class="stats">'+
+    (sc.tf[1]?'<div class="stat"><b>'+sc.tf[0]+' of '+sc.tf[1]+'</b><small>True or false'+(a.bonus?', plus '+a.bonus+' bonus for fixes':'')+'</small></div>':'')+
+    (sc.mc[1]?'<div class="stat"><b>'+sc.mc[0]+' of '+sc.mc[1]+'</b><small>Multiple choice points</small></div>':'')+
+    (sc.match[1]?'<div class="stat"><b>'+sc.match[0]+' of '+sc.match[1]+'</b><small>Matching</small></div>':'')+
+    '<div class="stat"><b>'+g.sure[1]+'</b><small>Red flags: most points on a wrong answer</small></div></div>'+
+    '<h3>How you spread your points</h3><div class="tablewrap" tabindex="0" role="region" aria-label="Table, scrolls sideways on small screens"><table><thead><tr><th>On multiple choice you put</th><th class="n">Right</th><th class="n">Missed</th></tr></thead><tbody>'+
     ['sure','unsure','guess'].map(function(c){ return '<tr><td>'+CONF[c]+'</td><td class="n">'+g[c][0]+'</td><td class="n">'+g[c][1]+'</td></tr>'; }).join('')+'</tbody></table></div>'+
     calibText(g).map(function(t){ return '<p style="margin-top:10px">'+esc(t)+'</p>'; }).join('')+
-    (flags.length?'<div class="redflag"><h3>Red flags</h3><p>You were sure about these and they were wrong. Read the reasoning below for each one before you do anything else.</p><ul>'+flags.map(function(r){ return '<li><strong>'+esc(COMP[r.comp].name)+'</strong></li>'; }).join('')+'</ul></div>':'')+
-    '<div class="actions"><button type="button" class="btn gold" id="togap">Go to Step 2: Find the gap</button><button type="button" class="btn ghost" id="again">Build another check</button></div></div>'+
-    '<h3>Every question, with the reasoning</h3>'+a.answers.map(function(r,i){ return reviewItem(r,i); }).join('');
+    (flags.length?'<div class="redflag"><h3>Red flags</h3><p>You were confident about these and they were wrong. Read the reasoning below for each one before you do anything else.</p><ul>'+flags.map(function(r){ return '<li><strong>'+esc(COMP[r.comp].name)+'</strong></li>'; }).join('')+'</ul></div>':'')+
+    '</div>';
+  if(dump){
+    h+='<div class="card chk" id="bdcheck"><h3 style="margin-top:0">Check your brain dump: '+esc(dump.title)+'</h3><p class="small">'+esc(dump.prompt)+'</p>'+
+      (a.dump.text?'<details><summary>What you wrote</summary><p style="white-space:pre-wrap">'+esc(a.dump.text)+'</p></details>':'')+
+      '<p style="margin-top:10px">Tick each item that is in your brain dump. Be honest. Anything you leave unticked goes on your repair plan.</p>'+
+      dump.key.map(function(k,i){ return '<label><input type="checkbox" data-k="'+i+'"'+(a.dump.checked.indexOf(i)!==-1?' checked':'')+'><span>'+esc(k)+'</span></label>'; }).join('')+
+      '<p class="msg" id="bdcount" aria-live="polite"></p></div>';
+  }
+  h+='<div class="actions"><button type="button" class="btn gold" id="togap">Go to Step 2: Find the gap</button><button type="button" class="btn ghost" id="again">Build another check</button></div>';
+  var tfs=a.answers.filter(function(r){ return r.kind==='tf'; }), mcs=mcAnswers(a.answers);
+  if(tfs.length) h+='<h3>True or false, with the reasoning</h3>'+tfs.map(function(r,i){ return reviewItem(r,i); }).join('');
+  if(mcs.length) h+='<h3>Multiple choice, with the reasoning</h3>'+mcs.map(function(r,i){ return reviewItem(r,i); }).join('');
+  h+=matchReview(a);
   host.innerHTML=h; host.scrollIntoView({block:'start'}); var hh=$('h2',host); hh.setAttribute('tabindex','-1'); hh.focus();
+  if(dump){ var bc=$('#bdcheck',host); function cnt(){ $('#bdcount',host).textContent=a.dump.checked.length+' of '+dump.key.length+' key items in your brain dump.'; }
+    $$('input',bc).forEach(function(c){ c.addEventListener('change', function(){ var k=+c.getAttribute('data-k'); var ix=a.dump.checked.indexOf(k); if(c.checked&&ix===-1) a.dump.checked.push(k); if(!c.checked&&ix!==-1) a.dump.checked.splice(ix,1); save(); cnt(); }); }); cnt(); }
   $('#togap',host).addEventListener('click', function(){ go('gap'); });
   $('#again',host).addEventListener('click', function(){ go('check'); });
   sendHeight();
+}
+/* one line describing where a miss showed up, for the gap step and the plan */
+function missLine(x){
+  if(x.kind==='tf'){ var t=findTF(x.id); if(!t) return ''; return 'True or false: "'+tfPlain(t.st)+'" You said '+(x.judged?'true':'false')+'. It is '+(t.ans?'true':'false')+'.'; }
+  if(x.kind==='match'){ var d=day(); var a=null; d.checks.forEach(function(c){ if(c.match && x.id.indexOf(c.match.set+':')===0 && c.answers.indexOf(x)!==-1) a=c; }); if(!a) return ''; var p=a.match.pairs[x.row]; return 'Matching: "'+p[1]+'" is '+p[0]+'. You chose '+(a.match.pairs[x.picked]?a.match.pairs[x.picked][0]:'nothing')+'.'; }
+  var it=findItem(x.id); if(!it) return '';
+  return it.stem+' Most of your points went to: '+it.options[x.picked]+' The answer: '+it.options[it.correct];
 }
 
 /* ================= step 2: find the gap ================= */
@@ -574,7 +768,7 @@ function showFeedback(host, quiet){
       (d.statements[id]?'<p><strong>Your gap, in your words:</strong> '+esc(d.statements[id])+'</p>':'')+
       '<p><strong>What this is.</strong> '+esc(S2.say)+'</p>'+
       '<p><strong>What you need to be able to do.</strong> '+esc(c.can)+'</p>';
-    if(s){ var miss=s.items.filter(function(x){ return !x.right; }); if(miss.length){ h+='<p><strong>Where it showed up.</strong></p><ul>'+miss.map(function(x){ var it=findItem(x.id); return it?'<li>'+esc(it.stem)+' You chose: '+esc(it.options[x.picked])+' The answer: '+esc(it.options[it.correct])+'</li>':''; }).join('')+'</ul>'; } }
+    if(s){ var miss=s.items.filter(function(x){ return !x.right; }); if(miss.length){ h+='<p><strong>Where it showed up.</strong></p><ul>'+miss.map(function(x){ var t=missLine(x); return t?'<li>'+esc(t)+'</li>':''; }).join('')+'</ul>'; } }
     var rel=relatedOf(id);
     if(rel.length){ h+='<p><strong>Also check these. They usually break together.</strong></p><ul>'+rel.map(function(p){ var o=COMP[p[0]]; if(!o) return ''; var os=st[p[0]]; var note = !os ? 'Not tested yet, so treat it as a likely gap too.' : os.status==='solid' ? 'You got this one today, so your gap is narrower.' : 'You missed this one too today ('+STATUS[os.status].tag.toLowerCase()+'), which confirms it.'; return '<li><strong>'+esc(o.name)+'.</strong> '+esc(p[1])+' <span class="muted">'+note+'</span></li>'; }).join('')+'</ul>'; }
     h+='<p><strong>How to fix it.</strong></p><ol>'+fixSteps(status, r).map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ol></div>';
@@ -616,7 +810,7 @@ VIEWS.fix = function(v){
     h+='<div class="station"><p class="eyebrow">Repair problem &middot; your gaps: '+byStation[k].map(function(id){ return esc(COMP[id].name); }).join(', ')+'</p><h3 style="margin-top:0">'+esc(stn.title)+'</h3><ol>'+stn.tasks.map(function(t){ return '<li>'+esc(t)+'</li>'; }).join('')+'</ol><p class="done">You are done when: '+esc(stn.done)+'</p></div>'; });
   other.forEach(function(id){ var c=COMP[id]; var r=resOf(id);
     h+='<div class="station"><p class="eyebrow">Repair problem</p><h3 style="margin-top:0">'+esc(c.name)+'</h3><ol><li>'+esc(c.can)+(solo?' Do it on paper':' Do it on the whiteboard')+', with drawings and labels, without notes.</li>'+(solo?'<li>Explain each part out loud in your own words, as if to a classmate.</li><li>Write one "what if" question about it and answer it.</li>':'<li>Each person explains one part to the group in their own words.</li><li>The group writes one "what if" question about it and answers it together.</li>')+'<li>Check everything against '+(r?ext(r.notes,'the notes'):'the notes')+'. Circle anything you corrected.</li></ol></div>'; });
-  if(md){ var rest=Object.keys(md.stations).filter(function(k){ return !byStation[k]; });
+  if(md && md.stations){ var rest=Object.keys(md.stations).filter(function(k){ return !byStation[k]; });
     if(rest.length) h+='<details class="card"><summary>Other repair problems, if your group finishes or has different gaps</summary>'+rest.map(function(k){ var stn=md.stations[k]; return '<h4>'+esc(stn.title)+'</h4><ol>'+stn.tasks.map(function(t){ return '<li>'+esc(t)+'</li>'; }).join('')+'</ol><p class="done">You are done when: '+esc(stn.done)+'</p>'; }).join('')+'</details>'; }
   h+='<div class="card"><h3 style="margin-top:0">What did you fix?</h3><p class="small">For each gap, write the corrected idea in your own words, the way you would explain it to a classmate. This goes on your repair plan.</p>'+
     d.gaps.map(function(id,i){ return '<div class="field"><label for="fx'+i+'">'+esc(COMP[id].name)+'</label><textarea id="fx'+i+'" data-id="'+id+'" rows="3">'+esc(d.fixes[id]||'')+'</textarea></div>'; }).join('')+
@@ -631,7 +825,7 @@ VIEWS.fix = function(v){
 VIEWS.prove = function(v){
   var d=day();
   var h='<div class="card"><p class="eyebrow">Step 4 &middot; Prove it</p><h2>New questions, same competencies.</h2>'+
-    '<ol><li><strong>Alone first.</strong> Answer every question and mark Sure, Unsure or Guess. Then lock your answers.</li>'+
+    '<ol><li><strong>Alone first.</strong> Spread 4 confidence points on every question, the same way as the exam. Then lock your answers.</li>'+
     '<li><strong>Then talk it through with your team.</strong> Agree on a team answer for each question. You cannot change your own answer, only the team one. <span class="muted">On your own? Skip the team answers. Instead, go back through each question and say why each wrong option is wrong, then reveal.</span></li>'+
     '<li><strong>Then reveal.</strong> See how you did alone, how the team did, and whether each gap closed.</li></ol>'+
     '<p class="small muted">The questions target your three gaps ('+d.gaps.map(function(id){ return esc(COMP[id].name); }).join(', ')+') and the competencies next to them, and they skip questions you have already seen when there are new ones left.</p>'+
@@ -656,7 +850,7 @@ function lockForTeam(host, a){
   var h = solo ? '<div class="card"><h3 style="margin-top:0">Locked. Before you reveal, check your own reasoning.</h3><p>Go question by question. For each one, say out loud why your answer is right and why each of the other options is wrong. If you cannot explain an option, that is a spot to reread after you reveal. There is no team answer when you are working on your own.</p></div>'
     : '<div class="card"><h3 style="margin-top:0">Locked. Now talk it through with your team.</h3><p>Go question by question. Each person says their answer and why. Agree on a team answer and pick it below. Leave it on "Same as mine" when the team agrees with you.</p></div>';
   a.answers.forEach(function(r,i){ var it=findItem(r.id); if(!it) return; var ord=r.order;
-    h+='<div class="q"><p class="small muted" style="margin:0 0 4px">Question '+(i+1)+'</p><p class="stem">'+esc(it.stem)+'</p><div class="opts">'+ord.map(function(oi,k){ return '<div class="opt"><span class="l">'+LET[k]+'.</span><span>'+esc(it.options[oi])+(oi===r.picked?' <strong>(my answer)</strong>':'')+'</span></div>'; }).join('')+'</div>'+
+    h+='<div class="q"><p class="small muted" style="margin:0 0 4px">Question '+(i+1)+'</p><p class="stem">'+esc(it.stem)+'</p><div class="opts">'+ord.map(function(oi,k){ return '<div class="opt"><span class="l">'+LET[k]+'.</span><span>'+esc(it.options[oi])+(r.pts&&r.pts[oi]?' <strong>(my '+r.pts[oi]+(r.pts[oi]===1?' point':' points')+')</strong>':(oi===r.picked?' <strong>(my answer)</strong>':''))+'</span></div>'; }).join('')+'</div>'+
       (solo?'':'<div class="teamrow"><label for="tm'+i+'">Team answer</label><select id="tm'+i+'" data-i="'+i+'"><option value="">Same as mine</option>'+ord.map(function(oi,k){ return '<option value="'+oi+'"'+(r.team===oi?' selected':'')+'>'+LET[k]+'</option>'; }).join('')+'</select></div>')+'</div>'; });
   h+='<div class="actions"><button type="button" class="btn gold" id="reveal">Reveal the answers</button></div>';
   host.innerHTML=h; sendHeight();
@@ -736,12 +930,17 @@ function planHtml(name){
   h+='<h2>Today’s checks</h2>';
   if(!d.checks.length) h+='<p>No check taken yet today.</p>';
   else { var g=calib([].concat.apply([], d.checks.map(function(a){ return a.answers; })));
-    h+='<table><thead><tr><th>Check</th><th>Score</th><th>Red flags</th></tr></thead><tbody>'+d.checks.map(function(a,i){ return '<tr><td>'+(i+1)+' ('+a.answers.length+' questions)</td><td>'+pct(a.score)+'%</td><td>'+a.answers.filter(function(r){ return !r.right&&r.conf==='sure'; }).length+'</td></tr>'; }).join('')+'</tbody></table>'+
-      '<h3>Accuracy by confidence</h3><p>Sure: '+g.sure[0]+' right, '+g.sure[1]+' wrong. Unsure: '+g.unsure[0]+' right, '+g.unsure[1]+' wrong. Guess: '+g.guess[0]+' right, '+g.guess[1]+' wrong.</p>'+calibText(g).map(function(t){ return '<p>'+esc(t)+'</p>'; }).join(''); }
-  h+='<h2>Red flags: I was sure, and I was wrong</h2>';
-  if(!flags.length) h+='<p>None today. Your Sure answers held up.</p>';
+    h+='<table><thead><tr><th>Check</th><th>Score</th><th>True or false</th><th>Multiple choice points</th><th>Matching</th><th>Red flags</th></tr></thead><tbody>'+d.checks.map(function(a,i){ var sc=sectionScores(a); return '<tr><td>'+(i+1)+(a.len&&LENGTHS[a.len]?' ('+LENGTHS[a.len].label.toLowerCase()+')':'')+'</td><td>'+pct(a.score)+'%'+(a.bonus?' + '+a.bonus+' bonus':'')+'</td><td>'+(sc.tf[1]?sc.tf[0]+' of '+sc.tf[1]:'')+'</td><td>'+(sc.mc[1]?sc.mc[0]+' of '+sc.mc[1]:'')+'</td><td>'+(sc.match[1]?sc.match[0]+' of '+sc.match[1]:'')+'</td><td>'+a.answers.filter(function(r){ return !r.right&&r.conf==='sure'; }).length+'</td></tr>'; }).join('')+'</tbody></table>'+
+      '<h3>How I spread my confidence points</h3><p>3 or 4 points on one answer: '+g.sure[0]+' right, '+g.sure[1]+' missed. Split 2 and 2: '+g.unsure[0]+' right, '+g.unsure[1]+' missed. Spread 1 at a time: '+g.guess[0]+' right, '+g.guess[1]+' missed.</p>'+calibText(g).map(function(t){ return '<p>'+esc(t)+'</p>'; }).join('');
+    var dmiss=d.checks.filter(function(a){ return a.dump; }).map(function(a){ var dd=findDump(a.dump.chosen); if(!dd) return ''; var left=dd.key.filter(function(k,i){ return a.dump.checked.indexOf(i)===-1; }); return '<h3>Brain dump: '+esc(dd.title)+' ('+(dd.key.length-left.length)+' of '+dd.key.length+' key items)</h3>'+(left.length?'<p>Left out, so study these:</p><ul>'+left.map(function(k){ return '<li>'+esc(k)+'</li>'; }).join('')+'</ul>':'<p>Every key item was in my brain dump.</p>'); }).join('');
+    if(dmiss) h+=dmiss;
+    var tfmiss=[]; d.checks.forEach(function(a){ a.answers.forEach(function(r){ if(r.kind==='tf' && !r.right){ var t=findTF(r.id); if(t) tfmiss.push('<li>'+tfHtml(t.st).replace(/<strong>/,'<strong>').replace(/<\/strong>/,'</strong>')+' <strong>This is '+(t.ans?'true':'false')+'.</strong>'+(t.why?' '+esc(t.why):'')+'</li>'); } }); });
+    if(tfmiss.length) h+='<h3>True or false statements I missed</h3><ul>'+tfmiss.join('')+'</ul>';
+  }
+  h+='<h2>Red flags: most of my points went to a wrong answer</h2>';
+  if(!flags.length) h+='<p>None today. When I committed my points, they held up.</p>';
   flags.forEach(function(r){ var it=findItem(r.id); if(!it) return; var rr=resOf(r.comp);
-    h+='<div class="flag"><p><strong>'+esc(COMP[r.comp].name)+'</strong></p><p>'+esc(it.stem)+'</p><p>I chose: '+esc(it.options[r.picked])+'</p><p><strong>The answer:</strong> '+esc(it.options[it.correct])+'</p><p><strong>Why:</strong> '+esc(it.why)+'</p>'+(it.whyNot?'<p><strong>Why my answer was wrong:</strong> '+esc(it.whyNot[r.picked])+'</p>':'')+(rr?'<p>Fix it in '+lnk(rr.notes,'the notes, '+rr.section)+'.</p>':'')+'</div>'; });
+    h+='<div class="flag"><p><strong>'+esc(COMP[r.comp].name)+'</strong></p><p>'+esc(it.stem)+'</p><p>Most of my points went to: '+esc(it.options[r.picked])+'</p><p><strong>The answer:</strong> '+esc(it.options[it.correct])+'</p><p><strong>Why:</strong> '+esc(it.why)+'</p>'+(it.whyNot?'<p><strong>Why my answer was wrong:</strong> '+esc(it.whyNot[r.picked])+'</p>':'')+(rr?'<p>Fix it in '+lnk(rr.notes,'the notes, '+rr.section)+'.</p>':'')+'</div>'; });
   h+='<h2>My three gaps and how I will fix them</h2>';
   if(!d.gaps.length) h+='<p>Gaps not named yet. Finish Step 2.</p>';
   d.gaps.forEach(function(id){ var c=COMP[id], s=st[id], status=s?s.status:'untested', r=resOf(id);
@@ -769,7 +968,7 @@ $('#plan').addEventListener('click', function(){
 });
 var wipeArmed=false;
 $('#wipe').addEventListener('click', function(){
-  if(!wipeArmed){ wipeArmed=true; $('#wipe').textContent='Yes, clear everything'; $('#wipemsg').textContent='Click again to confirm. This cannot be undone.'; return; }
+  if(!wipeArmed){ wipeArmed=true; $('#wipe').textContent='Yes, delete my whole semester record'; $('#wipemsg').textContent='Are you sure? This deletes every module and cannot be undone. Click again to confirm.'; return; }
   try{ localStorage.removeItem(KEY); }catch(e){}
   S={section:S.section, module:S.module, days:{}}; save(); wipeArmed=false; $('#wipe').textContent='Clear my saved work'; $('#wipemsg').textContent='Cleared.'; go('check', true); refresh();
 });
