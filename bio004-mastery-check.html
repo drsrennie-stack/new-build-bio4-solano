@@ -303,7 +303,11 @@ var MODCOMPS = {}; COMPS.forEach(function(c){ var m=moduleForWeek(c.week); if(!m
 
 /* Question pool per module: exam-style items first, then recall cards whose competency is known exactly. */
 var POOL = {}; var TOPICPAGE = {}; var TOPICOFCOMP = {};
-(MB.items||[]).forEach(function(it){ var c=COMP[it.comp]; if(!c) return; (POOL[c._mod]=POOL[c._mod]||[]).push({id:it.id, comp:it.comp, stem:it.stem, options:it.options, correct:it.correct, why:it.why, whyNot:it.whyNot, src:'x'}); });
+/* Exam-level questions only: authored items tagged DOK 1 are never drawn.
+   Recall cards join a module's pool only when that module has fewer than
+   40 authored DOK 2 and 3 questions, since the card bank is mostly recall. */
+(MB.items||[]).forEach(function(it){ var c=COMP[it.comp]; if(!c) return; if(it.dok!=null && it.dok<2) return; (POOL[c._mod]=POOL[c._mod]||[]).push({id:it.id, comp:it.comp, dok:it.dok||2, stem:it.stem, options:it.options, correct:it.correct, why:it.why, whyNot:it.whyNot, src:'x'}); });
+var AUTHORED = {}; Object.keys(POOL).forEach(function(m){ AUTHORED[m]=POOL[m].length; });
 CC.modules.forEach(function(m){ m.topics.forEach(function(t){
   if(t.lecturePageUrl) TOPICPAGE[t.id] = {url:t.lecturePageUrl, title:t.title};
   var te = CMAP[t.id]; if(te && te.comps) te.comps.forEach(function(id){ (TOPICOFCOMP[id]=TOPICOFCOMP[id]||[]).push(t.id); });
@@ -313,7 +317,8 @@ CC.modules.forEach(function(m){ m.topics.forEach(function(t){
     if(ids.length!==1 || !COMP[ids[0]]) return;
     if(!Array.isArray(card.options) || card.options.length<3 || typeof card.correctIndex!=='number') return;
     var c = COMP[ids[0]]; if(!c._mod) return;
-    (POOL[c._mod]=POOL[c._mod]||[]).push({id:'c:'+t.id+':'+card.id, comp:c.id, stem:clean(card.q), options:card.options.map(clean), correct:card.correctIndex, why:clean(card.explanation||card.a||''), whyNot:null, src:'c'});
+    if((AUTHORED[c._mod]||0)>=40) return;
+    (POOL[c._mod]=POOL[c._mod]||[]).push({id:'c:'+t.id+':'+card.id, comp:c.id, dok:card.dok||2, stem:clean(card.q), options:card.options.map(clean), correct:card.correctIndex, why:clean(card.explanation||card.a||''), whyNot:null, src:'c'});
   });
 });});
 function clean(s){ return String(s==null?'':s).replace(/\s*[\u2014\u2013]\s*/g, ', ').replace(/\s+/g,' ').trim(); }
@@ -403,42 +408,122 @@ var STATUS = {
 /* ================= generator ================= */
 function EXAM(){ return (MB.exam||{})[S.module] || null; }
 var LENGTHS = {
-  quick:{label:'Quick check', time:'about 15 to 20 minutes', tf:5, mc:10, match:5},
-  mini:{label:'Mini exam', time:'about 30 to 35 minutes', tf:10, mc:20, match:5}
+  full:{label:'Full exam', time:'about 60 minutes', tf:20, mc:40, sets:2, match:5},
+  mini:{label:'Mini exam', time:'about 30 to 35 minutes', tf:10, mc:20, sets:1, match:5}
 };
-function seenIds(){ var s={}; moduleDays().forEach(function(k){ var d=S.days[k]; d.checks.concat(d.prove?[d.prove]:[]).forEach(function(a){ a.answers.forEach(function(r){ s[r.id]=1; }); if(a.match) s['set:'+a.match.set]=1; if(a.dump) (a.dump.choices||[]).forEach(function(x){ s['dump:'+x]=1; }); }); }); return s; }
-function pickItems(n, comps, seen){
+function seenIds(){ var s={}; moduleDays().forEach(function(k){ var d=S.days[k]; d.checks.concat(d.prove?[d.prove]:[]).forEach(function(a){ a.answers.forEach(function(r){ s[r.id]=1; }); matchesOf(a).forEach(function(M){ s['set:'+M.set]=1; }); if(a.dump) (a.dump.choices||[]).forEach(function(x){ s['dump:'+x]=1; }); }); }); return s; }
+/* Spreading the competencies. Within one check, no competency is tested
+   twice until every competency in the module has had a question. The
+   competencies tested least today go first, so repeated checks rotate
+   through the whole module instead of landing on the same ones. `used`
+   is shared across the parts of one check. */
+function testedToday(){ var c={}; day().checks.forEach(function(a){ a.answers.forEach(function(r){ c[r.comp]=(c[r.comp]||0)+1; }); }); return c; }
+function compOrder(ids, used, counts){
+  var r={}; ids.forEach(function(id){ r[id]=Math.random(); });
+  return ids.slice().sort(function(x,y){ return ((used[x]||0)-(used[y]||0)) || ((counts[x]||0)-(counts[y]||0)) || (r[x]-r[y]); });
+}
+function pickItems(n, comps, seen, used){
+  used=used||{}; var counts=testedToday();
   var pool=(POOL[S.module]||[]).filter(function(it){ return !comps || comps.indexOf(it.comp)!==-1; });
   var byComp={}; pool.forEach(function(it){ (byComp[it.comp]=byComp[it.comp]||[]).push(it); });
   Object.keys(byComp).forEach(function(c){ byComp[c]=shuffle(byComp[c]).sort(function(a,b){ return (seen[a.id]?1:0)-(seen[b.id]?1:0) || (a.src==='x'?-1:0)-(b.src==='x'?-1:0); }); });
-  var order=shuffle(Object.keys(byComp)), out=[], round=0;
-  while(out.length<n){ var added=false; order.forEach(function(c){ if(out.length>=n) return; var it=byComp[c][round]; if(it){ out.push(it); added=true; } }); if(!added) break; round++; }
+  var out=[], taken={};
+  while(out.length<n){
+    var order=compOrder(Object.keys(byComp).filter(function(c){ return byComp[c].some(function(it){ return !taken[it.id]; }); }), used, counts);
+    if(!order.length) break;
+    var c=order[0]; var it=byComp[c].filter(function(x){ return !taken[x.id]; })[0];
+    out.push(it); taken[it.id]=1; used[c]=(used[c]||0)+1;
+  }
   return shuffle(out).map(function(it){ var ord=it.options.map(function(_,i){ return i; }); shuffle(ord); return {it:it, order:ord}; });
 }
-function spread(list, n, seen){
-  /* unseen first, one per competency before any competency repeats */
-  var L=shuffle(list.slice()).sort(function(a,b){ return (seen[a.id]?1:0)-(seen[b.id]?1:0); });
-  var out=[], used={};
-  L.forEach(function(it){ if(out.length<n && !used[it.comp]){ out.push(it); used[it.comp]=1; } });
-  L.forEach(function(it){ if(out.length<n && out.indexOf(it)===-1) out.push(it); });
+function spread(list, n, seen, used, counts){
+  var byComp={}; shuffle(list.slice()).sort(function(a,b){ return (seen[a.id]?1:0)-(seen[b.id]?1:0); }).forEach(function(it){ (byComp[it.comp]=byComp[it.comp]||[]).push(it); });
+  var out=[];
+  while(out.length<n){
+    var order=compOrder(Object.keys(byComp).filter(function(c){ return byComp[c].length; }), used, counts);
+    if(!order.length) break;
+    var c=order[0]; out.push(byComp[c].shift()); used[c]=(used[c]||0)+1;
+  }
   return out;
 }
-function pickTF(n, seen){
+function pickTF(n, seen, used){
   var ex=EXAM(); if(!ex || !ex.tf || !n) return [];
+  used=used||{}; var counts=testedToday();
   var nf=Math.ceil(n/2), nt=n-nf;
   if(Math.random()<0.5){ var t=nf; nf=nt; nt=t; }
-  var f=spread(ex.tf.filter(function(x){ return !x.ans; }), nf, seen), t2=spread(ex.tf.filter(function(x){ return x.ans; }), nt, seen);
+  var f=spread(ex.tf.filter(function(x){ return !x.ans; }), nf, seen, used, counts), t2=spread(ex.tf.filter(function(x){ return x.ans; }), nt, seen, used, counts);
   return shuffle(f.concat(t2));
 }
-function pickMatch(n, seen){
+/* Units. Module 2 splits into bone tissue (week 4), the axial skeleton
+   (week 5), the appendicular skeleton and joints (week 6). Other modules
+   use each competency's system. A check gives every unit an equal share
+   of the true or false and the multiple choice. */
+function unitOf(id){ var c=COMP[id]; if(!c) return '?'; if(S.module===2){ return c.week===4?'Bone tissue':c.week===5?'Axial skeleton':(c.general==='Joints'?'Joints':'Appendicular skeleton'); } return c.general||c.system||'Module'; }
+function splitEven(n, keys){ var out={}; keys=shuffle(keys.slice()); keys.forEach(function(k){ out[k]=Math.floor(n/keys.length); }); for(var i=0;i<n%keys.length;i++) out[keys[i]]++; return out; }
+/* Pick n items from list with the competency rotation and a DOK 3 target. */
+function pickFrom(list, n, want3, seen, used, counts, taken){
+  var out=[], got3=0;
+  for(var k=0;k<n;k++){
+    var needDok = (want3-got3) >= (n-k) ? 3 : (got3>=want3 ? 2 : (Math.random()<(want3-got3)/(n-k)?3:2));
+    var cand=list.filter(function(it){ return !taken[it.id]; });
+    if(!cand.length) break;
+    /* the competency spread comes first: only the least-used competencies are
+       in play, and the DOK target chooses among them */
+    var minU=Math.min.apply(null, cand.map(function(it){ return used[it.comp]||0; }));
+    var tier=cand.filter(function(it){ return (used[it.comp]||0)===minU; });
+    var pref=tier.filter(function(it){ return (it.dok||2)===needDok; }); if(!pref.length) pref=tier;
+    var byComp={}; pref.forEach(function(it){ (byComp[it.comp]=byComp[it.comp]||[]).push(it); });
+    var c=compOrder(Object.keys(byComp), used, counts)[0];
+    var opts=shuffle(byComp[c]).sort(function(x,y){ return (seen[x.id]?1:0)-(seen[y.id]?1:0) || (x.src==='x'?-1:0)-(y.src==='x'?-1:0); });
+    var it=opts[0]; out.push(it); taken[it.id]=1; used[c]=(used[c]||0)+1; if((it.dok||2)===3) got3++;
+  }
+  return {items:out, d3:got3};
+}
+function buildBalanced(L, seen, used){
+  var ex=EXAM(), counts=testedToday();
+  var tfPool = ex&&ex.tf ? ex.tf.filter(function(t){ return t.dok==null || t.dok>=2; }) : [];
+  var mcPool = POOL[S.module]||[];
+  var units=[]; (MODCOMPS[S.module]||[]).forEach(function(id){ var u=unitOf(id); if(units.indexOf(u)===-1) units.push(u); });
+  var nTF = tfPool.length ? L.tf : 0, nMC = tfPool.length ? L.mc : L.mc+L.tf;
+  var tfQ=splitEven(nTF, units), mcQ=splitEven(nMC, units);
+  var tf=[], mc=[], takenT={}, takenM={};
+  units.forEach(function(u){
+    var tU=tfPool.filter(function(t){ return unitOf(t.comp)===u; }), mU=mcPool.filter(function(it){ return unitOf(it.comp)===u; });
+    var target3=Math.round((tfQ[u]+mcQ[u])/2);
+    /* true or false: aim for about half true, and use its scarce DOK 3 items first */
+    var nF=Math.ceil(tfQ[u]/2), nT=tfQ[u]-nF; if(Math.random()<0.5){ var x=nF; nF=nT; nT=x; }
+    var f=pickFrom(tU.filter(function(t){ return !t.ans; }), nF, nF, seen, used, counts, takenT);
+    var t=pickFrom(tU.filter(function(t){ return t.ans; }), nT, nT, seen, used, counts, takenT);
+    var tfGot=f.items.concat(t.items);
+    /* a unit short on one kind borrows from the other kind */
+    if(tfGot.length<tfQ[u]){ var more=pickFrom(tU, tfQ[u]-tfGot.length, 0, seen, used, counts, takenT); tfGot=tfGot.concat(more.items); }
+    var d3=tfGot.filter(function(z){ return z.dok===3; }).length;
+    var m=pickFrom(mU, mcQ[u], Math.max(0, Math.min(mcQ[u], target3-d3)), seen, used, counts, takenM);
+    tf=tf.concat(tfGot); mc=mc.concat(m.items);
+  });
+  /* if a unit ran dry, top up from any unit */
+  if(tf.length<nTF){ tf=tf.concat(pickFrom(tfPool, nTF-tf.length, 0, seen, used, counts, takenT).items); }
+  if(mc.length<nMC){ mc=mc.concat(pickFrom(mcPool, nMC-mc.length, Math.round((nMC-mc.length)/2), seen, used, counts, takenM).items); }
+  return { tf:shuffle(tf), mc:shuffle(mc).map(function(it){ var ord=it.options.map(function(_,i){ return i; }); shuffle(ord); return {it:it, order:ord}; }) };
+}
+function pickMatchSets(k, n, seen, used){
+  var out=[], units=[];
+  for(var i=0;i<k;i++){ var m=pickMatch(n, seen, used, out.map(function(x){ return x.set; }), units); if(!m) break; out.push(m); units.push(m.unit); }
+  return out;
+}
+function pickMatch(n, seen, used, skipIds, skipUnits){
+  used=used||{};
   var ex=EXAM(); if(!ex || !ex.match || !ex.match.length) return null;
-  var sets=shuffle(ex.match.filter(function(m){ return m.pairs.length>=n; })).sort(function(a,b){ return (seen['set:'+a.id]?1:0)-(seen['set:'+b.id]?1:0); });
+  function overlap(m){ var o=0, k={}; m.pairs.forEach(function(p){ if(!k[p[2]]){ k[p[2]]=1; if(used[p[2]]) o+=used[p[2]]; } }); return o; }
+  skipIds=skipIds||[]; skipUnits=skipUnits||[];
+  var sets=shuffle(ex.match.filter(function(m){ return m.pairs.length>=n && skipIds.indexOf(m.id)===-1; })).sort(function(a,b){ return ((skipUnits.indexOf(unitOf(a.pairs[0][2]))!==-1?1:0)-(skipUnits.indexOf(unitOf(b.pairs[0][2]))!==-1?1:0)) || (overlap(a)-overlap(b)) || ((seen['set:'+a.id]?1:0)-(seen['set:'+b.id]?1:0)); });
   var set=sets[0]; if(!set) return null;
   var pairs=shuffle(set.pairs.slice()).slice(0,n);
   var terms=pairs.map(function(p,i){ return i; }), tries=0;
   /* the key may never run in item order, forward or backward */
   do { shuffle(terms); tries++; } while(tries<50 && (terms.every(function(v,i){ return v===i; }) || terms.every(function(v,i){ return v===terms.length-1-i; })));
-  return {set:set.id, title:set.title, pairs:pairs, terms:terms};
+  pairs.forEach(function(p){ used[p[2]]=(used[p[2]]||0)+1; });
+  return {set:set.id, title:set.title, pairs:pairs, terms:terms, unit:unitOf(set.pairs[0][2])};
 }
 function pickDumps(seen){
   var ex=EXAM(); if(!ex || !ex.dumps || !ex.dumps.length) return [];
@@ -455,7 +540,7 @@ function tfTerm(st){ var m=/\[\[(.*?)\]\]/.exec(st); return m?m[1]:''; }
 
 /* ================= steps ================= */
 var STEPS = [
-  {k:'check', n:'Step 1', t:'Check', s:'15 to 35 min, alone, closed notes'},
+  {k:'check', n:'Step 1', t:'Check', s:'30 to 60 min, alone, closed notes'},
   {k:'gap',   n:'Step 2', t:'Find the gap', s:'5 min, name three'},
   {k:'fix',   n:'Step 3', t:'Fix it', s:'25 to 30 min, group or on your own'},
   {k:'prove', n:'Step 4', t:'Prove it', s:'20 to 25 min, you first'},
@@ -494,20 +579,20 @@ VIEWS.check = function(v){
     '<li>On multiple choice, spread 4 points across the options. Put all 4 on one answer when you are certain, and split them when you are not. Be honest. How you spread your points is how we tell a wrong idea from a missing one.</li>'+
     '<li>Submit, then check your brain dump against the key and read the reasoning for everything you missed.</li></ol>'+
     (ex ? '' : '<p class="small"><strong>This module is multiple choice only for now.</strong> The true or false, matching and brain dump questions for it are still being written.</p>')+
-    '<p class="small muted">Every check is built fresh from this module’s question bank ('+pool+' multiple choice'+(ex&&ex.tf?', '+ex.tf.length+' true or false, '+ex.match.length+' matching sets, '+ex.dumps.length+' brain dumps':'')+'), spread across its '+(MODCOMPS[S.module]||[]).length+' competencies. Take as many as you like. Questions you have already seen are used last.</p>'+
+    '<p class="small muted">Every check is built fresh from this module’s question bank ('+pool+' multiple choice'+(ex&&ex.tf?', '+ex.tf.length+' true or false, '+ex.match.length+' matching sets, '+ex.dumps.length+' brain dumps':'')+'), spread across its '+(MODCOMPS[S.module]||[]).length+' competencies. Take as many as you like. Questions you have already seen are used last, and no competency is tested twice on a check until every competency in the module has had a question. Each new check starts with the competencies you have been tested on least today.</p>'+
     '<p class="lab" id="lenlab">Which length?</p><div class="pills" role="group" aria-labelledby="lenlab">'+
     Object.keys(LENGTHS).map(function(k){ var L=LENGTHS[k]; return '<button type="button" class="pill" data-len="'+k+'" aria-pressed="'+(k==='mini'?'true':'false')+'">'+L.label+'</button>'; }).join('')+'</div>'+
     '<p class="hint" id="lenhint" aria-live="polite"></p>'+
     '<div class="actions"><button type="button" class="btn" id="gen">Build my check</button>'+(d.checks.length?'<button type="button" class="btn ghost" id="lastres">See my last results</button>':'')+'</div></div><div id="exam"></div>';
   v.innerHTML=h;
   var len='mini';
-  function hint(){ var L=LENGTHS[len]; $('#lenhint',v).textContent = ex ? L.label+': '+L.tf+' true or false, '+L.mc+' multiple choice, '+L.match+' matching, and one brain dump chosen from three. Plan on '+L.time+'.' : L.label+': '+(L.mc+L.tf)+' multiple choice.'; }
+  function hint(){ var L=LENGTHS[len]; $('#lenhint',v).textContent = ex ? L.label+': '+L.tf+' true or false, '+L.mc+' multiple choice, '+(L.sets*L.match)+' matching'+(L.sets>1?' in two sets':'')+', and one brain dump chosen from three. Plan on '+L.time+'. Questions are split evenly across the units of the module and run half DOK 2 (apply and interpret) and half DOK 3 (reason through a case).' : L.label+': '+(L.mc+L.tf)+' multiple choice, split evenly across the units of the module.'; }
   $$('.pill',v).forEach(function(b){ b.addEventListener('click', function(){ len=b.getAttribute('data-len'); $$('.pill',v).forEach(function(o){ o.setAttribute('aria-pressed', o===b?'true':'false'); }); hint(); }); });
   hint();
   $('#gen',v).addEventListener('click', function(){
     var L=LENGTHS[len], seen=seenIds();
-    var tf=pickTF(ex?L.tf:0, seen), mc=pickItems(ex?L.mc:L.mc+L.tf, null, seen), mt=ex?pickMatch(L.match, seen):null, dp=ex?pickDumps(seen):[];
-    startCheck($('#exam',v), {len:len, tf:tf, mc:mc, match:mt, dumps:dp});
+    var used={}; var bal=buildBalanced(L, seen, used); var mts=ex?pickMatchSets(L.sets, L.match, seen, used):[], dp=ex?pickDumps(seen):[];
+    startCheck($('#exam',v), {len:len, tf:bal.tf, mc:bal.mc, matches:mts, dumps:dp});
   });
   if($('#lastres',v)) $('#lastres',v).addEventListener('click', function(){ showResults($('#exam',v), d.checks[d.checks.length-1]); });
 };
@@ -550,11 +635,13 @@ function startCheck(host, E){
     h+='<div class="card"><p class="eyebrow">Part '+part+'</p><h3 style="margin-top:0">Multiple choice, with confidence points</h3><p>Choose the best answer. Spread 4 points across the options for each question: all 4 on one answer if you are certain, or split them if you are unsure. You earn the points you place on the correct answer. Leave the other boxes empty or at 0.</p></div>';
     E.mc.forEach(function(p,i){ h+=mcBlock('mc', i, E.mc.length, p.it, p.order, 'Multiple choice'); });
   }
-  if(E.match){ part++;
-    var M=E.match;
-    h+='<div class="card q" id="mtq"><p class="eyebrow">Part '+part+'</p><h3 style="margin-top:0">Matching: '+esc(M.title)+'</h3><p>Match each description to one term. Each term is used once.</p>'+
-      '<ul class="terms" aria-label="Terms">'+M.terms.map(function(pi,k){ return '<li><strong>'+LET[k]+'.</strong> '+esc(M.pairs[pi][0])+'</li>'; }).join('')+'</ul>'+
-      M.pairs.map(function(p,i){ return '<div class="mrow"><label for="mt'+i+'"><span class="l">'+(i+1)+'.</span> '+esc(p[1])+'</label><select id="mt'+i+'"><option value="">Choose a letter</option>'+M.terms.map(function(pi,k){ return '<option value="'+pi+'">'+LET[k]+'</option>'; }).join('')+'</select></div>'; }).join('')+'</div>';
+  if(E.matches && E.matches.length){ part++;
+    var row=0;
+    E.matches.forEach(function(M,si){
+      h+='<div class="card q" id="mtq'+si+'">'+(si===0?'<p class="eyebrow">Part '+part+'</p>':'')+'<h3 style="margin-top:0">Matching'+(E.matches.length>1?' set '+(si+1):'')+': '+esc(M.title)+'</h3><p>Match each description to one term. Each term is used once.</p>'+
+        '<ul class="terms" aria-label="Terms for '+esc(M.title)+'">'+M.terms.map(function(pi,k){ return '<li><strong>'+LET[k]+'.</strong> '+esc(M.pairs[pi][0])+'</li>'; }).join('')+'</ul>'+
+        M.pairs.map(function(p,i){ row++; return '<div class="mrow"><label for="mt'+si+'_'+i+'"><span class="l">'+row+'.</span> '+esc(p[1])+'</label><select id="mt'+si+'_'+i+'"><option value="">Choose a letter</option>'+M.terms.map(function(pi,k){ return '<option value="'+pi+'">'+LET[k]+'</option>'; }).join('')+'</select></div>'; }).join('')+'</div>';
+    });
   }
   if(E.dumps.length){ part++;
     h+='<div class="card q" id="bdq"><p class="eyebrow">Part '+part+'</p><h3 style="margin-top:0">Brain dump: choose one</h3><p>Pick one prompt and write or sketch everything you know, with no notes. Paper is fine too. You will check it against the key after you submit.</p>'+
@@ -570,8 +657,7 @@ function startCheck(host, E){
     var miss={tf:[], mc:[], match:0, dump:false}; $$('.unanswered',host).forEach(function(x){ x.classList.remove('unanswered'); });
     E.tf.forEach(function(t,i){ if(!$('input[name="tf'+i+'"]:checked',host)){ miss.tf.push(i+1); $('#tfq'+i,host).classList.add('unanswered'); } });
     E.mc.forEach(function(p,i){ var s=readPoints(host,i,p.it.options.length).reduce(function(a,b){ return a+b; },0); if(s!==4){ miss.mc.push(i+1); $('#mcq'+i,host).classList.add('unanswered'); } });
-    if(E.match) E.match.pairs.forEach(function(p,i){ if(!$('#mt'+i,host).value) miss.match++; });
-    if(E.match && miss.match) $('#mtq',host).classList.add('unanswered');
+    (E.matches||[]).forEach(function(M,si){ var m0=0; M.pairs.forEach(function(p,i){ if(!$('#mt'+si+'_'+i,host).value){ miss.match++; m0++; } }); if(m0) $('#mtq'+si,host).classList.add('unanswered'); });
     if(E.dumps.length && !$('input[name="bd"]:checked',host)){ miss.dump=true; $('#bdq',host).classList.add('unanswered'); }
     var msg=[]; if(miss.tf.length) msg.push('true or false '+miss.tf.join(', '));
     if(miss.mc.length) msg.push('multiple choice '+miss.mc.join(', ')+' (points must total 4)');
@@ -582,11 +668,11 @@ function startCheck(host, E){
     E.tf.forEach(function(t,i){ var j=$('input[name="tf'+i+'"]:checked',host).value==='T'; var fix=$('#tfin'+i,host).value.trim(); var right=j===t.ans; var b=(!t.ans && !j && fix && (t.accept||[]).some(function(a){ return norm(a)===norm(fix); }))?1:0; bonus+=b*0.5; earned+=right?1:0; max+=1;
       answers.push({kind:'tf', id:t.id, comp:t.comp, judged:j, fix:fix, bonus:b, right:right, conf:'na'}); });
     E.mc.forEach(function(p,i){ var r=mcRecord(p.it, p.order, readPoints(host,i,p.it.options.length)); earned+=r.ptsRight; max+=4; answers.push(r); });
-    var M=null;
-    if(E.match){ M={set:E.match.set, title:E.match.title, pairs:E.match.pairs, terms:E.match.terms};
-      E.match.pairs.forEach(function(p,i){ var pk=+$('#mt'+i,host).value; var right=pk===i; earned+=right?1:0; max+=1; answers.push({kind:'match', id:E.match.set+':'+i, comp:p[2], row:i, picked:pk, right:right, conf:'na'}); }); }
+    var MS=(E.matches||[]).map(function(M,si){
+      M.pairs.forEach(function(p,i){ var pk=+$('#mt'+si+'_'+i,host).value; var right=pk===i; earned+=right?1:0; max+=1; answers.push({kind:'match', id:M.set+':'+i, set:M.set, comp:p[2], row:i, picked:pk, right:right, conf:'na'}); });
+      return {set:M.set, title:M.title, pairs:M.pairs, terms:M.terms}; });
     var D=null; if(E.dumps.length){ D={choices:E.dumps.map(function(d){ return d.id; }), chosen:$('input[name="bd"]:checked',host).value, text:$('#bdtext',host).value, checked:[]}; }
-    var a={id:live.id, kind:'check', len:E.len, at:new Date().toISOString(), answers:answers, match:M, dump:D, earned:earned, bonus:bonus, max:max, score:max?earned/max:0};
+    var a={id:live.id, kind:'check', len:E.len, at:new Date().toISOString(), answers:answers, matches:MS, dump:D, earned:earned, bonus:bonus, max:max, score:max?earned/max:0};
     day().checks.push(a); save(); refresh(); showResults(host, a);
   });
 }
@@ -625,16 +711,19 @@ function reviewItem(r, i, team){
   ord.forEach(function(oi,k){ var p=r.pts?r.pts[oi]:0; var cls = oi===it.correct?' right':(p>0?' wrong':''); h+='<div class="opt'+cls+'"><span class="l">'+LET[k]+'.</span><span>'+esc(it.options[oi])+(oi===it.correct?' <strong>(correct answer)</strong>':'')+(p?' <strong>('+p+(p===1?' point':' points')+' from you)</strong>':'')+(team!=null&&oi===team?' <strong>(team answer)</strong>':'')+'</span></div>'; });
   var prr=r.ptsRight!=null?r.ptsRight:(r.right?4:0);
   h+='</div><p class="verdict '+(r.right?'ok':'no')+'">'+prr+' of 4 points'+(!r.right&&r.conf==='sure'?'. Red flag: most of your points were on a wrong answer.':r.right&&r.conf!=='sure'?'. Right, but split.':'.')+'</p>';
-  h+='<details'+(prr===4?'':' open')+'><summary>The reasoning</summary><div class="why"><p>'+esc(it.why)+'</p>';
+  var rsx=resOf(r.comp);
+  h+='<details'+(prr===4?'':' open')+'><summary>The reasoning</summary><div class="why"><p>'+(it.why?esc(it.why):'This question has no written explanation yet. Work it out from '+(rsx?ext(rsx.notes,'the notes, '+rsx.section):'your notes')+'.')+'</p>';
   if(it.whyNot){ h+='<ul>'+ord.map(function(oi,k){ return oi===it.correct?'':'<li><strong>'+LET[k]+'.</strong> '+esc(it.whyNot[oi])+'</li>'; }).join('')+'</ul>'; }
   return h+'</div></details></div>';
 }
 function matchReview(a){
-  var M=a.match; if(!M) return '';
-  var rows=a.answers.filter(function(r){ return r.kind==='match'; });
+  return matchesOf(a).map(function(M){
+  var rows=a.answers.filter(function(r){ return r.kind==='match' && (r.set?r.set===M.set:true); });
   return '<div class="card"><h3 style="margin-top:0">Matching: '+esc(M.title)+'</h3><div class="tablewrap" tabindex="0" role="region" aria-label="Table, scrolls sideways on small screens"><table><thead><tr><th>Description</th><th>You chose</th><th>Answer</th></tr></thead><tbody>'+
     rows.map(function(r){ var p=M.pairs[r.row]; return '<tr><td>'+esc(p[1])+'</td><td>'+(r.right?'':'')+esc(M.pairs[r.picked]?M.pairs[r.picked][0]:'')+(r.right?' (right)':' (not this time)')+'</td><td><strong>'+esc(p[0])+'</strong></td></tr>'; }).join('')+'</tbody></table></div></div>';
+  }).join('');
 }
+function matchesOf(a){ return a.matches || (a.match?[a.match]:[]); }
 function mcAnswers(ans){ return ans.filter(function(r){ return r.kind==='mc' || !r.kind; }); }
 function calib(ans){
   var g={sure:[0,0],unsure:[0,0],guess:[0,0]}; mcAnswers(ans).forEach(function(r){ if(g[r.conf]) g[r.conf][r.right?0:1]++; }); return g;
@@ -691,7 +780,7 @@ function showResults(host, a){
 /* one line describing where a miss showed up, for the gap step and the plan */
 function missLine(x){
   if(x.kind==='tf'){ var t=findTF(x.id); if(!t) return ''; return 'True or false: "'+tfPlain(t.st)+'" You said '+(x.judged?'true':'false')+'. It is '+(t.ans?'true':'false')+'.'; }
-  if(x.kind==='match'){ var d=day(); var a=null; d.checks.forEach(function(c){ if(c.match && x.id.indexOf(c.match.set+':')===0 && c.answers.indexOf(x)!==-1) a=c; }); if(!a) return ''; var p=a.match.pairs[x.row]; return 'Matching: "'+p[1]+'" is '+p[0]+'. You chose '+(a.match.pairs[x.picked]?a.match.pairs[x.picked][0]:'nothing')+'.'; }
+  if(x.kind==='match'){ var d=day(); var a=null; var M=null; d.checks.forEach(function(c){ if(c.answers.indexOf(x)!==-1) matchesOf(c).forEach(function(mm){ if(x.id.indexOf(mm.set+':')===0) M=mm; }); }); if(!M) return ''; var p=M.pairs[x.row]; return 'Matching: "'+p[1]+'" is '+p[0]+'. You chose '+(M.pairs[x.picked]?M.pairs[x.picked][0]:'nothing')+'.'; }
   var it=findItem(x.id); if(!it) return '';
   return it.stem+' Most of your points went to: '+it.options[x.picked]+' The answer: '+it.options[it.correct];
 }
@@ -834,7 +923,7 @@ VIEWS.prove = function(v){
   $('#pgen',v).addEventListener('click', function(){
     var comps=d.gaps.slice(); d.gaps.forEach(function(id){ relatedOf(id).forEach(function(p){ if(comps.indexOf(p[0])===-1 && COMP[p[0]]) comps.push(p[0]); }); });
     var seen=seenIds();
-    var core=pickItems(d.gaps.length*2, d.gaps, seen);
+    var core=[]; d.gaps.forEach(function(id){ core=core.concat(pickItems(2, [id], seen)); });
     var used={}; core.forEach(function(p){ used[p.it.id]=1; });
     var extra=pickItems(3, comps.filter(function(id){ return d.gaps.indexOf(id)===-1; }), seen).filter(function(p){ return !used[p.it.id]; });
     startExam($('#pexam',v), 'prove', shuffle(core.concat(extra)), d.gaps.slice());
