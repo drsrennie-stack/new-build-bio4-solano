@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mastery Check &middot; BIO 004 Human Anatomy</title>
+<meta name="description" content="Check, find the gap, fix it, prove it. A walk-through mastery check for every BIO 004 module, built on the course competencies, notes and question bank.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   BIO 004 MASTERY CHECK. One page, one walk-through:
+   CHECK, FIND THE GAP, FIX IT, PROVE IT, then a retrieval finish.
+
+   Questions come from the recall card bank (course-content.js)
+   joined to the fall competencies (card-competency-map.js and
+   card-competency-fine.js), plus the exam-style items in
+   bio004-mastery-items.js. Modules and their opening dates come
+   from schedule-fall2026.js, competencies from
+   competenciesfall2026.js. Nothing here is typed twice.
+
+   Everything a student does stays in this browser's
+   localStorage under bio004-mastery-v1. Names are never stored.
+   Brand of record: navy #0B1530, rust #8B3A2E, gold #C9A14A.
+   No italics. White cards lift off the page with a shadow only.
+   ============================================================ */
+:root{
+  --navy:#0B1530; --navy-mid:#1C2E4F; --navy-tint:#ECEFF4;
+  --rust:#8B3A2E; --rust-dark:#6B2A20; --rust-tint:#F7EEEC;
+  --gold:#C9A14A; --gold-text:#6E5018; --gold-tint:#FBF6EC;
+  --page:#FFFFFF; --soft:#FAFAF9; --ink:#0B1530; --muted:#4E5464;
+  --gray:#5F6473; --line-soft:rgba(11,21,48,.14);
+  --shadow:0 1px 3px rgba(0,0,0,.08); --shadow-up:0 8px 16px rgba(0,0,0,.10);
+  --fd:'Plus Jakarta Sans',system-ui,sans-serif;
+  --fb:'Figtree',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--soft);color:var(--ink);font-family:var(--fb);font-size:16.5px;line-height:1.6}
+em,i,cite{font-style:normal}
+[hidden]{display:none !important}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:12px;top:12px;background:var(--page);padding:10px 14px;border-radius:6px;z-index:30;outline:3px solid var(--rust)}
+a{color:var(--rust);text-underline-offset:3px}
+a:hover{color:var(--rust-dark)}
+:focus-visible{outline:3px solid var(--rust);outline-offset:2px;border-radius:6px}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.site-header{background:var(--page);box-shadow:var(--shadow);padding:14px max(16px,4vw)}
+.site-logo{display:inline-flex;align-items:center;gap:12px;text-decoration:none;color:var(--navy)}
+.site-logo svg{height:40px;width:auto;display:block}
+.logo-title{display:block;font-family:var(--fd);font-size:19px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.logo-title .a{color:var(--rust)}
+.logo-sub{display:block;font-size:13px;color:var(--muted)}
+
+.wrap{max-width:900px;margin:0 auto;padding:0 16px}
+main{padding:24px 0 60px}
+h1,h2,h3,h4{font-family:var(--fd);color:var(--navy);line-height:1.2;margin:0 0 10px}
+h1{font-size:clamp(27px,5vw,38px);font-weight:800;letter-spacing:-.02em}
+h2{font-size:22px;font-weight:700;color:var(--rust-dark)}
+h3{font-size:18px;font-weight:700;color:var(--rust-dark);margin-top:18px}
+h4{font-size:16px;font-weight:700;margin-top:14px}
+p{margin:0 0 12px}
+.eyebrow{font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--rust-dark);margin:0 0 8px}
+.lede{font-size:18px;max-width:66ch}
+.muted{color:var(--muted)}
+.small{font-size:14.5px}
+
+.card{background:var(--page);border-radius:12px;padding:20px 22px;margin:0 0 18px;box-shadow:var(--shadow);transition:transform 200ms ease, box-shadow 200ms ease}
+.card.lift:hover{transform:translateY(-2px);box-shadow:var(--shadow-up)}
+.panel{background:var(--navy);color:#fff;border-radius:12px;padding:18px 22px;margin:0 0 18px}
+.panel h2,.panel h3,.panel p{color:#fff}
+.panel .eyebrow{color:#E9D6A6}
+
+/* the four words on the board */
+.board{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-family:var(--fd);font-weight:800;font-size:clamp(15px,3vw,20px);letter-spacing:.04em;margin:6px 0 4px}
+.board span.w{color:#fff}
+.board span.arr{color:var(--gold)}
+
+/* steps */
+.steps{list-style:none;padding:0;margin:0 0 18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stepbtn{width:100%;text-align:left;font:inherit;cursor:pointer;background:var(--page);color:var(--navy);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow);border:1px dashed var(--gray);min-height:74px}
+.stepbtn .n{display:block;font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.stepbtn .t{display:block;font-family:var(--fd);font-weight:800;font-size:16px}
+.stepbtn .s{display:block;font-size:13px;color:var(--muted)}
+.stepbtn[data-state="locked"]{color:var(--gray);cursor:not-allowed;background:#F3F3F2}
+.stepbtn[data-state="open"]{border:1px solid var(--gold)}
+.stepbtn[data-state="done"]{border:1px solid var(--navy);background:var(--navy-tint)}
+.stepbtn[aria-current="step"]{box-shadow:0 0 0 3px var(--gold),var(--shadow-up)}
+
+/* forms and buttons */
+.btn{display:inline-block;font:inherit;font-family:var(--fd);font-weight:700;font-size:15.5px;cursor:pointer;border-radius:8px;padding:11px 18px;border:2px solid var(--rust);background:var(--rust);color:#fff;text-decoration:none;min-height:44px}
+.btn:hover{background:var(--rust-dark);border-color:var(--rust-dark);color:#fff}
+.btn.ghost{background:var(--page);color:var(--navy);border-color:var(--navy)}
+.btn.ghost:hover{background:var(--navy-tint);color:var(--navy)}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.btn.gold:hover{background:#B8924A;border-color:#B8924A}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{font:inherit;font-weight:600;cursor:pointer;border-radius:999px;padding:8px 16px;border:1px solid var(--navy);background:var(--page);color:var(--navy);min-height:40px}
+.pill[aria-pressed="true"]{background:var(--navy);color:#fff}
+label{cursor:pointer}
+select,textarea,input[type=text]{font:inherit;color:var(--ink);border:1px solid var(--gray);border-radius:8px;padding:10px 12px;background:#fff;width:100%}
+textarea{min-height:90px;resize:vertical}
+.field{margin:0 0 12px}
+.field > label, .lab{display:block;font-weight:700;margin:0 0 6px}
+.hint{font-size:14.5px;color:var(--muted);margin:4px 0 0}
+.msg{font-weight:700;color:var(--rust-dark)}
+
+/* module picker */
+.mods{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:8px 0 4px}
+.mod{display:block;background:var(--page);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow);border:1px solid var(--gold);cursor:pointer}
+.mod input{accent-color:var(--rust);margin-right:6px}
+.mod .mt{font-family:var(--fd);font-weight:800}
+.mod .md{display:block;font-size:13.5px;color:var(--muted)}
+.mod.locked{border:1px dashed var(--gray);background:#F3F3F2;color:var(--gray);cursor:not-allowed}
+.mod.sel{border:1px solid var(--navy);background:var(--navy-tint)}
+
+/* exam items */
+.q{background:var(--page);border-radius:12px;padding:18px 20px;margin:0 0 14px;box-shadow:var(--shadow)}
+.q fieldset{border:0;margin:0;padding:0}
+.q legend{font-family:var(--fd);font-weight:800;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:0;margin:0 0 6px}
+.q .stem{font-weight:700;font-size:17px;margin:0 0 10px}
+.opts{display:flex;flex-direction:column;gap:6px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border-radius:8px;border:1px solid var(--line-soft);background:#fff}
+.opt input{margin-top:4px;accent-color:var(--navy);flex:none;width:18px;height:18px}
+.opt .l{font-family:var(--fd);font-weight:800;min-width:18px}
+.opt.right{border:2px solid var(--navy)}
+.opt.wrong{border:2px dashed var(--rust)}
+.conf{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.conf .cl{font-weight:700;font-size:14.5px;margin-right:4px}
+.conf label{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--navy);border-radius:999px;padding:6px 12px;font-size:14.5px;font-weight:600}
+.conf input{accent-color:var(--navy)}
+.q.unanswered{box-shadow:0 0 0 2px var(--rust),var(--shadow)}
+.verdict{font-family:var(--fd);font-weight:800;margin:10px 0 4px}
+.verdict.ok{color:var(--navy)}
+.verdict.no{color:var(--rust-dark)}
+details{margin-top:8px}
+summary{cursor:pointer;font-weight:700;color:var(--navy)}
+.why ul{margin:6px 0 0;padding-left:20px}
+.tag{display:inline-block;font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:3px 10px;margin:0 6px 4px 0;border:1px solid var(--navy)}
+.tag.flag{border-color:var(--rust);color:var(--rust-dark)}
+.tag.gap{border-color:var(--rust);color:var(--rust-dark);border-style:dashed}
+.tag.fragile{border-color:var(--gold-text);color:var(--gold-text)}
+.tag.solid{background:var(--navy-tint)}
+.tag.untested{border-color:var(--gray);color:var(--gray);border-style:dashed}
+
+/* results */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:10px 0}
+.stat{background:var(--page);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow)}
+.stat b{display:block;font-family:var(--fd);font-size:28px;font-weight:800;line-height:1.1}
+.stat small{display:block;color:var(--muted);font-size:13.5px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+th{font-family:var(--fd);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+td.n,th.n{text-align:right;white-space:nowrap}
+.tablewrap{overflow-x:auto}
+.redflag{background:var(--rust-tint);border-radius:10px;padding:14px 16px;margin:10px 0}
+.redflag h3{margin-top:0}
+.gapcard{background:var(--page);border-radius:12px;padding:18px 20px;margin:0 0 16px;box-shadow:var(--shadow)}
+.gapcard ol,.gapcard ul{padding-left:20px;margin:6px 0 10px}
+.gapcard li{margin:0 0 6px}
+.choose label{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line-soft)}
+.choose input{margin-top:5px;width:18px;height:18px;accent-color:var(--rust);flex:none}
+.station{background:var(--page);border-radius:12px;padding:18px 20px;margin:0 0 16px;box-shadow:var(--shadow)}
+.station ol{padding-left:22px}
+.station li{margin:0 0 8px}
+.done{background:var(--navy-tint);border-radius:8px;padding:10px 14px;font-weight:600}
+.compare td.v{font-weight:700}
+.chk label{display:flex;gap:10px;align-items:flex-start;padding:6px 0}
+.chk input{margin-top:5px;width:18px;height:18px;accent-color:var(--navy);flex:none}
+.sys{font-family:var(--fd);font-weight:800;margin:14px 0 4px;color:var(--navy)}
+.teamrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--line-soft)}
+.teamrow label{font-weight:700}
+.teamrow select{width:auto;min-width:160px}
+.footer{padding:24px 0 40px;color:var(--muted);font-size:14px}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important;scroll-behavior:auto !important} .card.lift:hover{transform:none} }
+@media print{ .site-header,.steps,.actions,.noprint{display:none !important} body{background:#fff} .card,.q,.gapcard,.station{box-shadow:none;border:1px solid #ccc} }
+</style>
+</head>
+<body data-no-reading-mode>
+<a class="skip" href="#main">Skip to the mastery check</a>
+<header class="site-header">
+  <a href="welcome.html" target="_top" class="site-logo" aria-label="BIO 004 Human Anatomy, course home">
+    <svg viewBox="40 10 125 148" aria-hidden="true" focusable="false"><g transform="translate(0, 18)"><g transform="translate(60, 0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#0B1530"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#0B1530"/></g><g transform="translate(100, 0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/></g><g transform="translate(140, 0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/></g></g></svg>
+    <span><span class="logo-title">Human <span class="a">Anatomy</span></span><span class="logo-sub">BIO 004 &middot; Solano Community College</span></span>
+  </a>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Mastery Check</p>
+  <h1>Check it, find the gap, fix it, prove it.</h1>
+  <p class="lede">This is not mainly about your score. It is about learning what to do when you cannot answer a question. You will take a short closed-notes check, find the competencies behind your misses, fix them with your group, then prove the fix on new questions.</p>
+
+  <div class="panel">
+    <p class="eyebrow">The whole method, in four moves</p>
+    <p class="board" aria-label="Check, then find the gap, then fix it, then prove it"><span class="w">CHECK</span><span class="arr" aria-hidden="true">&rarr;</span><span class="w">FIND THE GAP</span><span class="arr" aria-hidden="true">&rarr;</span><span class="w">FIX IT</span><span class="arr" aria-hidden="true">&rarr;</span><span class="w">PROVE IT</span></p>
+    <p class="small" style="margin:6px 0 0">Do it today, again tomorrow, and again the day after. Every run saves in this browser, so you can see whether your gaps are closing before the exam.</p>
+  </div>
+
+  <div class="card" id="setup">
+    <h2>Start here</h2>
+    <div class="field" style="max-width:360px">
+      <label for="section">Your class</label>
+      <select id="section">
+        <option value="">Choose your class</option>
+        <option value="class1">Class 1, Mon and Wed afternoon</option>
+        <option value="class2">Class 2, Tue and Thu morning</option>
+        <option value="class3">Class 3, Tue and Thu evening</option>
+      </select>
+      <p class="hint">This only sets your exam dates. Nothing is sent anywhere.</p>
+    </div>
+    <fieldset style="border:0;padding:0;margin:0">
+      <legend class="lab">Which module are you checking?</legend>
+      <p class="hint" style="margin:0 0 6px">Modules open on the course schedule and stay open all semester. Gray modules have not opened yet.</p>
+      <div class="mods" id="mods"></div>
+    </fieldset>
+    <p id="modinfo" class="small" aria-live="polite" style="margin-top:10px"></p>
+  </div>
+
+  <nav aria-label="Mastery check steps">
+    <ol class="steps" id="steps"></ol>
+  </nav>
+
+  <section id="view" aria-live="polite" tabindex="-1"></section>
+
+  <div class="card" id="progress">
+    <h2>My progress on this module</h2>
+    <div id="progbody"><p class="muted">Take your first check and your progress shows here, one row per day.</p></div>
+  </div>
+
+  <div class="card">
+    <h2>Save my repair plan</h2>
+    <p>Your repair plan lists your results, your red flags with the correct idea for each one, your three gaps with the steps and links to fix them, and what is still left on the module checklist. Print it or save it as a PDF and keep it next to you while you study. Upload it in Canvas if your assignment asks for it.</p>
+    <div class="field" style="max-width:380px">
+      <label for="rname">Your name, for the top of the plan</label>
+      <input type="text" id="rname" autocomplete="name">
+      <p class="hint">Your name goes on the printed plan only. It is never saved.</p>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn" id="plan">Open my repair plan</button>
+      <span id="planmsg" class="small" aria-live="polite"></span>
+    </div>
+  </div>
+
+  <div class="card noprint">
+    <h2>Start over on this device</h2>
+    <p class="small">Clears every saved check, gap and checklist for this course in this browser. Use it on a shared computer when you are finished.</p>
+    <div class="actions"><button type="button" class="btn ghost" id="wipe">Clear my saved work</button><span id="wipemsg" class="small" aria-live="polite"></span></div>
+  </div>
+
+  <p class="footer">Dr. Sharilyn Rennie &middot; BIO 004 Human Anatomy &middot; Solano Community College. Links to notes, drawing sheets and worksheets open in a new tab, so this page stays where you left it.</p>
+</div>
+</main>
+
+<script src="schedule-fall2026.js"></script>
+<script src="competenciesfall2026.js"></script>
+<script src="course-content.js"></script>
+<script src="card-competency-map.js"></script>
+<script src="card-competency-fine.js"></script>
+<script src="bio004-mastery-items.js"></script>
+<script>
+(function(){
+'use strict';
+/* ================= data joins ================= */
+var SEC   = window.BIO004_SECTIONS || {sections:{}};
+var MODS  = (window.BIO004_MODULES || []).filter(function(m){ return m.exam; });
+var COMPS = window.BIO004_COMPETENCIES || [];
+var CC    = window.BIO004_COURSE_CONTENT || {modules:[]};
+var CMAP  = window.BIO004_CARD_COMPETENCY_MAP || {};
+var MB    = window.BIO004_MASTERY || {modules:{}, items:[]};
+var KEY   = 'bio004-mastery-v1';
+var LET   = 'ABCDEF';
+
+var COMP = {}; COMPS.forEach(function(c){ COMP[c.id] = c; });
+/* Boundary weeks belong to the later module, the same rule the Exam Modules page uses. */
+function moduleForWeek(wk){ var f=null; MODS.forEach(function(m){ if(m.weeks.indexOf(wk)!==-1) f=m.n; }); return f; }
+var MODCOMPS = {}; COMPS.forEach(function(c){ var m=moduleForWeek(c.week); if(!m) return; (MODCOMPS[m]=MODCOMPS[m]||[]).push(c.id); c._mod=m; });
+
+/* Question pool per module: exam-style items first, then recall cards whose competency is known exactly. */
+var POOL = {}; var TOPICPAGE = {}; var TOPICOFCOMP = {};
+(MB.items||[]).forEach(function(it){ var c=COMP[it.comp]; if(!c) return; (POOL[c._mod]=POOL[c._mod]||[]).push({id:it.id, comp:it.comp, stem:it.stem, options:it.options, correct:it.correct, why:it.why, whyNot:it.whyNot, src:'x'}); });
+CC.modules.forEach(function(m){ m.topics.forEach(function(t){
+  if(t.lecturePageUrl) TOPICPAGE[t.id] = {url:t.lecturePageUrl, title:t.title};
+  var te = CMAP[t.id]; if(te && te.comps) te.comps.forEach(function(id){ (TOPICOFCOMP[id]=TOPICOFCOMP[id]||[]).push(t.id); });
+  t.cards.forEach(function(card){
+    var e = CMAP[t.id+':'+card.id] || null; var ids = e ? (e.comps || [e]) : [];
+    if(card.competencyId) ids=[card.competencyId];
+    if(ids.length!==1 || !COMP[ids[0]]) return;
+    if(!Array.isArray(card.options) || card.options.length<3 || typeof card.correctIndex!=='number') return;
+    var c = COMP[ids[0]]; if(!c._mod) return;
+    (POOL[c._mod]=POOL[c._mod]||[]).push({id:'c:'+t.id+':'+card.id, comp:c.id, stem:clean(card.q), options:card.options.map(clean), correct:card.correctIndex, why:clean(card.explanation||card.a||''), whyNot:null, src:'c'});
+  });
+});});
+function clean(s){ return String(s==null?'':s).replace(/\s*[\u2014\u2013]\s*/g, ', ').replace(/\s+/g,' ').trim(); }
+
+/* ================= utilities ================= */
+function $(s,r){ return (r||document).querySelector(s); }
+function $$(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function pct(x){ return Math.round(x*100); }
+function today(){ var d=new Date(); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+function parseDay(s){ var p=s.split('-'); return new Date(+p[0], +p[1]-1, +p[2]); }
+function fmtDay(s){ return parseDay(s).toLocaleDateString('en-US',{weekday:'short', month:'short', day:'numeric'}); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function load(){ try{ var v=JSON.parse(localStorage.getItem(KEY)||'null'); if(v && v.days) return v; }catch(e){} return {section:'', module:null, days:{}}; }
+var S = load();
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function baseUrl(){ return location.href.replace(/[?#].*$/,'').replace(/[^\/]*$/,''); }
+function ext(href, text){ return '<a href="'+esc(href)+'" target="_blank" rel="noopener">'+esc(text)+'<span class="vh"> (opens in a new tab)</span></a>'; }
+
+/* ================= schedule ================= */
+function examDate(n, sec){
+  var dates=[]; Object.keys(SEC.sections||{}).forEach(function(k){ if(sec && k!==sec) return; var ex=(SEC.sections[k].exams||[])[n-1]; if(ex) dates.push(ex.lecture); });
+  dates.sort(); return dates.length ? (sec ? dates[0] : dates[dates.length-1]) : null;
+}
+function opensOn(m){
+  if(m.n===1) return SEC.start || '2026-08-17';
+  var earliest=null; Object.keys(SEC.sections||{}).forEach(function(k){ var ex=(SEC.sections[k].exams||[])[m.n-2]; if(ex && (!earliest || ex.lecture<earliest)) earliest=ex.lecture; });
+  if(!earliest) return SEC.start;
+  var d=parseDay(earliest); d.setDate(d.getDate()+1);
+  return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+}
+function isOpen(m){ return opensOn(m) <= today(); }
+function defaultModule(){
+  var t=today(), pick=null;
+  MODS.forEach(function(m){ if(!isOpen(m)) return; var ex=examDate(m.n, S.section); if(!pick && ex && ex>=t) pick=m.n; });
+  if(!pick){ MODS.forEach(function(m){ if(isOpen(m)) pick=m.n; }); }
+  return pick || 1;
+}
+function MOD(){ return MODS.filter(function(m){ return m.n===S.module; })[0]; }
+function modData(){ return (MB.modules||{})[S.module] || null; }
+function dayKey(d){ return (d||today())+'|m'+S.module; }
+function day(){ var k=dayKey(); if(!S.days[k]) S.days[k]={checks:[], gaps:[], statements:{}, fixes:{}, prove:null, dump:{text:[], checked:{}, revealed:false}}; return S.days[k]; }
+function moduleDays(){ return Object.keys(S.days).filter(function(k){ return k.split('|')[1]==='m'+S.module; }).sort(); }
+
+/* ================= resources and relations ================= */
+function resOf(id){
+  var md=modData(); if(md && md.resources && md.resources[id]) return md.resources[id];
+  var tids=TOPICOFCOMP[id]||[]; var tp=tids.map(function(t){ return TOPICPAGE[t]; }).filter(Boolean)[0];
+  return tp ? {notes:tp.url, section:tp.title, draw:null, sheet:null, video:null, station:null} : null;
+}
+function relatedOf(id){
+  var md=modData(); if(md && md.related && md.related[id]) return md.related[id];
+  var c=COMP[id]; if(!c) return [];
+  return (MODCOMPS[S.module]||[]).filter(function(o){ return o!==id && COMP[o].system===c.system; })
+    .sort(function(a,b){ return Math.abs(COMP[a].week-c.week)-Math.abs(COMP[b].week-c.week); }).slice(0,2)
+    .map(function(o){ return [o, 'It sits in the same system, '+c.system+', so it is often learned and lost together.']; });
+}
+
+/* ================= scoring and gaps ================= */
+var CONF = {sure:'Sure', unsure:'Unsure', guess:'Guess'};
+function attemptsFor(which){ var d=day(); return which==='prove' ? (d.prove?[d.prove]:[]) : d.checks; }
+function compStats(attempts){
+  var st={};
+  attempts.forEach(function(a){ a.answers.forEach(function(r){
+    var s=st[r.comp]=st[r.comp]||{n:0,right:0,flag:0,wrong:0,fragile:0,items:[]};
+    s.n++; if(r.right){ s.right++; if(r.conf!=='sure') s.fragile++; } else { if(r.conf==='sure') s.flag++; else s.wrong++; }
+    s.items.push(r);
+  }); });
+  Object.keys(st).forEach(function(id){ var s=st[id]; s.status = s.flag?'flag' : s.wrong?'gap' : s.fragile?'fragile' : 'solid'; s.priority = s.flag*3 + s.wrong*2 + s.fragile; });
+  return st;
+}
+var STATUS = {
+  flag:{tag:'Red flag', cls:'flag', say:'You were sure, and you were wrong. That means you are holding a wrong idea, not just a missing one, and you would not think to look it up. Fix these first.'},
+  gap:{tag:'Gap', cls:'gap', say:'You missed it and you knew you were unsure. The idea is not there yet. Rebuild it from the notes, then test yourself without them.'},
+  fragile:{tag:'Fragile', cls:'fragile', say:'You got it right but were not sure. That answer will not hold up under exam pressure. A few rounds of retrieval will make it solid.'},
+  solid:{tag:'Solid', cls:'solid', say:'Right and sure. Keep it warm with a quick review, but spend your time elsewhere.'},
+  untested:{tag:'Not tested yet', cls:'untested', say:'No question on this one yet. Take another check to find out where it stands.'}
+};
+
+/* ================= generator ================= */
+function seenIds(){ var s={}; moduleDays().forEach(function(k){ var d=S.days[k]; d.checks.concat(d.prove?[d.prove]:[]).forEach(function(a){ a.answers.forEach(function(r){ s[r.id]=1; }); }); }); return s; }
+function pickItems(n, comps, seen){
+  var pool=(POOL[S.module]||[]).filter(function(it){ return !comps || comps.indexOf(it.comp)!==-1; });
+  var byComp={}; pool.forEach(function(it){ (byComp[it.comp]=byComp[it.comp]||[]).push(it); });
+  Object.keys(byComp).forEach(function(c){ byComp[c]=shuffle(byComp[c]).sort(function(a,b){ return (seen[a.id]?1:0)-(seen[b.id]?1:0) || (a.src==='x'?-1:0)-(b.src==='x'?-1:0); }); });
+  var order=shuffle(Object.keys(byComp)), out=[], round=0;
+  while(out.length<n){ var added=false; order.forEach(function(c){ if(out.length>=n) return; var it=byComp[c][round]; if(it){ out.push(it); added=true; } }); if(!added) break; round++; }
+  return shuffle(out).map(function(it){ var ord=it.options.map(function(_,i){ return i; }); shuffle(ord); return {it:it, order:ord}; });
+}
+
+/* ================= steps ================= */
+var STEPS = [
+  {k:'check', n:'Step 1', t:'Check', s:'15 to 20 min, alone, closed notes'},
+  {k:'gap',   n:'Step 2', t:'Find the gap', s:'5 min, name three'},
+  {k:'fix',   n:'Step 3', t:'Fix it', s:'25 to 30 min, with your group'},
+  {k:'prove', n:'Step 4', t:'Prove it', s:'20 to 25 min, you, then team'},
+  {k:'finish',n:'Step 5', t:'Retrieval finish', s:'10 to 15 min, no notes'}
+];
+var cur = 'check';
+var live = null; /* the exam currently on screen */
+function stepState(k){
+  var d=day();
+  if(k==='check') return d.checks.length?'done':'open';
+  if(k==='gap') return !d.checks.length?'locked':(d.gaps.length?'done':'open');
+  if(k==='fix') return !d.gaps.length?'locked':(Object.keys(d.fixes).some(function(x){ return d.fixes[x]; })?'done':'open');
+  if(k==='prove') return !d.gaps.length?'locked':(d.prove&&d.prove.revealed?'done':'open');
+  if(k==='finish') return d.dump.revealed?'done':'open';
+}
+function renderSteps(){
+  var ol=$('#steps'); ol.innerHTML='';
+  STEPS.forEach(function(st){
+    var s=stepState(st.k); var li=document.createElement('li');
+    var label = s==='locked' ? 'Opens after the step before it' : s==='done' ? 'Done today' : 'Ready';
+    li.innerHTML='<button type="button" class="stepbtn" data-k="'+st.k+'" data-state="'+s+'"'+(cur===st.k?' aria-current="step"':'')+(s==='locked'?' aria-disabled="true"':'')+'><span class="n">'+st.n+' &middot; '+label+'</span><span class="t">'+st.t+'</span><span class="s">'+st.s+'</span></button>';
+    ol.appendChild(li);
+  });
+  $$('.stepbtn', ol).forEach(function(b){ b.addEventListener('click', function(){ if(b.getAttribute('data-state')==='locked') return; go(b.getAttribute('data-k')); }); });
+}
+function go(k, keepFocus){ cur=k; live=null; renderSteps(); VIEWS[k]($('#view')); if(!keepFocus){ var h=$('#view h2'); if(h){ h.setAttribute('tabindex','-1'); h.focus(); } } sendHeight(); }
+function refresh(){ renderSteps(); renderProgress(); sendHeight(); }
+
+/* ================= step 1: check ================= */
+var VIEWS = {};
+VIEWS.check = function(v){
+  var d=day(); var pool=(POOL[S.module]||[]).length;
+  var h='<div class="card"><p class="eyebrow">Step 1 &middot; Check</p><h2>Take a mastery check.</h2>'+
+    '<ol><li>Close your notes and put your phone away. Treat this like the exam.</li>'+
+    '<li>Answer every question, then mark how you feel about it: <strong>Sure</strong>, <strong>Unsure</strong>, or <strong>Guess</strong>. Be honest. That mark is how we tell a wrong idea from a missing one.</li>'+
+    '<li>Submit, then read the reasoning for anything you missed or were unsure about.</li></ol>'+
+    '<p class="small muted">Every check is built fresh from '+pool+' questions on this module, spread across its '+(MODCOMPS[S.module]||[]).length+' competencies. Take as many as you like. Questions you have already seen are used last.</p>'+
+    '<p class="lab" id="lenlab">How many questions?</p><div class="pills" role="group" aria-labelledby="lenlab">'+
+    [10,15,20,30].map(function(n){ return '<button type="button" class="pill" data-n="'+n+'" aria-pressed="'+(n===15?'true':'false')+'">'+n+'</button>'; }).join('')+'</div>'+
+    '<p class="hint">15 questions takes about 15 to 20 minutes.</p>'+
+    '<div class="actions"><button type="button" class="btn" id="gen">Build my check</button>'+(d.checks.length?'<button type="button" class="btn ghost" id="lastres">See my last results</button>':'')+'</div></div><div id="exam"></div>';
+  v.innerHTML=h;
+  var n=15; $$('.pill',v).forEach(function(b){ b.addEventListener('click', function(){ n=+b.getAttribute('data-n'); $$('.pill',v).forEach(function(o){ o.setAttribute('aria-pressed', o===b?'true':'false'); }); }); });
+  $('#gen',v).addEventListener('click', function(){ startExam($('#exam',v), 'check', pickItems(n, null, seenIds())); });
+  if($('#lastres',v)) $('#lastres',v).addEventListener('click', function(){ showResults($('#exam',v), d.checks[d.checks.length-1]); });
+};
+
+function startExam(host, kind, picked, gapComps){
+  if(!picked.length){ host.innerHTML='<p class="msg">There are no questions for this module yet.</p>'; return; }
+  live={kind:kind, picked:picked, id:uid(), gapComps:gapComps||null};
+  var h='<form id="xform" novalidate>';
+  picked.forEach(function(p,i){
+    var it=p.it;
+    h+='<div class="q" id="q'+i+'"><fieldset><legend>Question '+(i+1)+' of '+picked.length+'</legend><p class="stem" id="st'+i+'">'+esc(it.stem)+'</p>'+
+      '<div class="opts" role="radiogroup" aria-labelledby="st'+i+'">'+p.order.map(function(oi,k){ return '<label class="opt"><input type="radio" name="a'+i+'" value="'+oi+'"><span class="l">'+LET[k]+'.</span><span>'+esc(it.options[oi])+'</span></label>'; }).join('')+'</div></fieldset>'+
+      '<fieldset class="conf"><legend class="cl">How sure are you?</legend>'+['sure','unsure','guess'].map(function(c){ return '<label><input type="radio" name="c'+i+'" value="'+c+'">'+CONF[c]+'</label>'; }).join('')+'</fieldset>'+
+      (kind==='prove'?'<div class="teamrow" id="tr'+i+'" hidden><label for="t'+i+'">Team answer</label><select id="t'+i+'"><option value="">Same as mine</option>'+p.order.map(function(oi,k){ return '<option value="'+oi+'">'+LET[k]+'</option>'; }).join('')+'</select></div>':'')+
+      '</div>';
+  });
+  h+='<div class="actions"><button type="submit" class="btn" id="xsub">'+(kind==='prove'?'Lock my answers':'Submit my check')+'</button><span class="msg" id="xmsg" role="alert"></span></div></form>';
+  host.innerHTML=h; host.scrollIntoView({block:'start'}); $('#q0 input',host).focus(); sendHeight();
+  $('#xform',host).addEventListener('submit', function(e){
+    e.preventDefault();
+    var missing=[]; picked.forEach(function(p,i){ var ok=$('input[name="a'+i+'"]:checked',host) && $('input[name="c'+i+'"]:checked',host); $('#q'+i,host).classList.toggle('unanswered', !ok); if(!ok) missing.push(i+1); });
+    if(missing.length){ $('#xmsg',host).textContent='Answer and mark Sure, Unsure or Guess on question'+(missing.length>1?'s ':' ')+missing.join(', ')+'.'; $('#q'+(missing[0]-1)+' input',host).focus(); return; }
+    var answers=picked.map(function(p,i){ var pk=+$('input[name="a'+i+'"]:checked',host).value; return {id:p.it.id, comp:p.it.comp, picked:pk, conf:$('input[name="c'+i+'"]:checked',host).value, right:pk===p.it.correct, order:p.order}; });
+    var a={id:live.id, kind:kind, at:new Date().toISOString(), answers:answers, score:answers.filter(function(r){ return r.right; }).length/answers.length};
+    if(kind==='prove'){ a.gapComps=live.gapComps; a.revealed=false; day().prove=a; save(); lockForTeam(host, a); refresh(); return; }
+    day().checks.push(a); save(); refresh(); showResults(host, a);
+  });
+}
+function findItem(id){ var p=POOL[S.module]||[]; for(var i=0;i<p.length;i++) if(p[i].id===id) return p[i]; return null; }
+function reviewItem(r, i, team){
+  var it=findItem(r.id); if(!it) return '';
+  var ord=r.order||it.options.map(function(_,k){ return k; });
+  var h='<div class="q"><p class="small muted" style="margin:0 0 4px">Question '+(i+1)+' &middot; '+esc((COMP[r.comp]||{}).name||'')+'</p><p class="stem">'+esc(it.stem)+'</p><div class="opts">';
+  ord.forEach(function(oi,k){ var cls = oi===it.correct?' right':(oi===r.picked?' wrong':''); h+='<div class="opt'+cls+'"><span class="l">'+LET[k]+'.</span><span>'+esc(it.options[oi])+(oi===it.correct?' <strong>(correct answer)</strong>':'')+(oi===r.picked?' <strong>(your answer)</strong>':'')+(team!=null&&oi===team&&team!==r.picked?' <strong>(team answer)</strong>':'')+'</span></div>'; });
+  h+='</div><p class="verdict '+(r.right?'ok':'no')+'">'+(r.right?'Correct':'Not this time')+', marked '+CONF[r.conf]+(!r.right&&r.conf==='sure'?'. Red flag.':'.')+'</p>';
+  h+='<details'+(r.right&&r.conf==='sure'?'':' open')+'><summary>The reasoning</summary><div class="why"><p>'+esc(it.why)+'</p>';
+  if(it.whyNot){ h+='<ul>'+ord.map(function(oi,k){ return oi===it.correct?'':'<li><strong>'+LET[k]+'.</strong> '+esc(it.whyNot[oi])+'</li>'; }).join('')+'</ul>'; }
+  h+='</div></details></div>';
+  return h;
+}
+function calib(ans){
+  var g={sure:[0,0],unsure:[0,0],guess:[0,0]}; ans.forEach(function(r){ g[r.conf][r.right?0:1]++; }); return g;
+}
+function calibText(g){
+  var out=[]; var sureN=g.sure[0]+g.sure[1];
+  if(g.sure[1]) out.push('You were sure and wrong on '+g.sure[1]+(g.sure[1]===1?' question':' questions')+'. Those are your red flags, and they matter more than anything else on this page.');
+  if(sureN>=3 && g.sure[0]/sureN>=0.9) out.push('When you say Sure, you are right almost every time. Your confidence is trustworthy.');
+  else if(sureN>=3 && g.sure[0]/sureN<0.75) out.push('Your Sure is right only '+pct(g.sure[0]/sureN)+' percent of the time. Slow down on questions that feel easy and check each option against what you know.');
+  var lowRight=g.unsure[0]+g.guess[0], lowN=lowRight+g.unsure[1]+g.guess[1];
+  if(lowN>=3 && lowRight/lowN>=0.6) out.push('You got '+lowRight+' of '+lowN+' right when you were unsure or guessing. You know more than you think, but it is not solid yet. Retrieval practice turns that into Sure.');
+  if(!out.length) out.push('Look at the table: every Unsure and Guess, right or wrong, is a place to practice.');
+  return out;
+}
+function showResults(host, a){
+  var g=calib(a.answers); var st=compStats([a]);
+  var flags=a.answers.filter(function(r){ return !r.right && r.conf==='sure'; });
+  var h='<div class="card"><p class="eyebrow">Your results</p><h2>'+pct(a.score)+' percent. Now the useful part.</h2>'+
+    '<div class="stats"><div class="stat"><b>'+a.answers.filter(function(r){return r.right;}).length+' of '+a.answers.length+'</b><small>Correct</small></div>'+
+    '<div class="stat"><b>'+g.sure[1]+'</b><small>Red flags: sure and wrong</small></div>'+
+    '<div class="stat"><b>'+(g.unsure[0]+g.guess[0])+'</b><small>Right, but not sure</small></div></div>'+
+    '<div class="tablewrap"><table><caption class="vh">Accuracy by confidence</caption><thead><tr><th>You marked</th><th class="n">Right</th><th class="n">Wrong</th></tr></thead><tbody>'+
+    ['sure','unsure','guess'].map(function(c){ return '<tr><td>'+CONF[c]+'</td><td class="n">'+g[c][0]+'</td><td class="n">'+g[c][1]+'</td></tr>'; }).join('')+'</tbody></table></div>'+
+    calibText(g).map(function(t){ return '<p style="margin-top:10px">'+esc(t)+'</p>'; }).join('')+
+    (flags.length?'<div class="redflag"><h3>Red flags</h3><p>You were sure about these and they were wrong. Read the reasoning below for each one before you do anything else.</p><ul>'+flags.map(function(r){ return '<li><strong>'+esc(COMP[r.comp].name)+'</strong></li>'; }).join('')+'</ul></div>':'')+
+    '<div class="actions"><button type="button" class="btn gold" id="togap">Go to Step 2: Find the gap</button><button type="button" class="btn ghost" id="again">Build another check</button></div></div>'+
+    '<h3>Every question, with the reasoning</h3>'+a.answers.map(function(r,i){ return reviewItem(r,i); }).join('');
+  host.innerHTML=h; host.scrollIntoView({block:'start'}); var hh=$('h2',host); hh.setAttribute('tabindex','-1'); hh.focus();
+  $('#togap',host).addEventListener('click', function(){ go('gap'); });
+  $('#again',host).addEventListener('click', function(){ go('check'); });
+  sendHeight();
+}
+
+/* ================= step 2: find the gap ================= */
+VIEWS.gap = function(v){
+  var d=day(); var st=compStats(d.checks);
+  var all=(MODCOMPS[S.module]||[]).map(function(id){ var s=st[id]; return {id:id, s:s, status:s?s.status:'untested', pr:s?s.priority:-1}; });
+  var ranked=all.filter(function(x){ return x.s; }).sort(function(a,b){ return b.pr-a.pr || (a.s.right/a.s.n)-(b.s.right/b.s.n); });
+  var chosen = d.gaps.length ? d.gaps.slice() : ranked.filter(function(x){ return x.pr>0; }).slice(0,3).map(function(x){ return x.id; });
+  var h='<div class="card"><p class="eyebrow">Step 2 &middot; Find the gap</p><h2>Name your three weakest competencies.</h2>'+
+    '<p>A gap is a competency, not a question number. "I missed number 7" does not tell you what to study. "I cannot tell intramembranous from endochondral ossification" does.</p>'+
+    '<p class="small muted">This table combines every check you took today on this module ('+d.checks.length+'). Red flags are listed first, then gaps, then fragile answers.</p>'+
+    '<div class="tablewrap"><table><thead><tr><th>Competency</th><th class="n">Right</th><th>What it means</th></tr></thead><tbody>'+
+    ranked.map(function(x){ var S2=STATUS[x.status]; return '<tr><td><strong>'+esc(COMP[x.id].name)+'</strong></td><td class="n">'+x.s.right+' of '+x.s.n+'</td><td><span class="tag '+S2.cls+'">'+S2.tag+'</span></td></tr>'; }).join('')+
+    '</tbody></table></div>';
+  var untested=all.filter(function(x){ return !x.s; });
+  if(untested.length) h+='<p class="small" style="margin-top:10px"><strong>Not tested yet ('+untested.length+'):</strong> '+untested.map(function(x){ return esc(COMP[x.id].name); }).join(', ')+'. Another check will reach these.</p>';
+  h+='<fieldset class="choose" style="border:0;padding:0;margin:16px 0 0"><legend class="lab">Pick three. We picked your top three to start, but change them if you know better.</legend>'+
+    ranked.map(function(x){ return '<label><input type="checkbox" name="g" value="'+x.id+'"'+(chosen.indexOf(x.id)!==-1?' checked':'')+'><span><strong>'+esc(COMP[x.id].name)+'</strong> <span class="tag '+STATUS[x.status].cls+'">'+STATUS[x.status].tag+'</span><br><span class="small muted">'+esc(COMP[x.id].can)+'</span></span></label>'; }).join('')+
+    '</fieldset><p class="msg" id="gmsg" role="alert"></p>'+
+    '<div id="stmts"></div>'+
+    '<div class="actions"><button type="button" class="btn" id="gsave">Save my three gaps and show me how to fix them</button></div></div><div id="feedback"></div>';
+  v.innerHTML=h;
+  function drawStatements(){
+    var ids=$$('input[name="g"]:checked',v).map(function(i){ return i.value; });
+    $('#stmts',v).innerHTML = ids.length ? '<h3>Say each gap in one sentence</h3><p class="small">Start with "I cannot..." and name the exact thing. Good: "I cannot put the five growth plate zones in order from the epiphysis." Not useful: "I missed the bone question."</p>'+
+      ids.map(function(id,i){ return '<div class="field"><label for="gs'+i+'">'+esc(COMP[id].name)+'</label><textarea id="gs'+i+'" data-id="'+id+'" rows="2">'+esc(d.statements[id]||'')+'</textarea></div>'; }).join('') : '';
+    sendHeight();
+  }
+  $$('input[name="g"]',v).forEach(function(c){ c.addEventListener('change', function(){ var n=$$('input[name="g"]:checked',v).length; if(n>3){ c.checked=false; $('#gmsg',v).textContent='Three is the limit. Uncheck one first.'; return; } $('#gmsg',v).textContent=''; keepStatements(); drawStatements(); }); });
+  function keepStatements(){ $$('#stmts textarea',v).forEach(function(t){ d.statements[t.getAttribute('data-id')]=t.value; }); }
+  drawStatements();
+  $('#gsave',v).addEventListener('click', function(){
+    keepStatements();
+    var ids=$$('input[name="g"]:checked',v).map(function(i){ return i.value; });
+    if(!ids.length){ $('#gmsg',v).textContent='Pick at least one competency.'; return; }
+    var weak=ids.filter(function(id){ var s=(d.statements[id]||'').trim(); return s.split(/\s+/).length<5 || /#\s*\d|\bquestion\s*\d|\bmissed\b/i.test(s); });
+    if(weak.length){ $('#gmsg',v).textContent='Make each sentence name the idea, not the question. Check: '+weak.map(function(id){ return COMP[id].name; }).join(', ')+'.'; var t=$('#stmts textarea[data-id="'+weak[0]+'"]',v); if(t) t.focus(); return; }
+    d.gaps=ids; save(); refresh(); showFeedback($('#feedback',v));
+  });
+  if(d.gaps.length) showFeedback($('#feedback',v), true);
+};
+function fixSteps(status, r){
+  var L=[];
+  var notes = r && r.notes ? ext(r.notes, 'the notes, '+r.section) : 'your notes for this topic';
+  if(status==='flag'){
+    L.push('Find the exact spot where your idea and the notes disagree. Open '+notes+'.');
+    L.push('Write two lines side by side: "I thought..." and "It is actually...". Seeing the wrong version next to the right one is what stops it coming back.');
+    L.push('Draw it'+(r&&r.draw?' on the '+ext(r.draw,'drawing sheet'):'')+' without looking, then check the drawing against the notes.');
+    L.push('Explain it out loud to someone in your group. If you can teach it, the wrong idea is gone.');
+  } else if(status==='gap'){
+    L.push('Read '+notes+' once, slowly, with the question in mind.');
+    L.push('Close the notes. Draw and label it from memory'+(r&&r.draw?' on the '+ext(r.draw,'drawing sheet'):'')+'.');
+    L.push('Open the notes and correct your drawing in a different color. The corrections are exactly what you did not know.');
+    if(r&&r.sheet) L.push('Work that section of the '+ext(r.sheet,'worksheet')+'.');
+  } else {
+    L.push('You mostly have this. Do five recall cards on it from '+ext(MB.recallUrl||'bio004-spaced-recall.html','the recall cards')+' today and again tomorrow.');
+    L.push('Say it out loud without notes, then check '+notes+'.');
+  }
+  if(r&&r.video) L.push('If the notes are not clicking, watch the '+ext(r.video,'concept video')+' and then try the drawing again.');
+  return L;
+}
+function showFeedback(host, quiet){
+  var d=day(); var st=compStats(d.checks);
+  var byStation={}; d.gaps.forEach(function(id){ var r=resOf(id); var k=r&&r.station||'other'; (byStation[k]=byStation[k]||[]).push(id); });
+  var h='<h2 style="margin-top:8px">What your gaps mean and how to fix them</h2>';
+  var pattern=Object.keys(byStation).filter(function(k){ return byStation[k].length>=2 && k!=='other'; });
+  if(pattern.length){ var md=modData(); h+='<div class="redflag"><h3>A pattern</h3><p>'+pattern.map(function(k){ return 'Two or more of your gaps sit in '+esc(md&&md.stations[k]?md.stations[k].title:k)+'. That points to a whole region to rebuild, not a single fact to memorize.'; }).join(' ')+'</p></div>'; }
+  d.gaps.forEach(function(id){
+    var c=COMP[id], s=st[id], status=s?s.status:'untested', S2=STATUS[status], r=resOf(id);
+    h+='<div class="gapcard"><p class="eyebrow">'+esc(c.system||'')+'</p><h3 style="margin-top:0">'+esc(c.name)+'</h3>'+
+      '<p><span class="tag '+S2.cls+'">'+S2.tag+'</span>'+(s?' <span class="small muted">'+s.right+' of '+s.n+' right today</span>':'')+'</p>'+
+      (d.statements[id]?'<p><strong>Your gap, in your words:</strong> '+esc(d.statements[id])+'</p>':'')+
+      '<p><strong>What this is.</strong> '+esc(S2.say)+'</p>'+
+      '<p><strong>What you need to be able to do.</strong> '+esc(c.can)+'</p>';
+    if(s){ var miss=s.items.filter(function(x){ return !x.right; }); if(miss.length){ h+='<p><strong>Where it showed up.</strong></p><ul>'+miss.map(function(x){ var it=findItem(x.id); return it?'<li>'+esc(it.stem)+' You chose: '+esc(it.options[x.picked])+' The answer: '+esc(it.options[it.correct])+'</li>':''; }).join('')+'</ul>'; } }
+    var rel=relatedOf(id);
+    if(rel.length){ h+='<p><strong>Also check these. They usually break together.</strong></p><ul>'+rel.map(function(p){ var o=COMP[p[0]]; if(!o) return ''; var os=st[p[0]]; var note = !os ? 'Not tested yet, so treat it as a likely gap too.' : os.status==='solid' ? 'You got this one today, so your gap is narrower.' : 'You missed this one too today ('+STATUS[os.status].tag.toLowerCase()+'), which confirms it.'; return '<li><strong>'+esc(o.name)+'.</strong> '+esc(p[1])+' <span class="muted">'+note+'</span></li>'; }).join('')+'</ul>'; }
+    h+='<p><strong>How to fix it.</strong></p><ol>'+fixSteps(status, r).map(function(x){ return '<li>'+x+'</li>'; }).join('')+'</ol></div>';
+  });
+  h+='<div class="actions"><button type="button" class="btn gold" id="tofix">Go to Step 3: Fix it with your group</button></div>';
+  host.innerHTML=h;
+  $('#tofix',host).addEventListener('click', function(){ go('fix'); });
+  if(!quiet){ var hh=$('h2',host); hh.setAttribute('tabindex','-1'); hh.focus(); }
+  sendHeight();
+}
+
+/* ================= step 3: fix it ================= */
+VIEWS.fix = function(v){
+  var d=day(); var md=modData();
+  var byStation={}, other=[];
+  d.gaps.forEach(function(id){ var r=resOf(id); if(md && r && r.station && md.stations[r.station]) (byStation[r.station]=byStation[r.station]||[]).push(id); else other.push(id); });
+  var h='<div class="panel"><p class="eyebrow">Step 3 &middot; Fix it</p><h2>Get in your groups now.</h2><p>Bring this page and a whiteboard. Tell your group your three gaps. Pick the repair problem that covers the most of your group’s gaps and start there.</p>'+
+    '<p class="small">Build it, draw it, explain it, point to it. Do not answer more multiple choice here. Your instructor is circulating and listening for the ideas that are still wrong.</p></div>'+
+    '<div class="card"><h3 style="margin-top:0">How to run it</h3><ol><li><strong>One person draws, everyone else checks.</strong> Rotate the marker every task.</li><li><strong>Say why, not just what.</strong> "It is the radius because it is on the thumb side in anatomical position" beats "it is the radius."</li><li><strong>When the group disagrees, stop and open the notes.</strong> That disagreement is the gap showing itself.</li></ol></div>';
+  Object.keys(byStation).forEach(function(k){ var stn=md.stations[k];
+    h+='<div class="station"><p class="eyebrow">Repair problem &middot; your gaps: '+byStation[k].map(function(id){ return esc(COMP[id].name); }).join(', ')+'</p><h3 style="margin-top:0">'+esc(stn.title)+'</h3><ol>'+stn.tasks.map(function(t){ return '<li>'+esc(t)+'</li>'; }).join('')+'</ol><p class="done">You are done when: '+esc(stn.done)+'</p></div>'; });
+  other.forEach(function(id){ var c=COMP[id]; var r=resOf(id);
+    h+='<div class="station"><p class="eyebrow">Repair problem</p><h3 style="margin-top:0">'+esc(c.name)+'</h3><ol><li>'+esc(c.can)+' Do it on the whiteboard, with drawings and labels, without notes.</li><li>Each person explains one part to the group in their own words.</li><li>The group writes one "what if" question about it and answers it together.</li><li>Check everything against '+(r?ext(r.notes,'the notes'):'the notes')+'. Circle anything you corrected.</li></ol></div>'; });
+  if(md){ var rest=Object.keys(md.stations).filter(function(k){ return !byStation[k]; });
+    if(rest.length) h+='<details class="card"><summary>Other repair problems, if your group finishes or has different gaps</summary>'+rest.map(function(k){ var stn=md.stations[k]; return '<h4>'+esc(stn.title)+'</h4><ol>'+stn.tasks.map(function(t){ return '<li>'+esc(t)+'</li>'; }).join('')+'</ol><p class="done">You are done when: '+esc(stn.done)+'</p>'; }).join('')+'</details>'; }
+  h+='<div class="card"><h3 style="margin-top:0">What did you fix?</h3><p class="small">For each gap, write the corrected idea in your own words, the way you would explain it to a classmate. This goes on your repair plan.</p>'+
+    d.gaps.map(function(id,i){ return '<div class="field"><label for="fx'+i+'">'+esc(COMP[id].name)+'</label><textarea id="fx'+i+'" data-id="'+id+'" rows="3">'+esc(d.fixes[id]||'')+'</textarea></div>'; }).join('')+
+    '<div class="actions"><button type="button" class="btn" id="fxsave">Save, then go to Step 4: Prove it</button><span class="small" id="fxmsg" aria-live="polite"></span></div></div>';
+  v.innerHTML=h;
+  $$('textarea',v).forEach(function(t){ t.addEventListener('input', function(){ d.fixes[t.getAttribute('data-id')]=t.value; save(); }); });
+  $('#fxsave',v).addEventListener('click', function(){ save(); refresh(); go('prove'); });
+};
+
+/* ================= step 4: prove it ================= */
+VIEWS.prove = function(v){
+  var d=day();
+  var h='<div class="card"><p class="eyebrow">Step 4 &middot; Prove it</p><h2>New questions, same competencies.</h2>'+
+    '<ol><li><strong>Alone first.</strong> Answer every question and mark Sure, Unsure or Guess. Then lock your answers.</li>'+
+    '<li><strong>Then talk it through with your team.</strong> Agree on a team answer for each question. You cannot change your own answer, only the team one.</li>'+
+    '<li><strong>Then reveal.</strong> See how you did alone, how the team did, and whether each gap closed.</li></ol>'+
+    '<p class="small muted">The questions target your three gaps ('+d.gaps.map(function(id){ return esc(COMP[id].name); }).join(', ')+') and the competencies next to them, and they skip questions you have already seen when there are new ones left.</p>'+
+    '<div class="actions"><button type="button" class="btn" id="pgen">Build my Prove It set</button>'+(d.prove?'<button type="button" class="btn ghost" id="plast">Back to my last set</button>':'')+'</div></div><div id="pexam"></div>';
+  v.innerHTML=h;
+  $('#pgen',v).addEventListener('click', function(){
+    var comps=d.gaps.slice(); d.gaps.forEach(function(id){ relatedOf(id).forEach(function(p){ if(comps.indexOf(p[0])===-1 && COMP[p[0]]) comps.push(p[0]); }); });
+    var seen=seenIds();
+    var core=pickItems(d.gaps.length*2, d.gaps, seen);
+    var used={}; core.forEach(function(p){ used[p.it.id]=1; });
+    var extra=pickItems(3, comps.filter(function(id){ return d.gaps.indexOf(id)===-1; }), seen).filter(function(p){ return !used[p.it.id]; });
+    startExam($('#pexam',v), 'prove', shuffle(core.concat(extra)), d.gaps.slice());
+  });
+  if($('#plast',v)) $('#plast',v).addEventListener('click', function(){ var a=d.prove; if(a.revealed) showProve($('#pexam',v), a); else rebuildLocked($('#pexam',v), a); });
+};
+function rebuildLocked(host, a){
+  host.innerHTML='<div class="card"><h3 style="margin-top:0">Your answers are locked.</h3><p>Your last Prove It set is waiting for the team step.</p></div><div id="lk"></div>';
+  lockForTeam($('#lk',host), a);
+}
+function lockForTeam(host, a){
+  var h='<div class="card"><h3 style="margin-top:0">Locked. Now talk it through with your team.</h3><p>Go question by question. Each person says their answer and why. Agree on a team answer and pick it below. Leave it on "Same as mine" when the team agrees with you.</p></div>';
+  a.answers.forEach(function(r,i){ var it=findItem(r.id); if(!it) return; var ord=r.order;
+    h+='<div class="q"><p class="small muted" style="margin:0 0 4px">Question '+(i+1)+'</p><p class="stem">'+esc(it.stem)+'</p><div class="opts">'+ord.map(function(oi,k){ return '<div class="opt"><span class="l">'+LET[k]+'.</span><span>'+esc(it.options[oi])+(oi===r.picked?' <strong>(my answer)</strong>':'')+'</span></div>'; }).join('')+'</div>'+
+      '<div class="teamrow"><label for="tm'+i+'">Team answer</label><select id="tm'+i+'" data-i="'+i+'"><option value="">Same as mine</option>'+ord.map(function(oi,k){ return '<option value="'+oi+'"'+(r.team===oi?' selected':'')+'>'+LET[k]+'</option>'; }).join('')+'</select></div></div>'; });
+  h+='<div class="actions"><button type="button" class="btn gold" id="reveal">Reveal the answers</button></div>';
+  host.innerHTML=h; sendHeight();
+  $$('select',host).forEach(function(s){ s.addEventListener('change', function(){ var r=a.answers[+s.getAttribute('data-i')]; r.team = s.value===''?null:+s.value; save(); }); });
+  $('#reveal',host).addEventListener('click', function(){ a.answers.forEach(function(r){ var it=findItem(r.id); var t=r.team==null?r.picked:r.team; r.teamRight = it ? t===it.correct : false; }); a.teamScore=a.answers.filter(function(r){ return r.teamRight; }).length/a.answers.length; a.revealed=true; save(); refresh(); showProve(host, a); });
+}
+function showProve(host, a){
+  var d=day(); var before=compStats(d.checks), after=compStats([a]);
+  var h='<div class="card"><p class="eyebrow">Prove it &middot; results</p><h2>Did the fix hold?</h2>'+
+    '<div class="stats"><div class="stat"><b>'+pct(a.score)+'%</b><small>You, alone</small></div><div class="stat"><b>'+pct(a.teamScore||0)+'%</b><small>Your team</small></div><div class="stat"><b>'+a.answers.filter(function(r){ return !r.right && r.conf==='sure'; }).length+'</b><small>Red flags this time</small></div></div>'+
+    '<div class="tablewrap"><table class="compare"><thead><tr><th>Your gap</th><th>In the check</th><th>In Prove It</th><th>Verdict</th></tr></thead><tbody>';
+  (a.gapComps||[]).forEach(function(id){ var b=before[id], f=after[id]; var v;
+    if(!f) v='Not retested. Build another set.'; else if(f.right===f.n && !f.fragile) v='Closed. Right and sure.'; else if(f.right===f.n) v='Improving. Right, but still not sure.'; else if(f.flag) v='Still a red flag. Go back to Step 3.'; else v='Still open. Go back to Step 3.';
+    h+='<tr><td><strong>'+esc(COMP[id].name)+'</strong></td><td>'+(b?b.right+' of '+b.n:'not tested')+'</td><td>'+(f?f.right+' of '+f.n:'not tested')+'</td><td class="v">'+v+'</td></tr>'; });
+  h+='</tbody></table></div><p class="small" style="margin-top:10px">A gap that stays open is not a failure. It tells you exactly what to study tonight. Take another check tomorrow and see if it moves.</p>'+
+    '<div class="actions"><button type="button" class="btn gold" id="tofin">Go to Step 5: Retrieval finish</button><button type="button" class="btn ghost" id="pagain">Build another Prove It set</button></div></div>'+
+    a.answers.map(function(r,i){ return reviewItem(r,i,r.team); }).join('');
+  host.innerHTML=h; var hh=$('h2',host); hh.setAttribute('tabindex','-1'); hh.focus(); sendHeight();
+  $('#tofin',host).addEventListener('click', function(){ go('finish'); });
+  $('#pagain',host).addEventListener('click', function(){ go('prove'); });
+}
+
+/* ================= step 5: retrieval finish ================= */
+function prompts(){ var md=modData(); if(md && md.dump) return md.dump;
+  var sys=[]; (MODCOMPS[S.module]||[]).forEach(function(id){ var s=COMP[id].system; if(sys.indexOf(s)===-1) sys.push(s); });
+  return sys.map(function(s){ return s+': everything you can reconstruct.'; }); }
+VIEWS.finish = function(v){
+  var d=day(); var P=prompts();
+  var h='<div class="card"><p class="eyebrow">Step 5 &middot; Retrieval finish</p><h2>Brain dump. No notes.</h2>'+
+    '<p>Put everything away. For each area, write or sketch the big things you need for the exam, from memory. Paper is fine too. Then open the checklist and tick what you actually got.</p>'+
+    P.map(function(p,i){ return '<div class="field"><label for="bd'+i+'">'+esc(p)+'</label><textarea id="bd'+i+'" rows="4">'+esc(d.dump.text[i]||'')+'</textarea></div>'; }).join('')+
+    '<div class="actions"><button type="button" class="btn" id="bdrev">I am done. Show me the checklist.</button></div></div><div id="chk"></div>';
+  v.innerHTML=h;
+  $$('textarea',v).forEach(function(t,i){ t.addEventListener('input', function(){ d.dump.text[i]=t.value; save(); }); });
+  $('#bdrev',v).addEventListener('click', function(){ d.dump.revealed=true; save(); refresh(); drawChecklist($('#chk',v)); var hh=$('#chk h2',v); hh.setAttribute('tabindex','-1'); hh.focus(); });
+  if(d.dump.revealed) drawChecklist($('#chk',v));
+};
+function drawChecklist(host){
+  var d=day(); var ids=MODCOMPS[S.module]||[]; var groups={}, order=[];
+  ids.forEach(function(id){ var s=COMP[id].system; if(!groups[s]){ groups[s]=[]; order.push(s); } groups[s].push(id); });
+  var h='<div class="card chk"><p class="eyebrow">Module '+S.module+' checklist</p><h2>What made it into your brain dump?</h2><p class="small">Tick a competency only if you could do it from memory just now. The unticked ones go on your repair plan as tonight’s study list. Come back tomorrow and see how many more you can tick.</p>'+
+    order.map(function(s){ return '<p class="sys">'+esc(s)+'</p>'+groups[s].map(function(id){ return '<label><input type="checkbox" data-id="'+id+'"'+(d.dump.checked[id]?' checked':'')+'><span><strong>'+esc(COMP[id].name)+'.</strong> '+esc(COMP[id].can)+'</span></label>'; }).join(''); }).join('')+
+    '<p class="msg" id="chkcount" aria-live="polite"></p></div>';
+  host.innerHTML=h;
+  function count(){ var n=Object.keys(d.dump.checked).filter(function(k){ return d.dump.checked[k] && ids.indexOf(k)!==-1; }).length; $('#chkcount',host).textContent=n+' of '+ids.length+' competencies from memory today.'; }
+  $$('input',host).forEach(function(c){ c.addEventListener('change', function(){ d.dump.checked[c.getAttribute('data-id')]=c.checked; save(); count(); renderProgress(); }); });
+  count(); sendHeight();
+}
+
+/* ================= progress across days ================= */
+function renderProgress(){
+  var ks=moduleDays(); var body=$('#progbody');
+  if(!ks.length){ body.innerHTML='<p class="muted">Take your first check and your progress shows here, one row per day.</p>'; return; }
+  var total=(MODCOMPS[S.module]||[]).length;
+  body.innerHTML='<div class="tablewrap"><table><thead><tr><th>Day</th><th class="n">Checks</th><th class="n">Latest check</th><th class="n">Red flags</th><th>Gaps named</th><th class="n">Prove It</th><th class="n">Checklist</th></tr></thead><tbody>'+
+    ks.map(function(k){ var d=S.days[k]; var last=d.checks[d.checks.length-1]; var flags=d.checks.reduce(function(s,a){ return s+a.answers.filter(function(r){ return !r.right&&r.conf==='sure'; }).length; },0);
+      var ck=Object.keys(d.dump.checked||{}).filter(function(x){ return d.dump.checked[x]; }).length;
+      return '<tr><td>'+esc(fmtDay(k.split('|')[0]))+'</td><td class="n">'+d.checks.length+'</td><td class="n">'+(last?pct(last.score)+'%':'')+'</td><td class="n">'+flags+'</td><td>'+d.gaps.map(function(id){ return esc(COMP[id]?COMP[id].name:id); }).join('; ')+'</td><td class="n">'+(d.prove&&d.prove.revealed?pct(d.prove.score)+'%':'')+'</td><td class="n">'+(d.dump.revealed?ck+' of '+total:'')+'</td></tr>'; }).join('')+
+    '</tbody></table></div>';
+}
+
+/* ================= the repair plan ================= */
+function planHtml(name){
+  var d=day(); var m=MOD(); var st=compStats(d.checks); var base=baseUrl();
+  function abs(u){ return /^https?:/.test(u)?u:base+u; }
+  function lnk(u,t){ return '<a href="'+esc(abs(u))+'">'+esc(t)+'</a>'; }
+  var ex=examDate(S.module, S.section);
+  var flags=[]; d.checks.concat(d.prove&&d.prove.revealed?[d.prove]:[]).forEach(function(a){ a.answers.forEach(function(r){ if(!r.right && r.conf==='sure') flags.push(r); }); });
+  var h='<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My repair plan, Module '+S.module+', BIO 004</title><style>'+
+    'body{font-family:Arial,Helvetica,sans-serif;color:#0B1530;margin:0;background:#fff;line-height:1.5}.w{max-width:820px;margin:0 auto;padding:26px 22px}h1{font-size:25px;margin:0 0 4px}h2{font-size:18px;color:#6B2A20;margin:24px 0 8px;border-bottom:1px solid #ccc;padding-bottom:4px}h3{font-size:15.5px;margin:14px 0 4px}'+
+    'p,li{font-size:14.5px}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;padding:6px;border-bottom:1px solid #ddd;vertical-align:top}.eb{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#6B2A20;font-weight:700;margin:0 0 6px}'+
+    '.flag{border:2px solid #8B3A2E;border-radius:8px;padding:10px 12px;margin:8px 0}.btns{margin:0 0 16px}.btns button{font:inherit;font-weight:700;padding:9px 14px;margin-right:8px;border-radius:6px;border:2px solid #0B1530;background:#0B1530;color:#fff;cursor:pointer}'+
+    'a{color:#8B3A2E}em,i{font-style:normal}@media print{.btns{display:none}a{color:#0B1530}}</style></head><body><div class="w">'+
+    '<div class="btns"><button onclick="window.print()">Print or save as PDF</button></div>'+
+    '<p class="eb">BIO 004 Human Anatomy &middot; Mastery Check</p><h1>My repair plan: Module '+S.module+', '+esc(m?m.title:'')+'</h1>'+
+    '<p>'+(name?'<strong>'+esc(name)+'</strong> &middot; ':'')+esc(fmtDay(today()))+(ex?' &middot; Exam '+m.exam+' on '+esc(fmtDay(ex)):'')+'</p>';
+  h+='<h2>Today’s checks</h2>';
+  if(!d.checks.length) h+='<p>No check taken yet today.</p>';
+  else { var g=calib([].concat.apply([], d.checks.map(function(a){ return a.answers; })));
+    h+='<table><thead><tr><th>Check</th><th>Score</th><th>Red flags</th></tr></thead><tbody>'+d.checks.map(function(a,i){ return '<tr><td>'+(i+1)+' ('+a.answers.length+' questions)</td><td>'+pct(a.score)+'%</td><td>'+a.answers.filter(function(r){ return !r.right&&r.conf==='sure'; }).length+'</td></tr>'; }).join('')+'</tbody></table>'+
+      '<h3>Accuracy by confidence</h3><p>Sure: '+g.sure[0]+' right, '+g.sure[1]+' wrong. Unsure: '+g.unsure[0]+' right, '+g.unsure[1]+' wrong. Guess: '+g.guess[0]+' right, '+g.guess[1]+' wrong.</p>'+calibText(g).map(function(t){ return '<p>'+esc(t)+'</p>'; }).join(''); }
+  h+='<h2>Red flags: I was sure, and I was wrong</h2>';
+  if(!flags.length) h+='<p>None today. Your Sure answers held up.</p>';
+  flags.forEach(function(r){ var it=findItem(r.id); if(!it) return; var rr=resOf(r.comp);
+    h+='<div class="flag"><p><strong>'+esc(COMP[r.comp].name)+'</strong></p><p>'+esc(it.stem)+'</p><p>I chose: '+esc(it.options[r.picked])+'</p><p><strong>The answer:</strong> '+esc(it.options[it.correct])+'</p><p><strong>Why:</strong> '+esc(it.why)+'</p>'+(it.whyNot?'<p><strong>Why my answer was wrong:</strong> '+esc(it.whyNot[r.picked])+'</p>':'')+(rr?'<p>Fix it in '+lnk(rr.notes,'the notes, '+rr.section)+'.</p>':'')+'</div>'; });
+  h+='<h2>My three gaps and how I will fix them</h2>';
+  if(!d.gaps.length) h+='<p>Gaps not named yet. Finish Step 2.</p>';
+  d.gaps.forEach(function(id){ var c=COMP[id], s=st[id], status=s?s.status:'untested', r=resOf(id);
+    h+='<h3>'+esc(c.name)+' ('+STATUS[status].tag+(s?', '+s.right+' of '+s.n+' right':'')+')</h3>'+
+      (d.statements[id]?'<p><strong>My gap:</strong> '+esc(d.statements[id])+'</p>':'')+
+      '<p><strong>I need to be able to:</strong> '+esc(c.can)+'</p>'+
+      (d.fixes[id]?'<p><strong>What my group fixed:</strong> '+esc(d.fixes[id])+'</p>':'')+
+      '<p><strong>Steps:</strong></p><ol>'+fixSteps(status, r).map(function(x){ return '<li>'+x.replace(/href="(?!https?:)/g,'href="'+base).replace(/ target="_blank" rel="noopener"/g,'').replace(/<span class="vh">[^<]*<\/span>/g,'')+'</li>'; }).join('')+'</ol>';
+    var rel=relatedOf(id); if(rel.length) h+='<p><strong>Also check:</strong> '+rel.map(function(p){ return COMP[p[0]]?esc(COMP[p[0]].name):''; }).filter(Boolean).join('; ')+'.</p>'; });
+  if(d.prove && d.prove.revealed){ var after=compStats([d.prove]);
+    h+='<h2>Prove It</h2><p>Alone: '+pct(d.prove.score)+'%. Team: '+pct(d.prove.teamScore||0)+'%.</p><table><thead><tr><th>Gap</th><th>Check</th><th>Prove It</th></tr></thead><tbody>'+(d.prove.gapComps||[]).map(function(id){ var b=st[id], f=after[id]; return '<tr><td>'+esc(COMP[id].name)+'</td><td>'+(b?b.right+' of '+b.n:'not tested')+'</td><td>'+(f?f.right+' of '+f.n:'not tested')+'</td></tr>'; }).join('')+'</tbody></table>'; }
+  var ids=MODCOMPS[S.module]||[];
+  if(d.dump.revealed){ var left=ids.filter(function(id){ return !d.dump.checked[id]; });
+    h+='<h2>Still to rebuild from memory ('+left.length+' of '+ids.length+')</h2>'+(left.length?'<ul>'+left.map(function(id){ var r=resOf(id); return '<li><strong>'+esc(COMP[id].name)+'.</strong> '+esc(COMP[id].can)+(r?' '+lnk(r.notes,'Notes')+'.':'')+'</li>'; }).join('')+'</ul>':'<p>Everything on the checklist came out of memory today.</p>'); }
+  var ks=moduleDays(); if(ks.length>1){ h+='<h2>My progress across days</h2><table><thead><tr><th>Day</th><th>Latest check</th><th>Red flags</th><th>Checklist</th></tr></thead><tbody>'+ks.map(function(k){ var dd=S.days[k]; var last=dd.checks[dd.checks.length-1]; var fl=dd.checks.reduce(function(s,a){ return s+a.answers.filter(function(r){ return !r.right&&r.conf==='sure'; }).length; },0); var ck=Object.keys(dd.dump.checked||{}).filter(function(x){ return dd.dump.checked[x]; }).length; return '<tr><td>'+esc(fmtDay(k.split('|')[0]))+'</td><td>'+(last?pct(last.score)+'%':'')+'</td><td>'+fl+'</td><td>'+(dd.dump.revealed?ck+' of '+ids.length:'')+'</td></tr>'; }).join('')+'</tbody></table>'; }
+  h+='<p style="margin-top:22px;font-size:12.5px;color:#4E5464">Dr. Sharilyn Rennie &middot; BIO 004 Human Anatomy &middot; Solano Community College. Practice results carry no points. The value is in what you do next.</p></div></body></html>';
+  return h;
+}
+$('#plan').addEventListener('click', function(){
+  var html=planHtml($('#rname').value.trim()); var msg=$('#planmsg');
+  var w=null; try{ w=window.open('', '_blank'); }catch(e){ w=null; }
+  if(w){ w.document.open(); w.document.write(html); w.document.close(); msg.textContent='Your plan opened in a new tab. Use Print or save as PDF at the top of it.'; return; }
+  try{ var b=new Blob([html],{type:'text/html'}); var a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='bio004-repair-plan-module'+S.module+'-'+today()+'.html'; document.body.appendChild(a); a.click(); a.remove(); msg.textContent='Your browser blocked the new tab, so the plan downloaded instead. Open the file, then print or save it as a PDF.'; }
+  catch(e){ msg.textContent='Your browser would not open the plan. Try opening this page in its own tab.'; }
+});
+var wipeArmed=false;
+$('#wipe').addEventListener('click', function(){
+  if(!wipeArmed){ wipeArmed=true; $('#wipe').textContent='Yes, clear everything'; $('#wipemsg').textContent='Click again to confirm. This cannot be undone.'; return; }
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  S={section:S.section, module:S.module, days:{}}; save(); wipeArmed=false; $('#wipe').textContent='Clear my saved work'; $('#wipemsg').textContent='Cleared.'; go('check', true); refresh();
+});
+
+/* ================= setup ================= */
+function renderMods(){
+  var box=$('#mods'); box.innerHTML='';
+  MODS.forEach(function(m){
+    var open=isOpen(m), ex=examDate(m.n, S.section);
+    var lab=document.createElement('label'); lab.className='mod'+(open?'':' locked')+(S.module===m.n?' sel':'');
+    lab.innerHTML='<input type="radio" name="mod" value="'+m.n+'"'+(S.module===m.n?' checked':'')+(open?'':' disabled')+'><span class="mt">Module '+m.n+'</span><span class="md">'+esc(m.title)+'</span><span class="md">'+(open?(ex?'Exam '+m.exam+': '+esc(fmtDay(ex))+(S.section?'':' (latest section)'):''):'Opens '+esc(fmtDay(opensOn(m))))+'</span>';
+    box.appendChild(lab);
+  });
+  $$('input[name="mod"]',box).forEach(function(r){ r.addEventListener('change', function(){ S.module=+r.value; save(); renderMods(); go('check', true); refresh(); }); });
+  var m=MOD(); var ex=m?examDate(m.n,S.section):null; var days=ex?Math.round((parseDay(ex)-parseDay(today()))/86400000):null;
+  $('#modinfo').textContent = m ? 'Module '+m.n+' has '+(MODCOMPS[m.n]||[]).length+' competencies and '+(POOL[m.n]||[]).length+' questions.'+(days!=null&&days>=0?' Exam '+m.exam+' is '+(days===0?'today':days===1?'tomorrow':'in '+days+' days')+'.':'') : '';
+}
+$('#section').value=S.section||'';
+$('#section').addEventListener('change', function(){ S.section=this.value; save(); renderMods(); });
+if(!S.module || !MODS.filter(function(m){ return m.n===S.module && isOpen(m); }).length) S.module=defaultModule();
+renderMods(); go('check', true); refresh();
+
+/* ================= iframe height sender ================= */
+function sendHeight(){
+  var h=Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+  try{ window.parent.postMessage({type:'resize', id:'bio004-mastery-check', frameId:'bio004-mastery-check', height:h}, '*'); }catch(e){}
+}
+window.sendHeight=sendHeight;
+window.addEventListener('load', sendHeight);
+window.addEventListener('resize', sendHeight);
+if(window.ResizeObserver){ try{ new ResizeObserver(sendHeight).observe(document.body); }catch(e){} }
+[300,1000,2000].forEach(function(t){ setTimeout(sendHeight, t); });
+})();
+</script>
+</body>
+</html>
