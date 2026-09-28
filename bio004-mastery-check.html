@@ -136,6 +136,7 @@ textarea{min-height:90px;resize:vertical}
 .opt.pts{align-items:center}
 .opt.pts input{width:3.4em;margin:0;padding:6px 4px;text-align:center;font:inherit;font-weight:700;border:1px solid var(--gray);border-radius:6px;flex:none;height:auto}
 .opt.pts label{flex:1}
+.beat{background:var(--gold-tint);border-radius:10px;padding:12px 16px;margin:10px 0 4px}
 .q .stem.tfst{font-weight:400}
 .q .stem.tfst strong{font-weight:800;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
 .ptsline{font-size:14.5px;font-weight:700;color:var(--muted);margin:8px 0 0}
@@ -193,6 +194,13 @@ td.n,th.n{text-align:right;white-space:nowrap}
 .teamrow select{width:auto;min-width:160px}
 .footer{padding:24px 0 40px;color:var(--muted);font-size:14px}
 @media (prefers-reduced-motion: reduce){ *{transition:none !important;scroll-behavior:auto !important} .card.lift:hover{transform:none} }
+#planview .plantitle{font-family:var(--fd);font-weight:800;font-size:24px;margin:0 0 4px}
+#planview h3{font-size:18px;color:var(--rust-dark);margin:22px 0 8px}
+#planview h4{font-size:16px;margin:14px 0 4px}
+#planview .eb{font-family:var(--fd);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--rust-dark);font-weight:700;margin:0 0 6px}
+#planview .flag{background:var(--rust-tint);border-radius:8px;padding:10px 12px;margin:8px 0}
+#planview table{margin:6px 0 10px}
+@media print{ body.plan-print .site-header, body.plan-print .wrap > *:not(#planwrap), body.plan-print #planbar{display:none !important} body.plan-print #planwrap{display:block !important} body.plan-print #planview{box-shadow:none;border:0;padding:0} }
 @media print{ .site-header,.steps,.actions,.noprint{display:none !important} body{background:#fff} .card,.q,.gapcard,.station{box-shadow:none;border:1px solid #ccc} }
 </style>
 </head>
@@ -250,16 +258,38 @@ td.n,th.n{text-align:right;white-space:nowrap}
 
   <div class="card">
     <h2>Save my repair plan</h2>
-    <p>Your repair plan lists your results, your red flags with the correct idea for each one, your three gaps with the steps and links to fix them, and what is still left on the module checklist. Print it or save it as a PDF and keep it next to you while you study. Upload it in Canvas if your assignment asks for it.</p>
+    <p>Your repair plan lists your results, your red flags with the correct idea for each one, your three gaps with the steps and links to fix them, and what is still left on the module checklist. Print it, save it as a PDF, download it or copy it as text, and keep it next to you while you study. Upload it in Canvas if your assignment asks for it.</p>
     <div class="field" style="max-width:380px">
       <label for="rname">Your name, for the top of the plan</label>
       <input type="text" id="rname" autocomplete="name">
       <p class="hint">Your name goes on the printed plan only. It is never saved.</p>
     </div>
     <div class="actions">
-      <button type="button" class="btn" id="plan">Open my repair plan</button>
+      <button type="button" class="btn" id="plan">Show my repair plan</button>
       <span id="planmsg" class="small" aria-live="polite"></span>
     </div>
+  </div>
+
+  <div id="planwrap" hidden>
+    <div class="card" id="planbar">
+      <h2 id="planhead" tabindex="-1">Your repair plan is below</h2>
+      <p>Choose whichever way works on your device.</p>
+      <div class="actions">
+        <button type="button" class="btn" id="planprint">Print or save as PDF</button>
+        <button type="button" class="btn ghost" id="plandl">Download a copy</button>
+        <button type="button" class="btn ghost" id="plancopy">Copy the plan as text</button>
+        <button type="button" class="btn ghost" id="planclose">Hide the plan</button>
+      </div>
+      <p class="msg" id="planmsg2" aria-live="polite"></p>
+      <details style="margin-top:10px"><summary>Saving it on a phone or tablet</summary>
+        <ul class="small">
+          <li><strong>iPhone or iPad:</strong> tap Print or save as PDF. On the print screen, tap the Share button (or spread two fingers on the preview), then choose Save to Files.</li>
+          <li><strong>Android:</strong> tap Print or save as PDF, then choose Save as PDF as the printer and tap the download button.</li>
+          <li><strong>In the Canvas app, or if nothing happens when you tap Print:</strong> phones often block printing inside Canvas. Tap Download a copy and open the file, or tap Copy the plan as text and paste it into your Canvas submission box. You can also open Canvas in your phone’s web browser instead of the app and print from there.</li>
+        </ul>
+      </details>
+    </div>
+    <div class="card" id="planview"></div>
   </div>
 
   <div class="card noprint">
@@ -267,7 +297,7 @@ td.n,th.n{text-align:right;white-space:nowrap}
     <div class="redflag" role="note">
       <h3>Read this before you clear anything</h3>
       <p>Everything you do on this page builds a record of your gaps: every check, every red flag, and every checklist, for every module. Keep adding to it all semester. When the cumulative final comes, that record shows you which gaps kept coming back, and those are the ones to study first.</p>
-      <p style="margin:0">Clearing deletes all of it, for every module, and it cannot be brought back. Only clear it if you are on a shared or school computer and you are finished with it for good. If you want to keep a copy first, open your repair plan above for each module you have worked on and save each one as a PDF.</p>
+      <p style="margin:0">Clearing deletes all of it, for every module, and it cannot be brought back. Only clear it if you are on a shared or school computer and you are finished with it for good. If you want to keep a copy first, show your repair plan above for each module you have worked on and save each one as a PDF.</p>
     </div>
     <div class="actions"><button type="button" class="btn ghost" id="wipe">Clear my saved work</button><span id="wipemsg" class="small" aria-live="polite"></span></div>
   </div>
@@ -467,6 +497,8 @@ function pickFrom(list, n, want3, seen, used, counts, taken){
     var needDok = (want3-got3) >= (n-k) ? 3 : (got3>=want3 ? 2 : (Math.random()<(want3-got3)/(n-k)?3:2));
     var cand=list.filter(function(it){ return !taken[it.id]; });
     if(!cand.length) break;
+    /* questions the student has never seen come first; seen ones only once the unseen run out */
+    var fresh=cand.filter(function(it){ return !seen[it.id]; }); if(fresh.length) cand=fresh;
     /* the competency spread comes first: only the least-used competencies are
        in play, and the DOK target chooses among them */
     var minU=Math.min.apply(null, cand.map(function(it){ return used[it.comp]||0; }));
@@ -501,6 +533,20 @@ function buildBalanced(L, seen, used){
     var m=pickFrom(mU, mcQ[u], Math.max(0, Math.min(mcQ[u], target3-d3)), seen, used, counts, takenM);
     tf=tf.concat(tfGot); mc=mc.concat(m.items);
   });
+  /* when a unit has run out of questions the student has not seen, swap its
+     repeats for unseen questions from another unit: a fresh question matters
+     more than a perfectly even split */
+  function swapSeen(list, pool, taken){
+    return list.map(function(it){
+      if(!seen[it.id]) return it;
+      var alt=shuffle(pool.filter(function(x){ return !taken[x.id] && !seen[x.id] && (x.ans===undefined || x.ans===it.ans) && (x.dok||2)===(it.dok||2); }))
+        .sort(function(x,y){ return (used[x.comp]||0)-(used[y.comp]||0); })[0];
+      if(!alt) alt=shuffle(pool.filter(function(x){ return !taken[x.id] && !seen[x.id] && (x.ans===undefined || x.ans===it.ans); }))[0];
+      if(!alt) return it;
+      taken[alt.id]=1; used[alt.comp]=(used[alt.comp]||0)+1; return alt;
+    });
+  }
+  tf=swapSeen(tf, tfPool, takenT); mc=swapSeen(mc, mcPool, takenM);
   /* if a unit ran dry, top up from any unit */
   if(tf.length<nTF){ tf=tf.concat(pickFrom(tfPool, nTF-tf.length, 0, seen, used, counts, takenT).items); }
   if(mc.length<nMC){ mc=mc.concat(pickFrom(mcPool, nMC-mc.length, Math.round((nMC-mc.length)/2), seen, used, counts, takenM).items); }
@@ -516,7 +562,7 @@ function pickMatch(n, seen, used, skipIds, skipUnits){
   var ex=EXAM(); if(!ex || !ex.match || !ex.match.length) return null;
   function overlap(m){ var o=0, k={}; m.pairs.forEach(function(p){ if(!k[p[2]]){ k[p[2]]=1; if(used[p[2]]) o+=used[p[2]]; } }); return o; }
   skipIds=skipIds||[]; skipUnits=skipUnits||[];
-  var sets=shuffle(ex.match.filter(function(m){ return m.pairs.length>=n && skipIds.indexOf(m.id)===-1; })).sort(function(a,b){ return ((skipUnits.indexOf(unitOf(a.pairs[0][2]))!==-1?1:0)-(skipUnits.indexOf(unitOf(b.pairs[0][2]))!==-1?1:0)) || (overlap(a)-overlap(b)) || ((seen['set:'+a.id]?1:0)-(seen['set:'+b.id]?1:0)); });
+  var sets=shuffle(ex.match.filter(function(m){ return m.pairs.length>=n && skipIds.indexOf(m.id)===-1; })).sort(function(a,b){ return ((seen['set:'+a.id]?1:0)-(seen['set:'+b.id]?1:0)) || ((skipUnits.indexOf(unitOf(a.pairs[0][2]))!==-1?1:0)-(skipUnits.indexOf(unitOf(b.pairs[0][2]))!==-1?1:0)) || (overlap(a)-overlap(b)); });
   var set=sets[0]; if(!set) return null;
   var pairs=shuffle(set.pairs.slice()).slice(0,n);
   var terms=pairs.map(function(p,i){ return i; }), tries=0;
@@ -747,7 +793,7 @@ function showResults(host, a){
   var g=calib(a.answers); var sc=sectionScores(a);
   var flags=mcAnswers(a.answers).filter(function(r){ return !r.right && r.conf==='sure'; });
   var dump=a.dump?findDump(a.dump.chosen):null;
-  var h='<div class="card"><p class="eyebrow">Your results</p><h2>'+pct(a.score)+' percent'+(a.bonus?' plus '+a.bonus+' bonus':'')+'. Now the useful part.</h2>'+
+  var h='<div class="card"><p class="eyebrow">Your results</p><h2>'+pct(a.score)+' percent'+(a.bonus?' plus '+a.bonus+' bonus':'')+'. Now the useful part.</h2>'+(a.len?scoreLine(a):'')+
     '<div class="stats">'+
     (sc.tf[1]?'<div class="stat"><b>'+sc.tf[0]+' of '+sc.tf[1]+'</b><small>True or false'+(a.bonus?', plus '+a.bonus+' bonus for fixes':'')+'</small></div>':'')+
     (sc.mc[1]?'<div class="stat"><b>'+sc.mc[0]+' of '+sc.mc[1]+'</b><small>Multiple choice points</small></div>':'')+
@@ -989,16 +1035,42 @@ function drawChecklist(host){
   count(); sendHeight();
 }
 
+/* ================= scores to beat ================= */
+/* Every check on this module, oldest first, across every day. */
+function allChecks(){ var out=[]; moduleDays().forEach(function(k){ S.days[k].checks.forEach(function(a){ out.push({day:k.split('|')[0], a:a}); }); }); out.sort(function(x,y){ return String(x.a.at).localeCompare(String(y.a.at)); }); return out; }
+function lenLabel(a){ return a.len&&LENGTHS[a.len] ? LENGTHS[a.len].label : 'Check'; }
+function totalPct(a){ return a.max ? (a.earned+(a.bonus||0))/a.max : a.score; }
+function bestBefore(a){ var best=null; allChecks().forEach(function(x){ if(x.a.id===a.id || x.a.len!==a.len) return; if(String(x.a.at)>String(a.at)) return; if(!best || x.a.score>best.score) best=x.a; }); return best; }
+function scoreLine(a){
+  var prev=bestBefore(a), L=lenLabel(a);
+  if(!prev) return '<div class="beat"><strong>This is your first '+esc(L)+' on this module.</strong> '+pct(a.score)+' percent is now the score to beat. Take another one tomorrow and see if you can top it.</div>';
+  var diff=pct(a.score)-pct(prev.score);
+  if(diff>0) return '<div class="beat"><strong>New personal best.</strong> '+pct(a.score)+' percent beats your best '+esc(L)+' so far ('+pct(prev.score)+' percent) by '+diff+' percentage point'+(diff===1?'':'s')+'.</div>';
+  if(diff===0) return '<div class="beat"><strong>You tied your best '+esc(L)+'</strong> at '+pct(a.score)+' percent. One more question right next time and you beat it.</div>';
+  return '<div class="beat"><strong>Your best '+esc(L)+' is still '+pct(prev.score)+' percent.</strong> This one was '+pct(a.score)+' percent, '+(-diff)+' point'+(-diff===1?'':'s')+' short. Fix today’s gaps and try to beat it next time.</div>';
+}
+function attemptsTable(forPlan){
+  var list=allChecks(); if(!list.length) return '';
+  var best={}; list.forEach(function(x){ var k=x.a.len||'?'; if(!best[k] || x.a.score>best[k].score) best[k]=x.a; });
+  var rows=list.map(function(x,i){ var a=x.a, sc=sectionScores(a), isBest=best[a.len||'?']===a;
+    var fl=a.answers.filter(function(r){ return !r.right&&r.conf==='sure'; }).length;
+    return '<tr><td class="n">'+(i+1)+'</td><td>'+esc(fmtDay(x.day))+'</td><td>'+esc(lenLabel(a))+'</td><td class="n"><strong>'+pct(a.score)+'%</strong>'+(a.bonus?' + '+a.bonus+' bonus':'')+(isBest?(forPlan?' (best)':' <span class="tag solid">Best</span>'):'')+'</td><td class="n">'+(sc.tf[1]?sc.tf[0]+'/'+sc.tf[1]:'')+'</td><td class="n">'+(sc.mc[1]?sc.mc[0]+'/'+sc.mc[1]:'')+'</td><td class="n">'+(sc.match[1]?sc.match[0]+'/'+sc.match[1]:'')+'</td><td class="n">'+fl+'</td></tr>'; }).join('');
+  var toBeat=Object.keys(LENGTHS).filter(function(k){ return best[k]; }).map(function(k){ return LENGTHS[k].label+': '+pct(best[k].score)+' percent'; }).join('. ');
+  return (forPlan?'<h2>Every check I have taken on this module</h2>':'<h3>Every check you have taken on this module</h3>')+
+    (toBeat?'<p><strong>Score'+(forPlan?'s':'s')+' to beat.</strong> '+esc(toBeat)+'.</p>':'')+
+    (forPlan?'':'<div class="tablewrap" tabindex="0" role="region" aria-label="Table, scrolls sideways on small screens">')+'<table><thead><tr><th class="n">#</th><th>Day</th><th>Length</th><th class="n">Score</th><th class="n">True or false</th><th class="n">Multiple choice points</th><th class="n">Matching</th><th class="n">Red flags</th></tr></thead><tbody>'+rows+'</tbody></table>'+(forPlan?'':'</div>');
+}
+
 /* ================= progress across days ================= */
 function renderProgress(){
   var ks=moduleDays(); var body=$('#progbody');
-  if(!ks.length){ body.innerHTML='<p class="muted">Take your first check and your progress shows here, one row per day.</p>'; return; }
+  if(!ks.length){ body.innerHTML='<p class="muted">Take your first check and your progress shows here: one row per day, then every check you have taken with your best score marked, so you always know the score to beat.</p>'; return; }
   var total=(MODCOMPS[S.module]||[]).length;
   body.innerHTML='<div class="tablewrap" tabindex="0" role="region" aria-label="Table, scrolls sideways on small screens"><table><thead><tr><th>Day</th><th class="n">Checks</th><th class="n">Latest check</th><th class="n">Red flags</th><th>Gaps named</th><th class="n">Prove It</th><th class="n">Checklist</th></tr></thead><tbody>'+
     ks.map(function(k){ var d=S.days[k]; var last=d.checks[d.checks.length-1]; var flags=d.checks.reduce(function(s,a){ return s+a.answers.filter(function(r){ return !r.right&&r.conf==='sure'; }).length; },0);
       var ck=Object.keys(d.dump.checked||{}).filter(function(x){ return d.dump.checked[x]; }).length;
       return '<tr><td>'+esc(fmtDay(k.split('|')[0]))+'</td><td class="n">'+d.checks.length+'</td><td class="n">'+(last?pct(last.score)+'%':'')+'</td><td class="n">'+flags+'</td><td>'+d.gaps.map(function(id){ return esc(COMP[id]?COMP[id].name:id); }).join('; ')+'</td><td class="n">'+(d.prove&&d.prove.revealed?pct(d.prove.score)+'%':'')+'</td><td class="n">'+(d.dump.revealed?ck+' of '+total:'')+'</td></tr>'; }).join('')+
-    '</tbody></table></div>';
+    '</tbody></table></div>'+attemptsTable(false);
 }
 
 /* ================= the repair plan ================= */
@@ -1044,17 +1116,45 @@ function planHtml(name){
   var ids=MODCOMPS[S.module]||[];
   if(d.dump.revealed){ var left=ids.filter(function(id){ return !d.dump.checked[id]; });
     h+='<h2>Still to rebuild from memory ('+left.length+' of '+ids.length+')</h2>'+(left.length?'<ul>'+left.map(function(id){ var r=resOf(id); return '<li><strong>'+esc(COMP[id].name)+'.</strong> '+esc(COMP[id].can)+(r?' '+lnk(r.notes,'Notes')+'.':'')+'</li>'; }).join('')+'</ul>':'<p>Everything on the checklist came out of memory today.</p>'); }
+  h+=attemptsTable(true);
   var ks=moduleDays(); if(ks.length>1){ h+='<h2>My progress across days</h2><table><thead><tr><th>Day</th><th>Latest check</th><th>Red flags</th><th>Checklist</th></tr></thead><tbody>'+ks.map(function(k){ var dd=S.days[k]; var last=dd.checks[dd.checks.length-1]; var fl=dd.checks.reduce(function(s,a){ return s+a.answers.filter(function(r){ return !r.right&&r.conf==='sure'; }).length; },0); var ck=Object.keys(dd.dump.checked||{}).filter(function(x){ return dd.dump.checked[x]; }).length; return '<tr><td>'+esc(fmtDay(k.split('|')[0]))+'</td><td>'+(last?pct(last.score)+'%':'')+'</td><td>'+fl+'</td><td>'+(dd.dump.revealed?ck+' of '+ids.length:'')+'</td></tr>'; }).join('')+'</tbody></table>'; }
   h+='<p style="margin-top:22px;font-size:12.5px;color:#4E5464">Dr. Sharilyn Rennie &middot; BIO 004 Human Anatomy &middot; Solano Community College. Practice results carry no points. The value is in what you do next.</p></div></body></html>';
   return h;
 }
+/* The plan is shown right on this page and printed from here. Opening it in a
+   new tab broke on phones and inside the Canvas app, which block pop-up tabs
+   and printing from them. Download and copy-as-text are the fallbacks. */
+var planCache='';
 $('#plan').addEventListener('click', function(){
-  var html=planHtml($('#rname').value.trim()); var msg=$('#planmsg');
-  var w=null; try{ w=window.open('', '_blank'); }catch(e){ w=null; }
-  if(w){ w.document.open(); w.document.write(html); w.document.close(); msg.textContent='Your plan opened in a new tab. Use Print or save as PDF at the top of it.'; return; }
-  try{ var b=new Blob([html],{type:'text/html'}); var a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='bio004-repair-plan-module'+S.module+'-'+today()+'.html'; document.body.appendChild(a); a.click(); a.remove(); msg.textContent='Your browser blocked the new tab, so the plan downloaded instead. Open the file, then print or save it as a PDF.'; }
-  catch(e){ msg.textContent='Your browser would not open the plan. Try opening this page in its own tab.'; }
+  var html=planHtml($('#rname').value.trim()); planCache=html;
+  var doc=new DOMParser().parseFromString(html,'text/html');
+  var w=doc.querySelector('.w'); var bt=w&&w.querySelector('.btns'); if(bt) bt.remove();
+  $('#planview').innerHTML = w ? w.innerHTML : '';
+  /* the plan sits under this page's own h2, so step its headings down one level */
+  $$('#planview h3').forEach(function(x){ var n=document.createElement('h4'); n.innerHTML=x.innerHTML; x.replaceWith(n); });
+  $$('#planview h2').forEach(function(x){ var n=document.createElement('h3'); n.innerHTML=x.innerHTML; x.replaceWith(n); });
+  $$('#planview h1').forEach(function(x){ var n=document.createElement('p'); n.className='plantitle'; n.innerHTML=x.innerHTML; x.replaceWith(n); });
+  $('#planwrap').hidden=false; $('#planmsg').textContent='Your plan is open below this box.'; $('#planmsg2').textContent='';
+  $('#planhead').focus(); $('#planwrap').scrollIntoView({block:'start'}); sendHeight();
 });
+$('#planprint').addEventListener('click', function(){
+  document.body.classList.add('plan-print');
+  var done=function(){ document.body.classList.remove('plan-print'); window.removeEventListener('afterprint', done); };
+  window.addEventListener('afterprint', done); setTimeout(done, 60000);
+  try{ window.print(); }catch(e){ done(); $('#planmsg2').textContent='This device would not print from here. Use Download a copy or Copy the plan as text.'; return; }
+  $('#planmsg2').textContent='If no print screen appeared, this device is blocking printing inside Canvas. Use Download a copy or Copy the plan as text instead.';
+});
+$('#plandl').addEventListener('click', function(){
+  try{ var b=new Blob([planCache],{type:'text/html'}); var a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='bio004-repair-plan-module'+S.module+'-'+today()+'.html'; document.body.appendChild(a); a.click(); a.remove();
+    $('#planmsg2').textContent='If a file downloaded, open it, then print it or save it as a PDF from there. If nothing downloaded, this device is blocking downloads inside Canvas, so use Copy the plan as text.'; }
+  catch(e){ $('#planmsg2').textContent='This device would not download the file. Use Copy the plan as text instead.'; }
+});
+$('#plancopy').addEventListener('click', function(){
+  var txt=$('#planview').innerText;
+  function fallback(){ var ta=document.createElement('textarea'); ta.value=txt; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); var ok=false; try{ ok=document.execCommand('copy'); }catch(e){} ta.remove(); $('#planmsg2').textContent= ok?'Copied. Paste it into your Canvas submission box.':'Copying was blocked. Select the plan text below with your finger or mouse and copy it.'; }
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(function(){ $('#planmsg2').textContent='Copied. Paste it into your Canvas submission box.'; }, fallback); } else fallback();
+});
+$('#planclose').addEventListener('click', function(){ $('#planwrap').hidden=true; $('#plan').focus(); sendHeight(); });
 var wipeArmed=false;
 $('#wipe').addEventListener('click', function(){
   if(!wipeArmed){ wipeArmed=true; $('#wipe').textContent='Yes, delete my whole semester record'; $('#wipemsg').textContent='Are you sure? This deletes every module and cannot be undone. Click again to confirm.'; return; }
