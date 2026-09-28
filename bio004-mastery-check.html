@@ -388,8 +388,8 @@ function pickItems(n, comps, seen){
 var STEPS = [
   {k:'check', n:'Step 1', t:'Check', s:'15 to 20 min, alone, closed notes'},
   {k:'gap',   n:'Step 2', t:'Find the gap', s:'5 min, name three'},
-  {k:'fix',   n:'Step 3', t:'Fix it', s:'25 to 30 min, with your group'},
-  {k:'prove', n:'Step 4', t:'Prove it', s:'20 to 25 min, you, then team'},
+  {k:'fix',   n:'Step 3', t:'Fix it', s:'25 to 30 min, group or on your own'},
+  {k:'prove', n:'Step 4', t:'Prove it', s:'20 to 25 min, you first'},
   {k:'finish',n:'Step 5', t:'Retrieval finish', s:'10 to 15 min, no notes'}
 ];
 var cur = 'check';
@@ -490,7 +490,7 @@ function showResults(host, a){
     '<div class="stats"><div class="stat"><b>'+a.answers.filter(function(r){return r.right;}).length+' of '+a.answers.length+'</b><small>Correct</small></div>'+
     '<div class="stat"><b>'+g.sure[1]+'</b><small>Red flags: sure and wrong</small></div>'+
     '<div class="stat"><b>'+(g.unsure[0]+g.guess[0])+'</b><small>Right, but not sure</small></div></div>'+
-    '<div class="tablewrap"><table><caption class="vh">Accuracy by confidence</caption><thead><tr><th>You marked</th><th class="n">Right</th><th class="n">Wrong</th></tr></thead><tbody>'+
+    '<div class="tablewrap" tabindex="0" role="region" aria-label="Table, scrolls sideways on small screens"><table><caption class="vh">Accuracy by confidence</caption><thead><tr><th>You marked</th><th class="n">Right</th><th class="n">Wrong</th></tr></thead><tbody>'+
     ['sure','unsure','guess'].map(function(c){ return '<tr><td>'+CONF[c]+'</td><td class="n">'+g[c][0]+'</td><td class="n">'+g[c][1]+'</td></tr>'; }).join('')+'</tbody></table></div>'+
     calibText(g).map(function(t){ return '<p style="margin-top:10px">'+esc(t)+'</p>'; }).join('')+
     (flags.length?'<div class="redflag"><h3>Red flags</h3><p>You were sure about these and they were wrong. Read the reasoning below for each one before you do anything else.</p><ul>'+flags.map(function(r){ return '<li><strong>'+esc(COMP[r.comp].name)+'</strong></li>'; }).join('')+'</ul></div>':'')+
@@ -511,7 +511,7 @@ VIEWS.gap = function(v){
   var h='<div class="card"><p class="eyebrow">Step 2 &middot; Find the gap</p><h2>Name your three weakest competencies.</h2>'+
     '<p>A gap is a competency, not a question number. "I missed number 7" does not tell you what to study. "I cannot tell intramembranous from endochondral ossification" does.</p>'+
     '<p class="small muted">This table combines every check you took today on this module ('+d.checks.length+'). Red flags are listed first, then gaps, then fragile answers.</p>'+
-    '<div class="tablewrap"><table><thead><tr><th>Competency</th><th class="n">Right</th><th>What it means</th></tr></thead><tbody>'+
+    '<div class="tablewrap" tabindex="0" role="region" aria-label="Table, scrolls sideways on small screens"><table><thead><tr><th>Competency</th><th class="n">Right</th><th>What it means</th></tr></thead><tbody>'+
     ranked.map(function(x){ var S2=STATUS[x.status]; return '<tr><td><strong>'+esc(COMP[x.id].name)+'</strong></td><td class="n">'+x.s.right+' of '+x.s.n+'</td><td><span class="tag '+S2.cls+'">'+S2.tag+'</span></td></tr>'; }).join('')+
     '</tbody></table></div>';
   var untested=all.filter(function(x){ return !x.s; });
@@ -591,13 +591,31 @@ VIEWS.fix = function(v){
   var d=day(); var md=modData();
   var byStation={}, other=[];
   d.gaps.forEach(function(id){ var r=resOf(id); if(md && r && r.station && md.stations[r.station]) (byStation[r.station]=byStation[r.station]||[]).push(id); else other.push(id); });
-  var h='<div class="panel"><p class="eyebrow">Step 3 &middot; Fix it</p><h2>Get in your groups now.</h2><p>Bring this page and a whiteboard. Tell your group your three gaps. Pick the repair problem that covers the most of your group’s gaps and start there.</p>'+
+  var solo=!!S.solo;
+  var h='<div class="card"><fieldset style="border:0;padding:0;margin:0"><legend class="lab">How are you doing this step?</legend>'+
+    '<div class="chk"><label><input type="radio" name="how" value="group"'+(solo?'':' checked')+'><span><strong>With a group, in class.</strong></span></label>'+
+    '<label><input type="radio" name="how" value="solo"'+(solo?' checked':'')+'><span><strong>On my own,</strong> at home or anywhere outside class.</span></label></div></fieldset></div>';
+  if(!solo){
+    h+='<div class="panel"><p class="eyebrow">Step 3 &middot; Fix it</p><h2>Get in your groups now.</h2><p>Bring this page and a whiteboard. Tell your group your three gaps. Pick the repair problem that covers the most of your group\u2019s gaps and start there.</p>'+
     '<p class="small">Build it, draw it, explain it, point to it. Do not answer more multiple choice here. Your instructor is circulating and listening for the ideas that are still wrong.</p></div>'+
     '<div class="card"><h3 style="margin-top:0">How to run it</h3><ol><li><strong>One person draws, everyone else checks.</strong> Rotate the marker every task.</li><li><strong>Say why, not just what.</strong> "It is the radius because it is on the thumb side in anatomical position" beats "it is the radius."</li><li><strong>When the group disagrees, stop and open the notes.</strong> That disagreement is the gap showing itself.</li></ol></div>';
+  } else {
+    h+='<div class="panel"><p class="eyebrow">Step 3 &middot; Fix it</p><h2>Working on your own? Fix it with your notes and videos.</h2><p>You will do the same repair problems a group would do, on paper instead of a whiteboard. Instead of a group checking your work, you check it against the notes, the drawing sheets and the concept videos.</p>'+
+    '<p class="small">Build it, draw it, explain it out loud. Do not answer more multiple choice here. The goal is to rebuild the idea yourself, not to recognize it on a list.</p></div>'+
+    '<div class="card"><h3 style="margin-top:0">How to run it on your own</h3><ol>'+
+    '<li><strong>Start with your red flags.</strong> Those are the ideas you were sure about and had wrong, so fix them first.</li>'+
+    '<li><strong>Read the notes section for the gap once, slowly.</strong> The links for each of your gaps are just below.</li>'+
+    '<li><strong>Watch the concept video</strong> if the notes are not clicking on the first read.</li>'+
+    '<li><strong>Close everything and do the repair problem on paper.</strong> Draw it, label it, and write one sentence on why for each label.</li>'+
+    '<li><strong>Open the notes and the drawing sheet and correct your work in a different color.</strong> Everything you corrected is what you did not know yet.</li>'+
+    '<li><strong>Explain it out loud as if you were teaching a classmate.</strong> Where you get stuck is the spot to reread.</li></ol>'+
+    '<p class="small">Where a repair problem says teammate or group, do that part on your own: point to the structure on yourself or on a diagram, and check yourself against the notes.</p></div>'+
+    '<div class="card"><h3 style="margin-top:0">Your links for each gap</h3>'+d.gaps.map(function(id){ var r=resOf(id); var L=[]; if(r){ L.push(ext(r.notes,'Notes: '+r.section)); if(r.video) L.push(ext(r.video,'Concept video')); if(r.draw) L.push(ext(r.draw,'Drawing sheet')); if(r.sheet) L.push(ext(r.sheet,'Worksheet')); } L.push(ext(MB.recallUrl||'bio004-spaced-recall.html','Recall cards')); return '<h4>'+esc(COMP[id].name)+'</h4><ul><li>'+L.join('</li><li>')+'</li></ul>'; }).join('')+'</div>';
+  }
   Object.keys(byStation).forEach(function(k){ var stn=md.stations[k];
     h+='<div class="station"><p class="eyebrow">Repair problem &middot; your gaps: '+byStation[k].map(function(id){ return esc(COMP[id].name); }).join(', ')+'</p><h3 style="margin-top:0">'+esc(stn.title)+'</h3><ol>'+stn.tasks.map(function(t){ return '<li>'+esc(t)+'</li>'; }).join('')+'</ol><p class="done">You are done when: '+esc(stn.done)+'</p></div>'; });
   other.forEach(function(id){ var c=COMP[id]; var r=resOf(id);
-    h+='<div class="station"><p class="eyebrow">Repair problem</p><h3 style="margin-top:0">'+esc(c.name)+'</h3><ol><li>'+esc(c.can)+' Do it on the whiteboard, with drawings and labels, without notes.</li><li>Each person explains one part to the group in their own words.</li><li>The group writes one "what if" question about it and answers it together.</li><li>Check everything against '+(r?ext(r.notes,'the notes'):'the notes')+'. Circle anything you corrected.</li></ol></div>'; });
+    h+='<div class="station"><p class="eyebrow">Repair problem</p><h3 style="margin-top:0">'+esc(c.name)+'</h3><ol><li>'+esc(c.can)+(solo?' Do it on paper':' Do it on the whiteboard')+', with drawings and labels, without notes.</li>'+(solo?'<li>Explain each part out loud in your own words, as if to a classmate.</li><li>Write one "what if" question about it and answer it.</li>':'<li>Each person explains one part to the group in their own words.</li><li>The group writes one "what if" question about it and answers it together.</li>')+'<li>Check everything against '+(r?ext(r.notes,'the notes'):'the notes')+'. Circle anything you corrected.</li></ol></div>'; });
   if(md){ var rest=Object.keys(md.stations).filter(function(k){ return !byStation[k]; });
     if(rest.length) h+='<details class="card"><summary>Other repair problems, if your group finishes or has different gaps</summary>'+rest.map(function(k){ var stn=md.stations[k]; return '<h4>'+esc(stn.title)+'</h4><ol>'+stn.tasks.map(function(t){ return '<li>'+esc(t)+'</li>'; }).join('')+'</ol><p class="done">You are done when: '+esc(stn.done)+'</p>'; }).join('')+'</details>'; }
   h+='<div class="card"><h3 style="margin-top:0">What did you fix?</h3><p class="small">For each gap, write the corrected idea in your own words, the way you would explain it to a classmate. This goes on your repair plan.</p>'+
@@ -605,6 +623,7 @@ VIEWS.fix = function(v){
     '<div class="actions"><button type="button" class="btn" id="fxsave">Save, then go to Step 4: Prove it</button><span class="small" id="fxmsg" aria-live="polite"></span></div></div>';
   v.innerHTML=h;
   $$('textarea',v).forEach(function(t){ t.addEventListener('input', function(){ d.fixes[t.getAttribute('data-id')]=t.value; save(); }); });
+  $$('input[name="how"]',v).forEach(function(r){ r.addEventListener('change', function(){ S.solo = r.value==='solo'; save(); VIEWS.fix(v); var f=$('input[name="how"]:checked',v); if(f) f.focus(); sendHeight(); }); });
   $('#fxsave',v).addEventListener('click', function(){ save(); refresh(); go('prove'); });
 };
 
@@ -613,7 +632,7 @@ VIEWS.prove = function(v){
   var d=day();
   var h='<div class="card"><p class="eyebrow">Step 4 &middot; Prove it</p><h2>New questions, same competencies.</h2>'+
     '<ol><li><strong>Alone first.</strong> Answer every question and mark Sure, Unsure or Guess. Then lock your answers.</li>'+
-    '<li><strong>Then talk it through with your team.</strong> Agree on a team answer for each question. You cannot change your own answer, only the team one.</li>'+
+    '<li><strong>Then talk it through with your team.</strong> Agree on a team answer for each question. You cannot change your own answer, only the team one. <span class="muted">On your own? Skip the team answers. Instead, go back through each question and say why each wrong option is wrong, then reveal.</span></li>'+
     '<li><strong>Then reveal.</strong> See how you did alone, how the team did, and whether each gap closed.</li></ol>'+
     '<p class="small muted">The questions target your three gaps ('+d.gaps.map(function(id){ return esc(COMP[id].name); }).join(', ')+') and the competencies next to them, and they skip questions you have already seen when there are new ones left.</p>'+
     '<div class="actions"><button type="button" class="btn" id="pgen">Build my Prove It set</button>'+(d.prove?'<button type="button" class="btn ghost" id="plast">Back to my last set</button>':'')+'</div></div><div id="pexam"></div>';
@@ -633,20 +652,22 @@ function rebuildLocked(host, a){
   lockForTeam($('#lk',host), a);
 }
 function lockForTeam(host, a){
-  var h='<div class="card"><h3 style="margin-top:0">Locked. Now talk it through with your team.</h3><p>Go question by question. Each person says their answer and why. Agree on a team answer and pick it below. Leave it on "Same as mine" when the team agrees with you.</p></div>';
+  var solo=!!S.solo;
+  var h = solo ? '<div class="card"><h3 style="margin-top:0">Locked. Before you reveal, check your own reasoning.</h3><p>Go question by question. For each one, say out loud why your answer is right and why each of the other options is wrong. If you cannot explain an option, that is a spot to reread after you reveal. There is no team answer when you are working on your own.</p></div>'
+    : '<div class="card"><h3 style="margin-top:0">Locked. Now talk it through with your team.</h3><p>Go question by question. Each person says their answer and why. Agree on a team answer and pick it below. Leave it on "Same as mine" when the team agrees with you.</p></div>';
   a.answers.forEach(function(r,i){ var it=findItem(r.id); if(!it) return; var ord=r.order;
     h+='<div class="q"><p class="small muted" style="margin:0 0 4px">Question '+(i+1)+'</p><p class="stem">'+esc(it.stem)+'</p><div class="opts">'+ord.map(function(oi,k){ return '<div class="opt"><span class="l">'+LET[k]+'.</span><span>'+esc(it.options[oi])+(oi===r.picked?' <strong>(my answer)</strong>':'')+'</span></div>'; }).join('')+'</div>'+
-      '<div class="teamrow"><label for="tm'+i+'">Team answer</label><select id="tm'+i+'" data-i="'+i+'"><option value="">Same as mine</option>'+ord.map(function(oi,k){ return '<option value="'+oi+'"'+(r.team===oi?' selected':'')+'>'+LET[k]+'</option>'; }).join('')+'</select></div></div>'; });
+      (solo?'':'<div class="teamrow"><label for="tm'+i+'">Team answer</label><select id="tm'+i+'" data-i="'+i+'"><option value="">Same as mine</option>'+ord.map(function(oi,k){ return '<option value="'+oi+'"'+(r.team===oi?' selected':'')+'>'+LET[k]+'</option>'; }).join('')+'</select></div>')+'</div>'; });
   h+='<div class="actions"><button type="button" class="btn gold" id="reveal">Reveal the answers</button></div>';
   host.innerHTML=h; sendHeight();
   $$('select',host).forEach(function(s){ s.addEventListener('change', function(){ var r=a.answers[+s.getAttribute('data-i')]; r.team = s.value===''?null:+s.value; save(); }); });
-  $('#reveal',host).addEventListener('click', function(){ a.answers.forEach(function(r){ var it=findItem(r.id); var t=r.team==null?r.picked:r.team; r.teamRight = it ? t===it.correct : false; }); a.teamScore=a.answers.filter(function(r){ return r.teamRight; }).length/a.answers.length; a.revealed=true; save(); refresh(); showProve(host, a); });
+  $('#reveal',host).addEventListener('click', function(){ a.answers.forEach(function(r){ var it=findItem(r.id); var t=r.team==null?r.picked:r.team; r.teamRight = it ? t===it.correct : false; }); a.teamScore=a.answers.filter(function(r){ return r.teamRight; }).length/a.answers.length; a.solo=solo; a.revealed=true; save(); refresh(); showProve(host, a); });
 }
 function showProve(host, a){
   var d=day(); var before=compStats(d.checks), after=compStats([a]);
   var h='<div class="card"><p class="eyebrow">Prove it &middot; results</p><h2>Did the fix hold?</h2>'+
-    '<div class="stats"><div class="stat"><b>'+pct(a.score)+'%</b><small>You, alone</small></div><div class="stat"><b>'+pct(a.teamScore||0)+'%</b><small>Your team</small></div><div class="stat"><b>'+a.answers.filter(function(r){ return !r.right && r.conf==='sure'; }).length+'</b><small>Red flags this time</small></div></div>'+
-    '<div class="tablewrap"><table class="compare"><thead><tr><th>Your gap</th><th>In the check</th><th>In Prove It</th><th>Verdict</th></tr></thead><tbody>';
+    '<div class="stats"><div class="stat"><b>'+pct(a.score)+'%</b><small>You, alone</small></div>'+(a.solo?'':'<div class="stat"><b>'+pct(a.teamScore||0)+'%</b><small>Your team</small></div>')+'<div class="stat"><b>'+a.answers.filter(function(r){ return !r.right && r.conf==='sure'; }).length+'</b><small>Red flags this time</small></div></div>'+
+    '<div class="tablewrap" tabindex="0" role="region" aria-label="Table, scrolls sideways on small screens"><table class="compare"><thead><tr><th>Your gap</th><th>In the check</th><th>In Prove It</th><th>Verdict</th></tr></thead><tbody>';
   (a.gapComps||[]).forEach(function(id){ var b=before[id], f=after[id]; var v;
     if(!f) v='Not retested. Build another set.'; else if(f.right===f.n && !f.fragile) v='Closed. Right and sure.'; else if(f.right===f.n) v='Improving. Right, but still not sure.'; else if(f.flag) v='Still a red flag. Go back to Step 3.'; else v='Still open. Go back to Step 3.';
     h+='<tr><td><strong>'+esc(COMP[id].name)+'</strong></td><td>'+(b?b.right+' of '+b.n:'not tested')+'</td><td>'+(f?f.right+' of '+f.n:'not tested')+'</td><td class="v">'+v+'</td></tr>'; });
@@ -690,7 +711,7 @@ function renderProgress(){
   var ks=moduleDays(); var body=$('#progbody');
   if(!ks.length){ body.innerHTML='<p class="muted">Take your first check and your progress shows here, one row per day.</p>'; return; }
   var total=(MODCOMPS[S.module]||[]).length;
-  body.innerHTML='<div class="tablewrap"><table><thead><tr><th>Day</th><th class="n">Checks</th><th class="n">Latest check</th><th class="n">Red flags</th><th>Gaps named</th><th class="n">Prove It</th><th class="n">Checklist</th></tr></thead><tbody>'+
+  body.innerHTML='<div class="tablewrap" tabindex="0" role="region" aria-label="Table, scrolls sideways on small screens"><table><thead><tr><th>Day</th><th class="n">Checks</th><th class="n">Latest check</th><th class="n">Red flags</th><th>Gaps named</th><th class="n">Prove It</th><th class="n">Checklist</th></tr></thead><tbody>'+
     ks.map(function(k){ var d=S.days[k]; var last=d.checks[d.checks.length-1]; var flags=d.checks.reduce(function(s,a){ return s+a.answers.filter(function(r){ return !r.right&&r.conf==='sure'; }).length; },0);
       var ck=Object.keys(d.dump.checked||{}).filter(function(x){ return d.dump.checked[x]; }).length;
       return '<tr><td>'+esc(fmtDay(k.split('|')[0]))+'</td><td class="n">'+d.checks.length+'</td><td class="n">'+(last?pct(last.score)+'%':'')+'</td><td class="n">'+flags+'</td><td>'+d.gaps.map(function(id){ return esc(COMP[id]?COMP[id].name:id); }).join('; ')+'</td><td class="n">'+(d.prove&&d.prove.revealed?pct(d.prove.score)+'%':'')+'</td><td class="n">'+(d.dump.revealed?ck+' of '+total:'')+'</td></tr>'; }).join('')+
@@ -731,7 +752,7 @@ function planHtml(name){
       '<p><strong>Steps:</strong></p><ol>'+fixSteps(status, r).map(function(x){ return '<li>'+x.replace(/href="(?!https?:)/g,'href="'+base).replace(/ target="_blank" rel="noopener"/g,'').replace(/<span class="vh">[^<]*<\/span>/g,'')+'</li>'; }).join('')+'</ol>';
     var rel=relatedOf(id); if(rel.length) h+='<p><strong>Also check:</strong> '+rel.map(function(p){ return COMP[p[0]]?esc(COMP[p[0]].name):''; }).filter(Boolean).join('; ')+'.</p>'; });
   if(d.prove && d.prove.revealed){ var after=compStats([d.prove]);
-    h+='<h2>Prove It</h2><p>Alone: '+pct(d.prove.score)+'%. Team: '+pct(d.prove.teamScore||0)+'%.</p><table><thead><tr><th>Gap</th><th>Check</th><th>Prove It</th></tr></thead><tbody>'+(d.prove.gapComps||[]).map(function(id){ var b=st[id], f=after[id]; return '<tr><td>'+esc(COMP[id].name)+'</td><td>'+(b?b.right+' of '+b.n:'not tested')+'</td><td>'+(f?f.right+' of '+f.n:'not tested')+'</td></tr>'; }).join('')+'</tbody></table>'; }
+    h+='<h2>Prove It</h2><p>Alone: '+pct(d.prove.score)+'%.'+(d.prove.solo?' Worked on my own.':' Team: '+pct(d.prove.teamScore||0)+'%.')+'</p><table><thead><tr><th>Gap</th><th>Check</th><th>Prove It</th></tr></thead><tbody>'+(d.prove.gapComps||[]).map(function(id){ var b=st[id], f=after[id]; return '<tr><td>'+esc(COMP[id].name)+'</td><td>'+(b?b.right+' of '+b.n:'not tested')+'</td><td>'+(f?f.right+' of '+f.n:'not tested')+'</td></tr>'; }).join('')+'</tbody></table>'; }
   var ids=MODCOMPS[S.module]||[];
   if(d.dump.revealed){ var left=ids.filter(function(id){ return !d.dump.checked[id]; });
     h+='<h2>Still to rebuild from memory ('+left.length+' of '+ids.length+')</h2>'+(left.length?'<ul>'+left.map(function(id){ var r=resOf(id); return '<li><strong>'+esc(COMP[id].name)+'.</strong> '+esc(COMP[id].can)+(r?' '+lnk(r.notes,'Notes')+'.':'')+'</li>'; }).join('')+'</ul>':'<p>Everything on the checklist came out of memory today.</p>'); }
