@@ -8,7 +8,7 @@
   - bio004-m3-sheet-data.js (the prompt data behind that packet)
   - BIO004-M3-Lab-Packet.html and .pdf (structure list, muscle charts, blood cell charts, lab exam questions)
   - muscle-structure-concept-videos.html and muscle-fascicles-concept-videos.html (Loom video and chapter buttons replace the "coming soon" placeholder)
-  - m3-back-thorax-notes.html (one accuracy fix to the trapezius action)
+  - m3-back-thorax-notes.html and BIO004-M3-Back-Thorax-Notes.pdf (one accuracy fix to the trapezius action)
 - Date: September 30, 2026
 
 ## 2. WCAG version and level
@@ -59,7 +59,6 @@ Checked the markup structure for landmarks (header, nav, main, footer), heading 
 - VoiceOver pass still to do before the packets are posted.
 - The Loom player's own controls are Loom's; their accessibility is outside this page.
 - The Fascicles page plays the general muscle recording until a fascicle and lever video is recorded. Replace the Loom ID and chapter list when it exists.
-- BIO004-M3-Back-Thorax-Notes.pdf was not regenerated after the trapezius fix to the HTML notes; rebuild it with the next notes update.
 
 ## 7. Reviewer
 
