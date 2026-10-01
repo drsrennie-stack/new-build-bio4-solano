@@ -355,6 +355,87 @@
   .answer p:last-child { margin-bottom: 0; }
   .answer .key { color: var(--terra-dark); font-weight: 700; }
 
+  /* Highlight on the image */
+  .img-wrap { position: relative; }
+  .overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+  .hl-fig.is-lit .overlay { opacity: 1; }
+  .overlay .dim { fill: rgba(8,16,31,0.58); }
+  .overlay .line-under { fill: none; stroke: #FFFFFF; stroke-width: 6px; vector-effect: non-scaling-stroke; }
+  .overlay .line-over { fill: none; stroke: var(--gold); stroke-width: 3px; vector-effect: non-scaling-stroke; }
+
+  .explore { margin-top: 16px; }
+  .explore-label { margin: 0 0 10px; font-weight: 600; color: var(--navy); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+    background: #FFFFFF;
+    border: 1.5px solid var(--navy);
+    border-radius: 999px;
+    padding: 7px 14px 7px 8px;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+  .chip:not(:has(.chip-letter)) { padding-left: 14px; }
+  .chip-letter {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: #FFFFFF;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 14px;
+  }
+  .chip:hover { background: #EDF1F3; }
+  .chip[aria-pressed="true"] { background: var(--navy); color: #FFFFFF; }
+  .chip[aria-pressed="true"] .chip-letter { background: var(--gold); color: var(--page); }
+  .readout {
+    margin: 12px 0 0 !important;
+    font-size: 16px;
+    color: var(--navy);
+    min-height: 1.6em;
+  }
+  .readout strong { color: var(--terra-dark); }
+
+  .hl-card { cursor: pointer; display: flex; flex-direction: column; }
+  .show-btn {
+    margin-top: auto;
+    align-self: flex-start;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    background: #FFFFFF;
+    border: 1.5px solid var(--navy);
+    border-radius: 999px;
+    padding: 8px 16px;
+    min-height: 40px;
+    cursor: pointer;
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+  .hl-card .why + .show-btn, .hl-card p + .show-btn { margin-top: auto; }
+  .hl-card > p:last-of-type { margin-bottom: 16px; }
+  .show-btn:hover { background: #EDF1F3; }
+  .show-btn .btn-on { display: none; }
+  .show-btn[aria-pressed="true"] { background: var(--navy); color: #FFFFFF; }
+  .show-btn[aria-pressed="true"] .btn-on { display: inline; }
+  .show-btn[aria-pressed="true"] .btn-off { display: none; }
+  .hl-card.is-active { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+  .hl-card.is-active .badge { background: var(--gold); color: var(--page); }
+
   /* Footer */
   .sig {
     margin-top: 48px;
@@ -419,7 +500,7 @@
   @media print {
     body { background: #FFFFFF; color: #000000; font-size: 11.5pt; }
     .wrap { max-width: none; padding: 0; }
-    .skip-link, .back, .jump, .hint { display: none !important; }
+    .skip-link, .back, .jump, .hint, .overlay, .explore, .show-btn { display: none !important; }
     h1, .lede, .sig small { color: #000000; }
     .eyebrow, .sig { color: var(--terra-dark); }
     .card {
@@ -468,54 +549,82 @@
         <p class="section-label">Section 1 &middot; Laminated image 1</p>
         <h2 id="s1-title">The sarcomere under the electron microscope</h2>
         <p>This image is a transmission electron micrograph of skeletal muscle, sliced along the length of a myofibril. The repeating light and dark bands are the striations you see on skeletal muscle under a light microscope. Each band lines up with a specific arrangement of thick filaments (myosin) and thin filaments (actin), so once you can name the bands, you can describe what the filaments are doing.</p>
-        <figure>
-          <img src="Muscle_Microanatomy-Laminated_001.jpeg"
-               alt="Labeled electron micrograph of one sarcomere in skeletal muscle, showing alternating dark and light bands. Leader line A points to the thin dark M line at the exact center. B points to the pale H zone on either side of the M line. C spans the whole dark A band from one edge to the other. D points to the pale I band. E points to the dark Z disc running through the middle of the I band. F spans one full sarcomere, from one Z disc to the next.">
+        <figure class="hl-fig" id="em-figure" data-fig="em">
+          <div class="img-wrap">
+            <img src="Muscle_Microanatomy-Laminated_001.jpeg"
+               width="1920" height="1080"
+               alt="Labeled black and white electron micrograph of one sarcomere, with a wide dark band in the middle, pale bands on each side, and a thick black vertical line near each end. A, a red arrow from above, points to the thin darker line at the center of the pale strip in the middle of the dark band: the M line. B, two red arrows from below, mark the pale strip beside the M line: the H zone. C, an orange bracket across the top, spans the dark part of the band from its left edge in to the H zone: the A band. D, a green bracket across the top, spans the pale region between the left black line and the dark band: the I band. E, a blue arrow from above, points to the thick black line on the right: a Z disc. F, a long green bracket along the bottom, runs from the left black line to the right black line: one sarcomere.">
+            <svg class="overlay" viewBox="0 0 1920 1080" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+              <defs><mask id="em-mask"><rect width="1920" height="1080" fill="white"/><g class="mask-holes" fill="black"></g></mask></defs>
+              <rect class="dim" width="1920" height="1080" mask="url(#em-mask)"/>
+              <g class="outline"></g>
+            </svg>
+          </div>
           <figcaption>Labeled electron micrograph of a sarcomere, letters A through F.</figcaption>
         </figure>
+        <div class="explore">
+          <p class="explore-label" id="em-chips-label">Tap a letter to light up that structure on the micrograph. You can also use the button on any card below.</p>
+          <div class="chips" role="group" aria-labelledby="em-chips-label">
+            <button type="button" class="chip" data-fig="em" data-key="a" aria-pressed="false"><span class="chip-letter" aria-hidden="true">A</span>M line</button>
+            <button type="button" class="chip" data-fig="em" data-key="b" aria-pressed="false"><span class="chip-letter" aria-hidden="true">B</span>H zone</button>
+            <button type="button" class="chip" data-fig="em" data-key="c" aria-pressed="false"><span class="chip-letter" aria-hidden="true">C</span>A band</button>
+            <button type="button" class="chip" data-fig="em" data-key="d" aria-pressed="false"><span class="chip-letter" aria-hidden="true">D</span>I band</button>
+            <button type="button" class="chip" data-fig="em" data-key="e" aria-pressed="false"><span class="chip-letter" aria-hidden="true">E</span>Z disc</button>
+            <button type="button" class="chip" data-fig="em" data-key="f" aria-pressed="false"><span class="chip-letter" aria-hidden="true">F</span>One sarcomere</button>
+          </div>
+          <p class="readout" id="em-readout" aria-live="polite">Nothing highlighted yet.</p>
+        </div>
       </div>
 
       <ul class="grid" aria-label="Structures A through F" style="margin-top:20px;">
         <li>
-          <article class="card" aria-labelledby="a-title">
+          <article class="card hl-card" aria-labelledby="a-title" data-fig="em" data-key="a">
             <div class="title-row"><span class="badge" aria-hidden="true">A</span><h3 id="a-title"><span class="visually-hidden">A. </span>M line</h3></div>
             <p class="what"><strong>What it is:</strong> the thin dark line at the dead center of the sarcomere.</p>
             <p class="why"><strong>Why it matters:</strong> the M line is a protein scaffold that ties the middles of the thick filaments together. It keeps them lined up in neat rows so they all pull in the same direction instead of drifting out of position.</p>
+                      <button type="button" class="show-btn" data-fig="em" data-key="a" aria-pressed="false"><span class="btn-off">Show <span class="visually-hidden">M line </span>on the image</span><span class="btn-on">Showing <span class="visually-hidden">M line </span>on the image</span></button>
           </article>
         </li>
         <li>
-          <article class="card" aria-labelledby="b-title">
+          <article class="card hl-card" aria-labelledby="b-title" data-fig="em" data-key="b">
             <div class="title-row"><span class="badge" aria-hidden="true">B</span><h3 id="b-title"><span class="visually-hidden">B. </span>H zone</h3></div>
             <p class="what"><strong>What it is:</strong> the paler region in the middle of the A band, on either side of the M line.</p>
             <p class="why"><strong>Why it matters:</strong> the H zone contains thick filaments only, because the thin filaments do not reach this far in. During contraction the thin filaments slide toward the center, so the H zone gets narrower and can disappear entirely.</p>
+                      <button type="button" class="show-btn" data-fig="em" data-key="b" aria-pressed="false"><span class="btn-off">Show <span class="visually-hidden">H zone </span>on the image</span><span class="btn-on">Showing <span class="visually-hidden">H zone </span>on the image</span></button>
           </article>
         </li>
         <li>
-          <article class="card" aria-labelledby="c-title">
+          <article class="card hl-card" aria-labelledby="c-title" data-fig="em" data-key="c">
             <div class="title-row"><span class="badge" aria-hidden="true">C</span><h3 id="c-title"><span class="visually-hidden">C. </span>A band</h3></div>
             <p class="what"><strong>What it is:</strong> the entire dark band, measured edge to edge. The H zone and M line sit inside it.</p>
             <p class="why"><strong>Why it matters:</strong> the A band is exactly as long as a thick filament. Thick filaments do not shorten, so the A band keeps the same length whether the muscle is relaxed or contracted. Its outer ends look darkest because thick and thin filaments overlap there.</p>
+            <p class="why"><strong>On the image:</strong> the C bracket marks the dark part on the left side of the H zone. The A band itself keeps going across the H zone to the matching dark edge on the right.</p>
+                      <button type="button" class="show-btn" data-fig="em" data-key="c" aria-pressed="false"><span class="btn-off">Show <span class="visually-hidden">A band </span>on the image</span><span class="btn-on">Showing <span class="visually-hidden">A band </span>on the image</span></button>
           </article>
         </li>
         <li>
-          <article class="card" aria-labelledby="d-title">
+          <article class="card hl-card" aria-labelledby="d-title" data-fig="em" data-key="d">
             <div class="title-row"><span class="badge" aria-hidden="true">D</span><h3 id="d-title"><span class="visually-hidden">D. </span>I band</h3></div>
             <p class="what"><strong>What it is:</strong> the pale band between the A bands of neighboring sarcomeres. A Z disc runs through its middle, so half of each I band belongs to one sarcomere and half belongs to the next.</p>
             <p class="why"><strong>Why it matters:</strong> the I band contains thin filaments only. As the thin filaments slide in over the thick filaments, there is less thin-only territory left, so the I band shortens during contraction.</p>
+            <p class="why"><strong>On the image:</strong> the D bracket covers the pale space between the left Z disc and the dark A band. That is the half of the I band that belongs to this sarcomere.</p>
+                      <button type="button" class="show-btn" data-fig="em" data-key="d" aria-pressed="false"><span class="btn-off">Show <span class="visually-hidden">I band </span>on the image</span><span class="btn-on">Showing <span class="visually-hidden">I band </span>on the image</span></button>
           </article>
         </li>
         <li>
-          <article class="card" aria-labelledby="e-title">
+          <article class="card hl-card" aria-labelledby="e-title" data-fig="em" data-key="e">
             <div class="title-row"><span class="badge" aria-hidden="true">E</span><h3 id="e-title"><span class="visually-hidden">E. </span>Z disc</h3></div>
             <p class="what"><strong>What it is:</strong> the dark vertical line running through the middle of the I band.</p>
             <p class="why"><strong>Why it matters:</strong> thin filaments are anchored to the Z disc. Z discs mark the two ends of every sarcomere, and when the thin filaments are pulled toward the center, the Z discs are pulled closer together. That is what makes the sarcomere shorter.</p>
+                      <button type="button" class="show-btn" data-fig="em" data-key="e" aria-pressed="false"><span class="btn-off">Show <span class="visually-hidden">Z disc </span>on the image</span><span class="btn-on">Showing <span class="visually-hidden">Z disc </span>on the image</span></button>
           </article>
         </li>
         <li>
-          <article class="card" aria-labelledby="f-title">
+          <article class="card hl-card" aria-labelledby="f-title" data-fig="em" data-key="f">
             <div class="title-row"><span class="badge" aria-hidden="true">F</span><h3 id="f-title"><span class="visually-hidden">F. </span>One sarcomere</h3></div>
             <p class="what"><strong>What it is:</strong> the segment from one Z disc to the next Z disc.</p>
             <p class="why"><strong>Why it matters:</strong> the sarcomere is the functional unit of contraction, the smallest piece of a muscle fiber that can contract. A myofibril is thousands of sarcomeres linked end to end, so when each one shortens a little, the whole fiber shortens a lot.</p>
+                      <button type="button" class="show-btn" data-fig="em" data-key="f" aria-pressed="false"><span class="btn-off">Show <span class="visually-hidden">One sarcomere </span>on the image</span><span class="btn-on">Showing <span class="visually-hidden">One sarcomere </span>on the image</span></button>
           </article>
         </li>
       </ul>
@@ -574,54 +683,80 @@
         <p class="section-label">Section 2 &middot; Laminated image 2</p>
         <h2 id="s2-title">The skeletal muscle fiber model</h2>
         <p>The model zooms out from a single sarcomere to a whole muscle cell, also called a muscle fiber. Here you can see how the contractile parts (myofibrils and their sarcomeres) are wrapped by the membranes that deliver the signal to contract (T tubules and sarcoplasmic reticulum).</p>
-        <figure>
-          <img src="Muscle_Microanatomy-Laminated_010.jpeg"
-               alt="Labeled photograph of a skeletal muscle fiber model. Leader lines point to six structures: a myofibril, one of the long striped cylinders packed inside the fiber; the sarcoplasmic reticulum, the network of membrane tubes wrapped around each myofibril; a transverse (T) tubule, a tube running inward from the cell membrane across the fiber; a triad, where one T tubule sits between two enlarged sacs; a sarcomere, one repeating segment of a myofibril's banding pattern; and a terminal cistern, one of the enlarged sacs at the end of the sarcoplasmic reticulum beside a T tubule.">
+        <figure class="hl-fig" id="model-figure" data-fig="model">
+          <div class="img-wrap">
+            <img src="Muscle_Microanatomy-Laminated_010.jpeg"
+               width="1920" height="1080"
+               alt="Labeled photograph of a skeletal muscle fiber model, cut open to show pink striped myofibrils wrapped in a tan lacy network, with blue tubes running across the fiber at regular intervals. Myofibril: a bracket across the top spans one striped pink cylinder. Sarcoplasmic reticulum: an arrow points to the tan lacy network covering a myofibril. Transverse (T) tubules: an arrow points to one of the blue tubes running across the fiber. Triad, labeled 1 T tubule plus 2 terminal cisterns: two arrows point to the tan swellings directly above and below one blue tube. Sarcomere: a vertical double-headed arrow spans one repeating segment of a pink myofibril in the center. Terminal cistern: an arrow at the bottom points to the swollen tan edge of the network where it meets a blue tube.">
+            <svg class="overlay" viewBox="0 0 1920 1080" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+              <defs><mask id="model-mask"><rect width="1920" height="1080" fill="white"/><g class="mask-holes" fill="black"></g></mask></defs>
+              <rect class="dim" width="1920" height="1080" mask="url(#model-mask)"/>
+              <g class="outline"></g>
+            </svg>
+          </div>
           <figcaption>Labeled skeletal muscle fiber model with six structures identified.</figcaption>
         </figure>
+        <div class="explore">
+          <p class="explore-label" id="model-chips-label">Tap a structure to light it up on the model. You can also use the button on any card below.</p>
+          <div class="chips" role="group" aria-labelledby="model-chips-label">
+            <button type="button" class="chip" data-fig="model" data-key="myofibril" aria-pressed="false">Myofibril</button>
+            <button type="button" class="chip" data-fig="model" data-key="sr" aria-pressed="false">Sarcoplasmic reticulum</button>
+            <button type="button" class="chip" data-fig="model" data-key="ttubule" aria-pressed="false">Transverse (T) tubule</button>
+            <button type="button" class="chip" data-fig="model" data-key="triad" aria-pressed="false">Triad</button>
+            <button type="button" class="chip" data-fig="model" data-key="sarcomere" aria-pressed="false">Sarcomere</button>
+            <button type="button" class="chip" data-fig="model" data-key="cistern" aria-pressed="false">Terminal cistern</button>
+          </div>
+          <p class="readout" id="model-readout" aria-live="polite">Nothing highlighted yet.</p>
+        </div>
       </div>
 
       <ul class="grid" aria-label="Six structures on the fiber model" style="margin-top:20px;">
         <li>
-          <article class="card" aria-labelledby="m1-title">
+          <article class="card hl-card" aria-labelledby="m1-title" data-fig="model" data-key="myofibril">
             <h3 id="m1-title">Myofibril</h3>
             <p class="what"><strong>What it is:</strong> one of the long, rod-shaped bundles packed side by side inside the fiber. Each myofibril is a chain of sarcomeres linked end to end.</p>
             <p class="why"><strong>Why it matters:</strong> myofibrils are the contractile machinery of the cell. Because the sarcomeres in neighboring myofibrils line up with each other, the whole fiber looks striped.</p>
+                      <button type="button" class="show-btn" data-fig="model" data-key="myofibril" aria-pressed="false"><span class="btn-off">Show <span class="visually-hidden">Myofibril </span>on the image</span><span class="btn-on">Showing <span class="visually-hidden">Myofibril </span>on the image</span></button>
           </article>
         </li>
         <li>
-          <article class="card" aria-labelledby="m2-title">
+          <article class="card hl-card" aria-labelledby="m2-title" data-fig="model" data-key="sr">
             <h3 id="m2-title">Sarcoplasmic reticulum</h3>
             <p class="what"><strong>What it is:</strong> a network of membrane tubes that wraps around each myofibril like a lace sleeve. It is a specialized form of smooth endoplasmic reticulum.</p>
             <p class="why"><strong>Why it matters:</strong> the sarcoplasmic reticulum stores calcium. Because it surrounds every myofibril, it can deliver calcium right where the filaments need it.</p>
+                      <button type="button" class="show-btn" data-fig="model" data-key="sr" aria-pressed="false"><span class="btn-off">Show <span class="visually-hidden">Sarcoplasmic reticulum </span>on the image</span><span class="btn-on">Showing <span class="visually-hidden">Sarcoplasmic reticulum </span>on the image</span></button>
           </article>
         </li>
         <li>
-          <article class="card" aria-labelledby="m3-title">
+          <article class="card hl-card" aria-labelledby="m3-title" data-fig="model" data-key="ttubule">
             <h3 id="m3-title">Transverse (T) tubule</h3>
             <p class="what"><strong>What it is:</strong> an inward fold of the sarcolemma (the muscle cell membrane) that tunnels across the fiber between the myofibrils.</p>
             <p class="why"><strong>Why it matters:</strong> a muscle fiber is wide, and the signal to contract travels along its membrane. T tubules carry that signal deep into the cell so the myofibrils in the center get it at the same time as the ones near the surface.</p>
+                      <button type="button" class="show-btn" data-fig="model" data-key="ttubule" aria-pressed="false"><span class="btn-off">Show <span class="visually-hidden">Transverse (T) tubule </span>on the image</span><span class="btn-on">Showing <span class="visually-hidden">Transverse (T) tubule </span>on the image</span></button>
           </article>
         </li>
         <li>
-          <article class="card" aria-labelledby="m4-title">
+          <article class="card hl-card" aria-labelledby="m4-title" data-fig="model" data-key="triad">
             <h3 id="m4-title">Triad</h3>
             <p class="what"><strong>What it is:</strong> a set of three tubes: one T tubule in the middle with a terminal cistern on each side (1 T tubule + 2 terminal cisterns).</p>
             <p class="why"><strong>Why it matters:</strong> the triad is the handoff point. It is where the signal carried by the T tubule reaches the calcium stores. In human skeletal muscle, triads sit where the A band meets the I band, so each sarcomere has two.</p>
+                      <button type="button" class="show-btn" data-fig="model" data-key="triad" aria-pressed="false"><span class="btn-off">Show <span class="visually-hidden">Triad </span>on the image</span><span class="btn-on">Showing <span class="visually-hidden">Triad </span>on the image</span></button>
           </article>
         </li>
         <li>
-          <article class="card" aria-labelledby="m5-title">
+          <article class="card hl-card" aria-labelledby="m5-title" data-fig="model" data-key="sarcomere">
             <h3 id="m5-title">Sarcomere</h3>
             <p class="what"><strong>What it is:</strong> one repeating segment of a myofibril, from one Z disc to the next. On the model it is one unit of the light and dark banding pattern.</p>
             <p class="why"><strong>Why it matters:</strong> this is the same structure you labeled F on the micrograph, now shown in place inside the cell. It is the functional unit of contraction.</p>
+                      <button type="button" class="show-btn" data-fig="model" data-key="sarcomere" aria-pressed="false"><span class="btn-off">Show <span class="visually-hidden">Sarcomere </span>on the image</span><span class="btn-on">Showing <span class="visually-hidden">Sarcomere </span>on the image</span></button>
           </article>
         </li>
         <li>
-          <article class="card" aria-labelledby="m6-title">
+          <article class="card hl-card" aria-labelledby="m6-title" data-fig="model" data-key="cistern">
             <h3 id="m6-title">Terminal cistern</h3>
             <p class="what"><strong>What it is:</strong> an enlarged sac at the end of the sarcoplasmic reticulum, pressed up against a T tubule. The plural is terminal cisterns (or cisternae).</p>
             <p class="why"><strong>Why it matters:</strong> terminal cisterns hold the largest calcium store in the fiber. Sitting right beside the T tubule lets them release calcium as soon as the signal arrives.</p>
+                      <button type="button" class="show-btn" data-fig="model" data-key="cistern" aria-pressed="false"><span class="btn-off">Show <span class="visually-hidden">Terminal cistern </span>on the image</span><span class="btn-on">Showing <span class="visually-hidden">Terminal cistern </span>on the image</span></button>
           </article>
         </li>
       </ul>
@@ -711,6 +846,106 @@
   window.addEventListener('afterprint', function () {
     openedForPrint.forEach(function (d) { d.open = false; });
     openedForPrint = [];
+  });
+
+
+  /* Click a card or a chip to light up that structure on the image.
+     Coordinates are in the images' own pixels (1920 x 1080). */
+  function r(x, y, w, h) { return [x + ',' + y, (x + w) + ',' + y, (x + w) + ',' + (y + h), x + ',' + (y + h)].join(' '); }
+  var EMY = 308, EMH = 462;
+  var SHAPES = {
+    em: {
+      a: [r(1146, EMY, 30, EMH)],
+      b: [r(1100, EMY, 96, EMH)],
+      c: [r(862, EMY, 580, EMH)],
+      d: [r(540, EMY, 102, EMH), r(712, EMY, 150, EMH), r(1442, EMY, 140, EMH), r(1662, EMY, 93, EMH)],
+      e: [r(640, EMY, 72, EMH), r(1582, EMY, 80, EMH)],
+      f: [r(676, EMY, 946, EMH)]
+    },
+    model: {
+      myofibril: ['648,95 832,95 842,795 735,800 705,560 676,300'],
+      sr: ['682,290 1052,282 1052,390 688,400'],
+      ttubule: ['674,398 1056,388 1056,422 678,432'],
+      triad: ['694,536 1056,530 1056,618 704,622'],
+      sarcomere: [r(1056, 325, 130, 255)],
+      cistern: ['718,772 1050,766 1050,812 732,818']
+    }
+  };
+  var NS = 'http://www.w3.org/2000/svg';
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function poly(points, cls) {
+    var el = document.createElementNS(NS, 'polygon');
+    el.setAttribute('points', points);
+    if (cls) el.setAttribute('class', cls);
+    return el;
+  }
+
+  function cardFor(fig, key) {
+    return document.querySelector('.hl-card[data-fig="' + fig + '"][data-key="' + key + '"]');
+  }
+
+  function setActive(fig, key, fromCard) {
+    var figure = document.getElementById(fig + '-figure');
+    var holes = figure.querySelector('.mask-holes');
+    var outline = figure.querySelector('.outline');
+    var readout = document.getElementById(fig + '-readout');
+    holes.innerHTML = ''; outline.innerHTML = '';
+
+    document.querySelectorAll('[data-fig="' + fig + '"][aria-pressed]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-key') === key));
+    });
+    document.querySelectorAll('.hl-card[data-fig="' + fig + '"]').forEach(function (c) {
+      c.classList.toggle('is-active', c.getAttribute('data-key') === key);
+    });
+
+    if (!key) {
+      figure.classList.remove('is-lit');
+      readout.textContent = 'Nothing highlighted yet.';
+      return;
+    }
+    SHAPES[fig][key].forEach(function (pts) {
+      holes.appendChild(poly(pts));
+      outline.appendChild(poly(pts, 'line-under'));
+      outline.appendChild(poly(pts, 'line-over'));
+    });
+    figure.classList.add('is-lit');
+
+    var card = cardFor(fig, key);
+    var name = card.querySelector('h3').textContent.replace(/^[A-F]\.\s*/, '').trim();
+    var what = card.querySelector('.what').textContent.replace(/^What it is:\s*/, '').trim();
+    var letter = fig === 'em' ? key.toUpperCase() + ', ' : '';
+    readout.innerHTML = '';
+    var s = document.createElement('strong'); s.textContent = 'Showing ' + letter + name + ': ';
+    readout.appendChild(s); readout.appendChild(document.createTextNode(what));
+
+    if (fromCard) {
+      var box = figure.getBoundingClientRect();
+      if (box.top < 0 || box.bottom > window.innerHeight) {
+        figure.scrollIntoView({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' });
+      }
+    }
+  }
+
+  function toggle(btn, fromCard) {
+    var fig = btn.getAttribute('data-fig'), key = btn.getAttribute('data-key');
+    var on = btn.getAttribute('aria-pressed') === 'true';
+    setActive(fig, on ? null : key, fromCard);
+  }
+
+  document.querySelectorAll('.chip').forEach(function (b) {
+    b.addEventListener('click', function () { toggle(b, false); });
+  });
+  document.querySelectorAll('.show-btn').forEach(function (b) {
+    b.addEventListener('click', function (e) { e.stopPropagation(); toggle(b, true); });
+  });
+  /* The whole card is a click target for mouse and touch; the button inside handles keyboard and screen readers */
+  document.querySelectorAll('.hl-card').forEach(function (c) {
+    c.addEventListener('click', function (e) {
+      if (e.target.closest('a, button')) return;
+      if (window.getSelection && String(window.getSelection())) return;
+      toggle(c.querySelector('.show-btn'), true);
+    });
   });
 
   /* Iframe height sender for Canvas and Kajabi embeds */
