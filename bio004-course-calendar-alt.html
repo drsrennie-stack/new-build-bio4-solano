@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Pattern &middot; BIO 004 Human Anatomy &middot; Fall 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- ============================================================
+     THE ALTERNATE SCHEDULE, WEEK BY WEEK. PREVIEW, NOT LINKED.
+
+     Reads schedule-alt-fall2026.js and nothing else. The live
+     calendar (bio004-course-calendar.html) is untouched. Every
+     class day links to its pre-read (bio004-preread.html).
+     ============================================================ -->
+
+<style>
+  :root{
+    --navy:#08101F; --navy-tint:#ECEFF4;
+    --terra:#8B1D1D; --terra-dark:#6B1616;
+    --gold:#DCB45C; --gold-text:#6F5316;
+    --offwhite:#FAFAF9; --gray:#4F5D66; --gray-light:#D1D5DB;
+    --radius:10px;
+    --shadow-rest:0 1px 3px rgba(0,0,0,0.08);
+    --shadow-hover:0 8px 16px rgba(0,0,0,0.10);
+    --t:transform 200ms ease, box-shadow 200ms ease;
+    --font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  }
+  :root{ --bg:var(--offwhite); --card:#FFFFFF; --ink:var(--navy); --soft:var(--gray); --line:var(--navy-tint); --accent:var(--terra-dark); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#0B1220; --card:#141C2C; --ink:#EEF1F6; --soft:#B4BDCA; --line:#26324A; --accent:#E8A79A; --gold-text:#E2C27A; color-scheme:dark; } }
+  :root[data-theme="dark"]{ --bg:#0B1220; --card:#141C2C; --ink:#EEF1F6; --soft:#B4BDCA; --line:#26324A; --accent:#E8A79A; --gold-text:#E2C27A; color-scheme:dark; }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1000px;margin:0 auto;padding:24px 16px 56px;}
+  .skip{position:absolute;left:-9999px;background:var(--terra-dark);color:#fff;padding:10px 16px;border-radius:8px;font-weight:700;z-index:50;}
+  .skip:focus{left:16px;top:16px;}
+  :focus-visible{outline:3px solid var(--terra-dark);outline-offset:2px;border-radius:6px;}
+  a{color:var(--accent);}
+
+  .cover{background:var(--navy);border-radius:var(--radius);padding:clamp(20px,4vw,32px);color:#fff;box-shadow:0 10px 26px rgba(8,16,31,.22);}
+  .eyebrow{font-size:.74rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0 0 8px;}
+  h1{font-weight:800;font-size:clamp(26px,4.6vw,40px);line-height:1.06;letter-spacing:-.02em;margin:0;}
+  h1 span{color:var(--gold);}
+  .secs{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+  .secs button{font:inherit;font-size:.9rem;font-weight:700;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:999px;padding:8px 14px;cursor:pointer;}
+  .secs button[aria-pressed="true"]{background:#fff;color:var(--navy);border-color:#fff;}
+
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-rest);padding:clamp(18px,3vw,24px);margin-top:18px;}
+  .card h2{font-weight:800;font-size:1.25rem;margin:0 0 8px;}
+  .k{font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 6px;}
+
+  .pattern{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:640px){.pattern{grid-template-columns:1fr;}}
+  .pday{border:1px solid var(--line);border-radius:8px;padding:14px;}
+  .pday h3{margin:0 0 8px;font-size:1.05rem;font-weight:800;}
+  .pday ol{margin:0;padding-left:20px;}
+  .pday li{margin:4px 0;}
+  .pday b{color:var(--accent);}
+
+  .week{margin-top:18px;}
+  .week > h2{font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);margin:0 0 8px;}
+  .days{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:700px){.days{grid-template-columns:1fr;}}
+  .day{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-rest);padding:16px;transition:var(--t);display:flex;flex-direction:column;}
+  .day:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);}
+  @media (prefers-reduced-motion:reduce){.day:hover{transform:none;}}
+  .day.next{border:1px solid var(--gold);}
+  .day .dt{font-weight:800;font-size:1.02rem;margin:0;}
+  .day .tag{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-text);margin:2px 0 8px;}
+  .day ul{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:6px;}
+  .day li{font-size:.93rem;display:grid;grid-template-columns:104px 1fr;gap:8px;}
+  .day li .w{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);padding-top:2px;}
+  .day .nt{font-size:.88rem;color:var(--soft);margin:0 0 10px;}
+  .day a.go{margin-top:auto;align-self:flex-start;font-weight:700;text-decoration:none;background:var(--navy);color:#fff;border-radius:8px;padding:9px 14px;font-size:.9rem;}
+  .day a.go:hover{background:#1c2638;}
+  .day.exam{background:var(--navy);color:#fff;}
+  .day.exam .tag{color:var(--gold);}
+  .day.exam .nt{color:#E7EAF0;}
+  .day.off{background:transparent;box-shadow:none;border:1px dashed var(--gray-light);}
+  .day.off:hover{transform:none;box-shadow:none;}
+  .before{font-size:.95rem;}
+  .due{background:var(--bg);border-radius:8px;padding:12px;margin:0 0 12px;display:grid;gap:10px;}
+  .due-h{font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0;}
+  .due-row{display:grid;gap:3px;min-width:0;}
+  .due-row .lbl{font-weight:800;font-size:.9rem;}
+  .due-row .lbl span{font-weight:600;color:var(--soft);font-size:.82rem;}
+  .due-row ul{list-style:none;margin:0;padding:0;display:grid;gap:3px;}
+  .due-row li{display:block;font-size:.88rem;}
+  .due-row li::before{content:"\25A2  ";color:var(--soft);}
+  .day.exam .due{background:rgba(255,255,255,.08);}
+  .sched-h{font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);margin:0 0 6px;}
+
+  footer{margin-top:34px;text-align:center;color:var(--soft);font-size:.9rem;}
+  footer .by{font-weight:700;color:var(--ink);}
+  /* chart view */
+  :root{ --lec:#08101F; --lab:#6B1616; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --lec:#EEF1F6; --lab:#E8A79A; } }
+  :root[data-theme="dark"]{ --lec:#EEF1F6; --lab:#E8A79A; }
+  .views{display:flex;gap:8px;margin:18px 0 0;}
+  .views button{font:inherit;font-weight:700;font-size:.9rem;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 16px;cursor:pointer;}
+  .views button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink);}
+  .chart-wrap{margin-top:18px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-rest);overflow-x:auto;}
+  table.chart{border-collapse:collapse;width:100%;min-width:860px;font-size:.88rem;}
+  .chart th,.chart td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);}
+  .chart thead th{font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);position:sticky;top:0;background:var(--card);}
+  .chart thead tr.grp th{border-bottom:0;padding-bottom:0;}
+  .chart th.g-due{color:var(--accent);}
+  .chart td.cday{font-weight:800;white-space:nowrap;}
+  .chart td.cday small{display:block;font-weight:700;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-text);margin-top:2px;}
+  .chart td.lec{color:var(--ink);} .chart td.lec > b{color:var(--lec);opacity:1;}
+  .chart td.lab{color:var(--ink);} .chart td.lab > b{color:var(--lab);opacity:1;}
+  .chart td b{display:block;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;opacity:.8;}
+  .chart tr.wk td{border-top:2px solid var(--line);}
+  .chart tr.exam td{background:var(--navy);color:#fff;font-weight:700;}
+  .chart tr.off td{color:var(--soft);}
+  .chart tr.next td.cday{box-shadow:inset 4px 0 0 var(--gold);}
+  .mode{display:block;margin-top:6px;font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;}
+  .m-model{color:var(--lab);} .m-cadaver{color:var(--accent);} .m-review{color:var(--soft);}
+  .key{display:flex;flex-wrap:wrap;gap:14px;font-size:.85rem;margin:12px 0 0;}
+  .key span{display:inline-flex;align-items:center;gap:6px;}
+  .key i{display:inline-block;width:12px;height:12px;border-radius:50%;}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+  <main id="main">
+
+    <section class="cover" aria-labelledby="t">
+      <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
+      <h1 id="t">Your <span>week</span>, every week</h1>
+      <div class="secs" role="group" aria-label="Choose your section">
+        <button type="button" data-sec="mw" aria-pressed="false">Mon / Wed</button>
+        <button type="button" data-sec="tr-am" aria-pressed="false">Tue / Thu morning</button>
+        <button type="button" data-sec="tr-eve" aria-pressed="false">Tue / Thu evening</button>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="patH">
+      <p class="k">The pattern</p>
+      <h2 id="patH">What happens on each class day</h2>
+      <div class="pattern">
+        <div class="pday">
+          <h3 id="d1Name">Monday</h3>
+          <ol>
+            <li><b>Start of lecture:</b> Lecture TBL on this week's lecture topic</li>
+            <li>Rest of lecture: the TBL application activity</li>
+            <li>Lab</li>
+            <li><b>End of class:</b> Lab brain dump on today's lab</li>
+          </ol>
+        </div>
+        <div class="pday">
+          <h3 id="d2Name">Wednesday</h3>
+          <ol>
+            <li>Lecture</li>
+            <li><b>First 1.5 hours of lab:</b> Lab TBL on the current lab block, with its application activity</li>
+            <li>Lab</li>
+            <li><b>End of class:</b> Lecture brain dump on this week's lecture topic</li>
+          </ol>
+        </div>
+      </div>
+      <p><b>Labs run in pairs.</b> A new block starts on the models, with many of the structures tagged for you. Not every structure is tagged. You are responsible for finding the untagged ones on your structure list, identifying them, and making your own study materials for them. The next class is the cadaver, and you tag the structures yourself. The last lab before each exam is review: you tag, then work on whatever you need.</p>
+      <p>Every class day has a pre-read. It walks you through the notes, the note sheet and the lab prep in the order that works. Do it before class, including the first class after an exam.</p>
+    </section>
+
+    <section class="card before" aria-label="Before this schedule starts">
+      <p id="beforeTxt"></p>
+    </section>
+
+    <div class="views" role="group" aria-label="Choose a view">
+      <button type="button" data-view="chart" aria-pressed="true">Chart</button>
+      <button type="button" data-view="cards" aria-pressed="false">Week by week</button>
+    </div>
+    <div id="chartView">
+      <div class="key" aria-hidden="true"><span><i style="background:var(--lec)"></i>Lecture</span><span><i style="background:var(--lab)"></i>Lab</span></div>
+      <div class="chart-wrap" tabindex="0" role="region" aria-label="Schedule chart, scrolls sideways on small screens"><table class="chart" id="chart"></table></div>
+    </div>
+    <div id="weeks" aria-live="polite" hidden></div>
+
+  </main>
+  <footer>
+    <div class="by">Dr. Sharilyn Rennie</div>
+    <div>Professor of Anatomy &amp; Physiology</div>
+  </footer>
+</div>
+
+<script src="schedule-alt-fall2026.js"></script>
+<script>
+(function(){
+  'use strict';
+  var A=window.BIO004_ALT;
+  var DOWL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function pad(n){ return n<10?'0'+n:''+n; }
+  function parse(s){ var p=s.split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); }
+  function iso(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function join(a){ return a.length<2 ? a.join('') : a.slice(0,-1).join(', ')+' and '+a[a.length-1]; }
+  function lec(keys){ return join((keys||[]).map(A.lecName)); }
+  function lab(keys){ return (keys||[]).map(A.labName).join(' + '); }
+  var SITE='https://drsrennie-stack.github.io/new-build-bio4-solano/';
+  function abs(u){ return /^https?:/.test(u) ? u : SITE + u; }
+  function lnk(p){ var ext=/^https?:/.test(p[0]) && p[0].indexOf(SITE)!==0;
+    return '<a href="'+esc(abs(p[0]))+'"'+(ext?' target="_blank" rel="noopener"':' target="_top"')+'>'+esc(p[1])+'</a>'; }
+  function pick(keys, table, field){ var seen={}, out=[];
+    (keys||[]).forEach(function(k){ ((table[k]||{})[field]||[]).forEach(function(p){ if(!seen[p[0]]){ seen[p[0]]=1; out.push(p); } }); });
+    return out; }
+  function lecDue(keys, why){
+    var items=[];
+    pick(keys,A.LECTURE,'notes').forEach(function(p){ items.push('Read '+lnk(p)+' notes'); });
+    pick(keys,A.LECTURE,'sheets').forEach(function(p){ items.push('Work '+lnk(p)+', all three panels'); });
+    pick(keys,A.LECTURE,'videos').forEach(function(p){ items.push('Watch '+lnk(p)+' after the sheet'); });
+    return '<div class="due-row"><p class="lbl">Lecture: '+esc(lec(keys))+' <span>'+esc(why)+'</span></p><ul>'+items.map(function(i){ return '<li>'+i+'</li>'; }).join('')+'</ul></div>';
+  }
+  function labDue(keys, why){
+    var items=[];
+    pick(keys,A.LAB,'list').forEach(function(p){ items.push('Read '+lnk(p)); });
+    pick(keys,A.LAB,'sprints').forEach(function(p){ items.push('Lab sprint: '+lnk(p)); });
+    if(keys.some(function(k){ return A.LAB[k].muscle; })) items.push('Fill the '+lnk(A.MUSCLE_CHART)+' for these muscles');
+    return '<div class="due-row"><p class="lbl">Lab: '+esc(lab(keys))+' <span>'+esc(why)+'</span></p><ul>'+items.map(function(i){ return '<li>'+i+'</li>'; }).join('')+'</ul></div>';
+  }
+
+  var KEY='bio004-section', sec=null;
+  try{ var m=location.search.match(/[?&]sec=([^&#]+)/); if(m) sec=decodeURIComponent(m[1]); }catch(e){}
+  if(!A.TIMES[sec]){ try{ sec=localStorage.getItem(KEY); }catch(e){} }
+  if(!A.TIMES[sec]) sec='mw';
+
+  function mondayOf(s){ var d=parse(s); d.setDate(d.getDate()-((d.getDay()+6)%7)); return iso(d); }
+
+  function dayCard(s, nextD){
+    var d=parse(s.d), dt=DOWL[d.getDay()]+', '+MON[d.getMonth()]+' '+d.getDate();
+    if(s.kind==='holiday') return '<article class="day off"><p class="dt">'+esc(dt)+'</p><span class="tag">No class</span><p class="nt">'+esc(s.lec)+'</p></article>';
+    if(s.kind==='exam') return '<article class="day exam"><p class="dt">'+esc(dt)+'</p><span class="tag">Exam '+s.exam+'</span><p class="nt">Lecture exam and lab practical, both today.</p></article>';
+    var rows, tag, due, L=s.lab, mode=A.MODE[L.mode], lb=lab(s.labTopic);
+    var labWhy = L.mode==='model' ? 'first time on the models' : L.mode==='cadaver' ? 'you tag it on the cadaver today' : L.mode==='both' ? 'models, then you tag it on the cadaver, all today' : 'review lab';
+    if(s.kind==='d1'){
+      tag='Lecture TBL '+s.tbl.n;
+      rows=[['Start',tag+': '+lec(s.tbl.topics)],['Then','TBL application activity'],['Lab',lb+'. '+mode],['End','Lab brain dump: '+lab(s.bd.topics)]];
+      due = lecDue(s.tbl.topics, 'for the TBL at the start of class')
+          + labDue(s.labTopic, labWhy+', and the brain dump at the end');
+    } else {
+      tag = s.tbl ? 'Lab TBL '+s.tbl.n : 'Review lab';
+      rows=[['Lecture',s.lec]];
+      if(s.tbl) rows.push(['Lab, first 1.5 hours',tag+': '+lab(s.tbl.topics)+', with application']);
+      rows.push([s.tbl?'Rest of lab':'Lab', lb+'. '+mode]);
+      rows.push(['End','Lecture brain dump: '+lec(s.bd.topics)]);
+      due = labDue(s.labTopic, s.tbl ? 'for the Lab TBL, first 1.5 hours of lab ('+labWhy+')' : labWhy)
+          + lecDue(s.lecTopic, 'started, for today\'s lecture')
+          + (s.bd.topics.join()!==s.lecTopic.join() ? '<div class="due-row"><p class="lbl">Brain dump: '+esc(lec(s.bd.topics))+' <span>at the end of class</span></p><ul><li>Redraw your note sheet visuals from memory the night before</li></ul></div>' : '');
+    }
+    return '<article class="day'+(s.d===nextD?' next':'')+'" aria-label="'+esc(dt)+(s.d===nextD?', your next class':'')+'">'
+      + '<p class="dt">'+esc(dt)+'</p><span class="tag">'+esc(tag)+(s.d===nextD?' &middot; next class':'')+'</span>'
+      + '<div class="due"><p class="due-h">Due before class</p>'+due+'</div>'
+      + '<p class="sched-h">In class</p>'
+      + '<ul>'+rows.map(function(r){ return '<li><span class="w">'+esc(r[0])+'</span><span>'+esc(r[1])+'</span></li>'; }).join('')+'</ul>'
+      + (s.note?'<p class="nt">'+esc(s.note)+'</p>':'')
+      + '<a class="go" target="_top" href="'+SITE+'bio004-preread.html?sec='+encodeURIComponent(sec)+'&amp;day='+s.d+'">Open the pre-read<span style="position:absolute;left:-9999px"> for '+esc(dt)+'</span></a>'
+      + '</article>';
+  }
+
+  function render(){
+    document.querySelectorAll('.secs button').forEach(function(b){ b.setAttribute('aria-pressed', String(b.getAttribute('data-sec')===sec)); });
+    var dn=A.days(sec);
+    document.getElementById('d1Name').textContent=dn.d1;
+    document.getElementById('d2Name').textContent=dn.d2;
+    var start=A.START[A.track(sec)], sd=parse(start);
+    document.getElementById('beforeTxt').innerHTML='This pattern starts '+esc(DOWL[sd.getDay()]+', '+MON[sd.getMonth()]+' '+sd.getDate())
+      +'. Class days before that are unchanged and are on the <a href="'+SITE+'bio004-course-calendar.html" target="_top">course calendar</a>.';
+    var list=A.sessions(sec), today=iso(new Date()), nextD=null;
+    for(var i=0;i<list.length;i++){ if(list[i].kind!=='holiday' && list[i].d>=today){ nextD=list[i].d; break; } }
+    var weeks={}, order=[];
+    list.forEach(function(s){ var w=mondayOf(s.d); if(!weeks[w]){ weeks[w]=[]; order.push(w); } weeks[w].push(s); });
+    document.getElementById('chart').innerHTML=chart(list,nextD);
+    document.getElementById('weeks').innerHTML=order.map(function(w){
+      var d=parse(w);
+      return '<section class="week" aria-labelledby="w'+w+'"><h2 id="w'+w+'">Week of '+MON[d.getMonth()]+' '+d.getDate()+'</h2><div class="days">'
+        + weeks[w].map(function(s){ return dayCard(s,nextD); }).join('')+'</div></section>';
+    }).join('');
+  }
+
+  function chart(list,nextD){
+    var h='<thead><tr class="grp"><th></th><th colspan="2" class="g-due">Due before class</th><th colspan="3">In class</th></tr>'
+      + '<tr><th scope="col">Class day</th><th scope="col">Lecture prep</th><th scope="col">Lab prep</th><th scope="col">Start of class</th><th scope="col">Then</th><th scope="col">End of class</th></tr></thead><tbody>';
+    var lastW=null;
+    list.forEach(function(s){
+      var d=parse(s.d), w=mondayOf(s.d), wk = w!==lastW && lastW!==null; lastW=w;
+      var dt=DOWL[d.getDay()].slice(0,3)+' '+MON[d.getMonth()]+' '+d.getDate();
+      var cls=(wk?'wk ':'')+(s.d===nextD?'next ':'');
+      if(s.kind==='holiday'){ h+='<tr class="'+cls+'off"><td class="cday">'+esc(dt)+'</td><td colspan="5">'+esc(s.lec)+'</td></tr>'; return; }
+      if(s.kind==='exam'){ h+='<tr class="'+cls+'exam"><td class="cday">'+esc(dt)+'</td><td colspan="5">Exam '+s.exam+': lecture exam and lab practical, both today. No pre-read.</td></tr>'; return; }
+      var tag, lecPrep, labPrep, start, mid, end, L=s.lab, lb=lab(s.labTopic);
+      var labDo = L.mode==='model' ? 'structure list and lab sprint, so the tagged models are not your first look'
+                : L.mode==='cadaver' ? 'redo the lab sprint without looking at the tags; you tag these on the cadaver'
+                : L.mode==='both' ? 'structure list and lab sprint, then quiz yourself without the tags; you go from the models to the cadaver in one lab'
+                : 'mark on your structure list everything you still cannot find';
+      var modeTag = '<span class="mode m-'+L.mode+'">'+(L.mode==='model'?'Models, some tagged':L.mode==='cadaver'?'Cadaver, you tag':L.mode==='both'?'Models, then cadaver':'Review, you tag')+'</span>';
+      if(s.kind==='d1'){
+        tag='Lecture TBL '+s.tbl.n;
+        lecPrep='<b>For the TBL</b>'+esc(lec(s.tbl.topics))+': notes, all three panels of the note sheet, videos';
+        labPrep='<b>For today\'s lab</b>'+esc(lb)+': '+labDo;
+        start='<td class="lec"><b>Lecture TBL '+s.tbl.n+'</b>'+esc(lec(s.tbl.topics))+'</td>';
+        mid='<td>Rest of lecture: TBL application activity<br>Lab: '+esc(lb)+modeTag+'</td>';
+        end='<td class="lab"><b>Lab brain dump</b>'+esc(lab(s.bd.topics))+'</td>';
+      } else {
+        tag = s.tbl ? 'Lab TBL '+s.tbl.n : 'Review lab';
+        lecPrep='<b>For today\'s lecture</b>'+esc(lec(s.lecTopic))+': read the notes, start the note sheet'
+          + (s.bd.topics.join()!==s.lecTopic.join() ? '<b style="margin-top:6px">For the brain dump</b>'+esc(lec(s.bd.topics))+': redraw your visuals from memory' : '');
+        labPrep='<b>'+(s.tbl?'For the Lab TBL':'For the review lab')+'</b>'+esc(lb)+': '+labDo;
+        start='<td>Lecture: '+esc(s.lec)+'</td>';
+        mid = s.tbl
+          ? '<td class="lab"><b>Lab TBL '+s.tbl.n+', first 1.5 hours of lab</b>'+esc(lb)+', with application<br>Rest of lab: '+esc(lb)+modeTag+'</td>'
+          : '<td class="lab"><b>Lab</b>'+esc(lb)+modeTag+'</td>';
+        end='<td class="lec"><b>Lecture brain dump</b>'+esc(lec(s.bd.topics))+'</td>';
+      }
+      h+='<tr class="'+cls+'"><td class="cday">'+esc(dt)+'<small>'+esc(tag)+(s.d===nextD?' &middot; next':'')+'</small></td>'
+        + '<td class="lec">'+lecPrep+'</td><td class="lab">'+labPrep+'</td>'+start+mid+end+'</tr>';
+    });
+    return h+'</tbody>';
+  }
+
+  document.querySelectorAll('.views button').forEach(function(b){
+    b.addEventListener('click', function(){
+      var v=b.getAttribute('data-view');
+      document.querySelectorAll('.views button').forEach(function(x){ x.setAttribute('aria-pressed', String(x===b)); });
+      document.getElementById('chartView').hidden = v!=='chart';
+      document.getElementById('weeks').hidden = v!=='cards';
+    });
+  });
+
+  document.querySelectorAll('.secs button').forEach(function(b){
+    b.addEventListener('click', function(){
+      sec=b.getAttribute('data-sec');
+      try{ localStorage.setItem(KEY,sec); }catch(e){}
+      render();
+    });
+  });
+  render();
+})();
+</script>
+
+<!-- iframe height sender, measures body only so the frame can shrink -->
+<script>
+(function(){
+  'use strict';
+  var frameId=null;
+  try{ var m=location.search.match(/[?&]frameId=([^&#]+)/); if(m) frameId=decodeURIComponent(m[1]); }catch(e){}
+  var last=0;
+  function postHeight(){
+    var b=document.body; if(!b) return;
+    var h=Math.max(b.scrollHeight, b.offsetHeight, Math.ceil(b.getBoundingClientRect().height));
+    if(Math.abs(h-last)<2) return;
+    last=h;
+    try{ parent.postMessage({frameId:frameId,id:frameId,type:'resize',height:h},'*'); }catch(e){}
+  }
+  window.addEventListener('load',postHeight);
+  window.addEventListener('resize',postHeight);
+  if(window.ResizeObserver){ try{ new ResizeObserver(postHeight).observe(document.body); }catch(e){} }
+  document.addEventListener('click',function(){ window.setTimeout(postHeight,60); });
+  postHeight();
+})();
+</script>
+</body>
+</html>
