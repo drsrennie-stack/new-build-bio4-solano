@@ -267,6 +267,13 @@
 
   /* ---------- lecture walkthrough ---------- */
   function lectureCard(s){
+    if(s.prepTopic){
+      var R=A.LECTURE[s.prepTopic[0]];
+      return '<section class="card" aria-labelledby="lecH"><p class="k">Part 1 &middot; Lecture</p>'
+        + '<h2 id="lecH">Before class: review your muscles</h2>'
+        + '<p>Go through the origin, insertion and action of every muscle in these sections. Lecture TBL '+s.tbl.n+' is on '+esc(lecNames(s.tbl.topics))+', which you prepared for last class.</p>'
+        + rows(R.notes) + rows([A.MUSCLE_CHART].concat(R.guide)) + '</section>';
+    }
     var isTbl = s.kind==='d1';
     var keys = isTbl ? s.tbl.topics : s.lecTopic;
     var notes=gather(keys,A.LECTURE,'notes'), sheets=gather(keys,A.LECTURE,'sheets'),
@@ -311,7 +318,9 @@
   function labCard(s){
     var isTbl = s.kind==='d2' && !!s.tbl;
     var keys = s.labTopic, mode = s.lab.mode;
-    var how = mode==='model'
+    var how = mode==='lab'
+      ? 'Work the structure list and lab sprint before class, so you walk in already knowing the names.'
+      : mode==='model'
       ? 'Today is the first time you see this block in lab. It is on the models. Many of the structures will be tagged for you, but not all of them. You are responsible for finding the untagged ones on your structure list, identifying them, and making your own study materials for them, so bring the list and something to build those materials in.'
       : mode==='cadaver'
       ? 'You saw this block on the models last class. Today it is on the cadaver, and you tag the structures yourself, so come able to find them without the tags.'

@@ -77,7 +77,7 @@
 window.BIO004_ALT = (function () {
   'use strict';
 
-  var START = { mw: '2026-10-12', tr: '2026-10-15' };
+  var START = { mw: '2026-10-07', tr: '2026-10-08' };
 
   /* ---------- material, by topic ----------
      Every file name was checked against the repo. They are the
@@ -157,6 +157,40 @@ window.BIO004_ALT = (function () {
       slides: [['slides-cranial-nerves.html','Cranial Nerves slides']],
       guide:  [['cranial-nerves-study-guide.html','Cranial nerves study guide']]
     }
+  };
+
+  /* Lecture topics added for the alternate schedule. */
+  LECTURE.lymph = {
+    name: 'The Lymphatic System',
+    notes:  [['m4-lymphatic-notes.html','The Lymphatic System']],
+    sheets: [['BIO004-M4-Lymphatic-Note-Sheets.html','Lymphatic System note sheets']],
+    videos: [['lymphatic-concept-videos.html','The Lymphatic System']],
+    slides: [['slides-lymphatic-innate-immunity.html','Lymphatic System and Innate Immunity slides']],
+    guide:  [['lymphatic-system-study-guide.html','Lymphatic system study guide']]
+  };
+  LECTURE.cnsBrain = {
+    name: 'The Brain, Brainstem, Meninges and CSF',
+    notes:  [['m5-brain-notes.html','The Brain'],['m5-brainstem-notes.html','The Brainstem'],['m5-meninges-notes.html','Meninges and CSF']],
+    sheets: [['m5-brain-worksheet.html','Brain and Brainstem pre-work sheet'],['m5-cord-worksheet.html','Meninges, CSF and Spinal Cord pre-work sheet (meninges and CSF parts)']],
+    videos: [['brain-concept-videos.html','The Brain'],['brainstem-concept-videos.html','The Brainstem'],['brain-meninges-concept-videos.html','Brain and Meninges']],
+    slides: [['slides-cns.html','CNS slides']],
+    guide:  [['brain-meninges-study-guide.html','Brain, CSF and meninges study guide']]
+  };
+  LECTURE.cnCord = {
+    name: 'Cranial Nerves and the Spinal Cord',
+    notes:  [['m5-cranial-notes.html','Cranial Nerves'],['m5-cord-notes.html','The Spinal Cord'],['m5-plexus-notes.html','Nerve Plexuses']],
+    sheets: [['m5-cord-worksheet.html','Meninges, CSF and Spinal Cord pre-work sheet (spinal cord parts)'],['m5-pns-worksheet.html','Peripheral and Autonomic pre-work sheet (cranial and spinal nerve parts)']],
+    videos: [['cranial-nerves-concept-videos.html','Cranial Nerves'],['spinal-cord-concept-videos.html','The Spinal Cord'],['spinal-pns-concept-videos.html','Spinal Nerves and PNS']],
+    slides: [['slides-cranial-nerves.html','Cranial Nerves slides'],['slides-spinal-pns.html','Spinal Cord and PNS slides']],
+    guide:  [['cranial-nerves-study-guide.html','Cranial nerves study guide'],['spinal-cord-study-guide.html','Spinal cord study guide']]
+  };
+  LECTURE.ans = {
+    name: 'The Autonomic Nervous System',
+    notes:  [['m5-ans-notes.html','The Autonomic Nervous System']],
+    sheets: [['m5-pns-worksheet.html','Peripheral and Autonomic pre-work sheet (autonomic parts)']],
+    videos: [['ans-concept-videos.html','The Autonomic Nervous System']],
+    slides: [['slides-ans.html','ANS slides']],
+    guide:  [['ans-study-guide.html','Autonomic nervous system study guide']]
   };
 
   var MUSCLE_CHART = ['https://www.medmasterscollaborative.com/muscle-charts-i-o-a-inn','Muscle charts: origin, insertion, action, innervation'];
@@ -278,7 +312,19 @@ window.BIO004_ALT = (function () {
     if(extra) for(var x in extra) o[x] = extra[x];
     return o;
   }
+  LAB.muscleMicro = { name:'Muscle Microanatomy and the Sarcomere',
+    list:[['module-3-structure-list.html#h-muscle-histo','Module 3 list: Muscle Tissue and Microanatomy']],
+    sprints:[['muscle-structure-lab-sprint.html','Muscle Microanatomy']], notes:[['m3-muscle-notes.html','Muscle Tissue']] };
+  LAB.heartLab = { name:'The Heart',
+    list:[['module-3-structure-list.html#h-heart-lab','Module 3 list: The Heart']],
+    sprints:[['heart-lab-sprint.html','The Heart'],['cardiac-conduction-lab-sprint.html','Cardiac Conduction']],
+    notes:[['m3-heart-notes.html','The Heart'],['m3-conduction-notes.html','Cardiac Conduction']] };
+  LAB.antForearm = { name:'Muscles and NAV of the Anterior Forearm',
+    list:[['module-3-structure-list.html#h-upper-limb-lab','Module 3 list: Muscles of the Upper Extremity'],['module-3-structure-list.html#h-thorax-limb-arteries','Module 3 list: Arteries and Veins of the Upper Limb'],['module-3-structure-list.html#h-upper-limb-nerves','Module 3 list: Nerves of the Upper Limb']],
+    sprints:[['antebrachium-muscles-lab-sprint.html','Antebrachium (Forearm) Muscles']],
+    notes:[['m3-arm-muscles-notes.html#the-forearm','Forearm muscles']], muscle:true };
   LAB.upperBody = merge('Muscles, Nerves and Vessels of the Trunk and Upper Limb', ['faceChestBack','upperArm','postForearm']);
+  LAB.microTrunkArm = merge('Muscle Microanatomy, and Muscles of the Upper Trunk and Arm', ['muscleMicro','faceChestBack','upperArm']);
   LAB.lowerLimb = merge('Muscles, Nerves and Vessels of the Lower Limb', ['antThigh','postThigh','leg']);
   LAB.uroRepro  = merge('Urinary and Reproductive Organs', ['renal','repro']);
   LAB.cns       = merge('Brain, Brainstem, Spinal Cord and Cranial Nerves', ['brain','brainstemCN','cord']);
@@ -286,9 +332,19 @@ window.BIO004_ALT = (function () {
                     sprints:[['muscle-structure-lab-sprint.html','Muscle Microanatomy'],['heart-lab-sprint.html','The Heart'],['blood-vessels-lab-sprint.html','Blood Vessels'],['cardiac-conduction-lab-sprint.html','Cardiac Conduction']].concat(LAB.upperBody.sprints), review:true });
   LAB.review5   = merge('Module 5 lab review', ['uroRepro','cns'], { list:[['module-4-structure-list.html#h-urinary-lab','Module 4 list: urinary and reproductive sections'],['module-5-structure-list.html','Module 5 lab structure list (all of it)']], review:true });
 
+  /* short names for the chart */
+  var SHORT = {
+    lymph:'Lymphatic system', cnsBrain:'Brain, brainstem, meninges and CSF', cnCord:'Cranial nerves and spinal cord', ans:'Autonomic nervous system', heart:'Heart and conduction', muscle:'Muscle microanatomy', blood:'Blood', resp:'Respiratory',
+    endocrine:'Endocrine', gi:'GI', renal:'Renal', repro:'Reproductive', cranial:'Brainstem and cranial nerves',
+    muscleMicro:'Muscle microanatomy', microTrunkArm:'Muscle micro + upper trunk and arm muscles', heartLab:'Heart', antForearm:'Anterior forearm', postForearm:'Posterior forearm', upperBody:'Trunk and upper limb muscles', lowerLimb:'Lower limb muscles', giAll:'GI organs',
+    uroRepro:'Urinary and reproductive', cns:'Brain, spinal cord and cranial nerves',
+    review3:'Module 3 review', review5:'Module 5 review'
+  };
+
   var MODE = {
     model:   'Models. Many structures are tagged for you. For the ones that are not, you find them, identify them and make your own study materials.',
     cadaver: 'Cadaver. You tag the structures.',
+    lab:     '',
     both:    'Models first, with many of the structures tagged for you, then the cadaver, where you tag them yourself.',
     review:  'Review. You tag the structures, then work on what you need.'
   };
@@ -317,38 +373,41 @@ window.BIO004_ALT = (function () {
   var AFTER4 = 'First class after Exam 4. The Lab TBL runs on the pre-read, before you have seen these organs in lab.';
 
   var MW = [
-    D1('2026-10-12', 4, ['heart','muscle'], 'Lecture TBL 4: Heart Anatomy, Cardiac Conduction and Muscle Microanatomy', 'upperBody', 'model'),
-    D2('2026-10-14', 1, 'upperBody', 'cadaver', 'Blood Cell Interactive Lecture', ['blood'], ['heart','muscle']),
-    D1('2026-10-19', 5, ['blood'], 'Lecture TBL 5: Blood', 'review3', 'review',
-       'Last lab before Exam 3. Bring your structure list marked with what you still cannot find.'),
+    D1('2026-10-07', 4, ['muscle'], 'Lecture TBL 4: Muscle Microanatomy and the Sarcomere', 'microTrunkArm', 'lab',
+       'A Wednesday, but it runs like a Monday this one time: lecture TBL, then lab, then the lab brain dump.'),
+    D1('2026-10-12', 5, ['heart'], 'Lecture TBL 5: Heart Anatomy and Cardiac Conduction', 'heartLab', 'lab'),
+    D2('2026-10-14', 1, 'antForearm', 'lab', 'Blood Cell Interactive Lecture', ['blood'], ['heart','muscle']),
+    D1('2026-10-19', 6, ['lymph'], 'Lecture TBL 6: Lymphatic System', 'postForearm', 'lab'),
     EX('2026-10-21', 3),
-    D1('2026-10-26', 6, ['resp'], 'Lecture TBL 6: Respiratory Anatomy and Histology', 'resp', 'model', AFTER3),
-    D2('2026-10-28', 2, 'resp', 'cadaver', 'Endocrine Guided Walk-Through Activity', ['endocrine'], ['resp']),
-    D1('2026-11-02', 7, ['endocrine'], 'Lecture TBL 7: Endocrine System', 'lowerLimb', 'model'),
+    D1('2026-10-26', 7, ['resp'], 'Lecture TBL 7: Respiratory Anatomy and Histology', 'resp', 'model', AFTER3),
+    D2('2026-10-28', 2, 'resp', 'cadaver', 'Endocrine Mind Map Activity', ['endocrine'], ['resp']),
+    D1('2026-11-02', 8, ['endocrine'], 'Lecture TBL 8: Endocrine System', 'lowerLimb', 'model'),
     D2('2026-11-04', 3, 'lowerLimb', 'cadaver', 'Guided DITKI GI Map Activity I and II', ['gi'], ['endocrine']),
-    D1('2026-11-09', 8, ['gi'], 'Lecture TBL 8: GI System', 'giAll', 'both',
+    D1('2026-11-09', 9, ['gi'], 'Lecture TBL 9: GI System', 'giAll', 'both',
        'GI gets one lab, since Wednesday is Veterans Day: models first, then the cadaver, in the same lab. This is the last lab before Exam 4.'),
     OFF('2026-11-11', "Veteran's Day"),
     EX('2026-11-16', 4),
     D2('2026-11-18', 4, 'uroRepro', 'model', 'Exam 4 Rebuttals; Guided Renal Map', ['renal'], ['renal'], AFTER4),
-    D1('2026-11-23', 9, ['renal'], 'Lecture TBL 9: Renal Anatomy', 'uroRepro', 'cadaver',
-       'Replaces the renal Kahoot. No Wednesday class this week (Travel Day).'),
+    D1('2026-11-23', 10, ['repro'], 'Lecture TBL 10: Reproductive Anatomy', 'uroRepro', 'cadaver',
+       'No Wednesday class this week (Travel Day).'),
     OFF('2026-11-25', 'Travel Day'),
-    D1('2026-11-30', 10, ['repro'], 'Lecture TBL 10: Reproductive Anatomy', 'cns', 'model'),
-    D2('2026-12-02', 5, 'cns', 'cadaver', 'Clinical: Cranial Nerve Exam Stations', ['cranial'], ['repro']),
-    D1('2026-12-07', 11, ['cranial'], 'Lecture TBL 11: Cranial Nerves', 'review5', 'review',
+    D1('2026-11-30', 11, ['cnsBrain'], 'Lecture TBL 11: Brain, Brainstem, Meninges and CSF', 'cns', 'model'),
+    D2('2026-12-02', 5, 'cns', 'cadaver', 'Cranial Nerves and Spinal Cord, with Cranial Nerve Exam Stations', ['cnCord'], ['cnsBrain']),
+    D1('2026-12-07', 12, ['ans'], 'Lecture TBL 12: Autonomic Nervous System', 'review5', 'review',
        'Last lab before Exam 5. Bring your structure list marked with what you still cannot find.'),
     EX('2026-12-09', 5)
   ];
 
   var TR = [
-    D2('2026-10-15', 1, 'upperBody', 'model', 'Blood Cell Interactive Lecture', ['blood'], ['heart','muscle'],
-       'First week of the new pattern. Tuesday Oct 13 is Professional Development.'),
-    D1('2026-10-20', 5, ['blood'], 'Lecture TBL 5: Blood', 'upperBody', 'cadaver',
-       'Last lab before Exam 3. After the cadaver work, spend the rest of lab tagging and reviewing whatever you need from Module 3.'),
+    D1('2026-10-08', 4, ['heart','muscle'], 'Lecture TBL 4: Heart, Cardiac Conduction and Muscle Microanatomy', 'upperBody', 'model',
+       'A Thursday, but it runs like a Tuesday this one time: lecture TBL, then lab, then the lab brain dump.'),
+    D2('2026-10-15', 1, 'upperBody', 'cadaver', 'Blood Cell Interactive Lecture', ['blood'], ['heart','muscle'],
+       'Tuesday Oct 13 is Professional Development.'),
+    D1('2026-10-20', 5, ['lymph'], 'Lecture TBL 5: Lymphatic System', 'review3', 'review',
+       'Last lab before Exam 3. Bring your structure list marked with what you still cannot find.'),
     EX('2026-10-22', 3),
     D1('2026-10-27', 6, ['resp'], 'Lecture TBL 6: Respiratory Anatomy and Histology', 'resp', 'model', AFTER3),
-    D2('2026-10-29', 2, 'resp', 'cadaver', 'Endocrine Guided Walk-Through Activity', ['endocrine'], ['resp']),
+    D2('2026-10-29', 2, 'resp', 'cadaver', 'Endocrine Mind Map Activity', ['endocrine'], ['resp']),
     D1('2026-11-03', 7, ['endocrine'], 'Lecture TBL 7: Endocrine System', 'lowerLimb', 'model'),
     D2('2026-11-05', 3, 'lowerLimb', 'cadaver', 'Guided DITKI GI Map Activity I', ['gi'], ['endocrine']),
     D1('2026-11-10', 8, ['gi'], 'Lecture TBL 8: GI System', 'giAll', 'model'),
@@ -356,12 +415,12 @@ window.BIO004_ALT = (function () {
        'Last lab before Exam 4.'),
     EX('2026-11-17', 4),
     D2('2026-11-19', 5, 'uroRepro', 'model', 'Guided Renal Map', ['renal'], ['renal'], AFTER4),
-    D1('2026-11-24', 9, ['renal'], 'Lecture TBL 9: Renal Anatomy', 'uroRepro', 'cadaver',
-       'Replaces the renal Kahoot. No Thursday class this week (Thanksgiving).'),
+    D1('2026-11-24', 9, ['repro'], 'Lecture TBL 9: Reproductive Anatomy', 'uroRepro', 'cadaver',
+       'No Thursday class this week (Thanksgiving).'),
     OFF('2026-11-26', 'Thanksgiving'),
-    D1('2026-12-01', 10, ['repro'], 'Lecture TBL 10: Reproductive Anatomy', 'cns', 'model'),
-    D2('2026-12-03', 6, 'cns', 'cadaver', 'Clinical: Cranial Nerve Exam Stations', ['cranial'], ['repro']),
-    D1('2026-12-08', 11, ['cranial'], 'Lecture TBL 11: Cranial Nerves', 'review5', 'review',
+    D1('2026-12-01', 10, ['cnsBrain'], 'Lecture TBL 10: Brain, Brainstem, Meninges and CSF', 'cns', 'model'),
+    D2('2026-12-03', 6, 'cns', 'cadaver', 'Cranial Nerves and Spinal Cord, with Cranial Nerve Exam Stations', ['cnCord'], ['cnsBrain']),
+    D1('2026-12-08', 11, ['ans'], 'Lecture TBL 11: Autonomic Nervous System', 'review5', 'review',
        'Last lab before Exam 5. Bring your structure list marked with what you still cannot find.'),
     EX('2026-12-10', 5)
   ];
@@ -397,7 +456,7 @@ window.BIO004_ALT = (function () {
   }
 
   return {
-    START: START, MODE: MODE, labName: labName, lecName: lecName, toDayCard: toDayCard, LECTURE: LECTURE, LAB: LAB, MUSCLE_CHART: MUSCLE_CHART, TIMES: TIMES,
+    START: START, MODE: MODE, short: function(k){ return SHORT[k] || (LECTURE[k]||LAB[k]||{}).name || k; }, labName: labName, lecName: lecName, toDayCard: toDayCard, LECTURE: LECTURE, LAB: LAB, MUSCLE_CHART: MUSCLE_CHART, TIMES: TIMES,
     track: function(sec){ return ALIAS[sec] || null; },
     sessions: function(sec){ var t = SECTIONS[ALIAS[sec]]; return t ? t.sess.slice() : []; },
     days: function(sec){ var t = SECTIONS[ALIAS[sec]]; return t ? { d1:t.d1, d2:t.d2 } : null; },

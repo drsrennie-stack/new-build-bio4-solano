@@ -28,9 +28,8 @@
     --t:transform 200ms ease, box-shadow 200ms ease;
     --font:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   }
-  :root{ --bg:var(--offwhite); --card:#FFFFFF; --ink:var(--navy); --soft:var(--gray); --line:var(--navy-tint); --accent:var(--terra-dark); }
-  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#0B1220; --card:#141C2C; --ink:#EEF1F6; --soft:#B4BDCA; --line:#26324A; --accent:#E8A79A; --gold-text:#E2C27A; color-scheme:dark; } }
-  :root[data-theme="dark"]{ --bg:#0B1220; --card:#141C2C; --ink:#EEF1F6; --soft:#B4BDCA; --line:#26324A; --accent:#E8A79A; --gold-text:#E2C27A; color-scheme:dark; }
+  /* One look in every theme: white cards on off-white, as on the rest of the course site. */
+  :root{ color-scheme:light; --bg:var(--offwhite); --card:#FFFFFF; --ink:var(--navy); --soft:var(--gray); --line:var(--navy-tint); --accent:var(--terra-dark); }
   *{box-sizing:border-box;}
   body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased;}
   .wrap{max-width:1000px;margin:0 auto;padding:24px 16px 56px;}
@@ -81,6 +80,7 @@
   .day.off{background:transparent;box-shadow:none;border:1px dashed var(--gray-light);}
   .day.off:hover{transform:none;box-shadow:none;}
   .before{font-size:.95rem;}
+  .before p{margin:0;}
   .due{background:var(--bg);border-radius:8px;padding:12px;margin:0 0 12px;display:grid;gap:10px;}
   .due-h{font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0;}
   .due-row{display:grid;gap:3px;min-width:0;}
@@ -96,13 +96,11 @@
   footer .by{font-weight:700;color:var(--ink);}
   /* chart view */
   :root{ --lec:#08101F; --lab:#6B1616; }
-  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --lec:#EEF1F6; --lab:#E8A79A; } }
-  :root[data-theme="dark"]{ --lec:#EEF1F6; --lab:#E8A79A; }
   .views{display:flex;gap:8px;margin:18px 0 0;}
   .views button{font:inherit;font-weight:700;font-size:.9rem;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 16px;cursor:pointer;}
   .views button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink);}
   .chart-wrap{margin-top:18px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-rest);overflow-x:auto;}
-  table.chart{border-collapse:collapse;width:100%;min-width:860px;font-size:.88rem;}
+  table.chart{border-collapse:collapse;width:100%;min-width:760px;font-size:.88rem;}
   .chart th,.chart td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);}
   .chart thead th{font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);position:sticky;top:0;background:var(--card);}
   .chart thead tr.grp th{border-bottom:0;padding-bottom:0;}
@@ -118,6 +116,19 @@
   .chart tr.next td.cday{box-shadow:inset 4px 0 0 var(--gold);}
   .mode{display:block;margin-top:6px;font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;}
   .m-model{color:var(--lab);} .m-cadaver{color:var(--accent);} .m-review{color:var(--soft);}
+  .pill{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:3px 10px;vertical-align:middle;white-space:nowrap;}
+  .p-tbl{background:var(--navy);color:#fff;}
+  .p-bd{background:var(--gold);color:var(--navy);}
+  .chart .pill{margin:0;}
+  .chart th.g-lec,.chart th.g-lab{font-size:.85rem;letter-spacing:.12em;color:#fff;text-align:left;}
+  .chart th.g-lec{background:var(--navy);} .chart th.g-lab{background:var(--terra-dark);}
+  .chart th.sub{font-size:.68rem;}
+  .chart .lab-start{border-left:2px solid var(--line);}
+  .chart ul.cl b{display:inline;font-size:inherit;letter-spacing:0;text-transform:none;opacity:1;color:var(--ink);font-weight:700;}
+  ul.cl{list-style:none;margin:0;padding:0;display:grid;gap:6px;}
+  ul.cl li{position:relative;padding-left:14px;}
+  ul.cl li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:50%;background:var(--soft);}
+  .pday h3{display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
   .key{display:flex;flex-wrap:wrap;gap:14px;font-size:.85rem;margin:12px 0 0;}
   .key span{display:inline-flex;align-items:center;gap:6px;}
   .key i{display:inline-block;width:12px;height:12px;border-radius:50%;}
@@ -143,26 +154,24 @@
       <h2 id="patH">What happens on each class day</h2>
       <div class="pattern">
         <div class="pday">
-          <h3 id="d1Name">Monday</h3>
+          <h3><span id="d1Name">Monday</span> <span class="pill p-tbl">TBL &middot; Lecture</span></h3>
           <ol>
-            <li><b>Start of lecture:</b> Lecture TBL on this week's lecture topic</li>
-            <li>Rest of lecture: the TBL application activity</li>
+            <li>Lecture TBL, then the application activity</li>
             <li>Lab</li>
-            <li><b>End of class:</b> Lab brain dump on today's lab</li>
+            <li>End of class: <span class="pill p-bd">Brain dump &middot; Lab</span></li>
           </ol>
         </div>
         <div class="pday">
-          <h3 id="d2Name">Wednesday</h3>
+          <h3><span id="d2Name">Wednesday</span> <span class="pill p-tbl">TBL &middot; Lab</span></h3>
           <ol>
             <li>Lecture</li>
-            <li><b>First 1.5 hours of lab:</b> Lab TBL on the current lab block, with its application activity</li>
-            <li>Lab</li>
-            <li><b>End of class:</b> Lecture brain dump on this week's lecture topic</li>
+            <li>Lab TBL (first 1.5 hours), then lab</li>
+            <li>End of class: <span class="pill p-bd">Brain dump &middot; Lecture</span></li>
           </ol>
         </div>
       </div>
-      <p><b>Labs run in pairs.</b> A new block starts on the models, with many of the structures tagged for you. Not every structure is tagged. You are responsible for finding the untagged ones on your structure list, identifying them, and making your own study materials for them. The next class is the cadaver, and you tag the structures yourself. The last lab before each exam is review: you tag, then work on whatever you need.</p>
-      <p>Every class day has a pre-read. It walks you through the notes, the note sheet and the lab prep in the order that works. Do it before class, including the first class after an exam.</p>
+      <p><b>Labs:</b> models first, with many structures tagged. Find and learn the untagged ones yourself. Next class is the cadaver, where you tag.</p>
+      <p><b>Before every class:</b> do the pre-read.</p>
     </section>
 
     <section class="card before" aria-label="Before this schedule starts">
@@ -174,7 +183,6 @@
       <button type="button" data-view="cards" aria-pressed="false">Week by week</button>
     </div>
     <div id="chartView">
-      <div class="key" aria-hidden="true"><span><i style="background:var(--lec)"></i>Lecture</span><span><i style="background:var(--lab)"></i>Lab</span></div>
       <div class="chart-wrap" tabindex="0" role="region" aria-label="Schedule chart, scrolls sideways on small screens"><table class="chart" id="chart"></table></div>
     </div>
     <div id="weeks" aria-live="polite" hidden></div>
@@ -234,18 +242,18 @@
     if(s.kind==='holiday') return '<article class="day off"><p class="dt">'+esc(dt)+'</p><span class="tag">No class</span><p class="nt">'+esc(s.lec)+'</p></article>';
     if(s.kind==='exam') return '<article class="day exam"><p class="dt">'+esc(dt)+'</p><span class="tag">Exam '+s.exam+'</span><p class="nt">Lecture exam and lab practical, both today.</p></article>';
     var rows, tag, due, L=s.lab, mode=A.MODE[L.mode], lb=lab(s.labTopic);
-    var labWhy = L.mode==='model' ? 'first time on the models' : L.mode==='cadaver' ? 'you tag it on the cadaver today' : L.mode==='both' ? 'models, then you tag it on the cadaver, all today' : 'review lab';
+    var labWhy = L.mode==='lab' ? 'for today\'s lab' : L.mode==='model' ? 'first time on the models' : L.mode==='cadaver' ? 'you tag it on the cadaver today' : L.mode==='both' ? 'models, then you tag it on the cadaver, all today' : 'review lab';
     if(s.kind==='d1'){
       tag='Lecture TBL '+s.tbl.n;
-      rows=[['Start',tag+': '+lec(s.tbl.topics)],['Then','TBL application activity'],['Lab',lb+'. '+mode],['End','Lab brain dump: '+lab(s.bd.topics)]];
-      due = lecDue(s.tbl.topics, 'for the TBL at the start of class')
+      rows=[['Start',tag+': '+lec(s.tbl.topics)],['Then','TBL application activity'],['Lab',lb+(mode?'. '+mode:'')],['End','Brain dump (lab): '+lab(s.bd.topics)]];
+      due = (s.prepTopic ? lecDue(s.prepTopic, 'review before class') : lecDue(s.tbl.topics, 'for the TBL at the start of class'))
           + labDue(s.labTopic, labWhy+', and the brain dump at the end');
     } else {
       tag = s.tbl ? 'Lab TBL '+s.tbl.n : 'Review lab';
       rows=[['Lecture',s.lec]];
       if(s.tbl) rows.push(['Lab, first 1.5 hours',tag+': '+lab(s.tbl.topics)+', with application']);
-      rows.push([s.tbl?'Rest of lab':'Lab', lb+'. '+mode]);
-      rows.push(['End','Lecture brain dump: '+lec(s.bd.topics)]);
+      rows.push([s.tbl?'Rest of lab':'Lab', lb+(mode?'. '+mode:'')]);
+      rows.push(['End','Brain dump (lecture): '+lec(s.bd.topics)]);
       due = labDue(s.labTopic, s.tbl ? 'for the Lab TBL, first 1.5 hours of lab ('+labWhy+')' : labWhy)
           + lecDue(s.lecTopic, 'started, for today\'s lecture')
           + (s.bd.topics.join()!==s.lecTopic.join() ? '<div class="due-row"><p class="lbl">Brain dump: '+esc(lec(s.bd.topics))+' <span>at the end of class</span></p><ul><li>Redraw your note sheet visuals from memory the night before</li></ul></div>' : '');
@@ -266,8 +274,8 @@
     document.getElementById('d1Name').textContent=dn.d1;
     document.getElementById('d2Name').textContent=dn.d2;
     var start=A.START[A.track(sec)], sd=parse(start);
-    document.getElementById('beforeTxt').innerHTML='This pattern starts '+esc(DOWL[sd.getDay()]+', '+MON[sd.getMonth()]+' '+sd.getDate())
-      +'. Class days before that are unchanged and are on the <a href="'+SITE+'bio004-course-calendar.html" target="_top">course calendar</a>.';
+    document.getElementById('beforeTxt').innerHTML='Starts '+esc(DOWL[sd.getDay()]+', '+MON[sd.getMonth()]+' '+sd.getDate())
+      +'. Earlier days: <a href="'+SITE+'bio004-course-calendar.html" target="_top">course calendar</a>.';
     var list=A.sessions(sec), today=iso(new Date()), nextD=null;
     for(var i=0;i<list.length;i++){ if(list[i].kind!=='holiday' && list[i].d>=today){ nextD=list[i].d; break; } }
     var weeks={}, order=[];
@@ -281,41 +289,36 @@
   }
 
   function chart(list,nextD){
-    var h='<thead><tr class="grp"><th></th><th colspan="2" class="g-due">Due before class</th><th colspan="3">In class</th></tr>'
-      + '<tr><th scope="col">Class day</th><th scope="col">Lecture prep</th><th scope="col">Lab prep</th><th scope="col">Start of class</th><th scope="col">Then</th><th scope="col">End of class</th></tr></thead><tbody>';
+    function sl(keys){ return (keys||[]).map(A.short).join(' + '); }
+    function ul(items){ return '<ul class="cl">'+items.filter(Boolean).map(function(i){ return '<li>'+i+'</li>'; }).join('')+'</ul>'; }
+    var h='<thead><tr class="grp"><th></th><th colspan="2" class="g-lec">Lecture</th><th colspan="2" class="g-lab">Lab</th></tr>'
+      + '<tr><th scope="col">Class day</th><th scope="col" class="sub">Before class</th><th scope="col" class="sub">In class</th><th scope="col" class="sub lab-start">Before class</th><th scope="col" class="sub">In class</th></tr></thead><tbody>';
     var lastW=null;
     list.forEach(function(s){
       var d=parse(s.d), w=mondayOf(s.d), wk = w!==lastW && lastW!==null; lastW=w;
       var dt=DOWL[d.getDay()].slice(0,3)+' '+MON[d.getMonth()]+' '+d.getDate();
       var cls=(wk?'wk ':'')+(s.d===nextD?'next ':'');
-      if(s.kind==='holiday'){ h+='<tr class="'+cls+'off"><td class="cday">'+esc(dt)+'</td><td colspan="5">'+esc(s.lec)+'</td></tr>'; return; }
-      if(s.kind==='exam'){ h+='<tr class="'+cls+'exam"><td class="cday">'+esc(dt)+'</td><td colspan="5">Exam '+s.exam+': lecture exam and lab practical, both today. No pre-read.</td></tr>'; return; }
-      var tag, lecPrep, labPrep, start, mid, end, L=s.lab, lb=lab(s.labTopic);
-      var labDo = L.mode==='model' ? 'structure list and lab sprint, so the tagged models are not your first look'
-                : L.mode==='cadaver' ? 'redo the lab sprint without looking at the tags; you tag these on the cadaver'
-                : L.mode==='both' ? 'structure list and lab sprint, then quiz yourself without the tags; you go from the models to the cadaver in one lab'
-                : 'mark on your structure list everything you still cannot find';
-      var modeTag = '<span class="mode m-'+L.mode+'">'+(L.mode==='model'?'Models, some tagged':L.mode==='cadaver'?'Cadaver, you tag':L.mode==='both'?'Models, then cadaver':'Review, you tag')+'</span>';
+      if(s.kind==='holiday'){ h+='<tr class="'+cls+'off"><td class="cday">'+esc(dt)+'</td><td colspan="4">'+esc(s.lec)+'</td></tr>'; return; }
+      if(s.kind==='exam'){ h+='<tr class="'+cls+'exam"><td class="cday">'+esc(dt)+'</td><td colspan="4">Exam '+s.exam+': lecture and lab practical</td></tr>'; return; }
+      var L=s.lab, lb=sl(s.labTopic);
+      var labDo = L.mode==='cadaver' ? 'Lab sprint, no tags' : L.mode==='review' ? 'Mark what you can\'t find' : 'Structure list + lab sprint';
+      var modeTxt = L.mode==='lab' ? '' : L.mode==='model' ? 'Models, some tagged' : L.mode==='cadaver' ? 'Cadaver, you tag' : L.mode==='both' ? 'Models, then cadaver' : 'Review, you tag';
+      var lecPre, lecIn, labPre, labIn;
       if(s.kind==='d1'){
-        tag='Lecture TBL '+s.tbl.n;
-        lecPrep='<b>For the TBL</b>'+esc(lec(s.tbl.topics))+': notes, all three panels of the note sheet, videos';
-        labPrep='<b>For today\'s lab</b>'+esc(lb)+': '+labDo;
-        start='<td class="lec"><b>Lecture TBL '+s.tbl.n+'</b>'+esc(lec(s.tbl.topics))+'</td>';
-        mid='<td>Rest of lecture: TBL application activity<br>Lab: '+esc(lb)+modeTag+'</td>';
-        end='<td class="lab"><b>Lab brain dump</b>'+esc(lab(s.bd.topics))+'</td>';
+        lecPre = s.prepTopic ? ul(['<b>'+esc(sl(s.prepTopic))+'</b>','Origins, insertions, actions']) : ul(['<b>'+esc(sl(s.tbl.topics))+'</b>','Notes, note sheet, videos']);
+        lecIn  = ul(['<span class="pill p-tbl">TBL '+s.tbl.n+' &middot; Lecture</span>','Application activity']);
+        labPre = ul(['<b>'+esc(lb)+'</b>',labDo]);
+        labIn  = ul([modeTxt,'<span class="pill p-bd">Brain dump &middot; Lab</span>']);
       } else {
-        tag = s.tbl ? 'Lab TBL '+s.tbl.n : 'Review lab';
-        lecPrep='<b>For today\'s lecture</b>'+esc(lec(s.lecTopic))+': read the notes, start the note sheet'
-          + (s.bd.topics.join()!==s.lecTopic.join() ? '<b style="margin-top:6px">For the brain dump</b>'+esc(lec(s.bd.topics))+': redraw your visuals from memory' : '');
-        labPrep='<b>'+(s.tbl?'For the Lab TBL':'For the review lab')+'</b>'+esc(lb)+': '+labDo;
-        start='<td>Lecture: '+esc(s.lec)+'</td>';
-        mid = s.tbl
-          ? '<td class="lab"><b>Lab TBL '+s.tbl.n+', first 1.5 hours of lab</b>'+esc(lb)+', with application<br>Rest of lab: '+esc(lb)+modeTag+'</td>'
-          : '<td class="lab"><b>Lab</b>'+esc(lb)+modeTag+'</td>';
-        end='<td class="lec"><b>Lecture brain dump</b>'+esc(lec(s.bd.topics))+'</td>';
+        lecPre = ul(['<b>'+esc(sl(s.lecTopic))+'</b>','Read notes, start sheet',
+                     s.bd.topics.join()!==s.lecTopic.join() ? 'Brain dump prep: redraw '+esc(sl(s.bd.topics)) : '']);
+        lecIn  = ul([esc(s.lec),'<span class="pill p-bd">Brain dump &middot; Lecture</span> '+esc(sl(s.bd.topics))]);
+        labPre = ul(['<b>'+esc(lb)+'</b>',labDo]);
+        labIn  = ul([s.tbl ? '<span class="pill p-tbl">TBL '+s.tbl.n+' &middot; Lab</span> first 1.5 hours' : '', modeTxt]);
       }
+      var tag = s.kind==='d1' ? 'TBL '+s.tbl.n+' · Lecture' : (s.tbl ? 'TBL '+s.tbl.n+' · Lab' : 'Review lab');
       h+='<tr class="'+cls+'"><td class="cday">'+esc(dt)+'<small>'+esc(tag)+(s.d===nextD?' &middot; next':'')+'</small></td>'
-        + '<td class="lec">'+lecPrep+'</td><td class="lab">'+labPrep+'</td>'+start+mid+end+'</tr>';
+        + '<td>'+lecPre+'</td><td>'+lecIn+'</td><td class="lab-start">'+labPre+'</td><td>'+labIn+'</td></tr>';
     });
     return h+'</tbody>';
   }
