@@ -108,6 +108,14 @@ window.BIO004_ALT = (function () {
       slides: [['slides-blood.html','Blood slides']],
       guide:  []
     },
+    vessels: {
+      name: 'Blood Vessel Anatomy',
+      notes:  [['m3-vessels-notes.html','Blood Vessels'],['m3-limb-vessels-notes.html','Upper Limb Vessels and Nerves'],['m3-vessel-disorders-notes.html','Vessel Disorders and Fetal Circulation']],
+      sheets: [['m3-vessels-blood-worksheet.html','Blood Vessels and Blood pre-work sheet'],['m3-limb-vessels-worksheet.html','Upper Limb Vessels and Nerves pre-work sheet']],
+      videos: [['blood-vessels-concept-videos.html','Blood Vessels']],
+      slides: [['slides-blood-vessels.html','Blood Vessels slides']],
+      guide:  [['blood-vessels-study-guide.html','Blood vessels study guide']]
+    },
     resp: {
       name: 'Respiratory Anatomy and Histology',
       notes:  [['m4-respiratory-notes.html','The Respiratory System']],
@@ -328,17 +336,23 @@ window.BIO004_ALT = (function () {
   LAB.lowerLimb = merge('Muscles, Nerves and Vessels of the Lower Limb', ['antThigh','postThigh','leg']);
   LAB.uroRepro  = merge('Urinary and Reproductive Organs', ['renal','repro']);
   LAB.cns       = merge('Brain, Brainstem, Spinal Cord and Cranial Nerves', ['brain','brainstemCN','cord']);
-  LAB.review3   = merge('Module 3 lab review', ['upperBody'], { list:[['module-3-structure-list.html','Module 3 lab structure list (all of it)']],
+  LAB.bloodCells = { name:'Blood Cells (the smear)',
+    list:[['module-3-structure-list.html#h-blood-lab','Module 3 list: Blood']],
+    notes:[['m3-blood-notes.html','Blood']] };
+  LAB.heartBlood = merge('The Heart and Blood Cells', ['heartLab','bloodCells']);
+  LAB.ulTrunkHeart    = merge('Muscles, Nerves and Vessels of the Trunk and Upper Limb, and the Heart', ['faceChestBack','upperArm','heartLab']);
+  LAB.ulTrunkHeartAnt = merge('Trunk, Upper Limb, Heart and Anterior Forearm', ['faceChestBack','upperArm','heartLab','antForearm']);
+  LAB.review3   = merge('Module 3 lab review (everything)', ['muscleMicro','faceChestBack','upperArm','heartLab','antForearm','postForearm'], { list:[['module-3-structure-list.html','Module 3 lab structure list (all of it)']],
                     sprints:[['muscle-structure-lab-sprint.html','Muscle Microanatomy'],['heart-lab-sprint.html','The Heart'],['blood-vessels-lab-sprint.html','Blood Vessels'],['cardiac-conduction-lab-sprint.html','Cardiac Conduction']].concat(LAB.upperBody.sprints), review:true });
   LAB.review5   = merge('Module 5 lab review', ['uroRepro','cns'], { list:[['module-4-structure-list.html#h-urinary-lab','Module 4 list: urinary and reproductive sections'],['module-5-structure-list.html','Module 5 lab structure list (all of it)']], review:true });
 
   /* short names for the chart */
   var SHORT = {
-    lymph:'Lymphatic system', cnsBrain:'Brain, brainstem, meninges and CSF', cnCord:'Cranial nerves and spinal cord', ans:'Autonomic nervous system', heart:'Heart and conduction', muscle:'Muscle microanatomy', blood:'Blood', resp:'Respiratory',
+    lymph:'Lymphatic system', cnsBrain:'Brain, brainstem, meninges and CSF', cnCord:'Cranial nerves and spinal cord', ans:'Autonomic nervous system', heart:'Heart and conduction', muscle:'Muscle microanatomy', blood:'Blood', vessels:'Blood vessels', resp:'Respiratory',
     endocrine:'Endocrine', gi:'GI', renal:'Renal', repro:'Reproductive', cranial:'Brainstem and cranial nerves',
-    muscleMicro:'Muscle microanatomy', microTrunkArm:'Muscle micro + upper trunk and arm muscles', heartLab:'Heart', antForearm:'Anterior forearm', postForearm:'Posterior forearm', upperBody:'Trunk and upper limb muscles', lowerLimb:'Lower limb muscles', giAll:'GI organs',
+    muscleMicro:'Muscle microanatomy', microTrunkArm:'Muscle micro + upper trunk and arm muscles', heartLab:'Heart', bloodCells:'Blood cells', heartBlood:'Heart and blood cells', antForearm:'Anterior forearm', postForearm:'Posterior forearm', upperBody:'Trunk and upper limb muscles', ulTrunkHeart:'Upper limb, trunk and heart', ulTrunkHeartAnt:'Upper limb, trunk, heart and anterior forearm', lowerLimb:'Lower limb muscles', giAll:'GI organs',
     uroRepro:'Urinary and reproductive', cns:'Brain, spinal cord and cranial nerves',
-    review3:'Module 3 review', review5:'Module 5 review'
+    review3:'Module 3 review, everything', review5:'Module 5 review'
   };
 
   var MODE = {
@@ -346,8 +360,23 @@ window.BIO004_ALT = (function () {
     cadaver: 'Cadaver. You tag the structures.',
     lab:     '',
     both:    'Models first, with many of the structures tagged for you, then the cadaver, where you tag them yourself.',
-    review:  'Review. You tag the structures, then work on what you need.'
+    review:  'Review. You tag the structures, then work on what you need.',
+    split:   ''
   };
+  /* the application activity, when it has a name */
+  function APP(day, txt){ day.app = txt; return day; }
+  /* the Lab TBL covers a set of blocks wider than today's lab */
+  function LABTBL(day, keys){ if(day.tbl) day.tbl.topics = keys.slice(); return day; }
+  /* one lab, two stations: some blocks on the cadaver, others on the models */
+  function SPLIT(day, cad, mod){
+    var nm = function(ks){ return ks.map(function(k){ return SHORT[k] || LAB[k].name; }).join(' + '); };
+    day.labTopic = cad.concat(mod);
+    day.lab = { key:cad[0], mode:'split', cadaver:cad, model:mod,
+      text:'Cadaver, you tag: ' + nm(cad) + '. Models, many tagged: ' + nm(mod) + '.' };
+    if(day.kind==='d1') day.bd.topics = day.labTopic.slice();
+    if(day.tbl && day.tbl.kind==='lab') day.tbl.topics = cad.slice();
+    return day;
+  }
 
   /* ---------- the days ----------
      kind     'd1' lecture TBL + lab brain dump
@@ -375,14 +404,14 @@ window.BIO004_ALT = (function () {
   var MW = [
     D1('2026-10-07', 4, ['muscle'], 'Lecture TBL 4: Muscle Microanatomy and the Sarcomere', 'microTrunkArm', 'lab',
        'A Wednesday, but it runs like a Monday this one time: lecture TBL, then lab, then the lab brain dump.'),
-    D1('2026-10-12', 5, ['heart'], 'Lecture TBL 5: Heart Anatomy and Cardiac Conduction', 'heartLab', 'lab'),
-    D2('2026-10-14', 1, 'antForearm', 'lab', 'Blood Cell Interactive Lecture', ['blood'], ['heart','muscle']),
-    D1('2026-10-19', 6, ['lymph'], 'Lecture TBL 6: Lymphatic System', 'postForearm', 'lab'),
+    D1('2026-10-12', 5, ['heart'], 'Lecture TBL 5: Heart Anatomy and Cardiac Conduction', 'heartBlood', 'lab'),
+    D2('2026-10-14', 1, 'antForearm', 'lab', 'Blood Vessel Anatomy Lecture', ['vessels'], ['heart','muscle']),
+    APP(D1('2026-10-19', 6, ['blood'], 'Lecture TBL 6: Blood', 'postForearm', 'lab'), 'Application: Blood Cell Interactive'),
     EX('2026-10-21', 3),
     D1('2026-10-26', 7, ['resp'], 'Lecture TBL 7: Respiratory Anatomy and Histology', 'resp', 'model', AFTER3),
-    D2('2026-10-28', 2, 'resp', 'cadaver', 'Endocrine Mind Map Activity', ['endocrine'], ['resp']),
-    D1('2026-11-02', 8, ['endocrine'], 'Lecture TBL 8: Endocrine System', 'lowerLimb', 'model'),
-    D2('2026-11-04', 3, 'lowerLimb', 'cadaver', 'Guided DITKI GI Map Activity I and II', ['gi'], ['endocrine']),
+    D2('2026-10-28', 2, 'resp', 'cadaver', 'Lymphatic System Lecture', ['lymph'], ['resp']),
+    APP(D1('2026-11-02', 8, ['endocrine'], 'Lecture TBL 8: Endocrine System', 'lowerLimb', 'model'), 'Application: Endocrine Mind Map'),
+    D2('2026-11-04', 3, 'lowerLimb', 'cadaver', 'Guided DITKI GI Map Activity I and II', ['gi'], ['lymph','endocrine']),
     D1('2026-11-09', 9, ['gi'], 'Lecture TBL 9: GI System', 'giAll', 'both',
        'GI gets one lab, since Wednesday is Veterans Day: models first, then the cadaver, in the same lab. This is the last lab before Exam 4.'),
     OFF('2026-11-11', "Veteran's Day"),
@@ -399,17 +428,17 @@ window.BIO004_ALT = (function () {
   ];
 
   var TR = [
-    D1('2026-10-08', 4, ['heart','muscle'], 'Lecture TBL 4: Heart, Cardiac Conduction and Muscle Microanatomy', 'upperBody', 'model',
-       'A Thursday, but it runs like a Tuesday this one time: lecture TBL, then lab, then the lab brain dump.'),
-    D2('2026-10-15', 1, 'upperBody', 'cadaver', 'Blood Cell Interactive Lecture', ['blood'], ['heart','muscle'],
-       'Tuesday Oct 13 is Professional Development.'),
-    D1('2026-10-20', 5, ['lymph'], 'Lecture TBL 5: Lymphatic System', 'review3', 'review',
-       'Last lab before Exam 3. Bring your structure list marked with what you still cannot find.'),
+    SPLIT(D1('2026-10-08', 4, ['heart','muscle'], 'Lecture TBL 4: Heart, Cardiac Conduction and Muscle Microanatomy', 'ulTrunkHeart', 'split',
+       'A Thursday, but it runs like a Tuesday this one time: lecture TBL, then lab, then the lab brain dump.'), ['ulTrunkHeart'], ['antForearm']),
+    LABTBL(SPLIT(D2('2026-10-15', 1, 'ulTrunkHeartAnt', 'split', 'Blood Vessel Anatomy Lecture', ['vessels'], ['heart','muscle'],
+       'Tuesday Oct 13 is Professional Development.'), ['ulTrunkHeartAnt'], ['postForearm']), ['muscleMicro','ulTrunkHeartAnt']),
+    APP(D1('2026-10-20', 5, ['blood'], 'Lecture TBL 5: Blood', 'review3', 'review',
+       'Last lab before Exam 3. Everything from Module 3 lab is set out. Bring your structure list marked with what you still cannot find.'), 'Application: Blood Cell Interactive'),
     EX('2026-10-22', 3),
     D1('2026-10-27', 6, ['resp'], 'Lecture TBL 6: Respiratory Anatomy and Histology', 'resp', 'model', AFTER3),
-    D2('2026-10-29', 2, 'resp', 'cadaver', 'Endocrine Mind Map Activity', ['endocrine'], ['resp']),
-    D1('2026-11-03', 7, ['endocrine'], 'Lecture TBL 7: Endocrine System', 'lowerLimb', 'model'),
-    D2('2026-11-05', 3, 'lowerLimb', 'cadaver', 'Guided DITKI GI Map Activity I', ['gi'], ['endocrine']),
+    D2('2026-10-29', 2, 'resp', 'cadaver', 'Lymphatic System Lecture', ['lymph'], ['resp']),
+    APP(D1('2026-11-03', 7, ['endocrine'], 'Lecture TBL 7: Endocrine System', 'lowerLimb', 'model'), 'Application: Endocrine Mind Map'),
+    D2('2026-11-05', 3, 'lowerLimb', 'cadaver', 'Guided DITKI GI Map Activity I', ['gi'], ['lymph','endocrine']),
     D1('2026-11-10', 8, ['gi'], 'Lecture TBL 8: GI System', 'giAll', 'model'),
     D2('2026-11-12', 4, 'giAll', 'cadaver', 'Guided DITKI GI Map Activity II', ['gi'], ['gi'],
        'Last lab before Exam 4.'),

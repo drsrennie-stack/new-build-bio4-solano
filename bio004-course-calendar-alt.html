@@ -241,11 +241,11 @@
     var d=parse(s.d), dt=DOWL[d.getDay()]+', '+MON[d.getMonth()]+' '+d.getDate();
     if(s.kind==='holiday') return '<article class="day off"><p class="dt">'+esc(dt)+'</p><span class="tag">No class</span><p class="nt">'+esc(s.lec)+'</p></article>';
     if(s.kind==='exam') return '<article class="day exam"><p class="dt">'+esc(dt)+'</p><span class="tag">Exam '+s.exam+'</span><p class="nt">Lecture exam and lab practical, both today.</p></article>';
-    var rows, tag, due, L=s.lab, mode=A.MODE[L.mode], lb=lab(s.labTopic);
-    var labWhy = L.mode==='lab' ? 'for today\'s lab' : L.mode==='model' ? 'first time on the models' : L.mode==='cadaver' ? 'you tag it on the cadaver today' : L.mode==='both' ? 'models, then you tag it on the cadaver, all today' : 'review lab';
+    var rows, tag, due, L=s.lab, mode=(L.text||A.MODE[L.mode]), lb=lab(s.labTopic);
+    var labWhy = L.mode==='lab' ? 'for today\'s lab' : L.mode==='model' ? 'first time on the models' : L.mode==='cadaver' ? 'you tag it on the cadaver today' : L.mode==='both' ? 'models, then you tag it on the cadaver, all today' : L.mode==='split' ? 'cadaver and models today' : 'review lab';
     if(s.kind==='d1'){
       tag='Lecture TBL '+s.tbl.n;
-      rows=[['Start',tag+': '+lec(s.tbl.topics)],['Then','TBL application activity'],['Lab',lb+(mode?'. '+mode:'')],['End','Brain dump (lab): '+lab(s.bd.topics)]];
+      rows=[['Start',tag+': '+lec(s.tbl.topics)],['Then',s.app||'TBL application activity'],['Lab',lb+(mode?'. '+mode:'')],['End','Brain dump (lab): '+lab(s.bd.topics)]];
       due = (s.prepTopic ? lecDue(s.prepTopic, 'review before class') : lecDue(s.tbl.topics, 'for the TBL at the start of class'))
           + labDue(s.labTopic, labWhy+', and the brain dump at the end');
     } else {
@@ -302,11 +302,11 @@
       if(s.kind==='exam'){ h+='<tr class="'+cls+'exam"><td class="cday">'+esc(dt)+'</td><td colspan="4">Exam '+s.exam+': lecture and lab practical</td></tr>'; return; }
       var L=s.lab, lb=sl(s.labTopic);
       var labDo = L.mode==='cadaver' ? 'Lab sprint, no tags' : L.mode==='review' ? 'Mark what you can\'t find' : 'Structure list + lab sprint';
-      var modeTxt = L.mode==='lab' ? '' : L.mode==='model' ? 'Models, some tagged' : L.mode==='cadaver' ? 'Cadaver, you tag' : L.mode==='both' ? 'Models, then cadaver' : 'Review, you tag';
+      var modeTxt = L.mode==='lab' ? '' : L.mode==='model' ? 'Models, some tagged' : L.mode==='cadaver' ? 'Cadaver, you tag' : L.mode==='both' ? 'Models, then cadaver' : L.mode==='split' ? 'Cadaver, you tag: '+esc(sl(L.cadaver))+'</li><li>Models, some tagged: '+esc(sl(L.model)) : 'Review: work on what you need';
       var lecPre, lecIn, labPre, labIn;
       if(s.kind==='d1'){
         lecPre = s.prepTopic ? ul(['<b>'+esc(sl(s.prepTopic))+'</b>','Origins, insertions, actions']) : ul(['<b>'+esc(sl(s.tbl.topics))+'</b>','Notes, note sheet, videos']);
-        lecIn  = ul(['<span class="pill p-tbl">TBL '+s.tbl.n+' &middot; Lecture</span>','Application activity']);
+        lecIn  = ul(['<span class="pill p-tbl">TBL '+s.tbl.n+' &middot; Lecture</span>',esc(s.app||'Application activity')]);
         labPre = ul(['<b>'+esc(lb)+'</b>',labDo]);
         labIn  = ul([modeTxt,'<span class="pill p-bd">Brain dump &middot; Lab</span>']);
       } else {
@@ -314,7 +314,7 @@
                      s.bd.topics.join()!==s.lecTopic.join() ? 'Brain dump prep: redraw '+esc(sl(s.bd.topics)) : '']);
         lecIn  = ul([esc(s.lec),'<span class="pill p-bd">Brain dump &middot; Lecture</span> '+esc(sl(s.bd.topics))]);
         labPre = ul(['<b>'+esc(lb)+'</b>',labDo]);
-        labIn  = ul([s.tbl ? '<span class="pill p-tbl">TBL '+s.tbl.n+' &middot; Lab</span> first 1.5 hours' : '', modeTxt]);
+        labIn  = ul([s.tbl ? '<span class="pill p-tbl">TBL '+s.tbl.n+' &middot; Lab</span> first 1.5 hours'+(s.tbl.topics.join()!==s.labTopic.join() ? ': '+esc(sl(s.tbl.topics)) : '') : '', modeTxt]);
       }
       var tag = s.kind==='d1' ? 'TBL '+s.tbl.n+' · Lecture' : (s.tbl ? 'TBL '+s.tbl.n+' · Lab' : 'Review lab');
       h+='<tr class="'+cls+'"><td class="cday">'+esc(dt)+'<small>'+esc(tag)+(s.d===nextD?' &middot; next':'')+'</small></td>'

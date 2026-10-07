@@ -247,16 +247,16 @@
     var items=[];
     if(s.kind==='d1'){
       items.push(['hot', lecStart, 'Lecture TBL '+s.tbl.n+': '+lecNames(s.tbl.topics), 'iRAT on your own, then the tRAT with your team, then appeals. Closed notes for the iRAT and tRAT.']);
-      items.push(['', 'Rest of lecture', 'TBL application activity', 'Your team applies the TBL material to a problem. Bring your notes and your note sheet.']);
-      items.push(['', labStart, 'Lab: '+labNames(s.labTopic), A.MODE[s.lab.mode]]);
+      items.push(['', 'Rest of lecture', s.app||'TBL application activity', 'Your team applies the TBL material to a problem. Bring your notes and your note sheet.']);
+      items.push(['', labStart, 'Lab: '+labNames(s.labTopic), (s.lab.text||A.MODE[s.lab.mode])]);
       items.push(['hot', 'Before '+labEnd, 'Lab brain dump: '+labNames(s.bd.topics), 'Five minutes, closed notes, at the end of class. Everything you can name, draw and connect from today\'s lab.']);
     } else {
       items.push(['', lecStart, 'Lecture: '+s.lec, 'Topic: '+lecNames(s.lecTopic)+'.']);
       if(s.tbl){
         items.push(['hot', labStart, 'Lab TBL '+s.tbl.n+': '+labNames(s.tbl.topics), 'The first 1.5 hours of lab. iRAT on your own, then the tRAT with your team, then the application activity. Expect images, models and slides to identify.']);
-        items.push(['', 'Rest of lab', 'Lab: '+labNames(s.labTopic), A.MODE[s.lab.mode]]);
+        items.push(['', 'Rest of lab', 'Lab: '+labNames(s.labTopic), (s.lab.text||A.MODE[s.lab.mode])]);
       } else {
-        items.push(['', labStart, 'Lab: '+labNames(s.labTopic), A.MODE[s.lab.mode]]);
+        items.push(['', labStart, 'Lab: '+labNames(s.labTopic), (s.lab.text||A.MODE[s.lab.mode])]);
       }
       items.push(['hot', 'Before '+labEnd, 'Lecture brain dump: '+lecNames(s.bd.topics), 'Five minutes, closed notes, at the end of class.']);
     }
@@ -317,13 +317,15 @@
   /* ---------- lab walkthrough ---------- */
   function labCard(s){
     var isTbl = s.kind==='d2' && !!s.tbl;
-    var keys = s.labTopic, mode = s.lab.mode;
+    var keys = isTbl ? s.tbl.topics.concat(s.labTopic.filter(function(k){ return s.tbl.topics.indexOf(k)<0; })) : s.labTopic, mode = s.lab.mode;
     var how = mode==='lab'
       ? 'Work the structure list and lab sprint before class, so you walk in already knowing the names.'
       : mode==='model'
       ? 'Today is the first time you see this block in lab. It is on the models. Many of the structures will be tagged for you, but not all of them. You are responsible for finding the untagged ones on your structure list, identifying them, and making your own study materials for them, so bring the list and something to build those materials in.'
       : mode==='cadaver'
       ? 'You saw this block on the models last class. Today it is on the cadaver, and you tag the structures yourself, so come able to find them without the tags.'
+      : mode==='split'
+      ? 'Today runs two stations. '+s.lab.text+' Work the structure list and lab sprint for both before class, and come able to find the cadaver structures without tags.'
       : mode==='both'
       ? 'This block gets one lab. You start on the models, with many of the structures tagged for you, then move to the cadaver and tag the structures yourself, so come having already worked the lab sprint.'
       : 'This is a review lab. You tag the structures yourself, then spend the time on whatever you still need. Come with your structure list marked so you know what that is.';
@@ -334,7 +336,7 @@
       + '<p class="k">Part 2 &middot; Lab</p>'
       + '<h2 id="labH">'+(isTbl ? 'Prepare for Lab TBL '+s.tbl.n : (s.kind==='d1' ? 'Prepare for today\'s lab and the lab brain dump' : 'Prepare for today\'s review lab'))+'</h2>'
       + '<p>'+(isTbl
-          ? 'The Lab TBL takes the first 1.5 hours of lab and covers '+esc(labNames(keys))+'. '
+          ? 'The Lab TBL takes the first 1.5 hours of lab and covers '+esc(labNames(s.tbl.topics))+'. '
           : 'Today\'s lab is '+esc(labNames(keys))+'. '+(s.kind==='d1' ? 'Class ends with a lab brain dump on it. ' : ''))+esc(how)+'</p>'
       + '<ol class="steps">'
       + '<li><strong>Open the structure list and read the names once</strong>'
