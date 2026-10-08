@@ -190,6 +190,10 @@
   var sec = qp('sec');
   if(!A.TIMES[sec]){ try{ sec=localStorage.getItem(SKEY); }catch(e){ sec=null; } }
   if(!A.TIMES[sec]) sec='mw';
+  /* A link that names only the day (the calendar and Today pages send these)
+     still lands on the right class: if the remembered section has no class
+     that day, use the track that does. */
+  (function(){ var dq=qp('day'); if(dq && !A.day(sec,dq)){ var alt=A.track(sec)==='mw' ? 'tr-am' : 'mw'; if(A.day(alt,dq)) sec=alt; } })();
 
   /* ---------- ticks, shared with Today and the calendar ---------- */
   var DONE_KEY='bio004-done';

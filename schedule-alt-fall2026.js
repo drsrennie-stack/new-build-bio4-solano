@@ -2,7 +2,15 @@
    BIO 004 Human Anatomy, Fall 2026
    schedule-alt-fall2026.js
 
-   THE ALTERNATE SCHEDULE. NOT LIVE YET.
+   THE WEEKLY PATTERN SCHEDULE. LIVE FROM OCT 7 (Mon/Wed) AND OCT 8 (Tue/Thu).
+
+   On Oct 7, 2026 every class day from those dates on was copied from
+   this file into the live schedule: bio004-day-card.js (calendar and
+   Today), session-links.js (pre-work links), schedule-fall2026.js
+   (syllabus, weekly schedule), class1/2/3.html (each course's own
+   schedule), the three Mastery OS pages, week-8 to week-17 hubs and
+   bio004-master-schedule-fall2026.html. If a date changes here, change
+   it in those files too, or ask for the copy to be run again.
 
    Nothing on the site loads this file except the two preview
    pages built for it:
@@ -350,7 +358,7 @@ window.BIO004_ALT = (function () {
   var SHORT = {
     lymph:'Lymphatic system', cnsBrain:'Brain, brainstem, meninges and CSF', cnCord:'Cranial nerves and spinal cord', ans:'Autonomic nervous system', heart:'Heart and conduction', muscle:'Muscle microanatomy', blood:'Blood', vessels:'Blood vessels', resp:'Respiratory',
     endocrine:'Endocrine', gi:'GI', renal:'Renal', repro:'Reproductive', cranial:'Brainstem and cranial nerves',
-    muscleMicro:'Muscle microanatomy', microTrunkArm:'Muscle micro + upper trunk and arm muscles', heartLab:'Heart', bloodCells:'Blood cells', heartBlood:'Heart and blood cells', antForearm:'Anterior forearm', postForearm:'Posterior forearm', upperBody:'Trunk and upper limb muscles', ulTrunkHeart:'Upper limb, trunk and heart', ulTrunkHeartAnt:'Upper limb, trunk, heart and anterior forearm', lowerLimb:'Lower limb muscles', giAll:'GI organs',
+    muscleMicro:'Muscle microanatomy', microTrunkArm:'Muscle micro + upper trunk and arm muscles', heartLab:'Heart', bloodCells:'Blood cells', heartBlood:'Heart and blood cells', antForearm:'Anterior forearm', postForearm:'Posterior forearm', upperBody:'Trunk and upper limb muscles', ulTrunkHeart:'Upper limb, trunk and heart', ulTrunkHeartAnt:'Upper limb, trunk, heart and anterior forearm', lowerLimb:'Lower limb muscles, nerves and vessels', giAll:'GI organs',
     uroRepro:'Urinary and reproductive', cns:'Brain, spinal cord and cranial nerves',
     review3:'Module 3 review, everything', review5:'Module 5 review'
   };
@@ -437,10 +445,10 @@ window.BIO004_ALT = (function () {
     EX('2026-10-22', 3),
     D1('2026-10-27', 6, ['resp'], 'Lecture TBL 6: Respiratory Anatomy and Histology', 'resp', 'model', AFTER3),
     D2('2026-10-29', 2, 'resp', 'cadaver', 'Lymphatic System Lecture', ['lymph'], ['resp']),
-    APP(D1('2026-11-03', 7, ['endocrine'], 'Lecture TBL 7: Endocrine System', 'lowerLimb', 'model'), 'Application: Endocrine Mind Map'),
-    D2('2026-11-05', 3, 'lowerLimb', 'cadaver', 'Guided DITKI GI Map Activity I', ['gi'], ['lymph','endocrine']),
-    D1('2026-11-10', 8, ['gi'], 'Lecture TBL 8: GI System', 'giAll', 'model'),
-    D2('2026-11-12', 4, 'giAll', 'cadaver', 'Guided DITKI GI Map Activity II', ['gi'], ['gi'],
+    D1('2026-11-03', 7, ['endocrine'], 'Lecture TBL 7: Endocrine System', 'lowerLimb', 'model'),
+    D2('2026-11-05', 3, 'lowerLimb', 'cadaver', 'Endocrine Mind Map Activity', ['endocrine'], ['lymph']),
+    APP(D1('2026-11-10', 8, ['gi'], 'Lecture TBL 8: GI System', 'giAll', 'model'), 'Application: Guided DITKI GI Map Activity I'),
+    D2('2026-11-12', 4, 'giAll', 'cadaver', 'Guided DITKI GI Map Activity II', ['gi'], ['endocrine'],
        'Last lab before Exam 4.'),
     EX('2026-11-17', 4),
     D2('2026-11-19', 5, 'uroRepro', 'model', 'Guided Renal Map', ['renal'], ['renal'], AFTER4),
