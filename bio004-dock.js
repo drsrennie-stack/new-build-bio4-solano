@@ -280,7 +280,9 @@
     pencil:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
     target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4"/>',
     flask:'<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/><path d="M6.5 15h11"/>',
-    play:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/>'
+    play:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/>',
+    /* Video camera with a play mark: the cadaver video library. */
+    video:'<rect x="2" y="6" width="13" height="12" rx="2"/><path d="M15 10.5l6-3.5v10l-6-3.5z"/><path d="M7 9.5l3.5 2.5L7 14.5z"/>'
   };
   function icon(k) {
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
@@ -376,6 +378,13 @@
     t.push({ g: 'Lab materials', name: 'Lab sprints', sub: 'Every structure you are responsible for on the models',
              url: BASE + 'lab-sprints.html', icon: 'flask', tone: 'navy',
              qr: 'labs', kw: 'lab sprints models dissection structures practical stations bench' });
+    /* University of Michigan BlueLink videos, sorted by body system.
+       Lives in this repo as a page that links out to YouTube, so it
+       opens in the course tab like the other lab tools. */
+    t.push({ g: 'Lab materials', name: 'Cadaver videos', sub: 'University of Michigan BlueLink videos, sorted by body system',
+             url: BASE + 'bio004-bluelink-videos.html', icon: 'video', tone: 'navy',
+             kw: 'cadaver videos video bluelink michigan umich dissection donor lab muscles muscle bones '
+               + 'skeletal joints nerves brain heart vessels youtube watch station origin insertion action' });
     t.push({ g: 'Lab materials', name: 'Tissue Chart Practice', sub: 'The whole chart behind reveal boxes, same slides as lab',
              url: BASE + 'bio004-tissue-chart-practice.html', icon: 'flask', tone: 'terra',
              qr: 'tissuechart', kw: 'tissue chart practice histology epithelial connective muscle reveal recall memory drill' });

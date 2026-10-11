@@ -136,6 +136,7 @@
     bulb: '<path d="M12 2a7 7 0 0 1 7 7c0 2.4-1.2 4.2-2.6 5.6-.8.8-1.4 1.9-1.4 3v.4H9v-.4c0-1.1-.6-2.2-1.4-3C6.2 13.2 5 11.4 5 9a7 7 0 0 1 7-7z"/><path d="M9 21h6"/>',
     cal: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
     grid: '<path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+    video: '<rect x="2" y="6" width="13" height="12" rx="2"/><path d="M15 10.5l6-3.5v10l-6-3.5z"/><path d="M7 9.5l3.5 2.5L7 14.5z"/>',
     play: '<polygon points="10 8 16 12 10 16 10 8"/><rect x="3" y="4" width="18" height="16" rx="2"/>',
     pen: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
     check: '<path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
@@ -229,6 +230,7 @@
     + door('ic-gold', I.globe, 'Digital Atlas', 'Opens in its own tab', ext('https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02'))
     + door('ic-blue', I.scope, 'Histology help', 'Every slide tool, sorted', go('histology-help.html'))
     + door('ic-gold', I.grid, 'Tissue Chart', 'The chart behind reveal boxes', go('bio004-tissue-chart-practice.html'))
+    + door('ic-navy', I.video, 'Cadaver videos', 'U of Michigan, by body system', go('bio004-bluelink-videos.html'))
     + '</div></div>'
 
     + '<div class="lp-panel" data-lp="study">'

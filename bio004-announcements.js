@@ -20,6 +20,10 @@
    The doors screen shows the newest 5.
    ============================================================ */
 window.BIO004_ANNOUNCEMENTS = [
+  { date: '2026-10-07',
+    title: 'New in lab: cadaver videos',
+    body: 'Free University of Michigan BlueLink videos, sorted by body system: cadaver dissections, muscles by region, bones, joints, and lab stations. Find Cadaver videos in Course tools under Lab materials, or behind the Lab door.',
+    link: 'bio004-bluelink-announcement.html', linkLabel: 'How to find it' },
   { date: '2026-09-20',
     title: 'Lab Environment, Attendance, and Devices',
     body: 'Updates and clarifications on how lab runs: study however works for you, keep the room workable for everyone, and know where the device line is. Earplugs are fine, earbuds are not. An unauthorized device in your ear during anything graded is a zero, and the IRAT through the TRAT is one continuous device-free period. Read the whole thing; you are responsible for it.',
