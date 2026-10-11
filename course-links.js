@@ -43,7 +43,7 @@ window.BIO004_LINKS = {
   syllabusGeneric: { url: 'fall-2026-syllabus.html',    internal: true,  label: 'syllabus' },
 
   /* ---------- elsewhere ---------- */
-  atlas: { url: 'https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02',
+  atlas: { url: 'https://claude.ai/artifact/88nmVMHdWVZGXf3ShnSURo',
            internal: false, label: 'Digital Atlas' },
 
   loops: { url: 'https://drsrennie-stack.github.io/loops/',

@@ -227,7 +227,7 @@
     + door('ic-navy', I.clock, 'Lab sprints', 'Structure checklists by station', go('lab-sprints.html'))
     /* Articulate refuses to be framed (X-Frame-Options), so the Atlas
        opens in its own tab and the course tab stays behind it. */
-    + door('ic-gold', I.globe, 'Digital Atlas', 'Opens in its own tab', ext('https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02'))
+    + door('ic-gold', I.globe, 'Digital Atlas', 'Opens in its own tab', ext('https://claude.ai/artifact/88nmVMHdWVZGXf3ShnSURo'))
     + door('ic-blue', I.scope, 'Histology help', 'Every slide tool, sorted', go('histology-help.html'))
     + door('ic-gold', I.grid, 'Tissue Chart', 'The chart behind reveal boxes', go('bio004-tissue-chart-practice.html'))
     + door('ic-navy', I.video, 'Cadaver videos', 'U of Michigan, by body system', go('bio004-bluelink-videos.html'))

@@ -36,7 +36,7 @@
         { name: 'Lab Sprints', sub: 'structure checklists', href: 'lab-sprints.html', icon: 'clock', color: 'terra' },
         { name: 'Histology Help', sub: 'every slide tool', href: 'histology-help.html', icon: 'scope', color: 'teal' },
         { name: 'Tissue Chart Practice', sub: 'the reveal-box chart', href: 'bio004-tissue-chart-practice.html', icon: 'gridic', color: 'gold' },
-        { name: 'Digital Atlas', sub: 'opens in its own tab', href: 'https://share.articulate.com/UOHEe3p6DmTC4nXuUTE02', icon: 'globe', color: 'light' },
+        { name: 'Digital Atlas', sub: 'opens in its own tab', href: 'https://claude.ai/artifact/88nmVMHdWVZGXf3ShnSURo', icon: 'globe', color: 'light' },
       ]},
       { label: 'Grades and attendance', apps: [
         /* Course Engine is THE attendance tool (her words, Aug 23):
