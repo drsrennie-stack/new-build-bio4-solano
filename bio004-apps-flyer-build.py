@@ -37,7 +37,7 @@ APPS = [
               'off, and see how things sit against each other before you ever '
               'meet them on a model.',
          use='Phone or laptop. Give it a moment to load the first time.',
-         url='https://claude.ai/artifact/88nmVMHdWVZGXf3ShnSURo'),
+         url='https://drsrennie-stack.github.io/new-digital-atlas/'),
 ]
 
 

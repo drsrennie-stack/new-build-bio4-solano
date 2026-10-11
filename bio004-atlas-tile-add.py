@@ -19,7 +19,7 @@ Insertion points:
 """
 import re, glob, segno
 
-ATLAS = 'https://claude.ai/artifact/88nmVMHdWVZGXf3ShnSURo'
+ATLAS = 'https://drsrennie-stack.github.io/new-digital-atlas/'
 MARK = 'atl-tile'          # presence of this class means the tile is already in
 
 qr = segno.make(ATLAS, error='m').svg_inline(scale=1, border=1, dark='#08101F',

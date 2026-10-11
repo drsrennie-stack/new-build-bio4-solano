@@ -130,6 +130,6 @@ Mastery OS     https://drsrennie-stack.github.io/new-build-bio4-solano/mastery-o
 Recall Rx      https://drsrennie-stack.github.io/new-build-bio4-solano/bio004-spaced-recall.html
 Course calendar https://drsrennie-stack.github.io/new-build-bio4-solano/bio004-course-calendar.html
 Loops          https://drsrennie-stack.github.io/loops/
-Digital Atlas  https://claude.ai/artifact/88nmVMHdWVZGXf3ShnSURo
+Digital Atlas  https://drsrennie-stack.github.io/new-digital-atlas/
 Study With Me  https://drsrennie-stack.github.io/new-build-bio4-solano/study-session-signup.html
 ```
