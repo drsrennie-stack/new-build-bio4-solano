@@ -88,14 +88,14 @@ window.BIO004_SECTIONS = {
         { n:2, lecture:'2026-09-30', practical:'2026-09-30', sameDay:true,
           practicalCovers:'5 lab sessions, 2.1 through 2.6' },
         { n:3, lecture:'2026-10-21', practical:'2026-10-21', sameDay:true,
-          practicalCovers:'5 lab sessions, 3.1 through 3.5' },
+          practicalCovers:'all of the Module 3 labs: muscle microanatomy, the heart, blood vessels, and the muscles, nerves and vessels of the trunk and upper limb, plus blood cells' },
         { n:4, lecture:'2026-11-16', practical:'2026-11-16', sameDay:true,
-          practicalCovers:'lab sessions 4.1 through 4.6',
+          practicalCovers:'the Module 4 labs: respiratory, the lower limb muscles, nerves and vessels, and the GI organs',
           note:'MONDAY. Every other Class 1 exam is a Wednesday. This one sits '
              + 'Mon Nov 16 because that is the department lab practical date, and '
              + 'the lecture exam was moved to join it so both parts stay on one day.' },
         { n:5, lecture:'2026-12-09', practical:'2026-12-09', sameDay:true,
-          practicalCovers:'lab sessions 5.1 through 5.5, which is where renal and reproductive sit' }
+          practicalCovers:'the Module 5 labs: the urinary and reproductive organs, and the brain, spinal cord and cranial nerves' }
       ]
     },
 
@@ -110,11 +110,11 @@ window.BIO004_SECTIONS = {
         { n:2, lecture:'2026-09-29', practical:'2026-09-29', sameDay:true,
           practicalCovers:'5 lab sessions, 2.1 through 2.6' },
         { n:3, lecture:'2026-10-22', practical:'2026-10-22', sameDay:true,
-          practicalCovers:'5 lab sessions, 3.1 through 3.5' },
+          practicalCovers:'all of the Module 3 labs: muscle microanatomy, the heart, blood vessels, and the muscles, nerves and vessels of the trunk and upper limb' },
         { n:4, lecture:'2026-11-17', practical:'2026-11-17', sameDay:true,
-          practicalCovers:'lab sessions 4.1 through 4.6' },
+          practicalCovers:'the Module 4 labs: respiratory, the lower limb muscles, nerves and vessels, and the GI organs' },
         { n:5, lecture:'2026-12-10', practical:'2026-12-10', sameDay:true,
-          practicalCovers:'lab sessions 5.1 through 5.5, which is where renal and reproductive sit' }
+          practicalCovers:'the Module 5 labs: the urinary and reproductive organs, and the brain, spinal cord and cranial nerves' }
       ]
     },
 
@@ -130,11 +130,11 @@ window.BIO004_SECTIONS = {
         { n:2, lecture:'2026-09-29', practical:'2026-09-29', sameDay:true,
           practicalCovers:'5 lab sessions, 2.1 through 2.6' },
         { n:3, lecture:'2026-10-22', practical:'2026-10-22', sameDay:true,
-          practicalCovers:'5 lab sessions, 3.1 through 3.5' },
+          practicalCovers:'all of the Module 3 labs: muscle microanatomy, the heart, blood vessels, and the muscles, nerves and vessels of the trunk and upper limb' },
         { n:4, lecture:'2026-11-17', practical:'2026-11-17', sameDay:true,
-          practicalCovers:'lab sessions 4.1 through 4.6' },
+          practicalCovers:'the Module 4 labs: respiratory, the lower limb muscles, nerves and vessels, and the GI organs' },
         { n:5, lecture:'2026-12-10', practical:'2026-12-10', sameDay:true,
-          practicalCovers:'lab sessions 5.1 through 5.5, which is where renal and reproductive sit' }
+          practicalCovers:'the Module 5 labs: the urinary and reproductive organs, and the brain, spinal cord and cranial nerves' }
       ]
     }
   },

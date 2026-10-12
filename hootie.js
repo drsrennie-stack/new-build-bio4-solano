@@ -133,6 +133,11 @@
         for (var i = 0; i < rows.length; i++) {
           if (rows[i].date <= today) curWk = rows[i].wk; else break;
         }
+        /* On a Monday, a Tue/Thu student's last class was the week before.
+           "This week" should still be the calendar week they are in, so use
+           it whenever their section has a class day in it. */
+        var calWk = Math.floor((Date.parse(today + 'T12:00:00') - Date.parse(rows[0].date.slice(0, 4) + '-08-17T12:00:00')) / 6048e5) + 1;
+        if (rows.some(function (r) { return r.wk === calWk; })) curWk = calWk;
       }
     }
 
