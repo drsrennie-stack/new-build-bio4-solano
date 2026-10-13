@@ -330,6 +330,11 @@
     t.push({ g: 'This week', name: 'Weekly schedule', sub: 'Each class day: pre-work, brain dump or TBL, lecture, lab',
              url: BASE + 'bio004-weekly-schedule.html' + q, icon: 'cal', tone: 'terra',
              kw: 'weekly schedule week agenda prework pre-work brain dump tbl lecture lab topics what is due today case tips ai' });
+    /* The weekly pattern chart: lecture and lab, before class and in class,
+       for the student's own section only (q carries ?sec=, which locks it). */
+    t.push({ g: 'This week', name: 'Class day plan', sub: 'Lecture and lab, before class and in class, for your section',
+             url: BASE + 'bio004-course-calendar-alt.html' + q, icon: 'cal', tone: 'gold',
+             kw: 'class day plan weekly pattern chart before class in class tbl lab tbl brain dump pre-read preread prep lecture lab models cadaver' });
     t.push({ g: 'This week', name: 'Course calendar', sub: 'Every class day and what to prepare for it',
              /* nolaunch=1 so the calendar opens as the calendar. Without it the
                 launchpad curtain drops in front of it and the tile feels like a
