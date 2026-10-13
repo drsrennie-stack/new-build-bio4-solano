@@ -87,6 +87,10 @@
   + '.lpov .lp-boost .lp-bt{display:block}'
   + '.lpov .lp-boost b{color:#08101F}'
   + '.lpov .lp-boost .lp-bt span{color:rgba(8,16,31,.78)}'
+  + '.lpov .lp-sched{grid-column:1/-1;display:flex;align-items:center;gap:14px;text-align:left;padding:18px 20px}'
+  + '.lpov .lp-sched .lp-ic{margin:0;flex:none}'
+  + '.lpov .lp-sched .lp-bt{display:block}'
+  + '.lpov .lp-sched .lp-go{margin-left:auto;font-size:22px;font-weight:800;color:#6B1616}'
   + '.lpov .lp-news{grid-column:1/-1;display:flex;align-items:center;gap:14px;text-align:left;'
   + 'background:linear-gradient(135deg,#C2734D,#8a4526);padding:16px 20px;position:relative;width:100%}'
   + '.lpov .lp-news b{color:#fff}'
@@ -127,6 +131,7 @@
     return '<span class="lp-ic ' + cls + '" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + path + '</svg></span>';
   }
   var I = {
+    cal: '<rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M7.5 13.5h3M13.5 13.5h3M7.5 17h3"/>',
     heart: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21.2l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/>',
     target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
     mega: '<path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
@@ -176,11 +181,14 @@
      calendar button used to be the only one. */
   var here = (window.location.pathname.split('/').pop() || '').toLowerCase();
   var ON_CALENDAR = here === 'bio004-course-calendar.html' || here === '';
+  /* Oct 13: the main button goes to the student's class schedule (the
+     Class day plan, opened on their own section through u()). The way to
+     stay on the page behind the curtain is always offered beside it. */
+  /* The class schedule is the big card at the top of the doors. This row
+     offers the full term calendar and a way to stay on this page. */
   function calRow() {
-    if (ON_CALENDAR) {
-      return '<button class="lp-ghost" data-lpclose="1">Go to the calendar &#8594;</button>';
-    }
-    return '<a class="lp-ghost" ' + go('bio004-course-calendar.html?nolaunch=1') + '>Go to the calendar &#8594;</a>'
+    if (ON_CALENDAR) return '<button class="lp-ghost" data-lpclose="1">See the full course calendar &#8594;</button>';
+    return '<a class="lp-ghost" ' + go('bio004-course-calendar.html?nolaunch=1') + '>See the full course calendar &#8594;</a>'
          + '<button class="lp-ghost lp-stay" data-lpclose="1">Close this and stay here</button>';
   }
 
@@ -197,6 +205,9 @@
     + '<p class="lp-sub">Four doors. Everything in the course is behind one of them.</p>'
 
     + '<div class="lp-panel on" data-lp="home"><div class="lp-deck">'
+    + '<a class="lp-door lp-sched" ' + go('bio004-course-calendar-alt.html') + '>' + ic('ic-navy', I.cal)
+    + '<span class="lp-bt"><b>Your class schedule</b><span>What to do before class and in class, lecture and lab</span></span>'
+    + '<span class="lp-go" aria-hidden="true">&#8594;</span></a>'
     + door('ic-terra', I.book, 'Lecture', 'Notes, videos, pre-work, course materials', 'data-lpopen="lecture"')
     + door('ic-navy', I.flask, 'Lab', 'Loops, lab sprints, the Digital Atlas', 'data-lpopen="lab"')
     + door('ic-gold', I.bulb, 'Study', 'Mastery OS, recall cards, loops, brain dump', 'data-lpopen="study"')
