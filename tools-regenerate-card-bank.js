@@ -1,4 +1,19 @@
 /* ============================================================
+   RETIRED October 2026. DO NOT RUN.
+
+   bio004-card-bank.js is no longer generated from the old decks
+   listed below. In October 2026 every card was rewritten with four
+   choices, a teaching explanation and a note on every choice, and
+   the bank was reorganized by Module 1 to 5. The old deck files do
+   not have that content, so running this script would overwrite the
+   rebuilt bank with the old cards that students complained about.
+
+   bio004-card-bank.js is now the source of record. Edit cards there.
+   ============================================================ */
+console.error('tools-regenerate-card-bank.js is retired. bio004-card-bank.js is now the source of record; see the note at the top of this file.');
+process.exit(1);
+
+/* ============================================================
    BIO 004 Human Anatomy, Fall 2026
    tools-regenerate-card-bank.js
 

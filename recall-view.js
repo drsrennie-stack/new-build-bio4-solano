@@ -1,32 +1,39 @@
 /* ============================================================
    BIO 004 Human Anatomy, Fall 2026
-   recall-view.js
+   recall-view.js   (Recall Rx, v3, October 2026)
 
-   Spaced recall, running INSIDE Mastery OS rather than beside it.
+   Spaced recall, running inside Mastery OS on the one bank in
+   bio004-card-bank.js.
 
-   Recall used to live on its own page, bio004-spaced-recall.html,
-   which read two of the fifteen card files. Mastery OS knew which
-   competency every card belonged to but held no cards at all, and
-   linked out instead. So the two halves of the same idea sat in
-   two places and neither was complete.
+   WHAT CHANGED IN v3
+   ------------------
+   Students said the recall cards stopped teaching after the first
+   module: from the heart onward most cards had no answer choices
+   and no explanation. The bank was rebuilt (see the header of
+   bio004-card-bank.js) so every card now has four choices, a
+   teaching explanation of the right answer (why), and a note on
+   every choice (notes) saying what it actually is and when it
+   would be the right answer. This file shows all of that after a
+   student answers.
 
-   This mounts the whole recall engine into the Mastery OS page, on
-   the one bank in bio004-card-bank.js. One door.
+   The bank is now organized by Module 1 to 5, with topics in the
+   order they are taught. Students choose a module, then check the
+   topics they want in the session. Each topic carries its first
+   class date for the Mon/Wed and Tue/Thu sections, so the picker
+   marks what has been taught and pre-selects it.
 
-   Wire it after the bank, anywhere on the page:
-     <div id="recallMount"></div>
-     <script src="bio004-card-bank.js"></script>
-     <script src="recall-view.js"></script>
+   KEYS, so nobody's history is lost
+   ---------------------------------
+   Cards carried over from the old bank keep their old topic and
+   card ids as lt and lid. Spacing progress, the odometer and the
+   Mastery OS feed are all keyed on lt:lid, exactly as before.
+   New cards use their own topic and id.
 
-   Deep links, both supported:
+   Deep links:
      #s-recall            open recall
      #s-recall?comp=ID    open recall filtered to one competency
      ?comp=ID             same, from an external link
-
-   Two kinds of card live in the bank and both are handled:
-     multiple choice   options[] + correctIndex, graded by the app
-     free recall       q and a only, you grade yourself after
-                       committing to an answer out loud or on paper
+     ?module=3 or #s-recall?module=3   open on a module
 
    Nothing here runs on a timer. A student sets the pace.
    ============================================================ */
@@ -37,12 +44,11 @@
   var MOUNT = 'recallMount';
   var SKEY  = 'bio004-recall-progress';   // this engine's own spacing state
   var VKEY  = 'bio004-recall-v2';         // the feed Mastery OS already reads
-  var OKEY  = 'bio004-card-odometer';     // lifetime rep counter, every answer ever
+  var OKEY  = 'bio004-card-odometer';     // lifetime rep counter
+  var TKEY  = 'bio004-recall-topics';     // the student's topic checkboxes
+  var SECKEY = 'bio004-section';          // site-wide section choice (raw string)
 
-  /* ---------- the odometer: reps for bragging rights ----------
-     Every graded card is a rep, repeats included, like a view count.
-     total: every answer ever. cards: per-card counts, so unique and
-     repeat reps fall out of it. days: per-day counts for "today". */
+  /* ---------- the odometer ---------- */
   var RANKS = [
     [100,'First Incision'],[500,'Dissector'],[1000,'Prosector'],
     [2500,'Anatomist'],[5000,'Master Anatomist'],[10000,'Cadaver Whisperer'],
@@ -59,14 +65,9 @@
       od.cards[entry.key] = (od.cards[entry.key] || 0) + 1;
       var d = today();
       od.days[d] = (od.days[d] || 0) + 1;
-      /* keep the day log from growing forever */
       var ks = Object.keys(od.days);
       if (ks.length > 400) { ks.sort(); delete od.days[ks[0]]; }
       localStorage.setItem(OKEY, JSON.stringify(od));
-      var el = document.getElementById('rv-odo-total');
-      if (el) el.textContent = fmtNum(od.total);
-      var tl = document.getElementById('rv-odo-today');
-      if (tl) tl.textContent = fmtNum(od.days[d]);
     } catch (e) {}
   }
   function fmtNum(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
@@ -79,14 +80,9 @@
     return { cur: cur, next: next };
   }
 
-  /* Leitner-style spacing, in days. A card you get right moves out a
-     box, a card you miss goes back to the start. Deliberately coarse:
-     the point is that hard cards come back soon and easy ones stop
-     eating your evening. */
+  /* Leitner-style spacing, in days. Right moves a card out a box,
+     wrong sends it back to the start so it returns tomorrow. */
   var BOX_DAYS = [0, 1, 3, 7, 16, 35];
-
-  /* Cards drawn per topic in a gap run. Two across 217 topics is a
-     survey you can finish in a sitting, and it still touches everything. */
   var GAP_PER_TOPIC = 2;
 
   function $(id) { return document.getElementById(id); }
@@ -105,120 +101,96 @@
     var q = function (x) { return (x < 10 ? '0' : '') + x; };
     return d.getFullYear() + '-' + q(d.getMonth() + 1) + '-' + q(d.getDate());
   }
+  var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function fmtDate(iso) { if (!iso) return ''; var p = iso.split('-'); return MON[+p[1] - 1] + ' ' + (+p[2]); }
 
   function load() { try { return JSON.parse(localStorage.getItem(SKEY)) || {}; } catch (e) { return {}; } }
   function save(p) { try { localStorage.setItem(SKEY, JSON.stringify(p)); } catch (e) {} }
 
-  /* ---------- feeding Mastery OS ----------
-     Mastery OS already ingests recall results and turns them into
-     competency mastery, confidence, last-reviewed and next-recall. It
-     reads localStorage['bio004-recall-v2'], resolves a topic id to its
-     competencies through BIO004_CARD_COMPETENCY_MAP, and counts one
-     attempt per entry in each card's history array. attempts/correct
-     fields on the card are only a fallback, so the history is what has
-     to be written.
+  /* ---------- section, for "taught yet" ---------- */
+  function track() {
+    var s = null;
+    try { s = localStorage.getItem(SECKEY); } catch (e) {}
+    if (s === 'mw') return 'mw';
+    if (s === 'tr-am' || s === 'tr-eve' || s === 'tr') return 'tr';
+    return null;
+  }
+  function setTrack(t) {
+    try { localStorage.setItem(SECKEY, t === 'mw' ? 'mw' : 'tr-am'); } catch (e) {}
+  }
+  function topicDate(t) {
+    var tr = track();
+    if (tr) return t[tr] || '';
+    /* No section chosen yet: use the earlier of the two dates so a
+       topic counts as taught as soon as any section has had it. */
+    var a = t.mw || '', b = t.tr || '';
+    if (!a) return b; if (!b) return a;
+    return a < b ? a : b;
+  }
+  function topicStatus(t) {
+    var d = topicDate(t);
+    if (!d) return 'extra';
+    var now = today();
+    if (d < now) return 'done';
+    if (d === now) return 'now';
+    return 'soon';
+  }
 
+  /* ---------- feeding Mastery OS ----------
      Shape, exactly as the OS expects it:
        { topics: { <topicId>: { cards: { <cardId>: { history:[{correct,at}] } } } } }
-
-     Writing this is the whole reason recall belongs inside the app: the
-     dashboard, the weakness list and the daily build all move on their
-     own as a student works through cards. */
-
+     Written under the card's legacy topic and id when it has them, so
+     the competency map and earlier history keep working. */
   function feedMasteryOS(entry, right) {
     var st;
     try { st = JSON.parse(localStorage.getItem(VKEY)) || {}; } catch (e) { st = {}; }
     if (!st.topics) st.topics = {};
-    var t = st.topics[entry.topicId] || (st.topics[entry.topicId] = { cards: {} });
+    var t = st.topics[entry.feedTopic] || (st.topics[entry.feedTopic] = { cards: {} });
     if (!t.cards) t.cards = {};
-    var cid = entry.card.id || entry.key;
-    var card = t.cards[cid] || (t.cards[cid] = { history: [] });
+    var card = t.cards[entry.feedCard] || (t.cards[entry.feedCard] = { history: [] });
     if (!card.history) card.history = [];
     card.history.push({ correct: !!right, at: today() });
-    /* Keep the log from growing without bound. Twenty attempts on one
-       card is already far more than the OS needs to judge mastery. */
     if (card.history.length > 20) card.history = card.history.slice(-20);
     try { localStorage.setItem(VKEY, JSON.stringify(st)); } catch (e) {}
-
-    /* Mastery OS re-ingests on a storage event for 'bio004-progress', and
-       that handler reads the cards feed too. The browser does not fire
-       storage events in the tab that did the writing, and recall now lives
-       in that same tab, so nothing would refresh while a student worked.
-       Dispatching the event by hand gives the OS its own signal without
-       reaching into its internals, which are private to its closure. */
     try {
       var ev;
-      try {
-        ev = new StorageEvent('storage', { key: 'bio004-progress', storageArea: localStorage });
-      } catch (e) {
-        ev = document.createEvent('Event');
-        ev.initEvent('storage', false, false);
-        ev.key = 'bio004-progress';
-      }
+      try { ev = new StorageEvent('storage', { key: 'bio004-progress', storageArea: localStorage }); }
+      catch (e) { ev = document.createEvent('Event'); ev.initEvent('storage', false, false); ev.key = 'bio004-progress'; }
       window.dispatchEvent(ev);
     } catch (e) {}
   }
 
   /* ---------- the deck ---------- */
-
-  var ALL = [];        // every card, flattened, with its topic and module
+  var BANK = null;
+  var MODS = [];       // bank modules, in order
+  var TOPIC = {};      // topic id -> { t, m }
+  var ALL = [];        // every card, flattened
   var progress = load();
-  var queue = [], pos = 0, revealed = false, confidence = null, shown = null;
-  var runLog = [];   // {topicId, topicTitle, moduleTitle, right} for the run in progress
-  /* SCOPE, AND WHY IT DEFAULTS TO THE COURSE SO FAR
-     A student who has just watched the week 1 video and comes here for
-     spaced retrieval should not be asked about the fibrous pericardium.
-     The bank holds the whole term; the student has been taught one week
-     of it. So the default scope is everything taught up to today, newest
-     material first, and the pool is ordered rather than shuffled across
-     the whole course. "Every module" is still there for anyone who wants
-     to range wider. */
-  var filter = { scope: 'sofar', module: 'all', topic: 'all', comp: null, mode: 'due' };
-  /* set when a competency was asked for and had no cards of its own */
+  var queue = [], pos = 0, stage = 'conf', confidence = null, shown = null, picked = null;
+  var runLog = [];
+  var started = false;  // false shows the picker, true shows the session
+  var filter = { comp: null, mode: 'due' };
   var NO_CARDS_FOR = null;
-
-  var TERM_START = new Date(2026, 7, 17);            /* Monday 17 August 2026 */
-  function currentWeek() {
-    var wk = Math.floor((new Date() - TERM_START) / 604800000) + 1;
-    return wk < 1 ? 1 : (wk > 17 ? 17 : wk);
-  }
-
-  /* topic -> the earliest week it is taught, via the competency map and the
-     competency list. Topics the map does not cover return 0, which means
-     "no week known" and they only appear under Every module. */
-  var TOPIC_WEEK = null;
-  function topicWeek(topicId) {
-    if (!TOPIC_WEEK) {
-      TOPIC_WEEK = {};
-      var map = window.BIO004_CARD_COMPETENCY_MAP || window.CARD_COMPETENCY_MAP || {};
-      var comps = window.BIO004_COMPETENCIES || [];
-      var byId = {};
-      comps.forEach(function (c) { byId[c.id] = c; });
-      Object.keys(map).forEach(function (tid) {
-        var list = (map[tid] && map[tid].comps) || [];
-        var best = 0;
-        list.forEach(function (cid) {
-          var c = byId[cid];
-          if (c && c.week && (!best || c.week < best)) best = c.week;
-        });
-        if (best) TOPIC_WEEK[tid] = best;
-      });
-    }
-    return TOPIC_WEEK[topicId] || 0;
-  }
+  var curMod = 0;
+  var selected = {};    // topic id -> true
 
   function flatten() {
-    var bank = window.BIO004_CARD_BANK || window.BIO004_COURSE_CONTENT;
+    BANK = window.BIO004_CARD_BANK || null;
     var out = [];
-    if (!bank || !bank.modules) return out;
-    bank.modules.forEach(function (m) {
+    MODS = []; TOPIC = {};
+    if (!BANK || !BANK.modules) return out;
+    BANK.modules.forEach(function (m) {
+      MODS.push(m);
       (m.topics || []).forEach(function (t) {
+        TOPIC[t.id] = { t: t, m: m };
         (t.cards || []).forEach(function (c, i) {
+          var cid = c.id || String(i);
           out.push({
-            key: t.id + ':' + (c.id || i),
-            card: c,
-            topicId: t.id, topicTitle: t.title,
-            moduleId: m.id, moduleTitle: m.title,
+            key: c.lt ? c.lt + ':' + c.lid : t.id + ':' + cid,
+            feedTopic: c.lt || t.id,
+            feedCard: c.lt ? c.lid : cid,
+            card: c, topicId: t.id, topicTitle: t.title,
+            moduleId: m.id, moduleTitle: m.title, moduleN: m.n,
             mcq: Array.isArray(c.options) && typeof c.correctIndex === 'number'
           });
         });
@@ -227,49 +199,59 @@
     return out;
   }
 
-  /* THE MAP IS KEYED topicId -> { title, comps: [...] }.
-     This read map[entry.topicId] and returned that whole object, so the
-     filter below was comparing an object with a competency id string and
-     never matching. Every competency that has no competencyId stamped on
-     its cards, which is 56 of 192 including all seventeen of week 1,
-     therefore resolved to no cards at all. topicWeek() and
-     mastery-evidence.js both read .comps correctly; only this one did
-     not.
-
-     It returns an array when the route is the map, because one topic
-     covers several competencies. */
   function compOf(entry) {
     var map = window.CARD_COMPETENCY_MAP || window.BIO004_CARD_COMPETENCY_MAP;
     if (entry.card.competencyId) return entry.card.competencyId;
     if (map) {
-      var e = map[entry.key] || map[entry.card.id] || map[entry.topicId];
+      var e = map[entry.key] || map[entry.feedTopic] || map[entry.topicId];
       if (e) return (e && e.comps) ? e.comps : e;
     }
     return null;
   }
-  /* compOf can be a string or a list, so never compare it directly. */
   function isComp(entry, want) {
     var c = compOf(entry);
     if (!c) return false;
     return Array.isArray(c) ? c.indexOf(want) > -1 : c === want;
   }
-
   function due(entry) {
     var p = progress[entry.key];
-    if (!p) return true;                       // never seen, so it is due
+    if (!p) return true;
     return !p.next || p.next <= today();
   }
 
+  /* ---------- topic selection ---------- */
+  function loadSel() {
+    try { var s = JSON.parse(localStorage.getItem(TKEY)); if (s && typeof s === 'object') return s; } catch (e) {}
+    return null;
+  }
+  function saveSel() { try { localStorage.setItem(TKEY, JSON.stringify(selected)); } catch (e) {} }
+  function moduleNow() {
+    var best = 0;
+    MODS.forEach(function (m, i) {
+      if (m.extra) return;
+      if ((m.topics || []).some(function (t) { var s = topicStatus(t); return s === 'done' || s === 'now'; })) best = i;
+    });
+    return best;
+  }
+  function taughtIn(m) {
+    return (m.topics || []).filter(function (t) { var s = topicStatus(t); return s === 'done' || s === 'now'; });
+  }
+  function selectTaughtIn(m) {
+    (m.topics || []).forEach(function (t) { delete selected[t.id]; });
+    taughtIn(m).forEach(function (t) { selected[t.id] = true; });
+  }
+  function selCount() { return Object.keys(selected).filter(function (k) { return selected[k] && TOPIC[k]; }).length; }
+  function cardCount(ids) {
+    var want = {}; ids.forEach(function (i) { want[i] = 1; });
+    var n = 0; ALL.forEach(function (e) { if (want[e.topicId]) n++; }); return n;
+  }
+  function selectedIds() { return Object.keys(selected).filter(function (k) { return selected[k] && TOPIC[k]; }); }
+
   function build() {
-    var wkNow = currentWeek();
+    var ids = {}; selectedIds().forEach(function (k) { ids[k] = 1; });
     var pool = ALL.filter(function (e) {
-      var w = topicWeek(e.topicId);
-      if (filter.scope === 'week'  && w !== wkNow) return false;
-      if (filter.scope === 'sofar' && (w === 0 || w > wkNow)) return false;
-      if (filter.module !== 'all' && e.moduleId !== filter.module) return false;
-      if (filter.topic !== 'all' && e.topicId !== filter.topic) return false;
-      if (filter.comp && !isComp(e, filter.comp)) return false;
-      return true;
+      if (filter.comp) return isComp(e, filter.comp);
+      return !!ids[e.topicId];
     });
     if (filter.mode === 'due') pool = pool.filter(due);
     if (filter.mode === 'missed') pool = pool.filter(function (e) {
@@ -277,33 +259,14 @@
     });
     if (filter.mode === 'gaps') pool = sampleAcross(pool, GAP_PER_TOPIC);
     shuffle(pool);
-    /* Shuffle first so order inside a week is random, then bring this week's
-       material to the front. Newest first is what a student needs after a
-       lecture; older weeks still come round, which is the whole point of
-       spacing. */
-    if (filter.scope === 'sofar') {
-      pool.sort(function (a, b) { return topicWeek(b.topicId) - topicWeek(a.topicId); });
-    }
     return pool;
   }
-
-  /* A gap run is a survey, not a study session. It takes a small random
-     sample from EVERY topic rather than going deep anywhere, so a short run
-     tells you where you are weak across the whole course.
-
-     This is what the old gap-cards deck was for. That deck was 35 fixed
-     questions, so it found the same gaps every time and stopped being
-     diagnostic the moment you had seen it once. Sampling the live bank
-     instead means every run asks different questions, and there are 3,728
-     to draw from. Run it as often as you like; it will not repeat itself. */
   function sampleAcross(pool, perTopic) {
     var byTopic = {};
     pool.forEach(function (e) { (byTopic[e.topicId] = byTopic[e.topicId] || []).push(e); });
     var out = [];
     Object.keys(byTopic).forEach(function (id) {
       var cards = byTopic[id].slice();
-      /* Prefer what you have not proven yet, then fill from the rest, so a
-         gap run spends its questions where they can still tell you something. */
       var unproven = cards.filter(function (e) { var p = progress[e.key]; return !p || (p.box || 0) < 3; });
       var rest     = cards.filter(function (e) { var p = progress[e.key]; return p && (p.box || 0) >= 3; });
       shuffle(unproven); shuffle(rest);
@@ -311,13 +274,6 @@
     });
     return out;
   }
-
-  /* Fisher-Yates, seeded from Math.random, so the order is different every
-     single run. An earlier version sorted on a hash of the card id, which is
-     stable by definition, so every student met the same cards in the same
-     order every time. Stability is the wrong goal here: the order IS part of
-     what you are being tested on, and a fixed one lets you learn the sequence
-     instead of the anatomy. */
   function shuffle(a) {
     for (var i = a.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
@@ -325,20 +281,17 @@
     }
     return a;
   }
-
-  /* Options are re-shuffled every time a card is shown, not once per card.
-     Across the bank the correct answer sat in position 4 only 15.6% of the
-     time and position 2 32.6%, so a student could gain marks by learning to
-     avoid the last option. Returns a fresh view; the card itself is never
-     mutated, so the bank on disk stays as authored. */
+  /* Choices are shuffled every time a card is shown. Each choice keeps
+     its own note, so the breakdown always matches what is on screen. */
   function presentOptions(card) {
-    var pairs = card.options.map(function (text, i) { return { text: text, right: i === card.correctIndex }; });
+    var pairs = card.options.map(function (text, i) {
+      return { text: text, right: i === card.correctIndex, note: (card.notes && card.notes[i]) || '' };
+    });
     shuffle(pairs);
     return pairs;
   }
 
   /* ---------- grading ---------- */
-
   function grade(entry, right) {
     var p = progress[entry.key] || { box: 0, right: 0, wrong: 0 };
     if (right) { p.right++; p.box = Math.min((p.box || 0) + 1, BOX_DAYS.length - 1); }
@@ -346,21 +299,15 @@
     p.conf = confidence;
     p.last = today();
     p.next = addDays(today(), BOX_DAYS[p.box]);
+    if (!right && confidence === 'sure') p.blindspot = true;
     progress[entry.key] = p;
     save(progress);
     odBump(entry);
     feedMasteryOS(entry, right);
-    runLog.push({ topicId: entry.topicId, topicTitle: entry.topicTitle,
-                  moduleTitle: entry.moduleTitle, right: !!right });
-
-    /* The gap worth naming: sure and wrong. That pairing is what an
-       exam punishes, and a student cannot see it without being asked
-       to commit to a confidence first. */
-    if (!right && confidence === 'sure') p.blindspot = true;
+    runLog.push({ topicId: entry.topicId, topicTitle: entry.topicTitle, moduleTitle: entry.moduleTitle, right: !!right });
   }
 
-  /* ---------- render ---------- */
-
+  /* ---------- render: header ---------- */
   function stats() {
     var seen = 0, mastered = 0, shaky = 0, blind = 0;
     ALL.forEach(function (e) {
@@ -373,185 +320,334 @@
     });
     return { seen: seen, mastered: mastered, shaky: shaky, blind: blind, total: ALL.length };
   }
-
   function head() {
-    var s = stats();
-    var mods = {};
-    ALL.forEach(function (e) { mods[e.moduleId] = e.moduleTitle || e.moduleId; });
-    var opts = '<option value="all">Every module</option>';
-    /* Topics are the chapters inside a module. filter.topic already worked;
-       it simply had no control, so a student could reach a module but not the
-       chapter they had just been taught. The list follows the module choice,
-       and it respects the scope, so it never offers a chapter from a week
-       that has not happened. */
-    var wkNowT = currentWeek();
-    var tops = {};
-    ALL.forEach(function (e) {
-      if (filter.module !== 'all' && e.moduleId !== filter.module) return;
-      var w = topicWeek(e.topicId);
-      if (filter.scope === 'week'  && w !== wkNowT) return;
-      if (filter.scope === 'sofar' && (w === 0 || w > wkNowT)) return;
-      tops[e.topicId] = e.topicTitle || e.topicId;
-    });
-    var topOpts = '<option value="all">Every chapter</option>';
-    Object.keys(tops).sort(function (a, b) {
-      return (topicWeek(a) - topicWeek(b)) || String(tops[a]).localeCompare(String(tops[b]));
-    }).forEach(function (k) {
-      topOpts += '<option value="' + esc(k) + '"' + (filter.topic === k ? ' selected' : '') + '>'
-               + esc(tops[k]) + '</option>';
-    });
-    Object.keys(mods).forEach(function (k) {
-      opts += '<option value="' + esc(k) + '"' + (filter.module === k ? ' selected' : '') + '>'
-            + esc(mods[k]) + '</option>';
-    });
-    /* the odometer band: lifetime reps, todays reps, rank. Pure
-       bragging rights, and it never resets. */
-    var od = odRead();
+    var s = stats(), od = odRead();
     var uniq = Object.keys(od.cards).length;
-    var reps = Math.max(0, od.total - uniq);
     var rk = odRank(od.total);
     var todayN = od.days[today()] || 0;
-    var odo = ''
-      + '<div class="rv-odo" role="group" aria-label="Your lifetime card count" '
-      + 'style="display:flex;flex-wrap:wrap;gap:8px 22px;align-items:baseline;'
-      + 'background:#08101F;color:#EDF1F3;border-radius:12px;padding:14px 18px;margin:0 0 14px">'
-      + '<span style="font-size:30px;font-weight:800;letter-spacing:-.02em" id="rv-odo-total">' + fmtNum(od.total) + '</span>'
-      + '<span style="font-size:13px">cards answered, all time</span>'
-      + '<span style="font-size:13px"><b id="rv-odo-today">' + fmtNum(todayN) + '</b> today</span>'
-      + '<span style="font-size:13px"><b>' + fmtNum(uniq) + '</b> unique &middot; <b>' + fmtNum(reps) + '</b> repeat reps</span>'
-      + (rk.cur ? '<span style="font-size:13px;color:#CFA95F;font-weight:800">' + rk.cur[1] + '</span>' : '')
-      + (rk.next ? '<span style="font-size:12px;color:#C8D2DA">' + fmtNum(rk.next[0] - od.total) + ' to ' + rk.next[1] + '</span>'
-                 : (rk.cur ? '<span style="font-size:12px;color:#C8D2DA">Top rank. Absurd. Respect.</span>' : ''))
-      + '<a href="bio004-card-leaderboard.html" target="_blank" rel="noopener" '
-      + 'style="margin-left:auto;color:#fff;font-weight:700;font-size:13px">Class leaderboard &#8599;</a>'
-      + '</div>';
-    return odo
-      + '<div class="rv-stats" role="group" aria-label="Your recall progress">'
-      +   '<p class="rv-stat"><strong>' + s.total + '</strong><span>cards in the bank</span></p>'
-      +   '<p class="rv-stat"><strong>' + s.seen + '</strong><span>you have seen</span></p>'
-      +   '<p class="rv-stat"><strong>' + s.mastered + '</strong><span>holding steady</span></p>'
-      +   '<p class="rv-stat"><strong>' + s.shaky + '</strong><span>still shaky</span></p>'
+    return ''
+      + '<div class="rv-odo" role="group" aria-label="Your card count">'
+      +   '<span class="rv-odo-big">' + fmtNum(od.total) + '</span>'
+      +   '<span>cards answered, all time</span>'
+      +   '<span><b>' + fmtNum(todayN) + '</b> today</span>'
+      +   '<span><b>' + fmtNum(uniq) + '</b> unique</span>'
+      +   (rk.cur ? '<span class="rv-odo-rank">' + esc(rk.cur[1]) + '</span>' : '')
+      +   (rk.next ? '<span class="rv-odo-sub">' + fmtNum(rk.next[0] - od.total) + ' to ' + esc(rk.next[1]) + '</span>' : '')
+      +   '<span class="rv-odo-links"><a href="#s-weak" target="_top">My weakness dashboard</a>'
+      +   '<a href="bio004-card-leaderboard.html" target="_top">Class leaderboard</a></span>'
       + '</div>'
-      + (s.blind
-          ? '<p class="rv-blind">You have been <strong>sure and wrong</strong> on ' + s.blind
-            + ' card' + (s.blind === 1 ? '' : 's') + '. Those are worth more of your time than anything you already find hard, '
-            + 'because you would not have studied them.</p>'
-          : '')
-      + '<div class="rv-controls">'
-      +   '<span class="rv-field"><label for="rv-scope">Material</label>'
-      +     '<select id="rv-scope">'
-      +       '<option value="sofar"' + (filter.scope === 'sofar' ? ' selected' : '') + '>Everything taught so far</option>'
-      +       '<option value="week"'  + (filter.scope === 'week'  ? ' selected' : '') + '>This week only</option>'
-      +       '<option value="all"'   + (filter.scope === 'all'   ? ' selected' : '') + '>The whole course</option>'
-      +     '</select></span>'
-      +   '<span class="rv-field"><label for="rv-mod">Module</label>'
-      +     '<select id="rv-mod">' + opts + '</select></span>'
-      +   '<span class="rv-field"><label for="rv-topic">Chapter</label>'
-      +     '<select id="rv-topic">' + topOpts + '</select></span>'
+      + '<div class="rv-stats" role="group" aria-label="Your recall progress">'
+      +   '<p class="rv-stat"><strong>' + fmtNum(s.total) + '</strong><span>cards in the bank</span></p>'
+      +   '<p class="rv-stat"><strong>' + fmtNum(s.seen) + '</strong><span>you have seen</span></p>'
+      +   '<p class="rv-stat"><strong>' + fmtNum(s.mastered) + '</strong><span>holding steady</span></p>'
+      +   '<p class="rv-stat"><strong>' + fmtNum(s.shaky) + '</strong><span>still shaky</span></p>'
+      + '</div>'
+      + (s.blind ? '<p class="rv-blind">You were <strong>sure and wrong</strong> on ' + s.blind
+          + ' card' + (s.blind === 1 ? '' : 's') + '. Those deserve extra time, because you would not have studied them.</p>' : '');
+  }
+
+  /* ---------- display preferences ----------
+     Students choose how recall looks: the topic list layout, how the
+     answer explanations appear, and a light or dark theme. Saved in
+     this browser only. */
+  var DKEY = 'bio004-recall-display';
+  var PICKERS = [['tabs', 'Tabs, one module at a time'], ['stack', 'All modules on one page'], ['timeline', 'Class-by-class timeline']];
+  var THEMES = [['light', 'Light'], ['navy', 'Navy with white cards'], ['dark', 'Dark']];
+  var CARDS = [['panel', 'Explanation panel below the choices'], ['inline', 'Explanation under each choice'],
+               ['explore', 'Tap a choice to read about it'], ['flip', 'Flip the card over']];
+  function loadDisp() {
+    var d = null;
+    try { d = JSON.parse(localStorage.getItem(DKEY)); } catch (e) {}
+    d = d && typeof d === 'object' ? d : {};
+    function pick(v, list, dflt) { for (var i = 0; i < list.length; i++) if (list[i][0] === v) return v; return dflt; }
+    return { theme: pick(d.theme, THEMES, 'light'), picker: pick(d.picker, PICKERS, 'tabs'), card: pick(d.card, CARDS, 'panel') };
+  }
+  function saveDisp() { try { localStorage.setItem(DKEY, JSON.stringify(disp)); } catch (e) {} }
+  var disp = loadDisp();
+  var dispOpen = false;
+  var openMods = null;   // stacked view: which modules are expanded
+  var exploreAt = null;  // explore view: which choice is being read
+  var flipped = false;   // flip view: showing the back
+
+  function radios(name, list, cur, legend) {
+    return '<fieldset class="rv-fs"><legend>' + esc(legend) + '</legend>' + list.map(function (o) {
+      var id = 'rv-' + name + '-' + o[0];
+      return '<label class="rv-radio" for="' + id + '"><input type="radio" id="' + id + '" name="rv-' + name + '" value="' + o[0] + '" data-disp="' + name + '"'
+        + (cur === o[0] ? ' checked' : '') + '><span>' + esc(o[1]) + '</span></label>';
+    }).join('') + '</fieldset>';
+  }
+  function displayBar() {
+    return ''
+      + '<div class="rv-dispbar">'
+      +   '<button type="button" class="rv-btn rv-small" id="rv-disp-btn" aria-expanded="' + dispOpen + '" aria-controls="rv-disp">Display options</button>'
+      +   '<div class="rv-themes" role="group" aria-label="Theme">' + THEMES.map(function (o) {
+            return '<button type="button" class="rv-btn rv-small" data-theme-set="' + o[0] + '" aria-pressed="' + (disp.theme === o[0]) + '">'
+              + esc(o[0] === 'navy' ? 'Navy' : o[1]) + '</button>';
+          }).join('') + '</div>'
+      + '</div>'
+      + '<div class="rv-disp" id="rv-disp"' + (dispOpen ? '' : ' hidden') + '>'
+      +   radios('picker', PICKERS, disp.picker, 'How topics are listed')
+      +   radios('card', CARDS, disp.card, 'How answers are explained')
+      +   radios('theme', THEMES, disp.theme, 'Theme')
+      + '</div>';
+  }
+
+  /* ---------- render: the topic picker ---------- */
+  function chip(t) {
+    var s = topicStatus(t), d = topicDate(t);
+    if (s === 'done') return '<span class="rv-chip rv-done-chip">Taught ' + esc(fmtDate(d)) + '</span>';
+    if (s === 'now')  return '<span class="rv-chip rv-now-chip">Today</span>';
+    if (s === 'soon') return '<span class="rv-chip rv-soon-chip">Coming ' + esc(fmtDate(d)) + '</span>';
+    return '<span class="rv-chip rv-soon-chip">Extra practice</span>';
+  }
+  function topicRow(t) {
+    var s = topicStatus(t);
+    return '<li><label class="rv-check' + (s === 'soon' ? ' is-soon' : '') + '" for="rv-t-' + esc(t.id) + '">'
+      + '<input type="checkbox" id="rv-t-' + esc(t.id) + '" data-topic="' + esc(t.id) + '"' + (selected[t.id] ? ' checked' : '') + '>'
+      + '<span class="rv-check-t">' + esc(t.title) + '<small>' + fmtNum((t.cards || []).length) + ' cards</small></span>'
+      + chip(t) + '</label></li>';
+  }
+  function modLabel(mm) { return mm.extra ? 'More practice' : 'Module ' + mm.n; }
+  function modCount(mm) { return (mm.topics || []).filter(function (t) { return selected[t.id]; }).length; }
+  function quickRow(scope) {
+    if (scope === 'all') {
+      return '<div class="rv-quick"><span>Select:</span>'
+        + '<button type="button" class="rv-link" data-quick="taught-all">Everything taught so far</button>'
+        + '<button type="button" class="rv-link" data-quick="none-all">Clear everything</button></div>';
+    }
+    return '<div class="rv-quick"><span>Select:</span>'
+      + '<button type="button" class="rv-link" data-quick="taught">Everything taught so far</button>'
+      + '<button type="button" class="rv-link" data-quick="all">Whole module</button>'
+      + '<button type="button" class="rv-link" data-quick="none">Clear this module</button></div>';
+  }
+  function pickTabs() {
+    var m = MODS[curMod] || MODS[0];
+    var tabs = MODS.map(function (mm, i) {
+      var n = modCount(mm);
+      return '<button type="button" class="rv-tab" role="tab" id="rv-tab-' + i + '" aria-selected="' + (i === curMod) + '"'
+        + ' aria-controls="rv-topics" tabindex="' + (i === curMod ? '0' : '-1') + '" data-mod="' + i + '">'
+        + esc(modLabel(mm)) + (n ? ' <span class="rv-tab-n">' + n + '</span>' : '') + '</button>';
+    }).join('');
+    return '<div class="rv-tabs" role="tablist" aria-label="Modules">' + tabs + '</div>'
+      + '<div class="rv-tabpanel" id="rv-topics" role="tabpanel" aria-labelledby="rv-tab-' + curMod + '">'
+      +   '<p class="rv-mod-title">' + esc(m.title) + (m.exam ? ' <span>· ' + esc(m.exam) + '</span>' : '') + '</p>'
+      +   quickRow('mod')
+      +   '<ul class="rv-list">' + (m.topics || []).map(topicRow).join('') + '</ul>'
+      + '</div>';
+  }
+  function pickStack() {
+    if (!openMods) { openMods = {}; openMods[curMod] = true; }
+    return quickRow('all') + '<div class="rv-acc">' + MODS.map(function (mm, i) {
+      var n = modCount(mm), all = (mm.topics || []).length;
+      return '<div class="rv-accm' + (openMods[i] ? ' is-open' : '') + '">'
+        + '<div class="rv-acch">'
+        +   '<input type="checkbox" id="rv-m-' + i + '" data-modall="' + i + '"' + (n === all && all ? ' checked' : '')
+        +     ' aria-label="Select every topic in ' + esc(mm.title) + '">'
+        +   '<button type="button" class="rv-accbtn" data-open="' + i + '" aria-expanded="' + !!openMods[i] + '" aria-controls="rv-accp-' + i + '">'
+        +     '<span class="rv-acct">' + esc(mm.title) + '<small>' + n + ' of ' + all + ' topics checked' + (mm.exam ? ' · ' + esc(mm.exam) : '') + '</small></span>'
+        +     '<span class="rv-caret" aria-hidden="true">&#9656;</span></button>'
+        + '</div>'
+        + '<ul class="rv-list rv-accp" id="rv-accp-' + i + '"' + (openMods[i] ? '' : ' hidden') + '>' + (mm.topics || []).map(topicRow).join('') + '</ul>'
+        + '</div>';
+    }).join('') + '</div>';
+  }
+  function pickTimeline() {
+    var m = MODS[curMod] || MODS[0];
+    var opts = MODS.map(function (mm, i) {
+      return '<option value="' + i + '"' + (i === curMod ? ' selected' : '') + '>' + esc(mm.title) + '</option>';
+    }).join('');
+    var rows = (m.topics || []).map(function (t) {
+      var s = topicStatus(t), d = topicDate(t);
+      var word = s === 'done' ? 'Taught' : s === 'now' ? 'Today' : s === 'soon' ? 'Coming up' : 'Extra practice';
+      return '<li class="rv-tl-' + s + '"><span class="rv-tl-date">' + esc(d ? fmtDate(d) : '') + '</span>'
+        + '<span class="rv-tl-rail" aria-hidden="true"><span class="rv-tl-dot"></span></span>'
+        + '<label class="rv-tl-node" for="rv-t-' + esc(t.id) + '"><input type="checkbox" id="rv-t-' + esc(t.id) + '" data-topic="' + esc(t.id) + '"'
+        + (selected[t.id] ? ' checked' : '') + '><span class="rv-check-t">' + esc(t.title)
+        + '<small>' + word + ' · ' + fmtNum((t.cards || []).length) + ' cards</small></span></label></li>';
+    }).join('');
+    return '<span class="rv-field"><label for="rv-modsel">Module</label><select id="rv-modsel">' + opts + '</select></span>'
+      + quickRow('mod') + '<ol class="rv-tl">' + rows + '</ol>';
+  }
+  function picker() {
+    var tr = track();
+    var ids = selectedIds();
+    var nCards = cardCount(ids);
+    var nMods = {}; ids.forEach(function (k) { nMods[TOPIC[k].m.id] = 1; });
+    var body = disp.picker === 'stack' ? pickStack() : disp.picker === 'timeline' ? pickTimeline() : pickTabs();
+    return ''
+      + '<div class="rv-picker">'
+      + '<div class="rv-pick-head">'
+      +   '<h3 class="rv-h">Choose what to study</h3>'
+      +   '<div class="rv-sec" role="group" aria-label="Your class days">'
+      +     '<span>My class days:</span>'
+      +     '<button type="button" data-sec="mw" aria-pressed="' + (tr === 'mw') + '">Mon / Wed</button>'
+      +     '<button type="button" data-sec="tr" aria-pressed="' + (tr === 'tr') + '">Tue / Thu</button>'
+      +   '</div>'
+      + '</div>'
+      + body
+      + '<div class="rv-startbar">'
+      +   '<p class="rv-count" id="rv-count" aria-live="polite">'
+      +     (ids.length ? fmtNum(ids.length) + ' topic' + (ids.length === 1 ? '' : 's') + ' from ' + Object.keys(nMods).length
+              + ' module' + (Object.keys(nMods).length === 1 ? '' : 's') + ', ' + fmtNum(nCards) + ' cards'
+            : 'No topics checked yet. Check at least one topic to start.') + '</p>'
       +   '<span class="rv-field"><label for="rv-mode">Show me</label>'
       +     '<select id="rv-mode">'
       +       '<option value="due"' + (filter.mode === 'due' ? ' selected' : '') + '>Cards due today</option>'
-      +       '<option value="gaps"' + (filter.mode === 'gaps' ? ' selected' : '') + '>Find my gaps</option>'
+      +       '<option value="all"' + (filter.mode === 'all' ? ' selected' : '') + '>Every card in these topics</option>'
+      +       '<option value="gaps"' + (filter.mode === 'gaps' ? ' selected' : '') + '>Find my gaps (2 per topic)</option>'
       +       '<option value="missed"' + (filter.mode === 'missed' ? ' selected' : '') + '>Ones I keep missing</option>'
-      +       '<option value="all"' + (filter.mode === 'all' ? ' selected' : '') + '>Everything</option>'
       +     '</select></span>'
-      +   '<button type="button" class="btn ghost" id="rv-restart">Start a fresh run</button>'
+      +   '<button type="button" class="rv-btn rv-primary" id="rv-start"' + (ids.length ? '' : ' disabled') + '>Start session</button>'
+      + '</div>'
       + '</div>';
   }
 
+  /* ---------- render: a card ---------- */
+  var DOKN = { 1: 'Recall', 2: 'Apply', 3: 'Reason' };
+  var LET = 'ABCD';
+  function rightIndex() { for (var i = 0; i < shown.length; i++) if (shown[i].right) return i; return -1; }
+  function verdictHtml(c) {
+    var ri = rightIndex(), right = picked === ri;
+    return '<p class="rv-verdict">' + (right ? 'Correct.' : 'Not quite. The correct answer is “' + esc(ri > -1 ? shown[ri].text : c.a) + '.”')
+      + (!right && confidence === 'sure' ? ' You were sure on this one, so it will come back tomorrow.' : '') + '</p>';
+  }
+  function whyHtml(c) {
+    return '<div class="rv-why"><p class="rv-why-h">Why this answer is right</p><p>' + esc(c.why || c.explanation || '') + '</p></div>';
+  }
+  function optionsHtml(withNotes) {
+    var answered = picked !== null;
+    return '<ol class="rv-opts" aria-label="Answer choices">' + shown.map(function (o, i) {
+      var cls = 'rv-opt', tag = '';
+      if (answered) {
+        if (o.right) { cls += ' is-right'; tag = '<span class="rv-tag">Correct answer</span>'; }
+        else if (i === picked) { cls += ' is-wrong'; tag = '<span class="rv-tag">Your answer</span>'; }
+      }
+      var note = withNotes && answered ? '<p class="rv-inline-note">' + esc(o.right ? 'Correct. ' + (o.note.replace(/^correct\.?\s*/i, '')) : o.note) + '</p>' : '';
+      return '<li><button type="button" class="' + cls + '" data-pick="' + i + '"' + (answered ? ' disabled' : '') + '>'
+           + '<span class="rv-ltr" aria-hidden="true">' + LET[i] + '</span><span class="rv-opt-t">' + esc(o.text) + tag + '</span></button>' + note + '</li>';
+    }).join('') + '</ol>';
+  }
+  function whyNotHtml() {
+    var others = [];
+    shown.forEach(function (o, i) { if (!o.right) others.push({ o: o, i: i }); });
+    if (!others.some(function (x) { return x.o.note; })) return '';
+    others.sort(function (a, b) { return (b.i === picked) - (a.i === picked); });
+    return '<div class="rv-whynot"><p class="rv-whynot-h">Why not the others</p>' + others.map(function (x) {
+      return '<div class="rv-wn"><p class="rv-wn-h">' + esc(x.o.text) + (x.i === picked ? ' <span class="rv-tag">Your answer</span>' : '') + '</p>'
+           + '<p>' + esc(x.o.note) + '</p></div>';
+    }).join('') + '</div>';
+  }
+  function exploreHtml(c) {
+    var ri = rightIndex();
+    var at = exploreAt == null ? (picked !== ri && picked > -1 ? picked : ri) : exploreAt;
+    var o = shown[at];
+    return '<div class="rv-explore"><p class="rv-whynot-h" id="rv-ex-h">Read about any choice</p>'
+      + '<div class="rv-ptabs" role="tablist" aria-labelledby="rv-ex-h">' + shown.map(function (x, i) {
+          return '<button type="button" class="rv-ptab" role="tab" id="rv-ptab-' + i + '" data-explore="' + i + '" aria-selected="' + (i === at) + '"'
+            + ' aria-controls="rv-ppanel">' + LET[i]
+            + (x.right ? ' <span class="rv-ptab-k">correct</span>' : i === picked ? ' <span class="rv-ptab-k">yours</span>' : '') + '</button>';
+        }).join('') + '</div>'
+      + '<div class="rv-ppanel" id="rv-ppanel" role="tabpanel" aria-labelledby="rv-ptab-' + at + '">'
+      +   '<p class="rv-wn-h">' + esc(o.text) + '</p>'
+      +   '<p>' + esc(o.right ? c.why || c.explanation || '' : o.note) + '</p></div></div>';
+  }
+  function flipBackHtml(c) {
+    var ri = rightIndex();
+    var order = [ri].concat(shown.map(function (x, i) { return i; }).filter(function (i) { return i !== ri; }));
+    return '<div class="rv-flipback">' + verdictHtml(c) + '<div class="rv-minis">' + order.map(function (i) {
+      var x = shown[i], r = i === ri;
+      return '<div class="rv-mini' + (r ? ' is-right' : '') + '"><p class="rv-wn-h">'
+        + (r ? 'Right answer: ' : i === picked ? 'Your answer: ' : 'Not this one: ') + esc(x.text) + '</p>'
+        + '<p>' + esc(r ? c.why || c.explanation || '' : x.note) + '</p></div>';
+    }).join('') + '</div>'
+      + '<button type="button" class="rv-link" id="rv-flip">Show the question again</button></div>';
+  }
   function cardHtml(e) {
     var c = e.card;
-    var body = '';
-    if (!revealed) {
+    var dok = c.dok ? Math.max(1, Math.min(3, +c.dok)) : 1;
+    var body = '', isBack = false;
+    if (stage === 'conf') {
       body = '<div class="rv-conf" role="group" aria-labelledby="rv-conf-h">'
-           + '<p id="rv-conf-h" class="rv-conf-h">Before you look, how sure are you?</p>'
+           + '<p id="rv-conf-h" class="rv-conf-h">Before you see the choices, how sure are you?</p>'
            + '<div class="rv-conf-row">'
-           +   btn('sure',  'I know this')
-           +   btn('think', 'I think so')
-           +   btn('no',    'Not yet')
+           +   '<button type="button" class="rv-btn rv-gold" data-conf="sure">I know this</button>'
+           +   '<button type="button" class="rv-btn" data-conf="think">I think so</button>'
+           +   '<button type="button" class="rv-btn" data-conf="no">Not yet</button>'
            + '</div></div>';
     } else if (e.mcq) {
       if (!shown) shown = presentOptions(c);
-      body = '<ol class="rv-opts">' + shown.map(function (o, i) {
-        return '<li><button type="button" class="rv-opt" data-pick="' + i + '">' + esc(o.text) + '</button></li>';
-      }).join('') + '</ol>';
+      var answered = picked !== null;
+      if (!answered) body = optionsHtml(false);
+      else if (disp.card === 'inline') body = optionsHtml(true) + verdictHtml(c) + whyHtml(c);
+      else if (disp.card === 'explore') body = optionsHtml(false) + verdictHtml(c) + exploreHtml(c);
+      else if (disp.card === 'flip') {
+        if (flipped) { body = flipBackHtml(c); isBack = true; }
+        else body = optionsHtml(false) + '<button type="button" class="rv-btn rv-gold" id="rv-flip">Flip to see why</button>';
+      }
+      else body = optionsHtml(false) + '<div class="rv-breakdown">' + verdictHtml(c) + whyHtml(c) + whyNotHtml() + '</div>';
     } else {
-      body = '<div class="rv-answer"><p class="rv-answer-h">The answer</p><p>' + c.a + '</p>'
-           + (c.explanation ? '<p class="rv-expl">' + c.explanation + '</p>' : '')
-           + '<div class="rv-selfgrade"><p>Did you have it?</p>'
-           +   '<button type="button" class="btn primary" data-self="1">I had it</button> '
-           +   '<button type="button" class="btn" data-self="0">I did not</button>'
-           + '</div></div>';
+      body = '<div class="rv-why"><p class="rv-why-h">The answer</p><p>' + esc(c.a) + '</p>'
+           + (c.explanation ? '<p>' + esc(c.explanation) + '</p>' : '') + '</div>'
+           + '<div class="rv-conf-row"><button type="button" class="rv-btn rv-primary" data-self="1">I had it</button>'
+           + '<button type="button" class="rv-btn" data-self="0">I did not</button></div>';
     }
-    /* IT SHOULD LOOK LIKE A CARD, NOT LIKE THE PAGE.
-       This was a flat panel the same width and color as everything
-       around it, so the one thing a student is meant to be looking at
-       read as another block of the form above it. It is a card now:
-       narrower than the column, lifted well off the page on a real
-       shadow, with a colored tile in the corner the same way the
-       method cards on Today carry one. The tile color is the DOK
-       level, so the depth of the question is visible before it is
-       read. No bar across the top: bars are out of the system. */
-    var dok = c.dok ? Math.max(1, Math.min(4, +c.dok)) : 1;
-    var DOKN = { 1:'Recall', 2:'Apply', 3:'Reason', 4:'Extend' };
     return ''
       + '<div class="rv-stage">'
-      + '<article class="rv-card rv-d' + dok + '">'
-      +   '<p class="rv-badge" aria-hidden="true">' + dok + '</p>'
-      +   '<p class="rv-level">' + esc(DOKN[dok]) + '</p>'
-      +   '<p class="rv-crumb">' + esc(e.topicTitle || '')
-      +     ' &middot; card ' + (pos + 1) + ' of ' + queue.length + '</p>'
-      +   '<h3 class="rv-q">' + c.q + '</h3>'
+      + '<article class="rv-card' + (isBack ? ' is-back' : '') + '" aria-labelledby="rv-q">'
+      +   '<div class="rv-meta"><span class="rv-chip rv-done-chip">' + esc(e.moduleN ? 'Module ' + e.moduleN : 'More practice') + '</span>'
+      +     '<span>' + esc(e.topicTitle || '') + '</span>'
+      +     '<span class="rv-dok rv-d' + dok + '">' + esc(DOKN[dok]) + '</span>'
+      +     '<span class="rv-of">Card ' + (pos + 1) + ' of ' + queue.length + '</span></div>'
+      +   '<h3 class="rv-q" id="rv-q">' + esc(c.q) + '</h3>'
       +   body
       +   '<p class="rv-live" id="rv-live" role="status" aria-live="polite"></p>'
+      +   (picked !== null || stage === 'self' ? '<div class="rv-nextrow"><button type="button" class="rv-btn rv-primary" id="rv-next">'
+              + (pos + 1 >= queue.length ? 'Finish the session' : 'Next card') + '</button></div>' : '')
       + '</article>'
+      + '<p class="rv-back"><button type="button" class="rv-link" id="rv-topicsbtn">Change topics</button></p>'
       + '</div>';
   }
-  function btn(k, label) {
-    return '<button type="button" class="btn' + (k === 'sure' ? ' gold' : '') + '" data-conf="' + k + '">'
-         + esc(label) + '</button>';
-  }
 
-  function render() {
+  /* ---------- render: whole view ---------- */
+  function render(focusSel) {
     var host = $(MOUNT);
     if (!host) return;
     if (!ALL.length) {
-      host.innerHTML = '<p class="note">The card bank did not load. Check that '
-        + '<code>bio004-card-bank.js</code> is on the page before this script.</p>';
+      host.innerHTML = '<p class="note">The card bank did not load. Check that bio004-card-bank.js is on the page before this script.</p>';
       return;
     }
-    var inner = head();
+    host.setAttribute('data-rv-theme', disp.theme);
+    var inner = head() + displayBar();
     if (NO_CARDS_FOR) {
-      var cs = window.BIO004_COMPETENCIES || [];
-      var hit = null;
+      var cs = window.BIO004_COMPETENCIES || [], hit = null;
       for (var ci = 0; ci < cs.length; ci++) { if (cs[ci].id === NO_CARDS_FOR) { hit = cs[ci]; break; } }
-      inner += '<div class="rv-card rv-note"><h3>' + esc(hit ? hit.name : 'That one') +
-               ' is not a card topic</h3>' +
-               '<p>It is a specimen identification, so it is proved at the cadaver or the ' +
-               'microscope rather than by multiple choice. Showing you everything else that is ' +
-               'queued instead.</p></div>';
+      inner += '<div class="rv-note"><h3>' + esc(hit ? hit.name : 'That one') + ' is not a card topic</h3>'
+             + '<p>It is a specimen identification, so it is practiced at the cadaver or the microscope instead of by multiple choice. Choose topics below instead.</p></div>';
     }
-    if (!queue.length) {
-      inner += '<div class="rv-card rv-done"><h3>Nothing due right now</h3>'
-             + '<p>That is the system working, not a gap. Cards come back on a schedule so you '
-             + 'meet them again just as they start to fade. If you want more anyway, switch '
-             + '"Show me" to everything.</p></div>';
+    if (!started) {
+      inner += picker();
+    } else if (!queue.length) {
+      inner += '<div class="rv-note"><h3>Nothing due in these topics right now</h3>'
+             + '<p>That means the spacing is working. Cards come back just as they start to fade. To keep going anyway, change "Show me" to every card in these topics.</p>'
+             + '<button type="button" class="rv-btn rv-primary" id="rv-topicsbtn">Back to topics</button></div>';
     } else if (pos >= queue.length) {
-      inner += '<div class="rv-card rv-done"><h3>That is the run finished</h3>'
-             + '<p>' + queue.length + ' card' + (queue.length === 1 ? '' : 's') + ' done. '
-             + 'Come back tomorrow and the ones you found hard will be waiting, the ones you '
-             + 'found easy will not.</p>'
+      inner += '<div class="rv-note"><h3>Session finished</h3>'
+             + '<p>' + queue.length + ' card' + (queue.length === 1 ? '' : 's') + ' done. The ones you missed or found hard come back tomorrow.</p>'
              + report()
-             + '<button type="button" class="btn primary" id="rv-restart2">Run another set</button></div>';
+             + '<div class="rv-conf-row"><button type="button" class="rv-btn rv-primary" id="rv-again">Run these topics again</button>'
+             + '<button type="button" class="rv-btn" id="rv-topicsbtn">Choose different topics</button></div>'
+             + '<p>Your results also feed your <a href="#s-weak" target="_top">weakness dashboard</a>, which ranks the competencies you are missing.</p></div>';
     } else {
       inner += cardHtml(queue[pos]);
     }
     host.innerHTML = inner;
+    MODS.forEach(function (mm, i) {
+      var cb = host.querySelector('[data-modall="' + i + '"]');
+      if (cb) { var n = modCount(mm); cb.indeterminate = n > 0 && n < (mm.topics || []).length; }
+    });
+    if (focusSel) { var f = host.querySelector(focusSel); if (f) f.focus(); }
   }
 
-
-  /* What the run just told you, worst first. Only shown when there is enough
-     to say something honest: a topic you answered once is not evidence. */
   function report() {
     if (runLog.length < 4) return '';
     var by = {};
@@ -559,177 +655,288 @@
       var t = by[r.topicId] = by[r.topicId] || { title: r.topicTitle, mod: r.moduleTitle, n: 0, ok: 0 };
       t.n++; if (r.right) t.ok++;
     });
-    var rows = Object.keys(by).map(function (id) {
-      var t = by[id];
-      return { id: id, title: t.title, mod: t.mod, n: t.n, ok: t.ok, pct: t.ok / t.n };
-    });
-    var weak = rows.filter(function (r) { return r.pct < 1; })
-                   .sort(function (a, b) { return a.pct - b.pct || b.n - a.n; });
-    var clean = rows.length - weak.length;
-
-    if (!weak.length) {
-      return '<div class="rv-report"><h4>Nothing came up weak</h4>'
-           + '<p>You got every card in this run. Run it again and it will draw '
-           + 'different questions, because the sample is random each time.</p></div>';
-    }
-    return '<div class="rv-report"><h4>Where this run says you are exposed</h4>'
-      + '<p class="rv-report-sub">Weakest first. ' + clean + ' topic' + (clean === 1 ? '' : 's')
-      + ' came back clean and are not listed.</p>'
+    var rows = Object.keys(by).map(function (id) { var t = by[id]; return { title: t.title, mod: t.mod, n: t.n, ok: t.ok, pct: t.ok / t.n }; });
+    var weak = rows.filter(function (r) { return r.pct < 1; }).sort(function (a, b) { return a.pct - b.pct || b.n - a.n; });
+    if (!weak.length) return '<div class="rv-report"><h4>Every topic came back clean</h4><p>Run it again and you will get different cards.</p></div>';
+    return '<div class="rv-report"><h4>Topics to spend more time on</h4>'
       + '<ol class="rv-weak">' + weak.slice(0, 12).map(function (r) {
-          return '<li><span class="rv-weak-t">' + esc(r.title || r.id) + '</span>'
-               + '<span class="rv-weak-m">' + esc(r.mod || '') + '</span>'
+          return '<li><span class="rv-weak-t">' + esc(r.title) + '</span><span class="rv-weak-m">' + esc(r.mod || '') + '</span>'
                + '<span class="rv-weak-n">' + r.ok + ' of ' + r.n + '</span></li>';
-        }).join('') + '</ol>'
-      + '<p class="rv-report-sub">This is one sample, not a verdict. Run it again '
-      + 'in a few days and watch which topics keep appearing. Those are the real ones.</p>'
-      + '</div>';
+        }).join('') + '</ol></div>';
   }
 
-  function next() { pos++; revealed = false; confidence = null; shown = null; render(); }
+  function say(msg) { var l = $('rv-live'); if (l) l.textContent = msg; }
 
-  function say(msg) {
-    var l = $('rv-live');
-    if (l) l.textContent = msg;
+  function startRun() {
+    queue = build(); pos = 0; stage = 'conf'; confidence = null; shown = null; picked = null; runLog = []; exploreAt = null; flipped = false;
+    started = true;
+    render('#rv-q');
+    var sec = document.getElementById('s-recall') || $(MOUNT);
+    if (sec && sec.scrollIntoView) { try { sec.scrollIntoView({ block: 'start' }); } catch (e) {} }
   }
+  function next() { pos++; stage = 'conf'; confidence = null; shown = null; picked = null; exploreAt = null; flipped = false; render('#rv-q'); }
 
   /* ---------- events ---------- */
+  function inMount(t) { var h = $(MOUNT); return h && h.contains(t); }
 
   function onClick(ev) {
-    var t = ev.target.closest ? ev.target.closest('[data-conf],[data-pick],[data-self],#rv-restart,#rv-restart2') : null;
-    if (!t || !$(MOUNT) || !$(MOUNT).contains(t)) return;
+    var t = ev.target.closest ? ev.target.closest('button') : null;
+    if (!t || !inMount(t)) return;
 
-    if (t.id === 'rv-restart' || t.id === 'rv-restart2') {
-      queue = build(); pos = 0; revealed = false; confidence = null; shown = null; runLog = []; render();
-      say(queue.length ? queue.length + ' cards queued.' : 'Nothing is due.');
-      return;
+    if (t.id === 'rv-disp-btn') { dispOpen = !dispOpen; render('#rv-disp-btn'); return; }
+    if (t.hasAttribute('data-theme-set')) { disp.theme = t.getAttribute('data-theme-set'); saveDisp(); render('[data-theme-set="' + disp.theme + '"]'); return; }
+    if (t.hasAttribute('data-open')) { var oi = +t.getAttribute('data-open'); openMods = openMods || {}; openMods[oi] = !openMods[oi]; render('[data-open="' + oi + '"]'); return; }
+    if (t.hasAttribute('data-explore')) { exploreAt = +t.getAttribute('data-explore'); render('#rv-ptab-' + exploreAt); return; }
+    if (t.id === 'rv-flip') { flipped = !flipped; render(flipped ? '.rv-verdict' : '#rv-flip'); return; }
+    if (t.hasAttribute('data-mod')) { curMod = +t.getAttribute('data-mod'); render('#rv-tab-' + curMod); return; }
+    if (t.hasAttribute('data-sec')) { setTrack(t.getAttribute('data-sec')); render(); return; }
+    if (t.hasAttribute('data-quick')) {
+      var m = MODS[curMod], q = t.getAttribute('data-quick');
+      (m.topics || []).forEach(function (x) { delete selected[x.id]; });
+      if (q === 'all') (m.topics || []).forEach(function (x) { selected[x.id] = true; });
+      if (q === 'taught') taughtIn(m).forEach(function (x) { selected[x.id] = true; });
+      if (q === 'taught-all' || q === 'none-all') {
+        selected = {};
+        if (q === 'taught-all') MODS.forEach(function (mm) { if (!mm.extra) taughtIn(mm).forEach(function (x) { selected[x.id] = true; }); });
+      }
+      saveSel(); render('[data-quick="' + q + '"]'); return;
     }
+    if (t.id === 'rv-start' || t.id === 'rv-again') { filter.comp = null; NO_CARDS_FOR = null; startRun(); return; }
+    if (t.id === 'rv-topicsbtn') { started = false; filter.comp = null; render('#rv-tab-' + curMod); return; }
+    if (t.id === 'rv-next') { next(); return; }
+
     var e = queue[pos];
     if (!e) return;
-
     if (t.hasAttribute('data-conf')) {
       confidence = t.getAttribute('data-conf');
-      revealed = true;
-      render();
-      say('Now answer it.');
+      stage = e.mcq ? 'answer' : 'self';
+      render('.rv-opt, [data-self]');
+      say('Now choose your answer.');
       return;
     }
     if (t.hasAttribute('data-pick')) {
-      var pick = +t.getAttribute('data-pick');
-      var rightAt = -1;
-      for (var k = 0; k < shown.length; k++) { if (shown[k].right) rightAt = k; }
-      var right = pick === rightAt;
+      if (picked !== null) return;
+      picked = +t.getAttribute('data-pick');
+      var right = !!shown[picked].right;
       grade(e, right);
-      var opts = $(MOUNT).querySelectorAll('.rv-opt');
-      for (var i = 0; i < opts.length; i++) {
-        opts[i].disabled = true;
-        if (i === rightAt) opts[i].className = 'rv-opt is-right';
-        else if (i === pick) opts[i].className = 'rv-opt is-wrong';
-      }
-      /* The verdict is words, not just color, so it survives color
-         blindness and reaches a screen reader through the live region. */
-      var verdict = right ? 'Correct. ' : 'Not this time. The answer is: ' + strip(shown[rightAt].text) + '. ';
-      if (!right && confidence === 'sure') verdict += 'You were sure on that one, so it is worth a second look. ';
-      if (e.card.explanation) verdict += strip(e.card.explanation);
-      say(verdict);
-      addNext();
+      render(disp.card === 'flip' ? '#rv-flip' : '#rv-next');
+      var rightOpt = null; shown.forEach(function (o) { if (o.right) rightOpt = o; });
+      say((right ? 'Correct. ' : 'Not quite. The correct answer is ' + (rightOpt ? rightOpt.text : '') + '. ')
+          + (disp.card === 'flip' ? 'Flip the card to read why.' : 'The explanation for every choice is below.'));
       return;
     }
     if (t.hasAttribute('data-self')) {
       grade(e, t.getAttribute('data-self') === '1');
-      say(t.getAttribute('data-self') === '1' ? 'Marked as known.' : 'Marked to come back soon.');
-      addNext();
+      picked = -1; stage = 'self';
+      render('#rv-next');
       return;
     }
   }
-  function strip(h) { var d = document.createElement('div'); d.innerHTML = h; return d.textContent || ''; }
-
-  function addNext() {
-    var host = $(MOUNT);
-    if (!host || host.querySelector('#rv-next')) return;
-    var b = document.createElement('button');
-    b.type = 'button'; b.className = 'btn primary'; b.id = 'rv-next';
-    b.textContent = pos + 1 >= queue.length ? 'Finish the run' : 'Next card';
-    b.addEventListener('click', next);
-    var card = host.querySelector('.rv-card');
-    if (card) card.appendChild(b);
-    b.focus();
-  }
 
   function onChange(ev) {
-    if (ev.target.id === 'rv-scope') { filter.scope = ev.target.value; filter.topic = 'all'; }
-    else if (ev.target.id === 'rv-topic') { filter.topic = ev.target.value; }
-    else if (ev.target.id === 'rv-mod')  { filter.module = ev.target.value; filter.topic = 'all'; }
-    else if (ev.target.id === 'rv-mode') { filter.mode = ev.target.value; }
-    else return;
-    queue = build(); pos = 0; revealed = false; confidence = null; shown = null; runLog = []; render();
+    var t = ev.target;
+    if (!inMount(t)) return;
+    if (t.hasAttribute && t.hasAttribute('data-topic')) {
+      var id = t.getAttribute('data-topic');
+      if (t.checked) selected[id] = true; else delete selected[id];
+      saveSel(); render('#rv-t-' + id); return;
+    }
+    if (t.id === 'rv-mode') { filter.mode = t.value; render('#rv-mode'); return; }
+    if (t.id === 'rv-modsel') { curMod = +t.value; render('#rv-modsel'); return; }
+    if (t.hasAttribute && t.hasAttribute('data-disp')) {
+      disp[t.getAttribute('data-disp')] = t.value; saveDisp();
+      render('#' + t.id); return;
+    }
+    if (t.hasAttribute && t.hasAttribute('data-modall')) {
+      var mm = MODS[+t.getAttribute('data-modall')];
+      (mm.topics || []).forEach(function (x) { if (t.checked) selected[x.id] = true; else delete selected[x.id]; });
+      saveSel(); render('#' + t.id); return;
+    }
   }
 
-  /* ---------- styles ---------- */
+  /* arrow keys move between module tabs */
+  function onKey(ev) {
+    var t = ev.target;
+    if (!t.classList || !t.classList.contains('rv-tab') || !inMount(t)) return;
+    var k = ev.key, n = MODS.length;
+    if (k !== 'ArrowRight' && k !== 'ArrowLeft' && k !== 'Home' && k !== 'End') return;
+    ev.preventDefault();
+    if (k === 'ArrowRight') curMod = (curMod + 1) % n;
+    if (k === 'ArrowLeft') curMod = (curMod - 1 + n) % n;
+    if (k === 'Home') curMod = 0;
+    if (k === 'End') curMod = n - 1;
+    render('#rv-tab-' + curMod);
+  }
 
+  /* ---------- styles ----------
+     Brand: deep navy, dark terra cotta (almost maroon), brushed gold.
+     No teal anywhere; the grays lean navy. Three themes:
+       light  off-white page, white cards
+       navy   navy page, white cards
+       dark   navy-black page, dark navy cards                       */
+  var R = '#' + MOUNT;
+  var T = function (name, v) {
+    return R + '[data-rv-theme="' + name + '"]{' + v + '}';
+  };
   var CSS = ''
-  + '#' + MOUNT + ' .rv-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:0 0 14px}'
-  + '#' + MOUNT + ' .rv-stat{margin:0;padding:12px 14px;border:1px solid rgba(11,21,48,.16);border-radius:10px;background:#fff}'
-  + '#' + MOUNT + ' .rv-stat strong{display:block;font-size:1.5rem;line-height:1.1}'
-  + '#' + MOUNT + ' .rv-stat span{font-size:.82rem;opacity:.75}'
-  + '#' + MOUNT + ' .rv-blind{margin:0 0 14px;padding:12px 14px;border-left:3px solid #8B3A2E;background:#fff;border-radius:0 8px 8px 0}'
-  + '#' + MOUNT + ' .rv-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin:0 0 16px}'
-  + '#' + MOUNT + ' .rv-field{display:flex;flex-direction:column;gap:4px}'
-  + '#' + MOUNT + ' .rv-field label{font-size:.78rem;font-weight:600;opacity:.8}'
-  + '#' + MOUNT + ' .rv-field select{padding:8px 10px;border:1px solid rgba(11,21,48,.28);border-radius:8px;background:#fff;font:inherit;min-height:44px}'
-  + '#' + MOUNT + ' .rv-note{border-left:0;background:#FFF;box-shadow:0 1px 3px rgba(8,16,31,.10);border-radius:12px;padding:16px 18px;margin:0 0 14px}'
-  + '#' + MOUNT + ' .rv-note h3{margin:0 0 6px;font-size:16px}'
-  + '#' + MOUNT + ' .rv-note p{margin:0;font-size:14px;color:#3D4757}'
-  + '#' + MOUNT + ' .rv-stage{display:flex;justify-content:center;padding:26px 0 10px}'
-  + '#' + MOUNT + ' .rv-card{position:relative;width:100%;max-width:620px;padding:26px 30px 26px;'
-  +   'border:1px solid rgba(8,16,31,.09);border-radius:18px;background:#fff;'
-  +   'box-shadow:0 26px 50px -14px rgba(8,16,31,.30), 0 2px 6px rgba(8,16,31,.07);'
-  +   'transition:transform 220ms ease, box-shadow 220ms ease}'
-  + '#' + MOUNT + ' .rv-card:hover{transform:translateY(-3px);'
-  +   'box-shadow:0 34px 62px -16px rgba(8,16,31,.34), 0 2px 6px rgba(8,16,31,.07)}'
-  + '@media (prefers-reduced-motion:reduce){#' + MOUNT + ' .rv-card:hover{transform:none}}'
-  + '#' + MOUNT + ' .rv-badge{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;'
-  +   'justify-content:center;font-family:var(--font-display,inherit);font-weight:800;font-size:17px;'
-  +   'margin:0 0 12px;color:#fff}'
-  + '#' + MOUNT + ' .rv-d1 .rv-badge{background:#7C93A8}'
-  + '#' + MOUNT + ' .rv-d2 .rv-badge{background:#DCB45C;color:#08101F}'
-  + '#' + MOUNT + ' .rv-d3 .rv-badge{background:#C2734D}'
-  + '#' + MOUNT + ' .rv-d4 .rv-badge{background:#6B1616}'
-  + '#' + MOUNT + ' .rv-level{margin:0;font-family:var(--font-eyebrow,inherit);font-weight:700;'
-  +   'font-size:.64rem;letter-spacing:.16em;text-transform:uppercase}'
-  + '#' + MOUNT + ' .rv-d1 .rv-level{color:#4A5C6B}'
-  + '#' + MOUNT + ' .rv-d2 .rv-level{color:#6F5316}'
-  + '#' + MOUNT + ' .rv-d3 .rv-level{color:#A0522D}'
-  + '#' + MOUNT + ' .rv-d4 .rv-level{color:#6B1616}'
-  + '#' + MOUNT + ' .rv-crumb{margin:3px 0 14px;font-size:.72rem;letter-spacing:.02em;'
-  +   'text-transform:uppercase;opacity:.62}'
-  + '#' + MOUNT + ' .rv-q{margin:0 0 18px;font-size:1.28rem;line-height:1.4;font-weight:700}'
-  + '#' + MOUNT + ' .rv-conf-h{margin:0 0 8px;font-weight:600}'
-  + '#' + MOUNT + ' .rv-conf-row{display:flex;flex-wrap:wrap;gap:8px}'
-  + '#' + MOUNT + ' .rv-opts{list-style:none;margin:0;padding:0;display:grid;gap:8px}'
-  + '#' + MOUNT + ' .rv-opt{display:block;width:100%;text-align:left;padding:12px 14px;min-height:44px;'
-  +   'border:1px solid rgba(11,21,48,.28);border-radius:10px;background:#fff;font:inherit;cursor:pointer}'
-  + '#' + MOUNT + ' .rv-opt:hover:not(:disabled){border-color:#08101F}'
-  + '#' + MOUNT + ' .rv-opt.is-right{border-color:#1d7a46;border-width:2px;background:#F2F8F4}'
-  + '#' + MOUNT + ' .rv-opt.is-right::after{content:" \\2713 correct";font-weight:700;color:#14532d}'
-  + '#' + MOUNT + ' .rv-opt.is-wrong{border-color:#8B3A2E;border-width:2px;background:#FBF3F1}'
-  + '#' + MOUNT + ' .rv-opt.is-wrong::after{content:" \\2715 what you picked";font-weight:700;color:#7A2A22}'
-  + '#' + MOUNT + ' .rv-answer-h{margin:0 0 4px;font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.03em;opacity:.72}'
-  + '#' + MOUNT + ' .rv-expl{margin:10px 0 0;opacity:.86}'
-  + '#' + MOUNT + ' .rv-selfgrade{margin-top:14px;padding-top:12px;border-top:1px solid rgba(11,21,48,.12)}'
-  + '#' + MOUNT + ' .rv-selfgrade p{margin:0 0 8px;font-weight:600}'
-  + '#' + MOUNT + ' .rv-live{margin:14px 0 0;line-height:1.5}'
-  + '#' + MOUNT + ' #rv-next{margin-top:16px}'
-  + '#' + MOUNT + ' .rv-report{margin:18px 0 0;padding-top:14px;border-top:1px solid rgba(11,21,48,.14)}'
-  + '#' + MOUNT + ' .rv-report h4{margin:0 0 4px;font-size:1rem}'
-  + '#' + MOUNT + ' .rv-report-sub{margin:0 0 10px;font-size:.86rem;opacity:.78}'
-  + '#' + MOUNT + ' .rv-weak{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:6px}'
-  + '#' + MOUNT + ' .rv-weak li{display:grid;grid-template-columns:1fr auto;gap:2px 12px;'
-  +   'padding:8px 10px;border-left:3px solid #8B3A2E;background:#FAFAF9;border-radius:0 6px 6px 0}'
-  + '#' + MOUNT + ' .rv-weak-t{font-weight:600}'
-  + '#' + MOUNT + ' .rv-weak-m{grid-column:1;font-size:.8rem;opacity:.7}'
-  + '#' + MOUNT + ' .rv-weak-n{grid-row:1/3;align-self:center;font-variant-numeric:tabular-nums;font-weight:700}'
-  + '#' + MOUNT + ' .rv-done h3{margin:0 0 8px}'
-  + '@media (prefers-reduced-motion: reduce){#' + MOUNT + ' *{transition:none!important;animation:none!important}}';
+  + T('light', '--rv-bg:transparent;--rv-pad:0;--rv-on-bg:#0B1530;--rv-on-bg-soft:#454B5C;--rv-on-bg-link:#7A2E24;'
+      + '--rv-card:#FFFFFF;--rv-text:#0B1530;--rv-ink:#0B1530;--rv-on-ink:#FFFFFF;--rv-soft:#454B5C;--rv-line:#D8DBE3;'
+      + '--rv-tint:#ECEEF3;--rv-gold:#B8924A;--rv-gold-text:#6F5316;--rv-terra:#8B3A2E;--rv-terra-text:#7A2E24;'
+      + '--rv-lock:#6B7080;--rv-bad:#F7EDEB;--rv-odo-bg:#0B1530;--rv-odo-line:transparent;--rv-shadow:rgba(11,21,48,.10);color-scheme:light')
+  + T('navy', '--rv-bg:#0B1530;--rv-pad:18px;--rv-on-bg:#FFFFFF;--rv-on-bg-soft:#D8DBE3;--rv-on-bg-link:#E2C281;'
+      + '--rv-card:#FFFFFF;--rv-text:#0B1530;--rv-ink:#0B1530;--rv-on-ink:#FFFFFF;--rv-soft:#454B5C;--rv-line:#D8DBE3;'
+      + '--rv-tint:#ECEEF3;--rv-gold:#B8924A;--rv-gold-text:#6F5316;--rv-terra:#8B3A2E;--rv-terra-text:#7A2E24;'
+      + '--rv-lock:#6B7080;--rv-bad:#F7EDEB;--rv-odo-bg:#16224A;--rv-odo-line:rgba(255,255,255,.18);--rv-shadow:rgba(0,0,0,.30);color-scheme:light')
+  + T('dark', '--rv-bg:#070C18;--rv-pad:18px;--rv-on-bg:#ECEEF3;--rv-on-bg-soft:#B3B8C8;--rv-on-bg-link:#E2C281;'
+      + '--rv-card:#111A30;--rv-text:#ECEEF3;--rv-ink:#E8EAF2;--rv-on-ink:#0B1530;--rv-soft:#B3B8C8;--rv-line:#2A3352;'
+      + '--rv-tint:#1C2642;--rv-gold:#CFA95F;--rv-gold-text:#E2C281;--rv-terra:#E09485;--rv-terra-text:#E9A397;'
+      + '--rv-lock:#9097A8;--rv-bad:#3A1F1C;--rv-odo-bg:#111A30;--rv-odo-line:#2A3352;--rv-shadow:rgba(0,0,0,.45);color-scheme:dark')
+  + R + '{background:var(--rv-bg);color:var(--rv-on-bg);padding:var(--rv-pad);border-radius:18px}'
+  /* The count band is dark terra cotta in every theme, with light gold
+     numbers (7.4:1) and white text (9.4:1), so it stands apart from a
+     navy page as well as a light one. */
+  + R + ' .rv-odo{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:baseline;background:#7A2E24;color:#FFFFFF;border-radius:12px;padding:14px 18px;margin:0 0 14px;font-size:13px;box-shadow:0 1px 3px var(--rv-shadow)}'
+  + R + ' .rv-odo-big{font-size:30px;font-weight:800;letter-spacing:-.02em;color:#F3E3BC}'
+  + R + ' .rv-odo b{color:#F3E3BC}'
+  + R + ' .rv-odo-rank{color:#F3E3BC;font-weight:800}'
+  + R + ' .rv-odo-sub{opacity:.85}'
+  + R + ' .rv-odo-links{margin-left:auto;display:flex;flex-wrap:wrap;gap:6px 16px}'
+  + R + ' .rv-odo a{color:inherit;font-weight:700}'
+  + R + ' .rv-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 14px}'
+  + '@media (max-width:640px){' + R + ' .rv-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}'
+  + R + ' .rv-stat{margin:0;padding:12px 14px;border-radius:10px;background:var(--rv-card);box-shadow:0 1px 3px var(--rv-shadow)}'
+  + R + ' .rv-stat strong{display:block;font-size:1.6rem;line-height:1.1;color:var(--rv-terra-text);font-variant-numeric:tabular-nums}'
+  + R + ' .rv-stat span{font-size:.82rem;color:var(--rv-soft)}'
+  + R + ' .rv-blind{margin:0 0 14px;padding:12px 14px;background:var(--rv-card);color:var(--rv-text);border-radius:10px;box-shadow:0 1px 3px var(--rv-shadow)}'
+  + R + ' .rv-dispbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin:0 0 10px}'
+  + R + ' .rv-themes{display:flex;gap:6px}'
+  + R + ' .rv-small{min-height:40px;padding:8px 14px;font-size:14px;background:var(--rv-card);color:var(--rv-text);border-color:var(--rv-line)}'
+  + R + ' .rv-small[aria-expanded="true"],' + R + ' .rv-small[aria-pressed="true"]{border-color:var(--rv-gold);box-shadow:inset 0 0 0 1px var(--rv-gold)}'
+  + R + ' .rv-disp{background:var(--rv-card);color:var(--rv-text);border-radius:14px;box-shadow:0 1px 3px var(--rv-shadow);padding:14px 18px;margin:0 0 14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 20px}'
+  + R + ' .rv-fs{border:0;margin:0;padding:0;display:grid;gap:4px}'
+  + R + ' .rv-fs legend{font-weight:800;margin:0 0 4px;padding:0}'
+  + R + ' .rv-radio{display:flex;gap:8px;align-items:flex-start;padding:6px 4px;border-radius:8px;cursor:pointer}'
+  + R + ' .rv-radio input{width:18px;height:18px;margin-top:2px;accent-color:var(--rv-terra);flex:none}'
+  + R + ' .rv-note{background:var(--rv-card);color:var(--rv-text);box-shadow:0 1px 3px var(--rv-shadow);border-radius:12px;padding:18px 20px;margin:0 0 14px;display:grid;gap:10px}'
+  + R + ' .rv-note h3{margin:0;font-size:17px;color:var(--rv-text)}'
+  + R + ' .rv-note p{margin:0}'
+  + R + ' .rv-picker{background:var(--rv-card);color:var(--rv-text);border-radius:14px;box-shadow:0 1px 3px var(--rv-shadow);padding:18px 20px;display:grid;gap:12px}'
+  + R + ' .rv-pick-head{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between}'
+  + R + ' .rv-h{margin:0;font-size:18px;font-weight:800;color:var(--rv-text)}'
+  + R + ' .rv-sec{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;color:var(--rv-soft)}'
+  + R + ' .rv-sec button{font:inherit;font-weight:700;color:var(--rv-ink);background:var(--rv-card);border:1px solid var(--rv-ink);border-radius:999px;padding:6px 12px;cursor:pointer;min-height:36px}'
+  + R + ' .rv-sec button[aria-pressed="true"]{background:var(--rv-ink);color:var(--rv-on-ink)}'
+  + R + ' .rv-tabs{display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--rv-line)}'
+  + R + ' .rv-tab{font:inherit;font-weight:700;font-size:14px;background:none;border:0;border-bottom:3px solid transparent;color:var(--rv-soft);padding:10px 12px;cursor:pointer;white-space:nowrap;min-height:44px}'
+  + R + ' .rv-tab[aria-selected="true"]{color:var(--rv-text);border-bottom-color:var(--rv-gold)}'
+  + R + ' .rv-tab-n{display:inline-block;min-width:20px;padding:0 6px;border-radius:999px;background:var(--rv-tint);color:var(--rv-text);font-size:12px;margin-left:4px}'
+  + R + ' .rv-mod-title{margin:4px 0 0;font-weight:700;color:var(--rv-terra-text)}'
+  + R + ' .rv-mod-title span{font-weight:500;color:var(--rv-soft)}'
+  + R + ' .rv-quick{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;font-size:13px;color:var(--rv-soft)}'
+  + R + ' .rv-link{font:inherit;font-weight:700;font-size:13px;background:none;border:0;color:var(--rv-terra-text);cursor:pointer;padding:6px 2px;text-decoration:underline;text-underline-offset:3px}'
+  + R + ' .rv-back .rv-link{color:var(--rv-on-bg-link)}'
+  + R + ' .rv-list{list-style:none;margin:0;padding:0;display:grid;gap:2px}'
+  + R + ' .rv-check{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border-radius:10px;cursor:pointer}'
+  + R + ' .rv-check:hover{background:var(--rv-tint)}'
+  + R + ' .rv-check input,' + R + ' .rv-acch input,' + R + ' .rv-tl-node input{width:20px;height:20px;margin-top:1px;accent-color:var(--rv-terra);flex:none}'
+  + R + ' .rv-check-t{flex:1;min-width:0;color:var(--rv-text);font-weight:600}'
+  + R + ' .rv-check-t small{display:block;font-weight:500;color:var(--rv-soft);font-size:12.5px}'
+  + R + ' .rv-check.is-soon .rv-check-t{color:var(--rv-soft)}'
+  + R + ' .rv-chip{display:inline-flex;align-items:center;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:3px 9px;white-space:nowrap}'
+  + R + ' .rv-done-chip{background:var(--rv-tint);color:var(--rv-text);border:1px solid var(--rv-ink)}'
+  + R + ' .rv-now-chip{background:var(--rv-card);color:var(--rv-gold-text);border:1px solid var(--rv-gold)}'
+  + R + ' .rv-soon-chip{background:var(--rv-card);color:var(--rv-lock);border:1px dashed var(--rv-lock)}'
+  /* stacked modules */
+  + R + ' .rv-acc{display:grid;gap:8px}'
+  + R + ' .rv-accm{border:1px solid var(--rv-line);border-radius:12px}'
+  + R + ' .rv-accm.is-open{border-color:var(--rv-ink)}'
+  + R + ' .rv-acch{display:flex;gap:10px;align-items:center;padding:6px 10px}'
+  + R + ' .rv-accbtn{flex:1;min-width:0;display:flex;gap:10px;align-items:center;font:inherit;text-align:left;background:none;border:0;color:var(--rv-text);cursor:pointer;padding:6px 0;min-height:44px}'
+  + R + ' .rv-acct{flex:1;min-width:0;font-weight:700}'
+  + R + ' .rv-acct small{display:block;font-weight:500;color:var(--rv-soft);font-size:12.5px}'
+  + R + ' .rv-caret{color:var(--rv-soft);transition:transform 200ms ease}'
+  + R + ' .is-open .rv-caret{transform:rotate(90deg)}'
+  + R + ' .rv-accp{padding:0 8px 10px 30px}'
+  /* timeline */
+  + R + ' .rv-tl{list-style:none;margin:0;padding:0;display:grid}'
+  + R + ' .rv-tl li{display:grid;grid-template-columns:56px 24px minmax(0,1fr);gap:8px;align-items:start}'
+  + R + ' .rv-tl-date{font-size:12px;font-weight:700;color:var(--rv-soft);text-align:right;padding-top:13px;font-variant-numeric:tabular-nums}'
+  + R + ' .rv-tl-rail{position:relative;align-self:stretch}'
+  + R + ' .rv-tl-rail::before{content:"";position:absolute;left:11px;top:0;bottom:0;width:2px;background:var(--rv-line)}'
+  + R + ' .rv-tl-dot{position:relative;display:block;width:16px;height:16px;border-radius:50%;margin:14px 0 0 4px;background:var(--rv-card);border:2px dashed var(--rv-lock)}'
+  + R + ' .rv-tl-done .rv-tl-dot{background:var(--rv-ink);border:2px solid var(--rv-ink)}'
+  + R + ' .rv-tl-now .rv-tl-dot{background:var(--rv-gold);border:2px solid var(--rv-gold)}'
+  + R + ' .rv-tl-node{display:flex;gap:10px;align-items:flex-start;margin:4px 0;border-radius:10px;padding:9px 10px;cursor:pointer;border:1px dashed var(--rv-lock)}'
+  + R + ' .rv-tl-done .rv-tl-node{border:1px solid var(--rv-ink);background:var(--rv-tint)}'
+  + R + ' .rv-tl-now .rv-tl-node{border:1px solid var(--rv-gold)}'
+  + R + ' .rv-startbar{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between;border-top:1px solid var(--rv-line);padding-top:12px}'
+  + R + ' .rv-count{margin:0;font-weight:600;color:var(--rv-text);flex:1 1 220px}'
+  + R + ' .rv-field{display:flex;flex-direction:column;gap:4px}'
+  + R + ' .rv-field label{font-size:.78rem;font-weight:700;color:var(--rv-soft)}'
+  + R + ' .rv-field select{padding:8px 10px;border:1px solid var(--rv-ink);border-radius:8px;background:var(--rv-card);font:inherit;min-height:44px;color:var(--rv-text);max-width:100%}'
+  + R + ' .rv-btn{font:inherit;font-weight:700;border-radius:10px;padding:10px 16px;min-height:44px;cursor:pointer;border:1px solid var(--rv-ink);background:var(--rv-card);color:var(--rv-text);transition:transform 200ms ease,box-shadow 200ms ease}'
+  + R + ' .rv-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 16px var(--rv-shadow)}'
+  + R + ' .rv-btn:disabled{opacity:.5;cursor:not-allowed}'
+  + R + ' .rv-primary{background:var(--rv-ink);color:var(--rv-on-ink)}'
+  + R + ' .rv-gold{border-color:var(--rv-gold);background:var(--rv-gold);color:#0B1530}'
+  + R + ' .rv-stage{display:grid;justify-items:center;gap:8px;padding:16px 0 6px}'
+  + R + ' .rv-card{width:100%;max-width:680px;padding:24px 26px;border-radius:16px;background:var(--rv-card);color:var(--rv-text);box-shadow:0 1px 3px var(--rv-shadow),0 18px 36px -18px var(--rv-shadow);display:grid;gap:14px}'
+  + R + ' .rv-card.is-back{background:var(--rv-tint)}'
+  + R + ' .rv-meta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:12.5px;color:var(--rv-soft)}'
+  + R + ' .rv-of{margin-left:auto;font-variant-numeric:tabular-nums}'
+  + R + ' .rv-dok{font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase}'
+  + R + ' .rv-d1{color:var(--rv-soft)}' + R + ' .rv-d2{color:var(--rv-gold-text)}' + R + ' .rv-d3{color:var(--rv-terra-text)}'
+  + R + ' .rv-q{margin:0;font-size:1.22rem;line-height:1.4;font-weight:700;color:var(--rv-text)}'
+  + R + ' .rv-conf-h{margin:0 0 8px;font-weight:600}'
+  + R + ' .rv-conf-row{display:flex;flex-wrap:wrap;gap:8px}'
+  + R + ' .rv-opts{list-style:none;margin:0;padding:0;display:grid;gap:8px}'
+  + R + ' .rv-opt{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;padding:12px 14px;min-height:44px;border:1px solid var(--rv-line);border-radius:10px;background:var(--rv-card);font:inherit;color:var(--rv-text);cursor:pointer}'
+  + R + ' .rv-opt:hover:not(:disabled){border-color:var(--rv-ink)}'
+  + R + ' .rv-opt:disabled{cursor:default;color:var(--rv-text)}'
+  + R + ' .rv-ltr{flex:none;width:24px;height:24px;border-radius:50%;border:1px solid currentColor;display:inline-grid;place-items:center;font-size:13px;font-weight:700}'
+  + R + ' .rv-opt-t{flex:1;min-width:0}'
+  + R + ' .rv-opt.is-right{border:2px solid var(--rv-ink);background:var(--rv-tint)}'
+  + R + ' .rv-opt.is-wrong{border:2px solid var(--rv-terra);background:var(--rv-bad)}'
+  + R + ' .rv-tag{display:inline-block;margin-left:8px;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--rv-terra-text)}'
+  + R + ' .is-right .rv-tag{color:var(--rv-text)}'
+  + R + ' .rv-inline-note{margin:6px 0 4px 36px;font-size:14.5px;color:var(--rv-text)}'
+  + R + ' .rv-breakdown{display:grid;gap:12px}'
+  + R + ' .rv-verdict{margin:0;font-weight:800;color:var(--rv-text)}'
+  + R + ' .rv-why{background:var(--rv-tint);border-radius:10px;padding:12px 14px}'
+  + R + ' .is-back .rv-why{background:var(--rv-card)}'
+  + R + ' .rv-why p{margin:0}'
+  + R + ' .rv-why-h,' + R + ' .rv-whynot-h{font-weight:800;color:var(--rv-text);margin:0 0 4px}'
+  + R + ' .rv-whynot{display:grid;gap:8px}'
+  + R + ' .rv-whynot-h{margin:0}'
+  + R + ' .rv-wn,' + R + ' .rv-ppanel{border:1px solid var(--rv-line);border-radius:10px;padding:10px 12px}'
+  + R + ' .rv-wn p,' + R + ' .rv-ppanel p,' + R + ' .rv-mini p{margin:0}'
+  + R + ' .rv-wn-h{font-weight:700;color:var(--rv-text);margin:0 0 3px !important}'
+  + R + ' .rv-explore{display:grid;gap:8px}'
+  + R + ' .rv-ptabs{display:flex;flex-wrap:wrap;gap:6px}'
+  + R + ' .rv-ptab{font:inherit;font-weight:700;font-size:14px;border:1px solid var(--rv-line);background:var(--rv-card);color:var(--rv-text);border-radius:8px;padding:8px 12px;min-height:44px;cursor:pointer}'
+  + R + ' .rv-ptab[aria-selected="true"]{background:var(--rv-ink);color:var(--rv-on-ink);border-color:var(--rv-ink)}'
+  + R + ' .rv-ptab-k{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:800}'
+  + R + ' .rv-flipback{display:grid;gap:10px}'
+  + R + ' .rv-minis{display:grid;gap:8px}'
+  + R + ' .rv-mini{background:var(--rv-card);border-radius:10px;padding:10px 12px;box-shadow:0 1px 3px var(--rv-shadow)}'
+  + R + ' .rv-mini.is-right{border:2px solid var(--rv-ink)}'
+  + R + ' .rv-live{margin:0;position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}'
+  + R + ' .rv-nextrow{display:flex;justify-content:flex-end}'
+  + R + ' .rv-back{margin:0}'
+  + R + ' .rv-report{display:grid;gap:8px}'
+  + R + ' .rv-report h4{margin:0;font-size:1rem}'
+  + R + ' .rv-report p{margin:0}'
+  + R + ' .rv-weak{list-style:none;margin:0;padding:0;display:grid;gap:6px}'
+  + R + ' .rv-weak li{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:8px 10px;border:1px solid var(--rv-line);border-radius:8px}'
+  + R + ' .rv-weak-t{font-weight:600}'
+  + R + ' .rv-weak-m{grid-column:1;font-size:.8rem;color:var(--rv-soft)}'
+  + R + ' .rv-weak-n{grid-row:1/3;align-self:center;font-variant-numeric:tabular-nums;font-weight:700}'
+  + R + ' [hidden]{display:none!important}'
+  + R + ' :focus-visible{outline:3px solid var(--rv-gold);outline-offset:2px}'
+  + '@media (max-width:520px){' + R + '{--rv-pad:10px}' + R + ' .rv-card{padding:18px 16px}' + R + ' .rv-picker{padding:14px}'
+  +   R + ' .rv-check{flex-wrap:wrap}' + R + ' .rv-check-t{flex:1 1 calc(100% - 40px)}' + R + ' .rv-check .rv-chip{margin-left:30px}'
+  +   R + ' .rv-inline-note{margin-left:0}' + R + ' .rv-tl li{grid-template-columns:44px 24px minmax(0,1fr)}}'
+  + '@media (prefers-reduced-motion: reduce){' + R + ' *{transition:none!important;animation:none!important}}';
 
   function styles() {
     if ($('rv-styles')) return;
@@ -739,10 +946,9 @@
   }
 
   /* ---------- boot ---------- */
-
-  function readComp() {
+  function readParam(name) {
     try {
-      var m = (location.hash + location.search).match(/[?&#]comp=([^&#]+)/);
+      var m = (location.hash + location.search).match(new RegExp('[?&#]' + name + '=([^&#]+)'));
       return m ? decodeURIComponent(m[1]) : null;
     } catch (e) { return null; }
   }
@@ -751,37 +957,30 @@
     if (!$(MOUNT)) return;
     styles();
     ALL = flatten();
-    filter.comp = readComp();
-    queue = build();
-    if (!queue.length && filter.mode === 'due') { filter.mode = 'all'; queue = build(); }
-    render();
+    curMod = moduleNow();
+    var wantMod = readParam('module');
+    if (wantMod) MODS.forEach(function (m, i) { if (String(m.n) === wantMod) curMod = i; });
+    var saved = loadSel();
+    if (saved) { selected = saved; }
+    else if (MODS[curMod]) { selected = {}; selectTaughtIn(MODS[curMod]); saveSel(); }
+
+    filter.comp = readParam('comp');
+    if (filter.comp) { filter.mode = 'all'; startRun(); }
+    else render();
+
     document.addEventListener('click', onClick);
     document.addEventListener('change', onChange);
+    document.addEventListener('keydown', onKey);
 
-    /* A Study Run in Mastery OS needs to hand a student a run of cards on
-       one competency without a page load, because a page load would drop
-       the run. Nothing else in here is public; this is the one door. */
+    /* Mastery OS opens a run on one competency without a page load. */
     window.BIO004_RECALL_OPEN = function (compId) {
       filter.comp = compId || null;
       filter.mode = 'all';
-      queue = build();
-      /* Ten competencies have no cards on purpose: the cadaver and
-         specimen identifications, which are evidenced at the bench, not
-         by multiple choice. Dropping the filter used to hand a student
-         the entire 2,986-card deck without a word, which reads as a
-         glitch rather than as an answer. Say what happened instead. */
       NO_CARDS_FOR = null;
-      if (!queue.length && compId) {
-        NO_CARDS_FOR = compId;
-        filter.comp = null;
-        queue = build();
-      } else if (!queue.length) {
-        filter.comp = null;
-        queue = build();
-      }
-      render();
-      var sec = document.getElementById('s-recall') || $(MOUNT);
-      if (sec && sec.scrollIntoView) sec.scrollIntoView({ block: 'start' });
+      if (!compId) { filter.comp = null; started = false; render(); return 0; }
+      queue = build();
+      if (!queue.length) { NO_CARDS_FOR = compId; filter.comp = null; started = false; render(); return 0; }
+      startRun();
       return queue.length;
     };
   }
