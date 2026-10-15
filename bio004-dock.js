@@ -204,6 +204,16 @@
        would be a course nested in a course. */
     if (a.protocol !== location.protocol || a.host !== location.host) return;
 
+    /* Study tools that save to Mastery OS open in their own tab, never
+       inside this frame: a framed copy saves where the weak spot board
+       cannot see it. */
+    if (/^\/loops(\/|$)/.test(a.pathname) ||
+        /(^|\/)(mastery-os-fall-2026|bio004-spaced-recall|bio004-spaced-recall-weakness-dashboard|spaced-recall|spaced-recall-heart|recall-cards|recall-rx-exam-prep|card-gap-finder|brain-dump-practice|competency-brain-dump|mastery-canvas|bio004-draw|practice-lecture-exam|bio004-day-review)\.html$/.test(a.pathname)) {
+      a.target = '_blank';
+      a.rel = 'noopener';
+      return;
+    }
+
     /* A hash link to this very page is an in page jump, not a nav. */
     if (a.pathname === location.pathname && a.search === location.search && a.hash) return;
 
@@ -431,9 +441,9 @@
     t.push({ g: 'Practice and recall', name: 'Tissue Chart Practice', sub: 'Pick the columns, flip to Recall, reveal as you go',
              url: BASE + 'bio004-tissue-chart-practice.html', icon: 'cards', tone: 'gold',
              qr: 'tissuechart', kw: 'tissue chart practice recall reveal memory histology' });
-    t.push({ g: 'Practice and recall', name: 'Study Protocol', sub: 'A flow chart of exactly what to try this week, step by step',
-             url: BASE + 'bio004-study-protocol.html', icon: 'target', tone: 'gold', qr: 'protocol',
-             kw: 'study protocol how to study improve grade improve grades method plan boxes flow chart steps what should i try' });
+    t.push({ g: 'Practice and recall', name: 'What do you need help with?', sub: 'Pick your problem, get the right study tool in one click',
+             url: BASE + 'bio004-study-help.html', icon: 'target', tone: 'gold',
+             kw: 'help study what should i use stuck forgetting memory exam prepare lab identification paper videos dont understand study protocol how to study' });
     t.push({ g: 'Practice and recall', name: 'Kahoots', sub: 'Every class Kahoot by module, play the rematch any time',
              url: BASE + 'kahoots.html', icon: 'play', tone: 'gold',
              kw: 'kahoot kahoots quiz game review class rematch challenge questions module play' });

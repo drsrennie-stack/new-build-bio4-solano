@@ -210,8 +210,7 @@
     + '<span class="lp-go" aria-hidden="true">&#8594;</span></a>'
     + door('ic-terra', I.book, 'Lecture', 'Notes, videos, pre-work, course materials', 'data-lpopen="lecture"')
     + door('ic-navy', I.flask, 'Lab', 'Loops, lab sprints, the Digital Atlas', 'data-lpopen="lab"')
-    + door('ic-gold', I.bulb, 'Study', 'Mastery OS, recall cards, loops, brain dump', 'data-lpopen="study"')
-    + door('ic-blue', I.flow, 'Study Protocol', 'The flow chart for this week', go('bio004-study-protocol.html'))
+    + door('ic-gold', I.bulb, 'Study', 'Tell us what you need help with, we point you to the right tool', go('bio004-study-help.html'))
     + '<a class="lp-door lp-boost" ' + go('bio004-blog.html') + '>' + ic('ic-navy', I.heart)
     + '<span class="lp-bt"><b>Need motivation?</b><span>Short reads for hard weeks, from Dr. Rennie</span></span></a>'
     + '<button class="lp-door lp-news" data-lpopen="news" id="lpNewsDoor">' + ic('', I.mega)
@@ -242,19 +241,6 @@
     + door('ic-blue', I.scope, 'Histology help', 'Every slide tool, sorted', go('histology-help.html'))
     + door('ic-gold', I.grid, 'Tissue Chart', 'The chart behind reveal boxes', go('bio004-tissue-chart-practice.html'))
     + door('ic-navy', I.video, 'Cadaver videos', 'U of Michigan, by body system', go('bio004-bluelink-videos.html'))
-    + '</div></div>'
-
-    + '<div class="lp-panel" data-lp="study">'
-    + '<div class="lp-backrow"><button class="lp-ghost" data-lpback="1">&#8592; Back to the four doors</button></div>'
-    + '<div class="lp-subdeck">'
-    + door('ic-gold', I.brain, 'Mastery OS', 'Your plan, dials, and session', go('mastery-os-fall-2026.html'))
-    + door('ic-blue', I.cards, 'Recall cards', 'Straight into what is due', go('mastery-os-fall-2026.html#s-recall'))
-    + door('ic-terra', I.loop, 'Loops', 'Fast visual practice, any topic', ext('https://drsrennie-stack.github.io/loops/'))
-    + door('ic-navy', I.pen, 'Brain dump', 'Blank page, timer, check yourself', go('brain-dump-practice.html'))
-    + door('ic-gold', I.flow, 'Study Protocol', 'The flow chart for this week', go('bio004-study-protocol.html'))
-    + door('ic-blue', I.grid, 'Tissue Chart', 'Recall it column by column', go('bio004-tissue-chart-practice.html'))
-    + door('ic-terra', I.target, 'Exam Builder', 'Fresh practice exam, any time', go('bio004-practice-exam-builder.html'))
-    + door('ic-gold', I.people, 'Study With Me', 'See the calendar, join a session or host one', go('study-session-signup.html'))
     + '</div></div>'
 
     + '<div class="lp-panel" data-lp="news">'

@@ -2185,6 +2185,9 @@
       if(!href || href.charAt(0) === '#') return;
       var probe = document.createElement('a'); probe.href = href;
       if(probe.host !== window.location.host) return;                     /* external stays a new tab */
+      /* Study tools that save to Mastery OS open in their own tab, never in the viewer frame. */
+      if(/^\/loops(\/|$)/.test(probe.pathname) ||
+         /(^|\/)(mastery-os-fall-2026|bio004-spaced-recall|bio004-spaced-recall-weakness-dashboard|spaced-recall|spaced-recall-heart|recall-cards|recall-rx-exam-prep|card-gap-finder|brain-dump-practice|competency-brain-dump|mastery-canvas|bio004-draw|practice-lecture-exam|bio004-day-review)\.html$/.test(probe.pathname)) return;
       e.preventDefault();
       var label = a.cloneNode(true);
       Array.prototype.forEach.call(label.querySelectorAll('.sr-only,.arr'), function(x){ x.remove(); });
