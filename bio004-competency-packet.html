@@ -4,255 +4,314 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Course Competencies &middot; BIO 004 Human Anatomy &middot; Fall 2026</title>
-<meta name="description" content="Every competency BIO 004 assesses, as an online checklist. Same content as the Competency Packet PDF, rendered from the same data Mastery OS reads.">
+<meta name="description" content="All 193 BIO 004 competencies, exactly as printed in the Fall 2026 Competency Packet, as an online checklist.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=DM+Sans:wght@500;700&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   COURSE COMPETENCIES, ONLINE
-   The Competency Packet PDF, readable in the browser. Renders
-   at load time from competenciesfall2026.js, the same file
-   Mastery OS reads, so this page and the exams can never drift
-   apart. Checkboxes persist in this browser only.
+   COURSE COMPETENCIES, ONLINE (Fall 2026 rebuild)
+   The Competency Packet PDF students were handed in class, in the
+   browser: the same 193 numbers, names, wording and LECTURE / LAB
+   tags. Content comes from bio004-competency-packet-data.js, which
+   is built straight from the PDF. Ticks persist in this browser only.
    Site brand: navy #08101F, maroon #7A2A22, gold #DCB45C,
-   white cards on off-white. No serif, no italics.
+   white cards on off-white lifted by shadow only (no borders,
+   no accent bars). Plus Jakarta Sans with DM Sans eyebrows.
+   No serif, no italics.
    ============================================================ */
   :root{
-    --cp-ink:#08101F; --cp-maroon:#7A2A22; --cp-maroondark:#5E201A;
-    --cp-gold:#DCB45C; --cp-straw:#E8CE85;
-    --cp-line:#DCE1E4; --cp-page:#FAFAF9; --cp-card:#FFFFFF;
-    --f:'Plus Jakarta Sans',system-ui,sans-serif;
-    --fe:'DM Sans',system-ui,sans-serif;
+    --ink:#08101F; --ink-soft:#3D4A57; --maroon:#7A2A22; --maroon-dark:#5E201A;
+    --gold:#DCB45C; --straw:#F3E3B5; --mist:#E7EBF0;
+    --line:#DCE1E4; --page:#FAFAF9; --card:#FFFFFF;
+    --shadow:0 1px 3px rgba(8,16,31,.08);
+    --shadow-hover:0 8px 16px rgba(8,16,31,.10);
+    --f:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --fe:'DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
-  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} *{transition:none !important} }
   html,body{margin:0}
-  body{background:var(--cp-page);color:var(--cp-ink);font-family:var(--f);line-height:1.55;font-size:16.5px}
+  body{background:var(--page);color:var(--ink);font-family:var(--f);line-height:1.55;font-size:16.5px}
+  em,i{font-style:normal}
+  [hidden]{display:none !important}
   .skip{position:absolute;left:-9999px}
-  .skip:focus{left:12px;top:12px;background:var(--cp-card);padding:10px 14px;border-radius:6px;z-index:20;outline:3px solid var(--cp-ink)}
-  a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--cp-maroon);outline-offset:2px}
-  .wrap{max-width:860px;margin:0 auto;padding:28px 20px 80px}
+  .skip:focus{left:12px;top:12px;background:var(--card);padding:10px 14px;border-radius:6px;z-index:20;outline:3px solid var(--ink)}
+  a{color:var(--maroon)}
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--maroon);outline-offset:2px}
+  .wrap{max-width:880px;margin:0 auto;padding:28px 20px 80px}
 
-  .eyebrow{font-family:var(--fe);font-size:12px;font-weight:700;letter-spacing:.14em;
-    text-transform:uppercase;color:var(--cp-maroon);margin:0 0 8px}
-  h1{font-size:clamp(26px,5vw,38px);font-weight:800;letter-spacing:-.02em;margin:0;line-height:1.1}
-  .lede{max-width:66ch;margin:14px 0 0}
-  .lede b{font-weight:800}
+  .eyebrow{font-family:var(--fe);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--maroon);margin:0 0 8px}
+  h1{font-size:clamp(28px,5vw,40px);font-weight:800;letter-spacing:-.02em;margin:0;line-height:1.1}
+  .lede{font-size:17px;max-width:68ch;margin:14px 0 0}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0 0}
+  .btn{display:inline-block;padding:11px 16px;border-radius:10px;font-weight:700;font-size:15px;text-decoration:none}
+  .btn.primary{background:var(--ink);color:#FFFFFF}
+  .btn.primary:hover{background:#1E2A47}
+  .btn.ghost{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+  .btn.ghost:hover{box-shadow:var(--shadow-hover)}
 
-  .actions{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0 0}
-  .abtn{display:inline-block;text-decoration:none;font-weight:700;font-size:14.5px;
-    padding:10px 16px;border-radius:10px}
-  .abtn.primary{background:var(--cp-maroon);color:#fff}
-  .abtn.primary:hover{background:var(--cp-maroondark)}
-  .abtn.ghost{color:var(--cp-ink);background:var(--cp-card);border:2px solid var(--cp-gold)}
-  .abtn.ghost:hover{background:#F7EEDA}
+  .card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:18px 20px}
+  .howto{margin:24px 0 0;font-size:15px}
+  .howto p{margin:0}
+  .tag{display:inline-block;font-family:var(--fe);font-size:11px;font-weight:700;letter-spacing:.08em;border-radius:5px;padding:2px 7px;vertical-align:1px;color:var(--ink)}
+  .tag.lec{background:var(--mist)}
+  .tag.lab{background:var(--straw)}
 
-  .controls{background:var(--cp-card);border:1px solid var(--cp-line);border-radius:12px;
-    padding:12px 16px;margin:22px 0 0;box-shadow:0 1px 3px rgba(11,21,48,0.10)}
-  .controls .lbl{font-family:var(--fe);font-size:11.5px;font-weight:700;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--cp-maroon);margin:0 8px 0 0}
-  .controls button{font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;margin:3px 6px 3px 0;
-    padding:7px 12px;border-radius:8px;border:1px solid var(--cp-ink);background:var(--cp-card);color:var(--cp-ink)}
-  .controls button[aria-pressed="true"]{background:var(--cp-ink);color:#fff}
-  .controls button:hover{border-color:var(--cp-gold)}
-  .count{font-size:13.5px;margin:8px 0 0;color:var(--cp-ink)}
+  h2.sec{font-family:var(--fe);font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--maroon);margin:30px 0 10px}
+  .tbl-wrap{overflow-x:auto;border-radius:14px;box-shadow:var(--shadow);background:var(--card)}
+  table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+  thead th{background:var(--ink);color:#FFFFFF;font-family:var(--fe);font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:10px 12px;font-weight:700}
+  td{padding:10px 12px;border-top:1px solid var(--line)}
+  td.n,th.n{text-align:right}
+  tfoot td{font-weight:800}
+  td.mod{color:var(--maroon);font-weight:800}
 
-  .module-h{font-size:18px;font-weight:800;color:var(--cp-maroon);
-    margin:38px 0 0;padding-top:22px;border-top:1px solid var(--cp-gold)}
-  .module-h .mt{font-weight:600;color:var(--cp-ink)}
-  h3.sys{font-family:var(--fe);font-size:12.5px;font-weight:700;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--cp-ink);margin:22px 0 0}
+  /* controls */
+  .controls{margin:28px 0 0;display:grid;gap:14px}
+  .jump{display:flex;flex-wrap:wrap;gap:8px}
+  .jump a{display:inline-flex;flex-direction:column;gap:1px;text-decoration:none;color:var(--ink);background:var(--card);box-shadow:var(--shadow);border-radius:10px;padding:8px 12px;font-weight:700;font-size:14px;transition:transform 200ms ease,box-shadow 200ms ease}
+  .jump a span{font-family:var(--fe);font-weight:500;font-size:12px;color:var(--ink-soft)}
+  .jump a:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+  .filters{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+  .search{flex:1 1 260px;display:flex;flex-direction:column;gap:4px}
+  .search label,.show legend{font-family:var(--fe);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+  .search input{font:inherit;font-size:16px;padding:10px 12px;border:1px solid #6B7785;border-radius:10px;background:var(--card);color:var(--ink);width:100%}
+  fieldset.show{border:0;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+  fieldset.show legend{width:100%;margin-bottom:4px}
+  .show label{display:inline-flex;align-items:center;gap:6px;font-size:15px;cursor:pointer}
+  .count{font-size:14px;color:var(--ink-soft);margin:0}
 
-  .comp{background:var(--cp-card);border:1px solid var(--cp-line);border-radius:12px;
-    padding:12px 14px;margin-top:10px;box-shadow:0 1px 3px rgba(11,21,48,0.10);
-    display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start}
-  .comp.done{border-color:var(--cp-gold);background:#FDFBF5}
-  .comp input[type="checkbox"]{width:22px;height:22px;margin:3px 0 0;accent-color:var(--cp-maroon);cursor:pointer}
-  .comp label{cursor:pointer}
-  .cname{font-weight:800;font-size:15.5px}
-  .ccan{font-size:14.5px;margin:3px 0 0}
-  .ctags{margin:7px 0 0;display:flex;flex-wrap:wrap;gap:6px}
-  .tag{font-family:var(--fe);font-size:10.5px;font-weight:700;letter-spacing:.06em;
-    text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid var(--cp-line);color:var(--cp-ink)}
-  .tag.core{border-color:var(--cp-maroon);color:var(--cp-maroon)}
-  .tag.high{border-color:var(--cp-gold);background:#F7EEDA;color:#5E4407}
-  .tag.support{color:#4A5560}
+  /* modules */
+  section.module{margin:34px 0 0;scroll-margin-top:16px}
+  .mhead{background:var(--ink);color:#FFFFFF;border-radius:14px;padding:16px 20px}
+  .mhead h2{margin:0;font-size:20px;font-weight:800;letter-spacing:-.01em}
+  .mhead p{margin:4px 0 0;font-family:var(--fe);font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+  .mhead .dates{margin-top:6px;font-family:var(--f);font-weight:600;font-size:14px;letter-spacing:0;text-transform:none;color:#E8EDF2}
+  h3.topic{font-family:var(--fe);font-size:12.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--maroon);margin:22px 0 8px}
+  ol.comps{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+  li.comp{background:var(--card);border-radius:12px;box-shadow:var(--shadow);scroll-margin-top:16px}
+  li.comp label{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;padding:14px 16px;cursor:pointer;align-items:start}
+  li.comp input{width:20px;height:20px;margin:3px 0 0;accent-color:var(--ink)}
+  .ctext{min-width:0}
+  .ctext .num{font-weight:800;color:var(--maroon);margin-right:4px;font-variant-numeric:tabular-nums}
+  .ctext .name{font-weight:800}
+  .ctext .tags{display:inline-flex;gap:6px;margin-left:6px;flex-wrap:wrap}
+  li.comp.done{background:#EDF1F3}
+  li.comp.done .ctext{color:var(--ink-soft)}
+  li.comp:target{box-shadow:0 0 0 3px var(--gold),var(--shadow-hover)}
+  .empty{margin:24px 0 0}
 
-  .protocol-band{margin:26px 0 0;background:var(--cp-ink);color:#F4EFE8;border-radius:12px;
-    padding:16px 18px;font-size:15px}
-  .protocol-band b{color:var(--cp-straw)}
-  .protocol-band a{color:#fff;font-weight:700}
-
-  .fallback{background:var(--cp-card);border:1px solid var(--cp-line);border-radius:12px;
-    padding:16px 18px;margin-top:20px;box-shadow:0 1px 3px rgba(11,21,48,0.10)}
-  footer.foot{border-top:1px solid var(--cp-line);margin-top:44px;padding-top:16px;font-size:14px}
+  footer{margin:40px 0 0;font-size:14px;color:var(--ink-soft)}
+  footer p{margin:0 0 6px}
 
   @media print{
-    .controls,.actions,.protocol-band{display:none}
-    .comp{box-shadow:none;break-inside:avoid}
-    body{background:#fff}
+    body{background:#FFFFFF;font-size:12pt}
+    .actions,.controls,.skip,footer .noprint{display:none !important}
+    .card,li.comp,.tbl-wrap,.jump a{box-shadow:none}
+    li.comp{break-inside:avoid}
+    .mhead{break-after:avoid}
   }
 </style>
 </head>
 <body>
 <a class="skip" href="#list">Skip to the competency list</a>
-<div class="wrap">
+<main class="wrap" id="top">
 
   <header>
     <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Solano Community College &middot; Fall 2026</p>
     <h1>Course Competencies</h1>
-    <p class="lede">Everything this course asks you to be able to do, as one checklist.
-    <b>When you can do the thing without looking, that one is finished.</b> Tick it here and
-    this page remembers, on this device. These are what Mastery OS tracks and what the five
-    lecture exams and five lab practicals are written from. Nothing is assessed that is not
-    on this list.</p>
+    <p class="lede">These 193 competencies are the whole of what BIO 004 asks you to be able to do. They are what the five lecture exams and five lab practicals are written from. Nothing is assessed that is not on this list. This page matches the Competency Packet you were handed in class, number for number.</p>
     <div class="actions">
-      <a class="abtn primary" href="bio004-study-protocol.html" target="_top">How do I study these? Open the Study Protocol</a>
-      <a class="abtn ghost" href="BIO004-Fall2026-Competency-Packet.pdf" target="_blank" rel="noopener">Download the PDF version &#8599;</a>
+      <a class="btn primary" href="BIO004-Fall2026-Competency-Packet.pdf" target="_blank" rel="noopener">Open the PDF version</a>
+      <a class="btn ghost" href="bio004-study-protocol.html" target="_top">How do I study these?</a>
     </div>
   </header>
 
-  <div class="controls" role="group" aria-label="Filter the list">
-    <span class="lbl">Show</span>
-    <button type="button" data-yf="all" aria-pressed="true">Everything</button>
-    <button type="button" data-yf="core" aria-pressed="false">Core only</button>
-    <button type="button" data-yf="high" aria-pressed="false">High yield only</button>
-    <button type="button" data-yf="support" aria-pressed="false">Support only</button>
-    <button type="button" id="hidedone" aria-pressed="false">Hide the ones I checked</button>
-    <p class="count" id="count" aria-live="polite"></p>
+  <div class="card howto">
+    <p><strong>How to read this list.</strong> Competencies are grouped by module, then by topic, in teaching order.
+      <span class="tag lec">LECTURE</span> means it is on the lecture exam for that module.
+      <span class="tag lab">LAB</span> means you have to find or produce it in the lab practical, on a slide, a model, a chart, or prosected material.
+      Many carry both. Tick a box when you can do it without looking.</p>
   </div>
 
-  <div id="list">
-    <div class="fallback" id="fallback">
-      <b>The list is loading.</b> If it does not appear after a refresh, the
-      <a href="BIO004-Fall2026-Competency-Packet.pdf" target="_blank" rel="noopener">PDF version</a>
-      has the same content.
+  <h2 class="sec" id="load-title">Competency load by module</h2>
+  <div class="tbl-wrap" role="region" aria-labelledby="load-title" tabindex="0">
+    <table>
+      <thead><tr><th scope="col">Mod</th><th scope="col">Module</th><th scope="col" class="n">Total</th><th scope="col" class="n">Lecture</th><th scope="col" class="n">Lab</th><th scope="col" class="n">Core</th></tr></thead>
+      <tbody id="loadBody"></tbody>
+      <tfoot><tr><td></td><td>All five modules</td><td class="n" id="tTotal"></td><td class="n" id="tLec"></td><td class="n" id="tLab"></td><td class="n" id="tCore"></td></tr></tfoot>
+    </table>
+  </div>
+
+  <div class="controls" role="search" aria-label="Find and filter competencies">
+    <nav class="jump" aria-label="Jump to a module" id="jump"></nav>
+    <div class="filters">
+      <div class="search">
+        <label for="find">Search</label>
+        <input id="find" type="search" placeholder="For example: brachial plexus, or 64" autocomplete="off">
+      </div>
+      <fieldset class="show">
+        <legend>Show</legend>
+        <label><input type="radio" name="kind" value="all" checked> Everything</label>
+        <label><input type="radio" name="kind" value="lecture"> Lecture</label>
+        <label><input type="radio" name="kind" value="lab"> Lab</label>
+        <label><input type="checkbox" id="hideDone"> Hide the ones I ticked</label>
+      </fieldset>
     </div>
+    <p class="count" id="count" role="status" aria-live="polite"></p>
   </div>
 
-  <div class="protocol-band">
-    <b>Checked some boxes and still not sure how to study the rest?</b> The
-    <a href="bio004-study-protocol.html" target="_top">Study Protocol</a> is a flow chart that turns
-    this list into a week of work: pick the high-yield items, build study boxes, recall them from
-    memory, then drill the cards. Start at the top and do one box at a time.
-  </div>
+  <div id="list"></div>
+  <p class="empty" id="empty" hidden>Nothing matches that search. Try a shorter word, or a competency number.</p>
 
-  <footer class="foot">
-    <p>BIO 004 Human Anatomy &middot; Fall 2026 &middot; Solano Community College<br>
-    Dr. Sharilyn Rennie</p>
+  <footer>
+    <p>Same content as the <a href="BIO004-Fall2026-Competency-Packet.pdf" target="_blank" rel="noopener">Fall 2026 Competency Packet PDF</a>. Your ticks are saved in this browser on this device only.</p>
+    <p class="noprint"><a href="#top">Back to the top</a></p>
   </footer>
-</div>
+</main>
 
-<script src="schedule-fall2026.js"></script>
-<script src="competenciesfall2026.js"></script>
+<script src="bio004-competency-packet-data.js"></script>
 <script>
 (function () {
   'use strict';
-  var C = window.BIO004_COMPETENCIES;
-  var MODS = window.BIO004_MODULES || [];
-  if (!C || !C.length) return; /* fallback card stays */
+  var P = window.BIO004_PACKET;
+  var list = document.getElementById('list');
+  if (!P) {
+    list.innerHTML = '<p class="card">The list did not load. The <a href="BIO004-Fall2026-Competency-Packet.pdf" target="_blank" rel="noopener">PDF version</a> has the same content.</p>';
+    return;
+  }
 
-  var STORE = 'bio004-comp-checks';
-  function loadChecks() { try { return JSON.parse(localStorage.getItem(STORE)) || {}; } catch (e) { return {}; } }
-  function saveChecks(ch) { try { localStorage.setItem(STORE, JSON.stringify(ch)); } catch (e) {} }
-  var checks = loadChecks();
+  /* Exam dates per section, from schedule-fall2026.js (Fall 2026). */
+  var EXAMS = {
+    mw: ['2026-09-09', '2026-09-30', '2026-10-21', '2026-11-16', '2026-12-09'],
+    tr: ['2026-09-08', '2026-09-29', '2026-10-22', '2026-11-17', '2026-12-10']
+  };
+  var DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  function fmt(iso) {
+    var p = iso.split('-'); var d = new Date(+p[0], +p[1] - 1, +p[2]);
+    return DAYS[d.getDay()] + ' ' + MONTHS[d.getMonth()] + ' ' + d.getDate();
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
 
-  /* Boundary weeks belong to the LATER module, same rule as everywhere. */
-  var wkModule = {};
-  MODS.forEach(function (m) { (m.weeks || []).forEach(function (w) { wkModule[w] = m; }); });
+  /* Saved ticks. New key: the old page used different ids. */
+  var KEY = 'bio004-packet-ticks-fa26';
+  function loadTicks() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
+  function saveTicks(t) { try { localStorage.setItem(KEY, JSON.stringify(t)); } catch (e) {} }
+  var ticks = loadTicks();
 
-  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-  var YIELD_TAG = { core: ['core','Core'], high: ['high','High yield'], support: ['support','Support'] };
-
-  /* Group: module -> system, in teaching (week, then file) order. */
-  var lastMod = null, lastSys = null, html = '', sysN = 0;
-  var sorted = C.slice().sort(function (a, b) { return a.week - b.week || C.indexOf(a) - C.indexOf(b); });
-  sorted.forEach(function (c) {
-    var m = wkModule[c.week];
-    if (m && m.n !== lastMod) {
-      lastMod = m.n; lastSys = null;
-      html += '<h2 class="module-h" id="module-' + m.n + '" data-mod="' + m.n + '">Module ' + m.n
-        + ' <span class="mt">&middot; ' + esc(m.title) + '</span></h2>';
-    }
-    if (c.system !== lastSys) {
-      lastSys = c.system; sysN++;
-      html += '<h3 class="sys" data-sys="' + sysN + '">' + esc(c.system) + '</h3>';
-    }
-    var yt = YIELD_TAG[c.yield] || ['support', c.yield];
-    var done = checks[c.id] ? ' done' : '';
-    html += '<div class="comp' + done + '" data-yield="' + esc(c.yield) + '" data-id="' + esc(c.id) + '"'
-      + ' data-mod="' + (m ? m.n : '') + '" data-sys="' + sysN + '">'
-      + '<input type="checkbox" id="ck-' + esc(c.id) + '"' + (checks[c.id] ? ' checked' : '')
-      + ' aria-describedby="cn-' + esc(c.id) + '">'
-      + '<label for="ck-' + esc(c.id) + '">'
-      + '<span class="cname" id="cn-' + esc(c.id) + '">' + esc(c.name) + '</span>'
-      + '<span class="ccan" style="display:block">' + esc(c.can) + '</span>'
-      + '<span class="ctags">'
-      + '<span class="tag ' + yt[0] + '">' + yt[1] + '</span>'
-      + '<span class="tag">DOK ' + c.dok + '</span>'
-      + (c.facets || []).map(function (f) { return '<span class="tag">' + esc(f) + '</span>'; }).join('')
-      + '</span></label></div>';
+  /* Load table */
+  var sum = { t: 0, lec: 0, lab: 0, core: 0 };
+  var rows = P.modules.map(function (m) {
+    var lec = m.comps.filter(function (c) { return c.lecture; }).length;
+    var lab = m.comps.filter(function (c) { return c.lab; }).length;
+    sum.t += m.comps.length; sum.lec += lec; sum.lab += lab; sum.core += m.core;
+    return '<tr><td class="mod">' + m.n + '</td><td>' + esc(m.title) + '</td><td class="n">' + m.comps.length +
+      '</td><td class="n">' + lec + '</td><td class="n">' + lab + '</td><td class="n">' + m.core + '</td></tr>';
   });
-  document.getElementById('list').innerHTML = html;
+  document.getElementById('loadBody').innerHTML = rows.join('');
+  document.getElementById('tTotal').textContent = sum.t;
+  document.getElementById('tLec').textContent = sum.lec;
+  document.getElementById('tLab').textContent = sum.lab;
+  document.getElementById('tCore').textContent = sum.core;
 
-  /* filters */
-  var yf = 'all', hideDone = false;
+  /* Jump chips */
+  document.getElementById('jump').innerHTML = P.modules.map(function (m) {
+    var first = m.comps[0].n, last = m.comps[m.comps.length - 1].n;
+    return '<a href="#module-' + m.n + '">Module ' + m.n + '<span>' + first + ' to ' + last + ' &middot; Exam ' + m.exam + '</span></a>';
+  }).join('');
+
+  /* Modules and competencies */
+  list.innerHTML = P.modules.map(function (m) {
+    var first = m.comps[0].n, last = m.comps[m.comps.length - 1].n;
+    var i = m.exam - 1;
+    var html = '<section class="module" id="module-' + m.n + '" aria-labelledby="mh-' + m.n + '">' +
+      '<div class="mhead"><h2 id="mh-' + m.n + '">Module ' + m.n + '. ' + esc(m.title) + '</h2>' +
+      '<p>' + m.comps.length + ' competencies &middot; ' + first + ' to ' + last + ' &middot; Assessed on Exam ' + m.exam + '</p>' +
+      '<p class="dates">Exam ' + m.exam + ': ' + fmt(EXAMS.mw[i]) + ' (Mon/Wed) &middot; ' + fmt(EXAMS.tr[i]) + ' (Tue/Thu)</p></div>';
+    var topic = null;
+    m.comps.forEach(function (c) {
+      if (c.topic !== topic) {
+        if (topic !== null) html += '</ol>';
+        topic = c.topic;
+        html += '<h3 class="topic">' + esc(topic) + '</h3><ol class="comps">';
+      }
+      var tags = (c.lecture ? '<span class="tag lec">LECTURE</span>' : '') + (c.lab ? '<span class="tag lab">LAB</span>' : '');
+      var done = ticks['c' + c.n] ? ' done' : '';
+      html += '<li class="comp' + done + '" id="c' + c.n + '" data-n="' + c.n + '" data-lec="' + (c.lecture ? 1 : 0) + '" data-lab="' + (c.lab ? 1 : 0) +
+        '" data-q="' + esc((c.n + ' ' + c.name + ' ' + c.text + ' ' + c.topic).toLowerCase()) + '">' +
+        '<label><input type="checkbox"' + (done ? ' checked' : '') + ' aria-label="I can do competency ' + c.n + ', ' + esc(c.name) + '">' +
+        '<span class="ctext"><span class="num">' + c.n + '.</span><span class="name">' + esc(c.name) + '.</span> ' + esc(c.text) +
+        ' <span class="tags">' + tags + '</span></span></label></li>';
+    });
+    if (topic !== null) html += '</ol>';
+    return html + '</section>';
+  }).join('');
+
+  /* Filters */
+  var find = document.getElementById('find');
+  var hideDone = document.getElementById('hideDone');
+  var count = document.getElementById('count');
+  var empty = document.getElementById('empty');
+  function kind() { var r = document.querySelector('input[name="kind"]:checked'); return r ? r.value : 'all'; }
   function apply() {
-    var shown = 0, doneN = 0;
-    document.querySelectorAll('.comp').forEach(function (el) {
-      var isDone = el.classList.contains('done');
-      if (isDone) doneN++;
-      var ok = (yf === 'all' || el.getAttribute('data-yield') === yf) && !(hideDone && isDone);
-      el.style.display = ok ? '' : 'none';
+    var q = find.value.trim().toLowerCase();
+    var k = kind();
+    var shown = 0;
+    var items = list.querySelectorAll('li.comp');
+    items.forEach(function (li) {
+      var ok = true;
+      if (k === 'lecture' && li.getAttribute('data-lec') !== '1') ok = false;
+      if (k === 'lab' && li.getAttribute('data-lab') !== '1') ok = false;
+      if (hideDone.checked && li.classList.contains('done')) ok = false;
+      if (ok && q) {
+        ok = /^\d+$/.test(q) ? li.getAttribute('data-n') === q : li.getAttribute('data-q').indexOf(q) > -1;
+      }
+      li.hidden = !ok;
       if (ok) shown++;
     });
-    /* Hide headings whose whole group is hidden. Matched by data
-       attribute, not DOM position, because reading mode rewraps the
-       page into its own sections after load. */
-    document.querySelectorAll('h3.sys').forEach(function (h) {
-      var any = document.querySelector('.comp[data-sys="' + h.getAttribute('data-sys') + '"]:not([style*="none"])');
-      h.style.display = any ? '' : 'none';
+    list.querySelectorAll('ol.comps').forEach(function (ol) {
+      var any = ol.querySelector('li.comp:not([hidden])');
+      ol.hidden = !any; ol.previousElementSibling.hidden = !any;
     });
-    document.querySelectorAll('h2.module-h').forEach(function (h) {
-      var any = document.querySelector('.comp[data-mod="' + h.getAttribute('data-mod') + '"]:not([style*="none"])');
-      h.style.display = any ? '' : 'none';
+    list.querySelectorAll('section.module').forEach(function (s) {
+      s.hidden = !s.querySelector('li.comp:not([hidden])');
     });
-    document.getElementById('count').textContent =
-      shown + ' of ' + C.length + ' competencies shown. ' + doneN + ' checked off.';
+    var ticked = Object.keys(ticks).length;
+    count.textContent = 'Showing ' + shown + ' of ' + items.length + ' competencies. You have ticked ' + ticked + '.';
+    empty.hidden = shown > 0;
   }
-  document.querySelectorAll('[data-yf]').forEach(function (b) {
-    b.addEventListener('click', function () {
-      yf = b.getAttribute('data-yf');
-      document.querySelectorAll('[data-yf]').forEach(function (x) {
-        x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
-      });
-      apply();
-    });
-  });
-  document.getElementById('hidedone').addEventListener('click', function () {
-    hideDone = !hideDone;
-    this.setAttribute('aria-pressed', hideDone ? 'true' : 'false');
-    apply();
-  });
-  document.getElementById('list').addEventListener('change', function (e) {
+  find.addEventListener('input', apply);
+  document.querySelectorAll('input[name="kind"]').forEach(function (r) { r.addEventListener('change', apply); });
+  hideDone.addEventListener('change', apply);
+  list.addEventListener('change', function (e) {
     if (e.target.type !== 'checkbox') return;
-    var comp = e.target.closest('.comp');
-    var id = comp.getAttribute('data-id');
-    if (e.target.checked) { checks[id] = 1; comp.classList.add('done'); }
-    else { delete checks[id]; comp.classList.remove('done'); }
-    saveChecks(checks);
+    var li = e.target.closest('li.comp');
+    var id = 'c' + li.getAttribute('data-n');
+    if (e.target.checked) { ticks[id] = 1; li.classList.add('done'); }
+    else { delete ticks[id]; li.classList.remove('done'); }
+    saveTicks(ticks);
     apply();
   });
   apply();
 
-  /* height sender for embeds */
+  /* Open at #module-3 or #c64 when linked that way. */
+  if (location.hash) {
+    var target = document.getElementById(location.hash.slice(1));
+    if (target) setTimeout(function () { target.scrollIntoView(); }, 50);
+  }
+
+  /* Height sender for Canvas and Kajabi embeds. */
   var FRAME_ID = 'bio004-competency-packet';
   function sendHeight() {
     var h = (window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight);
-    if (window.parent && window.parent !== window) parent.postMessage({type: 'resize', id: FRAME_ID, height: h}, '*');
+    if (window.parent && window.parent !== window) parent.postMessage({ type: 'resize', id: FRAME_ID, height: h }, '*');
   }
   window.addEventListener('load', sendHeight);
   window.addEventListener('resize', sendHeight);
