@@ -222,8 +222,37 @@ footer.site-foot{text-align:center;margin-top:40px;padding:26px 16px;background:
   .day,.week{break-inside:avoid-page}
   a{color:#000;text-decoration:none}
 }
+/* ============================================================
+   WEEK PAGE MODE (?hub=N). The week-N-hub.html pages forward here,
+   so a week page and the weekly schedule are the same data and can
+   never disagree. Navy page, white day cards, nothing but that week.
+   ============================================================ */
+.hubhead{display:none}
+body.hubmode{background:#08101F}
+body.hubmode .site-header,body.hubmode .cover,body.hubmode [data-day-plan],body.hubmode .order,
+body.hubmode .controls,body.hubmode .week-head,body.hubmode .site-foot{display:none!important}
+body.hubmode .hubhead{display:block;position:relative;color:#fff;margin:4px 0 22px;padding-right:64px}
+.hub-eyebrow{margin:0;font-family:var(--eb);font-size:clamp(15px,2.2vw,18px);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#E3C27D}
+.hubhead h1{margin:8px 0 4px;font-size:clamp(28px,5vw,40px);line-height:1.1;font-weight:800;letter-spacing:-.02em;color:#fff}
+.hub-sub{margin:0;color:#C8D2DA;font-size:16px}
+.hub-secs{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
+.hub-secs .pill{background:transparent;color:#fff;border-color:rgba(255,255,255,.35);min-height:36px;padding:5px 14px;font-size:.84rem}
+.hub-secs .pill[aria-pressed="true"]{background:#fff;color:#08101F;border-color:#fff}
+.hub-nav{display:flex;flex-wrap:wrap;gap:8px 22px;margin:16px 0 0;font-size:15px}
+.hub-nav a{color:#fff;font-weight:700}
+.hub-nav a:hover{color:#E3C27D}
+.hub-nav a[aria-disabled="true"]{display:none}
+.swm{position:absolute;top:0;right:0;width:48px;height:48px;border-radius:50%;background:#B8924A;color:#08101F;
+  display:grid;place-items:center;text-decoration:none;box-shadow:0 8px 20px -8px rgba(0,0,0,.6)}
+.swm:hover{background:#E3C27D;color:#08101F}
+.swm:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.swm svg{width:24px;height:24px}
+.swm-l{position:absolute;top:54px;right:-6px;white-space:nowrap;font-family:var(--eb);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#E3C27D}
+body.hubmode .strip h4{color:var(--terra-dark)}
+body.hubmode a:focus-visible{outline-color:#E3C27D}
+body.hubmode .day a:focus-visible,body.hubmode .strip a:focus-visible{outline-color:var(--terra-dark)}
+@media (max-width:560px){body.hubmode .hubhead{padding-right:56px}.swm-l{display:none}}
 </style>
-</head>
 <body>
 <a class="skip" href="#schedule">Skip to the schedule</a>
 
@@ -246,6 +275,25 @@ footer.site-foot{text-align:center;margin-top:40px;padding:26px 16px;background:
 </header>
 
 <main class="wrap" id="top">
+  <section class="hubhead" id="hubHead" aria-labelledby="hubTitle">
+    <a class="swm" href="study-session-signup.html" target="_top" aria-label="Study With Me: join or host a study session" title="Study With Me">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span class="swm-l" aria-hidden="true">Study With Me</span>
+    </a>
+    <p class="hub-eyebrow">BIO 004 &middot; Human Anatomy</p>
+    <h1 id="hubTitle">This week</h1>
+    <p class="hub-sub" id="hubSub"></p>
+    <div class="hub-secs" role="group" aria-label="Your class">
+      <button type="button" class="pill" data-sec="mw" aria-pressed="false">Mon / Wed</button>
+      <button type="button" class="pill" data-sec="tr-am" aria-pressed="false">Tue / Thu AM</button>
+      <button type="button" class="pill" data-sec="tr-eve" aria-pressed="false">Tue / Thu PM</button>
+    </div>
+    <nav class="hub-nav" aria-label="Other weeks">
+      <a id="hubPrev" href="#" target="_top">&#8592; Previous week</a>
+      <a id="hubAll" href="bio004-weekly-schedule.html" target="_top">The whole schedule</a>
+      <a id="hubNext" href="#" target="_top">Next week &#8594;</a>
+    </nav>
+  </section>
   <section class="cover">
     <p class="cover-eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
     <h1>Your weekly <span>schedule</span></h1>
@@ -757,7 +805,7 @@ var LOOPS = "https://www.medmasterscollaborative.com/anatomy-loops";
     return '<h4><span class="n" aria-hidden="true">4</span>Lab</h4>'
       + '<p><span class="kicker">'+(no?'Lab '+esc(no)+' · ':'')+esc(title)+'</span></p>'
       + (sprints?'<p class="small">Lab sprint: '+sprints+'</p>':'')
-      + '<p class="small">Learn to see it in the '+a('bio004-digital-atlas.html','Digital Atlas')+', then retrieve it in '+ext(LOOPS,'Loops')+'.</p>';
+      + '<p class="small">Learn to see it in the '+a('bio004-digital-atlas.html','Interactive Digital Atlas')+', then retrieve it in '+ext(LOOPS,'Loops')+'.</p>';
   }
 
   function caseBlock(ex, iso){
@@ -962,7 +1010,31 @@ var LOOPS = "https://www.medmasterscollaborative.com/anatomy-loops";
 
   function say(msg){ var el=document.getElementById('status'); el.textContent=''; setTimeout(function(){ el.textContent=msg; },30); }
 
+  /* ?hub=N shows one week on its own, for the week-N-hub.html pages */
+  var HUB = +((location.search.match(/[?&]hub=(\d+)/)||[])[1]||0);
+  if(HUB<1||HUB>17) HUB=0;
+  if(HUB) document.body.classList.add('hubmode');
+  function hubLink(n){ return 'week-'+n+'-hub.html'+(state.chosen?'?sec='+state.sec:''); }
+  function renderHub(){
+    var cfg=SEC[state.sec], list=SESS[cfg.track].filter(function(s){return s.wk===HUB;});
+    var W=WEEKS[HUB]||{};
+    var mods=(MODS||[]).filter(function(m){return m.weeks.indexOf(HUB)>-1;}).map(function(m){return 'Module '+m.n;}).join(' into ');
+    var range=list.length?label(list[0].date)+(list.length>1?' to '+label(list[list.length-1].date):''):'';
+    document.getElementById('hubTitle').textContent='Week '+HUB+(W.theme?': '+W.theme:'');
+    document.getElementById('hubSub').textContent=[range,mods].filter(Boolean).join(' · ')+(HUB===NOWWK?' · This week':'');
+    document.title='Week '+HUB+(W.theme?': '+W.theme:'')+' · BIO 004 Human Anatomy';
+    var pv=document.getElementById('hubPrev'), nx=document.getElementById('hubNext');
+    pv.href=hubLink(HUB-1); nx.href=hubLink(HUB+1);
+    pv.textContent='\u2190 Week '+(HUB-1); nx.textContent='Week '+(HUB+1)+' \u2192';
+    if(HUB<=1) pv.setAttribute('aria-disabled','true'); else pv.removeAttribute('aria-disabled');
+    if(HUB>=17) nx.setAttribute('aria-disabled','true'); else nx.removeAttribute('aria-disabled');
+    document.getElementById('hubAll').href='bio004-weekly-schedule.html'+(state.chosen?'?sec='+state.sec:'')+'#week-'+HUB;
+    document.querySelectorAll('[data-sec]').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-sec')===state.sec?'true':'false'); });
+    host.innerHTML = weekHTML(HUB) || '<article class="card day"><p>No class meetings this week for your section.</p></article>';
+  }
+
   function render(){
+    if(HUB){ renderHub(); return; }
     var cfg=S.sections[SEC[state.sec].key], M=dayMap();
     document.querySelectorAll('[data-sec]').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-sec')===state.sec?'true':'false'); });
     document.querySelectorAll('[data-view]').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-view')===state.view?'true':'false'); });
