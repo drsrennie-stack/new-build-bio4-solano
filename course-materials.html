@@ -291,6 +291,23 @@
   var query = '';
   var open = order.length ? order[0] : 1;
 
+  /* Which module opens first: the one in the link (#mod-3) if there is
+     one, otherwise the module class is in right now, worked out from the
+     student's section and the exam dates (the first exam still ahead). */
+  (function(){
+    var h = (location.hash || '').match(/^#mod-(\d+)$/);
+    if(h && order.indexOf(+h[1]) > -1){ open = +h[1]; return; }
+    var sec = null;
+    try { var q = location.search.match(/[?&]sec=(mw|tr-am|tr-eve)/); sec = q ? q[1] : localStorage.getItem('bio004-section'); } catch(e){}
+    var EXAMS = { mw: ['2026-09-09','2026-09-30','2026-10-21','2026-11-16','2026-12-09'],
+                  tr: ['2026-09-08','2026-09-29','2026-10-22','2026-11-17','2026-12-10'] };
+    var d = new Date(), p = function(n){ return (n < 10 ? '0' : '') + n; };
+    var today = d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate());
+    var list = EXAMS[sec === 'mw' ? 'mw' : 'tr'], now = 5;
+    for(var i = 0; i < list.length; i++){ if(today <= list[i]){ now = i + 1; break; } }
+    if(order.indexOf(now) > -1) open = now;
+  })();
+
   (function(){
     var m = null;
     try { m = location.search.match(/[?&]show=([a-z,]+)/i); } catch(e){}
@@ -342,170 +359,3 @@
       var g = groups[n];
       if(!g.m) return;
       var wk = (g.m.weeks && g.m.weeks.length)
-        ? 'Weeks ' + g.m.weeks[0] + ' to ' + g.m.weeks[g.m.weeks.length-1] : '';
-      h += '<a href="#mod-'+n+'" data-mod="'+n+'" class="'+(open===n?'active':'')+'"'
-        +  (open===n ? ' aria-current="true"' : '') + '>'
-        +    '<span class="k">Module '+n+' &middot; '+wk+(g.m.exam?' &middot; Exam '+g.m.exam:'')+'</span>'
-        +    '<span class="t">'+esc(g.m.title)+'</span>'
-        +  '</a>';
-    });
-    document.getElementById('modnav').innerHTML = h;
-  }
-
-  function render(){
-    var out = '', shown = 0;
-
-    order.forEach(function(n){
-      var g = groups[n];
-      var isOpen = (query ? true : open === n);
-      var body = '', any = 0;
-
-      KINDS.forEach(function(K){
-        if(!active[K.k]) return;
-        var list = (g.kinds[K.k] || []).filter(match);
-        if(!list.length) return;
-        list.sort(function(a,b){ return (a.wk||0)-(b.wk||0) || String(a.t).localeCompare(String(b.t)); });
-        any += list.length; shown += list.length;
-
-        var titles = list.map(function(it, i){
-          return (i ? '<span class="sep">&middot;</span>' : '')
-               + '<a href="'+esc(it.u)+'" target="_top"'+(i?' class="more"':'')+'>'+esc(it.t)+'</a>';
-        }).join('');
-
-        body += '<div class="row">'
-             +    '<span class="tag '+K.cls+'">'+K.tag+'</span>'
-             +    '<span class="what">'+titles+'</span>'
-             +    '<button type="button" class="go" data-only="'+K.k+'">'
-             +      list.length+' '+K.unit+(list.length===1?'':'s')+' &rarr;</button>'
-             +  '</div>';
-      });
-
-      /* One practice exam per module, and only when the module has
-         an exam to practice for. */
-      if(showExam && g.m && g.m.exam && (!query || 'practice exam'.indexOf(query) > -1
-          || String(g.m.title).toLowerCase().indexOf(query) > -1)){
-        any += 1; shown += 1;
-        body += '<div class="exam-card">'
-             +    '<span class="tag">PRACTICE EXAM</span>'
-             +    '<span class="what">Practice Exam '+g.m.exam+' &middot; '+esc(g.m.title)
-             +      '<span class="note">A fresh paper in the real format, generated when you want it. '
-             +      'Nothing repeats inside one paper.</span></span>'
-             +    '<a class="go" href="practice-lecture-exam.html?exam='+g.m.exam+'" target="_top">Start &rarr;</a>'
-             +  '</div>'
-             /* the follow-up: one paper is never enough close to an exam */
-             +  '<div class="exam-more">Want to make more? '
-             +    '<a href="bio004-practice-exam-builder.html" target="_top">Build unlimited fresh exams</a>'
-             +    '<span class="sep">&middot;</span>'
-             +    '<a href="exam-simulator.html" target="_top">or run the Exam Simulator</a>, '
-             +    'graded against the competency packet.'
-             +  '</div>';
-      }
-
-      if(!any) return;
-
-      var title = g.m ? ('Module '+g.n+' &middot; '+esc(g.m.title)) : 'Not placed in a module';
-      out += '<section class="mod'+(isOpen?' open':'')+'" id="mod-'+n+'">'
-          +    '<h2 style="margin:0">'
-          +      '<button type="button" class="mod-h" data-mod="'+n+'" aria-expanded="'+(isOpen?'true':'false')
-          +      '" aria-controls="body-'+n+'">'
-          +        '<span class="title">'+title+'</span>'
-          +        '<span class="count">'+(isOpen ? any+' items' : 'Expand &#9662;')+'</span>'
-          +      '</button>'
-          +    '</h2>'
-          +    '<p class="mod-sub">'+subLine(g)+'</p>'
-          +    '<div class="mod-b" id="body-'+n+'">'+body+'</div>'
-          +  '</section>';
-    });
-
-    document.getElementById('mods').innerHTML = out
-      || '<section class="mod open"><h2 class="mod-h"><span class="title">Nothing matches</span></h2>'
-       + '<p class="mod-sub">Clear the search, or switch a type back on.</p></section>';
-
-    document.getElementById('count').textContent =
-      shown + ' item' + (shown===1?'':'s') + ' showing'
-      + (query ? ' for "' + query + '"' : '') + '.';
-    renderNav();
-  }
-
-  /* ---------- events ---------- */
-  document.getElementById('kindFilter').addEventListener('click', function(e){
-    var b = e.target.closest('.pill'); if(!b) return;
-    var k = b.getAttribute('data-k');
-    if(k === 'all'){ KINDS.forEach(function(K){ active[K.k] = true; }); showExam = true; }
-    else if(allOn()){
-      /* Everything is on, so a click means "just this one". */
-      KINDS.forEach(function(K){ active[K.k] = (K.k === k); });
-      showExam = (k === 'exam');
-    } else {
-      if(k === 'exam') showExam = !showExam; else active[k] = !active[k];
-      if(KINDS.every(function(K){ return !active[K.k]; }) && !showExam){
-        KINDS.forEach(function(K){ active[K.k] = true; }); showExam = true;
-      }
-    }
-    chips(); render();
-  });
-
-  document.getElementById('mods').addEventListener('click', function(e){
-    var only = e.target.closest('.go[data-only]');
-    if(only){
-      var k = only.getAttribute('data-only');
-      KINDS.forEach(function(K){ active[K.k] = (K.k === k); });
-      showExam = false; chips(); render();
-      try{ document.getElementById('find').focus(); }catch(err){}
-      return;
-    }
-    var b = e.target.closest('.mod-h'); if(!b) return;
-    var n = parseInt(b.getAttribute('data-mod'),10);
-    open = (open === n) ? -1 : n;
-    render();
-    var again = document.querySelector('.mod-h[data-mod="'+n+'"]');
-    if(again) again.focus();
-  });
-
-  document.getElementById('modnav').addEventListener('click', function(e){
-    var a = e.target.closest('a[data-mod]'); if(!a) return;
-    open = parseInt(a.getAttribute('data-mod'),10);
-    render();
-  });
-
-  var t = null;
-  document.getElementById('find').addEventListener('input', function(){
-    var v = this.value.trim().toLowerCase();
-    window.clearTimeout(t);
-    t = window.setTimeout(function(){ query = v; render(); }, 120);
-  });
-
-  chips(); render();
-}());
-</script>
-
-<!-- iframe height sender -->
-<script>
-(function(){
-  'use strict';
-  var frameId=null;
-  try{ var m=location.search.match(/[?&]frameId=([^&#]+)/); if(m) frameId=decodeURIComponent(m[1]); }catch(e){}
-  var last=0;
-  /* Measure the BODY only. documentElement.scrollHeight is
-     max(content, viewport), and inside an iframe the viewport IS the
-     frame, so measuring it means the page can never report a height
-     smaller than the frame already has and the frame ratchets up. */
-  function postHeight(){
-    var b=document.body; if(!b) return;
-    var h=Math.max(b.scrollHeight, b.offsetHeight, Math.ceil(b.getBoundingClientRect().height));
-    if(Math.abs(h-last)<2) return;
-    last=h;
-    try{ parent.postMessage({frameId:frameId,type:'resize',height:h},'*'); }catch(e){}
-  }
-  window.addEventListener('load',postHeight);
-  window.addEventListener('resize',postHeight);
-  if(window.ResizeObserver){ try{ new ResizeObserver(postHeight).observe(document.body); }catch(e){} }
-  document.addEventListener('click',function(){ window.setTimeout(postHeight,60); });
-  postHeight();
-})();
-</script>
-
-<script src="bio004-dock.js"></script>
-<script src="dock-coachmark.js"></script>
-</body>
-</html>
