@@ -743,7 +743,15 @@ body[data-view="progress"] #workRail{display:none}
    student never gets lost behind the one thing they clicked. Items
    cross off as they finish. Today's steps use it; a weakness repair
    run swaps its contents. */
-#workRail{float:right;position:sticky;top:118px;width:232px;margin:18px 16px 18px 26px;
+/* Calmer: the list no longer floats over the work. It opens from the
+   "Today's list" chip in the view bar and closes again. */
+.vtab-list{margin-left:auto;color:var(--navy);border-color:var(--line)}
+.vtab-list[aria-expanded="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.vtab-list + .vtab-free{margin-left:0}
+body[data-view="progress"] #wlChip{display:none}
+#s-recall .note-short{background:none;border:0;box-shadow:none;padding:0;margin:4px 0 14px;font-size:14px;color:var(--ink-soft)}
+.hoo-nudge{display:none !important}
+#workRail{position:fixed;top:128px;right:max(16px,calc((100vw - 1120px)/2 + 16px));width:260px;margin:0;
   background:var(--white);border:1px solid var(--line);border-radius:14px;padding:14px 14px 10px;z-index:26;
   box-shadow:0 8px 20px rgba(11,21,48,.12)}
 #workRail[hidden]{display:none}
@@ -762,19 +770,12 @@ body[data-view="progress"] #workRail{display:none}
 .wr-sub{display:block;font-weight:600;font-size:11.5px;color:var(--ink-soft);text-decoration:none}
 .wr-foot{border-top:1px solid var(--line);margin-top:6px;padding-top:8px;font-size:11.5px;color:var(--ink-soft)}
 .wr-foot button{background:none;border:0;padding:0;font:inherit;font-weight:700;color:var(--terra-dark);cursor:pointer;text-decoration:underline}
-@media(max-width:1099px){
-  /* narrow screens and Canvas iframes: the list becomes a sticky
-     chip scroller across the top, same items, same cross-off */
-  #workRail{float:none;position:sticky;top:104px;width:auto;margin:0 0 14px;display:flex;gap:8px;
-    overflow-x:auto;align-items:center;padding:10px 12px;border-radius:12px}
-  #workRail .wr-eyebrow,#workRail h3{display:none}
-  .wr-item{border-top:0;border:1px solid var(--line);border-radius:999px;padding:6px 12px;white-space:nowrap;flex:none;width:auto}
-  .wr-item .wr-sub{display:none}
-  .wr-foot{border-top:0;margin:0;padding:0;white-space:nowrap;flex:none}
+@media(max-width:600px){
+  #workRail{left:12px;right:12px;width:auto}
 }
 </style>
 </head>
-<body>
+<body data-no-back>
 <a class="skip" href="#s-plan">Skip to today's plan</a>
 
 <!-- ============ ONBOARDING ============ -->
@@ -818,6 +819,7 @@ body[data-view="progress"] #workRail{display:none}
   <div class="vtabs">
     <button type="button" class="vtab" id="tabToday" data-goview="today" aria-pressed="true">Today</button>
     <button type="button" class="vtab" id="tabProg" data-goview="progress" aria-pressed="false">My progress</button>
+    <button type="button" class="vtab vtab-list" id="wlChip" aria-expanded="false" aria-controls="workRail" hidden></button>
     <button type="button" class="vtab vtab-free" data-freestyle>Freestyle</button>
   </div>
   <ul>
@@ -898,9 +900,7 @@ body[data-view="progress"] #workRail{display:none}
   <section class="block" id="s-recall" aria-labelledby="h-recall" tabindex="-1">
     <div class="wrap">
       <h2 id="h-recall">Recall</h2>
-      <p class="note">Every card in the course is here, and the schedule decides which ones you
-        see. Answer how sure you are before you look, because being sure and being wrong is the
-        gap that costs you marks, and it is the one you cannot feel from the inside.</p>
+      <p class="note note-short">Say how sure you are before you look. Sure and wrong is the gap that costs marks.</p>
       <div id="recallMount"></div>
     </div>
   </section>
@@ -2016,7 +2016,7 @@ function renderMap(){
 /* =========================================================
    RENDER: SECTION 4 - WEAKNESS
 ========================================================= */
-var LOOPS_BASE='https://drsrennie-stack.github.io/loops/';
+var LOOPS_BASE='https://www.medmasterscollaborative.com/anatomy-loops';
 /* Smallest loop that covers this competency. Smallest, not first: a
    13-competency omnibus loop is a worse repair target than a focused
    one, even though both technically cover it. */
@@ -4834,6 +4834,7 @@ function wlStartWeak(){
   if(!w.length){toast('No flagged weaknesses right now. Nothing to repair.');return;}
   WL={mode:'weak',startedAt:new Date().toISOString(),items:w.map(function(x){return {id:x.c.id,name:x.c.name};})};
   wlSave();
+  WL_OPEN=true;
   setView('today');
   location.hash='s-recall';
   if(window.BIO004_RECALL_OPEN)window.BIO004_RECALL_OPEN(WL.items[0].id);
@@ -4861,9 +4862,9 @@ function wlRender(){
         +'<span class="wr-sub">'+(done?'Crossed off':got+' of '+WL_DOSE+' cards')+'</span></span></button>';
     }).join('');
     h+='<div class="wr-foot">'+doneN+' of '+WL.items.length+' crossed off &middot; <button type="button" data-wlback>Back to today</button></div>';
-    el.hidden=false; el.innerHTML=h; return;
+    el.innerHTML=h; wlChipSet('Repair run',doneN,WL.items.length); return;
   }
-  if(typeof DR==='undefined'||!DR.steps||!DR.steps.length){el.hidden=true;return;}
+  if(typeof DR==='undefined'||!DR.steps||!DR.steps.length){el.hidden=true;wlChipSet(null);return;}
   h+='<p class="wr-eyebrow">Today</p><h3>Your list</h3>';
   h+=DR.steps.map(function(s,i){
     return '<button type="button" class="wr-item'+(s.doneFlag?' done':'')+'" data-wlstep="'+i+'" '
@@ -4872,8 +4873,34 @@ function wlRender(){
       +(s.topic?'<span class="wr-sub">'+esc(s.topic)+'</span>':'')+'</span></button>';
   }).join('');
   try{var cc=cardCountsToday();h+='<div class="wr-foot">Cards today: '+cc.rev+' review &middot; '+cc.nw+' new</div>';}catch(e){}
-  el.hidden=false; el.innerHTML=h;
+  el.innerHTML=h;
+  wlChipSet("Today's list",DR.steps.filter(function(s){return s.doneFlag;}).length,DR.steps.length);
 }
+var WL_OPEN=false;
+function wlChipSet(label,done,total){
+  var c=document.getElementById('wlChip'),el=document.getElementById('workRail');
+  if(!c||!el)return;
+  if(!label){c.hidden=true;el.hidden=true;WL_OPEN=false;return;}
+  c.hidden=false;
+  c.textContent=label+' \u00b7 '+done+' of '+total;
+  c.setAttribute('aria-expanded',String(WL_OPEN));
+  el.hidden=!WL_OPEN;
+}
+function wlToggle(open){
+  WL_OPEN=(open===undefined)?!WL_OPEN:!!open;
+  var c=document.getElementById('wlChip'),el=document.getElementById('workRail');
+  if(!c||!el||c.hidden)return;
+  c.setAttribute('aria-expanded',String(WL_OPEN)); el.hidden=!WL_OPEN;
+  if(WL_OPEN){var f=el.querySelector('.wr-item');if(f)f.focus();}
+}
+document.addEventListener('click',function(e){
+  if(e.target.closest('#wlChip')){wlToggle();return;}
+  if(WL_OPEN&&!e.target.closest('#workRail'))wlToggle(false);
+  else if(WL_OPEN&&e.target.closest('.wr-item'))setTimeout(function(){wlToggle(false);},0);
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&WL_OPEN){wlToggle(false);var c=document.getElementById('wlChip');if(c)c.focus();}
+});
 
 /* =========================================================
    EXAM RUN-IN. Two scheduled nudges before every exam.

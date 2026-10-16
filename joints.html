@@ -1,352 +1,181 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8">
-<title>Joints Practice Cards</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Articulations &amp; Joints · Human Anatomy · Dr. Sharilyn Rennie</title>
 <style>
-/* Layout: specimen on a lifted white plate at left, answer sheet at right, card strip across the top. Single light look: white page, navy ink, maroon terra cotta, small gold accents. */
-:root{
-  --bg:#ffffff; --surface:#ffffff; --ink:#0B1530; --muted:#4F576A; --line:rgba(11,21,48,.15);
-  --navy:#0B1530; --maroon:#8B3A2E; --maroon-soft:#F3F4F7; --gold:#8B3A2E; --gold-soft:#F3F4F7;
-  --good:#2b7a34; --good-soft:#e5f2e4; --bad:#c0392b; --bad-soft:#fbe9e7;
-  --shadow:0 0 0 .5px rgba(11,21,48,.15);
-  --f-display:"Open Sans","Plus Jakarta Sans",system-ui,sans-serif;
-  --f-body:"Plus Jakarta Sans",system-ui,sans-serif;
-  color-scheme:light;
-}
-*{box-sizing:border-box;font-style:normal}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.45;margin:0}
-a{color:var(--maroon)}
-.wrap{max-width:1240px;margin:0 auto;padding-inline:20px;padding-block:18px 48px;display:grid;gap:16px}
-.home{font-weight:700;text-decoration:none;font-size:15px;display:inline-flex;gap:6px;align-items:center}
-.home:hover{text-decoration:underline}
-header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
-.eyebrow{font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--gold)}
-h1{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,4vw,40px);line-height:1.05;margin:4px 0 0;color:var(--navy);text-wrap:balance}
-.sets{display:flex;flex-wrap:wrap;gap:8px}
-button{font:inherit;color:inherit;cursor:pointer}
-button:focus-visible,input:focus-visible,a:focus-visible,.pin:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-.chip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:6px 14px;font-size:15px}
-.chip[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
-.strip{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:thin}
-.strip button{flex:none;width:42px;height:42px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-weight:700;font-variant-numeric:tabular-nums;position:relative}
-.strip button[aria-current="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
-.strip .dot{position:absolute;right:4px;top:4px;width:8px;height:8px;border-radius:50%}
-.strip .dot.done{background:var(--good)} .strip .dot.part{background:var(--gold)}
-.stage{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:22px;align-items:start}
-@media (max-width:860px){.stage{grid-template-columns:1fr}}
-.plate{background:var(--surface);border-radius:8px;box-shadow:var(--shadow);padding:14px;min-width:0}
-.plate{position:relative}
-.zbtn{position:absolute;top:22px;right:22px;z-index:2;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:rgba(255,255,255,.94);border-radius:99px;padding:7px 13px;font:700 13px/1 var(--f-body);color:var(--navy);cursor:pointer;box-shadow:0 2px 8px rgba(11,21,48,.12)}
-.zbtn:hover{border-color:var(--maroon);color:var(--maroon)}
-.plate svg{cursor:zoom-in}
-dialog.zoom{border:0;padding:0;width:100vw;height:100vh;max-width:100vw;max-height:100vh;background:#0B1530}
-dialog.zoom::backdrop{background:rgba(11,21,48,.6)}
-.zbar{position:fixed;top:0;left:0;right:0;display:flex;gap:10px;align-items:center;padding:12px 16px;color:#fff;font-weight:700;z-index:3}
-.zbar .zt{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.zbar button{border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.1);color:#fff;border-radius:99px;padding:8px 14px;font:700 13px/1 var(--f-body);cursor:pointer}
-.zbar button:hover{background:rgba(255,255,255,.22)}
-.zwrap{position:absolute;inset:58px 0 0 0;overflow:auto;display:grid;place-items:center;padding:8px 16px 24px}
-.zwrap svg{display:block;background:#fff;border-radius:8px;max-width:calc(100vw - 32px);max-height:calc(100vh - 92px);width:auto;height:auto}
-.zwrap.big{place-items:start}
-.zwrap.big svg{max-width:none;max-height:none}
-.plate svg{display:block;width:100%;height:auto;background:#fff;border-radius:8px;user-select:none}
-.fix .mine{margin-left:8px;border:1px solid var(--line,#D5D9E2);background:#fff;color:#256B3A;border-radius:8px;padding:3px 9px;font:700 13px var(--f-body);cursor:pointer}
-.report{display:inline-block;margin-top:6px;font-size:14px;font-weight:700;color:var(--maroon,#8B3A2E)}
-.pin{cursor:pointer;transition:opacity .15s}
-.pin:hover{opacity:.18}
-@media (hover:none){.pin:hover{opacity:1}}
-.pin circle{fill:var(--navy);stroke:#fff;stroke-width:3}
-.pin text{fill:#fff;font-family:var(--f-body);font-weight:700}
-.pin.hot circle{fill:var(--maroon)}
-.ring{fill:none;stroke:#DCB45C;stroke-width:7;pointer-events:none}
-@media (prefers-reduced-motion:no-preference){.ring{animation:ring 1.4s ease-out infinite}@keyframes ring{0%{stroke-opacity:1;stroke-width:9}100%{stroke-opacity:.15;stroke-width:3}}}
-.lbl.found{fill:var(--maroon)}
-.found-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--gold-soft);border-radius:10px;padding:10px 14px;font-weight:700}
-.found-bar span{color:var(--maroon)}
-.found-bar button{margin-left:auto;border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 12px;font-weight:700;color:var(--navy)}
-.dsearch{position:relative;min-width:0;flex:1 1 280px;max-width:420px}
-.dsearch input{width:100%;font:inherit;font-size:16px;padding:9px 12px;border:2px solid var(--navy);border-radius:10px}
-.dres{position:absolute;z-index:5;left:0;right:0;top:calc(100% + 4px);background:#fff;border-radius:10px;box-shadow:var(--shadow);max-height:360px;overflow:auto}
-.dres a{display:block;padding:9px 12px;text-decoration:none;color:var(--ink);border-bottom:1px solid var(--line)}
-.dres a:hover,.dres a:focus{background:var(--gold-soft)}
-.dres b{color:var(--navy)} .dres small{color:var(--muted);display:block}
-.pin.right circle{fill:var(--good)} .pin.wrong circle{fill:var(--bad)}
-.lbl{font-family:var(--f-body);font-weight:700;fill:var(--navy);paint-order:stroke;stroke:#fff;stroke-width:7px;stroke-linejoin:round;pointer-events:none}
-.lbl.hot{fill:var(--maroon)}
-.sheet{background:var(--surface);border-radius:8px;box-shadow:var(--shadow);padding:18px 18px 16px;display:grid;gap:14px;min-width:0}
-.cardhead h2{font-family:var(--f-display);font-weight:600;font-size:24px;line-height:1.15;margin:2px 0 0;color:var(--navy);text-wrap:balance}
-.depth{margin:0 0 12px}
-.depth button{display:inline-flex;align-items:center;gap:12px;border:0;background:none;padding:4px 0;font:600 15px/1.3 var(--f-body);color:var(--navy);cursor:pointer;text-align:left}
-.depth .track{flex:none;width:46px;height:26px;border-radius:99px;background:#C9CDD8;position:relative;transition:background .2s}
-.depth .knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(11,21,48,.3);transition:left .2s}
-.depth button[aria-checked="true"] .track{background:var(--navy)}
-.depth button[aria-checked="true"] .knob{left:23px}
-.more{margin-top:26px;background:var(--surface);border-radius:8px;box-shadow:var(--shadow);padding:18px}
-.more h2{font-family:var(--f-display);font-size:20px;margin:0 0 10px;color:var(--navy)}
-.more a{display:block;padding:10px 0;border-top:1px solid var(--line);color:var(--maroon);font-weight:700;text-decoration:none}
-.more a:hover{text-decoration:underline}
-.more a small{display:block;color:var(--muted);font-weight:500}
-.modes{display:flex;background:var(--maroon-soft);border-radius:10px;padding:4px;gap:4px}
-.modes button{flex:1;border:0;background:transparent;border-radius:7px;padding:8px 6px;font-size:15px;font-weight:700;color:var(--maroon)}
-.modes button[aria-pressed="true"]{background:var(--maroon);color:#fff}
-.hint{font-size:15px;color:var(--muted);margin:0}
-ol.answers{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-ol.answers li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:center;border-radius:4px;padding:4px 6px}
-ol.answers li.hot{background:var(--gold-soft)}
-.num{width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;font-weight:700;display:grid;place-items:center;font-size:15px;font-variant-numeric:tabular-nums}
-.num.right{background:var(--good)} .num.wrong{background:var(--bad)}
-.q{font-weight:700;margin-bottom:4px}
-.field input{width:100%;font:inherit;font-size:17px;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;background:#fbfbfc;color:var(--ink)}
-.field input.right{border-color:var(--good);background:var(--good-soft)}
-.field input.wrong{border-color:var(--bad);background:var(--bad-soft)}
-.field input.self{border-color:var(--gold);background:var(--gold-soft)}
-.fix{font-size:15px;margin-top:3px;color:var(--bad);font-weight:700}
-.fix.ok{color:var(--good)} .fix.cmp{color:var(--navy)}
-.reveal{width:100%;text-align:left;border:1.5px dashed var(--line);background:transparent;border-radius:8px;padding:8px 10px;color:var(--muted);font-size:16px}
-.reveal.open{border-style:solid;border-color:transparent;background:var(--gold-soft);color:var(--ink);font-weight:700}
-.ans{font-weight:700;padding:6px 2px}
-.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.btn{border:1px solid var(--line);background:var(--surface);border-radius:4px;padding:9px 16px;font-weight:700;font-size:16px;color:var(--navy)}
-.btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
-.score{font-weight:700;font-variant-numeric:tabular-nums;color:var(--maroon)}
-.nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-footer.note{font-size:14px;color:var(--muted)}
-@media (prefers-reduced-motion:no-preference){.pin circle,.num,.reveal{transition:fill .15s,background .15s}}
-.vids h2{font-family:var(--f-display);font-weight:800;font-size:clamp(22px,3vw,28px);margin:8px 0 2px;color:var(--navy)}
-.vids-sub{color:var(--muted);margin:0 0 12px;font-size:15px}
-</style>
-
-<div class="wrap">
-  <a class="home" href="atlas.html">&larr; Atlas index</a>
-  <header class="top">
-    <div>
-      <div class="eyebrow">Anatomy Atlas &middot; BIO 004 Human Anatomy</div>
-      <h1>Joints Practice Cards</h1>
-    </div>
-      </header>
-  <div class="sets" id="sets" role="group" aria-label="Which cards to practice"></div>
-  <div class="depth" id="depth" hidden><button id="dSw" type="button" role="switch" aria-checked="true"><span class="track"><span class="knob"></span></span><span class="dl">Also ask origin, insertion and action</span></button></div>
-  <nav class="strip" id="strip" aria-label="Cards"></nav>
-  <main class="stage">
-    <div class="plate"><button class="zbtn" id="zoomBtn" type="button" aria-label="Zoom in on this image"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21M10.5 7.5v6M7.5 10.5h6"/></svg>Zoom</button><svg id="fig" role="img" aria-label="Practice image"></svg></div>
-    <dialog class="zoom" id="zoom" aria-label="Enlarged image">
-      <div class="zbar"><span class="zt" id="zTitle"></span><button type="button" id="zPrev" aria-label="Previous card">&larr;</button><button type="button" id="zNext" aria-label="Next card">&rarr;</button><button type="button" id="zSize">Bigger</button><button type="button" id="zClose">Close</button></div>
-      <div class="zwrap" id="zWrap"></div>
-    </dialog>
-    <section class="sheet">
-      <div class="cardhead"><div class="eyebrow" id="cardEyebrow"></div><h2 id="cardTitle"></h2><a id="report" class="report" target="_blank" rel="noopener">Report a problem with this card</a></div>
-      <div class="modes" role="group" aria-label="How to practice">
-        <button id="mType" aria-pressed="true">Type answers</button>
-        <button id="mReveal" aria-pressed="false">Tap to reveal</button>
-        <button id="mStudy" aria-pressed="false">Show all</button>
-      </div>
-      <div class="found-bar" id="found" hidden></div>
-      <p class="hint" id="hint"></p>
-      <ol class="answers" id="answers"></ol>
-      <div class="row" id="actions"></div>
-      <div class="nav">
-        <button class="btn" id="prev">&larr; Previous card</button>
-        <button class="btn" id="shuffle">Shuffle cards</button>
-        <button class="btn" id="next">Next card &rarr;</button>
-      </div>
-    </section>
-  </main>
-  <section class="vids" id="vids" data-videos="joints" hidden aria-labelledby="vidsH"><h2 id="vidsH">Walk-through videos</h2><p class="vids-sub">Watch the structures pointed out, then practice them on the cards above.</p></section>
-  <section class="more" id="more" hidden><h2>Further study</h2><div id="moreLinks"></div></section>
-  <footer class="note"><b>Spelling counts on the lab exam.</b> Practice here accepts close spellings, but on the exam the only abbreviations allowed are R. (right), L. (left), A. (artery), V. (vein) and N. (nerve). Spell everything else out. Your progress stays on this device. Cadaver images courtesy of BlueLink, University of Michigan Medical School. Histology images courtesy of Duke University Virtual Microscopy. Black-and-white brain images from Duane E. Haines's neuroanatomy atlas. Line drawings marked OpenStax are from OpenStax Anatomy and Physiology 2e (openstax.org), licensed CC BY 4.0, with labels replaced by numbers.</footer>
-</div>
-
-<script src="search-data.js"></script>
-<script src="search.js"></script>
-<script src="videos-data.js"></script>
-<script src="videos.js"></script>
+*{box-sizing:border-box} html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,Arial,sans-serif;background:#FAFAF9;color:#060A18;font-size:16px;line-height:1.5}
+button{font-family:inherit} a{color:#8B3A2E}
+:focus-visible{outline:3px solid #8B3A2E;outline-offset:3px;border-radius:4px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:16px;top:16px;position:fixed;background:#060A18;color:#fff;padding:10px 14px;border-radius:4px;z-index:80}
+.site-header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px max(16px,3vw);background:#fff;border-bottom:1px solid rgba(11,21,48,.14)}
+.site-header .id{flex:1;min-width:240px;display:flex;align-items:center;gap:14px}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#8B3A2E;display:block;margin-bottom:2px}
+.site-header h1{font-size:18px;font-weight:800;margin:0;color:#0B1530}
+.site-header h1 .ac{color:#8B3A2E}
+.btn{font-weight:700;font-size:13px;letter-spacing:.04em;border:1px solid #060A18;background:#060A18;color:#fff;padding:10px 16px;border-radius:6px;cursor:pointer}
+.btn:hover{background:#16213d}
+.deck{max-width:1180px;margin:0 auto;padding:24px max(16px,3vw) 40px}
+.slide{background:#fff;border:1px solid rgba(11,21,48,.14);border-radius:12px;box-shadow:0 1px 3px rgba(11,21,48,.06);margin-bottom:22px;overflow:hidden}
+.slide-header{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding:15px 20px;background:#FAFAF9;border-bottom:1px solid rgba(11,21,48,.14)}
+.slide-num{font-size:28px;font-weight:800;color:#8B3A2E;min-width:46px}
+.slide-eyebrow{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#060A18;opacity:.6;margin:0 0 3px}
+.slide-title{font-size:clamp(18px,2.2vw,24px);font-weight:800;margin:0}
+.slide-meta{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8B3A2E}
+.slide-body{padding:22px}
+.lead-in{font-size:17px;font-weight:600;margin:0 0 14px}
+.slide-content h3{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#8B3A2E;margin:0 0 14px}
+.slide-content ul{margin:0;padding:0;list-style:none}
+.slide-content li{font-size:15.5px;line-height:1.5;padding:5px 0 5px 18px;position:relative}
+.slide-content li::before{content:"";position:absolute;left:2px;top:12px;width:7px;height:7px;background:#8B3A2E;border-radius:50%}
+.slide-content li strong{font-weight:800}
+.split{display:grid;grid-template-columns:minmax(260px,1fr) minmax(280px,1.05fr);gap:22px;align-items:center}
+.takeaway{margin-top:16px;padding:14px 16px;background:#FAFAF9;border-left:3px solid #8B3A2E;border-radius:6px;font-size:15px}
+.takeaway strong{color:#8B3A2E}
+.figcol{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0}
+.slidefig{width:100%;height:auto;max-width:620px;border-radius:8px;background:#fff;cursor:zoom-in}
+.figcap{font-size:12.5px;color:#060A18;opacity:.78;text-align:center;margin:8px 0 0}
+.figcap strong{color:#8B3A2E;opacity:1}
+.divider .slide-header{display:none}
+.divider .slide-body{padding:0}
+.divhero{background:#060A18;color:#fff;padding:9vh 6vw;min-height:46vh;display:flex;flex-direction:column;justify-content:center}
+.divhero .dn{font-size:13px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:#DCB45C;margin:0 0 10px}
+.divhero h2{font-size:clamp(26px,4vw,46px);font-weight:800;margin:0 0 10px;line-height:1.06}
+.divhero p{font-size:clamp(15px,1.6vw,20px);opacity:.9;margin:0;max-width:64ch}
+.q{border:1px solid rgba(11,21,48,.14);border-left:4px solid #8B3A2E;background:#fff;border-radius:8px;padding:16px 18px;margin:0 0 14px}
+.q .lab{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#8B3A2E;margin:0 0 8px}
+.q .prompt2{font-weight:700;font-size:16px;margin:0 0 12px}
+.choices{display:flex;gap:10px;flex-wrap:wrap}
+.choice{font-weight:700;font-size:15px;border-radius:6px;cursor:pointer;border:1px solid #060A18;background:#fff;color:#060A18;padding:10px 15px}
+.choice:hover{background:#EAEEF4}
+.choice.right{background:#EAEEF4;border-color:#0B1530;color:#0B1530}
+.choice.wrong{border-color:rgba(11,21,48,.14);opacity:.55}
+.reveal{margin:12px 0 0;border:1px solid rgba(11,21,48,.14);background:#FAFAF9;border-radius:6px;padding:12px 14px}
+.reveal[hidden]{display:none}.reveal .rlab{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#6E5018;margin:0 0 6px}.reveal p{margin:0}
+.foot{margin:8px max(16px,3vw) 30px;font-size:12px;color:#060A18;opacity:.6;border-top:1px solid rgba(11,21,48,.14);padding-top:12px;max-width:1180px}
+@media (max-width:860px){.split{grid-template-columns:1fr}}
+body.present{overflow:hidden;background:#060A18}
+body.present .site-header,body.present .foot{display:none}
+body.present .deck{max-width:none;margin:0;padding:0}
+body.present .slide{display:none}
+body.present .slide.is-current{display:flex;flex-direction:column;position:fixed;inset:0;margin:0;border:0;border-radius:0;box-shadow:none;overflow:auto;background:#fff}
+body.present .slide.is-current .slide-body{flex:1;max-width:1280px;width:100%;margin:0 auto;padding:2.5vh 5vw;display:flex;flex-direction:column;justify-content:center}
+body.present .slide-content li{font-size:clamp(16px,1.7vw,25px);padding:7px 0 7px 26px}
+body.present .slide-content li::before{top:15px;width:9px;height:9px}
+body.present .slide-content h3{font-size:clamp(15px,1.5vw,20px)!important}
+body.present .lead-in{font-size:clamp(18px,2vw,28px)}
+body.present .slidefig{max-width:100%;max-height:70vh;width:auto;height:auto}
+.lightbox{position:fixed;inset:0;z-index:100;background:rgba(6,10,24,.93);display:flex;align-items:center;justify-content:center;padding:3vh 3vw;cursor:zoom-out}
+.lightbox[hidden]{display:none}
+.lightbox .lb-img{max-width:96vw;max-height:94vh;width:auto;height:auto;border-radius:6px;background:#fff;cursor:default}
+.lightbox .lb-close{position:fixed;top:16px;right:20px;background:#8B3A2E;color:#fff;border:0;border-radius:8px;font-size:24px;line-height:1;width:46px;height:46px;cursor:pointer}
+body.present .q .prompt2{font-size:clamp(18px,1.8vw,25px)}
+body.present .choice{font-size:clamp(16px,1.6vw,21px);padding:13px 19px}
+body.present .reveal{font-size:clamp(15px,1.5vw,21px)}
+.present-bar{position:fixed;z-index:70;left:50%;bottom:18px;transform:translateX(-50%);display:none;align-items:center;gap:10px;background:rgba(11,21,48,.92);color:#fff;padding:8px 12px;border-radius:999px}
+body.present .present-bar{display:flex}
+.present-bar button{font-weight:700;font-size:16px;border:0;border-radius:999px;background:#8B3A2E;color:#fff;width:42px;height:42px;cursor:pointer}
+.present-bar button:disabled{background:#3a4357}.present-bar .count{font-size:13px;font-weight:700;min-width:62px;text-align:center}
+.present-bar .exit{width:auto;padding:0 14px;background:transparent;border:1px solid rgba(255,255,255,.4)}
+@media print{.site-header,.present-bar,.foot,#presentBtn{display:none}.slide{break-inside:avoid;page-break-after:always;box-shadow:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.tkey{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;align-items:start;margin-top:4px}
+.tkey .tcol{border:1px solid rgba(11,21,48,.18);border-radius:10px;overflow:hidden;background:#fff}
+.tkey .th{padding:8px 12px;font-weight:800;font-size:14px;letter-spacing:.02em}
+.tkey .th small{display:block;font-weight:600;font-size:11px;opacity:.95}
+.tkey .th.ep{background:#C9A14A;color:#0B1530}
+.tkey .th.ct{background:#8B3A2E;color:#fff}
+.tkey .th.mu{background:#0B1530;color:#fff}
+.tkey .th.ne{background:#142a36;color:#fff}
+.tkey .sub{padding:9px 12px}
+.tkey .grp{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#8B3A2E;margin:9px 0 4px}
+.tkey .grp:first-child{margin-top:0}
+.tkey .it{font-size:12.5px;line-height:1.34;margin:0 0 7px;color:#1d2733}
+.tkey .it b{color:#0B1530}
+.tkey .it .tell{color:#3a4658}
+@media (max-width:760px){.tkey{grid-template-columns:1fr}}
+@media print{.tkey{grid-template-columns:repeat(2,1fr)}.tkey .tcol{break-inside:avoid}}
+.imgph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:200px;border:2px dashed #B8924A;border-radius:10px;background:#FAFAF9;color:#8B3A2E;text-align:center;padding:18px}.imgph .ph-t{font-weight:800;font-size:14px}.imgph .ph-s{font-weight:600;font-size:12px;color:#5a6573}.dtable{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px}.dtable caption{text-align:left;font-weight:700;color:#8B3A2E;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}.dtable th,.dtable td{border:1px solid rgba(11,21,48,.18);padding:8px 10px;text-align:left;vertical-align:top}.dtable thead th{background:#0B1530;color:#fff}.dtable tbody th{background:#FAFAF9;color:#0B1530;white-space:nowrap}.dtable tbody tr:nth-child(even) td{background:#FAFAF9}@media print{.imgph{min-height:120px}.dtable{font-size:10.5px}}
+</style></head><body>
+<a href="#deck" class="skip">Skip to slides</a>
+<header class="site-header"><div class="id"><svg viewBox="40 10 125 148" role="img" aria-label="Human Anatomy logo" focusable="false" style="height:46px;width:auto"><g transform="translate(0,18)"><g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#0B1530"/><path d="M0,32 C-10,32 -16,36 -16,42 C-16,55 -13,68 -11,82 C-10,100 -12,118 -14,130 L14,130 C12,118 10,100 11,82 C13,68 16,55 16,42 C16,36 10,32 0,32 Z" fill="#0B1530"/></g><g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/><path d="M0,22 C-11,22 -17,26 -17,34 C-17,52 -14,70 -12,86 C-11,108 -13,122 -15,132 L15,132 C13,122 11,108 12,86 C14,70 17,52 17,34 C17,26 11,22 0,22 Z" fill="#8B3A2E"/></g><g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M0,32 C-10,32 -16,36 -16,42 C-16,55 -13,68 -11,82 C-10,100 -12,118 -14,130 L14,130 C12,118 10,100 11,82 C13,68 16,55 16,42 C16,36 10,32 0,32 Z" fill="#C9A14A"/></g></g></svg><div><span class="eyebrow">Focus: Human Anatomy</span><h1>Human <span class="ac">Anatomy</span> · Joints</h1></div></div><div class="hero-actions"><button class="btn" id="backBtn" type="button" hidden>← Back</button> <button class="btn" id="presentBtn" type="button">Present</button> <button class="btn" id="printBtn" type="button">Print / Save PDF</button></div></header>
+<main class="deck" id="deck">
+<section class="slide divider" aria-label="Title"><div class="slide-body"><div class="divhero"><div style="margin:0 0 14px"><svg viewBox="40 10 125 148" role="img" aria-label="Human Anatomy logo" focusable="false" style="height:64px;width:auto;display:block"><g transform="translate(0,18)"><g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#FFFFFF"/><path d="M0,32 C-10,32 -16,36 -16,42 C-16,55 -13,68 -11,82 C-10,100 -12,118 -14,130 L14,130 C12,118 10,100 11,82 C13,68 16,55 16,42 C16,36 10,32 0,32 Z" fill="#FFFFFF"/></g><g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#C2734D"/><path d="M0,22 C-11,22 -17,26 -17,34 C-17,52 -14,70 -12,86 C-11,108 -13,122 -15,132 L15,132 C13,122 11,108 12,86 C14,70 17,52 17,34 C17,26 11,22 0,22 Z" fill="#C2734D"/></g><g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M0,32 C-10,32 -16,36 -16,42 C-16,55 -13,68 -11,82 C-10,100 -12,118 -14,130 L14,130 C12,118 10,100 11,82 C13,68 16,55 16,42 C16,36 10,32 0,32 Z" fill="#C9A14A"/></g></g></svg></div><p class="dn">Focus: Human Anatomy</p><h2>Articulations &amp; Joints</h2><p>A joint is where bones meet. Joints trade mobility for stability: some are locked solid for protection, others move freely. We classify them, build a synovial joint, name the movements and the six joint types, then study the shoulder and knee.  Dr. Sharilyn Rennie</p><div style="margin-top:24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAGaCAIAAAC5ZBI0AAAIgUlEQVR4nO3dMW4kuxVAUcsYwIFX4P0v7q/gB47K6QRGQQDFeeTtc9LBdJeqpAsGj6yv53n+AXC/f05fAMDPkDMgQs6ACDkDIuQMiJAzIELOgAg5AyLkDIiQMyBCzoAIOQMi5AyIkDMgQs6ACDkDIuQMiJAzIELOgAg5AyLkDIiQMyBCzoAIOQMi5AyIkDMgQs6ACDkDIuQMiJAzIELOgAg5AyLkDIiQMyBCzoAIOQMi5AyIkDMgQs6AiF9TX/yvf/9n6qs3+e/ff73868rP+/7J796/d+WaV67q3b7vnXoK7z7tb2EfqzMgQs6ACDkDIuQMiJAzIELOgAg5AyLkDIiQMyBibFfAu6mp4ndnTm+vXNWN8/cr17xv58Y+/ha+z+oMiJAzIELOgAg5AyLkDIiQMyBCzoAIOQMi5AyIOHRXwLt9E8lnTmC/2zfpfubJ+ium3n6wj7+F31mdARFyBkTIGRAhZ0CEnAERcgZEyBkQIWdAhJwBEVfuCrjRvnP3952Of+a7AqZ2QUzdSb7P6gyIkDMgQs6ACDkDIuQMiJAzIELOgAg5AyLkDIiwK+APOfPc/TMn3c+8V2d+L7+zOgMi5AyIkDMgQs6ACDkDIuQMiJAzIELOgAg5AyKu3BVw4wS2E+6//8lTbzDY94ym7uSnsToDIuQMiJAzIELOgAg5AyLkDIiQMyBCzoAIOQMiDt0VsDKBfaap2f0b9wysOPNerej9LexjdQZEyBkQIWdAhJwBEXIGRMgZECFnQIScARFyBkR8Pc8zfQ1cOfl95o6CqfcMvDtzB0WP1RkQIWdAhJwBEXIGRMgZECFnQIScARFyBkTIGRAxtivgzOntKTee93/mVU2Z2jNw5vsNpp6g1RkQIWdAhJwBEXIGRMgZECFnQIScARFyBkTIGRDxa+qL980rT33yu30T2CuffOYOijOf/sr3Tvm09xtYnQERcgZEyBkQIWdAhJwBEXIGRMgZECFnQIScARFjuwLeTZ2evvLJ+3zaPod3U3P/7z5t/v7Mtz1YnQERcgZEyBkQIWdAhJwBEXIGRMgZECFnQIScARFfz/NMX8P/cebM8YqVn+jGifMz9yrsuxtTe1HO3NdhVwDAEjkDIuQMiJAzIELOgAg5AyLkDIiQMyBCzoCIsXcFrEwkT00zT51D/25qLvz9e6fm7/e5cTr/3Y27a95ZnQERcgZEyBkQIWdAhJwBEXIGRMgZECFnQIScARFjuwLOnBo/86T5M904y37m8923F6X3zo13VmdAhJwBEXIGRMgZECFnQIScARFyBkTIGRAhZ0DE1/M809fww/adfz81233m9PaNOxluvJOf9nu1wuoMiJAzIELOgAg5AyLkDIiQMyBCzoAIOQMi5AyIOHRXQO+M86np7TO/1yd//5PP3DNw5l+o1RkQIWdAhJwBEXIGRMgZECFnQIScARFyBkTIGRAxtivgzHnlqfPvp6aozzxp/sydDCvf670Kf4bVGRAhZ0CEnAERcgZEyBkQIWdAhJwBEXIGRMgZEPFr6ounpqhvnPzed80rP9GZp8Xvu6p9//fGNwmc+fStzoAIOQMi5AyIkDMgQs6ACDkDIuQMiJAzIELOgIixXQE3nsp/5lsIzjylfuVe7ZuDX3Hj9974joIVVmdAhJwBEXIGRMgZECFnQIScARFyBkTIGRAhZ0DE2K6AFfvOOH9346nt7278iT5tz4C5/++zOgMi5AyIkDMgQs6ACDkDIuQMiJAzIELOgAg5AyK+nucZ+eJPm2aemr+/cab8zLn/KTf+bkw9BaszIELOgAg5AyLkDIiQMyBCzoAIOQMi5AyIkDMg4tB3Bdx4pvuZE/Yrzpw4fzf1FPb9xp65n+RMVmdAhJwBEXIGRMgZECFnQIScARFyBkTIGRAhZ0DEobsC3t042b/yyWfO369YeUb7nu/KneztRvCuAIAxcgZEyBkQIWdAhJwBEXIGRMgZECFnQIScARFX7grYNwc/Nc28b59Db4/Emeffn/mbs+LG3SZWZ0CEnAERcgZEyBkQIWdAhJwBEXIGRMgZECFnQMShuwKmJvunptVXTN2rM/cq9Kbz95l6gvtYnQERcgZEyBkQIWdAhJwBEXIGRMgZECFnQIScARFfz/NMX8NHmDrT/d3ULPvUef8rn3zmOyh6P9EKqzMgQs6ACDkDIuQMiJAzIELOgAg5AyLkDIiQMyBi7F0BN56t/m7fnPTUJ5/5FoLeLPuZbz848169szoDIuQMiJAzIELOgAg5AyLkDIiQMyBCzoAIOQMixnYFvDtzInlqJ8ONU+P7zrA/83djxdSbBHqszoAIOQMi5AyIkDMgQs6ACDkDIuQMiJAzIELOgIhDdwW82zfrfObE+Y1n59/4roB9v1dT0/krT+HGvRlWZ0CEnAERcgZEyBkQIWdAhJwBEXIGRMgZECFnQMSVuwI+zdTc/9QMvbcf/NT/3efMq7I6AyLkDIiQMyBCzoAIOQMi5AyIkDMgQs6ACDkDIuwK+EOmTm2fmt4+8yz5fXdj6j7v+924kdUZECFnQIScARFyBkTIGRAhZ0CEnAERcgZEyBkQceWugDMnzqd82lz41Kn87868zzc+3xVWZ0CEnAERcgZEyBkQIWdAhJwBEXIGRMgZECFnQMShuwJ608xTZ8m/2zfLPjVhP3Une3szbtx7Y3UGRMgZECFnQIScARFyBkTIGRAhZ0CEnAERcgZEfD3PM30NAD/A6gyIkDMgQs6ACDkDIuQMiJAzIELOgAg5AyLkDIiQMyBCzoAIOQMi5AyIkDMgQs6ACDkDIuQMiJAzIELOgAg5AyLkDIiQMyBCzoAIOQMi5AyIkDMgQs6ACDkDIuQMiJAzIELOgAg5AyLkDIiQMyBCzoAIOQMi5AyIkDMgQs6AiP8BIjbksVwg2DEAAAAASUVORK5CYII=" alt="QR code that opens the interactive web version of this deck at https://drsrennie-stack.github.io/A-P-lecture-core/joints.html" style="width:122px;height:122px;background:#fff;padding:9px;border-radius:10px"><div style="font-size:15px;line-height:1.55;max-width:34ch"><strong style="color:#DCB45C">Scan for the interactive page.</strong><br><a href="https://drsrennie-stack.github.io/A-P-lecture-core/Articulations-Joints.pptx" target="_blank" rel="noopener" style="color:#fff">Download the PowerPoint</a> &middot; need a PDF? Download the accessible PDF from Canvas.</div></div></div></div></section>
+<section class="slide divider" aria-label="Part 1 divider"><div class="slide-body"><div class="divhero"><p class="dn">Part 1</p><h2>Classifying Joints</h2><p>Every joint is named two ways at once: by its structure (what holds it) and by its function (how much it moves).</p></div></div></section>
+<section class="slide " aria-label="Two ways to classify a joint">
+<header class="slide-header"><div class="slide-num"></div><div><p class="slide-eyebrow">Part 1 · Compare &amp; contrast</p><h2 class="slide-title">Two ways to classify a joint</h2></div><div class="slide-meta">Joints</div></header>
+<div class="slide-body"><p class="lead-in">Structure asks what binds the bones and whether a synovial cavity is present. Function asks how much the joint moves. The two line up closely.</p><table class="dtable"><caption>Structural and functional classification</caption><thead><tr><th scope="col">Structural class</th><th scope="col">Synovial cavity?</th><th scope="col">Binding tissue</th><th scope="col">Usual function</th></tr></thead><tbody><tr><th scope="row">Fibrous</th><td>None</td><td>Dense (collagen) connective tissue</td><td>Synarthrosis (immovable)</td></tr><tr><th scope="row">Cartilaginous</th><td>None</td><td>Hyaline cartilage or fibrocartilage</td><td>Synarthrosis or amphiarthrosis (slightly movable)</td></tr><tr><th scope="row">Synovial</th><td>Present</td><td>An articular capsule of dense irregular tissue</td><td>Diarthrosis (freely movable)</td></tr></tbody></table><div class="takeaway">Functional terms: <strong>synarthrosis</strong> = immovable, <strong>amphiarthrosis</strong> = slightly movable, <strong>diarthrosis</strong> = freely movable.</div></div></section>
+<section class="slide " aria-label="Fibrous and cartilaginous joints">
+<header class="slide-header"><div class="slide-num"></div><div><p class="slide-eyebrow">Part 1 · Fibrous &amp; cartilaginous</p><h2 class="slide-title">Fibrous and cartilaginous joints</h2></div><div class="slide-meta">Joints</div></header>
+<div class="slide-body"><div class="slide-content"><ul><li><strong>Fibrous joints</strong> (no cavity, held by collagen): <strong>sutures</strong> of the skull (synarthroses that may fuse into a <strong>synostosis</strong>), <strong>syndesmoses</strong> (an <strong>interosseous membrane</strong> binding the radius to the ulna or the tibia to the fibula, slightly movable), and <strong>gomphoses</strong> (a tooth in its socket).</li><li><strong>Cartilaginous joints</strong> (no cavity, held by cartilage):</li><li style="list-style:none;margin-left:0"><table class="dtable"><caption>Synchondrosis vs symphysis</caption><thead><tr><th scope="col">Type</th><th scope="col">Cartilage</th><th scope="col">Movement</th><th scope="col">Examples</th></tr></thead><tbody><tr><th scope="row">Synchondrosis</th><td>Hyaline</td><td>Immovable</td><td>The epiphyseal plate; the first rib to the manubrium</td></tr><tr><th scope="row">Symphysis</th><td>Fibrocartilage disc</td><td>Slightly movable</td><td>Pubic symphysis, intervertebral joints (all in the midline)</td></tr></tbody></table></li></ul></div></div></section>
+<section class="slide divider" aria-label="Part 2 divider"><div class="slide-body"><div class="divhero"><p class="dn">Part 2</p><h2>Synovial Joints</h2><p>The freely movable joints: a fluid-filled cavity, an articular capsule, and a set of accessory parts that fine-tune fit and reduce friction.</p></div></div></section>
+<section class="slide " aria-label="Inside a synovial joint">
+<header class="slide-header"><div class="slide-num"></div><div><p class="slide-eyebrow">Part 2 · Structure</p><h2 class="slide-title">Inside a synovial joint</h2></div><div class="slide-meta">Joints</div></header>
+<div class="slide-body"><div class="split"><div class="slide-content"><ul><li><strong>Articular cartilage</strong>: hyaline cartilage capping the bone ends; it reduces friction and absorbs shock but does <strong>not</strong> bind the bones, and is fed by synovial fluid.</li><li><strong>Synovial cavity</strong>: the space holding <strong>synovial fluid</strong>, which lubricates and nourishes.</li><li><strong>Articular capsule</strong>: an outer <strong>fibrous membrane</strong> (dense irregular tissue continuous with the periosteum; thickened into <strong>ligaments</strong>) and an inner <strong>synovial membrane</strong> that makes the fluid.</li></ul></div><div class="figcol"><div class="imgph" role="img" aria-label="Image placeholder: labeled synovial joint cross section. A labeled diagram will be added here."><span class="ph-t">Picture: labeled synovial joint cross section</span><span class="ph-s">your labeled diagram goes here</span></div></div></div></div></section>
+<section class="slide " aria-label="Accessory structures, nerves, and vessels">
+<header class="slide-header"><div class="slide-num"></div><div><p class="slide-eyebrow">Part 2 · Accessory parts</p><h2 class="slide-title">Accessory structures, nerves, and vessels</h2></div><div class="slide-meta">Joints</div></header>
+<div class="slide-body"><div class="slide-content"><ul><li><strong>Ligaments</strong>: <strong>extracapsular</strong> (outside the capsule, like the knee collaterals) and <strong>intracapsular</strong> (inside but wrapped out of the cavity, like the cruciates).</li><li><strong>Articular discs (menisci)</strong>: fibrocartilage pads that improve fit, absorb shock, and spread weight and fluid. A <strong>labrum</strong> is a fibrocartilage rim that deepens a ball-and-socket (shoulder, hip).</li><li><strong>Bursae</strong>: fluid sacs that cut friction between moving parts; <strong>tendon sheaths</strong> are tube-shaped bursae wrapping tendons in tight spaces.</li><li><strong>Supply</strong>: the same nerves that move the joint carry its pain; vessels feed the capsule and ligaments, while the cartilage is fed by synovial fluid.</li></ul></div></div></section>
+<section class="slide " aria-label="The movements at synovial joints">
+<header class="slide-header"><div class="slide-num"></div><div><p class="slide-eyebrow">Part 2 · Movements</p><h2 class="slide-title">The movements at synovial joints</h2></div><div class="slide-meta">Joints</div></header>
+<div class="slide-body"><div class="slide-content"><ul><li><strong>Gliding</strong>: flat surfaces slide with no change in angle.</li><li><strong>Angular</strong>: <strong>flexion</strong> (decreases the angle), <strong>extension</strong> (increases it), <strong>hyperextension</strong> (past anatomical position), <strong>abduction</strong> (away from midline), <strong>adduction</strong> (toward midline), and <strong>circumduction</strong> (a cone).</li><li><strong>Rotation</strong>: turning around the long axis (medial and lateral rotation).</li><li><strong>Special</strong>: supination and pronation of the forearm; dorsiflexion and plantarflexion of the foot; inversion and eversion; elevation and depression; protraction and retraction; opposition of the thumb.</li></ul></div></div></section>
+<section class="slide " aria-label="The six types of synovial joints">
+<header class="slide-header"><div class="slide-num"></div><div><p class="slide-eyebrow">Part 2 · Compare &amp; contrast</p><h2 class="slide-title">The six types of synovial joints</h2></div><div class="slide-meta">Joints</div></header>
+<div class="slide-body"><p class="lead-in">Shape sets the axes: uniaxial (one axis), biaxial (two), triaxial (three).</p><table class="dtable"><caption>The six synovial joints</caption><thead><tr><th scope="col">Type</th><th scope="col">Surfaces</th><th scope="col">Axes / movement</th><th scope="col">Examples</th></tr></thead><tbody><tr><th scope="row">Plane</th><td>Flat surfaces that glide</td><td>Nonaxial gliding</td><td>Intercarpal, intertarsal</td></tr><tr><th scope="row">Hinge</th><td>Convex fits concave</td><td>Uniaxial: flexion/extension</td><td>Elbow, ankle, interphalangeal</td></tr><tr><th scope="row">Pivot</th><td>Rounded fits a ring</td><td>Uniaxial: rotation</td><td>Atlantoaxial, radioulnar</td></tr><tr><th scope="row">Condyloid</th><td>Oval fits oval depression</td><td>Biaxial</td><td>Radiocarpal, metacarpophalangeal</td></tr><tr><th scope="row">Saddle</th><td>Each surface concave and convex</td><td>Biaxial</td><td>Thumb carpometacarpal</td></tr><tr><th scope="row">Ball-and-socket</th><td>Ball fits a cup</td><td>Triaxial</td><td>Shoulder, hip</td></tr></tbody></table></div></section>
+<section class="slide " aria-label="What limits range of motion">
+<header class="slide-header"><div class="slide-num"></div><div><p class="slide-eyebrow">Part 2 · Range of motion</p><h2 class="slide-title">What limits range of motion</h2></div><div class="slide-meta">Joints</div></header>
+<div class="slide-body"><div class="slide-content"><p class="lead-in">Range of motion is the arc, in degrees, a joint allows. Several factors set the limit:</p><ul><li><strong>Bone shape</strong> and the fit of the surfaces.</li><li><strong>Ligament tension</strong> and <strong>muscle arrangement</strong>, which restrain and guide the bones.</li><li><strong>Contact of soft parts</strong> meeting each other.</li><li><strong>Hormones</strong> (relaxin loosens the pubic symphysis late in pregnancy) and <strong>disuse</strong> (a joint long unused stiffens).</li></ul></div></div></section>
+<section class="slide divider" aria-label="Part 3 divider"><div class="slide-body"><div class="divhero"><p class="dn">Part 3</p><h2>Two Joints and Their Troubles</h2><p>The shoulder trades stability for mobility; the knee is the largest and most often injured. Then the common joint disorders.</p></div></div></section>
+<section class="slide " aria-label="The shoulder (glenohumeral) joint">
+<header class="slide-header"><div class="slide-num"></div><div><p class="slide-eyebrow">Part 3 · Shoulder</p><h2 class="slide-title">The shoulder (glenohumeral) joint</h2></div><div class="slide-meta">Joints</div></header>
+<div class="slide-body"><div class="slide-content"><ul><li>A <strong>ball-and-socket</strong> joint: the humeral head in the shallow <strong>glenoid cavity</strong>, deepened slightly by a <strong>labrum</strong>.</li><li>The most <strong>freely movable</strong> joint, and so the least stable and most often dislocated.</li><li>Its ligaments add little strength; stability comes mostly from the <strong>rotator cuff</strong> muscles, the <strong>SITS</strong>: supraspinatus, infraspinatus, teres minor, subscapularis, which hold the head in the socket.</li></ul></div></div></section>
+<section class="slide " aria-label="The knee (tibiofemoral) joint">
+<header class="slide-header"><div class="slide-num"></div><div><p class="slide-eyebrow">Part 3 · Knee</p><h2 class="slide-title">The knee (tibiofemoral) joint</h2></div><div class="slide-meta">Joints</div></header>
+<div class="slide-body"><div class="slide-content"><ul><li>A <strong>modified hinge</strong>, the largest and most complex joint, and the most often injured. It is three joints in one cavity (two tibiofemoral and one patellofemoral).</li><li>Anterior support: the <strong>patellar ligament</strong> (quadriceps tendon to the tibial tuberosity) and the patellar retinacula.</li><li style="list-style:none;margin-left:0"><table class="dtable"><caption>The collateral and cruciate ligaments</caption><thead><tr><th scope="col">Ligament</th><th scope="col">Where</th><th scope="col">Resists</th></tr></thead><tbody><tr><th scope="row">Tibial (medial) collateral</th><td>Medial side</td><td>Forces opening the knee medially</td></tr><tr><th scope="row">Fibular (lateral) collateral</th><td>Lateral side</td><td>Forces opening the knee laterally</td></tr><tr><th scope="row">Anterior cruciate (ACL)</th><td>Inside, crossing</td><td>The tibia sliding forward</td></tr><tr><th scope="row">Posterior cruciate (PCL)</th><td>Inside, crossing</td><td>The tibia sliding backward</td></tr></tbody></table></li></ul></div></div></section>
+<section class="slide " aria-label="Common knee injuries">
+<header class="slide-header"><div class="slide-num"></div><div><p class="slide-eyebrow">Part 3 · Knee injuries</p><h2 class="slide-title">Common knee injuries</h2></div><div class="slide-meta">Clinical</div></header>
+<div class="slide-body"><div class="slide-content"><ul><li><strong>Unhappy triad</strong>: a lateral blow to a planted knee tears the <strong>tibial collateral ligament, the medial meniscus, and the ACL</strong> at once.</li><li><strong>ACL tears</strong> are three to six times more common in women (narrower intercondylar space, wider pelvis and knee angle, looser ligaments, less protective muscle).</li><li><strong>Swelling</strong>: immediate is blood from torn vessels; delayed is excess synovial fluid. First aid follows <strong>PRICE</strong>: protection, rest, ice, compression, elevation.</li></ul></div></div></section>
+<section class="slide " aria-label="Common joint disorders">
+<header class="slide-header"><div class="slide-num"></div><div><p class="slide-eyebrow">Part 3 · Disorders</p><h2 class="slide-title">Common joint disorders</h2></div><div class="slide-meta">Clinical</div></header>
+<div class="slide-body"><div class="slide-content"><ul><li><strong>Bursitis</strong>: inflamed bursa from overuse, infection, or arthritis. <strong>Torn meniscus</strong>: knee-cartilage tear, repaired by arthroscopy.</li><li><strong>Arthritis</strong> (swollen, stiff, painful joints) is the leading cause of disability after 65:</li><li><strong>Osteoarthritis</strong>: degenerative wear of cartilage in weight-bearing joints.</li><li><strong>Rheumatoid arthritis</strong>: an autoimmune attack on the joint linings, usually symmetric.</li><li><strong>Gouty arthritis</strong>: sodium urate crystals deposit in a joint (often the great toe).</li></ul></div></div></section>
+<section class="slide divider" aria-label="Part 4 divider"><div class="slide-body"><div class="divhero"><p class="dn">Part 4</p><h2>Check Your Understanding</h2><p>From recall to reasoning, then the key takeaways.</p></div></div></section>
+<section class="slide " aria-label="Name the joint type">
+<header class="slide-header"><div class="slide-num"></div><div><p class="slide-eyebrow">Part 4 · Recall (DOK 1)</p><h2 class="slide-title">Name the joint type</h2></div><div class="slide-meta">Practice</div></header>
+<div class="slide-body"><div class="q decision"><p class="lab">Depth of Knowledge 1 · Recall</p><p class="prompt2">The hip and shoulder allow movement around three axes. What type of synovial joint are they?</p><div class="choices"><button type="button" class="choice" data-correct="false">Hinge</button><button type="button" class="choice" data-correct="false">Pivot</button><button type="button" class="choice" data-correct="true">Ball-and-socket</button><button type="button" class="choice" data-correct="false">Saddle</button></div><div class="reveal" hidden><p class="rlab">Answer</p><p><strong>Ball-and-socket.</strong> A ball in a cup gives triaxial movement, the widest range of any joint.</p></div></div></div></section>
+<section class="slide " aria-label="Apply the structure">
+<header class="slide-header"><div class="slide-num"></div><div><p class="slide-eyebrow">Part 4 · Skill / concept (DOK 2)</p><h2 class="slide-title">Apply the structure</h2></div><div class="slide-meta">Practice</div></header>
+<div class="slide-body"><div class="q decision"><p class="lab">Depth of Knowledge 2 · Skill / concept</p><p class="prompt2">Why is the shoulder so easily dislocated compared with the hip?</p><div class="choices"><button type="button" class="choice" data-correct="true">Its socket (glenoid cavity) is shallow and its ligaments are weak, so it trades stability for mobility.</button><button type="button" class="choice" data-correct="false">It has no articular cartilage to hold the bones together.</button><button type="button" class="choice" data-correct="false">It is a hinge joint, which only moves one way.</button></div><div class="reveal" hidden><p class="rlab">Answer</p><p><strong>A shallow socket and weak ligaments.</strong> The shoulder relies on the rotator cuff for stability, so it is mobile but easily dislocated.</p></div></div></div></section>
+<section class="slide " aria-label="Reason it through">
+<header class="slide-header"><div class="slide-num"></div><div><p class="slide-eyebrow">Part 4 · Strategic reasoning (DOK 3)</p><h2 class="slide-title">Reason it through</h2></div><div class="slide-meta">Practice</div></header>
+<div class="slide-body"><div class="q decision"><p class="lab">Depth of Knowledge 3 · Strategic reasoning</p><p class="prompt2">A soccer player is hit on the outside of a planted knee and tears three structures at once. Which three, and what is this called?</p><div class="choices"><button type="button" class="choice" data-correct="true">Tibial collateral ligament, medial meniscus, and ACL: the unhappy triad.</button><button type="button" class="choice" data-correct="false">Both cruciates and the patellar ligament: the unhappy triad.</button><button type="button" class="choice" data-correct="false">Fibular collateral, lateral meniscus, and PCL: the unhappy triad.</button></div><div class="reveal" hidden><p class="rlab">Answer</p><p><strong>The unhappy triad</strong>: a lateral blow tears the tibial collateral ligament, the medial meniscus, and the ACL together.</p></div></div></div></section>
+<section class="slide " aria-label="Key takeaways">
+<header class="slide-header"><div class="slide-num"></div><div><p class="slide-eyebrow">Wrap-up</p><h2 class="slide-title">Key takeaways</h2></div><div class="slide-meta">Summary</div></header>
+<div class="slide-body"><div class="slide-content"><ul><li>Classify joints by <strong>structure</strong> (fibrous, cartilaginous, synovial) and by <strong>function</strong> (syn-, amphi-, diarthrosis).</li><li>A <strong>synovial joint</strong> has articular cartilage, a fluid-filled cavity, and a capsule; accessory parts (menisci, labrum, bursae) fine-tune it.</li><li>The six synovial types run from <strong>plane</strong> (gliding) to <strong>ball-and-socket</strong> (triaxial).</li><li>The <strong>shoulder</strong> trades stability for mobility and leans on the <strong>rotator cuff (SITS)</strong>.</li><li>The <strong>knee</strong> is stabilized by collateral and cruciate ligaments; the <strong>unhappy triad</strong> and ACL tears are classic injuries.</li><li>Disorders: bursitis, torn meniscus, and arthritis (osteo-, rheumatoid, gouty).</li></ul></div></div></section>
+</main>
+<p class="foot">Dr. Sharilyn Rennie · Focus: Human Anatomy · The Skeletal System: Articulations &amp; Joints. Need a PDF? Use Print / Save PDF above, or download the accessible PDF from Canvas.</p>
+<div class="present-bar"><button type="button" class="prev" aria-label="Previous slide">&#8249;</button><span class="count" id="presentCount">1 / 1</span><button type="button" class="next" aria-label="Next slide">&#8250;</button><button type="button" class="exit">Exit</button></div>
 <script>
-const DECK={"id": "joints", "title": "Joints", "sets": {"knee": "Knee structures", "joints": "Joints of the body"}, "cards": [{"id": "01", "title": "Ligaments and menisci of the knee (model)", "set": "knee", "type": "label", "w": 1920, "h": 1080, "r": 30, "pins": [{"n": 1, "lab": "1", "a": "Anterior cruciate ligament", "x": 1628, "y": 216, "box": [1623, 211, 1633, 221], "q": "Name this structure.", "acc": ["ACL"], "tags": ["Anterior cruciate ligament"]}, {"n": 2, "lab": "2", "a": "Posterior cruciate ligament", "x": 1448, "y": 258, "box": [1443, 253, 1453, 263], "q": "Name this structure.", "acc": ["PCL"], "tags": ["Posterior cruciate ligament"]}, {"n": 3, "lab": "3", "a": "Medial collateral ligament", "x": 1045, "y": 322, "box": [1040, 317, 1050, 327], "q": "Name this structure.", "acc": ["MCL", "tibial collateral ligament"], "tags": ["Medial collateral ligament"]}, {"n": 4, "lab": "4", "a": "Lateral meniscus", "x": 1745, "y": 358, "box": [1740, 353, 1750, 363], "q": "Name this structure.", "acc": [], "tags": ["Lateral meniscus"]}, {"n": 5, "lab": "5", "a": "Quadriceps tendon", "x": 668, "y": 405, "box": [663, 400, 673, 410], "q": "Name this structure.", "acc": [], "tags": ["Quadriceps tendon"]}, {"n": 6, "lab": "6", "a": "Medial collateral ligament", "x": 1262, "y": 488, "box": [1257, 483, 1267, 493], "q": "Name this structure.", "acc": ["MCL", "tibial collateral ligament"], "tags": ["Medial collateral ligament"]}, {"n": 7, "lab": "7", "a": "Lateral collateral ligament", "x": 545, "y": 718, "box": [540, 713, 550, 723], "q": "Name this structure.", "acc": ["LCL", "fibular collateral ligament"], "tags": ["Lateral collateral ligament"]}, {"n": 8, "lab": "8", "a": "Lateral collateral ligament", "x": 1820, "y": 725, "box": [1815, 720, 1825, 730], "q": "Name this structure.", "acc": ["LCL", "fibular collateral ligament"], "tags": ["Lateral collateral ligament"]}, {"n": 9, "lab": "9", "a": "Lateral meniscus", "x": 620, "y": 775, "box": [615, 770, 625, 780], "q": "Name this structure.", "acc": [], "tags": ["Lateral meniscus"]}, {"n": 10, "lab": "10", "a": "Medial meniscus", "x": 1095, "y": 755, "box": [1090, 750, 1100, 760], "q": "Name this structure.", "acc": [], "tags": ["Medial meniscus"]}, {"n": 11, "lab": "11", "a": "Medial meniscus", "x": 1310, "y": 808, "box": [1305, 803, 1315, 813], "q": "Name this structure.", "acc": [], "tags": ["Medial meniscus"]}, {"n": 12, "lab": "12", "a": "Patellar ligament", "x": 1010, "y": 905, "box": [1005, 900, 1015, 910], "q": "Name this structure.", "acc": ["patellar tendon"], "tags": ["Patellar ligament"]}], "items": [], "img": "img/joints-01.jpg", "n": 1}, {"id": "02", "title": "Joint at the arrow", "set": "joints", "type": "qa", "w": 1172, "h": 1080, "r": 0, "pins": [], "img": "img/joints-02.jpg", "items": [{"q": "Name this joint.", "a": "Acromioclavicular joint", "self": false, "acc": ["AC joint"]}, {"q": "Which bones form it?", "a": "Acromion of the scapula and acromial end of the clavicle", "self": true, "acc": []}, {"q": "Structural class, joint type, and how much it moves?", "a": "Synovial, plane joint; diarthrosis", "self": true, "acc": []}, {"q": "What movements happen here?", "a": "Gliding", "self": true, "acc": []}], "n": 2}, {"id": "03", "title": "Joint at the arrow", "set": "joints", "type": "qa", "w": 1172, "h": 1080, "r": 0, "pins": [], "img": "img/joints-03.jpg", "items": [{"q": "Name this joint.", "a": "Sternoclavicular joint", "self": false, "acc": ["SC joint"]}, {"q": "Which bones form it?", "a": "Manubrium of the sternum and sternal end of the clavicle", "self": true, "acc": []}, {"q": "Structural class, joint type, and how much it moves?", "a": "Synovial, saddle joint; diarthrosis", "self": true, "acc": []}, {"q": "What movements happen here?", "a": "Elevation, depression, protraction, retraction, circumduction", "self": true, "acc": []}], "n": 3}, {"id": "04", "title": "Joint at the arrow", "set": "joints", "type": "qa", "w": 1172, "h": 1080, "r": 0, "pins": [], "img": "img/joints-04.jpg", "items": [{"q": "Name this joint.", "a": "Glenohumeral joint", "self": false, "acc": ["shoulder joint", "glenohumoral joint"]}, {"q": "Which bones form it?", "a": "Glenoid cavity of the scapula and head of the humerus", "self": true, "acc": []}, {"q": "Structural class, joint type, and how much it moves?", "a": "Synovial, ball-and-socket joint; diarthrosis", "self": true, "acc": []}, {"q": "What movements happen here?", "a": "Flexion, extension, abduction, adduction, rotation, circumduction", "self": true, "acc": []}], "n": 4}, {"id": "05", "title": "Joint at the arrow", "set": "joints", "type": "qa", "w": 1172, "h": 1080, "r": 0, "pins": [], "img": "img/joints-05.jpg", "items": [{"q": "Name this joint.", "a": "Manubriosternal joint", "self": false, "acc": []}, {"q": "Which bones form it?", "a": "Manubrium and body of the sternum", "self": true, "acc": []}, {"q": "Structural class, joint type, and how much it moves?", "a": "Cartilaginous, symphysis; amphiarthrosis", "self": true, "acc": []}, {"q": "What movements happen here?", "a": "Slight movement during breathing", "self": true, "acc": []}], "n": 5}, {"id": "06", "title": "Joint at the arrow", "set": "joints", "type": "qa", "w": 1098, "h": 1037, "r": 0, "pins": [], "img": "img/joints-06.jpg", "items": [{"q": "Name this joint.", "a": "Temporomandibular joint", "self": false, "acc": ["TMJ"]}, {"q": "Which bones form it?", "a": "Mandible (condylar process) and temporal bone", "self": true, "acc": []}, {"q": "Structural class, joint type, and how much it moves?", "a": "Synovial, modified hinge (hinge and plane); diarthrosis", "self": true, "acc": []}, {"q": "What movements happen here?", "a": "Elevation, depression, protraction, retraction, side-to-side (lateral excursion)", "self": true, "acc": []}], "n": 6}, {"id": "07", "title": "Joint at the arrow", "set": "joints", "type": "qa", "w": 1154, "h": 926, "r": 0, "pins": [], "img": "img/joints-07.jpg", "items": [{"q": "Name this joint.", "a": "Sacroiliac joint", "self": false, "acc": ["SI joint"]}, {"q": "Which bones form it?", "a": "Ilium and sacrum", "self": true, "acc": []}, {"q": "Structural class, joint type, and how much it moves?", "a": "Synovial, plane joint; diarthrosis in youth, amphiarthrosis in adults", "self": true, "acc": []}, {"q": "What movements happen here?", "a": "Gliding, slight movement", "self": true, "acc": []}], "n": 7}, {"id": "08", "title": "Joint at the arrow", "set": "joints", "type": "qa", "w": 1208, "h": 931, "r": 0, "pins": [], "img": "img/joints-08.jpg", "items": [{"q": "Name this joint.", "a": "Pubic symphysis", "self": false, "acc": []}, {"q": "Which bones form it?", "a": "Left and right pubic bones", "self": true, "acc": []}, {"q": "Structural class, joint type, and how much it moves?", "a": "Cartilaginous, symphysis; amphiarthrosis", "self": true, "acc": []}, {"q": "What movements happen here?", "a": "Slight movement (more during childbirth)", "self": true, "acc": []}], "n": 8}, {"id": "09", "title": "Joint at the arrow", "set": "joints", "type": "qa", "w": 1629, "h": 767, "r": 0, "pins": [], "img": "img/joints-09.jpg", "items": [{"q": "Name this joint.", "a": "Atlanto-occipital joint", "self": false, "acc": ["atlantooccipital joint"]}, {"q": "Which bones form it?", "a": "Occipital condyles and the superior articular facets of the atlas (C1)", "self": true, "acc": []}, {"q": "Structural class, joint type, and how much it moves?", "a": "Synovial, condyloid joint; diarthrosis", "self": true, "acc": []}, {"q": "What movements happen here?", "a": "Flexion and extension (nodding \"yes\"), slight lateral flexion", "self": true, "acc": []}], "n": 9}, {"id": "10", "title": "Joint at the arrow", "set": "joints", "type": "qa", "w": 811, "h": 765, "r": 0, "pins": [], "img": "img/joints-10.jpg", "items": [{"q": "Name this joint.", "a": "Atlanto-axial joint", "self": false, "acc": ["atlantoaxial joint"]}, {"q": "Which bones form it?", "a": "Dens of the axis (C2) and the facet for the dens on the atlas (C1)", "self": true, "acc": []}, {"q": "Structural class, joint type, and how much it moves?", "a": "Synovial, pivot joint; diarthrosis", "self": true, "acc": []}, {"q": "What movements happen here?", "a": "Rotation (shaking the head \"no\")", "self": true, "acc": []}], "n": 10}, {"id": "11", "title": "Joint at the arrow", "set": "joints", "type": "qa", "w": 938, "h": 1005, "r": 0, "pins": [], "img": "img/joints-11.jpg", "items": [{"q": "Name this joint.", "a": "Zygapophyseal (facet) joint", "self": false, "acc": ["zygapophyseal joint", "facet joint", "Z joint"]}, {"q": "Which bones form it?", "a": "Inferior articular facet of one vertebra and superior articular facet of the vertebra below", "self": true, "acc": []}, {"q": "Structural class, joint type, and how much it moves?", "a": "Synovial, plane joint; diarthrosis", "self": true, "acc": []}, {"q": "What movements happen here?", "a": "Gliding: slight flexion, extension, lateral flexion and rotation", "self": true, "acc": []}], "n": 11}, {"id": "12", "title": "Joint at the arrow", "set": "joints", "type": "qa", "w": 1307, "h": 984, "r": 0, "pins": [], "img": "img/joints-12.jpg", "items": [{"q": "Name this joint.", "a": "Knee joint", "self": false, "acc": ["knee", "tibiofemoral joint"]}, {"q": "Which bones form it?", "a": "Femur and tibia (with the patella in front)", "self": true, "acc": []}, {"q": "Structural class, joint type, and how much it moves?", "a": "Synovial, hinge joint (modified); diarthrosis", "self": true, "acc": []}, {"q": "What movements happen here?", "a": "Flexion and extension", "self": true, "acc": []}], "n": 12}, {"id": "13", "title": "Joint at the arrow", "set": "joints", "type": "qa", "w": 974, "h": 1075, "r": 0, "pins": [], "img": "img/joints-13.jpg", "items": [{"q": "Name this joint.", "a": "Acetabulofemoral (hip) joint", "self": false, "acc": ["hip joint", "coxal joint", "acetabulofemoral joint", "hip"]}, {"q": "Which bones form it?", "a": "Head of the femur and acetabulum of the hip bone", "self": true, "acc": []}, {"q": "Structural class, joint type, and how much it moves?", "a": "Synovial, ball-and-socket joint; diarthrosis", "self": true, "acc": []}, {"q": "What movements happen here?", "a": "Flexion, extension, abduction, adduction, rotation, circumduction", "self": true, "acc": []}], "n": 13}]};
-const SETS=DECK.sets, CARDS=DECK.cards;
-if(DECK.links&&DECK.links.length){const m=document.getElementById('more');m.hidden=false;DECK.links.forEach(l=>{const a=document.createElement('a');a.href=l.u;a.target='_blank';a.rel='noopener';a.textContent=l.t;const sm=document.createElement('small');sm.textContent=l.d;a.appendChild(sm);document.getElementById('moreLinks').appendChild(a)})}
-const SYN={"anterior interventricular artery": ["lad", "left anterior descending", "left anterior descending artery"], "bicuspid valve": ["mitral valve", "mitral", "left atrioventricular valve"], "tricuspid valve": ["right atrioventricular valve"], "pulmonary semilunar valve": ["pulmonic valve", "pulmonary valve"], "pulmonic valve": ["pulmonary semilunar valve", "pulmonary valve"], "aortic semilunar valve": ["aortic valve"], "sinoatrial node": ["sa node"], "atrioventricular node": ["av node"], "bundle of his": ["av bundle", "atrioventricular bundle"], "epicardium": ["visceral pericardium"], "fibrous pericardium": ["parietal pericardium", "fibrous parietal pericardium"], "purkinje fibers": ["purkinje"], "thymus": ["thymus gland"], "brachiocephalic trunk": ["brachiocephalic artery"], "transverse tubule": ["t tubule"], "z disc": ["z line", "z disk"], "intercalated disc": ["intercalated disk"], "terminal cistern": ["terminal cisterna", "terminal cisternae"], "skeletal muscle tissue": ["skeletal muscle", "striated muscle"], "cardiac muscle tissue": ["cardiac muscle", "heart muscle", "myocardium"], "smooth muscle tissue": ["smooth muscle", "visceral muscle"], "coronary sulcus": ["atrioventricular groove"]};
-const ABBR={a:'artery',aa:'arteries',art:'artery',v:'vein',vv:'veins',r:'right',rt:'right',l:'left',lt:'left',
- svc:'superior vena cava',ivc:'inferior vena cava',m:'muscle',ant:'anterior',post:'posterior',sr:'sarcoplasmic reticulum'};
-const DROP=new Set(['the','of','for','to','opening','openings','space','an']);
-function norm(s){
-  return s.toLowerCase().replace(/[\/,.;:()"'+-]/g,' ').split(/\s+/).filter(Boolean)
-   .map(w=>ABBR[w]||w).join(' ').split(' ').filter(w=>!DROP.has(w))
-   .map(w=>w.length>4?w.replace(/(es|s)$/,''):w).join(' ');
-}
-function shortForms(a){
-  const base=a.split(':')[0].replace(/\([^)]*\)/g,' ').replace(/\s+/g,' ').trim();
-  const out=base.split(' / ').map(s=>s.trim()); const extra=[];
-  out.forEach(o=>{const k=o.toLowerCase();Object.keys(SYN).forEach(s=>{if(k.includes(s))SYN[s].forEach(x=>extra.push(k.replace(s,x)))})});
-  return {show:out.join(' / '),accept:[...out,...extra].map(norm)};
-}
-function lev(a,b){const m=a.length,n=b.length;if(!m)return n;if(!n)return m;let p=[...Array(n+1).keys()];
- for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]==b[j-1]?0:1));p=c}return p[n]}
-let ALLN=null;
-function close(g,list){g=norm(g);if(!g)return false;
-  if(!ALLN){ALLN=new Set();CARDS.forEach(c=>{c.pins.forEach(p=>p.sf.accept.forEach(x=>ALLN.add(x)));c.items.forEach(it=>it.accN.forEach(x=>ALLN.add(x)))})}
-  let best=Infinity,ok=false;
-  list.forEach(t=>{const d=lev(g,t),tol=t.length<5?0:Math.max(1,Math.floor(t.length/7));if(d<=tol)ok=true;if(d<best)best=d});
-  if(!ok)return false;if(best===0)return true;
-  for(const o of ALLN){if(!list.includes(o)&&lev(g,o)<best)return false}  // closer to a different answer, e.g. granulocyte vs agranulocyte
-  return true}
-CARDS.forEach(c=>{c.pins.forEach(p=>{p.sf=shortForms(p.a);(p.acc||[]).forEach(x=>p.sf.accept.push(norm(x)))});c.items.forEach(it=>it.accN=[it.a,...it.acc].map(norm))});
-
-const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
- set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-const BEST_KEY='atlasBest_'+DECK.id;
-let best=store.get(BEST_KEY,{});
-let set='all', order=CARDS.map((_,i)=>i), pos=0, mode='type', state={}, hotPin=null;
-const $=id=>document.getElementById(id);
-const visible=()=>order.filter(i=>set==='all'||CARDS[i].set===set);
-const cur=()=>CARDS[visible()[pos]];
-const HAS_DETAIL=CARDS.some(c=>c.items.some(it=>it.self&&/origin/i.test(it.q)));
-let nameOnly=HAS_DETAIL&&store.get('atlasNameOnly_'+DECK.id,false);
-const units=c=>c.type==='qa'?c.items.map((it,i)=>({key:i+1,lab:String(i+1),it})).filter(u=>!(nameOnly&&u.it.self)):c.pins.map(p=>({key:p.n,lab:p.lab,p}));
-const autoUnits=c=>units(c).filter(u=>!(u.it&&u.it.self));
-
-function renderSets(){const el=$('sets');el.innerHTML='';
-  [['all','All cards'],...Object.entries(SETS)].forEach(([k,name])=>{const b=document.createElement('button');b.className='chip';b.textContent=name;
-    b.setAttribute('aria-pressed',set===k);b.onclick=()=>{set=k;pos=0;renderSets();load()};el.appendChild(b)})}
-function renderStrip(){const el=$('strip');el.innerHTML='';
-  visible().forEach((i,j)=>{const c=CARDS[i];const b=document.createElement('button');b.textContent=c.n;b.title=c.title;
-    b.setAttribute('aria-label',`Card ${c.n}: ${c.title}`);if(j===pos)b.setAttribute('aria-current','true');
-    const s=best[c.id];if(s!=null){const d=document.createElement('span');d.className='dot '+(s>=autoUnits(c).length?'done':'part');b.appendChild(d)}
-    b.onclick=()=>{pos=j;load()};el.appendChild(b)});
-  const a=el.querySelector('[aria-current]');if(a)a.scrollIntoView({block:'nearest',inline:'nearest'})}
-const NS='http://www.w3.org/2000/svg';
-function svgEl(t,attrs,parent){const e=document.createElementNS(NS,t);for(const k in attrs)e.setAttribute(k,attrs[k]);parent&&parent.appendChild(e);return e}
-function drawFig(){
-  const c=cur(),svg=$('fig');svg.innerHTML='';svg.setAttribute('viewBox',`0 0 ${c.w} ${c.h}`);
-  svg.setAttribute('aria-label',c.type==='qa'?`Microscope image for ${c.title}`:`${c.title}, with ${c.pins.length} marked structures`);
-  svgEl('image',{href:c.img,x:0,y:0,width:c.w,height:c.h},svg);
-  if(c.type==='qa'){syncZoom();return}
-  const fs=Math.round(Math.max(26,c.r*1.0));
-  c.pins.forEach(p=>{const st=state[p.n]||{};
-    if(mode==='study'||st.open||(mode==='type'&&st.result!=null)||hotPin===p.n&&st.open){
-      const bx=(p.box[0]+p.box[2])/2;let x,y=p.y+fs*0.35+(p.dy||0),anchor;
-      if(Math.abs(p.x-bx)<6){x=p.x;y=p.y-c.r-10;anchor='middle'}else if(p.x>bx){x=p.x-c.r-6;anchor='end'}else{x=p.x+c.r+6;anchor='start'}
-      const t=svgEl('text',{x,y,'text-anchor':anchor,'font-size':fs,class:'lbl'+(hotPin===p.n?' found':'')},svg);t.textContent=p.sf.show}});
-  const fp=c.pins.find(p=>p.n===hotPin);if(fp)svgEl('circle',{cx:fp.x,cy:fp.y,r:c.r*1.9,class:'ring'},svg);
-  c.pins.forEach(p=>{const st=state[p.n]||{};
-    const g=svgEl('g',{class:'pin'+(st.result===true?' right':st.result===false?' wrong':'')+(hotPin===p.n?' hot':''),'data-n':p.n,tabindex:0,role:'button','aria-label':'Structure '+p.lab},svg);
-    svgEl('circle',{cx:p.x,cy:p.y,r:c.r},g);
-    const t=svgEl('text',{x:p.x,y:p.y+c.r*0.42,'text-anchor':'middle','font-size':Math.round(c.r*1.2)},g);t.textContent=p.lab;
-    g.onclick=()=>pinAct(p.n);g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pinAct(p.n)}};
-    g.onmouseenter=()=>hot(p.n,true);g.onmouseleave=()=>hot(p.n,false)});
-  syncZoom()}
-function syncZoom(){const d=$('zoom');if(!d||!d.open)return;const c=cur(),w=$('zWrap'),big=w.classList.contains('big');
-  const k=$('fig').cloneNode(true);k.removeAttribute('id');k.setAttribute('aria-label',c.title);
-  if(big){k.setAttribute('width',Math.max(c.w,Math.round(window.innerWidth*1.6)));k.removeAttribute('height')}else{const sc=Math.min((innerWidth-32)/c.w,(innerHeight-92)/c.h);k.setAttribute('width',Math.round(c.w*sc));k.setAttribute('height',Math.round(c.h*sc))}
-  w.innerHTML='';w.appendChild(k);$('zTitle').textContent=c.title;$('zSize').textContent=big?'Fit to screen':'Bigger'}
-function openZoom(){const d=$('zoom');$('zWrap').classList.remove('big');if(!d.open)d.showModal();syncZoom()}
-function hot(n,on){document.querySelectorAll(`[data-n="${n}"]`).forEach(e=>e.classList.toggle('hot',on))}
-function pinAct(n){if(mode==='type'){const i=$('in'+n);if(i)i.focus()}
-  else if(mode==='reveal'){state[n]=state[n]||{};state[n].open=!state[n].open;drawFig();drawList()}}
-function drawList(){
-  const c=cur(),ol=$('answers');ol.innerHTML='';
-  units(c).forEach(u=>{const n=u.key,st=state[n]||{},ans=u.it?u.it.a:u.p.a;
-    const li=document.createElement('li');li.dataset.n=n;li.onmouseenter=()=>hot(n,true);li.onmouseleave=()=>hot(n,false);
-    const num=document.createElement('span');num.className='num'+(st.result===true?' right':st.result===false?' wrong':'');num.textContent=u.lab;li.appendChild(num);
-    const box=document.createElement('div');box.className='field';
-    const qq=u.it?u.it.q:(u.p.q||'');if(qq){const q=document.createElement('div');q.className='q';q.textContent=qq;box.appendChild(q)}
-    if(mode==='type'){
-      const inp=document.createElement('input');inp.id='in'+n;inp.autocomplete='off';inp.spellcheck=false;
-      inp.setAttribute('aria-label',u.it?u.it.q:'Answer for '+u.lab);inp.value=st.typed||'';
-      if(st.result!=null)inp.className=st.result?'right':'wrong'; else if(st.shown)inp.className='self';
-      inp.oninput=()=>{state[n]=Object.assign(state[n]||{},{typed:inp.value})};
-      inp.onfocus=()=>hot(n,true);inp.onblur=()=>hot(n,false);
-      inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();const nx=$('in'+(n+1));nx?nx.focus():check()}};
-      box.appendChild(inp);
-      if(st.result!=null||st.shown){const f=document.createElement('div');
-        f.className='fix'+(st.shown?' cmp':st.result?' ok':'');f.textContent=st.shown?'Compare with: '+ans:st.result?ans:'Answer: '+ans;box.appendChild(f);
-        if(st.result===false){const m=document.createElement('button');m.type='button';m.className='mine';m.textContent='I had it right';
-          m.onclick=()=>{st.result=true;const REC='atlasRec_'+DECK.id,rec=store.get(REC,{}),k=c.img+'|'+c.title+'#'+(u.it?'q'+u.key:u.p.lab),r=rec[k];
-            if(r){r.ok=true;r.w=Math.max(0,r.w-1);r.r=(r.r||0)+1;store.set(REC,rec)}window.dispatchEvent(new Event('atlas-rec'));drawFig();drawList()};f.append(' ',m)}}
-    }else if(mode==='reveal'){
-      const b=document.createElement('button');b.className='reveal'+(st.open?' open':'');
-      b.textContent=st.open?ans:(u.it?'Tap to show the answer':'Tap to show '+u.lab);b.setAttribute('aria-expanded',!!st.open);
-      b.onclick=()=>{state[n]=state[n]||{};state[n].open=!state[n].open;drawFig();drawList()};box.appendChild(b);
-    }else{const s=document.createElement('div');s.className='ans';s.textContent=ans;box.appendChild(s)}
-    li.appendChild(box);ol.appendChild(li)});
-  const act=$('actions');act.innerHTML='';
-  if(mode==='type'){
-    const b=document.createElement('button');b.className='btn primary';b.textContent='Check my answers';b.onclick=check;act.appendChild(b);
-    const r=document.createElement('button');r.className='btn';r.textContent='Clear and try again';r.onclick=()=>{state={};drawFig();drawList()};act.appendChild(r);
-    const au=autoUnits(c);if(au.some(u=>(state[u.key]||{}).result!=null)){const s=document.createElement('span');s.className='score';
-      s.setAttribute('aria-live','polite');s.textContent=`${au.filter(u=>(state[u.key]||{}).result===true).length} of ${au.length} correct`;act.appendChild(s)}
-  }else if(mode==='reveal'){const b=document.createElement('button');b.className='btn';b.textContent='Hide all again';
-    b.onclick=()=>{Object.values(state).forEach(s=>s.open=false);drawFig();drawList()};act.appendChild(b)}
-}
-function check(){const c=cur();let right=0;
-  units(c).forEach(u=>{const st=state[u.key]=state[u.key]||{};
-    if(u.it&&u.it.self){st.shown=true;return}
-    st.result=u.it?close(st.typed||'',u.it.accN):close(st.typed||'',u.p.sf.accept);if(st.result)right++});
-  const REC='atlasRec_'+DECK.id, rec=store.get(REC,{});
-  units(c).forEach(u=>{if(u.it&&u.it.self)return;const st=state[u.key];if(!st||!(st.typed||'').trim())return;
-    const k=c.img+'|'+c.title+'#'+(u.it?'q'+u.key:u.p.lab), r=rec[k]||{r:0,w:0};r.ok=!!st.result;st.result?r.r++:r.w++;r.t=Date.now();rec[k]=r});
-  store.set(REC,rec);window.dispatchEvent(new Event('atlas-rec'));
-  if(best[c.id]==null||right>best[c.id]){best[c.id]=right;store.set(BEST_KEY,best)}
-  drawFig();drawList();renderStrip()}
-const HINTS={type:'Type each answer, then check. Press Enter to jump to the next blank. Questions about function and location show the answer so you can compare.',
- reveal:'Say each answer out loud first, then tap to see if you were right.',
- study:'Everything is labeled. Study the card, then switch back to Type answers to test yourself.'};
-function setMode(m){mode=m;[['type','mType'],['reveal','mReveal'],['study','mStudy']].forEach(([k,id])=>$(id).setAttribute('aria-pressed',k===m));
-  $('hint').textContent=HINTS[m];drawFig();drawList()}
-function load(keep){const v=visible();if(pos>=v.length)pos=0;if(pos<0)pos=v.length-1;
-  const c=cur();if(!keep){state={};hotPin=null}
-  $('report').href='https://docs.google.com/forms/d/e/1FAIpQLSe_5aNCIRbDDUX6UluXEmuKpdDsghVfCNeh-z64dielvxgiWw/viewform?usp=pp_url&entry.871380301='+encodeURIComponent(`${DECK.title}, card ${c.n}: ${c.title}`);
-  $('cardEyebrow').textContent=`Card ${c.n} · ${SETS[c.set]}`;showFound();$('cardTitle').textContent=c.title;renderStrip();setMode(mode)}
-function showFound(){const c=cur(),fb=$('found'),p=c.pins.find(p=>p.n===hotPin);
-  if(!p){fb.hidden=true;return}
-  fb.hidden=false;fb.innerHTML='';fb.append('Found: ');const sp=document.createElement('span');sp.textContent=p.sf.show;fb.append(sp,` (number ${p.lab}, circled in gold)`);
-  const b=document.createElement('button');b.textContent='Clear';b.onclick=()=>{hotPin=null;state={};history.replaceState(null,'',location.pathname);setMode('type');showFound()};fb.append(b);
-  document.querySelector('.plate').scrollIntoView({block:'start',behavior:'smooth'})}
-function fromHash(){const m=/^#c(\d+)(?:-p(\d+))?$/.exec(location.hash);if(!m)return false;
-  const idx=CARDS.findIndex(c=>c.n===+m[1]);if(idx<0)return false;
-  set='all';order=CARDS.map((_,i)=>i);pos=idx;state={};hotPin=null;
-  if(m[2]){hotPin=+m[2];state[hotPin]={open:true};mode='reveal'}
-  renderSets();load(true);return true}
-$('mType').onclick=()=>setMode('type');$('mReveal').onclick=()=>setMode('reveal');$('mStudy').onclick=()=>setMode('study');
-$('prev').onclick=()=>{pos--;load()};$('next').onclick=()=>{pos++;load()};
-$('shuffle').onclick=()=>{for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]]}pos=0;load()};
-$('zoomBtn').onclick=openZoom;
-$('fig').addEventListener('click',e=>{if(!e.target.closest('.pin'))openZoom()});
-$('zClose').onclick=()=>$('zoom').close();
-$('zSize').onclick=()=>{$('zWrap').classList.toggle('big');syncZoom()};
-$('zPrev').onclick=()=>{pos--;hotPin=null;load()};$('zNext').onclick=()=>{pos++;hotPin=null;load()};
-$('zoom').addEventListener('click',e=>{if(e.target.id==='zWrap'||e.target.id==='zoom'){$('zoom').close();return}
-  const g=e.target.closest('.pin');if(!g)return;const n=+g.dataset.n;
-  if(mode==='type'){$('zoom').close();const i=$('in'+n);if(i)i.focus()}else pinAct(n)});
-addEventListener('resize',syncZoom);
-document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.key==='ArrowRight'){pos++;hotPin=null;load()}if(e.key==='ArrowLeft'){pos--;hotPin=null;load()}});
-window.addEventListener('hashchange',fromHash);
-function renderDepth(){if(!HAS_DETAIL)return;$('depth').hidden=false;$('dSw').setAttribute('aria-checked',!nameOnly)}
-$('dSw').onclick=()=>{nameOnly=!nameOnly;store.set('atlasNameOnly_'+DECK.id,nameOnly);state={};renderDepth();load()};
-renderDepth();
-if(!fromHash()){renderSets();load()}
-</script>
-
-<script src="atlas-competency-map.js"></script>
-<script src="atlas-name-it.js"></script>
-<script>
-/* Iframe height sender (Canvas, Kajabi and other embeds). Pass ?id= to name the frame. */
-(function () {
-  var FRAME_ID = (function () {
-    try { var m = window.location.search.match(/[?&]id=([^&]+)/); if (m) return decodeURIComponent(m[1]); } catch (e) {}
-    return 'joints';
-  })();
-  function sendHeight() {
-    var h = (window.BIO004_CONTENT_HEIGHT ? window.BIO004_CONTENT_HEIGHT() : document.body.scrollHeight);
-    try { if (window.parent && window.parent !== window) window.parent.postMessage({ type: 'resize', id: FRAME_ID, height: h }, '*'); } catch (e) {}
-  }
-  window.addEventListener('load', sendHeight);
-  window.addEventListener('resize', sendHeight);
-  if (window.ResizeObserver) { try { new ResizeObserver(sendHeight).observe(document.body); } catch (e) {} }
-  sendHeight();
+(function(){document.querySelectorAll('.deck .slide').forEach(function(s,i){var n=s.querySelector('.slide-num');if(n)n.textContent=(i<10?'0':'')+i;});})();
+(function(){document.querySelectorAll('.decision').forEach(function(g){var r=g.querySelector('.reveal');g.querySelectorAll('.choice').forEach(function(b){b.addEventListener('click',function(){g.querySelectorAll('.choice').forEach(function(x){x.classList.remove('right','wrong');x.classList.add(x.getAttribute('data-correct')==='true'?'right':'wrong');});if(r)r.hidden=false;});});});})();
+(function(){var pr=document.getElementById('printBtn');if(pr)pr.addEventListener('click',function(){window.print();});})();
+(function(){var slides=[].slice.call(document.querySelectorAll('.deck .slide'));if(!slides.length)return;var idx=0,on=false;var bar=document.querySelector('.present-bar'),countEl=document.getElementById('presentCount');var prev=bar.querySelector('.prev'),next=bar.querySelector('.next'),exitB=bar.querySelector('.exit');
+function show(i){idx=Math.max(0,Math.min(slides.length-1,i));slides.forEach(function(s,k){s.classList.toggle('is-current',k===idx);});countEl.textContent=(idx+1)+' / '+slides.length;prev.disabled=idx===0;next.disabled=idx===slides.length-1;}
+function enter(i){on=true;document.body.classList.add('present');show(i||0);if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(function(){});}
+function exit(){on=false;document.body.classList.remove('present');slides.forEach(function(s){s.classList.remove('is-current');});if(document.fullscreenElement&&document.exitFullscreen)document.exitFullscreen().catch(function(){});}
+var pb=document.getElementById('presentBtn');if(pb)pb.addEventListener('click',function(){enter(0);});
+prev.addEventListener('click',function(){show(idx-1);});next.addEventListener('click',function(){show(idx+1);});exitB.addEventListener('click',exit);
+document.addEventListener('keydown',function(e){if(!on)return;if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();show(idx+1);}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(idx-1);}else if(e.key==='Escape'){exit();}});
+document.addEventListener('fullscreenchange',function(){if(!document.fullscreenElement&&on)exit();});
 })();
 </script>
-</body>
-</html>
+<div class="lightbox" id="lightbox" hidden><img class="lb-img" src="" alt=""><button type="button" class="lb-close" aria-label="Close enlarged image">&times;</button></div>
+<script>
+(function(){var lb=document.getElementById('lightbox');if(!lb)return;var img=lb.querySelector('.lb-img');var cb=lb.querySelector('.lb-close');
+document.querySelectorAll('.slidefig').forEach(function(el){el.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();img.src=el.currentSrc||el.src;img.alt=el.alt||'';lb.hidden=false;});});
+function close(){lb.hidden=true;img.removeAttribute('src');}
+lb.addEventListener('click',function(e){if(e.target!==img)close();});
+cb.addEventListener('click',function(e){e.stopPropagation();close();});
+document.addEventListener('keydown',function(e){if(!lb.hidden&&e.key==='Escape')close();});})();
+</script>
+<script>(function(){var b=document.getElementById("backBtn");if(!b)return;if(document.referrer||window.history.length>1){b.hidden=false;}b.addEventListener("click",function(){if(history.length>1)history.back();else if(document.referrer)location.href=document.referrer;});})();</script>
+
+<script src="bio004-dock.js"></script>
+<script src="dock-coachmark.js"></script>
+</body></html>

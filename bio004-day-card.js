@@ -289,7 +289,7 @@
     }
 
     html += '<div class="mat" style="margin-top:14px;">'+
-      '<a href="'+((window.BIO004_LINKS&&window.BIO004_LINKS.loops)?window.BIO004_LINKS.loops.url:'https://drsrennie-stack.github.io/loops/')+'" '+
+      '<a href="'+((window.BIO004_LINKS&&window.BIO004_LINKS.loops)?window.BIO004_LINKS.loops.url:'https://www.medmasterscollaborative.com/anatomy-loops')+'" '+
       'target="_blank" rel="noopener"><span class="mi" aria-hidden="true">&#8635;</span>'+
       '<span>Loops, quick visual practice</span><span class="mk">Practice</span></a></div>';
 

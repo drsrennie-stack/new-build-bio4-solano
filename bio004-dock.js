@@ -441,8 +441,8 @@
     t.push({ g: 'Practice and recall', name: 'Tissue Chart Practice', sub: 'Pick the columns, flip to Recall, reveal as you go',
              url: BASE + 'bio004-tissue-chart-practice.html', icon: 'cards', tone: 'gold',
              qr: 'tissuechart', kw: 'tissue chart practice recall reveal memory histology' });
-    t.push({ g: 'Practice and recall', name: 'What do you need help with?', sub: 'Pick your problem, get the right study tool in one click',
-             url: BASE + 'bio004-study-help.html', icon: 'target', tone: 'gold',
+    t.push({ g: 'Practice and recall', name: 'How do I study for this class?', sub: 'Every study tool, step by step, for lecture and lab',
+             url: BASE + 'bio004-study-process.html', icon: 'target', tone: 'gold',
              kw: 'help study what should i use stuck forgetting memory exam prepare lab identification paper videos dont understand study protocol how to study' });
     t.push({ g: 'Practice and recall', name: 'Kahoots', sub: 'Every class Kahoot by module, play the rematch any time',
              url: BASE + 'kahoots.html', icon: 'play', tone: 'gold',
@@ -462,7 +462,7 @@
              ext: true, qr: 'muscles',
              kw: 'muscle charts origin insertion action innervation ioa oia drill table muscles' });
     t.push({ g: 'Lab materials', name: 'Loops', sub: 'Thirty-nine image loops for fast visual practice',
-             url: 'https://drsrennie-stack.github.io/loops/', icon: 'loop', tone: 'terra', qr: 'loops', ext: true, kw: 'loops images practice lab' });
+             url: 'https://www.medmasterscollaborative.com/anatomy-loops', icon: 'loop', tone: 'terra', qr: 'loops', ext: true, kw: 'loops images practice lab' });
     /* The slide tools were built and then never linked anywhere a
        student would look. Lab materials, next to Loops, because both
        are visual practice. */

@@ -172,6 +172,8 @@
   var filter = { comp: null, mode: 'due' };
   var NO_CARDS_FOR = null;
   var curMod = 0;
+  var NOW_MOD = 0;        // the module class is in now
+  var modsOpen = false;   // tabs view: other modules shown only on request
   var selected = {};    // topic id -> true
 
   function flatten() {
@@ -322,28 +324,20 @@
   }
   function head() {
     var s = stats(), od = odRead();
-    var uniq = Object.keys(od.cards).length;
     var rk = odRank(od.total);
     var todayN = od.days[today()] || 0;
     return ''
       + '<div class="rv-odo" role="group" aria-label="Your card count">'
       +   '<span class="rv-odo-big">' + fmtNum(od.total) + '</span>'
-      +   '<span>cards answered, all time</span>'
+      +   '<span>cards answered</span>'
       +   '<span><b>' + fmtNum(todayN) + '</b> today</span>'
-      +   '<span><b>' + fmtNum(uniq) + '</b> unique</span>'
-      +   (rk.cur ? '<span class="rv-odo-rank">' + esc(rk.cur[1]) + '</span>' : '')
+      +   (s.shaky ? '<span><b>' + fmtNum(s.shaky) + '</b> still shaky</span>' : '')
+      +   (s.blind ? '<span title="Cards you were sure of and got wrong. Give these extra time."><b>' + fmtNum(s.blind) + '</b> sure and wrong</span>' : '')
       +   (rk.next ? '<span class="rv-odo-sub">' + fmtNum(rk.next[0] - od.total) + ' to ' + esc(rk.next[1]) + '</span>' : '')
-      +   '<span class="rv-odo-links"><a href="#s-weak" target="_top">My weakness dashboard</a>'
-      +   '<a href="bio004-card-leaderboard.html" target="_top">Class leaderboard</a></span>'
-      + '</div>'
-      + '<div class="rv-stats" role="group" aria-label="Your recall progress">'
-      +   '<p class="rv-stat"><strong>' + fmtNum(s.total) + '</strong><span>cards in the bank</span></p>'
-      +   '<p class="rv-stat"><strong>' + fmtNum(s.seen) + '</strong><span>you have seen</span></p>'
-      +   '<p class="rv-stat"><strong>' + fmtNum(s.mastered) + '</strong><span>holding steady</span></p>'
-      +   '<p class="rv-stat"><strong>' + fmtNum(s.shaky) + '</strong><span>still shaky</span></p>'
-      + '</div>'
-      + (s.blind ? '<p class="rv-blind">You were <strong>sure and wrong</strong> on ' + s.blind
-          + ' card' + (s.blind === 1 ? '' : 's') + '. Those deserve extra time, because you would not have studied them.</p>' : '');
+      +   '<span class="rv-odo-links"><a href="#s-weak" target="_top">My weak spots</a>'
+      +   '<a href="bio004-card-leaderboard.html" target="_top">Leaderboard</a>'
+      +   '<button type="button" class="rv-odo-disp" id="rv-disp-btn" aria-expanded="' + dispOpen + '" aria-controls="rv-disp">Display</button></span>'
+      + '</div>';
   }
 
   /* ---------- display preferences ----------
@@ -376,16 +370,16 @@
         + (cur === o[0] ? ' checked' : '') + '><span>' + esc(o[1]) + '</span></label>';
     }).join('') + '</fieldset>';
   }
+  function secButtons() {
+    var tr = track();
+    return '<span class="rv-sec">'
+      + '<button type="button" data-sec="mw" aria-pressed="' + (tr === 'mw') + '">Mon / Wed</button>'
+      + '<button type="button" data-sec="tr" aria-pressed="' + (tr === 'tr') + '">Tue / Thu</button></span>';
+  }
   function displayBar() {
     return ''
-      + '<div class="rv-dispbar">'
-      +   '<button type="button" class="rv-btn rv-small" id="rv-disp-btn" aria-expanded="' + dispOpen + '" aria-controls="rv-disp">Display options</button>'
-      +   '<div class="rv-themes" role="group" aria-label="Theme">' + THEMES.map(function (o) {
-            return '<button type="button" class="rv-btn rv-small" data-theme-set="' + o[0] + '" aria-pressed="' + (disp.theme === o[0]) + '">'
-              + esc(o[0] === 'navy' ? 'Navy' : o[1]) + '</button>';
-          }).join('') + '</div>'
-      + '</div>'
       + '<div class="rv-disp" id="rv-disp"' + (dispOpen ? '' : ' hidden') + '>'
+      +   (track() ? '<fieldset class="rv-fs"><legend>My class days</legend>' + secButtons() + '</fieldset>' : '')
       +   radios('picker', PICKERS, disp.picker, 'How topics are listed')
       +   radios('card', CARDS, disp.card, 'How answers are explained')
       +   radios('theme', THEMES, disp.theme, 'Theme')
@@ -428,7 +422,19 @@
         + ' aria-controls="rv-topics" tabindex="' + (i === curMod ? '0' : '-1') + '" data-mod="' + i + '">'
         + esc(modLabel(mm)) + (n ? ' <span class="rv-tab-n">' + n + '</span>' : '') + '</button>';
     }).join('');
-    return '<div class="rv-tabs" role="tablist" aria-label="Modules">' + tabs + '</div>'
+    /* Opens on this week's module. The other modules wait behind one
+       button, so the first thing a student sees is what class is on. */
+    var other = '<button type="button" class="rv-link rv-othermods" data-othermods="1" aria-expanded="' + modsOpen + '">'
+      + (modsOpen ? 'Back to this week\'s module' : 'Study a different module') + '</button>';
+    if (!modsOpen) {
+      return '<div class="rv-tabpanel" id="rv-topics">'
+        +   '<p class="rv-mod-title">' + esc(m.title) + (m.exam ? ' <span>· ' + esc(m.exam) + '</span>' : '')
+        +     (curMod === NOW_MOD ? ' <span class="rv-chip rv-now-chip">This week</span>' : '') + '</p>'
+        +   other + quickRow('mod')
+        +   '<ul class="rv-list">' + (m.topics || []).map(topicRow).join('') + '</ul>'
+        + '</div>';
+    }
+    return other + '<div class="rv-tabs" role="tablist" aria-label="Modules">' + tabs + '</div>'
       + '<div class="rv-tabpanel" id="rv-topics" role="tabpanel" aria-labelledby="rv-tab-' + curMod + '">'
       +   '<p class="rv-mod-title">' + esc(m.title) + (m.exam ? ' <span>· ' + esc(m.exam) + '</span>' : '') + '</p>'
       +   quickRow('mod')
@@ -478,11 +484,8 @@
       + '<div class="rv-picker">'
       + '<div class="rv-pick-head">'
       +   '<h3 class="rv-h">Choose what to study</h3>'
-      +   '<div class="rv-sec" role="group" aria-label="Your class days">'
-      +     '<span>My class days:</span>'
-      +     '<button type="button" data-sec="mw" aria-pressed="' + (tr === 'mw') + '">Mon / Wed</button>'
-      +     '<button type="button" data-sec="tr" aria-pressed="' + (tr === 'tr') + '">Tue / Thu</button>'
-      +   '</div>'
+      /* asked once; after that it lives under Display */
+      +   (tr ? '' : '<div class="rv-sec" role="group" aria-label="Your class days"><span>My class days:</span>' + secButtons() + '</div>')
       + '</div>'
       + body
       + '<div class="rv-startbar">'
@@ -688,6 +691,10 @@
     if (t.hasAttribute('data-open')) { var oi = +t.getAttribute('data-open'); openMods = openMods || {}; openMods[oi] = !openMods[oi]; render('[data-open="' + oi + '"]'); return; }
     if (t.hasAttribute('data-explore')) { exploreAt = +t.getAttribute('data-explore'); render('#rv-ptab-' + exploreAt); return; }
     if (t.id === 'rv-flip') { flipped = !flipped; render(flipped ? '.rv-verdict' : '#rv-flip'); return; }
+    if (t.hasAttribute('data-othermods')) {
+      modsOpen = !modsOpen; if (!modsOpen) curMod = NOW_MOD;
+      render(modsOpen ? '#rv-tab-' + curMod : '[data-othermods]'); return;
+    }
     if (t.hasAttribute('data-mod')) { curMod = +t.getAttribute('data-mod'); render('#rv-tab-' + curMod); return; }
     if (t.hasAttribute('data-sec')) { setTrack(t.getAttribute('data-sec')); render(); return; }
     if (t.hasAttribute('data-quick')) {
@@ -802,6 +809,10 @@
   + R + ' .rv-odo-sub{opacity:.85}'
   + R + ' .rv-odo-links{margin-left:auto;display:flex;flex-wrap:wrap;gap:6px 16px}'
   + R + ' .rv-odo a{color:inherit;font-weight:700}'
+  + R + ' .rv-odo-disp{font:inherit;font-weight:700;color:inherit;background:none;border:1px solid rgba(255,255,255,.55);border-radius:999px;padding:4px 12px;cursor:pointer;min-height:32px}'
+  + R + ' .rv-odo-disp:hover,' + R + ' .rv-odo-disp[aria-expanded="true"]{background:rgba(255,255,255,.14)}'
+  + R + ' .rv-odo-disp:focus-visible{outline:3px solid #F3E3BC;outline-offset:2px}'
+  + R + ' .rv-odo-links{align-items:center}'
   + R + ' .rv-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 14px}'
   + '@media (max-width:640px){' + R + ' .rv-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}'
   + R + ' .rv-stat{margin:0;padding:12px 14px;border-radius:10px;background:var(--rv-card);box-shadow:0 1px 3px var(--rv-shadow)}'
@@ -831,6 +842,7 @@
   + R + ' .rv-tab[aria-selected="true"]{color:var(--rv-text);border-bottom-color:var(--rv-gold)}'
   + R + ' .rv-tab-n{display:inline-block;min-width:20px;padding:0 6px;border-radius:999px;background:var(--rv-tint);color:var(--rv-text);font-size:12px;margin-left:4px}'
   + R + ' .rv-mod-title{margin:4px 0 0;font-weight:700;color:var(--rv-terra-text)}'
+  + R + ' .rv-othermods{display:inline-block;margin:6px 0 8px;padding-left:0}'
   + R + ' .rv-mod-title span{font-weight:500;color:var(--rv-soft)}'
   + R + ' .rv-quick{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;font-size:13px;color:var(--rv-soft)}'
   + R + ' .rv-link{font:inherit;font-weight:700;font-size:13px;background:none;border:0;color:var(--rv-terra-text);cursor:pointer;padding:6px 2px;text-decoration:underline;text-underline-offset:3px}'
@@ -957,10 +969,15 @@
     if (!$(MOUNT)) return;
     styles();
     ALL = flatten();
-    curMod = moduleNow();
+    curMod = moduleNow(); NOW_MOD = curMod;
     var wantMod = readParam('module');
     if (wantMod) MODS.forEach(function (m, i) { if (String(m.n) === wantMod) curMod = i; });
     var saved = loadSel();
+    /* Each new sitting opens on this week's module, as asked. A
+       different choice holds for the rest of the sitting. */
+    var fresh = true;
+    try { fresh = !sessionStorage.getItem('bio004-recall-sitting'); sessionStorage.setItem('bio004-recall-sitting', '1'); } catch (e) {}
+    if (fresh && !wantMod) saved = null;
     if (saved) { selected = saved; }
     else if (MODS[curMod]) { selected = {}; selectTaughtIn(MODS[curMod]); saveSel(); }
 

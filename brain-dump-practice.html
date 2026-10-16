@@ -117,6 +117,14 @@
   .chip[aria-pressed="true"] .n{color:#C6CEDA}
   .mini{background:none;border:0;color:var(--terra-dark);font-weight:700;font-size:14px;
         cursor:pointer;text-decoration:underline;padding:8px 4px}
+  .picked{font-size:17px;color:var(--ink);margin:4px 0 2px}
+  .picked b{font-weight:800}
+  .picked .now{display:inline-block;margin-left:8px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--white);background:var(--ink);border-radius:999px;padding:3px 10px;vertical-align:2px}
+  #otherMods{padding-left:0}
+  details.more{margin-top:14px}
+  details.more summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--terra-dark);padding:8px 0;min-height:40px}
+  details.more summary:focus-visible{outline:3px solid var(--gold,#DCB45C);outline-offset:2px;border-radius:4px}
 
   /* ---------- timer options ---------- */
   .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px;margin-top:12px}
@@ -285,21 +293,24 @@
 
   <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
   <h1>Brain dump <span>practice</span></h1>
-  <p class="lede">Pick what you want to be asked about, spin, and get one prompt. Set your own clock,
-     write it on paper with nothing open, then check yourself against the key points.</p>
-  <p class="lede">What you score here goes to your weak spot board, so the app stops guessing what you need.</p>
+  <p class="lede">Spin for a prompt, write it on paper from memory, then check yourself.</p>
   <p class="runline" id="runline"></p>
 
   <!-- ---------- 1. what to be asked about ---------- -->
   <section class="card" id="s-setup" aria-labelledby="h-setup">
     <div class="card-head"><span class="step-k">Step 1</span><h2 id="h-setup">What should it ask you about?</h2></div>
-    <p class="hint">Pick as many as you like. One module to drill it, or several to be caught off guard,
-       which is closer to what an exam does. Modules marked <b>not covered yet</b> are ahead of where
-       class is, so they start off. Switch them on if you want to work ahead.</p>
-    <div class="chips" id="modChips" role="group" aria-label="Choose which modules to be asked about"></div>
-    <div class="row">
-      <button type="button" class="mini" id="pickAll">Select everything</button>
-      <button type="button" class="mini" id="pickNone">Clear</button>
+    <!-- Defaults to the module the class is in now. Other modules stay
+         tucked behind one button until a student asks for them. -->
+    <p class="picked" id="pickedLine" aria-live="polite"></p>
+    <button type="button" class="mini" id="otherMods" aria-expanded="false" aria-controls="modMore">Study a different module</button>
+    <div id="modMore" hidden>
+      <p class="hint" style="margin:8px 0 0">Pick one or more. Mixing modules is closer to a real exam.</p>
+      <div class="chips" id="modChips" role="group" aria-label="Choose which modules to be asked about"></div>
+      <div class="row">
+        <button type="button" class="mini" id="pickNow">Just this week's module</button>
+        <button type="button" class="mini" id="pickAll">Select everything</button>
+        <button type="button" class="mini" id="pickNone">Clear</button>
+      </div>
     </div>
     <p class="hint" id="poolCount" role="status" style="margin:12px 0 0"></p>
   </section>
@@ -307,8 +318,7 @@
   <!-- ---------- 2. the clock ---------- -->
   <section class="card" aria-labelledby="h-clock">
     <div class="card-head"><span class="step-k">Step 2</span><h2 id="h-clock">How long do you want?</h2></div>
-    <p class="hint">In class it is five minutes. On your own, longer is fine while you are learning the format.
-       The clock is there to stop you drifting, not to fail you.</p>
+    <p class="hint">Class pace is 5 minutes. Longer is fine while you learn the format.</p>
     <div class="opts" id="timeOpts" role="group" aria-label="Choose how long the clock runs"></div>
     <div class="custom">
       <label for="customMin">Or set your own</label>
@@ -337,13 +347,14 @@
         </svg>
       </div>
       <div>
-        <p class="hint" id="wheelHint">Ten prompts go on the wheel each time, drawn from what you picked.
-           If none of them appeal, spin again and it reloads with ten different ones.</p>
+        <p class="hint" id="wheelHint">Ten prompts per spin. Spin again for ten new ones.</p>
         <div class="row">
           <button type="button" class="big" id="spinBtn">Spin the wheel</button>
           <button type="button" class="ghost" id="justGive">Just give me one</button>
         </div>
 
+        <details class="more">
+        <summary>Spin settings</summary>
         <div class="toggles">
           <label class="tg">
             <input type="checkbox" id="noRepeat">
@@ -362,6 +373,7 @@
           <p class="hint" id="repeatNote" style="margin:4px 0 0"></p>
           <button type="button" class="mini hidden" id="clearSeen">Clear my history and put every prompt back on the wheel</button>
         </div>
+        </details>
 
         <p class="sr" id="spinSay" role="status" aria-live="polite"></p>
       </div>
@@ -383,15 +395,13 @@
       <button type="button" class="ghost" id="doneBtn">I have finished, check my answer</button>
       <button type="button" class="ghost" id="reSpin">Spin for a different one</button>
     </div>
-    <p class="hint" style="margin:12px 0 0">Not using the clock is fine. Write it, then press
-       <b>I have finished</b> and the key points come up.</p>
+    <p class="hint" style="margin:12px 0 0">No clock is fine. Press <b>I have finished</b> when you are done.</p>
   </section>
 
   <!-- ---------- 5. confidence, asked before the answer ---------- -->
   <section class="card hidden" id="s-conf" aria-labelledby="h-conf">
     <div class="card-head"><span class="step-k">Step 4</span><h2 id="h-conf">Before you look, how did that go?</h2></div>
-    <p class="hint">Answer this before you see the key points. The gap between what you thought and what you
-       actually got is the most useful thing on this page.</p>
+    <p class="hint">Rate it before you see the key points.</p>
     <div class="conf" id="confBtns" role="group" aria-label="Rate your confidence before checking">
       <button type="button" class="cf" data-conf="high" aria-pressed="false">
         <b>Solid</b><i>I could teach it</i></button>
@@ -408,8 +418,7 @@
   <section class="card hidden" id="s-check" aria-labelledby="h-check" tabindex="-1">
     <div class="card-head"><span class="step-k">Step 5</span><h2 id="h-check">What the answer should have had</h2></div>
     <div id="refWrap"></div>
-    <p class="hint">Tick every point you actually got down on paper. Be honest with yourself here, a generous
-       tick only hides the gap from you.</p>
+    <p class="hint">Tick only what you actually wrote down.</p>
     <ul class="kp" id="kpList"></ul>
     <p class="tally" id="tally" role="status"></p>
     <div class="row"><button type="button" class="big" id="saveBtn">Save this to my weak spot board</button></div>
@@ -591,9 +600,25 @@ window.BIO004_DUMP_REFERENCE = {
 
   /* ---------- chosen state ---------- */
   var chosen = {};
+  /* The module the class is in right now: the first one whose exam is
+     still ahead for this student's section (dates from schedule-fall2026.js). */
+  var EXAMS = { mw: ['2026-09-09','2026-09-30','2026-10-21','2026-11-16','2026-12-09'],
+                tr: ['2026-09-08','2026-09-29','2026-10-22','2026-11-17','2026-12-10'] };
+  var NOW_GROUP = (function(){
+    var sec = lsGet('bio004-section'), list = EXAMS[sec === 'mw' ? 'mw' : 'tr'];
+    var d = new Date(), pad = function(n){ return (n<10?'0':'')+n; };
+    var today = d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()), n = 5;
+    for(var i=0;i<list.length;i++){ if(today <= list[i]){ n = i+1; break; } }
+    var g = 'Module ' + n;
+    return GROUPS.indexOf(g) >= 0 ? g : null;
+  })();
   (function(){
+    /* A new sitting starts on this week's module. A different choice
+       holds for the rest of the sitting only, so nobody is left
+       drilling Module 1 in week 9 because of a click in September. */
     var saved = null;
-    try{ saved = JSON.parse(lsGet(K_MODS)||'null'); }catch(e){}
+    try{ saved = JSON.parse(sessionStorage.getItem(K_MODS)||'null'); }catch(e){}
+    if(!(Array.isArray(saved) && saved.length) && NOW_GROUP) saved = [NOW_GROUP];
     if(Array.isArray(saved) && saved.length){
       saved.forEach(function(g){ if(GROUPS.indexOf(g)>=0) chosen[g]=1; });
     }
@@ -614,7 +639,7 @@ window.BIO004_DUMP_REFERENCE = {
       if(!Object.keys(chosen).length && GROUPS.length) chosen[GROUPS[0]]=1;
     }
   })();
-  function saveChosen(){ lsSet(K_MODS, JSON.stringify(Object.keys(chosen))); }
+  function saveChosen(){ try{ sessionStorage.setItem(K_MODS, JSON.stringify(Object.keys(chosen))); }catch(e){} }
 
   /* ---------- prompts already scored ----------
      Marked when a score is SAVED, not when a prompt lands. Spinning
@@ -670,6 +695,10 @@ window.BIO004_DUMP_REFERENCE = {
          + '<span class="sr">' + (chosen[g]?', included':', not included') + '</span></button>';
     });
     $('modChips').innerHTML = h;
+    var keys = GROUPS.filter(function(g){ return chosen[g]; });
+    $('pickedLine').innerHTML = !keys.length ? 'No module picked yet.'
+      : keys.map(function(g){ return '<b>' + esc(groupLabel(g)) + '</b>'; }).join(', ')
+        + (keys.length === 1 && keys[0] === NOW_GROUP ? '<span class="now">This week</span>' : '');
     countUp();
   }
   function countUp(){
@@ -713,6 +742,15 @@ window.BIO004_DUMP_REFERENCE = {
     var g = b.getAttribute('data-g');
     if(chosen[g]) delete chosen[g]; else chosen[g]=1;
     saveChosen(); renderChips();
+  });
+  $('otherMods').addEventListener('click', function(){
+    var m = $('modMore'), open = m.hidden;
+    m.hidden = !open; this.setAttribute('aria-expanded', String(open));
+    this.textContent = open ? 'Done choosing' : 'Study a different module';
+  });
+  $('pickNow').addEventListener('click', function(){
+    Object.keys(chosen).forEach(function(g){ delete chosen[g]; });
+    if(NOW_GROUP) chosen[NOW_GROUP] = 1; saveChosen(); renderChips();
   });
   $('pickAll').addEventListener('click', function(){
     GROUPS.forEach(function(g){ chosen[g]=1; }); saveChosen(); renderChips();

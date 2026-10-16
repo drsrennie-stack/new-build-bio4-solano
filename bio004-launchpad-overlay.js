@@ -1,254 +1,174 @@
 /* ============================================================
-   THE LAUNCHPAD OVERLAY.
-   The four doors (Lecture, Lab, Study, Calendar) as a dark
-   full-screen popup that appears EVERY time the page loads.
-   Nothing is remembered on purpose: Scrubs' call, so a student
-   who picked Lab once is not funneled to Lab forever. Choosing
-   Calendar just closes the curtain, because the page behind it
-   IS the calendar. Escape also closes it.
+   THE COURSE ENTRY ("Welcome to Anatomy").
+   A navy full-screen curtain with white cards that appears when a
+   student ARRIVES at the course (from Canvas, a phone link or a
+   fresh tab). Every card has its own colored icon so no two read
+   alike. One wide card goes to this week, four cards answer the
+   questions students ask most, three small rows open Lecture, Lab
+   and the study steps, and one line shows the newest announcement.
+   Details (help contacts, lecture and lab tools, announcements)
+   stay hidden until a card is chosen.
+
+   Nothing is remembered on purpose, so a student who picked Lab
+   once is not funneled to Lab forever. Escape closes it. On the
+   calendar page the curtain simply lifts to show the calendar.
 
    To put it on a page: <script src="bio004-launchpad-overlay.js">
-   after the page's content. Built for bio004-course-calendar.html.
-   The standalone version lives at bio004-launchpad.html for
-   Canvas embeds.
+   after the page's content. bio004-launchpad.html shows the same
+   screen on its own (set window.BIO004_LAUNCHPAD_STANDALONE first).
    ============================================================ */
 (function () {
   'use strict';
   if (window.__BIO004_LAUNCHPAD__) return;
   window.__BIO004_LAUNCHPAD__ = true;
-  /* Canvas shows the calendar inside an iframe, and the doors are
-     MEANT to appear there first: that is the whole point. The only
-     opt-out is explicit: add ?nolaunch=1 to the address for an embed
-     that should skip straight to the calendar. */
-  if (/[?&]nolaunch=1/.test(window.location.search)) return;
+  var STANDALONE = !!window.BIO004_LAUNCHPAD_STANDALONE;
+  /* Canvas shows the calendar inside an iframe, and the curtain is
+     MEANT to appear there first. The only opt-out is explicit: add
+     ?nolaunch=1 for an embed that should skip straight to the page. */
+  if (!STANDALONE && /[?&]nolaunch=1/.test(window.location.search)) return;
 
-  /* The curtain is for students ARRIVING at the course, from Canvas, a
-     phone link or a fresh tab. It was also opening when they were already
-     inside the site, which is how "Go to the calendar" became a loop: the
-     calendar loaded and the doors dropped in front of it again. So if the
-     click came from another page on this same site, the doors stay down. */
-  try {
-    if (document.referrer) {
-      var from = document.createElement('a');
-      from.href = document.referrer;
-      if (from.host === window.location.host) return;
-    }
-  } catch (e) {}
+  /* The curtain is for students ARRIVING at the course. If the click
+     came from another page on this same site, it stays down, so
+     "Go to the calendar" never loops back to the curtain. */
+  if (!STANDALONE) {
+    try {
+      if (document.referrer) {
+        var from = document.createElement('a');
+        from.href = document.referrer;
+        if (from.host === window.location.host) return;
+      }
+    } catch (e) {}
+  }
 
   var css = ''
   + '.lpov{position:fixed;inset:0;z-index:2147482998;background:#08101F;overflow:auto;'
-  + 'font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#F4EFE8}'
-  + '.lpov .lp-wrap{max-width:900px;margin:0 auto;padding:44px 20px 60px;text-align:center}'
-  + '.lpov h2{font-size:clamp(24px,5vw,34px);font-weight:800;letter-spacing:-.02em;margin:10px 0 4px;color:#fff}'
-  + '.lpov .lp-sub{font-size:15px;color:#C8D2DA;margin:0 0 30px}'
-  + '.lpov .lp-eyebrow{font-family:"DM Sans",system-ui,sans-serif;font-size:11px;font-weight:700;'
-  + 'letter-spacing:.18em;text-transform:uppercase;color:#CFA95F;margin:0}'
-  + '.lpov .lp-deck{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:640px;margin:0 auto}'
-  + '@media (max-width:430px){.lpov .lp-deck{grid-template-columns:1fr}}'
-  + '.lpov .lp-door{background:#fff;color:#08101F;border:0;border-radius:18px;padding:20px 16px 18px;'
-  + 'text-align:center;text-decoration:none;display:block;cursor:pointer;font-family:inherit;'
-  + 'box-shadow:0 14px 34px -12px rgba(0,0,0,.6);transition:transform .18s ease,box-shadow .18s ease}'
-  + '.lpov .lp-door:hover{transform:translateY(-4px);box-shadow:0 22px 44px -14px rgba(0,0,0,.7)}'
-  + '@media (prefers-reduced-motion:reduce){.lpov .lp-door{transition:none}.lpov .lp-door:hover{transform:none}}'
-  + '.lpov .lp-ic{width:52px;height:52px;border-radius:15px;margin:0 auto 11px;display:flex;align-items:center;justify-content:center}'
-  + '.lpov .lp-ic svg{width:26px;height:26px;color:#fff}'
-  + '.lpov .ic-gold{background:linear-gradient(135deg,#B8924A,#8a6a2e)}'
-  + '.lpov .ic-terra{background:linear-gradient(135deg,#C2734D,#8a4526)}'
-  + '.lpov .ic-navy{background:linear-gradient(135deg,#1E2A47,#08101F)}'
-  + '.lpov .ic-blue{background:linear-gradient(135deg,#33507e,#1E2A47)}'
-  + '.lpov .lp-door b{display:block;font-size:17px;font-weight:800;color:#08101F}'
-  + '.lpov .lp-door span{display:block;font-size:12.5px;color:#2A3949;margin-top:3px}'
-  + '.lpov .lp-panel{display:none}'
-  + '.lpov .lp-panel.on{display:block}'
-  + '.lpov .lp-backrow{margin:0 0 16px;text-align:left}'
-  + '.lpov .lp-ghost{background:none;border:1.5px solid rgba(244,239,232,.45);color:#F4EFE8;cursor:pointer;'
-  + 'font-family:inherit;font-weight:700;font-size:13.5px;border-radius:999px;padding:8px 16px}'
-  + '.lpov .lp-ghost:hover{border-color:#CFA95F;color:#fff}'
-  + '.lpov .lp-calrow{margin-top:20px;text-align:center}'
-  + '.lpov .lp-calrow{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}'
-  + '.lpov a.lp-ghost{display:inline-block;text-decoration:none;line-height:1.4}'
-  + '.lpov .lp-disc{margin-top:14px;display:flex;flex-direction:column;gap:12px;align-items:center}'
-  + '.lpov .lp-dlbl{font-size:12.5px;font-weight:700;color:#C8D2DA}'
-  + '.lpov .lp-drow{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;align-items:flex-start}'
-  + '.lpov .lp-dcard{display:flex;flex-direction:column;align-items:center;gap:9px}'
-  + '.lpov .lp-disc a{display:inline-block;background:none;border:1.5px solid rgba(244,239,232,.45);color:#F4EFE8;'
-  + 'text-decoration:none;font-weight:700;font-size:13px;border-radius:999px;padding:7px 14px}'
-  + '.lpov .lp-disc a:hover{border-color:#CFA95F;color:#fff}'
-  + '.lpov .lp-dqr{background:#fff;border-radius:10px;padding:7px;line-height:0}'
-  + '.lpov .lp-dqr svg{width:96px;height:96px;display:block}'
-  + '.lpov .lp-subdeck{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px}'
-  + '.lpov .lp-subdeck .lp-door{padding:15px 13px}'
-  + '.lpov .lp-subdeck .lp-ic{width:42px;height:42px;border-radius:12px;margin-bottom:8px}'
-  + '.lpov .lp-subdeck .lp-ic svg{width:21px;height:21px}'
-  + '.lpov .lp-subdeck .lp-door b{font-size:15px}'
-  + '.lpov .lp-boost{grid-column:1/-1;display:flex;align-items:center;gap:14px;text-align:left;'
-  + 'background:linear-gradient(135deg,#DCB45C,#B8924A);padding:16px 20px}'
-  + '.lpov .lp-boost .lp-ic{margin:0;flex:none}'
-  + '.lpov .lp-boost .lp-bt{display:block}'
-  + '.lpov .lp-boost b{color:#08101F}'
-  + '.lpov .lp-boost .lp-bt span{color:rgba(8,16,31,.78)}'
-  + '.lpov .lp-sched{grid-column:1/-1;display:flex;align-items:center;gap:14px;text-align:left;padding:18px 20px}'
-  + '.lpov .lp-sched .lp-ic{margin:0;flex:none}'
-  + '.lpov .lp-sched .lp-bt{display:block}'
-  + '.lpov .lp-sched .lp-go{margin-left:auto;font-size:22px;font-weight:800;color:#6B1616}'
-  + '.lpov .lp-news{grid-column:1/-1;display:flex;align-items:center;gap:14px;text-align:left;'
-  + 'background:linear-gradient(135deg,#C2734D,#8a4526);padding:16px 20px;position:relative;width:100%}'
-  + '.lpov .lp-news b{color:#fff}'
-  + '.lpov .lp-news .lp-bt{display:block}'
-  + '.lpov .lp-news .lp-bt span{color:rgba(255,255,255,.88)}'
-  + '.lpov .lp-news .lp-ic{margin:0;flex:none;background:rgba(8,16,31,.35)}'
-  + '.lpov .lp-abadge{position:absolute;top:-9px;right:-9px;background:#DCB45C;color:#08101F;font-weight:800;'
-  + 'border-radius:999px;min-width:26px;height:26px;display:flex;align-items:center;justify-content:center;'
-  + 'font-size:13px;padding:0 8px;box-shadow:0 4px 10px rgba(0,0,0,.4);border:2px solid #08101F}'
-  + '.lpov .lp-ann a.ai{display:block;text-decoration:none;color:inherit}'
-  + '.lpov .lp-ann a.ai:hover .at,.lpov .lp-ann a.ai:focus-visible .at{color:#8a4526}'
-  + '.lpov .lp-ann{background:#fff;color:#08101F;border-radius:16px;padding:18px 18px 14px;text-align:left;'
-  + 'box-shadow:0 14px 34px -12px rgba(0,0,0,.6);margin:26px auto 0;max-width:640px}'
-  + '.lpov .lp-ann h2{font-size:16px;font-weight:800;margin:0;color:#08101F}'
-  + '.lpov .lp-ann .asub{font-family:"DM Sans",system-ui,sans-serif;font-size:10.5px;font-weight:700;'
-  + 'letter-spacing:.14em;text-transform:uppercase;color:#8a4526;margin:2px 0 4px}'
-  + '.lpov .lp-ann .ai{border-top:1px solid rgba(30,61,76,.14);padding:11px 0 10px}'
-  + '.lpov .lp-ann .ai:first-of-type{border-top:0}'
-  + '.lpov .lp-ann .ad{font-family:"DM Sans",system-ui,sans-serif;font-size:10.5px;font-weight:700;'
-  + 'letter-spacing:.1em;text-transform:uppercase;color:#2A3949}'
-  + '.lpov .lp-ann .anew{display:inline-block;background:#B8924A;color:#fff;border-radius:999px;'
-  + 'font-size:9.5px;font-weight:700;padding:2px 8px;margin-left:6px;vertical-align:1px}'
-  + '.lpov .lp-ann .at{font-weight:800;font-size:14.5px;margin:3px 0 3px;color:#08101F}'
-  + '.lpov .lp-ann .ab{font-size:13px;color:#2A3949;margin:0}'
-  + '.lpov .lp-ann .al{display:inline-block;font-weight:700;font-size:12.5px;color:#8a4526;'
-  + 'text-decoration:none;margin-top:5px}'
-  + '.lpov .lp-ann .al:hover{text-decoration:underline}'
-  + '.lpov .lp-ann .anote{font-family:"DM Sans",system-ui,sans-serif;font-size:10.5px;color:#2A3949;'
-  + 'margin:10px 0 0;border-top:1px solid rgba(30,61,76,.14);padding-top:9px}'
-  + '@media(min-width:1060px){.lpov .lp-wrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;'
-  + 'column-gap:30px;max-width:1200px;align-items:start}'
-  + '.lpov .lp-wrap>*{grid-column:1}'
-  + '.lpov .lp-wrap>.lp-ann{grid-column:2;grid-row:1/span 30;margin:40px 0 0;max-width:none}}'
-  + '.lpov a:focus-visible,.lpov button:focus-visible{outline:3px solid #CFA95F;outline-offset:3px;border-radius:8px}'
+  + 'font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:#F4EFE8;line-height:1.45}'
+  + '.lpov,.lpov *{box-sizing:border-box}'
+  + '.lpov.lp-standalone{position:static;min-height:100vh}'
+  + '.lpov .lp-wrap{max-width:860px;margin:0 auto;padding:40px 18px 56px}'
+  + '.lpov .lp-eyebrow{font-family:"DM Sans",system-ui,sans-serif;font-size:clamp(15px,2.2vw,18px);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#E3C27D;margin:0}'
+  + '.lpov h2.lp-h{font-size:clamp(28px,5vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:10px 0 4px;color:#fff}'
+  + '.lpov h2.lp-h:focus{outline:none}'
+  + '.lpov .lp-sub{font-size:17px;color:#C8D2DA;margin:0 0 24px}'
+  /* cards */
+  + '.lpov .lp-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}'
+  + '@media (max-width:820px){.lpov .lp-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}'
+  + '@media (max-width:560px){.lpov .lp-grid{grid-template-columns:minmax(0,1fr);gap:10px}}'
+  + '.lpov .lp-card{display:grid;grid-template-columns:48px minmax(0,1fr);gap:14px;align-items:center;width:100%;height:100%;text-align:left;'
+  + 'background:#fff;color:#0B1530;border:0;border-radius:16px;padding:18px;text-decoration:none;cursor:pointer;font:inherit;'
+  + 'box-shadow:0 14px 34px -14px rgba(0,0,0,.65);transition:transform 200ms ease,box-shadow 200ms ease}'
+  + '.lpov .lp-card:hover{transform:translateY(-2px);box-shadow:0 22px 44px -16px rgba(0,0,0,.75)}'
+  + '.lpov .lp-wide{grid-column:1/-1}'
+  + '.lpov .lp-wide .lp-card{grid-template-columns:48px minmax(0,1fr) auto;padding:20px}'
+  /* the study door stands out: gold outline and a larger title, so the way to the study steps is obvious */
+  + '.lpov .lp-card.lp-study{box-shadow:0 0 0 3px #E3C27D,0 14px 34px -14px rgba(0,0,0,.65)}'
+  + '.lpov .lp-card.lp-study .lp-t{font-size:21px}'
+  + '.lpov .lp-go{font-size:22px;color:#7A2E24;font-weight:700}'
+  + '.lpov .lp-ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;color:#fff}'
+  + '.lpov .lp-ic svg{width:24px;height:24px}'
+  + '.lpov .ic-navy{background:#0B1530}.lpov .ic-terra{background:#7A2E24}.lpov .ic-gold{background:#B8924A;color:#0B1530}'
+  + '.lpov .lp-t{display:block;font-size:18px;font-weight:800;line-height:1.25}'
+  + '.lpov .lp-s{display:block;margin-top:3px;font-size:14px;color:#454B5C}'
+  /* small rows */
+  + '.lpov .lp-rows{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}'
+  + '@media (max-width:720px){.lpov .lp-rows{grid-template-columns:minmax(0,1fr);gap:10px}}'
+  + '.lpov .lp-row{display:flex;align-items:center;gap:12px;width:100%;background:rgba(255,255,255,.07);color:#fff;border:1px solid rgba(255,255,255,.22);'
+  + 'border-radius:14px;padding:12px 14px;cursor:pointer;font:inherit;text-align:left;text-decoration:none;min-height:56px;transition:background 150ms ease,border-color 150ms ease}'
+  + '.lpov .lp-row:hover{background:rgba(255,255,255,.13);border-color:#E3C27D}'
+  + '.lpov .lp-row .lp-ic{width:34px;height:34px;border-radius:10px}.lpov .lp-row .lp-ic svg{width:18px;height:18px}'
+  + '.lpov .lp-row b{display:block;font-size:15.5px;font-weight:800}'
+  + '.lpov .lp-row small{display:block;font-size:12.5px;color:#C8D2DA}'
+  + '.lpov .lp-row .lp-chev{margin-left:auto;color:#E3C27D;font-size:18px}'
+  /* announcement line */
+  + '.lpov .lp-annline{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;width:100%;margin-top:18px;background:none;color:#fff;font:inherit;text-align:left;'
+  + 'border:0;border-top:1px solid rgba(255,255,255,.18);border-bottom:1px solid rgba(255,255,255,.18);padding:14px 4px;cursor:pointer;min-height:56px}'
+  + '.lpov .lp-annline:hover .lp-at{text-decoration:underline;text-underline-offset:4px}'
+  + '.lpov .lp-annline svg{width:22px;height:22px;color:#E3C27D;flex:none}'
+  + '.lpov .lp-ad{font-family:"DM Sans",system-ui,sans-serif;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#C8D2DA}'
+  + '.lpov .lp-at{flex:1 1 180px;font-weight:700}'
+  + '@media (max-width:560px){.lpov .lp-hsm{display:none}.lpov .lp-at{flex-basis:0}}'
+  + '.lpov .lp-new{font-size:11.5px;font-weight:800;color:#0B1530;background:#E3C27D;border-radius:999px;padding:3px 9px}'
+  /* footer links */
+  + '.lpov .lp-foot{display:flex;flex-wrap:wrap;gap:10px 22px;justify-content:center;align-items:center;margin-top:20px;font-size:14.5px;color:#C8D2DA}'
+  + '.lpov .lp-foot a,.lpov .lp-foot button{color:#fff;font:inherit;font-weight:700;background:none;border:0;padding:6px 0;cursor:pointer;'
+  + 'text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;min-height:40px}'
+  + '.lpov .lp-foot a:hover,.lpov .lp-foot button:hover{color:#E3C27D}'
+  /* opened panel */
+  + '.lpov .lp-panel{background:#fff;color:#0B1530;border-radius:16px;padding:22px;box-shadow:0 14px 34px -14px rgba(0,0,0,.65)}'
+  + '.lpov .lp-back{font:inherit;font-size:14px;font-weight:700;color:#0B1530;background:#ECEEF3;border:0;border-radius:999px;padding:8px 16px;min-height:44px;cursor:pointer}'
+  + '.lpov .lp-back:hover{background:#E1E4EB}'
+  + '.lpov .lp-phead{display:flex;align-items:center;gap:12px;margin:16px 0 8px}'
+  + '.lpov .lp-phead h3{margin:0;font-size:22px;font-weight:800}'
+  + '.lpov .lp-grp{margin:16px 0 4px;font-family:"DM Sans",system-ui,sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7A2E24}'
+  + '.lpov .lp-res{list-style:none;margin:0;padding:0}'
+  + '.lpov .lp-res li{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px;padding:11px 0;border-bottom:1px solid #E3E4E8}'
+  + '.lpov .lp-res li:last-child{border-bottom:0}'
+  + '.lpov .lp-res .lp-n{font-weight:800;color:#0B1530;text-decoration:none}'
+  + '.lpov .lp-res a.lp-n:hover{text-decoration:underline;text-underline-offset:4px}'
+  + '.lpov .lp-res .lp-w{font-size:14px;color:#454B5C}'
+  + '.lpov .lp-mods{display:flex;flex-wrap:wrap;gap:6px;width:100%;margin-top:6px}'
+  + '.lpov .lp-mods a{display:inline-flex;align-items:center;min-height:34px;padding:0 12px;border-radius:999px;font-size:13px;font-weight:700;'
+  + 'color:#0B1530;background:#ECEEF3;text-decoration:none}'
+  + '.lpov .lp-mods a.now{background:#0B1530;color:#fff}'
+  + '.lpov .lp-dqrw{width:100%}'
+  + '.lpov .lp-dqr{display:inline-block;background:#fff;border:1px solid #E3E4E8;border-radius:10px;padding:6px;line-height:0;margin-top:6px}'
+  + '.lpov .lp-dqr svg{width:92px;height:92px;display:block}'
+  + '.lpov .lp-ai{padding:14px 0;border-bottom:1px solid #E3E4E8;display:grid;gap:4px}'
+  + '.lpov .lp-ai .lp-ad{color:#454B5C}'
+  + '.lpov .lp-ai b{font-size:16px}'
+  + '.lpov .lp-ai p{margin:0;font-size:14.5px;color:#454B5C}'
+  + '.lpov .lp-ai a{font-weight:700;color:#7A2E24;font-size:14px}'
+  + '.lpov .lp-note{margin:12px 0 0;font-size:13px;color:#454B5C}'
+  + '.lpov .lp-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}'
+  + '.lpov a:focus-visible,.lpov button:focus-visible,.lpov h3:focus-visible{outline:3px solid #E3C27D;outline-offset:3px;border-radius:8px}'
+  + '.lpov .lp-panel a:focus-visible,.lpov .lp-panel button:focus-visible{outline-color:#0B1530}'
+  + '@media (prefers-reduced-motion:reduce){.lpov *{transition:none!important}.lpov .lp-card:hover{transform:none}}'
   + '@media print{.lpov{display:none}}';
 
-  function ic(cls, path) {
-    return '<span class="lp-ic ' + cls + '" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + path + '</svg></span>';
+  function icon(path, cls) {
+    return '<span class="lp-ic ' + (cls || '') + '" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + path + '</svg></span>';
   }
   var I = {
-    cal: '<rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M7.5 13.5h3M13.5 13.5h3M7.5 17h3"/>',
-    heart: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21.2l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/>',
-    target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
-    mega: '<path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
-    people: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
-    book: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
+    flag: '<path d="M5 3v18"/><path d="M5 4h11l-2 4 2 4H5"/>',
+    help: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.4V14"/><path d="M12 17.2v.3"/>',
+    exam: '<rect x="5.5" y="5" width="13" height="16" rx="2"/><path d="M9 5V3.5h6V5"/><path d="M9.5 13.5l2 2 3.5-4"/>',
+    cal: '<rect x="3" y="4.5" width="18" height="16" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
+    chat: '<path d="M21 12a8 8 0 0 1-11.8 7L4 20l1.1-4.6A8 8 0 1 1 21 12z"/>',
+    book: '<path d="M3 5.5c2.8-1 5.8-1 9 1v13c-3.2-2-6.2-2-9-1z"/><path d="M21 5.5c-2.8-1-5.8-1-9 1v13c3.2-2 6.2-2 9-1z"/>',
     flask: '<path d="M10 2v7.5L4.5 19a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L14 9.5V2"/><path d="M8 2h8"/>',
-    bulb: '<path d="M12 2a7 7 0 0 1 7 7c0 2.4-1.2 4.2-2.6 5.6-.8.8-1.4 1.9-1.4 3v.4H9v-.4c0-1.1-.6-2.2-1.4-3C6.2 13.2 5 11.4 5 9a7 7 0 0 1 7-7z"/><path d="M9 21h6"/>',
-    cal: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
-    grid: '<path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/>',
-    video: '<rect x="2" y="6" width="13" height="12" rx="2"/><path d="M15 10.5l6-3.5v10l-6-3.5z"/><path d="M7 9.5l3.5 2.5L7 14.5z"/>',
-    play: '<polygon points="10 8 16 12 10 16 10 8"/><rect x="3" y="4" width="18" height="16" rx="2"/>',
-    pen: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
-    check: '<path d="M9 11l3 3 8-8"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
-    loop: '<path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>',
-    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
-    globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/>',
-    scope: '<path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/>',
-    brain: '<path d="M12 2a4 4 0 0 1 4 4c2 0 4 2 4 4s-1 3-2 4c1 1 1 3 0 4a4 4 0 0 1-4 4 4 4 0 0 1-4-2 4 4 0 0 1-4 2 4 4 0 0 1-4-4c-1-1-1-3 0-4-1-1-2-2-2-4s2-4 4-4a4 4 0 0 1 4-4z"/>',
-    cards: '<rect x="3" y="6" width="14" height="12" rx="2"/><path d="M7 6V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"/>',
-    flow: '<path d="M12 3v4M12 11v4M12 19v2"/><rect x="8" y="7" width="8" height="4" rx="1"/><rect x="8" y="15" width="8" height="4" rx="1"/>'
+    steps: '<path d="M4 20h4v-4h4v-4h4V8h4"/>',
+    mega: '<path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
+    doc: '<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/><path d="M10 13h6M10 17h6"/>'
   };
-  function door(cls, icon, title, sub, attrs) {
-    var tag = /href=/.test(attrs) ? 'a' : 'button';
-    return '<' + tag + ' class="lp-door" ' + attrs + '>' + ic(cls, icon)
-      + '<b>' + title + '</b><span>' + sub + '</span></' + tag + '>';
-  }
+  var SYLLABUS = { 'mw': ['syllabus-class1.html', 'Mon / Wed afternoon'], 'tr-am': ['syllabus-class2.html', 'Tue / Thu morning'], 'tr-eve': ['syllabus-class3.html', 'Tue / Thu evening'] };
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 
+  /* ---------- the student's section, week and module ---------- */
   var sec = null;
   try {
     var m = window.location.search.match(/[?&]sec=(mw|tr-am|tr-eve)/);
     sec = m ? m[1] : (localStorage.getItem('bio004-section') || null);
   } catch (e) {}
+  if (sec !== 'mw' && sec !== 'tr-am' && sec !== 'tr-eve') sec = null;
   function u(page) {
-    var bits = page.split('#');
-    var base = bits[0];
+    var bits = page.split('#'), base = bits[0];
     if (sec) base += (base.indexOf('?') > -1 ? '&' : '?') + 'sec=' + sec;
     return base + (bits[1] ? '#' + bits[1] : '');
   }
   function go(page) { return 'href="' + u(page) + '" target="_top"'; }
-
-  /* The calendar row used to be a single button that only closed the
-     curtain, which is right on the calendar page and wrong on every other
-     page that loads this file: on the Canvas front door, "Go to the
-     calendar" dropped the student on the front door instead. So the button
-     is a real link anywhere the calendar is not already behind the curtain,
-     and those pages also get a way out that says what it does, since the
-     calendar button used to be the only one. */
-  var here = (window.location.pathname.split('/').pop() || '').toLowerCase();
-  var ON_CALENDAR = here === 'bio004-course-calendar.html' || here === '';
-  /* Oct 13: the main button goes to the student's class schedule (the
-     Class day plan, opened on their own section through u()). The way to
-     stay on the page behind the curtain is always offered beside it. */
-  /* The class schedule is the big card at the top of the doors. This row
-     offers the full term calendar and a way to stay on this page. */
-  function calRow() {
-    if (ON_CALENDAR) return '<button class="lp-ghost" data-lpclose="1">See the full course calendar &#8594;</button>';
-    return '<a class="lp-ghost" ' + go('bio004-course-calendar.html?nolaunch=1') + '>See the full course calendar &#8594;</a>'
-         + '<button class="lp-ghost lp-stay" data-lpclose="1">Close this and stay here</button>';
-  }
-
   function ext(url) { return 'href="' + url + '" target="_blank" rel="noopener"'; }
+  var NOWD = new Date();
+  var WEEK = Math.floor((NOWD - new Date(2026, 7, 17)) / 604800000) + 1;
+  var IN_TERM = WEEK >= 1 && WEEK <= 17;
+  var EXAMS = { mw: ['2026-09-09', '2026-09-30', '2026-10-21', '2026-11-16', '2026-12-09'],
+                tr: ['2026-09-08', '2026-09-29', '2026-10-22', '2026-11-17', '2026-12-10'] };
+  var p2 = function (n) { return (n < 10 ? '0' : '') + n; };
+  var TODAY = NOWD.getFullYear() + '-' + p2(NOWD.getMonth() + 1) + '-' + p2(NOWD.getDate());
+  var MOD = 5, EL = EXAMS[sec === 'mw' ? 'mw' : 'tr'];
+  for (var i = 0; i < EL.length; i++) { if (TODAY <= EL[i]) { MOD = i + 1; break; } }
 
-  var ov = document.createElement('div');
-  ov.className = 'lpov';
-  ov.setAttribute('role', 'dialog');
-  ov.setAttribute('aria-modal', 'true');
-  ov.setAttribute('aria-label', 'Where are you headed?');
-  ov.innerHTML = '<div class="lp-wrap">'
-    + '<p class="lp-eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>'
-    + '<h2>Where are you headed?</h2>'
-    + '<p class="lp-sub">Four doors. Everything in the course is behind one of them.</p>'
-
-    + '<div class="lp-panel on" data-lp="home"><div class="lp-deck">'
-    + '<a class="lp-door lp-sched" ' + go('bio004-course-calendar-alt.html') + '>' + ic('ic-navy', I.cal)
-    + '<span class="lp-bt"><b>Your class schedule</b><span>What to do before class and in class, lecture and lab</span></span>'
-    + '<span class="lp-go" aria-hidden="true">&#8594;</span></a>'
-    + door('ic-terra', I.book, 'Lecture', 'Notes, videos, pre-work, course materials', 'data-lpopen="lecture"')
-    + door('ic-navy', I.flask, 'Lab', 'Loops, lab sprints, the Digital Atlas', 'data-lpopen="lab"')
-    + door('ic-gold', I.bulb, 'Study', 'Tell us what you need help with, we point you to the right tool', go('bio004-study-help.html'))
-    + '<a class="lp-door lp-boost" ' + go('bio004-blog.html') + '>' + ic('ic-navy', I.heart)
-    + '<span class="lp-bt"><b>Need motivation?</b><span>Short reads for hard weeks, from Dr. Rennie</span></span></a>'
-    + '<button class="lp-door lp-news" data-lpopen="news" id="lpNewsDoor">' + ic('', I.mega)
-    + '<span class="lp-bt"><b>Weekly announcements</b><span>What you missed, in one place</span></span>'
-    + '<span class="lp-abadge" id="lpAnnBadge" hidden aria-hidden="true"></span></button>'
-    + '</div>'
-    + '<div class="lp-calrow">' + calRow() + '</div>'
-    + '<div class="lp-disc" id="lpDisc"></div>'
-    + '</div>'
-
-    + '<div class="lp-panel" data-lp="lecture">'
-    + '<div class="lp-backrow"><button class="lp-ghost" data-lpback="1">&#8592; Back to the four doors</button></div>'
-    + '<div class="lp-subdeck">'
-    + door('ic-terra', I.grid, 'Course materials', 'Everything, organized by module', go('course-materials.html'))
-    + door('ic-gold', I.play, 'Videos', 'Just the videos, by module', go('bio004-quick-access.html?cat=videos'))
-    + door('ic-navy', I.pen, 'Notes', 'Just the notes, by module', go('bio004-quick-access.html?cat=notes'))
-    + door('ic-blue', I.check, 'Pre-work', 'Just what is due before class', go('bio004-quick-access.html?cat=prework'))
-    + '</div></div>'
-
-    + '<div class="lp-panel" data-lp="lab">'
-    + '<div class="lp-backrow"><button class="lp-ghost" data-lpback="1">&#8592; Back to the four doors</button></div>'
-    + '<div class="lp-subdeck">'
-    + door('ic-terra', I.loop, 'Loops', 'Fast visual practice', ext('https://drsrennie-stack.github.io/loops/'))
-    + door('ic-navy', I.clock, 'Lab sprints', 'Structure checklists by station', go('lab-sprints.html'))
-    /* Articulate refuses to be framed (X-Frame-Options), so the Atlas
-       opens in its own tab and the course tab stays behind it. */
-    + door('ic-gold', I.globe, 'Digital Atlas', 'Opens in its own tab', ext('https://drsrennie-stack.github.io/new-digital-atlas/'))
-    + door('ic-blue', I.scope, 'Histology help', 'Every slide tool, sorted', go('histology-help.html'))
-    + door('ic-gold', I.grid, 'Tissue Chart', 'The chart behind reveal boxes', go('bio004-tissue-chart-practice.html'))
-    + door('ic-navy', I.video, 'Cadaver videos', 'U of Michigan, by body system', go('bio004-bluelink-videos.html'))
-    + '</div></div>'
-
-    + '<div class="lp-panel" data-lp="news">'
-    + '<div class="lp-backrow"><button class="lp-ghost" data-lpback="1">&#8592; Back to the four doors</button></div>'
-    + '<div class="lp-ann" id="lpNewsList" style="margin-top:0"></div>'
-    + '</div>'
-
-    + '</div>';
+  var here = (window.location.pathname.split('/').pop() || '').toLowerCase();
+  var ON_CALENDAR = !STANDALONE && (here === 'bio004-course-calendar.html' || here === '');
 
   /* class Discord servers, one per section; the picked section wins */
   var DISCORD = {
@@ -256,86 +176,130 @@
     'tr-am':  { label: '80654 &middot; TR 9:30 to 1:50',  url: 'https://discord.gg/XxhERvqf3N', qr: '<svg viewBox="0 0 33 33" class="segno"><path class="qrline" stroke="#0b1530" d="M2 2.5h7m2 0h1m2 0h1m1 0h2m4 0h1m1 0h7m-29 1h1m5 0h1m9 0h5m1 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h3m2 0h1m1 0h1m1 0h4m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m6 0h1m1 0h2m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h2m3 0h1m3 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m1 0h1m1 0h3m1 0h1m2 0h3m2 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-19 1h3m1 0h1m2 0h2m-18 1h1m2 0h1m1 0h1m1 0h2m1 0h2m1 0h1m5 0h2m1 0h2m1 0h1m-24 1h1m1 0h1m1 0h1m7 0h2m1 0h1m4 0h2m1 0h3m-29 1h1m1 0h1m1 0h3m1 0h1m1 0h2m2 0h1m5 0h2m1 0h1m1 0h2m1 0h1m-29 1h1m1 0h3m3 0h1m2 0h1m1 0h2m1 0h3m2 0h1m1 0h2m2 0h2m-24 1h2m1 0h1m2 0h1m1 0h1m1 0h1m1 0h1m1 0h2m2 0h1m1 0h1m2 0h1m-29 1h1m1 0h3m4 0h3m1 0h6m3 0h1m1 0h1m1 0h1m1 0h1m-28 1h3m1 0h12m1 0h1m3 0h1m1 0h1m3 0h1m-28 1h1m2 0h1m3 0h1m1 0h1m1 0h1m1 0h1m1 0h2m2 0h1m1 0h2m1 0h1m-26 1h3m2 0h2m5 0h3m1 0h1m1 0h2m1 0h1m5 0h1m-28 1h1m3 0h1m5 0h1m1 0h1m1 0h1m2 0h2m2 0h1m1 0h2m3 0h1m-26 1h1m2 0h1m3 0h2m2 0h2m2 0h1m4 0h1m1 0h2m1 0h1m-22 1h1m1 0h1m1 0h10m2 0h3m2 0h1m-29 1h3m2 0h3m1 0h1m2 0h3m2 0h1m1 0h6m1 0h3m-21 1h2m4 0h2m3 0h2m3 0h1m1 0h1m1 0h1m-29 1h7m3 0h4m1 0h3m1 0h2m1 0h1m1 0h1m3 0h1m-29 1h1m5 0h1m6 0h1m1 0h1m1 0h1m1 0h2m3 0h2m1 0h1m-28 1h1m1 0h3m1 0h1m1 0h4m1 0h2m3 0h7m2 0h2m-29 1h1m1 0h3m1 0h1m3 0h2m1 0h1m2 0h1m1 0h1m4 0h1m1 0h1m1 0h1m-28 1h1m1 0h3m1 0h1m3 0h1m1 0h1m3 0h1m2 0h3m5 0h2m-29 1h1m5 0h1m1 0h2m3 0h1m3 0h1m1 0h5m1 0h1m1 0h2m-29 1h7m2 0h2m3 0h2m1 0h1m2 0h1m1 0h1m1 0h1m2 0h1"/></svg>' },
     'tr-eve': { label: '80655 &middot; TR 5:30 to 9:50',  url: 'https://discord.gg/7Z2k7DePJ6', qr: '<svg viewBox="0 0 33 33" class="segno"><path class="qrline" stroke="#0b1530" d="M2 2.5h7m2 0h1m1 0h1m4 0h1m1 0h2m2 0h7m-29 1h1m5 0h1m4 0h1m3 0h1m1 0h4m1 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h3m2 0h1m1 0h1m1 0h2m3 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m4 0h1m1 0h1m1 0h2m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h4m1 0h2m2 0h2m3 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m1 0h1m1 0h3m4 0h3m2 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-19 1h4m3 0h1m-17 1h1m2 0h1m1 0h1m1 0h2m1 0h1m2 0h1m2 0h2m2 0h1m1 0h2m1 0h1m-25 1h2m1 0h1m1 0h2m6 0h2m2 0h1m2 0h3m1 0h3m-29 1h1m3 0h3m1 0h1m1 0h1m1 0h1m1 0h2m4 0h2m1 0h4m1 0h1m-29 1h1m1 0h1m1 0h1m3 0h1m2 0h1m1 0h2m1 0h3m1 0h2m1 0h1m3 0h2m-27 1h1m2 0h4m4 0h1m3 0h1m1 0h2m2 0h1m1 0h1m2 0h1m-27 1h3m4 0h3m1 0h4m1 0h1m3 0h1m1 0h1m1 0h1m1 0h1m-28 1h3m2 0h3m2 0h6m1 0h1m2 0h1m2 0h1m3 0h1m-25 1h2m2 0h2m2 0h3m1 0h2m2 0h1m2 0h1m1 0h1m-26 1h1m1 0h1m3 0h1m3 0h1m1 0h1m3 0h1m1 0h3m2 0h1m3 0h1m-28 1h2m2 0h2m1 0h2m3 0h1m1 0h1m2 0h2m2 0h2m1 0h1m3 0h1m-27 1h2m2 0h1m3 0h1m3 0h2m2 0h1m4 0h4m1 0h1m-27 1h1m4 0h3m3 0h6m1 0h1m2 0h2m3 0h1m-29 1h3m2 0h3m1 0h1m1 0h4m2 0h1m1 0h6m2 0h2m-21 1h2m3 0h3m3 0h2m3 0h1m1 0h1m1 0h1m-29 1h7m2 0h4m1 0h4m1 0h2m1 0h1m1 0h1m3 0h1m-29 1h1m5 0h1m3 0h1m2 0h3m1 0h1m1 0h2m3 0h2m1 0h1m-28 1h1m1 0h3m1 0h1m1 0h2m1 0h1m1 0h2m3 0h7m2 0h2m-29 1h1m1 0h3m1 0h1m3 0h1m2 0h2m1 0h1m1 0h1m4 0h1m2 0h2m-28 1h1m1 0h3m1 0h1m3 0h1m5 0h1m2 0h3m3 0h4m-29 1h1m5 0h1m1 0h2m1 0h1m1 0h1m3 0h1m4 0h2m1 0h1m1 0h2m-29 1h7m2 0h2m3 0h2m1 0h1m2 0h3m1 0h1m1 0h2"/></svg>' }
   };
-  (function () {
-    var el = ov.querySelector('#lpDisc');
-    if (!el) return;
-    function dcard(d, text) {
-      return '<span class="lp-dcard"><a href="' + d.url + '" target="_blank" rel="noopener">' + text + '</a>'
-        + '<span class="lp-dqr" aria-hidden="true">' + d.qr + '</span></span>';
-    }
-    if (sec && DISCORD[sec]) {
-      el.innerHTML = '<span class="lp-dlbl">Your class Discord, click or scan:</span><span class="lp-drow">'
-        + dcard(DISCORD[sec], 'Join ' + DISCORD[sec].label + ' &#8594;') + '</span>';
-    } else {
-      el.innerHTML = '<span class="lp-dlbl">Class Discord, click yours or scan it:</span><span class="lp-drow">'
-        + dcard(DISCORD['mw'], DISCORD['mw'].label)
-        + dcard(DISCORD['tr-am'], DISCORD['tr-am'].label)
-        + dcard(DISCORD['tr-eve'], DISCORD['tr-eve'].label) + '</span>';
-    }
-  })();
 
-  /* announcements column: bio004-announcements.js is loaded on demand so
-     every page that carries the overlay shows the same list */
-  (function () {
-    var tag = document.createElement('script');
-    tag.src = 'bio004-announcements.js';
-    tag.onload = function () {
-      var A = window.BIO004_ANNOUNCEMENTS;
-      if (!A || !A.length) return;
-      var wrap = ov.querySelector('.lp-wrap');
-      if (!wrap) return;
-      var aesc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); };
-      var MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      var now = new Date(); now.setHours(0, 0, 0, 0);
-      var sorted = A.slice().sort(function (a, b) { return a.date === b.date ? 0 : (a.date < b.date ? 1 : -1); });
-      var itemHTML = function (a) {
-        var d = new Date(a.date + 'T00:00:00');
-        var isNew = (now - d) <= 7 * 864e5;
-        var ext = /^https?:/i.test(a.link || '');
-        var inner = '<span class="ad">' + MO[d.getMonth()] + ' ' + d.getDate() + '</span>'
-          + (isNew ? '<span class="anew">NEW</span>' : '')
-          + '<div class="at">' + aesc(a.title) + '</div>'
-          + '<p class="ab">' + aesc(a.body) + '</p>'
-          + (a.link ? '<span class="al">' + aesc(a.linkLabel || 'Read it') + ' &#8594;</span>' : '');
-        return a.link
-          ? '<a class="ai" href="' + aesc(a.link) + '"' + (ext ? ' target="_blank" rel="noopener"' : ' target="_top"') + '>' + inner + '</a>'
-          : '<div class="ai">' + inner + '</div>';
-      };
-      var head = '<div class="asub">From Dr. Rennie</div><h2>Announcements</h2>';
-      var note = '<p class="anote">Announcements also go out by email through Canvas.</p>';
-      var el = document.createElement('aside');
-      el.className = 'lp-ann';
-      el.setAttribute('aria-label', 'Announcements');
-      el.innerHTML = head + sorted.slice(0, 5).map(itemHTML).join('') + note;
-      wrap.appendChild(el);
-      var newsList = ov.querySelector('#lpNewsList');
-      if (newsList) newsList.innerHTML = head + sorted.slice(0, 15).map(itemHTML).join('') + note;
+  /* ---------- the panels behind the cards ---------- */
+  function row(r) {
+    var name = r.href
+      ? '<a class="lp-n" ' + r.href + '>' + esc(r.name) + ' <span aria-hidden="true">' + (/_blank/.test(r.href) ? '&#8599;' : '&#8594;') + '</span>'
+        + (/_blank/.test(r.href) ? '<span class="lp-sr"> (opens in a new tab)</span>' : '') + '</a>'
+      : '<span class="lp-n">' + esc(r.name) + '</span>';
+    return '<li>' + name + (r.what ? '<span class="lp-w">' + r.what + '</span>' : '') + (r.extra || '') + '</li>';
+  }
+  function list(rows) { return '<ul class="lp-res">' + rows.map(row).join('') + '</ul>'; }
+  function mods() {
+    var h = '<span class="lp-mods" role="group" aria-label="Lab structure list by module">';
+    for (var n = 1; n <= 5; n++) h += '<a ' + go('module-' + n + '-structure-list.html') + (n === MOD ? ' class="now" aria-current="true"' : '') + '>Module ' + n + '</a>';
+    return h + '</span>';
+  }
+  function discordRows() {
+    var keys = sec ? [sec] : ['mw', 'tr-am', 'tr-eve'];
+    return keys.map(function (k) {
+      var d = DISCORD[k];
+      return { name: 'Class Discord', href: ext(d.url), what: d.label + (sec ? ', click or scan' : ''),
+               extra: sec ? '<span class="lp-dqrw"><span class="lp-dqr" aria-hidden="true">' + d.qr + '</span></span>' : '' };
+    });
+  }
+  var PANELS = {
+    help: { title: 'Need help?', icon: icon(I.chat, 'ic-gold'), body: function () {
+      return '<p class="lp-grp">Talk to Dr. Rennie</p>' + list([
+          { name: 'Office hours', what: 'Mondays 10:30 am to 12:30 pm in the conference room, and 30 minutes before every class' },
+          { name: 'Open lab', what: 'Fridays 2:00 to 3:00 pm' },
+          { name: 'Email', href: 'href="mailto:srennie@solano.edu"', what: 'srennie@solano.edu' }
+        ])
+        + '<p class="lp-grp">Study with others</p>' + list(discordRows().concat([
+          { name: 'Study With Me', href: go('study-session-signup.html'), what: 'Join or host a study session' }
+        ]))
+        + '<p class="lp-grp">Tutoring</p>' + list([
+          { name: 'ASTC tutoring', href: ext('https://welcome.solano.edu/astc-homepage'), what: 'Free, in person or on Zoom' },
+          { name: 'Tutor Josh Roy', what: '' }
+        ]);
+    } },
+    syllabus: { title: 'Syllabus and course information', icon: icon(I.doc, 'ic-navy'), body: function () {
+      var syl = sec ? [{ name: 'Your syllabus', href: go(SYLLABUS[sec][0]), what: SYLLABUS[sec][1] }]
+        : ['mw', 'tr-am', 'tr-eve'].map(function (k) { return { name: 'Syllabus', href: go(SYLLABUS[k][0]), what: SYLLABUS[k][1] }; });
+      return '<p class="lp-grp">The course</p>' + list(syl.concat([
+          { name: 'Device policy', href: go('digital-device-policy-agreement.html'), what: 'Sign it, then save the PDF for Canvas' }
+        ]))
+        + '<p class="lp-grp">The schedule</p>' + list([
+          { name: 'Semester schedule', href: go('bio004-master-schedule-fall2026.html'), what: 'Every week of the semester on one page' },
+          { name: 'Course calendar', href: ON_CALENDAR ? 'href="#" data-lpclose="1"' : go('bio004-course-calendar.html?nolaunch=1'), what: 'Every class day and what to prepare for it' },
+          { name: 'Class day plan', href: go('bio004-course-calendar-alt.html'), what: 'Lecture and lab, before class and in class' }
+        ]);
+    } },
+    news: { title: 'Announcements', icon: icon(I.mega, 'ic-terra'), body: function () {
+      var A = sortedAnn();
+      if (!A.length) return '<p class="lp-note">No announcements yet.</p>';
+      return A.slice(0, 15).map(function (a) {
+        var x = /^https?:/i.test(a.link || '');
+        return '<div class="lp-ai"><span class="lp-ad">' + dlabel(a.date) + '</span><b>' + esc(a.title) + '</b><p>' + esc(a.body) + '</p>'
+          + (a.link ? '<a href="' + esc(a.link) + '"' + (x ? ' target="_blank" rel="noopener"' : ' target="_top"') + '>' + esc(a.linkLabel || 'Read it') + ' &#8594;</a>' : '') + '</div>';
+      }).join('') + '<p class="lp-note">Announcements also go out by email through Canvas.</p>';
+    } }
+  };
 
-      /* unread badge on the Weekly announcements door */
-      var badge = ov.querySelector('#lpAnnBadge');
-      var newsDoor = ov.querySelector('#lpNewsDoor');
-      var readDate = '';
-      try { readDate = localStorage.getItem('bio004-ann-read') || ''; } catch (e) {}
-      var unread = A.filter(function (a) { return a.date > readDate; }).length;
-      if (badge && unread > 0) {
-        badge.hidden = false;
-        badge.textContent = unread > 9 ? '9+' : unread;
-        if (newsDoor) newsDoor.setAttribute('aria-label', 'Weekly announcements, ' + unread + ' unread');
-      }
-      var markRead = function () {
-        var mx = A.reduce(function (m, a) { return a.date > m ? a.date : m; }, '');
-        try { localStorage.setItem('bio004-ann-read', mx); } catch (e) {}
-        if (badge) badge.hidden = true;
-        if (newsDoor) newsDoor.setAttribute('aria-label', 'Weekly announcements');
-      };
-      ov.addEventListener('click', function (e) {
-        if (e.target.closest('[data-lpopen="news"]')) markRead();
-      });
-      /* on a wide screen the column is in plain sight, so it counts as read */
-      if (window.matchMedia && matchMedia('(min-width:1060px)').matches) markRead();
-    };
-    document.head.appendChild(tag);
-  })();
+  /* ---------- announcements data, loaded on demand ---------- */
+  var MO = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  function dlabel(iso) { var d = new Date(iso + 'T00:00:00'); return MO[d.getMonth()] + ' ' + d.getDate(); }
+  function sortedAnn() {
+    return (window.BIO004_ANNOUNCEMENTS || []).slice().sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
+  }
+  function unreadCount() {
+    var r = ''; try { r = localStorage.getItem('bio004-ann-read') || ''; } catch (e) {}
+    return sortedAnn().filter(function (a) { return a.date > r; }).length;
+  }
+  function markRead() {
+    var A = sortedAnn(); if (!A.length) return;
+    try { localStorage.setItem('bio004-ann-read', A[0].date); } catch (e) {}
+  }
+
+  /* ---------- the first screen ---------- */
+  function card(href, ic, title, sub, wide, extra) {
+    var tag = /^data-/.test(href) ? 'button type="button"' : 'a';
+    var close = tag === 'a' ? 'a' : 'button';
+    return '<li' + (wide ? ' class="lp-wide"' : '') + '><' + tag + ' class="lp-card' + (extra ? ' ' + extra : '') + '" ' + href + '>' + ic
+      + '<span><span class="lp-t">' + title + '</span><span class="lp-s">' + sub + '</span></span>'
+      + (wide ? '<span class="lp-go" aria-hidden="true">&#8594;</span>' : '') + '</' + close + '></li>';
+  }
+  function home() {
+    /* five questions, in the order students ask them */
+    var A = sortedAnn(), latest = A[0], unread = unreadCount();
+    var weekHref = IN_TERM ? go('week-' + WEEK + '-hub.html') : go('bio004-course-calendar-alt.html');
+    return '<ul class="lp-grid" aria-label="Where are you headed">'
+      + card(weekHref, icon(I.flag, 'ic-gold'), 'What do I do this week?', IN_TERM ? 'Week ' + WEEK + ' &middot; Module ' + MOD : 'Your class schedule', true)
+      + card(go('bio004-study-process.html'), icon(I.steps, 'ic-terra'), 'How do I study for this class?', 'Every study tool, step by step, for lecture and lab', true, 'lp-study')
+      + card(go('bio004-study-process.html#prepare'), icon(I.exam, 'ic-navy'), 'What is on the exam?', 'Competencies &middot; Structure lists')
+      + card('data-lpopen="syllabus"', icon(I.doc, 'ic-gold'), 'Do you want to review the syllabus and course information?', 'Syllabus &middot; Semester schedule')
+      + card('data-lpopen="help"', icon(I.chat, 'ic-terra'), 'Who can I ask for help?', 'Office hours &middot; Discord &middot; Tutoring')
+      + '</ul>'
+      + (latest ? '<button type="button" class="lp-annline" data-lpopen="news" aria-label="Announcements' + (unread ? ', ' + unread + ' new' : '') + '. Latest: ' + esc(latest.title) + '">'
+          + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + I.mega + '</svg>'
+          + '<span class="lp-ad lp-hsm">' + dlabel(latest.date) + '</span><span class="lp-at">' + esc(latest.title) + '</span>'
+          + (unread ? '<span class="lp-new">' + (unread > 9 ? '9+' : unread) + ' new</span>' : '') + '<span aria-hidden="true">&#8250;</span></button>' : '')
+      + '<div class="lp-foot">'
+      +   '<span>Hard week? <a ' + go('bio004-blog.html') + '>Short reads from Dr. Rennie</a></span>'
+      +   (STANDALONE ? '' : ON_CALENDAR
+            ? '<button type="button" data-lpclose="1">See the full course calendar &#8594;</button>'
+            : '<a ' + go('bio004-course-calendar.html?nolaunch=1') + '>See the full course calendar &#8594;</a><button type="button" data-lpclose="1">Close this and stay here</button>')
+      + '</div>';
+  }
+  function panel(key) {
+    var c = PANELS[key];
+    return '<div class="lp-panel" role="region" aria-labelledby="lp-ph">'
+      + '<button type="button" class="lp-back" data-lpback="1">&#8592; Back</button>'
+      + '<div class="lp-phead">' + c.icon + '<h3 id="lp-ph" tabindex="-1">' + c.title + '</h3></div>'
+      + c.body() + '</div>';
+  }
+
+  var ov = document.createElement('div');
+  ov.className = 'lpov' + (STANDALONE ? ' lp-standalone' : '');
+  if (!STANDALONE) { ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); }
+  ov.setAttribute('aria-labelledby', 'lp-title');
+  ov.innerHTML = '<div class="lp-wrap">'
+    + '<p class="lp-eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>'
+    + '<h2 class="lp-h" id="lp-title" tabindex="-1">Welcome to Anatomy</h2>'
+    + '<p class="lp-sub">Where are you headed?</p>'
+    + '<div id="lpView" aria-live="polite"></div>'
+    + '</div>';
 
   function boot() {
     var st = document.createElement('style');
@@ -343,36 +307,54 @@
     document.head.appendChild(st);
     document.body.appendChild(ov);
     var prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    if (!STANDALONE) document.body.style.overflow = 'hidden';
     var lastFocus = document.activeElement;
+    var view = ov.querySelector('#lpView'), CURRENT = null;
 
-    function show(key) {
-      ov.querySelectorAll('.lp-panel').forEach(function (p) {
-        p.classList.toggle('on', p.getAttribute('data-lp') === key);
-      });
-      /* the news panel IS the announcements list, so the side column
-         steps aside while it is open to avoid showing the list twice */
-      var ann = ov.querySelector('.lp-ann');
-      if (ann) ann.style.display = (key === 'news') ? 'none' : '';
-      var f = ov.querySelector('.lp-panel.on .lp-door, .lp-panel.on button');
+    function show(key, focusBack, quiet) {
+      CURRENT = PANELS[key] ? key : null;
+      view.innerHTML = CURRENT ? panel(key) : home();
+      if (CURRENT === 'news') markRead();
+      if (quiet) return;
+      /* on arrival focus lands on the title, not a card, so only the study
+         door carries a gold outline and nothing looks pre-selected */
+      var f = CURRENT ? view.querySelector('#lp-ph')
+        : (focusBack && view.querySelector('[data-lpopen="' + focusBack + '"]')) || ov.querySelector('#lp-title');
       if (f) f.focus();
     }
     function close() {
-      ov.parentNode.removeChild(ov);
+      if (STANDALONE) return;
+      if (ov.parentNode) ov.parentNode.removeChild(ov);
       document.body.style.overflow = prevOverflow;
       if (lastFocus && lastFocus.focus) lastFocus.focus();
       document.removeEventListener('keydown', onKey);
     }
-    function onKey(e) { if (e.key === 'Escape') close(); }
+    function onKey(e) {
+      if (e.key !== 'Escape') return;
+      if (CURRENT) { var prev = CURRENT; show(null, prev); } else close();
+    }
     ov.addEventListener('click', function (e) {
       var o = e.target.closest('[data-lpopen]');
       if (o) { show(o.getAttribute('data-lpopen')); return; }
-      if (e.target.closest('[data-lpback]')) { show('home'); return; }
-      if (e.target.closest('[data-lpclose]')) close();
+      if (e.target.closest('[data-lpback]')) { var prev = CURRENT; show(null, prev); return; }
+      if (e.target.closest('[data-lpclose]')) { e.preventDefault(); close(); }
     });
     document.addEventListener('keydown', onKey);
-    var f0 = ov.querySelector('.lp-door');
-    if (f0) f0.focus();
+    show(null);
+
+    /* the newest announcement fills in once its file arrives */
+    if (!window.BIO004_ANNOUNCEMENTS) {
+      var tag = document.createElement('script');
+      tag.src = 'bio004-announcements.js';
+      /* redraw quietly so a student who has already started tabbing keeps their place */
+      tag.onload = function () {
+        if (CURRENT) return;
+        var a = document.activeElement, sel = a && a.getAttribute && (a.getAttribute('href') || a.getAttribute('data-lpopen'));
+        show(null, null, true);
+        if (sel) { var b = view.querySelector('[href="' + sel + '"],[data-lpopen="' + sel + '"]'); if (b) b.focus(); }
+      };
+      document.head.appendChild(tag);
+    }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();

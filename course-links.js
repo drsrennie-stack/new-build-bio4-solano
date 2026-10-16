@@ -46,7 +46,7 @@ window.BIO004_LINKS = {
   atlas: { url: 'https://drsrennie-stack.github.io/new-digital-atlas/',
            internal: false, label: 'Digital Atlas' },
 
-  loops: { url: 'https://drsrennie-stack.github.io/loops/',
+  loops: { url: 'https://www.medmasterscollaborative.com/anatomy-loops',
            internal: false, label: 'Loops' },
 
   study: { url: 'https://drsrennie-stack.github.io/new-build-bio4-solano/study-session-signup.html',
