@@ -31,8 +31,8 @@
      End of class ....... LAB BRAIN DUMP on the lab done that day
 
    Day 2 (Wed for Class 1, Thu for Classes 2 and 3)
-     First 1.5 hours of lab  LAB TBL on the current lab block (iRAT,
-                          tRAT, application)
+     Lecture, then lab. (The Lab TBL that used to open lab is
+                          discontinued. See LAB_TBL below.)
      End of class ....... LECTURE BRAIN DUMP on the week's lecture
                           topic
 
@@ -86,6 +86,12 @@ window.BIO004_ALT = (function () {
   'use strict';
 
   var START = { mw: '2026-10-07', tr: '2026-10-08' };
+
+  /* LAB TBL IS DISCONTINUED (Oct 2026, it took too much lab time).
+     Wed / Thu is now lecture, lab, then the lecture brain dump.
+     The Lab TBL numbers below are kept in the day rows so they can
+     come back by setting this to true, but no page shows them. */
+  var LAB_TBL = false;
 
   /* ---------- material, by topic ----------
      Every file name was checked against the repo. They are the
@@ -208,6 +214,33 @@ window.BIO004_ALT = (function () {
     slides: [['slides-ans.html','ANS slides']],
     guide:  [['ans-study-guide.html','Autonomic nervous system study guide']]
   };
+
+  /* ---------- what students draw on, by lecture topic ----------
+     draw   the competency note sheets (two prompts and one open box per
+            competency). Modules 1 to 3 and the lymphatic system have
+            them. Other Module 4 and 5 topics point at the drawing sheet
+            for that topic until their note sheets are posted. Swap the
+            link here and every page picks it up.
+     comps  the competency numbers in the Fall 2026 Competency Packet
+            (bio004-competency-packet.html#cN, the paper packet). */
+  var M3 = 'BIO004-M3-Note-Sheet-Packet.html';
+  var DRAW = {
+    muscle:    { draw:[[M3+'#c1','Module 3 note sheets: Muscle']], comps:[72,80] },
+    heart:     { draw:[[M3+'#c18','Module 3 note sheets: The Heart']], comps:[56,65] },
+    vessels:   { draw:[[M3+'#c28','Module 3 note sheets: Blood Vessels']], comps:[66,71] },
+    blood:     { draw:[[M3+'#c35','Module 3 note sheets: Blood']], comps:[81,84] },
+    lymph:     { draw:[['BIO004-M4-Lymphatic-Note-Sheets.html','Lymphatic System note sheets']], comps:[105,108] },
+    resp:      { draw:[['m4-resp-drawing-sheet.html','Drawing sheet: Respiratory and Lymphatic']], comps:[97,104], sheet:true },
+    endocrine: { draw:[['m4-urinary-drawing-sheet.html','Drawing sheet: Urinary and Endocrine']], comps:[128,132], sheet:true },
+    gi:        { draw:[['m4-digest-drawing-sheet.html','Drawing sheet: The Digestive System']], comps:[109,125], sheet:true },
+    renal:     { draw:[['m4-urinary-drawing-sheet.html','Drawing sheet: Urinary and Endocrine']], comps:[133,140], sheet:true },
+    repro:     { draw:[['m4-repro-drawing-sheet.html','Drawing sheet: Reproductive Systems']], comps:[141,150], sheet:true },
+    cnsBrain:  { draw:[['m5-brain-drawing-sheet.html','Drawing sheet: The Brain and Brainstem'],['m5-cord-drawing-sheet.html','Drawing sheet: Meninges, CSF and the Spinal Cord']], comps:[151,172], sheet:true },
+    cnCord:    { draw:[['m5-cord-drawing-sheet.html','Drawing sheet: Meninges, CSF and the Spinal Cord'],['m5-pns-drawing-sheet.html','Drawing sheet: Peripheral and Autonomic']], comps:[184,191], sheet:true },
+    ans:       { draw:[['m5-pns-drawing-sheet.html','Drawing sheet: Peripheral and Autonomic']], comps:[192,193], sheet:true },
+    cranial:   { draw:[['m5-brain-drawing-sheet.html','Drawing sheet: The Brain and Brainstem']], comps:[161,166], sheet:true }
+  };
+  Object.keys(DRAW).forEach(function(k){ if(LECTURE[k]){ LECTURE[k].draw = DRAW[k].draw; LECTURE[k].comps = DRAW[k].comps; LECTURE[k].drawSheet = !!DRAW[k].sheet; } });
 
   var MUSCLE_CHART = ['https://www.medmasterscollaborative.com/muscle-charts-i-o-a-inn','Muscle charts: origin, insertion, action, innervation'];
 
@@ -400,14 +433,14 @@ window.BIO004_ALT = (function () {
   }
   function D2(d, n, labKey, mode, lec, lecTopics, bdTopics, note){
     return { d:d, kind:'d2', lec:lec, lecTopic:lecTopics, labTopic:[labKey], lab:{ key:labKey, mode:mode },
-      tbl: n ? { kind:'lab', n:n, topics:[labKey] } : null,
+      tbl: (n && LAB_TBL) ? { kind:'lab', n:n, topics:[labKey] } : null,
       bd:{ kind:'lecture', topics:bdTopics }, note:note||'' };
   }
   function EX(d, n){ return { d:d, kind:'exam', exam:n, lec:'Exam ' + n, labTopic:[], lecTopic:[] }; }
   function OFF(d, name){ return { d:d, kind:'holiday', lec:name + ', No Class', labTopic:[], lecTopic:[] }; }
 
   var AFTER3 = 'First class after Exam 3. The TBL runs on the pre-read, so the respiratory reading is due before class.';
-  var AFTER4 = 'First class after Exam 4. The Lab TBL runs on the pre-read, before you have seen these organs in lab.';
+  var AFTER4 = 'First class after Exam 4. Come having read the notes and worked the structure list, so the models are the second time you meet these organs, not the first.';
 
   var MW = [
     D1('2026-10-07', 4, ['muscle'], 'Lecture TBL 4: Muscle Microanatomy and the Sarcomere', 'microTrunkArm', 'lab',
@@ -485,7 +518,7 @@ window.BIO004_ALT = (function () {
       if(s.kind === 'holiday') return { d:s.d, lec:s.lec, lm:'holiday', tag:'No class', lab:null, pw:null };
       if(s.kind === 'exam') return { d:s.d, lec:s.lec, lm:'exam', tag:'Exam ' + s.exam, lab:'Exam ' + s.exam,
         pw:{ t:'Study for Exam ' + s.exam, l:'' } };
-      var tag = s.kind === 'd1' ? 'TBL ' + s.tbl.n : (s.tbl ? 'Lab TBL ' + s.tbl.n : 'Lab review');
+      var tag = s.kind === 'd1' ? 'TBL ' + s.tbl.n : (s.tbl ? 'Lab TBL ' + s.tbl.n : (s.lab.mode === 'review' ? 'Lab review' : 'Lecture and lab'));
       return { d:s.d, lec:s.lec, lm:'tbl', tag:tag, lab:names(s.labTopic, labName),
         pw:{ t:'Pre-read for ' + tag,
              l:'bio004-preread.html?day=' + s.d } };
@@ -493,7 +526,7 @@ window.BIO004_ALT = (function () {
   }
 
   return {
-    START: START, MODE: MODE, short: function(k){ return SHORT[k] || (LECTURE[k]||LAB[k]||{}).name || k; }, labName: labName, lecName: lecName, toDayCard: toDayCard, LECTURE: LECTURE, LAB: LAB, MUSCLE_CHART: MUSCLE_CHART, TIMES: TIMES,
+    START: START, LAB_TBL: LAB_TBL, MODE: MODE, short: function(k){ return SHORT[k] || (LECTURE[k]||LAB[k]||{}).name || k; }, labName: labName, lecName: lecName, toDayCard: toDayCard, LECTURE: LECTURE, LAB: LAB, MUSCLE_CHART: MUSCLE_CHART, TIMES: TIMES,
     track: function(sec){ return ALIAS[sec] || null; },
     sessions: function(sec){ var t = SECTIONS[ALIAS[sec]]; return t ? t.sess.slice() : []; },
     days: function(sec){ var t = SECTIONS[ALIAS[sec]]; return t ? { d1:t.d1, d2:t.d2 } : null; },

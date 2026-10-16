@@ -1013,6 +1013,8 @@ var LOOPS = "https://www.medmasterscollaborative.com/anatomy-loops";
   /* ?hub=N shows one week on its own, for the week-N-hub.html pages */
   var HUB = +((location.search.match(/[?&]hub=(\d+)/)||[])[1]||0);
   if(HUB<1||HUB>17) HUB=0;
+  /* weeks 9 to 17 come from the newest calendar now (bio004-week.html) */
+  if(HUB>=9){ location.replace('bio004-week.html?w='+HUB+(location.search.match(/[?&]sec=(mw|tr-am|tr-eve)/)?'&sec='+RegExp.$1:'')+location.hash); return; }
   if(HUB) document.body.classList.add('hubmode');
   function hubLink(n){ return 'week-'+n+'-hub.html'+(state.chosen?'?sec='+state.sec:''); }
   function renderHub(){

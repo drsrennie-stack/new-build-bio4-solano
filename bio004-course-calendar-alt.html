@@ -276,7 +276,7 @@
 <div class="wrap">
   <main id="main">
 
-    <header id="printHead"><h1>BIO 004 Human Anatomy &middot; Fall 2026 schedule</h1><p id="printSec"></p><p class="key2"><b>M / T</b> = Lecture TBL day. <b>W / Th</b> (double border) = Lab TBL day. Before class = prep. In class = retrieval (TBL, brain dump). Dr. Sharilyn Rennie.</p></header>
+    <header id="printHead"><h1>BIO 004 Human Anatomy &middot; Fall 2026 schedule</h1><p id="printSec"></p><p class="key2"><b>M / T</b> = Lecture TBL day. <b>W / Th</b> (double border) = lecture and lab day. Before class = prep. In class = retrieval (TBL, brain dump). Dr. Sharilyn Rennie.</p></header>
 
     <section class="cover" aria-labelledby="t">
       <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
@@ -301,10 +301,10 @@
           </ol>
         </div>
         <div class="pday labday">
-          <h3><span class="badge lg lab" id="d2Letter" aria-hidden="true">W</span><span><span id="d2Name">Wednesday</span><br><span class="pill p-tbl lab">TBL &middot; Lab</span></span></h3>
+          <h3><span class="badge lg lab" id="d2Letter" aria-hidden="true">W</span><span><span id="d2Name">Wednesday</span><br><span class="pill p-tbl lab">Lecture &middot; Lab</span></span></h3>
           <ol>
             <li>Lecture</li>
-            <li>Lab TBL (first 1.5 hours), then lab</li>
+            <li>Lab</li>
             <li>End of class: <span class="pill p-bd">Brain dump &middot; Lecture</span></li>
           </ol>
         </div>
@@ -390,8 +390,8 @@
   })();
 
   function letters(){ return A.track(sec)==='mw' ? ['M','W'] : ['T','Th']; }
-  function tagH(s){ var t=(s.kind==='d1'?'TBL <span class="tn">'+s.tbl.n+'</span> &middot; Lecture':(s.tbl?'TBL <span class="tn">'+s.tbl.n+'</span> &middot; Lab':'Review lab')); return t; }
-  function badge(s,cls){ var LT=letters(), L=s.kind==='d1'?LT[0]:LT[1], what=s.kind==='d1'?'Lecture TBL day':'Lab TBL day'; return '<span class="badge '+(s.kind==='d2'?'lab ':'')+(cls||'')+'" role="img" aria-label="'+what+'">'+L+'</span>'; }
+  function tagH(s){ var t=(s.kind==='d1'?'TBL <span class="tn">'+s.tbl.n+'</span> &middot; Lecture':(s.tbl?'TBL <span class="tn">'+s.tbl.n+'</span> &middot; Lab':(s.lab&&s.lab.mode==='review'?'Review lab':'Lecture and lab'))); return t; }
+  function badge(s,cls){ var LT=letters(), L=s.kind==='d1'?LT[0]:LT[1], what=s.kind==='d1'?'Lecture TBL day':'Lecture and lab day'; return '<span class="badge '+(s.kind==='d2'?'lab ':'')+(cls||'')+'" role="img" aria-label="'+what+'">'+L+'</span>'; }
   function mondayOf(s){ var d=parse(s); d.setDate(d.getDate()-((d.getDay()+6)%7)); return iso(d); }
 
   function dayCard(s, nextD){
@@ -406,7 +406,7 @@
       due = (s.prepTopic ? lecDue(s.prepTopic, 'review before class') : lecDue(s.tbl.topics, 'for the TBL at the start of class'))
           + labDue(s.labTopic, labWhy+', and the brain dump at the end');
     } else {
-      tag = s.tbl ? 'Lab TBL '+s.tbl.n : 'Review lab';
+      tag = s.tbl ? 'Lab TBL '+s.tbl.n : (L.mode==='review' ? 'Review lab' : 'Lecture and lab');
       rows=[['Lecture',s.lec]];
       if(s.tbl) rows.push(['Lab, first 1.5 hours',tag+': '+lab(s.tbl.topics)+', with application']);
       rows.push([s.tbl?'Rest of lab':'Lab', lb+(mode?'. '+mode:'')]);
@@ -478,18 +478,18 @@
       var modeTxt = L.mode==='lab' ? '' : L.mode==='model' ? 'Models, some tagged' : L.mode==='cadaver' ? 'Cadaver, you tag' : L.mode==='both' ? 'Models, then cadaver' : L.mode==='split' ? 'Cadaver, you tag: '+esc(sl(L.cadaver))+'</li><li>Models, some tagged: '+esc(sl(L.model)) : 'Review: work on what you need';
       var lecPre, lecIn, labPre, labIn;
       if(s.kind==='d1'){
-        lecPre = s.prepTopic ? ul(['<b>'+esc(sl(s.prepTopic))+'</b>','Origins, insertions, actions']) : ul(['<b>'+esc(sl(s.tbl.topics))+'</b>','Notes, note sheet, videos']);
+        lecPre = s.prepTopic ? ul(['<b>'+esc(sl(s.prepTopic))+'</b>','Origins, insertions, actions']) : ul(['<b>'+esc(sl(s.tbl.topics))+'</b>','Notes, note sheets, videos']);
         lecIn  = ul(['<span class="pill p-tbl">TBL '+s.tbl.n+' &middot; Lecture</span>',esc(s.app||'Application activity')]);
         labPre = labPrep(s);
         labIn  = ul([modeTxt,'<span class="pill p-bd">Brain dump &middot; Lab</span>']);
       } else {
-        lecPre = ul(['<b>'+esc(sl(s.lecTopic))+'</b>','Read notes, start sheet',
+        lecPre = ul(['<b>'+esc(sl(s.lecTopic))+'</b>','Read notes, start note sheets',
                      s.bd.topics.join()!==s.lecTopic.join() ? 'Brain dump prep: redraw '+esc(sl(s.bd.topics)) : '']);
         lecIn  = ul([esc(s.lec),'<span class="pill p-bd">Brain dump &middot; Lecture</span> '+esc(sl(s.bd.topics))]);
         labPre = labPrep(s);
         labIn  = ul([s.tbl ? '<span class="pill p-tbl lab">TBL '+s.tbl.n+' &middot; Lab</span> first 1.5 hours'+(s.tbl.topics.join()!==s.labTopic.join() ? ': '+esc(sl(s.tbl.topics)) : '') : '', modeTxt]);
       }
-      var tag = s.kind==='d1' ? 'TBL '+s.tbl.n+' · Lecture' : (s.tbl ? 'TBL '+s.tbl.n+' · Lab' : 'Review lab');
+      var tag = s.kind==='d1' ? 'TBL '+s.tbl.n+' · Lecture' : (s.tbl ? 'TBL '+s.tbl.n+' · Lab' : (L.mode==='review' ? 'Review lab' : 'Lecture and lab'));
       h+='<tr class="'+cls+'"><td class="cday"><div class="bd-row">'+badge(s)+'<div class="what"><b>'+esc(dt)+'</b><small>'+tagH(s)+(s.d===nextD?' &middot; next':'')+'</small></div></div></td>'
         + '<td>'+lecPre+'</td><td>'+lecIn+'</td><td class="lab-start">'+labPre+'</td><td>'+labIn+'</td></tr>';
     });
