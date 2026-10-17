@@ -64,7 +64,9 @@ tr.past td{color:var(--soft)}
 .card.dm{background:#7A2A22}
 .card.dk h2,.card.dm h2{color:#FFFFFF}
 .card.dk a,.card.dm a{color:#F2DFAE}
-.card.dk .note-sm,.card.dm .note-sm{color:#DCE1E8}
+.card.dk .links a,.card.dm .links a{color:var(--ink);background:#FFFFFF}
+.card.dk .links a:hover,.card.dm .links a:hover{background:#F1F3F6}
+.card.dk .note-sm,.card.dm .note-sm,.card.dk .when,.card.dm .when,.card.dk td,.card.dm td,.card.dk th,.card.dm th{color:#DCE1E8}
 .card.dk .tag,.card.dm .tag{background:#E8CE85;color:var(--ink)}
 .card.dk .fact,.card.dm .fact{background:rgba(255,255,255,.10)}
 .card.dk .fact .k,.card.dm .fact .k{color:#E8CE85}
@@ -74,6 +76,11 @@ tr.past td{color:var(--soft)}
 .card.dk .stat .n,.card.dk .big{color:#C9A35B}
 .card.dm .stat .n,.card.dm .big{color:#F2DFAE}
 .stat .l{font-size:14.5px;margin:6px 0 0}
+.backnav{margin:0 0 14px;font-size:15px;font-weight:700}
+.backnav a{display:inline-block;text-decoration:none;color:var(--ink);background:var(--card);box-shadow:var(--shadow);border-radius:10px;padding:8px 12px}
+.backnav a:hover{text-decoration:underline}
+.backq{margin:12px 0 0;font-size:14.5px;font-weight:700}
+.card.dk .backq a,.card.dm .backq a{color:#F2DFAE}
 .stats.sm .n{font-size:clamp(26px,4.4vw,32px);white-space:nowrap}
 .card.dk .stat .l,.card.dm .stat .l{color:#E6EAF0}
 .qlist{columns:2;column-gap:28px;padding-left:1.1em}
@@ -110,6 +117,7 @@ footer{margin:32px 0 0;font-size:13.5px;color:var(--soft)}
 <body>
 <a class="skip" href="#main">Skip to the page content</a>
 <main class="wrap" id="main">
+<p class="backnav"><a id="backLink" href="bio004-syllabus-update.html">&larr; What is in the syllabus?</a></p>
 <header>
   <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
   <h1>What do I have to do, and what is my choice?</h1>
@@ -177,6 +185,19 @@ function fmt(iso){ var p = iso.split('-'); var d = new Date(+p[0], +p[1]-1, +p[2
 function today(){ var d = new Date(), z = function(n){ return (n < 10 ? '0' : '') + n; }; return d.getFullYear() + '-' + z(d.getMonth()+1) + '-' + z(d.getDate()); }
 function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
 function abs(p){ return /^https?:/.test(p) ? p : SITE + p; }
+/* Top back link. If the student came from another of these pages, it goes back
+   there. Otherwise it goes to the syllabus questions page. Hidden on the
+   syllabus page itself unless the student came from another page. */
+function initBack(me){
+  var a = document.getElementById('backLink'); if (!a) return;
+  var ref = document.referrer || '', fromUs = ref.indexOf(SITE) === 0 && ref.indexOf(me) === -1;
+  if (fromUs && history.length > 1) {
+    a.innerHTML = '&larr; Back to the page you were on';
+    a.addEventListener('click', function(e){ e.preventDefault(); history.back(); });
+  } else if (me === 'bio004-syllabus-update.html') {
+    a.parentNode.hidden = true;
+  }
+}
 /* every internal link leaves the Canvas frame; external links open a new tab */
 function fixLinks(root){
   (root || document).querySelectorAll('a[href]').forEach(function(a){
@@ -252,6 +273,7 @@ secPicker(document.getElementById('secpick'));
 document.querySelectorAll('a[data-sec]').forEach(function(x){ if (SEC) x.setAttribute('href', x.getAttribute('href') + '?sec=' + SEC); });
 
 fixLinks();
+initBack('bio004-required-optional.html');
 sendHeightSetup('bio004-required-optional');
 })();
 </script>
