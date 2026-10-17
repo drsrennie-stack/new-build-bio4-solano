@@ -217,28 +217,27 @@ window.BIO004_ALT = (function () {
 
   /* ---------- what students draw on, by lecture topic ----------
      draw   the competency note sheets (two prompts and one open box per
-            competency). Modules 1 to 3 and the lymphatic system have
-            them. Other Module 4 and 5 topics point at the drawing sheet
-            for that topic until their note sheets are posted. Swap the
+            competency), linked at the competency's own number. Swap the
             link here and every page picks it up.
      comps  the competency numbers in the Fall 2026 Competency Packet
             (bio004-competency-packet.html#cN, the paper packet). */
   var M3 = 'BIO004-M3-Note-Sheet-Packet.html';
+  var M4 = 'BIO004-M4-Note-Sheet-Packet.html', M5 = 'BIO004-M5-Note-Sheet-Packet.html';
   var DRAW = {
     muscle:    { draw:[[M3+'#c1','Module 3 note sheets: Muscle']], comps:[72,80] },
     heart:     { draw:[[M3+'#c18','Module 3 note sheets: The Heart']], comps:[56,65] },
     vessels:   { draw:[[M3+'#c28','Module 3 note sheets: Blood Vessels']], comps:[66,71] },
     blood:     { draw:[[M3+'#c35','Module 3 note sheets: Blood']], comps:[81,84] },
-    lymph:     { draw:[['BIO004-M4-Lymphatic-Note-Sheets.html','Lymphatic System note sheets']], comps:[105,108] },
-    resp:      { draw:[['m4-resp-drawing-sheet.html','Drawing sheet: Respiratory and Lymphatic']], comps:[97,104], sheet:true },
-    endocrine: { draw:[['m4-urinary-drawing-sheet.html','Drawing sheet: Urinary and Endocrine']], comps:[128,132], sheet:true },
-    gi:        { draw:[['m4-digest-drawing-sheet.html','Drawing sheet: The Digestive System']], comps:[109,125], sheet:true },
-    renal:     { draw:[['m4-urinary-drawing-sheet.html','Drawing sheet: Urinary and Endocrine']], comps:[133,140], sheet:true },
-    repro:     { draw:[['m4-repro-drawing-sheet.html','Drawing sheet: Reproductive Systems']], comps:[141,150], sheet:true },
-    cnsBrain:  { draw:[['m5-brain-drawing-sheet.html','Drawing sheet: The Brain and Brainstem'],['m5-cord-drawing-sheet.html','Drawing sheet: Meninges, CSF and the Spinal Cord']], comps:[151,172], sheet:true },
-    cnCord:    { draw:[['m5-cord-drawing-sheet.html','Drawing sheet: Meninges, CSF and the Spinal Cord'],['m5-pns-drawing-sheet.html','Drawing sheet: Peripheral and Autonomic']], comps:[184,191], sheet:true },
-    ans:       { draw:[['m5-pns-drawing-sheet.html','Drawing sheet: Peripheral and Autonomic']], comps:[192,193], sheet:true },
-    cranial:   { draw:[['m5-brain-drawing-sheet.html','Drawing sheet: The Brain and Brainstem']], comps:[161,166], sheet:true }
+    resp:      { draw:[[M4+'#c97','Module 4 note sheets: The Respiratory System']], comps:[97,104] },
+    lymph:     { draw:[[M4+'#c105','Module 4 note sheets: The Lymphatic System']], comps:[105,108] },
+    gi:        { draw:[[M4+'#c109','Module 4 note sheets: The Alimentary Canal'],[M4+'#c120','Module 4 note sheets: The Accessory Organs']], comps:[109,125] },
+    endocrine: { draw:[[M4+'#c128','Module 4 note sheets: The Endocrine System']], comps:[128,132] },
+    renal:     { draw:[[M5+'#c133','Module 5 note sheets: The Urinary System']], comps:[133,140] },
+    repro:     { draw:[[M5+'#c141','Module 5 note sheets: Male Reproductive'],[M5+'#c146','Module 5 note sheets: Female Reproductive']], comps:[141,150] },
+    cnsBrain:  { draw:[[M5+'#c151','Module 5 note sheets: The Brain'],[M5+'#c161','Module 5 note sheets: The Brainstem'],[M5+'#c167','Module 5 note sheets: Meninges and CSF']], comps:[151,172] },
+    cnCord:    { draw:[[M5+'#c184','Module 5 note sheets: The Spinal Cord'],[M5+'#c187','Module 5 note sheets: Peripheral, Cranial Nerves and Plexuses']], comps:[184,191] },
+    ans:       { draw:[[M5+'#c192','Module 5 note sheets: The Autonomic Nervous System']], comps:[192,193] },
+    cranial:   { draw:[[M5+'#c161','Module 5 note sheets: The Brainstem'],[M5+'#c190','Module 5 note sheets: The Cranial Nerves']], comps:[161,166] }
   };
   Object.keys(DRAW).forEach(function(k){ if(LECTURE[k]){ LECTURE[k].draw = DRAW[k].draw; LECTURE[k].comps = DRAW[k].comps; LECTURE[k].drawSheet = !!DRAW[k].sheet; } });
 
