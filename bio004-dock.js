@@ -236,6 +236,50 @@
   if (window.__BIO004_DOCK__) return;      /* never inject twice */
   window.__BIO004_DOCK__ = true;
 
+  /* ============================================================
+     STUDY TOOLS: NO DOCK, NO HOOTIE, ONE WAY BACK
+
+     On the practice tools (Mastery OS and the tools it opens) the
+     Course tools launcher and Hootie covered the controls on a phone,
+     and Dr. Rennie wants students moving between tools through Mastery
+     OS for now. So on these pages neither is built. Every tool except
+     Mastery OS itself gets one small "Mastery OS home" link at the top
+     of the page instead.
+
+     To put the dock and Hootie back on these pages, delete this block.
+     ============================================================ */
+  var TOOL_PAGE = /(^|\/)(mastery-os-fall-2026|practice-lecture-exam|bio004-mastery-check|loops|mastery-canvas|bio004-day-review|bio004-spaced-recall|spaced-recall|recall-cards|recall-rx-exam-prep|card-gap-finder|brain-dump-practice|bio004-draw)\.html$/;
+  if (TOOL_PAGE.test(location.pathname) || /\/loops\//.test(location.pathname)) {
+    if (!/(^|\/)mastery-os-fall-2026\.html$/.test(location.pathname)) {
+      var addHome = function () {
+        if (document.getElementById('bio004-mos-home')) return;
+        var st = document.createElement('style');
+        st.textContent =
+          '#bio004-mos-home{display:inline-flex;align-items:center;gap:6px;margin:10px 0 0 max(12px,env(safe-area-inset-left,0px));' +
+          'padding:6px 12px;min-height:32px;border-radius:999px;background:#060B1A;color:#FFFFFF;text-decoration:none;' +
+          'font:700 12px/1.2 "DM Sans","Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;' +
+          'letter-spacing:.08em;text-transform:uppercase;position:relative;z-index:5}' +
+          '#bio004-mos-home:hover{background:#7A2E24}' +
+          '#bio004-mos-home:focus-visible{outline:3px solid #B8924A;outline-offset:2px}' +
+          '@media print{#bio004-mos-home{display:none}}';
+        document.head.appendChild(st);
+        var a = document.createElement('a');
+        a.id = 'bio004-mos-home';
+        a.href = 'mastery-os-fall-2026.html';
+        a.target = '_top';
+        a.innerHTML = '<span aria-hidden="true">&larr;</span> Mastery OS home';
+        a.setAttribute('aria-label', 'Back to Mastery OS home to choose another study tool');
+        /* after the skip link, so the skip link stays the first tab stop */
+        var skip = document.body.querySelector(':scope > a.skip, :scope > .skip, :scope > .skip-link');
+        if (skip) skip.insertAdjacentElement('afterend', a);
+        else document.body.insertBefore(a, document.body.firstChild);
+      };
+      if (document.body) addHome();
+      else document.addEventListener('DOMContentLoaded', addHome);
+    }
+    return;
+  }
+
   var BASE = 'https://drsrennie-stack.github.io/new-build-bio4-solano/';
   var SEC_KEY = 'bio004-section';
 

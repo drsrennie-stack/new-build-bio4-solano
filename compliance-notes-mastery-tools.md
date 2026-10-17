@@ -166,3 +166,13 @@ Files covered: mastery-os-fall-2026.html, recall-view.js, braindump-view.js, bio
   - The Loops app inside the frame has its own accessibility notes in the loops repo.
   - A screen reader pass with VoiceOver or NVDA is still to do.
 - **Reviewer:** Claude, for Dr. Sharilyn Rennie. Card and brain dump content was independently fact-checked.
+
+## Addendum, October 17, 2026: no dock or Hootie on the study tools
+
+Files: bio004-dock.js, bio004-mastery-check.html.
+
+- On Mastery OS and the tools it opens (practice exam, mastery check, Loops, mastery canvas, day review and the recall redirects), bio004-dock.js no longer builds the Course tools launcher or loads Hootie. Every tool except Mastery OS gets one "Mastery OS home" link at the top of the page instead.
+- The link is a real link (target="_top"), placed right after the skip link so the skip link stays the first tab stop. It has an accessible name, a visible gold focus ring, and white on #060B1A text (about 19:1). It is in the normal page flow, not floating, so it covers nothing on a phone, and it is hidden when printing.
+- bio004-mastery-check.html now loads bio004-dock.js (it had no dock before), which gives it the home link and the content-height measure.
+- Every other page keeps the dock and Hootie. To bring them back on the tools, delete the "STUDY TOOLS" block near the top of the dock section in bio004-dock.js.
+- Checked at 390px wide: no script errors, no sideways scroll on the changed pages.
