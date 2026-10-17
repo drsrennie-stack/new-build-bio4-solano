@@ -1,4 +1,4 @@
-"""The three-app flyer: Mastery OS, Lab Loops, Digital Atlas.
+"""The apps flyer: Mastery OS, Lab Loops, Digital Atlas, Brain dumps, Practice exam.
 
     python3 bio004-apps-flyer-build.py
 
@@ -29,8 +29,8 @@ APPS = [
          tag='Fast visual practice',
          desc='Thirty-nine image loops. A structure appears, you name it, the '
               'answer follows. Built for the ten minutes between other things.',
-         use='Works well on a phone. No account, nothing to install.',
-         url='https://drsrennie-stack.github.io/loops/'),
+         use='Works well on a phone. Your misses count toward your weak areas.',
+         url=SITE + 'mastery-os-fall-2026.html#s-loops'),
     dict(icon='iconAtlas', tone='blue', name='Digital Atlas',
          tag='Turn it around',
          desc='Explore structures in three dimensions. Rotate them, take layers '
@@ -38,6 +38,18 @@ APPS = [
               'meet them on a model.',
          use='Phone or laptop. Give it a moment to load the first time.',
          url='https://drsrennie-stack.github.io/new-digital-atlas/'),
+    dict(icon='iconPencil', tone='navy', name='Brain dumps',
+         tag='Write it from memory',
+         desc='Three levels per topic. Pick a prompt, write everything you know on '
+              'paper, then check your answer against the key.',
+         use='Paper and a pen. The timer is on the page.',
+         url=SITE + 'mastery-os-fall-2026.html#s-dumps'),
+    dict(icon='iconDoc', tone='maroon', name='Practice exam',
+         tag='A simulated exam',
+         desc='A fresh 100 point paper in the real format. Pick the topics and the '
+              'difficulty, take it, and see the score with the reasoning.',
+         use='None of it counts toward your grade.',
+         url=SITE + 'practice-lecture-exam.html'),
 ]
 
 
@@ -80,11 +92,11 @@ PAGE = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Three apps you can use &middot; BIO 004 Human Anatomy</title>
-<meta name="description" content="Mastery OS, Lab Loops and the Digital Atlas. Scan a code to open one.">
+<title>Five apps you can use &middot; BIO 004 Human Anatomy</title>
+<meta name="description" content="Mastery OS, Lab Loops, the Digital Atlas, Brain dumps and the Practice exam. Scan a code to open one.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@400;700;800&family=Lora:ital@1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
     --navy:#08101F; --tile:#0B1530; --maroon:#7A2A22; --gold:#C9A14A;
@@ -119,7 +131,7 @@ PAGE = """<!DOCTYPE html>
     margin:0;color:var(--navy)}
   h1 .accent{color:var(--maroon)}
   .sub{font-size:clamp(14px,1.6vw,17px);color:var(--navy);opacity:.82;margin:10px 0 0;max-width:70ch}
-  .usage{font-family:Lora,Georgia,serif;font-style:italic;font-size:15px;color:var(--gray);
+  .usage{font-size:15px;color:var(--gray);
     margin:12px 0 0;max-width:66ch}
 
   .apps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px}
@@ -132,13 +144,15 @@ PAGE = """<!DOCTYPE html>
     stroke-linecap:round;stroke-linejoin:round}
   .tone-terra{background:linear-gradient(145deg,#C2734D,#8B3A2E)}
   .tone-blue{background:linear-gradient(145deg,#5C7FA8,#2F4C7D)}
+  .tone-navy{background:linear-gradient(145deg,#4F6B85,#243B52)}
+  .tone-maroon{background:linear-gradient(145deg,#A34A3F,#6A241D)}
   .a-body{min-width:0}
   .a-tag{font-family:var(--fe);font-size:11px;font-weight:800;letter-spacing:.14em;
     text-transform:uppercase;color:var(--gold-mins);margin:0}
   .a-h{font-size:25px;font-weight:800;letter-spacing:-.015em;color:var(--gold-name);
     margin:3px 0 0;line-height:1.15}
   .a-d{font-size:13.5px;line-height:1.5;color:#E9EDF3;margin:7px 0 0}
-  .a-use{font-family:Lora,Georgia,serif;font-style:italic;font-size:12.5px;color:#C3CCD8;margin:7px 0 0}
+  .a-use{font-size:12.5px;color:#C3CCD8;margin:7px 0 0}
   .a-scan{display:flex;flex-direction:column;align-items:center;gap:6px}
   .a-qr{width:140px;height:140px;background:#fff;border-radius:12px;padding:7px}
   .a-qr svg{width:100%;height:100%;display:block;shape-rendering:crispEdges}
@@ -165,32 +179,32 @@ PAGE = """<!DOCTYPE html>
   @media print{
     body{background:#fff}
     .sheet{max-width:none;padding:0}
-    .brandbar{padding:0 0 7pt;margin-bottom:8pt}
+    .brandbar{padding:0 0 5pt;margin-bottom:5pt}
     .site-logo svg{height:34pt}
     .logo-title{font-size:17pt}
     .logo-sub{font-size:7pt}
     .brand-term{font-size:6.6pt}
-    .intro{padding:0 0 10pt}
+    .intro{padding:0 0 6pt}
     .eyebrow{font-size:6.6pt;margin-bottom:3pt}
-    h1{font-size:21pt}
-    .sub{font-size:9pt;margin-top:5pt}
-    .usage{font-size:8.6pt;margin-top:6pt}
-    .apps{gap:12pt}
-    .a{break-inside:avoid;grid-template-columns:48pt 1fr 124pt;gap:15pt;padding:15pt 18pt;
+    h1{font-size:18pt}
+    .sub{font-size:8.8pt;margin-top:3pt}
+    .usage{font-size:8.4pt;margin-top:3pt}
+    .apps{gap:5pt}
+    .a{break-inside:avoid;grid-template-columns:40pt 1fr 84pt;gap:11pt;padding:6pt 12pt;
       border-radius:12pt;box-shadow:0 0 0 1.5pt var(--gold);
       -webkit-print-color-adjust:exact;print-color-adjust:exact}
-    .a-ic{width:43pt;height:43pt;border-radius:12pt}
-    .a-ic svg{width:22pt;height:22pt}
+    .a-ic{width:36pt;height:36pt;border-radius:10pt}
+    .a-ic svg{width:19pt;height:19pt}
     .a-tag{font-size:7.6pt}
-    .a-h{font-size:18pt}
-    .a-d{font-size:9.9pt;line-height:1.43;margin-top:5pt}
-    .a-use{font-size:9pt;margin-top:5pt}
-    .a-qr{width:114pt;height:114pt;padding:5.5pt;border-radius:10pt}
-    .a-cap{font-size:7pt}
-    .how{gap:14pt;margin-top:11pt}
+    .a-h{font-size:13.5pt}
+    .a-d{font-size:8.8pt;line-height:1.35;margin-top:2pt}
+    .a-use{font-size:8.2pt;margin-top:2pt}
+    .a-qr{width:74pt;height:74pt;padding:4pt;border-radius:7pt}
+    .a-cap{font-size:6.6pt}
+    .how{gap:12pt;margin-top:6pt}
     .how li{font-size:8.4pt}
     .how b{font-size:6.4pt;padding:2pt 7pt}
-    .foot{margin-top:11pt;padding-top:7pt;font-size:7.6pt}
+    .foot{margin-top:6pt;padding-top:5pt;font-size:7.4pt}
   }
 </style>
 </head>
@@ -210,7 +224,7 @@ PAGE = """<!DOCTYPE html>
 
   <div class="intro">
     <p class="eyebrow">Study tools</p>
-    <h1>Three apps, <span class="accent">yours to use</span></h1>
+    <h1>Five apps, <span class="accent">yours to use</span></h1>
     <p class="sub">These are the practice tools from BIO 004 Human Anatomy. They are free,
     they need no account, and you can use them whether or not you are in the course.</p>
     <p class="usage">Scan a code with your phone camera. Nothing to install.</p>
