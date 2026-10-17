@@ -12,7 +12,7 @@
 :root{
   --ink:#0B1530; --soft:#3D4A57; --maroon:#7A2A22; --gold:#B8924A; --goldtext:#5E4719;
   --page:#FAFAF9; --card:#FFFFFF; --line:#E3E6EA; --tint:#F1F3F6; --warm:#F7F1E4;
-  --shadow:0 1px 3px rgba(11,21,48,.08); --shadow-hover:0 8px 16px rgba(11,21,48,.10);
+  --shadow:0 1px 2px rgba(11,21,48,.06),0 6px 18px rgba(11,21,48,.10); --shadow-hover:0 2px 4px rgba(11,21,48,.08),0 16px 32px rgba(11,21,48,.16);
   --f:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   --fe:'DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
 }
@@ -35,7 +35,9 @@ h1{font-size:clamp(28px,5.5vw,38px);font-weight:800;letter-spacing:-.02em;line-h
 .secpick a{text-decoration:none;color:var(--ink);background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:6px 12px;font-weight:700}
 .secpick a[aria-current="true"]{background:var(--ink);color:#FFFFFF}
 h2{font-size:21px;font-weight:800;letter-spacing:-.01em;margin:0 0 6px;text-wrap:balance}
-.card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:18px 20px;margin:14px 0 0}
+.card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:18px 20px;margin:16px 0 0;transition:transform 200ms ease,box-shadow 200ms ease}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+@media (prefers-reduced-motion:reduce){.card:hover{transform:none}}
 .card p{margin:6px 0 0}
 .card ul{margin:8px 0 0;padding-left:20px}
 .card li{margin:4px 0}
@@ -55,17 +57,33 @@ table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:ta
 th{text-align:left;font-family:var(--fe);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);padding:8px 10px;border-bottom:1px solid var(--line)}
 td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
 tr.past td{color:var(--soft)}
-.card.tn{background:rgba(30,64,140,.09)}
-.card.tm{background:rgba(122,42,34,.08)}
+.card.tn{background:rgba(11,21,48,.09)}
+.card.tm{background:rgba(160,82,45,.13)}
+.card.dk,.card.dm{color:#FFFFFF}
+.card.dk{background:var(--ink)}
+.card.dm{background:#7A2A22}
+.card.dk h2,.card.dm h2{color:#FFFFFF}
+.card.dk a,.card.dm a{color:#F2DFAE}
+.card.dk .note-sm,.card.dm .note-sm{color:#DCE1E8}
+.card.dk .tag,.card.dm .tag{background:#E8CE85;color:var(--ink)}
+.card.dk .fact,.card.dm .fact{background:rgba(255,255,255,.10)}
+.card.dk .fact .k,.card.dm .fact .k{color:#E8CE85}
+.card.dk .fact p,.card.dm .fact p{color:#DCE1E8}
+.stats{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,104px),1fr));margin:12px 0 0}
+.stat .n{font-size:clamp(34px,6vw,44px);font-weight:800;line-height:1;letter-spacing:-.02em}
+.card.dk .stat .n,.card.dk .big{color:#C9A35B}
+.card.dm .stat .n,.card.dm .big{color:#F2DFAE}
+.stat .l{font-size:14.5px;margin:6px 0 0}
+.card.dk .stat .l,.card.dm .stat .l{color:#E6EAF0}
 .qlist{columns:2;column-gap:28px;padding-left:1.1em}
 .qlist li{break-inside:avoid;margin:0 0 6px}
 @media (max-width:560px){.qlist{columns:1}}
 th[scope=row]{text-align:left;font-weight:700}
 tr.nextrow td{background:var(--warm);font-weight:700}
-.big{font-size:30px;font-weight:800;line-height:1.1}
+.big{font-size:clamp(38px,7vw,48px);font-weight:800;line-height:1;letter-spacing:-.02em;margin:4px 0 6px}
 .split{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));margin:14px 0 0}
 .split .card{margin:0}
-.callout{background:var(--ink);color:#FFFFFF;border-radius:14px;padding:16px 20px;margin:14px 0 0}
+.callout{background:var(--ink);color:#FFFFFF;border-radius:14px;padding:16px 20px;margin:16px 0 0;box-shadow:var(--shadow)}
 .callout p{margin:0}
 .callout strong{color:#E8CE85}
 .links{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
@@ -96,18 +114,15 @@ footer{margin:32px 0 0;font-size:13.5px;color:var(--soft)}
   <h1>What do I have to do, and what is my choice?</h1>
   <p class="lede">Your grade comes from five things. The study tools are yours to pick.</p>
 </header>
-<section class="card" aria-labelledby="r1">
+<section class="card dk" aria-labelledby="r1">
   <h2 id="r1">What counts toward my grade?</h2>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th scope="col">What</th><th scope="col">Weight</th></tr></thead>
-    <tbody>
-      <tr><td>TBLs</td><td>30%</td></tr>
-      <tr><td>Lecture exams</td><td>30%</td></tr>
-      <tr><td>Lab practicals</td><td>30%</td></tr>
-      <tr><td>Lab quizzes</td><td>5%</td></tr>
-      <tr><td>Brain dumps</td><td>5%</td></tr>
-    </tbody>
-  </table></div>
+  <div class="stats">
+    <div class="stat"><div class="n">30%</div><div class="l">TBLs</div></div>
+    <div class="stat"><div class="n">30%</div><div class="l">Lecture exams</div></div>
+    <div class="stat"><div class="n">30%</div><div class="l">Lab practicals</div></div>
+    <div class="stat"><div class="n">5%</div><div class="l">Lab quizzes</div></div>
+    <div class="stat"><div class="n">5%</div><div class="l">Brain dumps</div></div>
+  </div>
 </section>
 <section class="card" aria-labelledby="r2">
   <h2 id="r2">Which forms do I have to sign?</h2>
@@ -137,17 +152,17 @@ footer{margin:32px 0 0;font-size:13.5px;color:var(--soft)}
   </ul>
 </section>
 <div class="callout"><p><strong>The rule:</strong> you do not need every study tool. You do need to master every competency.</p></div>
-<section class="card tm" aria-labelledby="r5">
+<section class="card dm" aria-labelledby="r5">
   <h2 id="r5">Can I earn extra credit?</h2>
   <p>Yes, two ways. There is no other extra credit.</p>
-  <ul>
-    <li><strong>Scholar Points:</strong> up to 3%, from verified hours of Study With Me, tutoring and open lab.</li>
-    <li><strong>Exam bonus questions:</strong> scores count up to 102%.</li>
-  </ul>
+  <div class="stats">
+    <div class="stat"><div class="n">+3%</div><div class="l">Scholar Points, from verified hours of Study With Me, tutoring and open lab</div></div>
+    <div class="stat"><div class="n">102%</div><div class="l">the most an exam can count, thanks to built-in bonus questions</div></div>
+  </div>
 </section>
 <nav class="links" aria-label="Related pages">
   <a href="bio004-study-process.html">How do I study for this class?</a>
-  <a href="bio004-exam-scope.html" data-sec>What is on each exam</a>
+  <a href="bio004-exam-scope.html" data-sec>What is on each exam?</a>
 </nav>
 <footer><p>BIO 004 Human Anatomy &middot; Solano Community College &middot; Dr. Sharilyn Rennie</p></footer>
 </main>
