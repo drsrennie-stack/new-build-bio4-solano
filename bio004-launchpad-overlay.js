@@ -202,7 +202,7 @@
   var PANELS = {
     help: { title: 'Need help?', icon: icon(I.chat, 'ic-gold'), body: function () {
       return '<p class="lp-grp">Talk to Dr. Rennie</p>' + list([
-          { name: 'Office hours', what: 'Mondays 10:30 am to 12:30 pm in the conference room, and 30 minutes before every class' },
+          { name: 'Office hours', what: 'Mondays and Wednesdays 10:30 am to 12:30 pm in the conference room across from Biotech Lab 1127, and 30 minutes before every class' },
           { name: 'Open lab', what: 'Fridays 2:00 to 3:00 pm' },
           { name: 'Email', href: 'href="mailto:srennie@solano.edu"', what: 'srennie@solano.edu' }
         ])

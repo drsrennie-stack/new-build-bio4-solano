@@ -75,7 +75,7 @@ window.BIO004_LINKS = {
     canvasInbox: 'the Canvas Inbox',
     email:       'srennie@solano.edu',
     turnaround:  'about 48 to 72 hours on weekdays',
-    officeHours: '30 minutes before each class, or by appointment',
+    officeHours: 'Mondays and Wednesdays 10:30 am to 12:30 pm in the conference room across from Biotech Lab 1127, and 30 minutes before each class. Open lab is Fridays 2:00 to 3:00 pm. Other times by appointment',
     ascEmail:    'ASC@solano.edu',
     ascPhone:    '(707) 864-7136'
   }

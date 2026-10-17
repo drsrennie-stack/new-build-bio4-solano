@@ -347,7 +347,7 @@
           + '1. Open the ' + a('masteryOS', 'Mastery OS') + ' Gap Finder to see exactly what is weak.'
           + '<br>2. Run a 3-Day Cram before your next exam.'
           + '<br>3. Join a ' + a('study') + ' session.'
-          + '<br>4. Come to office hours, 30 minutes before every class, or book free tutoring through the ' + a('astc') + '.'
+          + '<br>4. Come to office hours (Mondays and Wednesdays 10:30 am to 12:30 pm, or 30 minutes before every class), or book free tutoring through the ' + a('astc') + '.'
           + '<br><br>Then write three specific commitments for the week, small and checkable, plus one thing you will do in the next 24 hours. Not "study more." Something like "20 minutes of recall on the tissues sheet after dinner."<br><br>Reach out early, and watch the right signals: focus, recall and energy improve before the gradebook does, so do not read a flat grade as no progress.'
           + (ctx.nextExam ? '<br><br>' + examLine(ctx, ctx.nextExam) : '');
 
@@ -415,7 +415,7 @@
           + 'Sit with it and sort every lost point into one of four piles: did not study it, studied it but never understood it, understood it but could not recall it cold, or knew it and lost it to misreading or panic. Those four need four different repairs, and most students find one pile holds most of their points.'
           + '<br><br>Then start an error log. For each wrong answer write what you thought, what is correct, why you missed it, and what you will remember. Try the same question cold a week later, and only cross it off when you can get its whole type right without looking.'
           + '<br><br>Two honest questions about how you prepared: how many days did you spread the studying across, and how much of it was retrieval instead of rereading? One day of cramming scores very differently from a week of spaced work, even at the same hour total.'
-          + '<br><br>Then bring the sorted exam to office hours, 30 minutes before class. That conversation gets you much further than "I studied but it did not work." '
+          + '<br><br>Then bring the sorted exam to office hours (Mondays and Wednesdays 10:30 am to 12:30 pm, or 30 minutes before class). That conversation gets you much further than "I studied but it did not work." '
           + a('masteryOS', 'Mastery OS') + ' has a Gap Finder for rebuilding the weak spots you just found. And for next week, run one lane of the ' + ilink('bio004-study-protocol.html', 'Study Protocol') + ': it is a flow chart of exactly what to do, box by box.';
 
       case 'stillpass':

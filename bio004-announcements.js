@@ -34,7 +34,7 @@ window.BIO004_ANNOUNCEMENTS = [
     link: 'bio004-swm-bonus-announcement.html', linkLabel: 'The full rules' },
   { date: '2026-08-24',
     title: 'Your Team Is Not Controlling Your Grade',
-    body: 'Only 12.5% of your course grade is team-determined; 87.5% is you. And the research says teams outperform their own best member more than 99% of the time. The numbers, in perspective.',
+    body: 'Only 12.5% of your course grade is team-determined; 87.5% is you. And the research says teams outperform their own best member more than 99% of the time. Since Module 3, you earn the TBL team points when your own iRAT is 70% or higher. The numbers, in perspective.',
     link: 'bio004-team-grade-announcement.html', linkLabel: 'See the math' },
   { date: '2026-08-24',
     title: 'What If My Team Is Not Participating?',
