@@ -231,7 +231,7 @@
     var M = (window.BIO004_SESSION_LINKS||{})[s.d] || {};
 
     if(s.pw){
-      html += '<div class="d-card prework"><div class="dc-k">Pre-work<span class="dc-when">by '+nbLabel+' night</span></div>';
+      html += '<div class="d-card prework"><div class="dc-k">Pre-work (optional, but recommended)<span class="dc-when">by '+nbLabel+' night</span></div>';
       html += '<div class="dc-t">'+esc(s.pw.t)+'</div>';
       var step1 = many(M.sheets,'&#9998;','Pre-work',s.d) + many(M.notes,'&#9776;','Notes',s.d) + many(M.workbooks,'&#9636;','Workbook',s.d);
       var step2 = many(M.videos,'&#9658;','Video',s.d);
