@@ -16,8 +16,11 @@ Unchanged. No interactive elements added or removed.
 Markup checked. Notes PDFs rebuilt with WeasyPrint as tagged PDF/UA-1 (structure tree, language en-US, title shown); page counts match the old PDFs. Module 1 to 3 packet PDFs rebuilt in Chromium with tagging on; page counts match (81, 82, 84). A live VoiceOver or NVDA pass is still to do.
 
 ## 6. Known limitations
-- male-reproductive-system.pdf was not rebuilt (see docs/recall-rx-card-audit.md).
+- male-reproductive-system.pdf and BIO004-Week6-Notes.pdf were not rebuilt. The words ", slightly acidic" were removed from their text directly, so their tagging and layout are as before.
 - Live screen reader pass still to do.
 
 ## 7. Reviewer
 Checked with Claude for Dr. Sharilyn Rennie. Every page that changed was loaded in headless Chromium over http: no script errors and no missing files. Facts follow the reviewed course notes (BIO004-Module4-Packet.html, BIO004-Module5-Packet.html).
+
+## Addendum: week page links to the note sheet keys
+schedule-alt-fall2026.js now adds a "Check your drawings" link beside every Module 4 and 5 note sheet link. The week hubs (weeks 11 to 16) and the pre-read page pick it up. The links carry target="_top" like the others and open the key at the matching competency. No script errors on any week hub.

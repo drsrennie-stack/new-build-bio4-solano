@@ -23992,7 +23992,7 @@ window.BIO004_COURSE_CONTENT = {
        "id": "fr13",
        "dok": 2,
        "q": "Give the shape, location, and secretion of the prostate.",
-       "a": "A single walnut-sized gland inferior to the bladder surrounding the prostatic urethra; secretes a milky, slightly acidic fluid.",
+       "a": "A single walnut-sized gland inferior to the bladder surrounding the prostatic urethra; secretes a milky fluid that helps the sperm stay active.",
        "tags": [
         "reproductive",
         "male"

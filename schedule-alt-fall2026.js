@@ -239,6 +239,18 @@ window.BIO004_ALT = (function () {
     ans:       { draw:[[M5+'#c192','Module 5 note sheets: The Autonomic Nervous System']], comps:[192,193] },
     cranial:   { draw:[[M5+'#c161','Module 5 note sheets: The Brainstem'],[M5+'#c190','Module 5 note sheets: The Cranial Nerves']], comps:[161,166] }
   };
+  /* Modules 4 and 5: each note sheet link gets a second link to the online
+     key for the same competency, where students check their drawing. */
+  var KEY = {}; KEY[M4] = 'BIO004-M4-Note-Sheet-Key.html'; KEY[M5] = 'BIO004-M5-Note-Sheet-Key.html';
+  Object.keys(DRAW).forEach(function(k){
+    var out = [];
+    DRAW[k].draw.forEach(function(d){
+      out.push(d);
+      var hash = d[0].indexOf('#'), file = hash < 0 ? d[0] : d[0].slice(0, hash);
+      if (KEY[file]) out.push([KEY[file] + (hash < 0 ? '' : d[0].slice(hash)), d[1].replace(/^Module \d note sheets: /, 'Check your drawings: ')]);
+    });
+    DRAW[k].draw = out;
+  });
   Object.keys(DRAW).forEach(function(k){ if(LECTURE[k]){ LECTURE[k].draw = DRAW[k].draw; LECTURE[k].comps = DRAW[k].comps; LECTURE[k].drawSheet = !!DRAW[k].sheet; } });
 
   var MUSCLE_CHART = ['https://www.medmasterscollaborative.com/muscle-charts-i-o-a-inn','Muscle charts: origin, insertion, action, innervation'];

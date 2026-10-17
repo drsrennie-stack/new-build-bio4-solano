@@ -327,6 +327,6 @@ Rewrite and audit performed by Claude at Dr. Rennie's request, with an independe
 - 69 cards still have no competency (blood typing, muscle properties, deep back muscles, joint disorders and a few others). They stay open in Level up.
 - Competency 27 still has 3 Level 1 cards, because her notes give only two facts on it.
 
-### Not changed
-- male-reproductive-system.pdf (a May case deep dive) still says "slightly acidic". Rebuilding it from the page changes its layout, so it was left alone.
-- The old deck files (course-content.js, bio004-w7-cards.js and others) and w7-preview.html still carry the older wording. Recall no longer reads them.
+### Prostate wording, everywhere
+- The phrase "slightly acidic" for prostate fluid is gone from every file in the repo: the pages above, course-content.js, course-content-tagged.js, male-reproductive-system.pdf and BIO004-Week6-Notes.pdf (the summer Week 6 compilation). In the two PDFs only the words ", slightly acidic" were taken out of the text; nothing else on the page moved.
+- The old deck files and w7-preview.html may still carry other older wording. Recall no longer reads them.
