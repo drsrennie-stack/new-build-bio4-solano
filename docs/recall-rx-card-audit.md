@@ -301,3 +301,32 @@ Rewrite and audit performed by Claude at Dr. Rennie's request, with an independe
 | L02689 | corrected | Wrong-option note gives the ENS as about one million neurons (from her notes); standard texts give roughly 100 million or more, so the number is dropped. |
 | L03054 | corrected | Note for the lower lumbar and coccygeal option says both sit in the gap between L2 and S2; the coccygeal segment lies below S4, not in that gap. |
 | L03258 | corrected | Notes for the glossopharyngeal and vestibulocochlear options are swapped: the glossopharyngeal option shows 'Correct. CN VIII...' and the keyed vestibulocochlear option shows the glossopharyngeal explanation. |
+
+## October 17 update, part 3 (Recall Lab Part II)
+
+### Her pages brought in line with the reviewed course notes
+- Palatine tonsils: lateral walls of the oropharynx (m4-lymphatic-notes).
+- Duodenum: about 25 cm (10 inches) (m4-alimentary-notes, alimentary-canal, gi-tract-journey).
+- Prostate: "milky fluid that helps the sperm stay active", with no pH named, matching the course notes (m4-male-repro-notes, reproductive-male, reproductive-male-workbook, reproductive-anatomy-study-guide, male-reproductive-system, the Module 5 exam rationale and the practice exam bank). Testis lobules now "a few hundred", as in the course notes.
+- Filtration slits: hold back most of the smaller proteins that get past the basement membrane (m4-urinary-notes, urinary-system, m4-urinary-worksheet, Module 5 exam rationale, practice exam bank).
+- Brainstem: nuclei of III through X and XII; the XI nucleus sits in the upper cervical cord (m5-brainstem-notes, cns-brainstem, the Module 5 note sheet key).
+- Cranial nerves: the solitary nucleus is in the medulla; the spinal accessory nucleus is in the upper cervical cord, about C1 to C5 (m5-cranial-notes, cranial-nerves).
+- Spinal cord: lumbar enlargement behind about T9 to T12; lateral horn T1 to L2 (m5-cord-notes, cns-spinal-cord, spinal-cord-study-guide).
+- Meninges: the cranial epidural space is a potential space (m5-meninges-notes, cns-meninges-csf).
+- Enteric nervous system: roughly 100 million neurons (m5-nervous-tissue-notes, nervous-tissue).
+- "Hold onto this" callouts now read "Key point" on every BIO 004 notes page and in the Module 1 to 3 packets.
+
+### Open flags settled
+- Brachioradialis now sits in the posterior forearm block of the Module 3 list (and in the Module 3 lab packet and Module 3 packet), with a note that it flexes the elbow. That matches the arm notes, the antebrachium sprint and the muscle chart.
+- Main elbow flexor: the fascicles notes and the Module 3 packet now use the brachialis as the agonist example and the biceps as the synergist, matching the arm notes.
+- Extraocular muscles (competency 96) stay as a Module 3 Lecture and Lab competency. Dr. Rennie's rule: lab tag decisions apply to lab materials only. The eye muscles are identified in lab on the Module 5 list.
+- Deep back muscles and joint disorders stay in the lecture notes and on cards with no competency (they are lecture content).
+
+### Card bank
+- Competency 152 (neural tube brain development) now has a Mastery OS id, w7-brain-development, added to competenciesfall2026.js. Loops already credited that id, which had never been defined, so Loops results for brain development now reach the weak areas dashboard too. Its 10 cards carry the id.
+- 69 cards still have no competency (blood typing, muscle properties, deep back muscles, joint disorders and a few others). They stay open in Level up.
+- Competency 27 still has 3 Level 1 cards, because her notes give only two facts on it.
+
+### Not changed
+- male-reproductive-system.pdf (a May case deep dive) still says "slightly acidic". Rebuilding it from the page changes its layout, so it was left alone.
+- The old deck files (course-content.js, bio004-w7-cards.js and others) and w7-preview.html still carry the older wording. Recall no longer reads them.

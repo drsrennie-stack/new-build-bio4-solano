@@ -79,10 +79,23 @@ Files: module-3-structure-list.html; muscle-structure, head-neck-muscles, antebr
 
 Files: BIO004-M3-Lab-Packet.html, BIO004-M3-Lab-Packet.pdf.
 
-- Part A (structure list) is now the same content as module-3-structure-list.html, so the packet and the list name the same 261 structures.
-- Part B (muscle charts): rows for muscles that are not tagged were removed (orbicularis oculi, the pterygoids, scalenes, supra and infrahyoids, innermost intercostals, transversus thoracis, serratus posterior, subclavius, extensor indicis, and every hand muscle except abductor pollicis brevis). The deep back chart was removed. Platysma moved to the neck chart to match the list. Chart notes were rewritten where they named removed muscles.
+- Part A (structure list) is now the same content as module-3-structure-list.html, so the packet and the list name the same 262 structures.
+- Part B (muscle charts): rows for muscles that are not tagged were removed (the pterygoids, scalenes, supra and infrahyoids, innermost intercostals, transversus thoracis, serratus posterior, subclavius, extensor indicis, and every hand muscle except abductor pollicis brevis). The deep back chart was removed. Platysma moved to the neck chart to match the list. Chart notes were rewritten where they named removed muscles.
 - Part C (blood): hemocytoblast row, rouleaux term and the rouleaux mention removed.
 - Part D (questions): questions on untagged structures and nerve-to-muscle questions removed; "origin, insertion, action, or nerve" now reads "origin, insertion, or action". One location question added (axillary nerve at the surgical neck of the humerus, which is on the list).
 - PDF: 26 to 21 pages. Built with WeasyPrint as PDF/UA-1 (tagged, structure tree, language en-US, title shown). The page was rendered with scripts off so the dock does not add on-screen badges to the printed headings; the QR codes keep their alt text and print at 1.3 inches.
 - Print CSS: a lab question now stays on the same page as the block above it.
 - No duplicate ids, no broken in-page links, no script errors, no horizontal scroll at 375px.
+
+## Addendum, October 17, 2026: orbicularis oculi back on Module 3, full neck muscles on Module 4
+
+Files: module-3-structure-list.html, BIO004-M3-Lab-Packet.html and .pdf, head-neck-muscles-lab-sprint.html, week-7-lab-sprints.html, lab-sprint-counts.js, module-4-structure-list.html, BIO004-M4-Lab-Packet.html and .pdf.
+
+- Dr. Rennie's call: orbicularis oculi is a muscle of facial expression and stays on the Module 3 list. Added to the list, the lab packet (Part A and its chart row) and the Head and Neck Muscles sprint (20 to 21 structures; Spiral Rounds and counters read from the sprint's own data).
+- Dr. Rennie's call: the full set of neck muscles moves to Module 4, Chapter 8, with the neck vessels. The chapter now has a "Muscles of the neck" block (sternocleidomastoid, three scalenes, four suprahyoids, four infrahyoids) and a "Vessels of the neck" block. The Module 4 lab packet chart became "Muscles of the neck" with ten rows, reused from the reviewed Module 3 chart. One lab question was added (suprahyoid or infrahyoid), and the sternocleidomastoid question now asks origin, insertion and action, without the nerve.
+- Lecture competencies and note sheet prompts were not changed: some structures are tested in lecture but not on the lab exam.
+- lab-sprint-counts.js regenerated from every sprint page's own count line. It still held the August counts for the five sprints changed in drop oct17f, so the lab sprint index showed the old numbers. Total is now 1,109 structures across 31 sprints.
+- Module 4 structure list: a contents title pushed the page 42px wider than a 375px screen. It now wraps (same fix as Module 3). Reflow 1.4.10 passes.
+- Module 4 lab packet PDF rebuilt with WeasyPrint as tagged PDF/UA-1 (it was a Chromium print before, which has no structure tree). 28 pages. Module 4 copies already printed do not have the new neck muscles.
+- Print CSS on both packets: a lab question stays on the page with the block above it.
+- No script errors on any changed page; no duplicate ids.
