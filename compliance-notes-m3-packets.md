@@ -63,3 +63,14 @@ Checked the markup structure for landmarks (header, nav, main, footer), heading 
 ## 7. Reviewer
 
 Built and checked with Claude for Dr. Sharilyn Rennie. Anatomy content fact-checked against OpenStax Anatomy and Physiology 2e and Gray's Anatomy for Students.
+
+## Addendum, October 17, 2026: Module 3 tag check
+
+Files: module-3-structure-list.html; muscle-structure, head-neck-muscles, antebrachium-muscles, heart and blood-vessels lab sprints; week-3, week-4 and week-7 lab sprint pages.
+
+- The structure list and the sprints now hold only the structures Dr. Rennie tags, from her choices in the Module 3 tag check editor (all nine sections checked).
+- The list gains a Chapter 2, Muscles of the Head and Neck (17 face muscles, platysma, sternocleidomastoid). Chapters 2 to 8 became 3 to 9; the contents list and the chapter menu were updated to match. The new chapter uses the same markup as the others, so the accordion, the finder and the print layout pick it up.
+- Sprint counts (category counts, totals, Spiral Rounds sets, the study plan counter) match the remaining structures. Empty categories were removed from both the HTML list and the script data.
+- 1.3.1 and 2.4.6: the new chapter has one h2 and the same block structure as the other chapters. No duplicate ids on any changed page.
+- 1.4.10 Reflow: checked at 375px wide. Fixed a contents title on the structure list that pushed the page 48px wider than the screen (it now wraps).
+- No script errors on any changed page in Chromium.
