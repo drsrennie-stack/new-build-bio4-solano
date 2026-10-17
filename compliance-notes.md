@@ -1,36 +1,43 @@
-# Accessibility compliance notes: index
+# Accessibility compliance notes
 
-**Project:** BIO 004 Human Anatomy, Fall 2026
-**Repo:** drsrennie-stack/new-build-bio4-solano
-**Maintainer:** Dr. Sharilyn Rennie
+**Project:** BIO 004 syllabus pages, Fall 2026 (MedMasters site language)
+**Files:** bio004-syllabus-update.html, bio004-how-tbls-work.html, bio004-exam-scope.html, bio004-why-before-class.html, bio004-required-optional.html, bio004-anatomy-feels-hard.html, bio004-canvas-pages-setup.html
+**Date:** October 17, 2026
 
-One compliance-notes file per deliverable, named for what it covers, so no
-review ever overwrites another. This file is only the index. When a new
-deliverable ships, add its notes as `compliance-notes-<deliverable>.md` and
-list it here.
+## WCAG version and target
 
-## The notes on file
+WCAG 2.2. Level AA met on every criterion checked below; AAA met for all body text and headings.
 
-| File | Covers | Date |
-|------|--------|------|
-| `compliance-notes-fall-sweep.md` | Fall 2026 site sweep: syllabus-schedule.js, week-extras.js, missing-figure.js, and the pages touched in the audit | Aug 11, 2026 |
-| `compliance-notes-mastery-tools.md` | Study tools: bio004-draw.html, bio004-day-review.html, Mastery OS changed sections, mastery-evidence.js, draw-checklists.js, loops-index.js, dock tiles | Aug 9, 2026 |
-| `compliance-notes-recall-rx-exam-units.md` | Recall Rx spaced-recall system and the Muscle, Lymphatic, and Blood exam-unit decks | Aug 2026 |
-| `compliance-notes-brain-dump.md` | Brain Dump system (was misnamed `compliance-notes_4.md`) | Aug 2026 |
-| `compliance-notes-exam-simulator.md` | Exam Simulator and AI Exam Tutor: exam-simulator.html, ai-exam-tutor.html, exam-bank.sample.js, competency-upload-template.csv | Aug 25, 2026 |
-| `compliance-notes-tissues-round-table-sheets.md` | Tissues Round Table printable lab sheets: tissues-round-table-sheets.html and the rendered PDF | Sep 1, 2026 |
-| `compliance-notes-integumentary-round-table-sheets.md` | Integumentary Round Table printable lab sheets: integumentary-round-table-sheets.html and the rendered PDF | Sep 1, 2026 |
-| `compliance-notes-module-2-round-table-sheets.md` | Module 2 Round Table printable lab sheets: bone, skull, spine, upper-limb, lower-limb, joints (HTML and rendered PDFs) | Sep 1, 2026 |
-| `compliance-notes-intro-round-table-sheets.md` | Introduction to Anatomy Round Table printable lab sheets: intro-round-table-sheets.html and the rendered PDF | Sep 1, 2026 |
-| `compliance-notes-kahoots.md` | Anatomy Kahoots hub (kahoots.html) and the Kahoots dock tile in bio004-dock.js | Sep 2, 2026 |
-| `compliance-notes-lecture-gap-exam-1.md` | Exam 1 Gap Check: gap exam plus graded Metacognition Worksheet, both in bio004-lecture-gap-exam-1.html | Sep 2, 2026 |
-| `compliance-notes-readiness.md` | Readiness hub (bio004-readiness.html) and the gold Readiness dock card | Sep 2, 2026 |
-| `compliance-notes-module1-slideshow.md` | Module 1 Practice Lab Exam slide show (module1slideshow.html), editorial restyle | Sep 2, 2026 |
+## Color contrast audit
 
-## Housekeeping
+| Pair | Ratio | Normal text | Large text |
+|---|---|---|---|
+| Ink #0B1530 on white | 17.4:1 | AAA | AAA |
+| Soft gray #46555F on white | 7.7:1 | AAA | AAA |
+| Maroon #7A2A22 on white (eyebrows, h2 highlight, links, numerals) | 9.6:1 | AAA | AAA |
+| Muted #6B7682 on white (citations, past table rows) | 4.6:1 | AA | AAA |
+| White on navy #060B1A | 19.5:1 | AAA | AAA |
+| #C9CFD9 on navy #060B1A (band body text) | 12.4:1 | AAA | AAA |
+| Gold #B8924A on navy #060B1A (band eyebrows, 13px bold uppercase) | 6.5:1 | AA | AAA |
+| Terra-light #C2734D on navy (highlighted headline words, 28px+) | 5.5:1 | AA | AAA |
+| Terra #A0522D on navy (01/02/03 numerals, 72px decorative) | 3.1:1 | n/a | AA (large) |
+| White on maroon #7A2A22 (buttons, badges) | 9.6:1 | AAA | AAA |
 
-`compliance-notes_4.md` still exists on the live repo under its old name and
-can be deleted there; its content lives on as `compliance-notes-brain-dump.md`.
-The Aug 11 site-sweep notes were briefly overwritten by the Exam Simulator
-notes when both were named `compliance-notes.md`; both are preserved above
-under their own names.
+Note: the big maroon-on-navy numerals in the dark bands sit at the large-text AA line, the same treatment your MedMasters site uses. They are decorative section numbers, and each column also carries a white title, so nothing depends on reading them.
+
+## Keyboard navigation
+
+Skip link on every page. Top nav, buttons, text links, accordion summaries and copy buttons are all in the tab order with a 3px maroon focus outline. Accordions are native details/summary, so Enter and Space open them and screen readers announce the state. A link to a question inside a closed accordion opens it on arrival. prefers-reduced-motion turns off smooth scrolling.
+
+## Screen reader
+
+Landmarks: header, nav (labelled), main, section with aria-labelledby, footer. One h1 per page, h2 per section, h3 on exam cards. Tables use th with scope. The course mark is an inline SVG marked decorative, with the course name as live text beside it; the mark link carries an aria-label. Copy buttons have visible text; textareas have for+id labels. No italics anywhere.
+
+## Known limitations and remediation
+
+- The TBL list on the setup sheet depends on schedule-fall2026.js; a fallback sentence appears if it does not load.
+- Iframe heights in the embed codes are first-paint estimates; the height-sender script corrects them live, including when an accordion opens.
+
+## Reviewer
+
+Dr. Sharilyn Rennie
