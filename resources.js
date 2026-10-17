@@ -51,7 +51,7 @@
 (function(){
 
 var C     = 'https://drsrennie-stack.github.io/new-build-bio4-solano/';
-var LOOPS = 'https://www.medmasterscollaborative.com/anatomy-loops';
+var LOOPS = 'mastery-os-fall-2026.html#s-loops';
 var RECALL = C + 'bio004-spaced-recall.html';
 
 /* Build a Loom share URL, starting at t seconds when t is given. */

@@ -121,10 +121,13 @@
 
     var out = [];
     Object.keys(st.topics).forEach(function (tid) {
-      var entry = MAP[tid];
-      if (!entry || !entry.comps.length) return;
+      var topicEntry = MAP[tid];
       var cards = (st.topics[tid] && st.topics[tid].cards) || {};
       Object.keys(cards).forEach(function (cid) {
+        /* A card's own competency (card-level link) wins over the
+           topic-level list, so one answer credits one competency. */
+        var entry = MAP[tid + ':' + cid] || topicEntry;
+        if (!entry || !entry.comps || !entry.comps.length) return;
         var r = cards[cid] || {};
         var hist = r.history;
         if (hist && hist.length) {

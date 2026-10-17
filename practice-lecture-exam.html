@@ -52,6 +52,30 @@
      A finished paper writes one entry per competency into
      bio004-evidence-v1 as source 'exam', so it moves the weak spot
      board. Only competency ids and scores are stored.
+
+     WHAT THE STUDENT CHOOSES (merged in from the old Practice Exam
+     Builder, which now forwards here)
+
+     What it covers: modules and single topics from the audited card
+     bank (bio004-card-bank.js), starting with every topic whose first
+     class date has passed for the student's section (bio004-section,
+     or ?sec=). ?exam=N starts on module N. Cards join by their own
+     competencyId. Her written items join a partial module through
+     their topic's competencies (BIO004_EXAM_TOPIC_COMPS), brain dump
+     prompts through braindump-competency-map.js.
+
+     How hard: a DOK mix for true or false and multiple choice. Mixed
+     is the default and copies her real exams, half DOK 1 and 2 and
+     half DOK 3. A level that runs short borrows from its nearest
+     neighbour, and the paper header reports the mix it actually got.
+
+     If the real exam were tomorrow: a range built from the last few
+     papers aimed at the same exam, weighted half DOK 1 and 2, half
+     DOK 3, and shifted by how far the student's logged real scores
+     have run from earlier predictions. Practice history lives in
+     bio004-pexam-history, real scores in bio004_real_exam_scores
+     (the builder's key, so scores already logged carry over). Both
+     stay in this browser.
      ============================================================ -->
 
 <style>
@@ -60,7 +84,7 @@
     --terra-dark:#6B1616; --terra:#8B1D1D;
     --gold:#DCB45C; --gold-text:#6F5316;
     --white:#FFFFFF; --offwhite:#FAFAF9; --sub:#F1F4F7;
-    --ink-3:#4A5763; --line:#ECEAE6;
+    --ink-2:#2E3A47; --ink-3:#4A5763; --line:#ECEAE6;
     --ok:#1F6B3A; --bad:#8A1010;
     --radius:8px;
     --rest:0 1px 3px rgba(0,0,0,0.08);
@@ -256,6 +280,7 @@
   .partscores{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px}
   .partscores li{display:flex;justify-content:space-between;gap:12px;background:var(--sub);
                  border-radius:9px;padding:11px 14px;font-size:14.5px}
+  .partscores li b{white-space:nowrap}
 
   .float{position:fixed;right:20px;bottom:20px;z-index:60;display:none;background:#fff;border-radius:16px;
          padding:12px 16px;box-shadow:0 24px 46px -12px rgba(0,0,0,.35);align-items:center;gap:13px}
@@ -266,15 +291,68 @@
   .float button{background:var(--sub);color:var(--navy);border:0;border-radius:9px;font-family:var(--font);
                 font-weight:800;font-size:13px;padding:9px 12px;cursor:pointer}
 
+  /* ---------- what it covers ---------- */
+  .setcard{margin:0 0 16px}
+  .setcard .mod-b{padding-top:2px}
+  .smod{padding:12px 0;border-top:1px solid #F0EEE9}
+  .smod:first-child{border-top:0;padding-top:4px}
+  .smod-h{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:6px 12px}
+  .chk{display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-size:14.5px;line-height:1.4;min-width:0}
+  .chk input{width:19px;height:19px;flex:none;margin:1px 0 0;accent-color:#6B1616;cursor:pointer}
+  .chk .mk{display:block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-dark)}
+  .chk .mt{display:block;font-weight:700}
+  .scount{font-size:12px;font-weight:800;color:var(--gold-text);white-space:nowrap;padding-top:2px}
+  .smod details{margin:6px 0 0 29px}
+  .smod summary{cursor:pointer;font-size:13.5px;font-weight:700;color:var(--terra-dark);padding:4px 0;width:max-content;max-width:100%}
+  .tlist{list-style:none;margin:6px 0 2px;padding:0;display:grid;gap:8px}
+  .tlist .chk{font-size:14px;font-weight:500}
+  .tdate{display:block;font-size:12px;color:var(--ink-3);font-weight:600;margin-top:1px}
+  .tdate.later{color:var(--terra-dark)}
+  .quick{display:flex;flex-wrap:wrap;gap:8px;padding:0 22px 6px}
+  .quick .pill{font-size:13px;padding:8px 13px}
+
+  /* ---------- how hard ---------- */
+  .mixes{border:0;margin:0;padding:0 22px 18px;display:grid;
+         grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:9px;min-width:0}
+  .mix{position:relative;display:block;background:var(--sub);border-radius:10px;padding:12px 14px;
+       cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.05);transition:var(--t)}
+  .mix:hover{transform:translateY(-2px);box-shadow:var(--hover)}
+  .mix input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+  .mix:focus-within{outline:3px solid var(--terra-dark);outline-offset:2px}
+  .mix b{display:block;font-size:14.5px}
+  .mix span{display:block;font-size:12.5px;color:var(--ink-3);margin-top:2px;line-height:1.4}
+  .mix.on{background:var(--navy);color:#fff}
+  .mix.on span{color:#C6CEDA}
+  .mix.on b{color:var(--gold)}
+
+  /* ---------- prediction and real scores ---------- */
+  .pred{background:#fff;border-radius:12px;padding:22px 24px;margin:16px 0;box-shadow:var(--hover)}
+  .pred h3{margin:0 0 6px;font-size:17px;font-weight:800;letter-spacing:-.01em}
+  .pred .range{font-size:28px;font-weight:800;color:var(--terra-dark);letter-spacing:-.02em;margin:0;line-height:1.15}
+  .pred .cave{font-size:14px;color:var(--ink-3);margin:8px 0 0;max-width:66ch}
+  .pred h4{margin:20px 0 4px;font-size:15px;font-weight:800}
+  .logrow{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-top:10px}
+  .logrow .field{display:flex;flex-direction:column;gap:5px}
+  .logrow label{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+  .logrow input,.logrow select{font-family:var(--font);font-size:15.5px;font-weight:600;background:#fff;color:var(--navy);
+       border:0;border-radius:9px;padding:10px 12px;box-shadow:inset 0 0 0 2px #98A3B4}
+  .logrow input{width:110px}
+  .logrow input:focus,.logrow select:focus{box-shadow:inset 0 0 0 2px var(--terra-dark)}
+  .loglist{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:6px}
+  .loglist li{background:var(--sub);border-radius:9px;padding:9px 13px;font-size:14px}
+  .say-ok{color:var(--ok);font-weight:700}
+  .say-no{color:var(--bad);font-weight:700}
+
   footer{margin-top:34px;padding-top:20px;color:var(--ink-3);font-size:14px;
          box-shadow:inset 0 1px 0 rgba(8,16,31,.10)}
+  footer a{color:var(--terra-dark);font-weight:700}
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
     .opt,.big,.ghost{transition:none}
     .opt:hover,.big:hover,.ghost:hover{transform:none}
   }
   @media print{
-    .float,.row,#setup,.ghost{display:none !important}
+    .float,.row,.btnrow,#setup,.ghost,.pred{display:none !important}
     .q,.card,.result,.part-h{box-shadow:none}
     .part-h{background:#fff;color:var(--navy)}
     .part-h .pk{color:var(--terra-dark)} .part-h p{color:var(--ink-3)}
@@ -297,22 +375,48 @@
 <main id="main">
   <h1>Practice <span>exam</span></h1>
   <p class="lede">Built like the real thing: true or false with the fix word, confidence-based multiple
-     choice, matching, and a free response. 100 points, and you get a different paper every time.</p>
+     choice, matching, and a free response. 100 points, and you get a different paper every time.
+     Pick what it covers and how hard it is, then make your exam.</p>
   <p class="lede" id="lastLine"></p>
 
   <section id="setup">
     <div class="controls">
-      <span class="lbl">Clock</span>
-      <div id="timePick" style="display:flex;flex-wrap:wrap;gap:9px" role="group" aria-label="Choose whether the exam is timed"></div>
+      <span class="lbl" id="clockLblTop">Clock</span>
+      <div id="timePick" style="display:flex;flex-wrap:wrap;gap:9px" role="group" aria-labelledby="clockLblTop"></div>
     </div>
-    <p class="count-line" id="setupNote" role="status"></p>
+    <p class="count-line" id="setupNote" role="status" aria-live="polite"></p>
 
     <div class="layout">
-      <nav class="modnav" id="examPick" role="group" aria-label="Choose which exam to practice">
-        <span class="lbl">Exams</span>
+      <nav class="modnav" id="examPick" role="group" aria-label="Quick picks for what the exam covers">
+        <span class="lbl">Quick pick</span>
       </nav>
 
       <div>
+        <div class="mod setcard">
+          <div class="mod-h">
+            <h2 class="title" id="h-scope">What does it cover?</h2>
+            <span class="count" id="scopeCount"></span>
+          </div>
+          <p class="mod-sub">It starts with everything taught so far. Tick a whole module, or open
+             one and pick single topics.</p>
+          <div class="quick" role="group" aria-label="Select or clear every topic">
+            <button type="button" class="pill" id="scopeAll">Tick everything</button>
+            <button type="button" class="pill" id="scopeNone">Clear all</button>
+          </div>
+          <div class="mod-b" id="scopeList"></div>
+        </div>
+
+        <div class="mod setcard">
+          <div class="mod-h">
+            <h2 class="title" id="h-mix">How hard?</h2>
+          </div>
+          <p class="mod-sub">DOK 1 is recall. DOK 2 is using what you know. DOK 3 is reasoning through
+             a case. This sets the true or false and the multiple choice.</p>
+          <fieldset class="mixes" id="mixes">
+            <legend class="sr">How hard should the exam be?</legend>
+          </fieldset>
+        </div>
+
         <div class="mod">
           <div class="mod-h">
             <h2 class="title" id="h-setup">What you get</h2>
@@ -325,11 +429,14 @@
         <div class="start-card">
           <span class="what">Ready when you are
             <span class="note">Press it and you get a brand new paper. No question shows up twice on
-              it, and it spreads across the whole module instead of hammering one topic.</span></span>
+              it, and it spreads across everything you picked instead of hammering one topic.</span></span>
           <button type="button" class="big" id="startBtn">Make my exam</button>
         </div>
 
+        <div id="predSetup"></div>
+
         <div class="btnrow">
+          <a class="ghost" href="mastery-os-fall-2026.html#s-weak" target="_top">Open my weak spot board</a>
           <a class="ghost" href="bio004-course-calendar.html" target="_top">Back to the calendar</a>
           <a class="ghost" href="course-materials.html" target="_top">Course materials</a>
         </div>
@@ -346,22 +453,24 @@
          You will not see a single answer until you do, so keep your notes shut.</p>
     </div>
     <form id="parts"></form>
-    <div class="row">
+    <div class="btnrow">
       <button type="button" class="big" id="submitBtn">Submit exam</button>
       <button type="button" class="ghost" id="abandonBtn">Start over</button>
     </div>
-    <p class="hint" id="unanswered" role="status" style="margin-top:12px"></p>
+    <p class="hint" id="unanswered" role="status" aria-live="polite" style="margin-top:12px"></p>
   </section>
 
-  <section id="out" class="hidden" tabindex="-1">
-    <h2 class="sr">Your result</h2>
+  <section id="out" class="hidden" tabindex="-1" aria-labelledby="outH">
+    <h2 class="sr" id="outH">Your result</h2>
+    <p class="sr" id="resultSay" role="status" aria-live="polite"></p>
     <div id="resultWrap"></div>
+    <div id="predOut"></div>
   </section>
 
   <footer>
     <p>Every question is one Dr. Rennie wrote for a BIO 004 exam, with multiple choice topped up from the
        course card bank. Nothing repeats inside a paper. Nothing you answer leaves this browser. Your
-       score goes to your weak spot board.</p>
+       score goes to your <a href="mastery-os-fall-2026.html#s-weak" target="_top">weak spot board</a>.</p>
     <p>Dr. Sharilyn Rennie &middot; BIO 004 Human Anatomy &middot; Solano Community College</p>
   </footer>
 </main>
@@ -381,6 +490,7 @@
 <script src="mastery-evidence.js"></script>
 <script src="bio004-card-bank.js"></script>
 <script src="bio004-braindump-data.js"></script>
+<script src="braindump-competency-map.js"></script>
 <script src="practice-exam-bank.js"></script>
 
 <script>
@@ -389,11 +499,13 @@
 
   var BANK   = window.BIO004_CARD_BANK || {modules:[]};
   var CMAP   = window.BIO004_CARD_COMPETENCY_MAP || {};
+  var BTCOMP = window.BIO004_TOPIC_COMPS || {};
   var COMPS  = window.BIO004_COMPETENCIES || [];
   var MODS   = window.BIO004_MODULES || [];
   var AUTH   = window.BIO004_EXAM_BANK || {tf:[],mc:[],match:[],fr:[]};
   var TCOMP  = window.BIO004_EXAM_TOPIC_COMPS || {};
   var DUMPS  = window.BRAINDUMP_BANK || {pools:{}};
+  var DMAP   = window.BIO004_DUMP_COMPETENCY_MAP || {};
 
   function $(id){ return document.getElementById(id); }
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
@@ -402,12 +514,138 @@
   function bold(s){ return esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>'); }
   function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
   function lsSet(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } }
+  function lsJSON(k,d){ try{ var r=localStorage.getItem(k); if(!r) return d; var v=JSON.parse(r); return v==null?d:v; }catch(e){ return d; } }
+  function lsPut(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); return true; }catch(e){ return false; } }
   function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
+  function r2(x){ return Math.round(x*100)/100; }
+  function isoDay(d){ return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+  function fmtDay(s){
+    var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(s||'')); if(!m) return String(s||'');
+    return new Date(+m[1],+m[2]-1,+m[3]).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  }
 
-  var WEEK_OF={};
-  COMPS.forEach(function(c){ WEEK_OF[c.id]=c.week; });
   function moduleForWeek(wk){ var f=null; MODS.forEach(function(m){ if(m.weeks&&m.weeks.indexOf(wk)!==-1) f=m; }); return f; }
   function examTitle(n){ var m=MODS.filter(function(x){return x.exam===n;})[0]; return m?m.title:''; }
+  function compsOfTopic(t){ return TCOMP[t] || null; }
+
+  /* ============================================================
+     WHAT HAS BEEN TAUGHT
+
+     Every bank topic carries its first class date for the Mon/Wed
+     (mw) and Tue/Thu (tr) sections. The student's section comes
+     from ?sec= or bio004-section, the key the rest of the site
+     uses. With no section known, a topic counts as taught once
+     both sections have had it, so nobody is quizzed early.
+     ============================================================ */
+  var TODAY = isoDay(new Date());
+  var SECTION = (function(){
+    var s=null;
+    try{ var m=location.search.match(/[?&]sec=(mw|tr-am|tr-eve)/); s=m?m[1]:localStorage.getItem('bio004-section'); }catch(e){}
+    if(s==='class1') s='mw'; if(s==='class2') s='tr-am'; if(s==='class3') s='tr-eve';
+    return s;
+  })();
+  function taughtOn(t){
+    if(SECTION==='mw') return t.mw||'';
+    if(SECTION==='tr-am'||SECTION==='tr-eve') return t.tr||'';
+    var d=[t.mw,t.tr].filter(Boolean).sort(); return d.length?d[d.length-1]:'';
+  }
+
+  /* ============================================================
+     THE AUDITED CARD BANK, BY MODULE AND TOPIC
+
+     A card joins on its own competencyId, so a card answer credits
+     the one competency it teaches. Cards the audit could not place
+     on any competency carry no competencyId and are left out: an
+     exam only asks what the competencies cover. The "More practice"
+     block (topics outside this term) is left out too.
+     ============================================================ */
+  var MODLIST=[], TOPIC={}, CARDS=[];
+  BANK.modules.forEach(function(m){
+    if(!m || m.extra || !(m.n>=1 && m.n<=5)) return;
+    var mod={n:m.n, title:String(m.title||'').replace(/^Module\s*\d+\.\s*/,''), topics:[]};
+    (m.topics||[]).forEach(function(t){
+      var comps={};
+      (BTCOMP[t.id]||[]).forEach(function(c){ comps[c]=1; });
+      var e=CMAP[t.id]; if(e && e.comps) e.comps.forEach(function(c){ comps[c]=1; });
+      var tp={id:t.id, title:t.title, mod:m.n, date:taughtOn(t), comps:comps, n:0};
+      (t.cards||[]).forEach(function(c){
+        if(!c || !c.q || !c.options || c.options.length<2 || c.correctIndex==null || !c.competencyId) return;
+        comps[c.competencyId]=1; tp.n++;
+        CARDS.push({stem:c.q, options:c.options, correctIndex:c.correctIndex,
+                    rationale:c.why||c.explanation||'', topic:t.title, topicId:t.id, mod:m.n,
+                    dok:c.dok||2, comps:[c.competencyId]});
+      });
+      tp.compList=Object.keys(comps);
+      mod.topics.push(tp); TOPIC[t.id]=tp;
+    });
+    if(mod.topics.length) MODLIST.push(mod);
+  });
+
+  /* Her written items, tagged with the module they belong to and the
+     competencies of their topic. */
+  function authItems(kind){
+    return (AUTH[kind]||[]).map(function(x){
+      var o={}; for(var k in x) if(Object.prototype.hasOwnProperty.call(x,k)) o[k]=x[k];
+      o.mod=x.exam; o.comps=compsOfTopic(x.topic); return o;
+    });
+  }
+  var A_TF=authItems('tf'), A_MC=authItems('mc'), A_MATCH=authItems('match'), A_FR=authItems('fr');
+
+  /* Brain dump prompts, the fallback for Part 4. */
+  var A_DUMP=[];
+  Object.keys(DUMPS.pools||{}).forEach(function(k){
+    var p=DUMPS.pools[k]; if(!p||p.kind==='team') return;
+    var mod=p.week?moduleForWeek(p.week):null; if(!mod||!mod.exam) return;
+    (p.items||[]).forEach(function(it,i){
+      if(!it||!it.p) return;
+      A_DUMP.push({prompt:it.p, topic:it.t||'', rubric:(it.l||[]).slice(), lines:10, src:'dump',
+                   mod:mod.exam, comps:DMAP[k+':'+i]||null});
+    });
+  });
+
+  /* ============================================================
+     SCOPE: WHAT THE PAPER COVERS
+     ============================================================ */
+  var SCOPE={};
+  function setScope(fn){ SCOPE={}; MODLIST.forEach(function(m){ m.topics.forEach(function(t){ if(fn(t)) SCOPE[t.id]=1; }); }); }
+  function taught(t){ return !!t.date && t.date<=TODAY; }
+  function scopeSoFar(){ setScope(taught); if(!Object.keys(SCOPE).length) setScope(function(t){ return t.mod===1; }); }
+
+  function scopeInfo(){
+    var mods={}, full={}, comps={}, n=0;
+    MODLIST.forEach(function(m){
+      var on=0;
+      m.topics.forEach(function(t){ if(SCOPE[t.id]){ on++; n++; t.compList.forEach(function(c){ comps[c]=1; }); } });
+      if(on){ mods[m.n]=1; if(on===m.topics.length) full[m.n]=1; }
+    });
+    var list=Object.keys(mods).map(Number).sort(function(a,b){return a-b;});
+    /* The paper aims at the latest exam it reaches, the next one the
+       student will sit on that material. */
+    return {mods:mods, full:full, comps:comps, n:n, list:list, target:list.length?list[list.length-1]:1};
+  }
+  function inScope(item, S){
+    if(item.topicId) return !!SCOPE[item.topicId];
+    if(!S.mods[item.mod]) return false;
+    if(S.full[item.mod]) return true;
+    var cs=item.comps||[];
+    for(var i=0;i<cs.length;i++) if(S.comps[cs[i]]) return true;
+    return false;
+  }
+  function buildPools(){
+    var S=scopeInfo();
+    function f(list){ return list.filter(function(x){ return inScope(x,S); }); }
+    return {S:S, tf:f(A_TF), mcA:f(A_MC), cards:f(CARDS), match:f(A_MATCH), fr:f(A_FR).concat(f(A_DUMP))};
+  }
+  function scopeName(S){
+    if(!S.list.length) return 'Nothing picked yet';
+    var partial=S.list.some(function(n){ return !S.full[n]; });
+    var mods = S.list.length===1 ? 'Module '+S.list[0]
+             : (S.list.join(',')===rangeList(S.list[0],S.list[S.list.length-1]).join(',')
+                 ? 'Modules '+S.list[0]+' to '+S.list[S.list.length-1]
+                 : 'Modules '+S.list.slice(0,-1).join(', ')+' and '+S.list[S.list.length-1]);
+    return mods + (partial ? ', the topics you picked' : '');
+  }
+  function rangeList(a,b){ var o=[]; for(var i=a;i<=b;i++) o.push(i); return o; }
 
   /* ============================================================
      ONE PAPER, NO REPEATS, SPREAD ACROSS THE MATERIAL
@@ -439,8 +677,6 @@
       .replace(/[^a-z0-9]+/g,' ').trim();
   }
   function newLedger(){ return {text:{}, topic:{}, comp:{}}; }
-
-  function compsOfTopic(t){ return TCOMP[t] || null; }
 
   function scoreOf(item, L){
     var topic = item.topic || '';
@@ -490,34 +726,75 @@
     return out;
   }
 
-  /* ---------- card-bank multiple choice, scoped by exam ---------- */
-  var CARDS={1:[],2:[],3:[],4:[],5:[]};
-  BANK.modules.forEach(function(blk){
-    (blk.topics||[]).forEach(function(t){
-      var e=CMAP[t.id]; var comps=e?(e.comps||e):null; if(!comps) return;
-      comps=Array.isArray(comps)?comps:[comps];
-      var weeks=comps.map(function(id){return WEEK_OF[id];}).filter(Boolean); if(!weeks.length) return;
-      var mod=moduleForWeek(Math.min.apply(null,weeks)); if(!mod||!mod.exam) return;
-      (t.cards||[]).forEach(function(c){
-        if(!c||!c.q||!c.options||c.correctIndex==null) return;
-        CARDS[mod.exam].push({stem:c.q, options:c.options, correctIndex:c.correctIndex,
-                              rationale:c.explanation||'', topic:t.title||'', comps:comps});
-      });
-    });
-  });
+  /* ============================================================
+     HOW HARD: THE DOK MIX
 
-  /* ---------- brain dump prompts, the fallback for Part 4 ---------- */
-  var DUMPPOOL={1:[],2:[],3:[],4:[],5:[]};
-  Object.keys(DUMPS.pools||{}).forEach(function(k){
-    var p=DUMPS.pools[k]; if(!p||p.kind==='team') return;
-    var mod=p.week?moduleForWeek(p.week):null; if(!mod||!mod.exam) return;
-    (p.items||[]).forEach(function(it){
-      if(!it||!it.p) return;
-      DUMPPOOL[mod.exam].push({prompt:it.p, topic:it.t||'', rubric:(it.l||[]).slice(), lines:10, src:'dump'});
-    });
-  });
+     Mixed copies her real exams: half DOK 1 and 2, half DOK 3. The
+     others lean easier or harder. Each level is drawn through the
+     same ledger, so the paper stays broad inside every level. A
+     level that runs short (a single topic has few DOK 3 items, her
+     written true or false has few DOK 1) borrows from the nearest
+     level the mix allows, then from any level, so the paper keeps
+     its 100 points. The header reports the mix it actually got.
+     ============================================================ */
+  var MIXES = [
+    {id:'recall',  name:'Recall only',  sub:'All DOK 1. Good early in a module.',          w:{1:1,2:0,3:0},     fill:[1,2,3]},
+    {id:'easier',  name:'Easier',       sub:'DOK 1 and 2, half and half. A warm-up.',      w:{1:.5,2:.5,3:0},   fill:[2,1,3]},
+    {id:'mixed',   name:'Mixed',        sub:'Like the real exam: half DOK 1 and 2, half DOK 3.', w:{1:.25,2:.25,3:.5}, fill:[3,2,1]},
+    {id:'harder',  name:'Harder',       sub:'DOK 2 and 3, half and half. No easy ones.',   w:{1:0,2:.5,3:.5},   fill:[3,2,1]},
+    {id:'reason',  name:'Reasoning only', sub:'All DOK 3. The deep end.',                  w:{1:0,2:0,3:1},     fill:[3,2,1]}
+  ];
+  function mixOf(id){ return MIXES.filter(function(m){ return m.id===id; })[0] || MIXES[2]; }
+  function dokOf(x){ var d=parseInt(x.dok,10); return (d>=1&&d<=3)?d:2; }
 
-  function authFor(kind, exam){ return (AUTH[kind]||[]).filter(function(x){ return x.exam===exam; }); }
+  /* Split n across the levels by the mix weights, largest remainder. */
+  function quota(mix, n){
+    var q={1:0,2:0,3:0}, rem=[], used=0;
+    [1,2,3].forEach(function(d){ var v=n*mix.w[d]; q[d]=Math.floor(v); used+=q[d]; rem.push({d:d, r:v-q[d], w:mix.w[d]}); });
+    rem.sort(function(a,b){ return (b.r-a.r) || (b.w-a.w); });
+    for(var i=0; used<n && i<rem.length; i++){ if(rem[i].w>0){ q[rem[i].d]++; used++; } }
+    return q;
+  }
+  function drawMix(pool, n, L, mix){
+    if(n<=0) return [];
+    var q=quota(mix, n), out=[];
+    var by={1:[],2:[],3:[]}; pool.forEach(function(x){ by[dokOf(x)].push(x); });
+    [3,2,1].forEach(function(d){ if(q[d]) out=out.concat(drawSpread(by[d], q[d], L)); });
+    mix.fill.forEach(function(d){
+      if(out.length>=n) return;
+      out=out.concat(drawSpread(by[d], n-out.length, L));
+    });
+    return out;
+  }
+
+  /* Where the right answer sits on multiple choice. Spread evenly
+     over A to D, with no three in a row, no A-B-C or C-B-A runs, and
+     no A-B-A-B alternation, so the key is not a pattern to spot. */
+  function okNext(a, x){
+    var n=a.length;
+    if(n>=2 && a[n-1]===x && a[n-2]===x) return false;
+    if(n>=2 && Math.abs(x-a[n-1])===1 && (x-a[n-1])===(a[n-1]-a[n-2])) return false;
+    if(n>=3 && a[n-1]!==a[n-2] && a[n-3]===a[n-1] && a[n-2]===x) return false;
+    return true;
+  }
+  function balancedSlots(n){
+    for(var tries=0; tries<60; tries++){
+      var left=[0,0,0,0], extra=shuffle([0,1,2,3]);
+      for(var i=0;i<4;i++) left[i]=Math.floor(n/4);
+      for(var j=0;j<n%4;j++) left[extra[j]]++;
+      var out=[], fail=false;
+      for(var k=0;k<n;k++){
+        var c=[0,1,2,3].filter(function(x){ return left[x]>0 && okNext(out,x); });
+        if(!c.length){ fail=true; break; }
+        var tot=0; c.forEach(function(x){ tot+=left[x]; });
+        var r=Math.random()*tot, pick=c[c.length-1];
+        for(var z=0;z<c.length;z++){ r-=left[c[z]]; if(r<0){ pick=c[z]; break; } }
+        out.push(pick); left[pick]--;
+      }
+      if(!fail) return out;
+    }
+    var o=[]; for(var y=0;y<n;y++) o.push(y%4); return shuffle(o);
+  }
 
   /* ============================================================
      THE BLUEPRINT
@@ -531,74 +808,138 @@
        Part 3  Matching .............. 10 items at 2 pts
        Part 4  Free response ......... 20 pts, choose one
 
-     Every part now has enough written behind it for all five
-     exams, so no part is ever dropped and the paper is always 100.
-     Matching still tops up from the card bank when a module has
-     only the one written set and a student deals several papers.
+     A narrow pick can leave Part 1 short of her written true or
+     false, in which case its spare points go to Part 2, and the
+     paper still comes to 100.
      ============================================================ */
   var PLAN = { tf:20, mc:40, matchRows:10, matchPts:20, fr:20 };
 
-  function planFor(exam){
-    var tfHave    = authFor('tf', exam).length;
-    var mcHave    = authFor('mc', exam).length + CARDS[exam].length;
-    var matchRows = PLAN.matchRows;
-    var frHave    = authFor('fr', exam).length + DUMPPOOL[exam].length;
+  function planFor(P){
+    var tfHave    = P.tf.length;
+    var mcHave    = P.mcA.length + P.cards.length;
+    var frHave    = P.fr.length;
 
     var tf = Math.min(PLAN.tf, tfHave);
     var mc = Math.min(PLAN.mc + (PLAN.tf - tf), mcHave);
-    var match = (CARDS[exam].length >= 13 || authFor('match',exam).length) ? matchRows : 0;
+    var match = (P.cards.length >= 13 || P.match.length) ? PLAN.matchRows : 0;
     var fr = frHave ? PLAN.fr : 0;
 
     /* Part 3 is worth 20 whatever the set holds. Her module sets
        run ten items at two points; a Summer set runs eight, so
        those rows are worth 2.5 each and the part still comes to
-       20. Better than dropping nine written sets to keep a round
-       number on the row. */
+       20. */
     var matchPts = match ? PLAN.matchPts : 0;
     return {tf:tf, mc:mc, match:match, matchPts:matchPts, fr:fr,
             total: tf + mc + matchPts + fr,
             tfShort: tf < PLAN.tf, frShort: !fr};
   }
 
-  var K_EXAM='bio004-pexam-exam', K_TIME='bio004-pexam-time', K_LAST='bio004-pexam-last';
-  /* ?exam=3 lands straight on that paper, so the practice exam row
-     on the materials page can name a module and mean it. */
-  var exam=(function(){
+  var K_TIME='bio004-pexam-time', K_LAST='bio004-pexam-last', K_MIX='bio004-pexam-mix';
+  var K_HIST='bio004-pexam-history', K_REAL='bio004_real_exam_scores';
+
+  /* ?exam=3 lands straight on that module, so the practice exam row
+     on the materials page can name a module and mean it. Otherwise
+     the paper starts with everything taught so far. */
+  (function(){
     var m=null; try{ m=location.search.match(/[?&]exam=([1-5])/); }catch(e){}
-    if(m) return parseInt(m[1],10);
-    var v=parseInt(lsGet(K_EXAM),10); return (v>=1&&v<=5)?v:1;
+    if(m){ var n=parseInt(m[1],10); setScope(function(t){ return t.mod===n; }); }
+    else scopeSoFar();
   })();
   var mins=parseInt(lsGet(K_TIME),10); if(isNaN(mins)) mins=0;
+  var mixId=(function(){ var v=lsGet(K_MIX); return mixOf(v).id; })();
+  try{ var mq=location.search.match(/[?&]mix=(recall|easier|mixed|harder|reason)/); if(mq) mixId=mq[1]; }catch(e){}
   var TIME=[{m:0,b:'No clock',i:'Take as long as you need'},
             {m:50,b:'50 minutes',i:'A class period'},
             {m:75,b:'75 minutes',i:'The long block'}];
 
+  var POOLS=buildPools();
+
+  /* ---------- setup: quick picks rail ---------- */
+  var QUICK=[{k:'sofar', k1:'Taught so far', t:'Everything taught so far'}];
+  for(var qn=1;qn<=5;qn++) QUICK.push({k:'exam'+qn, k1:'Exam '+qn, t:examTitle(qn), n:qn});
+  QUICK.push({k:'all', k1:'Final', t:'Every module, for the final'});
+
+  function sameScope(fn){
+    var ok=true;
+    MODLIST.forEach(function(m){ m.topics.forEach(function(t){ if(!!fn(t)!==!!SCOPE[t.id]) ok=false; }); });
+    return ok;
+  }
+  function quickFn(q){
+    if(q.k==='sofar') return function(t){ return taught(t); };
+    if(q.k==='all') return function(){ return true; };
+    return function(t){ return t.mod===q.n; };
+  }
+  function renderQuick(){
+    var h='<span class="lbl">Quick pick</span>';
+    QUICK.forEach(function(q){
+      h+='<button type="button" data-quick="'+q.k+'" aria-pressed="'+(sameScope(quickFn(q))?'true':'false')+'">'
+        +  '<span class="k">'+esc(q.k1)+'</span>'
+        +  '<span class="t">'+esc(q.t)+'</span>'
+        +'</button>';
+    });
+    $('examPick').innerHTML=h;
+  }
+
+  /* ---------- setup: modules and topics ---------- */
+  function renderScopeList(){
+    var h='';
+    MODLIST.forEach(function(m){
+      var on=m.topics.filter(function(t){ return SCOPE[t.id]; }).length;
+      h+='<div class="smod" data-smod="'+m.n+'">'
+        + '<div class="smod-h">'
+        +   '<label class="chk"><input type="checkbox" data-mod="'+m.n+'"'+(on===m.topics.length?' checked':'')+'>'
+        +     '<span><span class="mk">Module '+m.n+' &middot; Exam '+m.n+'</span><span class="mt">'+esc(m.title)+'</span></span></label>'
+        +   '<span class="scount" id="sc'+m.n+'">'+on+' of '+m.topics.length+' topics</span>'
+        + '</div>'
+        + '<details><summary>Pick topics in module '+m.n+'</summary><ul class="tlist">';
+      m.topics.forEach(function(t){
+        var when = !t.date ? '' : (t.date<=TODAY ? 'Taught '+fmtDay(t.date) : 'Not taught yet, starts '+fmtDay(t.date));
+        h+='<li><label class="chk"><input type="checkbox" data-topic="'+esc(t.id)+'"'+(SCOPE[t.id]?' checked':'')+'>'
+          +'<span>'+esc(t.title)+(when?'<span class="tdate'+(t.date>TODAY?' later':'')+'">'+esc(when)+'</span>':'')+'</span></label></li>';
+      });
+      h+='</ul></details></div>';
+    });
+    $('scopeList').innerHTML=h;
+    syncModBoxes();
+  }
+  /* Module boxes show mixed when only some of their topics are in. */
+  function syncModBoxes(){
+    MODLIST.forEach(function(m){
+      var on=m.topics.filter(function(t){ return SCOPE[t.id]; }).length;
+      var box=$('scopeList').querySelector('[data-mod="'+m.n+'"]');
+      if(box){ box.checked = on===m.topics.length; box.indeterminate = on>0 && on<m.topics.length; }
+      m.topics.forEach(function(t){
+        var tb=$('scopeList').querySelector('[data-topic="'+t.id+'"]'); if(tb) tb.checked=!!SCOPE[t.id];
+      });
+      var sc=$('sc'+m.n); if(sc) sc.textContent=on+' of '+m.topics.length+' topics';
+    });
+  }
+
+  /* ---------- setup: how hard ---------- */
+  function renderMixes(){
+    var h='<legend class="sr">How hard should the exam be?</legend>';
+    MIXES.forEach(function(m){
+      h+='<label class="mix'+(m.id===mixId?' on':'')+'"><input type="radio" name="mix" value="'+m.id+'"'
+        +(m.id===mixId?' checked':'')+'><b>'+esc(m.name)+(m.id==='mixed'?' (start here)':'')+'</b><span>'+esc(m.sub)+'</span></label>';
+    });
+    $('mixes').innerHTML=h;
+  }
+
+  function dokCount(list){ var c={1:0,2:0,3:0}; list.forEach(function(x){ c[dokOf(x)]++; }); return c; }
+
   function renderSetup(){
-    /* THE EXAM PICKER IS THE RAIL.
+    POOLS=buildPools();
+    renderQuick();
+    var S=POOLS.S;
 
-       Five exams is the same shape as five modules, so it gets the
-       same object: a list where the one you are on lifts out of the
-       card. The blueprint underneath is the same tagged row the
-       materials page uses, because a part of a paper and a category
-       of material are the same kind of thing on a page. */
-    var h = '<span class="lbl">Exams</span>';
-    for(var n=1;n<=5;n++){
-      var p = planFor(n);
-      h += '<button type="button" data-exam="'+n+'" aria-pressed="'+(exam===n?'true':'false')+'">'
-        +    '<span class="k">Exam '+n+' &middot; '+p.total+' points</span>'
-        +    '<span class="t">'+esc(examTitle(n))+'</span>'
-        +  '</button>';
-    }
-    $('examPick').innerHTML = h;
-
-    h='';
+    var h='';
     TIME.forEach(function(T){
       h+='<button type="button" class="pill" data-min="'+T.m+'" aria-pressed="'+(mins===T.m?'true':'false')+'">'
         + esc(T.b) + '</button>';
     });
     $('timePick').innerHTML=h;
 
-    var p=planFor(exam);
+    var p=planFor(POOLS);
     var rows=[
       ['PART 1','True or false',                        p.tf+' points',    p.tfShort,
        'One point for getting true or false right. If it is false, name the word that fixes it and get a quarter point on top.'],
@@ -620,23 +961,56 @@
     $('blueprint').innerHTML = bh;
     $('planTotal').textContent = p.total + ' points';
 
-    var sub = 'Exam ' + exam + ' &middot; ' + esc(examTitle(exam));
+    var mix=mixOf(mixId);
+    var sub = esc(scopeName(S)) + ' &middot; ' + esc(mix.name);
     if(mins) sub += ' &middot; ' + mins + ' minutes on the clock';
     else sub += ' &middot; no clock';
     $('planSub').innerHTML = sub;
 
-    var say='Every paper is different. Nothing shows up twice on the same one, and it covers the '
-          + 'whole module instead of hammering one topic.';
-    if(p.tfShort) say += ' Part 1 only has '+p.tf+' questions this time, so its spare points go to Part 2.';
-    if(p.total !== 100) say += ' This one adds up to '+p.total+' points.';
+    $('scopeCount').textContent = S.n + ' topic' + (S.n===1?'':'s');
+
+    var say;
+    if(!S.n){
+      say='Pick at least one topic to make an exam.';
+    } else {
+      var qs=POOLS.tf.concat(POOLS.mcA, POOLS.cards), dc=dokCount(qs);
+      say='What you picked has '+qs.length+' questions to draw from: '+dc[1]+' DOK 1, '+dc[2]+' DOK 2 and '+dc[3]+' DOK 3.';
+      if(p.tfShort) say += ' Part 1 only has '+p.tf+' true or false this time, so its spare points go to Part 2.';
+      if(p.total !== 100) say += ' This one adds up to '+p.total+' points.';
+    }
     $('setupNote').textContent = say;
 
-    $('startBtn').disabled = p.total < 10;
+    $('startBtn').disabled = !S.n || p.total < 10;
+    renderPredCard($('predSetup'), 'ps', S.target, null);
   }
 
   $('examPick').addEventListener('click',function(e){
-    var b=e.target.closest('button[data-exam]'); if(!b) return;
-    exam=parseInt(b.getAttribute('data-exam'),10); lsSet(K_EXAM,String(exam)); renderSetup(); paintLast();
+    var b=e.target.closest('button[data-quick]'); if(!b) return;
+    var q=QUICK.filter(function(x){ return x.k===b.getAttribute('data-quick'); })[0]; if(!q) return;
+    setScope(quickFn(q));
+    if(!Object.keys(SCOPE).length && q.k==='sofar') scopeSoFar();
+    syncModBoxes(); renderSetup(); paintLast();
+  });
+  $('scopeList').addEventListener('change',function(e){
+    var t=e.target;
+    if(t.hasAttribute('data-mod')){
+      var n=parseInt(t.getAttribute('data-mod'),10);
+      MODLIST.forEach(function(m){ if(m.n!==n) return; m.topics.forEach(function(tp){ if(t.checked) SCOPE[tp.id]=1; else delete SCOPE[tp.id]; }); });
+    } else if(t.hasAttribute('data-topic')){
+      var id=t.getAttribute('data-topic');
+      if(t.checked) SCOPE[id]=1; else delete SCOPE[id];
+    } else return;
+    syncModBoxes(); renderSetup(); paintLast();
+  });
+  $('scopeAll').addEventListener('click',function(){ setScope(function(){ return true; }); syncModBoxes(); renderSetup(); paintLast(); });
+  $('scopeNone').addEventListener('click',function(){ SCOPE={}; syncModBoxes(); renderSetup(); paintLast(); });
+  $('mixes').addEventListener('change',function(e){
+    var r=e.target.closest('input[name="mix"]'); if(!r) return;
+    mixId=r.value; lsSet(K_MIX,mixId);
+    Array.prototype.forEach.call($('mixes').querySelectorAll('.mix'),function(l){
+      l.classList.toggle('on', !!l.querySelector('input:checked'));
+    });
+    renderSetup();
   });
   $('timePick').addEventListener('click',function(e){
     var b=e.target.closest('.pill'); if(!b) return;
@@ -650,11 +1024,11 @@
      built from cards where the stem is the clue and the answer is
      the match. Either way the bank carries three options that
      match nothing, which is how her banks work. */
-  function dealMatch(exam, rows, L){
+  function dealMatch(P, rows, L){
     if(rows <= 0) return null;
 
-    var written = drawSpread(authFor('match',exam).map(function(s){
-      return {key:'match:'+s.topic, topic:s.topic, set:s};
+    var written = drawSpread(P.match.map(function(s){
+      return {key:'match:'+s.topic, topic:s.topic, comps:s.comps, set:s};
     }), 1, L);
 
     if(written.length){
@@ -666,62 +1040,96 @@
               answers:s.answers.slice(0,n), comps:rowComps, written:true};
     }
 
-    var picks = drawSpread(CARDS[exam], rows, L);
+    /* Short clues and short answers read as matching; long case
+       stems belong in Part 2. Falls back to every card if too few. */
+    var pool = P.cards.filter(function(c){
+      return String(c.options[c.correctIndex]).length<=60 && String(c.stem).length<=170;
+    });
+    if(pool.length < rows+3) pool = P.cards.slice();
+    /* One clue per answer, so the bank never shows the same answer twice. */
+    var picks=[], seenA={}, cands=pool.slice();
+    while(picks.length<rows && cands.length){
+      var pk=drawSpread(cands,1,L)[0]; if(!pk) break;
+      var a=normText(pk.options[pk.correctIndex]);
+      cands=cands.filter(function(c){ return c!==pk && normText(c.options[c.correctIndex])!==a; });
+      if(seenA[a]) continue;
+      seenA[a]=1; picks.push(pk);
+    }
     if(picks.length < 2) return null;
     /* Three extra answers that belong to nobody on the list. */
-    var spare = CARDS[exam].filter(function(c){
-      return picks.indexOf(c) === -1;
-    });
-    shuffle(spare);
+    var spare = shuffle(pool.filter(function(c){ return picks.indexOf(c)===-1; }));
     var right  = picks.map(function(c){ return c.options[c.correctIndex]; });
     var extras = [];
     for(var k=0;k<spare.length && extras.length<3;k++){
-      var a = spare[k].options[spare[k].correctIndex];
-      if(right.indexOf(a) === -1 && extras.indexOf(a) === -1) extras.push(a);
+      var x = spare[k].options[spare[k].correctIndex], nx=normText(x);
+      if(!seenA[nx] && extras.map(normText).indexOf(nx) === -1) extras.push(x);
     }
-    var bank = shuffle(right.concat(extras));
-    return {termsCol:picks.map(function(c){ return c.stem; }), bank:bank,
-            answers:right.map(function(a){ return bank.indexOf(a); }),
+    /* Never let the key run in item order. */
+    var bank, answers, guard=0;
+    do {
+      bank = shuffle(right.concat(extras));
+      answers = right.map(function(a){ return bank.indexOf(a); });
+      guard++;
+    } while(guard<30 && answers.every(function(v,i){ return i===0 || v>answers[i-1]; }));
+    return {termsCol:picks.map(function(c){ return c.stem; }), bank:bank, answers:answers,
             comps:picks.map(function(c){ return c.comps; }), written:false};
   }
 
+  /* Free response: three prompts, from different modules whenever the
+     paper covers more than one, so the choice is a real choice. */
+  function dealFR(pool, L){
+    var want=Math.min(3, pool.length), by={}, out=[];
+    pool.forEach(function(x){ (by[x.mod]=by[x.mod]||[]).push(x); });
+    var mods=shuffle(Object.keys(by)), i=0, guard=0;
+    if(mods.length<2) return drawSpread(pool, want, L);
+    while(out.length<want && mods.length && guard++<50){
+      var m=mods[i%mods.length];
+      var got=drawSpread(by[m],1,L);
+      if(got.length){ out.push(got[0]); by[m].splice(by[m].indexOf(got[0]),1); i++; }
+      else mods.splice(i%mods.length,1);
+    }
+    return out;
+  }
+
   function deal(){
-    var p = planFor(exam);
+    var P = POOLS, p = planFor(P), mix = mixOf(mixId);
     var L = newLedger();
 
     /* Order matters. The tightest pool draws first so it is not
        left choosing from what the wide pools have already spent,
        and multiple choice, the widest pool by far, draws last and
        fills whatever breadth is still missing. */
-    var tf = drawSpread(authFor('tf',exam), p.tf, L);
+    var tf = shuffle(drawMix(P.tf, p.tf, L, mix));
 
-    var frPool = authFor('fr',exam).concat(DUMPPOOL[exam]);
-    var frs = drawSpread(frPool, Math.min(3, frPool.length), L);
+    var frs = dealFR(P.fr, L);
 
-    var set = dealMatch(exam, p.match, L);
+    var set = dealMatch(P, p.match, L);
     if(set) set.perRow = p.matchPts / set.termsCol.length;
 
-    var mcPool = authFor('mc',exam).map(function(x){
+    var mcPool = P.mcA.map(function(x){
         return {stem:x.stem, options:x.options.slice(), correctIndex:x.correctIndex,
-                rationale:x.rationale||'', topic:x.topic, comps:compsOfTopic(x.topic)};
-      }).concat(CARDS[exam].map(function(c){
+                rationale:x.rationale||'', topic:x.topic, comps:x.comps, dok:x.dok};
+      }).concat(P.cards.map(function(c){
         return {stem:c.stem, options:c.options.slice(), correctIndex:c.correctIndex,
-                rationale:c.rationale||'', topic:c.topic, comps:c.comps};
+                rationale:c.rationale||'', topic:c.topic, comps:c.comps, dok:c.dok};
       }));
-    var mc = drawSpread(mcPool, p.mc, L);
+    var mc = shuffle(drawMix(mcPool, p.mc, L, mix));
 
-    /* Shuffle each question's options so a bank answer that is
-       always C is not a pattern to spot. */
-    mc = shuffle(mc).map(function(q){
-      var idx=q.options.map(function(_,i){return i;});
-      shuffle(idx);
-      return {stem:q.stem, rationale:q.rationale, comps:q.comps, topic:q.topic,
-              options:idx.map(function(i){return q.options[i];}),
-              correctIndex:idx.indexOf(q.correctIndex)};
+    /* Put each right answer in its balanced slot, wrong options
+       shuffled around it. */
+    var slots = balancedSlots(mc.length);
+    mc = mc.map(function(q, qi){
+      var wrong = shuffle(q.options.map(function(_,i){return i;}).filter(function(i){ return i!==q.correctIndex; }));
+      var at = Math.min(slots[qi], q.options.length-1), idx=[];
+      for(var k=0;k<q.options.length;k++) idx.push(k===at ? q.correctIndex : wrong.shift());
+      return {stem:q.stem, rationale:q.rationale, comps:q.comps, topic:q.topic, dok:dokOf(q),
+              options:idx.map(function(i){return q.options[i];}), correctIndex:at};
     });
 
     var spread = {topics:Object.keys(L.topic).length, comps:Object.keys(L.comp).length};
-    return {plan:p, tf:tf, mc:mc, set:set, frs:frs, spread:spread};
+    var got = dokCount(tf.concat(mc));
+    return {plan:p, tf:tf, mc:mc, set:set, frs:frs, spread:spread, mix:mix, dok:got,
+            scope:P.S, target:P.S.target, title:scopeName(P.S)};
   }
 
   /* ---------- render ---------- */
@@ -793,7 +1201,7 @@
       paper.frs.forEach(function(d,i){
         h+='<label><input type="radio" name="frpick" value="'+i+'">'
           +'<span class="dt">'+(d.topic?'<b>'+esc(d.topic)+'</b>':'')+esc(d.prompt)
-          +(d.type==='chart'?' <i>(a chart or table is fine here)</i>':'')+'</span></label>';
+          +(d.type==='chart'?' (A chart or table is fine here.)':'')+'</span></label>';
       });
       h+='</div><label class="sr" for="frtext">Your response</label>'
         +'<textarea id="frtext" placeholder="Write your answer here. On the real exam this is on paper."></textarea>'
@@ -801,10 +1209,11 @@
     }
 
     $('parts').innerHTML=h;
-    $('paperTitle').textContent='Exam '+exam+' practice paper';
+    var single = paper.scope.list.length===1 && paper.scope.full[paper.scope.list[0]];
+    $('paperTitle').textContent = single ? 'Exam '+paper.scope.list[0]+' practice paper' : 'Practice paper: '+paper.title;
     $('paperMeta').innerHTML='Worth <b>'+paper.plan.total+' points</b>'
       + (mins? ' &middot; '+mins+' minutes' : ' &middot; no clock')
-      + ' &middot; '+esc(examTitle(exam))
+      + ' &middot; '+esc(paper.mix.name)+': '+paper.dok[1]+' DOK 1, '+paper.dok[2]+' DOK 2, '+paper.dok[3]+' DOK 3'
       + ' &middot; ' + paper.spread.topics + ' topics, ' + paper.spread.comps + ' competencies';
   }
 
@@ -822,19 +1231,22 @@
   });
 
   $('startBtn').addEventListener('click', function(){
+    if(!POOLS.S.n) return;
     paper=deal(); marked=false; armed=false;
     $('submitBtn').disabled=false; $('submitBtn').textContent='Submit exam';
     $('unanswered').textContent='';
     $('setup').classList.add('hidden'); $('out').classList.add('hidden');
     $('paper').classList.remove('hidden');
-    $('resultWrap').innerHTML='';
+    $('resultWrap').innerHTML=''; $('predOut').innerHTML=''; $('resultSay').textContent='';
     renderPaper();
     if(mins) startClock(); else stopClock(true);
     try{ $('paper').scrollIntoView({block:'start'}); }catch(e){}
+    var h2=$('paperTitle'); if(h2){ h2.setAttribute('tabindex','-1'); try{ h2.focus({preventScroll:true}); }catch(e){ h2.focus(); } }
   });
   $('abandonBtn').addEventListener('click', function(){
     stopClock(true); $('paper').classList.add('hidden'); $('setup').classList.remove('hidden');
     try{ $('setup').scrollIntoView({block:'start'}); }catch(e){}
+    $('startBtn').focus();
   });
 
   /* ---------- clock ---------- */
@@ -886,11 +1298,124 @@
     mark();
   });
 
+  /* ============================================================
+     IF THE REAL EXAM WERE TOMORROW
+
+     Carried over from the old builder. A range, not a promise:
+
+       center  the last few practice papers aimed at the same exam,
+               newest weighted most. Each paper counts as half its
+               DOK 1 and 2 score and half its DOK 3 score, because
+               that is how her real exams are built.
+       shift   the average gap between the student's logged real
+               scores and what was predicted for them.
+       width   wide after one paper, tighter after four. Wider again
+               when the latest paper had no DOK 3, since the real
+               exam is half DOK 3 and a paper without it reads high.
+     ============================================================ */
+  function examWeighted(dok, pct){
+    var g12=dok[1][0]+dok[2][0], m12=dok[1][1]+dok[2][1];
+    var p12 = m12 ? g12/m12*100 : null, p3 = dok[3][1] ? dok[3][0]/dok[3][1]*100 : null;
+    if(p12!=null && p3!=null) return 0.5*p12 + 0.5*p3;
+    return p12!=null ? p12 : (p3!=null ? p3 : pct);
+  }
+  function hist(){ var v=lsJSON(K_HIST,[]); return Array.isArray(v)?v:[]; }
+  function realList(){ var v=lsJSON(K_REAL,[]); return Array.isArray(v)?v:[]; }
+  function predictFor(no){
+    var hs=hist().filter(function(h){ return +h.exam===+no && typeof h.ew==='number'; }).slice(-4);
+    if(!hs.length) return null;
+    var c=0, w=0; hs.forEach(function(h,i){ c+=h.ew*(i+1); w+=i+1; }); c/=w;
+    var offs=realList().filter(function(x){ return (x.kind||'lecture')==='lecture' && x.predAt!=null && !isNaN(+x.score); })
+      .map(function(x){ return +x.score - +x.predAt; });
+    var off = offs.length ? offs.reduce(function(a,b){return a+b;},0)/offs.length : 0;
+    var center = Math.max(0, Math.min(100, c + off));
+    var last = hs[hs.length-1];
+    var noD3 = !last.d3;
+    var half = (hs.length>=4 ? 6 : hs.length===3 ? 8 : hs.length===2 ? 10 : 13) + (noD3 ? 4 : 0);
+    return {lo:Math.max(0,Math.round(center-half)), hi:Math.min(100,Math.round(center+half)),
+            center:Math.round(center*10)/10, n:hs.length, off:off, nOffs:offs.length, noD3:noD3};
+  }
+
+  function predHTML(no){
+    var p=predictFor(no);
+    if(!p) return '<p class="range">Exam '+no+': no prediction yet</p>'
+      + '<p class="cave">Take a practice paper that covers exam '+no+' and your range shows here.</p>';
+    var h='<p class="range">Exam '+no+': likely '+p.lo+' to '+p.hi+' percent</p>';
+    h+='<p class="cave">'+(p.n<3
+      ? 'The range is wide because it comes from '+(p.n===1?'one practice paper':p.n+' practice papers')+'. It gets tighter as you take more.'
+      : 'Built from your last '+p.n+' practice papers on exam '+no+', counted the way the real exam is built: half DOK 1 and 2, half DOK 3.')+'</p>';
+    if(p.noD3) h+='<p class="cave">Your last paper had no DOK 3 questions. Half of the real exam is DOK 3, so expect the real one to feel harder than this.</p>';
+    h+='<p class="cave">'+(p.nOffs
+      ? 'Your real exam scores have run '+(Math.abs(p.off)<0.5?'right on':(Math.round(Math.abs(p.off)*10)/10)+' points '+(p.off>0?'above':'below'))+' the predictions, so that is built in.'
+      : 'Log your real exam scores below and the prediction learns how far off it runs for you.')+'</p>';
+    return h;
+  }
+
+  function renderPredCard(host, px, no){
+    if(!host) return;
+    var real=realList();
+    var h='<div class="pred" aria-labelledby="'+px+'H">'
+      + '<h3 id="'+px+'H">If the real exam were tomorrow</h3>'
+      + '<div id="'+px+'Range">'+predHTML(no)+'</div>'
+      + '<h4 id="'+px+'LogH">Log your real exam score</h4>'
+      + '<p class="cave">When you get a real exam back, put the score here. It shows how close the predictions run, and the next prediction adjusts to you. Your scores stay in this browser only.</p>'
+      + '<div class="logrow" role="group" aria-labelledby="'+px+'LogH">'
+      +   '<div class="field"><label for="'+px+'No">Which exam</label><select id="'+px+'No">';
+    for(var n=1;n<=5;n++) h+='<option value="'+n+'"'+(n===+no?' selected':'')+'>Lecture exam '+n+'</option>';
+    h+= '</select></div>'
+      +   '<div class="field"><label for="'+px+'Score">Score, percent</label>'
+      +     '<input id="'+px+'Score" type="number" min="0" max="110" step="0.1" inputmode="decimal"></div>'
+      +   '<button type="button" class="ghost" id="'+px+'Save">Save my score</button>'
+      + '</div>'
+      + '<p class="cave" id="'+px+'Say" role="status" aria-live="polite"></p>';
+    if(real.length){
+      h+='<ul class="loglist" aria-label="Real exam scores you have logged">'+real.map(function(x){
+        return '<li><b>'+((x.kind==='lab')?'Lab exam ':'Lecture exam ')+esc(x.no)+':</b> '+esc(x.score)+' percent'
+          +(x.when?', logged '+esc(fmtDay(x.when)):'')
+          +(x.predAt!=null?'. The prediction was '+Math.round(+x.predAt)+'.':'.')+'</li>';
+      }).join('')+'</ul>';
+    }
+    h+='</div>';
+    host.innerHTML=h;
+    $(px+'Save').addEventListener('click', function(){
+      var raw=$(px+'Score').value, sc=parseFloat(raw), which=parseInt($(px+'No').value,10);
+      var say=$(px+'Say');
+      if(raw==='' || isNaN(sc) || sc<0 || sc>110){
+        say.className='cave say-no'; say.textContent='Type your score as a percent, from 0 to 110.';
+        $(px+'Score').focus(); return;
+      }
+      var p=predictFor(which), list=realList();
+      list.push({kind:'lecture', no:String(which), score:Math.round(sc*10)/10,
+                 predAt: p ? p.center : null, when: TODAY});
+      var ok=lsPut(K_REAL, list.slice(-40));
+      rerenderPreds();
+      var say2=$(px+'Say');
+      if(say2){
+        say2.className='cave '+(ok?'say-ok':'say-no');
+        say2.textContent = ok ? 'Saved. Lecture exam '+which+': '+(Math.round(sc*10)/10)+' percent.'
+                              : 'This browser would not save it. Private windows often block saving.';
+      }
+      var b=$(px+'Save'); if(b) b.focus();
+    });
+  }
+  function rerenderPreds(){
+    renderPredCard($('predSetup'), 'ps', POOLS.S.target);
+    if(paper && marked) renderPredCard($('predOut'), 'po', paper.target);
+  }
+
+  var curHist=null;
+  function saveHistory(entry){
+    var list=hist().filter(function(h){ return h.id!==entry.id; });
+    list.push(entry);
+    lsPut(K_HIST, list.slice(-30));
+  }
+
   function mark(){
     if(marked) return;
     marked=true; stopClock(true); $('unanswered').textContent='';
 
     var got={tf:0,mc:0,match:0,fr:0,bonus:0};
+    var dok={1:[0,0],2:[0,0],3:[0,0]};
     var byComp={};
     function credit(comps, gotN, ofN){
       (comps||[]).forEach(function(c){
@@ -913,7 +1438,8 @@
          extra credit, banked apart so Part 1 cannot read 22.5 of 20. */
       got.tf += right?1:0;
       got.bonus += (right&&fixRight)?0.25:0;
-      credit(compsOfTopic(it.topic), right?1:0, 1);
+      dok[dokOf(it)][0] += right?1:0; dok[dokOf(it)][1] += 1;
+      credit(it.comps || compsOfTopic(it.topic), right?1:0, 1);
 
       row.querySelectorAll('input').forEach(function(x){ x.disabled=true; });
       row.classList.add(right ? (fixRight||it.answer==='T' ? 'right':'part-credit') : 'wrong');
@@ -941,12 +1467,13 @@
       if(sum>4) onRight=onRight*4/sum;
       var pts=onRight*0.25;
       got.mc+=pts;
+      dok[q.dok][0] += pts; dok[q.dok][1] += 1;
       credit(q.comps || compsOfTopic(q.topic), pts, 1);
 
       row.classList.add(pts>=1?'right':(pts>0?'part-credit':'wrong'));
       var v=document.createElement('p');
       v.className='verdict '+(pts>=1?'ok':(pts>0?'part':'no'));
-      v.textContent=(Math.round(pts*100)/100)+' of 1 point';
+      v.textContent=r2(pts)+' of 1 point';
       row.appendChild(v);
       var w=document.createElement('div'); w.className='why';
       w.innerHTML='<b>Correct:</b> '+esc(q.options[q.correctIndex])
@@ -966,7 +1493,7 @@
         /* Credit the row that was answered, not the whole set. */
         if(s.comps && s.comps[ti]) credit(s.comps[ti], ok?1:0, 1);
       });
-      got.match = Math.round(right*s.perRow*100)/100;
+      got.match = r2(right*s.perRow);
       row.classList.add(right===s.termsCol.length?'right':(right?'part-credit':'wrong'));
       var mv=document.createElement('p');
       mv.className='verdict '+(right===s.termsCol.length?'ok':(right?'part':'no'));
@@ -1006,15 +1533,17 @@
         });
         frow.appendChild(ul);
         var say=document.createElement('p'); say.className='verdict part'; say.id='frScore';
+        say.setAttribute('aria-live','polite');
         say.textContent='0 of '+frMax+' points';
         frow.appendChild(say);
-        frow.addEventListener('change', function(){
+        frow.addEventListener('change', function(e){
+          if(!e.target.hasAttribute('data-rub')) return;
           var boxes=frow.querySelectorAll('[data-rub]');
           var on=0; boxes.forEach(function(b){ if(b.checked) on++; });
-          var sc=boxes.length? Math.round(on/boxes.length*frMax*100)/100 : 0;
+          var sc=boxes.length? r2(on/boxes.length*frMax) : 0;
           got.fr=sc;
           $('frScore').textContent=sc+' of '+frMax+' points';
-          paint();
+          paint(false);
         });
       } else {
         var nv=document.createElement('p'); nv.className='verdict no'; nv.textContent='No prompt chosen';
@@ -1023,26 +1552,36 @@
     }
 
     var maxTotal=paper.plan.total;
-    function paint(){
+    curHist={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6), at:TODAY,
+             exam:paper.target, mix:paper.mix.id, d3:dok[3][1]};
+
+    function paint(first){
       var total=got.tf+got.bonus+got.mc+got.match+got.fr;
       var pct=maxTotal? Math.round(total/maxTotal*100) : 0;
       var msg = pct>=85 ? 'That is exam ready. Leave it a few days before you sit another one.'
               : pct>=70 ? 'Solid, with some gaps. The parts below show you where.'
               : pct>=50 ? 'About half of it is there. Take your weakest part back to your notes, then make a new paper.'
               : 'Not ready yet, and far better to find that out here than in the room. Start with your weakest part.';
+      function dokLine(d, label){
+        var g=dok[d]; if(!g[1]) return '';
+        return '<li><span>'+label+'</span><b>'+r2(g[0])+' of '+g[1]+'</b></li>';
+      }
       var h='<div class="result">'
-        +'<p class="score">'+pct+'%<small> &middot; '+(Math.round(total*100)/100)+' of '+maxTotal+' points</small></p>'
-        +'<div class="bar"><i style="width:'+Math.min(100,pct)+'%"></i></div>'
+        +'<p class="score">'+pct+'%<small> &middot; '+r2(total)+' of '+maxTotal+' points</small></p>'
+        +'<div class="bar" aria-hidden="true"><span style="display:block;height:100%;background:var(--gold);border-radius:99px;width:'+Math.min(100,pct)+'%"></span></div>'
         +'<p class="hint" style="margin:12px 0 0">'+msg+'</p>'
-        +'<ul class="partscores">'
-        +(paper.tf.length?'<li><span>Part 1, true or false</span><b>'+(Math.round(got.tf*100)/100)+' of '+paper.tf.length
-            +(got.bonus?', plus '+(Math.round(got.bonus*100)/100)+' bonus':'')+'</b></li>':'')
-        +(paper.mc.length?'<li><span>Part 2, multiple choice</span><b>'+(Math.round(got.mc*100)/100)+' of '+paper.mc.length+'</b></li>':'')
+        +'<ul class="partscores" aria-label="Score by part">'
+        +(paper.tf.length?'<li><span>Part 1, true or false</span><b>'+r2(got.tf)+' of '+paper.tf.length
+            +(got.bonus?', plus '+r2(got.bonus)+' bonus':'')+'</b></li>':'')
+        +(paper.mc.length?'<li><span>Part 2, multiple choice</span><b>'+r2(got.mc)+' of '+paper.mc.length+'</b></li>':'')
         +(paper.set?'<li><span>Part 3, matching</span><b>'+got.match+' of '+paper.plan.matchPts+'</b></li>':'')
-        +(frMax?'<li><span>Part 4, free response</span><b>'+(Math.round(got.fr*100)/100)+' of '+frMax+'</b></li>':'')
+        +(frMax?'<li><span>Part 4, free response</span><b>'+r2(got.fr)+' of '+frMax+'</b></li>':'')
         +'</ul>'
-        +'<div class="row">'
-        +'<button type="button" class="big" id="againBtn">Generate another</button>'
+        +'<ul class="partscores" aria-label="True or false and multiple choice by difficulty">'
+        + dokLine(1,'DOK 1, recall') + dokLine(2,'DOK 2, using what you know') + dokLine(3,'DOK 3, reasoning through a case')
+        +'</ul>'
+        +'<div class="btnrow">'
+        +'<button type="button" class="big" id="againBtn">Make another exam</button>'
         +'<a class="ghost" href="mastery-os-fall-2026.html#s-weak" target="_top">Open my weak spot board</a>'
         +'<a class="ghost" href="course-materials.html" target="_top">Go to the notes</a>'
         +'</div></div>';
@@ -1051,20 +1590,29 @@
         marked=false; armed=false;
         $('submitBtn').disabled=false; $('submitBtn').textContent='Submit exam';
         $('out').classList.add('hidden'); $('paper').classList.add('hidden'); $('setup').classList.remove('hidden');
+        renderSetup();
         try{ $('setup').scrollIntoView({block:'start'}); }catch(e){}
+        $('startBtn').focus();
       });
-      lsSet(K_LAST, JSON.stringify({exam:exam, pct:pct, of:maxTotal}));
+      lsSet(K_LAST, JSON.stringify({exam:paper.target, pct:pct, of:maxTotal}));
       paintLast();
+
+      curHist.pct=pct; curHist.ew=Math.round(examWeighted(dok, pct)*10)/10;
+      saveHistory(curHist);
+      renderPredCard($('predOut'), 'po', paper.target);
+      var p=predictFor(paper.target);
+      $('resultSay').textContent = (first ? 'Marked. ' : 'Updated. ') + pct+' percent, '+r2(total)+' of '+maxTotal+' points.'
+        + (p && first ? ' If the real exam were tomorrow: likely '+p.lo+' to '+p.hi+' percent.' : '');
     }
 
     if(window.BIO004_EVIDENCE && window.BIO004_EVIDENCE.record){
       Object.keys(byComp).forEach(function(c){
         var g=byComp[c];
-        window.BIO004_EVIDENCE.record([c],'exam', Math.round(g.got*100)/100, g.of, null);
+        window.BIO004_EVIDENCE.record([c],'exam', r2(g.got), g.of, null);
       });
     }
 
-    paint();
+    paint(true);
     $('submitBtn').disabled=true;
     $('out').classList.remove('hidden');
     $('out').focus();
@@ -1073,10 +1621,13 @@
 
   function paintLast(){
     var v=null; try{ v=JSON.parse(lsGet(K_LAST)||'null'); }catch(e){}
-    $('lastLine').textContent = (v && v.exam===exam)
+    var t=POOLS.S.target;
+    $('lastLine').textContent = (v && v.exam===t)
       ? 'Last time on exam '+v.exam+' you scored '+v.pct+' percent.' : '';
   }
 
+  renderScopeList();
+  renderMixes();
   renderSetup();
   paintLast();
 })();

@@ -111,6 +111,13 @@ The cards follow the reviewed course notes. These older notes pages still say ot
 - Accurate cards on structures not on her lists were kept: gluteus minimus, fibularis tertius, the ankle retinacula, Billroth's cords and named thymic corpuscles. Cut them if the deck should match the lists exactly.
 - Near-duplicate cards remain in several topics (meninges order, ventricle counts, lung lobes, parathyroid location). All are accurate.
 
+## October 17 update, part 2: levels for every competency
+
+- **Modules 1 to 3 matched too.** All 2,880 Module 1 to 3 cards now carry their competency number and Mastery OS id. 69 cards fit no competency (for example blood typing, muscle properties, the deep back muscles, joint disorders) and stay open to everyone. 536 cards had their level corrected; most were labelled Level 3 but were one-step questions. Six flagged cards were fixed (blood temperature, a rolled ankle that read as eversion, the interosseous membrane as a syndesmosis, the lamellated corpuscle's depth, and the apex of the heart).
+- **Level up.** Recall now deals each competency's Level 1 cards first. Level 2 opens once a student has answered at least 4 Level 1 cards there (or all of them, if there are fewer) with about 80 percent right, and Level 3 opens the same way. A switch shows every level. Each card shows its level in words and its competency number.
+- **New cards so the levels are complete.** Every competency now has at least 4 Level 1, 3 Level 2 and 3 Level 3 cards where her notes support them. New cards were written for Modules 1, 2, 4 and 5 (251 after independent review, 1 cut as a duplicate); Module 3's are in review and will follow. Competency 27 (cartilage growth) has 3 Level 1 cards, because her notes give only two facts on it.
+- **Precise weak areas.** A card answer now credits the one competency that card teaches instead of every competency in its topic, in both Mastery OS and the evidence store.
+
 ## Appendix C. Cards removed on October 17 (38)
 
 | Card | Topic | Reason |

@@ -35,6 +35,25 @@
      ?comp=ID             same, from an external link
      ?module=3 or #s-recall?module=3   open on a module
 
+   LEVELS (v3.1, October 2026)
+   ---------------------------
+   Within each competency (card.comp) a student starts on Level 1
+   cards (dok 1, Recall). Level 2 (Apply) opens once the student has
+   answered at least 4 Level 1 cards of that competency and got 80
+   percent of those answers right; Level 3 (Reason) opens the same
+   way from Level 2. The history used is the spacing progress below,
+   keyed exactly as before, so earlier answers count right away.
+   Details:
+     - A competency with fewer than 4 cards at a level needs every
+       card at that level answered instead.
+     - The lowest level a competency has is always open, so a
+       competency with no Level 1 cards starts on Level 2.
+     - A level the student has already answered cards in stays open,
+       and a level opened during a sitting stays open for the sitting.
+     - Cards with no comp are always open.
+   The switch "Levels: Level up / Show all levels" sits above the
+   Start button and is saved with the other display choices.
+
    Nothing here runs on a timer. A student sets the pace.
    ============================================================ */
 
@@ -221,6 +240,80 @@
     return !p.next || p.next <= today();
   }
 
+  /* ---------- levels (see the header) ---------- */
+  var LV_MIN = 4;          // cards answered at a level before the next opens
+  var LV_PCT = 80;         // percent of those answers right
+  var LEVELN = { 1: 'Level 1, Recall', 2: 'Level 2, Apply', 3: 'Level 3, Reason' };
+  var COMPS = {};          // comp number -> [unused, L1 entries, L2 entries, L3 entries]
+  var openedNow = {};      // comp number -> highest level opened this sitting
+  var unlockMsg = '';      // the line shown under the current card's explanation
+  var lv = null;           // counts for the current render: { map, byTopic }
+
+  function levelOf(entry) { var d = Math.floor(+entry.card.dok); return d >= 1 && d <= 3 ? d : 1; }
+  function compKey(entry) { var c = entry.card.comp; return c == null || c === '' ? null : String(c); }
+  function indexComps() {
+    COMPS = {};
+    ALL.forEach(function (e) {
+      var k = compKey(e);
+      if (!k) return;
+      (COMPS[k] = COMPS[k] || [null, [], [], []])[levelOf(e)].push(e);
+    });
+  }
+  function tried(e) { var p = progress[e.key]; return !!p && ((p.right || 0) + (p.wrong || 0)) > 0; }
+  function passed(list) {
+    var n = 0, r = 0, w = 0;
+    list.forEach(function (e) {
+      if (!tried(e)) return;
+      var p = progress[e.key];
+      n++; r += p.right || 0; w += p.wrong || 0;
+    });
+    return n >= Math.min(LV_MIN, list.length) && r * 100 >= (r + w) * LV_PCT;
+  }
+  /* Highest level open for one competency under Level up. */
+  function openTo(k) {
+    var L = COMPS[k];
+    if (!L) return 3;
+    var present = [1, 2, 3].filter(function (l) { return L[l].length; });
+    if (!present.length) return 3;
+    var top = present[0];
+    for (var i = 0; i < present.length - 1; i++) {
+      if (passed(L[present[i]])) top = present[i + 1]; else break;
+    }
+    present.forEach(function (l) { if (l > top && L[l].some(tried)) top = l; });
+    if (openedNow[k] > top) top = openedNow[k];
+    return top;
+  }
+  function levelMap() {
+    var m = {};
+    Object.keys(COMPS).forEach(function (k) { m[k] = openTo(k); });
+    return m;
+  }
+  function levelsOn() { return disp.levels !== 'all'; }
+  function isOpen(e, map) {
+    if (!levelsOn()) return true;
+    var k = compKey(e);
+    if (!k) return true;
+    return levelOf(e) <= (map[k] || 3);
+  }
+  function levelCounts() {
+    var map = levelMap(), byTopic = {};
+    ALL.forEach(function (e) {
+      var t = byTopic[e.topicId] = byTopic[e.topicId] || { open: 0, locked: 0 };
+      if (isOpen(e, map)) t.open++; else t.locked++;
+    });
+    return { map: map, byTopic: byTopic };
+  }
+  function topicLv(id) { return (lv && lv.byTopic[id]) || { open: 0, locked: 0 }; }
+  /* One short line per topic: "312 open, 48 unlock as you improve". */
+  function cardsLine(t) {
+    var n = (t.cards || []).length;
+    if (!levelsOn()) return fmtNum(n) + ' cards';
+    var c = topicLv(t.id);
+    if (!c.locked) return fmtNum(n) + ' cards, all open';
+    return fmtNum(c.open) + ' open, ' + fmtNum(c.locked) + ' unlock as you improve';
+  }
+  function unlockHtml() { return unlockMsg ? '<p class="rv-unlock">' + esc(unlockMsg) + '</p>' : ''; }
+
   /* ---------- topic selection ---------- */
   function loadSel() {
     try { var s = JSON.parse(localStorage.getItem(TKEY)); if (s && typeof s === 'object') return s; } catch (e) {}
@@ -255,6 +348,10 @@
       if (filter.comp) return isComp(e, filter.comp);
       return !!ids[e.topicId];
     });
+    if (levelsOn()) {
+      var lm = levelMap();
+      pool = pool.filter(function (e) { return isOpen(e, lm); });
+    }
     if (filter.mode === 'due') pool = pool.filter(due);
     if (filter.mode === 'missed') pool = pool.filter(function (e) {
       var p = progress[e.key]; return p && p.wrong > 0 && (p.box || 0) < 3;
@@ -295,6 +392,7 @@
 
   /* ---------- grading ---------- */
   function grade(entry, right) {
+    var ck = compKey(entry), before = ck ? openTo(ck) : 0;
     var p = progress[entry.key] || { box: 0, right: 0, wrong: 0 };
     if (right) { p.right++; p.box = Math.min((p.box || 0) + 1, BOX_DAYS.length - 1); }
     else       { p.wrong++; p.box = 0; }
@@ -304,6 +402,14 @@
     if (!right && confidence === 'sure') p.blindspot = true;
     progress[entry.key] = p;
     save(progress);
+    unlockMsg = '';
+    if (ck) {
+      var after = openTo(ck);
+      if (after > before) {
+        openedNow[ck] = after;
+        if (levelsOn()) unlockMsg = 'Level ' + after + ' is now open for Competency ' + ck + '.';
+      }
+    }
     odBump(entry);
     feedMasteryOS(entry, right);
     runLog.push({ topicId: entry.topicId, topicTitle: entry.topicTitle, moduleTitle: entry.moduleTitle, right: !!right });
@@ -349,12 +455,14 @@
   var THEMES = [['light', 'Light'], ['navy', 'Navy with white cards'], ['dark', 'Dark']];
   var CARDS = [['panel', 'Explanation panel below the choices'], ['inline', 'Explanation under each choice'],
                ['explore', 'Tap a choice to read about it'], ['flip', 'Flip the card over']];
+  var LEVELS = [['up', 'Level up'], ['all', 'Show all levels']];
   function loadDisp() {
     var d = null;
     try { d = JSON.parse(localStorage.getItem(DKEY)); } catch (e) {}
     d = d && typeof d === 'object' ? d : {};
     function pick(v, list, dflt) { for (var i = 0; i < list.length; i++) if (list[i][0] === v) return v; return dflt; }
-    return { theme: pick(d.theme, THEMES, 'light'), picker: pick(d.picker, PICKERS, 'tabs'), card: pick(d.card, CARDS, 'panel') };
+    return { theme: pick(d.theme, THEMES, 'light'), picker: pick(d.picker, PICKERS, 'tabs'), card: pick(d.card, CARDS, 'panel'),
+             levels: pick(d.levels, LEVELS, 'up') };
   }
   function saveDisp() { try { localStorage.setItem(DKEY, JSON.stringify(disp)); } catch (e) {} }
   var disp = loadDisp();
@@ -398,7 +506,7 @@
     var s = topicStatus(t);
     return '<li><label class="rv-check' + (s === 'soon' ? ' is-soon' : '') + '" for="rv-t-' + esc(t.id) + '">'
       + '<input type="checkbox" id="rv-t-' + esc(t.id) + '" data-topic="' + esc(t.id) + '"' + (selected[t.id] ? ' checked' : '') + '>'
-      + '<span class="rv-check-t">' + esc(t.title) + '<small>' + fmtNum((t.cards || []).length) + ' cards</small></span>'
+      + '<span class="rv-check-t">' + esc(t.title) + '<small>' + esc(cardsLine(t)) + '</small></span>'
       + chip(t) + '</label></li>';
   }
   function modLabel(mm) { return mm.extra ? 'More practice' : 'Module ' + mm.n; }
@@ -469,7 +577,7 @@
         + '<span class="rv-tl-rail" aria-hidden="true"><span class="rv-tl-dot"></span></span>'
         + '<label class="rv-tl-node" for="rv-t-' + esc(t.id) + '"><input type="checkbox" id="rv-t-' + esc(t.id) + '" data-topic="' + esc(t.id) + '"'
         + (selected[t.id] ? ' checked' : '') + '><span class="rv-check-t">' + esc(t.title)
-        + '<small>' + word + ' · ' + fmtNum((t.cards || []).length) + ' cards</small></span></label></li>';
+        + '<small>' + word + ' · ' + esc(cardsLine(t)) + '</small></span></label></li>';
     }).join('');
     return '<span class="rv-field"><label for="rv-modsel">Module</label><select id="rv-modsel">' + opts + '</select></span>'
       + quickRow('mod') + '<ol class="rv-tl">' + rows + '</ol>';
@@ -480,6 +588,15 @@
     var nCards = cardCount(ids);
     var nMods = {}; ids.forEach(function (k) { nMods[TOPIC[k].m.id] = 1; });
     var body = disp.picker === 'stack' ? pickStack() : disp.picker === 'timeline' ? pickTimeline() : pickTabs();
+    var nOpen = 0; ids.forEach(function (k) { nOpen += topicLv(k).open; });
+    var up = levelsOn();
+    var levelsBar = '<div class="rv-sec rv-levels" role="group" aria-labelledby="rv-lv-h" aria-describedby="rv-lv-note">'
+      + '<span id="rv-lv-h">Levels:</span>'
+      + '<button type="button" data-levels="up" aria-pressed="' + up + '">Level up</button>'
+      + '<button type="button" data-levels="all" aria-pressed="' + !up + '">Show all levels</button>'
+      + '<span class="rv-lv-note" id="rv-lv-note">' + (up
+          ? 'Each competency starts at Level 1. Harder cards open as you get the easier ones right.'
+          : 'Every card is in the deck, from Level 1 to Level 3.') + '</span></div>';
     return ''
       + '<div class="rv-picker">'
       + '<div class="rv-pick-head">'
@@ -488,10 +605,12 @@
       +   (tr ? '' : '<div class="rv-sec" role="group" aria-label="Your class days"><span>My class days:</span>' + secButtons() + '</div>')
       + '</div>'
       + body
+      + levelsBar
       + '<div class="rv-startbar">'
       +   '<p class="rv-count" id="rv-count" aria-live="polite">'
       +     (ids.length ? fmtNum(ids.length) + ' topic' + (ids.length === 1 ? '' : 's') + ' from ' + Object.keys(nMods).length
               + ' module' + (Object.keys(nMods).length === 1 ? '' : 's') + ', ' + fmtNum(nCards) + ' cards'
+              + (up && nOpen < nCards ? ', ' + fmtNum(nOpen) + ' open now' : '')
             : 'No topics checked yet. Check at least one topic to start.') + '</p>'
       +   '<span class="rv-field"><label for="rv-mode">Show me</label>'
       +     '<select id="rv-mode">'
@@ -562,7 +681,7 @@
       return '<div class="rv-mini' + (r ? ' is-right' : '') + '"><p class="rv-wn-h">'
         + (r ? 'Right answer: ' : i === picked ? 'Your answer: ' : 'Not this one: ') + esc(x.text) + '</p>'
         + '<p>' + esc(r ? c.why || c.explanation || '' : x.note) + '</p></div>';
-    }).join('') + '</div>'
+    }).join('') + '</div>' + unlockHtml()
       + '<button type="button" class="rv-link" id="rv-flip">Show the question again</button></div>';
   }
   function cardHtml(e) {
@@ -581,13 +700,13 @@
       if (!shown) shown = presentOptions(c);
       var answered = picked !== null;
       if (!answered) body = optionsHtml(false);
-      else if (disp.card === 'inline') body = optionsHtml(true) + verdictHtml(c) + whyHtml(c);
-      else if (disp.card === 'explore') body = optionsHtml(false) + verdictHtml(c) + exploreHtml(c);
+      else if (disp.card === 'inline') body = optionsHtml(true) + verdictHtml(c) + whyHtml(c) + unlockHtml();
+      else if (disp.card === 'explore') body = optionsHtml(false) + verdictHtml(c) + exploreHtml(c) + unlockHtml();
       else if (disp.card === 'flip') {
         if (flipped) { body = flipBackHtml(c); isBack = true; }
         else body = optionsHtml(false) + '<button type="button" class="rv-btn rv-gold" id="rv-flip">Flip to see why</button>';
       }
-      else body = optionsHtml(false) + '<div class="rv-breakdown">' + verdictHtml(c) + whyHtml(c) + whyNotHtml() + '</div>';
+      else body = optionsHtml(false) + '<div class="rv-breakdown">' + verdictHtml(c) + whyHtml(c) + whyNotHtml() + unlockHtml() + '</div>';
     } else {
       body = '<div class="rv-why"><p class="rv-why-h">The answer</p><p>' + esc(c.a) + '</p>'
            + (c.explanation ? '<p>' + esc(c.explanation) + '</p>' : '') + '</div>'
@@ -599,11 +718,13 @@
       + '<article class="rv-card' + (isBack ? ' is-back' : '') + '" aria-labelledby="rv-q">'
       +   '<div class="rv-meta"><span class="rv-chip rv-done-chip">' + esc(e.moduleN ? 'Module ' + e.moduleN : 'More practice') + '</span>'
       +     '<span>' + esc(e.topicTitle || '') + '</span>'
-      +     '<span class="rv-dok rv-d' + dok + '">' + esc(DOKN[dok]) + '</span>'
+      +     '<span class="rv-dok rv-d' + dok + '">' + esc(LEVELN[dok]) + '</span>'
+      +     (compKey(e) ? '<span class="rv-comp">Competency ' + esc(compKey(e)) + '</span>' : '')
       +     '<span class="rv-of">Card ' + (pos + 1) + ' of ' + queue.length + '</span></div>'
       +   '<h3 class="rv-q" id="rv-q">' + esc(c.q) + '</h3>'
       +   body
       +   '<p class="rv-live" id="rv-live" role="status" aria-live="polite"></p>'
+      +   (!e.mcq && picked !== null ? unlockHtml() : '')
       +   (picked !== null || stage === 'self' ? '<div class="rv-nextrow"><button type="button" class="rv-btn rv-primary" id="rv-next">'
               + (pos + 1 >= queue.length ? 'Finish the session' : 'Next card') + '</button></div>' : '')
       + '</article>'
@@ -620,6 +741,7 @@
       return;
     }
     host.setAttribute('data-rv-theme', disp.theme);
+    lv = levelCounts();
     var inner = head() + displayBar();
     if (NO_CARDS_FOR) {
       var cs = window.BIO004_COMPETENCIES || [], hit = null;
@@ -651,7 +773,21 @@
     if (focusSel) { var f = host.querySelector(focusSel); if (f) f.focus(); }
   }
 
-  function report() {
+  function report() { return weakReport() + levelReport(); }
+  /* Per topic in this session: how many cards are open and how many
+     are still waiting on a level. Shown only under Level up. */
+  function levelReport() {
+    if (!levelsOn()) return '';
+    var seen = {}, ids = [];
+    queue.forEach(function (e) { if (!seen[e.topicId]) { seen[e.topicId] = 1; ids.push(e.topicId); } });
+    if (!ids.length) return '';
+    return '<div class="rv-report"><h4>Cards open in these topics</h4>'
+      + '<ul class="rv-weak">' + ids.map(function (id) {
+          var t = TOPIC[id] ? TOPIC[id].t : { id: id, title: id, cards: [] };
+          return '<li><span class="rv-weak-t">' + esc(t.title) + '</span><span class="rv-weak-m">' + esc(cardsLine(t)) + '</span></li>';
+        }).join('') + '</ul></div>';
+  }
+  function weakReport() {
     if (runLog.length < 4) return '';
     var by = {};
     runLog.forEach(function (r) {
@@ -671,13 +807,13 @@
   function say(msg) { var l = $('rv-live'); if (l) l.textContent = msg; }
 
   function startRun() {
-    queue = build(); pos = 0; stage = 'conf'; confidence = null; shown = null; picked = null; runLog = []; exploreAt = null; flipped = false;
+    queue = build(); pos = 0; stage = 'conf'; confidence = null; shown = null; picked = null; runLog = []; exploreAt = null; flipped = false; unlockMsg = '';
     started = true;
     render('#rv-q');
     var sec = document.getElementById('s-recall') || $(MOUNT);
     if (sec && sec.scrollIntoView) { try { sec.scrollIntoView({ block: 'start' }); } catch (e) {} }
   }
-  function next() { pos++; stage = 'conf'; confidence = null; shown = null; picked = null; exploreAt = null; flipped = false; render('#rv-q'); }
+  function next() { pos++; stage = 'conf'; confidence = null; shown = null; picked = null; exploreAt = null; flipped = false; unlockMsg = ''; render('#rv-q'); }
 
   /* ---------- events ---------- */
   function inMount(t) { var h = $(MOUNT); return h && h.contains(t); }
@@ -697,6 +833,10 @@
     }
     if (t.hasAttribute('data-mod')) { curMod = +t.getAttribute('data-mod'); render('#rv-tab-' + curMod); return; }
     if (t.hasAttribute('data-sec')) { setTrack(t.getAttribute('data-sec')); render(); return; }
+    if (t.hasAttribute('data-levels')) {
+      disp.levels = t.getAttribute('data-levels') === 'all' ? 'all' : 'up'; saveDisp();
+      render('[data-levels="' + disp.levels + '"]'); return;
+    }
     if (t.hasAttribute('data-quick')) {
       var m = MODS[curMod], q = t.getAttribute('data-quick');
       (m.topics || []).forEach(function (x) { delete selected[x.id]; });
@@ -729,13 +869,15 @@
       render(disp.card === 'flip' ? '#rv-flip' : '#rv-next');
       var rightOpt = null; shown.forEach(function (o) { if (o.right) rightOpt = o; });
       say((right ? 'Correct. ' : 'Not quite. The correct answer is ' + (rightOpt ? rightOpt.text : '') + '. ')
-          + (disp.card === 'flip' ? 'Flip the card to read why.' : 'The explanation for every choice is below.'));
+          + (disp.card === 'flip' ? 'Flip the card to read why.' : 'The explanation for every choice is below.')
+          + (unlockMsg ? ' ' + unlockMsg : ''));
       return;
     }
     if (t.hasAttribute('data-self')) {
       grade(e, t.getAttribute('data-self') === '1');
       picked = -1; stage = 'self';
       render('#rv-next');
+      if (unlockMsg) say(unlockMsg);
       return;
     }
   }
@@ -896,7 +1038,12 @@
   + R + ' .rv-card.is-back{background:var(--rv-tint)}'
   + R + ' .rv-meta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:12.5px;color:var(--rv-soft)}'
   + R + ' .rv-of{margin-left:auto;font-variant-numeric:tabular-nums}'
-  + R + ' .rv-dok{font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase}'
+  + R + ' .rv-dok{font-weight:800;font-size:12.5px}'
+  + R + ' .rv-comp{font-weight:700;color:var(--rv-text)}'
+  + R + ' .rv-unlock{margin:0;font-weight:800;color:var(--rv-terra-text)}'
+  + R + ' .rv-levels{font-size:13px}'
+  + R + ' .rv-levels > span:first-child{font-weight:800;color:var(--rv-text)}'
+  + R + ' .rv-lv-note{flex:1 1 100%;font-size:12.5px;color:var(--rv-soft)}'
   + R + ' .rv-d1{color:var(--rv-soft)}' + R + ' .rv-d2{color:var(--rv-gold-text)}' + R + ' .rv-d3{color:var(--rv-terra-text)}'
   + R + ' .rv-q{margin:0;font-size:1.22rem;line-height:1.4;font-weight:700;color:var(--rv-text)}'
   + R + ' .rv-conf-h{margin:0 0 8px;font-weight:600}'
@@ -969,6 +1116,7 @@
     if (!$(MOUNT)) return;
     styles();
     ALL = flatten();
+    indexComps();
     curMod = moduleNow(); NOW_MOD = curMod;
     var wantMod = readParam('module');
     if (wantMod) MODS.forEach(function (m, i) { if (String(m.n) === wantMod) curMod = i; });

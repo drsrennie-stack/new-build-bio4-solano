@@ -16,7 +16,7 @@
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Lora:ital,wght@0,400;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   /* PRIMARY teaching palette. See palettes.md. Sage and cream are NOT in this
@@ -33,7 +33,7 @@
   --shadow:0 1px 3px rgba(0,0,0,0.08);
   --lift:0 8px 16px rgba(0,0,0,0.10);
   --disp:'Plus Jakarta Sans',system-ui,sans-serif;
-  --serif:'Lora',Georgia,serif;
+  --serif:'Plus Jakarta Sans',system-ui,sans-serif;
   --eyebrow:'DM Sans',system-ui,sans-serif;
   --mono:'Plus Jakarta Sans',system-ui,sans-serif;
   --r-sm:6px; --r:10px; --r-lg:16px;
@@ -773,6 +773,20 @@ body[data-view="progress"] #wlChip{display:none}
 @media(max-width:600px){
   #workRail{left:12px;right:12px;width:auto}
 }
+
+/* ---------- practice bar (Oct 17): the four ways to practice, always visible ---------- */
+.practicebar{max-width:1120px;margin:0 auto;padding:4px 16px 10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.practicebar .pblab{font:700 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin-right:2px}
+.practicebar a.btn{padding:8px 14px;font-size:13.5px}
+.practicebar a.btn[aria-current="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.practicebar .pbmore{font-size:13px;color:var(--ink-soft);margin-left:auto}
+.practicebar .pbmore a{color:var(--navy);font-weight:700}
+@media(max-width:640px){.practicebar .pbmore{margin-left:0;width:100%}}
+body[data-view="progress"] #s-dumps,body[data-view="progress"] #s-loops{display:none}
+.loopsframe{display:block;width:100%;height:82vh;min-height:560px;border:1px solid var(--line);border-radius:var(--r);background:#fff}
+.weak-acts{display:flex;flex-wrap:wrap;gap:6px}
+.weak-acts .btn{padding:7px 12px;font-size:12.5px}
+@media(max-width:480px){.hbar{gap:8px;padding:10px 12px}.hbadge{display:none}.logo .lt{font-size:17px}}
 </style>
 </head>
 <body data-no-back>
@@ -825,13 +839,21 @@ body[data-view="progress"] #wlChip{display:none}
   <ul>
     <li><a href="#s-dash">Dashboard</a></li>
     <li><a href="#s-map">Competencies</a></li>
-    <li><a href="#s-weak">Weaknesses</a></li>
+    <li><a href="#s-weak">My weak areas</a></li>
     <li><a href="#s-flow">Self-Tutoring</a></li>
     <li><a href="#s-evidence">Evidence</a></li>
     <li><a href="#s-skills">Learning Skills</a></li>
     <li><a href="#s-coach">Coach</a></li>
     <li><a href="#s-together">Study Together</a></li>
   </ul>
+  <div class="practicebar">
+    <span class="pblab" id="pb-lab">Practice</span>
+    <a class="btn" href="#s-recall" data-pb="s-recall">Recall cards</a>
+    <a class="btn" href="#s-dumps" data-pb="s-dumps">Brain dumps</a>
+    <a class="btn" href="#s-loops" data-pb="s-loops">Loops</a>
+    <a class="btn rust" href="#s-weak" data-pb="s-weak">My weak areas</a>
+    <span class="pbmore">Also: <a href="practice-lecture-exam.html" target="_top">Practice exam</a> &middot; <a href="bio004-mastery-check.html" target="_top">Mastery Check</a></span>
+  </div>
 </nav>
 
 <main id="main">
@@ -888,7 +910,7 @@ body[data-view="progress"] #wlChip{display:none}
   <section class="block" id="s-weak" aria-labelledby="h-weak">
     <div class="wrap">
       <div class="sec-head">
-        <div><p class="eyebrow">Section 4</p><h2 id="h-weak">Weakness Dashboard</h2><p class="lead">Collected from your misses, your low-confidence answers, and recall you have let slip.</p></div>
+        <div><p class="eyebrow">Section 4</p><h2 id="h-weak">My weak areas</h2><p class="lead">Where am I weak? Collected from your recall cards, brain dumps, Loops, practice exams and Mastery Checks: misses, low-confidence answers, and recall you have let slip. Each one links straight to its cards, its brain dump and its Loop.</p></div>
         <button class="btn rust" data-worklist-weak>Work the list</button>
       </div>
       <div id="weakWrap"><!-- JS --></div>
@@ -899,9 +921,28 @@ body[data-view="progress"] #wlChip{display:none}
   <!-- SPACED RECALL, in the app rather than beside it -->
   <section class="block" id="s-recall" aria-labelledby="h-recall" tabindex="-1">
     <div class="wrap">
-      <h2 id="h-recall">Recall</h2>
+      <h2 id="h-recall">Recall cards</h2>
       <p class="note note-short">Say how sure you are before you look. Sure and wrong is the gap that costs marks.</p>
       <div id="recallMount"></div>
+    </div>
+  </section>
+
+  <!-- BRAIN DUMPS (Oct 17): three levels per topic, check your answer feeds My weak areas -->
+  <section class="block" id="s-dumps" aria-labelledby="h-dumps" tabindex="-1">
+    <div class="wrap">
+      <h2 id="h-dumps">Brain dumps</h2>
+      <p class="note note-short">Blank paper, notes closed, about five minutes. Then check your answer and tick what you got. Level 2 and Level 3 open as you get the levels below right.</p>
+      <div id="dumpMount"><p class="note">Loading the brain dumps.</p></div>
+    </div>
+  </section>
+
+  <!-- LOOPS (Oct 17): the GitHub Pages Loops, same site, so every station you run feeds My weak areas -->
+  <section class="block" id="s-loops" aria-labelledby="h-loops" tabindex="-1">
+    <div class="wrap">
+      <h2 id="h-loops">Loops</h2>
+      <p class="note note-short">Lab ID practice on the models, the cadaver and the slides. Every station you run counts toward My weak areas. <a id="loopsTab" href="https://drsrennie-stack.github.io/loops/" target="_blank" rel="noopener">Open Loops in its own tab</a> if the frame is small on your screen.</p>
+      <p class="vh" id="loopsStatus" aria-live="polite"></p>
+      <iframe id="loopsFrame" class="loopsframe" title="Loops lab identification practice" loading="lazy"></iframe>
     </div>
   </section>
 
@@ -1067,6 +1108,8 @@ body[data-view="progress"] #wlChip{display:none}
 <script src="draw-checklists.js"></script>
 <script src="loops-index.js"></script>
 <script src="loops-stations.js"></script>
+<script src="bio004-braindump-practice-data.js"></script>
+<script src="braindump-view.js"></script>
 <script src="section-sync.js"></script>
 <script>
 "use strict";
@@ -1159,10 +1202,10 @@ var SEED={
    cumulative lecture final + cumulative lab final Thu Aug 6.
 ========================================================= */
 var FALL_MW={course:'BIO 004 Human Anatomy',section:'Mon / Wed (Afternoon)',term:'Fall 2026',start:'2026-08-17',end:'2026-12-11',highyield:'Tissue types, bone and skeletal landmarks, heart blood flow, muscle actions and NAV, cranial nerves, GI and renal organs',weeks:[
-{n:1,start:'2026-08-17',title:'Cells, Tissues and Epithelium',lecture:['Intro and Team Formation','Guided Cell Activity (Brain dump)'],lab:['Intro, Lab Safety and Introduction to Histology','Epithelial Tissues'],labExam:null,tbl:null}, {n:2,start:'2026-08-24',title:'Cell Anatomy and Connective Tissue',lecture:['TBL 1: Cell Anatomy','Interactive Histology Lecture (Brain dump)'],lab:['Connective Tissue I','Connective Tissue II'],labExam:null,tbl:'2026-08-24'}, {n:3,start:'2026-08-31',title:'Histology and Integument',lecture:['TBL 2: Histology','Exam 1 Review Game'],lab:['Muscle and Nervous Tissue','Integumentary'],labExam:null,tbl:'2026-08-31'}, {n:4,start:'2026-09-07',title:'Exam 1',lecture:['Labor Day (no class)','Exam 1'],lab:['Cell, Tissue and Integument Review'],labExam:{name:'Exam 1',date:'2026-09-09',covers:'Cells, tissues, histology, integument'},tbl:null}, {n:5,start:'2026-09-14',title:'Bone and Axial Skeleton',lecture:['Long Bone and Bone Microanatomy (Brain dump)','Skull Walk-Through (Brain dump)'],lab:['Bone Tissue and Long Bone Microanatomy','Axial Skeleton: Skull'],labExam:null,tbl:null}, {n:6,start:'2026-09-21',title:'Skeleton and Appendicular',lecture:['Spine Walk-Through (Brain dump)','TBL 3: Bone, Cartilage and Micro'],lab:['Axial Skeleton: Vertebrae and Ribs','Upper Extremity'],labExam:null,tbl:'2026-09-23'}, {n:7,start:'2026-09-28',title:'Exam 2',lecture:['Kahoot Review: Bone','Exam 2'],lab:['Lower Extremity'],labExam:{name:'Exam 2',date:'2026-09-30',covers:'Bone, cartilage, axial and appendicular skeleton'},tbl:null}, {n:8,start:'2026-10-05',title:'Heart, Muscle microanatomy',lecture:['Interactive Heart Lecture; Cardiac Conduction (Brain dump)','TBL 4: Muscle Microanatomy and the Sarcomere'],lab:['Thoracic Anatomy (Heart) and BV Histology','Muscle Microanatomy, and Muscles of the Upper Trunk and Arm'],labExam:null,tbl:'2026-10-07'}, {n:9,start:'2026-10-12',title:'Heart and conduction, Blood vessels',lecture:['TBL 5: Heart Anatomy and Cardiac Conduction','Blood Vessel Anatomy Lecture (Brain dump)'],lab:['The Heart and Blood Cells','Lab TBL 1: Muscles and NAV of the Anterior Forearm'],labExam:null,tbl:'2026-10-12'}, {n:10,start:'2026-10-19',title:'Blood, Exam 3',lecture:['TBL 6: Blood','Exam 3'],lab:['Muscles and NAV of the Posterior Forearm'],labExam:{name:'Exam 3',date:'2026-10-21',covers:'Muscle microanatomy, heart, blood vessels, blood, upper limb'},tbl:'2026-10-19'}, {n:11,start:'2026-10-26',title:'Respiratory, Lymphatic system',lecture:['TBL 7: Respiratory Anatomy and Histology','Lymphatic System Lecture (Brain dump)'],lab:['Thoracic Anatomy (Respiratory) and Respiratory Histology (models)','Thoracic Anatomy (Respiratory) and Respiratory Histology (cadaver)'],labExam:null,tbl:'2026-10-26'}, {n:12,start:'2026-11-02',title:'Endocrine, GI',lecture:['TBL 8: Endocrine System','Guided DITKI GI Map Activity I and II (Brain dump)'],lab:['Muscles, Nerves and Vessels of the Lower Limb (models)','Muscles, Nerves and Vessels of the Lower Limb (cadaver)'],labExam:null,tbl:'2026-11-02'}, {n:13,start:'2026-11-09',title:'GI',lecture:['TBL 9: GI System','Veteran\'s Day (no class)'],lab:['GI Organs, Primary and Accessory (models, then cadaver)'],labExam:null,tbl:'2026-11-09'}, {n:14,start:'2026-11-16',title:'Renal, Exam 4',lecture:['Exam 4','Exam 4 Rebuttals; Guided Renal Map (Brain dump)'],lab:['Urinary and Reproductive Organs (models)'],labExam:{name:'Exam 4',date:'2026-11-16',covers:'Respiratory, lymphatic, endocrine, GI primary and accessory, lower limb'},tbl:null}, {n:15,start:'2026-11-23',title:'Reproductive',lecture:['TBL 10: Reproductive Anatomy','Travel Day (no class)'],lab:['Urinary and Reproductive Organs (cadaver)'],labExam:null,tbl:'2026-11-23'}, {n:16,start:'2026-11-30',title:'Brain, brainstem, meninges and CSF, Cranial nerves and spinal cord',lecture:['TBL 11: Brain, Brainstem, Meninges and CSF','Cranial Nerves and Spinal Cord, with Cranial Nerve Exam Stations (Brain dump)'],lab:['Brain, Brainstem, Spinal Cord and Cranial Nerves (models)','Brain, Brainstem, Spinal Cord and Cranial Nerves (cadaver)'],labExam:null,tbl:'2026-11-30'}, {n:17,start:'2026-12-07',title:'Autonomic nervous system, Exam 5',lecture:['TBL 12: Autonomic Nervous System','Exam 5'],lab:['Module 5 lab review'],labExam:{name:'Exam 5',date:'2026-12-09',covers:'Renal, reproductive, brain, brainstem, cranial nerves, spinal cord and ANS'},tbl:'2026-12-07'}
+{n:1,start:'2026-08-17',title:'Cells, Tissues and Epithelium',lecture:['Intro and Team Formation','Guided Cell Activity (Brain dump)'],lab:['Intro, Lab Safety and Introduction to Histology','Epithelial Tissues'],labExam:null,tbl:null}, {n:2,start:'2026-08-24',title:'Cell Anatomy and Connective Tissue',lecture:['TBL 1: Cell Anatomy','Interactive Histology Lecture (Brain dump)'],lab:['Connective Tissue I','Connective Tissue II'],labExam:null,tbl:'2026-08-24'}, {n:3,start:'2026-08-31',title:'Histology and Integument',lecture:['TBL 2: Histology','Exam 1 Review Game'],lab:['Muscle and Nervous Tissue','Integumentary'],labExam:null,tbl:'2026-08-31'}, {n:4,start:'2026-09-07',title:'Exam 1',lecture:['Labor Day (no class)','Exam 1'],lab:['Cell, Tissue and Integument Review'],labExam:{name:'Exam 1',date:'2026-09-09',covers:'Cells, tissues, histology, integument'},tbl:null}, {n:5,start:'2026-09-14',title:'Bone and Axial Skeleton',lecture:['Long Bone and Bone Microanatomy (Brain dump)','Skull Walk-Through (Brain dump)'],lab:['Bone Tissue and Long Bone Microanatomy','Axial Skeleton: Skull'],labExam:null,tbl:null}, {n:6,start:'2026-09-21',title:'Skeleton and Appendicular',lecture:['Spine Walk-Through (Brain dump)','TBL 3: Bone, Cartilage and Micro'],lab:['Axial Skeleton: Vertebrae and Ribs','Upper Extremity'],labExam:null,tbl:'2026-09-23'}, {n:7,start:'2026-09-28',title:'Exam 2',lecture:['Kahoot Review: Bone','Exam 2'],lab:['Lower Extremity'],labExam:{name:'Exam 2',date:'2026-09-30',covers:'Bone, cartilage, axial and appendicular skeleton'},tbl:null}, {n:8,start:'2026-10-05',title:'Heart, Muscle microanatomy',lecture:['Interactive Heart Lecture; Cardiac Conduction (Brain dump)','TBL 4: Muscle Microanatomy and the Sarcomere'],lab:['Thoracic Anatomy (Heart) and BV Histology','Muscle Microanatomy, and Muscles of the Upper Trunk and Arm'],labExam:null,tbl:'2026-10-07'}, {n:9,start:'2026-10-12',title:'Heart and conduction, Blood vessels',lecture:['TBL 5: Heart Anatomy and Cardiac Conduction','Blood Vessel Anatomy Lecture (Brain dump)'],lab:['The Heart and Blood Cells','Lab TBL 1: Muscles and NAV of the Anterior Forearm'],labExam:null,tbl:'2026-10-12'}, {n:10,start:'2026-10-19',title:'Blood, Exam 3',lecture:['TBL 6: Blood','Exam 3'],lab:['Muscles and NAV of the Posterior Forearm'],labExam:{name:'Exam 3',date:'2026-10-21',covers:'Muscle microanatomy, heart, blood vessels, blood, upper limb'},tbl:'2026-10-19'}, {n:11,start:'2026-10-26',title:'Respiratory, Lymphatic system',lecture:['TBL 7: Respiratory Anatomy and Histology','Lymphatic System Lecture (Brain dump)'],lab:['Thoracic Anatomy (Respiratory) and Respiratory Histology (models)','Lab TBL 2: Thoracic Anatomy (Respiratory) and Respiratory Histology (cadaver)'],labExam:null,tbl:'2026-10-26'}, {n:12,start:'2026-11-02',title:'Endocrine, GI',lecture:['TBL 8: Endocrine System','Guided DITKI GI Map Activity I and II (Brain dump)'],lab:['Muscles, Nerves and Vessels of the Lower Limb (models)','Lab TBL 3: Muscles, Nerves and Vessels of the Lower Limb (cadaver)'],labExam:null,tbl:'2026-11-02'}, {n:13,start:'2026-11-09',title:'GI',lecture:['TBL 9: GI System','Veteran\'s Day (no class)'],lab:['GI Organs, Primary and Accessory (models, then cadaver)'],labExam:null,tbl:'2026-11-09'}, {n:14,start:'2026-11-16',title:'Renal, Exam 4',lecture:['Exam 4','Exam 4 Rebuttals; Guided Renal Map (Brain dump)'],lab:['Lab TBL 4: Urinary and Reproductive Organs (models)'],labExam:{name:'Exam 4',date:'2026-11-16',covers:'Respiratory, lymphatic, endocrine, GI primary and accessory, lower limb'},tbl:null}, {n:15,start:'2026-11-23',title:'Reproductive',lecture:['TBL 10: Reproductive Anatomy','Travel Day (no class)'],lab:['Urinary and Reproductive Organs (cadaver)'],labExam:null,tbl:'2026-11-23'}, {n:16,start:'2026-11-30',title:'Brain, brainstem, meninges and CSF, Cranial nerves and spinal cord',lecture:['TBL 11: Brain, Brainstem, Meninges and CSF','Cranial Nerves and Spinal Cord, with Cranial Nerve Exam Stations (Brain dump)'],lab:['Brain, Brainstem, Spinal Cord and Cranial Nerves (models)','Lab TBL 5: Brain, Brainstem, Spinal Cord and Cranial Nerves (cadaver)'],labExam:null,tbl:'2026-11-30'}, {n:17,start:'2026-12-07',title:'Autonomic nervous system, Exam 5',lecture:['TBL 12: Autonomic Nervous System','Exam 5'],lab:['Module 5 lab review'],labExam:{name:'Exam 5',date:'2026-12-09',covers:'Renal, reproductive, brain, brainstem, cranial nerves, spinal cord and ANS'},tbl:'2026-12-07'}
 ]};
 var FALL_TR={course:'BIO 004 Human Anatomy',section:'Tue / Thu',term:'Fall 2026',start:'2026-08-18',end:'2026-12-11',highyield:'Tissue types, bone and skeletal landmarks, heart blood flow, muscle actions and NAV, cranial nerves, GI and renal organs',weeks:[
-{n:1,start:'2026-08-17',title:'Cells, Tissues and Epithelium',lecture:['Intro and Team Formation','Guided Cell Activity (Brain dump)'],lab:['Intro, Lab Safety and Introduction to Histology','Epithelial Tissues'],labExam:null,tbl:null}, {n:2,start:'2026-08-24',title:'Cell Anatomy and Connective Tissue',lecture:['TBL 1: Cell Anatomy','Interactive Histology Lecture (Brain dump)'],lab:['Connective Tissue I','Connective Tissue II'],labExam:null,tbl:'2026-08-25'}, {n:3,start:'2026-08-31',title:'Histology and Integument',lecture:['TBL 2: Histology','Exam 1 Review Game'],lab:['Muscle and Nervous Tissue','Integumentary'],labExam:null,tbl:'2026-09-01'}, {n:4,start:'2026-09-07',title:'Exam 1 and Bone',lecture:['Exam 1','Long Bone and Bone Microanatomy (Brain dump)'],lab:['Cell, Tissue and Integument Review','Bone Tissue and Long Bone Microanatomy'],labExam:{name:'Exam 1',date:'2026-09-08',covers:'Cells, tissues, histology, integument'},tbl:null}, {n:5,start:'2026-09-14',title:'Axial Skeleton',lecture:['Skull Walk-Through (Brain dump)','Spine Walk-Through (Brain dump)'],lab:['Axial Skeleton: Skull','Axial Skeleton: Vertebrae and Ribs'],labExam:null,tbl:null}, {n:6,start:'2026-09-21',title:'Skeleton and Appendicular',lecture:['TBL 3: Bone, Cartilage and Micro','Kahoot Review: Bone'],lab:['Upper Extremity','Lower Extremity'],labExam:null,tbl:'2026-09-22'}, {n:7,start:'2026-09-28',title:'Exam 2 and Heart',lecture:['Exam 2','Interactive Heart Lecture; Cardiac Conduction (Brain dump)'],lab:['Skeletal and Joints Review','Thoracic Anatomy (Heart) and BV Histology'],labExam:{name:'Exam 2',date:'2026-09-29',covers:'Bone, cartilage, axial and appendicular skeleton'},tbl:null}, {n:8,start:'2026-10-05',title:'Heart and conduction, Muscle microanatomy',lecture:['Muscle Microanatomy and Sarcomere (Brain dump)','TBL 4: Heart, Cardiac Conduction and Muscle Microanatomy'],lab:['Muscle Microanatomy and Sarcomere','Cadaver: Muscles, Nerves and Vessels of the Trunk and Upper Limb, and the Heart; Models: Muscles and NAV of the Anterior Forearm'],labExam:null,tbl:'2026-10-08'}, {n:9,start:'2026-10-12',title:'Blood vessels',lecture:['Professional Development (no class)','Blood Vessel Anatomy Lecture (Brain dump)'],lab:['Lab TBL 1: Cadaver: Trunk, Upper Limb, Heart and Anterior Forearm; Models: Muscles and NAV of the Posterior Forearm'],labExam:null,tbl:null}, {n:10,start:'2026-10-19',title:'Blood, Exam 3',lecture:['TBL 5: Blood','Exam 3'],lab:['Module 3 lab review (everything)'],labExam:{name:'Exam 3',date:'2026-10-22',covers:'Muscle microanatomy, heart, blood vessels, blood, upper limb'},tbl:'2026-10-20'}, {n:11,start:'2026-10-26',title:'Respiratory, Lymphatic system',lecture:['TBL 6: Respiratory Anatomy and Histology','Lymphatic System Lecture (Brain dump)'],lab:['Thoracic Anatomy (Respiratory) and Respiratory Histology (models)','Thoracic Anatomy (Respiratory) and Respiratory Histology (cadaver)'],labExam:null,tbl:'2026-10-27'}, {n:12,start:'2026-11-02',title:'Endocrine',lecture:['TBL 7: Endocrine System','Endocrine Mind Map Activity (Brain dump)'],lab:['Muscles, Nerves and Vessels of the Lower Limb (models)','Muscles, Nerves and Vessels of the Lower Limb (cadaver)'],labExam:null,tbl:'2026-11-03'}, {n:13,start:'2026-11-09',title:'GI',lecture:['TBL 8: GI System','Guided DITKI GI Map Activity II (Brain dump)'],lab:['GI Organs, Primary and Accessory (models)','GI Organs, Primary and Accessory (cadaver)'],labExam:null,tbl:'2026-11-10'}, {n:14,start:'2026-11-16',title:'Renal, Exam 4',lecture:['Exam 4','Guided Renal Map (Brain dump)'],lab:['Urinary and Reproductive Organs (models)'],labExam:{name:'Exam 4',date:'2026-11-17',covers:'Respiratory, lymphatic, endocrine, GI primary and accessory, lower limb'},tbl:null}, {n:15,start:'2026-11-23',title:'Reproductive',lecture:['TBL 9: Reproductive Anatomy','Thanksgiving (no class)'],lab:['Urinary and Reproductive Organs (cadaver)'],labExam:null,tbl:'2026-11-24'}, {n:16,start:'2026-11-30',title:'Brain, brainstem, meninges and CSF, Cranial nerves and spinal cord',lecture:['TBL 10: Brain, Brainstem, Meninges and CSF','Cranial Nerves and Spinal Cord, with Cranial Nerve Exam Stations (Brain dump)'],lab:['Brain, Brainstem, Spinal Cord and Cranial Nerves (models)','Brain, Brainstem, Spinal Cord and Cranial Nerves (cadaver)'],labExam:null,tbl:'2026-12-01'}, {n:17,start:'2026-12-07',title:'Autonomic nervous system, Exam 5',lecture:['TBL 11: Autonomic Nervous System','Exam 5'],lab:['Module 5 lab review'],labExam:{name:'Exam 5',date:'2026-12-10',covers:'Renal, reproductive, brain, brainstem, cranial nerves, spinal cord and ANS'},tbl:'2026-12-08'}
+{n:1,start:'2026-08-17',title:'Cells, Tissues and Epithelium',lecture:['Intro and Team Formation','Guided Cell Activity (Brain dump)'],lab:['Intro, Lab Safety and Introduction to Histology','Epithelial Tissues'],labExam:null,tbl:null}, {n:2,start:'2026-08-24',title:'Cell Anatomy and Connective Tissue',lecture:['TBL 1: Cell Anatomy','Interactive Histology Lecture (Brain dump)'],lab:['Connective Tissue I','Connective Tissue II'],labExam:null,tbl:'2026-08-25'}, {n:3,start:'2026-08-31',title:'Histology and Integument',lecture:['TBL 2: Histology','Exam 1 Review Game'],lab:['Muscle and Nervous Tissue','Integumentary'],labExam:null,tbl:'2026-09-01'}, {n:4,start:'2026-09-07',title:'Exam 1 and Bone',lecture:['Exam 1','Long Bone and Bone Microanatomy (Brain dump)'],lab:['Cell, Tissue and Integument Review','Bone Tissue and Long Bone Microanatomy'],labExam:{name:'Exam 1',date:'2026-09-08',covers:'Cells, tissues, histology, integument'},tbl:null}, {n:5,start:'2026-09-14',title:'Axial Skeleton',lecture:['Skull Walk-Through (Brain dump)','Spine Walk-Through (Brain dump)'],lab:['Axial Skeleton: Skull','Axial Skeleton: Vertebrae and Ribs'],labExam:null,tbl:null}, {n:6,start:'2026-09-21',title:'Skeleton and Appendicular',lecture:['TBL 3: Bone, Cartilage and Micro','Kahoot Review: Bone'],lab:['Upper Extremity','Lower Extremity'],labExam:null,tbl:'2026-09-22'}, {n:7,start:'2026-09-28',title:'Exam 2 and Heart',lecture:['Exam 2','Interactive Heart Lecture; Cardiac Conduction (Brain dump)'],lab:['Skeletal and Joints Review','Thoracic Anatomy (Heart) and BV Histology'],labExam:{name:'Exam 2',date:'2026-09-29',covers:'Bone, cartilage, axial and appendicular skeleton'},tbl:null}, {n:8,start:'2026-10-05',title:'Heart and conduction, Muscle microanatomy',lecture:['Muscle Microanatomy and Sarcomere (Brain dump)','TBL 4: Heart, Cardiac Conduction and Muscle Microanatomy'],lab:['Muscle Microanatomy and Sarcomere','Cadaver: Muscles, Nerves and Vessels of the Trunk and Upper Limb, and the Heart; Models: Muscles and NAV of the Anterior Forearm'],labExam:null,tbl:'2026-10-08'}, {n:9,start:'2026-10-12',title:'Blood vessels',lecture:['Professional Development (no class)','Blood Vessel Anatomy Lecture (Brain dump)'],lab:['Lab TBL 1: Cadaver: Trunk, Upper Limb, Heart and Anterior Forearm; Models: Muscles and NAV of the Posterior Forearm'],labExam:null,tbl:null}, {n:10,start:'2026-10-19',title:'Blood, Exam 3',lecture:['TBL 5: Blood','Exam 3'],lab:['Module 3 lab review (everything)'],labExam:{name:'Exam 3',date:'2026-10-22',covers:'Muscle microanatomy, heart, blood vessels, blood, upper limb'},tbl:'2026-10-20'}, {n:11,start:'2026-10-26',title:'Respiratory, Lymphatic system',lecture:['TBL 6: Respiratory Anatomy and Histology','Lymphatic System Lecture (Brain dump)'],lab:['Thoracic Anatomy (Respiratory) and Respiratory Histology (models)','Lab TBL 2: Thoracic Anatomy (Respiratory) and Respiratory Histology (cadaver)'],labExam:null,tbl:'2026-10-27'}, {n:12,start:'2026-11-02',title:'Endocrine',lecture:['TBL 7: Endocrine System','Endocrine Mind Map Activity (Brain dump)'],lab:['Muscles, Nerves and Vessels of the Lower Limb (models)','Lab TBL 3: Muscles, Nerves and Vessels of the Lower Limb (cadaver)'],labExam:null,tbl:'2026-11-03'}, {n:13,start:'2026-11-09',title:'GI',lecture:['TBL 8: GI System','Guided DITKI GI Map Activity II (Brain dump)'],lab:['GI Organs, Primary and Accessory (models)','Lab TBL 4: GI Organs, Primary and Accessory (cadaver)'],labExam:null,tbl:'2026-11-10'}, {n:14,start:'2026-11-16',title:'Renal, Exam 4',lecture:['Exam 4','Guided Renal Map (Brain dump)'],lab:['Lab TBL 5: Urinary and Reproductive Organs (models)'],labExam:{name:'Exam 4',date:'2026-11-17',covers:'Respiratory, lymphatic, endocrine, GI primary and accessory, lower limb'},tbl:null}, {n:15,start:'2026-11-23',title:'Reproductive',lecture:['TBL 9: Reproductive Anatomy','Thanksgiving (no class)'],lab:['Urinary and Reproductive Organs (cadaver)'],labExam:null,tbl:'2026-11-24'}, {n:16,start:'2026-11-30',title:'Brain, brainstem, meninges and CSF, Cranial nerves and spinal cord',lecture:['TBL 10: Brain, Brainstem, Meninges and CSF','Cranial Nerves and Spinal Cord, with Cranial Nerve Exam Stations (Brain dump)'],lab:['Brain, Brainstem, Spinal Cord and Cranial Nerves (models)','Lab TBL 6: Brain, Brainstem, Spinal Cord and Cranial Nerves (cadaver)'],labExam:null,tbl:'2026-12-01'}, {n:17,start:'2026-12-07',title:'Autonomic nervous system, Exam 5',lecture:['TBL 11: Autonomic Nervous System','Exam 5'],lab:['Module 5 lab review'],labExam:{name:'Exam 5',date:'2026-12-10',covers:'Renal, reproductive, brain, brainstem, cranial nerves, spinal cord and ANS'},tbl:'2026-12-08'}
 ]};
 var FALL_SECTIONS={mw:FALL_MW,'tr-early':FALL_TR,'tr-eve':FALL_TR,tr:FALL_TR};
 
@@ -1544,15 +1587,19 @@ function ingestRecallCards(){
   }
   if(!st || !st.topics) st = {topics:{}};
   Object.keys(st.topics).forEach(function(tid){
-    var entry = MAP[tid]; if(!entry || !entry.comps.length) return;
+    var topicEntry = MAP[tid];
     var cards = (st.topics[tid] && st.topics[tid].cards) || {};
-    var a = 0, c = 0, seen = '';
     Object.keys(cards).forEach(function(cid){
+      /* A card's own competency (card-level link from the Oct 17 audit)
+         wins over the topic-level list, so one answer credits the one
+         competency that card teaches instead of every competency in
+         its topic. */
+      var entry = MAP[tid + ':' + cid] || topicEntry;
+      if(!entry || !entry.comps || !entry.comps.length) return;
       var r = cards[cid] || {};
+      var a = 0, c = 0, seen = '';
       /* Recall Rx stores the truth in history[], one entry per
-         attempt: {correct:bool, at:iso}. There is no attempts or
-         correct field on the card itself. Reading those directly
-         gives zero for every real card. attempts/correct are only
+         attempt: {correct:bool, at:iso}. attempts/correct are only
          honoured as a fallback for hand-made or imported state. */
       var hist = r.history;
       if (hist && hist.length) {
@@ -1567,12 +1614,12 @@ function ingestRecallCards(){
       }
       if(r.reviewedAt && r.reviewedAt > seen) seen = r.reviewedAt;
       if(r.lastAt && r.lastAt > seen) seen = r.lastAt;
-    });
-    if(!a) return;
-    entry.comps.forEach(function(id){
-      var g = agg[id] || (agg[id] = {a:0, c:0, seen:''});
-      g.a += a; g.c += c;
-      if(seen > g.seen) g.seen = seen;
+      if(!a) return;
+      entry.comps.forEach(function(id){
+        var g = agg[id] || (agg[id] = {a:0, c:0, seen:''});
+        g.a += a; g.c += c;
+        if(seen > g.seen) g.seen = seen;
+      });
     });
   });
 
@@ -2016,7 +2063,8 @@ function renderMap(){
 /* =========================================================
    RENDER: SECTION 4 - WEAKNESS
 ========================================================= */
-var LOOPS_BASE='https://www.medmasterscollaborative.com/anatomy-loops';
+var LOOPS_BASE='https://drsrennie-stack.github.io/loops/';
+function goLoops(loopId){ location.hash='s-loops'+(loopId?'?loop='+encodeURIComponent(loopId):''); }
 /* Smallest loop that covers this competency. Smallest, not first: a
    13-competency omnibus loop is a worse repair target than a focused
    one, even though both technically cover it. */
@@ -2072,7 +2120,7 @@ function renderLoopWeak(){
       + 'Loops is the only place the cadaver and specimen structures can be practiced outside the lab. '
       + 'Run one and the structures you miss will show up here by name, so you know exactly what to '
       + 'go back to.</p>'
-      + '<a class="btn primary" href="' + esc(LOOPS_BASE) + '" target="_blank" rel="noopener">Open Loops</a></div>';
+      + '<a class="btn primary" href="#s-loops">Open Loops</a></div>';
     return;
   }
 
@@ -2082,7 +2130,7 @@ function renderLoopWeak(){
       + '<p class="eyebrow" style="color:var(--terra-dark)">Lab ID practice</p>'
       + '<h3 style="font-size:16px;margin:2px 0 6px">No weak stations, from ' + total + ' practiced</h3>'
       + '<p style="font-size:13.5px;color:var(--ink-soft);margin:0 0 12px">Nothing you have run is coming back wrong. Add more stations rather than redoing these.</p>'
-      + '<a class="btn" href="' + esc(LOOPS_BASE) + '" target="_blank" rel="noopener">Open Loops</a></div>';
+      + '<a class="btn" href="#s-loops">Open Loops</a></div>';
     return;
   }
 
@@ -2096,8 +2144,8 @@ function renderLoopWeak(){
       + '<span class="wn">' + esc(x.name) + '</span>'
       + '<span class="wu">' + esc(x.loopTitle) + (x.unit ? ' &middot; ' + esc(x.unit) : '') + '</span>'
       + '<span class="wu" style="min-width:74px;text-align:right">' + pct + '% missed</span>'
-      + '<a class="btn" href="' + esc(LOOPS_BASE) + '" target="_blank" rel="noopener" '
-      + 'style="padding:7px 12px;font-size:12.5px" title="Opens the Loops hub. Choose ' + esc(x.loopTitle) + '">Run it</a>'
+      + '<a class="btn" href="#s-loops?loop=' + encodeURIComponent(x.loopId) + '" '
+      + 'style="padding:7px 12px;font-size:12.5px">Run ' + esc(loopShort(x.loopTitle)) + '</a>'
       + '</div>';
   }).join('');
 
@@ -2109,7 +2157,7 @@ function renderLoopWeak(){
     + '<p class="serif" style="flex:1;min-width:200px">Straight from your Loops runs, by name. '
     + (over ? '<b>' + over + '</b> of these you answered confidently and still got wrong, which is the miss a practical punishes hardest, so those are first. ' : '')
     + 'Out of ' + total + ' stations you have practiced.</p>'
-    + '<a class="btn rust big" href="' + esc(LOOPS_BASE) + '" target="_blank" rel="noopener">Open Loops</a></div>'
+    + '<a class="btn rust big" href="#s-loops">Open Loops</a></div>'
     + '<div class="card">' + rows + more + '</div>';
 }
 function renderWeakness(){
@@ -2127,11 +2175,13 @@ function renderWeakness(){
        to pick from 39 tiles. Telling them which one is the difference
        between a working instruction and a scavenger hunt. */
     var loopBtn = lp
-      ? '<a class="btn" href="'+esc(LOOPS_BASE)+'" target="_blank" rel="noopener" '+
-        'style="padding:7px 12px;font-size:12.5px" '+
-        'title="Opens the Loops hub. Choose '+esc(lp.title)+'">Loop: '+esc(loopShort(lp.title))+'</a>'
+      ? '<a class="btn" href="#s-loops?loop='+encodeURIComponent(lp.id)+'">Loop: '+esc(loopShort(lp.title))+'</a>'
       : '';
-    return '<div class="weak-item">'+tags+'<span class="wn">'+esc(x.c.name)+'</span><span class="wu">'+esc(x.u.name)+'</span>'+loopBtn+'<button class="btn" data-prove="'+x.c.id+'" style="padding:7px 12px;font-size:12.5px">Repair</button></div>';
+    var dumpBtn = (window.BIO004_DUMP_HAS && window.BIO004_DUMP_HAS(x.c.id))
+      ? '<a class="btn" href="#s-dumps?comp='+encodeURIComponent(x.c.id)+'">Brain dump</a>' : '';
+    return '<div class="weak-item">'+tags+'<span class="wn">'+esc(x.c.name)+'</span><span class="wu">'+esc(x.u.name)+'</span>'
+      +'<span class="weak-acts"><button class="btn" type="button" data-wkcards="'+x.c.id+'">Cards</button>'+dumpBtn+loopBtn
+      +'<button class="btn" type="button" data-prove="'+x.c.id+'">Repair</button></span></div>';
   }).join('');
   var head='<div class="weak-head"><div><div class="wc">'+w.length+'</div><div class="wl">competencies need repair</div></div>'+
     '<p class="serif" style="flex:1;min-width:200px">Collected automatically from missed questions, low-confidence concepts, and overdue recall items. One session repairs the top ones.</p>'+
@@ -2597,7 +2647,7 @@ function loopProveScreen(c){
       : '<p>None of the 39 Loops covers '+esc(c.name)+'. Prove it another way.</p>'+
         '<div class="g-actions"><button class="btn" id="proveBack">Back</button></div>')+
     '</div>');
-  var g=$('#lpGo');if(g)g.onclick=function(){window.open(LOOPS_BASE,'_blank','noopener');};
+  var g=$('#lpGo');if(g)g.onclick=function(){goLoops();};
   var d=$('#proveDone');if(d)d.onclick=function(){bumpDim('cadaver',3);logEvidence('loop',c.id);proveComplete(c,'loop');};
   var bk=$('#proveBack');if(bk)bk.onclick=function(){openProve(c.id);};
 }
@@ -3052,7 +3102,7 @@ function drBuild(){
       catch:over?'Catch up':null,
       why:lp.weak?('You keep missing <b>'+esc(lp.name)+'</b>.'):(lab.length?'Because tomorrow is a lab day.':'Lab ID practice.'),
       body:'Take the tile called <b>'+esc(lp.title)+'</b>. Say each structure out loud before the label appears. Beating the label is the exercise; watching it is not.',
-      go:function(){ window.open(LOOPS_BASE,'_blank','noopener'); }});
+      go:function(){ goLoops(); }});
   }
   if(weak.length){
     steps.push({tool:'',ic:'mic',name:'Teach It',sub:'Out loud, no notes',mins:8,topic:weak[0].c.name,
@@ -3895,7 +3945,7 @@ function runLoop(c){
     'beating the label is.</p>'+
     '<div class="g-actions"><button class="btn gold" id="rlGo">Open Loops</button>'+
     '<button class="btn" id="rlDone">I did the Loop</button></div></div>');
-  $('#rlGo').onclick=function(){window.open(LOOPS_BASE,'_blank','noopener');};
+  $('#rlGo').onclick=function(){goLoops();};
   $('#rlDone').onclick=function(){bumpComp(c,4);bumpDim('cadaver',2);runAdvance('loop');};
 }
 function runExplain(c){
@@ -4781,7 +4831,7 @@ function setView(v){
 }
 function viewFor(id){
   if(PROG_SECTIONS.indexOf(id)>-1)return 'progress';
-  if(id==='s-plan'||id==='s-recall')return 'today';
+  if(id==='s-plan'||id==='s-recall'||id==='s-dumps'||id==='s-loops')return 'today';
   return null;
 }
 function routeHash(){
@@ -5094,7 +5144,7 @@ function openRunin(stage){
     '<div class="g-actions" style="margin-top:16px">'+(stage==='d4'?'<button class="btn" id="riCram">Plan the final days</button>':'')+
     '<button class="btn" data-gameclose>Not now</button></div></div>');
   var l=$('#riLec'); if(l)l.onclick=function(){ runinStartQuiz(stage); };
-  var b=$('#riLab'); if(b)b.onclick=function(){ window.open(LOOPS_BASE,'_blank','noopener'); };
+  var b=$('#riLab'); if(b)b.onclick=function(){ goLoops(); };
   var cr=$('#riCram'); if(cr)cr.onclick=function(){ closeGame(); openCram(); };
 }
 
@@ -5164,7 +5214,7 @@ function fwLaunch(k){
   closeGame();
   var c=freestyleTarget();
   if(k==='recall'){ setView('today'); if(window.BIO004_RECALL_OPEN)window.BIO004_RECALL_OPEN(null); location.hash='s-recall'; }
-  else if(k==='loops'){ window.open(LOOPS_BASE,'_blank','noopener'); }
+  else if(k==='loops'){ goLoops(); }
   else if(k==='draw'&&c){ CUR_EX=c; openGame('drawknow'); }
   else if(k==='mindmap'&&c){ CUR_EX=c; openGame('mindmap'); }
   else if(k==='braindump'&&c){ CUR_EX=c; openGame('braindump'); }
@@ -5174,7 +5224,7 @@ function fwLaunch(k){
   else if(k==='weaklist'){ wlStartWeak(); }
   else if(k==='gapfinder'){ openGapByTopic(); }
   else if(k==='runin'){ var rs=runinStage(); if(rs)openRunin(rs); }
-  else if(k==='exambuilder'){ window.open(toolURL('bio004-practice-exam-builder.html'),'_top'); }
+  else if(k==='exambuilder'){ window.open(toolURL('practice-lecture-exam.html'),'_top'); }
 }
 
 function renderAll(){
@@ -5501,6 +5551,52 @@ try{
 <script src="bio004-card-bank.js"></script>
 <script src="bio004-leaderboard-config.js"></script>
 <script src="recall-view.js"></script>
+<script>
+/* Oct 17: practice bar state, weak-area actions, and the Loops frame. */
+(function(){
+  'use strict';
+  function hashId(){ return (location.hash||'').replace('#','').split('?')[0]; }
+  function hashParam(k){ var q=(location.hash||'').split('?')[1]||''; var m=q.match(new RegExp('(?:^|&)'+k+'=([^&]+)')); return m?decodeURIComponent(m[1]):null; }
+  function markBar(){
+    var id=hashId();
+    [].forEach.call(document.querySelectorAll('.practicebar [data-pb]'),function(a){
+      if(a.getAttribute('data-pb')===id) a.setAttribute('aria-current','true'); else a.removeAttribute('aria-current');
+    });
+  }
+  var frame=document.getElementById('loopsFrame'), base=(typeof LOOPS_BASE!=='undefined'?LOOPS_BASE:'https://drsrennie-stack.github.io/loops/');
+  var pending=null, ready=false;
+  function curModule(){
+    try{ var B=window.BIO004_CARD_BANK, today=new Date().toISOString().slice(0,10), sec=localStorage.getItem('bio004-section')||'mw', key=(sec==='mw'?'mw':'tr'), n=1;
+      B.modules.forEach(function(m){ if(m.extra) return; (m.topics||[]).forEach(function(t){ if(t[key] && t[key]<=today) n=Math.max(n,m.n); }); });
+      return n; }catch(e){ return 1; }
+  }
+  function startLoop(id){
+    var L=(window.BIO004_LOOPS||[]).filter(function(x){ return x.id===id; })[0];
+    try{ frame.contentWindow.postMessage({target:'loops-engine',type:'start',scope:{loop:id},filter:'all',title:L?L.title:'Practice'},'*'); }catch(e){}
+    var st=document.getElementById('loopsStatus'); if(st) st.textContent=L?('Starting '+L.title+'.'):'';
+  }
+  function openLoops(){
+    if(!frame) return;
+    if(!frame.getAttribute('src')){
+      frame.addEventListener('load',function(){ ready=true; if(pending){ var p=pending; pending=null; setTimeout(function(){ startLoop(p); },150); } });
+      frame.setAttribute('src', base+'#m'+curModule());
+    }
+    var loop=hashParam('loop');
+    if(loop){ if(ready) startLoop(loop); else pending=loop; }
+  }
+  function route(){ markBar(); if(hashId()==='s-loops') openLoops(); }
+  window.addEventListener('hashchange',route);
+  route();
+  document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('[data-wkcards]'); if(!b) return;
+    e.preventDefault();
+    var id=b.getAttribute('data-wkcards');
+    if(typeof setView==='function') setView('today');
+    if(window.BIO004_RECALL_OPEN) window.BIO004_RECALL_OPEN(id);
+    location.hash='s-recall';
+  });
+})();
+</script>
 <!-- The day-one placement check. Loads after the card bank and after
      loops-stations.js, because it builds its pool from both. -->
 <script src="bio004-pretest.js"></script>
