@@ -148,3 +148,21 @@ so it is not mistaken for an NVDA or VoiceOver pass.
 ## 6. Reviewer
 
 Dr. Sharilyn Rennie
+
+## October 17, 2026 update: Mastery OS as the one place to practice
+
+Files covered: mastery-os-fall-2026.html, recall-view.js, braindump-view.js, bio004-braindump-practice-data.js, mastery-evidence.js, bio004-card-bank.js, practice-lecture-exam.html, bio004-mastery-check.html, bio004-practice-exam-builder.html (now a forwarding page), brain-dump-practice.html (now a forwarding page), bio004-study-process.html, bio004-dock.js.
+
+- **Standard:** WCAG 2.2 AA.
+  - New controls are real buttons, links, selects, radio buttons and checkboxes with visible labels: the practice bar, the brain dump module tabs, level and timer selects, confidence radios, key point checkboxes, the recall "Level up / Show all levels" switch, and the weak-area Cards, Brain dump and Loop buttons.
+  - The pressed state is announced with aria-pressed or aria-current.
+  - Results, timer warnings and "Level 2 is now open" messages use polite aria-live regions.
+  - Focus moves to the new heading when a brain dump opens and when the key is revealed.
+- **Contrast:** the new parts reuse the existing Mastery OS tokens (navy on white, white on navy, terra on white), so they meet AAA as before. Lora was removed from Mastery OS; the serif token now uses Plus Jakarta Sans.
+- **Keyboard:** every new control is reachable with Tab and works with Enter or Space. No traps. Checked in Chromium.
+- **Reflow:** checked at 375px wide; there is no horizontal scroll on Mastery OS (Recall, Brain dumps, My weak areas), the practice exam, the Mastery Check or the study page. The header badge hides under 480px to make room.
+- **Loops frame:** the frame has a title ("Loops lab identification practice"). A link opens Loops in its own tab for small screens.
+- **Known limitations:**
+  - The Loops app inside the frame has its own accessibility notes in the loops repo.
+  - A screen reader pass with VoiceOver or NVDA is still to do.
+- **Reviewer:** Claude, for Dr. Sharilyn Rennie. Card and brain dump content was independently fact-checked.

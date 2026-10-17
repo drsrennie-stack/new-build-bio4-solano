@@ -4,14 +4,15 @@
    - Files:
      - Course notes: BIO004-Module4-Packet.html and .pdf, BIO004-Module5-Packet.html and .pdf.
      - Lab packets: BIO004-M4-Lab-Packet.html and .pdf, BIO004-M5-Lab-Packet.html and .pdf.
-     - Note sheets: BIO004-M4-Note-Sheet-Packet.html and .pdf, BIO004-M5-Note-Sheet-Packet.html and .pdf.
+     - Note sheets: BIO004-M4-Note-Sheet-Packet.html and .pdf, BIO004-M5-Note-Sheet-Packet.html and .pdf (the drawing sheets only).
+     - Note sheet keys (online only): BIO004-M4-Note-Sheet-Key.html, BIO004-M5-Note-Sheet-Key.html (both prompts and the drawing checklist for every competency).
      - Structure lists: module-4-structure-list.html, module-5-structure-list.html.
    - Date: October 17, 2026 (updated the same day for the rebuilt course notes, the new lab packets and the note sheet checklists).
-2. **Standard:** WCAG 2.2 AA met. These pages reuse the templates of the Module 3 lab packet, the Module 3 note sheet packet and the October course notes packets, which were already reviewed. New parts: competency sections in the course notes (numbered tag, heading, goal box), numbered flow charts, an A to Z index, chart tables and question cards in the lab packets, and the Part C checklists in the note sheets.
+2. **Standard:** WCAG 2.2 AA met. These pages reuse the templates of the Module 3 lab packet, the Module 3 note sheet packet and the October course notes packets, which were already reviewed. New parts: competency sections in the course notes (numbered tag, heading, goal box), numbered flow charts, an A to Z index, chart tables and question cards in the lab packets, and the online note sheet keys, reached by a QR code on every printed sheet.
    - 1.3.1 Info and relationships:
      - Course notes: one h1, an h2 per chapter, an h3 per competency, h4 for sub-topics. Each competency section is labelled by its heading. Flow charts are ordered lists, so the step order is announced.
      - Lab packets: an h2 per part and per structure chapter, an h3 per chart or question group. Chart tables have column headers (scope="col") and row headers (scope="row") and are labelled by their h3.
-     - Note sheets: Part C has an h3 per competency; each checklist is a real list.
+     - Note sheet keys: an h2 per topic and an h3 per competency; each checklist is a real list. Every printed sheet has a QR code (with an accessible name) that opens that competency's key, and the key is also linked from the note sheet page and from each topic's notes page, so students who cannot scan can still reach it.
    - 1.3.2 Meaningful sequence: reading order matches the visual order. Prompt letters are visual only (aria-hidden), and each prompt starts with a hidden "Prompt A." or "Option A." label.
    - 2.4.1 Bypass blocks: skip link to the packet on every page.
    - 2.4.5 Multiple ways: the course notes have a contents list (chapters and every competency, with print page numbers) and an A to Z index that links each term to its competency.
