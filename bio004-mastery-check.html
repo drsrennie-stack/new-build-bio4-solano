@@ -13,15 +13,21 @@
    BIO 004 MASTERY CHECK. One page, one walk-through:
    CHECK, FIND THE GAP, FIX IT, PROVE IT, then a retrieval finish.
 
-   Questions come from the recall card bank (course-content.js)
-   joined to the fall competencies (card-competency-map.js and
-   card-competency-fine.js), plus the exam-style items in
-   bio004-mastery-items.js. Modules and their opening dates come
+   Questions come from the audited recall card bank
+   (bio004-card-bank.js), joined to the fall competencies on each
+   card's own competencyId, plus the exam-style items in
+   bio004-mastery-items.js. (It used to read course-content.js, the
+   old 1,110-card bank, which still has errors the audit fixed.) Modules and their opening dates come
    from schedule-fall2026.js, competencies from
    competenciesfall2026.js. Nothing here is typed twice.
 
    Everything a student does stays in this browser's
    localStorage under bio004-mastery-v1. Names are never stored.
+   A scored check (and the alone half of a Prove It set) also adds
+   one entry per competency to the shared evidence store
+   (mastery-evidence.js, bio004-evidence-v1) as source 'check', so
+   the weakness dashboard in Mastery OS counts it. Only competency
+   ids, scores and confidence go there.
    Brand of record: navy #0B1530, rust #8B3A2E, gold #C9A14A.
    No italics. White cards lift off the page with a shadow only.
    ============================================================ */
@@ -308,11 +314,12 @@ td.n,th.n{text-align:right;white-space:nowrap}
 
 <script src="schedule-fall2026.js"></script>
 <script src="competenciesfall2026.js"></script>
-<script src="course-content.js"></script>
 <script src="card-competency-map.js"></script>
 <script src="card-competency-fine.js"></script>
+<script src="bio004-card-bank.js"></script>
 <script src="bio004-mastery-items.js"></script>
 <script src="bio004-mastery-exam.js"></script>
+<script src="mastery-evidence.js"></script>
 <script>
 (function(){
 'use strict';
@@ -320,7 +327,7 @@ td.n,th.n{text-align:right;white-space:nowrap}
 var SEC   = window.BIO004_SECTIONS || {sections:{}};
 var MODS  = (window.BIO004_MODULES || []).filter(function(m){ return m.exam; });
 var COMPS = window.BIO004_COMPETENCIES || [];
-var CC    = window.BIO004_COURSE_CONTENT || {modules:[]};
+var BANK  = window.BIO004_CARD_BANK || {modules:[]};
 var CMAP  = window.BIO004_CARD_COMPETENCY_MAP || {};
 var MB    = window.BIO004_MASTERY || {modules:{}, items:[]};
 var KEY   = 'bio004-mastery-v1';
@@ -333,24 +340,36 @@ var MODCOMPS = {}; COMPS.forEach(function(c){ var m=moduleForWeek(c.week); if(!m
 
 /* Question pool per module: exam-style items first, then recall cards whose competency is known exactly. */
 var POOL = {}; var TOPICPAGE = {}; var TOPICOFCOMP = {};
-/* Exam-level questions only: authored items tagged DOK 1 are never drawn.
+/* Exam-level questions only: items tagged DOK 1 are never drawn, authored or card.
    Recall cards join a module's pool only when that module has fewer than
-   40 authored DOK 2 and 3 questions, since the card bank is mostly recall. */
+   40 authored DOK 2 and 3 questions. */
 (MB.items||[]).forEach(function(it){ var c=COMP[it.comp]; if(!c) return; if(it.dok!=null && it.dok<2) return; (POOL[c._mod]=POOL[c._mod]||[]).push({id:it.id, comp:it.comp, dok:it.dok||2, stem:it.stem, options:it.options, correct:it.correct, why:it.why, whyNot:it.whyNot, src:'x'}); });
 var AUTHORED = {}; Object.keys(POOL).forEach(function(m){ AUTHORED[m]=POOL[m].length; });
-CC.modules.forEach(function(m){ m.topics.forEach(function(t){
-  if(t.lecturePageUrl) TOPICPAGE[t.id] = {url:t.lecturePageUrl, title:t.title};
-  var te = CMAP[t.id]; if(te && te.comps) te.comps.forEach(function(id){ (TOPICOFCOMP[id]=TOPICOFCOMP[id]||[]).push(t.id); });
-  t.cards.forEach(function(card){
-    var e = CMAP[t.id+':'+card.id] || null; var ids = e ? (e.comps || [e]) : [];
-    if(card.competencyId) ids=[card.competencyId];
-    if(ids.length!==1 || !COMP[ids[0]]) return;
+/* Lecture pages for the "fix it" links, keyed by the old topic id that every
+   carried-over card keeps as lt. Copied once from course-content.js so this
+   page no longer has to load the old bank to find them. */
+var PAGES = {"t-anatomical-terminology":["anatomical-terminology.html","Anatomical Terminology"],"t-body-cavities":["body-cavities.html","Body Cavities and Membranes"],"t-cell-anatomy":["cell-anatomy.html","Cell Anatomy"],"t-tissues":["tissues.html","Histology: The Four Tissue Types"],"t-integumentary":["integumentary.html","The Integumentary System"],"t-bone-histology":["bone-histology.html","Bone Histology"],"t-axial-skeleton-skull":["axial-skeleton-skull.html","The Axial Skeleton: The Skull"],"t-axial-skeleton-spine":["axial-skeleton-spine.html","The Axial Skeleton: The Vertebral Column"],"t-appendicular-skeleton-upper":["appendicular-skeleton-upper.html","The Appendicular Skeleton: Upper Limb"],"t-appendicular-skeleton-lower":["appendicular-skeleton-lower.html","The Appendicular Skeleton: Lower Limb"],"t-articulations":["articulations.html","Articulations"],"t-muscle-structure":["muscle-structure.html","Muscle Structure"],"t-muscle-fascicles":["muscle-fascicles.html","Muscle Organization and Fascicles"],"t-endocrine":["endocrine.html","The Endocrine System"],"t-heart":["heart.html","The Heart"],"t-cardiac-conduction":["cardiac-conduction.html","Cardiac Conduction"],"t-blood":["blood.html","Blood"],"t-blood-vessels":["blood-vessels.html","Blood Vessels"],"t-blood-vessel-disorders":["blood-vessel-disorders.html","Blood Vessel Disorders and Fetal Circulation"],"t-respiratory":["respiratory.html","The Respiratory System"],"t-lymphatic-system":["lymphatic-system.html","The Lymphatic System"],"t-alimentary-canal":["alimentary-canal.html","The Alimentary Canal"],"t-accessory-digestive-organs":["accessory-digestive-organs.html","The Accessory Digestive Organs"],"t-urinary-system":["urinary-system.html","The Urinary System"],"t-reproductive-male":["reproductive-male.html","The Male Reproductive System"],"t-reproductive-female":["reproductive-female.html","The Female Reproductive System"],"t-pregnancy-and-birth":["pregnancy-and-birth.html","Pregnancy and Birth"],"t-nervous-tissue":["nervous-tissue.html","Functional Organization and Nervous Tissue"],"t-neuronal-integration":["neuronal-integration.html","Gross Anatomy and Neuronal Integration"],"t-cns-brain":["cns-brain.html","The Brain"],"t-cns-brainstem":["cns-brainstem.html","The Brainstem"],"t-cns-spinal-cord":["cns-spinal-cord.html","The Spinal Cord"],"t-cns-meninges-csf":["cns-meninges-csf.html","The Meninges and Cerebrospinal Fluid"],"t-cranial-nerves":["cranial-nerves.html","The Cranial Nerves"],"t-nerve-plexuses":["nerve-plexuses.html","The Nerve Plexuses"],"t-pns":["pns.html","The Peripheral Nervous System"],"t-ans":["ans.html","The Autonomic Nervous System"]};
+Object.keys(PAGES).forEach(function(tid){ TOPICPAGE[tid] = {url:PAGES[tid][0], title:PAGES[tid][1]}; });
+/* Which page teaches a competency: first the page most of its own cards come
+   from, then any page whose topic lists it. */
+var PAGEVOTE = {};
+BANK.modules.forEach(function(m){ (m.topics||[]).forEach(function(t){
+  (t.cards||[]).forEach(function(card){
+    var cid = card.competencyId; var c = cid ? COMP[cid] : null;
+    if(!c) return;
+    if(card.lt && TOPICPAGE[card.lt]){ var v=PAGEVOTE[cid]=PAGEVOTE[cid]||{}; v[card.lt]=(v[card.lt]||0)+1; }
+    if(!c._mod) return;
+    if((card.dok||2) < 2) return;
     if(!Array.isArray(card.options) || card.options.length<3 || typeof card.correctIndex!=='number') return;
-    var c = COMP[ids[0]]; if(!c._mod) return;
     if((AUTHORED[c._mod]||0)>=40) return;
-    (POOL[c._mod]=POOL[c._mod]||[]).push({id:'c:'+t.id+':'+card.id, comp:c.id, dok:card.dok||2, stem:clean(card.q), options:card.options.map(clean), correct:card.correctIndex, why:clean(card.explanation||card.a||''), whyNot:null, src:'c'});
+    /* Carried-over cards keep the id the old bank gave them (lt:lid), so
+       earlier checks still find their questions and count them as seen. */
+    var key = (card.lt && card.lid) ? card.lt+':'+card.lid : t.id+':'+card.id;
+    (POOL[c._mod]=POOL[c._mod]||[]).push({id:'c:'+key, comp:cid, dok:card.dok||2, stem:clean(card.q), options:card.options.map(clean), correct:card.correctIndex, why:clean(card.why||card.explanation||card.a||''), whyNot:Array.isArray(card.notes)&&card.notes.length===card.options.length?card.notes.map(clean):null, src:'c'});
   });
 });});
+Object.keys(PAGEVOTE).forEach(function(cid){ var v=PAGEVOTE[cid]; TOPICOFCOMP[cid]=Object.keys(v).sort(function(a,b){ return v[b]-v[a]; }); });
+Object.keys(TOPICPAGE).forEach(function(tid){ var te=CMAP[tid]; if(te && te.comps) te.comps.forEach(function(id){ var l=TOPICOFCOMP[id]=TOPICOFCOMP[id]||[]; if(l.indexOf(tid)===-1) l.push(tid); }); });
 function clean(s){ return String(s==null?'':s).replace(/\s*[\u2014\u2013]\s*/g, ', ').replace(/\s+/g,' ').trim(); }
 
 /* ================= utilities ================= */
@@ -665,6 +684,28 @@ function mcRecord(it, order, pts){
   return {kind:'mc', id:it.id, comp:it.comp, pts:pts, order:order, picked:picked, ptsRight:pr, right:pr>=3, conf: max>=3?'sure':max===2?'unsure':'guess'};
 }
 
+/* The shared evidence store (mastery-evidence.js), so the weakness dashboard
+   in Mastery OS sees this check. One entry per competency, scored the way the
+   lecture exams score: a true or false or matching row is 1 or 0, and a
+   multiple choice question is the points on the right answer out of 4.
+   Confidence is the surest spread the student put on that competency, which
+   is what lets the dashboard spot a sure answer that was wrong. */
+var CONFMAP = {sure:'high', unsure:'med', guess:'low'}, CONFRANK = {low:1, med:2, high:3};
+function recordEvidence(answers){
+  var E=window.BIO004_EVIDENCE; if(!E || !E.record) return;
+  var by={};
+  (answers||[]).forEach(function(r){
+    if(!r || !r.comp || !COMP[r.comp]) return;
+    var g=by[r.comp]=by[r.comp]||{got:0, of:0, conf:null};
+    if(r.kind==='mc' || !r.kind){
+      g.got += Math.max(0, Math.min(4, r.ptsRight!=null ? r.ptsRight : (r.right?4:0)))/4; g.of += 1;
+      var c=CONFMAP[r.conf]; if(c && (!g.conf || CONFRANK[c]>CONFRANK[g.conf])) g.conf=c;
+    } else { g.got += r.right?1:0; g.of += 1; }
+  });
+  var at=new Date().toISOString();
+  Object.keys(by).forEach(function(id){ var g=by[id]; try{ E.record([id], 'check', Math.round(g.got*100)/100, g.of, g.conf, at); }catch(e){} });
+}
+
 function startCheck(host, E){
   if(!E.mc.length && !E.tf.length){ host.innerHTML='<p class="msg">There are no questions for this module yet.</p>'; return; }
   live={kind:'check', E:E, id:uid()};
@@ -719,7 +760,7 @@ function startCheck(host, E){
       return {set:M.set, title:M.title, pairs:M.pairs, terms:M.terms}; });
     var D=null; if(E.dumps.length){ D={choices:E.dumps.map(function(d){ return d.id; }), chosen:$('input[name="bd"]:checked',host).value, text:$('#bdtext',host).value, checked:[]}; }
     var a={id:live.id, kind:'check', len:E.len, at:new Date().toISOString(), answers:answers, matches:MS, dump:D, earned:earned, bonus:bonus, max:max, score:max?earned/max:0};
-    day().checks.push(a); save(); refresh(); showResults(host, a);
+    day().checks.push(a); save(); recordEvidence(a.answers); refresh(); showResults(host, a);
   });
 }
 
@@ -738,7 +779,7 @@ function startExam(host, kind, picked, gapComps){
     if(missing.length){ $('#xmsg',host).textContent='Place exactly 4 points on question'+(missing.length>1?'s ':' ')+missing.join(', ')+'.'; $('#pvq'+(missing[0]-1)+' input',host).focus(); return; }
     var answers=picked.map(function(p,i){ return mcRecord(p.it, p.order, readPoints(host,i,p.it.options.length)); });
     var a={id:live.id, kind:kind, at:new Date().toISOString(), answers:answers, score:answers.reduce(function(s,r){ return s+r.ptsRight; },0)/(4*answers.length)};
-    a.gapComps=live.gapComps; a.revealed=false; day().prove=a; save(); lockForTeam(host, a); refresh();
+    a.gapComps=live.gapComps; a.revealed=false; day().prove=a; save(); recordEvidence(answers); lockForTeam(host, a); refresh();
   });
 }
 
@@ -811,7 +852,8 @@ function showResults(host, a){
       dump.key.map(function(k,i){ return '<label><input type="checkbox" data-k="'+i+'"'+(a.dump.checked.indexOf(i)!==-1?' checked':'')+'><span>'+esc(k)+'</span></label>'; }).join('')+
       '<p class="msg" id="bdcount" aria-live="polite"></p></div>';
   }
-  h+='<div class="actions"><button type="button" class="btn gold" id="togap">Go to Step 2: Find the gap</button><button type="button" class="btn ghost" id="again">Build another check</button></div>';
+  h+='<p class="small" style="margin-top:14px">This check now counts on your weak spot board in Mastery OS, next to your recall cards and Loops.</p>'+
+    '<div class="actions"><button type="button" class="btn gold" id="togap">Go to Step 2: Find the gap</button><button type="button" class="btn ghost" id="again">Build another check</button><a class="btn ghost" href="mastery-os-fall-2026.html#s-weak" target="_top">Open my weak spot board</a></div>';
   var tfs=a.answers.filter(function(r){ return r.kind==='tf'; }), mcs=mcAnswers(a.answers);
   if(tfs.length) h+='<h3>True or false, with the reasoning</h3>'+tfs.map(function(r,i){ return reviewItem(r,i); }).join('');
   if(mcs.length) h+='<h3>Multiple choice, with the reasoning</h3>'+mcs.map(function(r,i){ return reviewItem(r,i); }).join('');
