@@ -48,7 +48,9 @@ ol.steps{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:10px;counter
 ol.steps li{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;counter-increment:s}
 ol.steps li::before{content:counter(s);width:30px;height:30px;border-radius:50%;background:var(--ink);color:#FFFFFF;display:grid;place-items:center;font-weight:800;font-size:15px}
 ol.steps b{display:block}
-.tbl-wrap{overflow-x:auto;margin:10px 0 0}
+.tbl-wrap{overflow-x:auto;margin:6px 0 0}
+.tblh{font-size:16px;font-weight:800;margin:6px 0 0}
+.note-sm{font-size:13.5px;color:var(--soft);margin:6px 0 0}
 table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
 th{text-align:left;font-family:var(--fe);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);padding:8px 10px;border-bottom:1px solid var(--line)}
 td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
@@ -87,7 +89,6 @@ footer{margin:32px 0 0;font-size:13.5px;color:var(--soft)}
   <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
   <h1>Why you learn before class</h1>
   <p class="lede">You meet each topic on your own first, so class time goes to the hard part, with help right there.</p>
-  <nav class="secpick" id="secpick" aria-label="Choose your section"></nav>
 </header>
 <div class="split">
   <section class="card" aria-labelledby="b1">
@@ -139,9 +140,7 @@ var SECS = {mw:{label:'Mon/Wed afternoon', pat:'mw', crn:'80650', syl:'syllabus-
             'tr-am':{label:'Tue/Thu morning', pat:'tr', crn:'80654', syl:'syllabus-class2.html'},
             'tr-eve':{label:'Tue/Thu evening', pat:'tr', crn:'80655', syl:'syllabus-class3.html'}};
 var SEC = null;
-try { var m = location.search.match(/[?&]sec=(mw|tr-am|tr-eve)/); if (m) SEC = m[1]; } catch (e) {}
-if (!SEC) { try { var s = localStorage.getItem('bio004-section'); if (SECS[s]) SEC = s; } catch (e) {} }
-if (SEC) { try { localStorage.setItem('bio004-section', SEC); } catch (e) {} }
+/* One page for every section: no section choice. */
 var EXAMS = { mw:['2026-09-09','2026-09-30','2026-10-21','2026-11-16','2026-12-09'],
               tr:['2026-09-08','2026-09-29','2026-10-22','2026-11-17','2026-12-10'] };
 var DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -187,6 +186,31 @@ function tblTable(pat){
       var cls = r.date < t ? 'past' : (!nextDone ? (nextDone = true, 'nextrow') : '');
       return '<tr class="' + cls + '"><td>' + r.n + '</td><td>' + fmt(r.date) + '</td><td>' + esc(r.topic) + (cls === 'nextrow' ? ' (next)' : '') + '</td></tr>';
     }).join('') + '</tbody></table></div>';
+}
+/* One list for both day patterns, in date order. Each date ends in M/W or T/R.
+   A TBL with the same number and focus on both patterns shares one row. */
+function tblMerged(){
+  var rows = [], tags = {mw:'M/W', tr:'T/R'};
+  ['mw','tr'].forEach(function(pat){
+    tblList(pat).forEach(function(r){
+      var hit = rows.filter(function(x){ return x.n === r.n && x.topic.toLowerCase() === r.topic.toLowerCase(); })[0];
+      if (hit) hit.dates.push({d:r.date, tag:tags[pat]});
+      else rows.push({n:r.n, topic:r.topic, dates:[{d:r.date, tag:tags[pat]}]});
+    });
+  });
+  rows.forEach(function(r){ r.first = r.dates.map(function(x){ return x.d; }).sort()[0]; });
+  rows.sort(function(a, b){ return a.first < b.first ? -1 : a.first > b.first ? 1 : 0; });
+  return rows;
+}
+function tblBoth(){
+  var R = tblMerged(), t = today();
+  if (!R.length) return '<p>The TBL list did not load. Check the course calendar.</p>';
+  return '<div class="tbl-wrap"><table><thead><tr><th scope="col">TBL</th><th scope="col">Focus</th><th scope="col">Date</th></tr></thead><tbody>' +
+    R.map(function(r){
+      var past = r.dates.every(function(x){ return x.d < t; });
+      return '<tr class="' + (past ? 'past' : '') + '"><td>' + r.n + '</td><td>' + esc(r.topic) + '</td><td>' +
+        r.dates.map(function(x){ return fmt(x.d) + ' ' + x.tag; }).join('<br>') + '</td></tr>';
+    }).join('') + '</tbody></table></div><p class="note-sm">M/W is the Mon/Wed afternoon section. T/R is both Tue/Thu sections. Gray rows are done.</p>';
 }
 function sendHeightSetup(id){
   function send(){ try { if (window.parent && window.parent !== window) parent.postMessage({type:'resize', id:id, height:document.body.scrollHeight}, '*'); } catch (e) {} }
