@@ -81,6 +81,79 @@ Recall still lives inside Mastery OS (the Recall section), on the same bank.
 
 The old deck files (heart-cards*.js, bio004-w*-cards.js, course-content*.js and others) are no longer used by recall. They were left in place in case any other page reads them.
 
+## October 17 update: Modules 4 and 5
+
+Every Module 4 and 5 card was checked again against the rebuilt, independently reviewed course notes (BIO004-Module4-Packet.html and BIO004-Module5-Packet.html), and matched to a competency.
+
+### What was done
+- **Every card now has a competency.** Each Module 4 and 5 card carries `comp` (its number in the competency packet, 91, 92 and 97 to 193) and `competencyId` (the matching Mastery OS id). Recall already filters by `competencyId` first, so a weak competency now deals only the cards that teach it. Competency 152 (neural tube development) has no Mastery OS id yet, so its cards carry `comp` only.
+- **2,229 cards checked**, in ten batches, each followed by an independent review by a reviewer who did not write the fixes.
+- **491 cards corrected.** Most fixes made a wrong-answer note say why that choice is wrong, or brought a fact in line with the course notes (examples: duodenum about 25 cm (10 inches); stomach curvatures medial and lateral; mylohyoid as the floor of the mouth; lateral horn T1 to L2; lumbar enlargement about T9 to T12; CN XI nucleus in the upper cervical cord; the cranial epidural space as a potential space; prostate fluid no longer called acidic; the corniculate and cuneiform cartilages elastic too).
+- **38 cards removed** as physiology, pregnancy and birth, or content on no competency or list (Appendix C).
+- **50 new cards** for competencies that had only 2 to 6 cards: 103, 104 (rhinitis, sinusitis, laryngitis, chronic bronchitis, cystic fibrosis, tuberculosis, pleural effusion), 110, 112, 136, 143, 152, 159, 163, 166 and 172. All were independently reviewed; 11 were changed in review.
+- Modules 4 and 5 now hold 2,241 cards. The bank holds 5,121.
+
+### Her pages that now disagree with the cards and the course notes
+The cards follow the reviewed course notes. These older notes pages still say otherwise, so students may see two versions until they are updated:
+- m4-lymphatic-notes.html: palatine tonsils at the "sides of the back of the oral cavity" (course notes: lateral walls of the oropharynx).
+- m4-alimentary-notes.html, alimentary-canal.html, gi-tract-journey.html: duodenum about 12 inches.
+- m4-male-repro-notes.html: prostate fluid "slightly acidic"; "two hundred to three hundred" lobules.
+- m4-urinary-notes.html: filtration slits hold back "medium-sized proteins".
+- m5-brainstem-notes.html: nuclei for "ten of the twelve" cranial nerves; the medulla holding VIII through XII.
+- m5-cranial-notes.html: the XI nucleus in the medulla and C1 to C5; the solitary nucleus in the pons.
+- m5-cord-notes.html: lumbar enlargement T11 to S2; lateral horn in all thoracic and lumbar segments.
+- m5-meninges-notes.html: "No cranial epidural space".
+- m5-nervous-tissue-notes.html: about one million enteric neurons (standard texts: about 100 million).
+- The brain, brainstem and cranial notes pages use a "Hold onto this" callout heading.
+
+### Open choices
+- The 147 course notes still have an ectopic pregnancy paragraph, and the 146 and 148 notes mention implantation. Five cards echo those phrases and were kept so cards and notes agree.
+- Accurate cards on structures not on her lists were kept: gluteus minimus, fibularis tertius, the ankle retinacula, Billroth's cords and named thymic corpuscles. Cut them if the deck should match the lists exactly.
+- Near-duplicate cards remain in several topics (meninges order, ventricle counts, lung lobes, parathyroid location). All are accurate.
+
+## Appendix C. Cards removed on October 17 (38)
+
+| Card | Topic | Reason |
+|---|---|---|
+| L01825 | m4-lymph-vessels | Flag right; cut. Fat-soluble vitamins are nutrition, not in any competency or the notes. |
+| L01912 | m4-lymph-organs | Flag right; cut. Tests the hormone product rather than a structure, and L01923 already covers thymic epithelial cells. |
+| L01927 | m4-lymph-organs | Flag right; cut. Thymic selection and apoptosis (about 2 percent survive) is immune physiology found in neither the course notes nor the notes page. |
+| L01931 | m4-lymph-organs | Flag right; cut. Dendritic cell function in the thymic cortex is immune physiology found in neither the course notes nor the notes page. |
+| L01950 | m4-lymph-organs | Flag right; cut. Plasma and memory B cell formation is physiology, and L01946, L01949, and L01951 already test the anatomy (follicles of B cells in the outer cortex). |
+| L01981 | m4-lymph-organs | Flag right; cut. Plasma cells secreting antibodies is immune physiology, and the stem's secondary nodule is not a course-notes term. |
+| L01144 | m4-endocrine | Flag right. Tests a thymic hormone action (physiology). A location rewrite would duplicate L01160 and L01192, and the thymus's T cell role is already covered by 14 thymus cards in the lymphatic batch  |
+| N-m4-leg-muscles-30 | m4-leg-muscles | Flag right. Foot arches fit no competency and are not on the Module 4 structure list or lab charts; comp null. Facts are accurate if she wants it back as enrichment. |
+| N-m4-leg-muscles-31 | m4-leg-muscles | Flag right. Plantar aponeurosis fits no competency and is not on the list or charts; comp null. Accurate if kept as enrichment. |
+| N-m4-leg-muscles-32 | m4-leg-muscles | Flag right. Intrinsic foot muscles are not leg muscles (competency 92) and are not on the list or charts; comp null. |
+| N-m4-leg-muscles-33 | m4-leg-muscles | Flag right. Extensor digitorum brevis is an intrinsic foot muscle outside competency 92 and off the list and charts; comp null. |
+| N-m4-leg-muscles-34 | m4-leg-muscles | Flag right. Flexor digitorum brevis is an intrinsic foot muscle outside competency 92 and off the list and charts; comp null. |
+| L02277 | m4-gi-wall | Flag is right; cut. Epithelial turnover every few days is physiology and is not in the course notes or her notes pages. |
+| L02281 | m4-accessory-organs | Flag is right; cut. The course notes say only that saliva starts starch breakdown; the enzyme name is physiology, and L02377 and L04373 already test what saliva does. |
+| L02291 | m4-accessory-organs | Flag is right; cut. Plasma protein synthesis is liver physiology and is not in the course notes. |
+| L02305 | m4-accessory-organs | Flag is right; cut. Emulsification is not in the course notes. |
+| L02373 | m4-accessory-organs | Flag is right; cut. Emulsification is not in the notes, and its unchanged note on the third distractor says bile flows one way in the ducts, which contradicts the two-way cystic duct flow in the 123 c |
+| L02374 | m4-accessory-organs | Flag is right; cut. Pancreatic bicarbonate neutralizing acid is physiology and not in the course notes. |
+| L02376 | m4-accessory-organs | Flag is right; cut. Liver regeneration is physiology and not in the course notes. |
+| N-m4-abdominal-vessels-9 | m4-abdominal-vessels | Flag is right; cut. The suprarenal arteries are not on the Module 4 structure list (only the suprarenal glands are) or in the 126 notes; they can stay as distractors elsewhere. |
+| N-m4-abdominal-vessels-10 | m4-abdominal-vessels | Flag is right; cut. The lumbar arteries are not on the Module 4 structure list or in the 126 notes; they can stay as distractors elsewhere. |
+| L02573 | m5-male-repro | Flag is right. The card tests a physiology mechanism (internal sphincter closing during ejaculation) that the course notes do not cover, and the auditor already removed the same claim from L02517; ure |
+| L02628 | m5-female-repro | Cut. Tests ectopic pregnancy and uses placenta previa as a distractor; pregnancy is out of this course on purpose. Flag is right. |
+| L02669 | m5-female-repro | Cut. Purpose of the endometrial build-up (implantation) is pregnancy and cycle physiology; a rewrite would only duplicate L02647, L02619, and L04467. Flag is right. |
+| L02670 | m5-female-repro | Cut. Gamete numbers and fertilization odds; no competency and out of scope. Flag is right. |
+| L02671 | m5-female-repro | Cut. Oocyte nutrient stores for the pre-implantation embryo; embryology, no competency. Flag is right. |
+| L02675 | m5-female-repro | Cut. Lifetime gamete supply is gametogenesis physiology with no competency. Flag is right. |
+| N-m5-female-repro-202 | m5-female-repro | Cut. Placenta previa and birth; out of scope. Flag is right. |
+| N-m5-female-repro-203 | m5-female-repro | Cut. Fetal membranes and labor; out of scope. Flag is right. |
+| N-m5-female-repro-204 | m5-female-repro | Cut. Fetal membranes and placenta; out of scope. Flag is right. |
+| L04468 | m5-female-repro | Cut. Ectopic pregnancy and tubal rupture; pregnancy is out of scope. Flag is right. |
+| L03210 | m5-diencephalon-brainstem | Flag is right. The cough, sneeze, swallow, and vomit reflex centers are not in the course notes for 164 or on her brainstem page, so students have nothing to study it from; cut it (or add the reflex c |
+| L02925 | m5-meninges-csf | Flag is right; cut. Encephalitis is not in any competency or in the course notes or her notes pages. |
+| L02965 | m5-meninges-csf | Flag is right; cut. It tests skull rigidity and raised intracranial pressure (clinical reasoning, not a Module 5 anatomy competency), and its foramen magnum note hints at herniation, which no notes co |
+| L03127 | m5-ans | Cut. The keyed answer (preganglionic axons branching to many chain ganglia) is not in the course notes, and the why leans on adrenal hormone action; it is a physiology mechanism question. |
+| L03130 | m5-ans | Cut. Explains why blood flow shifts from gut to muscle in fight or flight; physiology reasoning that is not in the notes. |
+| L03131 | m5-ans | Cut. Asks why dilated pupils help in a stress response (light, scanning for danger); physiology reasoning not in the notes. |
+| L03133 | m5-ans | Cut. Tests hormone action (adrenal medulla hormones lingering in the blood), which the brief puts out of scope. |
+
 ## Reviewer
 
 Rewrite and audit performed by Claude at Dr. Rennie's request, with an independent second-reviewer accuracy pass on every card. No student information is stored in the bank. Each student's progress and display choices stay in their own browser.
