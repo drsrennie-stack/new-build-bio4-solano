@@ -10,169 +10,149 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#0B1530; --soft:#3D4A57; --maroon:#7A2A22; --gold:#B8924A; --goldtext:#5E4719;
-  --page:#FAFAF9; --card:#FFFFFF; --line:#E3E6EA; --tint:#F1F3F6; --warm:#F7F1E4;
-  --shadow:0 1px 2px rgba(11,21,48,.06),0 6px 18px rgba(11,21,48,.10); --shadow-hover:0 2px 4px rgba(11,21,48,.08),0 16px 32px rgba(11,21,48,.16);
-  --f:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
-  --fe:'DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --navy:#1E3D4C; --navy-deep:#142A36; --navy-tint:#EDF1F3;
+  --gold:#B8924A; --terra:#C2734D; --terra-dark:#A0522D;
+  --white:#FFFFFF; --page:#FAFAF9; --soft:#46555F; --line:#E4E7EA; --mute:#8A939B;
+  --shadow:0 1px 3px rgba(0,0,0,0.08); --shadow-hover:0 8px 16px rgba(0,0,0,0.10);
+  --display:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --body:'DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
 }
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 html,body{margin:0}
-body{background:var(--page);color:var(--ink);font-family:var(--f);font-size:16.5px;line-height:1.55}
+body{background:var(--page);color:var(--navy);font-family:var(--body);font-size:17px;line-height:1.65}
 em,i{font-style:normal}
 [hidden]{display:none !important}
 @media (prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto !important}}
 .skip{position:absolute;left:-9999px}
-.skip:focus{left:12px;top:12px;background:var(--card);padding:10px 14px;border-radius:8px;z-index:20;outline:3px solid var(--ink)}
-a{color:var(--maroon)}
-a:focus-visible,button:focus-visible{outline:3px solid var(--maroon);outline-offset:2px;border-radius:4px}
-.wrap{max-width:820px;margin:0 auto;padding:28px max(18px,env(safe-area-inset-right,0px)) 56px max(18px,env(safe-area-inset-left,0px))}
-.eyebrow{font-family:var(--fe);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--maroon);margin:0 0 6px}
-h1{font-size:clamp(28px,5.5vw,38px);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:0;text-wrap:balance}
-.lede{font-size:18px;margin:10px 0 0;max-width:60ch}
-.dateline{font-size:14px;color:var(--soft);margin:6px 0 0}
-.secpick{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0 0;font-size:14px;color:var(--soft)}
-.secpick a{text-decoration:none;color:var(--ink);background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:6px 12px;font-weight:700}
-.secpick a[aria-current="true"]{background:var(--ink);color:#FFFFFF}
-h2{font-size:21px;font-weight:800;letter-spacing:-.01em;margin:0 0 6px;text-wrap:balance}
-.card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:18px 20px;margin:16px 0 0;transition:transform 200ms ease,box-shadow 200ms ease}
+.skip:focus{left:16px;top:16px;background:var(--white);color:var(--navy);padding:10px 14px;border-radius:8px;z-index:20;outline:3px solid var(--navy)}
+a{color:var(--terra-dark);text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{color:var(--navy)}
+a:focus-visible,button:focus-visible,textarea:focus-visible{outline:3px solid var(--navy);outline-offset:3px;border-radius:6px}
+.wrap{max-width:760px;margin:0 auto;padding:40px max(24px,env(safe-area-inset-right,0px)) 72px max(24px,env(safe-area-inset-left,0px))}
+
+/* page header */
+.backnav{margin:0 0 20px;font-size:15px}
+.backnav a{display:inline-block;text-decoration:none;font-family:var(--display);font-weight:700;color:var(--navy);background:var(--white);box-shadow:var(--shadow);border-radius:12px;padding:10px 14px;transition:transform 200ms ease,box-shadow 200ms ease}
+.backnav a:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+header.page{background:var(--white);border-radius:16px;box-shadow:var(--shadow);padding:32px 34px 34px;margin:0 0 8px}
+.brand{display:flex;align-items:center;gap:14px;margin:0 0 22px}
+.brand img{max-height:48px;width:auto;max-width:240px;display:block;font-family:var(--display);font-weight:700;color:var(--navy)}
+.eyebrow{font-family:var(--body);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--terra-dark);margin:0 0 12px}
+h1{font-family:var(--display);font-size:clamp(30px,5.5vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:0;color:var(--navy);text-wrap:balance}
+.lede{font-size:18px;line-height:1.6;color:var(--soft);margin:16px 0 0;max-width:58ch}
+
+/* groups and cards */
+.group{font-family:var(--body);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--terra-dark);margin:44px 0 0}
+.card{background:var(--white);border-radius:16px;box-shadow:var(--shadow);padding:28px 30px;margin:22px 0 0;transition:transform 200ms ease,box-shadow 200ms ease}
 .card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
-@media (prefers-reduced-motion:reduce){.card:hover{transform:none}}
-.card p{margin:6px 0 0}
-.card ul{margin:8px 0 0;padding-left:20px}
-.card li{margin:4px 0}
-.tag{display:inline-block;font-family:var(--fe);font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:999px;padding:3px 10px;margin:0 0 8px}
-.tag.new{background:var(--maroon);color:#FFFFFF}
-.tag.same{background:var(--tint);color:var(--ink)}
-.tag.done{background:var(--tint);color:var(--soft)}
-.tag.next{background:var(--gold);color:var(--ink)}
-ol.steps{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:10px;counter-reset:s}
-ol.steps li{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;counter-increment:s}
-ol.steps li::before{content:counter(s);width:30px;height:30px;border-radius:50%;background:var(--ink);color:#FFFFFF;display:grid;place-items:center;font-weight:800;font-size:15px}
-ol.steps b{display:block}
-.tbl-wrap{overflow-x:auto;margin:6px 0 0}
-.tblh{font-size:16px;font-weight:800;margin:6px 0 0}
-.note-sm{font-size:13.5px;color:var(--soft);margin:6px 0 0}
-table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
-th{text-align:left;font-family:var(--fe);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);padding:8px 10px;border-bottom:1px solid var(--line)}
-td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-tr.past td{color:var(--soft)}
-.card.tn{background:rgba(11,21,48,.09)}
-.card.tm{background:rgba(122,42,34,.10)}
-.card.dk,.card.dm{color:#FFFFFF}
-.card.dk{background:var(--ink)}
-.card.dm{background:#7A2A22}
-.card.dk h2,.card.dm h2{color:#FFFFFF}
-.card.dk a,.card.dm a{color:#F2DFAE}
-.card.dk .links a,.card.dm .links a{color:var(--ink);background:#FFFFFF}
-.card.dk .links a:hover,.card.dm .links a:hover{background:#F1F3F6}
-.card.dk .note-sm,.card.dm .note-sm,.card.dk .when,.card.dm .when,.card.dk td,.card.dm td,.card.dk th,.card.dm th{color:#DCE1E8}
-.card.dk .tag,.card.dm .tag{background:#E8CE85;color:var(--ink)}
-.card.dk .fact,.card.dm .fact{background:rgba(255,255,255,.10)}
-.card.dk .fact .k,.card.dm .fact .k{color:#E8CE85}
-.card.dk .fact p,.card.dm .fact p{color:#DCE1E8}
-.stats{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,104px),1fr));margin:12px 0 0}
-.stat .n{font-size:clamp(34px,6vw,44px);font-weight:800;line-height:1;letter-spacing:-.02em}
-.card.dk .stat .n,.card.dk .big{color:#C9A35B}
-.card.dm .stat .n,.card.dm .big{color:#F2DFAE}
-.stat .l{font-size:14.5px;margin:6px 0 0}
-.backnav{margin:0 0 14px;font-size:15px;font-weight:700}
-.backnav a{display:inline-block;text-decoration:none;color:var(--ink);background:var(--card);box-shadow:var(--shadow);border-radius:10px;padding:8px 12px}
-.backnav a:hover{text-decoration:underline}
-.backq{margin:12px 0 0;font-size:14.5px;font-weight:700}
-.card.dk .backq a,.card.dm .backq a{color:#F2DFAE}
-.stats.sm .n{font-size:clamp(26px,4.4vw,32px);white-space:nowrap}
-.card.dk .stat .l,.card.dm .stat .l{color:#E6EAF0}
-.qlist{columns:2;column-gap:28px;padding-left:1.1em}
-.qlist li{break-inside:avoid;margin:0 0 6px}
-@media (max-width:560px){.qlist{columns:1}}
-th[scope=row]{text-align:left;font-weight:700}
-tr.nextrow td{background:var(--warm);font-weight:700}
-.big{font-size:clamp(38px,7vw,48px);font-weight:800;line-height:1;letter-spacing:-.02em;margin:4px 0 6px}
-.split{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));margin:14px 0 0}
-.split .card{margin:0}
-.callout{background:var(--ink);color:#FFFFFF;border-radius:14px;padding:16px 20px;margin:16px 0 0;box-shadow:var(--shadow)}
-.callout p{margin:0}
-.callout strong{color:#E8CE85}
-.links{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
-.links a{display:inline-block;text-decoration:none;font-weight:700;font-size:14.5px;color:var(--ink);background:var(--tint);border-radius:10px;padding:8px 12px}
-.links a:hover{background:#E4E8EE}
-.exam h2{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}
-.exam .when{font-size:15px;color:var(--soft);font-weight:600;margin:2px 0 0}
-.facts{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));margin:10px 0 0}
-.fact{background:var(--tint);border-radius:10px;padding:10px 12px}
-.fact .k{font-family:var(--fe);font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--maroon)}
-.fact .v{font-weight:800;font-size:18px}
-.fact p{margin:2px 0 0;font-size:14.5px;color:var(--soft)}
-footer{margin:32px 0 0;font-size:13.5px;color:var(--soft)}
-@media print{
-  body{background:#FFFFFF}
-  .secpick,.skip,.links{display:none !important}
-  .card{box-shadow:none;border:1px solid var(--line);break-inside:avoid}
-  .callout{background:#FFFFFF;color:var(--ink);border:1px solid var(--ink)}
-  .callout strong{color:var(--maroon)}
-}
-/* ---------- type and layout pass ---------- */
-body{font-family:var(--fe);font-size:17px;line-height:1.65;letter-spacing:.005em}
-h1,h2,.stat .n,.big,.fact .v,ol.steps b,.tag,.backnav a,.links a,.qlist a{font-family:var(--f)}
-header{background:var(--ink);color:#FFFFFF;border-radius:18px;padding:30px 28px 28px;box-shadow:var(--shadow)}
-header .eyebrow{color:#E8CE85}
-header h1{color:#FFFFFF}
-header .lede{color:#DCE1E8;font-size:18.5px;line-height:1.6;margin:14px 0 0;max-width:62ch}
-h2{font-size:22px;line-height:1.25;margin:0 0 12px}
-.card{padding:24px 26px;margin:18px 0 0;border-radius:16px}
-.card p{margin:12px 0 0;max-width:68ch}
-.card h2 + p,.card .tag + h2 + p{margin-top:0}
+@media (prefers-reduced-motion:reduce){.card:hover,.backnav a:hover,.links a:hover,.qlist a:hover{transform:none}}
+h2{font-family:var(--display);font-size:21px;font-weight:600;line-height:1.3;color:var(--terra-dark);margin:0 0 10px;text-wrap:balance}
+.answer{font-family:var(--display);font-size:18px;font-weight:700;line-height:1.45;color:var(--navy);margin:0 0 8px;max-width:60ch}
+.card p{margin:12px 0 0;max-width:62ch}
+.card .answer+p{margin-top:8px}
 .card ul{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:10px}
-.card ul li{position:relative;margin:0;padding-left:24px;max-width:66ch}
-.card ul li::before{content:'';position:absolute;left:5px;top:.66em;width:8px;height:8px;border-radius:50%;background:var(--maroon)}
-.card.dk ul li::before,.card.dm ul li::before{background:#E8CE85}
-.card strong,.card b{font-weight:700}
-.card.dk strong,.card.dm strong{color:#F2DFAE}
-.stats{gap:16px;margin:16px 0 4px}
-.stat .l{font-size:15px;line-height:1.45;margin:8px 0 0}
-.note-sm{font-size:13.5px;margin:14px 0 0}
-.backq{margin:18px 0 0}
-.split{gap:18px;margin:18px 0 0}
-ol.steps{gap:14px;margin:14px 0 0}
-ol.steps li span{line-height:1.55}
-ol.steps b{font-size:17px;margin:3px 0 2px}
-.callout{padding:20px 24px;margin:18px 0 0}
-.facts{gap:12px;margin:14px 0 0}
-.fact{padding:12px 14px}
-.card .fact p{margin:4px 0 0}
-.card .fact .v{margin:2px 0 0}
-.links{gap:10px;margin:16px 0 0}
-/* question index as buttons */
-.qindex h2{margin-bottom:14px}
-.card ul.qlist{columns:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:8px;margin:0}
+.card ul li{position:relative;margin:0;padding-left:22px;max-width:62ch}
+.card ul li::before{content:'';position:absolute;left:2px;top:.6em;width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.card strong,.card b{font-weight:700;color:var(--navy)}
+.note-sm{font-size:14px;color:var(--soft);margin:16px 0 0}
+.card .note-sm{max-width:62ch}
+
+/* small labels */
+.tag{display:inline-block;font-family:var(--body);font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:999px;padding:5px 11px;margin:0 0 14px;border:1px solid var(--line);color:var(--soft);background:var(--white)}
+.tag.next{border-color:var(--gold);color:var(--navy)}
+.tag.new{border-color:var(--terra);color:var(--terra-dark)}
+.tag.done{color:var(--mute)}
+
+/* numbered steps */
+ol.steps{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:14px;counter-reset:s}
+ol.steps li{display:grid;grid-template-columns:34px 1fr;gap:14px;align-items:start;counter-increment:s}
+ol.steps li::before{content:counter(s);width:32px;height:32px;border-radius:50%;border:1px solid var(--navy);color:var(--navy);display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:15px}
+ol.steps b{display:block;font-family:var(--display);font-size:17px;color:var(--navy);margin:4px 0 2px}
+ol.steps span{line-height:1.55;max-width:60ch}
+
+/* big numbers */
+.stats{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,120px),1fr));margin:18px 0 4px}
+.stat .n{font-family:var(--display);font-size:clamp(32px,6vw,42px);font-weight:800;line-height:1;letter-spacing:-.02em;color:var(--navy)}
+.stats.sm .n{font-size:clamp(24px,4.4vw,30px);white-space:nowrap}
+.stat .l{font-size:15px;line-height:1.45;color:var(--soft);margin:8px 0 0}
+.big{font-family:var(--display);font-size:clamp(38px,7vw,48px);font-weight:800;line-height:1;letter-spacing:-.02em;color:var(--navy);margin:6px 0 10px}
+
+/* fact tiles */
+.facts{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));margin:16px 0 0}
+.fact{border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.fact .k{font-family:var(--body);font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--terra-dark)}
+.fact .v{font-family:var(--display);font-weight:700;font-size:18px;color:var(--navy);margin:4px 0 0}
+.card .fact p{margin:4px 0 0;font-size:14.5px;color:var(--soft)}
+
+/* two side-by-side cards */
+.two{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));margin:22px 0 0}
+.two .card{margin:0}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;margin:14px 0 0}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+th{text-align:left;font-family:var(--body);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);padding:10px 10px;border-bottom:1px solid var(--line)}
+td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th[scope=row]{text-align:left;font-weight:700}
+tr.past td{color:var(--mute)}
+tr.nextrow td{font-weight:700}
+
+/* link rows and question index */
+.links{display:flex;flex-wrap:wrap;gap:12px;margin:40px 0 0}
+.links a{display:inline-block;text-decoration:none;font-family:var(--display);font-weight:700;font-size:15px;line-height:1.3;color:var(--navy);background:var(--white);box-shadow:var(--shadow);border-radius:12px;padding:12px 16px;transition:transform 200ms ease,box-shadow 200ms ease}
+.links a:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);color:var(--navy)}
+.card .links{margin:18px 0 0}
+.card .links a{border:1px solid var(--line);box-shadow:none}
+.card .links a:hover{box-shadow:var(--shadow)}
+.qindex h2{margin-bottom:16px}
+.card ul.qlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:10px;margin:0}
 .card ul.qlist li{padding:0;max-width:none}
 .card ul.qlist li::before{content:none}
-.qlist a{display:flex;align-items:center;gap:10px;height:100%;text-decoration:none;color:var(--ink);background:var(--tint);border-radius:10px;padding:10px 14px;font-weight:700;font-size:15px;line-height:1.35}
-.qlist a::after{content:'\2193';margin-left:auto;color:var(--maroon);font-weight:800}
-.qlist a:hover{background:#E4E8EE}
-@media (max-width:560px){header{padding:24px 20px}.card{padding:20px 18px}}
+.qlist a{display:flex;align-items:center;gap:10px;height:100%;text-decoration:none;color:var(--navy);border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-family:var(--display);font-weight:700;font-size:15px;line-height:1.35;transition:transform 200ms ease,box-shadow 200ms ease}
+.qlist a::after{content:'\2193';margin-left:auto;color:var(--terra-dark);font-weight:700}
+.qlist a:hover{transform:translateY(-2px);box-shadow:var(--shadow);color:var(--navy)}
+.backq{margin:18px 0 0;font-size:14.5px;font-family:var(--display);font-weight:700}
+.exam .when{font-size:16px;color:var(--soft);font-weight:600;margin:0}
 
+/* instructor sheet */
+.codeblock{display:grid;gap:8px;margin:16px 0 0}
+.codeblock label{font-family:var(--body);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-dark)}
+.codeblock textarea{width:100%;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;padding:12px;border:1px solid var(--navy);border-radius:12px;background:var(--white);color:var(--navy);resize:vertical}
+.codeblock button{justify-self:start;font-family:var(--display);font-weight:700;font-size:14px;background:var(--navy);color:var(--white);border:0;border-radius:10px;padding:9px 16px;cursor:pointer}
+.codeblock button:hover{background:var(--navy-deep)}
+.gbm{margin:12px 0 0;padding-left:22px}
+.gbm li{margin:6px 0}
+
+footer{margin:48px 0 0;font-size:14px;color:var(--soft)}
+@media (max-width:560px){.wrap{padding-top:24px}header.page{padding:24px 22px 26px}.card{padding:22px 20px}}
+@media print{
+  body{background:#FFFFFF}
+  .skip,.links,.backnav,.backq{display:none !important}
+  .card,header.page{box-shadow:none;border:1px solid var(--line);break-inside:avoid}
+}
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the page content</a>
 <main class="wrap" id="main">
 <p class="backnav"><a id="backLink" href="bio004-syllabus-update.html">&larr; What is in the syllabus?</a></p>
-<header>
+<header class="page">
+  <p class="brand"><img src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/sites/2147570705/images/f67b862-aed1-4e08-e1-4ed5edeb112a_Screenshot_2026-05-11_at_4.22.16_PM.png" alt="MedMasters Collaborative"></p>
   <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
   <h1>Where is my study guide for each exam?</h1>
-  <p class="lede">Your study guide for each exam has two parts: the competencies in your Competency Packet for the lecture exam, and your lab structure list for the lab practical. Everything you can be asked is on them, and nothing else is on the exam. Your exam dates are on your class schedule.</p>
+  <p class="lede">Each exam has two study guides: the competencies in your Competency Packet for the lecture exam, and your lab structure list for the lab practical. Everything you can be asked is on them, and nothing else is on the exam. Your exam dates are on your class schedule.</p>
 </header>
+
 <div id="exams"></div>
-<section class="card dm" aria-labelledby="x2">
+<section class="card" aria-labelledby="x2">
   <h2 id="x2">What happens on exam day?</h2>
   <ul>
     <li>You take the lecture exam and the lab practical <strong>on the same day</strong>.</li>
-    <li>The lecture exam asks you to apply what you know and reason through problems, not just repeat facts.</li>
+    <li>The lecture exam asks you to apply what you know and reason through problems, not only repeat facts.</li>
     <li>The lab practical is a set of timed stations. You move from station to station and name what you see. <strong>Spelling counts</strong>, and you write <strong>in pen</strong>, not pencil.</li>
-    <li>The lab practical for Exam 1 was mostly histology, with about 80 to 90% of it on the microscopes. Exam 2 was all bones. Exams 3, 4 and 5 are half models and half cadaver.</li>
-    <li><strong>The doors lock when the practical starts</strong>, so if you're late, you can't come in. Plan to be early.</li>
+    <li>Exam 1 was mostly histology, about 80 to 90% on the microscopes. Exam 2 was all bones. Exams 3, 4 and 5 are half models and half cadaver.</li>
+    <li><strong>The doors lock when the practical starts.</strong> Once the doors are locked, no one can come in, so please plan to be early.</li>
     <li>Each exam has a few bonus questions built in, which can make up for a question or two you missed. Your score can go up to <strong>102%</strong>, but not higher.</li>
   </ul>
 </section>
@@ -183,7 +163,6 @@ ol.steps b{font-size:17px;margin:3px 0 2px}
 </nav>
 <footer><p>BIO 004 Human Anatomy &middot; Solano Community College &middot; Dr. Sharilyn Rennie</p></footer>
 </main>
-
 <script>
 (function(){
 'use strict';
@@ -287,25 +266,25 @@ function sendHeightSetup(id){
 
 secPicker(document.getElementById('secpick'));
 var MODS = [
-  {n:1, t:'Foundations to Integumentary', a:1, b:25, lec:25, lab:15, list:'BIO004-Module1-Packet.html#dvc', mix:'Lab practical: mostly histology, about 80 to 90% on the microscopes'},
-  {n:2, t:'Skeletal System and Joints', a:26, b:55, lec:30, lab:28, list:'BIO004-Module2-Packet.html#dvc', mix:'Lab practical: all bones'},
-  {n:3, t:'Cardiovascular, Muscle and Blood', a:56, b:96, lec:31, lab:32, list:'BIO004-M3-Lab-Packet.html#structures', mix:'Lab practical: half models, half cadaver'},
-  {n:4, t:'Respiratory, Lymphatic, Digestive and Endocrine', a:97, b:132, lec:34, lab:28, list:'BIO004-M4-Lab-Packet.html#structures', mix:'Lab practical: half models, half cadaver'},
-  {n:5, t:'Urinary, Reproductive and the Nervous System', a:133, b:193, lec:60, lab:50, list:'BIO004-M5-Lab-Packet.html#structures', mix:'Lab practical: half models, half cadaver'}
+  {n:1, t:'Foundations to Integumentary', a:1, b:25, lec:25, lab:15, list:'BIO004-Module1-Packet.html#dvc', mix:'Mostly histology, about 80 to 90% on the microscopes'},
+  {n:2, t:'Skeletal System and Joints', a:26, b:55, lec:30, lab:28, list:'BIO004-Module2-Packet.html#dvc', mix:'All bones'},
+  {n:3, t:'Cardiovascular, Muscle and Blood', a:56, b:96, lec:31, lab:32, list:'BIO004-M3-Lab-Packet.html#structures', mix:'Half models, half cadaver'},
+  {n:4, t:'Respiratory, Lymphatic, Digestive and Endocrine', a:97, b:132, lec:34, lab:28, list:'BIO004-M4-Lab-Packet.html#structures', mix:'Half models, half cadaver'},
+  {n:5, t:'Urinary, Reproductive and the Nervous System', a:133, b:193, lec:60, lab:50, list:'BIO004-M5-Lab-Packet.html#structures', mix:'Half models, half cadaver'}
 ];
 var t = today(), nextSet = false;
 document.getElementById('exams').innerHTML = MODS.map(function(m, i){
   var mine = SEC ? EXAMS[SECS[SEC].pat][i] : (EXAMS.mw[i] > EXAMS.tr[i] ? EXAMS.mw[i] : EXAMS.tr[i]);
   var past = mine < t, isNext = !past && !nextSet; if (isNext) nextSet = true;
-  var when = SEC ? fmt(EXAMS[SECS[SEC].pat][i]) : fmt(EXAMS.mw[i]) + ' (Mon/Wed) · ' + fmt(EXAMS.tr[i]) + ' (Tue/Thu)';
-  var tag = past ? '<span class="tag done">Done</span>' : (isNext ? '<span class="tag next">Next exam</span>' : '');
-  return '<section class="card exam' + (isNext ? ' dk' : '') + '" aria-labelledby="e' + m.n + '">' + tag +
+  var tag = past ? '<span class="tag done">Done</span>' : (isNext ? '<span class="tag next">Next exam</span>' : '<span class="tag">Coming up</span>');
+  return '<section class="card exam" aria-labelledby="e' + m.n + '">' + tag +
     '<h2 id="e' + m.n + '">Exam ' + m.n + ' · Module ' + m.n + '</h2><p class="when">' + esc(m.t) + '</p>' +
     '<div class="facts"><div class="fact"><div class="k">Lecture study guide</div><div class="v">Competencies ' + m.a + ' to ' + m.b + '</div><p>' + m.lec + ' on the lecture exam, ' + m.lab + ' on the lab practical</p></div>' +
-    '<div class="fact"><div class="k">Lab study guide</div><div class="v">Module ' + m.n + ' structure list</div><p>' + m.mix + '</p></div></div>' +
+    '<div class="fact"><div class="k">Lab study guide</div><div class="v">Module ' + m.n + ' structure list</div><p>Lab practical: ' + m.mix + '</p></div></div>' +
     '<div class="links"><a href="bio004-competency-packet.html#module-' + m.n + '">Lecture study guide, Module ' + m.n + '</a><a href="' + m.list + '">Lab study guide, Module ' + m.n + '</a></div></section>';
 }).join('');
 document.querySelectorAll('a[data-sec]').forEach(function(x){ if (SEC) x.setAttribute('href', x.getAttribute('href') + '?sec=' + SEC); });
+
 
 fixLinks();
 initBack('bio004-exam-scope.html');

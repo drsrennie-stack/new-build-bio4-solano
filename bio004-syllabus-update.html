@@ -10,160 +10,140 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#0B1530; --soft:#3D4A57; --maroon:#7A2A22; --gold:#B8924A; --goldtext:#5E4719;
-  --page:#FAFAF9; --card:#FFFFFF; --line:#E3E6EA; --tint:#F1F3F6; --warm:#F7F1E4;
-  --shadow:0 1px 2px rgba(11,21,48,.06),0 6px 18px rgba(11,21,48,.10); --shadow-hover:0 2px 4px rgba(11,21,48,.08),0 16px 32px rgba(11,21,48,.16);
-  --f:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
-  --fe:'DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --navy:#1E3D4C; --navy-deep:#142A36; --navy-tint:#EDF1F3;
+  --gold:#B8924A; --terra:#C2734D; --terra-dark:#A0522D;
+  --white:#FFFFFF; --page:#FAFAF9; --soft:#46555F; --line:#E4E7EA; --mute:#8A939B;
+  --shadow:0 1px 3px rgba(0,0,0,0.08); --shadow-hover:0 8px 16px rgba(0,0,0,0.10);
+  --display:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --body:'DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
 }
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 html,body{margin:0}
-body{background:var(--page);color:var(--ink);font-family:var(--f);font-size:16.5px;line-height:1.55}
+body{background:var(--page);color:var(--navy);font-family:var(--body);font-size:17px;line-height:1.65}
 em,i{font-style:normal}
 [hidden]{display:none !important}
 @media (prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto !important}}
 .skip{position:absolute;left:-9999px}
-.skip:focus{left:12px;top:12px;background:var(--card);padding:10px 14px;border-radius:8px;z-index:20;outline:3px solid var(--ink)}
-a{color:var(--maroon)}
-a:focus-visible,button:focus-visible{outline:3px solid var(--maroon);outline-offset:2px;border-radius:4px}
-.wrap{max-width:820px;margin:0 auto;padding:28px max(18px,env(safe-area-inset-right,0px)) 56px max(18px,env(safe-area-inset-left,0px))}
-.eyebrow{font-family:var(--fe);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--maroon);margin:0 0 6px}
-h1{font-size:clamp(28px,5.5vw,38px);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:0;text-wrap:balance}
-.lede{font-size:18px;margin:10px 0 0;max-width:60ch}
-.dateline{font-size:14px;color:var(--soft);margin:6px 0 0}
-.secpick{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0 0;font-size:14px;color:var(--soft)}
-.secpick a{text-decoration:none;color:var(--ink);background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:6px 12px;font-weight:700}
-.secpick a[aria-current="true"]{background:var(--ink);color:#FFFFFF}
-h2{font-size:21px;font-weight:800;letter-spacing:-.01em;margin:0 0 6px;text-wrap:balance}
-.card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:18px 20px;margin:16px 0 0;transition:transform 200ms ease,box-shadow 200ms ease}
+.skip:focus{left:16px;top:16px;background:var(--white);color:var(--navy);padding:10px 14px;border-radius:8px;z-index:20;outline:3px solid var(--navy)}
+a{color:var(--terra-dark);text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{color:var(--navy)}
+a:focus-visible,button:focus-visible,textarea:focus-visible{outline:3px solid var(--navy);outline-offset:3px;border-radius:6px}
+.wrap{max-width:760px;margin:0 auto;padding:40px max(24px,env(safe-area-inset-right,0px)) 72px max(24px,env(safe-area-inset-left,0px))}
+
+/* page header */
+.backnav{margin:0 0 20px;font-size:15px}
+.backnav a{display:inline-block;text-decoration:none;font-family:var(--display);font-weight:700;color:var(--navy);background:var(--white);box-shadow:var(--shadow);border-radius:12px;padding:10px 14px;transition:transform 200ms ease,box-shadow 200ms ease}
+.backnav a:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+header.page{background:var(--white);border-radius:16px;box-shadow:var(--shadow);padding:32px 34px 34px;margin:0 0 8px}
+.brand{display:flex;align-items:center;gap:14px;margin:0 0 22px}
+.brand img{max-height:48px;width:auto;max-width:240px;display:block;font-family:var(--display);font-weight:700;color:var(--navy)}
+.eyebrow{font-family:var(--body);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--terra-dark);margin:0 0 12px}
+h1{font-family:var(--display);font-size:clamp(30px,5.5vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin:0;color:var(--navy);text-wrap:balance}
+.lede{font-size:18px;line-height:1.6;color:var(--soft);margin:16px 0 0;max-width:58ch}
+
+/* groups and cards */
+.group{font-family:var(--body);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--terra-dark);margin:44px 0 0}
+.card{background:var(--white);border-radius:16px;box-shadow:var(--shadow);padding:28px 30px;margin:22px 0 0;transition:transform 200ms ease,box-shadow 200ms ease}
 .card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
-@media (prefers-reduced-motion:reduce){.card:hover{transform:none}}
-.card p{margin:6px 0 0}
-.card ul{margin:8px 0 0;padding-left:20px}
-.card li{margin:4px 0}
-.tag{display:inline-block;font-family:var(--fe);font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:999px;padding:3px 10px;margin:0 0 8px}
-.tag.new{background:var(--maroon);color:#FFFFFF}
-.tag.same{background:var(--tint);color:var(--ink)}
-.tag.done{background:var(--tint);color:var(--soft)}
-.tag.next{background:var(--gold);color:var(--ink)}
-ol.steps{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:10px;counter-reset:s}
-ol.steps li{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;counter-increment:s}
-ol.steps li::before{content:counter(s);width:30px;height:30px;border-radius:50%;background:var(--ink);color:#FFFFFF;display:grid;place-items:center;font-weight:800;font-size:15px}
-ol.steps b{display:block}
-.tbl-wrap{overflow-x:auto;margin:6px 0 0}
-.tblh{font-size:16px;font-weight:800;margin:6px 0 0}
-.note-sm{font-size:13.5px;color:var(--soft);margin:6px 0 0}
-table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
-th{text-align:left;font-family:var(--fe);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);padding:8px 10px;border-bottom:1px solid var(--line)}
-td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-tr.past td{color:var(--soft)}
-.card.tn{background:rgba(11,21,48,.09)}
-.card.tm{background:rgba(122,42,34,.10)}
-.card.dk,.card.dm{color:#FFFFFF}
-.card.dk{background:var(--ink)}
-.card.dm{background:#7A2A22}
-.card.dk h2,.card.dm h2{color:#FFFFFF}
-.card.dk a,.card.dm a{color:#F2DFAE}
-.card.dk .links a,.card.dm .links a{color:var(--ink);background:#FFFFFF}
-.card.dk .links a:hover,.card.dm .links a:hover{background:#F1F3F6}
-.card.dk .note-sm,.card.dm .note-sm,.card.dk .when,.card.dm .when,.card.dk td,.card.dm td,.card.dk th,.card.dm th{color:#DCE1E8}
-.card.dk .tag,.card.dm .tag{background:#E8CE85;color:var(--ink)}
-.card.dk .fact,.card.dm .fact{background:rgba(255,255,255,.10)}
-.card.dk .fact .k,.card.dm .fact .k{color:#E8CE85}
-.card.dk .fact p,.card.dm .fact p{color:#DCE1E8}
-.stats{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,104px),1fr));margin:12px 0 0}
-.stat .n{font-size:clamp(34px,6vw,44px);font-weight:800;line-height:1;letter-spacing:-.02em}
-.card.dk .stat .n,.card.dk .big{color:#C9A35B}
-.card.dm .stat .n,.card.dm .big{color:#F2DFAE}
-.stat .l{font-size:14.5px;margin:6px 0 0}
-.backnav{margin:0 0 14px;font-size:15px;font-weight:700}
-.backnav a{display:inline-block;text-decoration:none;color:var(--ink);background:var(--card);box-shadow:var(--shadow);border-radius:10px;padding:8px 12px}
-.backnav a:hover{text-decoration:underline}
-.backq{margin:12px 0 0;font-size:14.5px;font-weight:700}
-.card.dk .backq a,.card.dm .backq a{color:#F2DFAE}
-.stats.sm .n{font-size:clamp(26px,4.4vw,32px);white-space:nowrap}
-.card.dk .stat .l,.card.dm .stat .l{color:#E6EAF0}
-.qlist{columns:2;column-gap:28px;padding-left:1.1em}
-.qlist li{break-inside:avoid;margin:0 0 6px}
-@media (max-width:560px){.qlist{columns:1}}
-th[scope=row]{text-align:left;font-weight:700}
-tr.nextrow td{background:var(--warm);font-weight:700}
-.big{font-size:clamp(38px,7vw,48px);font-weight:800;line-height:1;letter-spacing:-.02em;margin:4px 0 6px}
-.split{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));margin:14px 0 0}
-.split .card{margin:0}
-.callout{background:var(--ink);color:#FFFFFF;border-radius:14px;padding:16px 20px;margin:16px 0 0;box-shadow:var(--shadow)}
-.callout p{margin:0}
-.callout strong{color:#E8CE85}
-.links{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
-.links a{display:inline-block;text-decoration:none;font-weight:700;font-size:14.5px;color:var(--ink);background:var(--tint);border-radius:10px;padding:8px 12px}
-.links a:hover{background:#E4E8EE}
-.exam h2{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}
-.exam .when{font-size:15px;color:var(--soft);font-weight:600;margin:2px 0 0}
-.facts{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));margin:10px 0 0}
-.fact{background:var(--tint);border-radius:10px;padding:10px 12px}
-.fact .k{font-family:var(--fe);font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--maroon)}
-.fact .v{font-weight:800;font-size:18px}
-.fact p{margin:2px 0 0;font-size:14.5px;color:var(--soft)}
-footer{margin:32px 0 0;font-size:13.5px;color:var(--soft)}
-@media print{
-  body{background:#FFFFFF}
-  .secpick,.skip,.links{display:none !important}
-  .card{box-shadow:none;border:1px solid var(--line);break-inside:avoid}
-  .callout{background:#FFFFFF;color:var(--ink);border:1px solid var(--ink)}
-  .callout strong{color:var(--maroon)}
-}
-/* ---------- type and layout pass ---------- */
-body{font-family:var(--fe);font-size:17px;line-height:1.65;letter-spacing:.005em}
-h1,h2,.stat .n,.big,.fact .v,ol.steps b,.tag,.backnav a,.links a,.qlist a{font-family:var(--f)}
-header{background:var(--ink);color:#FFFFFF;border-radius:18px;padding:30px 28px 28px;box-shadow:var(--shadow)}
-header .eyebrow{color:#E8CE85}
-header h1{color:#FFFFFF}
-header .lede{color:#DCE1E8;font-size:18.5px;line-height:1.6;margin:14px 0 0;max-width:62ch}
-h2{font-size:22px;line-height:1.25;margin:0 0 12px}
-.card{padding:24px 26px;margin:18px 0 0;border-radius:16px}
-.card p{margin:12px 0 0;max-width:68ch}
-.card h2 + p,.card .tag + h2 + p{margin-top:0}
+@media (prefers-reduced-motion:reduce){.card:hover,.backnav a:hover,.links a:hover,.qlist a:hover{transform:none}}
+h2{font-family:var(--display);font-size:21px;font-weight:600;line-height:1.3;color:var(--terra-dark);margin:0 0 10px;text-wrap:balance}
+.answer{font-family:var(--display);font-size:18px;font-weight:700;line-height:1.45;color:var(--navy);margin:0 0 8px;max-width:60ch}
+.card p{margin:12px 0 0;max-width:62ch}
+.card .answer+p{margin-top:8px}
 .card ul{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:10px}
-.card ul li{position:relative;margin:0;padding-left:24px;max-width:66ch}
-.card ul li::before{content:'';position:absolute;left:5px;top:.66em;width:8px;height:8px;border-radius:50%;background:var(--maroon)}
-.card.dk ul li::before,.card.dm ul li::before{background:#E8CE85}
-.card strong,.card b{font-weight:700}
-.card.dk strong,.card.dm strong{color:#F2DFAE}
-.stats{gap:16px;margin:16px 0 4px}
-.stat .l{font-size:15px;line-height:1.45;margin:8px 0 0}
-.note-sm{font-size:13.5px;margin:14px 0 0}
-.backq{margin:18px 0 0}
-.split{gap:18px;margin:18px 0 0}
-ol.steps{gap:14px;margin:14px 0 0}
-ol.steps li span{line-height:1.55}
-ol.steps b{font-size:17px;margin:3px 0 2px}
-.callout{padding:20px 24px;margin:18px 0 0}
-.facts{gap:12px;margin:14px 0 0}
-.fact{padding:12px 14px}
-.card .fact p{margin:4px 0 0}
-.card .fact .v{margin:2px 0 0}
-.links{gap:10px;margin:16px 0 0}
-/* question index as buttons */
-.qindex h2{margin-bottom:14px}
-.card ul.qlist{columns:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:8px;margin:0}
+.card ul li{position:relative;margin:0;padding-left:22px;max-width:62ch}
+.card ul li::before{content:'';position:absolute;left:2px;top:.6em;width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.card strong,.card b{font-weight:700;color:var(--navy)}
+.note-sm{font-size:14px;color:var(--soft);margin:16px 0 0}
+.card .note-sm{max-width:62ch}
+
+/* small labels */
+.tag{display:inline-block;font-family:var(--body);font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:999px;padding:5px 11px;margin:0 0 14px;border:1px solid var(--line);color:var(--soft);background:var(--white)}
+.tag.next{border-color:var(--gold);color:var(--navy)}
+.tag.new{border-color:var(--terra);color:var(--terra-dark)}
+.tag.done{color:var(--mute)}
+
+/* numbered steps */
+ol.steps{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:14px;counter-reset:s}
+ol.steps li{display:grid;grid-template-columns:34px 1fr;gap:14px;align-items:start;counter-increment:s}
+ol.steps li::before{content:counter(s);width:32px;height:32px;border-radius:50%;border:1px solid var(--navy);color:var(--navy);display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:15px}
+ol.steps b{display:block;font-family:var(--display);font-size:17px;color:var(--navy);margin:4px 0 2px}
+ol.steps span{line-height:1.55;max-width:60ch}
+
+/* big numbers */
+.stats{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(min(100%,120px),1fr));margin:18px 0 4px}
+.stat .n{font-family:var(--display);font-size:clamp(32px,6vw,42px);font-weight:800;line-height:1;letter-spacing:-.02em;color:var(--navy)}
+.stats.sm .n{font-size:clamp(24px,4.4vw,30px);white-space:nowrap}
+.stat .l{font-size:15px;line-height:1.45;color:var(--soft);margin:8px 0 0}
+.big{font-family:var(--display);font-size:clamp(38px,7vw,48px);font-weight:800;line-height:1;letter-spacing:-.02em;color:var(--navy);margin:6px 0 10px}
+
+/* fact tiles */
+.facts{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));margin:16px 0 0}
+.fact{border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.fact .k{font-family:var(--body);font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--terra-dark)}
+.fact .v{font-family:var(--display);font-weight:700;font-size:18px;color:var(--navy);margin:4px 0 0}
+.card .fact p{margin:4px 0 0;font-size:14.5px;color:var(--soft)}
+
+/* two side-by-side cards */
+.two{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));margin:22px 0 0}
+.two .card{margin:0}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;margin:14px 0 0}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+th{text-align:left;font-family:var(--body);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);padding:10px 10px;border-bottom:1px solid var(--line)}
+td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th[scope=row]{text-align:left;font-weight:700}
+tr.past td{color:var(--mute)}
+tr.nextrow td{font-weight:700}
+
+/* link rows and question index */
+.links{display:flex;flex-wrap:wrap;gap:12px;margin:40px 0 0}
+.links a{display:inline-block;text-decoration:none;font-family:var(--display);font-weight:700;font-size:15px;line-height:1.3;color:var(--navy);background:var(--white);box-shadow:var(--shadow);border-radius:12px;padding:12px 16px;transition:transform 200ms ease,box-shadow 200ms ease}
+.links a:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);color:var(--navy)}
+.card .links{margin:18px 0 0}
+.card .links a{border:1px solid var(--line);box-shadow:none}
+.card .links a:hover{box-shadow:var(--shadow)}
+.qindex h2{margin-bottom:16px}
+.card ul.qlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:10px;margin:0}
 .card ul.qlist li{padding:0;max-width:none}
 .card ul.qlist li::before{content:none}
-.qlist a{display:flex;align-items:center;gap:10px;height:100%;text-decoration:none;color:var(--ink);background:var(--tint);border-radius:10px;padding:10px 14px;font-weight:700;font-size:15px;line-height:1.35}
-.qlist a::after{content:'\2193';margin-left:auto;color:var(--maroon);font-weight:800}
-.qlist a:hover{background:#E4E8EE}
-@media (max-width:560px){header{padding:24px 20px}.card{padding:20px 18px}}
+.qlist a{display:flex;align-items:center;gap:10px;height:100%;text-decoration:none;color:var(--navy);border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-family:var(--display);font-weight:700;font-size:15px;line-height:1.35;transition:transform 200ms ease,box-shadow 200ms ease}
+.qlist a::after{content:'\2193';margin-left:auto;color:var(--terra-dark);font-weight:700}
+.qlist a:hover{transform:translateY(-2px);box-shadow:var(--shadow);color:var(--navy)}
+.backq{margin:18px 0 0;font-size:14.5px;font-family:var(--display);font-weight:700}
+.exam .when{font-size:16px;color:var(--soft);font-weight:600;margin:0}
 
+/* instructor sheet */
+.codeblock{display:grid;gap:8px;margin:16px 0 0}
+.codeblock label{font-family:var(--body);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-dark)}
+.codeblock textarea{width:100%;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;padding:12px;border:1px solid var(--navy);border-radius:12px;background:var(--white);color:var(--navy);resize:vertical}
+.codeblock button{justify-self:start;font-family:var(--display);font-weight:700;font-size:14px;background:var(--navy);color:var(--white);border:0;border-radius:10px;padding:9px 16px;cursor:pointer}
+.codeblock button:hover{background:var(--navy-deep)}
+.gbm{margin:12px 0 0;padding-left:22px}
+.gbm li{margin:6px 0}
+
+footer{margin:48px 0 0;font-size:14px;color:var(--soft)}
+@media (max-width:560px){.wrap{padding-top:24px}header.page{padding:24px 22px 26px}.card{padding:22px 20px}}
+@media print{
+  body{background:#FFFFFF}
+  .skip,.links,.backnav,.backq{display:none !important}
+  .card,header.page{box-shadow:none;border:1px solid var(--line);break-inside:avoid}
+}
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the page content</a>
 <main class="wrap" id="main">
 <p class="backnav"><a id="backLink" href="bio004-syllabus-update.html">&larr; What is in the syllabus?</a></p>
-<header>
+<header class="page">
+  <p class="brand"><img src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/sites/2147570705/images/f67b862-aed1-4e08-e1-4ed5edeb112a_Screenshot_2026-05-11_at_4.22.16_PM.png" alt="MedMasters Collaborative"></p>
   <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>
   <h1>What is in the syllabus?</h1>
   <p class="lede">Click a question to jump to the answer. TBLs, exams and grading each have their own page.</p>
 </header>
+
 <nav class="card qindex" aria-labelledby="qi">
   <h2 id="qi">Jump to a question</h2>
   <ul class="qlist">
@@ -187,95 +167,132 @@ ol.steps b{font-size:17px;margin:3px 0 2px}
       <li><a href="#s18">What do I do in an emergency?</a></li>
   </ul>
 </nav>
+
+<p class="group">The basics</p>
 <section class="card" aria-labelledby="s1">
   <h2 id="s1">When and where does my class meet?</h2>
-  <p>Class meets in person at the Vacaville Center. Lecture and lab are on the same day, and <strong>you need to be at both</strong>. Lab is always in <strong>VC 1137</strong>.</p>
-  <p>Your class days, times and lecture room are at the top of your syllabus in the Syllabus module.</p>
+  <p class="answer">In person at the Vacaville Center. Lecture and lab are on the same day, and you need to be at both.</p>
+  <ul>
+    <li>Lab is always in <strong>VC 1137</strong>.</li>
+    <li>Your class days, times and lecture room are at the top of your syllabus in the Syllabus module.</li>
+  </ul>
   <p class="backq"><a href="#qi">&uarr; Back to the questions</a></p>
 </section>
 <section class="card" aria-labelledby="s2">
   <h2 id="s2">What is this course about?</h2>
-  <p>This course is about the structure of the human body, from cells all the way up to organ systems. You'll study it three ways: tissues under the microscope, models, and human donors.</p>
-  <p>Knowing a structure means you can say what it is, find where it is, and recognize what it looks like. Some competencies also ask for a <strong>basic function</strong>, and your Competency Packet tells you which ones.</p>
+  <p class="answer">The structure of the human body, from cells all the way up to organ systems.</p>
+  <ul>
+    <li>You study it three ways: tissues under the microscope, models, and human donors.</li>
+    <li>Knowing a structure means you can say what it is, find where it is, and recognize what it looks like.</li>
+    <li>Some competencies also ask for a basic function. Your Competency Packet tells you which ones.</li>
+  </ul>
   <p class="backq"><a href="#qi">&uarr; Back to the questions</a></p>
 </section>
-<section class="card tn" aria-labelledby="s3">
+<section class="card" aria-labelledby="s3">
   <h2 id="s3">How do I contact Dr. Rennie?</h2>
-  <p>The best way to reach me is the <strong>Canvas Inbox</strong>, because it keeps all of your course messages in one place. You can also email me at <a href="mailto:srennie@solano.edu">srennie@solano.edu</a>.</p>
-  <p>I reply within <strong>48 to 72 hours on weekdays</strong>, so don't count on a same-day answer the night before something is due.</p>
-  <p>If you have a question about the course, post it on the <strong>Virtual Office</strong> board in Canvas. Someone else probably has the same question, and that way everyone sees the answer.</p>
+  <p class="answer">The Canvas Inbox is the best way. It keeps all of your course messages in one place.</p>
+  <ul>
+    <li>You can also email me at <a href="mailto:srennie@solano.edu">srennie@solano.edu</a>.</li>
+    <li>I reply within <strong>48 to 72 hours on weekdays</strong>, so please do not count on a same-day answer the night before something is due.</li>
+    <li>If your question is about the course, post it on the <strong>Virtual Office</strong> board in Canvas. Someone else probably has the same question, and that way everyone sees the answer.</li>
+  </ul>
   <p class="backq"><a href="#qi">&uarr; Back to the questions</a></p>
 </section>
-<section class="card dk" aria-labelledby="s4">
+<section class="card" aria-labelledby="s4">
   <h2 id="s4">Where and when are office hours?</h2>
   <div class="stats sm">
     <div class="stat"><div class="n">Mon &amp; Wed</div><div class="l">10:30 am to 12:30 pm, in the conference room across from Biotech Lab 1127</div></div>
     <div class="stat"><div class="n">30 min</div><div class="l">before each class, in our classroom</div></div>
     <div class="stat"><div class="n">Fri</div><div class="l">Open lab, 2:00 to 3:00 pm</div></div>
   </div>
-  <p>If none of those times work for you, send me a Canvas message and we'll find another time. <strong>Come see me early</strong>, while a gap is still small, because anatomy builds on itself.</p>
+  <p>If none of those times work, send me a Canvas message and we will find another time. <strong>Come see me early</strong>, while a gap is still small. Anatomy builds on itself.</p>
   <p class="backq"><a href="#qi">&uarr; Back to the questions</a></p>
 </section>
 <section class="card" aria-labelledby="s5">
   <h2 id="s5">What materials do I need?</h2>
-  <p>You'll need:</p>
   <ul>
-    <li><strong>your own lab coat</strong>, which stays in the lab all term</li>
-    <li><strong>non-latex nitrile gloves</strong> (you can split a box with your team)</li>
-    <li>a laptop, tablet or phone with internet, for Canvas, the concept videos and Mastery OS</li>
-    <li>a way to save files as PDFs, for anything you turn in on Canvas</li>
+    <li><strong>Your own lab coat</strong>, which stays in the lab all term</li>
+    <li><strong>Non-latex nitrile gloves</strong> (you can split a box with your team)</li>
+    <li>A laptop, tablet or phone with internet, for Canvas, the concept videos and Mastery OS</li>
+    <li>A way to save files as PDFs, for anything you turn in on Canvas</li>
   </ul>
   <p>I give you printed copies of the module notes, the pre-work and the lab structure lists. Mastery OS, the concept videos, the Loops practice videos and the Digital Human Anatomy Atlas are all free.</p>
-  <p><strong>You don't need to buy a textbook.</strong> If you'd like one, OpenStax Anatomy and Physiology (2nd edition) is free at <a href="https://openstax.org/details/books/anatomy-and-physiology-2e" target="_blank" rel="noopener">openstax.org</a> and covers everything in this course. Marieb, Brady and Mallatt's Human Anatomy (9th edition) also works, and used copies are easy to find. You don't need Mastering A&amp;P for anything in this class, so please don't buy it.</p>
+  <p><strong>You do not need to buy a textbook.</strong> If you would like one, OpenStax Anatomy and Physiology (2nd edition) is free at <a href="https://openstax.org/details/books/anatomy-and-physiology-2e" target="_blank" rel="noopener">openstax.org</a> and covers everything in this course. Marieb, Brady and Mallatt's Human Anatomy (9th edition) also works, and used copies are easy to find. You do not need Mastering A&amp;P for anything in this class, so please do not buy it.</p>
   <p>The lab coat and gloves are <strong>your only costs</strong>. If paying for them is hard, talk to me or to the Basic Needs Center (Building 1400, Room 1409, 707-864-7261).</p>
   <p class="backq"><a href="#qi">&uarr; Back to the questions</a></p>
 </section>
-<section class="card dm" aria-labelledby="s6">
+
+<p class="group">In the lab</p>
+<section class="card" aria-labelledby="s6">
   <h2 id="s6">What is the digital device policy?</h2>
-  <p>Phones, smart watches, AI glasses, tablets, laptops and recording devices <strong>aren't allowed in the lab at any time</strong>. Silence your devices and put them away out of sight, which means not in your pocket, on your lap or on the table. You also can't take photos, video, audio or digital notes in the lab. Use your digital materials outside the lab, at home or during open study hours.</p>
-  <p>We follow this rule because the people who donated their bodies can't give permission to be photographed or recorded.</p>
-  <p>Breaking this rule <strong>can get you removed from the course</strong>. You'll sign the digital device agreement in Canvas before your first lab. Recording any class without permission is also against college policy (Board Policy 5390).</p>
+  <p class="answer">Phones, smart watches, AI glasses, tablets, laptops and recording devices are not allowed in the lab at any time.</p>
+  <ul>
+    <li>Silence your devices and put them away out of sight: not in your pocket, on your lap or on the table.</li>
+    <li>No photos, video, audio or digital notes in the lab. Use your digital materials outside the lab, at home or during open study hours.</li>
+    <li>We follow this rule because the people who donated their bodies cannot give permission to be photographed or recorded.</li>
+    <li>Breaking this rule <strong>can get you removed from the course</strong>. You sign the digital device agreement in Canvas before your first lab.</li>
+    <li>Recording any class without permission is also against college policy (Board Policy 5390).</li>
+  </ul>
   <p class="backq"><a href="#qi">&uarr; Back to the questions</a></p>
 </section>
-<section class="card tm" aria-labelledby="s7">
+<section class="card" aria-labelledby="s7">
   <h2 id="s7">How do I act around the donors?</h2>
-  <p>Handle every donor and specimen with care. Keep the tissue covered and moist, and leave your station the way you found it. Please don't joke around, use nicknames or use careless language in the lab, and don't talk about the donors outside the lab or on social media.</p>
-  <p><strong>Working with the donors is required.</strong> Half of the lab practical on Exams 3, 4 and 5 is on the donors, and there's no alternative assignment.</p>
-  <p>If you feel uneasy, come talk to me. Most people find the first day is the hardest, and you can step outside any time you need to.</p>
+  <p class="answer">Handle every donor and specimen with care.</p>
+  <ul>
+    <li>Keep the tissue covered and moist, and leave your station the way you found it.</li>
+    <li>Please do not joke around, use nicknames or use careless language in the lab, and do not talk about the donors outside the lab or on social media.</li>
+    <li><strong>Working with the donors is required.</strong> Half of the lab practical on Exams 3, 4 and 5 is on the donors, and there is no alternative assignment.</li>
+    <li>If you feel uneasy, come talk to me. Most people find the first day is the hardest, and you can step outside any time you need to.</li>
+  </ul>
   <p class="backq"><a href="#qi">&uarr; Back to the questions</a></p>
 </section>
-<section class="card tn" aria-labelledby="s8">
+
+<p class="group">Attendance and integrity</p>
+<section class="card" aria-labelledby="s8">
   <h2 id="s8">What is the attendance policy?</h2>
   <ul>
-    <li>If you arrive <strong>more than 20 minutes late</strong> or leave <strong>more than 20 minutes early</strong>, it counts as an absence.</li>
-    <li>TBLs, exams, lab quizzes and brain dumps happen in class and can't be made up, so <strong>missing one is a zero</strong>.</li>
+    <li>Arriving <strong>more than 20 minutes late</strong> or leaving <strong>more than 20 minutes early</strong> counts as an absence.</li>
+    <li>TBLs, exams, lab quizzes and brain dumps happen in class and cannot be made up, so <strong>missing one is a zero</strong>.</li>
     <li>I treat every absence the same way. <strong>You never have to give me a reason or a doctor's note.</strong></li>
-    <li><strong>The doors lock</strong> when a lab practical starts, and anyone who is late can't come in.</li>
+    <li><strong>The doors lock</strong> when a lab practical starts. Once they are locked, no one can come in.</li>
     <li>Check Canvas at least three times a week, and turn on notifications for announcements.</li>
     <li>Answer your team's messages within 24 hours.</li>
   </ul>
   <p>Under college policy (Board Policy 5020), too many absences can get you dropped from the course.</p>
   <p class="backq"><a href="#qi">&uarr; Back to the questions</a></p>
 </section>
-<section class="card tn" aria-labelledby="s9">
+<section class="card" aria-labelledby="s9">
   <h2 id="s9">What if I miss something or turn it in late?</h2>
-  <p><strong>I don't accept late work, and there are no make-ups.</strong> If you missed a TBL, read <a href="bio004-how-tbls-work.html">What if I miss a TBL?</a></p>
-  <p>If something serious happens in your life, come talk to me about your options in the course.</p>
+  <p class="answer">I do not accept late work, and there are no make-ups.</p>
+  <ul>
+    <li>If you missed a TBL, read <a href="bio004-how-tbls-work.html">What if I miss a TBL?</a></li>
+    <li>If something serious happens in your life, please come talk to me about your options in the course.</li>
+  </ul>
   <p class="backq"><a href="#qi">&uarr; Back to the questions</a></p>
 </section>
 <section class="card" aria-labelledby="s10">
   <h2 id="s10">Can I use AI?</h2>
-  <p><strong>You're welcome to use AI to study.</strong> The Teach It to an AI feature in Mastery OS is a good place to start.</p>
-  <p>For graded work, you can <strong>only use AI on assignments marked as AI assignments</strong>. You can't use it on exams or on any graded part of a TBL. If graded work is rated above 25% AI or plagiarism, it gets an <strong>automatic zero</strong>. If you're not sure whether a tool counts, ask me before you turn your work in.</p>
-  <p>The AI Honor Contract in Canvas has the full rules.</p>
+  <p class="answer">You are welcome to use AI to study. The Teach It to an AI feature in Mastery OS is a good place to start.</p>
+  <ul>
+    <li>For graded work, you can <strong>only use AI on assignments marked as AI assignments</strong>.</li>
+    <li>No AI on exams or on any graded part of a TBL.</li>
+    <li>If graded work is rated above 25% AI or plagiarism, it gets an <strong>automatic zero</strong>.</li>
+    <li>Not sure whether a tool counts? Ask me before you turn your work in. The AI Honor Contract in Canvas has the full rules.</li>
+  </ul>
   <p class="backq"><a href="#qi">&uarr; Back to the questions</a></p>
 </section>
 <section class="card" aria-labelledby="s11">
   <h2 id="s11">What counts as cheating?</h2>
-  <p>Plagiarism means using someone else's work without giving them credit. That includes their words, ideas, images, diagrams and data, whether you meant to or not. On exams, cheating includes sharing information with another student, using materials that aren't allowed, and looking at someone else's exam.</p>
-  <p>Cheating earns <strong>at least a zero</strong> on that work. It can also mean an F in the course, and it's reported to the college. If you're not sure where the line is, ask me.</p>
+  <ul>
+    <li><strong>Plagiarism</strong> means using someone else's work without giving them credit: their words, ideas, images, diagrams and data, whether you meant to or not.</li>
+    <li><strong>On exams</strong>, cheating includes sharing information with another student, using materials that are not allowed, and looking at someone else's exam.</li>
+    <li>Cheating earns <strong>at least a zero</strong> on that work. It can also mean an F in the course, and it is reported to the college.</li>
+    <li>If you are not sure where the line is, ask me.</li>
+  </ul>
   <p class="backq"><a href="#qi">&uarr; Back to the questions</a></p>
 </section>
+
+<p class="group">Grades and study time</p>
 <section class="card" aria-labelledby="s12">
   <h2 id="s12">What is the grading scale?</h2>
   <div class="stats">
@@ -285,27 +302,36 @@ ol.steps b{font-size:17px;margin:3px 0 2px}
     <div class="stat"><div class="n">D</div><div class="l">59.5 to 69.4%</div></div>
     <div class="stat"><div class="n">F</div><div class="l">below 59.5%</div></div>
   </div>
-  <p><strong>There's no curve.</strong> To see how much each part of your grade is worth, go to <a href="bio004-required-optional.html">What counts toward my grade?</a></p>
+  <p><strong>There is no curve.</strong> To see how much each part of your grade is worth, go to <a href="bio004-required-optional.html">What counts toward my grade?</a></p>
   <p class="backq"><a href="#qi">&uarr; Back to the questions</a></p>
 </section>
-<section class="card dk" aria-labelledby="s13">
+<section class="card" aria-labelledby="s13">
   <h2 id="s13">How much should I study?</h2>
   <div class="stats">
     <div class="stat"><div class="n">15 to 17</div><div class="l">hours a week outside class to pass with a C</div></div>
     <div class="stat"><div class="n">25 to 26</div><div class="l">hours a week outside class for most students who earn an A or B</div></div>
   </div>
-  <p>These hours are <strong>on top of your time in class</strong>, which is about 8 hours a week.</p>
-  <p>Why so much? The usual guideline is about 2 hours of study for every hour of lecture. Lab usually doesn't add study time, because in most labs you do an experiment and you're done. Anatomy lab is different. You have to memorize what you see in lab for a timed practical, so <strong>both lecture and lab add study time</strong>.</p>
-  <p>You may need more if this is your first majors-level college science course or you haven't taken much science before. That's normal.</p>
-  <p><strong>Make good use of your class time, especially in lab.</strong> The more you learn while you're in the room, the less you'll have to do at home, and the more of your study time can go to the more fun tools, like Loops, Kahoot and the games. Study a little every day instead of cramming, because anatomy builds on itself.</p>
+  <ul>
+    <li>These hours are <strong>on top of your time in class</strong>, which is about 8 hours a week.</li>
+    <li>Why so much? The usual guideline is about 2 hours of study for every hour of lecture. In most labs you do an experiment and you are done. Anatomy lab is different: you have to memorize what you see in lab for a timed practical, so <strong>both lecture and lab add study time</strong>.</li>
+    <li>You may need more if this is your first majors-level college science course or you have not taken much science before. That is normal.</li>
+    <li><strong>Make good use of your class time, especially in lab.</strong> The more you learn while you are in the room, the less you have to do at home, and the more of your study time can go to the more fun tools, like Loops, Kahoot and the games.</li>
+    <li>Study a little every day instead of cramming. Anatomy builds on itself.</li>
+  </ul>
   <p class="backq"><a href="#qi">&uarr; Back to the questions</a></p>
 </section>
 <section class="card" aria-labelledby="s14">
   <h2 id="s14">How do I get accommodations?</h2>
-  <p>Start with the Accessibility Services Center (ASC) in Building 400, Room 407, on the Fairfield campus. You can call them at 707-864-7136 or email <a href="mailto:asc@solano.edu">asc@solano.edu</a>. They're open Monday to Thursday from 8:30 am to 4:30 pm and Friday from 8:30 am to 2:30 pm.</p>
-  <p>Once your accommodations are approved, <strong>send them to me through the Canvas Inbox</strong>. They start when I receive them, so an exam you've already taken can't be retaken with accommodations.</p>
+  <p class="answer">Start with the Accessibility Services Center (ASC).</p>
+  <ul>
+    <li>Building 400, Room 407, on the Fairfield campus. 707-864-7136 or <a href="mailto:asc@solano.edu">asc@solano.edu</a>.</li>
+    <li>Open Monday to Thursday, 8:30 am to 4:30 pm, and Friday, 8:30 am to 2:30 pm.</li>
+    <li>Once your accommodations are approved, <strong>send them to me through the Canvas Inbox</strong>. They start when I receive them, so an exam you have already taken cannot be retaken with accommodations.</li>
+  </ul>
   <p class="backq"><a href="#qi">&uarr; Back to the questions</a></p>
 </section>
+
+<p class="group">Dates and dropping</p>
 <section class="card" aria-labelledby="s15">
   <h2 id="s15">What dates do I need to know?</h2>
   <div class="tbl-wrap"><table id="dates">
@@ -320,15 +346,20 @@ ol.steps b{font-size:17px;margin:3px 0 2px}
     </tbody>
   </table></div>
   <p class="note-sm">Gray rows have already passed. Your exam and TBL dates are on your class schedule.</p>
-  <p>There's no separate final during finals week unless I post one in Canvas. <strong>Exam 5 is your last exam.</strong></p>
+  <p>There is no separate final during finals week unless I post one in Canvas. <strong>Exam 5 is your last exam.</strong></p>
   <p class="backq"><a href="#qi">&uarr; Back to the questions</a></p>
 </section>
-<section class="card tm" aria-labelledby="s16">
+<section class="card" aria-labelledby="s16">
   <h2 id="s16">How do I drop the course?</h2>
-  <p><strong>You have to drop the course yourself</strong>, through your student portal. I don't do it for you, and it doesn't happen on its own. If you stop coming to class but never drop, you can end up with an F.</p>
-  <p><strong>November 20</strong> is the last day to drop with a W. After that, you'll get a letter grade.</p>
+  <p class="answer">You drop the course yourself, through your student portal.</p>
+  <ul>
+    <li>I do not do it for you, and it does not happen on its own. If you stop coming to class but never drop, you can end up with an F.</li>
+    <li><strong>November 20</strong> is the last day to drop with a W. After that, you get a letter grade.</li>
+  </ul>
   <p class="backq"><a href="#qi">&uarr; Back to the questions</a></p>
 </section>
+
+<p class="group">Help</p>
 <section class="card" aria-labelledby="s17">
   <h2 id="s17">Where else can I get help?</h2>
   <ul>
@@ -344,7 +375,7 @@ ol.steps b{font-size:17px;margin:3px 0 2px}
   <h2 id="s18">What do I do in an emergency?</h2>
   <ul>
     <li>Call 911.</li>
-    <li>For anything that isn't an emergency, call Campus Public Safety at 707-580-6526.</li>
+    <li>For anything that is not an emergency, call Campus Public Safety at 707-580-6526.</li>
     <li>Sign up for RAVE Alert, the college's emergency text alerts, by texting SolanoCollegeRaveEnroll to 67283.</li>
   </ul>
   <p class="backq"><a href="#qi">&uarr; Back to the questions</a></p>
@@ -356,7 +387,6 @@ ol.steps b{font-size:17px;margin:3px 0 2px}
 </nav>
 <footer><p>BIO 004 Human Anatomy &middot; Solano Community College &middot; Dr. Sharilyn Rennie</p></footer>
 </main>
-
 <script>
 (function(){
 'use strict';
@@ -460,6 +490,7 @@ function sendHeightSetup(id){
 
 var t = today();
 document.querySelectorAll('#dates tr[data-d]').forEach(function(r){ if (r.getAttribute('data-d') < t) r.className = 'past'; });
+
 
 fixLinks();
 initBack('bio004-syllabus-update.html');
