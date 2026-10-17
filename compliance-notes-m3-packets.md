@@ -74,3 +74,15 @@ Files: module-3-structure-list.html; muscle-structure, head-neck-muscles, antebr
 - 1.3.1 and 2.4.6: the new chapter has one h2 and the same block structure as the other chapters. No duplicate ids on any changed page.
 - 1.4.10 Reflow: checked at 375px wide. Fixed a contents title on the structure list that pushed the page 48px wider than the screen (it now wraps).
 - No script errors on any changed page in Chromium.
+
+## Addendum, October 17, 2026: Module 3 lab packet trimmed to the tag check
+
+Files: BIO004-M3-Lab-Packet.html, BIO004-M3-Lab-Packet.pdf.
+
+- Part A (structure list) is now the same content as module-3-structure-list.html, so the packet and the list name the same 261 structures.
+- Part B (muscle charts): rows for muscles that are not tagged were removed (orbicularis oculi, the pterygoids, scalenes, supra and infrahyoids, innermost intercostals, transversus thoracis, serratus posterior, subclavius, extensor indicis, and every hand muscle except abductor pollicis brevis). The deep back chart was removed. Platysma moved to the neck chart to match the list. Chart notes were rewritten where they named removed muscles.
+- Part C (blood): hemocytoblast row, rouleaux term and the rouleaux mention removed.
+- Part D (questions): questions on untagged structures and nerve-to-muscle questions removed; "origin, insertion, action, or nerve" now reads "origin, insertion, or action". One location question added (axillary nerve at the surgical neck of the humerus, which is on the list).
+- PDF: 26 to 21 pages. Built with WeasyPrint as PDF/UA-1 (tagged, structure tree, language en-US, title shown). The page was rendered with scripts off so the dock does not add on-screen badges to the printed headings; the QR codes keep their alt text and print at 1.3 inches.
+- Print CSS: a lab question now stays on the same page as the block above it.
+- No duplicate ids, no broken in-page links, no script errors, no horizontal scroll at 375px.
