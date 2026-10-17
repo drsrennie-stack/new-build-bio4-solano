@@ -274,21 +274,21 @@ window.BIO004_ALT = (function () {
     },
     antThigh: {
       name: 'Anterior Thigh Muscles and NAV',
-      list:    [['BIO004-Structure-List.html#h-unit-4','Lab structure list: Limb Muscles, Respiratory and Digestive']],
+      list:    [['module-4-structure-list.html#h-lower-limb-lab','Module 4 list: Muscles, Nerves and Vessels of the Lower Limb']],
       sprints: [['thigh-muscles-lab-sprint.html','Thigh Muscles']],
       notes:   [],
       muscle:  true
     },
     postThigh: {
       name: 'Posterior Thigh Muscles and NAV',
-      list:    [['BIO004-Structure-List.html#h-unit-4','Lab structure list: Limb Muscles, Respiratory and Digestive']],
+      list:    [['module-4-structure-list.html#h-lower-limb-lab','Module 4 list: Muscles, Nerves and Vessels of the Lower Limb']],
       sprints: [['thigh-muscles-lab-sprint.html','Thigh Muscles']],
       notes:   [],
       muscle:  true
     },
     leg: {
       name: 'Anterior and Posterior Lower Leg Muscles',
-      list:    [['BIO004-Structure-List.html#h-unit-4','Lab structure list: Limb Muscles, Respiratory and Digestive']],
+      list:    [['module-4-structure-list.html#h-lower-limb-lab','Module 4 list: Muscles, Nerves and Vessels of the Lower Limb']],
       sprints: [['leg-muscles-lab-sprint.html','Leg Muscles']],
       notes:   [],
       muscle:  true
@@ -313,13 +313,13 @@ window.BIO004_ALT = (function () {
     },
     renal: {
       name: 'Renal Anatomy',
-      list:    [['module-4-structure-list.html#h-urinary-lab','Module 4 list: The Urinary System']],
+      list:    [['module-5-structure-list.html#h-urinary-lab','Module 5 list: The Urinary System']],
       sprints: [['urinary-system-lab-sprint.html','Urinary System']],
       notes:   [['m4-urinary-notes.html','The Urinary System']]
     },
     repro: {
       name: 'Male and Female Reproductive Anatomy',
-      list:    [['module-4-structure-list.html#h-male-repro-lab','Module 4 list: The Male Reproductive System'],['module-4-structure-list.html#h-female-repro-lab','Module 4 list: The Female Reproductive System']],
+      list:    [['module-5-structure-list.html#h-male-repro-lab','Module 5 list: The Male Reproductive System'],['module-5-structure-list.html#h-female-repro-lab','Module 5 list: The Female Reproductive System']],
       sprints: [['reproductive-male-lab-sprint.html','Male Reproductive System'],['reproductive-female-lab-sprint.html','Female Reproductive System']],
       notes:   [['m4-male-repro-notes.html','Male Reproductive System'],['m4-female-repro-notes.html','Female Reproductive System']]
     },
@@ -384,7 +384,7 @@ window.BIO004_ALT = (function () {
   LAB.ulTrunkHeartAnt = merge('Trunk, Upper Limb, Heart and Anterior Forearm', ['faceChestBack','upperArm','heartLab','antForearm']);
   LAB.review3   = merge('Module 3 lab review (everything)', ['muscleMicro','faceChestBack','upperArm','heartLab','antForearm','postForearm'], { list:[['module-3-structure-list.html','Module 3 lab structure list (all of it)']],
                     sprints:[['muscle-structure-lab-sprint.html','Muscle Microanatomy'],['heart-lab-sprint.html','The Heart'],['blood-vessels-lab-sprint.html','Blood Vessels'],['cardiac-conduction-lab-sprint.html','Cardiac Conduction']].concat(LAB.upperBody.sprints), review:true });
-  LAB.review5   = merge('Module 5 lab review', ['uroRepro','cns'], { list:[['module-4-structure-list.html#h-urinary-lab','Module 4 list: urinary and reproductive sections'],['module-5-structure-list.html','Module 5 lab structure list (all of it)']], review:true });
+  LAB.review5   = merge('Module 5 lab review', ['uroRepro','cns'], { list:[['module-5-structure-list.html#h-urinary-lab','Module 5 list: urinary and reproductive sections'],['module-5-structure-list.html','Module 5 lab structure list (all of it)']], review:true });
 
   /* short names for the chart */
   var SHORT = {
