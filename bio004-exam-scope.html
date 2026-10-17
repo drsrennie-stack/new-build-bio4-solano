@@ -55,6 +55,8 @@ table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:ta
 th{text-align:left;font-family:var(--fe);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);padding:8px 10px;border-bottom:1px solid var(--line)}
 td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
 tr.past td{color:var(--soft)}
+.card.tn{background:rgba(30,64,140,.09)}
+.card.tm{background:rgba(122,42,34,.08)}
 .qlist{columns:2;column-gap:28px;padding-left:1.1em}
 .qlist li{break-inside:avoid;margin:0 0 6px}
 @media (max-width:560px){.qlist{columns:1}}
@@ -95,7 +97,7 @@ footer{margin:32px 0 0;font-size:13.5px;color:var(--soft)}
   <p class="lede">Each exam covers one module. Everything you can be asked is in your Competency Packet and your lab structure list. Nothing else is on the exam.</p>
 </header>
 <div id="exams"></div>
-<section class="card" aria-labelledby="x2">
+<section class="card tm" aria-labelledby="x2">
   <h2 id="x2">What happens on exam day?</h2>
   <ul>
     <li><strong>Same day:</strong> lecture exam and lab practical.</li>
@@ -216,7 +218,7 @@ document.getElementById('exams').innerHTML = MODS.map(function(m, i){
   var past = mine < t, isNext = !past && !nextSet; if (isNext) nextSet = true;
   var when = SEC ? fmt(EXAMS[SECS[SEC].pat][i]) : fmt(EXAMS.mw[i]) + ' (Mon/Wed) · ' + fmt(EXAMS.tr[i]) + ' (Tue/Thu)';
   var tag = past ? '<span class="tag done">Done</span>' : (isNext ? '<span class="tag next">Next exam</span>' : '');
-  return '<section class="card exam" aria-labelledby="e' + m.n + '">' + tag +
+  return '<section class="card exam' + (isNext ? ' tn' : '') + '" aria-labelledby="e' + m.n + '">' + tag +
     '<h2 id="e' + m.n + '">Exam ' + m.n + ' · Module ' + m.n + '</h2><p class="when">' + esc(m.t) + ' · ' + when + '</p>' +
     '<div class="facts"><div class="fact"><div class="k">Competencies</div><div class="v">' + m.a + ' to ' + m.b + '</div><p>' + m.lec + ' on the lecture exam, ' + m.lab + ' on the lab practical</p></div>' +
     '<div class="fact"><div class="k">Lab practical</div><div class="v">Structure list</div><p>Every structure you can be asked to find</p></div></div>' +
