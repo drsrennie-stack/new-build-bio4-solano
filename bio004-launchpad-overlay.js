@@ -325,8 +325,6 @@
   try { if (sec && (FIXED || /[?&]sec=/.test(window.location.search))) localStorage.setItem('bio004-section', sec); } catch (e) {}
   function u(page) {
     var bits = page.split('#'), base = bits[0];
-    /* the class schedule is a separate page per class */
-    if (base === 'bio004-course-calendar-alt.html' && sec) return 'bio004-schedule-' + sec + '.html' + (bits[1] ? '#' + bits[1] : '');
     if (sec) base += (base.indexOf('?') > -1 ? '&' : '?') + 'sec=' + sec;
     return base + (bits[1] ? '#' + bits[1] : '');
   }
@@ -518,7 +516,7 @@
     var mine = function (one) { return sec ? one : ''; };
     var main = '<div class="v3-main">'
       + V('1', 't1', 'Want to', 'Prepare', ' for class?', 'Learn the material before lecture or lab so you are ready to take part.',
-          P(go('bio004-quick-access.html?cat=videos'), 'Lecture videos', 'video') + P(go('bio004-quick-access.html?cat=notes'), 'Course notes', 'note')
+          P(go('bio004-videos.html'), 'Lecture videos', 'video') + P(go('bio004-notes.html'), 'Course notes', 'note')
           + P(go('bio004-quick-access.html?cat=prework'), 'Pre-work', 'pen') + P(go('bio004-bluelink-videos.html'), 'Cadaver videos', 'video'))
       + V('2', 't2', 'Want to', 'Practice', ' recall?', 'See what you can remember without looking. Pulling it from memory is what makes it stick.',
           P(go('mastery-os-fall-2026.html#s-recall'), 'Recall cards', 'cards', 't') + P(go('mastery-os-fall-2026.html#s-dumps'), 'Brain dumps', 'brain', 't')
@@ -542,7 +540,7 @@
       + (n === MOD ? '<span class="v3-tag">Now</span>' : '') + '<span class="ch" aria-hidden="true">&#8250;</span></a></li>';
     var side = '<aside class="v3-side" aria-label="More options">'
       + '<div class="v3-box"><h3>Quick links</h3><ul>'
-      + S(weekHref, IN_TERM ? 'Week ' + WEEK + ' page' : 'Class schedule', 'flag', 'g') + S(calHref, 'Course calendar', 'cal') + S(go('bio004-master-schedule-fall2026.html'), 'Semester schedule', 'cal', 't')
+      + S(weekHref, IN_TERM ? 'Week ' + WEEK + ' page' : 'Class schedule', 'flag', 'g') + S(go('bio004-course-calendar-alt.html?view=week'), 'Calendar, week by week', 'cal')
       + mine(S(go(SYLLABUS[sec] ? SYLLABUS[sec][0] : ''), 'My syllabus', 'doc'))
       + (latest ? '<li><button type="button" data-lpopen="news"><span class="lp-li t">' + svg('chat') + '</span><span>Announcements</span>' + (unread ? '<span class="lp-new" aria-label="' + unread + ' new">' + (unread > 9 ? '9+' : unread) + '</span>' : '<span class="ch" aria-hidden="true">&#8250;</span>') + '</button></li>' : '')
       + S('href="mailto:srennie@solano.edu"', 'Contact Dr. Rennie', 'mail', 'b')
