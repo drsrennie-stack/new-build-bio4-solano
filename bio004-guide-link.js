@@ -12,7 +12,7 @@
       try {
         if (window.parent && window.parent !== window) return;
         if (document.body.hasAttribute('data-no-back')) return;
-        if (/(^|\/)(bio004-launchpad|learning-guide)\.html$/.test(window.location.pathname)) return;
+        if (/(^|\/)(bio004-launchpad|learning-guide(-mw|-tr-am|-tr-eve)?)\.html$/.test(window.location.pathname)) return;
         if (document.querySelector('.bd-back')) return;
         var sc = null;
         try { var m = window.location.search.match(/[?&]sec=(mw|tr-am|tr-eve)/); sc = m ? m[1] : localStorage.getItem('bio004-section'); } catch (e) {}
@@ -34,7 +34,7 @@
         document.head.appendChild(st);
         var el = document.createElement('a');
         el.className = 'bd-back';
-        el.href = 'learning-guide.html' + (sc ? '?sec=' + sc : '');
+        el.href = sc ? 'learning-guide-' + sc + '.html' : 'learning-guide.html';
         el.target = '_top';
         el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span class="bb-t">Learning Guide</span>';
         el.setAttribute('aria-label', 'Back to the Learning Guide, every course resource on one page');

@@ -244,11 +244,13 @@
   /* layout */
   + '.lpov.lp-guide .lp-wrap.v3-wrap{max-width:1180px;padding:22px 22px 40px}'
   + '.lpov .v3{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:18px;align-items:start}'
-  + '@media (max-width:900px){.lpov .v3{grid-template-columns:minmax(0,1fr)}}'
+  + '@media (max-width:1060px){.lpov .v3{grid-template-columns:minmax(0,1fr) 230px}}'
+  + '@media (max-width:760px){.lpov .v3{grid-template-columns:minmax(0,1fr)}}'
   + '.lpov .v3-main{display:grid;gap:12px;min-width:0}'
   /* one row */
   + '.lpov .v3-row{display:grid;grid-template-columns:minmax(0,11fr) minmax(0,9fr);border-radius:16px;overflow:hidden;border:1px solid #E3E4E8;box-shadow:0 1px 3px rgba(0,0,0,.06);background:#F7F6F3}'
-  + '@media (max-width:680px){.lpov .v3-row{grid-template-columns:minmax(0,1fr)}}'
+  + '@media (max-width:980px){.lpov .v3-row{grid-template-columns:minmax(0,1fr)}.lpov .v3-ls{grid-template-columns:repeat(2,minmax(0,1fr))}}'
+  + '@media (max-width:480px){.lpov .v3-ls{grid-template-columns:minmax(0,1fr)}}'
   + '.lpov .v3-q{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 16px;align-items:center;padding:20px 22px}'
   + '.lpov .v3-n{font-size:clamp(64px,8vw,88px);font-weight:800;line-height:.85;letter-spacing:-.05em;color:#7A2E24}'
   + '.lpov .v3-want{margin:0;font-size:17px;font-weight:600;color:#2A3949}'
@@ -281,7 +283,7 @@
   + '.lpov .v3-box .ch{margin-left:auto;color:#7A2E24;font-weight:800}'
   + '.lpov .v3-box li a.now{background:#060B1A;color:#fff}.lpov .v3-box li a.now .ch{color:#E3C27D}'
   + '.lpov .v3-box .v3-tag{margin-left:auto;font-family:"DM Sans",system-ui,sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#E3C27D}'
-  + '.lpov .v3-box .lp-new{margin-left:auto}'
+  + '.lpov .v3-box .lp-new{margin-left:auto;flex:none;white-space:nowrap;font-size:10.5px;padding:3px 8px}'
   + '.lpov .v3-sig{text-align:center;font-family:"DM Sans",system-ui,sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#454B5C;padding:6px 0}'
   + '.lpov .v3-wrap .lp-foot{margin-top:18px}'
   /* while this page is up, the course tools dock and Hootie stay out of the way */
@@ -314,8 +316,13 @@
     sec = m ? m[1] : (localStorage.getItem('bio004-section') || null);
   } catch (e) {}
   if (sec !== 'mw' && sec !== 'tr-am' && sec !== 'tr-eve') sec = null;
+  /* A class's own page (learning-guide-mw.html and the other two) sets
+     BIO004_CLASS before this file loads. That class is fixed: no picker,
+     no switching, only that class's links. */
+  var FIXED = window.BIO004_CLASS;
+  if (FIXED === 'mw' || FIXED === 'tr-am' || FIXED === 'tr-eve') sec = FIXED; else FIXED = null;
   /* a link from a class's Canvas page carries ?sec=, so remember it */
-  try { if (sec && /[?&]sec=/.test(window.location.search)) localStorage.setItem('bio004-section', sec); } catch (e) {}
+  try { if (sec && (FIXED || /[?&]sec=/.test(window.location.search))) localStorage.setItem('bio004-section', sec); } catch (e) {}
   function u(page) {
     var bits = page.split('#'), base = bits[0];
     if (sec) base += (base.indexOf('?') > -1 ? '&' : '?') + 'sec=' + sec;
@@ -376,7 +383,7 @@
           { name: 'Study With Me', href: go('study-session-signup.html'), what: 'Join or host a study session' }
         ]))
         + '<p class="lp-grp">Tutoring</p>' + list([
-          { name: 'ASTC tutoring', href: ext('https://welcome.solano.edu/astc-homepage'), what: 'Free, in person or on Zoom' },
+          { name: 'ASTC tutoring', href: ext('https://solano.edu/centers/astc/index.php'), what: 'Free, in person or on Zoom' },
           { name: 'Tutor Josh Roy', what: '' }
         ]);
     } },
@@ -488,7 +495,8 @@
           + (dte != null ? '<li class="lp-stat"><b>' + esc(examDate(true)) + '</b><span>Exam ' + MOD + '</span></li>'
             + '<li class="lp-stat"><b>' + (dte <= 0 ? 'Today' : dte + ' day' + (dte === 1 ? '' : 's')) + '</b><span>' + (dte <= 0 ? 'Exam day' : 'Until Exam ' + MOD) + '</span></li>' : '')
           + '</ul>' : '')
-      + (sec ? '<p class="lp-mine">Your class: <b>' + SECNAME[sec] + '</b> <button type="button" data-lpsec="">Not your class?</button></p>'
+      + (FIXED ? '<p class="lp-mine">Your class: <b>' + SECNAME[sec] + '</b></p>'
+        : sec ? '<p class="lp-mine">Your class: <b>' + SECNAME[sec] + '</b> <button type="button" data-lpsec="">Not your class?</button></p>'
           : '<div class="lp-pick" role="group" aria-label="Which class are you in?"><p>Which class are you in?</p>'
             + ['mw', 'tr-am', 'tr-eve'].map(function (k) { return '<button type="button" data-lpsec="' + k + '">' + SECNAME[k] + '</button>'; }).join('') + '</div>')
       + '</div></div>';
@@ -522,13 +530,13 @@
       + V('4', 't4', 'Want to prepare for', 'The exam?', '', 'Find your gaps and spend your study time where you need it most.',
           P(go('bio004-competency-packet.html'), 'Competency list', 'target', 't') + P(go('practice-lecture-exam.html'), 'Practice exam', 'exam', 't')
           + P(go('mastery-os-fall-2026.html#s-weak'), 'My weak areas', 'steps', 't') + P(go('bio004-study-process.html'), 'How to study', 'doc', 't'))
-      + V('5', 't5', 'Want to study', 'On paper?', '', 'Everything Dr. Rennie printed for you, ready to print again.',
+      + V('5', 't5', 'Want to study', 'On paper?', '', 'You get a paper copy of each of these in class. If you need another, print it again here.',
           P(go('BIO004-Fall2026-Competency-Packet.pdf'), 'Competency packet', 'print', 'g') + P(go('BIO004-M' + MOD + '-Note-Sheet-Packet.pdf'), 'Note sheets, M' + MOD, 'print', 'g')
           + (MOD >= 3 ? P(go('BIO004-M' + MOD + '-Lab-Packet.pdf'), 'Lab packet, M' + MOD, 'print', 'g') : P(go('BIO004-Anatomy-Structure-List.pdf'), 'Lab structure list', 'print', 'g'))
           + (sec ? P(go(WB[sec]), 'My workbook', 'print', 'g') : P(go('BIO004-Anatomy-Structure-List.pdf'), 'Lab structure list', 'print', 'g')))
       + V('6', 't6', 'Need', 'Help', ' with something?', 'Office hours: Mon and Wed 10:30 am to 12:30 pm across from Biotech Lab 1127, and 30 minutes before class. Open lab: Fri 2 to 3 pm.',
           P('href="mailto:srennie@solano.edu"', 'Email Dr. Rennie', 'mail', 't') + mine(P(ext(DISCORD[sec] ? DISCORD[sec].url : ''), 'Class Discord', 'chat', 'b'))
-          + P(go('study-session-signup.html'), 'Study With Me', 'people', 'g') + P(ext('https://welcome.solano.edu/astc-homepage'), 'Free tutoring', 'people'))
+          + P(go('study-session-signup.html'), 'Study With Me', 'people', 'g') + P(ext('https://solano.edu/centers/astc/index.php'), 'Free tutoring', 'people'))
       + '</div>';
     var mods = '';
     for (var n = 1; n <= 5; n++) mods += '<li><a ' + go('course-materials.html#mod-' + n) + (n === MOD ? ' class="now" aria-current="true"' : '') + '><span>Module ' + n + '</span>'
@@ -537,7 +545,7 @@
       + '<div class="v3-box"><h3>Quick links</h3><ul>'
       + S(weekHref, IN_TERM ? 'Week ' + WEEK + ' page' : 'Class schedule', 'flag', 'g') + S(calHref, 'Course calendar', 'cal') + S(go('bio004-master-schedule-fall2026.html'), 'Semester schedule', 'cal', 't')
       + mine(S(go(SYLLABUS[sec] ? SYLLABUS[sec][0] : ''), 'My syllabus', 'doc'))
-      + (latest ? '<li><button type="button" data-lpopen="news"><span class="lp-li t">' + svg('chat') + '</span><span>Announcements</span>' + (unread ? '<span class="lp-new">' + (unread > 9 ? '9+' : unread) + ' new</span>' : '<span class="ch" aria-hidden="true">&#8250;</span>') + '</button></li>' : '')
+      + (latest ? '<li><button type="button" data-lpopen="news"><span class="lp-li t">' + svg('chat') + '</span><span>Announcements</span>' + (unread ? '<span class="lp-new" aria-label="' + unread + ' new">' + (unread > 9 ? '9+' : unread) + '</span>' : '<span class="ch" aria-hidden="true">&#8250;</span>') + '</button></li>' : '')
       + S('href="mailto:srennie@solano.edu"', 'Contact Dr. Rennie', 'mail', 'b')
       + '</ul></div>'
       + '<div class="v3-box"><h3>Modules</h3><ul>' + mods + '</ul></div>'
