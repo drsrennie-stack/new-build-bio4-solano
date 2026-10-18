@@ -2,6 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>
+/* THIS PAGE NOW SENDS STUDENTS TO THEIR OWN CLASS SCHEDULE.
+   About 95 pages link here as "course calendar". Rather than edit each
+   one, this page forwards to the student's class schedule
+   (bio004-schedule-mw / -tr-am / -tr-eve), opened on this week. A student
+   whose class is not known yet goes to the week-by-week schedule, which
+   shows their class once they have one.
+   The old month calendar is still here for past weeks: add ?all=1 to the
+   address (the schedule's "past weeks" link does). */
+(function () {
+  try {
+    if (/[?&]all=1/.test(location.search)) return;
+    var m = location.search.match(/[?&]sec=(mw|tr-am|tr-eve)/), s = m ? m[1] : null;
+    if (!s) { try { s = localStorage.getItem('bio004-section'); } catch (e) {} }
+    if (s !== 'mw' && s !== 'tr-am' && s !== 'tr-eve') s = null;
+    location.replace(s ? 'bio004-schedule-' + s + '.html?view=week' : 'bio004-course-calendar-alt.html?view=week');
+  } catch (e) {}
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Course Calendar · BIO 004 Human Anatomy · Fall 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
