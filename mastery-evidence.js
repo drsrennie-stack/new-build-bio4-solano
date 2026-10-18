@@ -56,7 +56,7 @@
 
   var KEY = 'bio004-evidence-v1';
   var RECALL_KEY = 'bio004-recall-v2';
-  var LOOPS_KEY = 'loopScores_v1';
+  var LOOPS_KEY = 'loopScores_v1'; /* older key, kept in case anything writes it; the Loops app writes loopsEngine_v1, read in fromLoops() */
 
   function read() {
     try {
@@ -184,10 +184,23 @@
 
     var st;
     try { st = JSON.parse(localStorage.getItem(LOOPS_KEY) || 'null'); }
-    catch (e) { return []; }
-    if (!st) return [];
-
+    catch (e) { st = null; }
     var out = [];
+
+    /* The Loops app writes loopsEngine_v1, one running record per station,
+       keyed "<loopId>#<index>". With loops-station-competency.js on the page,
+       each station counts only toward the competency its structure belongs
+       to. The store keeps no dates, so these entries carry none. */
+    var SC = window.BIO004_LOOP_STATION_COMPS, eng = null;
+    try { eng = JSON.parse(localStorage.getItem('loopsEngine_v1') || 'null'); } catch (e) { eng = null; }
+    if (SC && eng) Object.keys(eng).forEach(function (k) {
+      var r = eng[k]; if (!r || !r.seen) return;
+      (SC[k] || []).forEach(function (c) {
+        out.push({ comp: c, source: 'loop', got: (r.easy || 0) + (r.good || 0) + 0.5 * (r.hard || 0), of: r.seen, conf: r.lastConf >= 3 ? 'high' : r.lastConf === 2 ? 'med' : r.lastConf === 1 ? 'low' : null, at: '' });
+      });
+    });
+    if (!st) return out;
+
     Object.keys(st).forEach(function (loopId) {
       var comps = byId[loopId];
       if (!comps || !comps.length) return;

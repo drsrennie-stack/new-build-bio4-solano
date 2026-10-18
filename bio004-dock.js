@@ -237,6 +237,53 @@
   window.__BIO004_DOCK__ = true;
 
   /* ============================================================
+     BACK TO THE LEARNING GUIDE
+     One floating pill, bottom left, on every course page: it opens
+     the Learning Guide (learning-guide.html), the one page that
+     lists every resource, so a student looking for something else
+     always has one place to go back to. It keeps the student's class.
+     Not on the guide itself, not inside a frame (Canvas), and a page
+     can opt out with data-no-back on <body>.
+     ============================================================ */
+  function guidePill(raised) {
+    function inject() {
+      try {
+        if (window.parent && window.parent !== window) return;
+        if (document.body.hasAttribute('data-no-back')) return;
+        if (/(^|\/)(bio004-launchpad|learning-guide)\.html$/.test(window.location.pathname)) return;
+        if (document.querySelector('.bd-back')) return;
+        var sc = null;
+        try { var m = window.location.search.match(/[?&]sec=(mw|tr-am|tr-eve)/); sc = m ? m[1] : localStorage.getItem('bio004-section'); } catch (e) {}
+        if (sc !== 'mw' && sc !== 'tr-am' && sc !== 'tr-eve') sc = null;
+        var st = document.createElement('style');
+        st.textContent =
+          '.bd-back{position:fixed;left:18px;bottom:' + (raised ? '76px' : '18px') + ';z-index:2147482999;' +
+          'display:inline-flex;align-items:center;gap:8px;background:#7A2E24;color:#FAFAF9;' +
+          'border:0;border-radius:999px;padding:9px 16px 9px 12px;text-decoration:none;' +
+          'font:800 13.5px/1 "Plus Jakarta Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;' +
+          'box-shadow:0 2px 4px rgba(6,11,26,.14),0 8px 18px -8px rgba(6,11,26,.45);transform:translateY(-1px);transition:transform .18s ease,box-shadow .18s ease,background .18s ease}' +
+          '.bd-back:hover{background:#5E2219;color:#FAFAF9;transform:translateY(-3px);box-shadow:0 4px 8px rgba(6,11,26,.16),0 14px 26px -10px rgba(6,11,26,.55)}' +
+          '.bd-back:focus-visible{outline:3px solid #B8924A;outline-offset:3px}' +
+          '.bd-back svg{width:15px;height:15px}' +
+          '@media(max-width:520px){.bd-back{padding:10px 13px 10px 10px;font-size:12.5px}}' +
+          '.bd-back,.bd-back:visited{color:#FAFAF9}' +
+          '@media(prefers-reduced-motion:reduce){.bd-back{transition:none}.bd-back:hover{transform:none}}' +
+          '@media print{.bd-back{display:none !important}}';
+        document.head.appendChild(st);
+        var el = document.createElement('a');
+        el.className = 'bd-back';
+        el.href = 'learning-guide.html' + (sc ? '?sec=' + sc : '');
+        el.target = '_top';
+        el.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg><span class="bb-t">Learning Guide</span>';
+        el.setAttribute('aria-label', 'Back to the Learning Guide, every course resource on one page');
+        document.body.appendChild(el);
+      } catch (e) {}
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', inject);
+    else inject();
+  }
+
+  /* ============================================================
      STUDY TOOLS: NO DOCK, NO HOOTIE, ONE WAY BACK
 
      On the practice tools (Mastery OS and the tools it opens) the
@@ -277,6 +324,7 @@
       if (document.body) addHome();
       else document.addEventListener('DOMContentLoaded', addHome);
     }
+    guidePill(false);
     return;
   }
 
@@ -1055,79 +1103,8 @@
      Sits above the Course tools launcher; without the dock (the
      ?open=1 public view) it drops to the corner.
      ============================================================ */
-  (function backButton() {
-    function inject() {
-      try {
-        if (window.parent && window.parent !== window) return;
-        if (document.body.hasAttribute('data-no-back')) return;
-        if (/(^|\/)(welcome\.html|index\.html)?$/.test(window.location.pathname)) return;
-        if (document.querySelector('.bd-back')) return;
-
-        var fresh = false;
-        try { fresh = window.history.length <= 1; } catch (e) {}
-        /* The tab may have no history of its own (opened fresh from
-           Canvas, a QR, an emailed link) and still have arrived FROM
-           somewhere. The referrer is that somewhere, so "back" can mean
-           the page the student actually came from instead of the
-           course home. */
-        var ref = '';
-        try {
-          if (document.referrer && document.referrer !== window.location.href) ref = document.referrer;
-        } catch (e) {}
-
-        var st = document.createElement('style');
-        st.textContent =
-          '.bd-back{position:fixed;left:18px;bottom:' + (window.BIO004_OPEN_VIEW ? '18px' : '76px') + ';z-index:2147482999;' +
-          'display:inline-flex;align-items:center;gap:8px;background:#fff;color:#0B1530;' +
-          'border:2px solid #0B1530;border-radius:999px;padding:9px 16px 9px 12px;cursor:pointer;text-decoration:none;' +
-          'font:800 13.5px/1 "Plus Jakarta Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;' +
-          'box-shadow:0 3px 10px -4px rgba(11,21,48,.4);transition:transform .18s ease,box-shadow .18s ease}' +
-          '.bd-back:hover{transform:translateY(-2px);box-shadow:0 10px 24px -10px rgba(11,21,48,.6);border-color:#C9A14A}' +
-          '.bd-back:focus-visible{outline:3px solid #C9A14A;outline-offset:3px}' +
-          '.bd-back svg{width:15px;height:15px}' +
-          '@media(max-width:520px){.bd-back .bb-t{display:none}.bd-back{padding:11px}}' +
-          '@media(prefers-reduced-motion:reduce){.bd-back{transition:none}.bd-back:hover{transform:none}}' +
-          '@media print{.bd-back{display:none !important}}';
-        document.head.appendChild(st);
-
-        var arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>';
-        var el;
-        if (fresh && ref) {
-          el = document.createElement('a');
-          el.href = ref;
-          el.target = '_top';
-          el.innerHTML = arrow + '<span class="bb-t">Back</span>';
-          el.setAttribute('aria-label', 'Go back to the previous page');
-        } else if (fresh) {
-          el = document.createElement('a');
-          el.href = 'welcome.html';
-          el.target = '_top';
-          el.innerHTML = arrow + '<span class="bb-t">Course home</span>';
-          el.setAttribute('aria-label', 'Go to the course home page');
-        } else {
-          el = document.createElement('button');
-          el.type = 'button';
-          el.innerHTML = arrow + '<span class="bb-t">Back</span>';
-          el.setAttribute('aria-label', 'Go back to the previous page');
-          /* history.length lies in some browsers. If back() moved
-             nothing after half a second, go to the page that linked
-             here, and failing that the course home, so the button is
-             never dead. */
-          el.addEventListener('click', function () {
-            var before = window.location.href;
-            window.history.back();
-            setTimeout(function () {
-              if (window.location.href === before) window.location.href = ref || 'welcome.html';
-            }, 500);
-          });
-        }
-        el.className = 'bd-back';
-        document.body.appendChild(el);
-      } catch (e) {}
-    }
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', inject);
-    else inject();
-  })();
+  /* The old Back button now takes students to the Learning Guide (see guidePill at the top). */
+  if (!window.BIO004_OPEN_VIEW) guidePill(true);
 
   /* ============================================================
      THE READING FORMAT

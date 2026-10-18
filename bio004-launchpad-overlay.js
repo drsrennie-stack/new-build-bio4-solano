@@ -122,6 +122,170 @@
   + '.lpov .lp-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}'
   + '.lpov a:focus-visible,.lpov button:focus-visible,.lpov h3:focus-visible{outline:3px solid #E3C27D;outline-offset:3px;border-radius:8px}'
   + '.lpov .lp-panel a:focus-visible,.lpov .lp-panel button:focus-visible{outline-color:#0B1530}'
+  /* THE LEARNING GUIDE, infographic style: a dark navy band with the
+     week at a glance, then numbered cards, a study cycle drawn as three
+     linked circles, and a paper-or-screen split. White cards with a
+     hairline border on off-white. No accent bars. */
+  + '.lpov.lp-guide{background:#FAFAF9;color:#060B1A}'
+  + '.lpov .lp-band{background:#060B1A;color:#fff;padding:34px 22px 30px}'
+  + '.lpov .lp-bin{max-width:1060px;margin:0 auto}'
+  + '.lpov.lp-guide .lp-eyebrow{font-size:12.5px;letter-spacing:.16em;color:#E3C27D}'
+  + '.lpov.lp-guide h2.lp-h{color:#fff;font-size:clamp(30px,5vw,46px);margin:8px 0 4px}'
+  + '.lpov .lp-h .hl{color:#E3C27D}'
+  + '.lpov.lp-guide .lp-sub{color:#C8D2DA;font-size:17px;margin:0}'
+  + '.lpov .lp-stats{list-style:none;margin:22px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}'
+  + '@media (max-width:760px){.lpov .lp-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}'
+  + '.lpov .lp-stat{border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:12px 14px;background:rgba(255,255,255,.04)}'
+  + '.lpov .lp-stat b{display:block;font-size:clamp(26px,4vw,36px);font-weight:800;line-height:1.05;color:#fff;letter-spacing:-.02em}'
+  + '.lpov .lp-stat span{display:block;margin-top:4px;font-family:"DM Sans",system-ui,sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#E3C27D}'
+  + '.lpov .lp-stat a{display:block;height:100%;color:inherit;text-decoration:none}'
+  + '.lpov .lp-stat:hover{border-color:#E3C27D}'
+  + '.lpov.lp-guide .lp-wrap{max-width:1060px;padding:26px 22px 46px}'
+  + '.lpov .lp-grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}'
+  + '@media (max-width:760px){.lpov .lp-grid2{grid-template-columns:minmax(0,1fr)}}'
+  + '.lpov .lp-c{background:#fff;border:1px solid #E3E4E8;border-radius:16px;padding:20px 22px;box-shadow:0 1px 3px rgba(0,0,0,.06);min-width:0}'
+  + '.lpov .lp-c.full{grid-column:1/-1}'
+  + '.lpov .lp-ch{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;align-items:center;margin-bottom:12px}'
+  + '.lpov .lp-num{grid-row:span 2;font-size:44px;font-weight:800;line-height:.9;color:#7A2E24;letter-spacing:-.03em}'
+  + '.lpov .lp-c h3{margin:0;font-size:20px;font-weight:800;line-height:1.2;color:#060B1A}'
+  + '.lpov .lp-c h3 .hl{color:#7A2E24}'
+  + '.lpov .lp-why{margin:0;font-size:14px;color:#454B5C}'
+  + '.lpov .lp-tags{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}'
+  + '.lpov .lp-tag{font-family:"DM Sans",system-ui,sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border:1px solid #C9CDD5;border-radius:999px;padding:3px 9px;color:#2A3949}'
+  /* link rows with a colored icon */
+  + '.lpov .lp-ls{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 14px}'
+  + '.lpov .lp-ls.one{grid-template-columns:minmax(0,1fr)}'
+  + '@media (max-width:480px){.lpov .lp-ls{grid-template-columns:minmax(0,1fr)}}'
+  + '.lpov .lp-ls>li>a{display:flex;align-items:center;gap:10px;padding:6px 8px;margin:0 -8px;border-radius:10px;font-size:15px;font-weight:700;line-height:1.3;color:#060B1A;text-decoration:none;min-height:44px}'
+  + '.lpov .lp-ls>li>a:hover{background:#F2F3F6}'
+  + '.lpov .lp-ls>li>a:hover .tx{text-decoration:underline;text-decoration-color:#B8924A;text-decoration-thickness:2px;text-underline-offset:3px}'
+  + '.lpov .lp-li{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none;color:#fff;background:#060B1A}'
+  + '.lpov .lp-li svg{width:16px;height:16px}'
+  + '.lpov .lp-li.g{background:#B8924A;color:#060B1A}.lpov .lp-li.t{background:#7A2E24}.lpov .lp-li.b{background:#3D5A80}'
+  + '.lpov .lp-ls .ar{margin-left:auto;color:#B8924A;font-weight:800}'
+  + '.lpov .lp-txt{font-size:14px;color:#454B5C;margin:0 0 8px}'
+  + '.lpov .lp-txt b{color:#060B1A}'
+  + '.lpov.lp-guide .lp-mods{margin:6px 0 0}'
+  + '.lpov.lp-guide .lp-mods a{background:#fff;border:1px solid #C9CDD5;padding:0 12px;font-size:13px}'
+  + '.lpov.lp-guide .lp-mods a.now{background:#060B1A;color:#fff;border-color:#060B1A}'
+  + '.lpov .lp-sub2{font-family:"DM Sans",system-ui,sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7A2E24;margin:12px 0 4px}'
+  /* the study cycle */
+  + '.lpov .lp-cycle{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;position:relative}'
+  + '@media (max-width:760px){.lpov .lp-cycle{grid-template-columns:minmax(0,1fr)}}'
+  + '.lpov .lp-step{position:relative;min-width:0}'
+  + '.lpov .lp-step .dot{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:24px;font-weight:800;margin-bottom:10px;position:relative;z-index:1}'
+  + '.lpov .lp-step:nth-child(1) .dot{background:#060B1A}.lpov .lp-step:nth-child(2) .dot{background:#7A2E24}.lpov .lp-step:nth-child(3) .dot{background:#B8924A;color:#060B1A}'
+  + '.lpov .lp-step:not(:last-child):after{content:"";position:absolute;top:28px;left:66px;right:-10px;border-top:2px dashed #B8924A}'
+  + '@media (max-width:760px){.lpov .lp-step:not(:last-child):after{display:none}}'
+  + '.lpov .lp-step h4{margin:0 0 2px;font-size:17px;font-weight:800}'
+  + '.lpov .lp-step p{margin:0 0 6px;font-size:13.5px;color:#454B5C}'
+  /* paper or screen */
+  + '.lpov .lp-split{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:18px;align-items:start}'
+  + '@media (max-width:760px){.lpov .lp-split{grid-template-columns:minmax(0,1fr)}}'
+  + '.lpov .lp-or{align-self:center;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#060B1A;color:#E3C27D;font-weight:800;font-size:13px;letter-spacing:.06em}'
+  + '@media (max-width:760px){.lpov .lp-or{justify-self:center}}'
+  + '.lpov .lp-side h4{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:16px;font-weight:800}'
+  + '.lpov .lp-side p{margin:0 0 8px;font-size:13.5px;color:#454B5C}'
+  + '.lpov.lp-guide .lp-dqr svg{width:70px;height:70px}'
+  /* announcement and footer on the light page */
+  + '.lpov.lp-guide .lp-annline{color:#060B1A;border-color:#D9DCE2;margin-top:18px}'
+  + '.lpov.lp-guide .lp-annline svg{color:#7A2E24}'
+  + '.lpov.lp-guide .lp-ad{color:#454B5C}'
+  + '.lpov.lp-guide .lp-new{background:#7A2E24;color:#fff}'
+  + '.lpov.lp-guide .lp-foot{color:#454B5C}'
+  + '.lpov.lp-guide .lp-foot a,.lpov.lp-guide .lp-foot button{color:#060B1A}'
+  + '.lpov.lp-guide .lp-foot a:hover,.lpov.lp-guide .lp-foot button:hover{color:#7A2E24}'
+  + '.lpov.lp-guide .lp-panel{border:1px solid #D9DCE2;box-shadow:0 1px 3px rgba(0,0,0,.08)}'
+  + '.lpov.lp-guide .lp-wrap a:focus-visible,.lpov.lp-guide .lp-wrap button:focus-visible{outline:3px solid #060B1A;outline-offset:2px;border-radius:8px}'
+  /* "I want to..." rows: numeral, question, then a few link pills */
+  + '.lpov .lp-list{list-style:none;margin:0;padding:0;background:#fff;border:1px solid #E3E4E8;border-radius:18px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}'
+  + '.lpov .lp-row2{display:grid;grid-template-columns:64px minmax(0,4fr) minmax(0,6fr);gap:6px 22px;align-items:center;padding:18px 24px;border-top:1px solid #ECEDF0}'
+  + '.lpov .lp-row2:first-child{border-top:0}'
+  + '@media (max-width:760px){.lpov .lp-row2{grid-template-columns:52px minmax(0,1fr);padding:16px 18px}.lpov .lp-row2 .lp-pills{grid-column:1/-1}}'
+  + '.lpov .lp-row2 .lp-num{font-size:40px}'
+  + '.lpov .lp-row2 h3{margin:0;font-size:18.5px;font-weight:800;line-height:1.25;color:#060B1A}'
+  + '.lpov .lp-row2 h3 .hl{color:#7A2E24}'
+  + '.lpov .lp-row2 .lp-why{margin:3px 0 0;font-size:13.5px;color:#454B5C}'
+  + '.lpov .lp-step-pill{display:inline-block;margin:0 0 5px;font-family:"DM Sans",system-ui,sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border-radius:999px;padding:3px 9px;background:#060B1A;color:#E3C27D}'
+  + '.lpov .lp-pills{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:1fr;gap:8px 10px}'
+  + '@media (max-width:480px){.lpov .lp-pills{grid-template-columns:minmax(0,1fr)}}'
+  + '.lpov .lp-pills a{display:flex;width:100%;align-items:center;gap:10px;min-height:44px;padding:6px 14px 6px 6px;border:1px solid #D2D6DE;border-radius:999px;background:#fff;color:#060B1A;font-size:14.5px;font-weight:700;text-decoration:none;transition:border-color 150ms ease,transform 150ms ease}'
+  + '.lpov .lp-pills a:hover{border-color:#060B1A;transform:translateY(-1px)}'
+  + '.lpov .lp-pills .lp-li{width:30px;height:30px;border-radius:50%}'
+  + '.lpov .lp-pills .ar{margin-left:auto;color:#B8924A;font-weight:800}'
+  + '.lpov .lp-hrs{grid-column:1/-1;grid-row:auto;margin:0 0 2px;font-size:13.5px;color:#454B5C}'
+  + '.lpov .lp-hrs b{color:#060B1A}'
+  /* class picker in the band */
+  + '.lpov .lp-pick{margin:18px 0 0;display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}'
+  + '.lpov .lp-pick p{margin:0 6px 0 0;font-weight:700;color:#fff}'
+  + '.lpov .lp-pick button{font:inherit;font-size:14px;font-weight:700;min-height:42px;padding:6px 16px;border-radius:999px;border:1px solid #E3C27D;background:transparent;color:#fff;cursor:pointer}'
+  + '.lpov .lp-pick button:hover{background:#E3C27D;color:#060B1A}'
+  + '.lpov .lp-mine{margin:14px 0 0;font-size:14px;color:#C8D2DA}'
+  + '.lpov .lp-mine b{color:#fff}'
+  + '.lpov .lp-mine button{font:inherit;font-size:13px;font-weight:700;background:none;border:0;color:#E3C27D;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px 4px;min-height:36px}'
+  + '.lpov .lp-pick button:focus-visible,.lpov .lp-mine button:focus-visible{outline:3px solid #E3C27D;outline-offset:3px}'
+  + '.lpov.lp-guide .lp-band a:focus-visible{outline:3px solid #E3C27D;outline-offset:3px;border-radius:12px}'
+  /* VERSION 3: banner, five shaded "Want to..." rows with big numbers,
+     and a side menu (this week, quick links, modules, more help). */
+  + '.lpov .v3-band{background:linear-gradient(120deg,#060B1A 0%,#0E1A33 60%,#1B2A4A 100%);color:#fff;padding:30px 0 24px}'
+  + '.lpov .v3-bin{max-width:1180px;margin:0 auto;padding:0 22px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 24px;align-items:center}'
+  + '.lpov .v3-logo{grid-row:span 2;opacity:.95}'
+  + '@media (max-width:640px){.lpov .v3-bin{grid-template-columns:minmax(0,1fr)}.lpov .v3-logo{display:none}}'
+  + '.lpov .v3-band .lp-eyebrow{color:#E3C27D;font-size:12.5px;letter-spacing:.18em}'
+  + '.lpov .v3-band h2.lp-h{color:#fff;font-size:clamp(40px,7vw,68px);line-height:1;margin:6px 0 2px;letter-spacing:-.03em}'
+  + '.lpov .v3-band h2 .sm{display:block;font-size:clamp(20px,3vw,28px);font-weight:700;letter-spacing:-.01em;color:#E3C27D;margin-top:6px}'
+  + '.lpov .v3-words{grid-column:1/-1;margin:10px 0 0;font-family:"DM Sans",system-ui,sans-serif;font-size:12.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#C8D2DA}'
+  + '.lpov .v3-words b{color:#E3C27D;font-weight:700}'
+  + '.lpov .v3-band .lp-stats{grid-column:1/-1;grid-template-columns:repeat(5,minmax(0,1fr));margin-top:16px}'
+  + '@media (max-width:900px){.lpov .v3-band .lp-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}'
+  + '@media (max-width:520px){.lpov .v3-band .lp-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}'
+  + '.lpov .v3-band .lp-stat b{font-size:clamp(22px,3vw,30px)}'
+  + '.lpov .v3-band .lp-mine,.lpov .v3-band .lp-pick{grid-column:1/-1}'
+  /* layout */
+  + '.lpov.lp-guide .lp-wrap.v3-wrap{max-width:1180px;padding:22px 22px 40px}'
+  + '.lpov .v3{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:18px;align-items:start}'
+  + '@media (max-width:900px){.lpov .v3{grid-template-columns:minmax(0,1fr)}}'
+  + '.lpov .v3-main{display:grid;gap:12px;min-width:0}'
+  /* one row */
+  + '.lpov .v3-row{display:grid;grid-template-columns:minmax(0,11fr) minmax(0,9fr);border-radius:16px;overflow:hidden;border:1px solid #E3E4E8;box-shadow:0 1px 3px rgba(0,0,0,.06);background:#F7F6F3}'
+  + '@media (max-width:680px){.lpov .v3-row{grid-template-columns:minmax(0,1fr)}}'
+  + '.lpov .v3-q{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 16px;align-items:center;padding:20px 22px}'
+  + '.lpov .v3-n{font-size:clamp(64px,8vw,88px);font-weight:800;line-height:.85;letter-spacing:-.05em;color:#7A2E24}'
+  + '.lpov .v3-want{margin:0;font-size:17px;font-weight:600;color:#2A3949}'
+  + '.lpov .v3-q h3{margin:0;font-size:clamp(19px,2.2vw,23px);font-weight:700;line-height:1.15;color:#060B1A}'
+  + '.lpov .v3-q h3 .big{display:block;font-size:clamp(26px,3.2vw,34px);font-weight:800;letter-spacing:.01em;text-transform:uppercase;color:#7A2E24;line-height:1.05}'
+  + '.lpov .v3-q p.v3-d{grid-column:1/-1;margin:8px 0 0;font-size:14px;color:#2A3949;max-width:46ch}'
+  + '.lpov .v3-q .lp-step-pill{grid-column:1/-1;justify-self:start;margin:0 0 4px}'
+  /* shading, one tint per row */
+  + '.lpov .v3-row.t1 .v3-q{background:linear-gradient(135deg,#E1E5ED,#F3F4F7)}'
+  + '.lpov .v3-row.t2 .v3-q{background:linear-gradient(135deg,#F3E8D2,#FBF6EC)}'
+  + '.lpov .v3-row.t3 .v3-q{background:linear-gradient(135deg,#DCE3EE,#F1F4F8)}'
+  + '.lpov .v3-row.t4 .v3-q{background:linear-gradient(135deg,#EFDCD6,#F9F1EE)}'
+  + '.lpov .v3-row.t5 .v3-q{background:linear-gradient(135deg,#E6E3DA,#F5F3EE)}'
+  + '.lpov .v3-row.t6 .v3-q{background:linear-gradient(135deg,#DFE6E2,#F2F5F3)}'
+  /* the link list in each row */
+  + '.lpov .v3-ls{list-style:none;margin:0;padding:14px 16px;display:grid;gap:8px;align-content:center}'
+  + '.lpov .v3-ls a{display:flex;align-items:center;gap:10px;min-height:44px;padding:6px 12px 6px 6px;background:#fff;border:1px solid #E1E3E8;border-radius:10px;color:#060B1A;font-size:14.5px;font-weight:700;text-decoration:none;transition:border-color 150ms ease,transform 150ms ease}'
+  + '.lpov .v3-ls a:hover{border-color:#060B1A;transform:translateY(-1px)}'
+  + '.lpov .v3-ls .lp-li{width:30px;height:30px;border-radius:8px}'
+  + '.lpov .v3-ls .ar{margin-left:auto;color:#B8924A;font-weight:800}'
+  + '.lpov .v3-ls .lp-hrs{font-size:13px;color:#454B5C;margin:0 0 2px}'
+  /* side menu */
+  + '.lpov .v3-side{display:grid;gap:14px;min-width:0}'
+  + '.lpov .v3-box{background:#fff;border:1px solid #E3E4E8;border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}'
+  + '.lpov .v3-box h3{margin:0;padding:11px 16px;background:#060B1A;color:#E3C27D;font-family:"DM Sans",system-ui,sans-serif;font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}'
+  + '.lpov .v3-box ul{list-style:none;margin:0;padding:8px}'
+  + '.lpov .v3-box li a,.lpov .v3-box li button{display:flex;align-items:center;gap:10px;width:100%;min-height:42px;padding:6px 10px;border:0;border-radius:8px;background:none;color:#060B1A;font:inherit;font-size:14px;font-weight:700;text-align:left;text-decoration:none;cursor:pointer}'
+  + '.lpov .v3-box li a:hover,.lpov .v3-box li button:hover{background:#F2F3F6}'
+  + '.lpov .v3-box .lp-li{width:28px;height:28px;border-radius:8px}'
+  + '.lpov .v3-box .ch{margin-left:auto;color:#7A2E24;font-weight:800}'
+  + '.lpov .v3-box li a.now{background:#060B1A;color:#fff}.lpov .v3-box li a.now .ch{color:#E3C27D}'
+  + '.lpov .v3-box .v3-tag{margin-left:auto;font-family:"DM Sans",system-ui,sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#E3C27D}'
+  + '.lpov .v3-box .lp-new{margin-left:auto}'
+  + '.lpov .v3-sig{text-align:center;font-family:"DM Sans",system-ui,sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#454B5C;padding:6px 0}'
+  + '.lpov .v3-wrap .lp-foot{margin-top:18px}'
+  /* while this page is up, the course tools dock and Hootie stay out of the way */
+  + 'body.lp-open .bd-launch,body.lp-open .bd-back,body.lp-open .bd-scrim,body.lp-open .bd-panel,body.lp-open .dcm,body.lp-open .hoo-btn,body.lp-open .hoo-panel,body.lp-open .hoo-nudge{display:none!important}'
   + '@media (prefers-reduced-motion:reduce){.lpov *{transition:none!important}.lpov .lp-card:hover{transform:none}}'
   + '@media print{.lpov{display:none}}';
 
@@ -150,6 +314,8 @@
     sec = m ? m[1] : (localStorage.getItem('bio004-section') || null);
   } catch (e) {}
   if (sec !== 'mw' && sec !== 'tr-am' && sec !== 'tr-eve') sec = null;
+  /* a link from a class's Canvas page carries ?sec=, so remember it */
+  try { if (sec && /[?&]sec=/.test(window.location.search)) localStorage.setItem('bio004-section', sec); } catch (e) {}
   function u(page) {
     var bits = page.split('#'), base = bits[0];
     if (sec) base += (base.indexOf('?') > -1 ? '&' : '?') + 'sec=' + sec;
@@ -260,27 +426,129 @@
       + '<span><span class="lp-t">' + title + '</span><span class="lp-s">' + sub + '</span></span>'
       + (wide ? '<span class="lp-go" aria-hidden="true">&#8594;</span>' : '') + '</' + close + '></li>';
   }
+  /* ---------- the first screen: the learning guide ---------- */
+  var LI = {
+    video: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z"/>',
+    note: '<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M9 13h7M9 17h5"/>',
+    pen: '<path d="M4 20l4-1 11-11-3-3L5 16z"/>',
+    cards: '<rect x="4" y="7" width="12" height="13" rx="2"/><path d="M8 3h11a1 1 0 0 1 1 1v12"/>',
+    brain: '<path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3h1V4z"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3h-1V4z"/>',
+    loop: '<path d="M4 12a8 8 0 0 1 14-5l2 2"/><path d="M20 4v5h-5"/><path d="M20 12a8 8 0 0 1-14 5l-2-2"/><path d="M4 20v-5h5"/>',
+    globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
+    target: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1"/>',
+    print: '<path d="M7 8V3h10v5"/><rect x="3" y="8" width="18" height="9" rx="2"/><path d="M7 14h10v7H7z"/>',
+    cal: I.cal, flag: I.flag, chat: I.chat, doc: I.doc, exam: I.exam, steps: I.steps,
+    mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+    people: '<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14.5c2.5 0 5 1.5 5 4.5"/>',
+    screen: '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>'
+  };
+  function svg(n) { return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (LI[n] || LI.doc) + '</svg>'; }
+  function Lk(href, name, ic, col) {
+    var x = /_blank/.test(href);
+    return '<li><a ' + href + '><span class="lp-li ' + (col || '') + '">' + svg(ic) + '</span><span class="tx">' + esc(name) + '</span><span class="ar" aria-hidden="true">' + (x ? '&#8599;' : '&#8594;') + '</span>'
+      + (x ? '<span class="lp-sr"> (opens in a new tab)</span>' : '') + '</a></li>';
+  }
+  function P(href, name, ic, col) {
+    var x = /_blank/.test(href);
+    return '<li><a ' + href + '><span class="lp-li ' + (col || '') + '">' + svg(ic) + '</span><span>' + esc(name) + '</span><span class="ar" aria-hidden="true">' + (x ? '&#8599;' : '&#8594;') + '</span>'
+      + (x ? '<span class="lp-sr"> (opens in a new tab)</span>' : '') + '</a></li>';
+  }
+  function W(num, title, why, pills, step) {
+    return '<li class="lp-row2"><span class="lp-num" aria-hidden="true">' + num + '</span><div>' + (step ? '<span class="lp-step-pill">' + step + '</span>' : '')
+      + '<h3>' + title + '</h3><p class="lp-why">' + esc(why) + '</p></div><ul class="lp-pills">' + pills + '</ul></li>';
+  }
+  var SECNAME = { 'mw': 'Mon / Wed', 'tr-am': 'Tue / Thu morning', 'tr-eve': 'Tue / Thu evening' };
+  function C(num, title, why, body, full) {
+    return '<section class="lp-c' + (full ? ' full' : '') + '" aria-labelledby="lpq' + num + '"><div class="lp-ch"><span class="lp-num" aria-hidden="true">' + num + '</span>'
+      + '<h3 id="lpq' + num + '">' + title + '</h3><p class="lp-why">' + esc(why) + '</p></div>' + body + '</section>';
+  }
+  function examDate(short) {
+    var d = EL[MOD - 1]; if (!d) return '';
+    var x = new Date(d + 'T00:00:00');
+    return short ? MO[x.getMonth()] + ' ' + x.getDate() : ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][x.getDay()] + ', ' + MO[x.getMonth()] + ' ' + x.getDate();
+  }
+  function daysToExam() {
+    var d = EL[MOD - 1]; if (!d) return null;
+    var t = new Date(NOWD.getFullYear(), NOWD.getMonth(), NOWD.getDate());
+    return Math.round((new Date(d + 'T00:00:00') - t) / 864e5);
+  }
+  var LOGO = '<svg viewBox="40 10 125 148" width="70" height="84" role="img" aria-hidden="true" focusable="false"><g transform="translate(0,18)"><g transform="translate(60,0) rotate(8 0 130)"><circle cx="0" cy="20" r="10" fill="#FFFFFF"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#FFFFFF"/></g><g transform="translate(100,0)"><circle cx="0" cy="10" r="11" fill="#8B3A2E"/><path d="M 0,22 C -11,22 -17,26 -17,34 C -17,52 -14,70 -12,86 C -11,108 -13,122 -15,132 L 15,132 C 13,122 11,108 12,86 C 14,70 17,52 17,34 C 17,26 11,22 0,22 Z" fill="#8B3A2E"/></g><g transform="translate(140,0) rotate(-8 0 130)"><circle cx="0" cy="20" r="10" fill="#C9A14A"/><path d="M 0,32 C -10,32 -16,36 -16,42 C -16,55 -13,68 -11,82 C -10,100 -12,118 -14,130 L 14,130 C 12,118 10,100 11,82 C 13,68 16,55 16,42 C 16,36 10,32 0,32 Z" fill="#C9A14A"/></g></g></svg>';
+  function todayLabel() { return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][NOWD.getDay()] + ', ' + MO[NOWD.getMonth()] + ' ' + NOWD.getDate(); }
+  function band() {
+    var dte = daysToExam(), weekHref = IN_TERM ? go('week-' + WEEK + '-hub.html') : go('bio004-course-calendar-alt.html');
+    return '<div class="v3-band"><div class="v3-bin"><div>'
+      + '<p class="lp-eyebrow">Dr. Rennie &middot; Solano College &middot; Fall 2026</p>'
+      + '<h2 class="lp-h" id="lp-title" tabindex="-1">BIO 004<span class="sm">Human Anatomy Learning Guide</span></h2></div>'
+      + '<span class="v3-logo">' + LOGO + '</span>'
+      + '<p class="v3-words">Prepare <b>&middot;</b> Recall <b>&middot;</b> Identify <b>&middot;</b> Check <b>&middot;</b> Master</p>'
+      + (IN_TERM ? '<ul class="lp-stats" aria-label="Today at a glance">'
+          + '<li class="lp-stat"><b>' + MO[NOWD.getMonth()] + ' ' + NOWD.getDate() + '</b><span>Today &middot; ' + ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][NOWD.getDay()] + '</span></li>'
+          + '<li class="lp-stat"><a ' + weekHref + '><b>Week ' + WEEK + '</b><span>Open this week &#8594;</span></a></li>'
+          + '<li class="lp-stat"><b>Module ' + MOD + '</b><span>What we are on now</span></li>'
+          + (dte != null ? '<li class="lp-stat"><b>' + esc(examDate(true)) + '</b><span>Exam ' + MOD + '</span></li>'
+            + '<li class="lp-stat"><b>' + (dte <= 0 ? 'Today' : dte + ' day' + (dte === 1 ? '' : 's')) + '</b><span>' + (dte <= 0 ? 'Exam day' : 'Until Exam ' + MOD) + '</span></li>' : '')
+          + '</ul>' : '')
+      + (sec ? '<p class="lp-mine">Your class: <b>' + SECNAME[sec] + '</b> <button type="button" data-lpsec="">Not your class?</button></p>'
+          : '<div class="lp-pick" role="group" aria-label="Which class are you in?"><p>Which class are you in?</p>'
+            + ['mw', 'tr-am', 'tr-eve'].map(function (k) { return '<button type="button" data-lpsec="' + k + '">' + SECNAME[k] + '</button>'; }).join('') + '</div>')
+      + '</div></div>';
+  }
+  function V(n, tint, want, big, rest, desc, links, step) {
+    return '<section class="v3-row ' + tint + '" aria-labelledby="v3q' + n + '"><div class="v3-q"><span class="v3-n" aria-hidden="true">' + n + '</span>'
+      + '<div><p class="v3-want">' + want + '</p><h3 id="v3q' + n + '"><span class="big">' + big + '</span>' + rest + '</h3></div>'
+      + '<p class="v3-d">' + esc(desc) + '</p></div><ul class="v3-ls">' + links + '</ul></section>';
+  }
+  function S(href, name, ic, col, extra) {
+    var x = /_blank/.test(href);
+    return '<li><a ' + href + (extra || '') + '><span class="lp-li ' + (col || '') + '">' + svg(ic) + '</span><span>' + esc(name) + '</span><span class="ch" aria-hidden="true">' + (x ? '&#8599;' : '&#8250;') + '</span>'
+      + (x ? '<span class="lp-sr"> (opens in a new tab)</span>' : '') + '</a></li>';
+  }
   function home() {
-    /* five questions, in the order students ask them */
-    var A = sortedAnn(), latest = A[0], unread = unreadCount();
+    var Ann = sortedAnn(), latest = Ann[0], unread = unreadCount();
     var weekHref = IN_TERM ? go('week-' + WEEK + '-hub.html') : go('bio004-course-calendar-alt.html');
-    return '<ul class="lp-grid" aria-label="Where are you headed">'
-      + card(weekHref, icon(I.flag, 'ic-gold'), 'What do I do this week?', IN_TERM ? 'Week ' + WEEK + ' &middot; Module ' + MOD : 'Your class schedule', true)
-      + card(go('bio004-study-process.html'), icon(I.steps, 'ic-terra'), 'How do I study for this class?', 'Every study tool, step by step, for lecture and lab', true, 'lp-study')
-      + card(go('bio004-study-process.html#prepare'), icon(I.exam, 'ic-navy'), 'What is on the exam?', 'Competencies &middot; Structure lists')
-      + card('data-lpopen="syllabus"', icon(I.doc, 'ic-gold'), 'Do you want to review the syllabus and course information?', 'Syllabus &middot; Semester schedule')
-      + card('data-lpopen="help"', icon(I.chat, 'ic-terra'), 'Who can I ask for help?', 'Office hours &middot; Discord &middot; Tutoring')
-      + '</ul>'
-      + (latest ? '<button type="button" class="lp-annline" data-lpopen="news" aria-label="Announcements' + (unread ? ', ' + unread + ' new' : '') + '. Latest: ' + esc(latest.title) + '">'
-          + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + I.mega + '</svg>'
-          + '<span class="lp-ad lp-hsm">' + dlabel(latest.date) + '</span><span class="lp-at">' + esc(latest.title) + '</span>'
-          + (unread ? '<span class="lp-new">' + (unread > 9 ? '9+' : unread) + ' new</span>' : '') + '<span aria-hidden="true">&#8250;</span></button>' : '')
-      + '<div class="lp-foot">'
-      +   '<span>Hard week? <a ' + go('bio004-blog.html') + '>Short reads from Dr. Rennie</a></span>'
-      +   (STANDALONE ? '' : ON_CALENDAR
-            ? '<button type="button" data-lpclose="1">See the full course calendar &#8594;</button>'
-            : '<a ' + go('bio004-course-calendar.html?nolaunch=1') + '>See the full course calendar &#8594;</a><button type="button" data-lpclose="1">Close this and stay here</button>')
+    var calHref = ON_CALENDAR ? 'href="#" data-lpclose="1"' : go('bio004-course-calendar.html?nolaunch=1');
+    var WB = { 'mw': 'BIO004-Learning-Workbook-Class1.pdf', 'tr-am': 'BIO004-Learning-Workbook-Class2.pdf', 'tr-eve': 'BIO004-Learning-Workbook-Class3.pdf' };
+    var mine = function (one) { return sec ? one : ''; };
+    var main = '<div class="v3-main">'
+      + V('1', 't1', 'Want to', 'Prepare', ' for class?', 'Learn the material before lecture or lab so you are ready to take part.',
+          P(go('bio004-quick-access.html?cat=videos'), 'Lecture videos', 'video') + P(go('bio004-quick-access.html?cat=notes'), 'Course notes', 'note')
+          + P(go('bio004-quick-access.html?cat=prework'), 'Pre-work', 'pen') + P(go('bio004-bluelink-videos.html'), 'Cadaver videos', 'video'))
+      + V('2', 't2', 'Want to', 'Practice', ' recall?', 'See what you can remember without looking. Pulling it from memory is what makes it stick.',
+          P(go('mastery-os-fall-2026.html#s-recall'), 'Recall cards', 'cards', 't') + P(go('mastery-os-fall-2026.html#s-dumps'), 'Brain dumps', 'brain', 't')
+          + P(go('bio004-mastery-check.html'), 'Mastery Check', 'target', 't') + P(go('mastery-os-fall-2026.html'), 'Mastery OS', 'steps', 't'))
+      + V('3', 't3', 'Want to practice', 'Lab ID?', '', 'Name the structure before you check the answer.',
+          P(go('module-' + MOD + '-structure-list.html'), 'Structure list, M' + MOD, 'note', 'b') + P(ext('https://drsrennie-stack.github.io/new-digital-atlas/'), 'Digital Atlas', 'globe', 'b')
+          + P(go('mastery-os-fall-2026.html#s-loops'), 'Loops', 'loop', 'b') + P(go('histology-help.html'), 'Histology help', 'target', 'b'))
+      + V('4', 't4', 'Want to prepare for', 'The exam?', '', 'Find your gaps and spend your study time where you need it most.',
+          P(go('bio004-competency-packet.html'), 'Competency list', 'target', 't') + P(go('practice-lecture-exam.html'), 'Practice exam', 'exam', 't')
+          + P(go('mastery-os-fall-2026.html#s-weak'), 'My weak areas', 'steps', 't') + P(go('bio004-study-process.html'), 'How to study', 'doc', 't'))
+      + V('5', 't5', 'Want to study', 'On paper?', '', 'Everything Dr. Rennie printed for you, ready to print again.',
+          P(go('BIO004-Fall2026-Competency-Packet.pdf'), 'Competency packet', 'print', 'g') + P(go('BIO004-M' + MOD + '-Note-Sheet-Packet.pdf'), 'Note sheets, M' + MOD, 'print', 'g')
+          + (MOD >= 3 ? P(go('BIO004-M' + MOD + '-Lab-Packet.pdf'), 'Lab packet, M' + MOD, 'print', 'g') : P(go('BIO004-Anatomy-Structure-List.pdf'), 'Lab structure list', 'print', 'g'))
+          + (sec ? P(go(WB[sec]), 'My workbook', 'print', 'g') : P(go('BIO004-Anatomy-Structure-List.pdf'), 'Lab structure list', 'print', 'g')))
+      + V('6', 't6', 'Need', 'Help', ' with something?', 'Office hours: Mon and Wed 10:30 am to 12:30 pm across from Biotech Lab 1127, and 30 minutes before class. Open lab: Fri 2 to 3 pm.',
+          P('href="mailto:srennie@solano.edu"', 'Email Dr. Rennie', 'mail', 't') + mine(P(ext(DISCORD[sec] ? DISCORD[sec].url : ''), 'Class Discord', 'chat', 'b'))
+          + P(go('study-session-signup.html'), 'Study With Me', 'people', 'g') + P(ext('https://welcome.solano.edu/astc-homepage'), 'Free tutoring', 'people'))
       + '</div>';
+    var mods = '';
+    for (var n = 1; n <= 5; n++) mods += '<li><a ' + go('course-materials.html#mod-' + n) + (n === MOD ? ' class="now" aria-current="true"' : '') + '><span>Module ' + n + '</span>'
+      + (n === MOD ? '<span class="v3-tag">Now</span>' : '') + '<span class="ch" aria-hidden="true">&#8250;</span></a></li>';
+    var side = '<aside class="v3-side" aria-label="More options">'
+      + '<div class="v3-box"><h3>Quick links</h3><ul>'
+      + S(weekHref, IN_TERM ? 'Week ' + WEEK + ' page' : 'Class schedule', 'flag', 'g') + S(calHref, 'Course calendar', 'cal') + S(go('bio004-master-schedule-fall2026.html'), 'Semester schedule', 'cal', 't')
+      + mine(S(go(SYLLABUS[sec] ? SYLLABUS[sec][0] : ''), 'My syllabus', 'doc'))
+      + (latest ? '<li><button type="button" data-lpopen="news"><span class="lp-li t">' + svg('chat') + '</span><span>Announcements</span>' + (unread ? '<span class="lp-new">' + (unread > 9 ? '9+' : unread) + ' new</span>' : '<span class="ch" aria-hidden="true">&#8250;</span>') + '</button></li>' : '')
+      + S('href="mailto:srennie@solano.edu"', 'Contact Dr. Rennie', 'mail', 'b')
+      + '</ul></div>'
+      + '<div class="v3-box"><h3>Modules</h3><ul>' + mods + '</ul></div>'
+      + '<div class="v3-box"><h3>More help</h3><ul>'
+      + S(go('bio004-study-process.html'), 'How to study, step by step', 'steps', 'g') + S(go('course-materials.html'), 'All course materials', 'doc') + S(go('bio004-blog.html'), 'Short reads from Dr. Rennie', 'note', 't')
+      + S(go('digital-device-policy-agreement.html'), 'Device policy', 'doc', 'b')
+      + '</ul></div>'
+      + '<p class="v3-sig">Dr. Rennie &middot; BIO 004 &middot; Solano College</p>'
+      + '</aside>';
+    return '<div class="v3">' + main + side + '</div>'
+      + (STANDALONE ? '' : '<div class="lp-foot"><button type="button" data-lpclose="1">' + (ON_CALENDAR ? 'See the full course calendar &#8594;' : 'Close this and stay here') + '</button></div>');
   }
   function panel(key) {
     var c = PANELS[key];
@@ -291,21 +559,23 @@
   }
 
   var ov = document.createElement('div');
-  ov.className = 'lpov' + (STANDALONE ? ' lp-standalone' : '');
+  ov.className = 'lpov lp-guide' + (STANDALONE ? ' lp-standalone' : '');
   if (!STANDALONE) { ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); }
   ov.setAttribute('aria-labelledby', 'lp-title');
-  ov.innerHTML = '<div class="lp-wrap">'
-    + '<p class="lp-eyebrow">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>'
-    + '<h2 class="lp-h" id="lp-title" tabindex="-1">Welcome to Anatomy</h2>'
-    + '<p class="lp-sub">Where are you headed?</p>'
-    + '<div id="lpView" aria-live="polite"></div>'
-    + '</div>';
+  ov.innerHTML = '<div id="lpBand">' + band() + '</div><div class="lp-wrap v3-wrap"><div id="lpView" aria-live="polite"></div></div>';
 
   function boot() {
+    /* load the course fonts here too, so the page looks the same on any page that opens it */
+    if (!document.querySelector('link[href*="Plus+Jakarta+Sans"][href*="DM+Sans"]')) {
+      var fl = document.createElement('link'); fl.rel = 'stylesheet';
+      fl.href = 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@500;700&display=swap';
+      document.head.appendChild(fl);
+    }
     var st = document.createElement('style');
     st.textContent = css;
     document.head.appendChild(st);
     document.body.appendChild(ov);
+    document.body.classList.add('lp-open');
     var prevOverflow = document.body.style.overflow;
     if (!STANDALONE) document.body.style.overflow = 'hidden';
     var lastFocus = document.activeElement;
@@ -325,6 +595,7 @@
     function close() {
       if (STANDALONE) return;
       if (ov.parentNode) ov.parentNode.removeChild(ov);
+      document.body.classList.remove('lp-open');
       document.body.style.overflow = prevOverflow;
       if (lastFocus && lastFocus.focus) lastFocus.focus();
       document.removeEventListener('keydown', onKey);
@@ -334,6 +605,15 @@
       if (CURRENT) { var prev = CURRENT; show(null, prev); } else close();
     }
     ov.addEventListener('click', function (e) {
+      var sp = e.target.closest('[data-lpsec]');
+      if (sp) {
+        var v = sp.getAttribute('data-lpsec');
+        sec = SECNAME[v] ? v : null;
+        try { if (sec) localStorage.setItem('bio004-section', sec); else localStorage.removeItem('bio004-section'); } catch (x) {}
+        ov.querySelector('#lpBand').innerHTML = band(); show(null, null, true);
+        var f = ov.querySelector(sec ? '.lp-mine button' : '.lp-pick button'); if (f) f.focus();
+        return;
+      }
       var o = e.target.closest('[data-lpopen]');
       if (o) { show(o.getAttribute('data-lpopen')); return; }
       if (e.target.closest('[data-lpback]')) { var prev = CURRENT; show(null, prev); return; }

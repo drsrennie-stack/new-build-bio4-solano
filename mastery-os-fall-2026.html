@@ -120,6 +120,11 @@ a{color:var(--rust)}
 .logo .lt .ac{color:var(--rust)}
 .logo .ls{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);display:block;margin-top:3px}
 .spacer{flex:1}
+.hguide{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:6px 15px;border-radius:999px;border:0;color:#FAFAF9;background:#7A2E24;font-size:13px;font-weight:800;text-decoration:none;white-space:nowrap;box-shadow:0 2px 4px rgba(6,11,26,.14),0 8px 18px -8px rgba(6,11,26,.45);transform:translateY(-1px);transition:transform .18s ease,box-shadow .18s ease,background .18s ease}
+.hguide:visited{color:#FAFAF9}
+.hguide:hover{background:#5E2219;transform:translateY(-3px);box-shadow:0 4px 8px rgba(6,11,26,.16),0 14px 26px -10px rgba(6,11,26,.55)}
+@media(prefers-reduced-motion:reduce){.hguide{transition:none;transform:none}.hguide:hover{transform:none}}
+.hguide:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .hbadge{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--navy);background:var(--white);border:1px solid var(--line);padding:6px 12px;border-radius:999px}
 .icbtn{width:40px;height:40px;border-radius:var(--r);border:1.5px solid var(--line);background:var(--white);color:var(--navy);display:grid;place-items:center;transition:.18s}
 .icbtn:hover{border-color:var(--navy);transform:translateY(-1px)}
@@ -783,7 +788,7 @@ body[data-view="progress"] #wlChip{display:none}
 .practicebar .pbmore a{color:var(--navy);font-weight:700}
 @media(max-width:640px){.practicebar .pbmore{margin-left:0;width:100%}}
 body[data-view="progress"] #s-dumps,body[data-view="progress"] #s-loops{display:none}
-.loopsframe{display:block;width:100%;height:82vh;min-height:560px;border:1px solid var(--line);border-radius:var(--r);background:#fff}
+.loopsframe{display:block;width:100%;height:82vh;min-height:560px;transition:height .2s ease;border:1px solid var(--line);border-radius:var(--r);background:#fff}
 .weak-acts{display:flex;flex-wrap:wrap;gap:6px}
 .weak-acts .btn{padding:7px 12px;font-size:12.5px}
 @media(max-width:480px){.hbar{gap:8px;padding:10px 12px}.hbadge{display:none}.logo .lt{font-size:17px}}
@@ -815,6 +820,7 @@ body[data-view="progress"] #s-dumps,body[data-view="progress"] #s-loops{display:
       <span><span class="lt">Mastery <span class="ac">OS</span></span><span class="ls">Human Anatomy</span></span>
     </span>
     <span class="spacer"></span>
+    <a class="hguide" href="learning-guide.html" target="_top" aria-label="Back to the Learning Guide, every course resource on one page"><span aria-hidden="true">&larr;</span> Learning Guide</a>
     <span class="hbadge" id="greetBadge">Welcome</span>
     <button class="icbtn" id="openGrades" aria-label="My grades" title="My grades">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M2 20h20"/></svg>
@@ -954,10 +960,6 @@ body[data-view="progress"] #s-dumps,body[data-view="progress"] #s-loops{display:
         <button class="btn" data-goview="today">Go to Today</button>
       </div>
       <div class="flow" id="flowWrap"><!-- JS --></div>
-      <h3 style="margin:30px 0 4px;font-size:17px">Signature exercises</h3>
-      <p style="font-size:14px;color:var(--ink-soft);margin:0 0 12px">Two deep-practice moves you can run on any competency, on paper, from memory.</p>
-      <div class="tip-note" style="display:flex;gap:10px;align-items:flex-start;background:var(--white);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:var(--r);padding:11px 14px;margin:0 0 16px;font-size:13.5px;color:var(--navy)"><span aria-hidden="true">📓</span><span>Keep one dedicated notebook for these written exercises: your drawings, mind-maps, and brain dumps. Date each page and label it with the competency. It becomes your own recall log to review before exams, and the act of writing by hand is part of what makes it stick.</span></div>
-      <div class="grid g3" id="exGrid"><!-- JS --></div>
     </div>
   </section>
 
@@ -1108,6 +1110,7 @@ body[data-view="progress"] #s-dumps,body[data-view="progress"] #s-loops{display:
 <script src="draw-checklists.js"></script>
 <script src="loops-index.js"></script>
 <script src="loops-stations.js"></script>
+<script src="loops-station-competency.js"></script>
 <script src="bio004-braindump-practice-data.js"></script>
 <script src="braindump-view.js"></script>
 <script src="section-sync.js"></script>
@@ -1482,6 +1485,20 @@ function loopStationAgg(){
   var L = window.BIO004_LOOPS || []; var byId = {};
   L.forEach(function(x){ byId[x.id] = x.comps || []; });
   var per = {};
+  /* Each station counts only toward the competency its structure belongs to
+     (loops-station-competency.js). Without that file, the old whole-loop
+     roll-up below still runs. */
+  var SC = window.BIO004_LOOP_STATION_COMPS;
+  if(SC){
+    Object.keys(store).forEach(function(k){
+      var r = store[k]; if(!r || !r.seen) return;
+      (SC[k] || []).forEach(function(id){
+        var x = agg[id] || (agg[id] = {a:0, c:0, seen:''});
+        x.a += r.seen; x.c += (r.easy||0) + (r.good||0) + 0.5*(r.hard||0);
+      });
+    });
+    return agg;
+  }
   Object.keys(store).forEach(function(k){
     var bits = k.split('#'); if(bits.length !== 2) return;
     var r = store[k]; if(!r || !r.seen) return;
@@ -5584,6 +5601,18 @@ try{
     var loop=hashParam('loop');
     if(loop){ if(ready) startLoop(loop); else pending=loop; }
   }
+  /* The Loops app reports its own height. Size the frame to it so nothing
+     inside is cut off and the page, not the frame, does the scrolling. */
+  window.addEventListener('message',function(e){
+    var d=e.data; if(!d || d.source!=='loops-engine' || d.type!=='resize' || !frame) return;
+    var h=+(d.height||d.frameHeight); if(!(h>0)) return;
+    /* exact height, never padded: a padded frame makes the page inside taller,
+       which reports a taller height, and the frame would grow forever */
+    h=Math.max(560, Math.ceil(h)); var cur=frame.getBoundingClientRect().height;
+    if(Math.abs(h-cur)<4) return;
+    frame.style.height=h+'px';
+    if(typeof sendHeight==='function') try{ sendHeight(); }catch(x){}
+  });
   function route(){ markBar(); if(hashId()==='s-loops') openLoops(); }
   window.addEventListener('hashchange',route);
   route();
