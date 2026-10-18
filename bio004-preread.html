@@ -16,8 +16,9 @@
 
      It walks a student through, in this order:
        1. what happens in class that day, start to finish
-       2. the lecture side: the notes section by section, then the
-          note sheet panel by panel, then the videos
+       2. the lecture side: the notes section by section, then
+          drawing on the competency note sheets, then the videos and
+          a second-color correction
        3. the lab side: the structure list, the lab sprint, the
           muscle chart where it applies, drawing, self-testing
        4. what the TBL and the brain dump will ask of them
@@ -138,7 +139,7 @@
   <main id="main">
 
     <section class="cover" aria-labelledby="title">
-      <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Pre-read</p>
+      <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; Pre-read (optional, but recommended)</p>
       <h1 id="title">Get ready for <span id="titleDay">class</span></h1>
       <p class="sub" id="titleSub">Pick your section and the class day.</p>
       <div class="pickers">
@@ -210,7 +211,7 @@
   function fillDays(selected){
     var list=classDays();
     dayPick.innerHTML=list.map(function(s){
-      var lab = s.kind==='exam' ? 'Exam '+s.exam : (s.kind==='d1' ? 'Lecture TBL '+s.tbl.n : (s.tbl ? 'Lab TBL '+s.tbl.n : 'Review lab'));
+      var lab = s.kind==='exam' ? 'Exam '+s.exam : (s.kind==='d1' ? 'Lecture TBL '+s.tbl.n : (s.tbl ? 'Lab TBL '+s.tbl.n : (s.lab.mode==='review' ? 'Review lab' : 'Lecture and lab')));
       return '<option value="'+s.d+'"'+(s.d===selected?' selected':'')+'>'+esc(shortDate(s.d)+' · '+lab)+'</option>';
     }).join('');
   }
@@ -251,7 +252,7 @@
     var items=[];
     if(s.kind==='d1'){
       items.push(['hot', lecStart, 'Lecture TBL '+s.tbl.n+': '+lecNames(s.tbl.topics), 'iRAT on your own, then the tRAT with your team, then appeals. Closed notes for the iRAT and tRAT.']);
-      items.push(['', 'Rest of lecture', s.app||'TBL application activity', 'Your team applies the TBL material to a problem. Bring your notes and your note sheet.']);
+      items.push(['', 'Rest of lecture', s.app||'TBL application activity', 'Your team applies the TBL material to a problem. Bring your notes and your note sheets.']);
       items.push(['', labStart, 'Lab: '+labNames(s.labTopic), (s.lab.text||A.MODE[s.lab.mode])]);
       items.push(['hot', 'Before '+labEnd, 'Lab brain dump: '+labNames(s.bd.topics), 'Five minutes, closed notes, at the end of class. Everything you can name, draw and connect from today\'s lab.']);
     } else {
@@ -269,6 +270,24 @@
     }).join('')+'</ol>';
   }
 
+  /* when this lecture topic comes back: its Lecture TBL, or a lecture brain dump */
+  function whatsNext(s, keys){
+    var list=A.sessions(sec), hit=function(a){ return (a||[]).some(function(k){ return keys.indexOf(k)>-1; }); };
+    for(var i=0;i<list.length;i++){
+      var x=list[i]; if(x.d<=s.d) continue;
+      if(x.kind==='d1' && x.tbl && hit(x.tbl.topics)) return { tbl:x.tbl.n, d:x.d };
+      if(x.bd && x.bd.kind==='lecture' && hit(x.bd.topics)) return { bd:true, d:x.d };
+      if(x.kind==='exam') return { exam:x.exam, d:x.d };
+    }
+    return {};
+  }
+  function laterText(n){
+    if(n.tbl) return 'This topic is Lecture TBL '+n.tbl+' on '+longDate(n.d)+'. ';
+    if(n.bd)  return 'This topic is on the lecture brain dump on '+longDate(n.d)+'. ';
+    if(n.exam) return 'This topic is on Exam '+n.exam+' on '+longDate(n.d)+'. ';
+    return '';
+  }
+
   /* ---------- lecture walkthrough ---------- */
   function lectureCard(s){
     if(s.prepTopic){
@@ -280,36 +299,42 @@
     }
     var isTbl = s.kind==='d1';
     var keys = isTbl ? s.tbl.topics : s.lecTopic;
-    var notes=gather(keys,A.LECTURE,'notes'), sheets=gather(keys,A.LECTURE,'sheets'),
+    var notes=gather(keys,A.LECTURE,'notes'), draw=gather(keys,A.LECTURE,'draw'),
+        comps=keys.filter(function(k){ return A.LECTURE[k].comps; }).map(function(k){ var c=A.LECTURE[k].comps;
+          return ['bio004-competency-packet.html#c'+c[0], 'Competencies '+c[0]+' to '+c[1]+' in your competency packet ('+A.short(k)+')']; }),
+        onSheet=keys.some(function(k){ return A.LECTURE[k].drawSheet; }),
         videos=gather(keys,A.LECTURE,'videos'), slides=gather(keys,A.LECTURE,'slides'), guide=gather(keys,A.LECTURE,'guide'), workbooks=gather(keys,A.LECTURE,'workbooks');
     var RECALL=[['mastery-os-fall-2026.html#s-recall','Mastery OS: spaced recall for this topic'],['https://drsrennie-stack.github.io/loops/','Loops: quick visual practice']];
+    var later = isTbl ? {} : whatsNext(s, keys);
     var h='<section class="card" aria-labelledby="lecH">'
       + '<p class="k">Part 1 &middot; Lecture</p>'
       + '<h2 id="lecH">'+(isTbl ? 'Prepare for Lecture TBL '+s.tbl.n : 'Come ready for today\'s lecture')+'</h2>'
       + '<p>'+(isTbl
           ? 'The TBL opens class and it is on '+esc(lecNames(keys))+'. Nothing in it is new to you if you have done the steps below. Do them in this order. The order matters more than the hours.'
-          : 'Today\'s lecture is on '+esc(lecNames(keys))+'. You do not need to master it before class, but you need to have read the notes and started the sheet, so the lecture is the second time you meet it, not the first.')+'</p>'
+          : 'Today\'s lecture is on '+esc(lecNames(keys))+'. You do not need to master it before class, but you need to have read the notes and started your note sheets, so the lecture is the second time you meet it, not the first.')+'</p>'
       + '<ol class="steps">'
       + '<li><strong>Read the notes, one section at a time</strong>'
-      +   '<p class="why">Read with the note sheet beside you but do not write on it yet. At the end of each section, look away and say what it was about in one sentence. If you cannot, read that section again before you move on.</p>'
+      +   '<p class="why">Read with your note sheets beside you, but do not draw yet. At the end of each section, look away and say what it was about in one sentence. If you cannot, read that section again before you move on.</p>'
       +   rows(notes,{outline:'notes'})+'</li>'
-      + '<li><strong>Work the note sheet, panel by panel</strong>'
-      +   '<p class="why">Panel 1, Organize it: turn the reading into small visuals in your own layout. Do not copy sentences. '
-      +   'Panel 2, Draw it: write down everything you remember first, then draw, then go back over it in a second color and correct yourself. '
-      +   'Panel 3, Apply it: answer with your notes closed, then open them only to check.</p>'
-      +   rows(sheets,{outline:'sheet'})
-      +   (workbooks.length ? '<p class="why">Want more practice on this topic? Use the workbook.</p>'+rows(workbooks) : '')+'</li>'
-      + '<li><strong>Watch the concept videos after the sheet, not before</strong>'
-      +   '<p class="why">You will notice the parts you got wrong on the sheet. Fix them in your second color while you watch.</p>'
+      + '<li><strong>Draw it on your note sheets</strong>'
+      +   '<p class="why">'+(onSheet
+            ? 'For this topic you draw on the drawing sheet. Each frame tells you what to draw and what to label. '
+            : 'Each competency has two prompts and one open box. Pick one prompt and draw it in the box. ')
+      +   'Draw from your notes in one color. Stop while part of the box is still empty. That empty part is what the videos fill in. '
+      +   'The competency numbers below match your paper competency packet, so you can see exactly what you are expected to be able to do.</p>'
+      +   rows(draw.concat(comps))+'</li>'
+      + '<li><strong>Watch the videos, then correct in a second color</strong>'
+      +   '<p class="why">Watch the concept videos with your drawings open. Fix and add to them in a second color. Whatever you add in that color is what you did not know yet, so it is what to review first.</p>'
       +   rows(videos)+'</li>'
       + (isTbl
           ? '<li><strong>The night before: test yourself cold</strong>'
-            + '<p class="why">Cover everything. Redraw your Panel 1 visuals from memory, then check. Whatever you could not redraw is what to reread before class. Use your recall cards for ten minutes.</p>'
+            + '<p class="why">Cover everything. Redraw your note sheet boxes from memory, then check. Whatever you could not redraw is what to reread before class. Use your recall cards for ten minutes.</p>'
             + rows([['bio004-draw.html','Draw from memory'],['bio004-spaced-recall.html','Recall cards']].concat(RECALL).concat(guide))+'</li>'
-          : '<li><strong>After class: get ready for the TBL</strong>'
-            + '<p class="why">This topic has its Lecture TBL at the start of your next week. Finish the sheet within two days of this lecture while it is fresh, then use spaced recall later in the week.</p>'+rows(RECALL)+'</li>')
+          : '<li><strong>'+(later.tbl ? 'After class: get ready for the TBL' : 'After class: finish your note sheets')+'</strong>'
+            + '<p class="why">'+esc(laterText(later))+'Finish your note sheets within two days of this lecture while it is fresh, then use spaced recall later in the week.</p>'+rows(RECALL)+'</li>')
       + '</ol>';
     if(slides.length) h += '<h3>For review after class</h3>'+rows(slides);
+    if(workbooks.length) h += '<h3>Extra practice</h3>'+rows(workbooks);
     if(isTbl){
       h += '<h3>How the TBL runs</h3><div class="tbl-how">'
         + '<div><b>iRAT</b>On your own, closed notes. It shows you, and me, what you understood from the pre-read.</div>'
@@ -340,7 +365,7 @@
     var muscle = keys.some(function(k){ return A.LAB[k].muscle; });
     var h='<section class="card" aria-labelledby="labH">'
       + '<p class="k">Part 2 &middot; Lab</p>'
-      + '<h2 id="labH">'+(isTbl ? 'Prepare for Lab TBL '+s.tbl.n : (s.kind==='d1' ? 'Prepare for today\'s lab and the lab brain dump' : 'Prepare for today\'s review lab'))+'</h2>'
+      + '<h2 id="labH">'+(isTbl ? 'Prepare for Lab TBL '+s.tbl.n : (s.kind==='d1' ? 'Prepare for today\'s lab and the lab brain dump' : (mode==='review' ? 'Prepare for today\'s review lab' : 'Prepare for today\'s lab')))+'</h2>'
       + '<p>'+(isTbl
           ? 'The Lab TBL takes the first 1.5 hours of lab and covers '+esc(labNames(s.tbl.topics))+'. '
           : 'Today\'s lab is '+esc(labNames(keys))+'. '+(s.kind==='d1' ? 'Class ends with a lab brain dump on it. ' : ''))+esc(how)+'</p>'
@@ -351,10 +376,10 @@
       + '<li><strong>Work the lab sprint: structures and questions</strong>'
       +   '<p class="why">Open each category. For every structure, find it on the images, say where it sits next to its neighbors, and answer the "Also be ready to answer" questions out loud.</p>'
       +   rows(sprints)+'</li>'
-      + (notes.length||sheets.length
+      + (notes.length
           ? '<li><strong>Use the notes for anything you cannot place</strong>'
             + '<p class="why">The lab sprint tells you what to find. The notes tell you why it is there. Look up only the structures you could not place.</p>'
-            + rows(notes.concat(sheets))+'</li>' : '')
+            + rows(notes)+'</li>' : '')
       + (muscle
           ? '<li><strong>Fill the muscle chart for every muscle on the list</strong>'
             + '<p class="why">Origin, insertion, action and innervation. Say the action out loud while you move that part of your own body. If you can feel it, you will remember it.</p>'
@@ -382,8 +407,8 @@
       + '<p>Five minutes, closed notes, on a blank page. Write and draw everything you can about '+esc(name)+': the structures, where they sit, what connects to what. A labeled drawing counts more than a list of words.</p>'
       + '<p>'+(lab
           ? 'It is on today\'s lab, so the best preparation is the work you do in lab. Name things out loud, draw the region once during lab, and test your teammates.'
-          : 'It is on the lecture topic from earlier this week. Redraw your Panel 1 visuals from memory the night before and you will be ready.')+'</p>'
-      + rows([['brain-dump-practice.html','Brain dump practice']])
+          : 'It is on the lecture topic from earlier this week. Redraw your note sheet boxes from memory the night before and you will be ready.')+'</p>'
+      + rows([['mastery-os-fall-2026.html#s-dumps','Brain dump practice']])
       + '</section>';
   }
 
@@ -400,11 +425,11 @@
         + rows([['bio004-exam-modules.html','What this exam covers'],['mastery-os-fall-2026.html','Mastery OS: build a cram plan'],['mastery-os-fall-2026.html#s-weak','Mastery OS: your weakest topics first'],['bio004-course-calendar.html','Course calendar']])+'</section>';
       out.innerHTML=h; wire(); return;
     }
-    h += '<section class="card" aria-labelledby="dayH"><p class="k">'+(s.kind==='d1'?'Lecture TBL day':(s.tbl?'Lab TBL day':'Review lab day'))+'</p>'
+    h += '<section class="card" aria-labelledby="dayH"><p class="k">'+(s.kind==='d1'?'Lecture TBL day':(s.tbl?'Lab TBL day':(s.lab.mode==='review'?'Review lab day':'Lecture and lab day')))+'</p>'
       + '<h2 id="dayH">What happens in class</h2>'+flow(s)
       + (s.note?'<p class="note">'+esc(s.note)+'</p>':'')+'</section>';
-    if(s.kind==='d1'){ h += lectureCard(s) + labCard(s) + dumpCard(s); }
-    else             { h += labCard(s) + lectureCard(s) + dumpCard(s); }
+    /* lecture comes first on both days now that Lab TBL is gone */
+    h += lectureCard(s) + labCard(s) + dumpCard(s);
     h += '<p class="prog" id="prog"></p>';
     out.innerHTML = h;
     wire();

@@ -25,6 +25,12 @@ HTML version:
    target="_blank" rel="noopener">Open BIO 004 &#8599;</a></p>
 ```
 
+**Class schedule** (this class only, nothing for students to pick)
+
+```
+https://drsrennie-stack.github.io/new-build-bio4-solano/bio004-schedule-mw.html
+```
+
 **The 17 week modules**
 
 ```
@@ -62,6 +68,12 @@ HTML version:
    target="_blank" rel="noopener">Open BIO 004 &#8599;</a></p>
 ```
 
+**Class schedule** (this class only, nothing for students to pick)
+
+```
+https://drsrennie-stack.github.io/new-build-bio4-solano/bio004-schedule-tr-am.html
+```
+
 **The 17 week modules**
 
 ```
@@ -97,6 +109,12 @@ HTML version:
 ```html
 <p><a class="btn btn-primary" href="https://drsrennie-stack.github.io/new-build-bio4-solano/welcome.html?sec=tr-eve"
    target="_blank" rel="noopener">Open BIO 004 &#8599;</a></p>
+```
+
+**Class schedule** (this class only, nothing for students to pick)
+
+```
+https://drsrennie-stack.github.io/new-build-bio4-solano/bio004-schedule-tr-eve.html
 ```
 
 **The 17 week modules**

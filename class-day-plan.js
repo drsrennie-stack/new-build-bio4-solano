@@ -16,7 +16,9 @@
    ============================================================ */
 (function(){
   'use strict';
-  var URL = 'https://drsrennie-stack.github.io/new-build-bio4-solano/bio004-course-calendar-alt.html';
+  var BASE = 'https://drsrennie-stack.github.io/new-build-bio4-solano/';
+  /* each class has its own schedule page; the shared page is only for a visitor whose class is unknown */
+  var URL = BASE + 'bio004-course-calendar-alt.html';
   var OK = { 'mw':1, 'tr-am':1, 'tr-eve':1 };
   var CSS = '.cdp{margin:16px 0;}'
     + '.cdp a{display:flex;align-items:center;gap:12px;background:#fff;color:#08101F;text-decoration:none;'
@@ -46,7 +48,7 @@
     Array.prototype.forEach.call(els, function(el){
       var s = section(el);
       el.className = (el.className ? el.className + ' ' : '') + 'cdp';
-      el.innerHTML = '<a href="' + URL + (s ? '?sec=' + s : '') + '" target="_top">'
+      el.innerHTML = '<a href="' + (s ? BASE + 'bio004-schedule-' + s + '.html' : URL) + '" target="_top">'
         + '<span class="cdp-ic" aria-hidden="true">&#9638;</span>'
         + '<span><span class="cdp-t">Class day plan</span>'
         + '<span class="cdp-s">What to do before class and in class, lecture and lab, every class day</span></span>'

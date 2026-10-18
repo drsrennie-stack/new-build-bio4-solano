@@ -325,6 +325,8 @@
   try { if (sec && (FIXED || /[?&]sec=/.test(window.location.search))) localStorage.setItem('bio004-section', sec); } catch (e) {}
   function u(page) {
     var bits = page.split('#'), base = bits[0];
+    /* the class schedule is a separate page per class */
+    if (base === 'bio004-course-calendar-alt.html' && sec) return 'bio004-schedule-' + sec + '.html' + (bits[1] ? '#' + bits[1] : '');
     if (sec) base += (base.indexOf('?') > -1 ? '&' : '?') + 'sec=' + sec;
     return base + (bits[1] ? '#' + bits[1] : '');
   }

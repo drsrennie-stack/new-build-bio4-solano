@@ -311,9 +311,23 @@ h1{margin:8px 0 4px;font-size:clamp(1.8rem,4.6vw,2.5rem);line-height:1.12;font-w
       + '</article>';
   }
 
+  var showPicker = false;
   function render(){
     document.querySelectorAll('.secs button').forEach(function(b){ b.setAttribute('aria-pressed', String(chosen && b.getAttribute('data-sec') === sec)); });
     document.getElementById('pick').hidden = chosen;
+    /* The class is already known (the Canvas link carries ?sec=, or the student
+       picked it once), so the buttons stay out of the way. A small link lets a
+       student who picked the wrong class fix it. */
+    var sp = document.querySelector('.secs'), ch = document.getElementById('secChange');
+    if (sp) sp.style.display = (chosen && !showPicker) ? 'none' : '';
+    if (chosen && !showPicker && !ch && sp) {
+      ch = document.createElement('button'); ch.type = 'button'; ch.id = 'secChange';
+      ch.textContent = 'Not your class? Change it';
+      ch.setAttribute('style', 'margin-top:12px;background:none;border:0;padding:0;color:#fff;opacity:.8;font:inherit;font-size:14px;text-decoration:underline;cursor:pointer');
+      ch.addEventListener('click', function(){ showPicker = true; render(); });
+      sp.parentNode.insertBefore(ch, sp.nextSibling);
+    }
+    if (ch) ch.style.display = (chosen && !showPicker) ? '' : 'none';
 
     var mon = addDays(TERM, 7 * (W - 1)), sun = addDays(mon, 6), a = iso(mon), z = iso(sun);
     var all = A.sessions(sec), wk = all.filter(function(s){ return s.d >= a && s.d <= z; });
@@ -337,7 +351,7 @@ h1{margin:8px 0 4px;font-size:clamp(1.8rem,4.6vw,2.5rem);line-height:1.12;font-w
     var pv = document.getElementById('prev'), nx = document.getElementById('next');
     pv.href = weekLink(W - 1); pv.textContent = '← Week ' + (W - 1); pv.hidden = W <= 1;
     nx.href = weekLink(W + 1); nx.textContent = 'Week ' + (W + 1) + ' →'; nx.hidden = W >= LAST_WEEK;
-    document.getElementById('all').href = 'bio004-course-calendar-alt.html?sec=' + sec;
+    document.getElementById('all').href = 'bio004-schedule-' + sec + '.html';
 
     out.innerHTML = wk.length ? wk.map(function(s){ return dayCard(s, all, nextD); }).join('')
       : '<div class="empty">No class meetings this week for your class.</div>';
@@ -346,6 +360,7 @@ h1{margin:8px 0 4px;font-size:clamp(1.8rem,4.6vw,2.5rem);line-height:1.12;font-w
   document.querySelectorAll('.secs button').forEach(function(b){
     b.addEventListener('click', function(){
       sec = b.getAttribute('data-sec'); chosen = true;
+      showPicker = false;
       try { localStorage.setItem('bio004-section', sec); } catch (e) {}
       try { history.replaceState(null, '', '?w=' + W + '&sec=' + sec + location.hash); } catch (e) {}
       render();

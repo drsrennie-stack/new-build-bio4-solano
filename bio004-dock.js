@@ -340,6 +340,17 @@
   function section() {
     var s = null;
     try { var m = location.search.match(/[?&]sec=([^&#]+)/); if (m) s = decodeURIComponent(m[1]); } catch (e) {}
+    /* a page that belongs to one class says so: the class pages, the syllabi
+       and the learning guides. That beats whatever was remembered. */
+    if (!SECTIONS[s]) {
+      try {
+        var fixed = window.BIO004_CLASS || (document.body && document.body.getAttribute('data-is-sec'))
+          || document.documentElement.getAttribute('data-force-sec');
+        var el = document.querySelector('[data-day-plan][data-sec]');
+        if (!SECTIONS[fixed] && el) fixed = el.getAttribute('data-sec');
+        if (SECTIONS[fixed]) s = fixed;
+      } catch (e) {}
+    }
     if (!SECTIONS[s]) { try { s = localStorage.getItem(SEC_KEY); } catch (e) { s = null; } }
     return SECTIONS[s] ? s : null;
   }
@@ -438,7 +449,7 @@
     /* The weekly pattern chart: lecture and lab, before class and in class,
        for the student's own section only (q carries ?sec=, which locks it). */
     t.push({ g: 'This week', name: 'Class day plan', sub: 'Lecture and lab, before class and in class, for your section',
-             url: BASE + 'bio004-course-calendar-alt.html' + q, icon: 'cal', tone: 'gold',
+             url: BASE + (sec ? 'bio004-schedule-' + sec + '.html' : 'bio004-course-calendar-alt.html'), icon: 'cal', tone: 'gold',
              kw: 'class day plan weekly pattern chart before class in class tbl lab tbl brain dump pre-read preread prep lecture lab models cadaver' });
     t.push({ g: 'This week', name: 'Course calendar', sub: 'Every class day and what to prepare for it',
              /* nolaunch=1 so the calendar opens as the calendar. Without it the
