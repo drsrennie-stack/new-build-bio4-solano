@@ -90,7 +90,15 @@
   .due-row li{display:block;font-size:.88rem;}
   .due-row li::before{content:"\25A2  ";color:var(--soft);}
   .day.exam .due{background:rgba(255,255,255,.08);}
-  .sched-h{font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);margin:0 0 6px;}
+  .sched-h{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 6px;}
+  .due-h .opt{display:block;margin-top:2px;font-size:.62rem;font-weight:600;letter-spacing:.1em;color:var(--soft);}
+  .pill{display:inline-block;margin:0 6px 2px 0;padding:2px 9px;border-radius:999px;font-size:.66rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;vertical-align:1px;line-height:1.5;}
+  .pill-tbl{background:#B3261E;color:#FFFFFF;}
+  .pill-bd{background:#FFD23F;color:#060B1A;}
+  .day li.lab-row .w{color:#3D5A80;}
+  .week.alt .day li.lab-row .w{color:#A9C3E6;}
+  .week.alt .due-h .opt{color:#D5DAE3;}
+  .week.alt .pill-tbl{background:#E5484D;color:#FFFFFF;}
 
   footer{margin-top:34px;text-align:center;color:var(--soft);font-size:.9rem;}
   footer .by{font-weight:600;color:var(--ink);}
@@ -189,6 +197,7 @@
   .week.alt .day .due{background:rgba(255,255,255,.09);}
   .week.alt .day .due-h,.week.alt .day .due-row .lbl{color:var(--yel);}
   .week.alt .day .due-row .lbl span,.week.alt .day li .w,.week.alt .day .sched-h{color:#D5DAE3;}
+  .week.alt .day .sched-h{color:var(--yel);}
   .week.alt .day a:not(.go){color:var(--yel);}
   .week.alt .day a.go{background:var(--yel);color:var(--navy);}
   .week.alt .day .badge{background:var(--yel);color:var(--navy);}
@@ -413,24 +422,25 @@
     var labWhy = L.mode==='lab' ? 'for today\'s lab' : L.mode==='model' ? 'first time on the models' : L.mode==='cadaver' ? 'you tag it on the cadaver today' : L.mode==='both' ? 'models, then you tag it on the cadaver, all today' : L.mode==='split' ? 'cadaver and models today' : 'review lab';
     if(s.kind==='d1'){
       tag='Lecture TBL '+s.tbl.n;
-      rows=[['Start',tag+': '+lec(s.tbl.topics)],['Then',s.app||'TBL application activity'],['Lab',lb+(mode?'. '+mode:'')],['End','Brain dump (lab): '+lab(s.bd.topics)]];
+      rows=[['Lecture',tag+': '+lec(s.tbl.topics),'tbl'],['Lecture, then',s.app||'TBL application activity'],['Lab',lb+(mode?'. '+mode:'')],['End of class','Brain dump on today\'s lab: '+lab(s.bd.topics),'bd']];
       due = (s.prepTopic ? lecDue(s.prepTopic, 'review before class') : lecDue(s.tbl.topics, 'for the TBL at the start of class'))
           + labDue(s.labTopic, labWhy+', and the brain dump at the end');
     } else {
       tag = s.tbl ? 'Lab TBL '+s.tbl.n : (L.mode==='review' ? 'Review lab' : 'Lecture and lab');
       rows=[['Lecture',s.lec]];
-      if(s.tbl) rows.push(['Lab, first 1.5 hours',tag+': '+lab(s.tbl.topics)+', with application']);
+      if(s.tbl) rows.push(['Lab, first 1.5 hours',tag+': '+lab(s.tbl.topics)+', with application','tbl']);
       rows.push([s.tbl?'Rest of lab':'Lab', lb+(mode?'. '+mode:'')]);
-      rows.push(['End','Brain dump (lecture): '+lec(s.bd.topics)]);
+      rows.push(['End of class','Brain dump on today\'s lecture: '+lec(s.bd.topics),'bd']);
       due = labDue(s.labTopic, s.tbl ? 'for the Lab TBL, first 1.5 hours of lab ('+labWhy+')' : labWhy)
           + lecDue(s.lecTopic, 'started, for today\'s lecture')
           + (s.bd.topics.join()!==s.lecTopic.join() ? '<div class="due-row"><p class="lbl">Brain dump: '+esc(lec(s.bd.topics))+' <span>at the end of class</span></p><ul><li>Redraw your note sheet visuals from memory the night before</li></ul></div>' : '');
     }
     return '<article class="day'+(s.kind==='d2'?' labd':'')+(s.d===nextD?' next':'')+'" aria-label="'+esc(dt)+(s.d===nextD?', your next class':'')+'">'
       + '<div class="head">'+badge(s)+'<div><p class="dt">'+esc(dt)+'</p><span class="tag" style="margin:0">'+tagH(s)+(s.d===nextD?' &middot; next class':'')+'</span></div></div>'
-      + '<div class="due"><p class="due-h">Before class (optional, but recommended)</p>'+due+'</div>'
-      + '<p class="sched-h">In class</p>'
-      + '<ul>'+rows.map(function(r){ return '<li><span class="w">'+esc(r[0])+'</span><span>'+esc(r[1])+'</span></li>'; }).join('')+'</ul>'
+      + '<div class="due"><p class="due-h">Prepare before class <span class="opt">optional, but recommended</span></p>'+due+'</div>'
+      + '<p class="sched-h">What we do in class</p>'
+      + '<ul>'+rows.map(function(r){ var pill = r[2]==='tbl' ? '<span class="pill pill-tbl">TBL</span>' : r[2]==='bd' ? '<span class="pill pill-bd">Brain dump</span>' : '';
+          return '<li class="'+(/^Lab|^Rest of lab/.test(r[0])?'lab-row':'lec-row')+'"><span class="w">'+esc(r[0])+'</span><span>'+pill+esc(r[1])+'</span></li>'; }).join('')+'</ul>'
       + (s.note?'<p class="nt">'+esc(s.note)+'</p>':'')
       + '<a class="go" target="_top" href="'+SITE+'bio004-preread.html?sec='+encodeURIComponent(sec)+'&amp;day='+s.d+'">Open the pre-read<span style="position:absolute;left:-9999px"> for '+esc(dt)+'</span></a>'
       + '</article>';
