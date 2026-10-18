@@ -325,6 +325,9 @@
   try { if (sec && (FIXED || /[?&]sec=/.test(window.location.search))) localStorage.setItem('bio004-section', sec); } catch (e) {}
   function u(page) {
     var bits = page.split('#'), base = bits[0];
+    /* the class schedule is a separate page per class */
+    var bare = base.split('?')[0], qs = base.indexOf('?') > -1 ? base.slice(base.indexOf('?')) : '';
+    if (bare === 'bio004-course-calendar-alt.html' && sec) return 'bio004-schedule-' + sec + '.html' + qs + (bits[1] ? '#' + bits[1] : '');
     if (sec) base += (base.indexOf('?') > -1 ? '&' : '?') + 'sec=' + sec;
     return base + (bits[1] ? '#' + bits[1] : '');
   }
@@ -540,7 +543,7 @@
       + (n === MOD ? '<span class="v3-tag">Now</span>' : '') + '<span class="ch" aria-hidden="true">&#8250;</span></a></li>';
     var side = '<aside class="v3-side" aria-label="More options">'
       + '<div class="v3-box"><h3>Quick links</h3><ul>'
-      + S(weekHref, IN_TERM ? 'Week ' + WEEK + ' page' : 'Class schedule', 'flag', 'g') + S(go('bio004-course-calendar-alt.html?view=week'), 'Calendar, week by week', 'cal')
+      + S(go('bio004-course-calendar-alt.html?view=week'), 'My class schedule', 'cal') + S(weekHref, IN_TERM ? 'Week ' + WEEK + ' page' : 'Class schedule', 'flag', 'g')
       + mine(S(go(SYLLABUS[sec] ? SYLLABUS[sec][0] : ''), 'My syllabus', 'doc'))
       + (latest ? '<li><button type="button" data-lpopen="news"><span class="lp-li t">' + svg('chat') + '</span><span>Announcements</span>' + (unread ? '<span class="lp-new" aria-label="' + unread + ' new">' + (unread > 9 ? '9+' : unread) + '</span>' : '<span class="ch" aria-hidden="true">&#8250;</span>') + '</button></li>' : '')
       + S('href="mailto:srennie@solano.edu"', 'Contact Dr. Rennie', 'mail', 'b')

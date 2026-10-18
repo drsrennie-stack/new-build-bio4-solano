@@ -174,6 +174,10 @@
   .wk-num{font-size:clamp(3.4rem,8vw,5.6rem);font-weight:600;line-height:.85;letter-spacing:-.03em;color:var(--brick);}
   .wk-body h2{font-size:clamp(1.25rem,2.6vw,1.6rem);font-weight:600;letter-spacing:-.01em;line-height:1.2;margin:0 0 4px;text-transform:none;color:var(--ink);}
   .wk-dates{margin:0 0 16px;font-size:.88rem;font-weight:500;color:var(--soft);}
+  .wk-go{display:inline-flex;align-items:center;gap:6px;margin:-6px 0 16px;min-height:40px;padding:8px 16px;border-radius:999px;background:#7A2E24;color:#FAFAF9;font-size:.88rem;font-weight:700;text-decoration:none;box-shadow:0 2px 4px rgba(6,11,26,.14),0 8px 18px -8px rgba(6,11,26,.45);}
+  .wk-go:hover{background:#5E2219;color:#FAFAF9;}
+  .wk-go:focus-visible{outline:3px solid var(--yel,#E3C27D);outline-offset:3px;}
+  @media print{.wk-go{display:none;}}
   @media(max-width:640px){.week{grid-template-columns:1fr;}.wk-num{font-size:3.2rem;}}
   .week.alt{background:var(--navy);color:#fff;border-radius:14px;padding:30px clamp(16px,3vw,28px);border-top:0;margin:8px 0;}
   .week.alt .wk-num{color:var(--yel);}
@@ -454,8 +458,8 @@
       return out.join(', ') || 'No class';
     }
     document.getElementById('weeks').innerHTML=order.map(function(w,wi){
-      var d=parse(w), e=new Date(d.getFullYear(),d.getMonth(),d.getDate()+6), n=wi+1;
-      return '<section class="week'+(wi%2?' alt':'')+'" aria-labelledby="w'+w+'"><div class="wk-num" aria-hidden="true">'+(n<10?'0'+n:n)+'</div><div class="wk-body"><h2 id="w'+w+'">'+esc(weekTitle(weeks[w]))+'</h2><p class="wk-dates">Week '+n+' &middot; '+MON[d.getMonth()]+' '+d.getDate()+' to '+MON[e.getMonth()]+' '+e.getDate()+'</p><div class="days">'
+      var d=parse(w), e=new Date(d.getFullYear(),d.getMonth(),d.getDate()+6), n=Math.round((d-new Date(2026,7,17))/6048e5)+1; /* the course week, the same number as the week pages */
+      return '<section class="week'+(wi%2?' alt':'')+'" aria-labelledby="w'+w+'"><div class="wk-num" aria-hidden="true">'+(n<10?'0'+n:n)+'</div><div class="wk-body"><h2 id="w'+w+'">'+esc(weekTitle(weeks[w]))+'</h2><p class="wk-dates">Week '+n+' &middot; '+MON[d.getMonth()]+' '+d.getDate()+' to '+MON[e.getMonth()]+' '+e.getDate()+'</p><a class="wk-go" href="'+SITE+'week-'+n+'.html?sec='+sec+'" target="_top">Open the Week '+n+' page &#8594;</a><div class="days">'
         + weeks[w].map(function(s){ return dayCard(s,nextD); }).join('')+'</div></div></section>';
     }).join('');
   }
@@ -513,6 +517,19 @@
     });
   });
 
+  /* ?view=week opens Week by week and scrolls to this week, so a student
+     coming from the Learning Guide lands on what is next, not on October 7. */
+  if(/[?&]view=week/.test(location.search)){
+    try{
+      var wb=document.querySelector('.views button[data-view="cards"]'); if(wb) wb.click();
+      /* the first week that still has a class day left (Mon to Sat) */
+      setTimeout(function(){
+        var t=new Date(); t.setHours(0,0,0,0); var secs=document.querySelectorAll('#weeks section.week h2[id^="w"]'), pick=null;
+        for(var i=0;i<secs.length;i++){ var m=parse(secs[i].id.slice(1)); m.setDate(m.getDate()+5); if(m>=t){ pick=secs[i]; break; } }
+        if(pick) pick.closest('section').scrollIntoView({block:'start'});
+      },250);
+    }catch(e){}
+  }
   document.getElementById('printBtn').addEventListener('click',function(){ window.print(); });
   document.querySelectorAll('.secs button').forEach(function(b){
     b.addEventListener('click', function(){

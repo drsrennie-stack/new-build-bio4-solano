@@ -173,6 +173,10 @@
   .wk-num{font-size:clamp(3.4rem,8vw,5.6rem);font-weight:600;line-height:.85;letter-spacing:-.03em;color:var(--brick);}
   .wk-body h2{font-size:clamp(1.25rem,2.6vw,1.6rem);font-weight:600;letter-spacing:-.01em;line-height:1.2;margin:0 0 4px;text-transform:none;color:var(--ink);}
   .wk-dates{margin:0 0 16px;font-size:.88rem;font-weight:500;color:var(--soft);}
+  .wk-go{display:inline-flex;align-items:center;gap:6px;margin:-6px 0 16px;min-height:40px;padding:8px 16px;border-radius:999px;background:#7A2E24;color:#FAFAF9;font-size:.88rem;font-weight:700;text-decoration:none;box-shadow:0 2px 4px rgba(6,11,26,.14),0 8px 18px -8px rgba(6,11,26,.45);}
+  .wk-go:hover{background:#5E2219;color:#FAFAF9;}
+  .wk-go:focus-visible{outline:3px solid var(--yel,#E3C27D);outline-offset:3px;}
+  @media print{.wk-go{display:none;}}
   @media(max-width:640px){.week{grid-template-columns:1fr;}.wk-num{font-size:3.2rem;}}
   .week.alt{background:var(--navy);color:#fff;border-radius:14px;padding:30px clamp(16px,3vw,28px);border-top:0;margin:8px 0;}
   .week.alt .wk-num{color:var(--yel);}
@@ -369,12 +373,18 @@
   }
 
   var KEY='bio004-section', sec=null;
+  /* A class's own schedule page (bio004-schedule-mw.html and the two
+     Tue/Thu ones) is this page with data-force-sec on <html>. It always
+     shows that one class: no buttons, nothing to choose, nothing remembered
+     from another visit can change it. */
+  var FORCE = document.documentElement.getAttribute('data-force-sec');
   try{ var m=location.search.match(/[?&]sec=([^&#]+)/); if(m) sec=decodeURIComponent(m[1]); }catch(e){}
   /* The student's own class shows automatically. ?sec= in the address (each
      Canvas course links with its own) wins and is remembered; otherwise the
      section they already picked anywhere on the site is used. Either way the
      section buttons stay out of sight, with a small link to change it in case
      a student picked the wrong one. Buttons show only when nothing is known. */
+  if(A.TIMES[FORCE]) sec=FORCE;
   if(A.TIMES[sec]){ try{ localStorage.setItem(KEY,sec); }catch(e){} }
   else { try{ sec=localStorage.getItem(KEY); }catch(e){} }
   var LOCKED = !!A.TIMES[sec];
@@ -382,6 +392,7 @@
   (function(){
     var sp=document.querySelector('.secs'); if(!sp || !LOCKED) return;
     sp.style.display='none';
+    if(A.TIMES[FORCE]) return;
     var ch=document.createElement('button'); ch.type='button'; ch.className='secs-change';
     ch.textContent='Not your class? Change it';
     ch.setAttribute('style','margin-top:14px;background:none;border:0;padding:0;color:#fff;opacity:.8;font:inherit;font-size:.85rem;text-decoration:underline;cursor:pointer');
@@ -446,8 +457,8 @@
       return out.join(', ') || 'No class';
     }
     document.getElementById('weeks').innerHTML=order.map(function(w,wi){
-      var d=parse(w), e=new Date(d.getFullYear(),d.getMonth(),d.getDate()+6), n=wi+1;
-      return '<section class="week'+(wi%2?' alt':'')+'" aria-labelledby="w'+w+'"><div class="wk-num" aria-hidden="true">'+(n<10?'0'+n:n)+'</div><div class="wk-body"><h2 id="w'+w+'">'+esc(weekTitle(weeks[w]))+'</h2><p class="wk-dates">Week '+n+' &middot; '+MON[d.getMonth()]+' '+d.getDate()+' to '+MON[e.getMonth()]+' '+e.getDate()+'</p><div class="days">'
+      var d=parse(w), e=new Date(d.getFullYear(),d.getMonth(),d.getDate()+6), n=Math.round((d-new Date(2026,7,17))/6048e5)+1; /* the course week, the same number as the week pages */
+      return '<section class="week'+(wi%2?' alt':'')+'" aria-labelledby="w'+w+'"><div class="wk-num" aria-hidden="true">'+(n<10?'0'+n:n)+'</div><div class="wk-body"><h2 id="w'+w+'">'+esc(weekTitle(weeks[w]))+'</h2><p class="wk-dates">Week '+n+' &middot; '+MON[d.getMonth()]+' '+d.getDate()+' to '+MON[e.getMonth()]+' '+e.getDate()+'</p><a class="wk-go" href="'+SITE+'week-'+n+'.html?sec='+sec+'" target="_top">Open the Week '+n+' page &#8594;</a><div class="days">'
         + weeks[w].map(function(s){ return dayCard(s,nextD); }).join('')+'</div></div></section>';
     }).join('');
   }
