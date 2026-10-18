@@ -495,10 +495,7 @@
           + (dte != null ? '<li class="lp-stat"><b>' + esc(examDate(true)) + '</b><span>Exam ' + MOD + '</span></li>'
             + '<li class="lp-stat"><b>' + (dte <= 0 ? 'Today' : dte + ' day' + (dte === 1 ? '' : 's')) + '</b><span>' + (dte <= 0 ? 'Exam day' : 'Until Exam ' + MOD) + '</span></li>' : '')
           + '</ul>' : '')
-      + (FIXED ? '<p class="lp-mine">Your class: <b>' + SECNAME[sec] + '</b></p>'
-        : sec ? '<p class="lp-mine">Your class: <b>' + SECNAME[sec] + '</b> <button type="button" data-lpsec="">Not your class?</button></p>'
-          : '<div class="lp-pick" role="group" aria-label="Which class are you in?"><p>Which class are you in?</p>'
-            + ['mw', 'tr-am', 'tr-eve'].map(function (k) { return '<button type="button" data-lpsec="' + k + '">' + SECNAME[k] + '</button>'; }).join('') + '</div>')
+      + (sec ? '<p class="lp-mine">Your class: <b>' + SECNAME[sec] + '</b></p>' : '')
       + '</div></div>';
   }
   function V(n, tint, want, big, rest, desc, links, step) {
