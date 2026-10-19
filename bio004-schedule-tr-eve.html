@@ -97,6 +97,8 @@
   .pill-tbl{background:#B3261E;color:#FFFFFF;}
   .pill-bd{background:#FFD23F;color:#060B1A;}
   .day li.lab-row .w{color:#3D5A80;}
+  .day .sched-h.lab-h{color:#3D5A80;margin-top:4px;}
+  .week.alt .day .sched-h.lab-h{color:#A9C3E6;}
   .week.alt .day li.lab-row .w{color:#A9C3E6;}
   .week.alt .due-h .opt{color:#D5DAE3;}
   .week.alt .pill-tbl{background:#E5484D;color:#FFFFFF;}
@@ -419,29 +421,50 @@
     var d=parse(s.d), dt=DOWL[d.getDay()]+', '+MON[d.getMonth()]+' '+d.getDate();
     if(s.kind==='holiday') return '<article class="day off"><p class="dt">'+esc(dt)+'</p><span class="tag">No class</span><p class="nt">'+esc(s.lec)+'</p></article>';
     if(s.kind==='exam') return '<article class="day exam"><p class="dt">'+esc(dt)+'</p><span class="tag">Exam '+s.exam+'</span><p class="nt">Lecture exam and lab practical, both today.</p></article>';
-    var rows, tag, due, L=s.lab, mode=(L.text||A.MODE[L.mode]), lb=lab(s.labTopic);
-    var labWhy = L.mode==='lab' ? 'for today\'s lab' : L.mode==='model' ? 'first time on the models' : L.mode==='cadaver' ? 'you tag it on the cadaver today' : L.mode==='both' ? 'models, then you tag it on the cadaver, all today' : L.mode==='split' ? 'cadaver and models today' : 'review lab';
+    /* Laid out like the chart: Lecture, then Lab, each with what to do
+       before class and what happens in class. Only today's items; the
+       full list of notes, sheets and videos lives in the pre-read. */
+    var L=s.lab;
+    function sl(keys){ return (keys||[]).map(A.short).join(' + '); }
+    function li(w,html,lab){ return '<li'+(lab?' class="lab-row"':'')+'><span class="w">'+w+'</span><span>'+html+'</span></li>'; }
+    function br(a){ return a.filter(Boolean).join('<br>'); }
+    var PILL_TBL='<span class="pill pill-tbl">TBL</span>', PILL_BD='<span class="pill pill-bd">Brain dump</span>';
+    var lecPre, lecIn;
     if(s.kind==='d1'){
-      tag='Lecture TBL '+s.tbl.n;
-      rows=[['Lecture',tag+': '+lec(s.tbl.topics),'tbl'],['Lecture, then',s.app||'TBL application activity'],['Lab',lb+(mode?'. '+mode:'')],['End of class','Brain dump on today\'s lab: '+lab(s.bd.topics),'bd']];
-      due = (s.prepTopic ? lecDue(s.prepTopic, 'review before class') : lecDue(s.tbl.topics, 'for the TBL at the start of class'))
-          + labDue(s.labTopic, labWhy+', and the brain dump at the end');
+      var top = s.prepTopic || s.tbl.topics;
+      lecPre = br(['<b>'+esc(sl(top))+'</b>', s.prepTopic ? 'Origins, insertions, actions' : 'Notes, note sheets, videos']);
+      lecIn  = br([PILL_TBL+'Lecture TBL '+s.tbl.n+': '+esc(sl(s.tbl.topics)),
+                   s.app ? esc(s.app) : 'Active learning activity on '+esc(sl(s.tbl.topics))]);
     } else {
-      tag = s.tbl ? 'Lab TBL '+s.tbl.n : (L.mode==='review' ? 'Review lab' : 'Lecture and lab');
-      rows=[['Lecture',s.lec]];
-      if(s.tbl) rows.push(['Lab, first 1.5 hours',tag+': '+lab(s.tbl.topics)+', with application','tbl']);
-      rows.push([s.tbl?'Rest of lab':'Lab', lb+(mode?'. '+mode:'')]);
-      rows.push(['End of class','Brain dump on today\'s lecture: '+lec(s.bd.topics),'bd']);
-      due = labDue(s.labTopic, s.tbl ? 'for the Lab TBL, first 1.5 hours of lab ('+labWhy+')' : labWhy)
-          + lecDue(s.lecTopic, 'started, for today\'s lecture')
-          + (s.bd.topics.join()!==s.lecTopic.join() ? '<div class="due-row"><p class="lbl">Brain dump: '+esc(lec(s.bd.topics))+' <span>at the end of class</span></p><ul><li>Redraw your note sheet visuals from memory the night before</li></ul></div>' : '');
+      lecPre = br(['<b>'+esc(sl(s.lecTopic))+'</b>','Read the notes, start your note sheets',
+                   s.bd.topics.join()!==s.lecTopic.join() ? 'Brain dump prep: redraw '+esc(sl(s.bd.topics)) : '']);
+      lecIn  = br([s.lec ? esc(s.lec) : 'Active learning activity on '+esc(sl(s.lecTopic)),
+                   PILL_BD+'on '+esc(sl(s.bd.topics))]);
     }
+    var keys=(s.tbl && s.tbl.kind==='lab' && s.tbl.topics ? s.tbl.topics : []).concat(s.labTopic||[]).filter(function(k,i,a){return a.indexOf(k)===i;});
+    var lists=pick(keys,A.LAB,'list');
+    /* A lab topic is new the first time it shows up in this class's term
+       (usually on the models); after that it is the same structures again
+       (the cadaver day, or review). The Tue/Thu Oct 15 cadaver set is the
+       Oct 8 set plus the anterior forearm, so it counts as a repeat. */
+    var SAME={ulTrunkHeartAnt:['ulTrunkHeart','antForearm']};
+    function labLine(s){ var had={}, all=A.sessions(sec), nw=[], old=[];
+      for(var i=0;i<all.length && all[i].d<s.d;i++) (all[i].labTopic||[]).forEach(function(k){ had[k]=1; });
+      (s.labTopic||[]).forEach(function(k){ (had[k] || (SAME[k]||[]).length && SAME[k].every(function(x){ return had[x]; }) ? old : nw).push(k); });
+      return [nw.length ? 'New: '+esc(sl(nw)) : '', old.length ? esc(sl(old))+' again' : ''].filter(Boolean).join('. ')+', while reviewing earlier labs'; }
+    var labPre = br(['<b>'+esc(sl(s.labTopic))+'</b>',
+                     L.mode==='review' ? 'Mark what you still cannot find' : '',
+                     lists.length ? 'Structure list: '+lists.map(function(p){ return lnk([p[0],p[1].replace(/^Module \d list: /,'')]); }).join(', ') : '']);
+    var how = L.mode==='model' ? 'Models, many structures tagged' : L.mode==='cadaver' ? 'Cadaver, you tag' : L.mode==='both' ? 'Models, then the cadaver' : L.mode==='split' ? 'Cadaver, you tag: '+esc(sl(L.cadaver))+'. Models: '+esc(sl(L.model)) : '';
+    var labIn = L.mode==='review'
+      ? br(['Review lab: work on what you need', s.kind==='d1' ? PILL_BD+'on today\'s lab' : ''])
+      : br([labLine(s), how,
+            s.tbl && s.tbl.kind==='lab' ? PILL_TBL+'Lab TBL '+s.tbl.n+', first 1.5 hours' : '',
+            s.kind==='d1' ? PILL_BD+'on today\'s lab' : '']);
     return '<article class="day'+(s.kind==='d2'?' labd':'')+(s.d===nextD?' next':'')+'" aria-label="'+esc(dt)+(s.d===nextD?', your next class':'')+'">'
       + '<div class="head">'+badge(s)+'<div><p class="dt">'+esc(dt)+'</p><span class="tag" style="margin:0">'+tagH(s)+(s.d===nextD?' &middot; next class':'')+'</span></div></div>'
-      + '<div class="due"><p class="due-h">Prepare before class <span class="opt">optional, but recommended</span></p>'+due+'</div>'
-      + '<p class="sched-h">What we do in class</p>'
-      + '<ul>'+rows.map(function(r){ var pill = r[2]==='tbl' ? '<span class="pill pill-tbl">TBL</span>' : r[2]==='bd' ? '<span class="pill pill-bd">Brain dump</span>' : '';
-          return '<li class="'+(/^Lab|^Rest of lab/.test(r[0])?'lab-row':'lec-row')+'"><span class="w">'+esc(r[0])+'</span><span>'+pill+esc(r[1])+'</span></li>'; }).join('')+'</ul>'
+      + '<p class="sched-h">Lecture</p><ul>'+li('Before class',lecPre)+li('In class',lecIn)+'</ul>'
+      + '<p class="sched-h lab-h">Lab</p><ul>'+li('Before class',labPre,1)+li('In class',labIn,1)+'</ul>'
       + (s.note?'<p class="nt">'+esc(s.note)+'</p>':'')
       + '<a class="go" target="_top" href="'+SITE+'bio004-preread.html?sec='+encodeURIComponent(sec)+'&amp;day='+s.d+'">Open the pre-read<span style="position:absolute;left:-9999px"> for '+esc(dt)+'</span></a>'
       + '</article>';
