@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TBL Study Group &middot; BIO 004</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1E3D4C; --navy-deep:#142a36; --navy-tint:#EDF1F3;
+  --gold:#B8924A; --terra:#C2734D; --terra-dark:#A0522D;
+  --white:#FFFFFF; --page:#FAFAF9; --gray:#5F6B70; --gray-line:#9AA3A7; --line:#D5DCDF;
+  --shadow:0 1px 3px rgba(0,0,0,0.08); --lift:0 8px 16px rgba(0,0,0,0.10);
+  --disp:'Plus Jakarta Sans',system-ui,sans-serif; --body:'DM Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+em,i,cite,address,dfn,var{font-style:normal}
+[hidden]{display:none !important}
+html{background:var(--page);scroll-padding-bottom:96px}
+body{margin:0;background:var(--page);color:var(--navy);font-family:var(--body);font-size:17px;line-height:1.55}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 120px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip{position:absolute;left:16px;top:-60px;background:var(--navy);color:var(--white);padding:10px 16px;border-radius:6px;z-index:50;font-weight:700;text-decoration:none}
+.skip:focus{top:12px}
+:focus-visible{outline:3px solid var(--terra-dark);outline-offset:3px}
+a{color:var(--terra-dark)}
+
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-dark);margin:0 0 6px}
+h1{font-family:var(--disp);font-weight:800;font-size:clamp(28px,4.5vw,38px);line-height:1.15;margin:0 0 6px}
+.subhead{font-family:var(--disp);font-weight:600;color:var(--terra-dark);font-size:clamp(17px,2.5vw,21px);margin:0 0 8px}
+h2{font-family:var(--disp);font-weight:600;color:var(--terra-dark);font-size:23px;line-height:1.25;margin:0 0 12px}
+h2:focus{outline:none}
+h3{font-family:var(--disp);font-weight:600;color:var(--terra-dark);font-size:19px;line-height:1.3;margin:0 0 8px}
+p{margin:0 0 10px}
+
+.card{background:var(--white);border-radius:12px;box-shadow:var(--shadow);padding:20px;margin:0 0 16px;transition:transform 200ms ease,box-shadow 200ms ease}
+.card.lift:hover{transform:translateY(-2px);box-shadow:var(--lift)}
+.label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-dark);margin:0 0 8px}
+.muted{color:var(--gray)}
+.small{font-size:15px}
+ul.tight{margin:0;padding-left:20px}
+ul.tight li{margin:3px 0}
+
+/* buttons */
+.btn{font:inherit;font-weight:700;border-radius:8px;padding:11px 18px;cursor:pointer;border:2px solid var(--navy);background:var(--navy);color:var(--white);min-height:44px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn:hover{background:var(--navy-deep);border-color:var(--navy-deep)}
+.btn.ghost{background:var(--white);color:var(--navy)}
+.btn.ghost:hover{background:var(--navy-tint)}
+.btn.small{padding:7px 12px;min-height:38px;font-size:15px}
+.btn[aria-disabled="true"]{background:var(--page);border:1px dashed var(--gray-line);color:var(--gray);cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.row.mt{margin-top:14px}
+
+/* mode switch and module tabs */
+.seg{display:inline-flex;background:var(--white);border-radius:10px;box-shadow:var(--shadow);padding:4px;gap:4px}
+.seg button{font:inherit;font-weight:700;border:0;background:transparent;color:var(--navy);padding:10px 22px;border-radius:8px;cursor:pointer;min-height:44px}
+.seg button[aria-checked="true"]{background:var(--navy);color:var(--white)}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 12px}
+.tabs button{font:inherit;font-weight:700;font-size:15px;border:1px solid var(--navy);background:var(--white);color:var(--navy);padding:8px 14px;border-radius:999px;cursor:pointer;min-height:40px}
+.tabs button[aria-selected="true"]{background:var(--navy);color:var(--white)}
+.topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin:0;padding:0;list-style:none}
+.topic{display:flex;gap:10px;align-items:flex-start;background:var(--white);border:1px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;min-height:56px}
+.topic:hover{background:var(--navy-tint)}
+.topic input{width:22px;height:22px;margin-top:2px;flex:0 0 auto;accent-color:var(--navy)}
+.topic .tt{font-weight:700;line-height:1.3}
+.topic .ts{font-size:14px;color:var(--gray);line-height:1.35;margin-top:2px}
+.tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--navy-tint);color:var(--navy);vertical-align:middle}
+.tag.warm{background:#F6E9E1;color:var(--terra-dark)}
+.field{display:flex;flex-direction:column;gap:6px;min-width:200px}
+.field label{font-weight:700}
+select,input[type=number],input[type=text],textarea{font:inherit;color:var(--navy);background:var(--white);border:1px solid var(--navy);border-radius:8px;padding:9px 12px;min-height:44px}
+textarea{width:100%;min-height:80px;resize:vertical}
+.ready{font-weight:700;margin:12px 0 0}
+
+/* stepper */
+.steps{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0;margin:18px 0}
+.steps button{width:100%;min-height:56px;font:inherit;font-size:14px;font-weight:700;border-radius:8px;cursor:pointer;background:var(--white);color:var(--navy);padding:6px 4px;line-height:1.2;box-shadow:var(--shadow)}
+.steps .st{display:block;font-size:12px;font-weight:500;margin-top:2px}
+.steps button.locked{border:1px dashed var(--gray-line);color:var(--gray);box-shadow:none;background:var(--page)}
+.steps button.open{border:2px solid var(--gold)}
+.steps button.done{border:2px solid var(--navy);background:var(--navy-tint)}
+.steps button[aria-current="step"]{outline:3px solid var(--terra-dark);outline-offset:2px}
+.sessionbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin:8px 0 22px}
+
+/* questions */
+.qnum{font-size:14px;font-weight:700;color:var(--gray);margin:0 0 6px}
+.stem{font-family:var(--disp);font-weight:700;font-size:18.5px;line-height:1.4;margin:0 0 14px}
+.fig{margin:0 0 14px;background:var(--navy-tint);border-radius:10px;overflow:hidden}
+.fig svg{display:block;width:100%;height:auto;max-height:62vh}
+.fig figcaption{font-size:14px;color:var(--gray);padding:6px 10px;background:var(--white)}
+.srow{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-bottom:8px;background:var(--white)}
+.srow.has{border-color:var(--navy)}
+.letter{width:32px;height:32px;border-radius:50%;border:2px solid var(--navy);display:grid;place-items:center;font-family:var(--disp);font-weight:800}
+.step{display:flex;align-items:center;gap:4px}
+.step button{width:40px;height:40px;border-radius:8px;border:1px solid var(--navy);background:var(--white);color:var(--navy);font:inherit;font-weight:800;font-size:20px;cursor:pointer}
+.step button:hover{background:var(--navy-tint)}
+.step input{width:52px;text-align:center;padding:6px 4px;min-height:40px;font-weight:800}
+.total{font-weight:700;margin:4px 0 0}
+.total.full{color:var(--navy)}
+.total.over{color:var(--terra-dark)}
+.sticky{position:fixed;left:0;right:0;bottom:0;background:var(--white);box-shadow:0 -2px 10px rgba(0,0,0,.10);z-index:20}
+.sticky .in{max-width:900px;margin:0 auto;padding:10px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+
+.opt{display:flex;gap:12px;align-items:center;width:100%;text-align:left;font:inherit;background:var(--white);color:var(--navy);border:1px solid var(--navy);border-radius:10px;padding:10px 12px;cursor:pointer;min-height:52px;margin-bottom:8px}
+.opt:hover{background:var(--navy-tint)}
+.opt .otext{flex:1}
+.opt .rank{min-width:46px;text-align:center;font-weight:800;font-size:14px;border-radius:999px;padding:3px 8px;background:var(--navy-tint)}
+.opt.ranked .rank{background:var(--navy);color:var(--white)}
+.opt.right{border:2px solid var(--navy);background:var(--navy-tint)}
+.opt.right .letter{background:var(--navy);color:var(--white)}
+.opt.wrongpick{border:1px dashed var(--terra-dark)}
+.opt[aria-disabled="true"]{cursor:default}
+.radio{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--navy);border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;background:var(--white)}
+.radio:hover{background:var(--navy-tint)}
+.radio input{width:22px;height:22px;margin-top:4px;accent-color:var(--navy);flex:0 0 auto}
+fieldset{border:0;margin:0;padding:0}
+legend{padding:0}
+
+/* breakdown */
+.bd{margin-top:14px;padding-top:12px;border-top:1px solid var(--navy-tint)}
+.bd p{margin:0 0 8px}
+.bd ol{list-style:none;margin:0;padding:0}
+.bd li{display:grid;grid-template-columns:34px 1fr;gap:10px;margin:0 0 10px}
+.bd li .letter{width:30px;height:30px;font-size:14px}
+.bd li.ok .letter{background:var(--navy);color:var(--white)}
+.verdict{font-weight:800}
+.pts{font-family:var(--disp);font-weight:800;font-size:20px}
+details.key{background:var(--white);border-radius:12px;box-shadow:var(--shadow);margin:0 0 10px}
+details.key>summary{cursor:pointer;padding:14px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:center;justify-content:space-between;min-height:52px}
+details.key>summary::-webkit-details-marker{display:none}
+details.key>summary .chev{transition:transform 200ms ease}
+details.key[open]>summary .chev{transform:rotate(90deg)}
+details.key .kb{padding:0 16px 16px}
+
+/* scores */
+.big{font-family:var(--disp);font-weight:800;font-size:clamp(34px,7vw,52px);line-height:1;margin:6px 0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.score-card{background:var(--white);border-radius:12px;box-shadow:var(--shadow);padding:16px}
+.qr{background:var(--white);display:inline-block;padding:12px;border-radius:12px;box-shadow:var(--shadow)}
+.qr svg{display:block;width:min(300px,70vw);height:auto}
+.linkbox{word-break:break-all;font-size:14px;background:var(--navy-tint);padding:8px 10px;border-radius:8px}
+.rec{background:var(--white);border-radius:12px;box-shadow:var(--shadow);padding:16px;margin-bottom:12px}
+.rec h3{margin-bottom:4px}
+.check{display:flex;gap:10px;align-items:center;font-weight:700;margin-top:8px}
+.check input{width:22px;height:22px;accent-color:var(--navy)}
+.error{color:var(--terra-dark);font-weight:700}
+.loading{padding:30px 0}
+
+#printArea{display:none}
+@media (max-width:640px){
+  .steps{grid-template-columns:repeat(2,1fr)}
+  .srow{grid-template-columns:30px 1fr;grid-template-areas:"l t" "s s"}
+  .srow .letter{grid-area:l}.srow .otext{grid-area:t}.srow .step{grid-area:s;justify-content:flex-end}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}.card.lift:hover{transform:none}}
+
+/* ---------- print packet ---------- */
+@page{margin:0.5in}
+@media print{
+  html,body{background:#fff}
+  body{font-size:10.5pt;line-height:1.35}
+  .wrap,.sticky,.skip{display:none !important}
+  #printArea{display:block !important;color:#000}
+  #printArea h1{font-size:18pt;margin:0 0 4pt}
+  #printArea h2{font-size:13pt;color:#000;margin:10pt 0 6pt}
+  #printArea .pq{break-inside:avoid;margin:0 0 9pt}
+  #printArea .pq .stem{font-size:10.5pt;margin:0 0 3pt}
+  #printArea .po{display:flex;gap:6pt;align-items:baseline;margin:0 0 2pt}
+  #printArea .box{display:inline-block;width:30pt;border-bottom:1px solid #000;flex:0 0 auto}
+  #printArea .newpage{break-before:page}
+  #printArea table{border-collapse:collapse;width:100%;font-size:10pt}
+  #printArea th,#printArea td{border:1px solid #000;padding:5pt 6pt;text-align:left}
+  #printArea .pfig svg{width:3.4in;height:auto;display:block}
+  #printArea .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:10pt 18pt}
+  #printArea .pgrid .pfig svg{width:100%;max-height:2.2in}
+  #printArea .kb .pfig svg{width:2.6in;max-height:2in}
+  #printArea .kb{break-inside:avoid;margin:0 0 9pt}
+  #printArea .note{margin:0 0 2pt 12pt}
+  #printArea .lines{border-bottom:1px solid #000;height:16pt}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">BIO 004 &middot; Human Anatomy &middot; MedMasters Collaborative</p>
+    <h1>TBL Study Group</h1>
+    <p class="subhead" id="subhead">Build a team test from your own course material</p>
+    <p class="small muted" id="byline">Dr. Sharilyn Rennie</p>
+  </header>
+  <nav aria-label="TBL steps" id="stepNav" hidden>
+    <ol class="steps" id="steps"></ol>
+    <div class="sessionbar" id="sessionBar"></div>
+  </nav>
+  <main id="main" tabindex="-1">
+    <div id="view" class="loading" aria-busy="true"><p>Loading your course questions&hellip;</p></div>
+  </main>
+  <div id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+</div>
+<div class="sticky" id="sticky" hidden><div class="in" id="stickyIn"></div></div>
+<div id="printArea" aria-hidden="true"></div>
+
+<script src="bio004-card-bank.js"></script>
+<script src="competenciesfall2026.js"></script>
+<script src="card-competency-map.js"></script>
+<script src="card-competency-fine.js"></script>
+<script src="bio004-tbl-lab-data.js"></script>
+<script src="bio004-tbl-apps.js"></script>
+<script src="bio004-qrcode.js"></script>
+<script>
+(function () {
+'use strict';
+
+/* ==========================================================
+   SETTINGS
+   ========================================================== */
+var TRAT_POINTS = [1, 0.5, 0.25, 0];   /* team tRAT: 1st, 2nd, 3rd, 4th choice correct */
+var IRAT_WEIGHT = 30, TRAT_WEIGHT = 10; /* out of 40 */
+var APP_POINTS = 3;                     /* each application, all or none */
+var DOK3_SHARE = 0.6;                   /* lecture iRAT: about 60 percent DOK 3 */
+var LAB_TEXT_SHARE = 0.3;               /* lab iRAT: about 30 percent text cards */
+var LETTERS = ['A', 'B', 'C', 'D'];
+var RANK_WORDS = ['1st', '2nd', '3rd', '4th'];
+/* Card bank topics that are lab structure work only; they show under Lab, not Lecture */
+var LAB_ONLY = ['m3-back-thorax-muscles', 'm3-arm-muscles', 'm3-forearm-anterior', 'm3-forearm-posterior', 'm3-hand-muscles',
+  'm3-upper-limb-vessels', 'm3-upper-limb-nerves', 'm4-hip-thigh-muscles', 'm4-leg-muscles', 'm4-lower-limb-nav',
+  'm4-abdominal-vessels', 'mx-head-neck-muscles', 'mx-abdominal-wall'];
+
+/* ==========================================================
+   HELPERS
+   ========================================================== */
+function $(id) { return document.getElementById(id); }
+function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function announce(m) { var a = $('announcer'); a.textContent = ''; setTimeout(function () { a.textContent = m; }, 60); }
+function store(k, v) { try { if (v === undefined) { var s = localStorage.getItem(k); return s ? JSON.parse(s) : null; } localStorage.setItem(k, JSON.stringify(v)); } catch (e) { return null; } }
+function norm(t) { return String(t || '').toLowerCase().replace(/\(.*?\)/g, ' ').replace(/[^a-z0-9 ]+/g, ' ').replace(/\b(the|of|a|an)\b/g, ' ').replace(/\s+/g, ' ').trim(); }
+function fnv(s) { var h = 2166136261; for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); }
+function rng(seed) { var a = seed >>> 0; return function () { a = (a + 0x6D2B79F5) >>> 0; var t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+function shuffle(arr, r) { for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(r() * (i + 1)); var t = arr[i]; arr[i] = arr[j]; arr[j] = t; } return arr; }
+function newSeed() { try { var u = new Uint32Array(1); crypto.getRandomValues(u); return u[0] % 2147483647; } catch (e) { return Math.floor(Math.random() * 2147483647); } }
+function fmt(n) { return (Math.round(n * 100) / 100).toString(); }
+function pct(n) { return (Math.round(n * 1000) / 10).toString() + '%'; }
+function lc(t) { t = String(t || ''); return /^[A-Z][a-z]/.test(t) ? t.charAt(0).toLowerCase() + t.slice(1) : t; }
+function today() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+
+/* answer letters for a set: balanced, no repeats in a row, no ABAB, no runs like ABC */
+function letterPlan(n, r) {
+  if (!n) return [];
+  var base = [];
+  for (var i = 0; i < n; i++) base.push(i % 4);
+  var best = null;
+  for (var tries = 0; tries < 4000; tries++) {
+    var s = shuffle(base.slice(), r), ok = true;
+    for (var k = 1; k < s.length && ok; k++) {
+      if (s[k] === s[k - 1]) ok = false;
+      if (k >= 3 && s[k] === s[k - 2] && s[k - 1] === s[k - 3]) ok = false;
+      if (k >= 2 && ((s[k] - s[k - 1] === 1 && s[k - 1] - s[k - 2] === 1) || (s[k - 1] - s[k] === 1 && s[k - 2] - s[k - 1] === 1))) ok = false;
+    }
+    if (ok) return s;
+    best = s;
+  }
+  return best;
+}
+
+/* ==========================================================
+   DATA: lecture topics (card bank), lab topics (atlas + lab cards),
+   application questions. Every question gets a short id for links.
+   ========================================================== */
+var BANK = window.BIO004_CARD_BANK, LAB = window.BIO004_TBL_LAB;
+var APPS = (window.BIO004_TBL_APPS && window.BIO004_TBL_APPS.items) || [];
+var COMP = {}; (window.BIO004_COMPETENCIES || []).forEach(function (c) { COMP[c.id] = c; });
+var CMAP = window.BIO004_CARD_COMPETENCY_MAP || window.CARD_COMPETENCY_MAP || {};
+var BYH = {}, TOPIC_BY_H = {};
+var MODES = { lec: [], lab: [] };
+
+function compsOfCard(c) {
+  if (c.competencyId) return [c.competencyId];
+  if (!c.lt) return null;
+  var e = CMAP[c.lt + ':' + c.lid] || CMAP[c.lt];
+  if (!e) return null;
+  var cs = e.comps || e;
+  return Array.isArray(cs) ? cs.slice() : [cs];
+}
+function addItem(it) { BYH[it.h] = it; return it; }
+function cardItem(c, topic, lab) {
+  return addItem({
+    kind: 'card', id: c.id, h: fnv('c:' + c.id), dok: c.dok, q: c.q,
+    opts: c.options, ci: c.correctIndex, why: c.why || '', notes: c.notes || [],
+    comps: compsOfCard(c) || [], key: lab ? 's:' + norm(c.options[c.correctIndex]) : null, topic: topic
+  });
+}
+function shortModule(t) { var m = /^Module (\d)/.exec(t); return m ? 'Module ' + m[1] : 'More practice'; }
+
+function buildData() {
+  var bankTopic = {};
+  BANK.modules.forEach(function (m) {
+    var mod = { id: m.id, title: m.title, short: shortModule(m.title), topics: [] };
+    m.topics.forEach(function (t) {
+      bankTopic[t.id] = t;
+      if (LAB_ONLY.indexOf(t.id) > -1) return;
+      var top = { id: t.id, h: fnv('t:' + t.id), title: t.title, summary: t.summary, mw: t.mw, tr: t.tr, mode: 'lec', items: [], apps: [] };
+      t.cards.forEach(function (c) {
+        if (c.dok < 2) return;
+        if (!compsOfCard(c)) return; /* only cards tied to a competency, so no competency repeats */
+        top.items.push(cardItem(c, top, false));
+      });
+      TOPIC_BY_H[top.h] = top;
+      mod.topics.push(top);
+    });
+    if (mod.topics.length) MODES.lec.push(mod);
+  });
+  (LAB ? LAB.modules : []).forEach(function (m) {
+    var mod = { id: m.id, title: m.title, short: shortModule(m.title), topics: [] };
+    m.topics.forEach(function (t) {
+      var top = { id: t.id, h: fnv('t:' + t.id), title: t.title, summary: '', mode: 'lab', items: [], apps: [] };
+      t.items.forEach(function (x) {
+        top.items.push(addItem({ kind: 'img', id: x.id, h: fnv('a:' + x.id), dok: 1, q: x.q, a: x.a, d: x.d, f: x.f, p: x.p,
+          comps: x.c || [], key: 's:' + x.k, topic: top }));
+      });
+      (t.bank || []).forEach(function (bid) {
+        var bt = bankTopic[bid]; if (!bt) return;
+        bt.cards.forEach(function (c) { if (c.dok >= 2) top.items.push(cardItem(c, top, true)); });
+      });
+      var structs = {}; top.items.forEach(function (i) { if (i.kind === 'img') structs[i.key] = 1; });
+      var nS = Object.keys(structs).length, nC = top.items.filter(function (i) { return i.kind === 'card'; }).length;
+      top.summary = (nS ? nS + ' structures on atlas images' : '') + (nS && nC ? ', plus ' : '') + (nC ? nC + ' lab cards' : '');
+      TOPIC_BY_H[top.h] = top;
+      mod.topics.push(top);
+    });
+    if (mod.topics.length) MODES.lab.push(mod);
+  });
+  var allTopics = {};
+  ['lec', 'lab'].forEach(function (k) { MODES[k].forEach(function (m) { m.topics.forEach(function (t) { allTopics[(k === 'lab' ? 'lab:' : 'lec:') + t.id] = t; }); }); });
+  APPS.forEach(function (a) {
+    var t = allTopics[(a.mode === 'lab' ? 'lab:' : 'lec:') + a.topic];
+    if (!t) return;
+    t.apps.push(addItem({ kind: 'app', id: a.id, h: fnv('p:' + a.id), dok: a.dok, type: a.type, q: a.q, opts: a.options, ci: a.correctIndex,
+      why: a.why, notes: a.notes, fix: a.fix, comps: [a.comp], topic: t }));
+  });
+}
+
+/* ==========================================================
+   DRAWING A SET (one question per competency or structure)
+   ========================================================== */
+function keysOf(it) { return it.key ? [it.key] : it.comps; }
+function takeInto(out, used, list, limit) {
+  for (var i = 0; i < list.length && out.length < limit; i++) {
+    var it = list[i];
+    if (out.indexOf(it) > -1) continue;
+    var ks = keysOf(it);
+    if (!ks.length) continue;
+    if (ks.some(function (k) { return used[k]; })) continue;
+    out.push(it); ks.forEach(function (k) { used[k] = 1; });
+  }
+}
+function drawRat(topics, n, mode, r) {
+  var pool = []; topics.forEach(function (t) { pool = pool.concat(t.items); });
+  var out = [], used = {};
+  if (mode === 'lec') {
+    /* cards tied to one competency go first, so a card that spans several
+       competencies never blocks the single-competency cards behind it */
+    var singleFirst = function (list) { return list.filter(function (i) { return i.comps.length === 1; }).concat(list.filter(function (i) { return i.comps.length > 1; })); };
+    var d3 = singleFirst(shuffle(pool.filter(function (i) { return i.dok >= 3; }), r));
+    var d2 = singleFirst(shuffle(pool.filter(function (i) { return i.dok === 2; }), r));
+    takeInto(out, used, d3, Math.ceil(n * DOK3_SHARE));
+    takeInto(out, used, d2, n);
+    takeInto(out, used, d3, n);
+  } else {
+    var imgs = shuffle(pool.filter(function (i) { return i.kind === 'img'; }), r);
+    var cards = shuffle(pool.filter(function (i) { return i.kind === 'card'; }), r);
+    takeInto(out, used, cards, cards.length ? Math.round(n * LAB_TEXT_SHARE) : 0);
+    takeInto(out, used, imgs, n);
+    takeInto(out, used, cards, n);
+  }
+  return shuffle(out, r);
+}
+function drawApps(topics, k, r) {
+  var pool = []; topics.forEach(function (t) { pool = pool.concat(t.apps); });
+  var out = [], used = {};
+  shuffle(pool, r);
+  takeInto(out, used, pool, k);
+  /* Lab: a competency like "cranial nerves" covers many structures, and each
+     lab application question works with different structures, so once every
+     competency has one question, more questions may be added. Lecture stays
+     strictly one question per competency. */
+  if (topics.length && topics[0].mode === 'lab') pool.forEach(function (it) { if (out.length < k && out.indexOf(it) < 0) out.push(it); });
+  return out;
+}
+function capacity(topics, mode) {
+  var r = rng(7), rat = drawRat(topics, 99, mode, r).length, apps = drawApps(topics, 99, rng(9)).length;
+  return { rat: rat, apps: apps };
+}
+
+/* ==========================================================
+   SESSION: what everyone in the group shares through the link
+   ========================================================== */
+var S = null;       /* current session */
+var ME = null;      /* this device: my iRAT */
+var TEAM = null;    /* this device: team test */
+
+function encode(sess) {
+  return ['1', sess.mode === 'lec' ? 'L' : 'B', sess.seed.toString(36),
+    sess.topics.map(function (t) { return t.h; }).join('-'),
+    sess.rat.map(function (i) { return i.h; }).join('-'),
+    sess.apps.map(function (i) { return i.h; }).join('-')].join('.');
+}
+function decode(code) {
+  var p = String(code || '').split('.');
+  if (p[0] !== '1' || p.length < 6) throw new Error('This link is not a TBL Study Group link.');
+  var mode = p[1] === 'L' ? 'lec' : 'lab';
+  var get = function (list, map) { return list ? list.split('-').map(function (h) { var x = map[h]; if (!x) throw new Error('missing'); return x; }) : []; };
+  try {
+    return finishSession({ mode: mode, seed: parseInt(p[2], 36), topics: get(p[3], TOPIC_BY_H), rat: get(p[4], BYH), apps: get(p[5], BYH) });
+  } catch (e) {
+    throw new Error('Some questions in this link are no longer in the course bank. Ask your group leader to build a new TBL.');
+  }
+}
+function finishSession(sess) {
+  var r = rng(sess.seed + 101);
+  var la = letterPlan(sess.rat.length, r), lb = letterPlan(sess.apps.length, r);
+  sess.ratV = sess.rat.map(function (it, i) { return arrange(it, la[i], r); });
+  sess.appV = sess.apps.map(function (it, i) { return arrange(it, lb[i], r); });
+  sess.code = encode(sess);
+  sess.key = 'tblstudy:' + fnv(sess.code);
+  return sess;
+}
+
+/* put the correct choice at its planned letter, wrong choices in a seeded order */
+function arrange(it, target, r) {
+  var v = { it: it, opts: [], ci: target };
+  if (it.kind === 'img') {
+    var wrong = shuffle(it.d.map(function (x) { return { t: x[0], pin: x[1], other: x[2] || '', c: false }; }), r);
+    wrong.splice(target, 0, { t: it.a, pin: it.p, c: true });
+    v.opts = wrong;
+    var fig = LAB.figs[it.f] || {};
+    v.opts.forEach(function (o, k) {
+      if (o.c) o.n = 'Correct. ' + (it.p >= 0 ? 'The marker points to this structure.' : 'The ring or arrow on this image marks this structure.');
+      else if (o.pin >= 0) o.n = 'Not the marked structure, but it is on this same image. Marker ' + LETTERS[k] + ' on the answer figure shows where it really sits, so learn it as a neighbor.';
+      else o.n = 'Not the marked structure. ' + (o.other ? 'You can find it on the "' + o.other + '" figure in this chapter of the atlas.' : 'It appears on a different figure in this chapter of the atlas.');
+    });
+    var can = it.comps.length && COMP[it.comps[0]] ? COMP[it.comps[0]].can : '';
+    v.why = 'This image is the "' + (fig.t || 'atlas') + '" figure from the digital atlas. ' +
+      (it.p >= 0 ? 'The marker points to the ' + lc(it.a) + '. The answer figure labels where each of the four choices actually sits, so you can learn the neighbors too.' :
+        'The structure marked on the image is the ' + lc(it.a) + '. Look at its shape, size and position next to the structures around it, then find it again on the model or cadaver.') +
+      (can ? ' What you need to be able to do: ' + can : '');
+    return v;
+  }
+  var idx = [0, 1, 2, 3].filter(function (i) { return i !== it.ci; });
+  shuffle(idx, r); idx.splice(target, 0, it.ci);
+  v.opts = idx.map(function (i) { return { t: it.opts[i], n: it.notes[i] || '', c: i === it.ci }; });
+  v.why = it.why;
+  return v;
+}
+
+/* ==========================================================
+   CONCEPT LABELS for recommendations
+   ========================================================== */
+function conceptOf(it) {
+  if (it.kind === 'img') return { key: 'k:' + it.key, name: it.a, can: it.comps.length && COMP[it.comps[0]] ? COMP[it.comps[0]].can : '' };
+  if (it.key) return { key: 'k:' + it.key, name: it.opts[it.ci], can: it.comps.length && COMP[it.comps[0]] ? COMP[it.comps[0]].can : '' };
+  var c = COMP[it.comps[0]];
+  return { key: 'c:' + it.comps[0], name: c ? c.name : it.topic.title, can: c ? c.can : '' };
+}
+
+/* ==========================================================
+   ROUTER AND STEPPER
+   ========================================================== */
+var screen = 'build';
+var STEPS = [
+  { id: 'irat', label: 'iRAT', sub: 'On your own' },
+  { id: 'trat', label: 'tRAT', sub: 'As a team' },
+  { id: 'apps', label: 'Application', sub: 'As a team' },
+  { id: 'results', label: 'Scores and key', sub: 'Fix it now' }
+];
+function stepState(id) {
+  if (id === 'irat') return ME.submitted ? 'done' : 'open';
+  if (id === 'trat') return TEAM.tratDone ? 'done' : 'open';
+  if (id === 'apps') return !S.apps.length ? 'locked' : (TEAM.appsDone ? 'done' : (TEAM.tratDone ? 'open' : 'locked'));
+  if (id === 'results') return (ME.submitted || TEAM.tratDone) ? 'open' : 'locked';
+}
+function renderSteps() {
+  var nav = $('stepNav');
+  if (!S || screen === 'build') { nav.hidden = true; return; }
+  nav.hidden = false;
+  $('steps').innerHTML = STEPS.map(function (s, i) {
+    var st = stepState(s.id), word = st === 'done' ? 'Done' : st === 'locked' ? (s.id === 'apps' && !S.apps.length ? 'None picked' : 'Later') : s.sub;
+    return '<li><button type="button" class="' + st + '" data-step="' + s.id + '"' + (screen === s.id ? ' aria-current="step"' : '') +
+      (st === 'locked' ? ' aria-disabled="true"' : '') + '>' + (i + 1) + '. ' + s.label + '<span class="st">' + word + '</span></button></li>';
+  }).join('');
+  $('steps').querySelectorAll('button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      if (b.getAttribute('aria-disabled') === 'true') { announce('That step opens after the one before it.'); return; }
+      go(b.dataset.step);
+    });
+  });
+  $('sessionBar').innerHTML = '<span class="small muted">' + esc(sessionTitle()) + '</span><span class="row">' +
+    '<button type="button" class="btn ghost small" id="barShare">Group QR code</button>' +
+    '<button type="button" class="btn ghost small" id="barPrint">Paper version (PDF)</button>' +
+    '<button type="button" class="btn ghost small" id="barNew">Build a new TBL</button></span>';
+  $('barShare').onclick = function () { go('share'); };
+  $('barPrint').onclick = printPacket;
+  $('barNew').onclick = function () { if (confirm('Start a new TBL? This group\'s answers stay saved on this device under the old link.')) { history.replaceState(null, '', location.pathname); S = null; go('build'); } };
+}
+function sessionTitle() {
+  var mod = S.topics.length ? moduleOf(S.topics[0]) : null;
+  return (S.mode === 'lec' ? 'Lecture' : 'Lab') + (mod ? ' · ' : '') + (mod ? mod.short : '') + ': ' + S.topics.map(function (t) { return t.title; }).join(', ');
+}
+function moduleOf(t) { var found = null; MODES[t.mode].forEach(function (m) { if (m.topics.indexOf(t) > -1) found = m; }); return found; }
+
+function go(to) {
+  screen = to;
+  $('sticky').hidden = true;
+  var v = $('view');
+  v.classList.remove('loading'); v.removeAttribute('aria-busy');
+  ({ build: viewBuild, share: viewShare, irat: viewIrat, trat: viewTrat, apps: viewApps, results: viewResults })[to]();
+  renderSteps();
+  var h = v.querySelector('h2'); if (h) { h.setAttribute('tabindex', '-1'); h.focus(); }
+  window.scrollTo(0, 0);
+}
+function saveMe() { store(S.key + ':me', ME); }
+function saveTeam() { store(S.key + ':team', TEAM); }
+function loadState() {
+  ME = store(S.key + ':me') || { spread: S.rat.map(function () { return [0, 0, 0, 0]; }), submitted: false, teamT: '', teamA: '', fixed: {} };
+  TEAM = store(S.key + ':team') || { tcur: 0, ranks: S.rat.map(function () { return []; }), locked: S.rat.map(function () { return false; }), tratDone: false,
+    acur: 0, pick: S.apps.map(function () { return -1; }), why: S.apps.map(function () { return ''; }), alocked: S.apps.map(function () { return false; }), appsDone: false, fixed: {} };
+}
+
+/* ==========================================================
+   SCREEN: BUILD
+   ========================================================== */
+var B = store('tblstudy:build') || { mode: 'lec', mod: 0, sel: {}, n: 10, k: 3 };
+function viewBuild() {
+  $('subhead').textContent = 'Build a team test from your own course material';
+  var mods = MODES[B.mode];
+  if (B.mod >= mods.length) B.mod = 0;
+  var mod = mods[B.mod], now = today();
+  var sel = B.sel[B.mode] = B.sel[B.mode] || [];
+  var topicsHtml = mod.topics.map(function (t) {
+    var on = sel.indexOf(t.id) > -1;
+    var later = t.mw && t.tr && t.mw > now && t.tr > now;
+    return '<li><label class="topic" for="tp-' + t.id + '"><input type="checkbox" id="tp-' + t.id + '" value="' + t.id + '"' + (on ? ' checked' : '') + '>' +
+      '<span><span class="tt">' + esc(t.title) + (later ? ' <span class="tag warm">Coming up</span>' : '') + '</span>' +
+      '<span class="ts">' + esc(t.summary || '') + '</span></span></label></li>';
+  }).join('');
+  $('view').innerHTML =
+    '<h2>Build your TBL</h2>' +
+    '<div class="card"><p class="label">How this works</p><ul class="tight">' +
+      '<li>One person builds the TBL and shows the QR code.</li>' +
+      '<li>Everyone scans it and takes the iRAT alone, on their own phone.</li>' +
+      '<li>The team takes the tRAT and the application questions together on one screen.</li>' +
+      '<li>Each person types in the team score to see their own grade and answer key.</li></ul></div>' +
+    '<div class="card"><p class="label" id="modeLbl">Lecture or lab</p>' +
+      '<div class="seg" role="radiogroup" aria-labelledby="modeLbl">' +
+        '<button type="button" role="radio" aria-checked="' + (B.mode === 'lec') + '" tabindex="' + (B.mode === 'lec' ? 0 : -1) + '" data-mode="lec">Lecture</button>' +
+        '<button type="button" role="radio" aria-checked="' + (B.mode === 'lab') + '" tabindex="' + (B.mode === 'lab' ? 0 : -1) + '" data-mode="lab">Lab</button></div>' +
+      '<p class="small muted" style="margin-top:10px">' + (B.mode === 'lec' ? 'Lecture questions come from your recall cards, DOK 2 and 3.' : 'Lab questions use your atlas images: a marker on the structure and four names to choose from, plus lab cards.') + '</p>' +
+      '<div class="tabs" role="tablist" aria-label="Modules">' + mods.map(function (m, i) {
+        return '<button type="button" role="tab" id="mt' + i + '" aria-selected="' + (i === B.mod) + '" aria-controls="topicPanel" tabindex="' + (i === B.mod ? 0 : -1) + '" data-mod="' + i + '">' + esc(m.short) + '</button>';
+      }).join('') + '</div>' +
+      '<div id="topicPanel" role="tabpanel" aria-labelledby="mt' + B.mod + '">' +
+        '<h3>' + esc(mod.title) + '</h3>' +
+        '<div class="row" style="margin-bottom:10px"><button type="button" class="btn ghost small" id="allTopics">Whole module</button><button type="button" class="btn ghost small" id="noTopics">Clear</button></div>' +
+        '<fieldset><legend class="sr-only">Topics in ' + esc(mod.title) + '</legend><ul class="topics">' + topicsHtml + '</ul></fieldset>' +
+      '</div></div>' +
+    '<div class="card"><div class="row">' +
+      '<div class="field"><label for="ratN">iRAT and tRAT questions</label><select id="ratN">' + [5, 8, 10, 12].map(function (n) { return '<option' + (n === B.n ? ' selected' : '') + '>' + n + '</option>'; }).join('') + '</select></div>' +
+      '<div class="field"><label for="appK">Application questions</label><select id="appK"></select></div></div>' +
+      '<p class="ready" id="ready" aria-live="polite"></p>' +
+      '<p class="small muted" id="readyNote"></p>' +
+      '<div class="row mt"><button type="button" class="btn" id="buildBtn">Build our TBL</button></div></div>' +
+    '<div class="card"><p class="label">Already have a link?</p><p class="small">Scan the QR code on your leader\'s screen, or paste the link here.</p>' +
+      '<div class="row"><label class="sr-only" for="joinLink">TBL link</label><input type="text" id="joinLink" placeholder="Paste the TBL link" style="flex:1;min-width:220px"><button type="button" class="btn ghost" id="joinBtn">Join</button></div><p class="error" id="joinErr" role="alert"></p></div>';
+
+  document.querySelectorAll('[data-mode]').forEach(function (b) {
+    b.onclick = function () { B.mode = b.dataset.mode; B.mod = 0; store('tblstudy:build', B); go('build'); };
+    b.onkeydown = function (e) { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); B.mode = B.mode === 'lec' ? 'lab' : 'lec'; B.mod = 0; store('tblstudy:build', B); go('build'); var x = document.querySelector('[data-mode="' + B.mode + '"]'); if (x) x.focus(); } };
+  });
+  var tabs = document.querySelectorAll('[data-mod]');
+  tabs.forEach(function (b) {
+    b.onclick = function () { B.mod = +b.dataset.mod; store('tblstudy:build', B); go('build'); var x = $('mt' + B.mod); if (x) x.focus(); };
+    b.onkeydown = function (e) {
+      var i = +b.dataset.mod, n = tabs.length;
+      if (e.key === 'ArrowRight') i = (i + 1) % n; else if (e.key === 'ArrowLeft') i = (i - 1 + n) % n; else if (e.key === 'Home') i = 0; else if (e.key === 'End') i = n - 1; else return;
+      e.preventDefault(); B.mod = i; store('tblstudy:build', B); go('build'); $('mt' + i).focus();
+    };
+  });
+  document.querySelectorAll('.topic input').forEach(function (cb) {
+    cb.onchange = function () {
+      var s = B.sel[B.mode];
+      if (cb.checked) { if (s.indexOf(cb.value) < 0) s.push(cb.value); } else B.sel[B.mode] = s.filter(function (x) { return x !== cb.value; });
+      store('tblstudy:build', B); updateReady();
+    };
+  });
+  $('allTopics').onclick = function () { var s = B.sel[B.mode]; mod.topics.forEach(function (t) { if (s.indexOf(t.id) < 0) s.push(t.id); }); store('tblstudy:build', B); go('build'); };
+  $('noTopics').onclick = function () { B.sel[B.mode] = []; store('tblstudy:build', B); go('build'); };
+  $('ratN').onchange = function () { B.n = +this.value; store('tblstudy:build', B); updateReady(); };
+  $('appK').onchange = function () { B.k = +this.value; store('tblstudy:build', B); };
+  $('buildBtn').onclick = buildSession;
+  $('joinBtn').onclick = function () {
+    var v = $('joinLink').value.trim(), m = /[?&]s=([^&#\s]+)/.exec(v), code = m ? decodeURIComponent(m[1]) : v;
+    try { startSession(decode(code), 'irat'); } catch (e) { $('joinErr').textContent = e.message; }
+  };
+  updateReady();
+}
+function selectedTopics() {
+  var ids = B.sel[B.mode] || [], out = [];
+  MODES[B.mode].forEach(function (m) { m.topics.forEach(function (t) { if (ids.indexOf(t.id) > -1) out.push(t); }); });
+  return out;
+}
+function updateReady() {
+  var tops = selectedTopics(), cap = tops.length ? capacity(tops, B.mode) : { rat: 0, apps: 0 };
+  var k = $('appK'), maxK = Math.min(cap.apps, 10);
+  k.innerHTML = ''; for (var i = 0; i <= maxK; i++) k.insertAdjacentHTML('beforeend', '<option' + (i === Math.min(B.k, maxK) ? ' selected' : '') + '>' + i + '</option>');
+  if (!tops.length) { $('ready').textContent = 'Pick at least one topic.'; $('readyNote').textContent = ''; $('buildBtn').setAttribute('aria-disabled', 'true'); return; }
+  $('buildBtn').removeAttribute('aria-disabled');
+  var n = Math.min(B.n, cap.rat);
+  $('ready').textContent = tops.length + ' topic' + (tops.length > 1 ? 's' : '') + ' picked: ' + n + ' iRAT questions and up to ' + maxK + ' application questions.';
+  $('readyNote').textContent = cap.rat < B.n ? 'These topics cover only ' + cap.rat + (B.mode === 'lec' ? ' competencies' : ' structures') + ', and no ' + (B.mode === 'lec' ? 'competency' : 'structure') + ' is tested twice. Add a topic for a longer test.' : 'Every build draws a fresh set, and no ' + (B.mode === 'lec' ? 'competency' : 'structure') + ' is tested twice.';
+}
+function buildSession() {
+  if ($('buildBtn').getAttribute('aria-disabled') === 'true') { announce('Pick at least one topic first.'); return; }
+  var tops = selectedTopics(), seed = newSeed(), r = rng(seed);
+  var rat = drawRat(tops, B.n, B.mode, r), apps = drawApps(tops, +$('appK').value, r);
+  if (!rat.length) { announce('These topics have no questions yet.'); return; }
+  var sess = finishSession({ mode: B.mode, seed: seed, topics: tops, rat: rat, apps: apps });
+  startSession(sess, 'share');
+}
+function startSession(sess, to) {
+  S = sess; loadState();
+  history.replaceState(null, '', location.pathname + '?s=' + encodeURIComponent(S.code));
+  $('subhead').textContent = (S.mode === 'lec' ? 'Lecture TBL' : 'Lab TBL') + ': ' + S.topics.map(function (t) { return t.title; }).join(', ');
+  go(to);
+}
+
+/* ==========================================================
+   SCREEN: SHARE (QR code)
+   ========================================================== */
+function joinUrl() { return location.origin + location.pathname + '?s=' + encodeURIComponent(S.code); }
+function qrSvg(text) {
+  var q = window.qrcode(0, 'M'); q.addData(text); q.make();
+  var n = q.getModuleCount(), m = 4, size = n + m * 2, d = '';
+  for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (q.isDark(r, c)) d += 'M' + (c + m) + ' ' + (r + m) + 'h1v1h-1z';
+  return '<svg viewBox="0 0 ' + size + ' ' + size + '" role="img" aria-label="QR code that opens this TBL" shape-rendering="crispEdges"><rect width="' + size + '" height="' + size + '" fill="#fff"/><path d="' + d + '" fill="#142a36"/></svg>';
+}
+function viewShare() {
+  var url = joinUrl(), qr = '';
+  try { qr = qrSvg(url); } catch (e) { qr = '<p class="error">The QR code could not be made. Share the link instead.</p>'; }
+  $('view').innerHTML =
+    '<h2>Everyone scan this</h2>' +
+    '<div class="card" style="text-align:center"><div class="qr">' + qr + '</div>' +
+      '<p class="small" style="margin-top:12px">' + S.rat.length + ' iRAT questions' + (S.apps.length ? ' and ' + S.apps.length + ' application questions' : '') + '</p></div>' +
+    '<div class="card"><p class="label">What to do</p><ul class="tight">' +
+      '<li>Scan with your phone camera and take the iRAT alone. No talking.</li>' +
+      '<li>Spread 4 points across the choices on each question.</li>' +
+      '<li>When everyone has submitted, one person runs the team test on this screen.</li></ul>' +
+      '<p class="small" style="margin-top:12px"><strong>No camera?</strong> Send this link:</p><p class="linkbox" id="linkText">' + esc(url) + '</p>' +
+      '<div class="row"><button type="button" class="btn ghost" id="copyLink">Copy link</button></div></div>' +
+    '<div class="row"><button type="button" class="btn" id="toIrat">Take my iRAT on this device</button>' +
+      '<button type="button" class="btn ghost" id="toTrat">Everyone is done: start the team test</button>' +
+      '<button type="button" class="btn ghost" id="toPrint">Paper version (PDF)</button></div>';
+  $('copyLink').onclick = function () { copyText(url, 'Link copied.'); };
+  $('toIrat').onclick = function () { go('irat'); };
+  $('toTrat').onclick = function () { go('trat'); };
+  $('toPrint').onclick = printPacket;
+}
+function copyText(t, msg) {
+  var done = function (ok) { announce(ok ? msg : 'Copy did not work. Select the text and copy it.'); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function () { done(true); }, function () { done(false); });
+  else { var ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); var ok = false; try { ok = document.execCommand('copy'); } catch (e) {} ta.remove(); done(ok); }
+}
+
+/* ==========================================================
+   FIGURES (lab images)
+   ========================================================== */
+function figHtml(v, answer, printMode) {
+  var it = v.it, fig = LAB.figs[it.f];
+  if (!fig) return '';
+  var w = fig.w, h = fig.h, rr = Math.max(fig.r || 0, Math.round(Math.min(w, h) * 0.022), 18);
+  var src = LAB.base + fig.img, marks = '';
+  var mark = function (x, y, lab, strong) {
+    return '<g>' + (strong ? '<circle cx="' + x + '" cy="' + y + '" r="' + (rr * 1.9) + '" fill="none" stroke="#B8924A" stroke-width="' + Math.max(4, rr * 0.35) + '"/>' : '') +
+      '<circle cx="' + x + '" cy="' + y + '" r="' + rr + '" fill="' + (strong ? '#142a36' : '#1E3D4C') + '" stroke="#fff" stroke-width="' + Math.max(3, rr * 0.18) + '"/>' +
+      '<text x="' + x + '" y="' + (y + rr * 0.42) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + Math.round(rr * 1.15) + '" fill="#fff">' + lab + '</text></g>';
+  };
+  if (it.p >= 0 && fig.pins[it.p]) {
+    if (!answer) marks = mark(fig.pins[it.p][0], fig.pins[it.p][1], '?', true);
+    else v.opts.forEach(function (o, k) { if (o.pin >= 0 && fig.pins[o.pin]) marks += mark(fig.pins[o.pin][0], fig.pins[o.pin][1], LETTERS[k], o.c); });
+  }
+  var label = (answer ? 'Answer figure: ' : 'Atlas image: ') + fig.t + (it.p >= 0 ? (answer ? '. Each lettered marker shows where that choice sits.' : '. A marker labeled with a question mark points to the structure to name.') : '. A ring or arrow printed on the image marks the structure to name.');
+  var svg = '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" aria-label="' + esc(label) + '" preserveAspectRatio="xMidYMid meet"><image href="' + esc(src) + '" x="0" y="0" width="' + w + '" height="' + h + '"/>' + marks + '</svg>';
+  if (printMode) return '<div class="pfig">' + svg + '</div>';
+  return '<figure class="fig">' + svg + '<figcaption>' + esc(answer ? 'Answer figure: each letter shows where that choice is.' : fig.t) + '</figcaption></figure>';
+}
+
+/* ==========================================================
+   SCREEN: iRAT (confidence spread, 4 points per question)
+   ========================================================== */
+function sumArr(a) { return a.reduce(function (s, x) { return s + (+x || 0); }, 0); }
+function iratPoints() { return S.ratV.reduce(function (s, v, i) { return s + (+ME.spread[i][v.ci] || 0); }, 0); }
+function viewIrat() {
+  if (ME.submitted) { viewIratDone(); return; }
+  var html = '<h2>iRAT: on your own</h2>' +
+    '<div class="card"><ul class="tight"><li>Work alone. No talking, no notes.</li><li>Spread exactly 4 points across the choices on each question.</li><li>Sure? Put all 4 on one choice. Torn? Split them.</li><li>You earn the points you put on the correct choice.</li></ul></div>';
+  S.ratV.forEach(function (v, i) {
+    html += '<article class="card" aria-labelledby="qs' + i + '"><p class="qnum">Question ' + (i + 1) + ' of ' + S.ratV.length + '</p>' +
+      (v.it.kind === 'img' ? figHtml(v, false) : '') +
+      '<p class="stem" id="qs' + i + '">' + esc(v.it.q) + '</p><div role="group" aria-labelledby="qs' + i + '">';
+    v.opts.forEach(function (o, k) {
+      var val = ME.spread[i][k] || 0;
+      html += '<div class="srow' + (val ? ' has' : '') + '" id="row' + i + '-' + k + '"><span class="letter" aria-hidden="true">' + LETTERS[k] + '</span>' +
+        '<span class="otext">' + esc(o.t) + '</span><span class="step">' +
+        '<button type="button" data-q="' + i + '" data-k="' + k + '" data-d="-1" aria-label="Take a point off choice ' + LETTERS[k] + '">&minus;</button>' +
+        '<label class="sr-only" for="sp' + i + '-' + k + '">Points on choice ' + LETTERS[k] + ': ' + esc(o.t) + '</label>' +
+        '<input type="number" inputmode="numeric" min="0" max="4" step="1" id="sp' + i + '-' + k + '" data-q="' + i + '" data-k="' + k + '" value="' + val + '">' +
+        '<button type="button" data-q="' + i + '" data-k="' + k + '" data-d="1" aria-label="Add a point to choice ' + LETTERS[k] + '">+</button></span></div>';
+    });
+    html += '</div><p class="total" id="tot' + i + '"></p></article>';
+  });
+  $('view').innerHTML = html;
+  $('sticky').hidden = false;
+  $('stickyIn').innerHTML = '<span id="stickyText" class="small" aria-live="polite"></span><button type="button" class="btn" id="submitIrat">Submit my iRAT</button>';
+  document.querySelectorAll('.step button').forEach(function (b) {
+    b.onclick = function () {
+      var i = +b.dataset.q, k = +b.dataset.k, d = +b.dataset.d, row = ME.spread[i], left = 4 - sumArr(row);
+      if (d > 0 && left <= 0) { announce('Question ' + (i + 1) + ' already has 4 points. Take one off another choice first.'); return; }
+      row[k] = Math.max(0, Math.min(4, (row[k] || 0) + d)); saveMe(); refreshIrat(i, true);
+    };
+  });
+  document.querySelectorAll('.step input').forEach(function (inp) {
+    inp.oninput = function () {
+      var i = +inp.dataset.q, k = +inp.dataset.k, v = Math.max(0, Math.min(4, parseInt(inp.value, 10) || 0));
+      ME.spread[i][k] = v; saveMe(); refreshIrat(i, false);
+    };
+  });
+  $('submitIrat').onclick = submitIrat;
+  S.ratV.forEach(function (v, i) { refreshIrat(i, false); });
+}
+function refreshIrat(i, speak) {
+  var row = ME.spread[i], t = sumArr(row);
+  row.forEach(function (val, k) { var inp = $('sp' + i + '-' + k); if (inp && document.activeElement !== inp) inp.value = val; $('row' + i + '-' + k).classList.toggle('has', val > 0); });
+  var el = $('tot' + i);
+  el.textContent = t === 4 ? 'All 4 points placed.' : t > 4 ? 'Too many points: ' + t + ' of 4. Take ' + (t - 4) + ' off.' : 'Points placed: ' + t + ' of 4.';
+  el.className = 'total' + (t === 4 ? ' full' : t > 4 ? ' over' : '');
+  if (speak) announce('Question ' + (i + 1) + ': ' + el.textContent);
+  var done = ME.spread.filter(function (r) { return sumArr(r) === 4; }).length;
+  $('stickyText').textContent = done + ' of ' + S.ratV.length + ' questions have all 4 points.';
+}
+function submitIrat() {
+  var bad = ME.spread.findIndex(function (r) { return sumArr(r) !== 4; });
+  if (bad > -1) { announce('Question ' + (bad + 1) + ' needs exactly 4 points before you submit.'); var x = $('sp' + bad + '-0'); if (x) { x.focus(); x.scrollIntoView({ block: 'center' }); } return; }
+  if (!confirm('Submit your iRAT? You cannot change it after this.')) return;
+  ME.submitted = true; saveMe(); announce('iRAT submitted.'); go('irat');
+}
+function viewIratDone() {
+  var p = iratPoints(), max = S.ratV.length * 4;
+  $('view').innerHTML = '<h2>Your iRAT is in</h2>' +
+    '<div class="grid2"><div class="score-card"><p class="label">Your iRAT</p><p class="big">' + p + ' of ' + max + '</p><p class="small muted">' + pct(p / max) + ' of the points went on correct answers.</p></div>' +
+    '<div class="score-card"><p class="label">Next</p><p>Join your team for the tRAT. When the team finishes, type the team scores in below to see your grade and your full answer key.</p></div></div>' +
+    teamScoreForm() +
+    '<div class="row mt"><button type="button" class="btn ghost" id="peekKey">Show my answer key now</button></div>';
+  bindTeamScoreForm();
+  $('peekKey').onclick = function () { if (TEAM.tratDone || confirm('Open the answer key now? Only do this after your team has finished the tRAT, or it gives the team test away.')) { ME.peek = true; saveMe(); go('results'); } };
+}
+function teamScoreForm() {
+  var n = S.ratV.length, k = S.appV.length;
+  var t = TEAM.tratDone ? tratTotal() : ME.teamT, a = TEAM.appsDone ? appTotal() : ME.teamA;
+  return '<form class="card" id="tsForm" novalidate><p class="label">Team scores</p><div class="row">' +
+    '<div class="field"><label for="tsT">Team tRAT points (out of ' + n + ')</label><input type="number" id="tsT" min="0" max="' + n + '" step="0.25" inputmode="decimal" value="' + esc(t) + '"></div>' +
+    (k ? '<div class="field"><label for="tsA">Team application points (out of ' + (k * APP_POINTS) + ', leave blank if not done)</label><input type="number" id="tsA" min="0" max="' + (k * APP_POINTS) + '" step="' + APP_POINTS + '" inputmode="numeric" value="' + esc(a) + '"></div>' : '') +
+    '</div><p class="error" id="tsErr" role="alert"></p><div class="row mt"><button type="submit" class="btn">See my grade and answer key</button></div></form>';
+}
+function bindTeamScoreForm() {
+  $('tsForm').onsubmit = function (e) {
+    e.preventDefault();
+    var n = S.ratV.length, k = S.appV.length, t = parseFloat($('tsT').value), aRaw = k ? $('tsA').value.trim() : '', a = aRaw === '' ? NaN : parseFloat(aRaw);
+    if (isNaN(t) || t < 0 || t > n || Math.round(t * 4) !== t * 4) { $('tsErr').textContent = 'Enter the team tRAT points, a number from 0 to ' + n + ' in steps of 0.25.'; $('tsT').focus(); return; }
+    if (k && aRaw !== '' && (isNaN(a) || a < 0 || a > k * APP_POINTS || a % APP_POINTS)) { $('tsErr').textContent = 'Enter the team application points: 0 to ' + (k * APP_POINTS) + ', in steps of ' + APP_POINTS + '.'; $('tsA').focus(); return; }
+    ME.teamT = t; ME.teamA = k && aRaw !== '' ? a : ''; saveMe(); go('results');
+  };
+}
+
+/* ==========================================================
+   SCREEN: tRAT (team ranks all four choices, 1st to 4th)
+   ========================================================== */
+function tratPoints(i) {
+  var ranks = TEAM.ranks[i], ci = S.ratV[i].ci, pos = ranks.indexOf(ci);
+  return pos < 0 ? 0 : (TRAT_POINTS[pos] || 0);
+}
+function tratTotal() { return S.ratV.reduce(function (s, v, i) { return s + (TEAM.locked[i] ? tratPoints(i) : 0); }, 0); }
+function viewTrat() {
+  if (!TEAM.started && !ME.submitted && !confirm('Has everyone in your group submitted their iRAT? The team test shows the answers.')) { go(ME.submitted ? 'results' : 'irat'); return; }
+  TEAM.started = true; saveTeam();
+  var i = Math.min(TEAM.tcur, S.ratV.length - 1), v = S.ratV[i], ranks = TEAM.ranks[i], locked = TEAM.locked[i];
+  var opts = v.opts.map(function (o, k) {
+    var pos = ranks.indexOf(k), cls = 'opt' + (pos > -1 ? ' ranked' : '') + (locked && o.c ? ' right' : '') + (locked && !o.c && pos === 0 ? ' wrongpick' : '');
+    var tagTxt = pos > -1 ? RANK_WORDS[pos] : 'Tap';
+    return '<button type="button" class="' + cls + '" data-k="' + k + '"' + (locked || pos > -1 ? ' aria-disabled="true"' : '') + '>' +
+      '<span class="letter" aria-hidden="true">' + LETTERS[k] + '</span><span class="otext"><span class="sr-only">Choice ' + LETTERS[k] + ': </span>' + esc(o.t) +
+      (locked && o.c ? ' <span class="tag">Correct</span>' : '') + '</span><span class="rank">' + (pos > -1 ? '<span class="sr-only">Ranked </span>' : '<span class="sr-only">Not ranked yet. </span>') + tagTxt + '</span></button>';
+  }).join('');
+  var html = '<h2>tRAT: as a team</h2>' +
+    '<p class="score"><strong>Team score so far: ' + fmt(tratTotal()) + ' of ' + S.ratV.length + '</strong> <span class="small muted">&middot; 1st choice right = 1 point, 2nd = 0.5, 3rd = 0.25</span></p>' +
+    '<article class="card" aria-labelledby="tq"><p class="qnum">Question ' + (i + 1) + ' of ' + S.ratV.length + '</p>' +
+    (v.it.kind === 'img' ? figHtml(v, locked) : '') +
+    '<p class="stem" id="tq">' + esc(v.it.q) + '</p>' +
+    (locked ? '' : '<p class="small">Talk it through. Then tap the choices in order: your team\'s 1st choice first, then 2nd, 3rd and 4th.</p>') +
+    '<div role="group" aria-labelledby="tq">' + opts + '</div>';
+  if (!locked) {
+    html += '<div class="row mt"><button type="button" class="btn ghost small" id="undoRank"' + (ranks.length ? '' : ' aria-disabled="true"') + '>Undo last</button>' +
+      '<button type="button" class="btn ghost small" id="clearRank"' + (ranks.length ? '' : ' aria-disabled="true"') + '>Clear</button>' +
+      '<button type="button" class="btn" id="lockRank"' + (ranks.length === 4 ? '' : ' aria-disabled="true"') + '>Lock our ranking</button></div>';
+  } else {
+    var pts = tratPoints(i), pos = ranks.indexOf(v.ci);
+    html += '<div class="bd"><p class="verdict">The answer is ' + LETTERS[v.ci] + '. Your team ranked it ' + RANK_WORDS[pos] + ': <span class="pts">' + fmt(pts) + ' point' + (pts === 1 ? '' : 's') + '</span></p>' + breakdownHtml(v) + '</div>';
+  }
+  html += '</article><div class="row">' + (i > 0 ? '<button type="button" class="btn ghost" id="prevQ">Previous question</button>' : '') +
+    (i < S.ratV.length - 1 ? '<button type="button" class="btn" id="nextQ"' + (locked ? '' : ' aria-disabled="true"') + '>Next question</button>' :
+      '<button type="button" class="btn" id="finishTrat"' + (TEAM.locked.every(Boolean) ? '' : ' aria-disabled="true"') + '>' + (S.appV.length ? 'Go to the application questions' : 'See team scores') + '</button>') + '</div>';
+  $('view').innerHTML = html;
+  document.querySelectorAll('.opt[data-k]').forEach(function (b) {
+    b.onclick = function () {
+      if (b.getAttribute('aria-disabled') === 'true') return;
+      ranks.push(+b.dataset.k);
+      if (ranks.length === 3) { for (var k = 0; k < 4; k++) if (ranks.indexOf(k) < 0) ranks.push(k); }
+      saveTeam(); var k2 = b.dataset.k; renderTratKeep(k2);
+      announce('Choice ' + LETTERS[+k2] + ' ranked ' + RANK_WORDS[ranks.indexOf(+k2)] + '.' + (ranks.length === 4 ? ' All four ranked. Lock your ranking when the team agrees.' : ''));
+    };
+  });
+  var u = $('undoRank'); if (u) u.onclick = function () { if (!ranks.length) return; ranks.pop(); if (ranks.length === 3) ranks.pop(); saveTeam(); renderTratKeep(null, 'undoRank'); };
+  var c = $('clearRank'); if (c) c.onclick = function () { TEAM.ranks[i] = []; saveTeam(); renderTratKeep(null, 'clearRank'); };
+  var l = $('lockRank'); if (l) l.onclick = function () {
+    if (ranks.length !== 4) { announce('Rank all four choices first.'); return; }
+    TEAM.locked[i] = true; saveTeam(); renderTratKeep(null);
+    announce('Locked. The answer is ' + LETTERS[v.ci] + '. Your team earned ' + fmt(tratPoints(i)) + ' points. The breakdown is below.');
+    var bd = document.querySelector('.bd'); if (bd) { bd.setAttribute('tabindex', '-1'); bd.focus(); }
+  };
+  var p = $('prevQ'); if (p) p.onclick = function () { TEAM.tcur = i - 1; saveTeam(); go('trat'); };
+  var n = $('nextQ'); if (n) n.onclick = function () { if (!locked) { announce('Lock your ranking first.'); return; } TEAM.tcur = i + 1; saveTeam(); go('trat'); };
+  var f = $('finishTrat'); if (f) f.onclick = function () {
+    var open = TEAM.locked.indexOf(false);
+    if (open > -1) { announce('Question ' + (open + 1) + ' is not locked yet.'); return; }
+    TEAM.tratDone = true; saveTeam(); go(S.appV.length ? 'apps' : 'results');
+  };
+}
+function renderTratKeep(focusK, focusId) {
+  var y = window.scrollY; screen = 'trat'; viewTrat(); renderSteps(); window.scrollTo(0, y);
+  var el = focusK != null ? document.querySelector('.opt[data-k="' + focusK + '"]') : (focusId ? $(focusId) : null);
+  if (el && el.getAttribute('aria-disabled') === 'true') el = $('lockRank') || $('undoRank') || el;
+  if (el) el.focus();
+}
+
+/* ==========================================================
+   BREAKDOWN (why the right answer is right, every choice explained)
+   ========================================================== */
+function breakdownHtml(v, mine, withFig) {
+  var html = '<p><strong>Why ' + LETTERS[v.ci] + ' is right:</strong> ' + esc(v.why) + '</p><p><strong>Every choice, explained:</strong></p><ol>';
+  v.opts.forEach(function (o, k) {
+    html += '<li class="' + (o.c ? 'ok' : '') + '"><span class="letter" aria-hidden="true">' + LETTERS[k] + '</span><span><span class="sr-only">Choice ' + LETTERS[k] + ', ' + (o.c ? 'correct' : 'not correct') + '. </span><strong>' + esc(o.t) + '.</strong> ' +
+      esc(String(o.n || '').replace(/^Correct\.\s*/, o.c ? '' : '')) + (mine ? ' <span class="small muted">(You put ' + (mine[k] || 0) + ' point' + (mine[k] === 1 ? '' : 's') + ' here.)</span>' : '') + '</span></li>';
+  });
+  html += '</ol>';
+  if (withFig && v.it.kind === 'img' && v.it.p >= 0) html += figHtml(v, true);
+  if (v.it.fix) html += '<p><strong>If you missed it:</strong> ' + esc(v.it.fix) + '</p>';
+  return html;
+}
+
+/* ==========================================================
+   SCREEN: APPLICATION (team picks one, 3 points all or none)
+   ========================================================== */
+function appTotal() { return S.appV.reduce(function (s, v, i) { return s + (TEAM.alocked[i] && TEAM.pick[i] === v.ci ? APP_POINTS : 0); }, 0); }
+function viewApps() {
+  if (!S.appV.length) { go('results'); return; }
+  var i = Math.min(TEAM.acur, S.appV.length - 1), v = S.appV[i], locked = TEAM.alocked[i], pick = TEAM.pick[i];
+  var html = '<h2>Application: as a team</h2>' +
+    '<p><strong>Team application points so far: ' + appTotal() + ' of ' + (S.appV.length * APP_POINTS) + '</strong> <span class="small muted">&middot; ' + APP_POINTS + ' points each, all or none</span></p>' +
+    '<article class="card"><p class="qnum">Application ' + (i + 1) + ' of ' + S.appV.length + ' <span class="tag">' + esc(v.it.type) + '</span> <span class="tag">DOK ' + v.it.dok + '</span></p>';
+  if (!locked) {
+    html += '<form id="appForm" novalidate><fieldset><legend class="stem">' + esc(v.it.q) + '</legend>' +
+      v.opts.map(function (o, k) {
+        return '<label class="radio" for="ap' + k + '"><input type="radio" name="ap" id="ap' + k + '" value="' + k + '"' + (pick === k ? ' checked' : '') + '><span><strong>' + LETTERS[k] + '.</strong> ' + esc(o.t) + '</span></label>';
+      }).join('') + '</fieldset>' +
+      '<label class="flabel" for="apWhy"><strong>Our reasoning</strong> <span class="small muted">(optional; say it out loud first)</span></label><textarea id="apWhy">' + esc(TEAM.why[i]) + '</textarea>' +
+      '<p class="error" id="apErr" role="alert"></p><div class="row mt"><button type="submit" class="btn">Lock our answer</button></div></form>';
+  } else {
+    var got = pick === v.ci;
+    html += '<p class="stem">' + esc(v.it.q) + '</p><div role="list">' + v.opts.map(function (o, k) {
+      return '<div role="listitem" class="opt' + (o.c ? ' right' : '') + (k === pick && !o.c ? ' wrongpick' : '') + '" aria-disabled="true"><span class="letter" aria-hidden="true">' + LETTERS[k] + '</span><span class="otext"><span class="sr-only">Choice ' + LETTERS[k] + ': </span>' + esc(o.t) +
+        (o.c ? ' <span class="tag">Correct</span>' : '') + (k === pick ? ' <span class="tag warm">Your team\'s pick</span>' : '') + '</span></div>';
+    }).join('') + '</div>' +
+      '<div class="bd" tabindex="-1" id="apBd"><p class="verdict">' + (got ? 'Your team got it: ' : 'Not this time: ') + '<span class="pts">' + (got ? APP_POINTS : 0) + ' of ' + APP_POINTS + ' points</span></p>' + breakdownHtml(v) + '</div>';
+  }
+  html += '</article><div class="row">' + (i > 0 ? '<button type="button" class="btn ghost" id="prevA">Previous</button>' : '') +
+    (i < S.appV.length - 1 ? '<button type="button" class="btn" id="nextA"' + (locked ? '' : ' aria-disabled="true"') + '>Next application</button>' :
+      '<button type="button" class="btn" id="finishA"' + (TEAM.alocked.every(Boolean) ? '' : ' aria-disabled="true"') + '>See team scores and the answer key</button>') + '</div>';
+  $('view').innerHTML = html;
+  var f = $('appForm');
+  if (f) {
+    f.querySelectorAll('input[name=ap]').forEach(function (r) { r.onchange = function () { TEAM.pick[i] = +r.value; saveTeam(); }; });
+    $('apWhy').oninput = function () { TEAM.why[i] = this.value; saveTeam(); };
+    f.onsubmit = function (e) {
+      e.preventDefault();
+      if (TEAM.pick[i] < 0) { $('apErr').textContent = 'Pick one answer first.'; f.querySelector('input').focus(); return; }
+      TEAM.alocked[i] = true; saveTeam(); go('apps');
+      announce(TEAM.pick[i] === v.ci ? 'Correct. Your team earned ' + APP_POINTS + ' points.' : 'Not correct. The answer is ' + LETTERS[v.ci] + '.');
+      var bd = $('apBd'); if (bd) bd.focus();
+    };
+  }
+  var p = $('prevA'); if (p) p.onclick = function () { TEAM.acur = i - 1; saveTeam(); go('apps'); };
+  var n = $('nextA'); if (n) n.onclick = function () { if (!locked) { announce('Lock your answer first.'); return; } TEAM.acur = i + 1; saveTeam(); go('apps'); };
+  var fin = $('finishA'); if (fin) fin.onclick = function () {
+    var open = TEAM.alocked.indexOf(false);
+    if (open > -1) { announce('Application ' + (open + 1) + ' is not locked yet.'); return; }
+    TEAM.appsDone = true; saveTeam(); go('results');
+  };
+}
+
+/* ==========================================================
+   SCREEN: SCORES, FIX IT NOW, ANSWER KEY
+   ========================================================== */
+function myGrade(teamT) {
+  var n = S.ratV.length, ip = iratPoints() / (n * 4), tp = teamT / n;
+  var g = IRAT_WEIGHT * ip + TRAT_WEIGHT * tp;
+  return { ipts: iratPoints(), imax: n * 4, ip: ip, tp: tp, g: g, gpct: g / (IRAT_WEIGHT + TRAT_WEIGHT) };
+}
+function viewResults() {
+  var html = '<h2>Scores and answer key</h2>';
+  var hasTeam = TEAM.tratDone, n = S.ratV.length, k = S.appV.length;
+  var tT = hasTeam ? tratTotal() : (ME.teamT === '' || ME.teamT == null ? null : +ME.teamT);
+  var tA = TEAM.appsDone ? appTotal() : (ME.teamA === '' || ME.teamA == null ? null : +ME.teamA);
+
+  if (hasTeam) {
+    html += '<div class="card"><p class="label">Team scores: read these out so everyone can enter them</p><div class="grid2">' +
+      '<div><p class="small">Team tRAT</p><p class="big">' + fmt(tratTotal()) + ' of ' + n + '</p><p class="small muted">' + pct(tratTotal() / n) + '</p></div>' +
+      (k ? '<div><p class="small">Team application</p><p class="big">' + (TEAM.appsDone ? appTotal() : '&hellip;') + ' of ' + (k * APP_POINTS) + '</p><p class="small muted">' + (TEAM.appsDone ? pct(appTotal() / (k * APP_POINTS)) : 'Not finished') + '</p></div>' : '') +
+      '</div></div>';
+  }
+  if (ME.submitted) {
+    if (tT == null) {
+      html += '<div class="card"><p class="label">Your grade</p><p>Your iRAT: <strong>' + iratPoints() + ' of ' + (n * 4) + '</strong>. Type in your team scores to see your grade.</p></div>' + teamScoreForm();
+    } else {
+      var G = myGrade(tT);
+      html += '<div class="card"><p class="label">Your grade on this TBL</p><div class="grid2">' +
+        '<div><p class="small">iRAT (counts ' + IRAT_WEIGHT + ' of 40)</p><p class="big">' + fmt(IRAT_WEIGHT * G.ip) + '</p><p class="small muted">' + G.ipts + ' of ' + G.imax + ' points, ' + pct(G.ip) + '</p></div>' +
+        '<div><p class="small">tRAT (counts ' + TRAT_WEIGHT + ' of 40)</p><p class="big">' + fmt(TRAT_WEIGHT * G.tp) + '</p><p class="small muted">' + fmt(tT) + ' of ' + n + ' team points, ' + pct(G.tp) + '</p></div>' +
+        '<div><p class="small">Total</p><p class="big">' + fmt(G.g) + ' of 40</p><p class="small muted">' + pct(G.gpct) + '</p></div>' +
+        (k ? '<div><p class="small">Application (separate)</p><p class="big">' + (tA == null ? '&hellip;' : pct(tA / (k * APP_POINTS))) + '</p><p class="small muted">' + (tA == null ? 'Enter the team application points' : tA + ' of ' + (k * APP_POINTS) + ' points') + '</p></div>' : '') +
+        '</div>' + (hasTeam ? '' : '<div class="row mt"><button type="button" class="btn ghost small" id="editTs">Change team scores</button></div>') + '</div>';
+    }
+  } else if (!hasTeam) {
+    html += '<div class="card"><p>Take the iRAT first, then come back here.</p><div class="row"><button type="button" class="btn" id="goIrat">Go to the iRAT</button></div></div>';
+  }
+
+  var showKey = hasTeam || ME.peek || tT != null;
+  if (showKey) {
+    html += fixItNowHtml();
+    html += '<h2 style="margin-top:24px">Answer key</h2><p class="small muted">Open any question to see why the answer is right and what every choice means.</p>';
+    S.ratV.forEach(function (v, i) {
+      var mine = ME.submitted ? ME.spread[i] : null, my = mine ? (mine[v.ci] || 0) : null;
+      var team = TEAM.locked[i] ? ' &middot; team ranked it ' + RANK_WORDS[TEAM.ranks[i].indexOf(v.ci)] : '';
+      html += '<details class="key"><summary><span>Question ' + (i + 1) + ': answer ' + LETTERS[v.ci] + (my != null ? ' &middot; you put ' + my + ' of 4 here' : '') + team + '</span><span class="chev" aria-hidden="true">&#9656;</span></summary><div class="kb">' +
+        '<p class="small muted">' + (v.it.kind === 'img' ? 'Atlas image question' : 'DOK ' + v.it.dok) + ' &middot; ' + esc(v.it.topic.title) + '</p>' +
+        (v.it.kind === 'img' ? figHtml(v, false) : '') + '<p class="stem">' + esc(v.it.q) + '</p><div class="bd">' + breakdownHtml(v, mine, true) + '</div></div></details>';
+    });
+    S.appV.forEach(function (v, i) {
+      var tp = TEAM.alocked[i] ? ' &middot; team picked ' + LETTERS[TEAM.pick[i]] : '';
+      html += '<details class="key"><summary><span>Application ' + (i + 1) + ': answer ' + LETTERS[v.ci] + tp + '</span><span class="chev" aria-hidden="true">&#9656;</span></summary><div class="kb">' +
+        '<p class="small muted">' + esc(v.it.type) + ' &middot; DOK ' + v.it.dok + ' &middot; ' + esc(v.it.topic.title) + '</p><p class="stem">' + esc(v.it.q) + '</p><div class="bd">' + breakdownHtml(v) + '</div></div></details>';
+    });
+    html += '<div class="row mt"><button type="button" class="btn ghost" id="copyRep">Copy my results</button><button type="button" class="btn ghost" id="printKey">Paper version with key (PDF)</button></div>';
+  }
+  $('view').innerHTML = html;
+  if ($('tsForm')) bindTeamScoreForm();
+  var e = $('editTs'); if (e) e.onclick = function () { ME.teamT = ''; ME.teamA = ''; saveMe(); go('results'); };
+  var gi = $('goIrat'); if (gi) gi.onclick = function () { go('irat'); };
+  var cr = $('copyRep'); if (cr) cr.onclick = function () { copyText(reportText(tT, tA), 'Results copied.'); };
+  var pk = $('printKey'); if (pk) pk.onclick = printPacket;
+  document.querySelectorAll('[data-fix]').forEach(function (cb) {
+    cb.onchange = function () { var bag = TEAM.tratDone ? TEAM : ME; bag.fixed = bag.fixed || {}; bag.fixed[cb.dataset.fix] = cb.checked; TEAM.tratDone ? saveTeam() : saveMe(); };
+  });
+}
+
+/* Concepts to fix, from my iRAT (2 or fewer points on the answer),
+   the team's tRAT (first choice wrong) and missed applications. */
+function weakConcepts() {
+  var map = {}, order = [];
+  var add = function (it, why, sev) {
+    var c = conceptOf(it);
+    if (!map[c.key]) { map[c.key] = { c: c, why: [], sev: 0, topic: it.topic.title, fix: it.fix || '' }; order.push(c.key); }
+    map[c.key].why.push(why); map[c.key].sev += sev;
+    if (it.fix && !map[c.key].fix) map[c.key].fix = it.fix;
+  };
+  S.ratV.forEach(function (v, i) {
+    if (ME.submitted) { var p = ME.spread[i][v.ci] || 0; if (p <= 2) add(v.it, 'iRAT question ' + (i + 1) + ': you put ' + p + ' of 4 points on the answer', 3 - p); }
+    if (TEAM.locked[i] && TEAM.ranks[i].indexOf(v.ci) > 0) add(v.it, 'tRAT question ' + (i + 1) + ': the team ranked the answer ' + RANK_WORDS[TEAM.ranks[i].indexOf(v.ci)], 2);
+  });
+  S.appV.forEach(function (v, i) { if (TEAM.alocked[i] && TEAM.pick[i] !== v.ci) add(v.it, 'Application ' + (i + 1) + ': the team picked ' + LETTERS[TEAM.pick[i]] + ', the answer is ' + LETTERS[v.ci], 3); });
+  return order.map(function (k) { return map[k]; }).sort(function (a, b) { return b.sev - a.sev; });
+}
+function fixItNowHtml() {
+  var list = weakConcepts(), bag = TEAM.tratDone ? TEAM : ME, fixed = bag.fixed || {};
+  if (!list.length) return '<div class="card"><p class="label">Fix it now</p><p>Nothing to fix from this set. Build another one to keep going.</p></div>';
+  var team = TEAM.tratDone;
+  var html = '<h2 style="margin-top:24px">Fix it now, together</h2><p>' + (team ?
+    'Before anyone leaves, work through these as a team. Pick one person to sketch each idea while everyone else talks it through, then check your sketch against the answer key below.' :
+    'Work through these with your team right now. Find a teammate who got it, have them walk you through it with a quick sketch, then explain it back in your own words.') + '</p>';
+  list.forEach(function (w, j) {
+    html += '<div class="rec"><h3>' + esc(w.c.name) + '</h3><p class="small muted">' + esc(w.topic) + '</p><ul class="tight small">' + w.why.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' +
+      (w.c.can ? '<p style="margin-top:8px"><strong>Be able to:</strong> ' + esc(w.c.can) + '</p>' : '') +
+      (w.fix ? '<p><strong>Review:</strong> ' + esc(w.fix) + '</p>' : '') +
+      '<p><strong>Do it now:</strong> ' + (team ? 'Draw it from memory on one sheet, label every part, and have each person say one thing the drawing shows.' : 'Ask a teammate who got this one to explain it with a quick drawing, then explain it back to them without looking.') + '</p>' +
+      '<label class="check" for="fx' + j + '"><input type="checkbox" id="fx' + j + '" data-fix="' + esc(w.c.key) + '"' + (fixed[w.c.key] ? ' checked' : '') + '> We went over this</label></div>';
+  });
+  return html;
+}
+function reportText(tT, tA) {
+  var n = S.ratV.length, k = S.appV.length, lines = ['BIO 004 TBL Study Group', sessionTitle(), ''];
+  if (ME.submitted) {
+    lines.push('My iRAT: ' + iratPoints() + ' of ' + (n * 4));
+    if (tT != null) { var G = myGrade(tT); lines.push('Team tRAT: ' + fmt(tT) + ' of ' + n, 'My TBL grade: ' + fmt(G.g) + ' of 40 (' + pct(G.gpct) + ')'); }
+  } else if (TEAM.tratDone) lines.push('Team tRAT: ' + fmt(tratTotal()) + ' of ' + n);
+  if (k && tA != null) lines.push('Team application: ' + tA + ' of ' + (k * APP_POINTS) + ' (' + pct(tA / (k * APP_POINTS)) + ')');
+  var w = weakConcepts();
+  if (w.length) { lines.push('', 'To review:'); w.forEach(function (x) { lines.push('- ' + x.c.name); }); }
+  return lines.join('\n');
+}
+
+/* ==========================================================
+   PAPER VERSION: iRAT sheet, tRAT ranking sheet, application
+   sheet and the full answer key, printed or saved as PDF
+   ========================================================== */
+function printPacket() {
+  var n = S.ratV.length, k = S.appV.length, h = '';
+  h += '<p style="font-size:9pt;letter-spacing:.08em;text-transform:uppercase;font-weight:700">BIO 004 &middot; Human Anatomy &middot; MedMasters Collaborative</p>' +
+    '<h1>TBL Study Group: ' + (S.mode === 'lec' ? 'Lecture' : 'Lab') + '</h1><p>' + esc(sessionTitle()) + '</p><p>Dr. Sharilyn Rennie</p>' +
+    '<h2>How to score it</h2><ul>' +
+    '<li>iRAT (alone): put 4 points across the choices on each question. You earn the points on the correct choice. Out of ' + (n * 4) + '.</li>' +
+    '<li>tRAT (team): rank the choices 1st to 4th on the team sheet. 1st choice correct = 1 point, 2nd = 0.5, 3rd = 0.25, 4th = 0. Out of ' + n + '.</li>' +
+    '<li>Your grade = (iRAT points &divide; ' + (n * 4) + ' &times; 30) + (tRAT points &divide; ' + n + ' &times; 10) = ______ of 40.</li>' +
+    (k ? '<li>Application (team): ' + APP_POINTS + ' points each, all or none. Percent = points &divide; ' + (k * APP_POINTS) + '.</li>' : '') +
+    '<li>The answer key starts on a new page. Keep it face down until your team has locked every answer.</li></ul>';
+  h += '<h2 class="newpage">iRAT (on your own) &middot; Name: ________________________</h2>' + (S.mode === 'lab' ? '<div class="pgrid">' : '');
+  S.ratV.forEach(function (v, i) {
+    h += '<div class="pq">' + (v.it.kind === 'img' ? figHtml(v, false, true) : '') + '<p class="stem"><strong>' + (i + 1) + '. ' + esc(v.it.q) + '</strong></p>' +
+      v.opts.map(function (o, j) { return '<div class="po"><span class="box"></span><span>' + LETTERS[j] + '. ' + esc(o.t) + '</span></div>'; }).join('') + '</div>';
+  });
+  h += (S.mode === 'lab' ? '</div>' : '') + '<p>iRAT points: ______ of ' + (n * 4) + '</p>';
+  h += '<h2 class="newpage">tRAT team sheet: write the letters in your ranked order</h2><table><thead><tr><th scope="col">Question</th><th scope="col">1st</th><th scope="col">2nd</th><th scope="col">3rd</th><th scope="col">4th</th><th scope="col">Points</th></tr></thead><tbody>' +
+    S.ratV.map(function (v, i) { return '<tr><td>' + (i + 1) + '</td><td></td><td></td><td></td><td></td><td></td></tr>'; }).join('') +
+    '<tr><td colspan="5"><strong>Team tRAT total</strong></td><td></td></tr></tbody></table>';
+  if (k) {
+    h += '<h2 class="newpage">Application questions (team)</h2>';
+    S.appV.forEach(function (v, i) {
+      h += '<div class="pq"><p class="stem"><strong>' + (i + 1) + '. ' + esc(v.it.q) + '</strong></p>' + v.opts.map(function (o, j) { return '<div class="po"><span>' + LETTERS[j] + '. ' + esc(o.t) + '</span></div>'; }).join('') +
+        '<p>Team answer: ______ &nbsp; Points: ______ of ' + APP_POINTS + '</p><p>Our reasoning:</p><div class="lines"></div><div class="lines"></div></div>';
+    });
+  }
+  h += '<h2 class="newpage">Answer key</h2>';
+  S.ratV.forEach(function (v, i) {
+    h += '<div class="kb"><p><strong>' + (i + 1) + '. Answer ' + LETTERS[v.ci] + '</strong> (' + (v.it.kind === 'img' ? 'atlas image' : 'DOK ' + v.it.dok) + ', ' + esc(v.it.topic.title) + ')</p><p>' + esc(v.it.q) + '</p><p><strong>Why ' + LETTERS[v.ci] + ' is right:</strong> ' + esc(v.why) + '</p>' +
+      v.opts.map(function (o, j) { return '<p class="note"><strong>' + LETTERS[j] + '. ' + esc(o.t) + ':</strong> ' + esc(String(o.n || '').replace(/^Correct\.\s*/, o.c ? 'Correct. ' : '')) + '</p>'; }).join('') +
+      (v.it.kind === 'img' && v.it.p >= 0 ? figHtml(v, true, true) : '') + '</div>';
+  });
+  S.appV.forEach(function (v, i) {
+    h += '<div class="kb"><p><strong>Application ' + (i + 1) + '. Answer ' + LETTERS[v.ci] + '</strong> (' + esc(v.it.type) + ', DOK ' + v.it.dok + ')</p><p>' + esc(v.it.q) + '</p><p><strong>Why ' + LETTERS[v.ci] + ' is right:</strong> ' + esc(v.why) + '</p>' +
+      v.opts.map(function (o, j) { return '<p class="note"><strong>' + LETTERS[j] + '. ' + esc(o.t) + ':</strong> ' + esc(o.n) + '</p>'; }).join('') +
+      (v.it.fix ? '<p><strong>If you missed it:</strong> ' + esc(v.it.fix) + '</p>' : '') + '</div>';
+  });
+  $('printArea').innerHTML = h;
+  announce('Opening the print window. Choose Save as PDF to keep a copy.');
+  setTimeout(function () { window.print(); }, 300);
+}
+
+/* ==========================================================
+   START
+   ========================================================== */
+function boot() {
+  if (!BANK || !BANK.modules) { $('view').innerHTML = '<p class="error">The course question bank did not load. Check your connection and reload the page.</p>'; return; }
+  buildData();
+  var m = /[?&]s=([^&#]+)/.exec(location.search);
+  if (m) {
+    try { var sess = decode(decodeURIComponent(m[1])); S = sess; loadState(); $('subhead').textContent = (S.mode === 'lec' ? 'Lecture TBL' : 'Lab TBL') + ': ' + S.topics.map(function (t) { return t.title; }).join(', '); go(TEAM.tratDone ? 'results' : (ME.submitted ? 'irat' : 'irat')); return; }
+    catch (e) { go('build'); $('joinErr').textContent = e.message; return; }
+  }
+  go('build');
+}
+boot();
+})();
+</script>
+<script>
+/* iframe height sender for Canvas and Kajabi embeds */
+(function () {
+  var FRAME_ID = 'bio004-tbl-study';
+  function send() {
+    var h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+    try { window.parent.postMessage({ type: 'iframe-height', id: FRAME_ID, height: h }, '*'); } catch (e) {}
+  }
+  window.addEventListener('load', send);
+  window.addEventListener('resize', send);
+  if ('ResizeObserver' in window) new ResizeObserver(send).observe(document.body);
+  send();
+})();
+</script>
+</body>
+</html>
