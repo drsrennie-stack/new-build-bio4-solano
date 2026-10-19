@@ -243,7 +243,7 @@ window.BIO004_SESSIONS = {
       lines:[['In class', '<strong>TBL 7</strong> &middot; Respiratory'],
              ['Lab', 'Thoracic Anatomy (Respiratory) and Respiratory Histology (models)']] },
     /* Wed Oct 28 */ { wk:11, date:'2026-10-28', kind:'class',
-      lines:[['In class', 'Lymphatic System Lecture (Brain dump)'],
+      lines:[['In class', 'Respiratory System Lecture (Brain dump). Before class: start the Lymphatic system'],
              ['Lab', 'Thoracic Anatomy (Respiratory) and Respiratory Histology (cadaver)']] },
     /* Mon Nov 2  */ { wk:12, date:'2026-11-02', kind:'class',
       lines:[['In class', '<strong>TBL 8</strong> &middot; Endocrine &middot; Endocrine Mind Map'],

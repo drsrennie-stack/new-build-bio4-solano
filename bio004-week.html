@@ -233,7 +233,7 @@ h1{margin:8px 0 4px;font-size:clamp(1.8rem,4.6vw,2.5rem);line-height:1.12;font-w
       items.push(['Lab', labNames(s.labTopic), modeText(s.lab)]);
       items.push(['End of class', 'Lab brain dump: ' + labNames(s.bd.topics), 'Five minutes, closed notes. Name, draw and connect everything you can from today\'s lab.']);
     } else {
-      items.push(['Lecture', s.lec, lecNames(s.lecTopic)]);
+      items.push(['Lecture', s.lec, s.prepOnly ? 'Before class: start ' + lecNames(s.lecTopic) : lecNames(s.lecTopic)]);
       items.push(['Lab', labNames(s.labTopic), modeText(s.lab)]);
       items.push(['End of class', 'Lecture brain dump: ' + lecNames(s.bd.topics), 'Five minutes, closed notes, on this week\'s lecture topic.']);
     }
@@ -254,7 +254,9 @@ h1{margin:8px 0 4px;font-size:clamp(1.8rem,4.6vw,2.5rem);line-height:1.12;font-w
       return ['bio004-competency-packet.html#c' + c[0], 'Competencies ' + c[0] + ' to ' + c[1] + ' (' + A.short(k) + ')'];
     });
     var onSheet = keys.some(function(k){ return A.LECTURE[k] && A.LECTURE[k].drawSheet; });
-    var intro = tblDay
+    var intro = s.prepOnly
+      ? 'In class today is the ' + s.lec + '. Before class, start ' + lecNames(keys) + ': read the notes and start your note sheets. There is no lecture on it in class, so this reading is how you learn it.'
+      : tblDay
       ? 'Lecture TBL ' + s.tbl.n + ' opens class. It is on ' + lecNames(keys) + '. Do these in order before you come.'
       : 'Today\'s lecture is on ' + lecNames(keys) + '. You do not need to master it yet. Read the notes and start your note sheets, so the lecture is the second time you see it.';
     return '<div class="side lec"><h3>Lecture</h3><p class="intro">' + esc(intro) + '</p><ol class="steps">'

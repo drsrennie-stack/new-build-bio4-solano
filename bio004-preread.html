@@ -256,7 +256,7 @@
       items.push(['', labStart, 'Lab: '+labNames(s.labTopic), (s.lab.text||A.MODE[s.lab.mode])]);
       items.push(['hot', 'Before '+labEnd, 'Lab brain dump: '+labNames(s.bd.topics), 'Five minutes, closed notes, at the end of class. Everything you can name, draw and connect from today\'s lab.']);
     } else {
-      items.push(['', lecStart, 'Lecture: '+s.lec, 'Topic: '+lecNames(s.lecTopic)+'.']);
+      items.push(['', lecStart, 'Lecture: '+s.lec, s.prepOnly ? 'Before class: start '+lecNames(s.lecTopic)+'.' : 'Topic: '+lecNames(s.lecTopic)+'.']);
       if(s.tbl){
         items.push(['hot', labStart, 'Lab TBL '+s.tbl.n+': '+labNames(s.tbl.topics), 'The first 1.5 hours of lab. iRAT on your own, then the tRAT with your team, then the application activity. Expect images, models and slides to identify.']);
         items.push(['', 'Rest of lab', 'Lab: '+labNames(s.labTopic), (s.lab.text||A.MODE[s.lab.mode])]);
@@ -308,8 +308,10 @@
     var later = isTbl ? {} : whatsNext(s, keys);
     var h='<section class="card" aria-labelledby="lecH">'
       + '<p class="k">Part 1 &middot; Lecture</p>'
-      + '<h2 id="lecH">'+(isTbl ? 'Prepare for Lecture TBL '+s.tbl.n : 'Come ready for today\'s lecture')+'</h2>'
-      + '<p>'+(isTbl
+      + '<h2 id="lecH">'+(isTbl ? 'Prepare for Lecture TBL '+s.tbl.n : s.prepOnly ? 'Start '+esc(lecNames(keys))+' before class' : 'Come ready for today\'s lecture')+'</h2>'
+      + '<p>'+(s.prepOnly
+          ? 'In class today is the '+esc(s.lec)+'. Before class, start '+esc(lecNames(keys))+': read the notes and start your note sheets. There is no lecture on it in class, so this reading is how you learn it.'
+          : isTbl
           ? 'The TBL opens class and it is on '+esc(lecNames(keys))+'. Nothing in it is new to you if you have done the steps below. Do them in this order. The order matters more than the hours.'
           : 'Today\'s lecture is on '+esc(lecNames(keys))+'. You do not need to master it before class, but you need to have read the notes and started your note sheets, so the lecture is the second time you meet it, not the first.')+'</p>'
       + '<ol class="steps">'

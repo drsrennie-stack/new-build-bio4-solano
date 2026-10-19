@@ -478,7 +478,9 @@ window.BIO004_ALT = (function () {
     APP(D1('2026-10-19', 6, ['blood'], 'Lecture TBL 6: Blood', 'postForearm', 'lab'), 'Application: Blood Cell Interactive'),
     EX('2026-10-21', 3),
     D1('2026-10-26', 7, ['resp'], 'Lecture TBL 7: Respiratory Anatomy and Histology', 'resp', 'model', AFTER3),
-    D2('2026-10-28', 2, 'resp', 'cadaver', 'Lymphatic System Lecture', ['lymph'], ['resp']),
+    /* In class is the respiratory lecture; the lymphatic system is before-class
+       prep only (no lymphatic lecture in class), checked in the Nov 4 brain dump. */
+    Object.assign(D2('2026-10-28', 2, 'resp', 'cadaver', 'Respiratory System Lecture', ['lymph'], ['resp']), { prepOnly:true }),
     APP(D1('2026-11-02', 8, ['endocrine'], 'Lecture TBL 8: Endocrine System', 'lowerLimb', 'model'), 'Application: Endocrine Mind Map'),
     D2('2026-11-04', 3, 'lowerLimb', 'cadaver', 'Guided DITKI GI Map Activity I and II', ['gi'], ['lymph','endocrine']),
     D1('2026-11-09', 9, ['gi'], 'Lecture TBL 9: GI System', 'giAll', 'both',
