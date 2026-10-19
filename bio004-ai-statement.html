@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Is This an AI Course? &middot; BIO 004 Human Anatomy &middot; Fall 2026</title>
+<meta name="description" content="BIO 004 is an in-person anatomy course designed and taught by Dr. Rennie. How AI was used to build the study tools, and the rules for your own use of AI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#060B1A; --navy-line:#232A40; --maroon:#7A2A22; --terra:#A0522D; --terra-light:#C2734D; --gold:#B8924A;
+  --ink:#0B1530; --soft:#46555F; --mute:#6B7682; --line:#E6E6E6; --white:#FFFFFF;
+  --display:'Noto Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --body:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+html,body{margin:0}
+body{background:var(--white);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+em,i{font-style:normal}
+[hidden]{display:none !important}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;scroll-behavior:auto !important}}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:16px;top:16px;background:var(--white);color:var(--ink);padding:10px 14px;z-index:20;outline:3px solid var(--navy)}
+a{color:var(--maroon)}
+a:focus-visible,button:focus-visible,summary:focus-visible,textarea:focus-visible{outline:3px solid var(--maroon);outline-offset:3px}
+.inner{max-width:1180px;margin:0 auto;padding:0 48px}
+@media (max-width:640px){.inner{padding:0 22px}}
+
+/* type */
+.eyebrow{display:block;font-size:13px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--maroon);margin:0 0 18px}
+.band .eyebrow{color:var(--gold)}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(36px,5.2vw,60px);line-height:1.08;letter-spacing:-.02em;color:var(--ink);margin:0;max-width:15em;text-wrap:balance}
+h2{font-family:var(--display);font-weight:800;font-size:clamp(28px,3.8vw,44px);line-height:1.1;letter-spacing:-.02em;color:var(--ink);margin:0;max-width:18em;text-wrap:balance}
+.band h1,.band h2{color:var(--white)}
+.hl{color:var(--maroon)}
+.band .hl{color:var(--gold)}
+.lede{font-size:19px;line-height:1.6;color:var(--soft);margin:22px 0 0;max-width:36em}
+.band .lede{color:#C9CFD9}
+p{margin:0}
+strong{font-weight:700}
+
+/* top bar */
+.top{border-bottom:1px solid var(--line)}
+.top .inner{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding-top:26px;padding-bottom:26px}
+.mark{display:flex;align-items:center;gap:16px;text-decoration:none}
+.mark svg{flex:none}
+.mark .wm{display:flex;flex-direction:column;line-height:1.1}
+.mark .wm1{font-family:var(--display);font-weight:800;font-size:26px;letter-spacing:-.02em;color:var(--ink)}
+.mark .wm1 span{color:var(--maroon)}
+.mark .wm2{font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--ink);margin-top:4px}
+.nav{display:flex;gap:26px;flex-wrap:wrap}
+.nav a{text-decoration:none;font-size:15px;font-weight:500;color:var(--ink);padding-bottom:2px;border-bottom:2px solid transparent}
+.nav a:hover{color:var(--maroon)}
+.nav a[aria-current="page"]{font-weight:700;color:var(--maroon);border-bottom-color:var(--maroon)}
+
+/* sections */
+.hero{padding:72px 0 64px}
+.sec{padding:72px 0 24px}
+.sec.last{padding-bottom:96px}
+.band{background:var(--navy);color:var(--white);padding:72px 0}
+.band + .sec{padding-top:80px}
+.head{display:flex;flex-direction:column;margin:0 0 40px}
+.cta{display:flex;gap:28px;align-items:center;flex-wrap:wrap;margin:32px 0 0}
+.btn{display:inline-block;text-decoration:none;background:var(--maroon);color:var(--white);font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:20px 32px;border-radius:4px}
+.btn:hover{background:#5E1F19;color:var(--white)}
+.btn.navy{background:var(--navy)}
+.btn.navy:hover{background:#000}
+.btn.sm{padding:16px 24px;font-size:12px}
+.tlink{display:inline-block;text-decoration:none;color:var(--ink);font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:8px 0;border-bottom:1px solid var(--ink)}
+.tlink:hover{color:var(--maroon);border-color:var(--maroon)}
+.tlink.m{color:var(--maroon);border-color:var(--maroon)}
+
+/* numbered columns */
+.nums{display:grid;grid-template-columns:repeat(var(--n,4),minmax(0,1fr));gap:0}
+.nums>div{display:flex;flex-direction:column;gap:16px;padding:8px 32px;border-right:1px solid var(--line)}
+.nums>div:first-child{padding-left:0}
+.nums>div:last-child{padding-right:0;border-right:0}
+.band .nums>div{border-color:var(--navy-line)}
+.num{font-family:var(--display);font-weight:800;font-size:72px;line-height:1;color:var(--maroon)}
+.band .num{color:var(--terra)}
+.nums .t{font-weight:700;font-size:20px;color:var(--ink)}
+.band .nums .t{color:var(--white)}
+.nums .d{font-size:16px;line-height:1.6;color:var(--soft)}
+.band .nums .d{color:#C9CFD9}
+@media (max-width:820px){.nums{grid-template-columns:1fr}.nums>div{padding:28px 0;border-right:0;border-top:1px solid var(--line)}.nums>div:first-child{border-top:0;padding-top:0}.band .nums>div{border-color:var(--navy-line)}}
+
+/* numbered steps */
+ol.steps{list-style:none;margin:0;padding:0}
+ol.steps li{display:grid;grid-template-columns:180px minmax(0,1fr);gap:24px;align-items:start;padding:36px 0;border-top:1px solid var(--line)}
+ol.steps li:last-child{border-bottom:1px solid var(--line)}
+ol.steps .num{font-size:84px;line-height:.9}
+ol.steps .t{display:block;font-weight:700;font-size:24px;color:var(--ink);margin:0 0 8px}
+ol.steps .d{font-size:17px;line-height:1.6;color:var(--soft);max-width:36em}
+@media (max-width:640px){ol.steps li{grid-template-columns:1fr;gap:10px}ol.steps .num{font-size:56px}}
+
+/* hairline cards */
+.cards{display:grid;grid-template-columns:repeat(var(--n,3),minmax(0,1fr));gap:28px;align-items:stretch}
+.card{position:relative;border:1px solid var(--line);border-radius:6px;padding:40px;display:flex;flex-direction:column;gap:14px;background:var(--white)}
+.card.featured{border:2px solid var(--maroon)}
+.card.done{opacity:.72}
+.card .num{font-size:44px}
+.card .t{font-weight:700;font-size:26px;line-height:1.2;color:var(--ink)}
+.card .s{font-weight:600;font-size:18px;color:var(--maroon)}
+.card .d{font-size:16px;line-height:1.6;color:var(--soft)}
+.card ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.card ul li{font-size:16px;line-height:1.5;color:var(--ink);padding:0 0 10px;border-bottom:1px solid var(--line)}
+.card ul li:last-child{border-bottom:0;padding-bottom:0}
+.badge{position:absolute;top:-16px;left:40px;background:var(--maroon);color:var(--white);font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:9px 16px;border-radius:4px}
+.badge.navy{background:var(--navy)}
+.badge.gray{background:#8A93A6}
+.card .cta{margin-top:auto;padding-top:10px}
+@media (max-width:900px){.cards{grid-template-columns:1fr}}
+
+/* two-up hairline box */
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--line)}
+.duo>div{padding:44px 48px;display:flex;flex-direction:column;gap:18px;border-right:1px solid var(--line)}
+.duo>div:last-child{border-right:0}
+.duo .k{font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--maroon)}
+.duo .big{font-family:var(--display);font-weight:800;font-size:clamp(56px,7vw,88px);line-height:.95;letter-spacing:-.03em;color:var(--ink)}
+.duo .big.m{color:var(--maroon)}
+.duo .t{font-weight:600;font-size:22px;line-height:1.45;color:var(--ink)}
+.duo .d{font-size:16px;line-height:1.6;color:var(--soft)}
+.duo ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.duo ul li{font-size:16px;line-height:1.5;padding:0 0 10px;border-bottom:1px solid var(--line)}
+.duo ul li:last-child{border-bottom:0;padding-bottom:0}
+@media (max-width:820px){.duo{grid-template-columns:1fr}.duo>div{border-right:0;border-bottom:1px solid var(--line);padding:32px 26px}.duo>div:last-child{border-bottom:0}}
+.cite{display:flex;justify-content:space-between;gap:32px;align-items:start;flex-wrap:wrap;margin:28px 0 0}
+.cite .d{font-size:16px;line-height:1.6;color:var(--soft);max-width:40em}
+.cite .src{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);line-height:1.8;text-align:right}
+
+/* accordion */
+.faq{border-top:1px solid var(--line);margin:8px 0 0}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:24px;padding:28px 0;font-weight:700;font-size:22px;line-height:1.3;color:var(--ink)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'+';font-family:var(--display);font-weight:700;font-size:28px;line-height:1;color:var(--maroon);flex:none}
+.faq details[open] summary::after{content:'\2212'}
+.faq summary:hover{color:var(--maroon)}
+.faq .a{padding:0 0 30px;max-width:46em;display:grid;gap:12px}
+.faq .a p,.faq .a li{font-size:17px;line-height:1.6;color:var(--soft)}
+.faq .a ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.faq .a li{padding-left:22px;position:relative}
+.faq .a li::before{content:'';position:absolute;left:0;top:.62em;width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.faq .a strong{color:var(--ink)}
+.faq .a a{color:var(--maroon)}
+.more{margin:28px 0 0;font-size:16px;color:var(--soft)}
+.more .tlink{margin-left:8px}
+
+/* stats row (grade split, grading scale) */
+.stats{display:grid;grid-template-columns:repeat(var(--n,5),minmax(0,1fr));border:1px solid var(--line)}
+.stats>div{padding:32px 28px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.stats>div:last-child{border-right:0}
+.stats .big{font-family:var(--display);font-weight:800;font-size:clamp(34px,4.5vw,56px);line-height:1;letter-spacing:-.03em;color:var(--maroon)}
+.stats .l{font-size:15px;line-height:1.45;color:var(--ink);font-weight:600}
+@media (max-width:820px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stats>div{border-bottom:1px solid var(--line)}.stats>div:nth-child(2n){border-right:0}}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;margin:0}
+table{border-collapse:collapse;width:100%;font-size:16px;font-variant-numeric:tabular-nums}
+th{text-align:left;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--maroon);padding:14px 12px;border-bottom:1px solid var(--line)}
+td{padding:16px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr.past td{color:var(--mute)}
+tr.nextrow td{font-weight:700}
+.note{font-size:14px;color:var(--mute);margin:16px 0 0}
+
+/* footer */
+.foot{background:var(--navy);color:var(--white);padding:64px 0 40px}
+.foot .cols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px}
+.foot .k{font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin:0 0 14px}
+.foot a{display:block;text-decoration:none;color:var(--white);font-size:16px;margin:0 0 12px}
+.foot a:hover{color:var(--gold)}
+.foot .about{font-size:15px;line-height:1.6;color:#C9CFD9;max-width:28em;margin:16px 0 0}
+.foot .mark .wm1,.foot .mark .wm2{color:var(--white)}
+.foot .mark .wm1 span{color:var(--gold)}
+.foot .base{margin:40px 0 0;padding-top:24px;border-top:1px solid var(--navy-line);display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:14px;color:#8A93A6}
+.foot .base span:last-child{font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+@media (max-width:820px){.foot .cols{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.foot .cols{grid-template-columns:1fr}}
+
+/* instructor sheet */
+.codeblock{display:grid;gap:8px;margin:18px 0 0}
+.codeblock label{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--maroon)}
+.codeblock textarea{width:100%;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;padding:12px;border:1px solid var(--ink);border-radius:4px;background:var(--white);color:var(--ink);resize:vertical}
+.codeblock button{justify-self:start;font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:.18em;text-transform:uppercase;background:var(--navy);color:var(--white);border:0;border-radius:4px;padding:14px 22px;cursor:pointer}
+.codeblock button:hover{background:#000}
+.gbm{margin:12px 0 0;padding-left:22px}
+.gbm li{margin:8px 0}
+.kv{margin:0;padding:0;list-style:none;display:grid;gap:8px;font-size:16px;color:var(--soft)}
+.kv strong{color:var(--ink)}
+
+@media print{
+  .band,.foot{background:#FFFFFF !important;color:var(--ink) !important;border-top:1px solid var(--line)}
+  .band h1,.band h2,.band .nums .t,.foot a{color:var(--ink) !important}
+  .band .num{color:var(--maroon) !important}
+  .skip,.nav,.cta{display:none !important}
+  .faq details{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the page content</a>
+<header class="top"><div class="inner">
+  <a class="mark" href="bio004-syllabus-update.html" aria-label="BIO 004 Human Anatomy, syllabus home"><svg width="52" height="52" viewBox="0 0 52 52" aria-hidden="true" focusable="false"><circle cx="12" cy="11" r="6" fill="#060B1A" class="f1"></circle><path d="M3 50 L5 24 Q12 18 19 24 L21 50 Z" fill="#060B1A" class="f1"></path><circle cx="26" cy="8" r="6.5" fill="#7A2A22"></circle><path d="M16 50 L18 21 Q26 14 34 21 L36 50 Z" fill="#7A2A22"></path><circle cx="40" cy="11" r="6" fill="#B8924A"></circle><path d="M31 50 L33 24 Q40 18 47 24 L49 50 Z" fill="#B8924A"></path></svg><span class="wm"><span class="wm1">BIO <span>004</span></span><span class="wm2">Human Anatomy</span></span></a>
+  <nav class="nav" aria-label="Syllabus pages"><a href="bio004-syllabus-update.html">Syllabus</a><a href="bio004-how-tbls-work.html">TBLs</a><a href="bio004-exam-scope.html">Study guides</a><a href="bio004-why-before-class.html">Before class</a><a href="bio004-required-optional.html">What counts</a><a href="bio004-anatomy-feels-hard.html">Why it feels hard</a><a href="bio004-ai-statement.html">AI statement</a></nav>
+</div></header>
+<main id="main">
+<section class="hero"><div class="inner">
+  <span class="eyebrow">AI in this course &middot; BIO 004 &middot; Fall 2026</span>
+  <h1>Is this an <span class="hl">AI</span> course?</h1>
+  <p class="lede">No. I've heard some of you say you'd rather have a regular course than an AI course, so I want to clear that up. This is an in-person anatomy course that I designed and teach. I did use AI to help build some of your study tools, and I want you to know exactly how.</p>
+</div></section>
+
+<section class="band" aria-labelledby="h-who"><div class="inner">
+  <div class="head"><span class="eyebrow">Who built this course</span><h2 id="h-who">I've been building this course for over <span class="hl">12 years</span>.</h2></div>
+  <div class="nums" style="--n:3">
+    <div><span class="num">01</span><span class="t">Hundreds of hours</span><span class="d">That's how much of my time has gone into this course, from the competencies and notes to the note sheets, lab structure lists and exams.</span></div>
+    <div><span class="num">02</span><span class="t">Built over 12 years</span><span class="d">I've taught this material and kept improving it for more than 12 years. None of it showed up overnight.</span></div>
+    <div><span class="num">03</span><span class="t">Taught by me</span><span class="d">I recorded your video lectures, and I'm in the room with you in class and in lab.</span></div>
+  </div>
+</div></section>
+
+<section class="sec" aria-labelledby="h-trad"><div class="inner">
+  <div class="head"><span class="eyebrow">How this course works</span><h2 id="h-trad">How you'll <span class="hl">learn</span> in this course</h2></div>
+  <ol class="steps">
+    <li><span class="num">01</span><div><span class="t">You watch my video lectures before class.</span><span class="d">There's a full semester of them, and I recorded them for this course. Watching first means you've already met the topic when you walk in.</span></div></li>
+    <li><span class="num">02</span><div><span class="t">Class is active learning.</span><span class="d">We spend class time using what you learned: TBLs, working problems with your team, and live lecture on the harder concepts.</span></div></li>
+    <li><span class="num">03</span><div><span class="t">Lab is hands-on.</span><span class="d">You work with microscope slides, models and human donors.</span></div></li>
+    <li><span class="num">04</span><div><span class="t">Exams are in person.</span><span class="d">You take your lecture exams and lab practicals in the room.</span></div></li>
+  </ol>
+  <p class="more">Why the course is set up this way: <a class="tlink m" href="bio004-why-before-class.html">Why do I learn before class?</a></p>
+</div></section>
+
+<section class="sec" aria-labelledby="h-where"><div class="inner">
+  <div class="head"><span class="eyebrow">Where AI comes in</span><h2 id="h-where">How I've used <span class="hl">AI</span></h2></div>
+  <div class="duo">
+    <div><span class="k">01 &middot; What AI helped with</span><span class="t">Building your study tools</span><span class="d">I'm trained in anatomy and medicine, not computer programming. AI helped me write the code for the study tools, organize my material inside them, and set up the spaced recall in Mastery OS.</span><ul><li>Mastery OS and the recall cards</li><li>Practice exams and brain dump practice</li><li>These course web pages</li></ul></div>
+    <div><span class="k">02 &middot; What I designed</span><span class="t">What you learn and what's on your exams</span><span class="d">The anatomy inside those tools comes from the course I've built over the last 12 years.</span><ul><li>The competencies and your study guides</li><li>The notes, note sheets and lab structure lists</li><li>The exams and lab practicals</li></ul></div>
+  </div>
+  <div class="cite"><span class="d">So when you use a recall card or a practice exam, AI helped build the tool, but the anatomy in it is what I teach.</span><span class="src">Dr. Sharilyn Rennie</span></div>
+</div></section>
+
+<section class="sec last" aria-labelledby="h-you"><div class="inner">
+  <div class="head"><span class="eyebrow">Your use of AI</span><h2 id="h-you">What about <span class="hl">your</span> use of AI?</h2></div>
+  <div class="faq">
+<details open><summary><span id="a1">Can I use AI to study?</span></summary><div class="a"><p><strong>Yes, and I encourage it.</strong> Try the Teach It to an AI feature in Mastery OS. It opens your own free ChatGPT, Claude or Gemini account with a quiz prompt ready to go. Explaining a concept to something that keeps asking you questions is a good way to find out whether you really know it.</p><p><strong>I'm happy to teach you how to use AI to help you learn, not to do things for you.</strong> Just ask me in class or at office hours.</p></div></details>
+<details><summary><span id="a2">Can I use AI on graded work?</span></summary><div class="a"><ul><li>You can only use AI on assignments <strong>marked as AI assignments</strong>.</li><li>You can't use AI on <strong>exams</strong> or on any graded part of a TBL.</li><li>If graded work is rated above 25% AI or plagiarism, it gets an <strong>automatic zero</strong>.</li><li>If you're not sure whether a tool counts, ask me before you turn your work in.</li></ul></div></details>
+<details><summary><span id="a3">Where are the full rules?</span></summary><div class="a"><p>They're in the <strong>AI Honor Contract</strong> in Canvas. Sign it before you turn in any graded work.</p></div></details>
+<details><summary><span id="a5">What if I don't want to use tools built with AI?</span></summary><div class="a"><p><strong>That's completely up to you.</strong> The study tools are optional. You're welcome to make your own from your notes, note sheets and competencies, like flashcards, drawings or practice questions.</p><p>It takes more of your time, but it works. What matters is that you master every competency.</p></div></details>
+  </div>
+  <p class="more">AI and cheating are also covered in the syllabus. <a class="tlink m" href="bio004-syllabus-update.html">What is in the syllabus?</a></p>
+</div></section>
+</main>
+</main>
+<footer class="foot"><div class="inner">
+  <div class="cols">
+    <div><span class="mark"><svg width="52" height="52" viewBox="0 0 52 52" aria-hidden="true" focusable="false"><circle cx="12" cy="11" r="6" fill="#F3EFE6" class="f1"></circle><path d="M3 50 L5 24 Q12 18 19 24 L21 50 Z" fill="#F3EFE6" class="f1"></path><circle cx="26" cy="8" r="6.5" fill="#7A2A22"></circle><path d="M16 50 L18 21 Q26 14 34 21 L36 50 Z" fill="#7A2A22"></path><circle cx="40" cy="11" r="6" fill="#B8924A"></circle><path d="M31 50 L33 24 Q40 18 47 24 L49 50 Z" fill="#B8924A"></path></svg><span class="wm"><span class="wm1">BIO <span>004</span></span><span class="wm2">Human Anatomy</span></span></span><p class="about">Human Anatomy at Solano Community College, Vacaville Center. Dr. Sharilyn Rennie.</p></div>
+    <div><p class="k">Syllabus</p><a href="bio004-syllabus-update.html">What is in the syllabus?</a><a href="bio004-required-optional.html">What do I have to do?</a><a href="bio004-exam-scope.html">Where is my study guide?</a><a href="bio004-ai-statement.html">Is this an AI course?</a></div>
+    <div><p class="k">How we learn</p><a href="bio004-how-tbls-work.html">What is a TBL?</a><a href="bio004-why-before-class.html">Why do I learn before class?</a><a href="bio004-anatomy-feels-hard.html">Why does anatomy feel so hard?</a></div>
+    <div><p class="k">Help</p><a href="bio004-syllabus-update.html#s3">Virtual Office</a><a href="bio004-syllabus-update.html#s4">Office hours</a><a href="bio004-syllabus-update.html#s17">Tutoring</a></div>
+  </div>
+  <div class="base"><span>BIO 004 Human Anatomy &middot; Solano Community College</span><span>Fall 2026 &middot; Dr. Sharilyn Rennie</span></div>
+</div></footer>
+<script>
+(function(){
+'use strict';
+
+var SITE = 'https://drsrennie-stack.github.io/new-build-bio4-solano/';
+var SECS = {mw:{label:'Mon/Wed afternoon', pat:'mw', crn:'80650', syl:'syllabus-class1.html'},
+            'tr-am':{label:'Tue/Thu morning', pat:'tr', crn:'80654', syl:'syllabus-class2.html'},
+            'tr-eve':{label:'Tue/Thu evening', pat:'tr', crn:'80655', syl:'syllabus-class3.html'}};
+var SEC = null;
+/* One page for every section: no section choice. */
+var EXAMS = { mw:['2026-09-09','2026-09-30','2026-10-21','2026-11-16','2026-12-09'],
+              tr:['2026-09-08','2026-09-29','2026-10-22','2026-11-17','2026-12-10'] };
+var DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmt(iso){ var p = iso.split('-'); var d = new Date(+p[0], +p[1]-1, +p[2]); return DOW[d.getDay()] + ' ' + MON[d.getMonth()] + ' ' + d.getDate(); }
+function today(){ var d = new Date(), z = function(n){ return (n < 10 ? '0' : '') + n; }; return d.getFullYear() + '-' + z(d.getMonth()+1) + '-' + z(d.getDate()); }
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function abs(p){ return /^https?:/.test(p) ? p : SITE + p; }
+/* every internal link leaves the Canvas frame; external links open a new tab */
+function fixLinks(root){
+  (root || document).querySelectorAll('a[href]').forEach(function(a){
+    var h = a.getAttribute('href');
+    if (h.charAt(0) === '#' || h.charAt(0) === '?') return;
+    if (/^https?:/.test(h) && h.indexOf(SITE) !== 0) { a.target = '_blank'; a.rel = 'noopener'; }
+    else { if (!/^https?:/.test(h)) a.href = abs(h); a.target = '_top'; }
+  });
+}
+/* mark the current page in the top nav */
+function markNav(me){
+  document.querySelectorAll('.nav a').forEach(function(a){
+    if (a.getAttribute('href') === me) a.setAttribute('aria-current', 'page');
+  });
+}
+/* TBLs for a day pattern, read from the live calendar (schedule-fall2026.js) */
+function tblList(pat){
+  var S = window.BIO004_SESSIONS; if (!S || !S[pat]) return [];
+  var out = [];
+  S[pat].forEach(function(s){
+    if (!s.lines) return;
+    s.lines.forEach(function(l){
+      if (l[0] !== 'In class') return;
+      var t = l[1].replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/&middot;/g, '·');
+      var mm = t.match(/^TBL (\d+)\s*·\s*([^·]+)/);
+      if (mm) out.push({ n: +mm[1], date: s.date, topic: mm[2].trim() });
+    });
+  });
+  return out;
+}
+/* One list for both day patterns, in date order. Each date ends in M/W or T/R.
+   A TBL with the same number and focus on both patterns shares one row. */
+function tblMerged(){
+  var rows = [], tags = {mw:'M/W', tr:'T/R'};
+  ['mw','tr'].forEach(function(pat){
+    tblList(pat).forEach(function(r){
+      var hit = rows.filter(function(x){ return x.n === r.n && x.topic.toLowerCase() === r.topic.toLowerCase(); })[0];
+      if (hit) hit.dates.push({d:r.date, tag:tags[pat]});
+      else rows.push({n:r.n, topic:r.topic, dates:[{d:r.date, tag:tags[pat]}]});
+    });
+  });
+  rows.forEach(function(r){ r.first = r.dates.map(function(x){ return x.d; }).sort()[0]; });
+  rows.sort(function(a, b){ return a.first < b.first ? -1 : a.first > b.first ? 1 : 0; });
+  return rows;
+}
+function sendHeightSetup(id){
+  function send(){ try { if (window.parent && window.parent !== window) parent.postMessage({type:'resize', id:id, height:document.body.scrollHeight}, '*'); } catch (e) {} }
+  window.addEventListener('load', send); window.addEventListener('resize', send);
+  if (window.ResizeObserver) new ResizeObserver(send).observe(document.body);
+  document.querySelectorAll('details').forEach(function(d){ d.addEventListener('toggle', send); });
+}
+
+
+
+fixLinks();
+markNav('bio004-ai-statement.html');
+sendHeightSetup('bio004-ai-statement');
+})();
+</script>
+</body>
+</html>
