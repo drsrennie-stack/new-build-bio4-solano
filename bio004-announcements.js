@@ -20,6 +20,10 @@
    The doors screen shows the newest 5.
    ============================================================ */
 window.BIO004_ANNOUNCEMENTS = [
+  { date: '2026-10-19',
+    title: 'Thank you for the survey',
+    body: 'Most of you described TBL as extremely helpful. Your feedback also showed where expectations and navigation could be clearer, so I adjusted the schedule and made a quick-reference sheet with recommended tasks for each activity. Also inside: learning with your team, how preparation and class fit together, and how to reach me privately.',
+    link: 'bio004-survey-thanks-announcement.html', linkLabel: 'Read the full announcement' },
   { date: '2026-10-07',
     title: 'New in lab: cadaver videos',
     body: 'Free University of Michigan BlueLink videos, sorted by body system: cadaver dissections, muscles by region, bones, joints, and lab stations. Find Cadaver videos in Course tools under Lab materials, or behind the Lab door.',
