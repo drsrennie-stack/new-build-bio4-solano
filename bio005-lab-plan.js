@@ -36,6 +36,10 @@ window.BIO005_LAB = {
     1:  ['reference-range-lab.html',      'Open the reference range lab'],
     2:  ['enzyme-amylase-lab.html',       'Open the enzyme lab'],
     3:  ['osmosis-iv-fluids-lab.html',    'Open the osmosis and IV fluids lab'],
+    4:  ['lab-worksheet-week04.html',     'Open the Week 4 lab worksheet'],
+    5:  ['lab-week05-neuro-exam.html',    'Open the Week 5 neurological exam lab'],
+    6:  ['lab-week06-muscle.html',        'Open the Week 6 muscle lab'],
+    7:  ['lab-week07-hormones.html',      'Open the Week 7 hormones lab'],
     8:  ['lab-week08-hormone-cycle.html', 'Open the hormone cycle lab'],
     11: ['cbc-pcr-lab.html',              'Open the blood analysis lab'],
     13: ['pulmonary-function-lab.html',   'Open the pulmonary function lab'],
@@ -111,12 +115,16 @@ window.BIO005_LAB = {
           'Name one thing you now know you had confused, and say how you will catch that confusion next time.'] },
 
   /* ---------------------------------------------------------- 4 */
-  4: { title:'Electrical Signaling', kind:'physioex',
-    pex:{ name:'PhysioEx Exercise 3, Neurophysiology of Nerve Impulses',
+  /* Week 4 is graded on the Week 4 lab worksheet alone
+     (lab-worksheet-week04.html). sheetOnly hides parts 02 to 04 on the
+     instructions page so students see one set of directions, not two.
+     The record/corr/meta entries below are kept for reference only. */
+  4: { title:'Electrical Signaling', kind:'physioex', sheetOnly:true,
+    pex:{ name:'PhysioEx Exercise 3, Neurophysiology of Nerve Impulses, Activities 1 to 9',
       steps:[
-        'Run all activities: resting membrane potential, threshold and stimulus intensity, blocking the action potential, conduction velocity, and synaptic transmission.',
-        'In the resting potential activity, change extracellular potassium and record the membrane potential at each concentration rather than only noting the direction.',
-        'In the blocking activity, note which agent blocks where. Lidocaine, tetrodotoxin and ethanol do not act at the same place.'
+        'Run all nine activities: the resting membrane potential, receptor potential, threshold, the importance of voltage-gated Na<sup>+</sup> channels, the refractory periods, coding for stimulus intensity, conduction velocity, chemical synaptic transmission, and putting it all together.',
+        'After each activity, fill in its three boxes on the Week 4 lab worksheet while it is fresh: what you measured, what you found, and what you learned. Use your actual numbers.',
+        'Finish with the two look-back questions at the end of the worksheet.'
       ]},
     record:[
       'A table of extracellular potassium against measured resting membrane potential, with at least four points.',
@@ -178,17 +186,22 @@ window.BIO005_LAB = {
           'Say one thing about muscle you believed on Monday that you would now state differently.'] },
 
   /* ---------------------------------------------------------- 7 */
-  7: { title:'Chemical Signaling &amp; Endocrine Control', kind:'physioex',
+  /* Oct 17 2026: matches lab-week07-hormones.html. The thyroid activity stays in
+     Week 12 with metabolism (physioex-lab-map-fall2026.md); the cortisol and ACTH
+     activity is added, and the week also has a home heart rate test and the
+     hormone cycle sheet, since reproduction now sits in Week 7. */
+  7: { title:'Hormones, the Autonomic System &amp; Reproduction', kind:'physioex',
     pex:{ name:'PhysioEx Exercise 4, Endocrine System Physiology, and Exercise 12, Serological Testing',
       steps:[
-        '<strong>Exercise 4.</strong> Run the metabolism and thyroid hormone activity, then the insulin and diabetes activity. Record the baseline before every intervention.',
-        '<strong>Exercise 12.</strong> Run the ELISA activity and treat it as the hormone immunoassay it is: a way of measuring a hormone you cannot see.',
-        'In the thyroid activity, note which animal received which hormone and what changed. The point is which level of the axis you are replacing.'
+        '<strong>At home first.</strong> Two heart rate tests: slow breathing, then lying down and standing up. They show the two branches of the autonomic nervous system at work.',
+        '<strong>Exercise 4.</strong> Run the plasma glucose, insulin and diabetes activity, the hormone replacement therapy activity, and the cortisol and ACTH activity. Record the baseline before every intervention.',
+        '<strong>Exercise 12.</strong> Run the ELISA activity and treat it as the hormone immunoassay it is: a way of measuring a hormone you cannot see. Then read two unknowns off a TSH standard curve.',
+        'Last, read one menstrual cycle from its hormone graphs on the hormone cycle sheet.'
       ]},
     record:[
-      'A table with one row per animal or condition: the intervention, the metabolic rate before, and after.',
-      'The glucose response curves, with the baseline glucose marked on each.',
-      'For the ELISA, the standard curve you built and where the unknown fell on it.'
+      'Your heart rates: resting, with slow breathing, lying down, and at 1 and 3 minutes of standing.',
+      'The glucose response curves, with the baseline glucose marked on each, and a table of cortisol and ACTH for each patient with your diagnosis.',
+      'For the ELISA and the standard curve, the curve you drew by hand and where each unknown fell on it.'
     ],
     corr:{ title:'TSH 8.4 with a normal free T4',
       body:'A patient has a TSH of 8.4 mIU/L, above the usual 0.4 to 4.0, and a free T4 of 1.1 ng/dL, which is inside the reference range. TSH is released by the anterior pituitary and thyroid hormone feeds back on the pituitary and the hypothalamus. TSH changes in a roughly logarithmic way for a linear change in T4.',
