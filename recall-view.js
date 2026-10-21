@@ -1296,13 +1296,13 @@
   +   R + ' .rv-inline-note{margin-left:0}' + R + ' .rv-tl li{grid-template-columns:44px 24px minmax(0,1fr)}}'
   + '@media (prefers-reduced-motion: reduce){' + R + ' *{transition:none!important;animation:none!important}}';
   }
-  /* The focus layer: a solid background in every theme, so nothing on
-     the page shows through or moves behind the card. */
+  /* The focus layer: a solid background, so nothing on the page shows
+     through or moves behind the card. */
   var F = '#rv-focus';
   var FOCUS_CSS = ''
-  + F + '[data-rv-theme="light"]{--rv-fbg:#E9EBF0}'
-  + F + '[data-rv-theme="navy"]{--rv-fbg:#0B1530}'
-  + F + '[data-rv-theme="dark"]{--rv-fbg:#070C18}'
+  /* Very dark navy behind the card in every theme. The light and navy
+     themes keep their white card; the bar text turns light. */
+  + F + '[data-rv-theme]{--rv-fbg:#060B1A;--rv-on-bg:#FFFFFF;--rv-on-bg-soft:#D8DBE3;--rv-on-bg-link:#E2C281}'
   + F + '{position:fixed;inset:0;z-index:2147483000;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:0;'
   +   'background:var(--rv-fbg);color:var(--rv-on-bg);padding:0 max(16px,env(safe-area-inset-right,0px)) max(24px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}'
   + F + '[hidden]{display:none!important}'
