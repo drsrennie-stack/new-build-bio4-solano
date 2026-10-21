@@ -64,6 +64,8 @@
    then 3. Under Level up, when a competency opens its next level
    during a session, that level's cards go straight into the deck,
    right after the current card, so the student keeps climbing.
+   A new level opening sets off about three seconds of fireworks
+   behind the card (not for students who ask for reduced motion).
    Keys inside the card: 1, 2, 3 rate how sure; A to D (or 1 to 4)
    answer; N goes to the next card; Esc stops and shows the results.
    ============================================================ */
@@ -457,6 +459,7 @@
         openedNow[ck] = after;
         if (levelsOn()) {
           var added = addUnlocked(ck, before, after);
+          if (started) setTimeout(fireworks, 60);
           unlockMsg = 'Level ' + after + ' is now open for Competency ' + ck + '.'
             + (added ? ' ' + added + ' Level ' + after + ' card' + (added === 1 ? ' comes' : 's come') + ' next.' : '');
         }
@@ -862,7 +865,7 @@
     FX.setAttribute('role', 'dialog');
     FX.setAttribute('aria-modal', 'true');
     FX.setAttribute('aria-label', 'Recall cards');
-    FX.innerHTML = '<div class="rv-fbar"></div><div class="rv-fbody"></div>';
+    FX.innerHTML = '<canvas class="rv-fw" aria-hidden="true"></canvas><div class="rv-fbar"></div><div class="rv-fbody"></div>';
     document.body.appendChild(FX);
     /* Listen on the document while the layer is open, in the capture
        phase, so keys reach the card even when focus is on the page
@@ -931,6 +934,66 @@
       var m = FX && FX.querySelector('.rv-meter span');
       if (m) m.style.width = Math.round(Math.min(1, (Date.now() - runStart) / (goalMins() * 60000)) * 100) + '%';
     }, 1000);
+  }
+  /* Fireworks behind the card when a new level opens. About three
+     seconds, then the canvas is cleared. Bursts are small, under three
+     a second at any one spot, with no large flashing area. Skipped for anyone who has
+     asked for reduced motion; the "Level 2 is now open" line still shows. */
+  var fwRun = 0;
+  function fireworks() {
+    try { if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; } catch (e) {}
+    if (!FX || FX.hidden) return;
+    var cv = FX.querySelector('.rv-fw'); if (!cv || !cv.getContext) return;
+    var ctx = cv.getContext('2d'), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W = window.innerWidth, H = window.innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var COLORS = ['#E2C281', '#B8924A', '#F3E3BC', '#C2734D', '#FFFFFF'];
+    var run = ++fwRun, t0 = performance.now(), rockets = [], sparks = [], launched = 0, SHOTS = 7;
+    /* Wide screens: fire in the open space beside the card. Phones have
+       no open space, so there the canvas sits over the card for these
+       few seconds (it never takes clicks). */
+    var card = FX.querySelector('.rv-card'), rc = card ? card.getBoundingClientRect() : null;
+    var side = rc && rc.left > 110 ? rc.left : 0;
+    cv.style.zIndex = side ? '0' : '3';
+    function pickX() {
+      if (!side) return W * (0.12 + Math.random() * 0.76);
+      var left = Math.random() < 0.5;
+      return left ? side * (0.15 + Math.random() * 0.7) : rc.right + (W - rc.right) * (0.15 + Math.random() * 0.7);
+    }
+    function launch() {
+      rockets.push({ x: pickX(), y: H, vy: -(H * 0.012 + Math.random() * H * 0.004), top: H * (0.12 + Math.random() * 0.3),
+                     c: COLORS[Math.floor(Math.random() * COLORS.length)] });
+    }
+    function burst(r) {
+      var n = 54 + Math.floor(Math.random() * 22);
+      for (var i = 0; i < n; i++) {
+        var a = (Math.PI * 2 * i) / n, sp = 1.6 + Math.random() * 2.6;
+        sparks.push({ x: r.x, y: r.y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 1, c: Math.random() < 0.7 ? r.c : COLORS[Math.floor(Math.random() * COLORS.length)] });
+      }
+    }
+    function frame(now) {
+      if (run !== fwRun || !FX || FX.hidden) { ctx.clearRect(0, 0, W, H); return; }
+      var t = now - t0;
+      while (launched < SHOTS && t > launched * 260) { launch(); launched++; }
+      ctx.clearRect(0, 0, W, H);
+      rockets = rockets.filter(function (r) {
+        r.y += r.vy;
+        ctx.fillStyle = r.c; ctx.beginPath(); ctx.arc(r.x, r.y, 2.2, 0, Math.PI * 2); ctx.fill();
+        if (r.y <= r.top) { burst(r); return false; }
+        return true;
+      });
+      sparks = sparks.filter(function (p) {
+        p.x += p.vx; p.y += p.vy; p.vy += 0.045; p.vx *= 0.985; p.life -= 0.012;
+        if (p.life <= 0) return false;
+        ctx.globalAlpha = Math.max(0, p.life);
+        ctx.fillStyle = p.c; ctx.beginPath(); ctx.arc(p.x, p.y, 2.6, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = 1;
+        return true;
+      });
+      if (t < 3200 || rockets.length || sparks.length) requestAnimationFrame(frame);
+      else ctx.clearRect(0, 0, W, H);
+    }
+    requestAnimationFrame(frame);
   }
   function stopTick() { if (tick) { clearInterval(tick); tick = null; } }
   function stopHere() {
@@ -1315,6 +1378,8 @@
   + F + ' .rv-meter{flex:1 1 100%;height:6px;border-radius:999px;background:rgba(127,127,127,.28);overflow:hidden}'
   + F + ' .rv-meter span{display:block;height:100%;background:var(--rv-gold);transition:width 300ms ease}'
   + F + ' .rv-stage{padding:6px 0 24px}'
+  + F + ' .rv-fw{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}'
+  + F + ' .rv-fbody{position:relative;z-index:1}'
   + F + ' .rv-q:focus,' + F + ' .rv-note h3:focus{outline:none}'
   + F + ' .rv-q:focus-visible{outline:3px solid var(--rv-gold);outline-offset:4px;border-radius:4px}'
   + F + ' .rv-keys{margin:0;font-size:12.5px;color:var(--rv-on-bg-soft);text-align:center}'
