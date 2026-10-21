@@ -176,3 +176,18 @@ Files: bio004-dock.js, bio004-mastery-check.html.
 - bio004-mastery-check.html now loads bio004-dock.js (it had no dock before), which gives it the home link and the content-height measure.
 - Every other page keeps the dock and Hootie. To bring them back on the tools, delete the "STUDY TOOLS" block near the top of the dock section in bio004-dock.js.
 - Checked at 390px wide: no script errors, no sideways scroll on the changed pages.
+
+## Addendum, October 20, 2026: recall cards open full screen
+
+File: recall-view.js (Mastery OS recall cards; the physiology Mastery OS pages load the same file).
+
+- A session now opens in a full-screen layer on a solid background (light gray, navy or near-black, matching the student's theme), so the page behind it can no longer scroll the student down into the brain dumps. A new card always starts at the top of the layer, and answering a card does not move the view.
+- New "How long" choice beside "Show me": until the deck is finished, 10, 20, 30 or 50 cards, or 5, 10, 15 or 20 minutes. The clock only runs when the student picks a time.
+- Cards come Level 1 first, then Level 2, then Level 3. Under Level up, when a competency opens its next level during a session, those cards are added right after the current card, and the card says how many came in.
+- Dialog: role="dialog", aria-modal="true", an accessible name, and the rest of the page is made inert while it is open. Focus goes to the question on each new card and to the results heading at the end; Tab stays inside the layer; Esc stops the session and shows the results, and Esc again closes it. Closing returns focus to the Start session button.
+- Single-key shortcuts (1, 2, 3 to rate, A to D or 1 to 4 to answer, N for next) work only while the layer is open and only for the buttons on screen, so they never fire while typing anywhere else (2.1.4). A line on the card lists them; it is hidden on phones, where they are not needed.
+- The bar shows the card count or the time left as text. The progress strip is decorative (aria-hidden). Screen readers hear "One minute left" and "Time is up" through the card's existing aria-live region; the clock does not announce every second.
+- Contrast: the bar text uses the theme's existing page-text tokens (navy #0B1530 on #E9EBF0, about 15:1; white on navy and on #070C18 above 15:1). The time left in light theme is #7A2E24 on #E9EBF0, about 8:1. Gold time on navy is #E2C281, about 10:1.
+- Also fixed: on the results screen the "Topics to spend more time on" list put the score in the wrong column.
+- Checked at 1280 and 390px wide in all three themes: no script errors, no sideways scroll, page scroll locked while the layer is open.
+- Known limit: if Mastery OS is ever embedded in an auto-height iframe, the layer covers the frame rather than the student's screen. Mastery OS is opened as its own page everywhere on the site today.

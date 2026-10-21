@@ -54,7 +54,18 @@
    The switch "Levels: Level up / Show all levels" sits above the
    Start button and is saved with the other display choices.
 
-   Nothing here runs on a timer. A student sets the pace.
+   FOCUS MODE (v3.2, October 20 2026)
+   ----------------------------------
+   A session now opens in a full-screen card on a solid background,
+   so the page behind it never scrolls. Before starting, a student
+   picks how long: until the deck is done, a number of cards (10, 20,
+   30, 50) or a set time (5, 10, 15, 20 minutes). The clock only runs
+   when the student chooses a time. Cards come Level 1 first, then 2,
+   then 3. Under Level up, when a competency opens its next level
+   during a session, that level's cards go straight into the deck,
+   right after the current card, so the student keeps climbing.
+   Keys inside the card: 1, 2, 3 rate how sure; A to D (or 1 to 4)
+   answer; N goes to the next card; Esc stops and shows the results.
    ============================================================ */
 
 (function () {
@@ -66,6 +77,20 @@
   var OKEY  = 'bio004-card-odometer';     // lifetime rep counter
   var TKEY  = 'bio004-recall-topics';     // the student's topic checkboxes
   var SECKEY = 'bio004-section';          // site-wide section choice (raw string)
+  var LKEY  = 'bio004-recall-length';     // how long a session runs
+
+  /* ---------- session length (focus mode) ---------- */
+  var LENS = [['done', 'Until I finish the deck'], ['c10', '10 cards'], ['c20', '20 cards'], ['c30', '30 cards'], ['c50', '50 cards'],
+              ['t5', '5 minutes'], ['t10', '10 minutes'], ['t15', '15 minutes'], ['t20', '20 minutes']];
+  function loadLen() {
+    var v = null; try { v = localStorage.getItem(LKEY); } catch (e) {}
+    for (var i = 0; i < LENS.length; i++) if (LENS[i][0] === v) return v;
+    return 'done';
+  }
+  var len = loadLen();
+  function goalCards() { return len.charAt(0) === 'c' ? +len.slice(1) : 0; }
+  function goalMins()  { return len.charAt(0) === 't' ? +len.slice(1) : 0; }
+  var runStart = 0, tick = null, timeUp = false, warned = false;
 
   /* ---------- the odometer ---------- */
   var RANKS = [
@@ -358,7 +383,30 @@
     });
     if (filter.mode === 'gaps') pool = sampleAcross(pool, GAP_PER_TOPIC);
     shuffle(pool);
+    /* Level 1 first, then 2, then 3, shuffled inside each level. */
+    pool = pool.map(function (e, i) { return { e: e, i: i }; })
+      .sort(function (a, b) { return levelOf(a.e) - levelOf(b.e) || a.i - b.i; })
+      .map(function (x) { return x.e; });
     return pool;
+  }
+  /* A level opened during the session: put its cards right after the
+     current one, so the student moves straight up to it. */
+  function addUnlocked(ck, from, to) {
+    if (!started || filter.mode === 'missed' || filter.mode === 'gaps') return 0;
+    var ids = {}; selectedIds().forEach(function (k) { ids[k] = 1; });
+    var have = {}; queue.forEach(function (e) { have[e.key] = 1; });
+    var add = [];
+    for (var l = from + 1; l <= to; l++) {
+      ((COMPS[ck] || [])[l] || []).forEach(function (e) {
+        if (have[e.key]) return;
+        if (filter.comp ? !isComp(e, filter.comp) : !ids[e.topicId]) return;
+        if (filter.mode === 'due' && !due(e)) return;
+        add.push(e);
+      });
+    }
+    shuffle(add);
+    Array.prototype.splice.apply(queue, [pos + 1, 0].concat(add));
+    return add.length;
   }
   function sampleAcross(pool, perTopic) {
     var byTopic = {};
@@ -407,7 +455,11 @@
       var after = openTo(ck);
       if (after > before) {
         openedNow[ck] = after;
-        if (levelsOn()) unlockMsg = 'Level ' + after + ' is now open for Competency ' + ck + '.';
+        if (levelsOn()) {
+          var added = addUnlocked(ck, before, after);
+          unlockMsg = 'Level ' + after + ' is now open for Competency ' + ck + '.'
+            + (added ? ' ' + added + ' Level ' + after + ' card' + (added === 1 ? ' comes' : 's come') + ' next.' : '');
+        }
       }
     }
     odBump(entry);
@@ -619,6 +671,10 @@
       +       '<option value="gaps"' + (filter.mode === 'gaps' ? ' selected' : '') + '>Find my gaps (2 per topic)</option>'
       +       '<option value="missed"' + (filter.mode === 'missed' ? ' selected' : '') + '>Ones I keep missing</option>'
       +     '</select></span>'
+      +   '<span class="rv-field"><label for="rv-len">How long</label>'
+      +     '<select id="rv-len">' + LENS.map(function (o) {
+                return '<option value="' + o[0] + '"' + (len === o[0] ? ' selected' : '') + '>' + esc(o[1]) + '</option>';
+              }).join('') + '</select></span>'
       +   '<button type="button" class="rv-btn rv-primary" id="rv-start"' + (ids.length ? '' : ' disabled') + '>Start session</button>'
       + '</div>'
       + '</div>';
@@ -720,15 +776,15 @@
       +     '<span>' + esc(e.topicTitle || '') + '</span>'
       +     '<span class="rv-dok rv-d' + dok + '">' + esc(LEVELN[dok]) + '</span>'
       +     (compKey(e) ? '<span class="rv-comp">Competency ' + esc(compKey(e)) + '</span>' : '')
-      +     '<span class="rv-of">Card ' + (pos + 1) + ' of ' + queue.length + '</span></div>'
-      +   '<h3 class="rv-q" id="rv-q">' + esc(c.q) + '</h3>'
+      + '</div>'
+      +   '<h3 class="rv-q" id="rv-q" tabindex="-1">' + esc(c.q) + '</h3>'
       +   body
       +   '<p class="rv-live" id="rv-live" role="status" aria-live="polite"></p>'
       +   (!e.mcq && picked !== null ? unlockHtml() : '')
       +   (picked !== null || stage === 'self' ? '<div class="rv-nextrow"><button type="button" class="rv-btn rv-primary" id="rv-next">'
-              + (pos + 1 >= queue.length ? 'Finish the session' : 'Next card') + '</button></div>' : '')
+              + (isLast() ? 'See my results' : 'Next card') + '</button></div>' : '')
       + '</article>'
-      + '<p class="rv-back"><button type="button" class="rv-link" id="rv-topicsbtn">Change topics</button></p>'
+      + '<p class="rv-keys">Keys: 1, 2, 3 to rate &middot; A to D to answer &middot; N for the next card &middot; Esc to stop</p>'
       + '</div>';
   }
 
@@ -751,26 +807,157 @@
     }
     if (!started) {
       inner += picker();
-    } else if (!queue.length) {
-      inner += '<div class="rv-note"><h3>Nothing due in these topics right now</h3>'
+      host.innerHTML = inner;
+      MODS.forEach(function (mm, i) {
+        var cb = host.querySelector('[data-modall="' + i + '"]');
+        if (cb) { var n = modCount(mm); cb.indeterminate = n > 0 && n < (mm.topics || []).length; }
+      });
+      closeFocus();
+      if (focusSel) { var f0 = host.querySelector(focusSel); if (f0) f0.focus(); }
+      return;
+    }
+    host.innerHTML = inner + '<div class="rv-note"><h3>Your session is open</h3><p>Your cards are on top of this page.</p>'
+      + '<div class="rv-conf-row"><button type="button" class="rv-btn rv-primary" id="rv-resume">Back to my cards</button></div></div>';
+    inner = '';
+    if (!queue.length) {
+      inner += '<div class="rv-note"><h3 tabindex="-1">Nothing due in these topics right now</h3>'
              + '<p>That means the spacing is working. Cards come back just as they start to fade. To keep going anyway, change "Show me" to every card in these topics.</p>'
              + '<button type="button" class="rv-btn rv-primary" id="rv-topicsbtn">Back to topics</button></div>';
     } else if (pos >= queue.length) {
-      inner += '<div class="rv-note"><h3>Session finished</h3>'
-             + '<p>' + queue.length + ' card' + (queue.length === 1 ? '' : 's') + ' done. The ones you missed or found hard come back tomorrow.</p>'
+      inner += '<div class="rv-note"><h3 tabindex="-1">Session finished</h3>'
+             + '<p>' + (timeUp ? 'Time is up. ' : '') + runLog.length + ' card' + (runLog.length === 1 ? '' : 's') + ' done'
+             + (runLog.length ? ', ' + runLog.filter(function (r) { return r.right; }).length + ' right' : '') + '. The ones you missed or found hard come back tomorrow.</p>'
              + report()
              + '<div class="rv-conf-row"><button type="button" class="rv-btn rv-primary" id="rv-again">Run these topics again</button>'
              + '<button type="button" class="rv-btn" id="rv-topicsbtn">Choose different topics</button></div>'
-             + '<p>Your results also feed your <a href="#s-weak" target="_top">weakness dashboard</a>, which ranks the competencies you are missing.</p></div>';
+             + '<p>Your results also feed your <a href="#s-weak" target="_top" data-closefocus="1">weakness dashboard</a>, which ranks the competencies you are missing.</p></div>';
     } else {
       inner += cardHtml(queue[pos]);
     }
-    host.innerHTML = inner;
-    MODS.forEach(function (mm, i) {
-      var cb = host.querySelector('[data-modall="' + i + '"]');
-      if (cb) { var n = modCount(mm); cb.indeterminate = n > 0 && n < (mm.topics || []).length; }
-    });
-    if (focusSel) { var f = host.querySelector(focusSel); if (f) f.focus(); }
+    var fx = openFocus();
+    fx.setAttribute('data-rv-theme', disp.theme);
+    var bodyEl = fx.querySelector('.rv-fbody');
+    var newCard = bodyEl.getAttribute('data-pos') !== String(pos) || bodyEl.getAttribute('data-done') !== String(pos >= queue.length);
+    fx.querySelector('.rv-fbar').innerHTML = barHtml();
+    bodyEl.innerHTML = inner;
+    bodyEl.setAttribute('data-pos', String(pos));
+    bodyEl.setAttribute('data-done', String(pos >= queue.length));
+    if (newCard) fx.scrollTop = 0;
+    var f = focusSel ? fx.querySelector(focusSel) : null;
+    if (!f && newCard) f = fx.querySelector('#rv-q') || fx.querySelector('.rv-fbody .rv-note h3');
+    /* The layer keeps its own scroll: a new card starts at the top, and
+       answering a card never jumps the view. */
+    if (f) { try { f.focus({ preventScroll: true }); } catch (e) { f.focus(); } }
+  }
+
+  /* ---------- focus mode: the full-screen card ---------- */
+  var FX = null, inerted = [];
+  function openFocus() {
+    if (FX && FX.parentNode) {
+      if (FX.hidden) { FX.hidden = false; lockPage(true); }
+      return FX;
+    }
+    FX = document.createElement('div');
+    FX.id = 'rv-focus';
+    FX.setAttribute('role', 'dialog');
+    FX.setAttribute('aria-modal', 'true');
+    FX.setAttribute('aria-label', 'Recall cards');
+    FX.innerHTML = '<div class="rv-fbar"></div><div class="rv-fbody"></div>';
+    document.body.appendChild(FX);
+    /* Listen on the document while the layer is open, in the capture
+       phase, so keys reach the card even when focus is on the page
+       body, and the page's own shortcuts never see them. */
+    document.addEventListener('keydown', function (ev) { if (FX && !FX.hidden) onFocusKey(ev); }, true);
+    lockPage(true);
+    return FX;
+  }
+  function closeFocus() {
+    stopTick();
+    if (!FX || FX.hidden) return;
+    FX.hidden = true;
+    lockPage(false);
+  }
+  function lockPage(on) {
+    try { document.documentElement.style.overflow = on ? 'hidden' : ''; } catch (e) {}
+    if (on) {
+      inerted = [];
+      Array.prototype.forEach.call(document.body.children, function (el) {
+        if (el === FX || el.tagName === 'SCRIPT' || el.tagName === 'STYLE' || el.hasAttribute('inert')) return;
+        el.setAttribute('inert', ''); inerted.push(el);
+      });
+    } else {
+      inerted.forEach(function (el) { el.removeAttribute('inert'); });
+      inerted = [];
+      /* Back to the recall section, wherever the page moved to behind the layer. */
+      var sec = document.getElementById('s-recall') || $(MOUNT);
+      if (sec && sec.scrollIntoView) { try { sec.scrollIntoView({ block: 'start' }); } catch (e) {} }
+    }
+  }
+  function answeredNow() { return runLog.length; }
+  function isLast() {
+    if (pos + 1 >= queue.length) return true;
+    var g = goalCards();
+    if (g && answeredNow() >= g) return true;
+    return timeUp;
+  }
+  function leftMs() { return Math.max(0, goalMins() * 60000 - (Date.now() - runStart)); }
+  function clock(ms) { var t = Math.ceil(ms / 1000), m = Math.floor(t / 60), x = t % 60; return m + ':' + (x < 10 ? '0' : '') + x; }
+  function barHtml() {
+    var done = pos >= queue.length || !queue.length;
+    var g = goalCards(), mins = goalMins(), frac = 0, prog = '';
+    var cur = answeredNow() + (picked === null && !done ? 1 : 0);
+    if (done) prog = answeredNow() + ' card' + (answeredNow() === 1 ? '' : 's') + ' done';
+    else if (g) { var of = Math.min(g, queue.length); prog = 'Card ' + Math.min(cur, of) + ' of ' + of; frac = answeredNow() / of; }
+    else if (mins) { prog = 'Card ' + cur; frac = (Date.now() - runStart) / (mins * 60000); }
+    else { prog = 'Card ' + (pos + 1) + ' of ' + queue.length; frac = pos / queue.length; }
+    if (done) frac = 1;
+    return '<span class="rv-fprog">' + esc(prog) + '</span>'
+      + (mins && !done ? '<span class="rv-ftime" id="rv-ftime">' + (timeUp ? 'Time is up' : clock(leftMs()) + ' left') + '</span>' : '')
+      + '<button type="button" class="rv-fstop" id="' + (done ? 'rv-fclose' : 'rv-fstop') + '">' + (done ? 'Close' : 'Stop here') + '</button>'
+      + '<span class="rv-meter" aria-hidden="true"><span style="width:' + Math.round(Math.min(1, Math.max(0, frac)) * 100) + '%"></span></span>';
+  }
+  function startTick() {
+    stopTick(); timeUp = false; warned = false;
+    if (!goalMins()) return;
+    tick = setInterval(function () {
+      var ms = leftMs(), el = document.getElementById('rv-ftime');
+      if (ms <= 60000 && !warned && ms > 0) { warned = true; say('One minute left.'); }
+      if (ms <= 0) {
+        timeUp = true; stopTick();
+        say('Time is up. Finish this card, then see your results.');
+        var nx = document.getElementById('rv-next'); if (nx) nx.textContent = 'See my results';
+      }
+      if (el) el.textContent = timeUp ? 'Time is up' : clock(ms) + ' left';
+      var m = FX && FX.querySelector('.rv-meter span');
+      if (m) m.style.width = Math.round(Math.min(1, (Date.now() - runStart) / (goalMins() * 60000)) * 100) + '%';
+    }, 1000);
+  }
+  function stopTick() { if (tick) { clearInterval(tick); tick = null; } }
+  function stopHere() {
+    if (!runLog.length) { started = false; render('#rv-start'); return; }
+    stopTick(); pos = queue.length; render();
+  }
+  /* Keys work only while the card has focus, and only on single
+     letters that the card offers right now. */
+  function onFocusKey(ev) {
+    if (ev.key === 'Escape') { ev.preventDefault(); ev.stopPropagation(); if (pos >= queue.length || !queue.length) { started = false; render('#rv-start'); } else stopHere(); return; }
+    if (ev.key === 'Tab') {
+      var f = Array.prototype.filter.call(FX.querySelectorAll('button:not([disabled]), a[href], select, input, [tabindex="0"]'), function (x) { return x.offsetParent !== null; });
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (ev.shiftKey && (document.activeElement === first || !FX.contains(document.activeElement))) { ev.preventDefault(); last.focus(); }
+      else if (!ev.shiftKey && document.activeElement === last) { ev.preventDefault(); first.focus(); }
+      return;
+    }
+    if (ev.ctrlKey || ev.metaKey || ev.altKey) return;
+    var k = (ev.key || '').toLowerCase(), b = null;
+    if (stage === 'conf' && picked === null) b = FX.querySelector('[data-conf="' + ({ '1': 'sure', '2': 'think', '3': 'no' })[k] + '"]');
+    else if (picked === null) {
+      var i = 'abcd'.indexOf(k); if (i < 0) i = '1234'.indexOf(k);
+      if (i > -1) b = FX.querySelector('[data-pick="' + i + '"]');
+    }
+    if (!b && k === 'n') b = FX.querySelector('#rv-next');
+    if (b && !b.disabled) { ev.preventDefault(); ev.stopPropagation(); b.click(); }
   }
 
   function report() { return weakReport() + levelReport(); }
@@ -809,18 +996,29 @@
   function startRun() {
     queue = build(); pos = 0; stage = 'conf'; confidence = null; shown = null; picked = null; runLog = []; exploreAt = null; flipped = false; unlockMsg = '';
     started = true;
+    runStart = Date.now(); timeUp = false;
     render('#rv-q');
-    var sec = document.getElementById('s-recall') || $(MOUNT);
-    if (sec && sec.scrollIntoView) { try { sec.scrollIntoView({ block: 'start' }); } catch (e) {} }
+    startTick();
   }
-  function next() { pos++; stage = 'conf'; confidence = null; shown = null; picked = null; exploreAt = null; flipped = false; unlockMsg = ''; render('#rv-q'); }
+  function next() {
+    if (isLast()) { stopTick(); pos = queue.length; }
+    else pos++;
+    stage = 'conf'; confidence = null; shown = null; picked = null; exploreAt = null; flipped = false; unlockMsg = '';
+    render();
+  }
 
   /* ---------- events ---------- */
-  function inMount(t) { var h = $(MOUNT); return h && h.contains(t); }
+  function inMount(t) { var h = $(MOUNT); return (h && h.contains(t)) || (FX && FX.contains(t)); }
 
   function onClick(ev) {
+    var a = ev.target.closest ? ev.target.closest('a[data-closefocus]') : null;
+    if (a && inMount(a)) { started = false; render(); return; }
     var t = ev.target.closest ? ev.target.closest('button') : null;
     if (!t || !inMount(t)) return;
+
+    if (t.id === 'rv-fstop') { stopHere(); return; }
+    if (t.id === 'rv-fclose') { started = false; render('#rv-start'); return; }
+    if (t.id === 'rv-resume') { render('#rv-q'); return; }
 
     if (t.id === 'rv-disp-btn') { dispOpen = !dispOpen; render('#rv-disp-btn'); return; }
     if (t.hasAttribute('data-theme-set')) { disp.theme = t.getAttribute('data-theme-set'); saveDisp(); render('[data-theme-set="' + disp.theme + '"]'); return; }
@@ -849,7 +1047,7 @@
       saveSel(); render('[data-quick="' + q + '"]'); return;
     }
     if (t.id === 'rv-start' || t.id === 'rv-again') { filter.comp = null; NO_CARDS_FOR = null; startRun(); return; }
-    if (t.id === 'rv-topicsbtn') { started = false; filter.comp = null; render('#rv-tab-' + curMod); return; }
+    if (t.id === 'rv-topicsbtn') { started = false; filter.comp = null; render('#rv-start'); return; }
     if (t.id === 'rv-next') { next(); return; }
 
     var e = queue[pos];
@@ -891,6 +1089,7 @@
       saveSel(); render('#rv-t-' + id); return;
     }
     if (t.id === 'rv-mode') { filter.mode = t.value; render('#rv-mode'); return; }
+    if (t.id === 'rv-len') { len = t.value; try { localStorage.setItem(LKEY, len); } catch (e) {} return; }
     if (t.id === 'rv-modsel') { curMod = +t.value; render('#rv-modsel'); return; }
     if (t.hasAttribute && t.hasAttribute('data-disp')) {
       disp[t.getAttribute('data-disp')] = t.value; saveDisp();
@@ -923,11 +1122,11 @@
        light  off-white page, white cards
        navy   navy page, white cards
        dark   navy-black page, dark navy cards                       */
-  var R = '#' + MOUNT;
+  function buildCSS(R) {
   var T = function (name, v) {
     return R + '[data-rv-theme="' + name + '"]{' + v + '}';
   };
-  var CSS = ''
+  return ''
   + T('light', '--rv-bg:transparent;--rv-pad:0;--rv-on-bg:#0B1530;--rv-on-bg-soft:#454B5C;--rv-on-bg-link:#7A2E24;'
       + '--rv-card:#FFFFFF;--rv-text:#0B1530;--rv-ink:#0B1530;--rv-on-ink:#FFFFFF;--rv-soft:#454B5C;--rv-line:#D8DBE3;'
       + '--rv-tint:#ECEEF3;--rv-gold:#B8924A;--rv-gold-text:#6F5316;--rv-terra:#8B3A2E;--rv-terra-text:#7A2E24;'
@@ -1087,15 +1286,42 @@
   + R + ' .rv-report p{margin:0}'
   + R + ' .rv-weak{list-style:none;margin:0;padding:0;display:grid;gap:6px}'
   + R + ' .rv-weak li{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:8px 10px;border:1px solid var(--rv-line);border-radius:8px}'
-  + R + ' .rv-weak-t{font-weight:600}'
+  + R + ' .rv-weak-t{grid-column:1;font-weight:600}'
   + R + ' .rv-weak-m{grid-column:1;font-size:.8rem;color:var(--rv-soft)}'
-  + R + ' .rv-weak-n{grid-row:1/3;align-self:center;font-variant-numeric:tabular-nums;font-weight:700}'
+  + R + ' .rv-weak-n{grid-column:2;grid-row:1/3;align-self:center;font-variant-numeric:tabular-nums;font-weight:700}'
   + R + ' [hidden]{display:none!important}'
   + R + ' :focus-visible{outline:3px solid var(--rv-gold);outline-offset:2px}'
   + '@media (max-width:520px){' + R + '{--rv-pad:10px}' + R + ' .rv-card{padding:18px 16px}' + R + ' .rv-picker{padding:14px}'
   +   R + ' .rv-check{flex-wrap:wrap}' + R + ' .rv-check-t{flex:1 1 calc(100% - 40px)}' + R + ' .rv-check .rv-chip{margin-left:30px}'
   +   R + ' .rv-inline-note{margin-left:0}' + R + ' .rv-tl li{grid-template-columns:44px 24px minmax(0,1fr)}}'
   + '@media (prefers-reduced-motion: reduce){' + R + ' *{transition:none!important;animation:none!important}}';
+  }
+  /* The focus layer: a solid background in every theme, so nothing on
+     the page shows through or moves behind the card. */
+  var F = '#rv-focus';
+  var FOCUS_CSS = ''
+  + F + '[data-rv-theme="light"]{--rv-fbg:#E9EBF0}'
+  + F + '[data-rv-theme="navy"]{--rv-fbg:#0B1530}'
+  + F + '[data-rv-theme="dark"]{--rv-fbg:#070C18}'
+  + F + '{position:fixed;inset:0;z-index:2147483000;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;border-radius:0;'
+  +   'background:var(--rv-fbg);color:var(--rv-on-bg);padding:0 max(16px,env(safe-area-inset-right,0px)) max(24px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}'
+  + F + '[hidden]{display:none!important}'
+  + F + ' .rv-fbar{position:sticky;top:0;z-index:2;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;max-width:680px;margin:0 auto;'
+  +   'padding:max(12px,env(safe-area-inset-top,0px)) 0 10px;background:var(--rv-fbg)}'
+  + F + ' .rv-fprog{font-weight:800;font-variant-numeric:tabular-nums}'
+  + F + ' .rv-ftime{font-weight:800;font-variant-numeric:tabular-nums;color:var(--rv-on-bg-link)}'
+  + F + ' .rv-fstop{margin-left:auto;font:inherit;font-weight:700;font-size:14px;color:var(--rv-on-bg);background:none;border:1px solid currentColor;border-radius:999px;padding:6px 14px;min-height:40px;cursor:pointer}'
+  + F + ' .rv-fstop:hover{background:rgba(127,127,127,.15)}'
+  + F + ' .rv-meter{flex:1 1 100%;height:6px;border-radius:999px;background:rgba(127,127,127,.28);overflow:hidden}'
+  + F + ' .rv-meter span{display:block;height:100%;background:var(--rv-gold);transition:width 300ms ease}'
+  + F + ' .rv-stage{padding:6px 0 24px}'
+  + F + ' .rv-q:focus,' + F + ' .rv-note h3:focus{outline:none}'
+  + F + ' .rv-q:focus-visible{outline:3px solid var(--rv-gold);outline-offset:4px;border-radius:4px}'
+  + F + ' .rv-keys{margin:0;font-size:12.5px;color:var(--rv-on-bg-soft);text-align:center}'
+  + F + ' .rv-note{max-width:680px;margin:14px auto}'
+  + '@media (max-width:520px){' + F + ' .rv-keys{display:none}}'
+  + '@media (prefers-reduced-motion: reduce){' + F + ' .rv-meter span{transition:none}}';
+  var CSS = buildCSS('#' + MOUNT) + buildCSS(F) + FOCUS_CSS;
 
   function styles() {
     if ($('rv-styles')) return;
