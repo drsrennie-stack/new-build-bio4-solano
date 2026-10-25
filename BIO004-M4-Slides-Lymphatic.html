@@ -1,0 +1,154 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BIO 004 · Lymphatic system · lecture slides</title><link rel="stylesheet" href="fonts-jakarta.css"><style>
+:root{--navy:#08101F;--ink:#060B1A;--maroon:#7A2A22;--gold:#DCB45C;--bg:#FAFAF9;--line:#d9d4c7}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:var(--ink)}
+button{font:inherit}
+#deck{position:relative;height:100%;overflow:hidden}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;padding:16px 28px 62px}
+.slide.on{display:flex}
+.hd{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:1px solid var(--navy);padding-bottom:6px;margin-bottom:8px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--maroon);margin:0 0 2px;font-weight:700}
+h1{font-size:26px;margin:0;font-weight:800;color:var(--navy);line-height:1.15}
+h1 .sec{color:var(--maroon)}
+.comp{font-size:13px;color:#444;white-space:nowrap;font-weight:600}
+.body{flex:1;min-height:0;position:relative}
+.stage{position:absolute;inset:0;display:grid;grid-template-columns:1fr auto 1fr;grid-template-rows:100%;gap:14px;align-items:center}
+.col{display:flex;flex-direction:column;justify-content:center;gap:6px;min-width:0;height:100%;overflow:hidden}
+.col .box{max-width:440px;width:100%}.col:first-child{align-items:flex-end}.col:last-child{align-items:flex-start}
+.col.dense .box{font-size:12px;padding:5px 9px}.col.dense .box b{font-size:13px}
+.imgwrap{position:relative;height:100%;max-height:100%;justify-self:center}
+.imgwrap img{display:block;height:100%;width:auto;max-width:100%;border:1px solid var(--line);border-radius:6px;background:#fff}
+.mk{position:absolute;width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;background:rgba(122,42,34,.85);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35);opacity:0;transform:scale(.4);transition:opacity .25s,transform .25s}
+.mk.show{opacity:1;transform:scale(1)}
+.mk.lit{background:var(--gold);color:var(--navy)}
+.box{background:#fff;border:1px solid var(--line);border-left:4px solid var(--maroon);border-radius:8px;padding:8px 11px;box-shadow:0 1px 3px rgba(0,0,0,.08);opacity:0;transform:translateY(8px);transition:opacity .25s,transform .25s;font-size:14px;line-height:1.35}
+.box.show{opacity:1;transform:none}
+.box.lit{border-left-color:var(--gold);box-shadow:0 8px 16px rgba(0,0,0,.12)}
+.box b{display:block;font-size:15px;color:var(--navy);margin-bottom:2px}
+.box .n{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--maroon);color:#fff;font-size:12px;font-weight:800;align-items:center;justify-content:center;margin-right:6px;vertical-align:middle}
+.box .fact{display:block;color:#222}
+.box .fact.hid{color:transparent;border-bottom:1px dashed #999;user-select:none;height:1.3em;overflow:hidden}
+.box .fact.hid::before{content:"click to reveal";color:#999;font-size:12px}
+svg.lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+svg.lead line{stroke:var(--maroon);stroke-width:2;opacity:0;transition:opacity .25s}
+svg.lead line.show{opacity:.9}
+svg.lead line.lit{stroke:var(--gold);stroke-width:3}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:14px;align-content:start;padding-top:8px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.08);opacity:0;transform:translateY(10px);transition:opacity .25s,transform .25s;font-size:20px;line-height:1.35}
+.card.show{opacity:1;transform:none}
+.grp{grid-column:1/-1;margin:10px 0 0;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--maroon)}
+.card .stem{font-weight:700;color:var(--navy)}
+.card .ans{display:block;margin-top:6px;color:var(--maroon);font-weight:600;min-height:1.3em}
+.card .ans.hid{color:transparent;border-bottom:2px dashed #bbb}
+.card.lit{border-color:var(--gold);box-shadow:0 8px 16px rgba(0,0,0,.12)}
+.cap{font-size:12px;color:#555;text-align:center;margin:4px 0 0}
+.title{justify-content:center;align-items:center;text-align:center}
+.title h1{font-size:44px}.title .sub{font-size:18px;color:#333;max-width:820px;margin:14px auto 0}
+.title .list{margin-top:26px;font-size:16px;color:var(--maroon);font-weight:600;line-height:1.7}
+.ft{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#555;border-top:1px solid var(--line);padding-top:6px;margin-top:6px}
+.ft .btns{display:flex;gap:6px}
+.ft button{border:1px solid var(--navy);background:#fff;color:var(--navy);border-radius:6px;padding:3px 10px;cursor:pointer;font-size:12px;font-weight:600}
+.ft button:hover{background:var(--navy);color:#fff}
+.ft button:focus-visible,.box:focus-visible,.card:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.prog{height:3px;background:var(--gold);position:absolute;left:0;bottom:0;transition:width .3s}
+.pill{display:inline-block;background:var(--navy);color:#fff;border-radius:999px;padding:2px 10px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-left:8px;vertical-align:middle}
+#help{position:fixed;right:16px;bottom:44px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 16px;box-shadow:0 8px 16px rgba(0,0,0,.15);font-size:13px;display:none;max-width:320px;z-index:5}
+#help.on{display:block}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<a href="#deck" class="skip" style="position:absolute;left:-999px">Skip to slides</a>
+<main id="deck" aria-live="polite"><section class="slide title"><p class="eyebrow">BIO 004 Human Anatomy · Module 4 · Lecture</p><h1>Lymphatic System</h1><p class="sub">Competencies 105 to 108: the route lymph takes, vessel and node structure, primary and secondary organs, disorders.</p><div class="list"><div>A. The route lymph takes (draw it) and the spleen (cadaver)</div><div>B. Lymphatic capillary, collecting vessel, lymph node (draw it)</div><div>C. Primary and secondary organs</div><div>D. Disorders: which structure does each one affect?</div></div><p class="sub" style="font-size:14px;color:#666">Click or press the right arrow to move forward. Press ? for all the keys.</p></section><section class="slide" aria-label="The route lymph takes (draw it) and the spleen (cadaver)">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lymphatic System</p><h1><span class="sec">A.</span> The route lymph takes (draw it) and the spleen (cadaver)</h1></div><div class="comp">Competency 105, 107</div></div>
+<div class="body"><div class="stage"><div class="col"><div class="box" data-step="1" data-g="p1" data-n="1" tabindex="0"><b><span class="n">1</span>Right lobe of liver</b><span class="fact hid">The largest lobe, right of the falciform ligament. The gallbladder sits in a hollow on its visceral surface.</span></div></div>
+<div class="imgwrap"><img src="img/digest-15.jpg" alt="Cadaver, upper abdomen: find the spleen"><span class="mk" data-step="1" data-g="p1" data-n="1" style="left:19.5%;top:26.9%">1</span><span class="mk" data-step="2" data-g="p2" data-n="2" style="left:82.6%;top:32.1%">2</span><span class="mk" data-step="3" data-g="p5" data-n="5" style="left:80.5%;top:64.1%">5</span></div>
+<div class="col"><div class="box" data-step="2" data-g="p2" data-n="2" tabindex="0"><b><span class="n">2</span>Spleen</b><span class="fact hid">The largest lymphatic organ, in the upper left abdomen behind the stomach under ribs 9 to 11. White pulp fights infection; red pulp filters the blood and removes old red cells.</span></div><div class="box" data-step="3" data-g="p5" data-n="5" tabindex="0"><b><span class="n">5</span>Left kidney</b><span class="fact hid">Retroperitoneal, against the posterior wall beside the vertebral column. Sits a little higher than the right kidney, which the liver pushes down.</span></div></div></div><svg class="lead" aria-hidden="true"></svg></div>
+<p class="cap">Cadaver, upper abdomen: find the spleen · 3 structures · click to reveal each one, click the box to reveal what the notes say</p>
+</section><section class="slide" aria-label="The route lymph takes (draw it) and the spleen (cadaver), notes">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lymphatic System</p><h1><span class="sec">A.</span> The route lymph takes (draw it) and the spleen (cadaver) <span class="pill">fill in</span></h1></div><div class="comp">Competency 105, 107</div></div>
+<div class="body"><div class="cards"><h2 class="grp">One-way route, in order</h2><div class="card" data-step="1" tabindex="0"><span class="stem">1.</span><span class="ans hid">lymphatic capillaries (blind ends in the tissue)</span></div><div class="card" data-step="2" tabindex="0"><span class="stem">2.</span><span class="ans hid">collecting vessels, with valves</span></div><div class="card" data-step="3" tabindex="0"><span class="stem">3.</span><span class="ans hid">lymph nodes</span></div><div class="card" data-step="4" tabindex="0"><span class="stem">4.</span><span class="ans hid">lymphatic trunks</span></div><div class="card" data-step="5" tabindex="0"><span class="stem">5.</span><span class="ans hid">right lymphatic duct or thoracic duct</span></div><div class="card" data-step="6" tabindex="0"><span class="stem">6.</span><span class="ans hid">subclavian veins</span></div><h2 class="grp">Fill in</h2><div class="card" data-step="7" tabindex="0"><span class="stem">Lymph is</span><span class="ans hid">fluid the capillaries left in the tissue, picked up by lymphatic vessels</span></div><div class="card" data-step="8" tabindex="0"><span class="stem">Right lymphatic duct drains</span><span class="ans hid">the right arm, right head and chest (upper right quarter)</span></div><div class="card" data-step="9" tabindex="0"><span class="stem">Thoracic duct drains</span><span class="ans hid">everything else; starts at the cisterna chyli</span></div><div class="card" data-step="10" tabindex="0"><span class="stem">Lymph moves with no pump by</span><span class="ans hid">skeletal muscle, breathing, valves</span></div><h2 class="grp">Spleen</h2><div class="card" data-step="11" tabindex="0"><span class="stem">Sits</span><span class="ans hid">upper left, behind the stomach, under ribs 9 to 11</span></div><div class="card" data-step="12" tabindex="0"><span class="stem">White pulp:</span><span class="ans hid">lymphocytes, immune</span></div><div class="card" data-step="13" tabindex="0"><span class="stem">Red pulp:</span><span class="ans hid">blood filtering, old red cells removed</span></div></div></div>
+<p class="cap">One-way route, in order · Fill in · Spleen · click to reveal each line, click again for the answer · students write the answer on the note sheet</p>
+</section><section class="slide" aria-label="Lymphatic capillary, collecting vessel, lymph node (draw it), notes">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lymphatic System</p><h1><span class="sec">B.</span> Lymphatic capillary, collecting vessel, lymph node (draw it) <span class="pill">fill in</span></h1></div><div class="comp">Competency 106</div></div>
+<div class="body"><div class="cards"><h2 class="grp">Lymph node, outside in</h2><div class="card" data-step="1" tabindex="0"><span class="stem">Capsule:</span><span class="ans hid">dense connective tissue</span></div><div class="card" data-step="2" tabindex="0"><span class="stem">Cortex:</span><span class="ans hid">lymphatic nodules, lymphocytes</span></div><div class="card" data-step="3" tabindex="0"><span class="stem">Medulla:</span><span class="ans hid">medullary cords and sinuses</span></div><div class="card" data-step="4" tabindex="0"><span class="stem">Afferent vessels enter</span><span class="ans hid">the convex side, many</span></div><div class="card" data-step="5" tabindex="0"><span class="stem">Efferent vessels leave</span><span class="ans hid">the hilum, few</span></div><div class="card" data-step="6" tabindex="0"><span class="stem">Hilum:</span><span class="ans hid">artery in, vein and efferent vessels out</span></div><h2 class="grp">Capillary and vessel</h2><div class="card" data-step="7" tabindex="0"><span class="stem">Lymphatic capillary wall:</span><span class="ans hid">overlapping endothelial flaps, one-way minivalves</span></div><div class="card" data-step="8" tabindex="0"><span class="stem">Collecting vessels have</span><span class="ans hid">valves, so flow is one way</span></div><div class="card" data-step="9" tabindex="0"><span class="stem">Lacteals are lymphatic capillaries in</span><span class="ans hid">the villi of the small intestine</span></div></div></div>
+<p class="cap">Lymph node, outside in · Capillary and vessel · click to reveal each line, click again for the answer · students write the answer on the note sheet</p>
+</section><section class="slide" aria-label="Primary and secondary organs">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lymphatic System</p><h1><span class="sec">C.</span> Primary and secondary organs <span class="pill">photo 1 of 2</span></h1></div><div class="comp">Competency 107</div></div>
+<div class="body"><div class="stage"><div class="col"><div class="box" data-step="2" data-g="p5" data-n="5" tabindex="0"><b><span class="n">5</span>Palatine tonsil</b><span class="fact hid">Paired lymphatic tissue in the side walls of the oropharynx between the palatoglossal and palatopharyngeal arches. These are the tonsils you see in an open mouth.</span></div><div class="box" data-step="3" data-g="p6" data-n="6" tabindex="0"><b><span class="n">6</span>Lingual tonsil</b><span class="fact hid">Lymphatic tissue on the back (root) of the tongue, in the oropharynx.</span></div></div>
+<div class="imgwrap"><img src="img/resp-13.jpg" alt="Model, midsagittal head: find the three tonsils"><span class="mk" data-step="1" data-g="p3" data-n="3" style="left:95.4%;top:45.2%">3</span><span class="mk" data-step="2" data-g="p5" data-n="5" style="left:81.6%;top:65.7%">5</span><span class="mk" data-step="3" data-g="p6" data-n="6" style="left:79.6%;top:72.1%">6</span></div>
+<div class="col"><div class="box" data-step="1" data-g="p3" data-n="3" tabindex="0"><b><span class="n">3</span>Pharyngeal tonsil</b><span class="fact hid">Single lymphatic mass on the back wall of the nasopharynx. Called the adenoids when enlarged.</span></div></div></div><svg class="lead" aria-hidden="true"></svg></div>
+<p class="cap">Model, midsagittal head: find the three tonsils · 3 structures · click to reveal each one, click the box to reveal what the notes say</p>
+</section><section class="slide" aria-label="Primary and secondary organs">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lymphatic System</p><h1><span class="sec">C.</span> Primary and secondary organs <span class="pill">photo 2 of 2</span></h1></div><div class="comp">Competency 107</div></div>
+<div class="body"><div class="stage"><div class="col"></div>
+<div class="imgwrap"><img src="img/heart-01.jpg" alt="Cadaver, chest opened: find the thymus"><span class="mk" data-step="1" data-g="p1" data-n="1" style="left:95.7%;top:16.2%">1</span></div>
+<div class="col"><div class="box" data-step="1" data-g="p1" data-n="1" tabindex="0"><b><span class="n">1</span>Thymus</b><span class="fact hid">A primary lymphatic organ in the mediastinum behind the sternum, large in children. T lymphocytes mature here.</span></div></div></div><svg class="lead" aria-hidden="true"></svg></div>
+<p class="cap">Cadaver, chest opened: find the thymus · 1 structures · click to reveal each one, click the box to reveal what the notes say</p>
+</section><section class="slide" aria-label="Primary and secondary organs, notes">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lymphatic System</p><h1><span class="sec">C.</span> Primary and secondary organs <span class="pill">fill in</span></h1></div><div class="comp">Competency 107</div></div>
+<div class="body"><div class="cards"><div class="card" data-step="1" tabindex="0"><span class="stem">Primary organs:</span><span class="ans hid">red bone marrow, thymus (lymphocytes made, mature)</span></div><div class="card" data-step="2" tabindex="0"><span class="stem">Secondary organs:</span><span class="ans hid">nodes, spleen, tonsils, MALT (where they work)</span></div><div class="card" data-step="3" tabindex="0"><span class="stem">Thymus:</span><span class="ans hid">mediastinum, behind the sternum; big in children</span></div><div class="card" data-step="4" tabindex="0"><span class="stem">Pharyngeal tonsil:</span><span class="ans hid">nasopharynx</span></div><div class="card" data-step="5" tabindex="0"><span class="stem">Palatine tonsils:</span><span class="ans hid">oropharynx</span></div><div class="card" data-step="6" tabindex="0"><span class="stem">Lingual tonsil:</span><span class="ans hid">root of the tongue</span></div><div class="card" data-step="7" tabindex="0"><span class="stem">MALT:</span><span class="ans hid">Peyer patches, appendix</span></div></div></div>
+<p class="cap">Fill in · click to reveal each line, click again for the answer · students write the answer on the note sheet</p>
+</section><section class="slide" aria-label="Disorders: which structure does each one affect?, notes">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lymphatic System</p><h1><span class="sec">D.</span> Disorders: which structure does each one affect? <span class="pill">fill in</span></h1></div><div class="comp">Competency 108</div></div>
+<div class="body"><div class="cards"><h2 class="grp">Disorder: structure, what changes</h2><div class="card" data-step="1" tabindex="0"><span class="stem">Edema:</span><span class="ans hid">tissue fluid builds up, any cause</span></div><div class="card" data-step="2" tabindex="0"><span class="stem">Lymphedema:</span><span class="ans hid">lymph vessels blocked or removed, limb swells</span></div><div class="card" data-step="3" tabindex="0"><span class="stem">Lymphadenopathy:</span><span class="ans hid">lymph nodes enlarged, infection or cancer</span></div><div class="card" data-step="4" tabindex="0"><span class="stem">Lymphoma:</span><span class="ans hid">cancer of the lymphocytes in lymphatic tissue</span></div><div class="card" data-step="5" tabindex="0"><span class="stem">Splenomegaly:</span><span class="ans hid">spleen enlarged; rupture risk in contact sports</span></div><div class="card" data-step="6" tabindex="0"><span class="stem">Tonsillitis:</span><span class="ans hid">palatine tonsils inflamed</span></div></div></div>
+<p class="cap">Disorder: structure, what changes · click to reveal each line, click again for the answer · students write the answer on the note sheet</p>
+</section>
+<div class="ft" style="position:absolute;left:28px;right:28px;bottom:10px"><span>Dr. Sharilyn Rennie · BIO 004 Human Anatomy · Solano Community College · Photos: BIO 004 Digital Atlas</span>
+<span class="btns"><button id="bprev" aria-label="Back">&larr; Back</button><button id="bnext" aria-label="Next">Next &rarr;</button><button id="bskip">Skip slide</button><button id="ball">Reveal all</button><button id="breset">Reset slide</button><button id="bmode" aria-pressed="false">Mode: students fill in</button><button id="bhelp" aria-expanded="false">?</button><span id="counter" aria-live="polite" style="min-width:60px;text-align:right"></span></span></div>
+<div class="prog" id="prog"></div></main>
+<div id="help" role="dialog" aria-label="Keyboard help"><b>Keys</b><br>&rarr; space Enter: next reveal or slide<br>&larr; Backspace: undo last reveal, or back a slide<br>N: skip to next slide<br>A: reveal everything on this slide<br>R: reset this slide<br>Home / End: first / last slide<br>?: this help<br><br>Click any box or card to reveal what the notes say. Mode button: "students fill in" hides the facts until you click; "show facts" shows them as each structure appears.</div>
+<div id="sr" class="visually-hidden" aria-live="polite" style="position:absolute;left:-999px"></div>
+<script>
+(function(){
+const slides=[...document.querySelectorAll('.slide')];let i=0;
+const counter=document.getElementById('counter'),prog=document.getElementById('prog');
+let instructor=false;
+function steps(s){return [...s.querySelectorAll('[data-step]')].sort((a,b)=>+a.dataset.step-+b.dataset.step)}
+function show(n){slides[i].classList.remove('on');i=Math.max(0,Math.min(slides.length-1,n));slides[i].classList.add('on');
+ counter.textContent=(i+1)+' / '+slides.length;prog.style.width=((i+1)/slides.length*100)+'%';
+ location.hash='s'+(i+1);layout(slides[i]);if(instructor)revealAll(slides[i]);}
+function lit(s,el){s.querySelectorAll('.lit').forEach(x=>x.classList.remove('lit'));if(!el)return;
+ el.classList.add('lit');const g=el.dataset.g;if(g)s.querySelectorAll('[data-g="'+g+'"]').forEach(x=>x.classList.add('lit'));}
+function next(){const s=slides[i];const st=steps(s);
+ const hidden=st.find(x=>!x.classList.contains('show'));
+ if(hidden){const g=hidden.dataset.g;const group=g?st.filter(x=>x.dataset.g===g&&!x.classList.contains('show')):[hidden];
+   group.forEach(x=>x.classList.add('show'));lit(s,hidden);const sr=document.getElementById('sr');const b=hidden.querySelector('b,.stem');if(sr&&b)sr.textContent=b.textContent;return;}
+ const fact=s.querySelector('.hid');
+ if(fact&&!instructor){fact.classList.remove('hid');lit(s,fact.closest('[data-step]'));return;}
+ if(i<slides.length-1)show(i+1);}
+function prev(){const s=slides[i];const st=steps(s).filter(x=>x.classList.contains('show'));
+ if(st.length){const last=st[st.length-1];const g=last.dataset.g;(g?st.filter(x=>x.dataset.g===g):[last]).forEach(x=>{x.classList.remove('show');x.querySelectorAll('.fact,.ans').forEach(f=>f.classList.add('hid'))});lit(s,null);return;}
+ if(i>0){show(i-1);}}
+function revealAll(s){steps(s).forEach(x=>x.classList.add('show'));s.querySelectorAll('.hid').forEach(x=>x.classList.remove('hid'));lit(s,null)}
+function resetSlide(s){steps(s).forEach(x=>x.classList.remove('show'));s.querySelectorAll('.fact,.ans').forEach(x=>x.classList.add('hid'));lit(s,null)}
+function layout(s){const w=s.querySelector('.imgwrap');if(!w)return;const img=w.querySelector('img');const svg=s.querySelector('svg.lead');const body=s.querySelector('.body');
+ if(!img.complete){img.addEventListener('load',()=>layout(s),{once:true});return;}
+ const br=body.getBoundingClientRect(),ir=img.getBoundingClientRect();
+ svg.innerHTML='';
+ s.querySelectorAll('.box').forEach(b=>{const n=b.dataset.n;const mk=w.querySelector('.mk[data-n="'+n+'"]');if(!mk)return;
+  const mr=mk.getBoundingClientRect(),bb=b.getBoundingClientRect();
+  const x1=mr.left+mr.width/2-br.left,y1=mr.top+mr.height/2-br.top;
+  const left=bb.left+bb.width/2<ir.left+ir.width/2;
+  const x2=(left?bb.right:bb.left)-br.left,y2=bb.top+Math.min(bb.height/2,16)-br.top;
+  const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);l.dataset.step=b.dataset.step;l.dataset.g=b.dataset.g;
+  if(b.classList.contains('show'))l.classList.add('show');if(b.classList.contains('lit'))l.classList.add('lit');svg.appendChild(l);});}
+document.addEventListener('keydown',ev=>{if(ev.target.tagName==='BUTTON')return;
+ if(ev.key==='ArrowRight'||ev.key===' '||ev.key==='PageDown'||ev.key==='Enter'){ev.preventDefault();next()}
+ else if(ev.key==='ArrowLeft'||ev.key==='PageUp'||ev.key==='Backspace'){ev.preventDefault();prev()}
+ else if(ev.key==='Home'){show(0)}else if(ev.key==='End'){show(slides.length-1)}
+ else if(ev.key==='a'||ev.key==='A'){revealAll(slides[i])}else if(ev.key==='r'||ev.key==='R'){resetSlide(slides[i])}
+ else if(ev.key==='?'){document.getElementById('help').classList.toggle('on')}
+ else if(ev.key==='n'||ev.key==='N'){if(i<slides.length-1)show(i+1)}});
+document.getElementById('deck').addEventListener('click',ev=>{
+ const b=ev.target.closest('.box,.card');if(b){const f=b.querySelector('.hid');if(f){f.classList.remove('hid')}lit(slides[i],b);ev.stopPropagation();return;}
+ if(ev.target.closest('button,a,#help'))return;next();});
+document.getElementById('bprev').onclick=()=>prev();document.getElementById('bnext').onclick=()=>next();
+document.getElementById('ball').onclick=()=>revealAll(slides[i]);document.getElementById('breset').onclick=()=>resetSlide(slides[i]);
+document.getElementById('bskip').onclick=()=>{if(i<slides.length-1)show(i+1)};
+document.getElementById('bmode').onclick=function(){instructor=!instructor;this.textContent=instructor?'Mode: show facts':'Mode: students fill in';this.setAttribute('aria-pressed',instructor);if(instructor)revealAll(slides[i])};
+document.getElementById('bhelp').onclick=()=>document.getElementById('help').classList.toggle('on');
+window.addEventListener('resize',()=>layout(slides[i]));
+const m=location.hash.match(/s(\d+)/);show(m?+m[1]-1:0);
+})();
+</script>
+<script>(function(){function send(){parent.postMessage({type:'resize',id:document.body.id||location.pathname,height:document.documentElement.scrollHeight},'*')}new ResizeObserver(send).observe(document.body);addEventListener('load',send);addEventListener('resize',send)})();</script>
+</body></html>

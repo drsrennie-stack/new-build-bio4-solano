@@ -1,0 +1,184 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BIO 004 · Lower limb · lecture slides</title><link rel="stylesheet" href="fonts-jakarta.css"><style>
+:root{--navy:#08101F;--ink:#060B1A;--maroon:#7A2A22;--gold:#DCB45C;--bg:#FAFAF9;--line:#d9d4c7}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:var(--ink)}
+button{font:inherit}
+#deck{position:relative;height:100%;overflow:hidden}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;padding:16px 28px 62px}
+.slide.on{display:flex}
+.hd{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:1px solid var(--navy);padding-bottom:6px;margin-bottom:8px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--maroon);margin:0 0 2px;font-weight:700}
+h1{font-size:26px;margin:0;font-weight:800;color:var(--navy);line-height:1.15}
+h1 .sec{color:var(--maroon)}
+.comp{font-size:13px;color:#444;white-space:nowrap;font-weight:600}
+.body{flex:1;min-height:0;position:relative}
+.stage{position:absolute;inset:0;display:grid;grid-template-columns:1fr auto 1fr;grid-template-rows:100%;gap:14px;align-items:center}
+.col{display:flex;flex-direction:column;justify-content:center;gap:6px;min-width:0;height:100%;overflow:hidden}
+.col .box{max-width:440px;width:100%}.col:first-child{align-items:flex-end}.col:last-child{align-items:flex-start}
+.col.dense .box{font-size:12px;padding:5px 9px}.col.dense .box b{font-size:13px}
+.imgwrap{position:relative;height:100%;max-height:100%;justify-self:center}
+.imgwrap img{display:block;height:100%;width:auto;max-width:100%;border:1px solid var(--line);border-radius:6px;background:#fff}
+.mk{position:absolute;width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;background:rgba(122,42,34,.85);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35);opacity:0;transform:scale(.4);transition:opacity .25s,transform .25s}
+.mk.show{opacity:1;transform:scale(1)}
+.mk.lit{background:var(--gold);color:var(--navy)}
+.box{background:#fff;border:1px solid var(--line);border-left:4px solid var(--maroon);border-radius:8px;padding:8px 11px;box-shadow:0 1px 3px rgba(0,0,0,.08);opacity:0;transform:translateY(8px);transition:opacity .25s,transform .25s;font-size:14px;line-height:1.35}
+.box.show{opacity:1;transform:none}
+.box.lit{border-left-color:var(--gold);box-shadow:0 8px 16px rgba(0,0,0,.12)}
+.box b{display:block;font-size:15px;color:var(--navy);margin-bottom:2px}
+.box .n{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--maroon);color:#fff;font-size:12px;font-weight:800;align-items:center;justify-content:center;margin-right:6px;vertical-align:middle}
+.box .fact{display:block;color:#222}
+.box .fact.hid{color:transparent;border-bottom:1px dashed #999;user-select:none;height:1.3em;overflow:hidden}
+.box .fact.hid::before{content:"click to reveal";color:#999;font-size:12px}
+svg.lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+svg.lead line{stroke:var(--maroon);stroke-width:2;opacity:0;transition:opacity .25s}
+svg.lead line.show{opacity:.9}
+svg.lead line.lit{stroke:var(--gold);stroke-width:3}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:14px;align-content:start;padding-top:8px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.08);opacity:0;transform:translateY(10px);transition:opacity .25s,transform .25s;font-size:20px;line-height:1.35}
+.card.show{opacity:1;transform:none}
+.grp{grid-column:1/-1;margin:10px 0 0;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--maroon)}
+.card .stem{font-weight:700;color:var(--navy)}
+.card .ans{display:block;margin-top:6px;color:var(--maroon);font-weight:600;min-height:1.3em}
+.card .ans.hid{color:transparent;border-bottom:2px dashed #bbb}
+.card.lit{border-color:var(--gold);box-shadow:0 8px 16px rgba(0,0,0,.12)}
+.cap{font-size:12px;color:#555;text-align:center;margin:4px 0 0}
+.title{justify-content:center;align-items:center;text-align:center}
+.title h1{font-size:44px}.title .sub{font-size:18px;color:#333;max-width:820px;margin:14px auto 0}
+.title .list{margin-top:26px;font-size:16px;color:var(--maroon);font-weight:600;line-height:1.7}
+.ft{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#555;border-top:1px solid var(--line);padding-top:6px;margin-top:6px}
+.ft .btns{display:flex;gap:6px}
+.ft button{border:1px solid var(--navy);background:#fff;color:var(--navy);border-radius:6px;padding:3px 10px;cursor:pointer;font-size:12px;font-weight:600}
+.ft button:hover{background:var(--navy);color:#fff}
+.ft button:focus-visible,.box:focus-visible,.card:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.prog{height:3px;background:var(--gold);position:absolute;left:0;bottom:0;transition:width .3s}
+.pill{display:inline-block;background:var(--navy);color:#fff;border-radius:999px;padding:2px 10px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-left:8px;vertical-align:middle}
+#help{position:fixed;right:16px;bottom:44px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 16px;box-shadow:0 8px 16px rgba(0,0,0,.15);font-size:13px;display:none;max-width:320px;z-index:5}
+#help.on{display:block}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<a href="#deck" class="skip" style="position:absolute;left:-999px">Skip to slides</a>
+<main id="deck" aria-live="polite"><section class="slide title"><p class="eyebrow">BIO 004 Human Anatomy · Module 4 · Lecture</p><h1>Lower Limb: Muscles, Nerves and Vessels</h1><p class="sub">Competency 127 and the lab muscle list: thigh, gluteal region and leg on the cadaver, with the nerves and vessels that run with them.</p><div class="list"><div>A. Anterior thigh and the femoral triangle (cadaver)</div><div>B. Gluteal region and posterior thigh (cadaver)</div><div>C. Anterior and lateral leg (cadaver)</div><div>D. Posterior leg, and the veins (cadaver)</div></div><p class="sub" style="font-size:14px;color:#666">Click or press the right arrow to move forward. Press ? for all the keys.</p></section><section class="slide" aria-label="Anterior thigh and the femoral triangle (cadaver)">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lower Limb: Muscles, Nerves and Vessels</p><h1><span class="sec">A.</span> Anterior thigh and the femoral triangle (cadaver) <span class="pill">photo 1 of 2</span></h1></div><div class="comp">Competency 127, lab</div></div>
+<div class="body"><div class="stage"><div class="col"><div class="box" data-step="1" data-g="p1" data-n="1" tabindex="0"><b><span class="n">1</span>Iliopsoas</b><span class="fact hid">Psoas major and iliacus together. The main hip flexor, passing under the inguinal ligament to the lesser trochanter.</span></div><div class="box" data-step="2" data-g="p2" data-n="2" tabindex="0"><b><span class="n">2</span>Vastus intermedius</b><span class="fact hid">The deep quadriceps head on the front of the femur, under rectus femoris. Extends the knee.</span></div><div class="box" data-step="4" data-g="p4" data-n="4" tabindex="0"><b><span class="n">4</span>Vastus medialis</b><span class="fact hid">The medial quadriceps head, the teardrop above the knee. Extends the knee and steadies the patella.</span></div></div>
+<div class="imgwrap"><img src="img/thigh-15.jpg" alt="Cadaver, anterior thigh, deep"><span class="mk" data-step="1" data-g="p1" data-n="1" style="left:6.3%;top:26.8%">1</span><span class="mk" data-step="2" data-g="p2" data-n="2" style="left:9.5%;top:49.9%">2</span><span class="mk" data-step="3" data-g="p3" data-n="3" style="left:93.7%;top:61.0%">3</span><span class="mk" data-step="4" data-g="p4" data-n="4" style="left:15.0%;top:76.4%">4</span><span class="mk" data-step="5" data-g="p5" data-n="5" style="left:92.6%;top:77.1%">5</span></div>
+<div class="col"><div class="box" data-step="3" data-g="p3" data-n="3" tabindex="0"><b><span class="n">3</span>Vastus lateralis</b><span class="fact hid">The lateral quadriceps head. Extends the knee.</span></div><div class="box" data-step="5" data-g="p5" data-n="5" tabindex="0"><b><span class="n">5</span>Rectus femoris</b><span class="fact hid">The quadriceps head that crosses both hip and knee. Flexes the hip and extends the knee.</span></div></div></div><svg class="lead" aria-hidden="true"></svg></div>
+<p class="cap">Cadaver, anterior thigh, deep · 5 structures · click to reveal each one, click the box to reveal what the notes say</p>
+</section><section class="slide" aria-label="Anterior thigh and the femoral triangle (cadaver)">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lower Limb: Muscles, Nerves and Vessels</p><h1><span class="sec">A.</span> Anterior thigh and the femoral triangle (cadaver) <span class="pill">photo 2 of 2</span></h1></div><div class="comp">Competency 127, lab</div></div>
+<div class="body"><div class="stage"><div class="col"><div class="box" data-step="2" data-g="p2" data-n="2" tabindex="0"><b><span class="n">2</span>Femoral vein</b><span class="fact hid">The deep vein of the thigh, on the medial side of the artery in the femoral triangle. Receives the great saphenous vein, then becomes the external iliac vein at the inguinal ligament.</span></div><div class="box" data-step="3" data-g="p3" data-n="3" tabindex="0"><b><span class="n">3</span>Femoral artery</b><span class="fact hid">The external iliac artery once it passes under the inguinal ligament. Runs through the femoral triangle, gives off the deep femoral artery, then passes the adductor hiatus to become the popliteal artery.</span></div></div>
+<div class="imgwrap"><img src="img/thigh-12.jpg" alt="Cadaver, femoral triangle"><span class="mk" data-step="1" data-g="p1" data-n="1" style="left:56.8%;top:32.4%">1</span><span class="mk" data-step="2" data-g="p2" data-n="2" style="left:38.8%;top:35.2%">2</span><span class="mk" data-step="3" data-g="p3" data-n="3" style="left:48.1%;top:39.8%">3</span></div>
+<div class="col"><div class="box" data-step="1" data-g="p1" data-n="1" tabindex="0"><b><span class="n">1</span>Femoral nerve</b><span class="fact hid">The largest branch of the lumbar plexus (L2 to L4). Enters the thigh under the inguinal ligament lateral to the femoral artery and supplies the anterior thigh: quadriceps and sartorius.</span></div></div></div><svg class="lead" aria-hidden="true"></svg></div>
+<p class="cap">Cadaver, femoral triangle · 3 structures · click to reveal each one, click the box to reveal what the notes say</p>
+</section><section class="slide" aria-label="Anterior thigh and the femoral triangle (cadaver), notes">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lower Limb: Muscles, Nerves and Vessels</p><h1><span class="sec">A.</span> Anterior thigh and the femoral triangle (cadaver) <span class="pill">fill in</span></h1></div><div class="comp">Competency 127, lab</div></div>
+<div class="body"><div class="cards"><div class="card" data-step="1" tabindex="0"><span class="stem">Quadriceps femoris =</span><span class="ans hid">rectus femoris, vastus lateralis, intermedius, medialis</span></div><div class="card" data-step="2" tabindex="0"><span class="stem">Quadriceps action:</span><span class="ans hid">extend the knee</span></div><div class="card" data-step="3" tabindex="0"><span class="stem">Iliopsoas action:</span><span class="ans hid">flex the hip</span></div><div class="card" data-step="4" tabindex="0"><span class="stem">Triangle borders:</span><span class="ans hid">inguinal ligament, sartorius, adductor longus</span></div><div class="card" data-step="5" tabindex="0"><span class="stem">Lateral to medial:</span><span class="ans hid">nerve, artery, vein (NAVEL)</span></div><div class="card" data-step="6" tabindex="0"><span class="stem">Femoral artery was the</span><span class="ans hid">external iliac artery</span></div></div></div>
+<p class="cap">Fill in · click to reveal each line, click again for the answer · students write the answer on the note sheet</p>
+</section><section class="slide" aria-label="Gluteal region and posterior thigh (cadaver)">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lower Limb: Muscles, Nerves and Vessels</p><h1><span class="sec">B.</span> Gluteal region and posterior thigh (cadaver) <span class="pill">photo 1 of 2</span></h1></div><div class="comp">Competency 127, lab</div></div>
+<div class="body"><div class="stage"><div class="col"><div class="box" data-step="2" data-g="p2" data-n="2" tabindex="0"><b><span class="n">2</span>Biceps femoris</b><span class="fact hid">The lateral hamstring. Its tendon is the landmark the common fibular nerve follows to the side of the knee.</span></div></div>
+<div class="imgwrap"><img src="img/thigh-16.jpg" alt="Cadaver, posterior thigh: the hamstrings"><span class="mk" data-step="1" data-g="p1" data-n="1" style="left:92.6%;top:46.3%">1</span><span class="mk" data-step="2" data-g="p2" data-n="2" style="left:5.8%;top:55.4%">2</span><span class="mk" data-step="3" data-g="p3" data-n="3" style="left:94.2%;top:70.8%">3</span></div>
+<div class="col"><div class="box" data-step="1" data-g="p1" data-n="1" tabindex="0"><b><span class="n">1</span>Semimembranosus</b><span class="fact hid">The deeper medial hamstring. Flexes the knee and extends the hip; supplied by the tibial part of the sciatic nerve.</span></div><div class="box" data-step="3" data-g="p3" data-n="3" tabindex="0"><b><span class="n">3</span>Semitendinosus</b><span class="fact hid">The superficial medial hamstring with a long cord-like tendon. Flexes the knee and extends the hip.</span></div></div></div><svg class="lead" aria-hidden="true"></svg></div>
+<p class="cap">Cadaver, posterior thigh: the hamstrings · 3 structures · click to reveal each one, click the box to reveal what the notes say</p>
+</section><section class="slide" aria-label="Gluteal region and posterior thigh (cadaver)">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lower Limb: Muscles, Nerves and Vessels</p><h1><span class="sec">B.</span> Gluteal region and posterior thigh (cadaver) <span class="pill">photo 2 of 2</span></h1></div><div class="comp">Competency 127, lab</div></div>
+<div class="body"><div class="stage"><div class="col"><div class="box" data-step="2" data-g="p2" data-n="2" tabindex="0"><b><span class="n">2</span>Gluteus minimus</b><span class="fact hid">The deepest gluteal muscle, under gluteus medius. Abducts the hip and steadies the pelvis when the opposite foot is off the ground.</span></div></div>
+<div class="imgwrap"><img src="img/thigh-14.jpg" alt="Cadaver, deep gluteal region: sciatic nerve"><span class="mk" data-step="1" data-g="p1" data-n="1" style="left:92.1%;top:28.1%">1</span><span class="mk" data-step="2" data-g="p2" data-n="2" style="left:9.7%;top:46.3%">2</span><span class="mk" data-step="3" data-g="p3" data-n="3" style="left:95.6%;top:46.7%">3</span></div>
+<div class="col"><div class="box" data-step="1" data-g="p1" data-n="1" tabindex="0"><b><span class="n">1</span>Piriformis</b><span class="fact hid">A deep gluteal muscle from the sacrum to the greater trochanter. The sciatic nerve usually leaves the pelvis just below it.</span></div><div class="box" data-step="3" data-g="p3" data-n="3" tabindex="0"><b><span class="n">3</span>Sciatic nerve</b><span class="fact hid">From the sacral plexus (L4 to S3), the largest nerve in the body. Leaves through the greater sciatic foramen below piriformis, runs deep to gluteus maximus and the hamstrings, and splits above the knee into the tibial and common fibular nerves.</span></div></div></div><svg class="lead" aria-hidden="true"></svg></div>
+<p class="cap">Cadaver, deep gluteal region: sciatic nerve · 3 structures · click to reveal each one, click the box to reveal what the notes say</p>
+</section><section class="slide" aria-label="Gluteal region and posterior thigh (cadaver), notes">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lower Limb: Muscles, Nerves and Vessels</p><h1><span class="sec">B.</span> Gluteal region and posterior thigh (cadaver) <span class="pill">fill in</span></h1></div><div class="comp">Competency 127, lab</div></div>
+<div class="body"><div class="cards"><div class="card" data-step="1" tabindex="0"><span class="stem">Hamstrings =</span><span class="ans hid">biceps femoris, semitendinosus, semimembranosus</span></div><div class="card" data-step="2" tabindex="0"><span class="stem">Hamstring actions:</span><span class="ans hid">flex the knee, extend the hip</span></div><div class="card" data-step="3" tabindex="0"><span class="stem">Gluteus maximus:</span><span class="ans hid">extends the hip</span></div><div class="card" data-step="4" tabindex="0"><span class="stem">Gluteus medius:</span><span class="ans hid">abducts the hip, steadies the pelvis</span></div><div class="card" data-step="5" tabindex="0"><span class="stem">Sciatic nerve leaves the pelvis through the</span><span class="ans hid">greater sciatic foramen, below piriformis</span></div><div class="card" data-step="6" tabindex="0"><span class="stem">Runs deep to</span><span class="ans hid">gluteus maximus, hamstrings</span></div><div class="card" data-step="7" tabindex="0"><span class="stem">Splits above the knee into</span><span class="ans hid">tibial and common fibular</span></div></div></div>
+<p class="cap">Fill in · click to reveal each line, click again for the answer · students write the answer on the note sheet</p>
+</section><section class="slide" aria-label="Anterior and lateral leg (cadaver)">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lower Limb: Muscles, Nerves and Vessels</p><h1><span class="sec">C.</span> Anterior and lateral leg (cadaver) <span class="pill">photo 1 of 2</span></h1></div><div class="comp">Competency 127, lab</div></div>
+<div class="body"><div class="stage"><div class="col"><div class="box" data-step="1" data-g="p1" data-n="1" tabindex="0"><b><span class="n">1</span>Tibialis anterior</b><span class="fact hid">The most medial anterior leg muscle. Dorsiflexes and inverts the foot; supplied by the deep fibular nerve.</span></div><div class="box" data-step="3" data-g="p3" data-n="3" tabindex="0"><b><span class="n">3</span>Superficial fibular nerve</b><span class="fact hid">The superficial branch of the common fibular nerve. Supplies fibularis longus and brevis, the lateral leg muscles that evert the foot.</span></div><div class="box" data-step="5" data-g="p5" data-n="5" tabindex="0"><b><span class="n">5</span>Extensor digitorum longus</b><span class="fact hid">An anterior leg muscle. Extends the toes and dorsiflexes the foot; supplied by the deep fibular nerve.</span></div></div>
+<div class="imgwrap"><img src="img/leg-03.jpg" alt="Cadaver, lateral leg"><span class="mk" data-step="1" data-g="p1" data-n="1" style="left:15.1%;top:30.2%">1</span><span class="mk" data-step="2" data-g="p2" data-n="2" style="left:91.1%;top:38.1%">2</span><span class="mk" data-step="3" data-g="p3" data-n="3" style="left:17.8%;top:47.3%">3</span><span class="mk" data-step="4" data-g="p4" data-n="4" style="left:93.3%;top:55.1%">4</span><span class="mk" data-step="5" data-g="p5" data-n="5" style="left:15.1%;top:65.6%">5</span><span class="mk" data-step="6" data-g="p6" data-n="6" style="left:93.3%;top:70.4%">6</span></div>
+<div class="col"><div class="box" data-step="2" data-g="p2" data-n="2" tabindex="0"><b><span class="n">2</span>Fibularis longus</b><span class="fact hid">The superficial lateral leg muscle. Everts and plantar flexes the foot; supplied by the superficial fibular nerve.</span></div><div class="box" data-step="4" data-g="p4" data-n="4" tabindex="0"><b><span class="n">4</span>Soleus</b><span class="fact hid">The flat calf muscle under gastrocnemius. Plantar flexes the foot through the calcaneal tendon; works in standing and walking.</span></div><div class="box" data-step="6" data-g="p6" data-n="6" tabindex="0"><b><span class="n">6</span>Fibularis brevis</b><span class="fact hid">A lateral leg muscle under fibularis longus. Everts the foot; supplied by the superficial fibular nerve.</span></div></div></div><svg class="lead" aria-hidden="true"></svg></div>
+<p class="cap">Cadaver, lateral leg · 6 structures · click to reveal each one, click the box to reveal what the notes say</p>
+</section><section class="slide" aria-label="Anterior and lateral leg (cadaver)">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lower Limb: Muscles, Nerves and Vessels</p><h1><span class="sec">C.</span> Anterior and lateral leg (cadaver) <span class="pill">photo 2 of 2</span></h1></div><div class="comp">Competency 127, lab</div></div>
+<div class="body"><div class="stage"><div class="col"><div class="box" data-step="1" data-g="p1" data-n="1" tabindex="0"><b><span class="n">1</span>Anterior tibial artery</b><span class="fact hid">One of the two branches of the popliteal artery. Runs down the front of the leg and continues onto the top of the foot as the dorsalis pedis artery.</span></div><div class="box" data-step="3" data-g="p3" data-n="3" tabindex="0"><b><span class="n">3</span>Deep fibular nerve</b><span class="fact hid">The deep branch of the common fibular nerve. Runs with the anterior tibial artery and supplies the anterior leg muscles that lift the foot; losing it gives foot drop.</span></div></div>
+<div class="imgwrap"><img src="img/leg-02.jpg" alt="Cadaver, anterior leg, deeper"><span class="mk" data-step="1" data-g="p1" data-n="1" style="left:14.1%;top:46.9%">1</span><span class="mk" data-step="2" data-g="p2" data-n="2" style="left:90.6%;top:50.5%">2</span><span class="mk" data-step="3" data-g="p3" data-n="3" style="left:14.1%;top:59.8%">3</span></div>
+<div class="col"><div class="box" data-step="2" data-g="p2" data-n="2" tabindex="0"><b><span class="n">2</span>Extensor digitorum longus</b><span class="fact hid">An anterior leg muscle. Extends the toes and dorsiflexes the foot; supplied by the deep fibular nerve.</span></div></div></div><svg class="lead" aria-hidden="true"></svg></div>
+<p class="cap">Cadaver, anterior leg, deeper · 3 structures · click to reveal each one, click the box to reveal what the notes say</p>
+</section><section class="slide" aria-label="Anterior and lateral leg (cadaver), notes">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lower Limb: Muscles, Nerves and Vessels</p><h1><span class="sec">C.</span> Anterior and lateral leg (cadaver) <span class="pill">fill in</span></h1></div><div class="comp">Competency 127, lab</div></div>
+<div class="body"><div class="cards"><div class="card" data-step="1" tabindex="0"><span class="stem">Anterior leg muscles</span><span class="ans hid">dorsiflex, extend the toes</span></div><div class="card" data-step="2" tabindex="0"><span class="stem">Fibularis longus and brevis</span><span class="ans hid">evert the foot</span></div><div class="card" data-step="3" tabindex="0"><span class="stem">Common fibular nerve wraps the</span><span class="ans hid">neck of the fibula</span></div><div class="card" data-step="4" tabindex="0"><span class="stem">Deep branch runs the</span><span class="ans hid">anterior leg</span></div><div class="card" data-step="5" tabindex="0"><span class="stem">Superficial branch runs the</span><span class="ans hid">lateral leg</span></div><div class="card" data-step="6" tabindex="0"><span class="stem">Injury at the fibular neck:</span><span class="ans hid">foot drop</span></div><div class="card" data-step="7" tabindex="0"><span class="stem">Anterior tibial artery becomes</span><span class="ans hid">dorsalis pedis</span></div></div></div>
+<p class="cap">Fill in · click to reveal each line, click again for the answer · students write the answer on the note sheet</p>
+</section><section class="slide" aria-label="Posterior leg, and the veins (cadaver)">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lower Limb: Muscles, Nerves and Vessels</p><h1><span class="sec">D.</span> Posterior leg, and the veins (cadaver) <span class="pill">photo 1 of 2</span></h1></div><div class="comp">Competency 127, lab</div></div>
+<div class="body"><div class="stage"><div class="col"><div class="box" data-step="2" data-g="p2" data-n="2" tabindex="0"><b><span class="n">2</span>Soleus</b><span class="fact hid">The flat calf muscle under gastrocnemius. Plantar flexes the foot through the calcaneal tendon; works in standing and walking.</span></div></div>
+<div class="imgwrap"><img src="img/leg-04.jpg" alt="Cadaver, posterior leg"><span class="mk" data-step="1" data-g="p1" data-n="1" style="left:83.8%;top:40.9%">1</span><span class="mk" data-step="2" data-g="p2" data-n="2" style="left:6.1%;top:54.0%">2</span><span class="mk" data-step="3" data-g="p3" data-n="3" style="left:93.9%;top:77.7%">3</span></div>
+<div class="col"><div class="box" data-step="1" data-g="p1" data-n="1" tabindex="0"><b><span class="n">1</span>Gastrocnemius</b><span class="fact hid">The superficial calf muscle with two heads from the femur. Plantar flexes the foot through the calcaneal tendon and flexes the knee; supplied by the tibial nerve.</span></div><div class="box" data-step="3" data-g="p3" data-n="3" tabindex="0"><b><span class="n">3</span>Calcaneal tendon</b><span class="fact hid">The Achilles tendon. Gastrocnemius and soleus share it to reach the calcaneus and plantar flex the foot.</span></div></div></div><svg class="lead" aria-hidden="true"></svg></div>
+<p class="cap">Cadaver, posterior leg · 3 structures · click to reveal each one, click the box to reveal what the notes say</p>
+</section><section class="slide" aria-label="Posterior leg, and the veins (cadaver)">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lower Limb: Muscles, Nerves and Vessels</p><h1><span class="sec">D.</span> Posterior leg, and the veins (cadaver) <span class="pill">photo 2 of 2</span></h1></div><div class="comp">Competency 127, lab</div></div>
+<div class="body"><div class="stage"><div class="col"><div class="box" data-step="2" data-g="p2" data-n="2" tabindex="0"><b><span class="n">2</span>Tibial nerve</b><span class="fact hid">The larger branch of the sciatic nerve. Runs down the back of the knee and leg beside the posterior tibial artery, behind the medial malleolus, into the sole. Supplies the posterior leg muscles.</span></div></div>
+<div class="imgwrap"><img src="img/leg-05.jpg" alt="Cadaver, deep posterior leg"><span class="mk" data-step="1" data-g="p1" data-n="1" style="left:92.8%;top:31.8%">1</span><span class="mk" data-step="2" data-g="p2" data-n="2" style="left:7.2%;top:38.5%">2</span></div>
+<div class="col"><div class="box" data-step="1" data-g="p1" data-n="1" tabindex="0"><b><span class="n">1</span>Posterior tibial artery</b><span class="fact hid">The larger branch of the popliteal artery, running down the back of the leg deep to the calf muscles beside the tibial nerve. Its pulse is felt behind the medial malleolus.</span></div></div></div><svg class="lead" aria-hidden="true"></svg></div>
+<p class="cap">Cadaver, deep posterior leg · 2 structures · click to reveal each one, click the box to reveal what the notes say</p>
+</section><section class="slide" aria-label="Posterior leg, and the veins (cadaver), notes">
+<div class="hd"><div><p class="eyebrow">BIO 004 · Lower Limb: Muscles, Nerves and Vessels</p><h1><span class="sec">D.</span> Posterior leg, and the veins (cadaver) <span class="pill">fill in</span></h1></div><div class="comp">Competency 127, lab</div></div>
+<div class="body"><div class="cards"><div class="card" data-step="1" tabindex="0"><span class="stem">Gastrocnemius and soleus</span><span class="ans hid">plantar flex the foot</span></div><div class="card" data-step="2" tabindex="0"><span class="stem">They share the</span><span class="ans hid">calcaneal (Achilles) tendon</span></div><div class="card" data-step="3" tabindex="0"><span class="stem">Behind the medial malleolus:</span><span class="ans hid">posterior tibial artery, tibial nerve</span></div><div class="card" data-step="4" tabindex="0"><span class="stem">Deep veins run with the</span><span class="ans hid">arteries, same names</span></div><div class="card" data-step="5" tabindex="0"><span class="stem">Great saphenous vein:</span><span class="ans hid">superficial, medial, in front of the medial malleolus, into the femoral vein</span></div><div class="card" data-step="6" tabindex="0"><span class="stem">Small saphenous vein:</span><span class="ans hid">up the calf, into the popliteal vein</span></div><div class="card" data-step="7" tabindex="0"><span class="stem">Artery renamed at:</span><span class="ans hid">inguinal ligament, adductor hiatus, below the knee</span></div></div></div>
+<p class="cap">Fill in · click to reveal each line, click again for the answer · students write the answer on the note sheet</p>
+</section>
+<div class="ft" style="position:absolute;left:28px;right:28px;bottom:10px"><span>Dr. Sharilyn Rennie · BIO 004 Human Anatomy · Solano Community College · Photos: BIO 004 Digital Atlas</span>
+<span class="btns"><button id="bprev" aria-label="Back">&larr; Back</button><button id="bnext" aria-label="Next">Next &rarr;</button><button id="bskip">Skip slide</button><button id="ball">Reveal all</button><button id="breset">Reset slide</button><button id="bmode" aria-pressed="false">Mode: students fill in</button><button id="bhelp" aria-expanded="false">?</button><span id="counter" aria-live="polite" style="min-width:60px;text-align:right"></span></span></div>
+<div class="prog" id="prog"></div></main>
+<div id="help" role="dialog" aria-label="Keyboard help"><b>Keys</b><br>&rarr; space Enter: next reveal or slide<br>&larr; Backspace: undo last reveal, or back a slide<br>N: skip to next slide<br>A: reveal everything on this slide<br>R: reset this slide<br>Home / End: first / last slide<br>?: this help<br><br>Click any box or card to reveal what the notes say. Mode button: "students fill in" hides the facts until you click; "show facts" shows them as each structure appears.</div>
+<div id="sr" class="visually-hidden" aria-live="polite" style="position:absolute;left:-999px"></div>
+<script>
+(function(){
+const slides=[...document.querySelectorAll('.slide')];let i=0;
+const counter=document.getElementById('counter'),prog=document.getElementById('prog');
+let instructor=false;
+function steps(s){return [...s.querySelectorAll('[data-step]')].sort((a,b)=>+a.dataset.step-+b.dataset.step)}
+function show(n){slides[i].classList.remove('on');i=Math.max(0,Math.min(slides.length-1,n));slides[i].classList.add('on');
+ counter.textContent=(i+1)+' / '+slides.length;prog.style.width=((i+1)/slides.length*100)+'%';
+ location.hash='s'+(i+1);layout(slides[i]);if(instructor)revealAll(slides[i]);}
+function lit(s,el){s.querySelectorAll('.lit').forEach(x=>x.classList.remove('lit'));if(!el)return;
+ el.classList.add('lit');const g=el.dataset.g;if(g)s.querySelectorAll('[data-g="'+g+'"]').forEach(x=>x.classList.add('lit'));}
+function next(){const s=slides[i];const st=steps(s);
+ const hidden=st.find(x=>!x.classList.contains('show'));
+ if(hidden){const g=hidden.dataset.g;const group=g?st.filter(x=>x.dataset.g===g&&!x.classList.contains('show')):[hidden];
+   group.forEach(x=>x.classList.add('show'));lit(s,hidden);const sr=document.getElementById('sr');const b=hidden.querySelector('b,.stem');if(sr&&b)sr.textContent=b.textContent;return;}
+ const fact=s.querySelector('.hid');
+ if(fact&&!instructor){fact.classList.remove('hid');lit(s,fact.closest('[data-step]'));return;}
+ if(i<slides.length-1)show(i+1);}
+function prev(){const s=slides[i];const st=steps(s).filter(x=>x.classList.contains('show'));
+ if(st.length){const last=st[st.length-1];const g=last.dataset.g;(g?st.filter(x=>x.dataset.g===g):[last]).forEach(x=>{x.classList.remove('show');x.querySelectorAll('.fact,.ans').forEach(f=>f.classList.add('hid'))});lit(s,null);return;}
+ if(i>0){show(i-1);}}
+function revealAll(s){steps(s).forEach(x=>x.classList.add('show'));s.querySelectorAll('.hid').forEach(x=>x.classList.remove('hid'));lit(s,null)}
+function resetSlide(s){steps(s).forEach(x=>x.classList.remove('show'));s.querySelectorAll('.fact,.ans').forEach(x=>x.classList.add('hid'));lit(s,null)}
+function layout(s){const w=s.querySelector('.imgwrap');if(!w)return;const img=w.querySelector('img');const svg=s.querySelector('svg.lead');const body=s.querySelector('.body');
+ if(!img.complete){img.addEventListener('load',()=>layout(s),{once:true});return;}
+ const br=body.getBoundingClientRect(),ir=img.getBoundingClientRect();
+ svg.innerHTML='';
+ s.querySelectorAll('.box').forEach(b=>{const n=b.dataset.n;const mk=w.querySelector('.mk[data-n="'+n+'"]');if(!mk)return;
+  const mr=mk.getBoundingClientRect(),bb=b.getBoundingClientRect();
+  const x1=mr.left+mr.width/2-br.left,y1=mr.top+mr.height/2-br.top;
+  const left=bb.left+bb.width/2<ir.left+ir.width/2;
+  const x2=(left?bb.right:bb.left)-br.left,y2=bb.top+Math.min(bb.height/2,16)-br.top;
+  const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',x1);l.setAttribute('y1',y1);l.setAttribute('x2',x2);l.setAttribute('y2',y2);l.dataset.step=b.dataset.step;l.dataset.g=b.dataset.g;
+  if(b.classList.contains('show'))l.classList.add('show');if(b.classList.contains('lit'))l.classList.add('lit');svg.appendChild(l);});}
+document.addEventListener('keydown',ev=>{if(ev.target.tagName==='BUTTON')return;
+ if(ev.key==='ArrowRight'||ev.key===' '||ev.key==='PageDown'||ev.key==='Enter'){ev.preventDefault();next()}
+ else if(ev.key==='ArrowLeft'||ev.key==='PageUp'||ev.key==='Backspace'){ev.preventDefault();prev()}
+ else if(ev.key==='Home'){show(0)}else if(ev.key==='End'){show(slides.length-1)}
+ else if(ev.key==='a'||ev.key==='A'){revealAll(slides[i])}else if(ev.key==='r'||ev.key==='R'){resetSlide(slides[i])}
+ else if(ev.key==='?'){document.getElementById('help').classList.toggle('on')}
+ else if(ev.key==='n'||ev.key==='N'){if(i<slides.length-1)show(i+1)}});
+document.getElementById('deck').addEventListener('click',ev=>{
+ const b=ev.target.closest('.box,.card');if(b){const f=b.querySelector('.hid');if(f){f.classList.remove('hid')}lit(slides[i],b);ev.stopPropagation();return;}
+ if(ev.target.closest('button,a,#help'))return;next();});
+document.getElementById('bprev').onclick=()=>prev();document.getElementById('bnext').onclick=()=>next();
+document.getElementById('ball').onclick=()=>revealAll(slides[i]);document.getElementById('breset').onclick=()=>resetSlide(slides[i]);
+document.getElementById('bskip').onclick=()=>{if(i<slides.length-1)show(i+1)};
+document.getElementById('bmode').onclick=function(){instructor=!instructor;this.textContent=instructor?'Mode: show facts':'Mode: students fill in';this.setAttribute('aria-pressed',instructor);if(instructor)revealAll(slides[i])};
+document.getElementById('bhelp').onclick=()=>document.getElementById('help').classList.toggle('on');
+window.addEventListener('resize',()=>layout(slides[i]));
+const m=location.hash.match(/s(\d+)/);show(m?+m[1]-1:0);
+})();
+</script>
+<script>(function(){function send(){parent.postMessage({type:'resize',id:document.body.id||location.pathname,height:document.documentElement.scrollHeight},'*')}new ResizeObserver(send).observe(document.body);addEventListener('load',send);addEventListener('resize',send)})();</script>
+</body></html>

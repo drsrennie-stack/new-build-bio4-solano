@@ -1,15 +1,20 @@
-BIO 004 Module 4 and Module 5 print drop, October 19, 2026
+BIO 004 Module 4 lecture slides (interactive HTML)
 
-M4-print/  three documents to send to the printer for Module 4
-  BIO004-M4-Lecture-Notes-Packet.pdf   lecture notes for print, competencies 97 to 132, cover and contents, 42 pages (compact: no worked questions, no video lines; those are on the web pages)
-  BIO004-M4-Note-Sheet-Packet.pdf      the drawing sheets, one per competency 97 to 132 (unchanged, from the repo), 37 pages
-  BIO004-M4-Lab-Packet.pdf             the lab structure list with charts and practice questions (unchanged, from the repo), 28 pages
+Open any deck in a browser (Chrome, Edge, Safari, Firefox) or drop the whole folder into the site repo and link to the html files. Keep fonts-jakarta.css and img/ next to the html files.
 
-M5-print/  the same three for Module 5
-  BIO004-M5-Lecture-Notes-Packet.pdf   lecture notes for print, competencies 133 to 193, cover and contents, 71 pages (compact, same cuts)
-  BIO004-M5-Note-Sheet-Packet.pdf      drawing sheets, one per competency 133 to 193 (unchanged), 62 pages
-  BIO004-M5-Lab-Packet.pdf             lab structure list with charts and questions (unchanged), 36 pages
+Decks
+  BIO004-M4-Slides-Respiratory.html   30 slides   Respiratory parts 1 to 3
+  BIO004-M4-Slides-Digestive.html     63 slides   GI map, GI parts I to III, histology, blood flow
+  BIO004-M4-Slides-LowerLimb.html     13 slides   Thigh, gluteal region, leg, vessels and nerves
+  BIO004-M4-Slides-Lymphatic.html      8 slides   Route of lymph, node, organs, disorders
 
-site/  for the repo (new-build-bio4-solano). Upload the 17 html files to the repo root and the notes/ folder
-       contents into the repo's notes/ folder (create it if it is not there). Each html page links to
-       notes/<its pdf>. The two FULL packet PDFs (with worked questions, 75 and 132 pages) are in notes/ for the web only so you can link them from the week pages.
+How a deck runs
+  Each box on a note sheet is a run of slides: one slide per photo, then one slide of fill-in cards.
+  Photo slide: each click (or right arrow) drops the next numbered pin on the structure with a box and a leader line.
+    Click the box (or keep clicking Next) to reveal what the course notes say about that structure.
+  Fill-in slide: each click reveals the next stem; the next click reveals the answer. Same stems as the note sheet.
+  Mode button: "students fill in" (default) hides every fact until you click it. "show facts" shows the fact as soon as the structure appears.
+  Keys: right / space / Enter = next reveal, left / Backspace = undo, N = skip to next slide, A = reveal all, R = reset slide, Home / End, ? = help.
+  The URL hash (#s12) is the slide number, so you can bookmark a slide.
+
+Facts come from the Module 4 lecture notes packet (competencies 97 to 127). Photos: BIO 004 Digital Atlas.
