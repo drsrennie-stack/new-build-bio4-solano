@@ -533,7 +533,7 @@
       + V('5', 't5', 'Want to study', 'On paper?', '', 'You get a paper copy of each of these in class. If you need another, print it again here.',
           P(go('BIO004-Fall2026-Competency-Packet.pdf'), 'Competency packet', 'print', 'g') + P(go('BIO004-M' + MOD + '-Note-Sheet-Packet.pdf'), 'Note sheets, M' + MOD, 'print', 'g')
           + (MOD >= 3 ? P(go('BIO004-M' + MOD + '-Lab-Packet.pdf'), 'Lab packet, M' + MOD, 'print', 'g') : P(go('BIO004-Anatomy-Structure-List.pdf'), 'Lab structure list', 'print', 'g'))
-          + P(go('lecture-note-sheets.html?m=' + MOD), 'Lecture note sheets, M' + MOD, 'print', 'g'))
+          + P(go('lecture-sheets.html?m=' + MOD), 'Lecture sheets, M' + MOD, 'print', 'g'))
       + V('6', 't6', 'Need', 'Help', ' with something?', 'Office hours: Mon and Wed 10:30 am to 12:30 pm across from Biotech Lab 1127, and 30 minutes before class. Open lab: Fri 2 to 3 pm.',
           P('href="mailto:srennie@solano.edu"', 'Email Dr. Rennie', 'mail', 't') + mine(P(ext(DISCORD[sec] ? DISCORD[sec].url : ''), 'Class Discord', 'chat', 'b'))
           + P(go('study-session-signup.html'), 'Study With Me', 'people', 'g') + P(ext('https://solano.edu/centers/astc/index.php'), 'Free tutoring', 'people'))
