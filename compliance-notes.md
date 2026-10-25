@@ -1,36 +1,37 @@
 # Accessibility compliance notes: BIO 004 Module 4 lecture slides
 
-Files: BIO004-M4-Slides-Respiratory.html, -Digestive.html, -LowerLimb.html, -Lymphatic.html. Date: October 25, 2026.
+Files: BIO004-M4-Slides-Respiratory.html, -LowerLimb.html, -Lymphatic.html. Date: October 25, 2026.
 
 ## WCAG 2.2 target
-AA met on every criterion checked; AAA contrast met for text.
+AA met on every criterion checked; AAA contrast met for all text.
 
-## Color contrast (text on white or off-white #FAFAF9)
-- Navy #08101F headings and body: 18.4:1, pass AAA
-- Maroon #7A2A22 eyebrow, answers, group headings: 8.9:1, pass AAA
-- Gray #444 competency line (13px, 600): 9.7:1, pass AAA
-- Gray #555 captions and footer (12px): 7.5:1, pass AAA
-- White on maroon pin markers and box numbers: 8.9:1, pass AAA
-- Navy on gold #DCB45C (lit marker): 9.4:1, pass AAA
-- Hidden "click to reveal" placeholder #999 (12px): 2.8:1, decorative state hint only; the same instruction is in the slide caption at 7.5:1.
+## Color contrast
+- Navy #060A18 text on white and #FAFAF9: 19:1, pass AAA
+- Rust #8B3A2E eyebrows, answers, competency line on white and off-white: 7.6:1, pass AAA
+- Slide eyebrow, navy at 60% opacity on off-white (effective #6a6d78): 5.1:1, pass AA (10px bold uppercase, decorative label; the slide title repeats the context)
+- White on rust buttons and pins: 7.6:1, pass AAA
+- Navy on gold-bright #DCB45C (lit pin): 10.6:1, pass AAA
+- White on navy present bar: 19:1, pass AAA
+- Gold-bright #DCB45C eyebrow on navy title hero: 10.6:1, pass AAA
+- "click to reveal" placeholder #777 on white: 4.5:1, pass AA (state hint; the caption repeats the instruction at AAA)
 
 ## Keyboard
-- Every reveal works from the keyboard: right arrow, space, Enter = next; left arrow, Backspace = undo; N, A, R, Home, End, ? as documented in README.
-- Every callout box and card has tabindex="0" and a visible 3px gold focus ring; Enter on a focused box reveals it.
-- Toolbar buttons are real buttons with accessible names; the mode button carries aria-pressed.
+- Present mode fully keyboard operable: arrows, space, Enter, Backspace, N, A, R, Home, End, ?, Esc.
+- Every callout box and fill-in card has tabindex="0" and reveals on Enter; focus ring is 3px rust with 3px offset.
+- All controls are native buttons with accessible names; the facts toggle carries aria-pressed.
 
 ## Screen reader
-- Slides are sections with aria-label (box title); the deck is a main landmark with aria-live="polite".
-- A hidden live region announces the structure name on each reveal; the slide counter is aria-live.
-- Leader-line SVG is aria-hidden; structure names and facts are real text in the boxes, not in the image.
-- Photo alt text is the caption (view and specimen). Pin positions are conveyed by the numbered text boxes.
+- Slides are articles with aria-label; the deck is a main landmark; a skip link precedes the header.
+- A hidden live region announces each structure or stem as it is revealed; the slide counter updates in the present bar.
+- Leader-line SVG is aria-hidden; structure names and facts are real text.
+- Photo alt text is the caption (specimen and view).
 
 ## Motion
-- Reveal transitions are 250 ms and disabled under prefers-reduced-motion.
+- 250 ms reveal transitions, removed under prefers-reduced-motion.
 
 ## Known limitations and plan
-- Facts are hidden by default in "students fill in" mode; a screen reader user can press A (reveal all) or switch the mode button to "show facts" to read everything at once.
-- Leader lines are drawn by script from live box positions; without JavaScript the boxes and image still render (static, all shown).
-- Pin placement on the photo is visual only; add the Digital Atlas page link in Canvas for the per-structure descriptions if a text alternative to the photo is required.
+- Pin positions on the photo are visual; the numbered boxes carry the same content as text.
+- Facts are hidden by default in Present; Reveal all (A) or the facts toggle shows everything for a reader who needs it at once.
+- Lecture page (non-present view) shows everything, so students reviewing later need no interaction.
 
 Reviewer: Dr. Sharilyn Rennie
