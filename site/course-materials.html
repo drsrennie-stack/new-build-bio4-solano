@@ -179,9 +179,10 @@
   .bandh{font-size:clamp(28px,4vw,42px);font-weight:800;margin:0 0 8px;line-height:1.05;color:#fff;letter-spacing:-.02em}
   .bandh span{color:#E3C27D}
   .bandp{margin:0;max-width:66ch;font-size:15px;opacity:.92}
-  .wrap > h1, .wrap > .lede{display:none}
+  .wrap h1, .wrap .lede{display:none}
   .wrap{padding-top:18px}
   .mods{gap:12px}
+  .mod{scroll-margin-top:14px}
   .mod{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,13fr);border-radius:16px;overflow:hidden;border:1px solid #E3E4E8;box-shadow:0 1px 3px rgba(0,0,0,.06);background:#F7F6F3}
   .mod:not(.open){grid-template-columns:1fr}
   .mod-q{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 16px;align-items:center;align-content:start;padding:22px 22px 20px;position:relative}
@@ -552,6 +553,10 @@
   });
 
   chips(); render();
+  /* No module named in the link: bring the current module to the top of the view so it is the first thing seen. */
+  if(!/^#mod-\d+$/.test(location.hash || '')){
+    window.setTimeout(function(){ var cur = document.getElementById('mod-' + open); if(cur){ cur.scrollIntoView({block:'start'}); } }, 450);
+  }
 
   /* a #mod-N link opened later on the same page (or the browser's
      back button) opens that module too */
