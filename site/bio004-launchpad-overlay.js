@@ -286,6 +286,7 @@
   + '.lpov .v3-box .lp-new{margin-left:auto;flex:none;white-space:nowrap;font-size:10.5px;padding:3px 8px}'
   + '.lpov .v3-sig{text-align:center;font-family:"DM Sans",system-ui,sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#454B5C;padding:6px 0}'
   + '.lpov .v3-wrap .lp-foot{margin-top:18px}'
+  + '.lpov .v3-ik{display:inline-block;vertical-align:middle;margin-left:6px;color:inherit;opacity:.35;padding:4px;border-radius:4px}.lpov .v3-ik:hover,.lpov .v3-ik:focus-visible{opacity:1;color:#7A2E24}'
   /* while this page is up, the course tools dock and Hootie stay out of the way */
   + 'body.lp-open .bd-launch,body.lp-open .bd-back,body.lp-open .bd-scrim,body.lp-open .bd-panel,body.lp-open .dcm,body.lp-open .hoo-btn,body.lp-open .hoo-panel,body.lp-open .hoo-nudge{display:none!important}'
   + '@media (prefers-reduced-motion:reduce){.lpov *{transition:none!important}.lpov .lp-card:hover{transform:none}}'
@@ -553,7 +554,7 @@
       + S(go('bio004-study-process.html'), 'How to study, step by step', 'steps', 'g') + S(go('course-materials.html'), 'All course materials', 'doc') + S(go('bio004-blog.html'), 'Short reads from Dr. Rennie', 'note', 't')
       + S(go('digital-device-policy-agreement.html'), 'Device policy', 'doc', 'b')
       + '</ul></div>'
-      + '<p class="v3-sig">Dr. Rennie &middot; BIO 004 &middot; Solano College</p>'
+      + '<p class="v3-sig">Dr. Rennie &middot; BIO 004 &middot; Solano College <a ' + go('instructor.html') + ' class="v3-ik" aria-label="Instructor sign in" title="Instructor"><svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.9 12.1 21 2M16 7l3 3M13 10l3 3"/></svg></a></p>'
       + '</aside>';
     return '<div class="v3">' + main + side + '</div>'
       + (STANDALONE ? '' : '<div class="lp-foot"><button type="button" data-lpclose="1">' + (ON_CALENDAR ? 'See the full course calendar &#8594;' : 'Close this and stay here') + '</button></div>');
