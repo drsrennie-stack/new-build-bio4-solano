@@ -529,7 +529,8 @@
           + P(go('bio004-mastery-check.html'), 'Mastery Check', 'target', 't') + P(go('mastery-os-fall-2026.html'), 'Mastery OS', 'steps', 't'))
       + V('3', 't3', 'Want to practice', 'Lab ID?', '', 'Name the structure before you check the answer.',
           P(go('module-' + MOD + '-structure-list.html'), 'Structure list, M' + MOD, 'note', 'b') + P(ext('https://drsrennie-stack.github.io/new-digital-atlas/'), 'Digital Atlas', 'globe', 'b')
-          + P(go('mastery-os-fall-2026.html#s-loops'), 'Loops', 'loop', 'b') + P(go('histology-help.html'), 'Histology help', 'target', 'b'))
+          + P(go('mastery-os-fall-2026.html#s-loops'), 'Loops', 'loop', 'b') + P(go('histology-help.html'), 'Histology help', 'target', 'b')
+          + P(ext('https://www.medmasterscollaborative.com/muscle-charts-i-o-a-inn'), 'Muscle charts: I, O, A', 'cards', 'b'))
       + V('4', 't4', 'Want to prepare for', 'The exam?', '', 'Find your gaps and spend your study time where you need it most.',
           P(go('bio004-competency-packet.html'), 'Competency list', 'target', 't') + P(go('practice-lecture-exam.html'), 'Practice exam', 'exam', 't')
           + P(go('mastery-os-fall-2026.html#s-weak'), 'My weak areas', 'steps', 't') + P(go('bio004-study-process.html'), 'How to study', 'doc', 't'))
