@@ -315,7 +315,7 @@
        then that day's lecture slides. Each such set renders on its
        own row, so a video always sits beside its slides. */
     (e.videos || []).forEach(function (it) {
-      if (it && it.u && !w.vseen[it.u]) { w.vseen[it.u] = 1; w.videos.push({ u: it.u, t: it.t || it.u, s: false }); }
+      if (it && it.u && !w.vseen[it.u]) { w.vseen[it.u] = 1; w.videos.push({ u: it.u, t: it.t || it.u, s: false, k: it.k || '' }); }
     });
     if (e.slides && e.slides.u && !w.vseen[e.slides.u]) {
       w.vseen[e.slides.u] = 1;
@@ -393,8 +393,8 @@
     return '<a class="mcard" data-cat="videos" href="' + esc(v.u) + '" target="_top">'
       + '<span class="mic ' + (v.s ? 'ic-blue' : 'ic-red') + '" aria-hidden="true"><svg viewBox="0 0 24 24">'
       + (v.s ? IC.slides : IC.play) + '</svg></span>'
-      + '<span class="mk">' + (v.s ? 'Lecture slides' : 'Video') + '</span>'
-      + '<b>' + esc(v.t) + '</b></a>';
+      + '<span class="mk">' + (v.s ? 'Lecture slides' : v.k === 'walkthrough' ? 'Walkthrough video' : 'Video') + '</span>'
+      + '<b>' + esc(v.k === 'walkthrough' ? v.t.replace(/^Walkthrough:\s*/i, '') : v.t) + '</b></a>';
   }
   /* Each video-and-its-slides set gets its OWN row: a new row starts
      whenever a video follows slides. Two videos sharing one set of

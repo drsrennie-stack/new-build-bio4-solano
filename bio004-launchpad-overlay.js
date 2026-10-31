@@ -522,7 +522,7 @@
     var mine = function (one) { return sec ? one : ''; };
     var main = '<div class="v3-main">'
       + V('1', 't1', 'Want to', 'Prepare', ' for class?', 'Learn the material before lecture or lab so you are ready to take part.',
-          P(go('bio004-videos.html'), 'Lecture videos', 'video') + P(go('bio004-notes.html'), 'Course notes', 'note')
+          P(go('bio004-videos.html'), 'Lecture videos', 'video') + P(go('bio004-walkthrough-videos.html'), 'Walkthrough videos', 'video', '', true) + P(go('bio004-notes.html'), 'Course notes', 'note')
           + P(go('bio004-quick-access.html?cat=prework'), 'Pre-work', 'pen') + P(go('bio004-bluelink-videos.html'), 'Cadaver videos', 'video'))
       + V('2', 't2', 'Want to', 'Practice', ' recall?', 'See what you can remember without looking. Pulling it from memory is what makes it stick.',
           P(go('mastery-os-fall-2026.html#s-recall'), 'Recall cards', 'cards', 't') + P(go('mastery-os-fall-2026.html#s-dumps'), 'Brain dumps', 'brain', 't')

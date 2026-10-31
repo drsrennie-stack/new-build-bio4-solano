@@ -147,6 +147,7 @@
   }
   function matLink(o, icon, kind, iso){
     if(!o) return '';
+    if(o.k === 'walkthrough') return row(o.u, icon, String(o.t||o.u).replace(/^Walkthrough:\s*/i,''), 'Walkthrough', iso);
     return row(o.u, icon, o.t, kind, iso);
   }
   function many(list, icon, kind, iso){

@@ -2,11 +2,12 @@
    BIO 004 Human Anatomy, Fall 2026
    bio004-library.js
 
-   Draws the two simple library pages:
-     bio004-videos.html   every concept video, by module and topic
-     bio004-notes.html    every notes page, by module and topic
+   Draws the three simple library pages:
+     bio004-videos.html              every concept video, by module and topic
+     bio004-walkthrough-videos.html  every walkthrough video (k:"walkthrough")
+     bio004-notes.html               every notes page, by module and topic
 
-   The page sets window.BIO004_LIBRARY = 'videos' or 'notes' before
+   The page sets window.BIO004_LIBRARY = 'videos', 'walkthroughs' or 'notes' before
    loading this file. Everything comes from session-links.js (the
    same file the calendar and week pages read) and the module list in
    schedule-fall2026.js, so a new video or notes page added there
@@ -16,7 +17,9 @@
    ============================================================ */
 (function () {
   'use strict';
-  var KIND = window.BIO004_LIBRARY === 'notes' ? 'notes' : 'videos';
+  var MODE = window.BIO004_LIBRARY === 'notes' ? 'notes' : window.BIO004_LIBRARY === 'walkthroughs' ? 'walkthroughs' : 'videos';
+  /* walkthroughs live in the same videos list, tagged k:"walkthrough" */
+  var KIND = MODE === 'notes' ? 'notes' : 'videos';
   var SL = window.BIO004_SESSION_LINKS || {};
   var MODS = window.BIO004_MODULES || [];
 
@@ -55,11 +58,13 @@
     var e = SL[d], mod = modOf(d);
     if (!mod) return;
     (e[KIND] || []).forEach(function (it) {
+      if (MODE === 'walkthroughs' && (!it || it.k !== 'walkthrough')) return;
+      if (MODE === 'videos' && it && it.k === 'walkthrough') return;
       /* once per module: a video taught again in a later module (muscle
          tissue in Module 1 and Module 3) shows in both */
       if (!it || !it.u || seen[mod + '|' + it.u]) return;
       seen[mod + '|' + it.u] = 1;
-      (byMod[mod] = byMod[mod] || []).push({ u: it.u, t: it.t || it.u });
+      (byMod[mod] = byMod[mod] || []).push({ u: it.u, t: it.t || it.u, k: it.k || '' });
     });
   });
 
@@ -107,6 +112,10 @@
   + '.lb-ic{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;flex:none;color:#fff;background:' + (KIND === 'videos' ? '#7A2E24' : '#060B1A') + '}'
   + '.lb-ic svg{width:16px;height:16px}'
   + '.lb-ar{margin-left:auto;color:#B8924A;font-weight:800;padding-left:6px}'
+  + '.lb-kind{flex:none;font-family:"DM Sans",system-ui,sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:#7A2E24;border-radius:999px;padding:3px 8px;margin-left:6px}'
+  + '.lb-list a.is-walk .lb-ic{background:#B8924A;color:#060B1A}'
+  + '.lb-key{margin:0 0 4px;font-size:14px;color:#454B5C;text-align:center}'
+  + '.lb-key .lb-kind{margin:0 4px 0 0}'
   + '.lb-empty{padding:16px 18px;margin:0;font-size:14px;color:#454B5C;align-self:center}'
   + '.lb-other{margin:4px 0 0;font-size:14px;color:#454B5C;text-align:center}'
   + '.lb-other a{color:#7A2E24;font-weight:800}'
@@ -115,8 +124,10 @@
   + '@media print{.lb-mod{break-inside:avoid}}'
   + '@media print{.lb-band{background:none;color:#060B1A}.lb-jump{display:none}}';
 
-  var T = KIND === 'videos'
-    ? { h: 'Concept <span class="hl">Videos</span>', sub: 'Pick your module, then the topic. Watch after you work the pre-work sheet.', other: '<a href="' + go('bio004-notes.html') + '" target="_top">Looking for the notes?</a>', empty: 'Videos for this module are coming.' }
+  var T = MODE === 'walkthroughs'
+    ? { h: 'Walkthrough <span class="hl">Videos</span>', sub: 'Between lab and lecture: each structure on the slide, the model and the cadaver, with the explanation as you go. Keep the matching worksheet open and pause to fill it in.', other: '<a href="' + go('bio004-videos.html') + '" target="_top">Looking for the concept videos?</a> &middot; <a href="' + go('bio004-notes.html') + '" target="_top">The notes?</a>', empty: 'No walkthrough for this module yet.' }
+    : KIND === 'videos'
+    ? { h: 'Concept <span class="hl">Videos</span>', sub: 'Pick your module, then the topic. Watch after you work the pre-work sheet.', other: '<a href="' + go('bio004-walkthrough-videos.html') + '" target="_top">Looking for the walkthrough videos?</a> &middot; <a href="' + go('bio004-notes.html') + '" target="_top">The notes?</a>', empty: 'Videos for this module are coming.' }
     : { h: 'Course <span class="hl">Notes</span>', sub: 'Pick your module, then the topic. Open them while you work the pre-work sheet.', other: '<a href="' + go('bio004-videos.html') + '" target="_top">Looking for the videos?</a>', empty: 'Notes for this module are coming.' };
 
   var jump = '', body = '';
@@ -127,11 +138,12 @@
       + '<summary class="lb-head"><span class="lb-num" aria-hidden="true">' + n + '</span>'
       + '<h2 id="mh' + n + '" class="lb-h2">Module ' + n + (n === CUR ? '<span class="lb-now">Now</span>' : '')
       + '<span class="lb-mt">' + esc(md.title || '') + '</span>'
-      + '<span class="lb-count">' + list.length + ' ' + (KIND === 'videos' ? (list.length === 1 ? 'video' : 'videos') : (list.length === 1 ? 'notes page' : 'notes pages')) + '</span></h2>'
+      + '<span class="lb-count">' + list.length + ' ' + (MODE === 'walkthroughs' ? (list.length === 1 ? 'walkthrough' : 'walkthroughs') : KIND === 'videos' ? (list.length === 1 ? 'video' : 'videos') : (list.length === 1 ? 'notes page' : 'notes pages')) + '</span></h2>'
       + '<span class="lb-chev" aria-hidden="true">&#8964;</span></summary>'
       + (list.length
           ? '<ul class="lb-list">' + list.map(function (it) {
-              return '<li><a href="' + esc(go(it.u)) + '" target="_top">' + icon() + '<span>' + esc(it.t) + '</span><span class="lb-ar" aria-hidden="true">&#8594;</span></a></li>';
+              var walk = it.k === 'walkthrough' && MODE !== 'walkthroughs', label = esc(it.t).replace(/^Walkthrough:\s*/i, '');
+              return '<li><a href="' + esc(go(it.u)) + '" target="_top"' + (walk ? ' class="is-walk"' : '') + '>' + icon() + '<span>' + label + '</span>' + (walk ? '<span class="lb-kind">Walkthrough</span>' : '') + '<span class="lb-ar" aria-hidden="true">&#8594;</span></a></li>';
             }).join('') + '</ul>'
           : '<p class="lb-empty">' + T.empty + '</p>')
       + '</details>';
@@ -143,7 +155,8 @@
     + '<header class="lb-band"><div class="lb-in"><p class="lb-eye">BIO 004 &middot; Human Anatomy &middot; Fall 2026</p>'
     + '<h1>' + T.h + '</h1><p class="lb-sub">' + T.sub + '</p>'
     + '<ul class="lb-jump" aria-label="Jump to a module">' + jump + '</ul></div></header>'
-    + '<main id="main" tabindex="-1">' + body + '<p class="lb-other">' + T.other + '</p></main>';
+    + '<main id="main" tabindex="-1">' + body
+    + '<p class="lb-other">' + T.other + '</p></main>';
 
   /* The current module is open and the others are folded. A module
      pill, or a link ending in #mod-4, opens that module and goes to it. */
@@ -160,7 +173,7 @@
   /* iframe height sender */
   function send() {
     var h = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-    try { parent.postMessage({ type: 'resize', id: 'bio004-' + KIND, frameId: 'bio004-' + KIND, height: h }, '*'); } catch (e) {}
+    try { parent.postMessage({ type: 'resize', id: 'bio004-' + MODE, frameId: 'bio004-' + MODE, height: h }, '*'); } catch (e) {}
   }
   window.addEventListener('load', send); window.addEventListener('resize', send);
   if (window.ResizeObserver) { try { new ResizeObserver(send).observe(document.body); } catch (e) {} }
