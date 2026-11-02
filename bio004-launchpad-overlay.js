@@ -531,7 +531,7 @@
           P(go('module-' + MOD + '-structure-list.html'), 'Structure list, M' + MOD, 'note', 'b') + P(ext('https://drsrennie-stack.github.io/new-digital-atlas/'), 'Digital Atlas', 'globe', 'b')
           + P(go('mastery-os-fall-2026.html#s-loops'), 'Loops', 'loop', 'b') + P(go('histology-help.html'), 'Histology help', 'target', 'b')
           + P(ext('https://www.medmasterscollaborative.com/muscle-charts-i-o-a-inn'), 'Muscle charts: I, O, A', 'cards', 'b')
-          + P(go('rounds/index.html'), 'Rounds: coming soon', 'steps', 'b'))
+          + P(go('rounds/index.html'), 'Rounds', 'steps', 'b', true))
       + V('4', 't4', 'Want to prepare for', 'The exam?', '', 'Find your gaps and spend your study time where you need it most.',
           P(go('bio004-competency-packet.html'), 'Competency list', 'target', 't') + P(go('practice-lecture-exam.html'), 'Practice exam', 'exam', 't')
           + P(go('mastery-os-fall-2026.html#s-weak'), 'My weak areas', 'steps', 't') + P(go('bio004-study-process.html'), 'How to study', 'doc', 't'))
