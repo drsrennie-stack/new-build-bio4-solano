@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rounds</title>
+<meta name="description" content="Rounds: a structure identification drill for anatomy lab.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#02050F; --navy-2:#081026; --maroon:#8B2E2E; --gold:#E3B341; --gold-brushed:#B8924A;
+  --ink:#1A1F2E; --ink-soft:#4A5064; --line:#D9DCE3; --page:#FAFAF9; --card:#FFFFFF;
+  --locked:#9AA0AE; --tint:#EDF1F3; --ok:#1E3D4C; --miss:#B3261E; --focus:#E3B341;
+  --shadow-rest:0 1px 3px rgba(0,0,0,.08); --shadow-hover:0 8px 16px rgba(0,0,0,.10);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--page);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;font-size:16px;line-height:1.5}
+h1,h2,h3{font-family:"Plus Jakarta Sans",system-ui,sans-serif;margin:0;line-height:1.15}
+button{font:inherit;cursor:pointer}
+a{color:var(--maroon)}
+.skip{position:absolute;left:-999px;top:0;background:var(--gold);color:var(--navy);padding:10px 16px;font-weight:600;z-index:100}
+.skip:focus{left:12px;top:12px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+
+/* ---------- opening film ---------- */
+#film{position:fixed;inset:0;z-index:50;background:var(--navy);color:#fff;display:grid;place-items:center;overflow:hidden;transition:opacity .9s ease,visibility .9s}
+#film.done{opacity:0;visibility:hidden}
+.scene{position:absolute;inset:0;display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .8s ease}
+.scene.on{opacity:1;pointer-events:auto}
+.begin{text-align:center;padding:0 24px}
+.begin .eb{font-size:12px;letter-spacing:.3em;text-transform:uppercase;font-weight:600;color:var(--gold)}
+.begin h2{font-family:"Plus Jakarta Sans";font-weight:800;font-size:clamp(46px,9vw,120px);line-height:.95;letter-spacing:-.03em;margin:.15em 0 .4em}
+.begin h2 span{color:var(--maroon)}
+.begin .btn{font-size:13px;padding:16px 28px}
+.begin .btn:hover{background:#A33636 !important;border-color:#A33636 !important}
+.hello svg{width:min(88vw,1100px);height:auto;overflow:visible}
+.hello text{font-family:"Plus Jakarta Sans";font-weight:800;font-size:200px;letter-spacing:-6px;fill:transparent;stroke:#fff;stroke-width:2.2;stroke-dasharray:1400;stroke-dashoffset:1400}
+.hello.on text{animation:draw 1.9s ease forwards,fillw .7s ease 1.5s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fillw{to{fill:#fff}}
+.hello .word{font-weight:600;font-size:clamp(15px,2vw,20px);letter-spacing:.32em;text-transform:uppercase;color:var(--gold);position:absolute;bottom:22vh;left:0;right:0;text-align:center;opacity:0;transition:opacity .8s ease 1.2s}
+.hello.on .word{opacity:1}
+.title-scene{text-align:center;padding:0 24px}
+.title-scene .eb{font-weight:600;font-size:13px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);transform:translateY(12px);opacity:0;transition:all .8s ease .2s}
+.title-scene h2{font-family:"Plus Jakarta Sans";font-weight:800;font-size:clamp(46px,9vw,124px);line-height:.95;letter-spacing:-.03em;margin:.18em 0 0;transform:scale(1.08);opacity:0;transition:all 1.4s cubic-bezier(.2,.7,.2,1) .3s}
+.title-scene h2 span{color:var(--gold)}
+.title-scene .num{font-family:"Plus Jakarta Sans";font-weight:800;font-size:clamp(60px,12vw,160px);color:var(--maroon);line-height:1;opacity:0;transition:opacity 1s ease .9s}
+.title-scene.on .eb,.title-scene.on h2,.title-scene.on .num{transform:none;opacity:1}
+.montage{grid-template-columns:repeat(3,1fr);gap:1.4vw;padding:6vh 6vw;place-items:stretch}
+.montage figure{margin:0;overflow:hidden;border-radius:8px;background:#fff;border:.5px solid rgba(255,255,255,.2)}
+.montage img{width:100%;height:100%;object-fit:cover;transform:scale(1.18);opacity:0;transition:transform 4.2s ease,opacity 1s ease}
+.montage.on img{transform:scale(1);opacity:1}
+.montage.on figure:nth-child(2) img{transition-delay:.25s}.montage.on figure:nth-child(3) img{transition-delay:.5s}
+.montage.on figure:nth-child(4) img{transition-delay:.75s}.montage.on figure:nth-child(5) img{transition-delay:1s}.montage.on figure:nth-child(6) img{transition-delay:1.25s}
+.skipfilm{position:absolute;right:20px;bottom:20px;z-index:3;font:600 12px/1 "DM Sans";letter-spacing:.2em;text-transform:uppercase;color:#fff;background:transparent;border:1px solid rgba(255,255,255,.5);border-radius:4px;padding:12px 16px}
+.skipfilm:hover{background:rgba(255,255,255,.1)}
+@media (prefers-reduced-motion:reduce){#film{display:none}}
+
+.band{background:var(--navy);color:#fff;padding:40px 24px 32px}
+.band .wrap{max-width:1180px;margin:0 auto}
+.eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:var(--gold)}
+.band h1{font-size:clamp(30px,5vw,50px);font-weight:800;margin-top:10px}
+.band h1 span{color:var(--gold)}
+.band .sub{margin-top:10px;color:#C8CCD6;font-size:17px;max-width:720px}
+.band .meta{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+.pill{display:inline-block;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:4px 12px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:#fff}
+
+.rounds-nav{max-width:1180px;margin:-22px auto 0;padding:0 24px;display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.rbtn{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 12px 10px;text-align:left;box-shadow:var(--shadow-rest);transition:transform 200ms ease,box-shadow 200ms ease;color:var(--ink)}
+.rbtn:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
+.rbtn .num{font-family:"Plus Jakarta Sans";font-weight:800;font-size:28px;color:var(--maroon);line-height:1}
+.rbtn .lab{display:block;font-weight:600;margin-top:6px;font-size:14px}
+.rbtn .st{display:block;font-size:11px;color:var(--ink-soft);margin-top:2px;letter-spacing:.06em;text-transform:uppercase}
+.rbtn[data-state="locked"]{border:1px dashed var(--locked);color:var(--locked);background:#F5F5F4;cursor:not-allowed}
+.rbtn[data-state="locked"] .num{color:var(--locked)}
+.rbtn[data-state="unlocked"]{border:1px solid var(--gold-brushed)}
+.rbtn[data-state="completed"]{border:1px solid var(--ok);background:var(--tint)}
+.rbtn[aria-current="true"]{outline:2px solid var(--navy);outline-offset:1px}
+
+main{max-width:1180px;margin:28px auto 60px;padding:0 24px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(300px,.9fr);gap:24px;align-items:start}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-rest);padding:14px;position:relative}
+.frames{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.frames:empty{display:none}
+.ftab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--navy)}
+.ftab[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.stage-inner{position:relative;width:100%;user-select:none}
+.stage-inner img{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
+.stage-inner svg{position:absolute;inset:0;width:100%;height:100%}
+.stage-inner.clickable{cursor:crosshair}
+polygon.zone{fill:transparent;stroke:transparent}
+polygon.zone.show{fill:rgba(227,179,65,.5);stroke:var(--maroon);stroke-width:4}
+polygon.zone.ok{fill:rgba(30,61,76,.45);stroke:var(--ok);stroke-width:4}
+polygon.zone.miss{fill:rgba(179,38,30,.45);stroke:var(--miss);stroke-width:4}
+polygon.zone.found{fill:rgba(30,61,76,.18);stroke:var(--ok);stroke-width:2}
+.stage-inner.kbd polygon.zone.kbd{stroke:var(--ink-soft);stroke-dasharray:6 6;stroke-width:2}
+polygon.zone:focus-visible{outline:none;stroke:var(--focus);stroke-width:5;fill:rgba(227,179,65,.18)}
+line.leader{stroke:var(--navy);stroke-width:2}
+.marker{cursor:pointer}
+.marker circle{fill:#fff;stroke:var(--navy);stroke-width:2.5}
+.marker text{font-family:"Plus Jakarta Sans";font-weight:800;font-size:22px;fill:var(--navy);text-anchor:middle;dominant-baseline:central}
+.marker.active circle{fill:var(--gold)}
+.marker:focus-visible{outline:none}
+.marker:focus-visible circle{stroke:var(--focus);stroke-width:5}
+.pin{fill:var(--maroon);stroke:#fff;stroke-width:2}
+.pointer-shape{fill:#fff;stroke:var(--navy);stroke-width:2.5;stroke-linejoin:round;filter:drop-shadow(0 3px 4px rgba(0,0,0,.35))}
+.pointer-inner{animation:arrive .45s cubic-bezier(.2,.7,.2,1) both, tap .8s ease .5s 2}
+@keyframes arrive{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes tap{0%,100%{transform:translateY(0)}50%{transform:translateY(14px)}}
+
+.panel{display:flex;flex-direction:column;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-rest);padding:20px}
+.card h2{font-size:22px;font-weight:700;color:var(--navy)}
+.card h2 span{color:var(--maroon)}
+.card .eyebrow{color:var(--maroon)}
+.card p{margin:8px 0 0;color:var(--ink-soft)}
+.prompt{font-family:"Plus Jakarta Sans";font-size:26px;font-weight:800;color:var(--navy);margin-top:10px;min-height:34px;word-break:break-word}
+.prompt.hidden-text{filter:blur(10px)}
+.cap{margin-top:10px;color:var(--ink)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.btn{background:var(--navy);color:#fff;border:1px solid var(--navy);border-radius:8px;padding:10px 18px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.btn:hover{background:var(--navy-2)}
+.btn.ghost{background:#fff;color:var(--navy)}
+.btn.ghost:hover{background:var(--tint)}
+.btn.gold{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.btn.sm{padding:6px 10px;font-size:11px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.icon-btn{width:40px;height:40px;border-radius:999px;border:1px solid var(--line);background:#fff;display:inline-flex;align-items:center;justify-content:center;color:var(--navy)}
+.icon-btn[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.icon-btn.rec[aria-pressed="true"]{background:var(--miss);border-color:var(--miss);color:#fff}
+.icon-btn[disabled]{opacity:.4;cursor:not-allowed}
+label{font-weight:600;font-size:14px;display:block;margin-top:12px}
+input[type=text],textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font:inherit;margin-top:6px;background:#fff;color:var(--ink)}
+input[type=text]:focus,textarea:focus{border-color:var(--navy)}
+textarea{min-height:84px;resize:vertical}
+.inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.inline input{flex:1;min-width:160px}
+.status{min-height:24px;margin-top:10px;font-weight:600}
+.status.ok{color:var(--ok)}
+.status.miss{color:var(--miss)}
+.counter{font-family:"Plus Jakarta Sans";font-weight:700;color:var(--navy)}
+.tally{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.dot{width:14px;height:14px;border-radius:999px;border:1px dashed var(--locked)}
+.dot.ok{border:1px solid var(--ok);background:var(--ok)}
+.dot.miss{border:1px solid var(--miss);background:var(--miss)}
+.list{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.list li{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.list li .n{font-family:"Plus Jakarta Sans";font-weight:800;color:var(--maroon);min-width:28px}
+.list li .grow{flex:1}
+.teach{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.teach .item{border:1px solid var(--line);border-radius:10px;padding:12px}
+.teach .item h3{font-size:16px;color:var(--navy)}
+.teach .ref{margin-top:8px;padding:10px;background:var(--tint);border-radius:8px;font-size:14px;display:none}
+.teach .item.compare .ref{display:block}
+.small{font-size:13px;color:var(--ink-soft)}
+details{margin-top:6px}
+summary{cursor:pointer;font-weight:600;color:var(--navy)}
+kbd{border:1px solid var(--line);border-radius:4px;padding:0 5px;font-size:12px;background:#fff}
+footer{max-width:1180px;margin:0 auto;padding:0 24px 40px;color:var(--ink-soft);font-size:14px}
+.hide{display:none !important}
+
+/* Author mode */
+.author polygon.zone{fill:rgba(139,46,46,.12);stroke:var(--maroon);stroke-width:2}
+.author polygon.zone.sel{fill:rgba(227,179,65,.3);stroke:var(--gold-brushed);stroke-width:3}
+.vtx{fill:#fff;stroke:var(--maroon);stroke-width:2;cursor:move}
+.handle{cursor:move}
+.author-list button.pick{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-top:6px}
+.author-list button.pick[aria-pressed="true"]{border-color:var(--maroon);background:#FBF3F3}
+.recrow{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;margin-top:8px;font-size:14px}
+.recrow .k{color:var(--ink-soft)}
+.recrow .has{color:var(--ok);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+pre{white-space:pre-wrap;font-size:12px;background:var(--tint);padding:10px;border-radius:8px;max-height:200px;overflow:auto}
+
+@media (max-width:900px){
+  main{grid-template-columns:1fr}
+  .rounds-nav{grid-template-columns:repeat(3,1fr)}
+}
+@media (prefers-reduced-motion:reduce){ *{transition:none !important;animation:none !important} }
+.gated #film,.gated main,.gated header,.gated nav,.gated footer{visibility:hidden}
+</style>
+</head>
+<body>
+<!-- Coming-soon gate. Instructor preview password unlocks it for this browser session. -->
+<div id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle" style="position:fixed;inset:0;z-index:90;background:#02050F;color:#fff;display:grid;place-items:center;padding:24px;font-family:'DM Sans',system-ui,sans-serif">
+  <div style="max-width:520px;width:100%;text-align:center">
+    <div style="font-size:12px;letter-spacing:.3em;text-transform:uppercase;font-weight:600;color:#E3B341">BIO 004 Human Anatomy · MedMasters Collaborative</div>
+    <h1 id="gateTitle" style="font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-weight:800;font-size:clamp(48px,10vw,120px);line-height:.95;letter-spacing:-.03em;margin:.15em 0 .2em">Rounds<span style="color:#8B2E2E">.</span></h1>
+    <p style="font-size:18px;color:#C8CCD6;margin:0 0 28px">Coming soon. Point to it, name it, know it.</p>
+    <details style="text-align:left;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:14px 16px">
+      <summary style="cursor:pointer;font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase">Instructor preview</summary>
+      <form id="gateForm" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <label for="gatePw" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Preview password</label>
+        <input id="gatePw" type="password" autocomplete="current-password" placeholder="Password" style="flex:1;min-width:160px;font:inherit;padding:10px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.4);background:#fff;color:#1A1F2E">
+        <button type="submit" style="font:inherit;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;padding:10px 18px;border-radius:8px;border:1px solid #8B2E2E;background:#8B2E2E;color:#fff;cursor:pointer">Open</button>
+      </form>
+      <p id="gateMsg" aria-live="polite" style="margin:8px 0 0;font-size:13px;color:#E3B341;min-height:18px"></p>
+    </details>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY="roundsPreview", HASH="25877b98fccba1d5a34b052c47e3265d8723b23fb696fb358fe6fc042dddb6db";
+  var g=document.getElementById("gate");
+  function open(){ g.remove(); document.documentElement.classList.remove("gated"); }
+  try{ if(sessionStorage.getItem(KEY)==="1"){ open(); return; } }catch(e){}
+  document.documentElement.classList.add("gated");
+  document.getElementById("gateForm").addEventListener("submit", async function(ev){
+    ev.preventDefault();
+    var pw=document.getElementById("gatePw").value;
+    var buf=await crypto.subtle.digest("SHA-256", new TextEncoder().encode(pw));
+    var hex=Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,"0"); }).join("");
+    if(hex===HASH){ try{ sessionStorage.setItem(KEY,"1"); }catch(e){} open(); }
+    else { document.getElementById("gateMsg").textContent="That is not the preview password."; }
+  });
+})();
+</script>
+
+<a class="skip" href="#main" target="_top">Skip to the drill</a>
+
+<div id="film" aria-label="Opening" role="dialog" aria-modal="true">
+  <div class="scene begin on" id="s0">
+    <div>
+      <div class="eb" id="filmEb">BIO 004 Human Anatomy</div>
+      <h2>Rounds<span>.</span></h2>
+      <button class="btn" id="beginBtn" type="button" style="background:var(--maroon);border-color:var(--maroon);color:#fff">Begin</button>
+    </div>
+  </div>
+  <div class="scene hello" id="s1" aria-hidden="true">
+    <svg viewBox="0 0 1100 300"><text id="hw" x="550" y="225" text-anchor="middle">hello</text></svg>
+    <div class="word" id="hl">Welcome</div>
+  </div>
+  <div class="scene title-scene" id="s2" aria-hidden="true">
+    <div><div class="eb" id="filmEb2"></div><h2>Rounds: <span id="filmTitle"></span></h2><div class="num" id="filmNum"></div></div>
+  </div>
+  <div class="scene montage" id="s3" aria-hidden="true"></div>
+  <button class="skipfilm" id="skipFilm" type="button">Skip intro</button>
+</div>
+
+<header class="band">
+  <div class="wrap">
+    <div class="eyebrow" id="eyebrow">BIO 004 · Human Anatomy · MedMasters Collaborative</div>
+    <h1><a href="index.html" target="_top" style="color:inherit;text-decoration:none">Rounds</a>: <span id="setTitle"></span></h1>
+    <p class="sub">Six rounds, same structures every time. A clean pass with no misses unlocks the next round.</p>
+    <div class="meta">
+      <span class="pill" id="pillCount"></span>
+      <span class="pill" id="pillFrames"></span>
+      <span class="pill">Progress saves on this device</span>
+    </div>
+  </div>
+</header>
+
+<nav class="rounds-nav" aria-label="Rounds" id="roundsNav"></nav>
+
+<main id="main">
+  <section class="stage" aria-label="Model image">
+    <div class="frames" id="frames" role="group" aria-label="Choose a view"></div>
+    <div class="stage-inner" id="stage">
+      <img id="img" alt="" src="">
+      <svg id="svg" viewBox="0 0 1000 1000" role="group" aria-label="Structure regions"></svg>
+    </div>
+    <p class="small" id="stageHint" aria-live="polite"></p>
+  </section>
+
+  <aside class="panel">
+    <div class="card" id="panelCard">
+      <div class="row" style="margin-top:0;justify-content:space-between">
+        <div class="eyebrow" id="roundEyebrow"></div>
+        <div class="row" style="margin-top:0">
+          <button class="icon-btn" id="soundBtn" aria-pressed="true" aria-label="Sound on. Press to turn sound off" title="Sound">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+          </button>
+          <button class="icon-btn" id="kbdBtn" aria-pressed="false" aria-label="Keyboard mode off. Press to show keyboard targets" title="Keyboard targets">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8"/></svg>
+          </button>
+        </div>
+      </div>
+      <h2 id="roundTitle"></h2>
+      <p id="roundHelp"></p>
+      <div id="roundBody"></div>
+      <div class="status" id="status" aria-live="assertive" role="status"></div>
+    </div>
+
+    <div class="card">
+      <details>
+        <summary>Keyboard, screen reader, and speaking</summary>
+        <p class="small">Turn on keyboard targets with the keyboard button. Each structure region becomes a button you can reach with <kbd>Tab</kbd> and press with <kbd>Enter</kbd>. Regions are announced by letter so nothing is given away; in the recall round the letters are shuffled each pass.</p>
+        <p class="small">The Say it button listens through your microphone and checks what you said. It works in Chrome, Edge, and Safari. The typed answer is what counts for spelling.</p>
+        <p class="small">The red Record button saves your own voice saying the name. Your recordings stay on this device until you download them.</p>
+        <div class="row"><button class="btn ghost sm" id="testSound" type="button">Test sound</button><span class="small" id="testNote" aria-live="polite"></span></div>
+      </details>
+      <details>
+        <summary>Reset my progress</summary>
+        <p class="small">Clears which rounds you have unlocked on this device.</p>
+        <button class="btn ghost" id="resetBtn" style="margin-top:8px">Reset progress</button>
+      </details>
+    </div>
+  </aside>
+</main>
+
+<footer>
+  <span id="byline">Dr. Sharilyn Rennie</span> · <a href="index.html" target="_top">All modules</a>
+  <span class="row" style="margin-top:10px">
+    <label for="setPick" style="margin:0;font-size:13px">Set</label>
+    <select id="setPick" style="width:auto;margin:0;padding:6px 10px"></select>
+    <button class="btn ghost sm" id="authorToggle" type="button">Author mode</button>
+  </span>
+</footer>
+
+<script id="defaultSet" type="application/json">
+{"larynx-anterior": {"id": "larynx-anterior", "title": "Larynx, anterior view", "course": "BIO 004", "frames": [{"id": "ant", "label": "Anterior", "image": "images/larynx-anterior.png", "width": 1000, "height": 1000}], "structures": [{"id": "hyoid", "name": "Hyoid bone", "aliases": ["hyoid"], "say": "high-oid bone", "frame": "ant", "caption": "U-shaped bone that does not touch any other bone. It hangs from the skull by ligaments and holds up the larynx.", "polygons": [[[340, 70], [400, 50], [500, 62], [600, 50], [665, 70], [660, 160], [560, 185], [500, 190], [440, 185], [345, 160]]], "anchor": [420, 120], "label": [250, 120], "facts": [{"q": "What makes the hyoid different from every other bone?", "a": ["does not articulate with any other bone", "doesn't articulate with any other bone", "does not touch any other bone", "no joints with other bones", "not attached to another bone", "does not articulate"]}]}, {"id": "epiglottis", "name": "Epiglottis", "aliases": [], "frame": "ant", "caption": "Leaf-shaped flap of elastic cartilage. It folds down over the opening of the larynx when you swallow.", "polygons": [[[445, 180], [550, 180], [542, 240], [500, 322], [458, 240]]], "anchor": [530, 215], "label": [760, 215], "facts": [{"q": "What type of cartilage is the epiglottis?", "a": ["elastic", "elastic cartilage"]}]}, {"id": "thyroid-cartilage", "name": "Thyroid cartilage", "aliases": [], "frame": "ant", "caption": "Largest laryngeal cartilage. Two plates (laminae) meet in the front to form a shield.", "polygons": [[[318, 290], [400, 255], [480, 300], [500, 372], [520, 300], [600, 255], [690, 290], [662, 400], [580, 482], [500, 496], [420, 482], [340, 400]]], "anchor": [380, 350], "label": [220, 350], "facts": [{"q": "What type of cartilage is the thyroid cartilage?", "a": ["hyaline", "hyaline cartilage"]}]}, {"id": "laryngeal-prominence", "name": "Laryngeal prominence", "aliases": ["adam's apple", "adams apple"], "say": "lah-rin-jee-ul prominence", "frame": "ant", "caption": "The ridge where the two thyroid laminae meet in the midline. Called the Adam's apple. Usually larger in males because the laminae meet at a sharper angle.", "polygons": [[[470, 380], [530, 380], [542, 440], [500, 462], [458, 440]]], "anchor": [532, 420], "label": [780, 420], "facts": [{"q": "What is the common name for the laryngeal prominence?", "a": ["adam's apple", "adams apple", "the adam's apple"]}]}, {"id": "cricothyroid-membrane", "name": "Cricothyroid membrane", "aliases": ["cricothyroid ligament"], "say": "cry-co-thyroid membrane", "frame": "ant", "caption": "Connective tissue filling the gap between the thyroid and cricoid cartilages. Clinical landmark for an emergency airway (cricothyrotomy).", "polygons": [[[445, 498], [556, 498], [562, 530], [440, 530]]], "anchor": [556, 514], "label": [790, 514], "facts": [{"q": "Which two cartilages does the cricothyroid membrane connect?", "a": ["thyroid and cricoid", "cricoid and thyroid", "thyroid cartilage and cricoid cartilage", "cricoid cartilage and thyroid cartilage"]}]}, {"id": "cricoid-cartilage", "name": "Cricoid cartilage", "aliases": ["cricoid"], "say": "cry-coid cartilage", "frame": "ant", "caption": "The only complete ring of cartilage in the airway. Narrow in front, wide in back, like a signet ring.", "polygons": [[[428, 530], [572, 530], [582, 582], [562, 600], [440, 600], [418, 582]]], "anchor": [430, 565], "label": [210, 565], "facts": [{"q": "What type of cartilage is the cricoid cartilage?", "a": ["hyaline", "hyaline cartilage"]}, {"q": "What is unusual about the shape of the cricoid compared with the tracheal rings?", "a": ["complete ring", "it is a complete ring", "it's a complete ring", "a complete ring", "complete"]}]}, {"id": "tracheal-c-ring", "name": "Tracheal C ring", "aliases": ["tracheal c-ring", "tracheal ring", "tracheal rings", "tracheal cartilage", "c ring", "c-ring"], "frame": "ant", "caption": "C-shaped rings of hyaline cartilage that hold the trachea open. The open side faces backward, toward the esophagus, and the trachealis muscle closes the gap.", "polygons": [[[435, 602], [575, 602], [580, 810], [430, 810]]], "anchor": [576, 700], "label": [790, 700], "facts": [{"q": "What type of cartilage makes up the tracheal rings?", "a": ["hyaline", "hyaline cartilage"]}, {"q": "Which direction does the open part of each C ring face?", "a": ["posterior", "posteriorly", "backward", "back", "toward the esophagus", "towards the esophagus", "posterior toward the esophagus"]}]}]}, "larynx-posterior": {"id": "larynx-posterior", "title": "Larynx, posterior and superior views", "course": "BIO 004", "frames": [{"id": "post", "label": "Posterior", "image": "images/larynx-posterior.png", "width": 1000, "height": 1000}, {"id": "sup", "label": "Superior", "image": "images/larynx-superior.png", "width": 800, "height": 800}], "structures": [{"id": "arytenoid-cartilage", "name": "Arytenoid cartilage", "aliases": ["arytenoid", "arytenoid cartilages", "arytenoids"], "say": "air-ih-tee-noid cartilage", "frame": "post", "caption": "Paired pyramid-shaped cartilages that sit on top of the cricoid. The vocal cords attach to them, and they pivot to open and close the airway.", "polygons": [[[428, 342], [484, 342], [488, 400], [470, 432], [425, 422]], [[516, 342], [572, 342], [575, 422], [530, 432], [512, 400]]], "anchor": [432, 390], "label": [250, 390], "facts": [{"q": "What type of cartilage makes up most of the arytenoid?", "a": ["hyaline", "hyaline cartilage", "mostly hyaline"]}]}, {"id": "corniculate-cartilage", "name": "Corniculate cartilage", "aliases": ["corniculate", "corniculate cartilages", "corniculates"], "say": "cor-nick-you-late cartilage", "frame": "post", "caption": "Small horn-shaped caps on the tips of the arytenoids. Elastic cartilage.", "polygons": [[[428, 308], [472, 306], [478, 340], [430, 342]], [[528, 306], [572, 308], [570, 342], [522, 340]]], "anchor": [474, 318], "label": [760, 318], "facts": [{"q": "What type of cartilage is the corniculate cartilage?", "a": ["elastic", "elastic cartilage"]}]}, {"id": "cricoid-cartilage", "name": "Cricoid cartilage", "aliases": ["cricoid"], "say": "cry-coid cartilage", "frame": "post", "caption": "The only complete ring of cartilage in the airway. Seen from behind, this is its wide plate (lamina). Narrow in front, wide in back, like a signet ring.", "polygons": [[[400, 432], [600, 432], [606, 520], [560, 576], [440, 576], [394, 520]]], "anchor": [398, 500], "label": [220, 500], "facts": [{"q": "What type of cartilage is the cricoid cartilage?", "a": ["hyaline", "hyaline cartilage"]}]}, {"id": "trachealis-muscle", "name": "Trachealis muscle", "aliases": ["trachealis"], "say": "tray-kee-AL-iss muscle", "frame": "post", "caption": "Band of smooth muscle across the back of the trachea. It closes the gap in each C ring, so the back of the trachea is flat and soft where it rests against the esophagus.", "polygons": [[[455, 590], [545, 590], [545, 810], [455, 810]]], "anchor": [546, 700], "label": [780, 700], "facts": [{"q": "What type of tissue is the trachealis?", "a": ["smooth muscle", "smooth"]}]}, {"id": "cuneiform-cartilage", "name": "Cuneiform cartilage", "aliases": ["cuneiform", "cuneiform cartilages", "cuneiforms"], "say": "cue-nee-ih-form cartilage", "frame": "sup", "caption": "Small rod-shaped elastic cartilages inside the folds that run from the arytenoids up to the epiglottis. They stiffen those folds.", "polygons": [[[282, 448], [318, 448], [322, 482], [280, 482]], [[478, 448], [518, 448], [520, 482], [478, 482]]], "anchor": [320, 465], "label": [120, 465], "facts": [{"q": "What type of cartilage is the cuneiform cartilage?", "a": ["elastic", "elastic cartilage"]}]}, {"id": "true-vocal-cords", "name": "True vocal cords", "aliases": ["true vocal cord", "vocal cords", "vocal folds", "true vocal folds", "vocal fold", "vocal cord"], "frame": "sup", "caption": "Paired folds stretched between the thyroid cartilage in front and the arytenoids behind. The slit between them is the rima glottidis. Air passing between them makes sound.", "polygons": [[[352, 282], [386, 282], [396, 480], [346, 470]], [[404, 282], [438, 282], [456, 470], [402, 480]]], "anchor": [440, 380], "label": [640, 380], "facts": [{"q": "What is the opening between the true vocal cords called?", "a": ["rima glottidis", "glottis", "the rima glottidis", "the glottis"]}]}]}, "bronchial-tree": {"id": "bronchial-tree", "title": "Larynx with the bronchial tree", "course": "BIO 004", "frames": [{"id": "intact", "label": "Intact", "image": "images/bronchial-tree.png", "width": 1000, "height": 1000}, {"id": "open", "label": "Larynx opened", "image": "images/bronchial-tree-open.png", "width": 1000, "height": 1000}], "structures": [{"id": "epiglottis", "name": "Epiglottis", "aliases": [], "frame": "open", "caption": "Leaf-shaped flap of elastic cartilage at the top of the larynx. It folds down over the airway when you swallow.", "polygons": [[[520, 45], [560, 38], [597, 45], [600, 110], [575, 165], [540, 170], [520, 110]]], "anchor": [598, 80], "label": [800, 80], "facts": [{"q": "What type of cartilage is the epiglottis?", "a": ["elastic", "elastic cartilage"]}]}, {"id": "vestibular-folds", "name": "Vestibular folds", "aliases": ["vestibular fold", "false vocal cords", "false vocal cord", "false vocal folds"], "frame": "open", "caption": "The upper pair of folds inside the larynx, also called the false vocal cords. They help protect the airway and do not make sound.", "polygons": [[[545, 170], [640, 172], [640, 186], [545, 186]]], "anchor": [640, 179], "label": [820, 179], "facts": [{"q": "What is the other name for the vestibular folds?", "a": ["false vocal cords", "false vocal folds", "false cords", "the false vocal cords"]}]}, {"id": "true-vocal-cords", "name": "True vocal cords", "aliases": ["true vocal cord", "vocal cords", "vocal folds", "true vocal folds", "vocal fold", "vocal cord"], "frame": "open", "caption": "The lower pair of folds inside the larynx. Air passing between them makes sound. The opening between them is the rima glottidis.", "polygons": [[[548, 190], [642, 192], [642, 206], [548, 206]]], "anchor": [642, 199], "label": [820, 230], "facts": [{"q": "Which pair of folds sits lower in the larynx, vestibular or true vocal?", "a": ["true vocal", "true vocal cords", "true vocal folds", "true"]}]}, {"id": "laryngeal-prominence", "name": "Laryngeal prominence", "aliases": ["adam's apple", "adams apple"], "say": "lah-rin-jee-ul prominence", "frame": "intact", "caption": "The midline ridge where the two laminae of the thyroid cartilage meet. Called the Adam's apple.", "polygons": [[[493, 140], [514, 140], [516, 196], [491, 196]]], "anchor": [514, 168], "label": [720, 168], "facts": [{"q": "Which cartilage forms the laryngeal prominence?", "a": ["thyroid", "thyroid cartilage", "the thyroid cartilage"]}]}, {"id": "cricothyroid-ligament", "name": "Cricothyroid ligament", "aliases": ["cricothyroid membrane"], "say": "cry-co-thyroid ligament", "frame": "intact", "caption": "Connective tissue between the thyroid cartilage above and the cricoid cartilage below. Clinical landmark for an emergency airway (cricothyrotomy).", "polygons": [[[488, 232], [526, 232], [528, 258], [486, 258]]], "anchor": [527, 245], "label": [720, 245], "facts": [{"q": "Which emergency airway procedure goes through the cricothyroid ligament?", "a": ["cricothyrotomy", "cricothyroidotomy", "emergency cricothyrotomy"]}]}, {"id": "thyroid-gland", "name": "Thyroid gland", "aliases": ["thyroid"], "frame": "intact", "caption": "Butterfly-shaped endocrine gland on the front of the trachea just below the larynx. Two lobes joined by a narrow isthmus. One lobe is shown on this model.", "polygons": [[[400, 220], [440, 215], [470, 240], [498, 250], [498, 320], [470, 340], [420, 335], [398, 290]]], "anchor": [402, 280], "label": [200, 280], "facts": [{"q": "What connects the two lobes of the thyroid gland?", "a": ["isthmus", "the isthmus", "an isthmus"]}]}, {"id": "tracheal-rings", "name": "Tracheal rings", "aliases": ["tracheal ring", "tracheal c rings", "tracheal c-rings", "tracheal c ring", "tracheal cartilage", "c rings", "c-rings"], "frame": "intact", "caption": "C-shaped rings of hyaline cartilage that keep the trachea open. The open side faces backward, where the trachealis muscle closes the gap.", "polygons": [[[478, 300], [535, 300], [540, 640], [475, 640]]], "anchor": [537, 470], "label": [720, 470], "facts": [{"q": "What type of cartilage makes up the tracheal rings?", "a": ["hyaline", "hyaline cartilage"]}]}, {"id": "trachealis", "name": "Trachealis", "aliases": ["trachealis muscle"], "say": "tray-kee-AL-iss", "frame": "open", "caption": "Band of smooth muscle across the back wall of the trachea. It bridges the open ends of the C rings, so the back of the trachea is flat and soft against the esophagus.", "polygons": [[[455, 222], [476, 222], [476, 330], [455, 330]]], "anchor": [455, 276], "label": [240, 276], "facts": [{"q": "What type of tissue is the trachealis?", "a": ["smooth muscle", "smooth"]}]}, {"id": "carina", "name": "Carina", "aliases": ["the carina"], "say": "kuh-RYE-nuh", "frame": "intact", "caption": "Ridge of cartilage at the point where the trachea splits into the right and left primary bronchi. Its lining is very sensitive, and anything that touches it sets off a strong cough reflex.", "polygons": [[[488, 652], [522, 652], [526, 690], [505, 702], [484, 690]]], "anchor": [505, 675], "label": [505, 560], "facts": [{"q": "What reflex is triggered when something touches the carina?", "a": ["cough reflex", "cough", "coughing", "the cough reflex"]}]}, {"id": "right-primary-bronchus", "name": "Right primary bronchus", "aliases": ["right main stem bronchus", "right mainstem bronchus", "right main bronchus", "right primary bronchi", "right main stem bronchi", "right bronchus"], "frame": "intact", "caption": "Wider, shorter, and more vertical than the left. Inhaled objects usually end up here. Remember the model faces you, so its right side is on your left.", "polygons": [[[452, 638], [498, 660], [442, 748], [398, 732], [428, 690]]], "anchor": [430, 700], "label": [230, 640], "facts": [{"q": "Which primary bronchus is wider, shorter, and more vertical?", "a": ["right", "the right", "right primary bronchus", "right main stem bronchus"]}]}, {"id": "left-primary-bronchus", "name": "Left primary bronchus", "aliases": ["left main stem bronchus", "left mainstem bronchus", "left main bronchus", "left primary bronchi", "left main stem bronchi", "left bronchus"], "frame": "intact", "caption": "Narrower, longer, and more horizontal than the right because it passes under the arch of the aorta.", "polygons": [[[514, 660], [546, 648], [642, 720], [636, 746], [600, 746], [504, 692]]], "anchor": [580, 700], "label": [800, 620], "facts": [{"q": "Why is the left primary bronchus more horizontal than the right?", "a": ["aortic arch", "aorta", "passes under the aortic arch", "it passes under the aorta", "the aortic arch", "arch of the aorta", "heart", "the heart"]}]}, {"id": "secondary-bronchi", "name": "Secondary (lobar) bronchi", "aliases": ["secondary bronchi", "lobar bronchi", "secondary bronchus", "lobar bronchus", "secondary lobar bronchi"], "frame": "intact", "caption": "One for each lobe: three on the right, two on the left. On this model they are the pale blue stems that lead to each colored cluster.", "polygons": [[[380, 665], [420, 665], [420, 705], [380, 705]], [[385, 745], [430, 745], [430, 850], [385, 850]], [[620, 680], [665, 680], [665, 720], [620, 720]], [[585, 745], [630, 745], [630, 850], [585, 850]]], "anchor": [408, 800], "label": [230, 800], "facts": [{"q": "How many secondary (lobar) bronchi are on the right side?", "a": ["3", "three"]}]}, {"id": "tertiary-bronchi", "name": "Tertiary (segmental) bronchi", "aliases": ["tertiary bronchi", "segmental bronchi", "tertiary bronchus", "segmental bronchus", "tertiary segmental bronchi"], "frame": "intact", "caption": "One for each bronchopulmonary segment, about ten per lung. On this model they are the color-coded branches.", "polygons": [[[320, 630], [395, 630], [395, 745], [320, 745]], [[315, 765], [430, 765], [430, 840], [315, 840]], [[310, 845], [430, 845], [430, 955], [310, 955]], [[650, 590], [735, 590], [735, 700], [650, 700]], [[655, 745], [740, 745], [740, 805], [655, 805]], [[575, 850], [710, 850], [710, 960], [575, 960]]], "anchor": [700, 780], "label": [860, 880], "facts": [{"q": "Each tertiary bronchus supplies one of what?", "a": ["bronchopulmonary segment", "segment", "a bronchopulmonary segment", "lung segment"]}]}]}}
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- Load set ---------- */
+const params = new URLSearchParams(location.search);
+const hashP = new URLSearchParams(location.hash.replace(/^#/,""));
+let savedPick={}; try{ savedPick=JSON.parse(sessionStorage.getItem("rounds:pick"))||{}; }catch(e){}
+const setName = params.get("set") || hashP.get("set") || savedPick.set || "larynx-anterior";
+const AUTHOR = params.get("author") === "1" || hashP.get("author") === "1" || savedPick.author === true;
+const KNOWN_SETS = (()=>{ try{ const all=JSON.parse(document.getElementById("defaultSet").textContent); return Object.keys(all).map(k=>[k, all[k].title]); }catch(e){ return [["larynx-anterior","Larynx, anterior view"]]; } })();
+let SET = null;
+
+async function loadSet(){
+  try{
+    const r = await fetch("sets/" + setName + ".json", {cache:"no-store"});
+    if(!r.ok) throw new Error("no set file");
+    SET = await r.json();
+  }catch(e){
+    const all = JSON.parse(document.getElementById("defaultSet").textContent);
+    SET = all[setName] || all["larynx-anterior"];
+  }
+  if(!SET.frames){ SET.frames=[{id:"main",label:"Model",image:SET.image,width:SET.width||1000,height:SET.height||1000}]; }
+  SET.structures.forEach(s=>{ if(!s.frame) s.frame=SET.frames[0].id; if(!s.polygons) s.polygons=[s.polygon]; delete s.polygon; if(!s.facts) s.facts=[]; });
+  init();
+}
+
+/* ---------- State ---------- */
+const LS_KEY = () => "rounds:" + SET.id;
+let progress = {unlocked:1, completed:[]};
+let round = 0, soundOn = true, kbdMode = false, frameId = null;
+function loadProgress(){
+  try{ const p = JSON.parse(localStorage.getItem(LS_KEY())); if(p) progress = p; }catch(e){}
+  try{ const s = localStorage.getItem("rounds:sound"); if(s!==null) soundOn = s==="1"; }catch(e){}
+}
+function saveProgress(){ try{ localStorage.setItem(LS_KEY(), JSON.stringify(progress)); }catch(e){} }
+
+/* ---------- Audio out ---------- */
+const audioCache = {};   // key -> HTMLAudioElement | false (none found)
+const EXTS = ["m4a","mp4","webm","mp3"];
+let lastAudioNote = "";
+function audioBase(s, kind){ return (SET.audioFolder||"audio/"+SET.id) + "/" + s.id + "-" + kind; }
+async function findClip(s, kind){
+  const key = s.id+"|"+kind;
+  if(key in audioCache) return audioCache[key];
+  const base = audioBase(s,kind);
+  if(location.protocol==="file:"){
+    // Local file: fetch is blocked, so try each extension with an audio element instead.
+    const found = await new Promise(res=>{ (function tryExt(i){ if(i>=EXTS.length) return res(null); const a=new Audio(base+"."+EXTS[i]); a.preload="auto"; a.oncanplaythrough=()=>res(a); a.onerror=()=>tryExt(i+1); })(0); });
+    audioCache[key] = found || false; return audioCache[key];
+  }
+  const checks = EXTS.map(async ext=>{
+    try{
+      const r = await fetch(base+"."+ext, {method:"GET", headers:{Range:"bytes=0-0"}, cache:"force-cache"});
+      const ct = (r.headers.get("content-type")||"").toLowerCase();
+      if(r.ok && (ct.startsWith("audio/")||ct.startsWith("video/")||ct==="application/octet-stream")) return base+"."+ext;
+    }catch(e){}
+    return null;
+  });
+  const found = (await Promise.all(checks)).find(Boolean) || null;
+  audioCache[key] = found ? new Audio(found) : false;
+  return audioCache[key];
+}
+async function playClip(s, kind, fallbackText){
+  if(!soundOn) return;
+  window.speechSynthesis && speechSynthesis.cancel();
+  const a = await findClip(s, kind);
+  if(!a){ lastAudioNote="No recorded clip for "+s.name+" ("+kind+"); used the computer voice."; speak(fallbackText); return; }
+  try{ a.currentTime=0; await a.play(); lastAudioNote="Played the recorded clip for "+s.name+" ("+kind+")."; }
+  catch(e){ lastAudioNote="The browser blocked playback: "+(e && e.message || e)+". Used the computer voice."; speak(fallbackText); }
+}
+function speak(text){
+  if(!soundOn) return;
+  if(!window.speechSynthesis){ lastAudioNote+=" This browser has no computer voice."; return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text); u.lang="en-US"; u.rate=0.92;
+  speechSynthesis.speak(u);
+}
+function sayName(s){ playClip(s,"name", "Point to the "+(s.say||s.name)); }
+function sayCaption(s){ playClip(s,"caption", (s.say||s.name)+". "+s.caption); }
+function sayClue(s,i,f){ playClip(s,"clue"+(i+1), f.q); }
+function factAnswer(f){ const a=f.answer || f.a[0]; return a.charAt(0).toUpperCase()+a.slice(1); }
+function sayAnswer(s,i,f){ playClip(s,"clue"+(i+1)+"-answer", factAnswer(f)); }
+
+/* ---------- Audio in: recording (students and author) ---------- */
+let studentClips = {};
+const DB_NAME="rounds-clips";
+function db(){ return new Promise((res,rej)=>{ const r=indexedDB.open(DB_NAME,1); r.onupgradeneeded=()=>r.result.createObjectStore("clips"); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); }
+function reqP(r){ return new Promise((res,rej)=>{ r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); }
+async function clipPut(key, blob){ studentClips[key]=blob; try{ const d=await db(); d.transaction("clips","readwrite").objectStore("clips").put(blob, SET.id+"|"+key); }catch(e){} }
+async function clipDel(key){ delete studentClips[key]; try{ const d=await db(); d.transaction("clips","readwrite").objectStore("clips").delete(SET.id+"|"+key); }catch(e){} }
+async function clipLoadAll(){ try{ const d=await db(); const st=d.transaction("clips","readonly").objectStore("clips"); const keys=await reqP(st.getAllKeys()); const vals=await reqP(st.getAll()); keys.forEach((k,i)=>{ k=String(k); if(k.startsWith(SET.id+"|")) studentClips[k.slice(SET.id.length+1)]=vals[i]; }); }catch(e){} }
+const REC_MIME = (window.MediaRecorder && navigator.mediaDevices && ["audio/mp4","audio/webm;codecs=opus","audio/webm"].find(m=>MediaRecorder.isTypeSupported(m))) || "";
+let recorder=null;
+async function startRec(){
+  const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+  recorder = new MediaRecorder(stream,{mimeType:REC_MIME});
+  const chunks=[]; recorder.ondataavailable=e=>chunks.push(e.data);
+  const done = new Promise(res=>{ recorder.onstop=()=>{ stream.getTracks().forEach(t=>t.stop()); res(new Blob(chunks,{type:REC_MIME})); }; });
+  recorder.start();
+  return done;
+}
+function stopRec(){ if(recorder && recorder.state!=="inactive") recorder.stop(); }
+function playBlob(blob){ new Audio(URL.createObjectURL(blob)).play(); }
+/* Save a file: through the claude.ai viewer when the page runs there, otherwise a normal browser download */
+async function saveFile(filename, data){
+  try{
+    if(window.claude && typeof window.claude.use==="function"){
+      const dl = await window.claude.use("downloads");
+      if(dl){ await dl.save({filename, data}); return "saved"; }
+    }
+  }catch(e){ if(e && e.code==="declined") return "declined"; }
+  const blob = data instanceof Blob ? data : new Blob([data]);
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=filename; document.body.appendChild(a); a.click(); a.remove();
+  return "saved";
+}
+function recControl(key, label, onChange){
+  const wrap=document.createElement("span"); wrap.className="row"; wrap.style.marginTop="0";
+  const rec=document.createElement("button"); rec.type="button"; rec.className="icon-btn rec"; rec.setAttribute("aria-pressed","false"); rec.setAttribute("aria-label","Record "+label); rec.title="Record";
+  rec.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="7"/></svg>';
+  const play=document.createElement("button"); play.type="button"; play.className="icon-btn"; play.setAttribute("aria-label","Play recording of "+label); play.title="Play";
+  play.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5v14l12-7z"/></svg>';
+  const del=document.createElement("button"); del.type="button"; del.className="icon-btn"; del.setAttribute("aria-label","Delete recording of "+label); del.title="Delete";
+  del.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>';
+  function refresh(){ const has=!!studentClips[key]; play.disabled=!has; del.disabled=!has; }
+  rec.addEventListener("click", async ()=>{
+    if(rec.getAttribute("aria-pressed")==="true"){ stopRec(); return; }
+    try{
+      rec.setAttribute("aria-pressed","true"); rec.setAttribute("aria-label","Stop recording "+label);
+      const blob = await startRec();
+      rec.setAttribute("aria-pressed","false"); rec.setAttribute("aria-label","Record "+label);
+      await clipPut(key, blob); refresh(); onChange && onChange(blob);
+    }catch(e){ rec.setAttribute("aria-pressed","false"); setStatus("Microphone not available. Check the browser permission.","miss"); }
+  });
+  play.addEventListener("click",()=>{ if(studentClips[key]) playBlob(studentClips[key]); });
+  del.addEventListener("click",async()=>{ await clipDel(key); refresh(); onChange && onChange(null); });
+  wrap.append(rec,play,del); refresh();
+  if(!REC_MIME) wrap.classList.add("hide");
+  return wrap;
+}
+async function downloadClips(prefix, keysFilter){
+  if(!window.JSZip){ setStatus("The zip helper did not load. Check your connection and try again.","miss"); return; }
+  const zip=new JSZip(); let n=0;
+  Object.keys(studentClips).forEach(k=>{ if(keysFilter && !keysFilter(k)) return; const ext=studentClips[k].type.startsWith("audio/mp4")?"m4a":"webm"; const parts=k.split("|"); const fname = parts[0]==="author" ? parts[1]+"-"+parts[2] : parts.join("-"); zip.file(fname+"."+ext, studentClips[k]); n++; });
+  if(!n){ setStatus("No recordings yet.","miss"); return; }
+  const blob=await zip.generateAsync({type:"blob"});
+  const r=await saveFile(prefix+"-"+SET.id+".zip", blob);
+  setStatus(r==="declined"?"Download cancelled.":n+" recording"+(n===1?"":"s")+" downloaded.", r==="declined"?"miss":"ok");
+}
+
+
+/* Compare the student's recording with the instructor's clip. Only shown after the structure has been named correctly. */
+function compareRow(s, key){
+  const row=document.createElement("span"); row.className="row"; row.style.marginTop="0";
+  const mine=document.createElement("button"); mine.type="button"; mine.className="btn ghost sm"; mine.textContent="Mine";
+  mine.disabled=!studentClips[key]; mine.addEventListener("click",()=>{ if(studentClips[key]) playBlob(studentClips[key]); });
+  const ref=document.createElement("button"); ref.type="button"; ref.className="btn ghost sm"; ref.textContent="Dr. Rennie";
+  ref.addEventListener("click",()=>{ const was=soundOn; soundOn=true; sayName(s); soundOn=was; });
+  row.append(mine,ref); return row;
+}
+function compareList(prefix){
+  const wrap=document.createElement("div");
+  const h=document.createElement("h3"); h.style.cssText="margin-top:16px;font-size:16px;color:var(--navy)"; h.textContent="Compare your pronunciation"; wrap.appendChild(h);
+  const p=document.createElement("p"); p.className="small"; p.textContent="Play yours, then Dr. Rennie's, for each structure."; wrap.appendChild(p);
+  const ol=document.createElement("ol"); ol.className="list";
+  SET.structures.forEach((s,i)=>{ const li=document.createElement("li"); li.innerHTML='<span class="n">'+String(i+1).padStart(2,"0")+'</span><span class="grow">'+s.name+'</span>'; li.appendChild(compareRow(s, prefix+"|"+s.id)); ol.appendChild(li); });
+  wrap.appendChild(ol);
+  if(REC_MIME){ const dl=document.createElement("button"); dl.className="btn ghost"; dl.style.marginTop="10px"; dl.textContent="Download my recordings"; dl.addEventListener("click",()=>downloadClips("my-rounds", k=>k.startsWith("recall|")||k.startsWith("name|"))); wrap.appendChild(dl); }
+  return wrap;
+}
+
+/* ---------- Speech in: recognition ---------- */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+function listen(){ return new Promise((res,rej)=>{ const r=new SR(); r.lang="en-US"; r.interimResults=false; r.maxAlternatives=5; let got=false; r.onresult=e=>{ got=true; const alts=[]; for(let i=0;i<e.results[0].length;i++) alts.push(e.results[0][i].transcript); res(alts); }; r.onerror=e=>rej(new Error(e.error)); r.onend=()=>{ if(!got) res([]); }; r.start(); }); }
+function lev(a,b){ const m=a.length,n=b.length; const d=Array.from({length:m+1},(_,i)=>[i].concat(Array(n).fill(0))); for(let j=1;j<=n;j++) d[0][j]=j; for(let i=1;i<=m;i++) for(let j=1;j<=n;j++) d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1)); return d[m][n]; }
+function fuzzyMatch(s, heard){ const names=[s.name].concat(s.aliases||[]).map(n=>norm(n).replace(/\s/g,"")); return heard.some(h=>{ const t=norm(h).replace(/\s/g,""); return names.some(n=> n===t || lev(n,t) <= Math.max(2, Math.floor(n.length*0.3))); }); }
+function sayItButton(getStructure, onResult){
+  const b=document.createElement("button"); b.type="button"; b.className="btn ghost sm"; b.textContent="Say it";
+  if(!SR) b.classList.add("hide");
+  b.addEventListener("click", async ()=>{
+    const s=getStructure(); if(!s) return;
+    b.textContent="Listening"; b.disabled=true;
+    try{ const alts=await listen(); b.textContent="Say it"; b.disabled=false; if(!alts.length){ setStatus("Did not catch that. Try again.","miss"); return; } onResult(fuzzyMatch(s,alts), alts[0]); }
+    catch(e){ b.textContent="Say it"; b.disabled=false; setStatus("Could not hear you. Check the microphone permission.","miss"); }
+  });
+  return b;
+}
+
+/* ---------- DOM helpers ---------- */
+const $ = id => document.getElementById(id);
+const svg=$("svg"), stage=$("stage"), img=$("img"), statusEl=$("status"), body=$("roundBody"), hint=$("stageHint");
+function setStatus(msg, cls){ statusEl.textContent=msg; statusEl.className="status "+(cls||""); }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function norm(t){ return (t||"").toLowerCase().replace(/[’']/g,"'").replace(/[^a-z0-9' ]+/g," ").replace(/\s+/g," ").trim(); }
+function nameMatches(s, typed){ const t=norm(typed); if(!t) return false; return [s.name].concat(s.aliases||[]).some(n=>norm(n)===t); }
+function answerMatches(f, typed){ const t=norm(typed); if(!t) return false; return f.a.some(x=>norm(x)===t); }
+function pointInPoly(pt, poly){ let inside=false; const [x,y]=pt; for(let i=0,j=poly.length-1;i<poly.length;j=i++){ const [xi,yi]=poly[i],[xj,yj]=poly[j]; if(((yi>y)!==(yj>y)) && (x<(xj-xi)*(y-yi)/(yj-yi)+xi)) inside=!inside; } return inside; }
+function polyArea(p){ let a=0; for(let i=0;i<p.length;i++){ const [x1,y1]=p[i],[x2,y2]=p[(i+1)%p.length]; a+=x1*y2-x2*y1; } return Math.abs(a/2); }
+function minArea(s){ return Math.min.apply(null, s.polygons.map(polyArea)); }
+function inFrame(){ return SET.structures.filter(s=>s.frame===frameId); }
+function hitTest(pt){ const order=inFrame().slice().sort((a,b)=>minArea(a)-minArea(b)); return order.find(s=>s.polygons.some(p=>pointInPoly(pt,p)))||null; }
+function frame(){ return SET.frames.find(f=>f.id===frameId); }
+function svgPoint(evt){ const r=svg.getBoundingClientRect(); const f=frame(); return [(evt.clientX-r.left)/r.width*f.width, (evt.clientY-r.top)/r.height*f.height]; }
+const SVGNS="http://www.w3.org/2000/svg";
+function el(tag, attrs, parent){ const e=document.createElementNS(SVGNS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); (parent||svg).appendChild(e); return e; }
+function clearSvg(){ while(svg.firstChild) svg.removeChild(svg.firstChild); }
+function pts(p){ return p.map(q=>q.join(",")).join(" "); }
+
+/* Frames */
+let afterFrameChange = null;
+function setFrame(id, silent){
+  frameId=id; const f=frame();
+  img.src=f.image; img.alt=SET.title+", "+f.label+" view";
+  stage.style.aspectRatio = f.width+" / "+f.height;
+  svg.setAttribute("viewBox","0 0 "+f.width+" "+f.height);
+  document.querySelectorAll(".ftab").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.id===id)));
+  if(!silent && afterFrameChange) afterFrameChange();
+}
+function renderFrameTabs(){
+  const w=$("frames"); w.innerHTML="";
+  if(SET.frames.length<2) return;
+  SET.frames.forEach(f=>{ const b=document.createElement("button"); b.type="button"; b.className="ftab"; b.dataset.id=f.id; b.textContent=f.label; b.setAttribute("aria-pressed",String(f.id===frameId)); b.addEventListener("click",()=>setFrame(f.id)); w.appendChild(b); });
+}
+
+function drawZones(letters, onActivate){
+  inFrame().forEach(s=>{
+    s.polygons.forEach((poly,k)=>{
+      const p=el("polygon",{points:pts(poly), class:"zone kbd", "data-id":s.id});
+      if(onActivate){
+        p.setAttribute("tabindex","0"); p.setAttribute("role","button");
+        p.setAttribute("aria-label","Region "+(letters?letters[s.id]:"")+(s.polygons.length>1?" part "+(k+1):""));
+        p.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onActivate(s); } });
+        p.addEventListener("click",e=>{ e.stopPropagation(); onActivate(s); });
+      }
+    });
+  });
+}
+function zoneEls(id){ return svg.querySelectorAll('polygon[data-id="'+id+'"]'); }
+function flash(id, cls, ms){ zoneEls(id).forEach(z=>{ z.classList.add(cls); if(ms) setTimeout(()=>z.classList.remove(cls),ms); }); }
+function clearCls(cls){ svg.querySelectorAll("polygon.zone").forEach(z=>z.classList.remove(cls)); }
+function letterMap(shuffled){ const ids=SET.structures.map(s=>s.id); const order=shuffled?shuffle(ids):ids; const m={}; order.forEach((id,i)=>m[id]=String.fromCharCode(65+i)); return m; }
+function drawMarkers(interactive, onPick, activeIdx){
+  inFrame().forEach(s=>{
+    const i=SET.structures.indexOf(s);
+    el("line",{x1:s.label[0],y1:s.label[1],x2:s.anchor[0],y2:s.anchor[1],class:"leader"});
+    el("circle",{cx:s.anchor[0],cy:s.anchor[1],r:5,class:"pin"});
+    const g=el("g",{class:"marker"+(i===activeIdx?" active":""),"data-i":i});
+    if(interactive){ g.setAttribute("tabindex","0"); g.setAttribute("role","button"); g.setAttribute("aria-label","Marker "+(i+1)+", "+s.name); g.addEventListener("click",()=>onPick(i)); g.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onPick(i);} }); }
+    else g.setAttribute("aria-hidden","true");
+    el("circle",{cx:s.label[0],cy:s.label[1],r:22},g); const t=el("text",{x:s.label[0],y:s.label[1]},g); t.textContent=i+1;
+  });
+}
+function renderTally(n, results){ const t=$("tally"); if(!t) return; t.innerHTML=""; for(let i=0;i<n;i++){ const d=document.createElement("span"); d.className="dot "+(results[i]||""); t.appendChild(d); } }
+
+/* ---------- Rounds nav ---------- */
+const ROUNDS=[
+  {n:"00", lab:"The tour", title:"The <span>tour</span>", help:"Click a numbered marker, or press Next, to hear each structure and what makes it stand out."},
+  {n:"01", lab:"Find it", title:"<span>Find</span> it", help:"You hear or see a name. Click that structure on the model. One miss restarts the pass."},
+  {n:"02", lab:"Name it", title:"<span>Name</span> it", help:"A structure lights up. Say its name, then type it. Spelling counts. One miss restarts the pass."},
+  {n:"03", lab:"Recall", title:"<span>Recall</span>", help:"No prompts. Click a structure, type its name, repeat until you have found all of them."},
+  {n:"04", lab:"Clues", title:"<span>Clues</span>", help:"You hear a question about a structure. Click the structure, then type the answer to the question."},
+  {n:"05", lab:"Teach it", title:"<span>Teach</span> it", help:"For each structure, write what you know about it. Then compare with the tour notes."}
+];
+function renderNav(){
+  const nav=$("roundsNav"); nav.innerHTML="";
+  ROUNDS.forEach((r,i)=>{
+    const b=document.createElement("button"); b.type="button";
+    const state=progress.completed.includes(i)?"completed":(i<=progress.unlocked?"unlocked":"locked");
+    b.className="rbtn"; b.dataset.state=state;
+    if(state==="locked"){ b.disabled=true; b.setAttribute("aria-disabled","true"); }
+    if(i===round) b.setAttribute("aria-current","true");
+    b.innerHTML='<div class="num">'+r.n+'</div><span class="lab">'+r.lab+'</span><span class="st">'+(state==="completed"?"Done":state==="unlocked"?"Open":"Locked")+'</span>';
+    b.setAttribute("aria-label","Round "+i+", "+r.lab+", "+(state==="completed"?"done":state==="unlocked"?"open":"locked"));
+    b.addEventListener("click",()=>{ if(!b.disabled) startRound(i); });
+    nav.appendChild(b);
+  });
+}
+function unlock(i){ if(!progress.completed.includes(i)) progress.completed.push(i); if(progress.unlocked<i+1) progress.unlocked=i+1; saveProgress(); renderNav(); }
+
+/* ---------- Round 0: Tour ---------- */
+let tourIdx=-1;
+function round0(){
+  stage.classList.remove("clickable"); stage.onclick=null;
+  body.innerHTML='<div class="prompt" id="tourName">Press Next to begin</div><div class="cap" id="tourCap"></div>'
+    +'<div class="row"><button class="btn ghost" id="prevBtn">Back</button><button class="btn" id="nextBtn">Next</button><button class="btn ghost" id="replayBtn">Replay</button></div>'
+    +'<ol class="list" id="tourList" aria-label="Structures in this set"></ol>'
+    +'<div class="row"><button class="btn gold" id="doneTour">I know these. Open Round 1</button></div>';
+  hint.textContent="Numbered markers sit beside the model. Each one points to a structure.";
+  tourIdx=-1;
+  afterFrameChange=()=>{ clearSvg(); drawZones(null,null); drawMarkers(true, showTour, tourIdx); if(tourIdx>=0 && SET.structures[tourIdx].frame===frameId) flash(SET.structures[tourIdx].id,"show"); };
+  afterFrameChange();
+  const list=$("tourList");
+  SET.structures.forEach((s,i)=>{ const li=document.createElement("li"); li.innerHTML='<span class="n">'+String(i+1).padStart(2,"0")+'</span><button class="btn ghost sm">'+s.name+'</button>'; li.querySelector("button").addEventListener("click",()=>showTour(i)); list.appendChild(li); });
+  $("nextBtn").addEventListener("click",()=>showTour(Math.min(tourIdx+1,SET.structures.length-1)));
+  $("prevBtn").addEventListener("click",()=>showTour(Math.max(tourIdx-1,0)));
+  $("replayBtn").addEventListener("click",()=>{ if(tourIdx>=0) sayCaption(SET.structures[tourIdx]); });
+  $("doneTour").addEventListener("click",()=>{ unlock(0); startRound(1); });
+}
+/* Pointer that slides in from the marker and taps the structure. SET.pointer: "hand" (default) or "arrow". */
+const HAND="M0,0 C-7,0 -7,8 -7,8 L-7,34 L-15,25 C-21,20 -27,28 -21,34 L-6,52 C-3,57 4,59 11,59 L21,59 C29,59 33,53 33,45 L33,31 C33,25 24,25 24,31 L24,29 C24,23 15,23 15,29 L15,27 C15,21 7,21 7,27 L7,8 C7,0 0,0 0,0 Z";
+const ARROW="M0,0 L-14,18 L-6,18 L-6,46 L6,46 L6,18 L14,18 Z";
+function drawPointer(s){
+  svg.querySelectorAll(".pointer").forEach(p=>p.remove());
+  const vx=s.label[0]-s.anchor[0], vy=s.label[1]-s.anchor[1];
+  const ang=Math.atan2(-vx,vy)*180/Math.PI;
+  const f=frame(); const k=1.5*Math.max(0.8, f.width/1000);
+  const g=el("g",{class:"pointer","aria-hidden":"true",transform:"translate("+s.anchor[0]+","+s.anchor[1]+") rotate("+ang.toFixed(1)+") scale("+k.toFixed(2)+")"});
+  const inner=el("g",{class:"pointer-inner"},g);
+  el("path",{d:SET.pointer==="arrow"?ARROW:HAND,class:"pointer-shape"},inner);
+}
+function showTour(i){
+  tourIdx=i; const s=SET.structures[i];
+  if(s.frame!==frameId) setFrame(s.frame,true);
+  afterFrameChange(); drawPointer(s);
+  $("tourName").textContent=(i+1)+". "+s.name; $("tourCap").textContent=s.caption;
+  sayCaption(s);
+}
+
+/* ---------- Round 1: Find it ---------- */
+let r1=null;
+function round1(){
+  stage.classList.add("clickable");
+  body.innerHTML='<div class="row" style="margin-top:0"><button class="icon-btn" id="hideText" aria-pressed="false" aria-label="Hide the written name and use sound only" title="Sound only"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><span class="small">Hide the word and go by ear</span></div>'
+    +'<div class="prompt" id="findName" aria-live="polite"></div>'
+    +'<div class="tally" id="tally" aria-label="Progress this pass"></div>'
+    +'<div class="row"><button class="btn ghost" id="replay1">Say it again</button><button class="btn" id="start1">Start pass</button></div>';
+  hint.textContent=SET.frames.length>1?"Click the structure you hear. It may be on either view; switch views with the tabs.":"Click the structure you hear.";
+  r1={order:[],idx:-1,results:[],letters:letterMap(false)};
+  afterFrameChange=()=>{ clearSvg(); drawZones(r1.letters, s=>answer1(s)); };
+  afterFrameChange();
+  stage.onclick=e=>{ if(!r1||r1.idx<0) return; answer1(hitTest(svgPoint(e))); };
+  $("start1").addEventListener("click",startPass1);
+  $("replay1").addEventListener("click",()=>{ if(r1.idx>=0) sayName(r1.order[r1.idx]); });
+  $("hideText").addEventListener("click",e=>{ const b=e.currentTarget; const on=b.getAttribute("aria-pressed")!=="true"; b.setAttribute("aria-pressed",String(on)); $("findName").classList.toggle("hidden-text",on); b.setAttribute("aria-label",on?"Show the written name":"Hide the written name and use sound only"); });
+  renderTally(SET.structures.length,[]);
+}
+function startPass1(){ r1.order=shuffle(SET.structures); r1.idx=0; r1.results=[]; setStatus("",""); $("start1").textContent="Restart pass"; renderTally(r1.order.length,[]); askFind(); }
+function askFind(){ const s=r1.order[r1.idx]; $("findName").textContent=s.name; sayName(s); }
+function answer1(s){
+  if(r1.idx<0) return;
+  const target=r1.order[r1.idx];
+  if(s && s.id===target.id){
+    r1.results.push("ok"); flash(target.id,"ok",700); renderTally(r1.order.length,r1.results);
+    if(r1.idx===r1.order.length-1){ setStatus("Clean pass. Round 2 is open.","ok"); unlock(1); r1.idx=-1; $("start1").textContent="Run it again"; }
+    else { r1.idx++; setTimeout(askFind,500); }
+  } else {
+    r1.results.push("miss"); renderTally(r1.order.length,r1.results);
+    if(target.frame!==frameId) setFrame(target.frame);
+    flash(target.id,"miss",1600); if(s) flash(s.id,"miss",600);
+    setStatus("Not that one. The correct spot is outlined. The pass restarts.","miss"); speak("Not that one. Try the pass again.");
+    r1.idx=-1; setTimeout(startPass1,1900);
+  }
+}
+
+/* ---------- Round 2: Name it ---------- */
+let r2=null;
+function round2(){
+  stage.classList.remove("clickable"); stage.onclick=null;
+  body.innerHTML='<div class="prompt" id="nameCue">Press Start</div>'
+    +'<label for="nameInput">Type the name of the highlighted structure</label><div class="inline"><input type="text" id="nameInput" autocomplete="off" autocapitalize="off" spellcheck="false" disabled><span id="say2"></span><span id="rec2"></span></div>'
+    +'<div class="tally" id="tally"></div>'
+    +'<div class="row"><button class="btn" id="start2">Start pass</button><button class="btn ghost" id="check2" disabled>Check</button></div><div id="cmp2"></div>';
+  hint.textContent="One structure is highlighted. Say its name, then type it.";
+  r2={order:[],idx:-1,results:[]};
+  afterFrameChange=()=>{ clearSvg(); drawZones(null,null); if(r2.idx>=0 && r2.order[r2.idx].frame===frameId) flash(r2.order[r2.idx].id,"show"); };
+  afterFrameChange();
+  $("say2").appendChild(sayItButton(()=>r2.idx>=0?r2.order[r2.idx]:null,(ok,heard)=>{ setStatus(ok?"Heard you say "+heard+". Now type it.":"Heard \""+heard+"\". Try saying it again, then type it.", ok?"ok":"miss"); }));
+  $("start2").addEventListener("click",startPass2);
+  $("check2").addEventListener("click",check2);
+  $("nameInput").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); check2(); } });
+  renderTally(SET.structures.length,[]);
+}
+function startPass2(){ r2.order=shuffle(SET.structures); r2.idx=0; r2.results=[]; setStatus("",""); $("start2").textContent="Restart pass"; $("nameInput").disabled=false; $("check2").disabled=false; renderTally(r2.order.length,[]); askName(); }
+function askName(){
+  const s=r2.order[r2.idx]; if(s.frame!==frameId) setFrame(s.frame,true); afterFrameChange();
+  $("nameCue").textContent="Structure "+(r2.idx+1)+" of "+r2.order.length;
+  const rc=$("rec2"); rc.innerHTML=""; rc.appendChild(recControl("name|"+s.id, "this structure")); $("cmp2").innerHTML="";
+  const inp=$("nameInput"); inp.value=""; inp.focus();
+  speak("What is this structure? Say it, then type it.");
+}
+function check2(){
+  if(r2.idx<0) return; const s=r2.order[r2.idx];
+  if(nameMatches(s,$("nameInput").value)){
+    r2.results.push("ok"); renderTally(r2.order.length,r2.results); setStatus("Correct: "+s.name,"ok");
+    const rc=$("rec2"); rc.innerHTML=""; rc.appendChild(compareRow(s,"name|"+s.id));
+    if(r2.idx===r2.order.length-1){ setStatus("Clean pass. Round 3 is open.","ok"); unlock(2); r2.idx=-1; $("nameInput").disabled=true; $("check2").disabled=true; $("start2").textContent="Run it again"; $("cmp2").innerHTML=""; $("cmp2").appendChild(compareList("name")); }
+    else { r2.idx++; setTimeout(askName,1400); }
+  } else {
+    r2.results.push("miss"); renderTally(r2.order.length,r2.results);
+    setStatus("Not quite. It is spelled: "+s.name+". The pass restarts.","miss"); speak("Not quite. It is the "+(s.say||s.name)+". Try the pass again.");
+    r2.idx=-1; $("nameInput").disabled=true; setTimeout(startPass2,2600);
+  }
+}
+
+/* ---------- Round 3: Recall ---------- */
+let r3=null;
+function round3(){
+  stage.classList.add("clickable");
+  body.innerHTML='<div class="prompt"><span class="counter" id="foundCount">0</span> of '+SET.structures.length+' found</div>'
+    +'<p class="small" id="r3hint">Click a structure on the model first.</p>'
+    +'<label for="recallInput">Name the structure you clicked</label><div class="inline"><input type="text" id="recallInput" autocomplete="off" autocapitalize="off" spellcheck="false" disabled><span id="say3"></span><span id="rec3"></span></div>'
+    +'<div class="row"><button class="btn ghost" id="check3" disabled>Check</button><button class="btn" id="done3">I am done</button></div>'
+    +'<ol class="list" id="foundList" aria-label="Structures you have found"></ol>';
+  hint.textContent=SET.frames.length>1?"Nothing is marked. Find every structure from memory, on both views.":"Nothing is marked. Find every structure from memory.";
+  r3={found:[],pending:null,misses:0,letters:letterMap(true)};
+  afterFrameChange=()=>{ clearSvg(); drawZones(r3.letters, s=>pick3(s,null)); r3.found.forEach(id=>flash(id,"found")); };
+  afterFrameChange();
+  stage.onclick=e=>{ if(!r3) return; const pt=svgPoint(e); pick3(hitTest(pt),pt); };
+  $("say3").appendChild(sayItButton(()=>r3.pending,(ok,heard)=>{ setStatus(ok?"Heard you say "+heard+". Now type it.":"Heard \""+heard+"\". Try again, then type it.", ok?"ok":"miss"); }));
+  $("check3").addEventListener("click",check3);
+  $("recallInput").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); check3(); } });
+  $("done3").addEventListener("click",finish3);
+}
+function pick3(s,pt){
+  clearCls("show"); svg.querySelectorAll(".pick").forEach(p=>p.remove());
+  if(pt) el("circle",{cx:pt[0],cy:pt[1],r:9,class:"pin pick"});
+  r3.pending=s;
+  if(s && r3.found.includes(s.id)){ setStatus("You already have that one.",""); r3.pending=null; return; }
+  if(!s){ r3.misses++; setStatus("Nothing listed there.","miss"); $("r3hint").textContent="That spot is not on a listed structure. Try another spot."; return; }
+  $("r3hint").textContent="Spot marked. Now type its name."; setStatus("","");
+  const rc=$("rec3"); rc.innerHTML=""; rc.appendChild(recControl("recall|"+s.id,"this structure"));
+  const inp=$("recallInput"); inp.disabled=false; $("check3").disabled=false; inp.value=""; inp.focus();
+}
+function check3(){
+  const s=r3.pending; if(!s) return;
+  if(nameMatches(s,$("recallInput").value)){
+    r3.found.push(s.id); flash(s.id,"found"); svg.querySelectorAll(".pick").forEach(p=>p.remove());
+    $("foundCount").textContent=r3.found.length;
+    const li=document.createElement("li"); li.innerHTML='<span class="n">'+String(r3.found.length).padStart(2,"0")+'</span><span class="grow">'+s.name+'</span>'; li.appendChild(compareRow(s,"recall|"+s.id)); $("foundList").appendChild(li);
+    setStatus("Yes: "+s.name,"ok"); speak("Yes, "+(s.say||s.name));
+    r3.pending=null; $("recallInput").disabled=true; $("check3").disabled=true; $("recallInput").value=""; $("rec3").innerHTML="";
+    $("r3hint").textContent="Click the next structure.";
+    if(r3.found.length===SET.structures.length) finish3();
+  } else { r3.misses++; setStatus("That name does not match the spot you clicked. Try again or pick another spot.","miss"); }
+}
+function finish3(){
+  const missed=SET.structures.filter(s=>!r3.found.includes(s.id));
+  stage.classList.remove("clickable"); stage.onclick=null;
+  $("recallInput").disabled=true; $("check3").disabled=true; $("done3").disabled=true;
+  if(missed.length===0 && r3.misses===0){ setStatus("All "+SET.structures.length+" from memory with no misses. Round 4 is open.","ok"); unlock(3); }
+  else if(missed.length===0){ setStatus("All found, with "+r3.misses+" miss"+(r3.misses===1?"":"es")+" along the way. Round 4 is open. Run this again when you want a clean pass.","ok"); unlock(3); }
+  else { missed.forEach(s=>{ if(s.frame===frameId) flash(s.id,"miss"); }); setStatus("You missed "+missed.length+": "+missed.map(s=>s.name).join(", ")+". Run Round 3 again.","miss"); }
+  const row=document.createElement("div"); row.className="row";
+  const again=document.createElement("button"); again.className="btn"; again.textContent="Run it again"; again.addEventListener("click",()=>startRound(3));
+  row.append(again); body.appendChild(row); body.appendChild(compareList("recall"));
+}
+
+/* ---------- Round 4: Clues ---------- */
+let r4=null;
+function round4(){
+  const items=[]; SET.structures.forEach(s=>s.facts.forEach((f,i)=>items.push({s,f,i})));
+  stage.classList.add("clickable");
+  if(!items.length){ body.innerHTML='<p>No clues have been written for this set yet.</p>'; unlock(4); return; }
+  body.innerHTML='<div class="prompt" id="clueText" aria-live="polite">Press Start</div>'
+    +'<p class="small" id="r4hint">First click the structure the clue describes.</p>'
+    +'<label for="clueInput">Then type the answer</label><div class="inline"><input type="text" id="clueInput" autocomplete="off" autocapitalize="off" spellcheck="false" disabled></div><div class="cap" id="ans4"></div>'
+    +'<div class="tally" id="tally"></div>'
+    +'<div class="row"><button class="btn" id="start4">Start</button><button class="btn ghost" id="replay4">Hear it again</button><button class="btn ghost" id="check4" disabled>Check</button></div>';
+  hint.textContent="Listen to the clue, then click the structure it describes.";
+  r4={order:[],idx:-1,results:[],clicked:false};
+  afterFrameChange=()=>{ clearSvg(); drawZones(letterMap(false), s=>click4(s)); };
+  afterFrameChange();
+  stage.onclick=e=>{ if(!r4||r4.idx<0||r4.clicked) return; click4(hitTest(svgPoint(e))); };
+  $("start4").addEventListener("click",()=>{ r4.order=shuffle(items); r4.idx=0; r4.results=[]; setStatus("",""); $("start4").textContent="Restart"; renderTally(items.length,[]); askClue(); });
+  $("replay4").addEventListener("click",()=>{ if(r4.idx>=0){ const it=r4.order[r4.idx]; sayClue(it.s,it.i,it.f); } });
+  $("check4").addEventListener("click",check4);
+  $("clueInput").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); check4(); } });
+  renderTally(items.length,[]);
+}
+function askClue(){
+  const it=r4.order[r4.idx]; r4.clicked=false; clearCls("show"); clearCls("ok");
+  $("clueText").textContent=it.f.q; $("r4hint").textContent="First click the structure the clue describes.";
+  $("clueInput").disabled=true; $("clueInput").value=""; $("check4").disabled=true; $("ans4").textContent="";
+  sayClue(it.s,it.i,it.f);
+}
+function click4(s){
+  if(r4.idx<0||r4.clicked) return;
+  const it=r4.order[r4.idx];
+  if(s && s.id===it.s.id){ r4.clicked=true; flash(s.id,"ok"); $("r4hint").textContent="Right spot: "+it.s.name+". Now type the answer to the question."; setStatus("",""); $("clueInput").disabled=false; $("check4").disabled=false; $("clueInput").focus(); }
+  else { r4.clicked=true; r4.results.push("miss"); renderTally(r4.order.length,r4.results); if(it.s.frame!==frameId) setFrame(it.s.frame); flash(it.s.id,"miss",2400); $("ans4").textContent="Answer: "+factAnswer(it.f); setStatus("Not that one. It is the "+it.s.name+".","miss"); speak("Not that one. It is the "+(it.s.say||it.s.name)+". "); setTimeout(()=>sayAnswer(it.s,it.i,it.f),2200); setTimeout(next4,4200); }
+}
+function check4(){
+  const it=r4.order[r4.idx]; if(!r4.clicked) return;
+  const ok=answerMatches(it.f,$("clueInput").value);
+  r4.results.push(ok?"ok":"miss"); renderTally(r4.order.length,r4.results);
+  $("ans4").textContent="Answer: "+factAnswer(it.f); sayAnswer(it.s,it.i,it.f);
+  setStatus(ok?"Yes. "+factAnswer(it.f):"Not quite. The answer is: "+factAnswer(it.f), ok?"ok":"miss");
+  $("clueInput").disabled=true; $("check4").disabled=true; setTimeout(next4, ok?1800:3200);
+}
+function next4(){
+  if(r4.idx>=r4.order.length-1){
+    const misses=r4.results.filter(x=>x==="miss").length;
+    r4.idx=-1; clearCls("ok"); $("clueInput").disabled=true; $("check4").disabled=true; $("start4").textContent="Run it again";
+    setStatus(misses===0?"Every clue, clean. Round 5 is open.":"Finished with "+misses+" miss"+(misses===1?"":"es")+". Round 5 is open. Run it again for a clean pass.","ok");
+    unlock(4); return;
+  }
+  r4.idx++; askClue();
+}
+
+/* ---------- Round 5: Teach it ---------- */
+function round5(){
+  stage.classList.remove("clickable"); stage.onclick=null;
+  afterFrameChange=()=>{ clearSvg(); drawZones(null,null); drawMarkers(false,null,-1); };
+  afterFrameChange();
+  hint.textContent="Markers are back so you can look while you write.";
+  let saved={}; try{ saved=JSON.parse(localStorage.getItem(LS_KEY()+":teach"))||{}; }catch(e){}
+  const wrap=document.createElement("div"); wrap.className="teach";
+  SET.structures.forEach((s,i)=>{
+    const d=document.createElement("div"); d.className="item";
+    d.innerHTML='<h3>'+(i+1)+'. '+s.name+'</h3><label for="t-'+s.id+'">What do you know about it?</label><textarea id="t-'+s.id+'"></textarea><div class="ref"><strong>Tour notes:</strong> '+s.caption+'</div>';
+    const ta=d.querySelector("textarea"); ta.value=saved[s.id]||"";
+    ta.addEventListener("input",e=>{ saved[s.id]=e.target.value; try{ localStorage.setItem(LS_KEY()+":teach",JSON.stringify(saved)); }catch(err){} });
+    wrap.appendChild(d);
+  });
+  body.innerHTML=""; body.appendChild(wrap);
+  const row=document.createElement("div"); row.className="row";
+  row.innerHTML='<button class="btn" id="cmpBtn">Compare with tour notes</button><button class="btn ghost" id="copyBtn">Copy my answers</button>';
+  body.appendChild(row);
+  $("cmpBtn").addEventListener("click",()=>{ wrap.querySelectorAll(".item").forEach(x=>x.classList.add("compare")); unlock(5); setStatus("Tour notes are shown under each answer.","ok"); });
+  $("copyBtn").addEventListener("click",()=>{ const txt="Rounds: "+SET.title+"\n\n"+SET.structures.map((s,i)=>(i+1)+". "+s.name+"\n"+(saved[s.id]||"(blank)")).join("\n\n"); navigator.clipboard&&navigator.clipboard.writeText(txt).then(()=>setStatus("Copied. Paste it into Canvas.","ok"),()=>setStatus("Could not copy. Select the text and copy it by hand.","miss")); });
+}
+
+/* ---------- Router ---------- */
+function startRound(i){
+  round=i; renderNav(); setStatus("",""); window.speechSynthesis&&speechSynthesis.cancel();
+  $("roundEyebrow").textContent="Round "+i; $("roundTitle").innerHTML=ROUNDS[i].title; $("roundHelp").textContent=ROUNDS[i].help;
+  [round0,round1,round2,round3,round4,round5][i]();
+  stage.classList.toggle("kbd",kbdMode);
+  $("roundTitle").scrollIntoView({block:"nearest"});
+}
+
+/* ---------- Opening film ---------- */
+function film(){
+  const f=$("film");
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let seen=false; try{ seen=sessionStorage.getItem("roundsIntro:"+SET.id)==="1"; }catch(e){}
+  let music=null;
+  const end=()=>{ f.classList.add("done"); try{ sessionStorage.setItem("roundsIntro:"+SET.id,"1"); }catch(e){} if(music){ const fade=setInterval(()=>{ music.volume=Math.max(0,music.volume-0.05); if(music.volume<=0){ music.pause(); clearInterval(fade); } },80); } };
+  $("skipFilm").onclick=end;
+  if(reduce||seen||AUTHOR||params.get("intro")!=="1"){ f.classList.add("done"); return; }
+  $("filmEb").textContent=(SET.course||"")+" Human Anatomy";
+  $("filmEb2").textContent=(SET.course||"")+" Human Anatomy · MedMasters Collaborative";
+  $("filmTitle").textContent=SET.title; $("filmNum").textContent=String(SET.structures.length).padStart(2,"0");
+  const m=$("s3"); const imgs=SET.frames.map(fr=>fr.image); while(imgs.length<3) imgs.push(imgs[imgs.length-1]);
+  imgs.slice(0,6).forEach(src=>{ const fig=document.createElement("figure"); const im=document.createElement("img"); im.src=src; im.alt=""; fig.appendChild(im); m.appendChild(fig); });
+  m.style.gridTemplateColumns="repeat("+Math.min(3,imgs.length)+",1fr)";
+  $("beginBtn").onclick=()=>{
+    try{ music=new Audio(SET.introMusic||"audio/intro.mp3"); music.volume=0.6; music.play().catch(()=>{ music=null; }); music.onerror=()=>{ music=null; }; }catch(e){ music=null; }
+    const s=[1,2,3].map(i=>$("s"+i)); const hw=$("hw"), hl=$("hl");
+    $("s0").classList.remove("on");
+    const greet=[["hello","Welcome"],["hola","Bienvenidos"],["kumusta","Maligayang pagdating"]];
+    let t=0; const at=(ms,fn)=>setTimeout(fn,t+=ms);
+    greet.forEach(([w,l],i)=>{ if(i) at(2300,()=>s[0].classList.remove("on")); at(i?800:400,()=>{ hw.textContent=w; hl.textContent=l; void hw.getBBox(); s[0].classList.add("on"); }); });
+    at(2700,()=>{ s[0].classList.remove("on"); s[1].classList.add("on"); });
+    at(2800,()=>{ s[1].classList.remove("on"); s[2].classList.add("on"); });
+    at(4200,end);
+  };
+}
+
+/* ---------- Init ---------- */
+async function init(){
+  loadProgress(); await clipLoadAll();
+  $("setTitle").textContent=SET.title; $("pillCount").textContent=SET.structures.length+" structures";
+  $("pillFrames").textContent=SET.frames.length>1?SET.frames.length+" views":"1 view";
+  if(SET.course) $("eyebrow").textContent=SET.course+" · Human Anatomy · MedMasters Collaborative";
+  document.title="Rounds: "+SET.title;
+  setFrame(SET.frames[0].id,true); renderFrameTabs();
+  $("soundBtn").setAttribute("aria-pressed",String(soundOn));
+  $("soundBtn").addEventListener("click",e=>{ soundOn=!soundOn; e.currentTarget.setAttribute("aria-pressed",String(soundOn)); e.currentTarget.setAttribute("aria-label",soundOn?"Sound on. Press to turn sound off":"Sound off. Press to turn sound on"); try{localStorage.setItem("rounds:sound",soundOn?"1":"0");}catch(x){} if(!soundOn&&window.speechSynthesis) speechSynthesis.cancel(); });
+  $("kbdBtn").addEventListener("click",e=>{ kbdMode=!kbdMode; e.currentTarget.setAttribute("aria-pressed",String(kbdMode)); e.currentTarget.setAttribute("aria-label",kbdMode?"Keyboard mode on. Press to hide keyboard targets":"Keyboard mode off. Press to show keyboard targets"); stage.classList.toggle("kbd",kbdMode); });
+  $("testSound").addEventListener("click", async ()=>{ const was=soundOn; soundOn=true; $("testNote").textContent="Playing..."; await playClip(SET.structures[0],"name","Point to the "+(SET.structures[0].say||SET.structures[0].name)); setTimeout(()=>{ $("testNote").textContent=lastAudioNote; },600); soundOn=was; });
+  $("resetBtn").addEventListener("click",()=>{ progress={unlocked:1,completed:[]}; saveProgress(); try{localStorage.removeItem(LS_KEY()+":teach");}catch(x){} startRound(0); setStatus("Progress cleared.",""); });
+  const pick=$("setPick"); KNOWN_SETS.forEach(([id,lab])=>{ const o=document.createElement("option"); o.value=id; o.textContent=lab; if(id===SET.id) o.selected=true; pick.appendChild(o); });
+  pick.addEventListener("change",()=>{ try{ sessionStorage.setItem("rounds:pick",JSON.stringify({set:pick.value,author:AUTHOR})); }catch(e){} location.reload(); });
+  $("authorToggle").textContent = AUTHOR ? "Back to student view" : "Author mode";
+  $("authorToggle").addEventListener("click",()=>{ try{ sessionStorage.setItem("rounds:pick",JSON.stringify({set:SET.id,author:!AUTHOR})); }catch(e){} location.reload(); });
+  film();
+  if(AUTHOR){ authorMode(); return; }
+  renderNav(); startRound(0);
+}
+
+/* ---------- Author mode ---------- */
+function authorMode(){
+  document.body.classList.add("author");
+  $("roundsNav").innerHTML=""; $("roundEyebrow").textContent="Author mode"; $("roundTitle").innerHTML="Zones, markers, and <span>recordings</span>";
+  $("roundHelp").textContent="Pick a structure. Drag its points. Click the image to add a point to the selected zone. Double-click a point to remove it. Drag the pin and the number to place the marker. Record clips with the red buttons.";
+  hint.textContent="Author mode. Nothing is saved until you copy the JSON or download the clips.";
+  let sel=0, drag=null;
+  function S(){ return SET.structures[sel]; }
+  function exportSet(){ return JSON.parse(JSON.stringify(SET)); }
+  function moveStructure(s,dx,dy){ s.polygons.forEach(poly=>poly.forEach(q=>{ q[0]+=dx; q[1]+=dy; })); s.anchor=[s.anchor[0]+dx,s.anchor[1]+dy]; }
+  function render(){
+    clearSvg();
+    inFrame().forEach(s=>{
+      const i=SET.structures.indexOf(s); const isSel=i===sel;
+      s.polygons.forEach((poly,pi)=>{
+        const p=el("polygon",{points:pts(poly),class:"zone"+(isSel?" sel":"")});
+        p.addEventListener("mousedown",e=>{ e.stopPropagation(); if(sel!==i){ sel=i; render(); list(); return; } drag={type:"body",pi,last:svgPoint(e)}; });
+        if(isSel) poly.forEach((q,k)=>{ const c=el("circle",{cx:q[0],cy:q[1],r:7,class:"vtx"}); c.addEventListener("mousedown",e=>{ e.stopPropagation(); drag={type:"v",pi,k}; }); c.addEventListener("dblclick",e=>{ e.stopPropagation(); if(poly.length>3){ poly.splice(k,1); render(); } }); });
+      });
+      el("line",{x1:s.label[0],y1:s.label[1],x2:s.anchor[0],y2:s.anchor[1],class:"leader",opacity:isSel?1:.35});
+      const a=el("circle",{cx:s.anchor[0],cy:s.anchor[1],r:8,class:"pin handle",opacity:isSel?1:.5}); if(isSel) a.addEventListener("mousedown",e=>{e.stopPropagation();drag={type:"a"};});
+      const g=el("g",{class:"marker handle",opacity:isSel?1:.5}); el("circle",{cx:s.label[0],cy:s.label[1],r:22},g); const t=el("text",{x:s.label[0],y:s.label[1]},g); t.textContent=i+1;
+      if(isSel) g.addEventListener("mousedown",e=>{e.stopPropagation();drag={type:"l"};});
+    });
+    $("json").textContent=JSON.stringify(exportSet(),null,1);
+  }
+  afterFrameChange=render;
+  let moved=false;
+  svg.addEventListener("mousemove",e=>{ if(!drag) return; moved=true; const s=S(); const f=frame(); const raw=svgPoint(e); const pt=raw.map((v,i)=>Math.round(Math.max(0,Math.min(i?f.height:f.width,v))));
+    if(drag.type==="v") s.polygons[drag.pi][drag.k]=pt;
+    else if(drag.type==="a") s.anchor=pt;
+    else if(drag.type==="l") s.label=pt;
+    else if(drag.type==="body"){ const dx=Math.round(raw[0]-drag.last[0]), dy=Math.round(raw[1]-drag.last[1]); s.polygons[drag.pi].forEach(q=>{ q[0]+=dx; q[1]+=dy; }); drag.last=raw; }
+    render(); });
+  window.addEventListener("mouseup",()=>{ drag=null; setTimeout(()=>moved=false,0); });
+  svg.addEventListener("click",e=>{ if(drag||moved) return; const s=S(); if(s.frame!==frameId) return; const pt=svgPoint(e).map(v=>Math.round(v)); let best=[0,0],bd=1e12; s.polygons.forEach((poly,pi)=>{ for(let i=0;i<poly.length;i++){ const a=poly[i],b=poly[(i+1)%poly.length]; const d=distSeg(pt,a,b); if(d<bd){bd=d;best=[pi,i];} } }); s.polygons[best[0]].splice(best[1]+1,0,pt); render(); });
+  function distSeg(p,a,b){ const dx=b[0]-a[0],dy=b[1]-a[1]; const t=Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/(dx*dx+dy*dy||1))); return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy); }
+  body.innerHTML='<div class="author-list" id="alist"></div>'
+    +'<div id="edit"></div>'
+    +'<div class="row"><button class="btn ghost sm" id="addPoly">Add a second zone</button><button class="btn ghost sm" id="addStruct">Add a structure</button><button class="btn ghost sm" id="moveFrame">Move to other view</button></div>'
+    +'<h3 style="margin-top:18px;font-size:16px;color:var(--navy)">Recordings</h3><p class="small">Say the prompt the way you say it in lab. Name clip: "Point to the carina." Caption clip: the name and what is special about it. Clue clips: read the question. Answers are shown as text; no recording needed.</p><div id="micNote" class="small" style="color:var(--miss);font-weight:600"></div><div id="recs"></div>'
+    +'<div class="row"><button class="btn" id="dlClips">Download all clips</button></div>'
+    +'<h3 style="margin-top:18px;font-size:16px;color:var(--navy)">Set file</h3><div class="row"><button class="btn" id="copyJson">Copy JSON</button><button class="btn ghost" id="dlJson">Download JSON</button></div><pre id="json"></pre>';
+  function list(){
+    const L=$("alist"); L.innerHTML="";
+    SET.structures.forEach((s,i)=>{ const b=document.createElement("button"); b.type="button"; b.className="pick"; b.textContent=(i+1)+". "+s.name+(SET.frames.length>1?"  ("+SET.frames.find(f=>f.id===s.frame).label+")":""); b.setAttribute("aria-pressed",String(i===sel)); b.addEventListener("click",()=>{ sel=i; if(s.frame!==frameId) setFrame(s.frame,true); render(); list(); }); L.appendChild(b); });
+    const s=S();
+    $("edit").innerHTML='<label for="eName">Name</label><input type="text" id="eName"><label for="eAl">Also accept (comma separated)</label><input type="text" id="eAl"><label for="eSay">Pronunciation hint for the computer voice (optional)</label><input type="text" id="eSay"><label for="eCap">Caption</label><textarea id="eCap"></textarea>';
+    $("eName").value=s.name; $("eAl").value=(s.aliases||[]).join(", "); $("eSay").value=s.say||""; $("eCap").value=s.caption;
+    $("eName").addEventListener("input",e=>{ s.name=e.target.value; render(); });
+    $("eAl").addEventListener("input",e=>{ s.aliases=e.target.value.split(",").map(x=>x.trim()).filter(Boolean); render(); });
+    $("eSay").addEventListener("input",e=>{ s.say=e.target.value.trim(); if(!s.say) delete s.say; render(); });
+    $("eCap").addEventListener("input",e=>{ s.caption=e.target.value; render(); });
+    const R=$("recs"); R.innerHTML="";
+    const kinds=[["name","Name prompt"],["caption","Caption"]].concat(s.facts.map((f,i)=>["clue"+(i+1),"Clue "+(i+1)+": "+f.q]));
+    kinds.forEach(([k,lab])=>{ const row=document.createElement("div"); row.className="recrow"; const t=document.createElement("span"); t.className="k"; t.textContent=lab; const h=document.createElement("span"); h.className="has"; h.textContent=studentClips["author|"+s.id+"|"+k]?"Recorded":""; row.append(t,h,recControl("author|"+s.id+"|"+k, lab, ()=>list())); R.appendChild(row); });
+  }
+  $("addPoly").addEventListener("click",()=>{ const s=S(); if(s.frame!==frameId) setFrame(s.frame,true); const f=frame(); const cx=Math.round(f.width/2),cy=Math.round(f.height/2); s.polygons.push([[cx-40,cy-40],[cx+40,cy-40],[cx+40,cy+40],[cx-40,cy+40]]); render(); });
+  $("addStruct").addEventListener("click",()=>{ const f=frame(); const cx=Math.round(f.width/2),cy=Math.round(f.height/2); const id="new-"+Date.now().toString(36); SET.structures.push({id,name:"New structure",aliases:[],frame:frameId,caption:"",polygons:[[[cx-40,cy-40],[cx+40,cy-40],[cx+40,cy+40],[cx-40,cy+40]]],anchor:[cx+40,cy],label:[Math.min(f.width-40,cx+200),cy],facts:[]}); sel=SET.structures.length-1; render(); list(); });
+  $("moveFrame").addEventListener("click",()=>{ if(SET.frames.length<2) return; const s=S(); const i=SET.frames.findIndex(f=>f.id===s.frame); s.frame=SET.frames[(i+1)%SET.frames.length].id; setFrame(s.frame,true); render(); list(); });
+  $("dlClips").addEventListener("click",()=>downloadClips("clips", k=>k.startsWith("author|")));
+  $("copyJson").addEventListener("click",()=>navigator.clipboard.writeText(JSON.stringify(exportSet(),null,2)).then(()=>setStatus("JSON copied. Paste it over sets/"+SET.id+".json","ok")));
+  $("dlJson").addEventListener("click",async()=>{ const r=await saveFile(SET.id+".json", JSON.stringify(exportSet(),null,2)); setStatus(r==="declined"?"Download cancelled.":"Set file downloaded. Put it in sets/ to replace "+SET.id+".json", r==="declined"?"miss":"ok"); });
+  /* Nudge the selected structure with the arrow keys (Shift for 10 px). Moves every zone, the pin, and the number together. */
+  document.addEventListener("keydown",e=>{
+    if(!/^Arrow/.test(e.key) || /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
+    e.preventDefault(); const d=e.shiftKey?10:1; const dx=e.key==="ArrowLeft"?-d:e.key==="ArrowRight"?d:0, dy=e.key==="ArrowUp"?-d:e.key==="ArrowDown"?d:0;
+    moveStructure(S(),dx,dy); render();
+  });
+  if(!REC_MIME){ $("micNote").textContent = "Recording is not available in this viewer: the microphone is blocked here. Open rounds.html from the zip on your Mac (double-click it), or from GitHub Pages, and the red Record buttons will appear."; }
+  else if(navigator.permissions && navigator.permissions.query){ navigator.permissions.query({name:"microphone"}).then(st=>{ if(st.state==="denied") $("micNote").textContent="The browser has blocked the microphone for this page. Allow it in the address bar, then reload."; }).catch(()=>{}); }
+  list(); render();
+}
+
+loadSet();
+})();
+</script>
+
+<script>
+/* iframe height sender for Canvas / Kajabi embeds */
+(function(){
+  var q=new URLSearchParams(location.search); var id=q.get("frameId")||q.get("frame")||"rounds";
+  function send(){ try{ if(window.parent&&window.parent!==window){ parent.postMessage({type:"resize",id:id,height:document.documentElement.scrollHeight},"*"); parent.postMessage({type:"frameHeight",id:id,height:document.documentElement.scrollHeight},"*"); } }catch(e){} }
+  if("ResizeObserver" in window){ new ResizeObserver(send).observe(document.body); }
+  window.addEventListener("load",send); window.addEventListener("resize",send); send();
+})();
+</script>
+</body>
+</html>
