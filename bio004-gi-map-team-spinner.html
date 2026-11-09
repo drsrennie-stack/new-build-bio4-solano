@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GI Map Team Spinner | BIO 004 Human Anatomy</title>
+<link href="https://cdn.jsdelivr.net/npm/@fontsource-variable/plus-jakarta-sans/index.css" rel="stylesheet">
+<style>
+  :root{
+    --navy:#060B1A; --navy-2:#0B1530; --maroon:#7A2A22; --maroon-dark:#5E1F19;
+    --gold:#DCB45C; --cream:#F5F1E8; --ink:#0B1530; --muted:#4E5566; --line:#8C90A0; --page:#FAFAF9; --card:#FFFFFF;
+    --focus:#8B3A2E;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--page);color:var(--ink);font-family:"Plus Jakarta Sans Variable","Plus Jakarta Sans",system-ui,Arial,sans-serif;font-size:17px;line-height:1.45}
+  h1,h2,h3{margin:0;line-height:1.1}
+  button,input{font:inherit}
+  .skip{position:absolute;left:-999px;top:0;background:#fff;color:var(--navy);padding:.5rem 1rem;z-index:50}
+  .skip:focus{left:1rem;top:1rem;outline:3px solid var(--focus)}
+  :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+  .eyebrow{font-size:11px;letter-spacing:.26em;text-transform:uppercase;font-weight:700;color:var(--maroon)}
+  .band{background:var(--navy);color:#fff;padding:22px 40px 20px}
+  .band .eyebrow{color:var(--gold)}
+  .band h1{font-size:clamp(28px,3.6vw,46px);font-weight:800;margin-top:6px}
+  .band h1 .hl{color:#C0473C}
+  .band p{margin:6px 0 0;color:var(--cream);font-size:15px}
+  .bandrow{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--navy);background:var(--navy);color:#fff;padding:10px 18px;border-radius:999px;cursor:pointer;text-transform:uppercase;letter-spacing:.12em;font-size:12px;font-weight:700}
+  .btn:hover{background:var(--navy-2)}
+  .btn.ghost{background:transparent;color:#fff;border-color:#8C90A0}
+  .btn.ghost:hover{border-color:#fff}
+  .band .btn:focus-visible{outline-color:var(--gold)}
+  .btn.maroon{background:var(--maroon);border-color:var(--maroon)}
+  .btn.maroon:hover{background:var(--maroon-dark)}
+  .btn.light{background:#fff;color:var(--navy);border-color:var(--line)}
+  .btn.light:hover{border-color:var(--navy)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn.small{padding:7px 12px;font-size:11px}
+
+  /* Day tabs */
+  .days{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:14px 40px 0}
+  .tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;cursor:pointer;font-weight:600;color:var(--navy);display:inline-flex;align-items:center;gap:8px}
+  .tab[aria-selected="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .tab input{border:0;background:transparent;color:inherit;font-weight:600;width:11ch;min-width:6ch;padding:0}
+  .tab input:focus{outline:2px solid var(--gold)}
+  .tab .x{border:0;background:transparent;color:inherit;cursor:pointer;padding:0 2px;line-height:1;font-size:16px}
+  .daysnote{color:var(--muted);font-size:13px;margin-left:auto}
+
+  main{padding:18px 40px 36px}
+  .grid{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:28px;align-items:start}
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .wheelwrap{position:relative;width:100%;max-width:420px;margin:8px auto 0}
+  canvas{display:block;width:100%;height:auto}
+  .pointer{position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-top:30px solid var(--maroon)}
+  .spinrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;margin-top:16px}
+  .result{margin-top:14px;min-height:56px;text-align:center}
+  .result .eyebrow{display:block}
+  .result h2{font-size:24px;font-weight:800;color:var(--navy);margin-top:4px}
+  .result h2 .hl{color:var(--maroon)}
+
+  .sections{display:grid;gap:12px}
+  .sec{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;box-shadow:0 1px 3px rgba(0,0,0,.06);transition:transform 200ms ease,box-shadow 200ms ease}
+  .sec:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(0,0,0,.10)}
+  .sec.taken{border-color:var(--navy)}
+  .num{font-size:44px;font-weight:800;color:var(--maroon);line-height:1}
+  .sec h3{font-size:20px;font-weight:700;color:var(--navy)}
+  .sec .sub{color:var(--muted);font-size:14px;margin-top:2px}
+  .assign{display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:190px}
+  .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted);background:#fff}
+  .pill.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .teamname{border:1px solid var(--line);border-radius:8px;padding:7px 10px;width:190px;color:var(--ink);background:#fff}
+  .teamname::placeholder{color:#5E6677}
+  label.sr{position:absolute;left:-9999px}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+
+  /* Prompt view */
+  #promptView{display:none}
+  body.prompt #promptView{display:block}
+  body.prompt #spinView{display:none}
+  .prompt-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px 30px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:16px}
+  .prompt-card h2{font-size:26px;font-weight:800;color:var(--navy);margin-bottom:10px}
+  .prompt-card h2 .hl{color:var(--maroon)}
+  .prompt-card ul{margin:6px 0 0 0;padding-left:20px}
+  .prompt-card li{margin:4px 0}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width:800px){.two{grid-template-columns:1fr}}
+  .secs{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:10px}
+  .secbox{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff}
+  .secbox .num{font-size:32px}
+  .secbox h3{font-size:17px;color:var(--navy);margin:4px 0 6px}
+  .secbox ul{padding-left:18px;margin:0;font-size:14.5px}
+  .tag{display:inline-block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--maroon);border:1px solid var(--maroon);border-radius:999px;padding:2px 9px;margin-right:6px}
+  .teamline{margin-top:8px;font-size:14px;color:var(--navy);font-weight:600}
+  .helperlink{color:var(--maroon);font-weight:700;font-size:13px;text-decoration:underline;text-underline-offset:3px}
+  .helperlink:hover{color:var(--maroon-dark)}
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;animation:none !important}
+  }
+  @media print{
+    @page{margin:.5in}
+    body{background:#fff;color:#000;font-size:12.5px}
+    .band,.days,.toolbar,.noprint,#spinView{display:none !important}
+    body:not(.prompt) #promptView{display:block}
+    #promptView{display:block !important}
+    .prompt-card,.secbox{border:1px solid #000;box-shadow:none;border-radius:6px;break-inside:avoid;padding:12px 14px;margin-bottom:10px}
+    .prompt-card h2,.secbox h3,.num,.eyebrow,.tag,.hl{color:#000 !important}
+    .tag{border-color:#000}
+    .prompt-card h2{font-size:18px}
+    .secs{grid-template-columns:1fr 1fr}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="band" role="banner">
+  <div class="bandrow">
+    <div>
+      <span class="eyebrow">BIO 004 · Human Anatomy · MedMasters Collaborative</span>
+      <h1>GI Map <span class="hl">Team</span> Spinner</h1>
+      <p>Spin once per group. Each section goes to one group and the result is saved on this computer.</p>
+    </div>
+    <div class="noprint" style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn ghost" id="togglePrompt" aria-pressed="false">Show project prompt</button>
+      <button class="btn ghost" id="printBtn">Print prompt</button>
+    </div>
+  </div>
+</header>
+
+<nav class="days noprint" aria-label="Class days">
+  <div id="dayTabs" role="tablist" aria-label="Select a class day" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+  <button class="btn light small" id="addDay">+ Add day</button>
+  <span class="daysnote">Click a tab to switch days. Click the name to rename it.</span>
+</nav>
+
+<main id="main">
+
+  <!-- SPIN VIEW -->
+  <section id="spinView" aria-label="Spinner and section assignments">
+    <div class="grid">
+      <div class="card">
+        <span class="eyebrow">Spin the wheel</span>
+        <div class="wheelwrap">
+          <div class="pointer" aria-hidden="true"></div>
+          <canvas id="wheel" width="800" height="800" role="img" aria-label="Spinner wheel with the five GI sections"></canvas>
+        </div>
+        <div class="spinrow">
+          <button class="btn maroon" id="spinBtn">Spin for Group 1</button>
+          <button class="btn light" id="undoBtn">Undo last spin</button>
+        </div>
+        <div class="result" aria-live="polite" aria-atomic="true" id="result">
+          <span class="eyebrow">Ready</span>
+          <h2>Press spin to assign Group 1</h2>
+        </div>
+      </div>
+
+      <div>
+        <span class="eyebrow">Sections and teams</span>
+        <div class="sections" id="sections" style="margin-top:8px"></div>
+        <div class="toolbar">
+          <button class="btn light" id="resetDay">Reset this day</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROMPT VIEW -->
+  <section id="promptView" aria-label="Project prompt for students">
+    <div class="prompt-card">
+      <span class="eyebrow">BIO 004 · Human Anatomy · Team project</span>
+      <h2>Build and teach <span class="hl">your section</span> of the GI tract</h2>
+      <p>Your team owns one section of the digestive system. Make a map of it on paper, then teach it to the class. You have today to build and Thursday to finish and teach.</p>
+      <div class="two">
+        <div>
+          <span class="eyebrow">Your map must show</span>
+          <ul>
+            <li><strong>Anatomy.</strong> Every structure in your section, drawn and labeled.</li>
+            <li><strong>Wall.</strong> The layers of the wall in your section, inside to outside, and what is different about them here.</li>
+            <li><strong>Cells and what they make.</strong> Each cell type, where it sits, and the substance it produces.</li>
+            <li><strong>Nerves.</strong> The two enteric plexuses, the parasympathetic nerve, and the sympathetic ganglion that reach your section.</li>
+            <li><strong>Blood supply.</strong> The main artery that feeds your section.</li>
+            <li><strong>Basic function.</strong> One or two sentences only. This is an anatomy course, so keep the mechanism out and the structure in.</li>
+            <li><strong>Two memory tools.</strong> Teach with at least two mnemonics or analogies. Your helper sheet gives you two; use those or invent better ones.</li>
+          </ul>
+        </div>
+        <div>
+          <span class="eyebrow">How it works</span>
+          <ul>
+            <li><strong>Today:</strong> plan and build your map. Divide the work so every person owns part of it.</li>
+            <li><strong>Thursday:</strong> finish, then teach your section to the class using your map.</li>
+            <li><strong>Allowed:</strong> the course notes, your own handwritten notes, your textbook, the models, the Digital Atlas, and your one-page helper sheet.</li>
+            <li><strong>Teaching:</strong> every team member speaks. Point to the structure, name it, and say what it is made of or what it makes.</li>
+            <li><strong>Take a picture</strong> of this prompt and of your map so the whole team has it.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-card">
+      <span class="eyebrow">The five sections</span>
+      <div class="secs" id="promptSecs"></div>
+    </div>
+
+    <div class="prompt-card">
+      <span class="eyebrow">How your map and teaching are scored</span>
+      <div class="two" style="margin-top:8px">
+        <ul>
+          <li><strong>Structures:</strong> everything on your section list is drawn and labeled correctly.</li>
+          <li><strong>Wall:</strong> the layers match your section, and you can say what is different here.</li>
+          <li><strong>Cells:</strong> each cell is placed where it lives and matched to what it makes.</li>
+        </ul>
+        <ul>
+          <li><strong>Nerves and vessels:</strong> both plexuses, the parasympathetic nerve, the sympathetic ganglion, and the main artery are named.</li>
+          <li><strong>Teaching:</strong> every member taught, used the map, and asked the class to point and name.</li>
+          <li><strong>Memory tools:</strong> at least two mnemonics or analogies were taught, and they were accurate.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  'use strict';
+
+  // ---------- Content ----------
+  var SECTIONS = [
+    { num:'01', name:'Mouth, pharynx and salivary glands', sub:'Lips to laryngopharynx', helper:'BIO004-GI-Map-Helper-01-Mouth-Pharynx-Salivary.pdf',
+      must:[
+        'Palate, tongue and papillae, tonsils, arches, three pharynx regions',
+        'A tooth in section: enamel, dentin, pulp, cementum, periodontal ligament',
+        'Parotid, submandibular, sublingual glands and where each duct opens',
+        'Serous vs mucous acini; which gland is which',
+        'Nerves: CN VII and CN IX to the glands, CN V3, VII, IX for the tongue, CN XII for tongue muscles'
+      ]},
+    { num:'02', name:'Esophagus and stomach', sub:'Hiatus to pyloric sphincter', helper:'BIO004-GI-Map-Helper-02-Esophagus-Stomach.pdf',
+      must:[
+        'Esophagus with its three muscle zones (skeletal, mixed, smooth) and the hiatus at T10',
+        'Stomach regions, both curvatures, rugae, both omenta',
+        'Three muscle layers of the stomach wall',
+        'A gastric gland in section: surface mucous, mucous neck, parietal, chief, G cells and what each makes',
+        'Nerves: vagal trunks, greater splanchnic to the celiac ganglion; artery: celiac trunk'
+      ]},
+    { num:'03', name:'Small intestine', sub:'Duodenum, jejunum, ileum', helper:'BIO004-GI-Map-Helper-03-Small-Intestine.pdf',
+      must:[
+        'Duodenum with four parts, both papillae, the hepatopancreatic ampulla',
+        'Jejunum vs ileum: at least three differences',
+        'Circular folds, villi, microvilli from largest to smallest',
+        'A villus and crypt in section: enterocytes, goblet, Paneth, enteroendocrine, stem cells; duodenal glands; Peyer’s patches',
+        'Nerves: vagus, celiac and superior mesenteric ganglia; artery: superior mesenteric'
+      ]},
+    { num:'04', name:'Accessory organs: liver, gallbladder and pancreas', sub:'Bile and pancreatic juice', helper:'BIO004-GI-Map-Helper-04-Accessory-Organs.pdf',
+      must:[
+        'Liver lobes and ligaments; gallbladder parts; the full duct path to the major duodenal papilla',
+        'A hepatic lobule: central vein, plates, sinusoids, portal triad; hepatocytes, Kupffer cells, stellate cells',
+        'Pancreas: head, uncinate process, neck, body, tail; main and accessory ducts',
+        'An acinus with centroacinar cells; an islet with alpha, beta, delta, PP cells and what each makes',
+        'Nerves: vagus, celiac and superior mesenteric ganglia; vessels: hepatic artery and portal vein, splenic and pancreaticoduodenal arteries'
+      ]},
+    { num:'05', name:'Large intestine, rectum and anal canal', sub:'Cecum to anus', helper:'BIO004-GI-Map-Helper-05-Large-Intestine.pdf',
+      must:[
+        'Cecum, appendix, all colon regions and both flexures, rectum, anal canal',
+        'Teniae coli, haustra, omental appendices',
+        'Wall in section: deep crypts, many goblet cells, no villi; compare with small intestine',
+        'Anal canal: pectinate line, internal and external sphincters',
+        'Nerves: vagus to the proximal two thirds of transverse colon, pelvic splanchnics after that, pudendal to the external sphincter; arteries: superior and inferior mesenteric'
+      ]}
+  ];
+  var GROUPS = 5;
+  var STORAGE_KEY = 'bio004_gi_map_spinner_v1';
+
+  // ---------- State ----------
+  function blankDay(label){
+    return { label: label, assignments: {}, order: [], teamNames: {} };
+  }
+  var state = { days: [ blankDay('Monday'), blankDay('Tue AM'), blankDay('Tue PM') ], active: 0 };
+
+  function load(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){ var s = JSON.parse(raw); if(s && s.days && s.days.length){ state = s; } }
+    }catch(e){}
+  }
+  function save(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+  }
+  function day(){ return state.days[state.active]; }
+  function nextGroup(){
+    var d = day();
+    for(var g=1; g<=GROUPS; g++){ if(!(g in d.assignments)) return g; }
+    return null;
+  }
+  function openSections(){
+    var d = day(), taken = {};
+    Object.keys(d.assignments).forEach(function(g){ taken[d.assignments[g]] = true; });
+    var out = [];
+    for(var i=0;i<SECTIONS.length;i++){ if(!taken[i]) out.push(i); }
+    return out;
+  }
+  function groupFor(sectionIdx){
+    var d = day();
+    for(var g in d.assignments){ if(d.assignments[g] === sectionIdx) return Number(g); }
+    return null;
+  }
+
+  // ---------- Wheel ----------
+  var canvas = document.getElementById('wheel');
+  var ctx = canvas.getContext('2d');
+  var angle = 0; // rotation in radians
+  var SLICE = 2*Math.PI/SECTIONS.length;
+  var colors = ['#0B1530','#7A2A22','#1C2E4F','#5E1F19','#060B1A'];
+
+  function drawWheel(){
+    var w = canvas.width, h = canvas.height, cx = w/2, cy = h/2, r = w/2 - 10;
+    ctx.clearRect(0,0,w,h);
+    var open = openSections();
+    for(var i=0;i<SECTIONS.length;i++){
+      var start = angle + i*SLICE - Math.PI/2 - SLICE/2;
+      var isOpen = open.indexOf(i) !== -1;
+      ctx.beginPath(); ctx.moveTo(cx,cy);
+      ctx.arc(cx,cy,r,start,start+SLICE); ctx.closePath();
+      ctx.fillStyle = isOpen ? colors[i%colors.length] : '#D9DDE3';
+      ctx.fill();
+      ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 4; ctx.stroke();
+      // label
+      var mid = start + SLICE/2;
+      var tx = cx + Math.cos(mid) * r * 0.66, ty = cy + Math.sin(mid) * r * 0.66;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = isOpen ? '#FFFFFF' : '#4E5566';
+      ctx.font = '800 72px "Plus Jakarta Sans Variable", "Plus Jakarta Sans", Arial, sans-serif';
+      ctx.fillText(SECTIONS[i].num, tx, ty);
+    }
+    ctx.beginPath(); ctx.arc(cx,cy,56,0,2*Math.PI); ctx.fillStyle = '#FFFFFF'; ctx.fill();
+    ctx.strokeStyle = '#DCB45C'; ctx.lineWidth = 6; ctx.stroke();
+  }
+
+  var spinning = false;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function spin(){
+    if(spinning) return;
+    var g = nextGroup();
+    if(g === null) return;
+    var open = openSections();
+    var target = open[Math.floor(Math.random()*open.length)];
+    // The pointer sits at the top (−π/2). Slice i is centered at angle + i*SLICE − π/2.
+    // To land slice `target` under the pointer we need angle ≡ −target*SLICE (mod 2π), plus a little random offset inside the slice.
+    var jitter = (Math.random()-0.5) * SLICE * 0.7;
+    var finalAngle = -target*SLICE + jitter;
+    var turns = 5 + Math.floor(Math.random()*3);
+    var startAngle = angle % (2*Math.PI);
+    var delta = (finalAngle - startAngle);
+    delta = ((delta % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI);
+    var total = delta + turns*2*Math.PI;
+    var duration = reduced ? 0 : 4200;
+    spinning = true;
+    spinBtn.disabled = true; undoBtn.disabled = true;
+    result.innerHTML = '<span class="eyebrow">Spinning</span><h2>Group ' + g + '</h2>';
+
+    var t0 = null;
+    function frame(ts){
+      if(t0 === null) t0 = ts;
+      var p = duration ? Math.min(1,(ts-t0)/duration) : 1;
+      var eased = 1 - Math.pow(1-p, 3);
+      angle = startAngle + total*eased;
+      drawWheel();
+      if(p < 1){ requestAnimationFrame(frame); }
+      else { angle = finalAngle; finish(g, target); }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function finish(g, target){
+    var d = day();
+    d.assignments[g] = target;
+    d.order.push(g);
+    save();
+    spinning = false;
+    drawWheel();
+    renderSections();
+    result.innerHTML = '<span class="eyebrow">Group ' + g + '</span><h2>' + SECTIONS[target].num + ' <span class="hl">' + SECTIONS[target].name + '</span></h2>';
+    updateButtons();
+  }
+
+  function undo(){
+    var d = day();
+    if(!d.order.length) return;
+    var g = d.order.pop();
+    delete d.assignments[g];
+    save();
+    drawWheel(); renderSections(); updateButtons();
+    result.innerHTML = '<span class="eyebrow">Undone</span><h2>Group ' + g + ' is back in the queue</h2>';
+  }
+
+  function updateButtons(){
+    var g = nextGroup();
+    spinBtn.disabled = (g === null) || spinning;
+    spinBtn.textContent = g === null ? 'All five groups assigned' : 'Spin for Group ' + g;
+    undoBtn.disabled = !day().order.length || spinning;
+  }
+
+  // ---------- Sections list ----------
+  var sectionsEl = document.getElementById('sections');
+  function renderSections(){
+    var d = day();
+    sectionsEl.innerHTML = '';
+    SECTIONS.forEach(function(s, i){
+      var g = groupFor(i);
+      var row = document.createElement('div');
+      row.className = 'sec' + (g ? ' taken' : '');
+      row.innerHTML =
+        '<div class="num" aria-hidden="true">' + s.num + '</div>' +
+        '<div><h3>' + s.name + '</h3><div class="sub">' + s.sub + '</div></div>' +
+        '<div class="assign">' +
+          '<span class="pill' + (g ? ' on' : '') + '">' + (g ? 'Group ' + g : 'Open') + '</span>' +
+          '<label class="sr" for="team-' + i + '">Team name for section ' + s.num + '</label>' +
+          '<input class="teamname" id="team-' + i + '" type="text" placeholder="Team name" value="' + (d.teamNames[i] ? escapeHtml(d.teamNames[i]) : '') + '">' +
+        '</div>';
+      sectionsEl.appendChild(row);
+      row.querySelector('input').addEventListener('input', function(e){
+        day().teamNames[i] = e.target.value; save(); renderPromptSecs();
+      });
+    });
+  }
+
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+  // ---------- Prompt view ----------
+  var promptSecs = document.getElementById('promptSecs');
+  function renderPromptSecs(){
+    var d = day();
+    promptSecs.innerHTML = '';
+    SECTIONS.forEach(function(s, i){
+      var g = groupFor(i);
+      var box = document.createElement('div');
+      box.className = 'secbox';
+      var team = d.teamNames[i] ? escapeHtml(d.teamNames[i]) : '';
+      var who = g ? ('Group ' + g + (team ? ' · ' + team : '')) : (team ? team : 'Not yet assigned');
+      box.innerHTML =
+        '<div class="num" aria-hidden="true">' + s.num + '</div>' +
+        '<h3>' + s.name + '</h3>' +
+        '<ul>' + s.must.map(function(m){ return '<li>' + m + '</li>'; }).join('') + '</ul>' +
+        '<div class="teamline"><span class="tag">Team</span>' + who + '</div>' +
+        '<div class="noprint" style="margin-top:8px"><a class="helperlink" href="' + s.helper + '" target="_top">Open the helper sheet (PDF)</a></div>';
+      promptSecs.appendChild(box);
+    });
+  }
+
+  // ---------- Day tabs ----------
+  var dayTabs = document.getElementById('dayTabs');
+  function renderDays(){
+    dayTabs.innerHTML = '';
+    state.days.forEach(function(d, i){
+      var tab = document.createElement('div');
+      tab.className = 'tab'; tab.setAttribute('role','tab');
+      tab.setAttribute('aria-selected', i === state.active ? 'true' : 'false');
+      tab.tabIndex = 0;
+      var input = document.createElement('input');
+      input.type = 'text'; input.value = d.label; input.setAttribute('aria-label','Day name');
+      input.addEventListener('input', function(){ d.label = input.value; save(); });
+      input.addEventListener('click', function(e){ e.stopPropagation(); selectDay(i); });
+      tab.appendChild(input);
+      if(state.days.length > 1){
+        var x = document.createElement('button');
+        x.className = 'x'; x.setAttribute('aria-label','Remove day ' + d.label); x.textContent = '×';
+        x.addEventListener('click', function(e){
+          e.stopPropagation();
+          if(confirm('Remove "' + d.label + '" and its assignments?')){
+            state.days.splice(i,1);
+            if(state.active >= state.days.length) state.active = state.days.length-1;
+            save(); renderAll();
+          }
+        });
+        tab.appendChild(x);
+      }
+      tab.addEventListener('click', function(){ selectDay(i); });
+      tab.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); selectDay(i); } });
+      dayTabs.appendChild(tab);
+    });
+  }
+  function selectDay(i){
+    state.active = i; save();
+    angle = 0;
+    renderAll();
+    result.innerHTML = '<span class="eyebrow">' + escapeHtml(day().label) + '</span><h2>' + (nextGroup() ? 'Press spin to assign Group ' + nextGroup() : 'All five groups assigned') + '</h2>';
+  }
+  document.getElementById('addDay').addEventListener('click', function(){
+    state.days.push(blankDay('Day ' + (state.days.length+1)));
+    state.active = state.days.length-1; save(); renderAll();
+  });
+
+  // ---------- Buttons ----------
+  var spinBtn = document.getElementById('spinBtn');
+  var undoBtn = document.getElementById('undoBtn');
+  var result = document.getElementById('result');
+  spinBtn.addEventListener('click', spin);
+  undoBtn.addEventListener('click', undo);
+  document.getElementById('resetDay').addEventListener('click', function(){
+    if(confirm('Clear all spins and team names for "' + day().label + '"?')){
+      state.days[state.active] = blankDay(day().label); save(); angle = 0; renderAll();
+      result.innerHTML = '<span class="eyebrow">Reset</span><h2>Press spin to assign Group 1</h2>';
+    }
+  });
+  var toggle = document.getElementById('togglePrompt');
+  toggle.addEventListener('click', function(){
+    var on = document.body.classList.toggle('prompt');
+    toggle.setAttribute('aria-pressed', on ? 'true' : 'false');
+    toggle.textContent = on ? 'Back to spinner' : 'Show project prompt';
+    sendHeight();
+  });
+  document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
+
+  function renderAll(){ renderDays(); drawWheel(); renderSections(); renderPromptSecs(); updateButtons(); sendHeight(); }
+
+  // ---------- iframe height sender ----------
+  function sendHeight(){
+    try{
+      var h = document.documentElement.scrollHeight;
+      window.parent.postMessage({ id: 'gi-map-spinner', height: h }, '*');
+    }catch(e){}
+  }
+  if(window.ResizeObserver){ new ResizeObserver(sendHeight).observe(document.body); }
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+
+  load();
+  renderAll();
+  result.innerHTML = '<span class="eyebrow">' + escapeHtml(day().label) + '</span><h2>' + (nextGroup() ? 'Press spin to assign Group ' + nextGroup() : 'All five groups assigned') + '</h2>';
+})();
+</script>
+</body>
+</html>
