@@ -157,7 +157,7 @@ window.BIO004_ALT = (function () {
     },
     renal: {
       name: 'Renal Anatomy',
-      notes:  [['m4-urinary-notes.html','The Urinary System']],
+      notes:  [['site/bio004-m5-urinary-lecture-notes.html','The Urinary System']],
       sheets: [['m4-urinary-worksheet.html','Urinary and Endocrine pre-work sheet (urinary parts)']],
       videos: [['urinary-concept-videos.html','The Urinary System']],
       slides: [['slides-renal-anatomy.html','Renal Anatomy slides']],
@@ -165,7 +165,7 @@ window.BIO004_ALT = (function () {
     },
     repro: {
       name: 'Reproductive Anatomy',
-      notes:  [['m4-male-repro-notes.html','Male Reproductive System'],['m4-female-repro-notes.html','Female Reproductive System']],
+      notes:  [['site/bio004-m5-male-reproductive-lecture-notes.html','Male Reproductive System'],['site/bio004-m5-female-reproductive-lecture-notes.html','Female Reproductive System']],
       sheets: [['m4-repro-worksheet.html','Reproductive System pre-work sheet']],
       videos: [['reproductive-male-concept-videos.html','Male Reproductive System'],['reproductive-female-concept-videos.html','Female Reproductive System']],
       slides: [['slides-reproductive-systems.html','Reproductive Systems slides']],
@@ -173,7 +173,7 @@ window.BIO004_ALT = (function () {
     },
     cranial: {
       name: 'The Brainstem and Cranial Nerves',
-      notes:  [['m5-brainstem-notes.html','The Brainstem'],['m5-cranial-notes.html','Cranial Nerves']],
+      notes:  [['site/bio004-m5-brainstem-lecture-notes.html','The Brainstem'],['site/bio004-m5-cord-pns-cranial-nerves-lecture-notes.html','Spinal Cord, PNS and Cranial Nerves']],
       sheets: [['m5-brain-worksheet.html','Brain and Brainstem pre-work sheet']],
       videos: [['cranial-nerves-concept-videos.html','Cranial Nerves']],
       slides: [['slides-cranial-nerves.html','Cranial Nerves slides']],
@@ -192,7 +192,7 @@ window.BIO004_ALT = (function () {
   };
   LECTURE.cnsBrain = {
     name: 'The Brain, Brainstem, Meninges and CSF',
-    notes:  [['m5-brain-notes.html','The Brain'],['m5-brainstem-notes.html','The Brainstem'],['m5-meninges-notes.html','Meninges and CSF']],
+    notes:  [['site/bio004-m5-brain-lecture-notes.html','The Brain'],['site/bio004-m5-brainstem-lecture-notes.html','The Brainstem'],['site/bio004-m5-meninges-csf-lecture-notes.html','Meninges and CSF']],
     sheets: [['m5-brain-worksheet.html','Brain and Brainstem pre-work sheet'],['m5-cord-worksheet.html','Meninges, CSF and Spinal Cord pre-work sheet (meninges and CSF parts)']],
     videos: [['brain-concept-videos.html','The Brain'],['brainstem-concept-videos.html','The Brainstem'],['brain-meninges-concept-videos.html','Brain and Meninges']],
     slides: [['slides-cns.html','CNS slides']],
@@ -200,7 +200,7 @@ window.BIO004_ALT = (function () {
   };
   LECTURE.cnCord = {
     name: 'Cranial Nerves and the Spinal Cord',
-    notes:  [['m5-cranial-notes.html','Cranial Nerves'],['m5-cord-notes.html','The Spinal Cord'],['m5-plexus-notes.html','Nerve Plexuses']],
+    notes:  [['site/bio004-m5-cord-pns-cranial-nerves-lecture-notes.html','Spinal Cord, PNS and Cranial Nerves'],['site/bio004-m5-plexuses-ans-lecture-notes.html','Nerve Plexuses and the ANS']],
     sheets: [['m5-cord-worksheet.html','Meninges, CSF and Spinal Cord pre-work sheet (spinal cord parts)'],['m5-pns-worksheet.html','Peripheral and Autonomic pre-work sheet (cranial and spinal nerve parts)']],
     videos: [['cranial-nerves-concept-videos.html','Cranial Nerves'],['spinal-cord-concept-videos.html','The Spinal Cord'],['spinal-pns-concept-videos.html','Spinal Nerves and PNS']],
     slides: [['slides-cranial-nerves.html','Cranial Nerves slides'],['slides-spinal-pns.html','Spinal Cord and PNS slides']],
@@ -208,7 +208,7 @@ window.BIO004_ALT = (function () {
   };
   LECTURE.ans = {
     name: 'The Autonomic Nervous System',
-    notes:  [['m5-ans-notes.html','The Autonomic Nervous System']],
+    notes:  [['site/bio004-m5-plexuses-ans-lecture-notes.html','Nerve Plexuses and the ANS']],
     sheets: [['m5-pns-worksheet.html','Peripheral and Autonomic pre-work sheet (autonomic parts)']],
     videos: [['ans-concept-videos.html','The Autonomic Nervous System']],
     slides: [['slides-ans.html','ANS slides']],
@@ -344,31 +344,31 @@ window.BIO004_ALT = (function () {
       name: 'Renal Anatomy',
       list:    [['module-5-structure-list.html#h-urinary-lab','Module 5 list: The Urinary System']],
       sprints: [['urinary-system-lab-sprint.html','Urinary System']],
-      notes:   [['m4-urinary-notes.html','The Urinary System']]
+      notes:   [['site/bio004-m5-urinary-lecture-notes.html','The Urinary System']]
     },
     repro: {
       name: 'Male and Female Reproductive Anatomy',
       list:    [['module-5-structure-list.html#h-male-repro-lab','Module 5 list: The Male Reproductive System'],['module-5-structure-list.html#h-female-repro-lab','Module 5 list: The Female Reproductive System']],
       sprints: [['reproductive-male-lab-sprint.html','Male Reproductive System'],['reproductive-female-lab-sprint.html','Female Reproductive System']],
-      notes:   [['m4-male-repro-notes.html','Male Reproductive System'],['m4-female-repro-notes.html','Female Reproductive System']]
+      notes:   [['site/bio004-m5-male-reproductive-lecture-notes.html','Male Reproductive System'],['site/bio004-m5-female-reproductive-lecture-notes.html','Female Reproductive System']]
     },
     brain: {
       name: 'CNS Brain, Meninges and CSF',
       list:    [['module-5-structure-list.html#h-brain-lab','Module 5 list: The Brain'],['module-5-structure-list.html#h-meninges-csf-lab','Module 5 list: Meninges, Ventricles and CSF']],
       sprints: [['cns-meninges-csf-lab-sprint.html','Meninges, Ventricles and CSF']],
-      notes:   [['m5-brain-notes.html','The Brain'],['m5-meninges-notes.html','Meninges and CSF']]
+      notes:   [['site/bio004-m5-brain-lecture-notes.html','The Brain'],['site/bio004-m5-meninges-csf-lecture-notes.html','Meninges and CSF']]
     },
     brainstemCN: {
       name: 'Brainstem (CNS) and Cranial Nerves (PNS)',
       list:    [['module-5-structure-list.html#h-brainstem-cerebellum-lab','Module 5 list: The Brainstem and Cerebellum'],['module-5-structure-list.html#h-cranial-nerves-lab','Module 5 list: The Cranial Nerves']],
       sprints: [['cns-brainstem-lab-sprint.html','The Brainstem'],['cranial-nerves-lab-sprint.html','Cranial Nerves']],
-      notes:   [['m5-brainstem-notes.html','The Brainstem'],['m5-cranial-notes.html','Cranial Nerves']]
+      notes:   [['site/bio004-m5-brainstem-lecture-notes.html','The Brainstem'],['site/bio004-m5-cord-pns-cranial-nerves-lecture-notes.html','Spinal Cord, PNS and Cranial Nerves']]
     },
     cord: {
       name: 'CNS Spinal Cord and Spinal Nerves',
       list:    [['module-5-structure-list.html#h-spinal-cord-lab','Module 5 list: The Spinal Cord'],['module-5-structure-list.html#h-peripheral-nerves-lab','Module 5 list: Peripheral Nerves and Plexuses']],
       sprints: [['cns-spinal-cord-lab-sprint.html','Spinal Cord'],['nerve-plexuses-lab-sprint.html','Spinal Nerves and Plexuses']],
-      notes:   [['m5-cord-notes.html','The Spinal Cord'],['m5-plexus-notes.html','Nerve Plexuses']]
+      notes:   [['site/bio004-m5-cord-pns-cranial-nerves-lecture-notes.html','Spinal Cord, PNS and Cranial Nerves'],['site/bio004-m5-plexuses-ans-lecture-notes.html','Nerve Plexuses and the ANS']]
     }
   };
 
