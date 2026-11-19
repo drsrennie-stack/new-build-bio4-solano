@@ -269,6 +269,12 @@
   + '.lpov .v3-ls{list-style:none;margin:0;padding:14px 16px;display:grid;gap:8px;align-content:center}'
   + '.lpov .v3-ls a{display:flex;align-items:center;gap:10px;min-height:44px;padding:6px 12px 6px 6px;background:#fff;border:1px solid #E1E3E8;border-radius:10px;color:#060B1A;font-size:14.5px;font-weight:700;text-decoration:none;transition:border-color 150ms ease,transform 150ms ease}'
   + '.lpov .v3-ls a:hover{border-color:#060B1A;transform:translateY(-1px)}'
+  + '.lpov .v3-ls li.v3-all{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:6px 2px 0;border-top:1px solid #E1E3E8;margin-top:4px}'
+  + '.lpov .v3-ls .v3-all-l{font-size:12.5px;font-weight:700;color:#414B5C}'
+  + '.lpov .v3-ls .v3-all .lp-mods{width:auto;margin:0}'
+  + '.lpov .v3-ls .v3-all a{min-height:32px;padding:0 12px;border-radius:999px;font-size:13px;display:inline-flex;gap:0}'
+  + '.lpov .v3-ls .v3-all a:hover{transform:none;background:#F3F4F6}'
+  + '.lpov .v3-ls .v3-all a.now,.lpov .v3-ls .v3-all a.now:hover{background:#060B1A;color:#fff;border-color:#060B1A}'
   + '.lpov .v3-ls .lp-li{width:30px;height:30px;border-radius:8px}'
   + '.lpov .v3-ls .ar{margin-left:auto;color:#B8924A;font-weight:800}'
   + '.lpov .v3-ls .lp-hrs{font-size:13px;color:#454B5C;margin:0 0 2px}'
@@ -368,6 +374,12 @@
     var h = '<span class="lp-mods" role="group" aria-label="Lab structure list by module">';
     for (var n = 1; n <= 5; n++) h += '<a ' + go('module-' + n + '-structure-list.html') + (n === MOD ? ' class="now" aria-current="true"' : '') + '>Module ' + n + '</a>';
     return h + '</span>';
+  }
+  /* one pill per module, the current module marked, so earlier modules stay reachable */
+  function modRow(label, hrefFor, from) {
+    var h = '<li class="v3-all"><span class="v3-all-l">' + label + '</span><span class="lp-mods" role="group" aria-label="' + label + ', by module">';
+    for (var n = (from || 1); n <= 5; n++) h += '<a ' + hrefFor(n) + (n === MOD ? ' class="now" aria-current="true"' : '') + '>M' + n + '</a>';
+    return h + '</span></li>';
   }
   function discordRows() {
     var keys = sec ? [sec] : ['mw', 'tr-am', 'tr-eve'];
@@ -531,14 +543,18 @@
           P(go('module-' + MOD + '-structure-list.html'), 'Structure list, M' + MOD, 'note', 'b') + P(ext('https://drsrennie-stack.github.io/new-digital-atlas/'), 'Digital Atlas', 'globe', 'b')
           + P(go('mastery-os-fall-2026.html#s-loops'), 'Loops', 'loop', 'b') + P(go('histology-help.html'), 'Histology help', 'target', 'b')
           + P(ext('https://www.medmasterscollaborative.com/muscle-charts-i-o-a-inn'), 'Muscle charts: I, O, A', 'cards', 'b')
-          + P(ext('https://drsrennie-stack.github.io/Rounds/index.html'), 'Rounds', 'steps', 'b', true))
+          + P(ext('https://drsrennie-stack.github.io/Rounds/index.html'), 'Rounds', 'steps', 'b', true)
+          + modRow('Structure lists, every module', function (n) { return go('module-' + n + '-structure-list.html'); }))
       + V('4', 't4', 'Want to prepare for', 'The exam?', '', 'Find your gaps and spend your study time where you need it most.',
           P(go('bio004-competency-packet.html'), 'Competency list', 'target', 't') + P(go('practice-lecture-exam.html'), 'Practice exam', 'exam', 't')
           + P(go('mastery-os-fall-2026.html#s-weak'), 'My weak areas', 'steps', 't') + P(go('bio004-study-process.html'), 'How to study', 'doc', 't'))
       + V('5', 't5', 'Want to study', 'On paper?', '', 'You get a paper copy of each of these in class. If you need another, print it again here.',
           P(go('BIO004-Fall2026-Competency-Packet.pdf'), 'Competency packet', 'print', 'g') + P(go('BIO004-M' + MOD + '-Note-Sheet-Packet.pdf'), 'Note sheets, M' + MOD, 'print', 'g')
           + (MOD >= 3 ? P(go('BIO004-M' + MOD + '-Lab-Packet.pdf'), 'Lab packet, M' + MOD, 'print', 'g') : P(go('BIO004-Anatomy-Structure-List.pdf'), 'Lab structure list', 'print', 'g'))
-          + P(go('lecture-sheets.html?m=' + MOD), 'Lecture sheets, M' + MOD, 'print', 'g', true))
+          + P(go('lecture-sheets.html?m=' + MOD), 'Lecture sheets, M' + MOD, 'print', 'g', true)
+          + modRow('Note sheets', function (n) { return go('BIO004-M' + n + '-Note-Sheet-Packet.pdf'); })
+          + modRow('Lab packets', function (n) { return go('BIO004-M' + n + '-Lab-Packet.pdf'); }, 3)
+          + modRow('Lecture sheets', function (n) { return go('lecture-sheets.html?m=' + n); }))
       + V('6', 't6', 'Need', 'Help', ' with something?', 'Office hours: Mon and Wed 10:30 am to 12:30 pm across from Biotech Lab 1127, and 30 minutes before class. Open lab: Fri 2 to 3 pm.',
           P('href="mailto:srennie@solano.edu"', 'Email Dr. Rennie', 'mail', 't') + mine(P(ext(DISCORD[sec] ? DISCORD[sec].url : ''), 'Class Discord', 'chat', 'b'))
           + P(go('study-session-signup.html'), 'Study With Me', 'people', 'g') + P(ext('https://solano.edu/centers/astc/index.php'), 'Free tutoring', 'people'))
