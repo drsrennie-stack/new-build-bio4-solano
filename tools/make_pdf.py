@@ -64,7 +64,7 @@ JOBS = {
 async def render(page_url: str, keep: str = None) -> str:
     """Load the page in Chromium, let its JS settle, return the printable DOM."""
     async with async_playwright() as pw:
-        b = await pw.chromium.launch()
+        b = await pw.chromium.launch(executable_path='/opt/pw-browsers/chromium' if os.path.exists('/opt/pw-browsers/chromium') else None)
         p = await b.new_page()
         await p.emulate_media(media='print')
         await p.goto('file://' + str(ROOT) + '/' + page_url)
